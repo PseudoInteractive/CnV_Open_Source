@@ -127,8 +127,15 @@
                 </Button>
             </Grid>
         </winui:NavigationView.PaneFooter>
-        <Grid>
-            <Frame x:Name="shellFrame" />
-        </Grid>
+		<RelativePanel x:Name="panel">
+
+		
+			<Frame x:Name="shellFrame"
+			       RelativePanel.AlignBottomWithPanel="True"
+                   RelativePanel.AlignTopWithPanel="True"
+                   RelativePanel.AlignRightWithPanel="True"
+				   Canvas.ZIndex = "3"
+				   />
+        </RelativePanel>
     </winui:NavigationView>
 </Page>

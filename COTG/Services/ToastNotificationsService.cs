@@ -14,7 +14,7 @@ namespace COTG.Services
         {
             try
             {
-                ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
+           //     ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
             }
             catch (Exception)
             {

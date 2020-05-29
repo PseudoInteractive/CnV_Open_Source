@@ -21,40 +21,32 @@ namespace COTG.Core.Services
 
         // WTS TODO: Please create a ClientID following these steps and update the app.config IdentityClientId.
         // https://docs.microsoft.com/azure/active-directory/develop/quickstart-register-app
-        private readonly string _clientId = ConfigurationManager.AppSettings["IdentityClientId"];
+        private static readonly string _clientId = "c8335265-6f9e-4721-a07e-355c2cd66d6d";
 
-        private readonly string[] _graphScopes = new string[] { "user.read" };
+        private static readonly string[] _graphScopes = new string[] { "openid" };
 
         private bool _integratedAuthAvailable;
         private IPublicClientApplication _client;
-        private AuthenticationResult _authenticationResult;
+        public static AuthenticationResult _authenticationResult;
 
         public event EventHandler LoggedIn;
 
         public event EventHandler LoggedOut;
 
-        public void InitializeWithAadAndPersonalMsAccounts()
+        public async Task InitializeWithAadAndPersonalMsAccounts()
         {
             _integratedAuthAvailable = false;
             _client = PublicClientApplicationBuilder.Create(_clientId)
-                                                    .WithAuthority(AadAuthorityAudience.AzureAdAndPersonalMicrosoftAccount)
-                                                    .Build();
-        }
 
-        public void InitializeWithAadMultipleOrgs(bool integratedAuth = false)
-        {
-            _integratedAuthAvailable = integratedAuth;
-            _client = PublicClientApplicationBuilder.Create(_clientId)
-                                                    .WithAuthority(AadAuthorityAudience.AzureAdMultipleOrgs)
-                                                    .Build();
-        }
+                                                   .WithB2CAuthority("https://avaex.b2clogin.com/tfp/avaex.onmicrosoft.com/B2C_1_id")
+                                                     .WithRedirectUri("https://avaex.b2clogin.com/oauth2/nativeclient")
 
-        public void InitializeWithAadSingleOrg(string tenant, bool integratedAuth = false)
-        {
-            _integratedAuthAvailable = integratedAuth;
-            _client = PublicClientApplicationBuilder.Create(_clientId)
-                                                    .WithAuthority(AzureCloudInstance.AzurePublic, tenant)
-                                                    .Build();
+                                                     //.WithLogging((level, message, containsPii) =>
+                                                     //{
+                                                     //    //Debug.WriteLine($"MSAL: {level} {message} ");
+                                                     //}, LogLevel.Warning, enablePiiLogging: false, enableDefaultPlatformLogging: true)
+                                                     .Build();
+            await AcquireTokenSilentAsync();
         }
 
         public bool IsLoggedIn() => _authenticationResult != null;
@@ -125,11 +117,12 @@ namespace COTG.Core.Services
             }
         }
 
-        public async Task<string> GetAccessTokenForGraphAsync() => await GetAccessTokenAsync(_graphScopes);
+        public async Task<string> GetAccessTokenForGraphAsync() => await GetAccessTokenAsync();
 
-        private async Task<string> GetAccessTokenAsync(string[] scopes)
+        private async Task<string> GetAccessTokenAsync()
         {
-            var acquireTokenSuccess = await AcquireTokenSilentAsync(scopes);
+            var scopes = _graphScopes;
+            var acquireTokenSuccess = await AcquireTokenSilentAsync();
             if (acquireTokenSuccess)
             {
                 return _authenticationResult.AccessToken;
@@ -155,10 +148,10 @@ namespace COTG.Core.Services
             }
         }
 
-        public async Task<bool> AcquireTokenSilentAsync() => await AcquireTokenSilentAsync(_graphScopes);
 
-        private async Task<bool> AcquireTokenSilentAsync(string[] scopes)
+        public async Task<bool> AcquireTokenSilentAsync()
         {
+            var scopes = _graphScopes;
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
                 return false;
