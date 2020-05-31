@@ -105,72 +105,9 @@ namespace COTG.Views
             User = await UserDataService.GetUserAsync();
 
             shellFrame.Background = null;
-            webView = new WebView(WebViewExecutionMode.SeparateThread);
-			webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
-			webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified
-			webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
-			webView.ScriptNotify += WebView_ScriptNotify;
-			webView.DOMContentLoaded += WebView_DOMContentLoaded;
-			webView.NavigationFailed += WebView_NavigationFailed;
-			webView.NavigationStarting += WebView_NavigationStarting;
-			webView.NavigationCompleted += WebView_NavigationCompleted;
-			webView.PermissionRequested += WebView_PermissionRequested;
-
-            //   webView.CacheMode = CacheMode.
-            panel.Children.Insert(0,webView);
-            RelativePanel.SetAlignLeftWithPanel(webView,true);
-            RelativePanel.SetAlignRightWithPanel(webView, true);
-            RelativePanel.SetAlignTopWithPanel(webView, true);
-            RelativePanel.SetAlignBottomWithPanel(webView, true);
-            Canvas.SetZIndex(webView, 0);
-            await Task.Delay(2000);
-            webView.Source = new Uri("https://www.crownofthegods.com");
+            await JSClient.Initialize(panel);
+           
         }
-
-		private void WebView_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
-		{
- 			throw new NotImplementedException();
-		}
-
-		private void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void WebView_UnsafeContentWarningDisplaying(WebView sender, object args)
-		{
-			throw new NotImplementedException();
-		}
 
 		private void OnUserDataUpdated(object sender, UserData userData)
         {

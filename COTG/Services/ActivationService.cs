@@ -78,8 +78,8 @@ namespace COTG.Services
 
         private async Task InitializeAsync()
         {
-            await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
-            await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
+            // TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
+            // TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
             await WindowManagerService.Current.InitializeAsync();
         }
@@ -107,7 +107,7 @@ namespace COTG.Services
         private async Task StartupAsync()
         {
             // TODO WTS: This is a sample to demonstrate how to add a UserActivity. Please adapt and move this method call to where you consider convenient in your app.
-            await UserActivityService.AddSampleUserActivity();
+            // TODO restore       await UserActivityService.AddSampleUserActivity();
             await ThemeSelectorService.SetRequestedThemeAsync();
 
             // TODO WTS: Configure and enable Azure Notification Hub integration.
@@ -115,17 +115,17 @@ namespace COTG.Services
             //  2. Uncomment the following line (an exception will be thrown if it is executed and the above information is not provided).
             // await Singleton<HubNotificationsService>.Instance.InitializeAsync().ConfigureAwait(false);
             Singleton<LiveTileService>.Instance.SampleUpdate();
-            await FirstRunDisplayService.ShowIfAppropriateAsync();
-            await WhatsNewDisplayService.ShowIfAppropriateAsync();
+            // TODO restore     await FirstRunDisplayService.ShowIfAppropriateAsync();
+            // TODO restore        await WhatsNewDisplayService.ShowIfAppropriateAsync();
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
-            yield return Singleton<LiveTileService>.Instance;
-            yield return Singleton<HubNotificationsService>.Instance;
+            // TODO restore        yield return Singleton<LiveTileService>.Instance;
+            // TODO restore     yield return Singleton<HubNotificationsService>.Instance;
             yield return Singleton<ToastNotificationsService>.Instance;
             yield return Singleton<ShareTargetActivationHandler>.Instance;
-            yield return Singleton<BackgroundTaskService>.Instance;
+            // TODO restore    yield return Singleton<BackgroundTaskService>.Instance;
             yield return Singleton<SuspendAndResumeService>.Instance;
             yield return Singleton<WebToAppLinkActivationHandler>.Instance;
             yield return Singleton<SchemeActivationHandler>.Instance;

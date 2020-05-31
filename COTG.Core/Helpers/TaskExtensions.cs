@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 
 namespace COTG.Core.Helpers
 {
-    public static class TaskExtensions
+	/// <summary>
+	/// The task extensions.
+	/// </summary>
+	public static class TaskExtensions
     {
         public static void FireAndForget(this Task task)
         {

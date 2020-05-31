@@ -9,3 +9,12 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# PropertyDocumentationHeader: The property must have a documentation header.
+dotnet_diagnostic.PropertyDocumentationHeader.severity = none
+
+# MethodDocumentationHeader: The method must have a documentation header.
+dotnet_diagnostic.MethodDocumentationHeader.severity = none
+
+# Default severity for analyzer diagnostics with category 'DocumentationHeader'
+dotnet_analyzer_diagnostic.category-DocumentationHeader.severity = none
