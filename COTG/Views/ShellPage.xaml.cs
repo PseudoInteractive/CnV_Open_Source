@@ -28,6 +28,7 @@ namespace COTG.Views
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 
+        public Frame shellFrame;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
         private UserData _user;
@@ -84,7 +85,6 @@ namespace COTG.Views
 
         private void Initialize()
         {
-            NavigationService.Frame = shellFrame;
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
             NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
@@ -96,6 +96,17 @@ namespace COTG.Views
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
+
+            await JSClient.Initialize(panel);
+            shellFrame = new Frame();
+         //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
+            RelativePanel.SetAlignRightWithPanel(shellFrame, true);
+            RelativePanel.SetAlignTopWithPanel(shellFrame, true);
+            RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
+            Canvas.SetZIndex(shellFrame, 3);
+            panel.Children.Add(shellFrame);
+            NavigationService.Frame = shellFrame;
+
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
             KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
@@ -103,13 +114,9 @@ namespace COTG.Views
             IsLoggedIn = IdentityService.IsLoggedIn();
             IsAuthorized = IsLoggedIn && IdentityService.IsAuthorized();
             User = await UserDataService.GetUserAsync();
-
-            shellFrame.Background = null;
-            await JSClient.Initialize(panel);
-           
         }
 
-		private void OnUserDataUpdated(object sender, UserData userData)
+        private void OnUserDataUpdated(object sender, UserData userData)
         {
             User = userData;
         }
@@ -146,6 +153,10 @@ namespace COTG.Views
             {
                 NavigationService.GoBack();
             }
+        }
+        void TestGet(object sender, RoutedEventArgs e)
+        {
+            JSClient.TestGet();
         }
 
         private async void OnUserProfile(object sender, RoutedEventArgs e)

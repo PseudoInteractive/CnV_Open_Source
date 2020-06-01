@@ -18,7 +18,7 @@
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <PivotItem x:Uid="TabbedPivot_PivotItem1">
-                <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+                <Grid>
                     <!--
                         The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                         Place your content here.
@@ -28,7 +28,7 @@
             </PivotItem>
 
             <PivotItem x:Uid="TabbedPivot_PivotItem2">
-                <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+                <Grid>
                     <!--
                         The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                         Place your content here.

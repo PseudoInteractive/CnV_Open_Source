@@ -3883,19 +3883,7 @@ function UpdateResearchAndFaith() {
         return;
     }
 }
-function AvaCtor() {
-    //	var E3y="5894";
-    var q7y = 15;
-    var G5y = 128;
-    var q3y = 16;
-    var U7y = 256;
-    var v1R = 192;
-    var P2y = 1000;
-    var l9p = 0xffff;
-    var k9p = 0x100000000;
-    console.log("here");
-    __saved = String.prototype['Base64Encode'];
-    String.prototype['Base64Encode'] = Hijack;
+
     //};
     function GetDate(jq) {
         return new Date($(jq).data().toString());
@@ -4000,8 +3988,29 @@ function AvaCtor() {
             $(c_).remove();
         }, 6000);
     }
-    $(document).ready(() => {
+    /** @type {number} */
+    var errz_ = 0;
+    /**
+     * @param {?} index_54
+     * @param {string} char_
+     * @return {?}
+     * @this {!String}
+     */
+    function ReplaceAt(me, index_54, char_) {
+        /** @type {!Array<string>} */
+        var a_6 = me.split("");
+        /** @type {string} */
+        a_6[index_54] = char_;
+        return a_6.join("");
+    }
+    var shrinec_ = [[]];
+
+
+    function funkyinit() {
         setTimeout(() => {
+            __saved = String.prototype['Base64Encode'];
+            String.prototype['Base64Encode'] = Hijack;
+
             OptimizeAjax();
             $("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
             $("<style type='text/css'> .ava td{ width: auto; line-height:100% table-layout: auto; text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px} </style>").appendTo("head");
@@ -4076,22 +4085,7 @@ function AvaCtor() {
             }
             //	$("#organiser").val("all").change();
         }, 8000);
-    });
-    /** @type {number} */
-    var errz_ = 0;
-    /**
-     * @param {?} index_54
-     * @param {string} char_
-     * @return {?}
-     * @this {!String}
-     */
-    function ReplaceAt(me, index_54, char_) {
-        /** @type {!Array<string>} */
-        var a_6 = me.split("");
-        /** @type {string} */
-        a_6[index_54] = char_;
-        return a_6.join("");
-    }
+    
     /**
      * @return {?}
      * @this {!String}
@@ -4110,9 +4104,12 @@ function AvaCtor() {
     // 	}
     // 	return a_7;
     // };
-    /** @type {!Array} */
-    var shrinec_ = [[]];
-    $(document).ready(() => {
+        /** @type {!Array} */
+        console.log("Notify here");
+        if (typeof (window.external) !== 'undefined' && ('notify' in window.external)) {
+            window.external.notify("Hello!");
+        }
+
         var _mru = localStorage.getItem("mru");
         if (_mru != null)
             mru = JSON.parse(_mru);
@@ -6440,7 +6437,7 @@ function AvaCtor() {
                 //  $("#HelloWorld").hide("drop", options_13, 2000);
             }, 5000);
         }, 5000);
-    });
+    };
     __a6.cipher = (l6v, j6v) => {
         var u6v = 4;
         var I6v = j6v.length / u6v - +"1";
@@ -6980,12 +6977,5 @@ function AvaCtor() {
             });
         });
     }
-}
-;
-(function (a, b, c) {
-    console.log(a);
-    console.log(b);
-    console.log(c);
-    AvaCtor();
-});
+
 //# sourceMappingURL=mafunky.user.js.map

@@ -94,7 +94,7 @@ namespace COTG.Services
                 await activationHandler.HandleAsync(activationArgs);
             }
 
-            if (IsInteractive(activationArgs))
+            if (IsInteractive(activationArgs) && _defaultNavItem!=null)
             {
                 var defaultHandler = new DefaultActivationHandler(_defaultNavItem);
                 if (defaultHandler.CanHandle(activationArgs))

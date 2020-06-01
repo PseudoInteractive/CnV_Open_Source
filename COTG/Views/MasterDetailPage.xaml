@@ -75,8 +75,11 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
+	<Page.Background>
+		<StaticResource ResourceKey="Acryllic"/>
+	</Page.Background>
 
-    <Grid x:Name="ContentArea">
+	<Grid x:Name="ContentArea">
         <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup>
                     <VisualState>
@@ -94,7 +97,7 @@
             x:Name="MasterDetailsViewControl"
             x:Uid="MasterDetail"
             BackButtonBehavior="Automatic"
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+            Background="{StaticResource Acryllic}"
             BorderBrush="Transparent"
             DetailsTemplate="{StaticResource DetailsTemplate}"
             ItemsSource="{x:Bind SampleItems}"
