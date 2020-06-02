@@ -23,10 +23,19 @@ namespace COTG.Models
 
         public AppBar()
         {
-            this.InitializeComponent();
+        //    this.Init();
 
         }
-       
+        public void TestPost(object o, RoutedEventArgs e)
+        {
+            JSClient.TestGet();
+        }
+
+        public void Refresh(object o, RoutedEventArgs e)
+        {
+            JSClient.Refresh(o,e);
+
+        }
     }
 
 }

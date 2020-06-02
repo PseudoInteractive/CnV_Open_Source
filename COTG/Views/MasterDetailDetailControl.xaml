@@ -11,9 +11,9 @@
         Name="ForegroundElement"
         Padding="{StaticResource DetailPageMargin}"
         HorizontalAlignment="Stretch"
-        Background="{StaticResource Acryllic}"
+        Background="{x:Null}"
         VerticalScrollMode="Enabled">
-        <StackPanel HorizontalAlignment="Left">
+        <StackPanel HorizontalAlignment="Left" Background="{StaticResource Acryllic}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <FontIcon
                     HorizontalAlignment="Center"
@@ -26,7 +26,7 @@
                     Text="{x:Bind MasterMenuItem.Company, Mode=OneWay}"
                     Style="{ThemeResource TitleTextBlockStyle}" />
             </StackPanel>
-            <StackPanel Name="block" Padding="0,15,0,0">
+            <StackPanel Name="block" Padding="0,15,0,0" Background="{StaticResource Acryllic}">
                 <TextBlock Style="{StaticResource DetailSubTitleStyle}" Text="Status" />
                 <TextBlock Style="{StaticResource DetailBodyBaseMediumStyle}" Text="{x:Bind MasterMenuItem.Status, Mode=OneWay}" />
                 <TextBlock

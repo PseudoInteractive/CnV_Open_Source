@@ -51,6 +51,12 @@ namespace COTG
 
 		static void AddDefaultHeaders(HttpRequestHeaderCollection headers)
         {
+            headers.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
+           // headers.TryAppendWithoutValidation("Content-Type", @"application/x-www-form-urlencoded; charset=UTF-8");
+          //  headers.TryAppendWithoutValidation("pp-ss", "0");
+         //   headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
+         //   headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+
         }
 
         internal async static Task Initialize(RelativePanel panel)
@@ -59,6 +65,9 @@ namespace COTG
             headers.TryAppendWithoutValidation("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
             headers.TryAppendWithoutValidation("pp-ss", "0");
             headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
+            headers.Append("X-Requested-With", "XMLHttpRequest");
+            headers.Append("X-Requested-With", "XMLHttpRequest");
+
             defaultHeaders = headers;
               view = new WebView(WebViewExecutionMode.SeparateThread);
             view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
@@ -85,6 +94,13 @@ namespace COTG
             refreshAccelerator.Invoked += (_, __) => view?.Refresh();
 
 
+        }
+        public static void Refresh(object ob,RoutedEventArgs args)
+        {
+            if (view == null)
+                return;
+            view.Refresh();
+            Services.NavigationService.Navigate<Views.MainPage>();
         }
 
         private static async Task AddJSPluginAsync()
@@ -133,10 +149,12 @@ namespace COTG
                 await AddJSPluginAsync();
             }
         }
-
+        static System.Text.Json.JsonDocument creds;
         static private void View_ScriptNotify(object sender, NotifyEventArgs e)
         {
             Log($"Notify: {e.CallingUri} {e.Value} {sender}");
+            creds = System.Text.Json.JsonDocument.Parse(e.Value);
+            Log(creds.ToString());
         }
 
         static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

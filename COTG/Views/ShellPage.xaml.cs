@@ -27,7 +27,7 @@ namespace COTG.Views
     {
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
-
+        static public ShellPage instance;
         public Frame shellFrame;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
@@ -35,7 +35,6 @@ namespace COTG.Views
         private bool _isBusy;
         private bool _isLoggedIn;
         private bool _isAuthorized;
-        public static WebView webView;
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
@@ -78,6 +77,7 @@ namespace COTG.Views
 
         public ShellPage()
         {
+            instance = this;
             InitializeComponent();
             DataContext = this;
             Initialize();
@@ -98,13 +98,14 @@ namespace COTG.Views
         {
 
             await JSClient.Initialize(panel);
-            shellFrame = new Frame();
+            shellFrame = new Frame() { Background = null };
          //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
             RelativePanel.SetAlignRightWithPanel(shellFrame, true);
             RelativePanel.SetAlignTopWithPanel(shellFrame, true);
             RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
             Canvas.SetZIndex(shellFrame, 3);
             panel.Children.Add(shellFrame);
+            panel.Background = null;
             NavigationService.Frame = shellFrame;
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
@@ -230,7 +231,7 @@ namespace COTG.Views
         {
             if (args.IsSettingsInvoked)
             {
-                NavigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
+                NavigationService.Navigate< SettingsPage>( null, args.RecommendedNavigationTransitionInfo);
                 return;
             }
 
@@ -276,6 +277,19 @@ namespace COTG.Views
             storage = value;
             OnPropertyChanged(propertyName);
         }
+
+
+        public void TestPost(object o, RoutedEventArgs e)
+        {
+            JSClient.TestGet();
+        }
+
+        public void Refresh(object o, RoutedEventArgs e)
+        {
+            JSClient.Refresh(o, e);
+
+        }
+
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

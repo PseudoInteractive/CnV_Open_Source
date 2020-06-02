@@ -6,12 +6,11 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:COTG.Behaviors"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    xmlns:winuib="using:Microsoft.UI.Xaml"
     xmlns:helpers="using:COTG.Helpers"
     xmlns:views="using:COTG.Views"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
-    xmlns:Custom1="using:COTG"
+    xmlns:Models="using:COTG.Models"
     x:Class="COTG.Views.ShellPage"
     Loaded="OnLoaded"
     mc:Ignorable="d">
@@ -31,20 +30,10 @@
         ExpandedModeThresholdWidth="1280"
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.ContextFlyout>
-            <winui:CommandBarFlyout>
-                <AppBarButton Content="Post" ScrollViewer.HorizontalScrollBarVisibility="Auto"  >
-                    <AppBarButton.Command>
-                        <XamlUICommand Description="POST" >
-                            <XamlUICommand.Command>
-                                <StandardUICommand Kind="Play"/>
-                            </XamlUICommand.Command>
-                            <XamlUICommand.IconSource>
-                                <SymbolIconSource Symbol="Play"/>
-                            </XamlUICommand.IconSource>
-                        </XamlUICommand>
-                    </AppBarButton.Command>
-                </AppBarButton>
-            </winui:CommandBarFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem Click="TestPost" Text="TestPost" />
+                <MenuFlyoutItem Click="Refresh"  Text="Refresh" AccessKey="F5" />
+            </MenuFlyout>
         </winui:NavigationView.ContextFlyout>
         <winui:NavigationView.MenuItems>
             <!--
@@ -121,6 +110,7 @@
         </i:Interaction.Behaviors>
         <winui:NavigationView.PaneFooter>
             <Grid>
+                <Models:AppBar x:Name="appBar" />
                 <Button
                     x:Uid="Shell_UserInfoButton"
                     Padding="0" Margin="0"

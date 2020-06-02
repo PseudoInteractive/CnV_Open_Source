@@ -12,7 +12,8 @@
     <AppBarButton Icon="Sort" IsCompact="True" ToolTipService.ToolTip="Special">
         <AppBarButton.Flyout>
             <MenuFlyout>
-                
+               <MenuFlyoutItem Click="TestPost" Text="TestPost" />
+                <MenuFlyoutItem Click="Refresh"  Text="Refresh" AccessKey="F5" />
             </MenuFlyout>
         </AppBarButton.Flyout>
     </AppBarButton>
