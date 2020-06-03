@@ -97,7 +97,7 @@ namespace COTG.Views
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            await JSClient.Initialize(panel);
+            JSClient.Initialize(panel);
             shellFrame = new Frame() { Background = null };
          //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
             RelativePanel.SetAlignRightWithPanel(shellFrame, true);

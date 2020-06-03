@@ -9,6 +9,7 @@ using Microsoft.AppCenter.Crashes;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace COTG
@@ -25,6 +26,7 @@ namespace COTG
         public App()
         {
             InitializeComponent();
+            Debug.coreWindow = CoreWindow.GetForCurrentThread();
 
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;

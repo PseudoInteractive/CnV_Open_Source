@@ -1,0 +1,51 @@
+{
+  "theme": "moonstone",
+  "pluginEnabledStatus": {
+    "File explorer": true,
+    "Search": true,
+    "Quick switcher": true,
+    "Graph view": true,
+    "Backlinks": true,
+    "Command palette": true,
+    "Markdown format importer": true,
+    "Word count": true,
+    "Tag pane": true,
+    "Page preview": true,
+    "Slides": true,
+    "Open with default app": true
+  },
+  "isSidebarCollapsed": false,
+  "isRightSidedockCollapsed": true,
+  "lastOpenSidebarTab": "File explorer",
+  "workspaceLayout": {
+    "id": "3cc19535ef33eb77",
+    "type": "split",
+    "dimension": null,
+    "direction": "vertical",
+    "children": [
+      {
+        "id": "80e43ed395d87b48",
+        "type": "leaf",
+        "dimension": null,
+        "active": true,
+        "master": "",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Browsers.md",
+            "mode": "source"
+          }
+        }
+      }
+    ]
+  },
+  "showLineNumber": true,
+  "foldIndent": true,
+  "foldHeading": true,
+  "lastOpenFiles": [
+    "Browsers.md",
+    "Crown of the Gods.md",
+    "Untitled.md",
+    "Crow of the Gods.md"
+  ]
+}

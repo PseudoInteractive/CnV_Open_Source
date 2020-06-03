@@ -59,13 +59,12 @@ namespace COTG
 
         }
 
-        internal async static Task Initialize(RelativePanel panel)
+        internal static void Initialize(RelativePanel panel)
         {
             var headers = httpClient.DefaultRequestHeaders;
             headers.TryAppendWithoutValidation("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
             headers.TryAppendWithoutValidation("pp-ss", "0");
             headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
-            headers.Append("X-Requested-With", "XMLHttpRequest");
             headers.Append("X-Requested-With", "XMLHttpRequest");
 
             defaultHeaders = headers;
@@ -105,12 +104,25 @@ namespace COTG
 
         private static async Task AddJSPluginAsync()
         {
-            var asm = typeof(JSClient).Assembly;
-            using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.mafunky.js"))
-            using (StreamReader reader = new StreamReader(stream))
+            try
             {
-                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
-                await view.InvokeScriptAsync("funkyinit", null);
+                var asm = typeof(JSClient).Assembly;
+                using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
+                {
+
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        Log("execute");
+                        await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
+                        Log("funky");
+                        await view.InvokeScriptAsync("avactor", null);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
             }
         }
 
@@ -152,9 +164,17 @@ namespace COTG
         static System.Text.Json.JsonDocument creds;
         static private void View_ScriptNotify(object sender, NotifyEventArgs e)
         {
-            Log($"Notify: {e.CallingUri} {e.Value} {sender}");
-            creds = System.Text.Json.JsonDocument.Parse(e.Value);
-            Log(creds.ToString());
+            try
+            {
+                Log($"Notify: {e.CallingUri} {e.Value} {sender}");
+                creds = System.Text.Json.JsonDocument.Parse(e.Value);
+                Log(creds.ToString());
+            }
+            catch (Exception ex)
+            {
+
+                Log(ex);
+            }
         }
 
         static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

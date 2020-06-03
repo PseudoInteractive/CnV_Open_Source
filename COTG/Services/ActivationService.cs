@@ -43,9 +43,8 @@ namespace COTG.Services
                 // take into account that the splash screen is shown while this code runs.
                 await InitializeAsync();
                 UserDataService.Initialize();
-                IdentityService.InitializeWithAadAndPersonalMsAccounts();
-                await IdentityService.AcquireTokenSilentAsync();
-
+                await IdentityService.InitializeWithAadAndPersonalMsAccounts();
+              
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active
                 if (Window.Current.Content == null)
