@@ -2107,13 +2107,14 @@ function __avatarAjaxDone(url, data) {
 function _pleaseNoMorePrefilters() { }
 function OptimizeAjax() {
     //	priorPrefilter
-    jQuery.ajaxPrefilter("nada", function avatarPrefilter(A7U, n7U, xhr) {
-        xhr.setRequestHeader("pp-ss", ppss);
+    jQuery.ajaxPrefilter((A7U, n7U, xhr) => {
+        //	xhr.setRequestHeader("pp-ss", ppss);
         if (ppdt['opt'][67] !== undefined) {
-            var cookie = ppdt['opt'][67].substring(0, 10);
+            let cookie = ppdt['opt'][67].substring(0, 10);
             xhr.setRequestHeader("Content-Encoding", cookie);
         }
     });
+    //jQuery.ajaxSetup({dataType:"nada" } )
     jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;
     ;
     /*
@@ -2217,10 +2218,6 @@ function UpdateResearchAndFaith() {
         return;
     }
 }
-var creds = {
-    header: null,
-    cookies: {},
-};
 function avactor() {
     //	var E3y="5894";
     var q7y = 15;
@@ -4775,14 +4772,23 @@ function avactor() {
         }, 5000);
         {
             console.log("Notify here");
+            let creds = {
+                token: "",
+                ppss: 0,
+                player: "",
+                pid: 0,
+                alliance: "",
+                s: "",
+                cookie: ""
+            };
             try {
-                let pairs = document.cookie.split(";");
-                creds.cookies = {};
-                for (var i = 0; i < pairs.length; i++) {
-                    var pair = pairs[i].split("=");
-                    creds.cookies[(pair[0] + '').trim()] = unescape(pair.slice(1).join('='));
-                }
-                creds.header = ppdt['opt'][67].substring(0, 10);
+                creds.cookie = document.cookie;
+                creds.token = ppdt['opt'][67].substring(0, 10);
+                creds.ppss = ppss;
+                creds.player = cotg.player.name();
+                creds.alliance = cotg.player.alliance();
+                creds.pid = ppdt.pid;
+                creds.s = s;
                 window['external']['notify'](JSON.stringify(creds));
             }
             catch (e) {

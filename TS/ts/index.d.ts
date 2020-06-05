@@ -6,3 +6,4 @@ declare var plDa : {
 	currcit: string;
 }
 declare var ppss;   
+declare var s;

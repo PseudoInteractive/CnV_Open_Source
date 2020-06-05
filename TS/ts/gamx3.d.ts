@@ -1,5 +1,6 @@
 declare function J0EE(): void;
 declare let ppdt: {
+    pid: number;
     clc: any;
     opt: any[];
     r: any;
@@ -7155,6 +7156,8 @@ interface Alliance {
     members(): [];
 }
 interface Player {
+    name(): string;
+    alliance(): string;
     research(): number[];
 }
 declare class Cotg {
