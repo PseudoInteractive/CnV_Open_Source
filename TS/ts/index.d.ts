@@ -5,3 +5,4 @@ declare var plDa : {
 	citstr: string;
 	currcit: string;
 }
+declare var ppss;   

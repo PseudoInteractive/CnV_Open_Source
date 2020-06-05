@@ -28,11 +28,12 @@ namespace COTG
         static HttpClient httpClient = new HttpClient();
         public const int world = 19;
         public static HttpRequestHeaderCollection defaultHeaders;
+       // IHttpContent content;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="JSClient"/> class.
-		/// </summary>
-		public JSClient()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JSClient"/> class.
+        /// </summary>
+        public JSClient()
 		{
 		}
 
@@ -51,7 +52,6 @@ namespace COTG
 
 		static void AddDefaultHeaders(HttpRequestHeaderCollection headers)
         {
-            headers.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
            // headers.TryAppendWithoutValidation("Content-Type", @"application/x-www-form-urlencoded; charset=UTF-8");
           //  headers.TryAppendWithoutValidation("pp-ss", "0");
          //   headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
@@ -61,39 +61,59 @@ namespace COTG
 
         internal static void Initialize(RelativePanel panel)
         {
+			try
+			{
+
             var headers = httpClient.DefaultRequestHeaders;
-            headers.TryAppendWithoutValidation("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+       //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
             headers.TryAppendWithoutValidation("pp-ss", "0");
-            headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
-            headers.Append("X-Requested-With", "XMLHttpRequest");
+            headers.Referer = new Uri($"https://w{world}.crownofthegods.com");
+            headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+            headers.TryAppendWithoutValidation("Origin", $"w{world}.crownofthegods.com");
+            headers.Accept.Append(new HttpMediaTypeWithQualityHeaderValue(@"application/json"));
+              defaultHeaders = headers;
+            }
+            catch (Exception e)
+            {
 
-            defaultHeaders = headers;
-              view = new WebView(WebViewExecutionMode.SeparateThread);
-            view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
-            view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
+                Log(e);
+            }
 
-            view.UnviewableContentIdentified += View_UnviewableContentIdentified;
-            view.ScriptNotify += View_ScriptNotify;
-            view.DOMContentLoaded += View_DOMContentLoaded;
-            view.NavigationFailed += View_NavigationFailed;
-            view.NavigationStarting += View_NavigationStarting;
-            view.NavigationCompleted += View_NavigationCompletedAsync;
-            view.PermissionRequested += View_PermissionRequested;
+			try
+			{
+				view = new WebView(WebViewExecutionMode.SeparateThread);
+				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
+				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
-            //   view.CacheMode = CacheMode.
-            RelativePanel.SetAlignLeftWithPanel(view, true);
-            RelativePanel.SetAlignRightWithPanel(view, true);
-            RelativePanel.SetAlignTopWithPanel(view, true);
-            RelativePanel.SetAlignBottomWithPanel(view, true);
-            Canvas.SetZIndex(view, 0);
-            panel.Children.Add(view);
-            view.Source = new Uri("https://www.crownofthegods.com");
+				view.UnviewableContentIdentified += View_UnviewableContentIdentified;
+				view.ScriptNotify += View_ScriptNotify;
+				view.DOMContentLoaded += View_DOMContentLoaded;
+				view.NavigationFailed += View_NavigationFailed;
+				view.NavigationStarting += View_NavigationStarting;
+				view.NavigationCompleted += View_NavigationCompletedAsync;
+				view.PermissionRequested += View_PermissionRequested;
 
-            refreshAccelerator = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
-            refreshAccelerator.Invoked += (_, __) => view?.Refresh();
+				//   view.CacheMode = CacheMode.
+				RelativePanel.SetAlignLeftWithPanel(view, true);
+				RelativePanel.SetAlignRightWithPanel(view, true);
+				RelativePanel.SetAlignTopWithPanel(view, true);
+				RelativePanel.SetAlignBottomWithPanel(view, true);
+				Canvas.SetZIndex(view, 0);
+				panel.Children.Add(view);
+				view.Source = new Uri("https://www.crownofthegods.com");
+
+				refreshAccelerator = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
+				refreshAccelerator.Invoked += (_, __) => view?.Refresh();
+
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
 
 
-        }
+
+		}
         public static void Refresh(object ob,RoutedEventArgs args)
         {
             if (view == null)
@@ -116,7 +136,7 @@ namespace COTG
                         await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
                         Log("funky");
                         await view.InvokeScriptAsync("avactor", null);
-                    }
+			        }
                 }
 
             }
@@ -126,7 +146,12 @@ namespace COTG
             }
         }
 
-        static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
+		private static void View_WebResourceRequested(WebView sender, WebViewWebResourceRequestedEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
+
+		static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {
             var pr = args.PermissionRequest;
             Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
@@ -162,13 +187,26 @@ namespace COTG
             }
         }
         static System.Text.Json.JsonDocument creds;
-        static private void View_ScriptNotify(object sender, NotifyEventArgs e)
+        static async private void View_ScriptNotify(object sender, NotifyEventArgs e)
         {
             try
             {
                 Log($"Notify: {e.CallingUri} {e.Value} {sender}");
                 creds = System.Text.Json.JsonDocument.Parse(e.Value);
                 Log(creds.ToString());
+
+                var headers = httpClient.DefaultRequestHeaders;
+                var root = creds.RootElement;
+                var cookies = root.GetProperty("cookies");
+                var cookiesToSend = headers.Cookie;
+                foreach (var c in cookies.EnumerateObject())
+                    cookiesToSend.Add( new HttpCookiePairHeaderValue(c.Name, c.Value.GetString() ) );
+
+                headers.TryAppendWithoutValidation("Content-Encoding", root.GetProperty("header").GetString());
+
+                Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+              
             }
             catch (Exception ex)
             {
@@ -195,18 +233,22 @@ namespace COTG
         public static async void TestGet()
         {
             Log("TestGet");
-            var req = new HttpRequestMessage(HttpMethod.Post, new Uri( new Uri($"https://w{world}.crownofthegods.com"), "overview/citover.php"));
-            AddDefaultHeaders(req.Headers);
-            var result = await httpClient.TrySendRequestAsync(req);
-            var resp = result.ResponseMessage;
-            if(resp.IsSuccessStatusCode )
+            //     using var req = new HttpRequestMessage(HttpMethod.Post, new Uri( new Uri($"https://w{world}.crownofthegods.com"), "poll2.php"));
+
+            //            AddDefaultHeaders(req.Headers);
+
+            var content = new HttpFormUrlEncodedContent(new[] { new KeyValuePair<string, string>("a", "a") } ); //<--Extension method here
+      
+
+            using var resp = await httpClient.PostAsync(new Uri(new Uri($"https://w{world}.crownofthegods.com"), "poll2.php"), content);
+            Log($"Error: {resp.StatusCode}");
+            if (resp.IsSuccessStatusCode )
             {
                 var str = await resp.Content.ReadAsStringAsync();
 
                 Log(str);
             }
             else {
-                Log($"Error: {result.ExtendedError}");
 
                     };
 

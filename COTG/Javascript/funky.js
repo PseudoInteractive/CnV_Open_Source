@@ -47,7 +47,7 @@ function OverviewPost(url, post, onSuccess) {
         method: "POST",
         headers: new Headers({
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "pp-ss": "0",
+            "pp-ss": ppss,
             referer: hostOverview,
         }),
         //  redirect: 'follow',
@@ -65,7 +65,7 @@ function OverviewFetch(url, post) {
         method: "POST",
         headers: new Headers({
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "pp-ss": "0",
+            "pp-ss": ppss,
             referer: hostOverview,
         }),
         //  redirect: 'follow',
@@ -1929,7 +1929,7 @@ class DoneWrapper {
             throw "waiting";
         defaultHeaders = [
             ["Content-Encoding", cookie],
-            ['pp-ss', '0'],
+            ['pp-ss', ppss],
             ['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
             ['X-Requested-With', 'XMLHttpRequest']
         ];
@@ -2104,27 +2104,32 @@ function __avatarAjaxDone(url, data) {
         }
     }
 }
-function _ajaxPrefilter() { }
-function avatarPrefilter(A7U, n7U, xhr) {
-    console.log(xhr);
-    //				if (!r7U.crossDomain && ppdt['opt'][67]!== undefined )
-    //					r7U.setRequestHeader(i011.S55(+'3885'), ppdt['opt'][67].substring(0,7) + _s("3150")); // + 7as?
-    //			});
-    //		
-}
-var __ajax;
+function _pleaseNoMorePrefilters() { }
 function OptimizeAjax() {
-    __ajax = window['$']['ajax'];
-    try {
-        DoneWrapper.setup();
-    }
-    catch (e) {
-        setTimeout(OptimizeAjax, 1000);
-        return;
-    }
-    window['$']['ajax'] = avatarPost;
+    //	priorPrefilter
+    jQuery.ajaxPrefilter("nada", function avatarPrefilter(A7U, n7U, xhr) {
+        xhr.setRequestHeader("pp-ss", ppss);
+        if (ppdt['opt'][67] !== undefined) {
+            var cookie = ppdt['opt'][67].substring(0, 10);
+            xhr.setRequestHeader("Content-Encoding", cookie);
+        }
+    });
+    jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;
+    ;
+    /*
+    __ajax=window['$']['ajax'];
+        try {
+            DoneWrapper.setup();
+        
+        } catch(e) {
+            setTimeout(OptimizeAjax,1000);
+            return;
+
+        }
+    window['$']['ajax']=avatarPost;
+    */
     //	$.['post']=avatarPost;
-    jQuery.ajaxPrefilter = _ajaxPrefilter;
+    //jQuery.ajaxPrefilter=_ajaxPrefilter;
     //_ajaxPrefilter('text',avatarPrefilter)
     /*		function Inner() {
                 try {
@@ -5173,7 +5178,7 @@ function avactor() {
         $("#ndeftable td").css("height", "25px");
         /** @type {(Element|null)} */
         var newTableObject_ = document.getElementById("ndeftable");
-        sorttable.makeSortable(newTableObject_);
+        //		sorttable.makeSortable(newTableObject_);
     }
     /**
      * @param {!Object} t_1
@@ -5274,7 +5279,7 @@ function avactor() {
         $("#nofftable td").css("height", "26px");
         /** @type {(Element|null)} */
         var newTableObject_1 = document.getElementById("nofftable");
-        sorttable.makeSortable(newTableObject_1);
+        //	sorttable.makeSortable(newTableObject_1);
         troopmail_.sort((a_2, b_3) => {
             return b_3[1] - a_2[1];
         });

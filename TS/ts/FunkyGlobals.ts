@@ -52,7 +52,7 @@ function OverviewPost(url: string, post?: object, onSuccess?: (a) => void ) {
 			method: "POST",
 			headers: new Headers ({
 				"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-				"pp-ss": "0",
+				"pp-ss": ppss,
 				referer: hostOverview, // may be redundant
 				//  'X-Requested-With':'XMLHttpRequest',
 			})
@@ -77,7 +77,7 @@ function OverviewFetch(url: string, post?: object): Promise<string> {
 			method: "POST",
 			headers: new Headers({
 				"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-				"pp-ss": "0",
+				"pp-ss": ppss,
 				referer: hostOverview, // may be redundant
 				//  'X-Requested-With':'XMLHttpRequest',
 			})

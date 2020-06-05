@@ -156,7 +156,13 @@
     <PackageReference Include="System.Net.Http.Json">
       <Version>5.0.0-preview.4.20251.6</Version>
     </PackageReference>
+    <PackageReference Include="System.Net.Http.WinHttpHandler">
+      <Version>5.0.0-preview.4.20251.6</Version>
+    </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
+      <Version>5.0.0-preview.4.20251.6</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.AccessControl">
       <Version>5.0.0-preview.4.20251.6</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
