@@ -17,16 +17,16 @@ namespace COTG.Services
 
         internal static async Task ShowIfAppropriateAsync()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, async () =>
-                {
-                    if (SystemInformation.Instance.IsAppUpdated && !shown)
-                    {
-                        //shown = true;
-                        //var dialog = new WhatsNewDialog();
-                        //await dialog.ShowAsync();
-                    }
-                });
+            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+            //    CoreDispatcherPriority.Normal, async () =>
+            //    {
+            //        if (SystemInformation.Instance.IsAppUpdated && !shown)
+            //        {
+            //            //shown = true;
+            //            //var dialog = new WhatsNewDialog();
+            //            //await dialog.ShowAsync();
+            //        }
+            //    });
         }
     }
 }

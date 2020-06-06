@@ -31,16 +31,16 @@ namespace COTG.Services
 
         public static async Task SetRequestedThemeAsync()
         {
-            foreach (var view in CoreApplication.Views)
-            {
-                await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    if (Window.Current.Content is FrameworkElement frameworkElement)
-                    {
-                        frameworkElement.RequestedTheme = Theme;
-                    }
-                });
-            }
+            //foreach (var view in CoreApplication.Views)
+            //{
+            //    await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //    {
+            //        if (Window.Current.Content is FrameworkElement frameworkElement)
+            //        {
+            //            frameworkElement.RequestedTheme = Theme;
+            //        }
+            //    });
+            //}
         }
 
         private static async Task<ElementTheme> LoadThemeFromSettingsAsync()

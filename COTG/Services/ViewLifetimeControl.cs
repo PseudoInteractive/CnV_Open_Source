@@ -24,9 +24,6 @@ namespace COTG.Services
 
         private event ViewReleasedHandler InternalReleased;
 
-        // Necessary to communicate with the window
-        public CoreDispatcher Dispatcher { get; private set; }
-
         // This id is used in all of the ApplicationViewSwitcher and ProjectionManager APIs
         public int Id { get; private set; }
 
@@ -63,7 +60,6 @@ namespace COTG.Services
 
         private ViewLifetimeControl(CoreWindow newWindow)
         {
-            Dispatcher = newWindow.Dispatcher;
             _window = newWindow;
             Id = ApplicationView.GetApplicationViewIdForWindow(_window);
             RegisterForEvents();
@@ -113,7 +109,8 @@ namespace COTG.Services
                     refCountCopy = --_refCount;
                     if (refCountCopy == 0)
                     {
-                        Dispatcher.RunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
+                        var d = _window.Dispatcher;
+                        d.RunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
                     }
                 }
             }

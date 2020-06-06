@@ -46,7 +46,7 @@
 
       <Extensions>
         <uap:Extension Category="windows.shareTarget">
-          <uap:ShareTarget>
+          <uap:ShareTarget Description="Cotg">
             <uap:SupportedFileTypes>
               <uap:FileType>.jpg</uap:FileType>
               <uap:FileType>.png</uap:FileType>
@@ -69,7 +69,7 @@
             </uap5:AppExecutionAlias>
           </uap5:Extension>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="wtsapp">
+          <uap:Protocol Name="cptg">
             <uap:Logo>Assets\Icon.png</uap:Logo>
             <uap:DisplayName>COTG</uap:DisplayName>
           </uap:Protocol>
@@ -84,6 +84,8 @@
   <Capabilities>
     <Capability Name="internetClientServer" />
     <Capability Name="internetClient" />
+    <Capability Name="codeGeneration"/>
+    <Capability Name="privateNetworkClientServer"/>
   </Capabilities>
 
   <genTemplate:Metadata>

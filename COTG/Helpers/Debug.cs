@@ -14,7 +14,7 @@ namespace COTG
     /// </summary>
     public static class Debug
     {
-        public static CoreWindow coreWindow;
+        public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
         public static void Log( string  s)
 		{
             Trace.WriteLine(s);
@@ -28,7 +28,7 @@ namespace COTG
             Trace.WriteLine($"Exception\n\n:{s}");
             Trace.Flush();
             Trace.Write(new StackTrace(true));
-            await coreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => await (new MessageDialog(s, "Not Good").ShowAsync()) );
+            await new MessageDialog(s, "Not Good").ShowAsync() ;
         }
     }
 }
