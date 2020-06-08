@@ -15,6 +15,7 @@ using Windows.UI.Xaml;
 using System.Windows.Input;
 using System.Net.WebSockets;
 using Windows.System;
+using System.Text.Json;
 
 namespace COTG
 {
@@ -23,12 +24,12 @@ namespace COTG
 	/// </summary>
 	public class JSClient : ICommand
     {
+        static JsonDocument jso;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
         static HttpBaseProtocolFilter httpFilter;
         static HttpClient httpClient;
-        static bool sendToggle;
         public static int world = 19;
         static Regex urlMatch = new Regex(@"w(\d\d).crownofthegods.com");
         static Uri httpsHost;
@@ -93,7 +94,7 @@ namespace COTG
 				view.NavigationStarting += View_NavigationStarting;
 				view.NavigationCompleted += View_NavigationCompletedAsync;
 				view.PermissionRequested += View_PermissionRequested;
-                view.WebResourceRequested += View_WebResourceRequested1;
+              //  view.WebResourceRequested += View_WebResourceRequested1;
 
 				//   view.CacheMode = CacheMode.
 				RelativePanel.SetAlignLeftWithPanel(view, true);
@@ -129,6 +130,7 @@ namespace COTG
                  //   req.Content.BufferAllAsync();
                     Log($"Post: {req.RequestUri.ToString()} {req.Headers.ToString()} {req.TransportInformation?.ToString()} {req.Properties?.ToString()} {req.Content?.ToString()}");
                     anyPost = req;
+                    await COTG.Services.RestAPI.HandleResonse(args.Request.RequestUri,args.Response);
 
                 }
 
@@ -227,7 +229,7 @@ namespace COTG
 
                         httpsHost = new Uri($"https://{args.Uri.Host}");
                      //   httpClient = new HttpClient(httpFilter); // reset
-                        httpClient = new HttpClient(httpFilter); // reset
+                        httpClient = new HttpClient(); // reset
                                                                  //                        var headers = httpClient.DefaultRequestHeaders;
                                                                  //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
                                                                  // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
@@ -371,9 +373,11 @@ namespace COTG
                 Log($"Error: {resp.RequestMessage.ToString()}");
                 if (resp.IsSuccessStatusCode)
                 {
-                    var str = await resp.Content.ReadAsStringAsync();
+                    var b = await resp.Content.ReadAsInputStreamAsync();
 
-                    Log(str);
+//                    jso = await JsonDocument.ParseAsync(b.ToString);
+
+                    Log(b.ToString());
                 }
                 else
                 {
