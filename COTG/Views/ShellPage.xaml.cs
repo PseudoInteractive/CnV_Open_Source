@@ -292,5 +292,11 @@ namespace COTG.Views
 
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private async void TestPost2(object sender, RoutedEventArgs e)
+        {
+            await RestAPI.regionView.Post();
+
+        }
     }
 }

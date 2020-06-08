@@ -7,12 +7,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using static System.Diagnostics.Debug;
+using System.Text.Json;
 //using System.Convert;
 //using Str8 = System.Utf8String;
 namespace COTG
 {
     public unsafe static class Aes
     {
+        static Aes()
+        {
+
+        }
+
+
         const int keySize = 256;
         static byte[] buffer = new byte[1024 * 1024 * 2];
         static Random random = new Random();
@@ -25,17 +32,17 @@ namespace COTG
             return s[index];
         }
 
-        public static int DateTimeNow()
+        static int DateTimeNow()
         {
             return (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
 
 
         }
-        public static int charCodeAt(this string s, int index)
+        static int charCodeAt(this string s, int index)
         {
             return s[index];
         }
-        public static string utf8Encode(this string a)
+        static string utf8Encode(this string a)
         {
             try
             {
@@ -44,12 +51,12 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                Debug.Log(e);
                 return a;
             }
 
         }
-        public static string utf8Decode(this string a)
+        static string utf8Decode(this string a)
         {
 
 
@@ -60,17 +67,17 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                Debug.Log(e);
                 return a;
             }
 
         }
-        public static byte[] base64Decode(this string a)
+        static byte[] base64Decode(this string a)
         {
             return (System.Convert.FromBase64String(a));
 
         }
-        public static string base64Encode(byte[] a, long length)
+        static string base64Encode(byte[] a, long length)
         {
             return (System.Convert.ToBase64String(a, 0, (int)length, Base64FormattingOptions.None));
 
@@ -364,6 +371,7 @@ namespace COTG
             var V2v = utf8Decode(sb.ToString());
             return V2v;
         }
-    }
+        
 
+    }
 }

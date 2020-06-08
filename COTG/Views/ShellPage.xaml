@@ -32,6 +32,7 @@
         <winui:NavigationView.ContextFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem Click="TestPost" Text="TestPost" />
+                <MenuFlyoutItem Click="TestPost2" Text="TestPost2" />
                 <MenuFlyoutItem Click="Refresh"  Text="Refresh" AccessKey="F5" />
             </MenuFlyout>
         </winui:NavigationView.ContextFlyout>
