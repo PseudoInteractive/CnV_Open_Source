@@ -298,5 +298,15 @@ namespace COTG.Views
             await RestAPI.regionView.Post();
 
         }
+        private async void TestGoCity(object sender, RoutedEventArgs e)
+        {
+            await RestAPI.goCity.Post();
+
+        }
+        private async void GetPPDT(object sender, RoutedEventArgs e)
+        {
+            await JSClient.GetPPDT();
+
+        }
     }
 }

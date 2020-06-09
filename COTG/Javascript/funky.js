@@ -2218,6 +2218,9 @@ function UpdateResearchAndFaith() {
         return;
     }
 }
+function getppdt() {
+    return JSON.stringify(ppdt);
+}
 function avactor() {
     //	var E3y="5894";
     var q7y = 15;
@@ -4779,7 +4782,8 @@ function avactor() {
                 pid: 0,
                 alliance: "",
                 s: "",
-                cookie: ""
+                cookie: "",
+                cid: 0
             };
             try {
                 creds.cookie = document.cookie;
@@ -4789,7 +4793,9 @@ function avactor() {
                 creds.alliance = cotg.player.alliance();
                 creds.pid = ppdt.pid;
                 creds.s = s;
-                window['external']['notify'](JSON.stringify(creds));
+                creds.cid = cid;
+                const wrapper = { jsvars: creds };
+                window['external']['notify'](JSON.stringify(wrapper));
             }
             catch (e) {
                 console.log("Notify failed");

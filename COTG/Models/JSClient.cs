@@ -24,7 +24,7 @@ namespace COTG
 	/// </summary>
 	public class JSClient : ICommand
     {
-        static JsonDocument jso;
+        static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
@@ -35,7 +35,7 @@ namespace COTG
         public static Uri httpsHost;
         static HttpRequestMessage anyPost;
         // IHttpContent content;
-        public struct JSVars
+        public class JSVars
         {
             public string token { get; set; }
             public int ppss { get; set; }
@@ -44,6 +44,20 @@ namespace COTG
             public string alliance { get; set; }
             public string s { get; set; }
             public string cookie { get; set; }
+            public int cid { get; set; }
+        };
+        public class JSCity
+        {
+            public int cid { get; set; }
+            public string name { get; set; }
+            public int player { get; set; }
+            public string notes { get; set; }
+        }
+
+        public struct NotifyMessage
+        {
+            public JSVars jsvars {get;set;}
+
         };
 
         public static JSVars jsVars;
@@ -176,10 +190,17 @@ namespace COTG
                 Log(e);
             }
         }
+        public static async Task GetPPDT()
+        {
+            var str = await view.InvokeScriptAsync("getppdt", null);
 
-	
+            Log(str);
+            ppdt = JsonDocument.Parse(str);
+            Log(ppdt.ToString());
+        }
 
-		static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
+
+        static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {
             var pr = args.PermissionRequest;
             Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
@@ -286,7 +307,8 @@ namespace COTG
             try
             {
                 Log($"Notify: {e.CallingUri} {e.Value} {sender}");
-                jsVars = System.Text.Json.JsonSerializer.Deserialize<JSVars>(e.Value);
+                var notify = System.Text.Json.JsonSerializer.Deserialize<NotifyMessage>(e.Value);
+                jsVars = notify.jsvars;
                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars) );
 
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;

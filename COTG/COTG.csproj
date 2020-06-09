@@ -216,6 +216,7 @@
     <Compile Include="EventHandlers\Ink\CopyPasteStrokesEventArgs.cs" />
     <Compile Include="EventHandlers\Ink\MoveStrokesEventArgs.cs" />
     <Compile Include="EventHandlers\Ink\RemoveEventArgs.cs" />
+    <Compile Include="Game\City.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />

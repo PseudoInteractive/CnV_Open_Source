@@ -7,3 +7,4 @@ declare var plDa : {
 }
 declare var ppss;   
 declare var s;
+declare var cid : number;

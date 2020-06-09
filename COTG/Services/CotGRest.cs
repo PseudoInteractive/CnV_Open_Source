@@ -85,7 +85,7 @@ namespace COTG.Services
 
         }
       
-        async public Task Post()
+        async public  Task Post()
         {
             try
             {
@@ -134,8 +134,8 @@ namespace COTG.Services
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-        static RestAPI __4 = new RestAPI("includes/gC.php", "X2U11s33S2375ccJx1e2");
-        public static RestAPI regionView = new rMp();
+        public static RestAPI goCity  = new gC();
+        public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         static RestAPI __7 = new RestAPI("includes/gWrd.php", "Addxddx5DdAxxer23752wz");
         static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");
@@ -159,8 +159,33 @@ namespace COTG.Services
         
 
         }
+    public class gC : RestAPI
+    {
+        int cid = 0;
+        public gC() : base("includes/gC.php", "X2U11s33S2375ccJx1e2")
+        {
 
-    
+        }
+        async public Task PostC(int _cid = 0)
+		{
+            cid = _cid;
+            await Post();
+            cid = 0;
+		}
+
+        public override string GetPostContent()
+        {
+            var encoded = Aes.Encode( (cid!=0?cid:JSClient.jsVars.cid).ToString(), secret);
+            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            return args;
+
+
+        }
+
+
+    }
+
+
 }
 
     
