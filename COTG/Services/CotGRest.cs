@@ -103,12 +103,14 @@ namespace COTG.Services
 
                 req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
 
-                var resp = await JSClient.httpClient.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
-                Log($"res: {resp.GetType()} {resp.StatusCode} {resp}");
+                var resp = await JSClient.httpClient.TrySendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+                Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
                 Log($"req: {resp.RequestMessage.ToString()}");
-                if (resp.IsSuccessStatusCode)
+                if (resp.ExtendedError != null)
+                    Log(resp.ExtendedError);
+                if (resp.Succeeded)
                 {
-                    await Accept(req.RequestUri, resp);
+                    await Accept(req.RequestUri, resp.ResponseMessage);
                     //var b = await resp.Content.ReadAsInputStreamAsync();
 
                     //                    jso = await JsonDocument.ParseAsync(b.ToString);
