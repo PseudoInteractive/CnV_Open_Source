@@ -174,9 +174,6 @@
     <PackageReference Include="System.Net.Http.Json">
       <Version>5.0.0-preview.4.20251.6</Version>
     </PackageReference>
-    <PackageReference Include="System.Net.Http.WinHttpHandler">
-      <Version>5.0.0-preview.4.20251.6</Version>
-    </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
       <Version>5.0.0-preview.4.20251.6</Version>
     </PackageReference>
@@ -220,6 +217,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Models\CityG.cs" />
     <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Helpers\Debug.cs" />
     <Compile Include="Helpers\DataRequestExtensions.cs" />
