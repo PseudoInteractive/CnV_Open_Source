@@ -39,15 +39,14 @@ namespace COTG.Models
             Log(context.Column.Name);
             Log(context.Column.Header);
             Log(base.CanExecute(parameter));
-			switch (context.Column.Header.ToString())
+            if(context.Column.Header != null )
+            switch (context.Column.Header.ToString())
 			{
                 case "xy": JSClient.ShowCity(cid); break;
                 case "name": JSClient.ChangeCity(cid); break;
           
 			};
-            //(context.Column.Header.ToString() == "xy")
-          //  _ = JSClient.ChangeCity(cid);
-
+ 
             if (base.CanExecute(parameter))
                 base.Execute(parameter);
 		

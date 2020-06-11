@@ -135,7 +135,9 @@ namespace COTG.Views
             IsLoggedIn = IdentityService.IsLoggedIn();
             IsAuthorized = IsLoggedIn && IdentityService.IsAuthorized();
             User = await UserDataService.GetUserAsync();
-           // panel.hor
+            // panel.hor
+            Services.NavigationService.Navigate<Views.MainPage>();
+
         }
 
         private void OnUserDataUpdated(object sender, UserData userData)

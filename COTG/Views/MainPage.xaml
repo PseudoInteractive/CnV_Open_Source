@@ -32,13 +32,6 @@
                               UserGroupMode="Disabled"
                               AutoGenerateColumns="False">
                         <tg:RadDataGrid.Columns>
-                            <tg:DataGridTemplateColumn SizeMode="Fixed" Width="40">
-                                <tg:DataGridTemplateColumn.CellContentTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Margin="10" IsChecked="{Binding HasRowDetails, Mode=TwoWay}" Click="OnCheckBoxClick"/>
-                                    </DataTemplate>
-                                </tg:DataGridTemplateColumn.CellContentTemplate>
-                            </tg:DataGridTemplateColumn>
                             <tg:DataGridTextColumn PropertyName="owner"/>
                             <tg:DataGridTextColumn PropertyName="alliance"/>
                             <tg:DataGridDateColumn PropertyName="lastAccessed"/>
@@ -51,6 +44,13 @@
                 <model:GridCellTapCommand />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
+                <tg:DataGridTemplateColumn SizeMode="Fixed" Width="40">
+                    <tg:DataGridTemplateColumn.CellContentTemplate>
+                        <DataTemplate>
+                            <CheckBox Margin="10" IsChecked="{Binding IsShowingRowDetails, Mode=TwoWay}" Click="OnCheckBoxClick"/>
+                        </DataTemplate>
+                    </tg:DataGridTemplateColumn.CellContentTemplate>
+                </tg:DataGridTemplateColumn>
                 <tg:DataGridTextColumn PropertyName="name" />
                 <tg:DataGridTextColumn PropertyName="xy" />
                 <tg:DataGridDateColumn PropertyName="lastAccessed" />

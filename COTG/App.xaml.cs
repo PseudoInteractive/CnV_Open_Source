@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using COTG.Core.Helpers;
 using COTG.Services;
@@ -6,6 +7,10 @@ using COTG.Services;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -47,6 +52,7 @@ namespace COTG
         {
             if (!args.PrelaunchActivated)
             {
+
                 await ActivationService.ActivateAsync(args);
             }
         }
@@ -57,8 +63,39 @@ namespace COTG
             AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
                typeof(Analytics), typeof(Crashes));
 
-        }
+            var configuration = new ConfigurationBuilder()
+                                            .AddJsonFile("appsettings.json", false, true)
+                                            .Build();
 
+
+            ILogger logger;
+
+            using (var serviceProvider = new ServiceCollection()
+                .AddLogging(cfg =>
+                {
+                    cfg.AddConfiguration(configuration.GetSection("Logging"));
+                    cfg.AddConsole();
+                })
+                .BuildServiceProvider())
+            {
+                logger = serviceProvider.GetService<ILogger<App>>();
+            }
+
+            logger.LogInformation("logger information");
+            logger.LogWarning("logger warning");
+
+          
+            //using (var listener = new LoggerTraceListener(logger))
+            //{
+            //    System.Diagnostics.Trace.Listeners.Add(listener);
+            //    TraceSources.Instance.InitLoggerTraceListener(listener);
+
+            //    TraceLover.DoSomething();
+            //    TraceSourceLover.DoSomething();
+            //}
+
+
+        }
         private ActivationService CreateActivationService()
         {
             return new ActivationService(this,null, new Lazy<UIElement>(CreateShell));

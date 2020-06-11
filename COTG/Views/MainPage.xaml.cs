@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
-using Xunit;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
@@ -16,6 +15,10 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Telerik.Core.Data;
 using System.Collections.Specialized;
+using FluentAssertions.Extensions;
+using FluentAssertions.Common;
+using FluentAssertions;
+
 
 namespace COTG.Views
 {
@@ -40,7 +43,7 @@ namespace COTG.Views
 
         public MainPage()
         {
-            Assert.True(cache == null);
+            (cache == null).Should().BeTrue();
             cache = this;
             InitializeComponent();
         }

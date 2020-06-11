@@ -14,6 +14,7 @@ namespace COTG
     /// </summary>
     public static class Debug
     {
+       
         public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
         public static void Log( string  s)
 		{

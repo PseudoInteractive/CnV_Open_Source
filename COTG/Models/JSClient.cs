@@ -29,6 +29,7 @@ namespace COTG
 	/// </summary>
 	public class JSClient : ICommand
     {
+
    
         static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
@@ -363,31 +364,32 @@ namespace COTG
                 await AddJSPluginAsync();
             }
         }
-        static async private void View_ScriptNotify(object sender, NotifyEventArgs e)
+        async static private void View_ScriptNotify(object sender, NotifyEventArgs e)
         {
             try
             {
+                bool gotCreds = false;
                 Log($"Notify: {e.CallingUri} {e.Value} {sender}");
                 var jsd = JsonDocument.Parse(e.Value).RootElement;
-                foreach(var jsp in jsd.EnumerateObject())
+                foreach (var jsp in jsd.EnumerateObject())
                 {
-                    switch(jsp.Name)
+                    switch (jsp.Name)
                     {
-                        case "jsVars":
-                        {
-                            var jso = jsp.Value;
-                            jsVars.token = jso.GetString("token");
-                            jsVars.ppss = jso.GetAsInt("ppss");
-                            jsVars.player = jso.GetString("player");
-                            jsVars.pid = jso.GetAsInt("pid");
-                            jsVars.alliance = jso.GetString();
-                            jsVars.s = jso.GetString("s");
-                            jsVars.cid = jso.GetAsInt("cid");
+                        case "jsvars":
+                            {
+                                var jso = jsp.Value;
+                                jsVars.token = jso.GetString("token");
+                                jsVars.ppss = jso.GetAsInt("ppss");
+                                jsVars.player = jso.GetString("player");
+                                jsVars.pid = jso.GetAsInt("pid");
+                                jsVars.alliance = jso.GetString("alliance");
+                                jsVars.s = jso.GetString("s");
+                                jsVars.cid = jso.GetAsInt("cid");
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
 
-                                Task.Delay(1000).ContinueWith((_) => GetPPDT() );
-                             break;
-                        }
+                                gotCreds = true;
+                                break;
+                            }
                         case "cityclick":
                             {
                                 var jso = jsp.Value;
@@ -407,11 +409,11 @@ namespace COTG
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
 
-	                        }
+                            }
                             break;
-                       }
-
                     }
+
+                }
 
 
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
@@ -423,16 +425,24 @@ namespace COTG
 
 
                 httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-               httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
                 //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
                 httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
-               // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
                 httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
                                                                      //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                 httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
                 httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+                if (gotCreds)
+                {
+                    await Task.Delay(2000);
+                    await GetPPDT();
+                }
+
+
             }
             catch (Exception ex)
             {
