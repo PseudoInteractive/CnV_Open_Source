@@ -17,17 +17,21 @@ namespace COTG
         public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
         public static void Log( string  s)
 		{
-            Trace.WriteLine(s);
+            System.Diagnostics.Debug.WriteLine(s);
 		}
+        public static void Log(object s)
+        {
+            System.Diagnostics.Debug.WriteLine(s);
+        }
         public static void Log(Exception e)
         {
-            Trace.WriteLine($"Exception\n{e}\n:{e.Message}\n{e.StackTrace}");
+            System.Diagnostics.Debug.WriteLine($"Exception\n{e}\n:{e.Message}\n{e.StackTrace}");
         }
         public async static Task Exception(string s)
         {
-            Trace.WriteLine($"Exception\n\n:{s}");
-            Trace.Flush();
-            Trace.Write(new StackTrace(true));
+            System.Diagnostics.Debug.WriteLine($"Exception\n\n:{s}");
+            System.Diagnostics.Debug.Flush();
+            System.Diagnostics.Debug.Write(new StackTrace(true));
             await new MessageDialog(s, "Not Good").ShowAsync() ;
         }
     }

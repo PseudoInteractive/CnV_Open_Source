@@ -96,16 +96,36 @@ namespace COTG.Views
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
+            
+            var webView= JSClient.Initialize(panel);
+            shellFrame = new Frame() {
+               Background = null
+              //  HorizontalAlignment=HorizontalAlignment.Stretch,
+             //   VerticalAlignment=VerticalAlignment.Stretch
+           ,CacheSize=10};
+            //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
+            //      RelativePanel.SetAlignRightWithPanel(shellFrame, true);
+            //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
+            //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
 
-            JSClient.Initialize(panel);
-            shellFrame = new Frame() { Background = null };
-         //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
-            RelativePanel.SetAlignRightWithPanel(shellFrame, true);
-            RelativePanel.SetAlignTopWithPanel(shellFrame, true);
-            RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
-            Canvas.SetZIndex(shellFrame, 3);
-            panel.Children.Add(shellFrame);
             panel.Background = null;
+
+            panel.Children.Add(webView);
+
+            panel.Children.Add(shellFrame);
+            Grid.SetColumn(shellFrame, 4);
+            Grid.SetRow(shellFrame, 0);
+            Grid.SetRowSpan(shellFrame, 5);
+            Canvas.SetZIndex(shellFrame, 3);
+
+
+            Grid.SetColumn(webView, 0);
+            Grid.SetRow(webView, 0);
+            Grid.SetRowSpan(webView, 5);
+            Grid.SetColumnSpan(webView, 4);
+            Canvas.SetZIndex(webView, 0);
+            
+
             NavigationService.Frame = shellFrame;
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
@@ -115,6 +135,7 @@ namespace COTG.Views
             IsLoggedIn = IdentityService.IsLoggedIn();
             IsAuthorized = IsLoggedIn && IdentityService.IsAuthorized();
             User = await UserDataService.GetUserAsync();
+           // panel.hor
         }
 
         private void OnUserDataUpdated(object sender, UserData userData)

@@ -2088,7 +2088,9 @@ function avactor() {
 				mru.push(toAdd);
 				mru.sort((a,b) => { return b.last.valueOf()-a.last.valueOf() });
 				console.log(mru);
-				localStorage.setItem("mru",JSON.stringify(mru));
+				localStorage.setItem("mru", JSON.stringify(mru));
+				const wrapper = { cityclick: toAdd }
+				window['external']['notify'](JSON.stringify(wrapper));
 
 			}
 		});

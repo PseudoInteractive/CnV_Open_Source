@@ -16,6 +16,11 @@ using System.Windows.Input;
 using System.Net.WebSockets;
 using Windows.System;
 using System.Text.Json;
+using COTG.Game;
+using System.Threading;
+using COTG.Helpers;
+using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
 
 namespace COTG
 {
@@ -24,6 +29,7 @@ namespace COTG
 	/// </summary>
 	public class JSClient : ICommand
     {
+   
         static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
@@ -35,7 +41,7 @@ namespace COTG
         public static Uri httpsHost;
         static HttpRequestMessage anyPost;
         // IHttpContent content;
-        public class JSVars
+        public struct JSVars
         {
             public string token { get; set; }
             public int ppss { get; set; }
@@ -46,19 +52,8 @@ namespace COTG
             public string cookie { get; set; }
             public int cid { get; set; }
         };
-        public class JSCity
-        {
-            public int cid { get; set; }
-            public string name { get; set; }
-            public int player { get; set; }
-            public string notes { get; set; }
-        }
+       
 
-        public struct NotifyMessage
-        {
-            public JSVars jsvars {get;set;}
-
-        };
 
         public static JSVars jsVars;
 
@@ -92,12 +87,15 @@ namespace COTG
 
         }
 
-        internal static void Initialize(RelativePanel panel)
+        internal static WebView Initialize(Grid panel)
         {
 
 			try
 			{
-				view = new WebView(WebViewExecutionMode.SeparateThread);
+                view = new WebView(WebViewExecutionMode.SeparateThread)
+                { HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    AllowFocusOnInteraction=true };
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -111,12 +109,11 @@ namespace COTG
               //  view.WebResourceRequested += View_WebResourceRequested1;
 
 				//   view.CacheMode = CacheMode.
-				RelativePanel.SetAlignLeftWithPanel(view, true);
-				RelativePanel.SetAlignRightWithPanel(view, true);
-				RelativePanel.SetAlignTopWithPanel(view, true);
-				RelativePanel.SetAlignBottomWithPanel(view, true);
-				Canvas.SetZIndex(view, 0);
-				panel.Children.Add(view);
+				//Grid.Se SetAlignLeftWithPanel(view, true);
+				//RelativePanel.SetAlignRightWithPanel(view, true);
+			///	RelativePanel.SetAlignTopWithPanel(view, true);
+		//		RelativePanel.SetAlignBottomWithPanel(view, true);
+				
 				view.Source = new Uri("https://www.crownofthegods.com");
 
 				refreshAccelerator = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
@@ -127,6 +124,7 @@ namespace COTG
 			{
 				Log(e);
 			}
+            return view;
 
 
 
@@ -167,6 +165,38 @@ namespace COTG
             Services.NavigationService.Navigate<Views.MainPage>();
         }
 
+        public async static Task ChangeCity(int cityId)
+		{
+			try
+			{
+				if (view != null)
+					await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
+
+
+		}
+        public async static Task ShowCity(int cityId)
+        {
+			try
+			{
+				if (view != null)
+				{
+					await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+				}
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
+
+
+		}
+
         private static async Task AddJSPluginAsync()
         {
             try
@@ -196,7 +226,38 @@ namespace COTG
 
             Log(str);
             ppdt = JsonDocument.Parse(str);
-            Log(ppdt.ToString());
+            // extract cities
+            lock (City.all)
+            {
+                var now = DateTime.Now;
+                foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
+                {
+                    var cid = jsCity.GetProperty("1").GetInt32();
+
+                    if (!City.all.TryGetValue(cid, out var city))
+                    {
+                        city = new City() { cid = cid };
+                        City.all.Add(cid, city);
+
+                    }
+                    city.name = jsCity.GetProperty("2").GetString();
+                    city.isCastle = jsCity.GetAsInt("12") != 0;
+                    city.lastUpdated = now;
+                    city.isOnWater = jsCity.GetAsInt("16") != 0;
+                    city.isTemple = jsCity.GetAsInt("15") != 0;
+                    city.owner = jsVars.player;
+                    city.alliance = jsVars.alliance;
+                    
+
+                }
+
+                Log(City.all.ToString());
+                Log(City.all.Count());
+            }
+             Views.MainPage.UpdateCityList();
+
+
+            // Log(ppdt.ToString());
         }
 
 
@@ -254,13 +315,13 @@ namespace COTG
 
                         httpsHost = new Uri($"https://{args.Uri.Host}");
                         httpClient = new HttpClient(httpFilter); // reset
-                     //   httpClient = new HttpClient(); // reset
-                                                                 //                        var headers = httpClient.DefaultRequestHeaders;
-                                                                 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
-                                                                 // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
-                                                                 //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                                                                 //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
-                      //   headers.Add("Accept", @"*/*");
+                                                                 //   httpClient = new HttpClient(); // reset
+                        //                        var headers = httpClient.DefaultRequestHeaders;
+                        //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
+                        // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
+                        //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                        //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
+                        //   headers.Add("Accept", @"*/*");
                     }
                     catch (Exception e)
                     {
@@ -307,9 +368,51 @@ namespace COTG
             try
             {
                 Log($"Notify: {e.CallingUri} {e.Value} {sender}");
-                var notify = System.Text.Json.JsonSerializer.Deserialize<NotifyMessage>(e.Value);
-                jsVars = notify.jsvars;
-                Log(System.Text.Json.JsonSerializer.Serialize(jsVars) );
+                var jsd = JsonDocument.Parse(e.Value).RootElement;
+                foreach(var jsp in jsd.EnumerateObject())
+                {
+                    switch(jsp.Name)
+                    {
+                        case "jsVars":
+                        {
+                            var jso = jsp.Value;
+                            jsVars.token = jso.GetString("token");
+                            jsVars.ppss = jso.GetAsInt("ppss");
+                            jsVars.player = jso.GetString("player");
+                            jsVars.pid = jso.GetAsInt("pid");
+                            jsVars.alliance = jso.GetString();
+                            jsVars.s = jso.GetString("s");
+                            jsVars.cid = jso.GetAsInt("cid");
+                                Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
+
+                                Task.Delay(1000).ContinueWith((_) => GetPPDT() );
+                             break;
+                        }
+                        case "cityclick":
+                            {
+                                var jso = jsp.Value;
+                                var cid = jso.GetAsInt("cid");
+                                lock (City.all)
+                                {
+                                    if (!City.all.TryGetValue(cid, out var city))
+                                    {
+                                        city = new City() { cid = cid };
+                                        City.all.Add(cid, city);
+                                    }
+                                    city.name = jso.GetString("name");
+                                    city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
+                                    city.notes = jso.GetString("notes");
+                                    city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
+                                    city.lastAccessed = DateTime.Now;
+                                }
+                                COTG.Views.MainPage.UpdateCityList();
+
+	                        }
+                            break;
+                       }
+
+                    }
+
 
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();

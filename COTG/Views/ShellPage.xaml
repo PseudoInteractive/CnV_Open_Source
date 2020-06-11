@@ -23,6 +23,7 @@
     <winui:NavigationView
         x:Name="navigationView"
         IsBackButtonVisible="Visible"
+        IsPaneOpen="false"
         IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
         SelectedItem="{x:Bind Mode=OneWay, Path=Selected}"
         ItemInvoked="OnItemInvoked"
@@ -65,38 +66,13 @@
                     <SymbolIcon Symbol="Document"/>
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_TelerikDataGrid" helpers:NavHelper.NavigateTo="views:TelerikDataGridPage" >
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document"/>
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_Chart" helpers:NavHelper.NavigateTo="views:ChartPage" >
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document"/>
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_TabbedPivot" helpers:NavHelper.NavigateTo="views:TabbedPivotPage" >
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document"/>
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_TabView" helpers:NavHelper.NavigateTo="views:TabViewPage" >
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document"/>
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_InkDrawPicture" helpers:NavHelper.NavigateTo="views:InkDrawPicturePage" >
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document"/>
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
             <winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample" helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage" >
                 <winui:NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Document"/>
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
         </winui:NavigationView.MenuItems>
-        <i:Interaction.Behaviors>
+        <!--<i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior
                 DefaultHeader="{x:Bind Mode=OneWay, Path=Selected.Content}">
                 <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
@@ -110,7 +86,7 @@
                     </DataTemplate>
                 </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
             </behaviors:NavigationViewHeaderBehavior>
-        </i:Interaction.Behaviors>
+        </i:Interaction.Behaviors>-->
         <winui:NavigationView.PaneFooter>
             <Grid>
                 <Models:AppBar x:Name="appBar" />
@@ -178,6 +154,21 @@
                 </Button>
             </Grid>
         </winui:NavigationView.PaneFooter>
-        <RelativePanel x:Name="panel"/>
+        <Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>   
+        </Grid>
     </winui:NavigationView>
 </Page>

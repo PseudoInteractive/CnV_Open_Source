@@ -136,7 +136,7 @@
       <Version>3.2.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Http.Connections.Client">
-      <Version>5.0.0-preview.4.20257.10</Version>
+      <Version>5.0.0-preview.5.20279.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers">
       <Version>0.11.0</Version>
@@ -156,32 +156,35 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>7.0.0-preview1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
+      <Version>7.0.0-preview1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.4.2</Version>
+      <Version>2.5.0-prerelease.200609001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Diagnostics.DiagnosticSource">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Diagnostics.PerformanceCounter">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Memory">
       <Version>4.5.4</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http.Json">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Utf8String.Experimental">
-      <Version>5.0.0-preview.4.20251.6</Version>
+      <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
       <Version>1.0.1.9</Version>
@@ -191,6 +194,9 @@
     </PackageReference>
     <PackageReference Include="WindowsAzure.Messaging.Managed">
       <Version>0.1.7.9</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.assert">
+      <Version>2.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +223,9 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
-    <Compile Include="Models\CityG.cs" />
+    <Compile Include="Helpers\JSONHelper.cs" />
+    <Compile Include="Models\GridCellTapCommand.cs" />
+    <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Helpers\Debug.cs" />
     <Compile Include="Helpers\DataRequestExtensions.cs" />
@@ -274,17 +282,11 @@
     <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
     <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
-    <Compile Include="Views\ChartPage.xaml.cs">
-      <DependentUpon>ChartPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
       <DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\InkDrawPicturePage.xaml.cs">
-      <DependentUpon>InkDrawPicturePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -312,9 +314,6 @@
     </Compile>
     <Compile Include="Views\TabViewPage.xaml.cs">
       <DependentUpon>TabViewPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TelerikDataGridPage.xaml.cs">
-      <DependentUpon>TelerikDataGridPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TreeViewPage.xaml.cs">
       <DependentUpon>TreeViewPage.xaml</DependentUpon>
@@ -367,19 +366,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ChartPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\CmdLineActivationSamplePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FirstRunDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\InkDrawPicturePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -416,10 +407,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TabViewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TelerikDataGridPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
