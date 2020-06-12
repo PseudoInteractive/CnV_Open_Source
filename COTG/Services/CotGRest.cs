@@ -29,7 +29,11 @@ namespace COTG.Services
 
         public virtual async Task Accept(Uri uri, HttpResponseMessage resp)
         {
-            var str = await resp.Content.ReadAsStringAsync();
+            var stream = resp.Content as HttpStreamContent;
+            var size = await stream.BufferAllAsync();
+            Log(size);
+
+            var str = await stream.ReadAsStringAsync();
             Log(str);
             try
             {
@@ -84,8 +88,8 @@ namespace COTG.Services
             }
 
         }
-      
-        async public  Task Post()
+
+        async public Task Post()
         {
             try
             {
@@ -95,7 +99,7 @@ namespace COTG.Services
                 var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath));
                 // req.TransportInformation.ver
                 //req.AllowAutoRedirect = true;
-                req.Content = new HttpStringContent(( GetPostContent() ),
+                req.Content = new HttpStringContent((GetPostContent()),
 
                             Windows.Storage.Streams.UnicodeEncoding.Utf8,
 
@@ -130,35 +134,58 @@ namespace COTG.Services
 
 
         }
-        
+
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-        public static RestAPI goCity  = new gC();
+        public static RestAPI goCity = new gC();
         public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
-        static RestAPI __7 = new RestAPI("includes/gWrd.php", "Addxddx5DdAxxer23752wz");
+        public static gWrd getWorldInfo = new gWrd();
         static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");
         static RestAPI __9 = new RestAPI("includes/sndTtr.php", "JJx452Tdd2375sRAssa");
     }
 
-       public class rMp : RestAPI
+    public class rMp : RestAPI
     {
-        public rMp(): base("includes/rMp.php", "X22ssa41aA1522")
+        public rMp() : base("includes/rMp.php", "X22ssa41aA1522")
         {
 
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode("[249]",secret);
-            var args = "a=" + HttpUtility.UrlEncode( encoded,Encoding.UTF8 );
+            var encoded = Aes.Encode("[249]", secret);
+            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
 
 
         }
-        
+    }
+
+    public class gWrd : RestAPI
+    {
+        public gWrd() : base("includes/gWrd.php", "Addxddx5DdAxxer23752wz")
+        {
 
         }
+        public override string GetPostContent()
+        {
+            // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
+            var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTime()},\"e\":\"World\"}}";
+            var encoded = Aes.Encode(json, secret);
+            var args =  "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
+            return args;
+
+
+        }
+        async public void Post2()
+        {
+            await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
+                "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
+        }
+    }
+
     public class gC : RestAPI
     {
         int cid = 0;
@@ -167,15 +194,15 @@ namespace COTG.Services
 
         }
         async public Task PostC(int _cid = 0)
-		{
+        {
             cid = _cid;
             await Post();
             cid = 0;
-		}
+        }
 
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode( (cid!=0?cid:JSClient.jsVars.cid).ToString(), secret);
+            var encoded = Aes.Encode((cid != 0 ? cid : JSClient.jsVars.cid).ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
 
@@ -188,5 +215,5 @@ namespace COTG.Services
 
 }
 
-    
+
 

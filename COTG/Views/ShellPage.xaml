@@ -7,6 +7,7 @@
     xmlns:behaviors="using:COTG.Behaviors"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:COTG.Helpers"
+    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:views="using:COTG.Views"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
@@ -23,15 +24,14 @@
     <winui:NavigationView
         x:Name="navigationView"
         IsBackButtonVisible="Visible"
-        IsPaneOpen="false"
         IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
         SelectedItem="{x:Bind Mode=OneWay, Path=Selected}"
         ItemInvoked="OnItemInvoked"
         IsSettingsVisible="True"
-        ExpandedModeThresholdWidth="1280"
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.ContextFlyout>
             <MenuFlyout>
+                <MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />
                 <MenuFlyoutItem Click="GetPPDT" Text="GetPPDT" />
                 <MenuFlyoutItem Click="TestPost" Text="TestPost" />
                 <MenuFlyoutItem Click="TestPost2" Text="TestPost2" />
@@ -168,7 +168,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
-            </Grid.ColumnDefinitions>   
+            </Grid.ColumnDefinitions>
+            
         </Grid>
     </winui:NavigationView>
 </Page>

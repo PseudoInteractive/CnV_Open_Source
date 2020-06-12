@@ -1841,15 +1841,6 @@ function RoundTo2Digits(num_5) {
         21627160
     ]
  */ 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 let __base64Encode = null;
 let __base64Decode = null;
 let __a6 = {
@@ -1916,31 +1907,29 @@ function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 var defaultHeaders = null;
+function SetupHeaders() {
+    if (defaultHeaders != null)
+        return;
+    var cookie = ppdt['opt'][67].substring(0, 10);
+    if (!cookie)
+        throw "waiting";
+    defaultHeaders = [
+        ["Content-Encoding", cookie],
+        ['pp-ss', ppss],
+        ['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
+        ['X-Requested-With', 'XMLHttpRequest']
+    ];
+    return;
+}
 class DoneWrapper {
     constructor(url, settings) {
         this.url = url;
         this.settings = settings;
     }
-    static setup() {
-        if (defaultHeaders != null)
-            return;
-        var cookie = ppdt['opt'][67].substring(0, 10);
-        if (!cookie)
-            throw "waiting";
-        defaultHeaders = [
-            ["Content-Encoding", cookie],
-            ['pp-ss', ppss],
-            ['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
-            ['X-Requested-With', 'XMLHttpRequest']
-        ];
-        return;
-    }
-    done(cb) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.dataRequest;
-            let text = yield this.dataResult;
-            cb(text);
-        });
+    async done(cb) {
+        await this.dataRequest;
+        let text = await this.dataResult;
+        cb(text);
     }
     fail(cb) {
         this.onFail = cb;
@@ -1948,44 +1937,42 @@ class DoneWrapper {
             this.onFail(this.reason);
         return this;
     }
-    go() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let data = this.settings ? this.settings.data : null;
-                console.log(data);
-                this.dataRequest = fetch(this.url, {
-                    method: 'POST',
-                    headers: new AvaHeaders(),
-                    mode: 'cors',
-                    cache: "no-cache",
-                    body: data ? (typeof data === "object" ? $.param(data) : data) : ""
-                });
-                let a = yield this.dataRequest;
-                this.dataResult = a.text();
-                let dataText = yield this.dataResult;
-                this.result = dataText;
-                //		if(this.onDone)
-                //			this.onDone(dataText);
-                if (this.settings && this.settings.success) {
-                    var suc = this.settings.success;
-                    console.log(suc);
-                    suc(dataText, null, null);
-                    console.log("hope this works!");
-                }
-                yield sleep(100);
-                __avatarAjaxDone(this.url, dataText);
-                //return cb(data);
-                //		_this.req.
-                //then(cb).
-                //catch(e => console.log(e));
+    async go() {
+        try {
+            let data = this.settings ? this.settings.data : null;
+            console.log(data);
+            this.dataRequest = fetch(this.url, {
+                method: 'POST',
+                headers: new AvaHeaders(),
+                mode: 'cors',
+                cache: "no-cache",
+                body: data ? (typeof data === "object" ? $.param(data) : data) : ""
+            });
+            let a = await this.dataRequest;
+            this.dataResult = a.text();
+            let dataText = await this.dataResult;
+            this.result = dataText;
+            //		if(this.onDone)
+            //			this.onDone(dataText);
+            if (this.settings && this.settings.success) {
+                var suc = this.settings.success;
+                console.log(suc);
+                suc(dataText, null, null);
+                console.log("hope this works!");
             }
-            catch (reason) {
-                this.reason = reason;
-                console.log(reason);
-                if (this.onFail)
-                    this.onFail(reason);
-            }
-        });
+            await sleep(100);
+            __avatarAjaxDone(this.url, dataText);
+            //return cb(data);
+            //		_this.req.
+            //then(cb).
+            //catch(e => console.log(e));
+        }
+        catch (reason) {
+            this.reason = reason;
+            console.log(reason);
+            if (this.onFail)
+                this.onFail(reason);
+        }
     }
 }
 class AvaHeaders {
@@ -2070,10 +2057,10 @@ function __avatarAjaxDone(url, data) {
     else if (Contains(url_21, "gWrd.php")) {
         setTimeout(function () {
             /** @type {*} */
-            wdata_ = JSON.parse(data);
+            var wrapper = JSON.parse(data);
             /** @type {boolean} */
             beentoworld_ = true;
-            wdata_ = DecodeWorldData(wdata_.a);
+            wdata_ = DecodeWorldData(wrapper.a);
             UpdateResearchAndFaith();
             getbossinfo_();
         }, 500);
@@ -2092,7 +2079,7 @@ function __avatarAjaxDone(url, data) {
             OGA = poll2_.OGA;
         if ('city' in poll2_) {
             {
-                cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
+                cdata_ = { ...cdata_, ...poll2_.city };
                 if ('bd' in poll2_.city) {
                     let now = Date.now();
                     if (now > lastUpdate + 5000) {
@@ -2220,6 +2207,35 @@ function UpdateResearchAndFaith() {
 }
 function getppdt() {
     return JSON.stringify(ppdt);
+}
+function jqclick(s) {
+    $(s).click();
+}
+function getview() {
+    if (regrender == 1)
+        return "region";
+    if (citrender = 1)
+        return "city";
+    return "world";
+}
+function avapost(url, args) {
+    const k2D = $.post(url, args);
+    k2D.done(s => {
+        console.log(s);
+    });
+}
+async function avafetch(url, args) {
+    let req = fetch(url, {
+        method: 'POST',
+        headers: defaultHeaders,
+        mode: 'cors',
+        cache: "no-cache",
+        body: args
+    });
+    let a = await req;
+    let txt = a.text();
+    console.log(txt);
+    return txt;
 }
 function avactor() {
     //	var E3y="5894";
@@ -2350,10 +2366,10 @@ function avactor() {
         window['infoPlay'] = gspotfunct.infoPlay;
         window['shCit'] = gspotfunct.shCit;
         window['chcity'] = gspotfunct.chcity;
-        // if (typeof String.prototype.utf8Encode == _s(h2R << 1513184672)) String.prototype.utf8Encode = function () {
-        //   i011.R6();
-        //   return unescape(encodeURIComponent(this));
-        // };
+        String.prototype['utf8Encode'] = function () {
+            console.log(this);
+            return unescape(encodeURIComponent(this));
+        };
         // if (typeof String.prototype.utf8Decode == i011.S55(h2R << 2061309088)) String.prototype.utf8Decode = function () {
         //   i011.R6();
         //   try {
@@ -2412,6 +2428,7 @@ function avactor() {
         }
         //	$("#organiser").val("all").change();
     }, 8000);
+    //this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
     /** @type {number} */
     var errz_ = 0;
     /**
@@ -3810,7 +3827,7 @@ function avactor() {
                 $("#cityplayerInfo div table tbody tr:gt(6)").remove();
                 // var coords = $("#citycoords")[0].innerText.split(":");
                 let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
-                var toAdd = Object.assign({}, defaultMru); // clone defaults
+                var toAdd = { ...defaultMru }; // clone defaults
                 var maxCount = 32;
                 /** @type {AsNumber} */
                 for (var i = 0; i < mru.length; ++i) {
@@ -4785,8 +4802,10 @@ function avactor() {
                 alliance: "",
                 s: "",
                 cookie: "",
-                cid: 0
+                cid: 0,
+                time: 0
             };
+            SetupHeaders();
             try {
                 creds.cookie = document.cookie;
                 creds.token = ppdt['opt'][67].substring(0, 10);
@@ -4796,6 +4815,7 @@ function avactor() {
                 creds.pid = ppdt.pid;
                 creds.s = s;
                 creds.cid = cid;
+                creds.time = currentTime();
                 const wrapper = { jsvars: creds };
                 window['external']['notify'](JSON.stringify(wrapper));
             }

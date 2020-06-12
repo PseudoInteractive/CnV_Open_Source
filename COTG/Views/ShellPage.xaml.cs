@@ -17,6 +17,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
 
@@ -124,7 +125,15 @@ namespace COTG.Views
             Grid.SetRowSpan(webView, 5);
             Grid.SetColumnSpan(webView, 4);
             Canvas.SetZIndex(webView, 0);
-            
+
+            var splitter = new GridSplitter();
+            panel.Children.Add(splitter);
+            Grid.SetColumn(splitter, 4);
+            Grid.SetRowSpan(splitter, 4);
+            splitter.Width = 16;
+            splitter.HorizontalAlignment = HorizontalAlignment.Left;
+            splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
+            Canvas.SetZIndex(splitter, 5);
 
             NavigationService.Frame = shellFrame;
 
@@ -137,6 +146,7 @@ namespace COTG.Views
             User = await UserDataService.GetUserAsync();
             // panel.hor
             Services.NavigationService.Navigate<Views.MainPage>();
+            navigationView.IsPaneOpen = false;
 
         }
 
@@ -324,6 +334,11 @@ namespace COTG.Views
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
             await RestAPI.goCity.Post();
+
+        }
+        private void GetWorldInfo(object sender, RoutedEventArgs e)
+        {
+           RestAPI.getWorldInfo.Post2();
 
         }
         private async void GetPPDT(object sender, RoutedEventArgs e)

@@ -72,6 +72,21 @@ function sleep(time) {
 }
 
 var defaultHeaders: [string,string][]=null;
+function SetupHeaders() {
+	if (defaultHeaders != null)
+		return;
+	var cookie = (ppdt['opt'][67] as any as String).substring(0, 10);
+	if (!cookie)
+		throw "waiting";
+
+
+	defaultHeaders = [
+		["Content-Encoding", cookie],
+		['pp-ss', ppss],
+		['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
+		['X-Requested-With', 'XMLHttpRequest']];
+	return;
+}
 
 class DoneWrapper {
 	//public req: Promise<Response>;
@@ -82,21 +97,7 @@ class DoneWrapper {
 	reason: any;
 	that: this;
 
-	static setup() {
-		if(defaultHeaders!=null)
-			return;
-		var cookie=(ppdt['opt'][67] as any as String).substring(0,10);
-		if(!cookie)
-			throw "waiting";
-
-
-		defaultHeaders=[
-			["Content-Encoding",cookie],
-			['pp-ss', ppss],
-			['Content-Type','application/x-www-form-urlencoded; charset=UTF-8'],
-			['X-Requested-With','XMLHttpRequest']];
-		return;
-	}
+	
 	async done(cb: (a:string) =>void) {
 		await this.dataRequest;
 		let text=await this.dataResult;
@@ -258,10 +259,10 @@ function __avatarAjaxDone(url: string,
 	else if(Contains(url_21,"gWrd.php")) {
 		setTimeout(function() {
 			/** @type {*} */
-			wdata_=JSON.parse(data);
+			var wrapper=JSON.parse(data);
 			/** @type {boolean} */
 			beentoworld_=true;
-			wdata_=DecodeWorldData(wdata_.a);
+			wdata_=DecodeWorldData(wrapper.a);
 			UpdateResearchAndFaith();
 			getbossinfo_();
 		},500);
@@ -428,6 +429,39 @@ function UpdateResearchAndFaith(): void {
 function getppdt() {
 	return JSON.stringify(ppdt);
 }
+function jqclick( s) {
+	$(s).click();
+}
+
+function getview() {
+	if (regrender == 1)
+		return "region";
+	if (citrender = 1)
+		return "city";
+	return "world";
+}
+
+function avapost(url: string, args: string) {
+	const k2D = $.post(url, args);
+	k2D.done(s => {
+		console.log(s);
+	});
+}
+
+async function avafetch(url: string, args: string) {
+	let req = fetch(url, {
+		method: 'POST',
+		headers: defaultHeaders,
+
+		mode: 'cors',
+		cache: "no-cache",
+		body: args
+	});
+	let a = await req;
+	let txt = a.text();
+	console.log(txt);
+	return txt;
+}
 
 function avactor() {
 
@@ -581,10 +615,10 @@ function avactor() {
 
 
 
-		// if (typeof String.prototype.utf8Encode == _s(h2R << 1513184672)) String.prototype.utf8Encode = function () {
-		//   i011.R6();
-		//   return unescape(encodeURIComponent(this));
-		// };
+		 String.prototype['utf8Encode'] = function () {
+			 console.log(this);
+		   return unescape(encodeURIComponent(this));
+		 };
 		// if (typeof String.prototype.utf8Decode == i011.S55(h2R << 2061309088)) String.prototype.utf8Decode = function () {
 		//   i011.R6();
 		//   try {
@@ -645,6 +679,8 @@ function avactor() {
 		}
 		//	$("#organiser").val("all").change();
 	},8000);
+
+	//this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 
 	/** @type {number} */
 	var errz_: number=0;
@@ -3042,9 +3078,10 @@ function avactor() {
 				alliance: "",
 				s: "",
 				cookie: "",
-				cid:0
+				cid: 0,
+				time:0
 			};
-			
+			SetupHeaders();
 
 			try {
 				creds.cookie = document.cookie;
@@ -3055,6 +3092,7 @@ function avactor() {
 				creds.pid = ppdt.pid;
 				creds.s = s;
 				creds.cid = cid;
+				creds.time = currentTime();
 				const wrapper = { jsvars: creds }
 				window['external']['notify'](JSON.stringify(wrapper));
 

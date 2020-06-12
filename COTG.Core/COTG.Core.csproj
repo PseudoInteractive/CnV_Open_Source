@@ -19,6 +19,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\KernelTraceControl.dll" />
+    <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\msdia140.dll" />
+  </ItemGroup>
+
    <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>

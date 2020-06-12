@@ -51,9 +51,10 @@ namespace COTG.Views
         private void OnCheckBoxClick(object sender, RoutedEventArgs e)
         {
             var cb = (CheckBox)sender;
-            if (showingRowDetails != null && cities.Contains(showingRowDetails) )
-                this.cityGrid.HideRowDetailsForItem(showingRowDetails);
+            var _showing = showingRowDetails;
             showingRowDetails = null;
+            if (_showing != null && cities.Contains(_showing) )
+                this.cityGrid.HideRowDetailsForItem(_showing);
 
             var newCheckedItem = (City)cb.DataContext;
 

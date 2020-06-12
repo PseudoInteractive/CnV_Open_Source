@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using FluentAssertions;
+using FluentAssertions.Common;
+using static COTG.Debug;
 
 namespace COTG.Game
 {
@@ -21,7 +24,10 @@ namespace COTG.Game
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
 
-        public bool IsShowingRowDetails => this == Views.MainPage.showingRowDetails; // this is nicely coupled
+        public bool IsShowingRowDetails {
+            get => this == Views.MainPage.showingRowDetails; // this is nicely coupled
+            set => Log($"{(this == Views.MainPage.showingRowDetails)}","{value}");
+                }
 
         public static Dictionary<int,City> all = new Dictionary<int, City>(); // keyed by city
 	}

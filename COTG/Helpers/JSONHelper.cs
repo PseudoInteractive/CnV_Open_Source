@@ -32,6 +32,28 @@ namespace COTG.Helpers
                 return 0;
         }
     }
+        public static long GetAsInt64(this JsonElement js, string prop)
+        {
+            if (!js.TryGetProperty(prop, out var e))
+                return 0;
+
+            switch (e.ValueKind)
+            {
+                case JsonValueKind.String:
+                    return long.Parse(e.GetString());
+                case JsonValueKind.Number:
+                    return e.GetInt64();
+                case JsonValueKind.True:
+                    return 1;
+                case JsonValueKind.Array:
+                case JsonValueKind.False:
+                case JsonValueKind.Null:
+                case JsonValueKind.Undefined:
+                case JsonValueKind.Object:
+                default:
+                    return 0;
+            }
+        }
         public static int GetInt(this JsonElement js, string prop)
         {
             if (!js.TryGetProperty(prop, out var e))

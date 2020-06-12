@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Windows.UI.Popups;
@@ -16,13 +13,25 @@ namespace COTG
     {
        
         public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
-        public static void Log( string  s)
+        public static void Log( string  s,
+        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            System.Diagnostics.Debug.WriteLine(s);
-		}
-        public static void Log(object s)
+           System.Diagnostics.Debug.WriteLine($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+        //    System.Diagnostics.Debug.WriteLine(new StackTrace());
+
+
+        }
+        public static void Log(object s,
+        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             System.Diagnostics.Debug.WriteLine(s);
+            System.Diagnostics.Debug.WriteLine(s.ToString());
+            System.Diagnostics.Debug.WriteLine($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+          //  System.Diagnostics.Debug.WriteLine(new StackTrace());
         }
         public static void Log(Exception e)
         {

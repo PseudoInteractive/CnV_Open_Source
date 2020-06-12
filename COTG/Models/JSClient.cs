@@ -52,13 +52,19 @@ namespace COTG
             public string s { get; set; }
             public string cookie { get; set; }
             public int cid { get; set; }
+            public DateTime launchTime;
+            public long gameMSAtSTart;
+           
         };
        
 
 
         public static JSVars jsVars;
 
-
+        public static long GameTime()
+        {
+            return (long)((DateTime.Now - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtSTart;
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="JSClient"/> class.
         /// </summary>
@@ -385,9 +391,28 @@ namespace COTG
                                 jsVars.alliance = jso.GetString("alliance");
                                 jsVars.s = jso.GetString("s");
                                 jsVars.cid = jso.GetAsInt("cid");
+                                jsVars.gameMSAtSTart = jso.GetAsInt64("time");
+                                jsVars.launchTime = DateTime.Now;
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
 
                                 gotCreds = true;
+                                httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
+                                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+                                //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
+                                httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
+                                // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                                httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
+                                                                                     //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
+
+                                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                                Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+                                if (gotCreds)
+                                {
+                                    await Task.Delay(2000);
+                                    await GetPPDT();
+                                }
                                 break;
                             }
                         case "cityclick":
@@ -424,23 +449,7 @@ namespace COTG
                 //}
 
 
-                httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
-                //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
-                httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
-                // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
-                                                                     //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
-
-                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
-
-                if (gotCreds)
-                {
-                    await Task.Delay(2000);
-                    await GetPPDT();
-                }
+              
 
 
             }

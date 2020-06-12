@@ -7,4 +7,7 @@ declare var plDa : {
 }
 declare var ppss;   
 declare var s;
-declare var cid : number;
+declare var cid: number;
+declare var worldrender: any; // '0' or 0 or 1
+declare var citrender: any; // '0' or 0 or 1
+declare var regrender: any; // '0' or 0 or 1
