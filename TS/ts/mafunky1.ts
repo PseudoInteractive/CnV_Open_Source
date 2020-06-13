@@ -71,162 +71,161 @@ function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve,time));
 }
 
-var defaultHeaders: [string,string][]=null;
+let defaultHeaders: Record<string,string>;
+
 function SetupHeaders() {
-	if (defaultHeaders != null)
-		return;
-	var cookie = (ppdt['opt'][67] as any as String).substring(0, 10);
+	const cookie = (ppdt['opt'][67] as string).substring(0, 10);
 	if (!cookie)
 		throw "waiting";
 
 
-	defaultHeaders = [
-		["Content-Encoding", cookie],
-		['pp-ss', ppss],
-		['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
-		['X-Requested-With', 'XMLHttpRequest']];
+	defaultHeaders = {
+		'Content-Encoding': cookie,
+		'pp-ss': ppss,
+		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+	};
 	return;
 }
 
-class DoneWrapper {
-	//public req: Promise<Response>;
-	dataResult: Promise<string>;
-	dataRequest: Promise<Response>;
-	onFail: (a) => void;
-	result: string;
-	reason: any;
-	that: this;
+//class DoneWrapper {
+//	//public req: Promise<Response>;
+//	dataResult: Promise<string>;
+//	dataRequest: Promise<Response>;
+//	onFail: (a) => void;
+//	result: string;
+//	reason: any;
+//	that: this;
 
 	
-	async done(cb: (a:string) =>void) {
-		await this.dataRequest;
-		let text=await this.dataResult;
-		cb(text);
-	}
+//	async done(cb: (a:string) =>void) {
+//		await this.dataRequest;
+//		let text=await this.dataResult;
+//		cb(text);
+//	}
 
-	fail(cb:any): this {
-		this.onFail=cb;
-		if(this.reason!=null)
-			this.onFail(this.reason);
-		return this;
-	}
+//	fail(cb:any): this {
+//		this.onFail=cb;
+//		if(this.reason!=null)
+//			this.onFail(this.reason);
+//		return this;
+//	}
 
-constructor(public url: string,public settings: JQueryAjaxSettings) { }
+//constructor(public url: string,public settings: JQueryAjaxSettings) { }
 	
-async go() {
+//async go() {
 	
-		try {
+//		try {
 
-		let data=this.settings? this.settings.data:null;
-		console.log(data);
-			this.dataRequest= fetch(this.url,{
-			method: 'POST',
-			headers: new AvaHeaders(),
+//		let data=this.settings? this.settings.data:null;
+//		console.log(data);
+//			this.dataRequest= fetch(this.url,{
+//			method: 'POST',
+//			headers: new AvaHeaders(),
 
-			mode: 'cors',
-			cache: "no-cache",
-			body: data? (typeof data==="object"? $.param(data as object):(data as string)):""
-			});
-			let a= await this.dataRequest;
-			this.dataResult=a.text();
-			let dataText=await this.dataResult;
-				this.result=dataText;
-		//		if(this.onDone)
-			//			this.onDone(dataText);
-				if(this.settings&&this.settings.success) {
-					var suc=this.settings.success as JQuery.Ajax.SuccessCallback<any> ;
-					console.log(suc);
-					suc(dataText,null,null);
-					console.log("hope this works!");
-				}
-			await sleep(100);
-			__avatarAjaxDone(this.url,dataText);
-				//return cb(data);
-				//		_this.req.
-				//then(cb).
-				//catch(e => console.log(e));
+//			mode: 'cors',
+//			cache: "no-cache",
+//			body: data? (typeof data==="object"? $.param(data as object):(data as string)):""
+//			});
+//			let a= await this.dataRequest;
+//			this.dataResult=a.text();
+//			let dataText=await this.dataResult;
+//				this.result=dataText;
+//		//		if(this.onDone)
+//			//			this.onDone(dataText);
+//				if(this.settings&&this.settings.success) {
+//					var suc=this.settings.success as JQuery.Ajax.SuccessCallback<any> ;
+//					console.log(suc);
+//					suc(dataText,null,null);
+//					console.log("hope this works!");
+//				}
+//			await sleep(100);
+//			__avatarAjaxDone(this.url,dataText);
+//				//return cb(data);
+//				//		_this.req.
+//				//then(cb).
+//				//catch(e => console.log(e));
 		
-	} catch(reason) {
+//	} catch(reason) {
 
-				this.reason=reason;
+//				this.reason=reason;
 
-				console.log(reason);
-			if(this.onFail)
-				this.onFail(reason);
-			}
+//				console.log(reason);
+//			if(this.onFail)
+//				this.onFail(reason);
+//			}
 			
 	
-	}
+//	}
 
-}
-
-
-class AvaHeaders implements Headers {
-	a: Array<[string,string]>;
-
-	append(name: string,value: string): void {
-		throw new Error("Method not implemented.");
-	}
-	delete(name: string): void {
-		throw new Error("Method not implemented.");
-	}
-	get(name: string): string {
-		throw new Error("Method not implemented.");
-	}
-	has(name: string): boolean {
-		throw new Error("Method not implemented.");
-	}
-	set(name: string,value: string): void {
-		throw new Error("Method not implemented.");
-	}
-	forEach(callbackfn: (value: string,key: string,parent: Headers) => void,thisArg?: any): void {
-		throw new Error("Method not implemented.");
-	}
-	entries(): IterableIterator<[string,string]> {
-		throw new Error("Method not implemented.");
-	}
-	keys(): IterableIterator<string> {
-		throw new Error("Method not implemented.");
-	}
-	values(): IterableIterator<string> {
-		throw new Error("Method not implemented.");
-	}
-	[Symbol.iterator](): IterableIterator<[string,string]> {
-		return defaultHeaders[Symbol.iterator]();
-	}
-	return?(value?: any): IteratorResult<[string,string],any> {
-		throw new Error("Method not implemented.");
-	}
-	throw?(e?: any): IteratorResult<[string,string],any> {
-		throw new Error("Method not implemented.");
-	}
-	construtor() { this.a=defaultHeaders; }
+//}
 
 
+//class AvaHeaders implements Headers {
+//	a: Array<[string,string]>;
+
+//	append(name: string,value: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	delete(name: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	get(name: string): string {
+//		throw new Error("Method not implemented.");
+//	}
+//	has(name: string): boolean {
+//		throw new Error("Method not implemented.");
+//	}
+//	set(name: string,value: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	forEach(callbackfn: (value: string,key: string,parent: Headers) => void,thisArg?: any): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	entries(): IterableIterator<[string,string]> {
+//		throw new Error("Method not implemented.");
+//	}
+//	keys(): IterableIterator<string> {
+//		throw new Error("Method not implemented.");
+//	}
+//	values(): IterableIterator<string> {
+//		throw new Error("Method not implemented.");
+//	}
+//	[Symbol.iterator](): IterableIterator<[string,string]> {
+//		return defaultHeaders[Symbol.iterator]();
+//	}
+//	return?(value?: any): IteratorResult<[string,string],any> {
+//		throw new Error("Method not implemented.");
+//	}
+//	throw?(e?: any): IteratorResult<[string,string],any> {
+//		throw new Error("Method not implemented.");
+//	}
+//	construtor() { this.a=defaultHeaders; }
 
 
-}
 
-function avatarPost(_url: string|JQuery.AjaxSettings,settings?: JQuery.AjaxSettings): DoneWrapper {
-	let url=_url as string;
-	if(typeof settings==='undefined') {
 
-		settings=_url as JQuery.AjaxSettings;
-		if(settings)
-			url=settings.url;
-	}
-	else if(!url) { url=settings.url; }
+//}
 
-	try {
-		let rv=new DoneWrapper(url,settings);
-		rv.go();
-		return rv;
-	} catch(e) {
-		console.log(e);
+//function avatarPost(_url: string|JQuery.AjaxSettings,settings?: JQuery.AjaxSettings): DoneWrapper {
+//	let url=_url as string;
+//	if(typeof settings==='undefined') {
 
-	}
+//		settings=_url as JQuery.AjaxSettings;
+//		if(settings)
+//			url=settings.url;
+//	}
+//	else if(!url) { url=settings.url; }
 
-	}
+//	try {
+//		let rv=new DoneWrapper(url,settings);
+//		rv.go();
+//		return rv;
+//	} catch(e) {
+//		console.log(e);
+
+//	}
+
+//	}
 
 function Contains(a:string,b:string) {
 	return a.indexOf(b)!=-1;

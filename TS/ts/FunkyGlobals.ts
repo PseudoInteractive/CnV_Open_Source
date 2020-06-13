@@ -18,6 +18,7 @@ function LocalStoreAsFloat(__s: string, __def: number= 0) {
 function GetContinent(x: number, y: number): number {
 	return Math.floor(x / 100) + Math.floor(y / 100) * 10;
 }
+
 class Coord  {
 	public static xy(x: number, y: number) {
 		return new Coord(x + y * 65536);

@@ -29,6 +29,28 @@ namespace COTG.Services
 
         public virtual async Task Accept(Uri uri, HttpResponseMessage resp)
         {
+
+            try
+            {
+                var buff = await resp.Content.ReadAsBufferAsync();
+
+                var temp = new byte[buff.Length];
+
+                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+                {
+                    dataReader.ReadBytes(temp);
+                }
+                var json = JsonDocument.Parse(temp);
+                Log(json.ToString());
+                ProcessJson(json);
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+
+            /*
             var stream = resp.Content as HttpStreamContent;
             var size = await stream.BufferAllAsync();
             Log(size);
@@ -45,22 +67,22 @@ namespace COTG.Services
             catch (Exception e)
             {
                 Log(e);
-            }
+            }*/
 
         }
 
-        public virtual void ProcessJsonPhase0(JsonDocument json)
+        public virtual void ProcessJson(JsonDocument json)
         {
 
-            if (json.RootElement.TryGetProperty("a", out var a))
-            {
-                var s = a.GetString();
-                if (secret != null)
-                {
-                    var raw = COTG.Aes.Decode(s, secret);
-                    Log(raw);
-                }
-            }
+            //if (json.RootElement.TryGetProperty("a", out var a))
+            //{
+            //    var s = a.GetString();
+            //    if (secret != null)
+            //    {
+            //        var raw = COTG.Aes.Decode(s, secret);
+            //        Log(raw);
+            //    }
+            //}
         }
         public virtual string GetPostContent()
         {
@@ -164,13 +186,15 @@ namespace COTG.Services
 
     public class gWrd : RestAPI
     {
-        public gWrd() : base("includes/gWrd.php", "Addxddx5DdAxxer23752wz")
+        public gWrd() : base("includes/gWrd.php", "Addxddx5DdAxxer569962wz")
+
         {
 
         }
         public override string GetPostContent()
         {
             // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
+            //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
             var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTime()},\"e\":\"World\"}}";
             var encoded = Aes.Encode(json, secret);
             var args =  "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
@@ -179,11 +203,23 @@ namespace COTG.Services
 
 
         }
-        async public void Post2()
+        public override void ProcessJson(JsonDocument json)
         {
-            await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
-                "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
+            foreach(var jsp in json.RootElement.EnumerateObject())
+            {
+                Log(jsp.Name);
+                var jso = jsp.Value;
+
+
+            }
         }
+
+        //async public void Post2()
+        //{
+        //    var a = await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
+        //        "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
+        //    Log(a);
+        //}
     }
 
     public class gC : RestAPI

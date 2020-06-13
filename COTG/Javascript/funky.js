@@ -1841,6 +1841,15 @@ function RoundTo2Digits(num_5) {
         21627160
     ]
  */ 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 let __base64Encode = null;
 let __base64Decode = null;
 let __a6 = {
@@ -1906,133 +1915,131 @@ var __debugMe;
 function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
-var defaultHeaders = null;
+let defaultHeaders;
 function SetupHeaders() {
-    if (defaultHeaders != null)
-        return;
-    var cookie = ppdt['opt'][67].substring(0, 10);
+    const cookie = ppdt['opt'][67].substring(0, 10);
     if (!cookie)
         throw "waiting";
-    defaultHeaders = [
-        ["Content-Encoding", cookie],
-        ['pp-ss', ppss],
-        ['Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'],
-        ['X-Requested-With', 'XMLHttpRequest']
-    ];
+    defaultHeaders = {
+        'Content-Encoding': cookie,
+        'pp-ss': ppss,
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    };
     return;
 }
-class DoneWrapper {
-    constructor(url, settings) {
-        this.url = url;
-        this.settings = settings;
-    }
-    async done(cb) {
-        await this.dataRequest;
-        let text = await this.dataResult;
-        cb(text);
-    }
-    fail(cb) {
-        this.onFail = cb;
-        if (this.reason != null)
-            this.onFail(this.reason);
-        return this;
-    }
-    async go() {
-        try {
-            let data = this.settings ? this.settings.data : null;
-            console.log(data);
-            this.dataRequest = fetch(this.url, {
-                method: 'POST',
-                headers: new AvaHeaders(),
-                mode: 'cors',
-                cache: "no-cache",
-                body: data ? (typeof data === "object" ? $.param(data) : data) : ""
-            });
-            let a = await this.dataRequest;
-            this.dataResult = a.text();
-            let dataText = await this.dataResult;
-            this.result = dataText;
-            //		if(this.onDone)
-            //			this.onDone(dataText);
-            if (this.settings && this.settings.success) {
-                var suc = this.settings.success;
-                console.log(suc);
-                suc(dataText, null, null);
-                console.log("hope this works!");
-            }
-            await sleep(100);
-            __avatarAjaxDone(this.url, dataText);
-            //return cb(data);
-            //		_this.req.
-            //then(cb).
-            //catch(e => console.log(e));
-        }
-        catch (reason) {
-            this.reason = reason;
-            console.log(reason);
-            if (this.onFail)
-                this.onFail(reason);
-        }
-    }
-}
-class AvaHeaders {
-    append(name, value) {
-        throw new Error("Method not implemented.");
-    }
-    delete(name) {
-        throw new Error("Method not implemented.");
-    }
-    get(name) {
-        throw new Error("Method not implemented.");
-    }
-    has(name) {
-        throw new Error("Method not implemented.");
-    }
-    set(name, value) {
-        throw new Error("Method not implemented.");
-    }
-    forEach(callbackfn, thisArg) {
-        throw new Error("Method not implemented.");
-    }
-    entries() {
-        throw new Error("Method not implemented.");
-    }
-    keys() {
-        throw new Error("Method not implemented.");
-    }
-    values() {
-        throw new Error("Method not implemented.");
-    }
-    [Symbol.iterator]() {
-        return defaultHeaders[Symbol.iterator]();
-    }
-    return(value) {
-        throw new Error("Method not implemented.");
-    }
-    throw(e) {
-        throw new Error("Method not implemented.");
-    }
-    construtor() { this.a = defaultHeaders; }
-}
-function avatarPost(_url, settings) {
-    let url = _url;
-    if (typeof settings === 'undefined') {
-        settings = _url;
-        if (settings)
-            url = settings.url;
-    }
-    else if (!url) {
-        url = settings.url;
-    }
-    try {
-        let rv = new DoneWrapper(url, settings);
-        rv.go();
-        return rv;
-    }
-    catch (e) {
-        console.log(e);
-    }
-}
+//class DoneWrapper {
+//	//public req: Promise<Response>;
+//	dataResult: Promise<string>;
+//	dataRequest: Promise<Response>;
+//	onFail: (a) => void;
+//	result: string;
+//	reason: any;
+//	that: this;
+//	async done(cb: (a:string) =>void) {
+//		await this.dataRequest;
+//		let text=await this.dataResult;
+//		cb(text);
+//	}
+//	fail(cb:any): this {
+//		this.onFail=cb;
+//		if(this.reason!=null)
+//			this.onFail(this.reason);
+//		return this;
+//	}
+//constructor(public url: string,public settings: JQueryAjaxSettings) { }
+//async go() {
+//		try {
+//		let data=this.settings? this.settings.data:null;
+//		console.log(data);
+//			this.dataRequest= fetch(this.url,{
+//			method: 'POST',
+//			headers: new AvaHeaders(),
+//			mode: 'cors',
+//			cache: "no-cache",
+//			body: data? (typeof data==="object"? $.param(data as object):(data as string)):""
+//			});
+//			let a= await this.dataRequest;
+//			this.dataResult=a.text();
+//			let dataText=await this.dataResult;
+//				this.result=dataText;
+//		//		if(this.onDone)
+//			//			this.onDone(dataText);
+//				if(this.settings&&this.settings.success) {
+//					var suc=this.settings.success as JQuery.Ajax.SuccessCallback<any> ;
+//					console.log(suc);
+//					suc(dataText,null,null);
+//					console.log("hope this works!");
+//				}
+//			await sleep(100);
+//			__avatarAjaxDone(this.url,dataText);
+//				//return cb(data);
+//				//		_this.req.
+//				//then(cb).
+//				//catch(e => console.log(e));
+//	} catch(reason) {
+//				this.reason=reason;
+//				console.log(reason);
+//			if(this.onFail)
+//				this.onFail(reason);
+//			}
+//	}
+//}
+//class AvaHeaders implements Headers {
+//	a: Array<[string,string]>;
+//	append(name: string,value: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	delete(name: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	get(name: string): string {
+//		throw new Error("Method not implemented.");
+//	}
+//	has(name: string): boolean {
+//		throw new Error("Method not implemented.");
+//	}
+//	set(name: string,value: string): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	forEach(callbackfn: (value: string,key: string,parent: Headers) => void,thisArg?: any): void {
+//		throw new Error("Method not implemented.");
+//	}
+//	entries(): IterableIterator<[string,string]> {
+//		throw new Error("Method not implemented.");
+//	}
+//	keys(): IterableIterator<string> {
+//		throw new Error("Method not implemented.");
+//	}
+//	values(): IterableIterator<string> {
+//		throw new Error("Method not implemented.");
+//	}
+//	[Symbol.iterator](): IterableIterator<[string,string]> {
+//		return defaultHeaders[Symbol.iterator]();
+//	}
+//	return?(value?: any): IteratorResult<[string,string],any> {
+//		throw new Error("Method not implemented.");
+//	}
+//	throw?(e?: any): IteratorResult<[string,string],any> {
+//		throw new Error("Method not implemented.");
+//	}
+//	construtor() { this.a=defaultHeaders; }
+//}
+//function avatarPost(_url: string|JQuery.AjaxSettings,settings?: JQuery.AjaxSettings): DoneWrapper {
+//	let url=_url as string;
+//	if(typeof settings==='undefined') {
+//		settings=_url as JQuery.AjaxSettings;
+//		if(settings)
+//			url=settings.url;
+//	}
+//	else if(!url) { url=settings.url; }
+//	try {
+//		let rv=new DoneWrapper(url,settings);
+//		rv.go();
+//		return rv;
+//	} catch(e) {
+//		console.log(e);
+//	}
+//	}
 function Contains(a, b) {
     return a.indexOf(b) != -1;
 }
@@ -2079,7 +2086,7 @@ function __avatarAjaxDone(url, data) {
             OGA = poll2_.OGA;
         if ('city' in poll2_) {
             {
-                cdata_ = { ...cdata_, ...poll2_.city };
+                cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
                 if ('bd' in poll2_.city) {
                     let now = Date.now();
                     if (now > lastUpdate + 5000) {
@@ -2224,18 +2231,20 @@ function avapost(url, args) {
         console.log(s);
     });
 }
-async function avafetch(url, args) {
-    let req = fetch(url, {
-        method: 'POST',
-        headers: defaultHeaders,
-        mode: 'cors',
-        cache: "no-cache",
-        body: args
+function avafetch(url, args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let req = fetch(url, {
+            method: 'POST',
+            headers: defaultHeaders,
+            mode: 'cors',
+            cache: "no-cache",
+            body: args
+        });
+        let a = yield req;
+        let txt = a.text();
+        console.log(txt);
+        return txt;
     });
-    let a = await req;
-    let txt = a.text();
-    console.log(txt);
-    return txt;
 }
 function avactor() {
     //	var E3y="5894";
@@ -3827,7 +3836,7 @@ function avactor() {
                 $("#cityplayerInfo div table tbody tr:gt(6)").remove();
                 // var coords = $("#citycoords")[0].innerText.split(":");
                 let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
-                var toAdd = { ...defaultMru }; // clone defaults
+                var toAdd = Object.assign({}, defaultMru); // clone defaults
                 var maxCount = 32;
                 /** @type {AsNumber} */
                 for (var i = 0; i < mru.length; ++i) {

@@ -336,9 +336,9 @@ namespace COTG.Views
             await RestAPI.goCity.Post();
 
         }
-        private void GetWorldInfo(object sender, RoutedEventArgs e)
+        private async void GetWorldInfo(object sender, RoutedEventArgs e)
         {
-           RestAPI.getWorldInfo.Post2();
+          await RestAPI.getWorldInfo.Post();
 
         }
         private async void GetPPDT(object sender, RoutedEventArgs e)
