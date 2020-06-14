@@ -92,55 +92,52 @@
         <winui:NavigationView.PaneFooter>
             <Grid>
                 <Models:AppBar x:Name="appBar" />
-                <Button x:Name="DetailFlyout"
+                <Button x:Name="buildingsButton"
                     Padding="0" Margin="0"
                     IsEnabled="true"
                     Visibility="Visible"
                     Background="Transparent"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Left"
-                    
-                    PointerEntered="ShowBuildings" Click="DoNothing" ClickMode="Hover">
+                    PointerEntered="ShowBuildings"
+                    Click="DoNothing">
                     <Grid Height="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="38" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Ellipse
-                            Grid.Column="0"
-                            Width="24"
-                            Height="24"
-                            HorizontalAlignment="Center">
-                            <!--<Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind Mode=OneWay, Path=User.Photo}" Stretch="UniformToFill" />
-                            </Ellipse.Fill>-->
-                        </Ellipse>
                         <TextBlock
                             Grid.Column="1"
                             Text="Hello"
                             VerticalAlignment="Center"
                             Style="{ThemeResource BodyTextBlockStyle}"
-                            Visibility="{x:Bind Mode=OneWay, Path=IsLoggedIn}" />
+                            Visibility="Visible" />
             
                     </Grid>
                     <Button.Flyout>
-                        <Flyout>
-                            <GridView x:Name="buildingList">
+                        <Flyout  ShowMode="Transient" Placement="Right" LightDismissOverlayMode="On" Closing="FlyoutClosing"  >
+                            <GridView x:Name="buildingList" Canvas.ZIndex="10" Width= "Auto" Height="Auto" PointerExited="GridLostMouse" >
+                            
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="Game:BuildingCount">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="47"/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <Image Source="{x:Bind image}" Width="40" Height="40"
+                                        <Grid Width="30" Height="60" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <Image Source="{x:Bind image}" Width="30" Height="30"
                                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                             <TextBlock Text="{x:Bind count}" Foreground="Teal" FontSize="14" 
                                                 Grid.Column="1" VerticalAlignment="Center"/>
                                         </Grid>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
-                             </GridView>
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid MaximumRowsOrColumns="6" Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
@@ -152,7 +149,7 @@
                     Visibility="{x:Bind Converter={StaticResource ReverseBoolToVisibility}, Mode=OneWay, Path=IsLoggedIn}"
                     Background="Transparent"
                     HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Left" PointerEntered="ShowBuildings">
+                    HorizontalContentAlignment="Left">
                     <Grid Height="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="38" />

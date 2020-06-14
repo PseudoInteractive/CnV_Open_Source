@@ -356,20 +356,46 @@ namespace COTG.Views
             bd.Add(new BuildingCount() { count = 5, image = bmp });
 
             }
+            var button = sender as Button;
+            button.Focus(FocusState.Programmatic);
 
             buildingList.ItemsSource = bd;
-            var button = sender as Button;
+            buildingList.Width = Double.NaN;
+            buildingList.Height = Double.NaN;
+
+            //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
+            //  buildingList.DesiredSize
+            button.Flyout.OverlayInputPassThroughElement = button;
+            buildingList.UpdateLayout();
+            
+ //           buildingList.UpdateLayout();
+       //     button.Flyout.with
             var mouseC = e.GetCurrentPoint(null).Position;
             const float spawn = 20.0f;
+            //            button.Focus(FocusState.Programmatic);
+
+//            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+
             var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-            button.Flyout.ShowAt(button, new FlyoutShowOptions() { ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway, Placement = FlyoutPlacementMode.Full }); // ,ExclusionRect=avoid });
+            button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
 
-
+           
         }
 
 		private void DoNothing(object sender, RoutedEventArgs e)
 		{
 
 		}
-	}
+
+        private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+        {
+            Log("Why is this closing?");
+        }
+
+        private void GridLostMouse(object sender, PointerRoutedEventArgs e)
+        {
+            var 
+
+        }
+    }
 }
