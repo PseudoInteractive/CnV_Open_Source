@@ -1,21 +1,25 @@
 ﻿using System;
-using System.Diagnostics;
+using static COTG.Debug;
 
 using COTG.Core.Helpers;
 using COTG.Services;
 
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter;
+//using Microsoft.AppCenter.Analytics;
+//using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+//using Microsoft.Extensions.DependencyInjection;
+//using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Options;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+
+//using ZLogger;
+
+using Cysharp.Text;
 
 namespace COTG
 {
@@ -67,29 +71,40 @@ namespace COTG
         protected override async void OnActivated(IActivatedEventArgs args)
         {
             await ActivationService.ActivateAsync(args);
-            AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-               typeof(Analytics), typeof(Crashes));
+            //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+            //   typeof(Analytics), typeof(Crashes));
 
-            var configuration = new ConfigurationBuilder()
-                                            .AddJsonFile("appsettings.json", false, true)
-                                            .Build();
+        
+
+            //var configuration = new ConfigurationBuilder()
+            //                                .AddJsonFile("appsettings.json", false, true)
+            //                                .Build();
 
 
-            ILogger logger;
+            
 
-            using (var serviceProvider = new ServiceCollection()
-                .AddLogging(cfg =>
-                {
-                    cfg.AddConfiguration(configuration.GetSection("Logging"));
-                    cfg.AddConsole();
-                })
-                .BuildServiceProvider())
-            {
-                logger = serviceProvider.GetService<ILogger<App>>();
-            }
+            //    CreateDefaultBuilder(args)
+            //        .ConfigureWebHostDefaults(webBuilder =>
+            //        {
+            //            webBuilder.UseStartup<Startup>();
+            //        }).Build().Run();
 
-            logger.LogInformation("logger information");
-            logger.LogWarning("logger warning");
+
+            //ILogger logger;
+
+            //using (var serviceProvider = new ServiceCollection()
+            //    .AddLogging(cfg =>
+            //    {
+            //        cfg.AddConfiguration(configuration.GetSection("Logging"));
+            //        cfg.AddConsole();
+            //    })
+            //    .BuildServiceProvider())
+            //{
+            //    logger = serviceProvider.GetService<ILogger<App>>();
+            //}
+
+            //logger.LogInformation("logger information");
+            //logger.LogWarning("logger warning");
 
           
             //using (var listener = new LoggerTraceListener(logger))

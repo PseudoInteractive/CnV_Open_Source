@@ -6,7 +6,7 @@ using System.Web;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using static System.Diagnostics.Debug;
+using static COTG.Debug;
 using System.Text.Json;
 //using System.Convert;
 //using Str8 = System.Utf8String;
@@ -51,7 +51,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                Log(e);
                 return a;
             }
 
@@ -67,7 +67,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                Log(e);
                 return a;
             }
 

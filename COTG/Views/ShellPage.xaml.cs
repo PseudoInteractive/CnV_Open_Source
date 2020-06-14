@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -18,8 +17,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-
+using static COTG.Debug;
 using WinUI = Microsoft.UI.Xaml.Controls;
+using COTG.Game;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Foundation;
 
 namespace COTG.Views
 {
@@ -32,7 +35,6 @@ namespace COTG.Views
         public Frame shellFrame;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
-        private UserData _user;
         private bool _isBusy;
         private bool _isLoggedIn;
         private bool _isAuthorized;
@@ -52,11 +54,7 @@ namespace COTG.Views
             set { Set(ref _selected, value); }
         }
 
-        public UserData User
-        {
-            get { return _user; }
-            set { Set(ref _user, value); }
-        }
+
 
         public bool IsBusy
         {
@@ -92,18 +90,20 @@ namespace COTG.Views
             navigationView.BackRequested += OnBackRequested;
             IdentityService.LoggedIn += OnLoggedIn;
             IdentityService.LoggedOut += OnLoggedOut;
-            UserDataService.UserDataUpdated += OnUserDataUpdated;
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            
-            var webView= JSClient.Initialize(panel);
-            shellFrame = new Frame() {
-               Background = null
-              //  HorizontalAlignment=HorizontalAlignment.Stretch,
-             //   VerticalAlignment=VerticalAlignment.Stretch
-           ,CacheSize=10};
+
+            var webView = JSClient.Initialize(panel);
+            shellFrame = new Frame()
+            {
+                Background = null
+           //  HorizontalAlignment=HorizontalAlignment.Stretch,
+           //   VerticalAlignment=VerticalAlignment.Stretch
+           ,
+                CacheSize = 10
+            };
             //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
             //      RelativePanel.SetAlignRightWithPanel(shellFrame, true);
             //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
@@ -141,30 +141,24 @@ namespace COTG.Views
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
             KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
             KeyboardAccelerators.Add(_backKeyboardAccelerator);
-            IsLoggedIn = IdentityService.IsLoggedIn();
-            IsAuthorized = IsLoggedIn && IdentityService.IsAuthorized();
-            User = await UserDataService.GetUserAsync();
+            IsLoggedIn = true;// IdentityService.IsLoggedIn();
+            IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // panel.hor
             Services.NavigationService.Navigate<Views.MainPage>();
             navigationView.IsPaneOpen = false;
 
         }
 
-        private void OnUserDataUpdated(object sender, UserData userData)
-        {
-            User = userData;
-        }
 
         private void OnLoggedIn(object sender, EventArgs e)
         {
             IsLoggedIn = true;
-            IsAuthorized = IsLoggedIn && IdentityService.IsAuthorized();
+            IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             IsBusy = false;
         }
 
         private void OnLoggedOut(object sender, EventArgs e)
         {
-            User = null;
             IsLoggedIn = false;
             IsAuthorized = false;
             CleanRestrictedPagesFromNavigationHistory();
@@ -174,9 +168,9 @@ namespace COTG.Views
         private void CleanRestrictedPagesFromNavigationHistory()
         {
             NavigationService.Frame.BackStack
-                .Where(b => Attribute.IsDefined(b.SourcePageType, typeof(Restricted)))
-                .ToList()
-                .ForEach(page => NavigationService.Frame.BackStack.Remove(page));
+.Where(b => Attribute.IsDefined(b.SourcePageType, typeof(Restricted)))
+.ToList()
+.ForEach(page => NavigationService.Frame.BackStack.Remove(page));
         }
 
         private void GoBackToLastUnrestrictedPage()
@@ -199,16 +193,16 @@ namespace COTG.Views
             {
                 NavigationService.Navigate<SettingsPage>();
             }
-            else
-            {
-                IsBusy = true;
-                var loginResult = await IdentityService.LoginAsync();
-                if (loginResult != LoginResultType.Success)
-                {
-                    await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
-                    IsBusy = false;
-                }
-            }
+            //else
+            //{
+            //    IsBusy = true;
+            //    var loginResult = await IdentityService.LoginAsync();
+            //    if (loginResult != LoginResultType.Success)
+            //    {
+            //        await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
+            //        IsBusy = false;
+            //    }
+            //}
         }
 
         private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -264,7 +258,7 @@ namespace COTG.Views
         {
             if (args.IsSettingsInvoked)
             {
-                NavigationService.Navigate< SettingsPage>( null, args.RecommendedNavigationTransitionInfo);
+                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
                 return;
             }
 
@@ -300,7 +294,7 @@ namespace COTG.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
@@ -324,6 +318,7 @@ namespace COTG.Views
         }
 
 
+
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private async void TestPost2(object sender, RoutedEventArgs e)
@@ -338,7 +333,7 @@ namespace COTG.Views
         }
         private async void GetWorldInfo(object sender, RoutedEventArgs e)
         {
-          await RestAPI.getWorldInfo.Post();
+            await RestAPI.getWorldInfo.Post();
 
         }
         private async void GetPPDT(object sender, RoutedEventArgs e)
@@ -346,5 +341,35 @@ namespace COTG.Views
             await JSClient.GetPPDT();
 
         }
-    }
+
+        static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+
+
+        private void ShowBuildings(object sender, PointerRoutedEventArgs e)
+        {
+            Log("Show Buildings");
+            List<BuildingCount> bd = new List<BuildingCount>();
+            foreach (var b in buildings)
+            {
+                var bmp = new BitmapImage(new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png"));// { Width = 40, height = 40 };
+                Log(bmp.UriSource.ToString());
+            bd.Add(new BuildingCount() { count = 5, image = bmp });
+
+            }
+
+            buildingList.ItemsSource = bd;
+            var button = sender as Button;
+            var mouseC = e.GetCurrentPoint(null).Position;
+            const float spawn = 20.0f;
+            var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+            button.Flyout.ShowAt(button, new FlyoutShowOptions() { ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway, Placement = FlyoutPlacementMode.Full }); // ,ExclusionRect=avoid });
+
+
+        }
+
+		private void DoNothing(object sender, RoutedEventArgs e)
+		{
+
+		}
+	}
 }

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>COTG.Core</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
@@ -30,28 +31,20 @@
 
    <ItemGroup>
      <PackageReference Include="FluentAssertions" Version="5.10.3" />
-     <PackageReference Include="Microsoft.AspNetCore.Http.Connections.Client" Version="5.0.0-preview.5.20279.2" />
-     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.56" />
      <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="5.0.0-preview.3.20215.2" />
-     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Identity.Client" Version="4.14.0" />
      <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview1" />
-     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
      <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Memory" Version="4.5.4" />
      <PackageReference Include="System.Text.Json" Version="5.0.0-preview.5.20278.1" />
+     <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.5.20278.1" />
+     <PackageReference Include="ZString" Version="2.1.2" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <Reference Include="ZLogger">
+       <HintPath>S:\source\ZLogger\src\ZLogger\bin\Debug\netstandard2.0\ZLogger.dll</HintPath>
+     </Reference>
    </ItemGroup>
 </Project>

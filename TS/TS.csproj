@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Remove="Ref\game.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Ref\game.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.0-beta-20200612-1">
       <PrivateAssets>all</PrivateAssets>

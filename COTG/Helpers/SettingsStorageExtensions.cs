@@ -6,6 +6,7 @@ using COTG.Core.Helpers;
 
 using Windows.Storage;
 using Windows.Storage.Streams;
+using System.Text.Json;
 
 namespace COTG.Helpers
 {
@@ -23,7 +24,7 @@ namespace COTG.Helpers
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = await Json.StringifyAsync(content);
+            var fileContent = JsonSerializer.Serialize(content);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -38,12 +39,12 @@ namespace COTG.Helpers
             var file = await folder.GetFileAsync($"{name}.json");
             var fileContent = await FileIO.ReadTextAsync(file);
 
-            return await Json.ToObjectAsync<T>(fileContent);
+            return JsonSerializer.Deserialize<T>(fileContent);
         }
 
         public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, await Json.StringifyAsync(value));
+            settings.SaveString(key, JsonSerializer.Serialize(value));
         }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
@@ -57,7 +58,7 @@ namespace COTG.Helpers
 
             if (settings.Values.TryGetValue(key, out obj))
             {
-                return await Json.ToObjectAsync<T>((string)obj);
+                return JsonSerializer.Deserialize<T>((string)obj);
             }
 
             return default(T);

@@ -79,13 +79,13 @@ namespace COTG.Views
             IdentityService.LoggedIn += OnLoggedIn;
             IdentityService.LoggedOut += OnLoggedOut;
             UserDataService.UserDataUpdated += OnUserDataUpdated;
-            IsLoggedIn = IdentityService.IsLoggedIn();
-            User = await UserDataService.GetUserAsync();
+            IsLoggedIn = true;// IdentityService.IsLoggedIn();
+            User = await UserDataService.GetDefaultUserData();
 
-            if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
-            {
-                FeedbackLink.Visibility = Visibility.Visible;
-            }
+            //if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
+            //{
+            //    FeedbackLink.Visibility = Visibility.Visible;
+            //}
         }
 
         private string GetVersionDescription()
@@ -115,19 +115,19 @@ namespace COTG.Views
 
         private async void OnLogIn(object sender, RoutedEventArgs e)
         {
-            IsBusy = true;
-            var loginResult = await IdentityService.LoginAsync();
-            if (loginResult != LoginResultType.Success)
-            {
-                await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
-                IsBusy = false;
-            }
+            //IsBusy = true;
+            //var loginResult = await IdentityService.LoginAsync();
+            //if (loginResult != LoginResultType.Success)
+            //{
+            //    await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
+            //    IsBusy = false;
+            //}
         }
 
         private async void OnLogOut(object sender, RoutedEventArgs e)
         {
-            IsBusy = true;
-            await IdentityService.LogoutAsync();
+          //  IsBusy = true;
+         //   await IdentityService.LogoutAsync();
         }
 
         private void OnLoggedIn(object sender, EventArgs e)
@@ -166,11 +166,11 @@ namespace COTG.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
-        {
-            // This launcher is part of the Store Services SDK https://docs.microsoft.com/windows/uwp/monetize/microsoft-store-services-sdk
-            var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-            await launcher.LaunchAsync();
-        }
+        //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // This launcher is part of the Store Services SDK https://docs.microsoft.com/windows/uwp/monetize/microsoft-store-services-sdk
+        //    var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+        //    await launcher.LaunchAsync();
+        //}
     }
 }

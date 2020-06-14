@@ -7,9 +7,9 @@ using Windows.Web.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Windows.Web.Http.Filters;
-using System.Net.Http.Json;
 using static COTG.Debug;
 using System.Web;
+using COTG.Game;
 
 namespace COTG.Services
 {
@@ -205,13 +205,7 @@ namespace COTG.Services
         }
         public override void ProcessJson(JsonDocument json)
         {
-            foreach(var jsp in json.RootElement.EnumerateObject())
-            {
-                Log(jsp.Name);
-                var jso = jsp.Value;
-
-
-            }
+            World.UpdateCurrent(json);
         }
 
         //async public void Post2()

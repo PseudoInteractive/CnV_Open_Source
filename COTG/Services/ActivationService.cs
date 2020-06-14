@@ -24,7 +24,7 @@ namespace COTG.Services
 
         private object _lastActivationArgs;
 
-        private IdentityService IdentityService => Singleton<IdentityService>.Instance;
+//        private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
@@ -42,8 +42,8 @@ namespace COTG.Services
                 // Initialize services that you need before app activation
                 // take into account that the splash screen is shown while this code runs.
                 await InitializeAsync();
-                UserDataService.Initialize();
-                await IdentityService.InitializeWithAadAndPersonalMsAccounts();
+            //    UserDataService.Initialize();
+  //              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
               
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active

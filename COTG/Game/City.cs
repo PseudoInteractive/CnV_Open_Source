@@ -7,6 +7,8 @@ using System.Collections.Concurrent;
 using FluentAssertions;
 using FluentAssertions.Common;
 using static COTG.Debug;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace COTG.Game
 {
@@ -31,4 +33,11 @@ namespace COTG.Game
 
         public static Dictionary<int,City> all = new Dictionary<int, City>(); // keyed by city
 	}
+    public class BuildingCount
+    {
+        public BitmapImage image { get; set; }
+        public int count { get; set; }
+
+    }
+
 }

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 
 namespace COTG.Core.Helpers
 {
+
     public static class Singleton<T>
         where T : new()
     {
