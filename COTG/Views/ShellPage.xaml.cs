@@ -344,40 +344,55 @@ namespace COTG.Views
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
 
-
+        static DateTime flyoutCreatedTime;
         private void ShowBuildings(object sender, PointerRoutedEventArgs e)
         {
             Log("Show Buildings");
             List<BuildingCount> bd = new List<BuildingCount>();
             foreach (var b in buildings)
             {
-                var bmp = new BitmapImage(new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png"));// { Width = 40, height = 40 };
-                Log(bmp.UriSource.ToString());
-            bd.Add(new BuildingCount() { count = 5, image = bmp });
+                var bmp = new BitmapImage();
+                bmp.DecodePixelWidth = 30;
+                bmp.UriSource = new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png");
+                // { Width = 40, height = 40 };
+         //       Log(bmp.UriSource.ToString());
+                bd.Add(new BuildingCount() { count = 5, image = bmp });
 
             }
             var button = sender as Button;
-            button.Focus(FocusState.Programmatic);
+           // button.Focus(FocusState.Programmatic);
 
-            buildingList.ItemsSource = bd;
             buildingList.Width = Double.NaN;
             buildingList.Height = Double.NaN;
+            buildingList.ItemsSource = bd;
+            buildingList.UpdateLayout();
+            flyoutCreatedTime = DateTime.Now;
+            var flyout = FlyoutBase.GetAttachedFlyout(button);
+            //  flyout.OverlayInputPassThroughElement = shellPage;
+            //    flyout.XamlRoot = shellFrame.XamlRoot;
+            //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
+          //  Log($"{button.Tr.ToString()}");
+            var c = button.CenterPoint;
+            //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
+            flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto }) ;
 
+ //           buildingList.Focus(FocusState.Programmatic);
+//            buildingList.CapturePointer(e.Pointer);
+            //   buildingList.Focus(FocusState.Programmatic);
             //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
             //  buildingList.DesiredSize
-            button.Flyout.OverlayInputPassThroughElement = button;
-            buildingList.UpdateLayout();
-            
- //           buildingList.UpdateLayout();
-       //     button.Flyout.with
+            //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
+
+            //           buildingList.UpdateLayout();
+            //     button.Flyout.with
             var mouseC = e.GetCurrentPoint(null).Position;
             const float spawn = 20.0f;
-            //            button.Focus(FocusState.Programmatic);
+                 //      button.Focus(FocusState.Programmatic);
 
 //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
 
-            var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-            button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
+          //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+          //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
 
            
         }
@@ -394,7 +409,38 @@ namespace COTG.Views
 
         private void GridLostMouse(object sender, PointerRoutedEventArgs e)
         {
-            var 
+
+			try
+			{
+                Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
+                var me = sender as GridView;
+                var button = buildingsButton;
+                var flyout = FlyoutBase.GetAttachedFlyout(button);
+                if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
+                    flyout.Hide();
+
+
+            }
+			catch (Exception)
+			{
+
+			}
+        }
+
+        public static string GetName(object o )
+		{
+
+            return o is FrameworkElement e ? $"{ e.Name }{e.GetType() }"  : $"{ o.ToString()}{o.GetType() }";
+		}
+		private void ShellPointerEntered(object sender, PointerRoutedEventArgs e)
+		{
+            Log($"pointer enter: {GetName(sender)} {GetName(e.OriginalSource)}");
+        }
+
+		private void ShellPointerExited(object sender, PointerRoutedEventArgs e)
+		{
+            Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
+
 
         }
     }

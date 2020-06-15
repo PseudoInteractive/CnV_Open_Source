@@ -42,6 +42,8 @@
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
 
       <Extensions>
@@ -86,6 +88,7 @@
     <Capability Name="internetClient" />
     <Capability Name="codeGeneration"/>
     <Capability Name="privateNetworkClientServer"/>
+    <DeviceCapability Name="lowLevel"/>
   </Capabilities>
 
   <genTemplate:Metadata>

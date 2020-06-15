@@ -6,6 +6,7 @@
     <RootNamespace>COTG.Core</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
     <LangVersion>preview</LangVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +19,9 @@
     <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FileAlignment>2048</FileAlignment>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
