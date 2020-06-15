@@ -19,39 +19,40 @@
     Loaded="OnLoaded"
     mc:Ignorable="d" PointerEntered="ShellPointerEntered" PointerExited="ShellPointerExited">
 
-	<Page.Resources>
-		<converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility" FalseValue="Visible" TrueValue="Collapsed" />
-		<converters:BoolNegationConverter x:Name="BoolNegationConverter" />
-		<Flyout x:Key="buildingFlyout"  ShowMode="Auto" Placement="Right" Closing="FlyoutClosing" 
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility" FalseValue="Visible" TrueValue="Collapsed" />
+        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
+        <Flyout x:Key="buildingFlyout" Closing="FlyoutClosing" 
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMode="Auto"
                     >
-            
-			<GridView x:Name="buildingList" Width= "Auto" Height="Auto" PointerExited="GridLostMouse" >
-				<GridView.ItemTemplate>
-					<DataTemplate x:DataType="Game:BuildingCount">
-						<Grid Width="30" Height="60" >
-							<Grid.RowDefinitions>
-								<RowDefinition Height="30"/>
-								<RowDefinition Height="30"/>
-							</Grid.RowDefinitions>
-							<Image Source="{x:Bind image}" Width="30" Height="30"
-                                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
-							<TextBlock Text="{x:Bind count}" Foreground="Teal" FontSize="14" 
-                                                Grid.Column="1" VerticalAlignment="Center"/>
-						</Grid>
-					</DataTemplate>
-				</GridView.ItemTemplate>
-				<GridView.ItemsPanel>
-					<ItemsPanelTemplate>
-						<ItemsWrapGrid MaximumRowsOrColumns="6" Orientation="Horizontal" />
-					</ItemsPanelTemplate>
-				</GridView.ItemsPanel>
-			</GridView>
-		</Flyout>
-	</Page.Resources>
 
-	<winui:NavigationView
+            <GridView x:Name="buildingList" PointerExited="GridLostMouse" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="Game:BuildingCount">
+                        <Grid Width="30" Height="60" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{x:Bind image,Mode=OneTime}" Stretch="UniformToFill" />
+                            <TextBlock Text="{x:Bind count,Mode=OneTime}" 
+                                                Grid.Row="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid MaximumRowsOrColumns="6" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+        </Flyout>
+    </Page.Resources>
+
+    <winui:NavigationView
         x:Name="navigationView"
         IsBackButtonVisible="Visible"
         IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
@@ -59,50 +60,50 @@
         ItemInvoked="OnItemInvoked"
         IsSettingsVisible="True"
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
-		<winui:NavigationView.ContextFlyout>
-			<MenuFlyout>
-				<MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />
-				<MenuFlyoutItem Click="GetPPDT" Text="GetPPDT" />
-				<MenuFlyoutItem Click="TestPost" Text="TestPost" />
-				<MenuFlyoutItem Click="TestPost2" Text="TestPost2" />
-				<MenuFlyoutItem Click="TestGoCity" Text="TestGoCity" />
-				<MenuFlyoutItem Click="Refresh"  Text="Refresh" AccessKey="F5" />
-			</MenuFlyout>
-		</winui:NavigationView.ContextFlyout>
-		<winui:NavigationView.MenuItems>
-			<!--
+        <winui:NavigationView.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />
+                <MenuFlyoutItem Click="GetPPDT" Text="GetPPDT" />
+                <MenuFlyoutItem Click="TestPost" Text="TestPost" />
+                <MenuFlyoutItem Click="TestPost2" Text="TestPost2" />
+                <MenuFlyoutItem Click="TestGoCity" Text="TestGoCity" />
+                <MenuFlyoutItem Click="Refresh"  Text="Refresh" AccessKey="F5" />
+            </MenuFlyout>
+        </winui:NavigationView.ContextFlyout>
+        <winui:NavigationView.MenuItems>
+            <!--
             TODO WTS: Change the symbols for each item as appropriate for your app
             More on Segoe UI Symbol icons: https://docs.microsoft.com/windows/uwp/style/segoe-ui-symbol-font
             Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/projectTypes/navigationpane.md
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
-			<winui:NavigationViewItem x:Uid="Shell_Main" helpers:NavHelper.NavigateTo="views:MainPage" >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document"/>
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_TwoPaneView" helpers:NavHelper.NavigateTo="views:TwoPaneViewPage" >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document"/>
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_MasterDetail" helpers:NavHelper.NavigateTo="views:MasterDetailPage" >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document"/>
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_TreeView" helpers:NavHelper.NavigateTo="views:TreeViewPage" >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document"/>
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample" helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage" >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document"/>
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-		</winui:NavigationView.MenuItems>
-		<!--<i:Interaction.Behaviors>
+            <winui:NavigationViewItem x:Uid="Shell_Main" helpers:NavHelper.NavigateTo="views:MainPage" >
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document"/>
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_TwoPaneView" helpers:NavHelper.NavigateTo="views:TwoPaneViewPage" >
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document"/>
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_MasterDetail" helpers:NavHelper.NavigateTo="views:MasterDetailPage" >
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document"/>
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_TreeView" helpers:NavHelper.NavigateTo="views:TreeViewPage" >
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document"/>
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample" helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage" >
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document"/>
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+        </winui:NavigationView.MenuItems>
+        <!--<i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior
                 DefaultHeader="{x:Bind Mode=OneWay, Path=Selected.Content}">
                 <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
@@ -117,10 +118,9 @@
                 </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
             </behaviors:NavigationViewHeaderBehavior>
         </i:Interaction.Behaviors>-->
-		<winui:NavigationView.PaneFooter>
-			<Grid>
-				<Models:AppBar x:Name="appBar" />
-				<Button x:Name="buildingsButton"
+        <winui:NavigationView.PaneFooter>
+            <Grid>
+                <Button x:Name="buildingsButton"
         
                     Height="60"
                     Width="Auto"
@@ -128,30 +128,29 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     PointerEntered="ShowBuildings"
-                    FlyoutBase.AttachedFlyout="{StaticResource buildingFlyout}" MinWidth="40" MinHeight="60" HorizontalContentAlignment="Stretch" AllowFocusOnInteraction="False" IsTapEnabled="False">
-					<Button.Foreground>
-						<ImageBrush ImageSource="ms-appx:///Views/Assets/LargeTile.png" Stretch="Fill"/>
-					</Button.Foreground>
-				</Button>
-				
-			</Grid>
-		</winui:NavigationView.PaneFooter>
-		<Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
+                    FlyoutBase.AttachedFlyout="{StaticResource buildingFlyout}">
+                    <Image Source="/images/marketplace.png" Stretch="Fill" />
+                </Button>
+                <Models:AppBar x:Name="appBar" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
 
-		</Grid>
-	</winui:NavigationView>
+            </Grid>
+        </winui:NavigationView.PaneFooter>
+        <Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+        </Grid>
+    </winui:NavigationView>
 </Page>

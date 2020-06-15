@@ -23,6 +23,7 @@ using COTG.Game;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
+using System.Collections.Concurrent;
 
 namespace COTG.Views
 {
@@ -344,6 +345,7 @@ namespace COTG.Views
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
 
+
         static DateTime flyoutCreatedTime;
         private void ShowBuildings(object sender, PointerRoutedEventArgs e)
         {
@@ -351,12 +353,13 @@ namespace COTG.Views
             List<BuildingCount> bd = new List<BuildingCount>();
             foreach (var b in buildings)
             {
-                var bmp = new BitmapImage();
-                bmp.DecodePixelWidth = 30;
-                bmp.UriSource = new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png");
+    //            var bmp = new BitmapImage();
+//                bmp.DecodePixelWidth = 30;
+  //               bmp.UriSource = new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png");
                 // { Width = 40, height = 40 };
          //       Log(bmp.UriSource.ToString());
-                bd.Add(new BuildingCount() { count = 5, image = bmp });
+                bd.Add(new BuildingCount() { count = 5, image =  JSClient.GetImage("images/city/buildings/icons/",$"{b}.png") });
+                
 
             }
             var button = sender as Button;

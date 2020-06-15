@@ -21,6 +21,10 @@ using System.Threading;
 using COTG.Helpers;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Collections.Concurrent;
+using Windows.Storage.Streams;
+using Windows.Storage;
 
 namespace COTG
 {
@@ -37,6 +41,7 @@ namespace COTG
         static KeyboardAccelerator refreshAccelerator;
         static HttpBaseProtocolFilter httpFilter;
         public static HttpClient httpClient;
+        public static HttpClient downloadImageClient;
         public static int world = 19;
         static Regex urlMatch = new Regex(@"w(\d\d).crownofthegods.com");
         public static Uri httpsHost;
@@ -294,6 +299,13 @@ namespace COTG
 
                     try
                     {
+                        httpsHost = new Uri($"https://{args.Uri.Host}");
+                        downloadImageClient = new HttpClient();
+                        downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
+                        downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
+                        downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
+                        downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+
                         httpFilter = new HttpBaseProtocolFilter();// HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
                         httpFilter.AllowAutoRedirect = true;
 //                        httpFilter.ServerCredential =
@@ -320,15 +332,16 @@ namespace COTG
                       
 //                        httpFilter.User.
 
-                        httpsHost = new Uri($"https://{args.Uri.Host}");
+                        
                         httpClient = new HttpClient(httpFilter); // reset
                                                                  //   httpClient = new HttpClient(); // reset
-                        //                        var headers = httpClient.DefaultRequestHeaders;
-                        //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
-                        // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
-                        //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                        //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
-                        //   headers.Add("Accept", @"*/*");
+                                                                 //                        var headers = httpClient.DefaultRequestHeaders;
+                                                                 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
+                                                                 // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
+                                                                 //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                                                                 //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
+                                                                 //   headers.Add("Accept", @"*/*");
+
                     }
                     catch (Exception e)
                     {
@@ -347,6 +360,53 @@ namespace COTG
 
         }
 
+        static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
+        public static BitmapImage GetImage(string dir,string name)
+        {
+            return ImageHelper.FromImages(name);
+            //if (imageCache.TryGetValue(name, out var b))
+            //    return b;
+            //b = new BitmapImage();
+            //imageCache.TryAdd(name, b);
+
+            //await LoadImage(b,dir,name);
+            //return b;
+        }
+        async static Task LoadImage(BitmapImage b,string dir,string name)
+        {
+
+            try
+            {
+
+                var uri = new Uri(httpsHost, dir+name);
+                using (var response = await downloadImageClient.GetAsync(uri))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var buff = await response.Content.ReadAsBufferAsync();
+
+                    var temp = new byte[buff.Length];
+
+                    var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff);
+                     dataReader.ReadBytes(temp);
+
+                    // Get the path to the app's Assets folder.
+                  //  string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                
+
+                    // Get the folder object that corresponds to this absolute path in the file system.
+                   // StorageFolder folder = await DownloadsFolder.CreateFolderAsync(@"\cotg");
+                    var file = await DownloadsFolder.CreateFileAsync(name);
+                    await FileIO.WriteBytesAsync(file, temp);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+
+        }
         private static void HttpFilter_ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs args)
         {
             Log(args.ToString());

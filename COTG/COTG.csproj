@@ -468,6 +468,30 @@
     <EmbeddedResource Include="Javascript\funky.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="images\barracks.png" />
+    <Content Include="images\blacksmith.png" />
+    <Content Include="images\castle.png" />
+    <Content Include="images\cityguardhouse.png" />
+    <Content Include="images\cottage.png" />
+    <Content Include="images\farmhouse.png" />
+    <Content Include="images\forester.png" />
+    <Content Include="images\hideaway.png" />
+    <Content Include="images\mage_tower.png" />
+    <Content Include="images\marketplace.png" />
+    <Content Include="images\mine.png" />
+    <Content Include="images\port.png" />
+    <Content Include="images\quarry.png" />
+    <Content Include="images\sawmill.png" />
+    <Content Include="images\shipyard.png" />
+    <Content Include="images\smelter.png" />
+    <Content Include="images\stable.png" />
+    <Content Include="images\stonemason.png" />
+    <Content Include="images\storehouse.png" />
+    <Content Include="images\temple.png" />
+    <Content Include="images\townhall.png" />
+    <Content Include="images\townhouse.png" />
+    <Content Include="images\trainingground.png" />
+    <Content Include="images\windmill.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

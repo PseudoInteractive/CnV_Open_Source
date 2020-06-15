@@ -2043,13 +2043,19 @@ function SetupHeaders() {
 function Contains(a, b) {
     return a.indexOf(b) != -1;
 }
+function sendCityData() {
+    console.log("sendCity");
+    const wrapper = { citydata: cdata_ };
+    window['external']['notify'](JSON.stringify(wrapper));
+}
 function __avatarAjaxDone(url, data) {
     //console.log("Change: " + this.readyState + " " + this.responseURL);
     let url_21 = url;
     if (Contains(url_21, "gC.php")) {
+        cdata_ = JSON.parse(data);
+        sendCityData();
         setTimeout(function () {
             /** @type {*} */
-            cdata_ = JSON.parse(data);
             updateattack_();
             updatedef_();
             makebuildcount_();
@@ -2081,7 +2087,7 @@ function __avatarAjaxDone(url, data) {
     // }
     else if (Contains(url_21, "poll2.php")) {
         /** @type {*} */
-        var poll2_ = JSON.parse(data);
+        let poll2_ = JSON.parse(data);
         if ('OGA' in poll2_)
             OGA = poll2_.OGA;
         if ('city' in poll2_) {
@@ -2089,8 +2095,10 @@ function __avatarAjaxDone(url, data) {
                 cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
                 if ('bd' in poll2_.city) {
                     let now = Date.now();
+                    console.log("pollCity");
                     if (now > lastUpdate + 5000) {
                         lastUpdate = now;
+                        sendCityData();
                         setTimeout(makebuildcount_, 400);
                     }
                 }
@@ -2111,7 +2119,27 @@ function OptimizeAjax() {
     //jQuery.ajaxSetup({dataType:"nada" } )
     jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;
     ;
-    /*
+    setTimeout(function () {
+        (function (open_2) {
+            /**
+             * @param {string=} p0
+             * @param {string=} p1
+             * @param {(boolean|null)=} p2
+             * @param {(null|string)=} p3
+             * @param {(null|string)=} p4
+             * @return {void}
+             */
+            XMLHttpRequest.prototype.open = function () {
+                this.addEventListener("readystatechange", function () {
+                    //console.log("Change: " + this.readyState + " " + this.responseURL);
+                    if (this.readyState == 4) {
+                        __avatarAjaxDone(this.responseURL, this.response);
+                    }
+                }, false);
+                open_2.apply(this, arguments);
+            };
+        })(XMLHttpRequest.prototype.open);
+    }, 100); /*
     __ajax=window['$']['ajax'];
         try {
             DoneWrapper.setup();

@@ -1,4 +1,4 @@
-4I0rr(X0rr());
+I0rr(X0rr());
 I0VV(u0VV());
 B0KK(A0KK());
 i011.J0EE = J0EE;
@@ -10266,7 +10266,6 @@ let cotgsubscribe;
     const W1k = 5563;
     const V7p = '2248';
     const r04 = '6508';
-    const '10' = '10';
     const C2y = 974;
     const B7k = 400000;
     const j3q = -(2131767013 >> 37162656);
@@ -32283,7 +32282,7 @@ let cotgsubscribe;
                 const I92 = _s(5431 - 0);
                 const v92 = a6.ccazzx.encrypt(JSON.stringify(w92), I92, U7y * 1);
                 N6();
-                const l92 = $.post(q6 + 'rSBr.php' ), {
+                const l92 = $.post(q6 + 'rSBr.php' , {
                     a: v92
                 });
                 F6();

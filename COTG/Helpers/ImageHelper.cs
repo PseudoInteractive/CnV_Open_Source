@@ -30,6 +30,11 @@ namespace COTG.Helpers
             var image = new BitmapImage(new Uri($"ms-appx:///Assets/{fileName}"));
             return image;
         }
+        public static BitmapImage FromImages(string fileName)
+        {
+            var image = new BitmapImage(new Uri($"ms-appx:///images/{fileName}"));
+            return image;
+        }
 
         public static async Task<StorageFile> LoadImageFileAsync()
         {
