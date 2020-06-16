@@ -468,7 +468,7 @@
     <EmbeddedResource Include="Javascript\funky.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="images\barracks.png" />
+    <Content Include="images\barracks.png" />
     <Content Include="images\blacksmith.png" />
     <Content Include="images\castle.png" />
     <Content Include="images\cityguardhouse.png" />

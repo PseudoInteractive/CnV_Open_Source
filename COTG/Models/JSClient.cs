@@ -35,7 +35,8 @@ namespace COTG
     {
 
    
-        static JsonDocument ppdt;
+        public static JsonDocument ppdt;
+        public static JsonDocument cityData;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
@@ -436,7 +437,8 @@ namespace COTG
             {
                 bool gotCreds = false;
                 Log($"Notify: {e.CallingUri} {e.Value} {sender}");
-                var jsd = JsonDocument.Parse(e.Value).RootElement;
+                var jsDoc = JsonDocument.Parse(e.Value);
+                var jsd = jsDoc.RootElement;
                 foreach (var jsp in jsd.EnumerateObject())
                 {
                     switch (jsp.Name)
@@ -493,7 +495,13 @@ namespace COTG
                                     city.lastAccessed = DateTime.Now;
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
+                                break;
 
+                            }
+                        case "citydata":
+                            {
+                                cityData = jsDoc;
+                                Log(cityData.ToString());
                             }
                             break;
                     }

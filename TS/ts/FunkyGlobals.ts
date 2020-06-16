@@ -1045,7 +1045,8 @@ function SendAttack_() {
 	// 	loop_();
 	}
 
-let lastUpdate;
+var lastUpdate: number = 0;
+
 function makebuildcount_() {
 		lastUpdate = Date.now();
 

@@ -998,7 +998,7 @@ function SendAttack_() {
     // 	end_5=commandInfo.x.length;
     // 	loop_();
 }
-let lastUpdate;
+var lastUpdate = 0;
 function makebuildcount_() {
     lastUpdate = Date.now();
     $("#bdtable").remove();
@@ -2092,7 +2092,7 @@ function __avatarAjaxDone(url, data) {
             OGA = poll2_.OGA;
         if ('city' in poll2_) {
             {
-                cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
+                cdata_ = Object.assign(cdata_, poll2_.city);
                 if ('bd' in poll2_.city) {
                     let now = Date.now();
                     console.log("pollCity");

@@ -17,7 +17,7 @@
     xmlns:Game="using:COTG.Game"
     x:Class="COTG.Views.ShellPage"
     Loaded="OnLoaded"
-    mc:Ignorable="d" PointerEntered="ShellPointerEntered" PointerExited="ShellPointerExited">
+    mc:Ignorable="d" >
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility" FalseValue="Visible" TrueValue="Collapsed" />

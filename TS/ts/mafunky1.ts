@@ -290,7 +290,7 @@ function __avatarAjaxDone(url: string,
 
 		if('city' in poll2_) {
 			{
-				cdata_={ ...cdata_,...poll2_.city };
+				cdata_=Object.assign(cdata_, poll2_.city);
 				if('bd' in poll2_.city) {
 					let now = Date.now();
 					console.log("pollCity");

@@ -349,55 +349,81 @@ namespace COTG.Views
         static DateTime flyoutCreatedTime;
         private void ShowBuildings(object sender, PointerRoutedEventArgs e)
         {
-            Log("Show Buildings");
-            List<BuildingCount> bd = new List<BuildingCount>();
-            foreach (var b in buildings)
+            try
             {
-    //            var bmp = new BitmapImage();
-//                bmp.DecodePixelWidth = 30;
-  //               bmp.UriSource = new Uri(JSClient.httpsHost, $"images/city/buildings/icons/{b}.png");
-                // { Width = 40, height = 40 };
-         //       Log(bmp.UriSource.ToString());
-                bd.Add(new BuildingCount() { count = 5, image =  JSClient.GetImage("images/city/buildings/icons/",$"{b}.png") });
+                Log("Show Buildings");
+                List<BuildingCount> bd = new List<BuildingCount>();
+                int bCount = 0;
+                var jse = JSClient.cityData.RootElement.GetProperty("citydata");
+                var bdd = new Dictionary<string, int>();
+
+                foreach (var bdi in jse.GetProperty("bd").EnumerateArray())
+                {
+                    var bid = bdi.GetAsInt("bid");
+                    if (bid >= buildings.Length)
+                    {
+                        Log($"{bid} out for range");
+                        continue;
+                    }
+                    var s = buildings[bid];
+                    if (!bdd.TryGetValue(s, out var counter))
+                    {
+                        bdd.Add(s, 0);
+                        counter = 0;
+                    }
+                    bdd[s] = counter + 1;
+                }
+                foreach (var i in bdd)
+                {
+                    bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
+                }
+
+//         
+
                 
+                var button = sender as Button;
+                // button.Focus(FocusState.Programmatic);
+
+                buildingList.Width = Double.NaN;
+                buildingList.Height = Double.NaN;
+                buildingList.ItemsSource = bd;
+                buildingList.UpdateLayout();
+                flyoutCreatedTime = DateTime.Now;
+                var flyout = FlyoutBase.GetAttachedFlyout(button);
+                //  flyout.OverlayInputPassThroughElement = shellPage;
+                //    flyout.XamlRoot = shellFrame.XamlRoot;
+                //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
+                //  Log($"{button.Tr.ToString()}");
+                var c = button.CenterPoint;
+                //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
+                flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
+
+                //           buildingList.Focus(FocusState.Programmatic);
+                //            buildingList.CapturePointer(e.Pointer);
+                //   buildingList.Focus(FocusState.Programmatic);
+                //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
+                //  buildingList.DesiredSize
+                //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
+
+                //           buildingList.UpdateLayout();
+                //     button.Flyout.with
+                var mouseC = e.GetCurrentPoint(null).Position;
+                const float spawn = 20.0f;
+                //      button.Focus(FocusState.Programmatic);
+
+                //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+
+                //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+                //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
 
             }
-            var button = sender as Button;
-           // button.Focus(FocusState.Programmatic);
+            catch (Exception e)
+            {
+                Log(e);
+            }
 
-            buildingList.Width = Double.NaN;
-            buildingList.Height = Double.NaN;
-            buildingList.ItemsSource = bd;
-            buildingList.UpdateLayout();
-            flyoutCreatedTime = DateTime.Now;
-            var flyout = FlyoutBase.GetAttachedFlyout(button);
-            //  flyout.OverlayInputPassThroughElement = shellPage;
-            //    flyout.XamlRoot = shellFrame.XamlRoot;
-            //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
-          //  Log($"{button.Tr.ToString()}");
-            var c = button.CenterPoint;
-            //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
-            flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto }) ;
 
- //           buildingList.Focus(FocusState.Programmatic);
-//            buildingList.CapturePointer(e.Pointer);
-            //   buildingList.Focus(FocusState.Programmatic);
-            //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
-            //  buildingList.DesiredSize
-            //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
 
-            //           buildingList.UpdateLayout();
-            //     button.Flyout.with
-            var mouseC = e.GetCurrentPoint(null).Position;
-            const float spawn = 20.0f;
-                 //      button.Focus(FocusState.Programmatic);
-
-//            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-
-          //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-          //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
-
-           
         }
 
 		private void DoNothing(object sender, RoutedEventArgs e)
