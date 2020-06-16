@@ -259,7 +259,8 @@ function __avatarAjaxDone(url: string,
 		UpdateResearchAndFaith();
 	}
 	else if(Contains(url_21,"nBuu.php")||Contains(url_21,"UBBit.php")) {
-		cdata_=JSON.parse(data);
+		cdata_ = JSON.parse(data);
+		sendCityData();
 	}
 
 	else if(Contains(url_21,"gWrd.php")) {
@@ -290,15 +291,17 @@ function __avatarAjaxDone(url: string,
 
 		if('city' in poll2_) {
 			{
-				cdata_=Object.assign(cdata_, poll2_.city);
-				if('bd' in poll2_.city) {
-					let now = Date.now();
-					console.log("pollCity");
-					if(now>lastUpdate+5000) {
-						lastUpdate = now;
-						sendCityData();
+				if (cdata_ != null) {
+					cdata_ = { ...cdata_, ...poll2_.city };
+					if ('bd' in poll2_.city) {
+						let now = Date.now();
+						console.log("pollCity");
+						if (now > lastUpdate + 5000) {
+							lastUpdate = now;
+							sendCityData();
 
-						setTimeout(makebuildcount_,400);
+							setTimeout(makebuildcount_, 400);
+						}
 					}
 				}
 			}
@@ -3124,7 +3127,10 @@ function avactor() {
 				creds.s = s;
 				creds.cid = cid;
 				creds.time = currentTime();
-				const wrapper = { jsvars: creds }
+				let wrapper = { jsvars: creds }
+				if (cdata_=null)
+					wrapper['citydata'] = cdata_;
+
 				window['external']['notify'](JSON.stringify(wrapper));
 
 			} catch (e) {

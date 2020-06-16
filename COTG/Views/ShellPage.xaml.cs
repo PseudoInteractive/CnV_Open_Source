@@ -340,31 +340,33 @@ namespace COTG.Views
         private async void GetPPDT(object sender, RoutedEventArgs e)
         {
             await JSClient.GetPPDT();
-
         }
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+        static List<short> bidMap = (new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, 455, 467 }).ToList();
 
 
         static DateTime flyoutCreatedTime;
-        private void ShowBuildings(object sender, PointerRoutedEventArgs e)
+        private async void ShowBuildings(object sender, PointerRoutedEventArgs e)
         {
             try
             {
+                Log(JSClient.cityData.ValueKind);
+                if (JSClient.cityData.ValueKind == System.Text.Json.JsonValueKind.Undefined)
+                    await COTG.Services.RestAPI.goCity.Post();
                 Log("Show Buildings");
                 List<BuildingCount> bd = new List<BuildingCount>();
                 int bCount = 0;
-                var jse = JSClient.cityData.RootElement.GetProperty("citydata");
+                var jse = JSClient.cityData;
                 var bdd = new Dictionary<string, int>();
 
                 foreach (var bdi in jse.GetProperty("bd").EnumerateArray())
                 {
                     var bid = bdi.GetAsInt("bid");
-                    if (bid >= buildings.Length)
-                    {
-                        Log($"{bid} out for range");
+                    bid= bidMap.FindIndex(b=>b==(short)bid);
+                    if (bid == -1)
                         continue;
-                    }
+                    
                     var s = buildings[bid];
                     if (!bdd.TryGetValue(s, out var counter))
                     {
@@ -417,9 +419,9 @@ namespace COTG.Views
                 //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log(e);
+                Log(ex);
             }
 
 

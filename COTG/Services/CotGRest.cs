@@ -238,7 +238,11 @@ namespace COTG.Services
 
 
         }
-
+        public override void ProcessJson(JsonDocument json)
+        {
+            Log("Got JS");
+            JSClient.cityData = json.RootElement;
+        }
 
     }
 

@@ -1763,7 +1763,7 @@ let layoutsl_ = [""];
 let layoutsw_ = [""];
 /** @type {!Array} */
 let layoutdf_ = [""];
-let cdata_;
+let cdata_ = null;
 let resl_ = [[]];
 let OGA = [];
 let wdata_;
@@ -2066,6 +2066,7 @@ function __avatarAjaxDone(url, data) {
     }
     else if (Contains(url_21, "nBuu.php") || Contains(url_21, "UBBit.php")) {
         cdata_ = JSON.parse(data);
+        sendCityData();
     }
     else if (Contains(url_21, "gWrd.php")) {
         setTimeout(function () {
@@ -2092,14 +2093,16 @@ function __avatarAjaxDone(url, data) {
             OGA = poll2_.OGA;
         if ('city' in poll2_) {
             {
-                cdata_ = Object.assign(cdata_, poll2_.city);
-                if ('bd' in poll2_.city) {
-                    let now = Date.now();
-                    console.log("pollCity");
-                    if (now > lastUpdate + 5000) {
-                        lastUpdate = now;
-                        sendCityData();
-                        setTimeout(makebuildcount_, 400);
+                if (cdata_ != null) {
+                    cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
+                    if ('bd' in poll2_.city) {
+                        let now = Date.now();
+                        console.log("pollCity");
+                        if (now > lastUpdate + 5000) {
+                            lastUpdate = now;
+                            sendCityData();
+                            setTimeout(makebuildcount_, 400);
+                        }
                     }
                 }
             }
@@ -4853,7 +4856,9 @@ function avactor() {
                 creds.s = s;
                 creds.cid = cid;
                 creds.time = currentTime();
-                const wrapper = { jsvars: creds };
+                let wrapper = { jsvars: creds };
+                if (cdata_ = null)
+                    wrapper['citydata'] = cdata_;
                 window['external']['notify'](JSON.stringify(wrapper));
             }
             catch (e) {

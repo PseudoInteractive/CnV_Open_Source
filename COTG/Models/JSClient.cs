@@ -36,7 +36,7 @@ namespace COTG
 
    
         public static JsonDocument ppdt;
-        public static JsonDocument cityData;
+        public static JsonElement cityData;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
@@ -500,7 +500,7 @@ namespace COTG
                             }
                         case "citydata":
                             {
-                                cityData = jsDoc;
+                                cityData = jsp.Value;
                                 Log(cityData.ToString());
                             }
                             break;
