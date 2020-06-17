@@ -473,6 +473,7 @@
     <Content Include="images\blacksmith.png" />
     <Content Include="images\castle.png" />
     <Content Include="images\cityguardhouse.png" />
+    <Content Include="images\cityicons.png" />
     <Content Include="images\cottage.png" />
     <Content Include="images\farmhouse.png" />
     <Content Include="images\forester.png" />

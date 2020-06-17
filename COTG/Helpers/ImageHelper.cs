@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 
@@ -24,15 +25,22 @@ namespace COTG.Helpers
 
             return image;
         }
-
+        static Dictionary<string, BitmapImage> assetsCache = new Dictionary<string, BitmapImage>();
+        static Dictionary<string, BitmapImage> imagesCache = new Dictionary<string, BitmapImage>();
         public static BitmapImage ImageFromAssetsFile(string fileName)
         {
+            if (assetsCache.TryGetValue(fileName, out var o))
+                return o;
             var image = new BitmapImage(new Uri($"ms-appx:///Assets/{fileName}"));
+            assetsCache.Add(fileName, image);
             return image;
         }
         public static BitmapImage FromImages(string fileName)
         {
+            if (imagesCache.TryGetValue(fileName, out var o))
+                return o;
             var image = new BitmapImage(new Uri($"ms-appx:///images/{fileName}"));
+            imagesCache.Add(fileName, image);
             return image;
         }
 

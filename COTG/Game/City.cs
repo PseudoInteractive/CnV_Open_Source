@@ -26,6 +26,7 @@ namespace COTG.Game
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
 
+        public BitmapImage icon { get; set; }
         public bool IsShowingRowDetails {
             get => this == Views.MainPage.showingRowDetails; // this is nicely coupled
             set => Log($"{(this == Views.MainPage.showingRowDetails)}","{value}");

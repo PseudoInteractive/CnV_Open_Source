@@ -32,6 +32,7 @@
                 <model:GridCellTapCommand />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
+                <tg:DataGridImageColumn PropertyName="icons" />
                 <tg:DataGridTextColumn PropertyName="name" />
                 <tg:DataGridTextColumn PropertyName="xy" />
                 <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
