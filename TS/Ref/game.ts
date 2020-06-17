@@ -11147,7 +11147,7 @@ let cotgsubscribe;
                 if (L41[o41]) {
                     const z41 = L41[o41][_s(1575 >> 1502211200)];
                     const M41 = L41[o41]['b'];
-                    const G41 = L41[o41][_s(x9y << 23107456)];
+                    const G41 = L41[o41]['c'];
                     const C41 = L41[o41][_s(T9y)];
                     A9(z41, M41, G41, C41, '0' | 0);
                 }
@@ -11288,7 +11288,7 @@ let cotgsubscribe;
                     if (e12[3 >> 1487645952]) {
                         var s12 = _s(4704 );
                         for (var k12 = +0; k12 < e12['3' * 1].length; k12++) {
-                            var I12 = t8(e12[+3][k12][_s(x9y )]);
+                            var I12 = t8(e12[+3][k12]['c']);
                             var u12 = e12[3 * 1][k12][+'1'];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y) + u12 + _s(R3y) + e12[+'3'][k12]['1' >> 1695530656] + _s(s3y) + e12[+3][k12][+'2'] + _s(Q3y << 506578528) + e12['3' ][k12][+1] + _s(g3y ) + I12 + _s(C3y) + e12[3 >> 412665760][k12]['1' >> 906221760] + _s(g3y | 2688) + e12[3 | 1][k12][+'1'] + _s('2659' ) + e12[+3][k12][+3] + _s(D3y) + p6(Number(e12['3' ][k12][+4])) + _s(K5y );
@@ -11307,7 +11307,7 @@ let cotgsubscribe;
                     if (e12[+4]) {
                         var s12 = _s(7003);
                         for (var k12 = 0 ; k12 < e12[+4].length; k12++) {
-                            var I12 = t8(e12[+4][k12][_s(x9y * 1)]);
+                            var I12 = t8(e12[+4][k12]['c']);
                             var u12 = e12[+4][k12]['1' ];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y ) + u12 + _s(R3y ) + e12[+4][k12][+'1'] + _s(s3y | 268) + e12[+'4'][k12][2 - 0] + _s(Q3y ) + e12[+'4'][k12][+1] + _s(g3y >> 1375910560) + I12 + _s(C3y) + e12[4 - 0][k12][+1] + _s(g3y) + e12[+'4'][k12]['1' * 1] + _s(2659 << 286426816) + e12[4 ][k12][+3] + _s(D3y << 1750801120) + p6(Number(e12[+4][k12]['4' ])) + _s(K5y);
@@ -11364,7 +11364,7 @@ let cotgsubscribe;
                     if (e12[7 ]) {
                         var s12 = _s(6679 << 1651013344);
                         for (var k12 = +'0'; k12 < e12['7' >> 453536768].length; k12++) {
-                            var I12 = t8(e12[+7][k12][_s(x9y << 2040537184)]);
+                            var I12 = t8(e12[+7][k12]['c']);
                             var u12 = e12[+'7'][k12][+'1'];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y >> 735440480) + u12 + _s(R3y) + e12['7' | 5][k12][+1] + _s(s3y) + e12[+'7'][k12][+2] + _s(Q3y) + e12['7' ][k12]['1' - 0] + _s(g3y << 202955616) + I12 + _s(C3y * 1) + e12['7' ][k12][+'1'] + _s(g3y) + e12['7' << 319979904][k12][+'1'] + _s(v3y | 5379) + e12['7' >> 38403616][k12][+'3'] + _s(D3y - 0) + p6(Number(e12['7' - 0][k12][+'4'])) + _s(K5y);
@@ -11383,7 +11383,7 @@ let cotgsubscribe;
                     if (e12[+'8']) {
                         var s12 = _s(6798);
                         for (var k12 = '0' << 1820924064; k12 < e12[+8].length; k12++) {
-                            var I12 = t8(e12['8' | 8][k12][_s(x9y - 0)]);
+                            var I12 = t8(e12['8' | 8][k12]['c']);
                             var u12 = e12[8 * 1][k12][+1];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y * 1) + u12 + _s(R3y | 4) + e12[8 | 8][k12]['1' ] + _s(s3y | 264) + e12[8 >> 308209120][k12][+2] + _s(Q3y) + e12[8 ][k12][1 ] + _s(g3y) + I12 + _s(C3y >> 699746464) + e12[+8][k12]['1' * 1] + _s(g3y) + e12[8 | 8][k12][1 >> 1713124416] + _s(v3y) + e12[8 << 680752192][k12][+'3'] + _s(D3y | 292) + p6(Number(e12[8 * 1][k12]['4' ])) + _s(K5y);
@@ -11414,7 +11414,7 @@ let cotgsubscribe;
                     if (e12[+D2y]) {
                         var s12 = _s('4929' >> 1392891456);
                         for (var k12 = '0' | 0; k12 < e12[D2y - 0].length; k12++) {
-                            var I12 = t8(e12[+D2y][k12][_s(x9y )]);
+                            var I12 = t8(e12[+D2y][k12]['c']);
                             var u12 = e12[D2y << 234411168][k12]['1' ];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y << 1121242176) + u12 + _s(R3y ) + e12[D2y >> 208263232][k12][+'1'] + _s(s3y >> 73951296) + e12[+D2y][k12]['2' << 1913935648] + _s(Q3y * 1) + e12[D2y << 1122086272][k12]['1' | 0] + _s(g3y) + I12 + _s(C3y) + e12[D2y >> 581718976][k12][+1] + _s(g3y << 56790592) + e12[D2y ][k12][1 | 1] + _s(v3y * 1) + e12[D2y << 47685856][k12]['3' * 1] + _s(D3y) + p6(Number(e12[+D2y][k12][+4])) + _s(K5y << 1026220032);
@@ -11432,7 +11432,7 @@ let cotgsubscribe;
                     if (e12[m2y ]) {
                         var s12 = _s('6535' | 6407);
                         for (var k12 = +'0'; k12 < e12[+m2y].length; k12++) {
-                            var I12 = t8(e12[+m2y][k12][_s(x9y - 0)]);
+                            var I12 = t8(e12[+m2y][k12]['c']);
                             var u12 = e12[+m2y][k12]['1' - 0];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y - 0) + u12 + _s(179 * 1) + e12[m2y * 1][k12][0 ] + _s(2368 >> 449968736) + e12[m2y << 115965280][k12][+'1'] + _s('1518') + e12[m2y ][k12][+1] + _s(g3y | 578) + I12 + _s('7005') + e12[m2y - 0][k12]['1' - 0] + _s(6279 | 6146) + e12[m2y | 9][k12][+4] + _s('5332') + e12[m2y * 1][k12][+'5'] + _s(g3y ) + e12[+m2y][k12][+5] + _s(3591) + e12[m2y << 1085549664][k12][B2y ] + _s(1033 >> 103489728) + e12[m2y - 0][k12][6 >> 1821248096] + _s(g3y - 0) + e12[m2y ][k12][+'6'] + _s('6090' * 1) + e12[+m2y][k12]['7' - 0] + _s(g3y ) + e12[m2y << 2006384128][k12][+'7'] + _s('5595' | 1409) + e12[m2y ][k12][8 - 0] + _s(g3y | 320) + e12[m2y - 0][k12][+8] + _s('713' >> 889819648) + e12[+m2y][k12]['9' ] + _s(g3y | 450) + e12[+m2y][k12][9 ] + _s(1367) + e12[m2y << 924828576][k12][+'10'] + _s(g3y ) + e12[m2y << 596982784][k12]['10' ] + _s(5584 | 5264) + e12[m2y >> 1652165184][k12][+j2y] + _s(g3y) + e12[m2y ][k12][j2y - 0] + _s('5220') + e12[m2y * 1][k12][D2y | 12] + _s(g3y) + e12[m2y ][k12][+D2y] + _s('5886') + e12[m2y << 1883244448][k12][m2y - 0] + _s(g3y) + e12[m2y * 1][k12][+m2y] + _s(K5y >> 1228442752);
@@ -11584,7 +11584,7 @@ let cotgsubscribe;
                     if (e12[+A5y]) {
                         var s12 = _s('3303');
                         for (var k12 = 0 | 0; k12 < e12[+A5y].length; k12++) {
-                            var I12 = t8(e12[A5y >> 1764174144][k12][_s(x9y * 1)]);
+                            var I12 = t8(e12[A5y >> 1764174144][k12]['c']);
                             var u12 = e12[+A5y][k12][+1];
                             u12 = u12.toLowerCase();
                             s12 = s12 + _s(M3y) + u12 + _s(4604 | 76) + e12[+A5y][k12][+0] + _s('4168' * 1) + e12[A5y ][k12]['1' << 950054336] + _s('1518' >> 1739132416) + e12[+A5y][k12][1 >> 1597126176] + _s(g3y * 1) + I12 + _s('7005' ) + e12[A5y ][k12][1 - 0] + _s('6279') + e12[+A5y][k12]['2' * 1] + _s(6720) + e12[A5y * 1][k12]['3' ] + _s(g3y >> 419899808) + e12[A5y ][k12][3 << 1854900608] + _s('4563') + e12[+A5y][k12][+'4'] + _s(g3y) + e12[A5y ][k12]['4' - 0] + _s(K5y);
@@ -11664,7 +11664,7 @@ let cotgsubscribe;
                 let T72;
                 for (const v72 in I72) {
                     T72 = _s(3613) + I72[v72]["l"] + _s(v6y) + bam[_s(4977)][Number(I72[v72][_s(w6y)])];
-                    l72 = l72 + _s('3469' >> 1355664768) + I72[v72][_s(x9y | 6459)] + _s('3516') + I72[v72][_s(x9y << 1626876384)] + _s(4389 - 0) + I72[v72]['c'] + _s('3430' << 1043888224) + I72[v72]['c'] + _s(F6y ) + T72 + _s(c2y) + Math.floor(Number(I72[v72][_s(K2y)])) + _s('6205' | 1) + I72[v72][_s(x9y | 6696)] + _s(F6y ) + I72[v72][_s(H6y )] + _s(A6y) + I72[v72][_s(G6y)] + _s(c2y - 0) + I72[v72][_s(T9y)] + _s(r6y) + I72[v72][_s(x9y | 256)] + _s(6144 | 0) + I72[v72]['c'] + _s(5434);
+                    l72 = l72 + _s('3469' >> 1355664768) + I72[v72]['c'] + _s('3516') + I72[v72]['c'] + _s(4389 - 0) + I72[v72]['c'] + _s('3430' << 1043888224) + I72[v72]['c'] + _s(F6y ) + T72 + _s(c2y) + Math.floor(Number(I72[v72][_s(K2y)])) + _s('6205' | 1) + I72[v72]['c'] + _s(F6y ) + I72[v72][_s(H6y )] + _s(A6y) + I72[v72][_s(G6y)] + _s(c2y - 0) + I72[v72][_s(T9y)] + _s(r6y) + I72[v72]['c'] + _s(6144 | 0) + I72[v72]['c'] + _s(5434);
                 }
                 l72 = l72 + _s(u3y);
                 $(_s(1739 | 1219)).off(_s(C2y));
@@ -11734,7 +11734,7 @@ let cotgsubscribe;
             const H9B = $(_s(463 )).val();
             I9B = $(_s(m5y)).val();
             j9B = $(_s(B5y | 1554)).val();
-            const O9B = ppdt[_s(x9y )].length;
+            const O9B = ppdt['c'].length;
             const t9B = Number(j9B) * (R5y | 0) + Number(I9B);
             const o9B = E8(I9B, j9B);
             const L9B = E8(D6.x, D6.y);
@@ -15332,13 +15332,13 @@ let cotgsubscribe;
             $(document).on(_s(C2y ), _s(6214), function () {
                 const E8V = $(this).attr("a");
                 const k9V = $(this).attr(_s(B9y << 1835709888));
-                const e9V = $(this).attr(_s(x9y << 2048033984));
+                const e9V = $(this).attr('c');
                 p8(E8V, k9V, e9V);
             });
             $(document).on(_s(C2y), _s('6695' | 519), function () {
                 const s9V = $(this).attr("a");
                 const u9V = $(this).attr('b');
-                const H9V = $(this).attr(_s(x9y << 63199104));
+                const H9V = $(this).attr('c');
                 const j9V = $(this).attr(_s(T9y ));
                 const w9V = $(this).attr(_s(K9y - 0));
                 h0V(s9V, u9V, H9V, j9V, w9V);
@@ -17394,7 +17394,7 @@ let cotgsubscribe;
 
         function W3F(d9T) {
             const g9T = m6[d9T][_s(3315)];
-            const J9T = m6[d9T][_s(x9y >> 314960096)];
+            const J9T = m6[d9T]['c'];
             const K9T = m6[d9T][_s(J9y - 0)];
             const f9T = m6[d9T][_s(T9y | 3072)];
             const S9T = m6[d9T][_s(r0R)];
@@ -22793,7 +22793,7 @@ let cotgsubscribe;
                         const E12 = $(this).attr(_s('1575' << 1023695616));
                         $(_s('5912')).attr(_s('1575' | 546), E12);
                         const k62 = $(this).attr('b');
-                        const e62 = $(this).attr(_s(x9y ));
+                        const e62 = $(this).attr('c');
                         tinyMCE.get(_s(3348)).setContent(k62);
                         $(_s(Z0p)).removeClass(_s(u0p)).addClass(_s(K0p ));
                         $(_s(a0p )).css(_s('2723' * 1), _s('1146' >> 944254272));
@@ -23515,7 +23515,7 @@ let cotgsubscribe;
                 if (W9l == +1)
                     Y6(_s('3716' * 1));
                 else {
-                    for (let X9l = +0; X9l < ppdt[_s(x9y )].length; X9l++) {
+                    for (let X9l = +0; X9l < ppdt['c'].length; X9l++) {
                         ctyid = ppdt['c'][X9l][1 - 0];
                         if (cid == ctyid)
                             ppdt['c'][X9l][+2] = t9l;
@@ -23835,7 +23835,7 @@ let cotgsubscribe;
                         const Q2l = _s(4865 * 1) + b2() + _s('3927' | 3346);
                         const t2l = a6.ccazzx.encrypt(JSON.stringify(O2l), Q2l, +U7y);
                         N6();
-                        const T2l = $.post(q6 + _s(2535), {
+                        const T2l = $.post(q6 + _s(2535), { // "sndRein.php"
                             a: t2l
                         });
                         F6();
@@ -24024,7 +24024,7 @@ let cotgsubscribe;
                             if (F9l == cid)
                                 if (Y9l == R9l - +'1') {
                                     D9l = +0;
-                                    y9l = ppdt[_s(x9y - 0)][D9l][+'1'];
+                                    y9l = ppdt['c'][D9l][+'1'];
                                 } else {
                                     D9l = Y9l + +1;
                                     y9l = ppdt['c'][D9l][1 ];
@@ -27656,7 +27656,7 @@ let cotgsubscribe;
                         $(_s(4505)).attr(_s('334' << 640346400), i4v);
                         $(_s('1611' )).html(_s('6212') + f7v.rid + _s(634 << 1683385696) + f7v.rid + _s(6021 | 1668));
                         $(_s('5836' >> 1221185088)).text(f7v.t);
-                    } else if (f7v.type == 1 * 1 && (f7v.stype == _s(x9y ) || f7v.stype == _s('6856' << 498836544))) {
+                    } else if (f7v.type == 1 * 1 && (f7v.stype == 'c' || f7v.stype == _s('6856' << 498836544))) {
                         o8();
                         $(_s(4010 << 1891611968)).css(_s('2723' | 160), "");
                         var m7v = +'0';
@@ -28395,14 +28395,14 @@ let cotgsubscribe;
                     for (const U3Z in ppdt.clc[Z3Z]) {
                         const P3Z = ppdt.clc[Z3Z][U3Z];
                         for (var K3Z = 0 | 0; K3Z < ppdt['c'].length; K3Z++) {
-                            ctyid = ppdt[_s(x9y - 0)][K3Z][1 ];
-                            ctyname = ppdt[_s(x9y | 299)][K3Z][+'2'];
+                            ctyid = ppdt['c'][K3Z][1 ];
+                            ctyname = ppdt['c'][K3Z][+'2'];
                             if (P3Z == ctyid)
                                 g3Z = g3Z + _s(4658) + ctyid + _s(o9R << 700496192) + ctyid + _s(g3y >> 1967449408) + ctyname + _s(P8p - 0);
                         }
                     }
                 else
-                    for (var K3Z = +'0'; K3Z < ppdt[_s(x9y )].length; K3Z++) {
+                    for (var K3Z = +'0'; K3Z < ppdt['c'].length; K3Z++) {
                         ctyid = ppdt['c'][K3Z][1 >> 1448841248];
                         ctyname = ppdt['c'][K3Z]['2' | 2];
                         g3Z = g3Z + _s('4658') + ctyid + _s(o9R ) + ctyid + _s(g3y * 1) + ctyname + _s(P8p);
@@ -28417,7 +28417,7 @@ let cotgsubscribe;
                     for (const D3Z in ppdt.clc[y3Z]) {
                         const p3Z = ppdt.clc[y3Z][D3Z];
                         for (var B3Z = '0' | 0; B3Z < ppdt['c'].length; B3Z++) {
-                            ctyid = ppdt[_s(x9y )][B3Z][1 - 0];
+                            ctyid = ppdt['c'][B3Z][1 - 0];
                             ctyname = ppdt['c'][B3Z][+2];
                             if (p3Z == ctyid)
                                 R3Z = R3Z + _s(1260) + ctyid + _s(o9R) + ctyid + _s(g3y) + ctyname + _s(P8p * 1);
@@ -28425,8 +28425,8 @@ let cotgsubscribe;
                     }
                 else
                     for (var B3Z = 0 ; B3Z < ppdt['c'].length; B3Z++) {
-                        ctyid = ppdt[_s(x9y )][B3Z][+1];
-                        ctyname = ppdt[_s(x9y << 288763008)][B3Z]['2' * 1];
+                        ctyid = ppdt['c'][B3Z][+1];
+                        ctyname = ppdt['c'][B3Z]['2' * 1];
                         R3Z = R3Z + _s('1260') + ctyid + _s(o9R) + ctyid + _s(g3y >> 1418313248) + ctyname + _s(P8p);
                     }
                 $(_s(P94 | 1048)).html(R3Z);
@@ -28439,7 +28439,7 @@ let cotgsubscribe;
                 if (F3Z != _s(Q3p))
                     for (const q3Z in ppdt.clc[F3Z]) {
                         const c3Z = ppdt.clc[F3Z][q3Z];
-                        for (var Y3Z = 0 << 1073792320; Y3Z < ppdt[_s(x9y )].length; Y3Z++) {
+                        for (var Y3Z = 0 << 1073792320; Y3Z < ppdt['c'].length; Y3Z++) {
                             ctyid = ppdt['c'][Y3Z]['1' << 880772736];
                             ctyname = ppdt['c'][Y3Z][2 ];
                             if (c3Z == ctyid)
@@ -28448,7 +28448,7 @@ let cotgsubscribe;
                     }
                 else
                     for (var Y3Z = +0; Y3Z < ppdt['c'].length; Y3Z++) {
-                        ctyid = ppdt[_s(x9y | 282)][Y3Z][+1];
+                        ctyid = ppdt['c'][Y3Z][+1];
                         ctyname = ppdt['c'][Y3Z][+'2'];
                         N3Z = N3Z + _s(1007 ) + ctyid + _s(o9R) + ctyid + _s(g3y) + ctyname + _s(P8p);
                     }
@@ -28461,17 +28461,17 @@ let cotgsubscribe;
                 if (E3Z != _s(Q3p - 0))
                     for (const k1Z in ppdt.clc[E3Z]) {
                         const e1Z = ppdt.clc[E3Z][k1Z];
-                        for (var m3Z = +0; m3Z < ppdt[_s(x9y >> 1140174560)].length; m3Z++) {
+                        for (var m3Z = +0; m3Z < ppdt['c'].length; m3Z++) {
                             ctyid = ppdt['c'][m3Z]['1' ];
-                            ctyname = ppdt[_s(x9y | 562)][m3Z][2 ];
+                            ctyname = ppdt['c'][m3Z][2 ];
                             if (e1Z == ctyid)
                                 a3Z = a3Z + _s(970) + ctyid + _s(o9R) + ctyid + _s(g3y << 300503488) + ctyname + _s(P8p);
                         }
                     }
                 else
-                    for (var m3Z = 0 | 0; m3Z < ppdt[_s(x9y )].length; m3Z++) {
-                        ctyid = ppdt[_s(x9y >> 222963680)][m3Z]['1' * 1];
-                        ctyname = ppdt[_s(x9y )][m3Z][2 * 1];
+                    for (var m3Z = 0 | 0; m3Z < ppdt['c'].length; m3Z++) {
+                        ctyid = ppdt['c'][m3Z]['1' * 1];
+                        ctyname = ppdt['c'][m3Z][2 * 1];
                         a3Z = a3Z + _s('970' ) + ctyid + _s(o9R * 1) + ctyid + _s(g3y) + ctyname + _s(P8p - 0);
                     }
                 $(_s(p94 )).html(a3Z);
@@ -28485,16 +28485,16 @@ let cotgsubscribe;
                     for (const j1Z in ppdt.clc[H1Z]) {
                         const w1Z = ppdt.clc[H1Z][j1Z];
                         for (var s1Z = +'0'; s1Z < ppdt['c'].length; s1Z++) {
-                            ctyid = ppdt[_s(x9y >> 345492768)][s1Z]['1' >> 169765312];
-                            ctyname = ppdt[_s(x9y )][s1Z]['2' << 1693310176];
+                            ctyid = ppdt['c'][s1Z]['1' >> 169765312];
+                            ctyname = ppdt['c'][s1Z]['2' << 1693310176];
                             if (w1Z == ctyid)
                                 u1Z = u1Z + _s(1635 - 0) + ctyid + _s(o9R) + ctyid + _s(g3y) + ctyname + _s(P8p);
                         }
                     }
                 else
                     for (var s1Z = '0' << 1123701088; s1Z < ppdt['c'].length; s1Z++) {
-                        ctyid = ppdt[_s(x9y - 0)][s1Z][+1];
-                        ctyname = ppdt[_s(x9y | 6443)][s1Z][+2];
+                        ctyid = ppdt['c'][s1Z][+1];
+                        ctyname = ppdt['c'][s1Z][+2];
                         u1Z = u1Z + _s('1635') + ctyid + _s(o9R) + ctyid + _s(g3y ) + ctyname + _s(P8p << 1914430400);
                     }
                 $(_s(5072 | 144)).html(u1Z);
@@ -28507,17 +28507,17 @@ let cotgsubscribe;
                 if (l1Z != _s(Q3p))
                     for (const Q1Z in ppdt.clc[l1Z]) {
                         const T1Z = ppdt.clc[l1Z][Q1Z];
-                        for (var I1Z = 0 * 1; I1Z < ppdt[_s(x9y )].length; I1Z++) {
-                            ctyid = ppdt[_s(x9y )][I1Z][1 >> 447834528];
-                            ctyname = ppdt[_s(x9y >> 1751945408)][I1Z][+2];
+                        for (var I1Z = 0 * 1; I1Z < ppdt['c'].length; I1Z++) {
+                            ctyid = ppdt['c'][I1Z][1 >> 447834528];
+                            ctyname = ppdt['c'][I1Z][+2];
                             if (T1Z == ctyid)
                                 v1Z = v1Z + _s('7049') + ctyid + _s(o9R ) + ctyid + _s(g3y) + ctyname + _s(P8p );
                         }
                     }
                 else
-                    for (var I1Z = +0; I1Z < ppdt[_s(x9y | 2608)].length; I1Z++) {
+                    for (var I1Z = +0; I1Z < ppdt['c'].length; I1Z++) {
                         ctyid = ppdt['c'][I1Z][+'1'];
-                        ctyname = ppdt[_s(x9y )][I1Z][2 >> 743877952];
+                        ctyname = ppdt['c'][I1Z][2 >> 743877952];
                         v1Z = v1Z + _s(7049 * 1) + ctyid + _s(o9R) + ctyid + _s(g3y) + ctyname + _s(P8p );
                     }
                 $(_s('603' * 1)).html(v1Z);
@@ -28529,17 +28529,17 @@ let cotgsubscribe;
                 if (t1Z != _s(Q3p - 0))
                     for (const o1Z in ppdt.clc[t1Z]) {
                         const L1Z = ppdt.clc[t1Z][o1Z];
-                        for (var x1Z = +0; x1Z < ppdt[_s(x9y << 1343623936)].length; x1Z++) {
-                            ctyid = ppdt[_s(x9y )][x1Z][+'1'];
+                        for (var x1Z = +0; x1Z < ppdt['c'].length; x1Z++) {
+                            ctyid = ppdt['c'][x1Z][+'1'];
                             ctyname = ppdt['c'][x1Z][+'2'];
                             if (L1Z == ctyid)
                                 O1Z = O1Z + _s(4785 ) + ctyid + _s(o9R - 0) + ctyid + _s(g3y ) + ctyname + _s(P8p);
                         }
                     }
                 else
-                    for (var x1Z = +'0'; x1Z < ppdt[_s(x9y >> 2117247808)].length; x1Z++) {
-                        ctyid = ppdt[_s(x9y - 0)][x1Z][+1];
-                        ctyname = ppdt[_s(x9y | 19)][x1Z]['2' ];
+                    for (var x1Z = +'0'; x1Z < ppdt['c'].length; x1Z++) {
+                        ctyid = ppdt['c'][x1Z][+1];
+                        ctyname = ppdt['c'][x1Z]['2' ];
                         O1Z = O1Z + _s(4785 ) + ctyid + _s(o9R) + ctyid + _s(g3y ) + ctyname + _s(P8p - 0);
                     }
                 $(_s(6332 * 1)).html(O1Z);
@@ -28551,8 +28551,8 @@ let cotgsubscribe;
                 if (M1Z != _s(Q3p ))
                     for (const G1Z in ppdt.clc[M1Z]) {
                         const C1Z = ppdt.clc[M1Z][G1Z];
-                        for (var X1Z = +0; X1Z < ppdt[_s(x9y | 6946)].length; X1Z++) {
-                            ctyid = ppdt[_s(x9y << 1343906624)][X1Z]['1' - 0];
+                        for (var X1Z = +0; X1Z < ppdt['c'].length; X1Z++) {
+                            ctyid = ppdt['c'][X1Z]['1' - 0];
                             ctyname = ppdt['c'][X1Z][+2];
                             if (C1Z == ctyid)
                                 z1Z = z1Z + _s(2079) + ctyid + _s(o9R | 2) + ctyid + _s(g3y - 0) + ctyname + _s(P8p);
@@ -28573,16 +28573,16 @@ let cotgsubscribe;
                 if (d1Z != _s(Q3p))
                     for (const b1Z in ppdt.clc[d1Z]) {
                         const S1Z = ppdt.clc[d1Z][b1Z];
-                        for (var W1Z = +0; W1Z < ppdt[_s(x9y << 1437190592)].length; W1Z++) {
+                        for (var W1Z = +0; W1Z < ppdt['c'].length; W1Z++) {
                             ctyid = ppdt['c'][W1Z][+1];
-                            ctyname = ppdt[_s(x9y - 0)][W1Z][+'2'];
+                            ctyname = ppdt['c'][W1Z][+'2'];
                             if (S1Z == ctyid)
                                 i1Z = i1Z + _s(5308 << 2070441984) + ctyid + _s(o9R ) + ctyid + _s(g3y >> 1431003680) + ctyname + _s(P8p);
                         }
                     }
                 else
-                    for (var W1Z = +'0'; W1Z < ppdt[_s(x9y )].length; W1Z++) {
-                        ctyid = ppdt[_s(x9y * 1)][W1Z]['1' - 0];
+                    for (var W1Z = +'0'; W1Z < ppdt['c'].length; W1Z++) {
+                        ctyid = ppdt['c'][W1Z]['1' - 0];
                         ctyname = ppdt['c'][W1Z][+2];
                         i1Z = i1Z + _s('5308') + ctyid + _s(o9R ) + ctyid + _s(g3y | 2880) + ctyname + _s(P8p);
                     }
@@ -28596,16 +28596,16 @@ let cotgsubscribe;
                     for (const r1Z in ppdt.clc[V1Z]) {
                         const A1Z = ppdt.clc[V1Z][r1Z];
                         for (var J1Z = 0 * 1; J1Z < ppdt['c'].length; J1Z++) {
-                            ctyid = ppdt[_s(x9y )][J1Z][1 << 548853504];
+                            ctyid = ppdt['c'][J1Z][1 << 548853504];
                             ctyname = ppdt['c'][J1Z][2 - 0];
                             if (A1Z == ctyid)
                                 h1Z = h1Z + _s('1143') + ctyid + _s(o9R) + ctyid + _s(g3y) + ctyname + _s(P8p << 606944480);
                         }
                     }
                 else
-                    for (var J1Z = '0' >> 796254432; J1Z < ppdt[_s(x9y )].length; J1Z++) {
+                    for (var J1Z = '0' >> 796254432; J1Z < ppdt['c'].length; J1Z++) {
                         ctyid = ppdt['c'][J1Z][1 * 1];
-                        ctyname = ppdt[_s(x9y >> 1041625248)][J1Z][+2];
+                        ctyname = ppdt['c'][J1Z][+2];
                         h1Z = h1Z + _s(1143 ) + ctyid + _s(o9R) + ctyid + _s(g3y * 1) + ctyname + _s(P8p << 516169408);
                     }
                 $(_s(n94 - 0)).html(h1Z);
@@ -29502,7 +29502,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = +'0'; k52 < E02.e[+'1'].length; k52++) {
-                            s52 = E02.e[1 ][k52][_s(x9y << 238855392)];
+                            s52 = E02.e[1 ][k52]['c'];
                             j52 = E02.e[+1][k52][_s(O4t )];
                             w52 = E02.e[1 >> 493119872][k52][_s(y8y)];
                             e52 = e52 + _s(v4t ) + s52 + _s(w4t) + E02.e[+'1'][k52][_s(F4t)] + _s(H4t ) + j52 + _s(q4t) + w52 + _s(K5y);
@@ -29526,7 +29526,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = '0' * 1; k52 < E02.e['3' | 3].length; k52++) {
-                            s52 = E02.e[3 ][k52][_s(x9y >> 383932224)];
+                            s52 = E02.e[3 ][k52]['c'];
                             j52 = E02.e[+'3'][k52][_s(O4t )];
                             w52 = E02.e[+'3'][k52][_s(y8y)];
                             e52 = e52 + _s(v4t >> 680473440) + s52 + _s(w4t ) + E02.e[+3][k52][_s(F4t - 0)] + _s(H4t) + j52 + _s(q4t << 348770720) + w52 + _s(K5y << 454995200);
@@ -29550,7 +29550,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = +'0'; k52 < E02.e[+'5'].length; k52++) {
-                            s52 = E02.e[5 - 0][k52][_s(x9y >> 853152000)];
+                            s52 = E02.e[5 - 0][k52]['c'];
                             j52 = E02.e[+5][k52][_s(O4t )];
                             w52 = E02.e['5' - 0][k52][_s(y8y)];
                             e52 = e52 + _s(v4t) + s52 + _s(w4t << 1677996800) + E02.e[+'5'][k52][_s(F4t)] + _s(H4t) + j52 + _s(q4t) + w52 + _s(K5y);
@@ -29562,7 +29562,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = 0 - 0; k52 < E02.e['6' ].length; k52++) {
-                            s52 = E02.e[+'6'][k52][_s(x9y * 1)];
+                            s52 = E02.e[+'6'][k52]['c'];
                             j52 = E02.e[+'6'][k52][_s(O4t)];
                             w52 = E02.e[+6][k52][_s(y8y)];
                             e52 = e52 + _s(v4t) + s52 + _s(w4t << 1019624224) + E02.e[6 << 2129086816][k52][_s(F4t - 0)] + _s(H4t) + j52 + _s(q4t >> 809210848) + w52 + _s(K5y);
@@ -29598,7 +29598,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = +0; k52 < E02.p[1 ].length; k52++) {
-                            s52 = E02.p[+1][k52][_s(x9y )];
+                            s52 = E02.p[+1][k52]['c'];
                             j52 = E02.p[+1][k52][_s(O4t << 1790105184)];
                             w52 = E02.p[1 | 0][k52][_s(y8y - 0)];
                             e52 = e52 + _s(v4t * 1) + s52 + _s(w4t - 0) + E02.p[+1][k52][_s(F4t)] + _s(H4t << 683574912) + j52 + _s(q4t) + w52 + _s(K5y << 374647904);
@@ -29622,7 +29622,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = +0; k52 < E02.p[+'3'].length; k52++) {
-                            s52 = E02.p['3' - 0][k52][_s(x9y - 0)];
+                            s52 = E02.p['3' - 0][k52]['c'];
                             j52 = E02.p['3' << 1569574880][k52][_s(O4t)];
                             w52 = E02.p[3 ][k52][_s(y8y)];
                             e52 = e52 + _s(v4t >> 770201760) + s52 + _s(w4t) + E02.p[3 >> 401182912][k52][_s(F4t)] + _s(H4t) + j52 + _s(q4t << 145055904) + w52 + _s(K5y );
@@ -29646,7 +29646,7 @@ let cotgsubscribe;
                     else {
                         e52 = "";
                         for (var k52 = '0' * 1; k52 < E02.p[+5].length; k52++) {
-                            s52 = E02.p[+'5'][k52][_s(x9y )];
+                            s52 = E02.p[+'5'][k52]['c'];
                             j52 = E02.p['5' - 0][k52][_s(O4t * 1)];
                             w52 = E02.p[+5][k52][_s(y8y - 0)];
                             e52 = e52 + _s(v4t | 192) + s52 + _s(w4t) + E02.p['5' << 157702848][k52][_s(F4t )] + _s(H4t) + j52 + _s(q4t - 0) + w52 + _s(K5y << 1275254976);
@@ -30710,7 +30710,7 @@ let cotgsubscribe;
             const F2T = $(_s(B5t )).find(_s('2408'));
             const N2T = Number(F2T.attr(_s(w6y))) * +P2y;
             if (N2T != (0 | 0)) {
-                const I8T = F2T.attr(_s(x9y ));
+                const I8T = F2T.attr('c');
                 const q2T = F2T.attr('c');
                 const w8T = Math.ceil(Number($(_s(e5t << 193584288)).attr(_s('334' ))));
                 const k8T = Number($(_s(e5t - 0)).attr(_s(i1y )));
@@ -31611,7 +31611,7 @@ let cotgsubscribe;
             const j2n = K8[_s(i9t )][H2n][_s(r0R)];
             const w2n = K8[_s(i9t)][H2n][_s(1575 )];
             const I2n = K8[_s(i9t)][H2n]['b'];
-            const v2n = K8[_s(i9t << 1812043328)][H2n][_s(x9y >> 504672096)];
+            const v2n = K8[_s(i9t << 1812043328)][H2n]['c'];
             const l2n = K8[_s(i9t * 1)][H2n][_s(T9y)];
             const Q2n = K8[_s(i9t >> 1158660576)][H2n][_s(K9y)];
             const T2n = K8[_s(i9t)][H2n][_s(B8y)];
@@ -36316,7 +36316,7 @@ let cotgsubscribe;
                 if (i41[W41]) {
                     const b41 = i41[W41]["a"];
                     const J41 = i41[W41][_s(B9y >> 322093536)];
-                    const h41 = i41[W41][_s(x9y )];
+                    const h41 = i41[W41]['c'];
                     const V41 = i41[W41][_s(T9y )];
                     s8(b41, J41, h41, V41, '0' << 588732768);
                 }
@@ -36847,10 +36847,10 @@ let cotgsubscribe;
                         else
                             k72 = k72 + _s(6281);
                     }
-                    let e72 = m52[c52][_s(x9y >> 672051872)][_s(O6y * 1)];
+                    let e72 = m52[c52]['c'][_s(O6y * 1)];
                     if (e72 < ('10' ))
                         e72 = _s(G6R) + e72;
-                    a52 = a52 + _s(513) + e72 + k72 + _s('1757') + m52[c52]['c'][_s(X4m)] + _s('3465') + m52[c52][_s(x9y - 0)][_s(O6y)] + _s('2375' * 1) + m52[c52][_s(x9y )][_s(X4m)] + _s(g3y | 3008) + m52[c52]['c'][_s(M8R)] + _s('3791') + m52[c52][_s(x9y - 0)][_s(X4m - 0)] + _s('2991') + m52[c52][_s(x9y >> 1597424096)][_s(O4t >> 1007729600)] + _s(3965) + Number(m52[c52][_s(t1R - 0)]) + _s(g3y) + p6(Number(m52[c52][_s(t1R)])) + _s(6810 - 0);
+                    a52 = a52 + _s(513) + e72 + k72 + _s('1757') + m52[c52]['c'][_s(X4m)] + _s('3465') + m52[c52]['c'][_s(O6y)] + _s('2375' * 1) + m52[c52]['c'][_s(X4m)] + _s(g3y | 3008) + m52[c52]['c'][_s(M8R)] + _s('3791') + m52[c52]['c'][_s(X4m - 0)] + _s('2991') + m52[c52]['c'][_s(O4t >> 1007729600)] + _s(3965) + Number(m52[c52][_s(t1R - 0)]) + _s(g3y) + p6(Number(m52[c52][_s(t1R)])) + _s(6810 - 0);
                     let s72 = +'0';
                     for (var E52 = +0; E52 < u72; E52++) {
                         if (s72 == +'0')
@@ -37358,7 +37358,7 @@ let cotgsubscribe;
         function g4V(v6T) {
             const C6T = m6[v6T][_s('3315' - 0)];
             E6k.R6();
-            const T6T = m6[v6T][_s(x9y | 6666)];
+            const T6T = m6[v6T]['c'];
             const G6T = m6[v6T][_s(J9y)];
             const M6T = m6[v6T][_s(T9y << 1667624448)];
             const t6T = m6[v6T][_s(r0R)];
@@ -38699,7 +38699,7 @@ let cotgsubscribe;
 
         function G9F(I2T) {
             const X2T = m6[I2T][_s(3315 )];
-            const t2T = m6[I2T][_s(x9y * 1)];
+            const t2T = m6[I2T]['c'];
             const L2T = m6[I2T][_s(J9y)];
             const o2T = m6[I2T][_s(T9y)];
             const Q2T = m6[I2T][_s(r0R )];
@@ -40357,7 +40357,7 @@ let cotgsubscribe;
                 x76 = +0;
                 if (C2.length != 0 << 320017600)
                     for (var T76 = 0 | 0; T76 < C2.length; T76++) {
-                        L76 = C2[T76][_s(x9y * 1)];
+                        L76 = C2[T76]['c'];
                         o76 = C2[T76][_s(w6y )];
                         if (L76 == O76) {
                             x76 = '1' >> 75100128;
@@ -40408,7 +40408,7 @@ let cotgsubscribe;
                     x76 = +0;
                     if (C2.length != (0 ))
                         for (var T76 = +'0'; T76 < C2.length; T76++) {
-                            L76 = C2[T76][_s(x9y )];
+                            L76 = C2[T76]['c'];
                             o76 = C2[T76][_s(w6y << 2023393696)];
                             if (L76 == O76) {
                                 x76 = +1;
@@ -40434,7 +40434,7 @@ let cotgsubscribe;
                     x76 = '0' - 0;
                     if (C2.length != (0 ))
                         for (var T76 = 0 * 1; T76 < C2.length; T76++) {
-                            L76 = C2[T76][_s(x9y )];
+                            L76 = C2[T76]['c'];
                             o76 = C2[T76][_s(w6y)];
                             if (L76 == O76) {
                                 x76 = +'1';
@@ -40656,19 +40656,19 @@ let cotgsubscribe;
                 if (c6V != _s(Q3p * 1))
                     for (var q6V in ppdt.clc[c6V]) {
                         const m6V = ppdt.clc[c6V][q6V];
-                        for (var B6V = +'0'; B6V < ppdt[_s(x9y * 1)].length; B6V++) {
-                            ctyid = ppdt[_s(x9y - 0)][B6V]['1' * 1];
+                        for (var B6V = +'0'; B6V < ppdt['c'].length; B6V++) {
+                            ctyid = ppdt['c'][B6V]['1' * 1];
                             ctyname = ppdt['c'][B6V][+2];
                             if (ppdt['c'][B6V][+D2y])
-                                D6V = ppdt[_s(x9y >> 1850885024)][B6V][D2y << 1641563072];
+                                D6V = ppdt['c'][B6V][D2y << 1641563072];
                             else
                                 D6V = 0 << 1440920128;
                             if (ppdt['c'][B6V][+q7y])
-                                y6V = ppdt[_s(x9y * 1)][B6V][+q7y];
+                                y6V = ppdt['c'][B6V][+q7y];
                             else
                                 y6V = 0 ;
-                            if (ppdt[_s(x9y )][B6V][q3y | 16])
-                                R6V = ppdt[_s(x9y >> 1565498368)][B6V][+q3y];
+                            if (ppdt['c'][B6V][q3y | 16])
+                                R6V = ppdt['c'][B6V][+q3y];
                             else
                                 R6V = +'0';
                             if (y6V == +1 && R6V == +1) {
@@ -40708,8 +40708,8 @@ let cotgsubscribe;
                 else {
                     t0 = performance.now();
                     for (var B6V = +0; B6V < ppdt['c'].length; B6V++) {
-                        ctyid = ppdt[_s(x9y << 399261088)][B6V][+'1'];
-                        ctyname = ppdt[_s(x9y | 2577)][B6V][+'2'];
+                        ctyid = ppdt['c'][B6V][+'1'];
+                        ctyname = ppdt['c'][B6V][+'2'];
                         if (ppdt['c'][B6V][+D2y])
                             D6V = ppdt['c'][B6V][+D2y];
                         else
@@ -40718,8 +40718,8 @@ let cotgsubscribe;
                             y6V = ppdt['c'][B6V][+q7y];
                         else
                             y6V = 0 - 0;
-                        if (ppdt[_s(x9y - 0)][B6V][q3y ])
-                            R6V = ppdt[_s(x9y )][B6V][q3y << 2041579104];
+                        if (ppdt['c'][B6V][q3y ])
+                            R6V = ppdt['c'][B6V][q3y << 2041579104];
                         else
                             R6V = 0 << 1300185376;
                         if (y6V == +1 && R6V == +'1') {
@@ -40760,12 +40760,12 @@ let cotgsubscribe;
                 if (F6V == (0 | 0))
                     for (var B6V = 0 * 1; B6V < ppdt['c'].length; B6V++) {
                         ctyid = ppdt['c'][B6V][+1];
-                        ctyname = ppdt[_s(x9y | 776)][B6V][+2];
-                        if (ppdt[_s(x9y )][B6V][D2y >> 1150239392])
+                        ctyname = ppdt['c'][B6V][+2];
+                        if (ppdt['c'][B6V][D2y >> 1150239392])
                             D6V = ppdt['c'][B6V][D2y >> 1071685280];
                         else
                             D6V = '0' >> 486043456;
-                        if (ppdt[_s(x9y )][B6V][+q7y])
+                        if (ppdt['c'][B6V][+q7y])
                             y6V = ppdt['c'][B6V][q7y | 12];
                         else
                             y6V = +'0';
@@ -41810,7 +41810,7 @@ let cotgsubscribe;
         function A2F() {
             function S56() {
                 const h56 = new Date();
-                c6.load.tilemap(_s(K9m << 218181696), _s(652 | 8) + h56, null, Phaser.Tilemap.TILED_JSON);
+                c6.load.tilemap('regional', _s(652 | 8) + h56, null, Phaser.Tilemap.TILED_JSON); // "regional"
                 c6.load.image(_s(4798 ), _s('3054'));
                 c6.load.image(_s('1673' ), _s('3495'));
                 E6k.R6();
@@ -41831,7 +41831,7 @@ let cotgsubscribe;
                 E6k.R6();
                 setTimeout(() => {
                     c6.stage.backgroundColor = _s(4421);
-                    k2 = c6.add.tilemap(_s(K9m));
+                    k2 = c6.add.tilemap('regional');
                     k2.addTilesetImage(_s('5263'), _s('1673' ));
                     k2.addTilesetImage(_s('1012' | 884), _s(4435 | 337));
                     k2.addTilesetImage(_s('1338'), _s('4798'));
@@ -42739,7 +42739,7 @@ let cotgsubscribe;
                                         name: k36
                                     }
                                 };
-                                a2(_s(K9m ), Y46);
+                                a2('regional', Y46);
                                 $(_s('5196' )).html(_s(6507) + z16);
                                 $(_s(4732 >> 2088708320)).attr(_s(c7p ), S36);
                                 $(_s(7004 >> 356510912)).css(_s('2723'), _s(Q9y));
@@ -42769,7 +42769,7 @@ let cotgsubscribe;
                                         active: +'0'
                                     }
                                 };
-                                a2(_s(K9m), Y46);
+                                a2('regional', Y46);
                             }
                             $(_s(3203)).attr(_s('334'), r46 + _s(A6y) + A46);
                             var r36 = `Shrine<br>Status:${I36}${_s('3331')}${N46}`;
@@ -42798,7 +42798,7 @@ let cotgsubscribe;
                                     active: G36
                                 }
                             };
-                            a2(_s(K9m | 2090), Y46);
+                            a2('regional', Y46);
                             if (G36 == '1' >> 752430464) {
                                 var I36 = _s(w9y) + r46 + _s(A6y) + A46 + _s(1200);
                                 var N46 = _s('318' );
@@ -42853,7 +42853,7 @@ let cotgsubscribe;
                                     water: E46
                                 }
                             };
-                            a2(_s(K9m), Y46);
+                            a2('regional', Y46);
                             if (v16 == (1 ))
                                 if (p46 == +'0') {
                                     D46 = _s('5419');
@@ -43076,7 +43076,7 @@ let cotgsubscribe;
                                     blessed: i16
                                 }
                             };
-                            a2(_s(K9m), Y46);
+                            a2('regional', Y46);
                             const p16 = Q36.substring('0', +1);
                             var Q36 = Q36.substring('1' , B46.length);
                             if (Q36 == +0)
@@ -43392,7 +43392,7 @@ let cotgsubscribe;
                                     active: t16
                                 }
                             };
-                            a2(_s(K9m | 1032), Y46);
+                            a2('regional', Y46);
                             console.log(_s(6061 - 0) + f36 + _s('6409' ) + h16 + _s('2112' * 1) + c46 + _s('4446' | 346) + p36 + _s(3196) + A16 + _s(6537 - 0) + O16);
                             $(_s('6093' << 135849568)).html(p36);
                             $(_s('2973' - 0)).html(f36);
@@ -43523,7 +43523,7 @@ let cotgsubscribe;
                                     type: z36
                                 }
                             };
-                            a2(_s(K9m), Y46);
+                            a2('regional', Y46);
                             var R46 = I9(Number(cid), Number(n46));
                             let j16 = +I2y;
                             if (ppdt[_s(W5t - 0)])
@@ -44379,8 +44379,8 @@ let cotgsubscribe;
                                     y41 = U41.substring('0', D41);
                                     s31[y41] = B41[P41][_s(B9y >> 162977440)][q41];
                                 }
-                            if (B41[P41][_s(x9y | 4410)])
-                                for (I31 in B41[P41][_s(x9y << 112449856)]) {
+                            if (B41[P41]['c'])
+                                for (I31 in B41[P41]['c']) {
                                     U41 = c9.d(B41[P41]['c'][I31]);
                                     var D41 = U41.indexOf(_s(r9y ), +'0');
                                     y41 = U41.substring('0', D41);
@@ -44829,7 +44829,7 @@ let cotgsubscribe;
                             if (o1V == _s('512'))
                             ;
                             X1V = T8(X1V);
-                            O1V += _s(q0p ) + L1V[b1V][_s(x9y * 1)] + _s(375) + z1V + _s(F6y) + C1V + _s(D0p) + o1V + _s(F6y | 2560) + o1V + _s(m0p) + X1V + _s(B0p - 0);
+                            O1V += _s(q0p ) + L1V[b1V]['c'] + _s(375) + z1V + _s(F6y) + C1V + _s(D0p) + o1V + _s(F6y | 2560) + o1V + _s(m0p) + X1V + _s(B0p - 0);
                         }
                     }
                 $(_s(c2R )).append(O1V);
@@ -44843,7 +44843,7 @@ let cotgsubscribe;
                     if (L1V[b1V]['b'][_s(1575 << 1030010464)] == +4) {
                         var X1V = L1V[b1V]['b'][_s(T9y )];
                         var o1V = L1V[b1V]['b'][_s(B9y )];
-                        var M1V = L1V[b1V][_s(B9y << 1884050176)][_s(x9y * 1)];
+                        var M1V = L1V[b1V][_s(B9y << 1884050176)]['c'];
                         var S1V = $(_s(c2R | 2690))[+'0'].scrollHeight - $(_s(c2R << 473951200)).scrollTop();
                         var h1V = document.getElementById(_s(L6m)).clientHeight;
                         var G1V = -(1 - 0);
@@ -44880,7 +44880,7 @@ let cotgsubscribe;
                     if (L1V[b1V][_s(B9y * 1)][_s(1575 )] == +5) {
                         var X1V = L1V[b1V]['b'][_s(T9y)];
                         var o1V = L1V[b1V]['b'][_s(B9y << 814608384)];
-                        var M1V = L1V[b1V]['b'][_s(x9y >> 1975360768)];
+                        var M1V = L1V[b1V]['b']['c'];
                         var S1V = $(_s(c2R))['0' | 0].scrollHeight - $(_s(c2R)).scrollTop();
                         var h1V = document.getElementById(_s(L6m >> 461364544)).clientHeight;
                         var G1V = - +'1';
@@ -45491,7 +45491,7 @@ let cotgsubscribe;
         }
 
         function O0F() {
-            const l3Z = ppdt[_s(x9y << 24696672)].length;
+            const l3Z = ppdt['c'].length;
             let c4Z;
             let q4Z;
             T8F();
@@ -45523,10 +45523,10 @@ let cotgsubscribe;
             m4Z = m4Z + _s('1502' >> 159181184);
             $(_s('2197' << 278846464)).css(_s(2723), _s('1146'));
             $(_s(1777)).css(_s(2723 - 0), _s('1146'));
-            for (let s3Z = +0; s3Z < ppdt[_s(x9y )].length; s3Z++) {
+            for (let s3Z = +0; s3Z < ppdt['c'].length; s3Z++) {
                 q4Z = ppdt['c'][s3Z][+1];
                 if (q4Z != cid) {
-                    c4Z = ppdt[_s(x9y )][s3Z]['2' << 1677241824];
+                    c4Z = ppdt['c'][s3Z]['2' << 1677241824];
                     u3Z = u3Z + _s('1635') + q4Z + _s(o9R) + q4Z + _s(g3y) + c4Z + _s(P8p << 1418091392);
                     H3Z = H3Z + _s('7049' * 1) + q4Z + _s(o9R ) + q4Z + _s(g3y) + c4Z + _s(P8p * 1);
                     j3Z = j3Z + _s(4785) + q4Z + _s(o9R) + q4Z + _s(g3y ) + c4Z + _s(P8p - 0);
@@ -45539,7 +45539,7 @@ let cotgsubscribe;
                     m4Z = m4Z + _s(1143) + q4Z + _s(o9R >> 2083376320) + q4Z + _s(g3y * 1) + c4Z + _s(P8p);
                 }
                 if (q4Z == cid)
-                    var v3Z = ppdt[_s(x9y )][s3Z][2 ];
+                    var v3Z = ppdt['c'][s3Z][2 ];
             }
             $(_s('2360' >> 839248320)).text(v3Z);
             $(_s(5072 )).html(u3Z);
@@ -45989,7 +45989,7 @@ let cotgsubscribe;
                     j21 = K61[g61][+2];
                     R61 = K61[g61]['3' << 32843232]["a"];
                     y61 = K61[g61][+'3'][_s(B9y << 589302080)];
-                    D61 = K61[g61][+'3'][_s(x9y >> 1410129920)];
+                    D61 = K61[g61][+'3']['c'];
                     p61 = K61[g61][+3][_s(T9y)];
                     F61 = K61[g61][+'4'];
                     a61 = K61[g61][+'5'];
@@ -47493,7 +47493,7 @@ let cotgsubscribe;
         }
 
         function a7F() {
-            if (ppdt[_s(x9y * 1)].length == 0 << 1670716128) {
+            if (ppdt['c'].length == 0 << 1670716128) {
                 window.onbeforeunload = null;
                 window.location.replace(_s(C2R >> 625599200));
             } else {
@@ -47724,7 +47724,7 @@ let cotgsubscribe;
             for (let C5D = 0 << 967594304; C5D < d5D.length; C5D++) {
                 const L5D = d5D[C5D]["a"];
                 const x5D = d5D[C5D][_s(g4p)];
-                const K5D = d5D[C5D][_s(x9y )];
+                const K5D = d5D[C5D]['c'];
                 let J5D = bam[_s(4619)][x5D][_s(e1p)] * L5D;
                 let h5D = bam[_s('4619')][x5D][_s(L1p >> 918706912)] * L5D;
                 let S5D = bam[_s('4619' | 512)][x5D][_s(l9y << 1901726752)] * L5D;
@@ -48930,7 +48930,7 @@ let cotgsubscribe;
                     for (var B19 = +0; B19 < P19.length; B19++) {
                         let m19 = P19[B19][3 - 0]["a"];
                         let a19 = P19[B19][+'3']['b'];
-                        let E19 = P19[B19][+'3'][_s(x9y * 1)];
+                        let E19 = P19[B19][+'3']['c'];
                         let k69 = P19[B19][3 ][_s(T9y)];
                         const I69 = Number(m19) + Number(a19) + Number(E19) + Number(k69);
                         if (P19[B19][+D2y] == +'0') {
@@ -49502,7 +49502,7 @@ let cotgsubscribe;
                 const e1i = m6[k1i][_s('3315' << 1268579808)];
                 const s1i = m6[k1i][_s(T9y)];
                 const u1i = m6[k1i][_s(r0R)];
-                const H1i = m6[k1i][_s(x9y * 1)];
+                const H1i = m6[k1i]['c'];
                 const j1i = m6[k1i][_s(J9y << 984379648)];
                 let E3i;
                 switch (u1i) {
@@ -49654,7 +49654,7 @@ let cotgsubscribe;
                 var P4l = 1 ;
             } else {
                 var G4l = qam[_s(G2y >> 1103052032)][Number(C4l)][_s(r2y)]['0' ][_s(r2y )];
-                var d4l = qam[_s(G2y)][Number(C4l)][_s(x9y - 0)];
+                var d4l = qam[_s(G2y)][Number(C4l)]['c'];
                 var h4l = qam[_s(d0p)][Number(G4l)][_s(y0R)];
                 var b4l = qam[_s(d0p)][Number(G4l)][_s(K2y)];
                 const Z4l = qam[_s(G2y)][Number(C4l)][_s(r2y)]['0' ][_s(b2y)];
@@ -50194,8 +50194,8 @@ let cotgsubscribe;
                 h2Z = _s(X4y );
             t2Z = _s('2947' - 0) + h2Z + _s('1568' >> 477491872);
             for (let X2Z = +'0'; X2Z < ppdt['c'].length; X2Z++) {
-                S2Z = ppdt[_s(x9y )][X2Z][+1];
-                r2Z = ppdt[_s(x9y * 1)][X2Z][+2];
+                S2Z = ppdt['c'][X2Z][+1];
+                r2Z = ppdt['c'][X2Z][+2];
                 if (w2Z == S2Z)
                     t2Z = t2Z + _s(232) + S2Z + _s('1744' >> 2007319584) + r2Z + _s(P8p);
                 else
@@ -50622,7 +50622,7 @@ let cotgsubscribe;
                 const N6B = _s(3945 | 800) + b2() + _s('2915');
                 const c6B = a6.ccazzx.encrypt(JSON.stringify(B6B), N6B, U7y );
                 N6();
-                const F6B = $.post(q6 + _s('5785' - 0), {
+                const F6B = $.post(q6 + _s('5785' - 0), { // "sndAtk.php"
                     a: c6B
                 });
                 F6();
@@ -51419,7 +51419,7 @@ let cotgsubscribe;
                     for (var k7T in e7T) {
                         var u7T = e7T[k7T]["a"];
                         var H7T = e7T[k7T][_s(B9y )];
-                        var j7T = e7T[k7T][_s(x9y - 0)];
+                        var j7T = e7T[k7T]['c'];
                         var w7T = e7T[k7T][_s(T9y | 2688)];
                         var s7T = $(_s('1437' ) + k7T).spectrum(_s('4096')).toHexString();
                         ppdt.wmo.p[k7T]['c'] = s7T;
@@ -51435,10 +51435,10 @@ let cotgsubscribe;
                     for (var k7T in e7T) {
                         var u7T = e7T[k7T]["a"];
                         var H7T = e7T[k7T]['b'];
-                        var j7T = e7T[k7T][_s(x9y - 0)];
+                        var j7T = e7T[k7T]['c'];
                         var w7T = e7T[k7T][_s(T9y )];
                         var s7T = $(_s(1172 ) + k7T).spectrum(_s('4096' - 0)).toHexString();
-                        ppdt.wmo.a[k7T][_s(x9y )] = s7T;
+                        ppdt.wmo.a[k7T]['c'] = s7T;
                         if ($(_s(4580 << 1901675744) + k7T).prop("checked"))
                             ppdt.wmo.a[k7T][_s(T9y)] = +'1';
                         else
@@ -52040,7 +52040,7 @@ let cotgsubscribe;
 
         function U0V(v8T) {
             const L8T = m6[v8T][_s('3315')];
-            const T8T = m6[v8T][_s(x9y << 2106722496)];
+            const T8T = m6[v8T]['c'];
             const X8T = m6[v8T][_s(J9y)];
             E6k.R6();
             const o8T = m6[v8T][_s(T9y)];
@@ -53070,7 +53070,7 @@ let cotgsubscribe;
                 let k5D = 0 << 1821877568;
                 const p0D = c0D[N0D]["a"];
                 const y0D = c0D[N0D][_s(g4p)];
-                const E0D = c0D[N0D][_s(x9y >> 1067992224)];
+                const E0D = c0D[N0D]['c'];
                 if (y0D == (s6y | 1)) {
                     k5D = +'1';
                     Y6(_s(6012));
@@ -53278,7 +53278,7 @@ let cotgsubscribe;
                 const O1i = m6[T1i][_s('3315' )];
                 const t1i = m6[T1i][_s(T9y )];
                 const x1i = m6[T1i][_s(r0R)];
-                const L1i = m6[T1i][_s(x9y - 0)];
+                const L1i = m6[T1i]['c'];
                 const X1i = m6[T1i][_s(J9y)];
                 let Q1i;
                 switch (x1i) {
@@ -53987,7 +53987,7 @@ let cotgsubscribe;
                         for (var Y92 in N92) {
                             var e09 = N92[Y92][_s(j1k)][_s('1575' << 1434283616)];
                             var k09 = N92[Y92][_s(j1k)]['b'];
-                            var a92 = N92[Y92][_s(j1k * 1)][_s(x9y )];
+                            var a92 = N92[Y92][_s(j1k * 1)]['c'];
                             var s09 = N92[Y92][_s(j1k)][_s(T9y << 1642026752)];
                             var u09 = Number(e09) + Number(k09) + Number(a92) + Number(s09);
                             var E92 = C7F(N92[Y92][_s(j1k)]);
@@ -54077,7 +54077,7 @@ let cotgsubscribe;
                         for (var Y92 in N92) {
                             var e09 = N92[Y92][_s(j1k)]["a"];
                             var k09 = N92[Y92][_s(j1k)]['b'];
-                            var a92 = N92[Y92][_s(j1k)][_s(x9y << 2077520768)];
+                            var a92 = N92[Y92][_s(j1k)]['c'];
                             var s09 = N92[Y92][_s(j1k)][_s(T9y >> 1672194304)];
                             var u09 = Number(e09) + Number(k09) + Number(a92) + Number(s09);
                             var E92 = C7F(N92[Y92][_s(j1k)]);
@@ -55515,7 +55515,7 @@ let cotgsubscribe;
                 const T9T = Math.ceil(Number($(_s(e5t)).attr(_s(334))));
                 const O9T = $(_s(B5t >> 250631328)).val();
                 const G9T = m6[Q9T][_s(3315)];
-                const t9T = m6[Q9T][_s(x9y )];
+                const t9T = m6[Q9T]['c'];
                 const W9T = m6[Q9T][_s(J9y << 133718816)];
                 const C9T = m6[Q9T][_s(T9y)];
                 const o9T = m6[Q9T][_s(r0R >> 2122958272)];
@@ -58774,7 +58774,7 @@ let cotgsubscribe;
                     }
                     for (var d7B in b7B) {
                         if (ppdt.specse == ('1' ))
-                            K7B = K7B + _s('723') + b7B[d7B][_s(x9y * 1)] + _s(1184 ) + b7B[d7B][_s(j2p)] + _s(2591 ) + b7B[d7B][_s(M8R)] + _s(c2y) + b7B[d7B][_s(3934)] + _s(a9t >> 2041578880) + b7B[d7B][_s(y8y)] + _s(c2y) + b7B[d7B][_s(3561 | 289)] + _s(o3y) + b7B[d7B][_s('6626' * 1)] + _s(g3y * 1) + b7B[d7B][_s(R8y )] + _s(K5y);
+                            K7B = K7B + _s('723') + b7B[d7B]['c'] + _s(1184 ) + b7B[d7B][_s(j2p)] + _s(2591 ) + b7B[d7B][_s(M8R)] + _s(c2y) + b7B[d7B][_s(3934)] + _s(a9t >> 2041578880) + b7B[d7B][_s(y8y)] + _s(c2y) + b7B[d7B][_s(3561 | 289)] + _s(o3y) + b7B[d7B][_s('6626' * 1)] + _s(g3y * 1) + b7B[d7B][_s(R8y )] + _s(K5y);
                         else {
                             const y7B = shrinesarr[Number(b7B[d7B][_s(1586 | 48)])][_s(193 - 0)];
                             const n7B = b7B[d7B][_s(i9y << 684636128)];
@@ -59721,11 +59721,11 @@ let cotgsubscribe;
                 position: _s(M64)
             });
             $(_s('1330' - 0)).tooltipster({
-                content: $(_s('4985' ) + bam[_s(4619)][+5][_s(t8R)] + _s(V3k) + bam[_s('4619' )][5 ][_s(x9y << 1932420928)] + _s('5807')),
+                content: $(_s('4985' ) + bam[_s(4619)][+5][_s(t8R)] + _s(V3k) + bam[_s('4619' )][5 ]['c'] + _s('5807')),
                 position: _s(M64 )
             });
             $(_s('317' >> 1562211200)).tooltipster({
-                content: $(_s(1307 | 1051) + bam[_s('4619')][2 ][_s(t8R >> 1500107104)] + _s(V3k - 0) + bam[_s('4619' * 1)][+'2'][_s(x9y << 361525440)] + _s('3833')),
+                content: $(_s(1307 | 1051) + bam[_s('4619')][2 ][_s(t8R >> 1500107104)] + _s(V3k - 0) + bam[_s('4619' * 1)][+'2']['c'] + _s('3833')),
                 position: _s(M64 << 134918048)
             });
             $(_s(957)).tooltipster({
@@ -59745,15 +59745,15 @@ let cotgsubscribe;
                 position: _s(M64)
             });
             $(_s(3455 )).tooltipster({
-                content: $(_s('1533' >> 320366112) + bam[_s(4619)][6 - 0][_s(t8R)] + _s(V3k * 1) + bam[_s('4619' * 1)][+'6'][_s(x9y * 1)] + _s(1175)),
+                content: $(_s('1533' >> 320366112) + bam[_s(4619)][6 - 0][_s(t8R)] + _s(V3k * 1) + bam[_s('4619' * 1)][+'6']['c'] + _s(1175)),
                 position: _s(M64 << 428666624)
             });
             $(_s(2072 )).tooltipster({
-                content: $(_s(1899) + bam[_s(4619 * 1)][+j2y][_s(t8R )] + _s(V3k - 0) + bam[_s('4619' >> 1912073632)][j2y ][_s(x9y >> 2111239360)] + _s(3950)),
+                content: $(_s(1899) + bam[_s(4619 * 1)][+j2y][_s(t8R )] + _s(V3k - 0) + bam[_s('4619' >> 1912073632)][j2y ]['c'] + _s(3950)),
                 position: _s(M64 )
             });
             $(_s(4322 >> 1604636064)).tooltipster({
-                content: $(_s('1331' - 0) + bam[_s('4619' )]['4' << 1726078976][_s(t8R)] + _s(V3k << 1494517856) + bam[_s('4619')][+4][_s(x9y | 4145)] + _s(3914)),
+                content: $(_s('1331' - 0) + bam[_s('4619' )]['4' << 1726078976][_s(t8R)] + _s(V3k << 1494517856) + bam[_s('4619')][+4]['c'] + _s(3914)),
                 position: _s(M64)
             });
             $(_s(6924)).tooltipster({
@@ -59777,11 +59777,11 @@ let cotgsubscribe;
                 position: _s(M64 >> 1039406688)
             });
             $(_s(c5y - 0)).tooltipster({
-                content: $(_s(2612) + bam[_s(4619)][+q7y][_s(t8R)] + _s(V3k) + bam[_s('4619' * 1)][+q7y][_s(x9y - 0)] + _s(6209)),
+                content: $(_s(2612) + bam[_s(4619)][+q7y][_s(t8R)] + _s(V3k) + bam[_s('4619' * 1)][+q7y]['c'] + _s(6209)),
                 position: _s(M64 )
             });
             $(_s(927)).tooltipster({
-                content: $(_s('3691') + bam[_s(4619 * 1)][+B2y][_s(t8R )] + _s(V3k << 497004512) + bam[_s(4619 )][B2y - 0][_s(x9y )] + _s(2661 * 1)),
+                content: $(_s('3691') + bam[_s(4619 * 1)][+B2y][_s(t8R )] + _s(V3k << 497004512) + bam[_s(4619 )][B2y - 0]['c'] + _s(2661 * 1)),
                 position: _s(M64)
             });
             $(_s(409 )).tooltipster({
@@ -59984,11 +59984,11 @@ let cotgsubscribe;
                 if (y1i != 0 >> 873884992)
                     for (const D1i in ppdt.clc[y1i]) {
                         const q1i = ppdt.clc[y1i][D1i];
-                        for (var Z1i = '0' - 0; Z1i < ppdt[_s(x9y * 1)].length; Z1i++) {
+                        for (var Z1i = '0' - 0; Z1i < ppdt['c'].length; Z1i++) {
                             ctyid = ppdt['c'][Z1i][+'1'];
-                            ctyname = ppdt[_s(x9y >> 1293817408)][Z1i][+2];
+                            ctyname = ppdt['c'][Z1i][+2];
                             if (ppdt['c'][Z1i][D2y * 1])
-                                B1i = ppdt[_s(x9y | 2587)][Z1i][D2y << 824570848];
+                                B1i = ppdt['c'][Z1i][D2y << 824570848];
                             else
                                 B1i = '0' ;
                             if (ppdt['c'][Z1i][q7y * 1])
@@ -59996,7 +59996,7 @@ let cotgsubscribe;
                             else
                                 U1i = '0' | 0;
                             if (ppdt['c'][Z1i][+q3y])
-                                P1i = ppdt[_s(x9y )][Z1i][+q3y];
+                                P1i = ppdt['c'][Z1i][+q3y];
                             else
                                 P1i = +0;
                             R1i[ctyid] = {
@@ -60008,10 +60008,10 @@ let cotgsubscribe;
                         }
                     }
                 else
-                    for (var Z1i = +'0'; Z1i < ppdt[_s(x9y - 0)].length; Z1i++) {
-                        ctyid = ppdt[_s(x9y >> 2091314464)][Z1i][+'1'];
-                        ctyname = ppdt[_s(x9y | 2355)][Z1i][+2];
-                        if (ppdt[_s(x9y )][Z1i][+D2y])
+                    for (var Z1i = +'0'; Z1i < ppdt['c'].length; Z1i++) {
+                        ctyid = ppdt['c'][Z1i][+'1'];
+                        ctyname = ppdt['c'][Z1i][+2];
+                        if (ppdt['c'][Z1i][+D2y])
                             B1i = ppdt['c'][Z1i][D2y ];
                         else
                             B1i = +'0';
@@ -60020,7 +60020,7 @@ let cotgsubscribe;
                         else
                             U1i = +'0';
                         if (ppdt['c'][Z1i][q3y << 1015022272])
-                            P1i = ppdt[_s(x9y )][Z1i][+q3y];
+                            P1i = ppdt['c'][Z1i][+q3y];
                         else
                             P1i = +0;
                         R1i[ctyid] = {

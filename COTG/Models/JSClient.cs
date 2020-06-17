@@ -255,6 +255,7 @@ namespace COTG
                     }
                     city.name = jsCity.GetProperty("2").GetString();
                     city.isCastle = jsCity.GetAsInt("12") != 0;
+                    city.points =  jsCity.GetAsInt("4");
                     city.lastUpdated = now;
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
@@ -504,6 +505,7 @@ namespace COTG
                                     city.name = jso.GetString("name");
                                     city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
                                     city.notes = jso.GetString("notes");
+                                    city.points = jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
                                 }

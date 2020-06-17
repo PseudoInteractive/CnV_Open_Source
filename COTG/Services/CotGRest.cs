@@ -149,6 +149,7 @@ namespace COTG.Services
         static RestAPI __9 = new RestAPI("includes/sndTtr.php", "JJx452Tdd2375sRAssa");
         // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
         public static fCv ScanDungeons = new fCv();
+        public static TroopsOverview troopsOverview = new TroopsOverview();
     }
 
     public class rMp : RestAPI
@@ -170,10 +171,9 @@ namespace COTG.Services
     public class gWrd : RestAPI
     {
         public gWrd() : base("includes/gWrd.php", "Addxddx5DdAxxer569962wz")
-
         {
-
         }
+
         public override string GetPostContent()
         {
             // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
@@ -183,9 +183,8 @@ namespace COTG.Services
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
             return args;
-
-
         }
+
         public override void ProcessJson(JsonDocument json)
         {
             World.UpdateCurrent(json);
@@ -218,9 +217,8 @@ namespace COTG.Services
             var encoded = Aes.Encode((cid != 0 ? cid : JSClient.cid).ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
-
-
         }
+
         public override void ProcessJson(JsonDocument json)
         {
             Log("Got JS");
@@ -232,34 +230,7 @@ namespace COTG.Services
 
     public class fCv : RestAPI
     {
-        public struct Dungeon
-        {
-            //          [JsonProperty("t")]
-            public byte type { get; set; }
-
-            //        [JsonProperty("l")]
-            public byte level { get; set; }
-
-            //       [JsonProperty("x")]
-            public short x { get; set; }
-
-            //      [JsonProperty("y")]
-            public short y { get; set; }
-
-            //     [JsonProperty("p")]
-            public float completion { get; set; }
-
-            //    [JsonProperty("c")]
-            public int cid { get; set; }
-
-            //    [JsonProperty("d")]
-            public float dist { get; set; }
-
-            public override string ToString()
-            {
-                return $"{{{nameof(type)}={type.ToString()}, {nameof(level)}={level.ToString()}, {nameof(x)}={x.ToString()}, {nameof(y)}={y.ToString()}, {nameof(completion)}={completion.ToString()}, {nameof(cid)}={cid.ToString()}, {nameof(dist)}={dist.ToString()}}}";
-            }
-        }
+      
         public static Dungeon[] dungeons = new Dungeon[0];
         public fCv() : base("includes/fCv.php", "Xs4b2261f55dlme55s")
         {
@@ -270,9 +241,8 @@ namespace COTG.Services
         {
             var args = "cid=" + JSClient.cid;
             return args;
-
-
         }
+
         public override async Task Accept(Uri uri, HttpResponseMessage resp)
         {
             Log("Got fCv");
@@ -303,27 +273,51 @@ namespace COTG.Services
                     rv.Add(new Dungeon()
                     {
                         cid = dung.GetAsInt("c"),
-                        x = dung.GetAsShort("x"),
-                        y = dung.GetAsShort("y"),
                         type = dung.GetAsByte("t"),
                         level = dung.GetAsByte("l"),
                         completion = dung.GetAsFloat("p"),
                         dist = dung.GetAsFloat("d")
 
                     });
-                    ;
                 }
-                dungeons = rv.ToArray();
-                foreach (var d in dungeons)
-                {
-                    Log(d);
-                }
+                // dont wait on this 
+                COTG.Views.MainPage.UpdateDungeonList(rv);
 
             }
             catch (Exception e)
             {
                 Log(e);
             }
+
+        }
+
+       
+
+    }
+    public class OverviewApi : RestAPI
+    {
+        public OverviewApi(string addr) : base(addr, null) { }
+
+    }
+    public class TroopsOverview : OverviewApi
+    {
+        public TroopsOverview() : base("overview/trpover.php") { }
+        public override void ProcessJson(JsonDocument json)
+        {
+            jsd = json;
+            dict = new Dictionary<int, JsonElement>();
+            foreach(var item in jsd.RootElement.EnumerateArray())
+            {
+                dict.Add(item.GetAsInt("id"), item);
+            }
+            Log("Got JS for troop overview");
+            Log(json.ToString());
+        }
+        public static JsonDocument jsd;
+        public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
+        public JsonElement Get(int cid)
+        {
+            return dict.GetValueOrDefault(cid);
 
         }
 

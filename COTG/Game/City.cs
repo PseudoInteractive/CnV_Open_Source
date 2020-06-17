@@ -9,6 +9,8 @@ using FluentAssertions.Common;
 using static COTG.Debug;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using COTG.Helpers;
+using System.Text.Json;
 
 namespace COTG.Game
 {
@@ -25,12 +27,12 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
+        public int points { get; set; }
+        public BitmapImage icon => ImageHelper.FromImages(isCastle?"castle4.png" : "city4.png");
 
-        public BitmapImage icon { get; set; }
-        public bool IsShowingRowDetails {
-            get => this == Views.MainPage.showingRowDetails; // this is nicely coupled
-            set => Log($"{(this == Views.MainPage.showingRowDetails)}","{value}");
-                }
+        public JsonElement jsTroops => COTG.Services.RestAPI.troopsOverview.Get(cid);
+        public int ts => jsTroops.IsValid() ? jsTroops.GetAsInt("total_troops") : -1;
+        public int tsHome => jsTroops.IsValid() ? jsTroops.GetAsInt("total_home") : -1;
 
         public static Dictionary<int,City> all = new Dictionary<int, City>(); // keyed by city
 	}

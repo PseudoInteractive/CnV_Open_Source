@@ -1451,6 +1451,8 @@ let defaultMru = {
 		notes: "",
 		player: "tbd",
 		alliance: "tbd",
+		ptype: 0,
+		score:0,
 		last: new Date(),
 	};
 let mru = [];

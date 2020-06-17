@@ -62,6 +62,7 @@
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.ContextFlyout>
             <MenuFlyout>
+                <MenuFlyoutItem Click="TroopOverview" Text="TroopOverview" />
                 <MenuFlyoutItem Click="TestRaid" Text="TestRaid" />
                 <MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />
                 <MenuFlyoutItem Click="GetPPDT" Text="GetPPDT" />
@@ -135,7 +136,7 @@
                                  ShowMode="Auto"
                     >
 
-                            <GridView x:Name="buildingList" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+                            <GridView x:Name="buildingList" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="Multiple">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="Game:BuildingCount">
                                         <Grid Width="30" Height="60" >
@@ -161,8 +162,6 @@
                     </Button.Flyout>
 					<Image Source="/images/marketplace.png"/>
                 </Button>
-                <Models:AppBar x:Name="appBar" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
-
             </Grid>
         </winui:NavigationView.PaneFooter>
         <Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">

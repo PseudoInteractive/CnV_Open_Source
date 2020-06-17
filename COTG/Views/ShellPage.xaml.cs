@@ -343,7 +343,7 @@ namespace COTG.Views
         }
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
-        static List<short> bidMap = (new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, 455, 467 }).ToList();
+        static short [] bidMap = new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, 455, 467 };
 
 
         static DateTime flyoutCreatedTime;
@@ -363,7 +363,7 @@ namespace COTG.Views
                 foreach (var bdi in jse.GetProperty("bd").EnumerateArray())
                 {
                     var bid = bdi.GetAsInt("bid");
-                    bid= bidMap.FindIndex(b=>b==(short)bid);
+                    bid= bidMap.FindIndex((short)bid);
                     if (bid == -1)
                         continue;
                     
@@ -475,6 +475,10 @@ namespace COTG.Views
             Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
 
 
+        }
+        private void TroopOverview(object sender, RoutedEventArgs e)
+        {
+            RestAPI.troopsOverview.Post();
         }
 
         private void TestRaid(object sender, RoutedEventArgs e)

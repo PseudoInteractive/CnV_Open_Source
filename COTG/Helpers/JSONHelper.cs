@@ -10,6 +10,10 @@ namespace COTG.Helpers
 {
     public static class JSONHelper
     {
+        public static bool IsValid(this JsonElement j)
+        {
+            return j.ValueKind != JsonValueKind.Undefined;
+        }
         public static int GetAsInt(this JsonElement js, string prop)
         {
             return (int)GetAsInt64(js, prop);
@@ -32,10 +36,12 @@ namespace COTG.Helpers
         }
         public static float GetAsFloat(this JsonElement js, string prop)
         {
+            if (!js.IsValid())
+                return -1;
             if (!js.TryGetProperty(prop, out var e))
             {
                 Log("Missing " + prop);
-                return 0;
+                return -1;
             }
             switch (e.ValueKind)
             {
@@ -45,22 +51,25 @@ namespace COTG.Helpers
                     return e.GetSingle();
                 case JsonValueKind.True:
                     return 1;
-                case JsonValueKind.Array:
                 case JsonValueKind.False:
+                    return 0;
+                case JsonValueKind.Array:
                 case JsonValueKind.Null:
                 case JsonValueKind.Undefined:
                 case JsonValueKind.Object:
                 default:
                     Log("Invalid Json Type " + e.ValueKind);
-                    return 0;
+                    return -1;
             }
         }
         public static long GetAsInt64(this JsonElement js, string prop)
         {
+            if (!js.IsValid())
+                return -1;
             if (!js.TryGetProperty(prop, out var e))
             {
                 Log("Missing " + prop);
-                return 0;
+                return -1;
             }
 
             switch (e.ValueKind)
@@ -71,13 +80,14 @@ namespace COTG.Helpers
                     return e.GetInt64();
                 case JsonValueKind.True:
                     return 1;
-                case JsonValueKind.Array:
                 case JsonValueKind.False:
+                    return 0;
+                case JsonValueKind.Array:
                 case JsonValueKind.Null:
                 case JsonValueKind.Undefined:
                 case JsonValueKind.Object:
                 default:
-                    return 0;
+                    return -1;
             }
         }
         public static int GetInt(this JsonElement js, string prop)
@@ -102,10 +112,12 @@ namespace COTG.Helpers
         }
         public static string GetAsString(this JsonElement js, string prop)
         {
+            if (!js.IsValid())
+                return "null";
             if (!js.TryGetProperty(prop, out var e))
             {
                 Log("Missing " + prop);
-                return null;
+                return "null";
             }
             return e.ToString();
 

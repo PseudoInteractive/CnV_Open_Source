@@ -1413,6 +1413,8 @@ let defaultMru = {
     notes: "",
     player: "tbd",
     alliance: "tbd",
+    ptype: 0,
+    score: 0,
     last: new Date(),
 };
 let mru = [];
@@ -3417,7 +3419,7 @@ function avactor() {
                     /**
                      * @return {void}
                      */
-                    const total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
+                    let total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
                     document.getElementById("raidDungGo").onclick = () => {
                         setTimeout(() => {
                             /** @type {number} */
@@ -3440,23 +3442,24 @@ function avactor() {
                     };
                     /** @type {number} */
                     const optimalTSM_ = total_lootm_;
+                    var infoptim_ = Math.ceil(optimalTSM_ / 10);
                     /** @type {number} */
-                    var cavoptim_ = Math.ceil(optimalTSM_ * 2 / 3);
+                    var cavoptim_ = Math.ceil(optimalTSM_ / 15);
                     /** @type {number} */
-                    var praoptim_ = Math.ceil(optimalTSM_ / 2);
+                    var praoptim_ = Math.ceil(optimalTSM_ / 20);
                     /** @type {number} */
-                    var sorcoptim_ = Math.ceil(optimalTSM_ * 2);
+                    var sorcoptim_ = Math.ceil(optimalTSM_ / 5);
                     /** @type {number} */
-                    var RToptim_ = Math.ceil(optimalTSM_ / 3);
-                    $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(optimalTSM_);
-                    $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text(`${RToptim_}/${RToptim_}`);
-                    $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(optimalTSM_);
+                    var RToptim_ = cavoptim_;
+                    $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(infoptim_);
+                    $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text(RToptim_);
+                    $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(infoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(praoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(cavoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(cavoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(sorcoptim_);
-                    $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(optimalTSM_);
-                    $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(optimalTSM_);
+                    $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(infoptim_);
+                    $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(infoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(praoptim_);
                     $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
                     $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
@@ -3895,6 +3898,8 @@ function avactor() {
                 toAdd.name = clickInfo.info.name;
                 toAdd.notes = clickInfo.info.remarks;
                 toAdd.cid = _cid;
+                toAdd.score = clickInfo.info.score;
+                toAdd.ptype = clickInfo.info.ptype;
                 mru.push(toAdd);
                 mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf(); });
                 console.log(mru);

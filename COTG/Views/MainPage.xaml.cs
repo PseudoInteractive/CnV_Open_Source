@@ -37,6 +37,7 @@ namespace COTG.Views
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         public DumbCollection<City> cities { get; } = new DumbCollection<City>();
+        public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
 
         public static City showingRowDetails;
@@ -84,9 +85,27 @@ namespace COTG.Views
 
             
         }
+        public async static void UpdateDungeonList(List<Dungeon> dungoens)
+        {
+            if (cache == null)
+                return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                var l = cache.dungeons;
+                l.Clear();
+                lock (City.all)
+                {
+                    l.AddRange(dungoens);
+                }
+                l.NotifyChange();
+            });
 
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {

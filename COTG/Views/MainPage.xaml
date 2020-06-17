@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
     xmlns:model="using:COTG.Models"
     x:Class="COTG.Views.MainPage"
@@ -16,8 +17,9 @@
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
+			<RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="cityGrid"
                          RowDetailsDisplayMode="Single"
@@ -29,16 +31,43 @@
                          >
             
             <tg:RadDataGrid.Commands>
-                <model:GridCellTapCommand />
+                <model:CityTapCommand />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icons" />
+                <tg:DataGridImageColumn PropertyName="icon" />
                 <tg:DataGridTextColumn PropertyName="name" />
                 <tg:DataGridTextColumn PropertyName="xy" />
-                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
+                <tg:DataGridTextColumn PropertyName="ts" />
+                <tg:DataGridTextColumn PropertyName="tsHome" />
+                <tg:DataGridNumericalColumn PropertyName="points" />
                 <tg:DataGridDateColumn PropertyName="owner" IsVisible="False" />
+                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False" />
                 <tg:DataGridDateColumn PropertyName="alliance" IsVisible="False" />
+                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
             </tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
-	</Grid>
+        <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
+                        x:Name="dungeonGrid"
+                        Grid.Row="1"
+                        RowDetailsDisplayMode="Single"
+                        ItemsSource="{x:Bind dungeons, Mode=OneWay}"
+                        AutoGenerateColumns="False" CanDrag="True"
+                        SelectionMode ="Extended"
+                        CanUserChooseColumns="true"
+                        SelectionUnit="Row" Margin="0,14,0,0"
+                       >
+
+            <tg:RadDataGrid.Commands>
+                <model:DungeonTapCommand />
+            </tg:RadDataGrid.Commands>
+            <tg:RadDataGrid.Columns>
+                <tg:DataGridTextColumn PropertyName="xy" />
+                <tg:DataGridNumericalColumn PropertyName="type" />
+                <tg:DataGridNumericalColumn PropertyName="level" />
+                <tg:DataGridNumericalColumn PropertyName="complete" />
+                <tg:DataGridNumericalColumn PropertyName="dist" />
+            </tg:RadDataGrid.Columns>
+        </tg:RadDataGrid>
+        <tk:GridSplitter Grid.Row="1" Height="13" VerticalAlignment="Top"/>
+    </Grid>
 </Page>
