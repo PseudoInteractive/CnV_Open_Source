@@ -347,7 +347,7 @@ namespace COTG.Views
 
 
         static DateTime flyoutCreatedTime;
-        private async void ShowBuildings(object sender, PointerRoutedEventArgs e)
+        private async void ShowBuildings(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -374,15 +374,17 @@ namespace COTG.Views
                         counter = 0;
                     }
                     bdd[s] = counter + 1;
+                    ++bCount;
                 }
                 foreach (var i in bdd)
                 {
                     bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
                 }
+                bd.Add(new BuildingCount() { count = bCount-1, image = ImageHelper.FromImages("townhall.png") });
 
-//         
+                //         
 
-                
+
                 var button = sender as Button;
                 // button.Focus(FocusState.Programmatic);
 
@@ -391,14 +393,14 @@ namespace COTG.Views
                 buildingList.ItemsSource = bd;
                 buildingList.UpdateLayout();
                 flyoutCreatedTime = DateTime.Now;
-                var flyout = FlyoutBase.GetAttachedFlyout(button);
+             //   var flyout = FlyoutBase.GetAttachedFlyout(button);
                 //  flyout.OverlayInputPassThroughElement = shellPage;
                 //    flyout.XamlRoot = shellFrame.XamlRoot;
                 //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
                 //  Log($"{button.Tr.ToString()}");
-                var c = button.CenterPoint;
+              //  var c = button.CenterPoint;
                 //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
-                flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
+              //  flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
 
                 //           buildingList.Focus(FocusState.Programmatic);
                 //            buildingList.CapturePointer(e.Pointer);
@@ -409,8 +411,8 @@ namespace COTG.Views
 
                 //           buildingList.UpdateLayout();
                 //     button.Flyout.with
-                var mouseC = e.GetCurrentPoint(null).Position;
-                const float spawn = 20.0f;
+                //var mouseC = e.GetCurrentPoint(null).Position;
+                //const float spawn = 20.0f;
                 //      button.Focus(FocusState.Programmatic);
 
                 //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
@@ -444,11 +446,11 @@ namespace COTG.Views
 			try
 			{
                 Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
-                var me = sender as GridView;
-                var button = buildingsButton;
-                var flyout = FlyoutBase.GetAttachedFlyout(button);
-                if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
-                    flyout.Hide();
+              //  var me = sender as GridView;
+              //  var button = buildingsButton;
+              //  var flyout = FlyoutBase.GetAttachedFlyout(button);
+              //  if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
+               //     flyout.Hide();
 
 
             }
@@ -473,6 +475,11 @@ namespace COTG.Views
             Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
 
 
+        }
+
+        private void TestRaid(object sender, RoutedEventArgs e)
+        {
+            RestAPI.ScanDungeons.Post();
         }
     }
 }

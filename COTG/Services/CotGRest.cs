@@ -10,6 +10,7 @@ using Windows.Web.Http.Filters;
 using static COTG.Debug;
 using System.Web;
 using COTG.Game;
+using COTG.Helpers;
 
 namespace COTG.Services
 {
@@ -48,26 +49,6 @@ namespace COTG.Services
             {
                 Log(e);
             }
-
-
-            /*
-            var stream = resp.Content as HttpStreamContent;
-            var size = await stream.BufferAllAsync();
-            Log(size);
-
-            var str = await stream.ReadAsStringAsync();
-            Log(str);
-            try
-            {
-                var json = JsonDocument.Parse(str);
-                Log(json.ToString());
-                ProcessJsonPhase0(json);
-
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }*/
 
         }
 
@@ -166,6 +147,8 @@ namespace COTG.Services
         public static gWrd getWorldInfo = new gWrd();
         static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");
         static RestAPI __9 = new RestAPI("includes/sndTtr.php", "JJx452Tdd2375sRAssa");
+        // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
+        public static fCv ScanDungeons = new fCv();
     }
 
     public class rMp : RestAPI
@@ -197,7 +180,7 @@ namespace COTG.Services
             //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
             var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTime()},\"e\":\"World\"}}";
             var encoded = Aes.Encode(json, secret);
-            var args =  "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
             return args;
 
@@ -232,7 +215,7 @@ namespace COTG.Services
 
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode((cid != 0 ? cid : JSClient.jsVars.cid).ToString(), secret);
+            var encoded = Aes.Encode((cid != 0 ? cid : JSClient.cid).ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
 
@@ -242,6 +225,106 @@ namespace COTG.Services
         {
             Log("Got JS");
             JSClient.cityData = json.RootElement;
+            JSClient.SetCidFromCityData();
+        }
+
+    }
+
+    public class fCv : RestAPI
+    {
+        public struct Dungeon
+        {
+            //          [JsonProperty("t")]
+            public byte type { get; set; }
+
+            //        [JsonProperty("l")]
+            public byte level { get; set; }
+
+            //       [JsonProperty("x")]
+            public short x { get; set; }
+
+            //      [JsonProperty("y")]
+            public short y { get; set; }
+
+            //     [JsonProperty("p")]
+            public float completion { get; set; }
+
+            //    [JsonProperty("c")]
+            public int cid { get; set; }
+
+            //    [JsonProperty("d")]
+            public float dist { get; set; }
+
+            public override string ToString()
+            {
+                return $"{{{nameof(type)}={type.ToString()}, {nameof(level)}={level.ToString()}, {nameof(x)}={x.ToString()}, {nameof(y)}={y.ToString()}, {nameof(completion)}={completion.ToString()}, {nameof(cid)}={cid.ToString()}, {nameof(dist)}={dist.ToString()}}}";
+            }
+        }
+        public static Dungeon[] dungeons = new Dungeon[0];
+        public fCv() : base("includes/fCv.php", "Xs4b2261f55dlme55s")
+        {
+
+        }
+
+        public override string GetPostContent()
+        {
+            var args = "cid=" + JSClient.cid;
+            return args;
+
+
+        }
+        public override async Task Accept(Uri uri, HttpResponseMessage resp)
+        {
+            Log("Got fCv");
+
+
+            try
+            {
+                var buff = await resp.Content.ReadAsBufferAsync();
+
+                var temp = new byte[buff.Length-1];
+
+                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+                {
+                    dataReader.ReadByte(); // for some reason, the first two are '\n'
+                    dataReader.ReadBytes(temp);
+                }
+                var dec2 = Encoding.UTF8.GetString(temp);
+                var temps = Aes.Decode(dec2, secret);
+                var json = JsonDocument.Parse(temps);
+                Log(json.ToString());
+
+
+                var jse = json.RootElement;
+                jse = jse[0];
+                var rv = new List<Dungeon>();
+                foreach (var dung in jse.EnumerateArray())
+                {
+                    rv.Add(new Dungeon()
+                    {
+                        cid = dung.GetAsInt("c"),
+                        x = dung.GetAsShort("x"),
+                        y = dung.GetAsShort("y"),
+                        type = dung.GetAsByte("t"),
+                        level = dung.GetAsByte("l"),
+                        completion = dung.GetAsFloat("p"),
+                        dist = dung.GetAsFloat("d")
+
+                    });
+                    ;
+                }
+                dungeons = rv.ToArray();
+                foreach (var d in dungeons)
+                {
+                    Log(d);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
         }
 
     }

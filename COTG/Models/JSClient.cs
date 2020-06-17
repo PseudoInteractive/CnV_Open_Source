@@ -37,6 +37,7 @@ namespace COTG
    
         public static JsonDocument ppdt;
         public static JsonElement cityData;
+        public static int cid; // cityId
         public static JSClient instance = new JSClient();
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
@@ -57,7 +58,6 @@ namespace COTG
             public string alliance { get; set; }
             public string s { get; set; }
             public string cookie { get; set; }
-            public int cid { get; set; }
             public DateTime launchTime;
             public long gameMSAtSTart;
            
@@ -273,6 +273,19 @@ namespace COTG
             // Log(ppdt.ToString());
         }
 
+        internal static void SetCidFromCityData()
+        {
+            try
+            {
+                cid = cityData.GetAsInt("cid");
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+
+        }
 
         static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {
@@ -452,7 +465,7 @@ namespace COTG
                                 jsVars.pid = jso.GetAsInt("pid");
                                 jsVars.alliance = jso.GetString("alliance");
                                 jsVars.s = jso.GetString("s");
-                                jsVars.cid = jso.GetAsInt("cid");
+                                cid = jso.GetAsInt("cid");
                                 jsVars.gameMSAtSTart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTime.Now;
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
@@ -501,6 +514,7 @@ namespace COTG
                         case "citydata":
                             {
                                 cityData = jsp.Value;
+                                SetCidFromCityData();
                                 Log(cityData.ToString());
                             }
                             break;

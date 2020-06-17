@@ -27,7 +27,7 @@
                     ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMode="Auto"
                     >
 
-            <GridView x:Name="buildingList" PointerExited="GridLostMouse" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+            <GridView x:Name="miscList" PointerExited="GridLostMouse" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="Game:BuildingCount">
                         <Grid Width="30" Height="60" >
@@ -62,6 +62,7 @@
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.ContextFlyout>
             <MenuFlyout>
+                <MenuFlyoutItem Click="TestRaid" Text="TestRaid" />
                 <MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />
                 <MenuFlyoutItem Click="GetPPDT" Text="GetPPDT" />
                 <MenuFlyoutItem Click="TestPost" Text="TestPost" />
@@ -126,10 +127,39 @@
                     Width="Auto"
                     
                     HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    PointerEntered="ShowBuildings"
-                    FlyoutBase.AttachedFlyout="{StaticResource buildingFlyout}">
-                    <Image Source="/images/marketplace.png" Stretch="Fill" />
+                    VerticalAlignment="Center" Click="ShowBuildings">
+					<Button.Flyout>
+                        <Flyout  Closing="FlyoutClosing" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                 ShowMode="Auto"
+                    >
+
+                            <GridView x:Name="buildingList" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="Game:BuildingCount">
+                                        <Grid Width="30" Height="60" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+                                            <Image Source="{x:Bind image,Mode=OneTime}" Stretch="UniformToFill" />
+                                            <TextBlock Text="{x:Bind count,Mode=OneTime}" 
+                                                Grid.Row="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid MaximumRowsOrColumns="6" Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
+                        </Flyout>
+                    </Button.Flyout>
+					<Image Source="/images/marketplace.png"/>
                 </Button>
                 <Models:AppBar x:Name="appBar" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
 

@@ -998,9 +998,9 @@ function SendAttack_() {
     // 	end_5=commandInfo.x.length;
     // 	loop_();
 }
-var lastUpdate = 0;
+let pendingBuildUpdate = false;
 function makebuildcount_() {
-    lastUpdate = Date.now();
+    pendingBuildUpdate = false;
     $("#bdtable").remove();
     const currentbd_ = {
         name: [],
@@ -1852,6 +1852,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 let __base64Encode = null;
 let __base64Decode = null;
+const encyptStr = [];
+const decyptStr = [];
 let __a6 = {
     ccazzx: { encrypt: (a, b, c) => "", decrypt: (a, b, c) => "" }
 };
@@ -1881,7 +1883,7 @@ function betterBase64Decode() {
     catch (e) {
         // not ready yet, try again later
     }
-    var rv = __base64Decode.call(this);
+    let rv = __base64Decode.call(this);
     //console.log(rv);
     return rv;
 }
@@ -2054,6 +2056,7 @@ function __avatarAjaxDone(url, data) {
     if (Contains(url_21, "gC.php")) {
         cdata_ = JSON.parse(data);
         sendCityData();
+        pendingBuildUpdate = true;
         setTimeout(function () {
             /** @type {*} */
             updateattack_();
@@ -2071,13 +2074,13 @@ function __avatarAjaxDone(url, data) {
     else if (Contains(url_21, "gWrd.php")) {
         setTimeout(function () {
             /** @type {*} */
-            var wrapper = JSON.parse(data);
+            let wrapper = JSON.parse(data);
             /** @type {boolean} */
             beentoworld_ = true;
             wdata_ = DecodeWorldData(wrapper.a);
             UpdateResearchAndFaith();
             getbossinfo_();
-        }, 500);
+        }, 1000);
     }
     else if (Contains(url_21, "gPlA.php")) {
         /** @type {*} */
@@ -2097,11 +2100,11 @@ function __avatarAjaxDone(url, data) {
                     cdata_ = Object.assign(Object.assign({}, cdata_), poll2_.city);
                     if ('bd' in poll2_.city) {
                         let now = Date.now();
-                        console.log("pollCity");
-                        if (now > lastUpdate + 5000) {
-                            lastUpdate = now;
+                        //console.log("pollCity");
+                        if (pendingBuildUpdate === false) {
+                            pendingBuildUpdate = true;
                             sendCityData();
-                            setTimeout(makebuildcount_, 400);
+                            setTimeout(makebuildcount_, 4000);
                         }
                     }
                 }
@@ -2407,17 +2410,15 @@ function avactor() {
         window['shCit'] = gspotfunct.shCit;
         window['chcity'] = gspotfunct.chcity;
         String.prototype['utf8Encode'] = function () {
+            encyptStr.push(this);
             console.log(this);
             return unescape(encodeURIComponent(this));
         };
-        // if (typeof String.prototype.utf8Decode == i011.S55(h2R << 2061309088)) String.prototype.utf8Decode = function () {
-        //   i011.R6();
-        //   try {
-        //     return decodeURIComponent(escape(this));
-        //   } catch (g2v) {
-        //     return this;
-        //   }
-        // };
+        String.prototype['utf8Decode'] = function () {
+            decyptStr.push(this);
+            console.log(this);
+            return decodeURIComponent(escape(this));
+        };
         // if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
         //     String.prototype.base64Decode = function() {
         //       if (typeof atob != _s(h2R ^ 0))

@@ -1,6 +1,9 @@
 ﻿
 let __base64Encode: Function=null;
-let __base64Decode: Function=null;
+let __base64Decode: Function = null;
+const encyptStr: string[] = [];
+const decyptStr: string[] = [];
+
 let __a6={
 	ccazzx: { encrypt: (a: string,b: string,c: number) => "",decrypt: (a: string,b: string,c: number) => "" } };
 function MakeGlobalGetter(a) {
@@ -32,7 +35,7 @@ function betterBase64Decode() {
 	catch(e) {
 		// not ready yet, try again later
 	}
-	var rv=__base64Decode.call(this);
+	let rv=__base64Decode.call(this);
 	//console.log(rv);
 	return rv;
 }
@@ -44,7 +47,7 @@ function betterBase64Encode()   {
 		//me.eval(MakeGlobalCopy("a6"));
 		//console.log(window['GetD6']());;
 
-		__a6.ccazzx.encrypt = arguments.callee.caller as (a:string,b:string,c:number)=>string;
+		__a6.ccazzx.encrypt = arguments.callee.caller as (a: string,b: string,c: number) => string;
 	
 		//console.log(this);
 		//console.log(window['__a6']);
@@ -246,6 +249,7 @@ function __avatarAjaxDone(url: string,
 	if(Contains(url_21,"gC.php")) {
 		cdata_ = JSON.parse(data);
 		sendCityData();
+		pendingBuildUpdate = true;
 		setTimeout(function () {
 			/** @type {*} */
 			updateattack_();
@@ -266,13 +270,13 @@ function __avatarAjaxDone(url: string,
 	else if(Contains(url_21,"gWrd.php")) {
 		setTimeout(function() {
 			/** @type {*} */
-			var wrapper=JSON.parse(data);
+			let wrapper=JSON.parse(data);
 			/** @type {boolean} */
 			beentoworld_=true;
 			wdata_=DecodeWorldData(wrapper.a);
 			UpdateResearchAndFaith();
 			getbossinfo_();
-		},500);
+		},1000);
 	} else	if(Contains(url_21,"gPlA.php")) {
 		/** @type {*} */
 		pldata_=JSON.parse(data);
@@ -295,12 +299,12 @@ function __avatarAjaxDone(url: string,
 					cdata_ = { ...cdata_, ...poll2_.city };
 					if ('bd' in poll2_.city) {
 						let now = Date.now();
-						console.log("pollCity");
-						if (now > lastUpdate + 5000) {
-							lastUpdate = now;
+						//console.log("pollCity");
+						if (pendingBuildUpdate===false) {
+							pendingBuildUpdate = true;
 							sendCityData();
 
-							setTimeout(makebuildcount_, 400);
+							setTimeout(makebuildcount_, 4000);
 						}
 					}
 				}
@@ -649,18 +653,16 @@ function avactor() {
 
 
 
-		 String.prototype['utf8Encode'] = function () {
+		String.prototype['utf8Encode'] = function () {
+			encyptStr.push(this);
 			 console.log(this);
 		   return unescape(encodeURIComponent(this));
 		 };
-		// if (typeof String.prototype.utf8Decode == i011.S55(h2R << 2061309088)) String.prototype.utf8Decode = function () {
-		//   i011.R6();
-		//   try {
-		//     return decodeURIComponent(escape(this));
-		//   } catch (g2v) {
-		//     return this;
-		//   }
-		// };
+		String.prototype['utf8Decode'] = function () {
+			decyptStr.push(this);
+			console.log(this);
+		     return decodeURIComponent(escape(this));
+		 };
 		// if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
 		//     String.prototype.base64Decode = function() {
 		//       if (typeof atob != _s(h2R ^ 0))

@@ -1045,10 +1045,10 @@ function SendAttack_() {
 	// 	loop_();
 	}
 
-var lastUpdate: number = 0;
+let pendingBuildUpdate = false;
 
 function makebuildcount_() {
-		lastUpdate = Date.now();
+		pendingBuildUpdate =false;
 
 		$("#bdtable").remove();
 		const currentbd_ = {
