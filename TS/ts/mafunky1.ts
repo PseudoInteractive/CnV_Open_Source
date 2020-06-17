@@ -1,8 +1,8 @@
 ﻿
 let __base64Encode: Function=null;
 let __base64Decode: Function = null;
-const encyptStr: string[] = [];
-const decyptStr: string[] = [];
+let encryptStr: string[] = [];
+let decryptStr: string[] = [];
 
 let __a6={
 	ccazzx: { encrypt: (a: string,b: string,c: number) => "",decrypt: (a: string,b: string,c: number) => "" } };
