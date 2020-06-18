@@ -1045,7 +1045,7 @@ function SendAttack_() {
 	// 	loop_();
 	}
 
-let pendingBuildUpdate = false;
+var pendingBuildUpdate = false;
 
 function makebuildcount_() {
 		pendingBuildUpdate =false;

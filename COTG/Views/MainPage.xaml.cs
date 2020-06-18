@@ -18,19 +18,35 @@ using System.Collections.Specialized;
 using FluentAssertions.Extensions;
 using FluentAssertions.Common;
 using FluentAssertions;
-
+using Windows.Foundation;
 
 namespace COTG.Views
 {
+
     public class DumbCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public void NotifyChange()
         {
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset ));
 
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 
@@ -42,11 +58,28 @@ namespace COTG.Views
 
         public static City showingRowDetails;
 
+        public DataTemplate GetTsInfoDataTemplate()
+        {
+            var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+            Assert(rv != null);
+            return rv;
+        }
+
         public MainPage()
         {
             (cache == null).Should().BeTrue();
             cache = this;
             InitializeComponent();
+        }
+
+        public string dungeonInfo { get
+            {
+                var ci = dungeonGrid.HitTestService.CellInfoFromPoint(CoreWindow.GetForCurrentThread().PointerPosition);
+                if(ci == null)
+                    return "Missed";
+                var i = ci.Item as COTG.Game.Dungeon;
+                return i.ToString();
+            }
         }
 
         private void OnCheckBoxClick(object sender, RoutedEventArgs e)
@@ -76,10 +109,7 @@ namespace COTG.Views
                 {
                     var cities = cache.cities;
                     cities.Clear();
-                    lock (City.all)
-                    {
-                        cities.AddRange(City.all.Values);
-                    }
+                    cities.AddRange(City.all.Values);
                     cities.NotifyChange();
                 });
 
@@ -94,10 +124,7 @@ namespace COTG.Views
             {
                 var l = cache.dungeons;
                 l.Clear();
-                lock (City.all)
-                {
-                    l.AddRange(dungoens);
-                }
+                l.AddRange(dungoens);
                 l.NotifyChange();
             });
 
@@ -121,5 +148,23 @@ namespace COTG.Views
         public void OnCityGridChange()  {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(cities)));
         }
-    }
+
+        static Dungeon lastTooltip;
+		private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+            var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+            var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+            var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+            var hit = cell?.Item as Dungeon;
+            if(hit!=lastTooltip)
+			{
+                lastTooltip = hit;
+                if (hit != null)
+                    ToolTipService.SetToolTip(this, hit.ToString());
+                else
+                    ToolTipService.SetToolTip(this,"None");
+			}
+        }
+	}
 }

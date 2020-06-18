@@ -6,10 +6,10 @@
     >
 
     <Application.Resources>
-        <ResourceDictionary>
+        <ResourceDictionary> 
 			<AcrylicBrush x:Key="Acryllic" TintColor="#7FFFFFFF"/>
             <ResourceDictionary.MergedDictionaries>
-                <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" UseCompactResources="False" />
                 <ResourceDictionary Source="/Styles/_Colors.xaml" />
                 <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
                 <ResourceDictionary Source="/Styles/_Thickness.xaml" />

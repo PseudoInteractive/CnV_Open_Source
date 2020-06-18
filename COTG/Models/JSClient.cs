@@ -25,18 +25,18 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.Concurrent;
 using Windows.Storage.Streams;
 using Windows.Storage;
+using COTG.Services;
 
 namespace COTG
 {
 	/// <summary>
 	/// The j s client.
 	/// </summary>
-	public class JSClient : ICommand
+	public class JSClient 
     {
 
    
         public static JsonDocument ppdt;
-        public static JsonElement cityData;
         public static int cid; // cityId
         public static JSClient instance = new JSClient();
         public static WebView view;
@@ -78,27 +78,8 @@ namespace COTG
 		{
 		}
 
-		event EventHandler ICommand.CanExecuteChanged
-		{
-			add
-			{
-				throw new NotImplementedException();
-			}
+		
 
-			remove
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		static void AddDefaultHeaders(HttpRequestHeaderCollection headers)
-        {
-           // headers.TryAppendWithoutValidation("Content-Type", @"application/x-www-form-urlencoded; charset=UTF-8");
-          //  headers.TryAppendWithoutValidation("pp-ss", "0");
-         //   headers.TryAppendWithoutValidation("Referer", $"https://w{world}.crownofthegods.com/overview/overview.php?s=0");
-         //   headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-
-        }
 
         internal static WebView Initialize(Grid panel)
         {
@@ -108,7 +89,10 @@ namespace COTG
                 view = new WebView(WebViewExecutionMode.SeparateThread)
                 { HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
-                    AllowFocusOnInteraction=true };
+                    AllowFocusOnInteraction=true,
+                 IsAccessKeyScope=true,
+                 AccessKey="F11"
+                };
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -240,7 +224,6 @@ namespace COTG
             Log(str);
             ppdt = JsonDocument.Parse(str);
             // extract cities
-            lock (City.all)
             {
                 var now = DateTime.Now;
                 foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
@@ -250,9 +233,9 @@ namespace COTG
                     if (!City.all.TryGetValue(cid, out var city))
                     {
                         city = new City() { cid = cid };
-                        City.all.Add(cid, city);
-
+                        City.all.TryAdd(cid, city);
                     }
+                    
                     city.name = jsCity.GetProperty("2").GetString();
                     city.isCastle = jsCity.GetAsInt("12") != 0;
                     city.points =  jsCity.GetAsInt("4");
@@ -267,26 +250,14 @@ namespace COTG
 
                 Log(City.all.ToString());
                 Log(City.all.Count());
-            }
+             }
              Views.MainPage.UpdateCityList();
 
 
             // Log(ppdt.ToString());
         }
 
-        internal static void SetCidFromCityData()
-        {
-            try
-            {
-                cid = cityData.GetAsInt("cid");
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-
-
-        }
+        
 
         static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {
@@ -484,30 +455,27 @@ namespace COTG
                                 httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-                                if (gotCreds)
-                                {
-                                    await Task.Delay(2000);
-                                    await GetPPDT();
-                                }
+                                
                                 break;
                             }
                         case "cityclick":
                             {
                                 var jso = jsp.Value;
                                 var cid = jso.GetAsInt("cid");
-                                lock (City.all)
                                 {
                                     if (!City.all.TryGetValue(cid, out var city))
                                     {
                                         city = new City() { cid = cid };
-                                        City.all.Add(cid, city);
+                                        City.all.TryAdd(cid, city);
                                     }
+                                    
                                     city.name = jso.GetString("name");
                                     city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
                                     city.notes = jso.GetString("notes");
                                     city.points = jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
+
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
                                 break;
@@ -515,16 +483,28 @@ namespace COTG
                             }
                         case "citydata":
                             {
-                                cityData = jsp.Value;
-                                SetCidFromCityData();
-                                Log(cityData.ToString());
+                                var jse = jsp.Value;
+                                cid = jse.GetInt("cid");
+                                if (!City.all.TryGetValue(cid, out var city))
+                                {
+                                    city = new City() { cid = cid };
+                                    City.all.TryAdd(cid, city);
+                                }
+                                city.LoadFromJson(jse);
+                                COTG.Views.MainPage.UpdateCityList();
+
                             }
                             break;
                     }
 
                 }
 
-
+                if (gotCreds)
+                {
+                    await RestAPI.getCity.Post();
+                    await GetPPDT();
+                    await RestAPI.ScanDungeons.Post();
+                }
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();
                 //foreach (var c in jsVars.cookie.Split(";"))
@@ -533,7 +513,7 @@ namespace COTG
                 //}
 
 
-              
+
 
 
             }
@@ -628,15 +608,5 @@ namespace COTG
 
 
         }
-
-		bool ICommand.CanExecute(object parameter)
-		{
-			return true;
-		}
-
-		void ICommand.Execute(object parameter)
-		{
-			throw new NotImplementedException();
-		}
-	}
+    }
 }

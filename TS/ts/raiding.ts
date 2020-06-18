@@ -542,7 +542,7 @@ function getDugRows_() {
 				loot1_=other_loot_;
 			}
 			/** @type {number} */
-			var total_loot_1=Math.ceil(loot1_[AsNumber(dunglvl_)-1]*(1-AsNumber(progress_)/100+1)*1.02);
+			var total_loot_1=Math.ceil(loot1_[AsNumber(dunglvl_)-1]*(2-AsNumber(progress_)/100)*1.02);
 			$("#dungloctab").find(".addraiwc td:nth-child(4)").html("<button id='raid115' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>115%</button><button id='raid108' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>108%</button>");
 			$("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>100%</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
 

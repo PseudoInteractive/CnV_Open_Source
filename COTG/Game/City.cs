@@ -29,12 +29,62 @@ namespace COTG.Game
         public bool isTemple { get; set; }
         public int points { get; set; }
         public BitmapImage icon => ImageHelper.FromImages(isCastle?"castle4.png" : "city4.png");
+        public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
-        public JsonElement jsTroops => COTG.Services.RestAPI.troopsOverview.Get(cid);
-        public int ts => jsTroops.IsValid() ? jsTroops.GetAsInt("total_troops") : -1;
-        public int tsHome => jsTroops.IsValid() ? jsTroops.GetAsInt("total_home") : -1;
+        // Abusing invalid jsE by returning it when we want to return null
+        public JsonElement troopsHome => !jsE.IsValid()?jsE : jsE.GetProperty("th");
+        public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
+        public string tsInfo => "Detailed info";
 
-        public static Dictionary<int,City> all = new Dictionary<int, City>(); // keyed by city
+        public int ts
+        {
+            get
+            {
+                var tt = troopsTotal;
+                if (!tt.IsValid())
+                    return -1;
+                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32() );
+            }
+        }
+        public int tsHome
+        {
+            get
+            {
+                var tt = troopsHome;
+                if (!tt.IsValid())
+                    return -1;
+                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
+            }
+        }
+        public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
+        public static ConcurrentDictionary<int,City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
+        public void LoadFromJson(JsonElement jse)
+        {
+            jsE = jse;
+            Debug.Assert(cid == jse.GetInt("cid"));
+            name = jse.GetAsString("citn");
+            owner = jse.GetAsString("pn");
+        }
+        const int bidCastle = 467;
+        public (int commandSlotsInUse,int totalCommandSlots,int freeCommandSlots) GetCommandSlots()
+        {
+            if (!jsE.IsValid())
+            {
+                Log("Missing City data");
+                return (0, 5, 0);
+            }
+            int total = 5;
+            var bd = jsE.GetProperty("bd");
+            foreach(var b in bd.EnumerateArray())
+            {
+                if(b.GetInt("bid") == bidCastle )
+                {
+                    total = b.GetInt("bl") + 5;
+                }
+            }
+            var comm = jsE.GetInt("comm");
+            return (comm, total, total - comm);
+        }
 	}
     public class BuildingCount
     {

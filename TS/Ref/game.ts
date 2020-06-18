@@ -2194,6 +2194,8 @@ const __s = {
     2178: "uBte.php",
     2179: "#dungAttack",
     2180: " e=",
+    
+    
     2181: "rgba(218,165,32,0.2)",
     2182: "<div class = \"tooltiptable4\"> <table> <tr> <td ID = \"#trnamett\" colspan = \"2\" style = \"width:100%;\">Amphis</td> </tr> <tr> <td ID = \"#trtypett\" colspan = \"2\" style = \"width:100%;\">Forest Cavern Creature</td> </tr> <tr> <td ID = \"#trdesctt\" colspan = \"2\" style = \"width:100%;\">The second highest tier of creatures found in Aschendals Forest Caverns.</td> </tr> <tr> <td>Defense against Infantry:</td> <td ID = \"#trinfdftt\">40</td> </tr> <tr> <td>Defense against Cavalry:</td> <td ID = \"#trcavdftt\">20</td> </tr> <tr> <td>Defense against Mystic:</td> <td ID = \"#trmysdftt\">40</td> </tr> <tr> <td>Defense against Artillery:</td> <td ID = \"#trartdftt\">40</td> </tr> </table> </div>",
     2183: "#alefrispan",
@@ -9609,7 +9611,6 @@ let cotgsubscribe;
     const B8y = 5592;
     const J9p = 0x3f;
     const Q5y = 5643;
-    const K4y = 467;
     const L2m = 3459;
     const Y2m = 3502;
     const l9y = 5995;
@@ -10460,7 +10461,7 @@ let cotgsubscribe;
             case +474:
                 return +C4y;
             case +475:
-                return +K4y;
+                return +467;
             case '478' :
                 return +a4y;
             case '443' :
@@ -13184,7 +13185,7 @@ let cotgsubscribe;
             let V0l = '0' * 1;
             let h0l = 0 | 0;
             const e5l = [];
-            const p8U = D6[_s(N1R)][E1R ][_s(i1R)];
+            const p8U = D6[_s(N1R)][E1R ]['bl'];
             const S0l = bam[_s(Q5y << 1718611616)][+q1R][_s(j1R >> 917628256)][p8U];
             const b0l = p8U * +'10';
             if (p8U == '10' * 1)
@@ -13215,8 +13216,8 @@ let cotgsubscribe;
             let f9U;
             let V9U = -(1 | 0);
             for (var U2U in D6[_s(N1R)]) {
-                P2U = D6[_s(N1R)][U2U][_s(m1R )];
-                D2U = D6[_s(N1R)][U2U][_s(i1R)];
+                P2U = D6[_s(N1R)][U2U]['bid'];
+                D2U = D6[_s(N1R)][U2U]['bl'];
                 U2U = Number(U2U);
                 f9U = $(_s(B1R) + U2U).data(_s(334 * 1));
                 if (f9U.bid != P2U || D2U != f9U.bl) {
@@ -13258,50 +13259,50 @@ let cotgsubscribe;
                         X1F(P2U, U2U);
                 }
                 if (P2U == +G1R || P2U == +C6y || P2U == (r1R | 192) || P2U == +b1R)
-                    D6[_s(N1R )][U2U][_s(i1R * 1)] = '0' >> 1393508928;
+                    D6[_s(N1R )][U2U]['bl'] = '0' >> 1393508928;
                 if (D2U > '10' << 366597216) {
                     D2U = '10' >> 1706097984;
-                    D6[_s(N1R)][U2U][_s(i1R)] = +'10';
+                    D6[_s(N1R)][U2U]['bl'] = +'10';
                 }
                 if (L2(P2U)) {
                     P2U = L2(P2U);
-                    D6[_s(N1R)][U2U][_s(m1R << 781563136)] = P2U;
+                    D6[_s(N1R)][U2U]['bid'] = P2U;
                 }
                 if (P2U == +r6y & U2U != ('0' )) {
-                    D6[_s(N1R * 1)][U2U][_s(m1R)] = +0;
-                    D6[_s(N1R )][U2U][_s(i1R)] = 0 | 0;
+                    D6[_s(N1R * 1)][U2U]['bid'] = +0;
+                    D6[_s(N1R )][U2U]['bl'] = 0 | 0;
                     D6[_s(N1R * 1)][U2U][_s(h1R)] = 0 ;
                     D6[_s(N1R)][U2U][_s(N1R - 0)] = +0;
                     D6[_s(N1R - 0)][U2U][_s(X1R)] = +'0';
                     D6[_s(N1R - 0)][U2U][_s(P1R - 0)] = '0' >> 43154272;
                 }
                 if (P2U != (n4y ) && P2U != +l4y && P2U != o4y - 0 && P2U != I1R << 1609086048 && P2U != +t1y && P2U != T1y * 1 && P2U != g1y - 0 && P2U != f1y * 1 && P2U != (V1y ) && P2U != M1y - 0 && P2U != +Q1y && P2U != +Z1y && P2U != +u1y && P2U != N1y << 248221984 && P2U != +i1y && P2U != q1y * 1 && P2U != D1y * 1 && P2U != (B1y | 36) && P2U != +e1y && P2U != y1y << 156907264 && (U2U == p1R >> 1467943232 || U2U == +z1R || U2U == +n1R || U2U == (d1R | 256) || U2U == +'323' || U2U == (l1R | 322) || U2U == +k1R || U2U == +o1R)) {
-                    D6[_s(N1R | 4234)][U2U][_s(m1R | 2629)] = +0;
-                    D6[_s(N1R )][U2U][_s(i1R)] = +0;
+                    D6[_s(N1R | 4234)][U2U]['bid'] = +0;
+                    D6[_s(N1R )][U2U]['bl'] = +0;
                     D6[_s(N1R)][U2U][_s(h1R)] = +0;
                     D6[_s(N1R )][U2U][_s(N1R | 4608)] = 0 >> 223830208;
                     D6[_s(N1R)][U2U][_s(X1R)] = +'0';
                     D6[_s(N1R )][U2U][_s(P1R << 882964352)] = 0 ;
                 }
                 if ((P2U == (n4y | 547) || P2U == +l4y || P2U == o4y - 0 || P2U == +I1R || P2U == t1y >> 51875552 || P2U == T1y * 1 || P2U == +g1y || P2U == f1y - 0 || P2U == +V1y || P2U == +M1y || P2U == Q1y << 225587520 || P2U == +Z1y || P2U == +u1y || P2U == +N1y || P2U == +i1y || P2U == (q1y ) || P2U == +D1y || P2U == B1y * 1 || P2U == (e1y ) || P2U == +y1y) && U2U != +3 && U2U != (7 ) && U2U != m2y - 0 && U2U != +s6y && U2U != D8y >> 126614880 && U2U != (S1R ) && U2U != +t5R && U2U != (J5R ) && U2U != +T5R && U2U != +433 && U2U != x5R << 1896147136 && U2U != (g5R ) && U2U != W5R * 1 && U2U != f5R >> 1551032608 && U2U != U5R << 737845088 && U2U != N0R << 1837042752 && U2U != (p1R | 80) && U2U != (z1R ) && U2U != +n1R && U2U != (d1R | 1) && U2U != +'323' && U2U != (l1R ) && U2U != k1R * 1 && U2U != +o1R) {
-                    D6[_s(N1R | 4186)][U2U][_s(m1R)] = +0;
-                    D6[_s(N1R << 1254247552)][U2U][_s(i1R)] = +'0';
+                    D6[_s(N1R | 4186)][U2U]['bid'] = +0;
+                    D6[_s(N1R << 1254247552)][U2U]['bl'] = +'0';
                     D6[_s(N1R)][U2U][_s(h1R )] = 0 ;
                     D6[_s(N1R )][U2U][_s(N1R)] = +'0';
                     D6[_s(N1R)][U2U][_s(X1R)] = 0 ;
                     D6[_s(N1R)][U2U][_s(P1R)] = +'0';
                 }
                 if (P2U != n4y * 1 && P2U != l4y - 0 && P2U != +o4y && P2U != +I1R && P2U != t1y << 1105644064 && P2U != +T1y && P2U != +g1y && P2U != (f1y ) && P2U != (V1y ) && P2U != (M1y | 528) && P2U != (Q1y ) && P2U != Z1y >> 809083616 && P2U != (u1y ) && P2U != +N1y && P2U != +i1y && P2U != +q1y && P2U != D1y >> 330094848 && P2U != +B1y && P2U != +e1y && P2U != y1y * 1 && P2U != +O1y && P2U != +w1y && P2U != H1y >> 611549632 && P2U != +G1y && P2U != (b1y ) && P2U != +X1y && P2U != +I1y && P2U != +z1y && P2U != d1y * 1 && P2U != k1y << 496658432 && P2U != +S1y && P2U != J5y >> 1172436896 && P2U != x5y >> 2039266656 && P2U != +W5y && P2U != +U5y && P2U != (c5y ) && (U2U == (p1R ) || U2U == (z1R ) || U2U == n1R << 1135504608 || U2U == d1R * 1 || U2U == (323 ) || U2U == (l1R ) || U2U == +k1R || U2U == o1R << 503237888 || U2U == '3' * 1 || U2U == +'7' || U2U == +m2y || U2U == s6y * 1 || U2U == +D8y || U2U == S1R - 0 || U2U == t5R - 0 || U2U == +J5R || U2U == T5R - 0 || U2U == +'433' || U2U == +x5R || U2U == g5R - 0 || U2U == W5R * 1 || U2U == (f5R ) || U2U == +U5R || U2U == +N0R || U2U == +p1R || U2U == +z1R || U2U == +n1R || U2U == +d1R || U2U == +'323' || U2U == l1R >> 1123097632 || U2U == (k1R | 33) || U2U == +o1R)) {
-                    D6[_s(N1R)][U2U][_s(m1R)] = '0' << 231642272;
-                    D6[_s(N1R >> 1615520064)][U2U][_s(i1R >> 1603456864)] = '0' - 0;
+                    D6[_s(N1R)][U2U]['bid'] = '0' << 231642272;
+                    D6[_s(N1R >> 1615520064)][U2U]['bl'] = '0' - 0;
                     D6[_s(N1R)][U2U][_s(h1R)] = 0 << 1580082592;
                     D6[_s(N1R >> 1387023872)][U2U][_s(N1R)] = +0;
                     D6[_s(N1R )][U2U][_s(X1R)] = 0 * 1;
                     D6[_s(N1R)][U2U][_s(P1R)] = 0 | 0;
                 }
                 if ((P2U == O1y * 1 || P2U == w1y >> 1332491136 || P2U == +H1y || P2U == G1y << 1922023968 || P2U == +b1y || P2U == X1y * 1 || P2U == (I1y ) || P2U == +z1y || P2U == +d1y || P2U == (k1y ) || P2U == +S1y || P2U == +J5y || P2U == +x5y || P2U == (W5y ) || P2U == +U5y || P2U == +c5y) && U2U != +3 && U2U != ('7' | 0) && U2U != +m2y && U2U != +s6y && U2U != +D8y && U2U != S1R >> 438385120 && U2U != +t5R && U2U != J5R - 0 && U2U != T5R << 945891840 && U2U != +'433' && U2U != x5R << 2130842048 && U2U != g5R - 0 && U2U != W5R << 796786560 && U2U != +f5R && U2U != +U5R && U2U != N0R - 0 && U2U != (p1R | 32) && U2U != z1R - 0 && U2U != (n1R | 12) && U2U != +d1R && U2U != ('323' ) && U2U != (l1R ) && U2U != +k1R && U2U != o1R << 1327847936) {
-                    D6[_s(N1R )][U2U][_s(m1R )] = '0' * 1;
-                    D6[_s(N1R )][U2U][_s(i1R | 2090)] = 0 - 0;
+                    D6[_s(N1R )][U2U]['bid'] = '0' * 1;
+                    D6[_s(N1R )][U2U]['bl'] = 0 - 0;
                     D6[_s(N1R)][U2U][_s(h1R)] = +'0';
                     D6[_s(N1R)][U2U][_s(N1R | 82)] = 0 - 0;
                     D6[_s(N1R)][U2U][_s(X1R * 1)] = +'0';
@@ -13316,8 +13317,8 @@ let cotgsubscribe;
                                 r9U++;
                         }
                 if (P2U >= (A4y | 73) && P2U <= I4y * 1 && U2U != +V5R && U2U != c5R << 1275326496 && U2U != +u8y && U2U != +M5R && U2U != +s5R && U2U != +Q5R && U2U != +C5R && U2U != Z5R * 1 && D6[_s(K5R)] == +1) {
-                    D6[_s(N1R | 522)][U2U][_s(m1R)] = +0;
-                    D6[_s(N1R << 1531969152)][U2U][_s(i1R)] = '0' | 0;
+                    D6[_s(N1R | 522)][U2U]['bid'] = +0;
+                    D6[_s(N1R << 1531969152)][U2U]['bl'] = '0' | 0;
                     D6[_s(N1R | 4170)][U2U][_s(h1R << 1862115520)] = 0 * 1;
                     D6[_s(N1R - 0)][U2U][_s(N1R << 974875328)] = +'0';
                     D6[_s(N1R)][U2U][_s(X1R)] = 0 - 0;
@@ -13388,9 +13389,9 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = Number(t8U[O8U]);
                         if (D6[_s(N1R)][B2U]) {
-                            var y2U = D6[_s(N1R >> 1632752992)][B2U][_s(m1R)];
+                            var y2U = D6[_s(N1R >> 1632752992)][B2U]['bid'];
                             if (y2U == A8U) {
-                                var N2U = D6[_s(N1R )][B2U][_s(i1R << 565347648)];
+                                var N2U = D6[_s(N1R )][B2U]['bl'];
                                 var R2U = bam[_s(Q5y)][y2U][_s(E5R * 1)][N2U];
                                 if (N2U >= +2)
                                     var u8U = N2U - ('1' << 473355456);
@@ -13679,8 +13680,8 @@ let cotgsubscribe;
                     };
                     D6[_s(N1R >> 1042252000)][U2U][_s(D1R)] = p2U;
                 }
-                if (D2U >= ('1' ) && P2U == +K4y) {
-                    var Y2U = D6[_s(N1R - 0)][U2U][_s(i1R )];
+                if (D2U >= ('1' ) && P2U == +467) {
+                    var Y2U = D6[_s(N1R - 0)][U2U]['bl'];
                     var W9U = bam[_s(Q5y)][P2U][_s('860')][Y2U];
                     Z0l = +1;
                     if (m2U != +'0')
@@ -13702,7 +13703,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= +1 && P2U == +C4y) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626' >> 1831661568)];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(t1R)][Y2U];
                     x9U = x9U + s8U;
                     if (Y2U > w9U)
@@ -13726,7 +13727,7 @@ let cotgsubscribe;
                     D6[_s(N1R - 0)][U2U][_s(D1R | 325)] = p2U;
                 }
                 if (D2U >= +1 && P2U == +S2y) {
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R * 1)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(B5R - 0)][Y2U];
                     I0l = I0l + s8U;
                     if (m2U != 0 - 0)
@@ -13748,7 +13749,7 @@ let cotgsubscribe;
                     D6[_s(N1R << 696836128)][U2U][_s(D1R)] = p2U;
                 }
                 if (D2U >= +1 && (P2U == F4y - 0 || P2U == A4y * 1 || P2U == +r4y)) {
-                    var Y2U = D6[_s(N1R - 0)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R - 0)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(B5R)][Y2U];
                     v0l = v0l + s8U;
                     if (m2U != '0' * 1)
@@ -13771,7 +13772,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= +1 && P2U == '483' - 0) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626' >> 13745024)];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(t1R )][Y2U];
                     t9U = t9U + s8U;
                     if (Y2U > I9U)
@@ -13796,7 +13797,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= +1 && P2U == +482) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626' >> 2105735648)];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(t1R)][Y2U];
                     Q9U = Q9U + s8U;
                     if (Y2U > k9U)
@@ -13821,7 +13822,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= '1' >> 1552201888 && (P2U == h4y - 0 || P2U == +P4y || P2U == +p4y)) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626' )];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y - 0)][P2U][_s(t1R * 1)][Y2U];
                     v9U = v9U + s8U;
                     if (Y2U > u9U)
@@ -13846,7 +13847,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= ('1' ) && P2U == +L4y) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626')];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R | 2220)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y )][P2U][_s(t1R)][Y2U];
                     T9U = T9U + s8U;
                     if (Y2U > m8U)
@@ -13871,7 +13872,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= (1 | 0) && P2U == 502 >> 1254342848) {
                     var K8U = bam[_s(Q5y)][P2U][_s('6626' >> 504766784)];
-                    var Y2U = D6[_s(N1R | 730)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R | 730)][U2U]['bl'];
                     var s8U = bam[_s(Q5y)][P2U][_s(t1R)][Y2U];
                     l9U = l9U + s8U;
                     if (Y2U > H9U)
@@ -13896,7 +13897,7 @@ let cotgsubscribe;
                 }
                 if (D2U >= +'1' && P2U == (504 )) {
                     var K8U = bam[_s(Q5y)][P2U][_s(6626)];
-                    var Y2U = D6[_s(N1R)][U2U][_s(i1R)];
+                    var Y2U = D6[_s(N1R)][U2U]['bl'];
                     var s8U = bam[_s(Q5y * 1)][P2U][_s(t1R)][Y2U];
                     B9U = B9U + s8U;
                     if (Y2U > a9U)
@@ -13954,10 +13955,10 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (B2U > +'0' && D6[_s(N1R)][B2U]) {
-                            var y2U = D6[_s(N1R)][B2U][_s(m1R)];
+                            var y2U = D6[_s(N1R)][B2U]['bid'];
                             if (y2U == +'483' || y2U == +C4y || y2U == (482 | 0) || y2U == +h4y || y2U == (P4y ) || y2U == +p4y || y2U == (L4y ) || y2U == '502' >> 1863732448) {
                                 var K8U = bam[_s(Q5y)][y2U][_s(6626)];
-                                var Y2U = D6[_s(N1R * 1)][B2U][_s(i1R | 2094)];
+                                var Y2U = D6[_s(N1R * 1)][B2U]['bl'];
                                 var s8U = 0 << 1822656704;
                                 switch (K8U) {
                                 case '0' >> 1323945088:
@@ -14180,9 +14181,9 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (D6[_s(N1R)][B2U]) {
-                            var y2U = D6[_s(N1R | 536)][B2U][_s(m1R)];
+                            var y2U = D6[_s(N1R | 536)][B2U]['bid'];
                             if (y2U == G0l || y2U == C0l || y2U == W0l || y2U == i0l) {
-                                var N2U = D6[_s(N1R - 0)][B2U][_s(i1R)];
+                                var N2U = D6[_s(N1R - 0)][B2U]['bl'];
                                 var R2U = bam[_s(Q5y << 941292448)][y2U][_s(j1R | 2053)][N2U];
                                 const j9U = bam[_s(Q5y)][y2U][_s(X1R * 1)];
                                 var g8U = +q7y;
@@ -14349,9 +14350,9 @@ let cotgsubscribe;
                     var t8U = [h8U, J8U, S8U, V8U, b8U, d8U, i8U, W8U];
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
-                        var y2U = D6[_s(N1R)][B2U][_s(m1R * 1)];
+                        var y2U = D6[_s(N1R)][B2U]['bid'];
                         if (y2U == M8U && G8U == +'0' || y2U == n8U || y2U == A8U) {
-                            var N2U = D6[_s(N1R - 0)][B2U][_s(i1R >> 1403575968)];
+                            var N2U = D6[_s(N1R - 0)][B2U]['bl'];
                             var R2U = bam[_s(Q5y)][y2U][_s(E5R)][N2U];
                             if (N2U >= +'2')
                                 var u8U = N2U - ('1' << 1623807168);
@@ -14468,7 +14469,7 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (D6[_s(N1R)][B2U]) {
-                            var y2U = D6[_s(N1R * 1)][B2U][_s(m1R << 1941530848)];
+                            var y2U = D6[_s(N1R * 1)][B2U]['bid'];
                             if (y2U == '0' << 1835718336 && B2U != +0 && B2U != '1' << 2103807712 && B2U != +2 && B2U != (3 ) && B2U != 4 * 1 && B2U != +5 && B2U != +6 && B2U != '7' - 0 && B2U != +'8' && B2U != 9 - 0 && B2U != +'10' && B2U != j2y - 0 && B2U != D2y * 1 && B2U != B2y << 1704664960 && B2U != (q7y ) && B2U != (q3y | 0) && B2U != s6y >> 1595429632 && B2U != +u7y && B2U != p0y << 1789523232 && B2U != u6y << 1875970880 && B2U != +A5y && B2U != +j6y && B2U != F8y >> 945958272 && B2U != b8y * 1 && B2U != +l8y && B2U != +c8y && B2U != k8y << 642430048 && B2U != +o8y && B2U != +S8y && B2U != (V0R | 20) && B2U != ('61' | 53) && B2U != +a0R && B2U != +73 && B2U != +84 && B2U != '94' * 1 && B2U != +L5R && B2U != ('105' ) && B2U != +y5R && B2U != +114 && B2U != 115 * 1 && B2U != U6y * 1 && B2U != +118 && B2U != +125 && B2U != +w5R && B2U != +'132' && B2U != +'133' && B2U != +'139' && B2U != +140 && B2U != +146 && B2U != +152 && B2U != +'153' && B2U != +'161' && B2U != +f9y && B2U != +'168' && B2U != '188' - 0 && B2U != +I5R && B2U != (194 ) && B2U != +'204' && B2U != +n5R && B2U != '210' << 114988192 && B2U != +'211' && B2U != +k5R && B2U != '213' >> 1411727488 && B2U != +S5R && B2U != +N5y && B2U != ('225' | 224) && B2U != +G7y && B2U != +227 && B2U != +'228' && B2U != +'229' && B2U != X4R * 1 && B2U != +'231' && B2U != +'236' && B2U != +f7R && B2U != (251 ) && B2U != ('252' | 44) && B2U != 272 << 202436832 && B2U != (M7R ) && B2U != s7R << 63206816 && B2U != 287 * 1 && B2U != +C7R && B2U != ('294' ) && B2U != M1R * 1 && B2U != +'301' && B2U != ('307' ) && B2U != (308 ) && B2U != +314 && B2U != '315' * 1 && B2U != (i7R ) && B2U != +'324' && B2U != (j7R ) && B2U != +D7R && B2U != '328' >> 1501590368 && B2U != '335' << 1233297120 && B2U != +'336' && B2U != '346' * 1 && B2U != '356' >> 1594885344 && B2U != '367' * 1 && B2U != +a5R && B2U != +Y7R && B2U != (388 ) && B2U != +397 && B2U != '398' - 0 && B2U != +n5y && B2U != i4R - 0 && B2U != 401 - 0 && B2U != +'409' && B2U != (A7R ) && B2U != (418 | 34) && B2U != '419' * 1 && B2U != +'420' && B2U != +h7R && B2U != '422' - 0 && B2U != +424 && B2U != (I7R ) && B2U != (426 | 2) && B2U != +428 && B2U != +q5R && B2U != z7R >> 1682434016 && B2U != (431 ) && B2U != '432' >> 634239808 && B2U != +'434' && B2U != +k7R && B2U != '436' << 305566720 && B2U != '438' >> 2009160032 && B2U != ('439' ) && B2U != +t9R)
                                 if (B2U != (V5R ) && B2U != (c5R ) && B2U != +u8y && B2U != +M5R && B2U != s5R * 1 && B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && D6[_s(K5R - 0)] == '1' * 1)
                                     y2U = R5R >> 914982432;
@@ -14482,7 +14483,7 @@ let cotgsubscribe;
                                     } else
                                         var N2U = 1 << 1781839072;
                                 else
-                                    var N2U = D6[_s(N1R)][B2U][_s(i1R | 136)];
+                                    var N2U = D6[_s(N1R)][B2U]['bl'];
                                 var R2U = bam[_s(Q5y )][y2U][_s(E5R)][N2U];
                                 if (N2U >= +'2')
                                     var u8U = N2U - (1 );
@@ -14601,9 +14602,9 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (D6[_s(N1R << 1380298112)][B2U]) {
-                            var y2U = D6[_s(N1R * 1)][B2U][_s(m1R | 2148)];
+                            var y2U = D6[_s(N1R * 1)][B2U]['bid'];
                             if (y2U == M8U || y2U == D0l || y2U == n8U || y2U == A8U) {
-                                var N2U = D6[_s(N1R * 1)][B2U][_s(i1R)];
+                                var N2U = D6[_s(N1R * 1)][B2U]['bl'];
                                 var R2U = bam[_s(Q5y)][y2U][_s(E5R * 1)][N2U];
                                 if (N2U >= (2 | 0))
                                     var u8U = N2U - 1 * 1;
@@ -14717,9 +14718,9 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (D6[_s(N1R | 4826)][B2U]) {
-                            var y2U = D6[_s(N1R << 386393568)][B2U][_s(m1R | 2564)];
+                            var y2U = D6[_s(N1R << 386393568)][B2U]['bid'];
                             if (y2U == M8U && G8U == 0 >> 1129650240 || y2U == n8U || y2U == A8U) {
-                                var N2U = D6[_s(N1R )][B2U][_s(i1R)];
+                                var N2U = D6[_s(N1R )][B2U]['bl'];
                                 var R2U = bam[_s(Q5y )][y2U][_s(E5R)][N2U];
                                 if (N2U >= +2)
                                     var u8U = N2U - +'1';
@@ -14833,9 +14834,9 @@ let cotgsubscribe;
                     for (var O8U in t8U) {
                         var B2U = t8U[O8U];
                         if (D6[_s(N1R - 0)][B2U]) {
-                            var y2U = D6[_s(N1R)][B2U][_s(m1R)];
+                            var y2U = D6[_s(N1R)][B2U]['bid'];
                             if (y2U == M8U && G8U == '0' * 1 || y2U == n8U || y2U == A8U) {
-                                var N2U = D6[_s(N1R)][B2U][_s(i1R)];
+                                var N2U = D6[_s(N1R)][B2U]['bl'];
                                 var R2U = bam[_s(Q5y << 1685293056)][y2U][_s(E5R | 5408)][N2U];
                                 if (N2U >= ('2' ))
                                     var u8U = N2U - +'1';
@@ -15579,8 +15580,8 @@ let cotgsubscribe;
                 else if (D1T == 4 * 1) {
                     const p1T = Z1T % +A5y;
                     const Y1T = (Z1T - p1T) / (A5y >> 225832320);
-                    D6[_s(N1R - 0)][Z1T][_s(m1R)] = 0 | 0;
-                    D6[_s(N1R)][Z1T][_s(i1R)] = +0;
+                    D6[_s(N1R - 0)][Z1T]['bid'] = 0 | 0;
+                    D6[_s(N1R)][Z1T]['bl'] = +0;
                     D6[_s(N1R * 1)][Z1T][_s(h1R * 1)] = +'0';
                     D6[_s(N1R * 1)][Z1T][_s(N1R )] = +'0';
                     D6[_s(N1R >> 272954464)][Z1T][_s(X1R >> 99225856)] = 0 | 0;
@@ -17507,10 +17508,10 @@ let cotgsubscribe;
                                 J2();
                             }
                             if (Z9T == +D2y) {
-                                const E9T = D6[_s(N1R)][E1R ][_s(i1R | 2088)];
+                                const E9T = D6[_s(N1R)][E1R ]['bl'];
                                 const Y9T = m6[d9T][_s(I6y)][+D2y];
                                 if (Number(E9T) <= Number(Y9T)) {
-                                    D6[_s(N1R)][+E1R][_s(i1R)] = Number(Y9T);
+                                    D6[_s(N1R)][+E1R]['bl'] = Number(Y9T);
                                     const a9T = Y8(Number(Y9T));
                                     const F9T = '10' >> 2080934464;
                                     const m9T = (E1R - 0 - F9T) / +A5y;
@@ -17673,13 +17674,13 @@ let cotgsubscribe;
         function g3F() {
             if (D6.w == +'1') {
                 $(_s(6405)).show();
-                if (D6[_s(N1R)][+0][_s(i1R)] >= +1)
+                if (D6[_s(N1R)][+0]['bl'] >= +1)
                     $(_s(f1p - 0)).removeClass().addClass(_s(2247));
                 else
                     $(_s(f1p << 170377888)).removeClass().addClass(_s('6120' ));
             } else {
                 $(_s(6405 | 256)).hide();
-                if (D6[_s(N1R)][+0][_s(i1R)] >= (1 | 1))
+                if (D6[_s(N1R)][+0]['bl'] >= (1 | 1))
                     $(_s(f1p)).removeClass().addClass(_s('1492'));
                 else
                     $(_s(f1p)).removeClass().addClass(_s('3111'));
@@ -17692,8 +17693,8 @@ let cotgsubscribe;
             const t5g = new Array(G1R, '525' , '526' >> 2126232544);
             const Q5g = new Array(r1R, +'523', 524 >> 409443520);
             for (let k5g = +0; k5g < D6[_s(N1R - 0)].length; k5g++) {
-                let e5g = D6[_s(N1R)][k5g][_s(m1R)];
-                let j5g = D6[_s(N1R << 144781440)][k5g][_s(i1R - 0)];
+                let e5g = D6[_s(N1R)][k5g]['bid'];
+                let j5g = D6[_s(N1R << 144781440)][k5g]['bl'];
                 $(_s(B1R << 1102389152) + k5g).data(_s(334 - 0), {
                     "bl": j5g,
                     "bid": e5g
@@ -17859,7 +17860,7 @@ let cotgsubscribe;
 
         function z1F(Z9g, K9g) {
             if (typeof K9g === _s(h2R - 0))
-                K9g = D6[_s(N1R << 1758947296)][Number(Z9g)][_s(i1R)];
+                K9g = D6[_s(N1R << 1758947296)][Number(Z9g)]['bl'];
             const g9g = Y8(K9g) - +'443';
             let n9g = g9g % ('4' >> 752659296);
             let f9g = (g9g - n9g) / +4;
@@ -17898,9 +17899,9 @@ let cotgsubscribe;
                         var J7Z = new Object();
                         var d7Z = new Object();
                         for (var g7Z in D6.bd) {
-                            C7Z = D6.bd[g7Z][_s(i1R)];
+                            C7Z = D6.bd[g7Z]['bl'];
                             if (C7Z >= +1 && C7Z < +'10') {
-                                h7Z = D6.bd[g7Z][_s(m1R)];
+                                h7Z = D6.bd[g7Z]['bid'];
                                 if (bam[_s(Q5y )][Number(h7Z)]) {
                                     b7Z = bam[_s(Q5y)][Number(h7Z)][_s(6112)];
                                     u4Z = D6.mo[Number(b7Z)];
@@ -17915,19 +17916,19 @@ let cotgsubscribe;
                                         }
                                         if (a7Z >= R7Z && c7Z >= B7Z) {
                                             J7Z[Number(b7Z)] = new Object();
-                                            if (Number(J7Z[Number(b7Z)][_s(i1R)]) === undefined) {
-                                                J7Z[Number(b7Z)][_s(i1R << 891717120)] = '10' ;
-                                                d7Z[_s(i1R << 1911457952)] = +'10';
+                                            if (Number(J7Z[Number(b7Z)]['bl']) === undefined) {
+                                                J7Z[Number(b7Z)]['bl'] = '10' ;
+                                                d7Z['bl'] = +'10';
                                             }
                                             if (U7Z > Number(C7Z)) {
-                                                J7Z[Number(b7Z)][_s(m1R)] = Number(h7Z);
-                                                J7Z[Number(b7Z)][_s(i1R)] = Number(C7Z);
+                                                J7Z[Number(b7Z)]['bid'] = Number(h7Z);
+                                                J7Z[Number(b7Z)]['bl'] = Number(C7Z);
                                                 J7Z[Number(b7Z)][_s(R1p)] = Number(g7Z);
                                                 U7Z = Number(C7Z);
                                             }
                                             if (y7Z > Number(C7Z)) {
-                                                d7Z[_s(m1R << 2130838176)] = Number(h7Z);
-                                                d7Z[_s(i1R)] = Number(C7Z);
+                                                d7Z['bid'] = Number(h7Z);
+                                                d7Z['bl'] = Number(C7Z);
                                                 d7Z[_s(R1p)] = Number(g7Z);
                                                 y7Z = Number(C7Z);
                                             }
@@ -17936,8 +17937,8 @@ let cotgsubscribe;
                                 }
                             }
                         }
-                        if (d7Z[_s(m1R << 1315908768)] !== undefined)
-                            Y2(d7Z[_s(m1R )], Number(d7Z[_s(R1p << 2140165632)]), '4' );
+                        if (d7Z['bid'] !== undefined)
+                            Y2(d7Z['bid'], Number(d7Z[_s(R1p << 2140165632)]), '4' );
                     }
                     if ((D6.mo[+A8y] == (1 | 0) || D6.mo[e2y - 0] == 1 * 1) && D6.bq.length == +0) {
                         var h7Z;
@@ -17950,9 +17951,9 @@ let cotgsubscribe;
                         var J7Z = new Object();
                         var d7Z = new Object();
                         for (var g7Z in D6.bd) {
-                            C7Z = D6.bd[g7Z][_s(i1R >> 169062464)];
+                            C7Z = D6.bd[g7Z]['bl'];
                             if (C7Z >= +1 && C7Z < +'10') {
-                                h7Z = D6.bd[g7Z][_s(m1R )];
+                                h7Z = D6.bd[g7Z]['bid'];
                                 if (bam[_s(Q5y)][Number(h7Z)]) {
                                     b7Z = bam[_s(Q5y - 0)][Number(h7Z)][_s(6112)];
                                     if (b7Z == +A8y && D6.mo[A8y * 1] == ('1' ) || b7Z == +e2y && D6.mo[+e2y] == +'1') {
@@ -17968,19 +17969,19 @@ let cotgsubscribe;
                                             }
                                             if (a7Z >= R7Z && c7Z >= B7Z) {
                                                 J7Z[Number(b7Z)] = new Object();
-                                                if (Number(J7Z[Number(b7Z)][_s(i1R)]) === undefined) {
-                                                    J7Z[Number(b7Z)][_s(i1R | 2190)] = +'10';
-                                                    d7Z[_s(i1R << 697825568)] = +'10';
+                                                if (Number(J7Z[Number(b7Z)]['bl']) === undefined) {
+                                                    J7Z[Number(b7Z)]['bl'] = +'10';
+                                                    d7Z['bl'] = +'10';
                                                 }
                                                 if (U7Z > Number(C7Z)) {
-                                                    J7Z[Number(b7Z)][_s(m1R )] = Number(h7Z);
-                                                    J7Z[Number(b7Z)][_s(i1R)] = Number(C7Z);
+                                                    J7Z[Number(b7Z)]['bid'] = Number(h7Z);
+                                                    J7Z[Number(b7Z)]['bl'] = Number(C7Z);
                                                     J7Z[Number(b7Z)][_s(R1p )] = Number(g7Z);
                                                     U7Z = Number(C7Z);
                                                 }
                                                 if (y7Z > Number(C7Z)) {
-                                                    d7Z[_s(m1R >> 1422580480)] = Number(h7Z);
-                                                    d7Z[_s(i1R)] = Number(C7Z);
+                                                    d7Z['bid'] = Number(h7Z);
+                                                    d7Z['bl'] = Number(C7Z);
                                                     d7Z[_s(R1p | 6144)] = Number(g7Z);
                                                     y7Z = Number(C7Z);
                                                 }
@@ -17990,8 +17991,8 @@ let cotgsubscribe;
                                 }
                             }
                         }
-                        if (d7Z[_s(m1R)] !== undefined)
-                            Y2(d7Z[_s(m1R)], Number(d7Z[_s(R1p)]), 4 * 1);
+                        if (d7Z['bid'] !== undefined)
+                            Y2(d7Z['bid'], Number(d7Z[_s(R1p)]), 4 * 1);
                     }
                     if (D6.mo[+9] >= +0 && D6.tq.length == +0) {
                         const n7Z = new Object();
@@ -21877,8 +21878,8 @@ let cotgsubscribe;
             const P04 = '3079';
             E6k.R6();
             var e1U = +r6y;
-            var s1U = D6.bd[+0][_s(i1R - 0)];
-            const s6U = D6.bd[0 | 0][_s(i1R )];
+            var s1U = D6.bd[+0]['bl'];
+            const s6U = D6.bd[0 | 0]['bl'];
             const X1U = +r6y;
             var T1U = '0' - 0;
             let V1U = "";
@@ -22151,12 +22152,12 @@ let cotgsubscribe;
                         $(_s(Y24)).css(_s(2723 * 1), _s(1146));
                         $(_s(j24)).css(_s('2723' * 1), _s(1146 >> 1510647872));
                         $(_s(f24)).css(_s(2723), _s('1146'));
-                    } else if (Number(s1U) == +1 && e1U == K4y * 1) {
+                    } else if (Number(s1U) == +1 && e1U == 467 * 1) {
                         $(_s(Y24 | 2)).css(_s('2723'), _s('1146' * 1));
                         $(_s(j24 << 790337280)).css(_s('2723' ), _s(1146));
                     } else if (Number(s1U) == +1)
                         $(_s(Y24)).css(_s(2723), _s(1146));
-                    if (e1U == +q1R || e1U == +K4y)
+                    if (e1U == +q1R || e1U == +467)
                         $(_s(j24 >> 453068544)).css(_s('2723' | 2), _s(1146 ));
                     else {
                         let L1U = +0;
@@ -23228,7 +23229,7 @@ let cotgsubscribe;
                 var V5l;
                 for (var L5l in l5l) {
                     o5l = bam[_s(Q5y)][Number(l5l[L5l][_s(g4p)])][_s(C5y)];
-                    i5l = D6.bd[Number(l5l[L5l][_s(B9y << 1344283840)])][_s(i1R)];
+                    i5l = D6.bd[Number(l5l[L5l][_s(B9y << 1344283840)])]['bl'];
                     G5l = l5l[L5l]["a"];
                     M5l += Number(G5l);
                     if (i5l != '0' - 0)
@@ -23292,7 +23293,7 @@ let cotgsubscribe;
                     var Q5l = M1R >> 1638837472;
                     var T5l = +M1R;
                     var C5l = +M1R;
-                    const S5l = D6.bd[+E1R][_s(i1R - 0)];
+                    const S5l = D6.bd[+E1R]['bl'];
                     const r5l = Number(S5l) * ('10' | 0);
                     const A5l = bam[_s(Q5y)][+q1R][_s(j1R)][Number(S5l)];
                     var v5l = _s(Z5y * 1) + btxt[w5l] + _s(c2y ) + Math.floor(C5l) + _s('647') + p6(Math.floor(A5l)) + _s('2930') + btxt[w5l] + _s(c2y) + r5l + _s(K5y);
@@ -23330,7 +23331,7 @@ let cotgsubscribe;
                 var V5l;
                 for (var L5l in l5l) {
                     o5l = bam[_s(Q5y << 1128600832)][Number(l5l[L5l][_s(g4p)])][_s(C5y )];
-                    i5l = D6.bd[Number(L5l)][_s(i1R | 2048)];
+                    i5l = D6.bd[Number(L5l)]['bl'];
                     G5l = l5l[L5l]["a"];
                     M5l += Number(G5l);
                     j5l += _s('228' | 4) + i5l + _s(v6y << 368543776) + o5l + _s('3996') + Math.floor(G5l) + _s(t54 * 1);
@@ -23594,11 +23595,11 @@ let cotgsubscribe;
                 r9g = r9g * +G5y;
                 $(_s(B1R * 1) + b9g).data(_s('334' >> 945353152), {
                     "bid": S9g,
-                    "bl": D6[_s(N1R * 1)][b9g][_s(i1R)]
+                    "bl": D6[_s(N1R * 1)][b9g]['bl']
                 });
                 let J9g = S9g % +'4';
                 let V9g = (S9g - J9g) / +4;
-                D6[_s(N1R << 176303296)][b9g][_s(m1R | 865)] = A9g;
+                D6[_s(N1R << 176303296)][b9g]['bid'] = A9g;
                 J9g = J9g * (G5y * 1);
                 V9g = V9g * +G5y;
                 $(_s(r5y ) + b9g).css({
@@ -25104,7 +25105,7 @@ let cotgsubscribe;
                 if (n6w == f6w || D6w == f6w || g6w == f6w || p6w == f6w || y6w == f6w || R6w == f6w || B6w == f6w || P6w == f6w || U6w == f6w)
                     Z6w = +'1';
             }
-            if (D6.bd[n6w][_s(m1R)] != ('0' ) || D6.bd[D6w][_s(m1R)] != +'0' || D6.bd[g6w][_s(m1R << 1891276288)] != +'0' || D6.bd[p6w][_s(m1R)] != ('0' | 0) || D6.bd[y6w][_s(m1R | 97)] != +0 || D6.bd[R6w][_s(m1R)] != 0 << 1355235456 || D6.bd[B6w][_s(m1R | 2404)] != +'0' || D6.bd[P6w][_s(m1R)] != ('0' ) || D6.bd[U6w][_s(m1R << 322693344)] != +0 || !Z2(n6w) || !Z2(D6w) || !Z2(g6w) || !Z2(p6w) || !Z2(y6w) || !Z2(R6w) || !Z2(B6w) || !Z2(P6w) || !Z2(U6w))
+            if (D6.bd[n6w]['bid'] != ('0' ) || D6.bd[D6w]['bid'] != +'0' || D6.bd[g6w]['bid'] != +'0' || D6.bd[p6w]['bid'] != ('0' | 0) || D6.bd[y6w]['bid'] != +0 || D6.bd[R6w]['bid'] != 0 << 1355235456 || D6.bd[B6w]['bid'] != +'0' || D6.bd[P6w]['bid'] != ('0' ) || D6.bd[U6w]['bid'] != +0 || !Z2(n6w) || !Z2(D6w) || !Z2(g6w) || !Z2(p6w) || !Z2(y6w) || !Z2(R6w) || !Z2(B6w) || !Z2(P6w) || !Z2(U6w))
                 Z6w = 1 * 1;
             if (Z6w == ('1' | 0))
                 Y6(_s('3774' ));
@@ -28923,7 +28924,7 @@ let cotgsubscribe;
 
         function N9F(o7g) {
             E6k.y6();
-            const L7g = Number(D6.bd[+E1R][_s(i1R )]);
+            const L7g = Number(D6.bd[+E1R]['bl']);
             const X7g = Number(bam[_s(Q5y )][o7g][_s(5812 | 5264)]);
             if (Number(o7g) == r1R << 545553696 || Number(o7g) == +C6y || Number(o7g) == G1R << 1052779200 || Number(o7g) == b1R << 1902848320)
                 return !"";
@@ -29318,8 +29319,8 @@ let cotgsubscribe;
             let S9n = 0 * 1;
             for (let b9n = +0; b9n < J9n; b9n++) {
                 n9n = b9n;
-                h9n = Number(D6.bd[b9n][_s(m1R)]);
-                V9n = Number(D6.bd[b9n][_s(i1R >> 1538816480)]);
+                h9n = Number(D6.bd[b9n]['bid']);
+                V9n = Number(D6.bd[b9n]['bl']);
                 if (r9n == h9n)
                     S9n += V9n;
             }
@@ -29546,7 +29547,7 @@ let cotgsubscribe;
                         $(_s('1488' )).html(e52);
                     }
                     if (E02.e[5 << 810348928].length == +'0')
-                        $(_s(K4y)).html(_s(i4t << 1207871680));
+                        $(_s(467)).html(_s(i4t << 1207871680));
                     else {
                         e52 = "";
                         for (var k52 = +'0'; k52 < E02.e[+'5'].length; k52++) {
@@ -29555,7 +29556,7 @@ let cotgsubscribe;
                             w52 = E02.e['5' - 0][k52][_s(y8y)];
                             e52 = e52 + _s(v4t) + s52 + _s(w4t << 1677996800) + E02.e[+'5'][k52][_s(F4t)] + _s(H4t) + j52 + _s(q4t) + w52 + _s(K5y);
                         }
-                        $(_s(K4y)).html(e52);
+                        $(_s(467)).html(e52);
                     }
                     if (E02.e[+'6'].length == +'0')
                         $(_s('4708' | B9s)).html(_s(i4t * 1));
@@ -30855,7 +30856,7 @@ let cotgsubscribe;
 
         function r5V() {
             l1F.push({
-                bid: h2[+'0'][_s(m1R)],
+                bid: h2[+'0']['bid'],
                 btype: h2[+'0'].btype,
                 bspot: h2[0 ].bspot,
                 slvl: h2[+0].slvl,
@@ -35775,55 +35776,55 @@ let cotgsubscribe;
             E6k.y6();
             if (o1D == +'1')
                 for (var t1D = +'0'; t1D < qtopleft.length; t1D++) {
-                    bid = D6[_s(N1R)][qtopleft[t1D]][_s(m1R )];
+                    bid = D6[_s(N1R)][qtopleft[t1D]]['bid'];
                     if (bid == (G1R | 385) || bid == +C6y || bid == +r1R || bid == (b1R )) {
                         I8(qtopleft[t1D]);
-                        D6[_s(N1R)][qtopleft[t1D]][_s(m1R | 2048)] = +'0';
-                        D6[_s(N1R )][qtopleft[t1D]][_s(i1R - 0)] = +0;
+                        D6[_s(N1R)][qtopleft[t1D]]['bid'] = +'0';
+                        D6[_s(N1R )][qtopleft[t1D]]['bl'] = +0;
                         D6[_s(N1R)][qtopleft[t1D]][_s(h1R)] = +0;
                         D6[_s(N1R)][qtopleft[t1D]][_s(N1R)] = +'0';
                     }
                 }
             else if (o1D == 2 - 0)
                 for (var t1D = +'0'; t1D < qtopright.length; t1D++) {
-                    bid = D6[_s(N1R)][qtopright[t1D]][_s(m1R)];
+                    bid = D6[_s(N1R)][qtopright[t1D]]['bid'];
                     if (bid == +G1R || bid == C6y - 0 || bid == r1R >> 671390368 || bid == +b1R) {
                         I8(qtopright[t1D]);
-                        D6[_s(N1R >> 1077030368)][qtopright[t1D]][_s(m1R)] = +'0';
-                        D6[_s(N1R | 4760)][qtopright[t1D]][_s(i1R - 0)] = +0;
+                        D6[_s(N1R >> 1077030368)][qtopright[t1D]]['bid'] = +'0';
+                        D6[_s(N1R | 4760)][qtopright[t1D]]['bl'] = +0;
                         D6[_s(N1R)][qtopright[t1D]][_s(h1R | 2690)] = 0 * 1;
                         D6[_s(N1R | 88)][qtopright[t1D]][_s(N1R << 773251616)] = +'0';
                     }
                 }
             else if (o1D == +'3')
                 for (var t1D = 0 ; t1D < qbotleft.length; t1D++) {
-                    bid = D6[_s(N1R)][qbotleft[t1D]][_s(m1R * 1)];
+                    bid = D6[_s(N1R)][qbotleft[t1D]]['bid'];
                     if (bid == +G1R || bid == +C6y || bid == r1R - 0 || bid == b1R * 1) {
                         I8(qbotleft[t1D]);
-                        D6[_s(N1R << 1722631456)][qbotleft[t1D]][_s(m1R)] = +0;
-                        D6[_s(N1R)][qbotleft[t1D]][_s(i1R)] = 0 - 0;
+                        D6[_s(N1R << 1722631456)][qbotleft[t1D]]['bid'] = +0;
+                        D6[_s(N1R)][qbotleft[t1D]]['bl'] = 0 - 0;
                         D6[_s(N1R )][qbotleft[t1D]][_s(h1R )] = '0' << 1102736480;
                         D6[_s(N1R << 104334592)][qbotleft[t1D]][_s(N1R)] = '0' - 0;
                     }
                 }
             else if (o1D == 4 >> 766473472)
                 for (var t1D = '0' ; t1D < qbotright.length; t1D++) {
-                    bid = D6[_s(N1R)][qbotright[t1D]][_s(m1R >> 1630080160)];
+                    bid = D6[_s(N1R)][qbotright[t1D]]['bid'];
                     if (bid == +G1R || bid == C6y << 914288736 || bid == +r1R || bid == +b1R) {
                         I8(qbotright[t1D]);
-                        D6[_s(N1R << 547247584)][qbotright[t1D]][_s(m1R)] = +'0';
-                        D6[_s(N1R)][qbotright[t1D]][_s(i1R | 36)] = 0 ;
+                        D6[_s(N1R << 547247584)][qbotright[t1D]]['bid'] = +'0';
+                        D6[_s(N1R)][qbotright[t1D]]['bl'] = 0 ;
                         D6[_s(N1R - 0)][qbotright[t1D]][_s(h1R)] = +'0';
                         D6[_s(N1R)][qbotright[t1D]][_s(N1R >> 937955744)] = 0 >> 766453920;
                     }
                 }
             else if (o1D == '5' * 1)
                 for (var t1D = +0; t1D < qcenter.length; t1D++) {
-                    bid = D6[_s(N1R)][qcenter[t1D]][_s(m1R * 1)];
+                    bid = D6[_s(N1R)][qcenter[t1D]]['bid'];
                     if (bid == (G1R ) || bid == (C6y ) || bid == +r1R || bid == b1R << 600757344) {
                         I8(qcenter[t1D]);
-                        D6[_s(N1R)][qcenter[t1D]][_s(m1R)] = +0;
-                        D6[_s(N1R)][qcenter[t1D]][_s(i1R >> 1797034592)] = '0' | 0;
+                        D6[_s(N1R)][qcenter[t1D]]['bid'] = +0;
+                        D6[_s(N1R)][qcenter[t1D]]['bl'] = '0' | 0;
                         D6[_s(N1R)][qcenter[t1D]][_s(h1R << 1122507552)] = +0;
                         D6[_s(N1R >> 1876628704)][qcenter[t1D]][_s(N1R)] = 0 | 0;
                     }
@@ -35952,7 +35953,7 @@ let cotgsubscribe;
                 if (i2U != undefined) {
                     for (var G2U in i2U) {
                         C2U = bam[_s(Q5y | 4098)][Number(i2U[G2U][_s(g4p)])][_s(C5y)];
-                        b2U = D6.bd[Number(i2U[G2U]['b'])][_s(i1R - 0)];
+                        b2U = D6.bd[Number(i2U[G2U]['b'])]['bl'];
                         W2U = i2U[G2U]["a"];
                         V2U += Number(W2U);
                         if (b2U != '0' * 1)
@@ -35966,7 +35967,7 @@ let cotgsubscribe;
                 if (d2U != undefined) {
                     for (var G2U in d2U) {
                         C2U = bam[_s(Q5y )][Number(d2U[G2U][_s(g4p )])][_s(C5y )];
-                        b2U = D6.bd[Number(d2U[G2U][_s(B9y | 41)])][_s(i1R)];
+                        b2U = D6.bd[Number(d2U[G2U][_s(B9y | 41)])]['bl'];
                         W2U = d2U[G2U][_s('1575' * 1)];
                         V2U += Number(W2U);
                         if (b2U != +0)
@@ -36906,7 +36907,7 @@ let cotgsubscribe;
         function J5V() {
             const s2w = [];
             s2w.push({
-                bid: q2[0 - 0][_s(m1R | 2112)],
+                bid: q2[0 - 0]['bid'],
                 btype: r6y | 801,
                 bspot: q2[+'0'].bspot,
                 slvl: q2[0 >> 2097057952].slvl,
@@ -36970,15 +36971,15 @@ let cotgsubscribe;
                     const z2w = e2w + (u6y - 0);
                     const T2w = e2w + (A5y >> 272862560);
                     const x2w = e2w + +j6y;
-                    D6[_s(N1R)][e2w][_s(m1R)] = R1R | 32;
-                    D6[_s(N1R)][Q2w][_s(m1R )] = '891' << 839865344;
-                    D6[_s(N1R)][t2w][_s(m1R)] = z9R ;
-                    D6[_s(N1R | 218)][o2w][_s(m1R )] = +'893';
-                    D6[_s(N1R)][L2w][_s(m1R - 0)] = 894 << 1758753984;
-                    D6[_s(N1R)][X2w][_s(m1R)] = D7t ;
-                    D6[_s(N1R)][z2w][_s(m1R - 0)] = +'896';
-                    D6[_s(N1R)][T2w][_s(m1R - 0)] = +Y1R;
-                    D6[_s(N1R)][x2w][_s(m1R - 0)] = '898' | 130;
+                    D6[_s(N1R)][e2w]['bid'] = R1R | 32;
+                    D6[_s(N1R)][Q2w]['bid'] = '891' << 839865344;
+                    D6[_s(N1R)][t2w]['bid'] = z9R ;
+                    D6[_s(N1R | 218)][o2w]['bid'] = +'893';
+                    D6[_s(N1R)][L2w]['bid'] = 894 << 1758753984;
+                    D6[_s(N1R)][X2w]['bid'] = D7t ;
+                    D6[_s(N1R)][z2w]['bid'] = +'896';
+                    D6[_s(N1R)][T2w]['bid'] = +Y1R;
+                    D6[_s(N1R)][x2w]['bid'] = '898' | 130;
                 }
             });
         }
@@ -37055,15 +37056,15 @@ let cotgsubscribe;
                 			var z2w = e2w + (u6y - 0);
                 			var T2w = e2w + (A5y >> 272862560);
                 			var x2w = e2w + +j6y;
-                			D6[_s(N1R)][e2w][_s(m1R)] = R1R | 32;
-                			D6[_s(N1R)][Q2w][_s(m1R )] = '\x38\x39\x31' << 839865344;
-                			D6[_s(N1R)][t2w][_s(m1R)] = z9R ;
-                			D6[_s(N1R | 218)][o2w][_s(m1R )] = +'\x38\x39\x33';
-                			D6[_s(N1R)][L2w][_s(m1R - 0)] = 894 << 1758753984;
-                			D6[_s(N1R)][X2w][_s(m1R)] = D7t ;
-                			D6[_s(N1R)][z2w][_s(m1R - 0)] = +'\x38\x39\x36';
-                			D6[_s(N1R)][T2w][_s(m1R - 0)] = +Y1R;
-                			D6[_s(N1R)][x2w][_s(m1R - 0)] = '\x38\x39\x38' | 130;
+                			D6[_s(N1R)][e2w]['bid'] = R1R | 32;
+                			D6[_s(N1R)][Q2w]['bid'] = '\x38\x39\x31' << 839865344;
+                			D6[_s(N1R)][t2w]['bid'] = z9R ;
+                			D6[_s(N1R | 218)][o2w]['bid'] = +'\x38\x39\x33';
+                			D6[_s(N1R)][L2w]['bid'] = 894 << 1758753984;
+                			D6[_s(N1R)][X2w]['bid'] = D7t ;
+                			D6[_s(N1R)][z2w]['bid'] = +'\x38\x39\x36';
+                			D6[_s(N1R)][T2w]['bid'] = +Y1R;
+                			D6[_s(N1R)][x2w]['bid'] = '\x38\x39\x38' | 130;
                 		}*/
             });
         }
@@ -37942,27 +37943,27 @@ let cotgsubscribe;
             let A3D = +'0';
             let J3D = +'0';
             for (var h3D = '0' ; h3D < qtopleft.length; h3D++) {
-                J3D = D6[_s(N1R)][qtopleft[h3D]][_s(m1R )];
+                J3D = D6[_s(N1R)][qtopleft[h3D]]['bid'];
                 if (J3D == G1R - 0 || J3D == +C6y || J3D == +r1R || J3D == +b1R)
                     f3D += +'1';
             }
             for (var h3D = +0; h3D < qtopright.length; h3D++) {
-                J3D = D6[_s(N1R )][qtopright[h3D]][_s(m1R << 175753056)];
+                J3D = D6[_s(N1R )][qtopright[h3D]]['bid'];
                 if (J3D == +G1R || J3D == C6y - 0 || J3D == +r1R || J3D == (b1R | 0))
                     n3D += +1;
             }
             for (var h3D = '0' << 852949248; h3D < qbotleft.length; h3D++) {
-                J3D = D6[_s(N1R >> 1594366144)][qbotleft[h3D]][_s(m1R)];
+                J3D = D6[_s(N1R >> 1594366144)][qbotleft[h3D]]['bid'];
                 if (J3D == +G1R || J3D == (C6y | 192) || J3D == (r1R ) || J3D == (b1R ))
                     V3D += +1;
             }
             for (var h3D = +'0'; h3D < qbotright.length; h3D++) {
-                J3D = D6[_s(N1R )][qbotright[h3D]][_s(m1R | 837)];
+                J3D = D6[_s(N1R )][qbotright[h3D]]['bid'];
                 if (J3D == +G1R || J3D == +C6y || J3D == r1R * 1 || J3D == +b1R)
                     r3D += +1;
             }
             for (var h3D = 0 ; h3D < qcenter.length; h3D++) {
-                J3D = D6[_s(N1R)][qcenter[h3D]][_s(m1R)];
+                J3D = D6[_s(N1R)][qcenter[h3D]]['bid'];
                 if (J3D == +G1R || J3D == (C6y ) || J3D == +r1R || J3D == +b1R)
                     A3D += +'1';
             }
@@ -39388,7 +39389,7 @@ let cotgsubscribe;
                         $(_s(Y24 << 908233088)).css(_s('2723'), _s('1146' ));
                         $(_s(j24)).css(_s('2723'), _s(1146 ));
                         $(_s(f24)).css(_s(2723 ), _s('1146'));
-                    } else if (Number(T6U) == +'1' && l6U == K4y - 0) {
+                    } else if (Number(T6U) == +'1' && l6U == 467 - 0) {
                         $(_s(Y24)).css(_s(2723), _s(1146 * 1));
                         $(_s(j24)).css(_s('2723' * 1), _s(1146 << 1642934912));
                     } else if (Number(T6U) == (1 | 1) && l6U == (q1R )) {
@@ -39396,7 +39397,7 @@ let cotgsubscribe;
                         $(_s(j24)).css(_s(2723), _s('1146'));
                     } else if (Number(T6U) == (1 ))
                         $(_s(Y24)).css(_s('2723'), _s('1146'));
-                    if (l6U == (q1R ) || l6U == +K4y || l6U >= R1R << 261016096)
+                    if (l6U == (q1R ) || l6U == +467 || l6U >= R1R << 261016096)
                         $(_s(j24 * 1)).css(_s(2723), _s('1146' * 1));
                     else {
                         let G6U = +0;
@@ -41961,7 +41962,7 @@ let cotgsubscribe;
                         const J1D = X1D % +A5y;
                         const h1D = (X1D - J1D) / +A5y;
                         z1D = +0;
-                        if (M1D == _s(r9y - 0) && D6.bd[X1D][_s(m1R)] != +0) {
+                        if (M1D == _s(r9y - 0) && D6.bd[X1D]['bid'] != +0) {
                             z1D = +'475';
                             z1D = z1D - +'443';
                             var W1D = z1D % +'4' * (G5y >> 2112323712);
@@ -41971,10 +41972,10 @@ let cotgsubscribe;
                                 'width': _s(p5y),
                                 'height': _s(p5y)
                             });
-                        } else if (!(M1D == _s(r9y | 64) && D6.bd[X1D][_s(m1R)] == +'0'))
+                        } else if (!(M1D == _s(r9y | 64) && D6.bd[X1D]['bid'] == +'0'))
                             if (layarray[M1D])
-                                if (D6.bd[X1D][_s(m1R )] != layarray[M1D]) {
-                                    if (M1D == _s('4632') && D6.bd[X1D][_s(m1R | 356)] != (F4y | 256) && D6.bd[X1D][_s(m1R)] != (A4y ) && D6.bd[X1D][_s(m1R)] != +r4y)
+                                if (D6.bd[X1D]['bid'] != layarray[M1D]) {
+                                    if (M1D == _s('4632') && D6.bd[X1D]['bid'] != (F4y | 256) && D6.bd[X1D]['bid'] != (A4y ) && D6.bd[X1D]['bid'] != +r4y)
                                         if (X1D == +V5R || X1D == +c5R || X1D == u8y >> 1281648832 || X1D == +M5R) {
                                             z1D = t0R ;
                                             C1D = J0R - 0;
@@ -41984,7 +41985,7 @@ let cotgsubscribe;
                                     } else {
                                         z1D = +f0R;
                                         C1D = x0R << 1412177632;
-                                    } else if (M1D == _s('6989' ) && D6.bd[X1D][_s(m1R )] != (h4y ) && D6.bd[X1D][_s(m1R )] != +P4y && D6.bd[X1D][_s(m1R)] != p4y * 1)
+                                    } else if (M1D == _s('6989' ) && D6.bd[X1D]['bid'] != (h4y ) && D6.bd[X1D]['bid'] != +P4y && D6.bd[X1D]['bid'] != p4y * 1)
                                         if (X1D == (V5R ) || X1D == c5R >> 1614424704 || X1D == +u8y || X1D == +M5R) {
                                             z1D = +'51';
                                             C1D = +g0R;
@@ -42562,7 +42563,7 @@ let cotgsubscribe;
                     m7g += _s(g3p) + Z7g + _s('3004' | 700) + F7g + _s('6' | 0) + F7g + _s(x3p << 721566080) + U7g + _s(2105 | 48) + P7g + _s(N5y);
                 }
                 $(_s('1328' )).show();
-                if (D6[_s(N1R - 0)][E1R >> 1672468448][_s(i1R)] == ('1' | 0)) {
+                if (D6[_s(N1R - 0)][E1R >> 1672468448]['bl'] == ('1' | 0)) {
                     if (m7g == "")
                         $(_s('1328' )).show();
                     if (Y7g != +0) {
@@ -43796,9 +43797,9 @@ let cotgsubscribe;
                 return !1;
             else if ((H7g == +O1y || H7g == (w1y ) || H7g == H1y - 0 || H7g == G1y - 0 || H7g == +b1y || H7g == +X1y || H7g == (I1y ) || H7g == +z1y || H7g == d1y << 114609184 || H7g == k1y << 1979742144 || H7g == +S1y || H7g == +J5y || H7g == +x5y || H7g == W5y * 1 || H7g == U5y * 1 || H7g == +c5y) && j7g != +'3' && j7g != ('7' ) && j7g != m2y << 541170048 && j7g != (s6y ) && j7g != D8y - 0 && j7g != +S1R && j7g != t5R - 0 && j7g != +J5R && j7g != +T5R && j7g != +'433' && j7g != (x5R ) && j7g != +g5R && j7g != +W5R && j7g != +f5R && j7g != +U5R && j7g != N0R * 1 && j7g != +p1R && j7g != z1R >> 802819264 && j7g != (n1R | 0) && j7g != +d1R && j7g != (323 ) && j7g != l1R - 0 && j7g != +k1R && j7g != +o1R)
                 return !{};
-            else if ((H7g == O1y * 1 || H7g == +w1y || H7g == (H1y ) || H7g == +G1y || H7g == +b1y || H7g == +X1y || H7g == +I1y || H7g == z1y << 2136267392 || H7g == +d1y || H7g == (k1y ) || H7g == S1y << 551109280 || H7g == (J5y ) || H7g == +x5y || H7g == W5y >> 1862552512 || H7g == U5y << 1218540256 || H7g == c5y - 0) && D6.bd[0 * 1][_s(i1R * 1)] == +0)
+            else if ((H7g == O1y * 1 || H7g == +w1y || H7g == (H1y ) || H7g == +G1y || H7g == +b1y || H7g == +X1y || H7g == +I1y || H7g == z1y << 2136267392 || H7g == +d1y || H7g == (k1y ) || H7g == S1y << 551109280 || H7g == (J5y ) || H7g == +x5y || H7g == W5y >> 1862552512 || H7g == U5y << 1218540256 || H7g == c5y - 0) && D6.bd[0 * 1]['bl'] == +0)
                 return ![];
-            else if (D6.bd[j7g][_s(m1R - 0)] != (0 ))
+            else if (D6.bd[j7g]['bid'] != (0 ))
                 return !1;
             else
                 return !!1;
@@ -44114,7 +44115,7 @@ let cotgsubscribe;
             if (v0w == ('4' | 4)) {
                 let M0w = +0;
                 for (var p9g = +'0'; p9g < C8.length; p9g++)
-                    if (D6[_s(N1R)][p9g][_s(i1R * 1)] >= +1 && D6[_s(N1R)][p9g][_s(m1R | 2560)] != r6y >> 1266285600)
+                    if (D6[_s(N1R)][p9g]['bl'] >= +1 && D6[_s(N1R)][p9g]['bid'] != r6y >> 1266285600)
                         M0w = +'1';
                 if (M0w == +0) {
                     var Q0w = $(_s(x24)).css(_s('2723'));
@@ -46203,7 +46204,7 @@ let cotgsubscribe;
                                     s1g = e0V();
                                 }
                                 if (m3g == +'1') {
-                                    if (c3g == 0 >> 1099756608 && p3g == 1 << 1556313664 && N3g == K4y * 1 || u1g == +R1R)
+                                    if (c3g == 0 >> 1099756608 && p3g == 1 << 1556313664 && N3g == 467 * 1 || u1g == +R1R)
                                         var e1g = "";
                                     else
                                         var e1g = _s(6014) + y3g + _s('3566' >> 1599353120);
@@ -46574,7 +46575,7 @@ let cotgsubscribe;
                         O5w = +1;
                         Y6(_s(6755));
                     }
-                    if (D6.bd[s5w][_s(m1R)] != +'0' && D6.bd[s5w][_s(m1R )] != u5w) {
+                    if (D6.bd[s5w]['bid'] != +'0' && D6.bd[s5w]['bid'] != u5w) {
                         O5w = '1' << 2039903200;
                         Y6(_s(3957));
                     }
@@ -46737,7 +46738,7 @@ let cotgsubscribe;
                                     if (x9 == (1 ))
                                         w5w = +'10';
                                     const a5w = b1F(u5w, s5w);
-                                    if (u5w == +K4y)
+                                    if (u5w == +467)
                                         V5V(i5w, t5w, s5w, '0' >> 2053271648, 1 | 1, L5w, X5w, u5w);
                                     else if (a5w == !![]) {
                                         var T5w = {
@@ -46804,7 +46805,7 @@ let cotgsubscribe;
                                     Y6(_s(g8y));
                                 else {
                                     a5V();
-                                    let f5w = D6.bd[s5w][_s(i1R)];
+                                    let f5w = D6.bd[s5w]['bl'];
                                     for (var H5w = '0' ; H5w < D6.bq.length; H5w++) {
                                         const c5w = D6.bq[H5w][_s(m54 >> 1189872704)];
                                         const R5w = D6.bq[H5w][_s('1381')];
@@ -46925,7 +46926,7 @@ let cotgsubscribe;
                                     var w5w = Number(I5w) - +1;
                                     if (u5w == +q1R && w5w == ('0' ))
                                         Y6(_s('4265' | 1));
-                                    else if (u5w == +K4y && w5w == +0)
+                                    else if (u5w == +467 && w5w == +0)
                                         Y6(_s('6957' ));
                                     else {
                                         var d5w = Math.ceil(bam[_s(Q5y )][u5w][_s(h6R)][I5w][_s(X6R << 536577120)] / (Number(D6.cs) / (X2y )));
@@ -47487,7 +47488,7 @@ let cotgsubscribe;
                         J5Z = Number(D6.bq[V5Z].brep);
                     }
                 }
-                if (J5Z != +q1R && J5Z != (K4y ) && J5Z != +R1R)
+                if (J5Z != +q1R && J5Z != (467 ) && J5Z != +R1R)
                     Y2(J5Z, h5Z, 3 - 0);
             }
         }
@@ -48531,15 +48532,15 @@ let cotgsubscribe;
             const N3U = a6.ccazzx.encrypt(q3U, Y3U, +U7y);
             E6k.y6();
             N6();
-            const F3U = $.post(q6 + _s(2332 | 2048), {
+            const F3U = $.post(q6 + _s(2332 | 2048), { // gC.php
                 a: N3U
             });
             F6();
             F3U.done(k1U => {
                 D6 = JSON.parse(k1U);
                 if ($(_s(C24)).is(_s(x5t))) {
-                    const c3U = D6[_s(N1R << 395352640)][Number(d2)][_s(m1R * 1)];
-                    const m3U = D6[_s(N1R )][Number(d2)][_s(i1R)];
+                    const c3U = D6[_s(N1R << 395352640)][Number(d2)]['bid'];
+                    const m3U = D6[_s(N1R )][Number(d2)]['bl'];
                     const a3U = Math.ceil(bam[_s(Q5y)][c3U][_s(h6R | 2049)][m3U][_s(X6R << 1836304064)] / (Number(D6.cs) / +X2y));
                     const E3U = Math.ceil(bam[_s(Q5y * 1)][c3U][_s(h6R - 0)][m3U][_s(n7y )] / (Number(D6.cs) / +X2y));
                     v9(c3U, m3U, a3U, E3U, d2);
@@ -48604,13 +48605,13 @@ let cotgsubscribe;
             E6k.R6();
             if (D6.w == +'1') {
                 $(_s('6405' >> 1911452288)).show();
-                if (D6[_s(N1R)][+0][_s(i1R )] >= +'1')
+                if (D6[_s(N1R)][+0]['bl'] >= +'1')
                     $(_s(f1p)).removeClass().addClass(_s(2247));
                 else
                     $(_s(f1p)).removeClass().addClass(_s('6120' ));
             } else {
                 $(_s(6405 >> 117911488)).hide();
-                if (D6[_s(N1R)]['0' * 1][_s(i1R)] >= +1)
+                if (D6[_s(N1R)]['0' * 1]['bl'] >= +1)
                     $(_s(f1p << 1798645888)).removeClass().addClass(_s(1492));
                 else
                     $(_s(f1p )).removeClass().addClass(_s(3111 * 1));
@@ -48759,8 +48760,8 @@ let cotgsubscribe;
                 if (D6.bq.length > +'0') {
                     if (JSON.stringify(D6.bq) != JSON.stringify(Y31)) {
                         if (Y31.length > ('0' ))
-                            if (D6.bq[0 << 1542275328][_s(m1R - 0)] == Y31[+0][_s(m1R)] && D6.bq[0 ][_s(6995 )] == Y31['0' ][_s(6995 )])
-                                T0V(D6.bq['0' << 1042087200][_s(m1R - 0)]);
+                            if (D6.bq[0 << 1542275328]['bid'] == Y31[+0]['bid'] && D6.bq[0 ][_s(6995 )] == Y31['0' ][_s(6995 )])
+                                T0V(D6.bq['0' << 1042087200]['bid']);
                             else
                                 s0F();
                         else
@@ -49345,7 +49346,7 @@ let cotgsubscribe;
                         if (D6.bq[g1w][_s(6995 )] == 0 >> 691074560) {
                             const P1w = D6.bq[g1w][_s(T1m)];
                             const B1w = D6.bq[g1w][_s(1381)];
-                            const Z1w = D6.bq[g1w][_s(m1R << 1538292704)];
+                            const Z1w = D6.bq[g1w]['bid'];
                             const Q6w = Math.floor(bam[_s(Q5y )][Number(P1w)][_s(h6R)][Number(B1w)][_s(m1p * 1)]);
                             const I6w = Math.floor(bam[_s(Q5y )][Number(P1w)][_s(h6R)][Number(B1w)][_s(B1p | 1280)]);
                             if (Q6w > S1w || I6w > J1w) {
@@ -50851,9 +50852,9 @@ let cotgsubscribe;
             let C8w = +'0';
             const i8w = D6.bd.length;
             for (let G8w = +'0'; G8w < i8w; G8w++) {
-                W8w = D6.bd[G8w][_s(m1R)];
-                if (W8w == +K4y)
-                    C8w = D6.bd[G8w][_s(i1R)];
+                W8w = D6.bd[G8w]['bid'];
+                if (W8w == 467)
+                    C8w = D6.bd[G8w]['bl'];
             }
             const d8w = +'5' + C8w;
             const b8w = D6.comm;
@@ -51852,10 +51853,10 @@ let cotgsubscribe;
             n2 = $(_s(X2p)).css(_s(2723 - 0));
             const Z2g = _s(m8y) + O2g + _s(m8y | 1452);
             const g2g = O2g;
-            const P2g = D6.bd[0 - 0][_s(i1R - 0)];
+            const P2g = D6.bd[0 - 0]['bl'];
             const T2g = D5F(Number(O2g));
-            const f2g = D6[_s(N1R)][O2g][_s(m1R)];
-            if (n2 == _s('1146' * 1) && (T2g == _s(K5R * 1) || D6[_s(N1R)][0 * 1][_s(i1R)] == ('0' ) && (T2g == _s(g4p >> 799281920) || T2g == _s(G2k - 0)))) {
+            const f2g = D6[_s(N1R)][O2g]['bid'];
+            if (n2 == _s('1146' * 1) && (T2g == _s(K5R * 1) || D6[_s(N1R)][0 * 1]['bl'] == ('0' ) && (T2g == _s(g4p >> 799281920) || T2g == _s(G2k - 0)))) {
                 r0V();
                 d2 = '0' ;
                 S0V();
@@ -60153,7 +60154,7 @@ let cotgsubscribe;
                     'zoom': _s(p9R)
                 });
                 $(_s('4591')).removeClass(_s(4891 >> 1352258912));
-                if (D6[_s(N1R * 1)][+0][_s(i1R)] > +'0' && e7g == _s(g4p >> 510267584) || e7g == _s(G2k ) || e7g == _s(L9y >> 1004387488)) {
+                if (D6[_s(N1R * 1)][+0]['bl'] > +'0' && e7g == _s(g4p >> 510267584) || e7g == _s(G2k ) || e7g == _s(L9y >> 1004387488)) {
                     n2 = $(_s(X2p)).css(_s(2723 ));
                     if (g2 == (1 ) && E6 != "") {
                         var m5g = E6;
@@ -60428,9 +60429,9 @@ let cotgsubscribe;
             let L8w = +0;
             const z8w = D6.bd.length;
             for (let o8w = 0 ; o8w < z8w; o8w++) {
-                X8w = D6.bd[o8w][_s(m1R )];
-                if (X8w == +K4y)
-                    L8w = D6.bd[o8w][_s(i1R | 12)];
+                X8w = D6.bd[o8w]['bid'];
+                if (X8w == +467)
+                    L8w = D6.bd[o8w]['bl'];
             }
             const M8w = +'5' + L8w;
             E6k.y6();
@@ -62635,7 +62636,7 @@ let cotgsubscribe;
                         let J7g = (M7g - d7g) / (A5y | 17);
                         d7g = d7g * +G5y;
                         J7g = J7g * (G5y << 1119893856);
-                        const n7g = D6[_s(N1R)][Number(M7g)][_s(m1R)];
+                        const n7g = D6[_s(N1R)][Number(M7g)]['bid'];
                         const f7g = D5F(Number(M7g));
                         if (n7g == +'0' && f7g == "l") {
                             let C7g = b7g[Math.round(Math.random() * (b7g.length - +1))];

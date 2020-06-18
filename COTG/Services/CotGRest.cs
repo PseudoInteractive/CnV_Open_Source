@@ -41,8 +41,8 @@ namespace COTG.Services
                 {
                     dataReader.ReadBytes(temp);
                 }
+                Log(uri.ToString()+ "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp)+ "\n\n>>>>>>>>>>>>>>\n\n");
                 var json = JsonDocument.Parse(temp);
-                Log(json.ToString());
                 ProcessJson(json);
             }
             catch (Exception e)
@@ -141,7 +141,7 @@ namespace COTG.Services
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-        public static RestAPI goCity = new gC();
+        public static RestAPI getCity = new gC();
         public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
@@ -200,30 +200,56 @@ namespace COTG.Services
 
     public class gC : RestAPI
     {
-        int cid = 0;
         public gC() : base("includes/gC.php", "X2U11s33S2375ccJx1e2")
         {
 
         }
-        async public Task PostC(int _cid = 0)
-        {
-            cid = _cid;
-            await Post();
-            cid = 0;
-        }
 
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode((cid != 0 ? cid : JSClient.cid).ToString(), secret);
+            var encoded = Aes.Encode(JSClient.cid.ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
 
         public override void ProcessJson(JsonDocument json)
         {
-            Log("Got JS");
-            JSClient.cityData = json.RootElement;
-            JSClient.SetCidFromCityData();
+            var cid = json.RootElement.GetAsInt("cid");
+            Log("Got JS " + cid);
+            if (!City.all.TryGetValue(cid, out var city))
+            {
+                city = new City() { cid = cid };
+                City.all.TryAdd(cid, city);
+            }
+
+            city.LoadFromJson(json.RootElement);
+
+        }
+
+    }
+
+
+    public class sndRaid : RestAPI
+    {
+        public string json;
+        public int cid;
+        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php", "XTR977sW56996sss2x2")
+        {
+            Log($"sndRaid:{_json}");
+            cid = _cid;
+            json = _json;
+
+        }
+        public override string GetPostContent()
+        {
+            var encoded = Aes.Encode(json, secret);
+            var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            return args;
+        }
+
+        public override void ProcessJson(JsonDocument json)
+        {
+            Log("Sent raid");
         }
 
     }

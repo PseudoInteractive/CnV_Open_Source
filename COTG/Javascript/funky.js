@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 function AsNumber(a) { return a == undefined ? 0 : parseFloat(a.toString()); }
 function LocalStoreAsInt(__s, __def = 0) {
     const rv = localStorage.getItem(__s);
@@ -998,7 +1007,7 @@ function SendAttack_() {
     // 	end_5=commandInfo.x.length;
     // 	loop_();
 }
-let pendingBuildUpdate = false;
+var pendingBuildUpdate = false;
 function makebuildcount_() {
     pendingBuildUpdate = false;
     $("#bdtable").remove();
@@ -1843,19 +1852,10 @@ function RoundTo2Digits(num_5) {
         21627160
     ]
  */ 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 let __base64Encode = null;
 let __base64Decode = null;
-const encyptStr = [];
-const decyptStr = [];
+var encryptStr = [""];
+var decryptStr = [""];
 let __a6 = {
     ccazzx: { encrypt: (a, b, c) => "", decrypt: (a, b, c) => "" }
 };
@@ -2412,12 +2412,12 @@ function avactor() {
         window['shCit'] = gspotfunct.shCit;
         window['chcity'] = gspotfunct.chcity;
         String.prototype['utf8Encode'] = function () {
-            encyptStr.push(this);
+            encryptStr.push(this);
             console.log(this);
             return unescape(encodeURIComponent(this));
         };
         String.prototype['utf8Decode'] = function () {
-            decyptStr.push(this);
+            decryptStr.push(this);
             console.log(this);
             return decodeURIComponent(escape(this));
         };
@@ -4863,7 +4863,7 @@ function avactor() {
                 creds.cid = cid;
                 creds.time = currentTime();
                 let wrapper = { jsvars: creds };
-                if (cdata_ = null)
+                if (cdata_ != null)
                     wrapper['citydata'] = cdata_;
                 window['external']['notify'](JSON.stringify(wrapper));
             }
@@ -5948,7 +5948,7 @@ function getDugRows_() {
                 loot1_ = other_loot_;
             }
             /** @type {number} */
-            var total_loot_1 = Math.ceil(loot1_[AsNumber(dunglvl_) - 1] * (1 - AsNumber(progress_) / 100 + 1) * 1.02);
+            var total_loot_1 = Math.ceil(loot1_[AsNumber(dunglvl_) - 1] * (2 - AsNumber(progress_) / 100) * 1.02);
             $("#dungloctab").find(".addraiwc td:nth-child(4)").html("<button id='raid115' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>115%</button><button id='raid108' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>108%</button>");
             $("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>100%</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
             $("#raid125").click(() => {
@@ -7196,4 +7196,3 @@ function updatetroops_(data_46, notes_3) {
         //});
     });
 }
-//# sourceMappingURL=funky.js.map

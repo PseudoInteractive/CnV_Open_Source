@@ -329,7 +329,7 @@ namespace COTG.Views
         }
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
-            await RestAPI.goCity.Post();
+            await RestAPI.getCity.Post();
 
         }
         private async void GetWorldInfo(object sender, RoutedEventArgs e)
@@ -351,13 +351,15 @@ namespace COTG.Views
         {
             try
             {
-                Log(JSClient.cityData.ValueKind);
-                if (JSClient.cityData.ValueKind == System.Text.Json.JsonValueKind.Undefined)
-                    await COTG.Services.RestAPI.goCity.Post();
+                var jse = City.current.jsE;
+                if (!jse.IsValid())
+                {
+                    await COTG.Services.RestAPI.getCity.Post();
+                    jse=City.current.jsE;
+                }
                 Log("Show Buildings");
                 List<BuildingCount> bd = new List<BuildingCount>();
                 int bCount = 0;
-                var jse = JSClient.cityData;
                 var bdd = new Dictionary<string, int>();
 
                 foreach (var bdi in jse.GetProperty("bd").EnumerateArray())

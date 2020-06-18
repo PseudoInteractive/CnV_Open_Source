@@ -1,8 +1,9 @@
 ﻿
 let __base64Encode: Function=null;
 let __base64Decode: Function = null;
-let encryptStr: string[] = [];
-let decryptStr: string[] = [];
+var encryptStr = [""];
+var decryptStr = [""];
+
 
 let __a6={
 	ccazzx: { encrypt: (a: string,b: string,c: number) => "",decrypt: (a: string,b: string,c: number) => "" } };
@@ -654,12 +655,12 @@ function avactor() {
 
 
 		String.prototype['utf8Encode'] = function () {
-			encyptStr.push(this);
+			encryptStr.push(this);
 			 console.log(this);
 		   return unescape(encodeURIComponent(this));
 		 };
 		String.prototype['utf8Decode'] = function () {
-			decyptStr.push(this);
+			decryptStr.push(this);
 			console.log(this);
 		     return decodeURIComponent(escape(this));
 		 };
@@ -3133,7 +3134,7 @@ function avactor() {
 				creds.cid = cid;
 				creds.time = currentTime();
 				let wrapper = { jsvars: creds }
-				if (cdata_=null)
+				if (cdata_!=null)
 					wrapper['citydata'] = cdata_;
 
 				window['external']['notify'](JSON.stringify(wrapper));
