@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using FluentAssertions;
-using FluentAssertions.Common;
 using static COTG.Debug;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -34,7 +32,6 @@ namespace COTG.Game
         // Abusing invalid jsE by returning it when we want to return null
         public JsonElement troopsHome => !jsE.IsValid()?jsE : jsE.GetProperty("th");
         public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
-        public string tsInfo => "Detailed info";
 
         public int ts
         {
@@ -85,7 +82,12 @@ namespace COTG.Game
             var comm = jsE.GetInt("comm");
             return (comm, total, total - comm);
         }
-	}
+
+        public override string ToString()
+        {
+            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(owner)}={owner}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+        }
+    }
     public class BuildingCount
     {
         public BitmapImage image { get; set; }

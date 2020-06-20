@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using FluentAssertions;
 
 using static COTG.Debug;
 
@@ -20,8 +19,8 @@ namespace COTG.Game
             {
                 rv *= 10;
                 var c = i < s.Length ? s[i] : '0';
-                (c >= '0').Should().BeTrue();
-                (c <= '9').Should().BeTrue();
+                Assert(c >= '0');
+                Assert(c <= '9');
                 rv += (uint)(c - '0');
             }
             return rv;

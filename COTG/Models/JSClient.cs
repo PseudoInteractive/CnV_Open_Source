@@ -132,19 +132,69 @@ namespace COTG
             try
             {
                 var req = args.Request;
-                if (req.Method.Method == HttpMethod.Post.Method && !req.RequestUri.LocalPath.EndsWith("poll2.php") )
+                if( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
                 {
-               //     if (req.Content != null)
-               //         await req.Content.BufferAllAsync();
-                 //   req.Content.BufferAllAsync();
-                    Log($"Post: {req.RequestUri.ToString()} {req.Headers.ToString()} {req.TransportInformation?.ToString()} {req.Properties?.ToString()} {req.Content?.ToString()}");
-                    if (args.Response != null)
+                    try
                     {
-                        Log(args.Response.Version.ToString());
-                        anyPost = req;
-                    //    await COTG.Services.RestAPI.HandleResponse(args.Request.RequestUri, args.Response);
+                        view.WebResourceRequested -= View_WebResourceRequested1;
+                        string host = args.Request.RequestUri.Host;
+                        string uri = args.Request.RequestUri.AbsoluteUri;
+
+                            var reqMsg = args.Request;
+                            var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
+
+                        var asm = typeof(JSClient).Assembly;
+
+                        using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
+                        {
+
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                var resp = respTask.Result;
+                                var priorContent = resp.Content;
+                                var js = priorContent.ReadAsStringAsync().AsTask().Result;
+
+                                var regex = new Regex("")
+                                Log("execute");
+                                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
+                                Log("funky");
+                                await view.InvokeScriptAsync("avactor", null);
+
+                                var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8);
+                                newContent.Headers.Clear();
+                                foreach (var h in priorContent.Headers)
+                                    newContent.Headers.TryAppendWithoutValidation(h.Key, h.Value);
+
+
+
+                                args.Response = resp;
+                                //var response = await client.SendRequestAsync(reqMsg).AsTask();
+                                resp.Content = newContent;
+                            }
+                        }
+
+
+
                     }
+                    catch (Exception e)
+                    {
+                    }
+
                 }
+
+               // if (req.Method.Method == HttpMethod.Post.Method && !req.RequestUri.LocalPath.EndsWith("poll2.php") )
+               // {
+               ////     if (req.Content != null)
+               ////         await req.Content.BufferAllAsync();
+               //  //   req.Content.BufferAllAsync();
+               //     Log($"Post: {req.RequestUri.ToString()} {req.Headers.ToString()} {req.TransportInformation?.ToString()} {req.Properties?.ToString()} {req.Content?.ToString()}");
+               //     if (args.Response != null)
+               //     {
+               //         Log(args.Response.Version.ToString());
+               //         anyPost = req;
+               //     //    await COTG.Services.RestAPI.HandleResponse(args.Request.RequestUri, args.Response);
+               //     }
+               // }
 
             }
             catch (Exception e)
@@ -285,6 +335,7 @@ namespace COTG
 
                     try
                     {
+
                         httpsHost = new Uri($"https://{args.Uri.Host}");
                         downloadImageClient = new HttpClient();
                         downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
@@ -327,6 +378,21 @@ namespace COTG
                                                                  //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
                                                                  //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
                                                                  //   headers.Add("Accept", @"*/*");
+                        httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
+                        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+                        //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
+                        httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
+                        // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                        httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
+                                                                             //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                        httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
+
+                        httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                        Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+                        view.WebResourceRequested -= View_WebResourceRequested1;
+                        view.WebResourceRequested += View_WebResourceRequested1;
+
 
                     }
                     catch (Exception e)
@@ -443,17 +509,7 @@ namespace COTG
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
 
                                 gotCreds = true;
-                                httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-                                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
-                                //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
-                                httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
-                                // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                                httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
-                                                                                     //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
-
-                                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                                Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+//                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
                                 
                                 break;
@@ -475,6 +531,7 @@ namespace COTG
                                     city.points = jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
+                                    Views.ShellPage.note.Show(city.ToString());
 
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
@@ -492,7 +549,7 @@ namespace COTG
                                 }
                                 city.LoadFromJson(jse);
                                 COTG.Views.MainPage.UpdateCityList();
-
+                                Views.ShellPage.note.Show(city.ToString());
                             }
                             break;
                     }

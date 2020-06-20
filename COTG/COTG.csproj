@@ -151,9 +151,6 @@
     <PackageReference Include="System.Diagnostics.DiagnosticSource">
       <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
-    <PackageReference Include="System.Diagnostics.EventLog">
-      <Version>5.0.0-preview.5.20278.1</Version>
-    </PackageReference>
     <PackageReference Include="System.Memory">
       <Version>4.5.4</Version>
     </PackageReference>

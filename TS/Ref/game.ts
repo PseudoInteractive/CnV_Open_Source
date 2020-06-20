@@ -11780,10 +11780,10 @@ let cotgsubscribe;
             } else {
                 if (H9B >= ('1' | 1)) {
                     D6[_s(s8y )][s6y << 1348325472] = D6[_s(s8y)][+s6y] - H9B;
-                    D6[_s(Q8y)][s6y - 0] = D6[_s(Q8y)][+s6y] - H9B;
+                    D6["th"][s6y - 0] = D6["th"][+s6y] - H9B;
                 } else {
                     D6[_s(s8y * 1)][s6y ] = D6[_s(s8y >> 1819245536)][+s6y] - ('1' );
-                    D6[_s(Q8y - 0)][s6y << 188368000] = D6[_s(Q8y)][s6y - 0] - ('1' << 1050502400);
+                    D6["th"][s6y << 188368000] = D6["th"][s6y - 0] - ('1' << 1050502400);
                 }
                 if (D6[_s(622 >> 715445280)])
                     var l9B = D6[_s('622' >> 498207456)].length;
@@ -17459,26 +17459,26 @@ let cotgsubscribe;
                             if (Z9T == +5)
                             ;
                             if (Z9T == +'6') {
-                                if (D6[_s(P1y )])
-                                    if (D6[_s(P1y - 0)][Z9T])
-                                        D6[_s(P1y )][Z9T] += U9T;
+                                if (D6["itu"])
+                                    if (D6["itu"][Z9T])
+                                        D6["itu"][Z9T] += U9T;
                                     else
-                                        D6[_s(P1y )][Z9T] = U9T;
+                                        D6["itu"][Z9T] = U9T;
                                 else {
-                                    D6[_s(P1y)] = new Object();
-                                    D6[_s(P1y)][Z9T] = U9T;
+                                    D6["itu"] = new Object();
+                                    D6["itu"][Z9T] = U9T;
                                 }
                                 J2();
                             }
                             if (Z9T == +'7') {
-                                if (D6[_s(P1y)])
-                                    if (D6[_s(P1y * 1)][Z9T])
-                                        D6[_s(P1y | 592)][Z9T] += U9T;
+                                if (D6["itu"])
+                                    if (D6["itu"][Z9T])
+                                        D6["itu"][Z9T] += U9T;
                                     else
-                                        D6[_s(P1y << 169838912)][Z9T] = U9T;
+                                        D6["itu"][Z9T] = U9T;
                                 else {
-                                    D6[_s(P1y | 581)] = new Object();
-                                    D6[_s(P1y)][Z9T] = U9T;
+                                    D6["itu"] = new Object();
+                                    D6["itu"][Z9T] = U9T;
                                 }
                                 J2();
                             }
@@ -17486,24 +17486,24 @@ let cotgsubscribe;
                                 const c9T = currentTime();
                                 const D9T = Number(c9T) + Number(B9T[+'9']);
                                 for (let N9T = b9T - +1; N9T >= 0 >> 999036192; N9T--)
-                                    if (D6[_s(P1y )])
-                                        if (D6[_s(P1y)][Z9T]) {
-                                            const p9T = D6[_s(P1y << 504733120)][Z9T].length;
-                                            D6[_s(P1y)][Z9T][p9T] = new Object();
-                                            D6[_s(P1y << 2072539232)][Z9T][p9T][0 ] = B9T[Z9T];
-                                            D6[_s(P1y)][Z9T][p9T][+'1'] = D9T;
+                                    if (D6["itu"])
+                                        if (D6["itu"][Z9T]) {
+                                            const p9T = D6["itu"][Z9T].length;
+                                            D6["itu"][Z9T][p9T] = new Object();
+                                            D6["itu"][Z9T][p9T][0 ] = B9T[Z9T];
+                                            D6["itu"][Z9T][p9T][+'1'] = D9T;
                                         } else {
-                                            D6[_s(P1y * 1)][Z9T] = new Object();
-                                            D6[_s(P1y * 1)][Z9T]['0' ] = new Object();
-                                            D6[_s(P1y )][Z9T]['0' ][0 | 0] = B9T[Z9T];
-                                            D6[_s(P1y * 1)][Z9T][0 >> 1533330240][+1] = D9T;
+                                            D6["itu"][Z9T] = new Object();
+                                            D6["itu"][Z9T]['0' ] = new Object();
+                                            D6["itu"][Z9T]['0' ][0 | 0] = B9T[Z9T];
+                                            D6["itu"][Z9T][0 >> 1533330240][+1] = D9T;
                                         }
                                 else {
-                                    D6[_s(P1y)] = new Object();
-                                    D6[_s(P1y )][Z9T] = new Object();
-                                    D6[_s(P1y << 1521288896)][Z9T][+'0'] = new Object();
-                                    D6[_s(P1y << 986435328)][Z9T][+'0'][0 ] = B9T[Z9T];
-                                    D6[_s(P1y - 0)][Z9T][+0][+1] = D9T;
+                                    D6["itu"] = new Object();
+                                    D6["itu"][Z9T] = new Object();
+                                    D6["itu"][Z9T][+'0'] = new Object();
+                                    D6["itu"][Z9T][+'0'][0 ] = B9T[Z9T];
+                                    D6["itu"][Z9T][+0][+1] = D9T;
                                 }
                                 J2();
                             }
@@ -23292,7 +23292,7 @@ let cotgsubscribe;
                 if (Number(x5l) == q1R << 550489024) {
                     var Q5l = M1R >> 1638837472;
                     var T5l = +M1R;
-                    var C5l = +M1R;
+                    var C5l = +M1R;w
                     const S5l = D6.bd[+E1R]['bl'];
                     const r5l = Number(S5l) * ('10' | 0);
                     const A5l = bam[_s(Q5y)][+q1R][_s(j1R)][Number(S5l)];
@@ -25512,7 +25512,7 @@ let cotgsubscribe;
                         if (!(y2B <= +'0'))
                             if (!(y2B > thome))
                                 if (y2B > ('0' )) {
-                                    D6[_s(Q8y >> 1414547584)][R2B] = D6[_s(Q8y)][R2B] - y2B;
+                                    D6["th"][R2B] = D6["th"][R2B] - y2B;
                                     D6[_s(s8y)][R2B] = D6[_s(s8y )][R2B] - y2B;
                                     D2B[R2B] = y2B;
                                     const p2B = bam[_s('4619' )][R2B][_s(t1R)] * y2B;
@@ -27786,10 +27786,10 @@ let cotgsubscribe;
             const s0t = 4094;
             const I84 = 4639;
             let I3w = +'0';
-            if (D6[_s(P1y)])
-                if (D6[_s(P1y)][+7])
-                    if (D6[_s(P1y >> 1638663200)][+7] > ('0' ))
-                        I3w = D6[_s(P1y)][+'7'];
+            if (D6["itu"])
+                if (D6["itu"][+7])
+                    if (D6["itu"][+7] > ('0' ))
+                        I3w = D6["itu"][+'7'];
             if (I3w > +'0')
                 var a4w = _s('2706' - 0) + Q2(I3w);
             else
@@ -27808,10 +27808,10 @@ let cotgsubscribe;
                 var T3w = '6' << 579107296;
             $(_s('6206' * 1)).text(W3w + _s(g9R << 31201760) + T3w);
             let x3w = +'0';
-            if (D6[_s(P1y)])
-                if (D6[_s(P1y * 1)][+6])
-                    if (D6[_s(P1y - 0)][+'6'] > +'0')
-                        x3w = D6[_s(P1y)][6 >> 2049692704];
+            if (D6["itu"])
+                if (D6["itu"][+6])
+                    if (D6["itu"][+'6'] > +'0')
+                        x3w = D6["itu"][6 >> 2049692704];
             if (x3w > +'0')
                 var w3w = _s(2348) + Q2(x3w);
             else
@@ -32311,7 +32311,7 @@ let cotgsubscribe;
             if (Y2v == +3 && N2v != m2y - 0)
                 return p2v + _s('1785' - 0);
             E6k.R6();
-            return p2v + _s(Q8y );
+            return p2v + "th";
         }
         ((P29, B29) => {
             E6k.R6();
@@ -38918,7 +38918,7 @@ let cotgsubscribe;
                             Y6(_s(E8y ));
                         else {
                             for (let H0Z = '0' | 0; H0Z < h9B.length; H0Z++)
-                                D6[_s(Q8y)][Number(h9B[H0Z][_s(6626)])] = D6[_s(Q8y)][Number(h9B[H0Z][_s('6626')])] - Number(h9B[H0Z][_s(r1t)]) * Number(r9B);
+                                D6["th"][Number(h9B[H0Z][_s(6626)])] = D6["th"][Number(h9B[H0Z][_s('6626')])] - Number(h9B[H0Z][_s(r1t)]) * Number(r9B);
                             D6[_s('6066' >> 1351861536)] = D6[_s(6066 )] + Number(r9B);
                             o0F(Z9B, K9B);
                             z5F();
@@ -45874,8 +45874,8 @@ let cotgsubscribe;
                     E6k.R6();
                     const T8l = $(this).attr('id');
                     const l8l = T8l.substring(6 - 0);
-                    if (D6[_s(Q8y - 0)][l8l])
-                        if (Q8l > D6[_s(Q8y )][l8l])
+                    if (D6["th"][l8l])
+                        if (Q8l > D6["th"][l8l])
                             j8l = '1' ;
                 });
             } else if (I8l == +'1') {
@@ -45888,8 +45888,8 @@ let cotgsubscribe;
                     const t8l = $(this).attr('id');
                     E6k.y6();
                     const x8l = t8l.substring(6);
-                    if (D6[_s(Q8y)][x8l])
-                        if (O8l > D6[_s(Q8y)][x8l])
+                    if (D6["th"][x8l])
+                        if (O8l > D6["th"][x8l])
                             j8l = '1' ;
                 });
             } else if (I8l == +2) {
@@ -45901,8 +45901,8 @@ let cotgsubscribe;
                     const L8l = $(this).val();
                     const X8l = $(this).attr("id");
                     const o8l = X8l.substring(6);
-                    if (D6[_s(Q8y << 2040589632)][o8l])
-                        if (L8l > D6[_s(Q8y)][o8l])
+                    if (D6["th"][o8l])
+                        if (L8l > D6["th"][o8l])
                             j8l = +'1';
                 });
             } else {
@@ -45914,8 +45914,8 @@ let cotgsubscribe;
                     const M8l = $(this).val();
                     const G8l = $(this).attr('id');
                     const z8l = G8l.substring(6);
-                    if (D6[_s(Q8y)][z8l])
-                        if (M8l > D6[_s(Q8y )][z8l])
+                    if (D6["th"][z8l])
+                        if (M8l > D6["th"][z8l])
                             j8l = '1' ;
                 });
             }
@@ -48036,16 +48036,16 @@ let cotgsubscribe;
                     const R7D = currentTime();
                     var B7D = Y7D - R7D;
                     if (Number(k7D) > +P2y)
-                        if (D6[_s(P1y )])
-                            if (D6[_s(P1y )]['7' | 4])
-                                if (D6[_s(P1y)][+7] > +0) {
-                                    const y7D = D6[_s(P1y)]['7' ];
+                        if (D6["itu"])
+                            if (D6["itu"]['7' | 4])
+                                if (D6["itu"][+7] > +0) {
+                                    const y7D = D6["itu"]['7' ];
                                     const D7D = Number(k7D) - B7D;
                                     if (y7D >= D7D) {
-                                        D6[_s(P1y)][7 ] = D6[_s(P1y )][+7] - D7D;
+                                        D6["itu"][7 ] = D6["itu"][+7] - D7D;
                                         B7D = Number(k7D) - (d8R << 1888815840);
                                     } else {
-                                        D6[_s(P1y )]['7' ] = 0 ;
+                                        D6["itu"]['7' ] = 0 ;
                                         l7D = Number(l7D) - y7D;
                                         B7D = Number(R7D) - Number(l7D);
                                     }
@@ -48084,9 +48084,9 @@ let cotgsubscribe;
                     H7D = D6.tq[+0].ttype;
                     s7D = D6.tq[+0].pa;
                     if (s7D == (1 | 1)) {
-                        $(_s(3372 )).first().html(_s('5726' >> 791771552));
+                        $(_s(3372)).first().html("<div id='tbar_outerdiv'><div class = 'pbarcontr'></div><div id='tbar_innerdiv'></div><div id='tbar_innertext'></div></div>");
                         W7D = D6[_s(s8y)][Number(H7D)];
-                        i7D = D6[_s(Q8y )][Number(H7D)];
+                        i7D = D6["th"][Number(H7D)];
                         l7D = G7D;
                         k7D = o7D;
                         Q7D = Math.floor(k7D / +X2y);
@@ -58889,19 +58889,19 @@ let cotgsubscribe;
                         const S0i = p6(Math.floor(Number(ppdt[_s(h8R)][_s(I6y - 0)]) / (X2y ) * Number(W0i)));
                         G0i = G0i + _s('6379') + ppdt[_s(h8R)][_s(I6y | 256)] + _s(2814 >> 343659904) + S0i + _s('2740' );
                     }
-                    if (ppdt[_s(P1y * 1)])
-                        if (ppdt[_s(P1y * 1)][+'10'])
-                            for (const C0i in ppdt[_s(P1y)][+'10']) {
+                    if (ppdt["itu"])
+                        if (ppdt["itu"][+'10'])
+                            for (const C0i in ppdt["itu"][+'10']) {
                                 const h0i = currentTime();
-                                const i0i = ppdt[_s(P1y >> 151392544)]['10' * 1][C0i][+'1'];
+                                const i0i = ppdt["itu"]['10' * 1][C0i][+'1'];
                                 if (i0i < h0i)
-                                    ppdt[_s(P1y)]['10' | 10].splice(C0i, +1);
+                                    ppdt["itu"]['10' | 10].splice(C0i, +1);
                                 else {
                                     const n0i = new Date(i0i);
                                     const r0i = MDFormat(i0i);
-                                    const A0i = p6(Math.floor(Number(ppdt[_s(P1y)][+'10'][C0i][0 - 0]) / +X2y * Number(W0i)));
-                                    G0i = G0i + _s('1751') + r0i + _s(e7k) + ppdt[_s(P1y)][+'10'][C0i][+'0'] + _s(2814) + A0i + _s('2740');
-                                    J0i += ppdt[_s(P1y)]['10' ][C0i][+0];
+                                    const A0i = p6(Math.floor(Number(ppdt["itu"][+'10'][C0i][0 - 0]) / +X2y * Number(W0i)));
+                                    G0i = G0i + _s('1751') + r0i + _s(e7k) + ppdt["itu"][+'10'][C0i][+'0'] + _s(2814) + A0i + _s('2740');
+                                    J0i += ppdt["itu"]['10' ][C0i][+0];
                                 }
                             }
                     const d0i = _s(1633 * 1) + p6(Math.floor(ppdt[_s(h8R)][_s(B9y | 2089)])) + _s('2740');
@@ -59616,18 +59616,18 @@ let cotgsubscribe;
                 const C3i = O3i;
                 let G3i = +0;
                 let x3i = "";
-                if (D6[_s(P1y)])
-                    if (D6[_s(P1y)][8 << 1023784160])
-                        for (const t3i in D6[_s(P1y)][+8]) {
+                if (D6["itu"])
+                    if (D6["itu"][8 << 1023784160])
+                        for (const t3i in D6["itu"][+8]) {
                             const M3i = currentTime();
-                            const L3i = D6[_s(P1y)][+'8'][t3i][+'1'];
+                            const L3i = D6["itu"][+'8'][t3i][+'1'];
                             if (L3i < M3i)
-                                D6[_s(P1y )]['8' ].splice(t3i, +'1');
+                                D6["itu"]['8' ].splice(t3i, +'1');
                             else {
                                 const z3i = new Date(L3i);
                                 const X3i = formatTimehrs(z3i) + _s(v6y | 1557) + MDFormat(L3i);
-                                x3i = x3i + _s(594) + D6[_s(P1y)]['8' >> 1828779520][t3i][0 ] + _s(4141) + X3i + _s(K5y - 0);
-                                G3i += D6[_s(P1y)][+'8'][t3i][+0];
+                                x3i = x3i + _s(594) + D6["itu"]['8' >> 1828779520][t3i][0 ] + _s(4141) + X3i + _s(K5y - 0);
+                                G3i += D6["itu"][+'8'][t3i][+0];
                             }
                         }
                 if (x3i != "")

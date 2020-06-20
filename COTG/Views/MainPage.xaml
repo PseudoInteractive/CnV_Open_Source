@@ -6,7 +6,7 @@
     xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
     xmlns:tl="using:Telerik.UI.Xaml.Controls"
     xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
-    xmlns:tdd="using:Telerik.UI.Xaml.Controls.Data.DataForm"
+    xmlns:tdd="using:Telerik.Data.Core"
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
     xmlns:model="using:COTG.Models"
@@ -16,42 +16,46 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required"
     Background="{x:Null}">
-    <Grid>
+	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="cityGrid"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
                         SelectionMode ="Extended"
                         CanUserChooseColumns="true"
                         ToolTipService.ToolTip="Helllo!"
-                        SelectionUnit="Cell" EnsureCurrentItemIntoView="True" KeyboardAcceleratorPlacementMode="Auto" UserColumnReorderMode="Interactive" UserFilterMode="Auto" UserGroupMode="Auto" UserSortMode="Auto" XYFocusKeyboardNavigation="Enabled" UserEditMode="Inline" HideFlyoutOnBackButtonPressed="True" 
+                        SelectionUnit="Cell" EnsureCurrentItemIntoView="True" KeyboardAcceleratorPlacementMode="Auto" UserColumnReorderMode="Interactive" UserFilterMode="Auto" UserGroupMode="Auto" UserSortMode="Auto" XYFocusKeyboardNavigation="Enabled" UserEditMode="External" HideFlyoutOnBackButtonPressed="True" GridLinesVisibility="Both" GroupHeaderDisplayMode="Frozen" GroupPanelPosition="Bottom" KeyTipPlacementMode="Auto" ListenForNestedPropertyChange="False" XYFocusDownNavigationStrategy="Projection" TabFocusNavigation="Cycle" XYFocusLeftNavigationStrategy="NavigationDirectionDistance" XYFocusRightNavigationStrategy="NavigationDirectionDistance" XYFocusUpNavigationStrategy="NavigationDirectionDistance"
                          >
 
-           
-            <tg:RadDataGrid.Commands>
-                <model:CityTapCommand />
-            </tg:RadDataGrid.Commands>
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icon"   />
-                <tg:DataGridTextColumn PropertyName="name"   />
-                <tg:DataGridTextColumn PropertyName="xy" />
-                <tg:DataGridTextColumn PropertyName="ts"  />
-                <tg:DataGridTextColumn PropertyName="tsHome" />
-                <tg:DataGridNumericalColumn PropertyName="points" />
-                <tg:DataGridDateColumn PropertyName="owner" IsVisible="False" />
-                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False" />
-                <tg:DataGridDateColumn PropertyName="alliance" IsVisible="False" />
-                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
-            </tg:RadDataGrid.Columns>
-		</tg:RadDataGrid>
-        <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
+
+			<tg:RadDataGrid.Commands>
+				<model:CityTapCommand />
+			</tg:RadDataGrid.Commands>
+			<tg:RadDataGrid.Columns>
+				<tg:DataGridImageColumn PropertyName="icon"   />
+				<tg:DataGridTextColumn PropertyName="name"   />
+				<tg:DataGridTextColumn PropertyName="xy" />
+				<tg:DataGridTextColumn PropertyName="ts"  />
+				<tg:DataGridTextColumn PropertyName="tsHome" />
+				<tg:DataGridNumericalColumn PropertyName="points" />
+				<tg:DataGridDateColumn PropertyName="owner" IsVisible="False" />
+				<tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False" />
+				<tg:DataGridDateColumn PropertyName="alliance" IsVisible="False" />
+				<tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
+			</tg:RadDataGrid.Columns>
+            <tg:RadDataGrid.AggregateDescriptors>
+                <tdd:PropertyAggregateDescriptor PropertyName="ts" Function="Sum" />
+                <tdd:PropertyAggregateDescriptor PropertyName="tsHome" Function="Sum" />
+            </tg:RadDataGrid.AggregateDescriptors>
+        </tg:RadDataGrid>
+		<tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="dungeonGrid"
                         Grid.Row="1"
                        
@@ -61,22 +65,22 @@
                         CanUserChooseColumns="true"
                         SelectionUnit="Cell" Margin="0,14,0,0" PointerMoved="DungeonPointerMoved"
                        >
-            <ToolTipService.ToolTip>
-                <ToolTip Name="tooltip" Content="eee"/>
-            </ToolTipService.ToolTip>
-            <tg:RadDataGrid.Commands>
-                <model:DungeonTapCommand />
-            </tg:RadDataGrid.Commands>
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridNumericalColumn PropertyName="dist" />
-                <tg:DataGridTextColumn PropertyName="plan" />
-                <tg:DataGridNumericalColumn PropertyName="level" />
-                <tg:DataGridNumericalColumn PropertyName="complete" />
-                <tg:DataGridNumericalColumn PropertyName="type" />
-                <tg:DataGridTextColumn PropertyName="xy" />
+			<ToolTipService.ToolTip>
+				<ToolTip x:Name="tip" Content="Hello" RequiresPointer="Never" Opacity="0.515" Foreground="{ThemeResource SystemControlForegroundChromeHighBrush}" Background="{ThemeResource Acryllic}"/>
+			</ToolTipService.ToolTip>
+			<tg:RadDataGrid.Commands>
+				<model:DungeonTapCommand />
+			</tg:RadDataGrid.Commands>
+			<tg:RadDataGrid.Columns>
+				<tg:DataGridNumericalColumn PropertyName="dist" SortDirection="Ascending" />
+				<tg:DataGridTextColumn PropertyName="plan" />
+				<tg:DataGridNumericalColumn PropertyName="level" />
+				<tg:DataGridNumericalColumn PropertyName="complete" />
+				<tg:DataGridNumericalColumn PropertyName="type" />
+				<tg:DataGridTextColumn PropertyName="xy" />
 
-            </tg:RadDataGrid.Columns>
-        </tg:RadDataGrid>
-        <tk:GridSplitter Grid.Row="1" Height="13" VerticalAlignment="Top"/>
-    </Grid>
+			</tg:RadDataGrid.Columns>
+		</tg:RadDataGrid>
+		<tk:GridSplitter Grid.Row="1" Height="13" VerticalAlignment="Top"/>
+	</Grid>
 </Page>

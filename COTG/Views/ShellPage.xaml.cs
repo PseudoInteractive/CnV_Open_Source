@@ -43,6 +43,8 @@ namespace COTG.Views
 
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
+        public static InAppNotification note => instance.InAppNote;
+
         public bool IsBackEnabled
         {
             get { return _isBackEnabled; }

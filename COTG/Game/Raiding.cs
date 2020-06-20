@@ -14,7 +14,7 @@ namespace COTG.Game
     public static class Raiding
     {
         public static float carryCapcity;
-        public static float desiredCarry = 1.05f;
+        public static float desiredCarry = 0.9f;
         public static bool raidOnce;
         public static float UpdateCarryCapacity(City city) // for current city
         {

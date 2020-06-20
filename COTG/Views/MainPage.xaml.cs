@@ -14,11 +14,11 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Telerik.Core.Data;
+using Telerik.Data.Core;
+using Telerik.Data;
 using System.Collections.Specialized;
-using FluentAssertions.Extensions;
-using FluentAssertions.Common;
-using FluentAssertions;
 using Windows.Foundation;
+
 
 namespace COTG.Views
 {
@@ -67,38 +67,38 @@ namespace COTG.Views
 
         public MainPage()
         {
-            (cache == null).Should().BeTrue();
+            Assert(cache == null);
             cache = this;
             InitializeComponent();
         }
 
-        public string dungeonInfo { get
-            {
-                var ci = dungeonGrid.HitTestService.CellInfoFromPoint(CoreWindow.GetForCurrentThread().PointerPosition);
-                if(ci == null)
-                    return "Missed";
-                var i = ci.Item as COTG.Game.Dungeon;
-                return i.ToString();
-            }
-        }
+        //public string dungeonInfo { get
+        //    {
+        //        var ci = dungeonGrid.HitTestService.CellInfoFromPoint(CoreWindow.GetForCurrentThread().PointerPosition);
+        //        if(ci == null)
+        //            return "Missed";
+        //        var i = ci.Item as COTG.Game.Dungeon;
+        //        return i.ToString();
+        //    }
+        //}
 
-        private void OnCheckBoxClick(object sender, RoutedEventArgs e)
-        {
-            var cb = (CheckBox)sender;
-            var _showing = showingRowDetails;
-            showingRowDetails = null;
-            if (_showing != null && cities.Contains(_showing) )
-                this.cityGrid.HideRowDetailsForItem(_showing);
+        //private void OnCheckBoxClick(object sender, RoutedEventArgs e)
+        //{
+        //    var cb = (CheckBox)sender;
+        //    var _showing = showingRowDetails;
+        //    showingRowDetails = null;
+        //    if (_showing != null && cities.Contains(_showing) )
+        //        this.cityGrid.HideRowDetailsForItem(_showing);
 
-            var newCheckedItem = (City)cb.DataContext;
+        //    var newCheckedItem = (City)cb.DataContext;
 
-            if (cb.IsChecked.HasValue && cb.IsChecked.Value)
-            {
-                showingRowDetails = newCheckedItem;
-                this.cityGrid.ShowRowDetailsForItem(newCheckedItem);
-            }
+        //    if (cb.IsChecked.HasValue && cb.IsChecked.Value)
+        //    {
+        //        showingRowDetails = newCheckedItem;
+        //        this.cityGrid.ShowRowDetailsForItem(newCheckedItem);
+        //    }
 
-        }
+        //}
 
         public async static void UpdateCityList()
         {
@@ -161,9 +161,9 @@ namespace COTG.Views
 			{
                 lastTooltip = hit;
                 if (hit != null)
-                    ToolTipService.SetToolTip(this, hit.ToString());
+                    ToolTipService.SetToolTip(tip, hit.ToString());
                 else
-                    ToolTipService.SetToolTip(this,"None");
+                    ToolTipService.SetToolTip(tip,"None");
 			}
         }
 	}
