@@ -127,7 +127,15 @@ namespace COTG
 
 		}
 
-        async private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
+        static Task read0Task;
+        static Task read1Task;
+        private static string GetJsString(string asm)
+        {
+            return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.Javascript.{asm}.js") ).ReadToEnd();
+
+        }
+        static Task read2Task;
+        private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
         {
             try
             {
@@ -145,33 +153,16 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
-                        {
+                        var js = GetJsString("J0EE") + GetJsString("game122") + GetJsString("funky");
 
-                            using (StreamReader reader = new StreamReader(stream))
-                            {
-                                var resp = respTask.Result;
-                                var priorContent = resp.Content;
-                                var js = priorContent.ReadAsStringAsync().AsTask().Result;
+                                var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
-                                var regex = new Regex("")
-                                Log("execute");
-                                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
-                                Log("funky");
-                                await view.InvokeScriptAsync("avactor", null);
-
-                                var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8);
-                                newContent.Headers.Clear();
-                                foreach (var h in priorContent.Headers)
-                                    newContent.Headers.TryAppendWithoutValidation(h.Key, h.Value);
-
-
-
-                                args.Response = resp;
+                        args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+                               // args.Response = resp;
                                 //var response = await client.SendRequestAsync(reqMsg).AsTask();
-                                resp.Content = newContent;
-                            }
-                        }
+                               // resp.Content = newContent;
+                        //    }
+                        
 
 
 
@@ -475,12 +466,12 @@ namespace COTG
 
         static async private void View_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
-            Log($"Dom loaded {args.Uri}");
-            if (urlMatch.IsMatch(args.Uri.Host))
-            {
-                Log("Match Regex!");
-                await AddJSPluginAsync();
-            }
+            //Log($"Dom loaded {args.Uri}");
+            //if (urlMatch.IsMatch(args.Uri.Host))
+            //{
+            //    Log("Match Regex!");
+            //    await AddJSPluginAsync();
+            //}
         }
         async static private void View_ScriptNotify(object sender, NotifyEventArgs e)
         {

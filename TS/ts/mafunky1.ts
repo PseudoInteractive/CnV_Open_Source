@@ -505,16 +505,16 @@ async function avafetch(url: string, args: string) {
 function avactor() {
 
 	//	var E3y="5894";
-	var q7y=15;
-	var G5y=128;
-	var q3y=16;
-	var U7y=256;
-	var v1R=192;
-	var P2y=1000;
-	var l9p=0xffff;
-	var k9p=0x100000000;
+	var q7y = 15;
+	var G5y = 128;
+	var q3y = 16;
+	var U7y = 256;
+	var v1R = 192;
+	var P2y = 1000;
+	var l9p = 0xffff;
+	var k9p = 0x100000000;
 	console.log("here");
-	
+
 	//};
 
 	function GetDate(jq: string) {
@@ -522,7 +522,7 @@ function avactor() {
 	}
 
 	function sleep(time) {
-		return new Promise((resolve) => setTimeout(resolve,time));
+		return new Promise((resolve) => setTimeout(resolve, time));
 	}
 	//var strings={};
 	//async function Decode() {
@@ -578,18 +578,18 @@ function avactor() {
 	 * @return {?}
 	 */
 	function getFormattedTime(date_2) {
-		var year_1=date_2.getFullYear();
-		var month_1=(1+date_2.getMonth()).toString();
-		month_1=month_1.length>1? month_1:`0${month_1}`;
-		var day_=date_2.getDate().toString();
-		day_=day_.length>1? day_:`0${day_}`;
+		var year_1 = date_2.getFullYear();
+		var month_1 = (1 + date_2.getMonth()).toString();
+		month_1 = month_1.length > 1 ? month_1 : `0${month_1}`;
+		var day_ = date_2.getDate().toString();
+		day_ = day_.length > 1 ? day_ : `0${day_}`;
 		/** @type {string} */
-		var hour_=TwoDigitNum(date_2.getHours());
+		var hour_ = TwoDigitNum(date_2.getHours());
 
 		/** @type {string} */
-		var min_=TwoDigitNum(date_2.getMinutes());
+		var min_ = TwoDigitNum(date_2.getMinutes());
 		/** @type {string} */
-		var sec_=TwoDigitNum(date_2.getSeconds());
+		var sec_ = TwoDigitNum(date_2.getSeconds());
 		return `${month_1}/${day_}/${year_1} ${hour_}:${min_}:${sec_}`;
 	}
 	/**
@@ -601,39 +601,39 @@ function avactor() {
 	 * @return {void}
 	 */
 	function errorgo_(j_) {
-		errz_=errz_+1;
+		errz_ = errz_ + 1;
 		/** @type {string} */
-		let b_=`errBR${errz_}`;
+		let b_ = `errBR${errz_}`;
 		/** @type {string} */
-		let c_=`#${b_}`;
+		let c_ = `#${b_}`;
 		/** @type {string} */
-		let d_=`#${b_} div`;
+		let d_ = `#${b_} div`;
 		/** @type {string} */
-		let errormsgs_=`<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
+		let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
 		$("#errorBRpopup").append(errormsgs_);
 		$(c_).show();
 		$(d_).animate({
 			opacity: 1,
 			bottom: "+10px"
-		},"slow");
+		}, "slow");
 		setTimeout(() => {
 			$(d_).animate({
 				opacity: 0,
 				bottom: "-10px"
-			},"slow");
+			}, "slow");
 			$(c_).fadeOut("slow");
-		},5000);
+		}, 5000);
 		setTimeout(() => {
 			$(c_).remove();
-		},6000);
+		}, 6000);
 	}
 
 	setTimeout(() => {
-		__base64Encode=String.prototype['base64Encode'];
-		String.prototype['base64Encode']=betterBase64Encode;
+		__base64Encode = String.prototype['base64Encode'];
+		String.prototype['base64Encode'] = betterBase64Encode;
 
-		__base64Decode=String.prototype['base64Decode'];
-		String.prototype['base64Decode']=betterBase64Decode;
+		__base64Decode = String.prototype['base64Decode'];
+		String.prototype['base64Decode'] = betterBase64Decode;
 
 		OptimizeAjax();
 
@@ -647,23 +647,23 @@ function avactor() {
 
 		//$("body").append(popwin_);
 
-		window['alliancelink']=gspotfunct.alliancelink;
-		window['infoPlay']=gspotfunct.infoPlay;
-		window['shCit']=gspotfunct.shCit;
-		window['chcity']=gspotfunct.chcity;
+		window['alliancelink'] = gspotfunct.alliancelink;
+		window['infoPlay'] = gspotfunct.infoPlay;
+		window['shCit'] = gspotfunct.shCit;
+		window['chcity'] = gspotfunct.chcity;
 
 
 
 		String.prototype['utf8Encode'] = function () {
 			encryptStr.push(this);
-			 console.log(this);
-		   return unescape(encodeURIComponent(this));
-		 };
+			console.log(this);
+			return unescape(encodeURIComponent(this));
+		};
 		String.prototype['utf8Decode'] = function () {
 			decryptStr.push(this);
 			console.log(this);
-		     return decodeURIComponent(escape(this));
-		 };
+			return decodeURIComponent(escape(this));
+		};
 		// if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
 		//     String.prototype.base64Decode = function() {
 		//       if (typeof atob != _s(h2R ^ 0))
@@ -682,14 +682,14 @@ function avactor() {
 		//       throw new Error(i011.S55(+"170"));
 		//     }
 
-		var a_5=$("#organiser > option");
-		var l_3=a_5.length;
+		var a_5 = $("#organiser > option");
+		var l_3 = a_5.length;
 		/** @type {number} */
-		var i_32=0;
-		for(;i_32<l_3;i_32++) {
+		var i_32 = 0;
+		for (; i_32 < l_3; i_32++) {
 			/** @type {string} */
-			var temp_3=String($(a_5[i_32]).attr("value"));
-		//	$("#organiser").val(temp_3).change();
+			var temp_3 = String($(a_5[i_32]).attr("value"));
+			//	$("#organiser").val(temp_3).change();
 			/** @type {!Array} */
 			//  console.log(ppdt.clc);
 			//console.log(temp_3);
@@ -715,23 +715,23 @@ function avactor() {
 			//}
 		}
 		//	$("#organiser").val("all").change();
-	},8000);
+	}, 8000);
 
 	//this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 
 	/** @type {number} */
-	var errz_: number=0;
+	var errz_: number = 0;
 	/**
 	 * @param {?} index_54
 	 * @param {string} char_
 	 * @return {?}
 	 * @this {!String}
 	 */
-	function ReplaceAt(me: string,index_54: number,char_: string) {
+	function ReplaceAt(me: string, index_54: number, char_: string) {
 		/** @type {!Array<string>} */
-		var a_6=me.split("");
+		var a_6 = me.split("");
 		/** @type {string} */
-		a_6[index_54]=char_;
+		a_6[index_54] = char_;
 		return a_6.join("");
 	}
 	/**
@@ -753,183 +753,183 @@ function avactor() {
 	// 	return a_7;
 	// };
 	/** @type {!Array} */
-	var shrinec_=[[]];
+	var shrinec_ = [[]];
 
 
-	var _mru=localStorage.getItem("mru");
-	if(_mru!=null)
-		mru=JSON.parse(_mru);
+	var _mru = localStorage.getItem("mru");
+	if (_mru != null)
+		mru = JSON.parse(_mru);
 
 
 	setTimeout(() => {
 
 		UpdateResearchAndFaith();
 		/** @type {string} */
-		var returnAllbut_="<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
+		var returnAllbut_ = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
 		/** @type {string} */
-		var raidbossbut_="<button id='raidbossGo' style='left: 65%;margin-left: 10px;margin-top: 15px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Locate Bosses</button>";
+		var raidbossbut_ = "<button id='raidbossGo' style='left: 65%;margin-left: 10px;margin-top: 15px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Locate Bosses</button>";
 		/** @type {string} */
-		var attackbut_="<button id='attackGo' style='margin-left: 25px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Attack Sender</button>";
+		var attackbut_ = "<button id='attackGo' style='margin-left: 25px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Attack Sender</button>";
 		/** @type {string} */
-		var defbut_="<button id='defGo' style='left: 65%;margin-left: 10px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Defense Sender</button>";
+		var defbut_ = "<button id='defGo' style='left: 65%;margin-left: 10px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Defense Sender</button>";
 		/** @type {string} */
-		var quickdefbut_="<button id='quickdefCityGo' style='width:96%; margin-top:2%; margin-left:2%;' class='regButton greenbuttonGo greenb'>@ Quick Reinforcements @</button>";
+		var quickdefbut_ = "<button id='quickdefCityGo' style='width:96%; margin-top:2%; margin-left:2%;' class='regButton greenbuttonGo greenb'>@ Quick Reinforcements @</button>";
 		/** @type {string} */
-		var neardefbut_="<button id='ndefGo' style='left: 4%;margin-left: 3px;margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Nearest Defense</button>";
+		var neardefbut_ = "<button id='ndefGo' style='left: 4%;margin-left: 3px;margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Nearest Defense</button>";
 		/** @type {string} */
-		var nearoffbut_="<button id='noffGo' style='right: 35.6%; margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Offensive list</button>";
+		var nearoffbut_ = "<button id='noffGo' style='right: 35.6%; margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Offensive list</button>";
 		/** @type {string} */
-		var addtoatt_="<button id='addtoAtt' style='margin-left: 7%;margin-top: -5%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Attack Sender</button>";
+		var addtoatt_ = "<button id='addtoAtt' style='margin-left: 7%;margin-top: -5%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Attack Sender</button>";
 		/** @type {string} */
-		var addtodef_="<button id='addtoDef' style='margin-left: 7%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Defense Sender</button>";
+		var addtodef_ = "<button id='addtoDef' style='margin-left: 7%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Defense Sender</button>";
 		/** @type {string} */
-		var bosstab_="<li id='bosshuntab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warBossmanager'";
+		var bosstab_ = "<li id='bosshuntab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warBossmanager'";
 		/** @type {string} */
-		bosstab_=`${bosstab_}aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>`;
+		bosstab_ = `${bosstab_}aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>`;
 		/** @type {string} */
-		bosstab_=`${bosstab_}<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>`;
+		bosstab_ = `${bosstab_}<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>`;
 		/** @type {string} */
-		var bosstabbody_="<div id='warBossmanager' aria-labeledby='ui-id-20' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var bosstabbody_ = "<div id='warBossmanager' aria-labeledby='ui-id-20' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		bosstabbody_=`${bosstabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>`;
+		bosstabbody_ = `${bosstabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>`;
 		/** @type {string} */
-		bosstabbody_=`${bosstabbody_}<div id='bossbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		bosstabbody_ = `${bosstabbody_}<div id='bossbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
 		/** @type {string} */
-		bosstabbody_=`${bosstabbody_}<div id='idletroops'></div></div>`;
+		bosstabbody_ = `${bosstabbody_}<div id='idletroops'></div></div>`;
 		/** @type {string} */
-		var attacktab_="<li id='attacktab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warAttackmanager'";
+		var attacktab_ = "<li id='attacktab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warAttackmanager'";
 		/** @type {string} */
-		attacktab_=`${attacktab_}aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>`;
+		attacktab_ = `${attacktab_}aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>`;
 		/** @type {string} */
-		attacktab_=`${attacktab_}<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>`;
+		attacktab_ = `${attacktab_}<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>`;
 		/** @type {string} */
-		var attacktabbody_="<div id='warAttackmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var attacktabbody_ = "<div id='warAttackmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>`;
+		attacktabbody_ = `${attacktabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<div id='attackbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+		attacktabbody_ = `${attacktabbody_}<div id='attackbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>`;
+		attacktabbody_ = `${attacktabbody_}<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>`;
 		/** @type {number} */
-		var i_35=1;
-		for(;i_35<16;i_35++) {
+		var i_35 = 1;
+		for (; i_35 < 16; i_35++) {
 			/** @type {string} */
-			attacktabbody_=`${attacktabbody_}<tr><td>Target ${i_35} </td><td><input id='t${i_35}x' type='number' style='width: 85%'></td><td><input id='t${i_35}y' type='number' style='width: 85%'></td>`;
+			attacktabbody_ = `${attacktabbody_}<tr><td>Target ${i_35} </td><td><input id='t${i_35}x' type='number' style='width: 85%'></td><td><input id='t${i_35}y' type='number' style='width: 85%'></td>`;
 			/** @type {string} */
-			attacktabbody_=`${attacktabbody_}<td><select id='type${i_35}' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>`;
+			attacktabbody_ = `${attacktabbody_}<td><select id='type${i_35}' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>`;
 		}
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}</tbody></table></div>`;
+		attacktabbody_ = `${attacktabbody_}</tbody></table></div>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<div id='picktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
+		attacktabbody_ = `${attacktabbody_}<div id='picktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>`;
+		attacktabbody_ = `${attacktabbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		attacktabbody_ = `${attacktabbody_}<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+		attacktabbody_ = `${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		attacktabbody_ = `${attacktabbody_}<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+		attacktabbody_ = `${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>`;
+		attacktabbody_ = `${attacktabbody_}<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>`;
+		attacktabbody_ = `${attacktabbody_}<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th colspan='5'>Date</th></tr>`;
+		attacktabbody_ = `${attacktabbody_}<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th colspan='5'>Date</th></tr>`;
 		/** @type {string} */
 		//    attacktabbody_ = attacktabbody_ + "<tr><td>Set Time: </td><td><input id='attackHr' type='number style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='attackMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<tr><td colspan='5'><input style='width:96%;' id='attackDat' type='datetime-local' step='1'></td></tr></tbody></table>`;
+		attacktabbody_ = `${attacktabbody_}<tr><td colspan='5'><input style='width:96%;' id='attackDat' type='datetime-local' step='1'></td></tr></tbody></table>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>`;
+		attacktabbody_ = `${attacktabbody_}<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>`;
+		attacktabbody_ = `${attacktabbody_}<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>`;
 		/** @type {string} */
-		attacktabbody_=`${attacktabbody_}<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>`;
+		attacktabbody_ = `${attacktabbody_}<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>`;
 		/** @type {string} */
-		var deftab_="<li id='deftab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warDefmanager'";
+		var deftab_ = "<li id='deftab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warDefmanager'";
 		/** @type {string} */
-		deftab_=`${deftab_}aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>`;
+		deftab_ = `${deftab_}aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>`;
 		/** @type {string} */
-		deftab_=`${deftab_}<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>`;
+		deftab_ = `${deftab_}<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>`;
 		/** @type {string} */
-		var deftabbbody_="<div id='warDefmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var deftabbbody_ = "<div id='warDefmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>`;
+		deftabbbody_ = `${deftabbbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>`;
+		deftabbbody_ = `${deftabbbody_}<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<div id='defbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+		deftabbbody_ = `${deftabbbody_}<div id='defbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>`;
+		deftabbbody_ = `${deftabbbody_}<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>`;
 		/** @type {number} */
-		i_35=1;
-		for(;i_35<=15;i_35++) {
+		i_35 = 1;
+		for (; i_35 <= 15; i_35++) {
 			/** @type {string} */
-			deftabbbody_=`${deftabbbody_}<tr><td>Target ${i_35} </td><td><input id='d${i_35}x' type='number' style='width: 85%'></td><td><input id='d${i_35}y' type='number' style='width: 85%'></td></tr>`;
+			deftabbbody_ = `${deftabbbody_}<tr><td>Target ${i_35} </td><td><input id='d${i_35}x' type='number' style='width: 85%'></td><td><input id='d${i_35}y' type='number' style='width: 85%'></td></tr>`;
 		}
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}</tbody></table></div>`;
+		deftabbbody_ = `${deftabbbody_}</tbody></table></div>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<div id='dpicktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
+		deftabbbody_ = `${deftabbbody_}<div id='dpicktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>`;
+		deftabbbody_ = `${deftabbbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		deftabbbody_ = `${deftabbbody_}<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>`;
+		deftabbbody_ = `${deftabbbody_}<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>`;
+		deftabbbody_ = `${deftabbbody_}<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>`;
+		deftabbbody_ = `${deftabbbody_}<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>`;
+		deftabbbody_ = `${deftabbbody_}<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='date' type='text' value='00/00/0000'></td></tr></tbody></table>`;
+		deftabbbody_ = `${deftabbbody_}<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='date' type='text' value='00/00/0000'></td></tr></tbody></table>`;
 		/** @type {string} */
-		deftabbbody_=`${deftabbbody_}<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>`;
+		deftabbbody_ = `${deftabbbody_}<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>`;
 		/** @type {string} */
-		var ndeftab_="<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
+		var ndeftab_ = "<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
 		/** @type {string} */
-		ndeftab_=`${ndeftab_}<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>`;
+		ndeftab_ = `${ndeftab_}<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>`;
 		/** @type {string} */
-		var ndeftabbody_="<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var ndeftabbody_ = "<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		ndeftabbody_=`${ndeftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>`;
+		ndeftabbody_ = `${ndeftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>`;
 		/** @type {string} */
-		ndeftabbody_=ndeftabbody_+'<table><td>Choose city:</td><td><input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefx\' type=\'number\'> : <input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefy\' type=\'number\'></td>';
+		ndeftabbody_ = ndeftabbody_ + '<table><td>Choose city:</td><td><input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefx\' type=\'number\'> : <input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefy\' type=\'number\'></td>';
 		/** @type {string} */
-		ndeftabbody_=`${ndeftabbody_}<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>`;
+		ndeftabbody_ = `${ndeftabbody_}<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>`;
 		/** @type {string} */
-		ndeftabbody_=`${ndeftabbody_}<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>`;
+		ndeftabbody_ = `${ndeftabbody_}<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>`;
 		/** @type {string} */
-		ndeftabbody_=`${ndeftabbody_}<div id='Ndefbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		ndeftabbody_ = `${ndeftabbody_}<div id='Ndefbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
 		/** @type {string} */
-		var nofftab_="<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
+		var nofftab_ = "<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
 		/** @type {string} */
-		nofftab_=`${nofftab_}<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>`;
+		nofftab_ = `${nofftab_}<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>`;
 		/** @type {string} */
-		var nofftabbody_="<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var nofftabbody_ = "<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		nofftabbody_=`${nofftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>`;
+		nofftabbody_ = `${nofftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>`;
 		/** @type {string} */
-		nofftabbody_=`${nofftabbody_}<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>`;
+		nofftabbody_ = `${nofftabbody_}<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>`;
 		/** @type {string} */
-		nofftabbody_=`${nofftabbody_}<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>`;
+		nofftabbody_ = `${nofftabbody_}<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>`;
 		/** @type {string} */
-		nofftabbody_=`${nofftabbody_}<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>`;
+		nofftabbody_ = `${nofftabbody_}<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>`;
 		/** @type {string} */
-		nofftabbody_=`${nofftabbody_}<div id='Noffbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		nofftabbody_ = `${nofftabbody_}<div id='Noffbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
 		/** @type {string} */
-		var expwin_="<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
+		var expwin_ = "<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
 		/** @type {string} */
-		expwin_=`${expwin_}<button id="cfunkyX" onclick="$('#ExpImp').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div id='expbody' class="popUpWindow">`;
+		expwin_ = `${expwin_}<button id="cfunkyX" onclick="$('#ExpImp').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div id='expbody' class="popUpWindow">`;
 		/** @type {string} */
-		expwin_=`${expwin_}<textarea style='font-size:11px;width:300px;height:200px;' id='expstring'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>`;
-		var tabs_=$("#warcouncTabs").tabs();
-		var ul_=tabs_.find("ul");
+		expwin_ = `${expwin_}<textarea style='font-size:11px;width:300px;height:200px;' id='expstring'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>`;
+		var tabs_ = $("#warcouncTabs").tabs();
+		var ul_ = tabs_.find("ul");
 		$(bosstab_).appendTo(ul_);
 		$(attacktab_).appendTo(ul_);
 		$(deftab_).appendTo(ul_);
@@ -951,11 +951,11 @@ function avactor() {
 		$("#warCounc").append(nearoffbut_);
 		$("#coordstochatGo1").after(addtoatt_);
 		$("#addtoAtt").after(addtodef_);
-		$("#loccavwarconGo").css("right","65%");
-		$("#idluniwarconGo").css("left","34%");
+		$("#loccavwarconGo").css("right", "65%");
+		$("#idluniwarconGo").css("left", "34%");
 		$("#idluniwarconGo").after(raidbossbut_);
 		$("#defdeparture").change(() => {
-			if($("#defdeparture").val()==0) {
+			if ($("#defdeparture").val() == 0) {
 				$("#deftime").hide();
 				$("#dret").hide();
 			} else {
@@ -963,14 +963,14 @@ function avactor() {
 				$("#dret").show();
 			}
 		});
-		$("#troopperc").val(localStorage.getItem("troopperc")||100);
-		$("#retcheck").prop("checked",(LocalStoreAsInt("retcheck")==1));
+		$("#troopperc").val(localStorage.getItem("troopperc") || 100);
+		$("#retcheck").prop("checked", (LocalStoreAsInt("retcheck") == 1));
 
-		$("#retHr").val(localStorage.getItem("retHr")||0);
+		$("#retHr").val(localStorage.getItem("retHr") || 0);
 		// $("#attackDat").datepicker();
 		$("#defDat").datepicker();
 		$("#bosshuntab").click(() => {
-			if(beentoworld_) {
+			if (beentoworld_) {
 				openbosswin_();
 			} else {
 				alert("Press World Button");
@@ -983,25 +983,25 @@ function avactor() {
 				// async false,
 				success: function success_10(data_49) {
 					/** @type {*} */
-					var thdata_=JSON.parse(data_49);
+					var thdata_ = JSON.parse(data_49);
 					$("#returnAll").remove();
 					openreturnwin_(thdata_);
 				}
 			});
 		});
 		$("#raidbossGo").click(() => {
-			if(beentoworld_) {
+			if (beentoworld_) {
 				$("#warcouncbox").show();
-				tabs_.tabs("option","active",2);
+				tabs_.tabs("option", "active", 2);
 				$("#bosshuntab").click();
 			} else {
 				alert("Press World Button");
 			}
 		});
 		$("#Attack").click(() => {
-			localStorage.setItem("troopperc",$("#troopperc").val().toString());
-			localStorage.setItem("retHr",$("#retHr").toString());
-			LocalStoreSet("retcheck",$("#retcheck").prop("checked")? 1:0);
+			localStorage.setItem("troopperc", $("#troopperc").val().toString());
+			localStorage.setItem("retHr", $("#retHr").toString());
+			LocalStoreSet("retcheck", $("#retcheck").prop("checked") ? 1 : 0);
 			SendAttack_();
 		});
 		//$("#Defend").click(() => {
@@ -1046,18 +1046,18 @@ function avactor() {
 		//});
 		$("#attackGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option","active",3);
+			tabs_.tabs("option", "active", 3);
 			jQuery("#attacktab")[0].click();
 		});
 		$("#defGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option","active",4);
+			tabs_.tabs("option", "active", 4);
 			$("#deftab").click();
 		});
 		$("#ndefGo").click(() => {
 			NearDefSubscribe();
 			$("#warcouncbox").show();
-			tabs_.tabs("option","active",5);
+			tabs_.tabs("option", "active", 5);
 			//$("#neardeftab").trigger({
 			//	type: "click",
 			//	originalEvent: "1"
@@ -1071,7 +1071,7 @@ function avactor() {
 		});
 		$("#noffGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option","active",6);
+			tabs_.tabs("option", "active", 6);
 			//$("#nearofftab").trigger({
 			//	type: "click",
 			//	originalEvent: "1"
@@ -1079,17 +1079,17 @@ function avactor() {
 		});
 		$("#addtoAtt").click(() => {
 			/** @type {number} */
-			var i_37=1;
-			for(;i_37<16;i_37++) {
-				if(!$(`#t${i_37}x`).val()) {
+			var i_37 = 1;
+			for (; i_37 < 16; i_37++) {
+				if (!$(`#t${i_37}x`).val()) {
 					/** @type {number} */
-					var tid_4=AsNumber($("#showReportsGo").attr("data"));
+					var tid_4 = AsNumber($("#showReportsGo").attr("data"));
 					var tempx_7;
 					var tempy_7;
 					/** @type {number} */
-					tempx_7=AsNumber(tid_4%65536);
+					tempx_7 = AsNumber(tid_4 % 65536);
 					/** @type {number} */
-					tempy_7=AsNumber((tid_4-tempx_7)/65536);
+					tempy_7 = AsNumber((tid_4 - tempx_7) / 65536);
 					$(`#t${i_37}x`).val(tempx_7);
 					$(`#t${i_37}y`).val(tempy_7);
 					break;
@@ -1098,17 +1098,17 @@ function avactor() {
 		});
 		$("#addtoDef").click(() => {
 			/** @type {number} */
-			var i_38=1;
-			for(;i_38<16;i_38++) {
-				if(!$(`#d${i_38}x`).val()) {
+			var i_38 = 1;
+			for (; i_38 < 16; i_38++) {
+				if (!$(`#d${i_38}x`).val()) {
 					/** @type {number} */
-					var tid_5=AsNumber($("#showReportsGo").attr("data"));
+					var tid_5 = AsNumber($("#showReportsGo").attr("data"));
 					var tempx_8;
 					var tempy_8;
 					/** @type {number} */
-					tempx_8=AsNumber(tid_5%65536);
+					tempx_8 = AsNumber(tid_5 % 65536);
 					/** @type {number} */
-					tempy_8=AsNumber((tid_5-tempx_8)/65536);
+					tempy_8 = AsNumber((tid_5 - tempx_8) / 65536);
 					$(`#d${i_38}x`).val(tempx_8);
 					$(`#d${i_38}y`).val(tempy_8);
 					break;
@@ -1141,12 +1141,12 @@ function avactor() {
 		});
 		$("#ndefup").click(() => {
 			/** @type {number} */
-			var tempxs_=AsNumber($("#ndefx").val());
+			var tempxs_ = AsNumber($("#ndefx").val());
 			/** @type {number} */
-			var tempys_=AsNumber($("#ndefy").val());
+			var tempys_ = AsNumber($("#ndefy").val());
 			/** @type {number} */
-			var tids_=tempxs_+tempys_*65536;
-			$("#asdfgh").data('data',tids_);
+			var tids_ = tempxs_ + tempys_ * 65536;
+			$("#asdfgh").data('data', tids_);
 			$("#asdfgh").text(`${tempxs_}:${tempys_}`);
 			///@todo
 
@@ -1176,28 +1176,28 @@ function avactor() {
 			//});
 		});
 		$("#Aexport").click(() => {
-			var Aexp_1={
+			var Aexp_1 = {
 				x: [],
 				y: [],
 				type: [],
 				time: []
 			};
 			/** @type {number} */
-			var i_40=1;
-			for(;i_40<16;i_40++) {
-				if($(`#t${i_40}x`).val()) {
+			var i_40 = 1;
+			for (; i_40 < 16; i_40++) {
+				if ($(`#t${i_40}x`).val()) {
 					Aexp_1.x.push($(`#t${i_40}x`).val());
 					Aexp_1.y.push($(`#t${i_40}y`).val());
 					Aexp_1.type.push($(`#type${i_40}`).val());
 				}
 			}
 			/** @type {Date} */
-			var date=GetDate("#attackDat");
-			Aexp_1.time[0]=date.getHours();
-			Aexp_1.time[1]=date.getMinutes();
-			Aexp_1.time[2]=date.getSeconds();
-			Aexp_1.time[3]=date.toLocaleDateString();
-			prompt("Attack Orders Expot",JSON.stringify(Aexp_1));
+			var date = GetDate("#attackDat");
+			Aexp_1.time[0] = date.getHours();
+			Aexp_1.time[1] = date.getMinutes();
+			Aexp_1.time[2] = date.getSeconds();
+			Aexp_1.time[3] = date.toLocaleDateString();
+			prompt("Attack Orders Expot", JSON.stringify(Aexp_1));
 
 		});
 		$("#Aimport").click(() => {
@@ -1207,7 +1207,7 @@ function avactor() {
 				containment: "window",
 				scroll: false
 			});
-			document.addEventListener("paste",evt_27 => {
+			document.addEventListener("paste", evt_27 => {
 				$("#expstring").val(evt_27.clipboardData.getData("text/plain"));
 			});
 			$("#applyExp").click(() => {
@@ -1216,28 +1216,28 @@ function avactor() {
 			});
 		});
 		/** @type {string} */
-		var fourbutton_="<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>TBA</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
+		var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>TBA</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
 		/** @type {string} */
-		var bdcountbox_="<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
+		var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
 		/** @type {string} */
-		bdcountbox_=`${bdcountbox_}<div id='bdcountbut' class='tradeqarr2'><div></div></div><span class='qbspan'>Current Buildings</span>`;
+		bdcountbox_ = `${bdcountbox_}<div id='bdcountbut' class='tradeqarr2'><div></div></div><span class='qbspan'>Current Buildings</span>`;
 		/** @type {string} */
-		bdcountbox_=`${bdcountbox_}<div id='numbdleft' class='barRightFloat tooltipstered'>0</div>`;
+		bdcountbox_ = `${bdcountbox_}<div id='numbdleft' class='barRightFloat tooltipstered'>0</div>`;
 		/** @type {string} */
-		bdcountbox_=`${bdcountbox_}</div><div id='bdcountwin' class='queueWindow' style='display: block;'></div></div>`;
+		bdcountbox_ = `${bdcountbox_}</div><div id='bdcountwin' class='queueWindow' style='display: block;'></div></div>`;
 		$("#buildQueue").before(fourbutton_);
 		/** @type {string} */
-		var fillbut_='<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
+		var fillbut_ = '<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
 		$("#sortbut").after(fillbut_);
 		$("#fillque").click(() => {
-			OverviewPost('overview/fillq.php',{ a: cotg.city.id() });
+			OverviewPost('overview/fillq.php', { a: cotg.city.id() });
 			event.stopPropagation();
 		});
 		/** @type {string} */
-		var convbut_='<button id="convque" class="greenb tooltipstered" style="height:18px; width:60px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Convert</button>';
+		var convbut_ = '<button id="convque" class="greenb tooltipstered" style="height:18px; width:60px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Convert</button>';
 		$("#sortbut").after(convbut_);
 		$("#convque").click(() => {
-			OverviewPost('overview/mconv.php',{ a: cotg.city.id() });
+			OverviewPost('overview/mconv.php', { a: cotg.city.id() });
 			event.stopPropagation();
 		});
 		//$("#fb1").click(function() {
@@ -1263,49 +1263,49 @@ function avactor() {
 			$("#tradePopUpBox").show();
 			setTimeout(() => {
 				jQuery("#ui-id-27")[0].click();
-			},100);
+			}, 100);
 		});
 		$("#fb3").click(() => {
 			$("#warcouncbox").show();
 			jQuery("#ui-id-19")[0].click();
 		});
 		/** @type {number} */
-		var autodemoon_=0;
-		$("#fb4").click(function() {
-			if(autodemoon_==0) {
+		var autodemoon_ = 0;
+		$("#fb4").click(function () {
+			if (autodemoon_ == 0) {
 				/** @type {number} */
-				autodemoon_=1;
+				autodemoon_ = 1;
 				$(this).removeClass("greenb");
 				$(this).addClass("redb");
 			} else {
 				/** @type {number} */
-				autodemoon_=0;
+				autodemoon_ = 0;
 				$(this).removeClass("redb");
 				$(this).addClass("greenb");
 			}
 		});
 		$("#centarrowNextDiv").click(() => {
 			/** @type {number} */
-			autodemoon_=0;
+			autodemoon_ = 0;
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#centarrowPrevDiv").click(() => {
 			/** @type {number} */
-			autodemoon_=0;
+			autodemoon_ = 0;
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#ddctd").click(() => {
 			/** @type {number} */
-			autodemoon_=0;
+			autodemoon_ = 0;
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#qbuildtbButton").click(() => {
 			/** @type {number} */
-			autodemoon_=0;
+			autodemoon_ = 0;
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#city_map").click(() => {
-			if(autodemoon_==1) {
+			if (autodemoon_ == 1) {
 				$("#buildingDemolishButton").trigger(
 					"click",
 					"1"
@@ -1313,10 +1313,10 @@ function avactor() {
 			}
 		});
 		/** @type {string} */
-		var sumbut_="<button class='tabButton' id='Sum'>Summary</button>";
+		var sumbut_ = "<button class='tabButton' id='Sum'>Summary</button>";
 		$("#items").after(sumbut_);
 		$("#Sum").click(() => {
-			if(sum_) {
+			if (sum_) {
 				opensumwin_();
 			} else {
 				$("#sumWin").show();
@@ -1327,165 +1327,165 @@ function avactor() {
 		});
 		$("#recruitmentQueue").before(bdcountbox_);
 		$("#bdcountbut").click(() => {
-			if(bdcountshow_) {
+			if (bdcountshow_) {
 				$("#bdcountwin").hide();
 				$("#bdcountbut").removeClass("tradeqarr2").addClass("tradeqarr1");
 				/** @type {boolean} */
-				bdcountshow_=false;
+				bdcountshow_ = false;
 			} else {
 				$("#bdcountwin").show();
 				$("#bdcountbut").removeClass("tradeqarr1").addClass("tradeqarr2");
 				/** @type {boolean} */
-				bdcountshow_=true;
+				bdcountshow_ = true;
 			}
 		});
 		/** @type {string} */
-		var wood50_="<td><button class='brownb' id='wood50'>Add 50%</button></td>";
+		var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";
 		$("#woodmaxbutton").parent().after(wood50_);
 		$("#wood50").click(() => {
 			/** @type {number} */
-			var res_3=AsNumber($("#maxwoodsend").text().replace(/,/g,""));
-			if($("#landseasendres").val()=="1") {
+			var res_3 = AsNumber($("#maxwoodsend").text().replace(/,/g, ""));
+			if ($("#landseasendres").val() == "1") {
 				/** @type {number} */
-				var carts_=Math.floor(AsNumber($("#availcartscity").text())/2)*1000;
+				var carts_ = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
 				/** @type {number} */
-				carts_=Math.floor(AsNumber($("#availshipscity").text())/2)*10000;
+				carts_ = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
-			if(res_3>carts_) {
+			if (res_3 > carts_) {
 				/** @type {number} */
-				res_3=carts_;
+				res_3 = carts_;
 			}
 			$("#woodsendamt").val(res_3);
 		});
 		/** @type {string} */
-		var stone50_="<td><button class='brownb' id='stone50'>Add 50%</button></td>";
+		var stone50_ = "<td><button class='brownb' id='stone50'>Add 50%</button></td>";
 		$("#stonemaxbutton").parent().after(stone50_);
 		$("#stone50").click(() => {
-			if($("#landseasendres").val()=="1") {
+			if ($("#landseasendres").val() == "1") {
 				/** @type {number} */
-				var carts_1=Math.floor(AsNumber($("#availcartscity").text())/2)*1000;
+				var carts_1 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
 				/** @type {number} */
-				carts_1=Math.floor(AsNumber($("#availshipscity").text())/2)*10000;
+				carts_1 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
 			/** @type {number} */
-			var res_4=AsNumber($("#maxstonesend").text().replace(/,/g,""));
-			if(res_4>carts_1) {
+			var res_4 = AsNumber($("#maxstonesend").text().replace(/,/g, ""));
+			if (res_4 > carts_1) {
 				/** @type {number} */
-				res_4=carts_1;
+				res_4 = carts_1;
 			}
 			$("#stonesendamt").val(res_4);
 		});
 		/** @type {string} */
-		var iron50_="<td><button class='brownb' id='iron50'>Add 50%</button></td>";
+		var iron50_ = "<td><button class='brownb' id='iron50'>Add 50%</button></td>";
 		$("#ironmaxbutton").parent().after(iron50_);
 		$("#iron50").click(() => {
 			/** @type {number} */
-			var res_5=AsNumber($("#maxironsend").text().replace(/,/g,""));
-			if($("#landseasendres").val()=="1") {
+			var res_5 = AsNumber($("#maxironsend").text().replace(/,/g, ""));
+			if ($("#landseasendres").val() == "1") {
 				/** @type {number} */
-				var carts_2=Math.floor(AsNumber($("#availcartscity").text())/2)*1000;
+				var carts_2 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
 				/** @type {number} */
-				carts_2=Math.floor(AsNumber($("#availshipscity").text())/2)*10000;
+				carts_2 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
-			if(res_5>carts_2) {
+			if (res_5 > carts_2) {
 				/** @type {number} */
-				res_5=carts_2;
+				res_5 = carts_2;
 			}
 			$("#ironsendamt").val(res_5);
 		});
 		/** @type {string} */
-		var food50_="<td><button class='brownb' id='food50'>Add 50%</button></td>";
+		var food50_ = "<td><button class='brownb' id='food50'>Add 50%</button></td>";
 		$("#foodmaxbutton").parent().after(food50_);
 		$("#food50").click(() => {
 			/** @type {number} */
-			var res_6=AsNumber($("#maxfoodsend").text().replace(/,/g,""));
-			if($("#landseasendres").val()=="1") {
+			var res_6 = AsNumber($("#maxfoodsend").text().replace(/,/g, ""));
+			if ($("#landseasendres").val() == "1") {
 				/** @type {number} */
-				var carts_3=Math.floor(AsNumber($("#availcartscity").text())/2)*1000;
+				var carts_3 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
 				/** @type {number} */
-				carts_3=Math.floor(AsNumber($("#availshipscity").text())/2)*10000;
+				carts_3 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
-			if(res_6>carts_3) {
+			if (res_6 > carts_3) {
 				/** @type {number} */
-				res_6=carts_3;
+				res_6 = carts_3;
 			}
 			$("#foodsendamt").val(res_6);
 		});
 		/** @type {string} */
-		var shrinebut_="<button class='regButton greenb' id='shrineP' style='width: 98%;margins: 1%;'>Shrine Planner</button>";
+		var shrinebut_ = "<button class='regButton greenb' id='shrineP' style='width: 98%;margins: 1%;'>Shrine Planner</button>";
 		$("#inactiveshrineInfo").before(shrinebut_);
 		$("#shrineP").click(() => {
-			if(beentoworld_) {
+			if (beentoworld_) {
 				/** @type {!Array} */
-				shrinec_=[[]];
-				splayers_={
+				shrinec_ = [[]];
+				splayers_ = {
 					name: [],
 					ally: [],
 					cities: []
 				};
 				/** @type {!Array} */
-				var players_=[];
-				var coords_=$("#coordstochatGo3").attr("data");
+				var players_ = [];
+				var coords_ = $("#coordstochatGo3").attr("data");
 				/** @type {number} */
-				var shrinex_=parseInt(coords_);
+				var shrinex_ = parseInt(coords_);
 				/** @type {number} */
-				var shriney_=AsNumber(coords_.match(/\d+$/)[0]);
+				var shriney_ = AsNumber(coords_.match(/\d+$/)[0]);
 				/** @type {number} */
-				var shrinecont_=AsNumber(Math.floor(shrinex_/100)+10*Math.floor(shriney_/100));
+				var shrinecont_ = AsNumber(Math.floor(shrinex_ / 100) + 10 * Math.floor(shriney_ / 100));
 				var i_41;
-				for(i_41 in wdata_.cities) {
+				for (i_41 in wdata_.cities) {
 					/** @type {number} */
-					var tempx_10=AsNumber(wdata_.cities[i_41].substr(8,3))-100;
+					var tempx_10 = AsNumber(wdata_.cities[i_41].substr(8, 3)) - 100;
 					/** @type {number} */
-					var tempy_10=AsNumber(wdata_.cities[i_41].substr(5,3))-100;
+					var tempy_10 = AsNumber(wdata_.cities[i_41].substr(5, 3)) - 100;
 					/** @type {number} */
-					var cont_2=AsNumber(Math.floor(tempx_10/100)+10*Math.floor(tempy_10/100));
-					if(cont_2==shrinecont_) {
+					var cont_2 = AsNumber(Math.floor(tempx_10 / 100) + 10 * Math.floor(tempy_10 / 100));
+					if (cont_2 == shrinecont_) {
 						/** @type {number} */
-						var dist_1=Math.sqrt((tempx_10-shrinex_)*(tempx_10-shrinex_)+(tempy_10-shriney_)*(tempy_10-shriney_));
-						if(dist_1<10) {
+						var dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
+						if (dist_1 < 10) {
 							/** @type {number} */
-							var l_4=AsNumber(wdata_.cities[i_41].substr(11,1));
+							var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
 							/** @type {number} */
-							var pid_=AsNumber(wdata_.cities[i_41].substr(12,l_4));
-							var pname_12=pldata_[pid_];
+							var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
+							var pname_12 = pldata_[pid_];
 							/** @type {!Array} */
-							var csn_=[3,4,7,8];
-							if(csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4)))>-1) {
-								shrinec_.push(["castle",pname_12,0,tempx_10,tempy_10,dist_1,"0",0,0,0]);
+							var csn_ = [3, 4, 7, 8];
+							if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
+								shrinec_.push(["castle", pname_12, 0, tempx_10, tempy_10, dist_1, "0", 0, 0, 0]);
 							} else {
-								shrinec_.push(["city",pname_12,0,tempx_10,tempy_10,dist_1,"0",0,0,0]);
+								shrinec_.push(["city", pname_12, 0, tempx_10, tempy_10, dist_1, "0", 0, 0, 0]);
 							}
 						}
 					}
 				}
-				shrinec_.sort((a,b) => {
-					return a[5]-b[5];
+				shrinec_.sort((a, b) => {
+					return a[5] - b[5];
 				});
 				/** @type {string} */
-				var planwin_="<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
+				var planwin_ = "<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
 				/** @type {string} */
-				planwin_=`${planwin_}<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id="sumX" onclick="$('#shrinePopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
+				planwin_ = `${planwin_}<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id="sumX" onclick="$('#shrinePopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
 				/** @type {string} */
-				planwin_=`${planwin_}<div id='shrinediv' class='beigemenutable scroll-pane ava' style='background:none;border: none;padding: 0px;height:90%;'></div></div>`;
-				for(i_41 in shrinec_) {
-					if(i_41<101) {
-						pname_12=shrinec_[i_41][1];
-						if(players_.indexOf(pname_12)==-1) {
+				planwin_ = `${planwin_}<div id='shrinediv' class='beigemenutable scroll-pane ava' style='background:none;border: none;padding: 0px;height:90%;'></div></div>`;
+				for (i_41 in shrinec_) {
+					if (i_41 < 101) {
+						pname_12 = shrinec_[i_41][1];
+						if (players_.indexOf(pname_12) == -1) {
 							players_.push(pname_12);
 							jQuery.ajax(
 								{
-									url: "includes/gPi.php",type: "POST",
+									url: "includes/gPi.php", type: "POST",
 									async: true,
 									data: {
 										a: pname_12
 									},
 									success: function success_13(_data) {
-										var pinfo_=JSON.parse(_data);
+										var pinfo_ = JSON.parse(_data);
 										splayers_.name.push(pinfo_.player);
 										splayers_.ally.push(pinfo_.a);
 										splayers_.cities.push(pinfo_.h);
@@ -1515,38 +1515,38 @@ function avactor() {
 						scroll: false
 					});
 					$("#shrinePopup").resizable();
-					if(localStorage.getItem("hidecities")) {
-						1==1;
+					if (localStorage.getItem("hidecities")) {
+						1 == 1;
 					} else {
-						localStorage.setItem("hidecities","0");
+						localStorage.setItem("hidecities", "0");
 					}
-					if(localStorage.getItem("hidecities")=="1") {
+					if (localStorage.getItem("hidecities") == "1") {
 						$("#hidec").html("Show Cities");
 					}
 					$("#hidec").click(() => {
-						if(localStorage.getItem("hidecities")=="0") {
+						if (localStorage.getItem("hidecities") == "0") {
 							hidecities_();
-							localStorage.setItem("hidecities","1");
+							localStorage.setItem("hidecities", "1");
 							$("#hidec").html("Show Cities");
 						} else {
-							if(localStorage.getItem("hidecities")=="1") {
+							if (localStorage.getItem("hidecities") == "1") {
 								showcities_();
-								localStorage.setItem("hidecities","0");
+								localStorage.setItem("hidecities", "0");
 								$("#hidec").html("Hide Cities");
 							}
 						}
 					});
 					updateshrine_();
 					/** @type {string} */
-					var addcitypop_="<div id='addcityPopup' style='width:500px;height:100px;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Add City</span>";
+					var addcitypop_ = "<div id='addcityPopup' style='width:500px;height:100px;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Add City</span>";
 					/** @type {string} */
-					addcitypop_=`${addcitypop_}<button id="sumX" onclick="$('#addcityPopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
+					addcitypop_ = `${addcitypop_}<button id="sumX" onclick="$('#addcityPopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
 					/** @type {string} */
-					addcitypop_=`${addcitypop_}<div><table><td>X: <input id='addx' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td><td>y: <input id='addy' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td>`;
+					addcitypop_ = `${addcitypop_}<div><table><td>X: <input id='addx' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td><td>y: <input id='addy' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td>`;
 					/** @type {string} */
-					addcitypop_=`${addcitypop_}<td>score: <input id='addscore' type='number' style='width: 45px;height: 22px;font-size: 10px;'></td><td>Type: <select id='addtype' class='greensel' style='font-size: 15px !important;width:55%;height:30px;'>`;
+					addcitypop_ = `${addcitypop_}<td>score: <input id='addscore' type='number' style='width: 45px;height: 22px;font-size: 10px;'></td><td>Type: <select id='addtype' class='greensel' style='font-size: 15px !important;width:55%;height:30px;'>`;
 					/** @type {string} */
-					addcitypop_=`${addcitypop_}<option value='city'>City</option><option value='castle'>Castle</option></select></td><td><button id='addadd' class='greenb'>Add</button></td></table></div></div>`;
+					addcitypop_ = `${addcitypop_}<option value='city'>City</option><option value='castle'>Castle</option></select></td><td><button id='addadd' class='greenb'>Add</button></td></table></div></div>`;
 					$("#addcity").click(() => {
 						$("body").append(addcitypop_);
 						$("#addcityPopup").draggable({
@@ -1555,93 +1555,93 @@ function avactor() {
 							scroll: false
 						});
 						$("#addadd").click(() => {
-							let tempx_10=$("#addx").val() as number;
-							let tempy_10=$("#addy").val() as number;
+							let tempx_10 = $("#addx").val() as number;
+							let tempy_10 = $("#addy").val() as number;
 							/** @type {number} */
-							dist_1=Math.sqrt((tempx_10-shrinex_)*(tempx_10-shrinex_)+(tempy_10-shriney_)*(tempy_10-shriney_));
+							dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
 							/** @type {!Array} */
-							var temp_4=[$("#addtype").val(),"Poseidon","Atlantis",tempx_10,tempy_10,dist_1,"1",$("#addscore").val(),"Hellas","1"];
+							var temp_4 = [$("#addtype").val(), "Poseidon", "Atlantis", tempx_10, tempy_10, dist_1, "1", $("#addscore").val(), "Hellas", "1"];
 							shrinec_.push(temp_4);
-							shrinec_.sort((a_9,b_7) => {
-								return a_9[5]-b_7[5];
+							shrinec_.sort((a_9, b_7) => {
+								return a_9[5] - b_7[5];
 							});
 							updateshrine_();
 							$("#addcityPopup").remove();
 						});
 					});
-				},2000);
+				}, 2000);
 			} else {
 				alert("Press World Button");
 			}
 		});
 
-		var incomingtabledata_=$("#incomingsAttacksTable").children().children().children();
+		var incomingtabledata_ = $("#incomingsAttacksTable").children().children().children();
 		$("#incomingsAttacksTable table thead tr th:nth-child(2)").width(140);
 		/** @type {string} */
-		var Addth_="<th>Lock time</th>";
+		var Addth_ = "<th>Lock time</th>";
 		incomingtabledata_.append(Addth_);
 		/** @type {string} */
-		var Addth1_="<th>Travel time</th>";
+		var Addth1_ = "<th>Travel time</th>";
 		incomingtabledata_.append(Addth1_);
 		$("#allianceIncomings").parent().click(() => {
 			setTimeout(() => {
 				incomings_();
-			},5000);
+			}, 5000);
 		});
 		$("#incomingsPic").click(() => {
 			setTimeout(() => {
 				incomings_();
-			},5000);
+			}, 5000);
 		});
 
-		cotgsubscribe.subscribe("regional",clickInfo => {
-			var dtype_=clickInfo.type;
-			var type_113=clickInfo.info.type;
-			var lvl_=clickInfo.info.lvl as number;
-			var prog_=clickInfo.info.prog;
-			var bossname_=clickInfo.info.name;
+		cotgsubscribe.subscribe("regional", clickInfo => {
+			var dtype_ = clickInfo.type;
+			var type_113 = clickInfo.info.type;
+			var lvl_ = clickInfo.info.lvl as number;
+			var prog_ = clickInfo.info.prog;
+			var bossname_ = clickInfo.info.name;
 			console.log(clickInfo);
 			UpdateResearchAndFaith();
-			let troops=cotg.city.troops();
+			let troops = cotg.city.troops();
 
-			if(dtype_==="dungeon") {
-				if($("#cityplayerInfo div table tbody tr").length>=11) {
+			if (dtype_ === "dungeon") {
+				if ($("#cityplayerInfo div table tbody tr").length >= 11) {
 					bossele_();
 				}
 				/** @type {number} */
-				let home_loot_2=0;
+				let home_loot_2 = 0;
 
-				for(let i in troops) {
-					let d=troops[i];
+				for (let i in troops) {
+					let d = troops[i];
 					/** @type {number} */
-					let home_1=d.home;
+					let home_1 = d.home;
 					/** @type {number} */
-					home_loot_2=home_loot_2+home_1*ttloot_[TroopNameToId(i)];
+					home_loot_2 = home_loot_2 + home_1 * ttloot_[TroopNameToId(i)];
 
 
 				}
-				if(type_113==="Siren's Cove") {
+				if (type_113 === "Siren's Cove") {
 					/** @type {number} */
-					let optimalTS_=Math.ceil(other_loot_[lvl_-1]/10*(1-prog_/100+1)*1.05);
+					let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
 
 					/** @type {number} */
-					var galleyTS_=Math.ceil(optimalTS_/100);
+					var galleyTS_ = Math.ceil(optimalTS_ / 100);
 					/** @type {number} */
-					var stingerTS_=Math.ceil(optimalTS_/150);
+					var stingerTS_ = Math.ceil(optimalTS_ / 150);
 					/** @type {number} */
-					var warshipTS_=Math.ceil(optimalTS_/300);
+					var warshipTS_ = Math.ceil(optimalTS_ / 300);
 					/**
 					 * @return {void}
 					 */
-					document.getElementById("raidDungGo").onclick=() => {
+					document.getElementById("raidDungGo").onclick = () => {
 						setTimeout(() => {
-							if(troops.warship.home>warshipTS_) {
+							if (troops.warship.home > warshipTS_) {
 								$("#raidIP16").val(warshipTS_);
 							} else {
-								if(troops.stinger.home>stingerTS_) {
+								if (troops.stinger.home > stingerTS_) {
 									$("#raidIP15").val(stingerTS_);
 								} else {
-									if(troops.galley.home>galleyTS_) {
+									if (troops.galley.home > galleyTS_) {
 										$("#raidIP14").val(galleyTS_);
 									} else {
 										errorgo_(message_23);
@@ -1650,7 +1650,7 @@ function avactor() {
 
 							}
 
-						},1500);
+						}, 1500);
 					};
 					$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text("0");
 					$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
@@ -1669,43 +1669,43 @@ function avactor() {
 				}
 				else {
 					let loot_: number[];
-					if(type_113==="Mountain Cavern")
-						loot_=mountain_loot_;
+					if (type_113 === "Mountain Cavern")
+						loot_ = mountain_loot_;
 					else
-						loot_=other_loot_;
+						loot_ = other_loot_;
 					/**
 					 * @return {void}
 					 */
-					let total_lootm_=Math.ceil(loot_[AsNumber(lvl_)-1]*(1-AsNumber(prog_)/100+1)*1.05);
-					document.getElementById("raidDungGo").onclick=() => {
+					let total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
+					document.getElementById("raidDungGo").onclick = () => {
 						setTimeout(() => {
 							/** @type {number} */
-							if(home_loot_2>total_lootm_) {
+							if (home_loot_2 > total_lootm_) {
 								/** @type {number} */
-								const option_numbersm_=Math.floor(home_loot_2/total_lootm_);
+								const option_numbersm_ = Math.floor(home_loot_2 / total_lootm_);
 								/** @type {number} */
-								const templ1m_=home_loot_2/total_lootm_*100/option_numbersm_;
+								const templ1m_ = home_loot_2 / total_lootm_ * 100 / option_numbersm_;
 								/** @type {number} */
-								const templ2m_=(templ1m_-100)/templ1m_*100;
+								const templ2m_ = (templ1m_ - 100) / templ1m_ * 100;
 								/** @type {number} */
-								for(let i in troops) {
-									const id=TroopNameToId(i);
-									const th=troops[i].home;
+								for (let i in troops) {
+									const id = TroopNameToId(i);
+									const th = troops[i].home;
 									/** @type {number} */
-									$(`#raidIP${id}`).val(th/option_numbersm_);
+									$(`#raidIP${id}`).val(th / option_numbersm_);
 								}
 							}
-						},1500);
+						}, 1500);
 					};
 					/** @type {number} */
-					const optimalTSM_=total_lootm_;
+					const optimalTSM_ = total_lootm_;
 					var infoptim_ = Math.ceil(optimalTSM_ / 10);
 					/** @type {number} */
-					var cavoptim_=Math.ceil(optimalTSM_/15);
+					var cavoptim_ = Math.ceil(optimalTSM_ / 15);
 					/** @type {number} */
-					var praoptim_=Math.ceil(optimalTSM_/20);
+					var praoptim_ = Math.ceil(optimalTSM_ / 20);
 					/** @type {number} */
-					var sorcoptim_=Math.ceil(optimalTSM_/5);
+					var sorcoptim_ = Math.ceil(optimalTSM_ / 5);
 					/** @type {number} */
 					var RToptim_ = cavoptim_;
 					$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(infoptim_);
@@ -1725,7 +1725,7 @@ function avactor() {
 				}
 
 			}
-			if(dtype_==="boss") {
+			if (dtype_ === "boss") {
 				/// @todo
 				//if($("#cityplayerInfo div table tbody tr").length===11) {
 				//	bossele_();
@@ -2125,44 +2125,44 @@ function avactor() {
 				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
 				//}
 			}
-			if(dtype_==="city") {
+			if (dtype_ === "city") {
 				$("#cityplayerInfo div table tbody tr:gt(6)").remove();
 				// var coords = $("#citycoords")[0].innerText.split(":");
-				let _cid=AsNumber(clickInfo.x)+65536*AsNumber(clickInfo.y);
-				var toAdd={ ...defaultMru }; // clone defaults
+				let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
+				var toAdd = { ...defaultMru }; // clone defaults
 
 
-				var maxCount=32;
+				var maxCount = 32;
 
 				/** @type {AsNumber} */
-				for(var i=0;i<mru.length;++i) {
-					var _i=mru[i];
-					if(_i.cid==_cid) {
-						toAdd=_i;
-						toAdd.last=new Date();
-						mru.splice(AsNumber(i),1);
+				for (var i = 0; i < mru.length; ++i) {
+					var _i = mru[i];
+					if (_i.cid == _cid) {
+						toAdd = _i;
+						toAdd.last = new Date();
+						mru.splice(AsNumber(i), 1);
 						break;
 					}
 				}
-				if(mru.length>maxCount) {
+				if (mru.length > maxCount) {
 					/** @type {number} */
-					for(var i=mru.length;--i>=0;) {
-						if(!mru[i].pin) {
-							mru.splice(i,1);
+					for (var i = mru.length; --i >= 0;) {
+						if (!mru[i].pin) {
+							mru.splice(i, 1);
 							break;
 						}
 					}
 				}
-				toAdd.player=clickInfo.info.player;
-				toAdd.last=new Date();
-				toAdd.alliance=clickInfo.info.alliance;
-				toAdd.name=clickInfo.info.name;
-				toAdd.notes=clickInfo.info.remarks;
+				toAdd.player = clickInfo.info.player;
+				toAdd.last = new Date();
+				toAdd.alliance = clickInfo.info.alliance;
+				toAdd.name = clickInfo.info.name;
+				toAdd.notes = clickInfo.info.remarks;
 				toAdd.cid = _cid;
 				toAdd.score = clickInfo.info.score;
 				toAdd.ptype = clickInfo.info.ptype;
 				mru.push(toAdd);
-				mru.sort((a,b) => { return b.last.valueOf()-a.last.valueOf() });
+				mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
 				console.log(mru);
 				localStorage.setItem("mru", JSON.stringify(mru));
 				const wrapper = { cityclick: toAdd }
@@ -2171,42 +2171,42 @@ function avactor() {
 			}
 		});
 		/** @type {string} */
-		var newbutz_="<div style='float: left; margin-left: 2%;'><button id='newbuttonu' style='font-size:8px; padding: 4px; border-radius: 8px;' class='greenb shRnTr'>Recall(<90%)</button></div>";
+		var newbutz_ = "<div style='float: left; margin-left: 2%;'><button id='newbuttonu' style='font-size:8px; padding: 4px; border-radius: 8px;' class='greenb shRnTr'>Recall(<90%)</button></div>";
 		$("#totalTS").before(newbutz_);
 		$("#newbuttonu").click(() => {
 			setTimeout(() => {
 				recallraidl100_();
-			},500);
+			}, 500);
 		});
 		$("#totalTS").click(() => {
 			setTimeout(() => {
 				carrycheck_();
-			},500);
+			}, 500);
 		});
 		$("#loccavwarconGo").click(() => {
 			setTimeout(() => {
 				getDugRows_();
-			},1000);
+			}, 1000);
 		});
 		$("#raidmantab").click(() => {
 			setTimeout(() => {
 				getDugRows_();
-			},1000);
+			}, 1000);
 		});
 		$("#allianceIncomings").parent().click(() => {
 			setTimeout(() => {
 				incomings_();
-			},4000);
+			}, 4000);
 		});
 		$("#ui-id-37").click(() => {
 			setTimeout(() => {
 				incomings_();
-			},1000);
+			}, 1000);
 		});
 
-		if(localStorage.getItem("raidbox")!=null) {
+		if (localStorage.getItem("raidbox") != null) {
 			/** @type {string} */
-			var raidboxback_="<button class='regButton greenb' id='raidboxb' style='width:120px; margin-left: 2%;'>Return Raiding Box</button>";
+			var raidboxback_ = "<button class='regButton greenb' id='raidboxb' style='width:120px; margin-left: 2%;'>Return Raiding Box</button>";
 			$("#squaredung td").find(".squarePlayerInfo").before(raidboxback_);
 			$("#raidboxb").click(() => {
 				localStorage.removeItem("raidbox");
@@ -2214,29 +2214,29 @@ function avactor() {
 			});
 		}
 		/** @type {string} */
-		var cancelallya_="<input id='cancelAllya' type='checkbox' checked='checked'> Cancel attack if same alliance";
+		var cancelallya_ = "<input id='cancelAllya' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		/** @type {string} */
-		var cancelallys_="<input id='cancelAllys' type='checkbox' checked='checked'> Cancel attack if same alliance";
+		var cancelallys_ = "<input id='cancelAllys' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		/** @type {string} */
-		var cancelallyp_="<input id='cancelAllyp' type='checkbox' checked='checked'> Cancel attack if same alliance";
+		var cancelallyp_ = "<input id='cancelAllyp' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		/** @type {string} */
-		var cancelallyc_="<input id='cancelAllyc' type='checkbox' checked='checked'> Cancel attack if same alliance";
+		var cancelallyc_ = "<input id='cancelAllyc' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		$("#assaulttraveltime").parent().next().html(cancelallya_);
 		$("#siegetraveltime").parent().next().html(cancelallys_);
 		$("#plundtraveltime").parent().next().html(cancelallyp_);
 		$("#scouttraveltime").parent().next().html(cancelallyc_);
 		$("#assaultGo").click(() => {
-			if($("#cancelAllya").prop("checked")==false) {
+			if ($("#cancelAllya").prop("checked") == false) {
 				setTimeout(() => {
-					$(".shAinf").each(function() {
-						let tid_7=ToInt($(this).parent().next().find(".cityblink").attr("data"));
+					$(".shAinf").each(function () {
+						let tid_7 = ToInt($(this).parent().next().find(".cityblink").attr("data"));
 						/** @type {number} */
-						var tx_1=tid_7%65536;
+						var tx_1 = tid_7 % 65536;
 						/** @type {number} */
-						var ty_1=(tid_7-tx_1)/65536;
-						if(tx_1==$("#assaultxcoord").val()&&ty_1==$("#assaultycoord").val()) {
-							var aid_=$(this).attr("data");
-							var dat_7={
+						var ty_1 = (tid_7 - tx_1) / 65536;
+						if (tx_1 == $("#assaultxcoord").val() && ty_1 == $("#assaultycoord").val()) {
+							var aid_ = $(this).attr("data");
+							var dat_7 = {
 								a: aid_,
 								b: 1
 							};
@@ -2248,16 +2248,16 @@ function avactor() {
 							});
 						}
 					});
-					$(".shPinf").each(function() {
-						let a=$(this).parent().next().find(".cityblink");
-						let tid_8=GetIntData(a);
+					$(".shPinf").each(function () {
+						let a = $(this).parent().next().find(".cityblink");
+						let tid_8 = GetIntData(a);
 						/** @type {number} */
-						var tx_2=tid_8%65536;
+						var tx_2 = tid_8 % 65536;
 						/** @type {number} */
-						var ty_2=(tid_8-tx_2)/65536;
-						if(tx_2==$("#assaultxcoord").val()&&ty_2==$("#assaultycoord").val()) {
-							var aid_1=$(this).attr("data");
-							var dat_8={
+						var ty_2 = (tid_8 - tx_2) / 65536;
+						if (tx_2 == $("#assaultxcoord").val() && ty_2 == $("#assaultycoord").val()) {
+							var aid_1 = $(this).attr("data");
+							var dat_8 = {
 								a: aid_1,
 								b: 1
 							};
@@ -2269,21 +2269,21 @@ function avactor() {
 							});
 						}
 					});
-				},4000);
+				}, 4000);
 			}
 		});
 		$("#plunderGo").click(() => {
-			if($("#cancelAllyp").prop("checked")==false) {
+			if ($("#cancelAllyp").prop("checked") == false) {
 				setTimeout(() => {
-					$(".shAinf").each(function() {
-						var tid_9=GetIntData($(this).parent().next().find(".cityblink"));
+					$(".shAinf").each(function () {
+						var tid_9 = GetIntData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						var tx_3=tid_9%65536;
+						var tx_3 = tid_9 % 65536;
 						/** @type {number} */
-						var ty_3=(tid_9-tx_3)/65536;
-						if(tx_3==$("#pluxcoord").val()&&ty_3==$("#pluycoord").val()) {
-							var aid_2=$(this).attr("data");
-							var dat_9={
+						var ty_3 = (tid_9 - tx_3) / 65536;
+						if (tx_3 == $("#pluxcoord").val() && ty_3 == $("#pluycoord").val()) {
+							var aid_2 = $(this).attr("data");
+							var dat_9 = {
 								a: aid_2,
 								b: 1
 							};
@@ -2295,15 +2295,15 @@ function avactor() {
 							});
 						}
 					});
-					$(".shPinf").each(function() {
-						var tid_10=GetIntData($(this).parent().next().find(".cityblink"));
+					$(".shPinf").each(function () {
+						var tid_10 = GetIntData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						var tx_4=tid_10%65536;
+						var tx_4 = tid_10 % 65536;
 						/** @type {number} */
-						var ty_4=(tid_10-tx_4)/65536;
-						if(tx_4==$("#pluxcoord").val()&&ty_4==$("#pluycoord").val()) {
-							var aid_3=$(this).attr("data");
-							var dat_10={
+						var ty_4 = (tid_10 - tx_4) / 65536;
+						if (tx_4 == $("#pluxcoord").val() && ty_4 == $("#pluycoord").val()) {
+							var aid_3 = $(this).attr("data");
+							var dat_10 = {
 								a: aid_3,
 								b: 1
 							};
@@ -2315,21 +2315,21 @@ function avactor() {
 							});
 						}
 					});
-				},4000);
+				}, 4000);
 			}
 		});
 		$("#scoutGo").click(() => {
-			if($("#cancelAllyc").prop("checked")==false) {
+			if ($("#cancelAllyc").prop("checked") == false) {
 				setTimeout(() => {
-					$(".shAinf").each(function() {
-						var tid_11=GetIntData($(this).parent().next().find(".cityblink"));
+					$(".shAinf").each(function () {
+						var tid_11 = GetIntData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						var tx_5=tid_11%65536;
+						var tx_5 = tid_11 % 65536;
 						/** @type {number} */
-						var ty_5=(tid_11-tx_5)/65536;
-						if(tx_5==$("#scoxcoord").val()&&ty_5==$("#scoycoord").val()) {
-							var aid_4=$(this).attr("data");
-							var dat_11={
+						var ty_5 = (tid_11 - tx_5) / 65536;
+						if (tx_5 == $("#scoxcoord").val() && ty_5 == $("#scoycoord").val()) {
+							var aid_4 = $(this).attr("data");
+							var dat_11 = {
 								a: aid_4,
 								b: 1
 							};
@@ -2341,15 +2341,15 @@ function avactor() {
 							});
 						}
 					});
-					$(".shPinf").each(function() {
-						var tid_12=GetIntData($(this).parent().next().find(".cityblink"));
+					$(".shPinf").each(function () {
+						var tid_12 = GetIntData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						var tx_6=tid_12%65536;
+						var tx_6 = tid_12 % 65536;
 						/** @type {number} */
-						var ty_6=(tid_12-tx_6)/65536;
-						if(tx_6==$("#scoxcoord").val()&&ty_6==$("#scoycoord").val()) {
-							var aid_5=$(this).attr("data");
-							var dat_12={
+						var ty_6 = (tid_12 - tx_6) / 65536;
+						if (tx_6 == $("#scoxcoord").val() && ty_6 == $("#scoycoord").val()) {
+							var aid_5 = $(this).attr("data");
+							var dat_12 = {
 								a: aid_5,
 								b: 1
 							};
@@ -2361,21 +2361,21 @@ function avactor() {
 							});
 						}
 					});
-				},4000);
+				}, 4000);
 			}
 		});
 		$("#siegeGo").click(() => {
-			if($("#cancelAllys").prop("checked")==false) {
+			if ($("#cancelAllys").prop("checked") == false) {
 				setTimeout(() => {
-					$(".shAinf").each(function() {
-						var tid_13=GetIntData($(this).parent().next().find(".cityblink"));
+					$(".shAinf").each(function () {
+						var tid_13 = GetIntData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						var tx_7=tid_13%65536;
+						var tx_7 = tid_13 % 65536;
 						/** @type {number} */
-						var ty_7=(tid_13-tx_7)/65536;
-						if(tx_7==$("#siexcoord").val()&&ty_7==$("#sieycoord").val()) {
-							var aid_6=$(this).attr("data");
-							var dat_13={
+						var ty_7 = (tid_13 - tx_7) / 65536;
+						if (tx_7 == $("#siexcoord").val() && ty_7 == $("#sieycoord").val()) {
+							var aid_6 = $(this).attr("data");
+							var dat_13 = {
 								a: aid_6,
 								b: 1
 							};
@@ -2387,15 +2387,15 @@ function avactor() {
 							});
 						}
 					});
-					$(".shPinf").each(function() {
-						let cid=GetCidData($(this).parent().next().find(".cityblink"));
+					$(".shPinf").each(function () {
+						let cid = GetCidData($(this).parent().next().find(".cityblink"));
 						/** @type {number} */
-						let tx_8=cid.x;
+						let tx_8 = cid.x;
 						/** @type {number} */
-						let ty_8=cid.y;
-						if(tx_8==$("#siexcoord").val()&&ty_8==$("#sieycoord").val()) {
-							var aid_7=$(this).attr("data");
-							var dat_14={
+						let ty_8 = cid.y;
+						if (tx_8 == $("#siexcoord").val() && ty_8 == $("#sieycoord").val()) {
+							var aid_7 = $(this).attr("data");
+							var dat_14 = {
 								a: aid_7,
 								b: 1
 							};
@@ -2407,7 +2407,7 @@ function avactor() {
 							});
 						}
 					});
-				},4000);
+				}, 4000);
 			}
 		});
 		$("#citynotes").draggable({
@@ -2418,33 +2418,33 @@ function avactor() {
 		$("#citynotes").height("310px");
 		$("#citynotes").width("495px");
 		/** @type {string} */
-		var layoutopttab_="<li id='layoutopt' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='layoutoptBody'";
+		var layoutopttab_ = "<li id='layoutopt' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='layoutoptBody'";
 		/** @type {string} */
-		layoutopttab_=`${layoutopttab_}aria-labeledby='ui-id-60' aria-selected='false' aria-expanded='false'>`;
+		layoutopttab_ = `${layoutopttab_}aria-labeledby='ui-id-60' aria-selected='false' aria-expanded='false'>`;
 		/** @type {string} */
-		layoutopttab_=`${layoutopttab_}<a href='#layoutoptBody' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-60'>Layout Options</a></li>`;
+		layoutopttab_ = `${layoutopttab_}<a href='#layoutoptBody' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-60'>Layout Options</a></li>`;
 		/** @type {string} */
-		var layoutoptbody_="<div id='layoutoptBody' aria-labeledby='ui-id-60' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		var layoutoptbody_ = "<div id='layoutoptBody' aria-labeledby='ui-id-60' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_} role='tabpanel' aria-hidden='true' style='display: none;'><table><tbody><tr><td><input id='addnotes' class='clsubopti' type='checkbox'> Add Notes</td>`;
+		layoutoptbody_ = `${layoutoptbody_} role='tabpanel' aria-hidden='true' style='display: none;'><table><tbody><tr><td><input id='addnotes' class='clsubopti' type='checkbox'> Add Notes</td>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<td><input id='addtroops' class='clsubopti' type='checkbox'> Add Troops</td></tr><tr><td><input id='addtowers' class='clsubopti' type='checkbox'> Add Towers</td><td><input id='addbuildings' class='clsubopti' type='checkbox'> Upgrade Cabins</td>`;
+		layoutoptbody_ = `${layoutoptbody_}<td><input id='addtroops' class='clsubopti' type='checkbox'> Add Troops</td></tr><tr><td><input id='addtowers' class='clsubopti' type='checkbox'> Add Towers</td><td><input id='addbuildings' class='clsubopti' type='checkbox'> Upgrade Cabins</td>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<td> Cabin Lvl: <input id='cablev' type='number' style='width:22px;' value='7'></td></tr><tr><td><input id='addwalls' class='clsubopti' type='checkbox'> Add Walls</td>`;
+		layoutoptbody_ = `${layoutoptbody_}<td> Cabin Lvl: <input id='cablev' type='number' style='width:22px;' value='7'></td></tr><tr><td><input id='addwalls' class='clsubopti' type='checkbox'> Add Walls</td>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<td><input id='addhub' class='clsubopti' type='checkbox'> Set Nearest Hub With layout</td></tr><tr><td>Select Hubs list: </td><td id='selhublist'></td><td>`;
+		layoutoptbody_ = `${layoutoptbody_}<td><input id='addhub' class='clsubopti' type='checkbox'> Set Nearest Hub With layout</td></tr><tr><td>Select Hubs list: </td><td id='selhublist'></td><td>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<button id='nearhubAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Set Nearest Hub</button><button id='infantryAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Infantry setup</button></td></tr></tbody></table>`;
+		layoutoptbody_ = `${layoutoptbody_}<button id='nearhubAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Set Nearest Hub</button><button id='infantryAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Infantry setup</button></td></tr></tbody></table>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<table><tbody><tr><td colspan='2'><input id='addres' class='clsubopti' type='checkbox'> Add Resources:</td><td id='buttd' colspan='2'></td></tr><tr><td>wood<input id='woodin' type='number' style='width:100px;' value='200000'></td><td>stone<input id='stonein' type='number' style='width:100px;' value='220000'></td>`;
+		layoutoptbody_ = `${layoutoptbody_}<table><tbody><tr><td colspan='2'><input id='addres' class='clsubopti' type='checkbox'> Add Resources:</td><td id='buttd' colspan='2'></td></tr><tr><td>wood<input id='woodin' type='number' style='width:100px;' value='200000'></td><td>stone<input id='stonein' type='number' style='width:100px;' value='220000'></td>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}<td>iron<input id='ironin' type='number' style='width:100px;' value='200000'></td><td>food<input id='foodin' type='number' style='width:100px;' value='350000'></td></tr>`;
+		layoutoptbody_ = `${layoutoptbody_}<td>iron<input id='ironin' type='number' style='width:100px;' value='200000'></td><td>food<input id='foodin' type='number' style='width:100px;' value='350000'></td></tr>`;
 		/** @type {string} */
-		layoutoptbody_=`${layoutoptbody_}</tbody></table></div>`;
+		layoutoptbody_ = `${layoutoptbody_}</tbody></table></div>`;
 		/** @type {string} */
-		var layoptbut_="<button id='layoptBut' class='regButton greenb' style='width:150px;'>Save Res Settings</button>";
-		var tabs_1=$("#CNtabs").tabs();
-		var ul_1=tabs_1.find("ul");
+		var layoptbut_ = "<button id='layoptBut' class='regButton greenb' style='width:150px;'>Save Res Settings</button>";
+		var tabs_1 = $("#CNtabs").tabs();
+		var ul_1 = tabs_1.find("ul");
 		$(layoutopttab_).appendTo(ul_1);
 		tabs_1.tabs("refresh");
 		$("#CNtabs").append(layoutoptbody_);
@@ -2456,25 +2456,25 @@ function avactor() {
 			setinfantry_();
 		});
 		$("#layoptBut").click(() => {
-			localStorage.setItem("woodin",$('$woodin').val().toString());
-			localStorage.setItem("foodin",$("#foodin").val().toString());
-			localStorage.setItem("ironin",$("#ironin").val().toString());
-			localStorage.setItem("stonein",$("#stonein").val().toString());
-			localStorage.setItem("cablev",$("#cablev").val().toString());
+			localStorage.setItem("woodin", $('$woodin').val().toString());
+			localStorage.setItem("foodin", $("#foodin").val().toString());
+			localStorage.setItem("ironin", $("#ironin").val().toString());
+			localStorage.setItem("stonein", $("#stonein").val().toString());
+			localStorage.setItem("cablev", $("#cablev").val().toString());
 		});
-		if(localStorage.getItem("cablev")) {
+		if (localStorage.getItem("cablev")) {
 			$("#cablev").val(LocalStoreAsInt("cablev"));
 		}
-		if(localStorage.getItem("woodin")) {
+		if (localStorage.getItem("woodin")) {
 			$("#woodin").val(localStorage.getItem("woodin"));
 		}
-		if(localStorage.getItem("stonein")) {
+		if (localStorage.getItem("stonein")) {
 			$("#stonein").val(localStorage.getItem("stonein"));
 		}
-		if(localStorage.getItem("ironin")) {
+		if (localStorage.getItem("ironin")) {
 			$("#ironin").val(localStorage.getItem("ironin"));
 		}
-		if(localStorage.getItem("foodin")) {
+		if (localStorage.getItem("foodin")) {
 			$("#foodin").val(localStorage.getItem("foodin"));
 		}
 		InitCheckbox('addres');
@@ -2489,120 +2489,120 @@ function avactor() {
 		InitCheckbox("addtroops");
 		$("#editspncn").click(() => {
 			$("#selHub").remove();
-			var selhub_=$("#organiser").clone(false).attr({
+			var selhub_ = $("#organiser").clone(false).attr({
 				id: "selHub",
 				style: "width:100%;height:28px;font-size:11;border-radius:6px;margin:7px"
 			});
 			$("#selhublist").append(selhub_);
-			if(localStorage.getItem("hublist")) {
+			if (localStorage.getItem("hublist")) {
 				$("#selHub").val(localStorage.getItem("hublist")).change();
 			}
 			$("#selHub").change(() => {
-				localStorage.setItem("hublist",$("#selHub").val().toString());
+				localStorage.setItem("hublist", $("#selHub").val().toString());
 			});
 			$("#dfunkylayout").remove();
 			$("#funkylayoutl").remove();
 			$("#funkylayoutw").remove();
 			setTimeout(() => {
-				var currentlayout_=$("#currentLOtextarea").text();
+				var currentlayout_ = $("#currentLOtextarea").text();
 				/** @type {number} */
-				var i_53=20;
-				for(;i_53<currentlayout_.length-20;i_53++) {
-					var tmpchar_=currentlayout_.charAt(i_53);
+				var i_53 = 20;
+				for (; i_53 < currentlayout_.length - 20; i_53++) {
+					var tmpchar_ = currentlayout_.charAt(i_53);
 					/** @type {!RegExp} */
-					var cmp_=new RegExp(tmpchar_);
-					if(!cmp_.test(emptyspots_)) {
-						currentlayout_=ReplaceAt(currentlayout_,i_53,"-");
+					var cmp_ = new RegExp(tmpchar_);
+					if (!cmp_.test(emptyspots_)) {
+						currentlayout_ = ReplaceAt(currentlayout_, i_53, "-");
 					}
 				}
 				/** @type {!Array} */
-				var prefered_data_=[{
+				var prefered_data_ = [{
 					name: "Guz 7s Prae 122k",
 					string: "[ShareString.1.3]:########################-------#-------#####BBBB----#--------###BZZZB----#---------##BBBBB----#---------##BZZZZ-#######------##BBBBB##BBBBB##-----##----##BZZZZZB##----##----#BBBBBBBBB#----##----#BZZZZZZZB#----#######BBBBTBBBB#######P--X#BZZZZZZZB#----##-SSJ#BBBBBBBBB#----##P---##BZZZZZB##----##P----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
 					remarks: "Landlocked Praetors",
 					notes: "122000 Praetors",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 4s Arbs 132k",
 					string: "[ShareString.1.3]:########################-------#-------#####BBBB----#--------###BEEEB----#---------##BBBBB----#---------##BEBEB-#######------##BBBBB##BBBBB##-----##----##BEEBEEB##----##----#BBBBBBBBB#----##----#BEEEBEEEB#----#######BBBBTBBBB#######----#EEEEBEEEB#----##----#BBBBBBBBB#----##----##BEEBEEB##----##-----##BBBBB##-----##------#######------##---------#J--------##-----SS--#X--------###----LM--#--------#####--PP---#-------########################",
 					remarks: "Arbs",
 					notes: "132000 Arbs",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 3s Rng 280k",
 					string: "[ShareString.1.3];########################-------#-------#####BBBB----#--------###BGBGB----#---------##BBBBB----#---------##BGBGB-#######------##BBBBB##BBBBB##-----##----##BGGBGGB##----##----#BBBBBBBBB#----##----#BGGBGBGGB#----#######BBBBTBBBB#######----#BGGBGBGGB#----##----#BBBBBBBBB#----##----##BGGBGGB##----##-----##BBBBB##-----##------#######--__--##---------#J---_##_-##-----SS--#X---_###_###----LM--#-----_#######--PP---#------_########################",
 					remarks: "Ranger",
 					notes: "280000 Ranger",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 3s Rng/Tri 256k",
 					string: "[ShareString.1.3]:########################BBBBB--#--,-,--#####-BGBGB-,#------,-###,-BGBBB--#-,-..-,--##--BGBGB-.#,-------.##--BBBB#######:-.---##----:##BBBBB##-.-,-##.-;-##GBGBGBG##----##----#BBBGBGBBB#--:-##...-#BGBGBGBGB#-::-#######BBBGTGBGB#######.SS.#BGBGBGBGB#---:##P--X#BBBGBGBBB#----##:-:J##GBGBGBG##--;-##P:---##BBBBB##,----##:--.--#######---,--##P-.--.-:-#--------,##P----.---#.--:-,-,-###,-,-.---#--------#####,----:-#.--;---########################",
 					remarks: "R/T",
 					notes: "128K Rng 128K Tri",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 3s R/T Ship 240K",
 					string: "[ShareString.1.3];########################-------#---BBBB#####--------#---BGBGB###---------#---BGBGB-##---------#---BBBBB-##------#######BGBGB-##-----##BBBBB##GBGB-##----##BGBGBGB##BB--##----#-BGBGBGB-#----##----#-BGBGBGB-#----#######-BGBTBGB-#######----#-BGBGBGB-#----##----#-BGBGBGB-#----##----##BGBGBGB##----##-----##BBBBB##-----##------#######--RR--##---------#SS--R##R-##---------#J---R###R###--------#X----R#######-------#------R########################",
 					remarks: "R/T Ship",
 					notes: "120K Rng 120K Tri",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 7s Arb Ship 124K",
 					string: "[ShareString.1.3];########################-------#-------#####BBB-----#--------###BEEE-----#---------##BBBBB----#---------##BEEE--#######------##BBBB-##BBBBB##-----##----##BEEBEEB##----##----#BBBBBBBBB#----##----#BEEEBEEEB#----#######BBBBTBBBB#######----#BEEEBEEEB#----##-SSX#BBBBBBBBB#----##---J##BEEBEEB##----##-----##BBBBB##-----##------#######--RR--##---------#----R##R-##---------#----R###R###--------#-----R#######-------#------R########################",
 					remarks: "Arb Ship",
 					notes: "124K Arb",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 7s Prae Ship 112K",
 					string: "[ShareString.1.3];########################-------#-------#####BBB-----#--------###ZZZZ-----#---------##BBBBB----#---------##ZZZZ--#######------##BBBB-##BBBBB##-----##----##BZZZZZB##----##----#BBBBBBBBB#----##----#BZZZZZZZB#----#######BBBBTBBBB#######----#BZZZZZZZB#----##-SSX#BBBBBBBBB#----##---J##BZZZZZB##----##-----##BBBBB##-----##------#######--RR--##---------#----R##R-##---------#----R###R###--------#-----R#######-------#------R########################",
 					remarks: "Prae Ship",
 					notes: "112K Arb",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 3s Rng Ship 260K",
 					string: "[ShareString.1.3];########################-------#-------#####BBB-----#--------###BGBGB----#---------##BBBBB----#---------##BGGG--#######------##-BBB-##BBBBB##-----##----##BGGBGGB##----##----#BBBBBBBBB#----##----#BGGBGBGGB#----#######BBBBTBBBB#######----#BGGBGBGGB#----##----#BBBBBBBBB#----##-SSX##BGGBGGB##----##-----##BBBBB##-----##---J--#######--RR--##---------#----R##R-##---------#----R###R###--------#-----R#######-------#------R########################",
 					remarks: "Rng Ship",
 					notes: "260K Arb",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 3s Vanq 300K",
 					string: "[ShareString.1.3]:########################-------#-------#####--------#BBBBBBB-###---------#BGBGBGB--##---------#BBBBBBB--##------#######-BGBB-##-----##BBBBB##BBB--##----##-BGBGBZ##----##----#BBBBBBBBB#----##----#BGBGBGBGB#----#######BGBBTBBBB#######----#BGBGBGBGB#----##----#BBBBBBBBB#----##----##-BGBGB-##----##-----##BBBBB##-----##------#######------##---------#-X-------##---------#JP-------###--------#SM------#####-------#SM-----########################",
 					remarks: "S - Vanq",
 					notes: "300K Vanq Senator Capable",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Guz 10s Druid 106K",
 					string: "[ShareString.1.3];########################BB-----#-------#####-JJ-----#--------###BBBBB----#---------##JJJJJ----#---------##BBBBBB#######------##JJJJJ##BBBBB##-----##BBBB##JJJJJJJ##----##----#BBBBBBBBB#----##----#JJJJJJJJJ#----#######BBBBTBBBB#######----#JJJJJJJJJ#----##----#BBBBBBBBB#----##----##JJJJJJJ##----##-----##BBBBB##-----##------#######--__--##--------M#X---_##_-##--------S#----_###_###--------#-----_#######-------#------_########################",
 					remarks: "Druid",
 					notes: "106K Druid",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
+				}, {
 					name: "Tas 4sec Priests",
 					string: "[ShareString.1.3];########################-------#-----BB#####--------#----BBBB###---------#----BZZZB##---------#----BBBBB##------#######-BZZZB##-----##BZBZB##BBBBB##----##ZBZBZBZ##----##----#BZBZBZBZB#SP--##----#BZBZBZBZB#SP--#######BZBZTZBZB#######----#BZBZBZBZB#JX--##----#BZBZBZBZB#----##----##ZBZBZBZ##----##-----##BZBZB##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################",
 					remarks: "Priests",
 					notes: "224000 Priests",
-					troop_count: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,575000,575000,575000,575000,0,0,0,0,1,0,0,0,0,0,575000,575000,575000,575000]
+					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
 				}];
 				/** @type {string} */
-				var selectbuttsdf_='<select id="dfunkylayout" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:30%;" class="regButton greenb"><option value="0">Prefered build layout</option>';
+				var selectbuttsdf_ = '<select id="dfunkylayout" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:30%;" class="regButton greenb"><option value="0">Prefered build layout</option>';
 				/** @type {number} */
-				var ww_=1;
+				var ww_ = 1;
 				var prefered_;
-				for(prefered_ in prefered_data_) {
+				for (prefered_ in prefered_data_) {
 					console.log(prefered_data_[prefered_]);
 					/** @type {string} */
-					selectbuttsdf_=`${selectbuttsdf_}<option value="${ww_}">${prefered_data_[prefered_].name}</option>`;
+					selectbuttsdf_ = `${selectbuttsdf_}<option value="${ww_}">${prefered_data_[prefered_].name}</option>`;
 					layoutdf_.push(prefered_data_[prefered_].string);
 					remarkdf_.push(prefered_data_[prefered_].remarks);
 					notedf_.push(prefered_data_[prefered_].notes);
@@ -2611,148 +2611,148 @@ function avactor() {
 					ww_++;
 				}
 				/** @type {string} */
-				selectbuttsdf_=`${selectbuttsdf_}</select>`;
+				selectbuttsdf_ = `${selectbuttsdf_}</select>`;
 				/** @type {string} */
-				var selectbuttsw_='<select id="funkylayoutw" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select water layout</option>';
+				var selectbuttsw_ = '<select id="funkylayoutw" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select water layout</option>';
 				/** @type {number} */
-				var cww_=1;
+				var cww_ = 1;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">2 sec rang/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">2 sec rang/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BGBGB##-----##----##GBGBGBG##----##----#BGBGBGBGB#----##----#BGBGBGBGB#---H#######BGBGTGBGB#######----#BGBGBGBGB#JSPX##----#BGBGBGBGB#----##----##GBGBGBG##G---##-----##BGGGB##BBBBG##------#######BBVVBB##---------#--GBV##VB##---------#--GBV###V###--------#---BBV#######-------#----BBV########################");
 				remarksw_.push("rangers/triari/galley");
 				notesw_.push("166600 inf and 334 galley @ 10 days");
-				troopcounw_.push([0,0,83300,83300,0,0,0,0,0,0,0,0,0,0,334,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 83300, 83300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 334, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">6 sec arbs/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">6 sec arbs/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#SPJX##----#BEBEBEBEB#MH--##----##EBEBEBE##----##-----##BEBEB##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#--BBBVTT#####-------#--BEBBV########################");
 				remarksw_.push("arbs/galley");
 				notesw_.push("88300 inf and 354 galley @ 11.5 days");
-				troopcounw_.push([0,0,0,0,0,0,0,0,88300,0,0,0,0,0,354,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 88300, 0, 0, 0, 0, 0, 354, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">3 sec priestess/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">3 sec priestess/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#---H#######BZBZTZBZB#######----#BZBZBZBZB#JSPX##----#BZBZBZBZB#----##----##ZBZBZBZ##-Z--##-----##BZZZB##BBBBZ##------#######BBVVBB##---------#---BV##VB##---------#--ZBV###V###--------#---BBV#######-------#---ZBBV########################");
 				remarksw_.push("priestess/galley");
 				notesw_.push("166600 inf and 334 galley @ 11 days");
-				troopcounw_.push([0,0,0,0,166600,0,0,0,0,0,0,0,0,0,334,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 166600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 334, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">7 sec praetor/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">7 sec praetor/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#----#######BZBZTZBZB#######----#BZBZBZBZB#SPJX##----#BZBZBZBZB#MH--##----##ZBZBZBZ##----##-----##BZBZB##BBBBZ##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#--BZBBV########################");
 				remarksw_.push("praetors/galley");
 				notesw_.push("86650 praetors and 347 galley @ 12 days");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,86650,0,0,0,0,347,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 86650, 0, 0, 0, 0, 347, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">2 sec vanq/galley+senator</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">2 sec vanq/galley+senator</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BGBGB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBGBGBGB#---H#######BGBGTGBGB#######----#BGBGBGBGB#JSPX##----#BGBGBGBGB#----##----##BBGBGBB##---B##-----##BGBGB##BBBBZ##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#---BBV#######-------#--BBBBV########################");
 				remarksw_.push("vanq/galley+senator");
 				notesw_.push("193300 inf and 387 galley @ 10 days");
-				troopcounw_.push([0,0,0,0,0,193300,0,0,0,0,0,0,0,0,387,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 193300, 0, 0, 0, 0, 0, 0, 0, 0, 387, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">5 sec horses/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">5 sec horses/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#---H#######BEBETEBEB#######----#BEBEBEBEB#JSPX##----#BEBEBEBEB#-M--##----##EBEBEBB##----##-----##BEBEB##BBBB-##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#--BBBV#######-------#--BEBBV########################");
 				remarksw_.push("horses/galley");
 				notesw_.push("90000 cav and 360 galley @ 10.5 days");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,90000,0,0,0,360,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90000, 0, 0, 0, 360, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">5 sec sorc/galley</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">5 sec sorc/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##JBJBJ##-----##----##BJBJBJB##----##----#JBJBJBJBJ#----##----#JBJBJBJBJ#---H#######JBJBTBJBJ#######----#JBJBJBJBJ#-S-X##----#JBJBJBJBJ#----##----##BJBJBJB##JJ--##-----##JBJBJ##BBBBJ##------#######BBVVBB##---------#--JBV##VB##---------#--JBV###V###--------#---BBV#######-------#---JBBV########################");
 				remarksw_.push("sorc/galley");
 				notesw_.push("156600 sorc and 314 galley @ 13.5 days");
-				troopcounw_.push([0,0,0,0,0,0,156600,0,0,0,0,0,0,0,314,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 156600, 0, 0, 0, 0, 0, 0, 0, 314, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">vanqs+ports+senator</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">vanqs+ports+senator</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BBBBB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBBBBBGB#----#######BBBGTGBBB#######----#BGBBBBBGB#PPJX##----#BGBGBGBGB#BBBB##----##BBGBGBB##BBBB##-----##BBBBB##BBBBB##------#######-BRRBB##---------#----R##RZ##---------#----R###R###--------#----SR#######-------#----MSR########################");
 				remarksw_.push("vanqs+senator+ports");
 				notesw_.push("264k infantry @ 10 days");
-				troopcounw_.push([0,0,0,100000,0,164000,0,0,0,0,0,0,0,0,0,0,0]);
-				resw_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounw_.push([0, 0, 0, 100000, 0, 164000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">main hub</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">main hub</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#---PPPPP###---------#---PPPPPP##---------#---PPPPPP##------#######PPPPPP##-----##-----##PPPPP##----##SLSDSAS##PPPP##----#-SDSMSDS-#PPPP##----#-SLSMSAS-#PPPP#######-SDSTSDS-#######----#-SLSMSAS-#----##----#-SDSMSDS-#----##----##SLSDSAS##----##-----##-----##-----##------#######--RR--##---------#ZB--RTTR-##---------#PJ--RTTTR###--------#-----RTT#####-------#------R########################");
 				remarksw_.push("main hub");
 				notesw_.push("14 mil w/s 23 mil iron 15 mil food 8200 carts 240 boats");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">palace storage</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace storage</option>`;
 				layoutsw_.push("[ShareString.1.3]:########################-------#-----PP#####--------#-----PPP###---------#-----PPPP##---------#-----PPPP##------#######--PPPP##-----##SASLS##-PPPP##----##ASASLSL##PPPP##----#SASASLSLS#-PPP##----#SASASLSLS#JPPP#######SASA#LSLS#######----#SASASLSLS#----##----#SASASLSLS#----##----##ASASLSL##----##-----##SASLS##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksw_.push("palace storage");
 				notesw_.push("40 mil w/s 6200 carts");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">palace feeder</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace feeder</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-PPPPPP#PPPPPPP#####--PPPPPP#PPPPPPPP###---PPPPPP#PPPPPPPPP##---PPPPPP#PPPPPPPPP##----PP#######PPPPPP##-----##----J##PPPPP##----##-A-----##PPPP##----#-SSS-----#PPPP##----#-AAA-----#PPPP#######-SSST----#######----#-LLL-----#----##----#-SSS-----#----##----##-L-----##----##-----##-----##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksw_.push("palace feeder");
 				notesw_.push("8.75 mil w/s 16400 carts");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">palace Hub mixed</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace Hub mixed</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#PPPPPPP#####--------#PPPPPPPP###---------#PPPPPPPPP##---------#PPPPPPPPP##------#######PPPPPP##-----##-----##PPPPP##----##-------##PPPP##----#SLSASLSAS#PPPP##----#SASLSASLS#JPPP#######SLSATLSAS#######----#SASLSASLS#----##----#SLSASLSAS#----##----##-------##----##-----##-----##-----##------#######--__--##---------#----_TT_-##---------#----_TTT_###--------#-----_TT#####-------#------_########################");
 				remarksw_.push("palace Hub mixed");
 				notesw_.push("24.57 mil w/s 11000 carts");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">Stingers</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">Stingers</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##-----##-----##----##-------##----##----#---------#----##----#---------#----#######----T----#######----#---------#SPHX##----#---------#-M--##----##-------##----##-----##-----##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#----BBV########################");
 				remarksw_.push("stingers");
 				notesw_.push("3480 stingers @ 84 days");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3480,0]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3480, 0]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}<option value="${cww_}">Warships</option>`;
+				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">Warships</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##-----##-----##----##-------##----##----#---------#----##----#---------#----#######----T----#######----#---------#SPHX##----#---------#-M--##----##-------##----##-----##-----##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#----BBV########################");
 				remarksw_.push("warships");
 				notesw_.push("870 warships @ 42 days");
-				troopcounw_.push([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,870]);
-				resw_.push([0,0,0,0,1,500000,500000,500000,500000,0,0,0,0,1,0,0,0,0,0,500000,500000,500000,500000]);
+				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 870]);
+				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				/** @type {string} */
-				selectbuttsw_=`${selectbuttsw_}</select>`;
+				selectbuttsw_ = `${selectbuttsw_}</select>`;
 				/** @type {string} */
-				var selectbuttsl_='<select id="funkylayoutl" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select land layout</option>';
+				var selectbuttsl_ = '<select id="funkylayoutl" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select land layout</option>';
 				/** @type {number} */
-				var ll_1=1;
+				var ll_1 = 1;
 				/** @type {!Array} */
-				var land_locked_data_=[{
+				var land_locked_data_ = [{
 					name: "1 sec vanqs",
 					string: "[ShareString.1.3]:########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##GBGBG##-----##----##BGBGBGB##----##----#GBGBGBGBG#----##----#GBGBGBGBG#----#######GBGBTBGBG#######----#GBGBGBGBG#----##----#GBGBGBGBG#----##----##BGBGBGB##----##GGGGG##GBGBG##-----##BBBBB-#######------##GGGGGG--H#---------##BBBBBB--J#---------###GGGG---X#--------#####BB----S#-------########################",
 					remarks: "vanqs",
 					notes: "180000 vanqs @ 2 days",
-					troop_count: [0,0,0,0,0,180000,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]
-				},{
+					troop_count: [0, 0, 0, 0, 0, 180000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]
+				}, {
 					name: "2 sec vanqs",
 					string: "[ShareString.1.3]:########################BBB--JX#-------#####BGBG--PP#--------###-BBBBB-MS#---------##-BGBGB--H#---------##-BGBGB#######------##-ZBB-##BBBBB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBBBBBGB#----#######BGBGTGBGB#######----#BGBBBBBGB#----##----#BGBGBGBGB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
 					remarks: "vanqs",
 					notes: "264000 vanqs @ 6 days",
-					troop_count: [0,0,0,0,0,264000,0,0,0,0,0,0,0,0,0,0,0],
-					res_count: [0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]
+					troop_count: [0, 0, 0, 0, 0, 264000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					res_count: [0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]
 				}];
 				var l_locked_;
-				for(l_locked_ in land_locked_data_) {
+				for (l_locked_ in land_locked_data_) {
 					/** @type {string} */
-					selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">${land_locked_data_[l_locked_].name}</option>`;
+					selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">${land_locked_data_[l_locked_].name}</option>`;
 					layoutsl_.push(land_locked_data_[l_locked_].string);
 					remarksl_.push(land_locked_data_[l_locked_].remarks);
 					notesl_.push(land_locked_data_[l_locked_].notes);
@@ -2761,227 +2761,227 @@ function avactor() {
 					ll_1++;
 				}
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">3 sec vanqs raiding</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">3 sec vanqs raiding</option>`;
 				layoutsl_.push("[ShareString.1.3];########################----PJX#-------#####BB----PP#--------###BGBGB--SS#---------##BBBBB--MP#---------##BGBGB-#######------##BBBBB##BBBBB##-----##--G-##BBGBGBB##----##----#BBBBBBBBB#----##----#BGBGBGBGB#----#######BBBBTBBBB#######----#BGBGBGBGB#----##----#BBBBBBBBB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksl_.push("vanqs");
 				notesl_.push("296000 vanqs @ 10 days");
-				troopcounl_.push([0,0,0,0,0,296000,0,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 296000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">2 sec rangers</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">2 sec rangers</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BGBGB-PP#--------###-BGBGB-MS#---------##-BGBGB--H#---------##-BGBGB#######------##--BBB##BGBGB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBGBGBGB#----#######BGBGTGBGB#######----#BGBGBGBGB#----##----#BGBGBGBGB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("rangers/triari");
 				notesl_.push("236000 inf @ 6.5 days");
-				troopcounl_.push([0,0,186000,50000,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 186000, 50000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">3 sec priests</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">3 sec priests</option>`;
 				layoutsl_.push("[ShareString.1.3];########################-------#-----BB#####--------#----BBBB###---------#----BZZZB##---------#----BBBBB##------#######-BZZZB##-----##BZBZB##BBBBB##----##ZBZBZBZ##----##----#BZBZBZBZB#SP--##----#BZBZBZBZB#SP--#######BZBZTZBZB#######----#BZBZBZBZB#JX--##----#BZBZBZBZB#----##----##ZBZBZBZ##----##-----##BZBZB##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksl_.push("priests");
 				notesl_.push("224000 inf @ 7.7 days");
-				troopcounl_.push([0,0,224000,50000,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 224000, 50000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">6 sec praetors</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">6 sec praetors</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BZBZB-PP#--------###-BZBZB-MS#---------##-BZBZB--H#---------##-BZBZB#######------##--BBB##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#----#######BZBZTZBZB#######----#BZBZBZBZB#----##----#BZBZBZBZB#----##----##BBZBZBB##----##-----##BZBZB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("praetors");
 				notesl_.push("110000 praetors @ 7.5 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,0,110000,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 110000, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">4 sec horses</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">4 sec horses</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--ZBB##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBE##----##-----##BEBEB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("horses");
 				notesl_.push("106000 horses @ 5 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,0,0,106000,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 106000, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">5 sec horses</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec horses</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################-B---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB-PH#---------##-BEBEB#######------##--BBB##BBBBB##-----##----##BBEBEBB##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBBTBBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("horses");
 				notesl_.push("124000 horses @ 7 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,0,0,124000,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124000, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">5 sec arbs</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec arbs</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--BBB##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BEBEB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("arbs");
 				notesl_.push("110000 arbs @ 6.5 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,110000,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 110000, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">6 sec arbs</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">6 sec arbs</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BBBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--BBB##BBBBB##-----##----##BBEBEBB##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("arbs");
 				notesl_.push("124000 arbs @ 8.5 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,124000,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 124000, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">4 sec sorc</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">4 sec sorc</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BJBJ--X#-------#####JBJBJ--S#--------###-JBJBJ--M#---------##-JBJBJ--H#---------##-JBJBJ#######------##-ZBJB##JBJBJ##-----##----##BJBJBJB##----##----#JBJBJBJBJ#----##----#JBJBJBJBJ#----#######JBJBTBJBJ#######----#JBJBJBJBJ#----##----#JBJBJBJBJ#----##----##BJBJBJB##----##-----##JBJBJ##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("sorc");
 				notesl_.push("176000 sorc @ 8 days");
-				troopcounl_.push([0,0,0,0,0,0,176000,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 176000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">5 sec sorc</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec sorc</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBB---X#-------#####BJBJB--P#--------###-BJBJB-MS#---------##-BJBJB--H#---------##-BJBJB#######------##-ZBBB##BJBJB##-----##----##JBJBJBJ##----##----#BJBJBJBJB#----##----#BJBJBJBJB#----#######BJBJTJBJB#######----#BJBJBJBJB#----##----#BJBJBJBJB#----##----##BBJBJBB##----##-----##BJBJB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("sorc");
 				notesl_.push("224000 sorc @ 13 days");
-				troopcounl_.push([0,0,0,0,0,0,224000,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 224000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">10 sec druids</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">10 sec druids</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################-J----X#-------#####JBJB--MS#--------###BJBJB---H#---------##BJBJB----#---------##BJBJB-#######------##BJBJB##BJBJB##-----##-JBJ##JBJBJBJ##----##----#BJBJBJBJB#----##----#BJBJBJBJB#----#######BJBJTJBJB#######----#BJBJBJBJB#----##----#BJBJBJBJB#----##----##JBJBJBJ##----##-----##BJBJB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("druids");
 				notesl_.push("102000 druids @ 12 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,0,0,0,102000,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102000, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">scorp/rams</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">scorp/rams</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBYB--X#-------#####BYBYB---#--------###-BYBYB-MS#---------##-BYBYB--H#---------##-BYBYB#######------##-BYBB##BYBYB##-----##----##YBYBYBY##----##----#BYBYBYBYB#----##----#BYBYBYBYB#----#######BYBYTYBYB#######----#BYBYBYBYB#----##----#BYBYBYBYB#----##----##YBYBYBY##----##-----##BYBYB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("scorp/rams");
 				notesl_.push("21600 siege engines @ 7.5 days");
-				troopcounl_.push([0,0,0,0,0,0,0,0,0,0,0,0,5500,16100,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5500, 16100, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}<option value="${ll_1}">ballista</option>`;
+				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">ballista</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBBB--X#-------#####BYBYB---#--------###-BYBYB-MS#---------##-BYBYB--H#---------##-BYBYB#######------##-BBBB##BBBBB##-----##----##BBYBYBB##----##----#BYBYBYBYB#----##----#BYBYBYBYB#----#######BYBYTYBYB#######----#BYBYBYBYB#----##----#BYBYBYBYB#----##----##BBYBYBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("ballista");
 				notesl_.push("25600 siege engines @ 10.5 days");
-				troopcounl_.push([0,25600,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-				resl_.push([0,0,0,0,1,150000,220000,150000,350000,0,0,0,0,1,0,0,0,0,0,150000,220000,150000,350000]);
+				troopcounl_.push([0, 25600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				/** @type {string} */
-				selectbuttsl_=`${selectbuttsl_}</select>`;
+				selectbuttsl_ = `${selectbuttsl_}</select>`;
 				$("#removeoverlayGo").after(selectbuttsdf_);
 				$("#dfunkylayout").after(selectbuttsl_);
 				$("#funkylayoutl").after(selectbuttsw_);
 				$("#funkylayoutl").change(() => {
-					var newlayout_=currentlayout_;
+					var newlayout_ = currentlayout_;
 					/** @type {number} */
-					var j_12=1;
-					for(;j_12<layoutsl_.length;j_12++) {
-						if($("#funkylayoutl").val()==j_12) {
+					var j_12 = 1;
+					for (; j_12 < layoutsl_.length; j_12++) {
+						if ($("#funkylayoutl").val() == j_12) {
 							/** @type {number} */
-							var i_54=20;
-							for(;i_54<currentlayout_.length;i_54++) {
-								var tmpchar_1=layoutsl_[j_12].charAt(i_54);
+							var i_54 = 20;
+							for (; i_54 < currentlayout_.length; i_54++) {
+								var tmpchar_1 = layoutsl_[j_12].charAt(i_54);
 								/** @type {!RegExp} */
-								var cmp_1=new RegExp(tmpchar_1);
-								if(!cmp_1.test(emptyspots_)) {
-									newlayout_=ReplaceAt(newlayout_,i_54,tmpchar_1);
+								var cmp_1 = new RegExp(tmpchar_1);
+								if (!cmp_1.test(emptyspots_)) {
+									newlayout_ = ReplaceAt(newlayout_, i_54, tmpchar_1);
 								}
 							}
 							$("#overlaytextarea").val(newlayout_);
 							setTimeout(() => {
 								jQuery("#applyoverlayGo")[0].click();
-							},300);
+							}, 300);
 							PostMMNIO(j_12);
 						}
 					}
 				});
 				$("#funkylayoutw").change(() => {
-					var newlayout_1=currentlayout_;
+					var newlayout_1 = currentlayout_;
 					/** @type {number} */
-					var j_13=1;
-					for(;j_13<layoutsw_.length;j_13++) {
-						if($("#funkylayoutw").val()==j_13) {
+					var j_13 = 1;
+					for (; j_13 < layoutsw_.length; j_13++) {
+						if ($("#funkylayoutw").val() == j_13) {
 							/** @type {number} */
-							for(let i_55=20;i_55<currentlayout_.length;i_55++) {
-								var tmpchar_2=layoutsw_[j_13].charAt(i_55);
+							for (let i_55 = 20; i_55 < currentlayout_.length; i_55++) {
+								var tmpchar_2 = layoutsw_[j_13].charAt(i_55);
 								/** @type {!RegExp} */
-								var cmp_2=new RegExp(tmpchar_2);
-								if(!cmp_2.test(emptyspots_)) {
-									newlayout_1=ReplaceAt(newlayout_1,i_55,tmpchar_2);
+								var cmp_2 = new RegExp(tmpchar_2);
+								if (!cmp_2.test(emptyspots_)) {
+									newlayout_1 = ReplaceAt(newlayout_1, i_55, tmpchar_2);
 								}
 							}
 							$("#overlaytextarea").val(newlayout_1);
 							setTimeout(() => {
 								jQuery("#applyoverlayGo")[0].click();
-							},300);
-							if($("#addnotes").prop("checked")==true) {
+							}, 300);
+							if ($("#addnotes").prop("checked") == true) {
 								$("#CNremarks").val(remarksw_[j_13]);
 								$("#citynotestextarea").val(notesw_[j_13]);
 								setTimeout(() => {
 									jQuery("#citnotesaveb")[0].click();
-								},100);
+								}, 100);
 							}
-							var aa_8=cdata_.mo;
-							if($("#addtroops").prop("checked")==true) {
+							var aa_8 = cdata_.mo;
+							if ($("#addtroops").prop("checked") == true) {
 								var k_4;
-								for(k_4 in troopcounw_[j_13]) {
-									aa_8[9+AsNumber(k_4)]=troopcounw_[j_13][k_4];
+								for (k_4 in troopcounw_[j_13]) {
+									aa_8[9 + AsNumber(k_4)] = troopcounw_[j_13][k_4];
 								}
 							}
-							if($("#addwalls").prop("checked")==true) {
+							if ($("#addwalls").prop("checked") == true) {
 								/** @type {number} */
-								aa_8[26]=1;
+								aa_8[26] = 1;
 							}
-							if($("#addtowers").prop("checked")==true) {
+							if ($("#addtowers").prop("checked") == true) {
 								/** @type {number} */
-								aa_8[27]=1;
+								aa_8[27] = 1;
 							}
-							if($("#addhub").prop("checked")==true) {
-								var hubs_3={
+							if ($("#addhub").prop("checked") == true) {
+								var hubs_3 = {
 									cid: [],
 									distance: []
 								};
-								$.each(ppdt.clc,(key_57,value_105) => {
-									if(key_57==$("#selHub").val()) {
+								$.each(ppdt.clc, (key_57, value_105) => {
+									if (key_57 == $("#selHub").val()) {
 										/** @type {number} */
-										hubs_3.cid=value_105;
+										hubs_3.cid = value_105;
 									}
 								});
-								for(let i_55 in hubs_3.cid) {
+								for (let i_55 in hubs_3.cid) {
 									/** @type {number} */
-									var tempx_12=AsNumber(hubs_3.cid[i_55]%65536);
+									var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
 									/** @type {number} */
-									var tempy_12=AsNumber((hubs_3.cid[i_55]-tempx_12)/65536);
-									hubs_3.distance.push(Math.sqrt((tempx_12-cdata_.x)*(tempx_12-cdata_.x)+(tempy_12-cdata_.y)*(tempy_12-cdata_.y)));
+									var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
+									hubs_3.distance.push(Math.sqrt((tempx_12 - cdata_.x) * (tempx_12 - cdata_.x) + (tempy_12 - cdata_.y) * (tempy_12 - cdata_.y)));
 								}
 								/** @type {number} */
-								var mindist_3=Math.min(...hubs_3.distance);
-								var nearesthub_3=hubs_3.cid[hubs_3.distance.indexOf(mindist_3)];
-								resw_[j_13][14]=nearesthub_3;
-								resw_[j_13][15]=nearesthub_3;
+								var mindist_3 = Math.min(...hubs_3.distance);
+								var nearesthub_3 = hubs_3.cid[hubs_3.distance.indexOf(mindist_3)];
+								resw_[j_13][14] = nearesthub_3;
+								resw_[j_13][15] = nearesthub_3;
 							} else {
 								/** @type {number} */
-								resw_[j_13][14]=0;
+								resw_[j_13][14] = 0;
 								/** @type {number} */
-								resw_[j_13][15]=0;
+								resw_[j_13][15] = 0;
 							}
-							if($("#addres").prop("checked")==true) {
-								resw_[j_13][5]=$("#woodin").val();
-								resw_[j_13][6]=$("#stonein").val();
-								resw_[j_13][7]=$("#ironin").val();
-								resw_[j_13][8]=$("#foodin").val();
-								resw_[j_13][19]=$("#woodin").val();
-								resw_[j_13][20]=$("#stonein").val();
-								resw_[j_13][21]=$("#ironin").val();
-								resw_[j_13][22]=$("#foodin").val();
-								for(k_4 in resw_[j_13]) {
-									aa_8[28+AsNumber(k_4)]=resw_[j_13][k_4];
+							if ($("#addres").prop("checked") == true) {
+								resw_[j_13][5] = $("#woodin").val();
+								resw_[j_13][6] = $("#stonein").val();
+								resw_[j_13][7] = $("#ironin").val();
+								resw_[j_13][8] = $("#foodin").val();
+								resw_[j_13][19] = $("#woodin").val();
+								resw_[j_13][20] = $("#stonein").val();
+								resw_[j_13][21] = $("#ironin").val();
+								resw_[j_13][22] = $("#foodin").val();
+								for (k_4 in resw_[j_13]) {
+									aa_8[28 + AsNumber(k_4)] = resw_[j_13][k_4];
 								}
 							}
-							if($("#addbuildings").prop("checked")==true) {
+							if ($("#addbuildings").prop("checked") == true) {
 								/** @type {!Array} */
-								aa_8[51]=[1,GetFloatValue($("#cablev"))];
+								aa_8[51] = [1, GetFloatValue($("#cablev"))];
 								/** @type {number} */
-								aa_8[1]=1;
+								aa_8[1] = 1;
 							}
-							var dat_16={
+							var dat_16 = {
 								a: JSON.stringify(aa_8),
 								b: cotg.city.id()
 							};
@@ -2995,92 +2995,92 @@ function avactor() {
 					}
 				});
 				$("#dfunkylayout").change(() => {
-					var newlayout_2=currentlayout_;
+					var newlayout_2 = currentlayout_;
 					/** @type {number} */
-					var j_14=1;
-					for(;j_14<layoutdf_.length;j_14++) {
-						if($("#dfunkylayout").val()==j_14) {
+					var j_14 = 1;
+					for (; j_14 < layoutdf_.length; j_14++) {
+						if ($("#dfunkylayout").val() == j_14) {
 							/** @type {number} */
 
-							for(let i_56=20;i_56<currentlayout_.length;i_56++) {
-								var tmpchar_3=layoutdf_[j_14].charAt(i_56);
+							for (let i_56 = 20; i_56 < currentlayout_.length; i_56++) {
+								var tmpchar_3 = layoutdf_[j_14].charAt(i_56);
 								/** @type {!RegExp} */
-								var cmp_3=new RegExp(tmpchar_3);
-								if(!cmp_3.test(emptyspots_)) {
-									newlayout_2=ReplaceAt(newlayout_2,i_56,tmpchar_3);
+								var cmp_3 = new RegExp(tmpchar_3);
+								if (!cmp_3.test(emptyspots_)) {
+									newlayout_2 = ReplaceAt(newlayout_2, i_56, tmpchar_3);
 								}
 							}
 							$("#overlaytextarea").val(newlayout_2);
 							setTimeout(() => {
 								jQuery("#applyoverlayGo")[0].click();
-							},300);
-							if($("#addnotes").prop("checked")==true) {
+							}, 300);
+							if ($("#addnotes").prop("checked") == true) {
 								$("#CNremarks").val(remarkdf_[j_14]);
 								$("#citynotestextarea").val(notedf_[j_14]);
 								setTimeout(() => {
 									jQuery("#citnotesaveb")[0].click();
-								},100);
+								}, 100);
 							}
-							var aa_9=cdata_.mo;
-							if($("#addtroops").prop("checked")==true) {
+							var aa_9 = cdata_.mo;
+							if ($("#addtroops").prop("checked") == true) {
 								var k_5;
-								for(k_5 in troopcound_[j_14]) {
-									aa_9[9+AsNumber(k_5)]=troopcound_[j_14][k_5];
+								for (k_5 in troopcound_[j_14]) {
+									aa_9[9 + AsNumber(k_5)] = troopcound_[j_14][k_5];
 								}
 							}
-							if($("#addwalls").prop("checked")==true) {
+							if ($("#addwalls").prop("checked") == true) {
 								/** @type {number} */
-								aa_9[26]=1;
+								aa_9[26] = 1;
 							}
-							if($("#addtowers").prop("checked")==true) {
+							if ($("#addtowers").prop("checked") == true) {
 								/** @type {number} */
-								aa_9[27]=1;
+								aa_9[27] = 1;
 							}
-							if($("#addhub").prop("checked")==true) {
-								var hubs_4={
+							if ($("#addhub").prop("checked") == true) {
+								var hubs_4 = {
 									cid: [],
 									distance: []
 								};
-								$.each(ppdt.clc,(key_58,value_106) => {
-									if(key_58==$("#selHub").val()) {
+								$.each(ppdt.clc, (key_58, value_106) => {
+									if (key_58 == $("#selHub").val()) {
 										/** @type {number} */
-										hubs_4.cid=value_106;
+										hubs_4.cid = value_106;
 									}
 								});
-								for(let i_56 in hubs_4.cid) {
+								for (let i_56 in hubs_4.cid) {
 									/** @type {number} */
-									var tempx_13=AsNumber(hubs_4.cid[i_56]%65536);
+									var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
 									/** @type {number} */
-									var tempy_13=AsNumber((hubs_4.cid[i_56]-tempx_13)/65536);
-									hubs_4.distance.push(Math.sqrt((tempx_13-cdata_.x)*(tempx_13-cdata_.x)+(tempy_13-cdata_.y)*(tempy_13-cdata_.y)));
+									var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
+									hubs_4.distance.push(Math.sqrt((tempx_13 - cdata_.x) * (tempx_13 - cdata_.x) + (tempy_13 - cdata_.y) * (tempy_13 - cdata_.y)));
 								}
 								/** @type {number} */
-								var mindist_4=Math.min(...hubs_4.distance);
-								var nearesthub_4=hubs_4.cid[hubs_4.distance.indexOf(mindist_4)];
-								resd_[j_14][14]=nearesthub_4;
-								resd_[j_14][15]=nearesthub_4;
+								var mindist_4 = Math.min(...hubs_4.distance);
+								var nearesthub_4 = hubs_4.cid[hubs_4.distance.indexOf(mindist_4)];
+								resd_[j_14][14] = nearesthub_4;
+								resd_[j_14][15] = nearesthub_4;
 							} else {
 								/** @type {number} */
-								resd_[j_14][14]=0;
+								resd_[j_14][14] = 0;
 								/** @type {number} */
-								resd_[j_14][15]=0;
+								resd_[j_14][15] = 0;
 							}
-							if($("#addres").prop("checked")==true) {
-								resd_[j_14][5]=$("#woodin").val();
-								resd_[j_14][6]=$("#stonein").val();
-								resd_[j_14][7]=$("#ironin").val();
-								resd_[j_14][8]=$("#foodin").val();
-								for(k_5 in resd_[j_14]) {
-									aa_9[28+AsNumber(k_5)]=resd_[j_14][k_5];
+							if ($("#addres").prop("checked") == true) {
+								resd_[j_14][5] = $("#woodin").val();
+								resd_[j_14][6] = $("#stonein").val();
+								resd_[j_14][7] = $("#ironin").val();
+								resd_[j_14][8] = $("#foodin").val();
+								for (k_5 in resd_[j_14]) {
+									aa_9[28 + AsNumber(k_5)] = resd_[j_14][k_5];
 								}
 							}
-							if($("#addbuildings").prop("checked")==true) {
+							if ($("#addbuildings").prop("checked") == true) {
 								/** @type {!Array} */
-								aa_9[51]=[1,GetFloatValue($("#cablev"))];
+								aa_9[51] = [1, GetFloatValue($("#cablev"))];
 								/** @type {number} */
-								aa_9[1]=1;
+								aa_9[1] = 1;
 							}
-							var dat_17={
+							var dat_17 = {
 								a: JSON.stringify(aa_9),
 								b: cotg.city.id()
 							};
@@ -3093,16 +3093,16 @@ function avactor() {
 						}
 					}
 				});
-			},500);
+			}, 500);
 		});
 		setTimeout(() => {
 			//  replaceElem('input','h2','#achatMsg');
 			setTimeout(() => {
 				//	  tinymce.init(chatHeaderConfig);//	
-			},1000);
+			}, 1000);
 			//  var options_13 = {};
 			//  $("#HelloWorld").hide("drop", options_13, 2000);
-			
+
 		}, 5000);
 
 		{
@@ -3119,7 +3119,7 @@ function avactor() {
 				s: "",
 				cookie: "",
 				cid: 0,
-				time:0
+				time: 0
 			};
 			SetupHeaders();
 
@@ -3134,7 +3134,7 @@ function avactor() {
 				creds.cid = cid;
 				creds.time = currentTime();
 				let wrapper = { jsvars: creds }
-				if (cdata_!=null)
+				if (cdata_ != null)
 					wrapper['citydata'] = cdata_;
 
 				window['external']['notify'](JSON.stringify(wrapper));
@@ -3144,7 +3144,7 @@ function avactor() {
 			}
 
 		}
-	},5000);
+	}, 5000);
 
 
 	//__a6.cipher=(l6v,j6v) => {
@@ -3360,17 +3360,17 @@ function avactor() {
 	//};
 
 
-	
+
 
 
 
 	// {"a":[["21 109","C23 (343:270)","Avatar","Cyndros",0,"12:00:00 ",7832371,8134875,1,"Do not fill",17695063,1584273600]],"b":[]}
 	//var testCityOver = [{ "city": "21 01","location": "C 23 (345:270)","score": 7316,"carts_total": 1600,"carts_home": 1567,"wood_per_hour": 20808,"wood": 1330774,"wood_storage": 2175000,"stone_per_hour": 0,"stone": 1775000,"stone_storage": 1775000,"iron_per_hour": 13507,"iron": 2746029,"iron_storage": 2975000,"food_per_hour": 106,"food": 3374015,"food_storage": 3375000,"ships_total": 240,"ships_home": 0,"Academy": "Y","Sorc_tower": "Y","reference": "","id": 17695065 },{ "city": "21 101","location": "C 23 (342:271)","score": 9460,"carts_total": 600,"carts_home": 62,"wood_per_hour": 300,"wood": 574371,"wood_storage": 575000,"stone_per_hour": 0,"stone": 574401,"stone_storage": 575000,"iron_per_hour": 0,"iron": 1000542,"iron_storage": 1375000,"food_per_hour": 39582,"food": 561848,"food_storage": 575000,"ships_total": 0,"ships_home": 0,"Academy": "Y","Sorc_tower": "N","reference": "","id": 17760598 }];
-	var nearDefSubscribed=undefined;
+	var nearDefSubscribed = undefined;
 	function NearDefSubscribe() {
-		if(nearDefSubscribed==undefined) {
-			nearDefSubscribed=1;
-			cotgsubscribe.subscribe("regional",data_50 => {
+		if (nearDefSubscribed == undefined) {
+			nearDefSubscribed = 1;
+			cotgsubscribe.subscribe("regional", data_50 => {
 				$("#ndefx").val(data_50.x);
 				$("#ndefy").val(data_50.y);
 			});
@@ -3385,17 +3385,17 @@ function avactor() {
 	 */
 	function Aimp_(str_6) {
 		/** @type {*} */
-		var Aexp_=JSON.parse(str_6);
+		var Aexp_ = JSON.parse(str_6);
 		/** @type {number} */
-		var i_4=1;
-		for(;i_4<=Aexp_.x.length;i_4++) {
-			$(`#t${i_4}x`).val(Aexp_.x[i_4-1]);
-			$(`#t${i_4}y`).val(Aexp_.y[i_4-1]);
-			$(`#type${i_4}`).val(Aexp_.type[i_4-1]).change();
+		var i_4 = 1;
+		for (; i_4 <= Aexp_.x.length; i_4++) {
+			$(`#t${i_4}x`).val(Aexp_.x[i_4 - 1]);
+			$(`#t${i_4}y`).val(Aexp_.y[i_4 - 1]);
+			$(`#type${i_4}`).val(Aexp_.type[i_4 - 1]).change();
 		}
-		var date=new Date(`${Aexp_.time[3]} ${Aexp_.time[0]}:${Aexp_.time[1]}:${Aexp_.time[2]}`);
+		var date = new Date(`${Aexp_.time[3]} ${Aexp_.time[0]}:${Aexp_.time[1]}:${Aexp_.time[2]}`);
 
-		$("#attackDat").val(date.toISOString().substr(0,19));
+		$("#attackDat").val(date.toISOString().substr(0, 19));
 
 	}
 	/**
@@ -3403,156 +3403,156 @@ function avactor() {
 	 * @return {void}
 	 */
 	function neardeftable_(t_) {
-		var cx_=AsNumber($("#ndefx").val());
-		var cy_=AsNumber($("#ndefy").val());
+		var cx_ = AsNumber($("#ndefx").val());
+		var cy_ = AsNumber($("#ndefy").val());
 		/** @type {number} */
-		var cont_=AsNumber(Math.floor(cx_/100)+10*Math.floor(cy_/100));
+		var cont_ = AsNumber(Math.floor(cx_ / 100) + 10 * Math.floor(cy_ / 100));
 		/** @type {!Array} */
-		var cit_=[[]];
+		var cit_ = [[]];
 		/** @type {any} */
 		var i_5;
-		for(i_5 in t_) {
-			var tid_=t_[i_5].id;
+		for (i_5 in t_) {
+			var tid_ = t_[i_5].id;
 			/** @type {number} */
-			var tempx_=AsNumber(tid_%65536);
+			var tempx_ = AsNumber(tid_ % 65536);
 			/** @type {number} */
-			var tempy_=AsNumber((tid_-tempx_)/65536);
+			var tempy_ = AsNumber((tid_ - tempx_) / 65536);
 			/** @type {number} */
-			var tcont_=AsNumber(Math.floor(tempx_/100)+10*Math.floor(tempy_/100));
-			if(cont_==tcont_) {
-				if(t_[i_5].Ballista_total>0||t_[i_5].Ranger_total>0||t_[i_5].Triari_total>0||t_[i_5].Priestess_total||t_[i_5].Arbalist_total>0||t_[i_5].Praetor_total>0) {
+			var tcont_ = AsNumber(Math.floor(tempx_ / 100) + 10 * Math.floor(tempy_ / 100));
+			if (cont_ == tcont_) {
+				if (t_[i_5].Ballista_total > 0 || t_[i_5].Ranger_total > 0 || t_[i_5].Triari_total > 0 || t_[i_5].Priestess_total || t_[i_5].Arbalist_total > 0 || t_[i_5].Praetor_total > 0) {
 					/** @type {number} */
-					var tdist_=Math.sqrt((tempx_-cx_)*(tempx_-cx_)+(tempy_-cy_)*(tempy_-cy_));
+					var tdist_ = Math.sqrt((tempx_ - cx_) * (tempx_ - cx_) + (tempy_ - cy_) * (tempy_ - cy_));
 					/** @type {!Array} */
-					var tempt_=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					tempt_[1]=t_[i_5].Ballista_total;
-					tempt_[2]=t_[i_5].Ranger_total;
-					tempt_[3]=t_[i_5].Triari_total;
-					tempt_[4]=t_[i_5].Priestess_total;
-					tempt_[8]=t_[i_5].Arbalist_total;
-					tempt_[9]=t_[i_5].Praetor_total;
+					var tempt_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					tempt_[1] = t_[i_5].Ballista_total;
+					tempt_[2] = t_[i_5].Ranger_total;
+					tempt_[3] = t_[i_5].Triari_total;
+					tempt_[4] = t_[i_5].Priestess_total;
+					tempt_[8] = t_[i_5].Arbalist_total;
+					tempt_[9] = t_[i_5].Praetor_total;
 					/** @type {!Array} */
-					var temph_=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					temph_[1]=t_[i_5].Ballista_home;
-					temph_[2]=t_[i_5].Ranger_home;
-					temph_[3]=t_[i_5].Triari_home;
-					temph_[4]=t_[i_5].Priestess_home;
-					temph_[8]=t_[i_5].Arbalist_home;
-					temph_[9]=t_[i_5].Praetor_home;
+					var temph_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					temph_[1] = t_[i_5].Ballista_home;
+					temph_[2] = t_[i_5].Ranger_home;
+					temph_[3] = t_[i_5].Triari_home;
+					temph_[4] = t_[i_5].Priestess_home;
+					temph_[8] = t_[i_5].Arbalist_home;
+					temph_[9] = t_[i_5].Praetor_home;
 					/** @type {number} */
-					var tempts_=0;
+					var tempts_ = 0;
 					var j_1;
-					for(j_1 in tempt_) {
+					for (j_1 in tempt_) {
 						/** @type {number} */
-						tempts_=tempts_+tempt_[j_1]*ttts_[j_1];
+						tempts_ = tempts_ + tempt_[j_1] * ttts_[j_1];
 					}
 					/** @type {number} */
-					var tempth_=0;
+					var tempth_ = 0;
 					var h_6;
-					for(h_6 in temph_) {
+					for (h_6 in temph_) {
 						/** @type {number} */
-						tempth_=tempth_+temph_[h_6]*ttts_[h_6];
+						tempth_ = tempth_ + temph_[h_6] * ttts_[h_6];
 					}
 					/** @type {number} */
-					var tspeed_=0;
-					for(j_1 in tempt_) {
-						if(tempt_[j_1]>0) {
-							if(AsNumber((ttspeed_[j_1]/ttspeedres_[j_1]).toFixed(2))>tspeed_) {
+					var tspeed_ = 0;
+					for (j_1 in tempt_) {
+						if (tempt_[j_1] > 0) {
+							if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_=AsNumber((ttspeed_[j_1]/ttspeedres_[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
 							}
 						}
 					}
-					cit_.push([tempx_,tempy_,tdist_,t_[i_5].c,tempt_,tempts_,tempth_,tid_,tdist_*tspeed_]);
+					cit_.push([tempx_, tempy_, tdist_, t_[i_5].c, tempt_, tempts_, tempth_, tid_, tdist_ * tspeed_]);
 				}
 			}
-			if(cont_!=tcont_||t_[i_5].Galley_total>0||t_[i_5].Stinger_total>0) {
-				if(t_[i_5].Stinger_total>0||t_[i_5].Galley_total>0) {
-					tdist_=RoundTo2Digits(Math.sqrt((tempx_-cx_)*(tempx_-cx_)+(tempy_-cy_)*(tempy_-cy_)));
+			if (cont_ != tcont_ || t_[i_5].Galley_total > 0 || t_[i_5].Stinger_total > 0) {
+				if (t_[i_5].Stinger_total > 0 || t_[i_5].Galley_total > 0) {
+					tdist_ = RoundTo2Digits(Math.sqrt((tempx_ - cx_) * (tempx_ - cx_) + (tempy_ - cy_) * (tempy_ - cy_)));
 					/** @type {!Array} */
-					tempt_=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					tempt_[1]=t_[i_5].Ballista_total;
-					tempt_[2]=t_[i_5].Ranger_total;
-					tempt_[3]=t_[i_5].Triari_total;
-					tempt_[4]=t_[i_5].Priestess_total;
-					tempt_[8]=t_[i_5].Arbalist_total;
-					tempt_[9]=t_[i_5].Praetor_total;
-					tempt_[14]=t_[i_5].Galley_total;
-					tempt_[15]=t_[i_5].Stinger_total;
+					tempt_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					tempt_[1] = t_[i_5].Ballista_total;
+					tempt_[2] = t_[i_5].Ranger_total;
+					tempt_[3] = t_[i_5].Triari_total;
+					tempt_[4] = t_[i_5].Priestess_total;
+					tempt_[8] = t_[i_5].Arbalist_total;
+					tempt_[9] = t_[i_5].Praetor_total;
+					tempt_[14] = t_[i_5].Galley_total;
+					tempt_[15] = t_[i_5].Stinger_total;
 					/** @type {!Array} */
-					temph_=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					temph_[1]=t_[i_5].Ballista_home;
-					temph_[2]=t_[i_5].Ranger_home;
-					temph_[3]=t_[i_5].Triari_home;
-					temph_[4]=t_[i_5].Priestess_home;
-					temph_[8]=t_[i_5].Arbalist_home;
-					temph_[9]=t_[i_5].Praetor_home;
-					temph_[14]=t_[i_5].Galley_home;
-					temph_[15]=t_[i_5].Stinger_home;
+					temph_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					temph_[1] = t_[i_5].Ballista_home;
+					temph_[2] = t_[i_5].Ranger_home;
+					temph_[3] = t_[i_5].Triari_home;
+					temph_[4] = t_[i_5].Priestess_home;
+					temph_[8] = t_[i_5].Arbalist_home;
+					temph_[9] = t_[i_5].Praetor_home;
+					temph_[14] = t_[i_5].Galley_home;
+					temph_[15] = t_[i_5].Stinger_home;
 					/** @type {number} */
-					tempts_=0;
-					for(j_1 in tempt_) {
+					tempts_ = 0;
+					for (j_1 in tempt_) {
 						/** @type {number} */
-						tempts_=tempts_+tempt_[j_1]*ttts_[j_1];
+						tempts_ = tempts_ + tempt_[j_1] * ttts_[j_1];
 					}
 					/** @type {number} */
-					tempth_=0;
-					for(h_6 in temph_) {
+					tempth_ = 0;
+					for (h_6 in temph_) {
 						/** @type {number} */
-						tempth_=tempth_+temph_[h_6]*ttts_[h_6];
+						tempth_ = tempth_ + temph_[h_6] * ttts_[h_6];
 					}
 					/** @type {number} */
-					tspeed_=0;
-					for(j_1 in tempt_) {
-						if(tempt_[j_1]>0) {
-							if(AsNumber((ttspeed_[j_1]/ttspeedres_[j_1]).toFixed(2))>tspeed_) {
+					tspeed_ = 0;
+					for (j_1 in tempt_) {
+						if (tempt_[j_1] > 0) {
+							if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_=AsNumber((ttspeed_[j_1]/ttspeedres_[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
 							}
 						}
 					}
 					/** @type {number} */
-					var timetssp_=tdist_*tspeed_+60;
-					cit_.push([tempx_,tempy_,tdist_,t_[i_5].c,tempt_,tempts_,tempth_,tid_,timetssp_]);
+					var timetssp_ = tdist_ * tspeed_ + 60;
+					cit_.push([tempx_, tempy_, tdist_, t_[i_5].c, tempt_, tempts_, tempth_, tid_, timetssp_]);
 				}
 			}
 		}
-		cit_.sort((a_,b_1) => {
-			return a_[8]-b_1[8];
+		cit_.sort((a_, b_1) => {
+			return a_[8] - b_1[8];
 		});
 		/** @type {string} */
-		var neardeftab_="<table id='ndeftable'><thead><th></th><th>City</th><th>Coords</th><th>TS Total</th><th>TS Home</th><th id='ndefdist'>Travel Time</th><th>type</th></thead><tbody>";
-		for(i_5 in cit_) {
-			if(i_5>0) {
+		var neardeftab_ = "<table id='ndeftable'><thead><th></th><th>City</th><th>Coords</th><th>TS Total</th><th>TS Home</th><th id='ndefdist'>Travel Time</th><th>type</th></thead><tbody>";
+		for (i_5 in cit_) {
+			if (i_5 > 0) {
 				/** @type {number} */
-				var h1_=Math.floor(cit_[i_5][8]/60);
+				var h1_ = Math.floor(cit_[i_5][8] / 60);
 				/** @type {number} */
-				var m1_=Math.floor(cit_[i_5][8]%60);
+				var m1_ = Math.floor(cit_[i_5][8] % 60);
 				/** @type {(number|string)} */
 
 				/** @type {(number|string)} */
 				/** @type {string} */
-				neardeftab_=`${neardeftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_[i_5][7]}'>Go To</button></td><td>${cit_[i_5][3]}</td><td class='coordblink shcitt' data='${cit_[i_5][7]}'>${cit_[i_5][0]}:${cit_[i_5][1]}</td>`;
+				neardeftab_ = `${neardeftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_[i_5][7]}'>Go To</button></td><td>${cit_[i_5][3]}</td><td class='coordblink shcitt' data='${cit_[i_5][7]}'>${cit_[i_5][0]}:${cit_[i_5][1]}</td>`;
 				/** @type {string} */
-				neardeftab_=`${neardeftab_}<td>${cit_[i_5][5]}</td><td>${cit_[i_5][6]}</td><td>${TwoDigitNum(h1_)}:${TwoDigitNum(m1_)}</td><td><table>`;
-				for(j_1 in cit_[i_5][4]) {
-					if(cit_[i_5][4][j_1]>0) {
+				neardeftab_ = `${neardeftab_}<td>${cit_[i_5][5]}</td><td>${cit_[i_5][6]}</td><td>${TwoDigitNum(h1_)}:${TwoDigitNum(m1_)}</td><td><table>`;
+				for (j_1 in cit_[i_5][4]) {
+					if (cit_[i_5][4][j_1] > 0) {
 						/** @type {string} */
-						neardeftab_=`${neardeftab_}<td><div class='${tpicdiv20_[j_1]}'></div></td>`;
+						neardeftab_ = `${neardeftab_}<td><div class='${tpicdiv20_[j_1]}'></div></td>`;
 					}
 				}
 				/** @type {string} */
-				neardeftab_=`${neardeftab_}</table></td></tr>`;
+				neardeftab_ = `${neardeftab_}</table></td></tr>`;
 			}
 		}
 		/** @type {string} */
-		neardeftab_=`${neardeftab_}</tbody></table>`;
+		neardeftab_ = `${neardeftab_}</tbody></table>`;
 		$("#Ndefbox").html(neardeftab_);
-		$("#ndeftable td").css("text-align","center");
-		$("#ndeftable td").css("height","25px");
+		$("#ndeftable td").css("text-align", "center");
+		$("#ndeftable td").css("height", "25px");
 		/** @type {(Element|null)} */
-		var newTableObject_=document.getElementById("ndeftable");
-//		sorttable.makeSortable(newTableObject_);
+		var newTableObject_ = document.getElementById("ndeftable");
+		//		sorttable.makeSortable(newTableObject_);
 	}
 	/**
 	 * @param {!Object} t_1
@@ -3560,144 +3560,146 @@ function avactor() {
 	 */
 	function nearofftable_(t_1) {
 		/** @type {number} */
-		var contoff_=AsNumber($("#noffx").val());
+		var contoff_ = AsNumber($("#noffx").val());
 		/** @type {!Array} */
-		var cit_1=[[]];
+		var cit_1 = [[]];
 		/** @type {!Array} */
-		var troopmail_=[[]];
+		var troopmail_ = [[]];
 		/** @type {number} */
-		var counteroff_=0;
+		var counteroff_ = 0;
 		var i_6;
-		for(i_6 in t_1) {
-			var tid_1=t_1[i_6].id;
+		for (i_6 in t_1) {
+			var tid_1 = t_1[i_6].id;
 			/** @type {number} */
-			var tempx_1=AsNumber(tid_1%65536);
+			var tempx_1 = AsNumber(tid_1 % 65536);
 			/** @type {number} */
-			var tempy_1=AsNumber((tid_1-tempx_1)/65536);
+			var tempy_1 = AsNumber((tid_1 - tempx_1) / 65536);
 			/** @type {number} */
-			var tcont_1=AsNumber(Math.floor(tempx_1/100)+10*Math.floor(tempy_1/100));
-			if(contoff_==tcont_1) {
-				if(t_1[i_6].Druid_total>0||t_1[i_6].Horseman_total>0||t_1[i_6].Sorcerer_total>0||t_1[i_6].Vanquisher_total>0||t_1[i_6].Scorpion_total>0||t_1[i_6].Ram_total>0) {
+			var tcont_1 = AsNumber(Math.floor(tempx_1 / 100) + 10 * Math.floor(tempy_1 / 100));
+			if (contoff_ == tcont_1) {
+				if (t_1[i_6].Druid_total > 0 || t_1[i_6].Horseman_total > 0 || t_1[i_6].Sorcerer_total > 0 || t_1[i_6].Vanquisher_total > 0 || t_1[i_6].Scorpion_total > 0 || t_1[i_6].Ram_total > 0) {
 					/** @type {number} */
-					counteroff_=counteroff_+1;
+					counteroff_ = counteroff_ + 1;
 					/** @type {!Array} */
-					var tempt_1=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					tempt_1[5]=t_1[i_6].Vanquisher_total;
-					tempt_1[6]=t_1[i_6].Sorcerer_total;
-					tempt_1[10]=t_1[i_6].Horseman_total;
-					tempt_1[11]=t_1[i_6].Druid_total;
-					tempt_1[12]=t_1[i_6].Ram_total;
-					tempt_1[13]=t_1[i_6].Scorpion_total;
+					var tempt_1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					tempt_1[5] = t_1[i_6].Vanquisher_total;
+					tempt_1[6] = t_1[i_6].Sorcerer_total;
+					tempt_1[10] = t_1[i_6].Horseman_total;
+					tempt_1[11] = t_1[i_6].Druid_total;
+					tempt_1[12] = t_1[i_6].Ram_total;
+					tempt_1[13] = t_1[i_6].Scorpion_total;
 					/** @type {number} */
-					var tempts_1=0;
+					var tempts_1 = 0;
 					var j_2;
-					for(j_2 in tempt_1) {
+					for (j_2 in tempt_1) {
 						/** @type {number} */
-						tempts_1=tempts_1+tempt_1[j_2]*ttts_[j_2];
+						tempts_1 = tempts_1 + tempt_1[j_2] * ttts_[j_2];
 					}
-					troopmail_.push([tempt_1,tempts_1]);
-					cit_1.push([tempx_1,tempy_1,tempts_1,tempt_1,t_1[i_6].c,tid_1]);
+					troopmail_.push([tempt_1, tempts_1]);
+					cit_1.push([tempx_1, tempy_1, tempts_1, tempt_1, t_1[i_6].c, tid_1]);
 				}
 			}
-			if(contoff_==99) {
-				if(t_1[i_6].Warship_total>0||t_1[i_6].Galley_total>0) {
+			if (contoff_ == 99) {
+				if (t_1[i_6].Warship_total > 0 || t_1[i_6].Galley_total > 0) {
 					/** @type {number} */
-					counteroff_=counteroff_+1;
+					counteroff_ = counteroff_ + 1;
 					/** @type {!Array} */
-					tempt_1=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-					tempt_1[5]=t_1[i_6].Vanquisher_total;
-					tempt_1[6]=t_1[i_6].Sorcerer_total;
-					tempt_1[10]=t_1[i_6].Horseman_total;
-					tempt_1[11]=t_1[i_6].Druid_total;
-					tempt_1[12]=t_1[i_6].Ram_total;
-					tempt_1[13]=t_1[i_6].Scorpion_total;
-					tempt_1[14]=t_1[i_6].Galley_total;
-					tempt_1[16]=t_1[i_6].Warship_total;
+					tempt_1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+					tempt_1[5] = t_1[i_6].Vanquisher_total;
+					tempt_1[6] = t_1[i_6].Sorcerer_total;
+					tempt_1[10] = t_1[i_6].Horseman_total;
+					tempt_1[11] = t_1[i_6].Druid_total;
+					tempt_1[12] = t_1[i_6].Ram_total;
+					tempt_1[13] = t_1[i_6].Scorpion_total;
+					tempt_1[14] = t_1[i_6].Galley_total;
+					tempt_1[16] = t_1[i_6].Warship_total;
 					/** @type {number} */
-					tempts_1=0;
-					for(j_2 in tempt_1) {
+					tempts_1 = 0;
+					for (j_2 in tempt_1) {
 						/** @type {number} */
-						tempts_1=tempts_1+tempt_1[j_2]*ttts_[j_2];
+						tempts_1 = tempts_1 + tempt_1[j_2] * ttts_[j_2];
 					}
-					troopmail_.push([tempt_1,tempts_1]);
-					cit_1.push([tempx_1,tempy_1,tempts_1,tempt_1,t_1[i_6].c,tid_1]);
+					troopmail_.push([tempt_1, tempts_1]);
+					cit_1.push([tempx_1, tempy_1, tempts_1, tempt_1, t_1[i_6].c, tid_1]);
 				}
 			}
 		}
-		cit_1.sort((a_1,b_2) => {
-			return b_2[2]-a_1[2];
+		cit_1.sort((a_1, b_2) => {
+			return b_2[2] - a_1[2];
 		});
 		$("#asdfg").text(`Total:${counteroff_}`);
 		/** @type {string} */
-		var nearofftab_="<table id='nofftable'><thead><th></th><th>City</th><th>Coords</th><th>TS</th><th>type</th></thead><tbody>";
-		for(i_6 in cit_1) {
-			if(i_6>0) {
+		var nearofftab_ = "<table id='nofftable'><thead><th></th><th>City</th><th>Coords</th><th>TS</th><th>type</th></thead><tbody>";
+		for (i_6 in cit_1) {
+			if (i_6 > 0) {
 				/** @type {string} */
-				nearofftab_=`${nearofftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_1[i_6][5]}'>Go To</button></td><td>${cit_1[i_6][4]}</td><td class='coordblink shcitt' data='${cit_1[i_6][5]}'>${cit_1[i_6][0]}:${cit_1[i_6][1]}</td>`;
+				nearofftab_ = `${nearofftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_1[i_6][5]}'>Go To</button></td><td>${cit_1[i_6][4]}</td><td class='coordblink shcitt' data='${cit_1[i_6][5]}'>${cit_1[i_6][0]}:${cit_1[i_6][1]}</td>`;
 				/** @type {string} */
-				nearofftab_=`${nearofftab_}<td>${cit_1[i_6][2]}</td><td><table>`;
-				for(j_2 in cit_1[i_6][3]) {
-					if(cit_1[i_6][3][j_2]>0) {
+				nearofftab_ = `${nearofftab_}<td>${cit_1[i_6][2]}</td><td><table>`;
+				for (j_2 in cit_1[i_6][3]) {
+					if (cit_1[i_6][3][j_2] > 0) {
 						/** @type {string} */
-						nearofftab_=`${nearofftab_}<td><div class='${tpicdiv20_[j_2]}'></div></td>`;
+						nearofftab_ = `${nearofftab_}<td><div class='${tpicdiv20_[j_2]}'></div></td>`;
 					}
 				}
 				/** @type {string} */
-				nearofftab_=`${nearofftab_}</table></td></tr>`;
+				nearofftab_ = `${nearofftab_}</table></td></tr>`;
 			}
 		}
 		/** @type {string} */
-		nearofftab_=`${nearofftab_}</tbody></table>`;
+		nearofftab_ = `${nearofftab_}</tbody></table>`;
 		$("#Noffbox").html(nearofftab_);
-		$("#nofftable td").css("text-align","center");
-		$("#nofftable td").css("height","26px");
+		$("#nofftable td").css("text-align", "center");
+		$("#nofftable td").css("height", "26px");
 		/** @type {(Element|null)} */
-		var newTableObject_1=document.getElementById("nofftable");
-	//	sorttable.makeSortable(newTableObject_1);
-		troopmail_.sort((a_2,b_3) => {
-			return b_3[1]-a_2[1];
+		var newTableObject_1 = document.getElementById("nofftable");
+		//	sorttable.makeSortable(newTableObject_1);
+		troopmail_.sort((a_2, b_3) => {
+			return b_3[1] - a_2[1];
 		});
 		$("#mailoff").click(() => {
-			var conttemp_=$("#noffx").val();
+			var conttemp_ = $("#noffx").val();
 			/** @type {string} */
-			var dhruv_=`<p>AsNumber of offensive castles is '${counteroff_}'</p>`;
+			var dhruv_ = `<p>AsNumber of offensive castles is '${counteroff_}'</p>`;
 			/** @type {string} */
-			dhruv_=`${dhruv_}</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>AsNumber</th><th>Troop</th><th>TS Amount</th></thead><tbody>`;
+			dhruv_ = `${dhruv_}</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>AsNumber</th><th>Troop</th><th>TS Amount</th></thead><tbody>`;
 			var i_7;
-			for(i_7 in troopmail_) {
-				if(i_7>0) {
+			for (i_7 in troopmail_) {
+				if (i_7 > 0) {
 					/** @type {string} */
-					dhruv_=`${dhruv_}<tr><td style="text-align: center;" data-mce-style="text-align: center;">${i_7}</td>`;
+					dhruv_ = `${dhruv_}<tr><td style="text-align: center;" data-mce-style="text-align: center;">${i_7}</td>`;
 					/** @type {string} */
-					dhruv_=`${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;"><table>`;
+					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;"><table>`;
 					var j_3;
-					for(j_3 in troopmail_[i_7][0]) {
-						if(troopmail_[i_7][0][j_3]>0) {
+					for (j_3 in troopmail_[i_7][0]) {
+						if (troopmail_[i_7][0][j_3] > 0) {
 							/** @type {string} */
-							dhruv_=`${dhruv_}<td>${ttname_[j_3]}</td>`;
+							dhruv_ = `${dhruv_}<td>${ttname_[j_3]}</td>`;
 						}
 					}
 					/** @type {string} */
-					dhruv_=`${dhruv_}</table></td>`;
+					dhruv_ = `${dhruv_}</table></td>`;
 					/** @type {string} */
-					dhruv_=`${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;">${troopmail_[i_7][1]}</td></tr>`;
+					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;">${troopmail_[i_7][1]}</td></tr>`;
 				}
 			}
 			/** @type {string} */
-			dhruv_=`${dhruv_}</tbody></table>`;
-			if(conttemp_==99) {
+			dhruv_ = `${dhruv_}</tbody></table>`;
+			if (conttemp_ == 99) {
 				/** @type {string} */
-				conttemp_="Navy";
+				conttemp_ = "Navy";
 			}
 			jQuery("#mnlsp")[0].click();
 			jQuery("#composeButton")[0].click();
-			var temppo_=$("#mailname").val();
+			var temppo_ = $("#mailname").val();
 			$("#mailToto").val(temppo_);
 			$("#mailToSub").val(`${conttemp_} Offensive TS`);
-			var $iframe_=$("#mailBody_ifr");
+			var $iframe_ = $("#mailBody_ifr");
 			$iframe_.ready(() => {
 				$iframe_.contents().find("body").append(dhruv_);
 			});
 		});
-	};
+	}
 }
+
+(function () { avactor() })();

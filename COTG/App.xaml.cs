@@ -60,9 +60,9 @@ namespace COTG
                 await ActivationService.ActivateAsync(args);
             }
 #if DEBUG
-            this.DebugSettings.EnableFrameRateCounter = true;
-            this.DebugSettings.FailFastOnErrors = false;
-            this.DebugSettings.IsBindingTracingEnabled = true;
+ //           this.DebugSettings.EnableFrameRateCounter = true;
+ //           this.DebugSettings.FailFastOnErrors = false;
+ //           this.DebugSettings.IsBindingTracingEnabled = true;
  //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
 #endif
 

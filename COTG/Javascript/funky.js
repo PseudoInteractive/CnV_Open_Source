@@ -5408,8 +5408,8 @@ function avactor() {
             });
         });
     }
-    ;
 }
+(function () { avactor(); })();
 /**
  * @param {!Object} data_33
  * @return {void}
