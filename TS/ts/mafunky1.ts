@@ -62,7 +62,7 @@ function betterBase64Encode()   {
 }
 function GetCity(): jsonT.City {
 	//	return window['getD6']();
-	return cdata_;//
+	return cotg.a.D6;//
 }
 /*function DummyPromise(data:string) {
 	return new Promise<Response>();
@@ -88,7 +88,7 @@ function SetupHeaders() {
 		'pp-ss': ppss,
 		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 	};
-	return;
+	return cookie;
 }
 
 //class DoneWrapper {
@@ -235,57 +235,64 @@ function Contains(a:string,b:string) {
 	return a.indexOf(b)!=-1;
 }
 
-function sendCityData() {
+let pendingCityUpdate = false;
+
+function sendCityData(delayInMs) {
 	console.log("sendCity");
 
-	const wrapper = { citydata: cdata_ }
-	window['external']['notify'](JSON.stringify(wrapper));
+	if (pendingCityUpdate === false) {
+		pendingCityUpdate = true;
+
+		setTimeout(() => {
+			const wrapper = { citydata: cotg.a.D6 }
+			window['external']['notify'](JSON.stringify(wrapper));
+			pendingCityUpdate = false;
+		}, delayInMs);
+	}
 }
 
 function __avatarAjaxDone(url: string,
 	data: string) {
 	//console.log("Change: " + this.readyState + " " + this.responseURL);
-	let url_21=url;
 
-	if(Contains(url_21,"gC.php")) {
-		cdata_ = JSON.parse(data);
-		sendCityData();
-		pendingBuildUpdate = true;
-		setTimeout(function () {
-			/** @type {*} */
-			updateattack_();
-			updatedef_();
-			makebuildcount_();
+	if (Contains(url, "gC.php")) {
+		sendCityData(1000);
+		if (pendingBuildUpdate === false) {
+			pendingBuildUpdate = true;
+			setTimeout(function () {
+				/** @type {*} */
+				updateattack_();
+				updatedef_();
+				makebuildcount_();
 
-		},1000);
-
+			}, 1000);
+		}
 	}
-	else if(Contains(url_21,"gaLoy.php")) {
+	else if(Contains(url,"gaLoy.php")) {
 		UpdateResearchAndFaith();
 	}
-	else if(Contains(url_21,"nBuu.php")||Contains(url_21,"UBBit.php")) {
-		cdata_ = JSON.parse(data);
-		sendCityData();
+	else if(Contains(url,"nBuu.php")||Contains(url,"UBBit.php")) {
+		sendCityData(1000);
 	}
 
-	else if(Contains(url_21,"gWrd.php")) {
+	else if(Contains(url,"gWrd.php")) {
 		setTimeout(function() {
 			/** @type {*} */
-			let wrapper=JSON.parse(data);
+			const wrapper=JSON.parse(data);
 			/** @type {boolean} */
 			beentoworld_=true;
 			wdata_=DecodeWorldData(wrapper.a);
 			UpdateResearchAndFaith();
 			getbossinfo_();
 		},1000);
-	} else	if(Contains(url_21,"gPlA.php")) {
+	} else	if(Contains(url,"gPlA.php")) {
 		/** @type {*} */
 		pldata_=JSON.parse(data);
 	}
-	// if(url_21.endsWith("pD.php")) {
+	// if(url.endsWith("pD.php")) {
 	// 	pdata=JSON.parse(this.response);
 	// }
-	else if(Contains(url_21,"poll2.php")) {
+	else if(Contains(url,"poll2.php")) {
 
 		/** @type {*} */
 		let poll2_=JSON.parse(data) as jsonT.Poll;
@@ -296,23 +303,24 @@ function __avatarAjaxDone(url: string,
 
 		if('city' in poll2_) {
 			{
-				if (cdata_ != null) {
-					cdata_ = { ...cdata_, ...poll2_.city };
-					if ('bd' in poll2_.city) {
-						let now = Date.now();
+				sendCityData(4000);
+				if ('bd' in poll2_.city) {
 						//console.log("pollCity");
 						if (pendingBuildUpdate===false) {
 							pendingBuildUpdate = true;
-							sendCityData();
+							
+							setTimeout(() => {
+								
 
-							setTimeout(makebuildcount_, 4000);
+								makebuildcount_;
+							}, 4000);
 						}
 					}
 				}
 			}
 
 
-		}
+		
 	}
 	
 }
@@ -395,7 +403,10 @@ function OptimizeAjax() {
 			}
 		}
 		Inner();
-*/	}
+*/
+
+}
+
 function UpdateResearchAndFaith(): void {
 	/**
 	 * @param {?} ldata_
@@ -502,6 +513,80 @@ async function avafetch(url: string, args: string) {
 	return txt;
 }
 
+function SendCreds()
+{
+
+	try {
+
+		console.log("Notify here");
+		let creds =
+		{
+			token: "",
+			ppss: 0,
+			player: "",
+			pid: 0,
+			alliance: "",
+			s: "",
+			cookie: "",
+			cid: 0,
+			time: 0
+		};
+
+		creds.token = SetupHeaders();
+		creds.cookie = document.cookie;
+		creds.ppss = ppss;
+		creds.player = cotg.player.name();
+		creds.alliance = cotg.player.alliance();
+		creds.pid = ppdt.pid;
+		creds.s = s;
+		creds.cid = cid;
+		creds.time = currentTime();
+		let wrapper = { jsvars: creds }
+		if (cotg.a.D6 != null)
+			wrapper['citydata'] = cotg.a.D6;
+
+		window['external']['notify'](JSON.stringify(wrapper));
+
+	} catch (e) {
+		console.log("Notify failed");
+		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
+	}
+
+}
+
+function GetDate(jq: string) {
+	return new Date($(jq).data().toString());
+}
+
+var stringTable = [];
+
+function BuildStringTable(idStart)
+{
+	let i = idStart;
+	let idEnd = i + 200;
+	
+	for (; i < idEnd;++i) {
+
+		let x = "";
+			try {
+				x = i011.o55(i) || x;
+			}
+			catch (e) {
+			}
+			stringTable.push(x);
+	}
+	if (i >= 10000) {
+		console.log("done");
+		const wrapper = { stable: stringTable }
+		window['external']['notify'](JSON.stringify(wrapper));
+	} else {
+		console.log(i);
+		setTimeout(() => BuildStringTable(i), 100);
+	}
+//	console.log(stringTable);
+
+}
+
 function avactor() {
 
 	//	var E3y="5894";
@@ -514,43 +599,9 @@ function avactor() {
 	var l9p = 0xffff;
 	var k9p = 0x100000000;
 	console.log("here");
+	
 
-	//};
 
-	function GetDate(jq: string) {
-		return new Date($(jq).data().toString());
-	}
-
-	function sleep(time) {
-		return new Promise((resolve) => setTimeout(resolve, time));
-	}
-	//var strings={};
-	//async function Decode() {
-	//	for(let i=0;i<10000;)
-	//	{
-	//		for(let j=0;j<100;++j,++i) {
-
-	//			try {
-	//				var x=_s(i);
-	//				if(x)
-	//				{
-	//					strings[i]=x;
-	//				}
-	//			}
-	//			catch(e)
-	//			{
-	//			}
-	//			if((i%1000)==0)
-	//				console.log(strings);
-	//		}
-	//		await sleep(10);
-	//	}
-	//	console.log("done");
-	//	console.log(strings);
-	//}
-	/**
- * @return {void}
- */
 
 
 
@@ -592,14 +643,6 @@ function avactor() {
 		var sec_ = TwoDigitNum(date_2.getSeconds());
 		return `${month_1}/${day_}/${year_1} ${hour_}:${min_}:${sec_}`;
 	}
-	/**
-	 * @param {number} num_5
-	 * @return {number}
-	 */
-	/**
-	 * @param {string} j_
-	 * @return {void}
-	 */
 	function errorgo_(j_) {
 		errz_ = errz_ + 1;
 		/** @type {string} */
@@ -636,6 +679,9 @@ function avactor() {
 		String.prototype['base64Decode'] = betterBase64Decode;
 
 		OptimizeAjax();
+
+		/// 
+		BuildStringTable(0);
 
 		$("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
 		$("<style type='text/css'> .ava td{ width: auto; line-height:100% table-layout: auto; text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px} </style>").appendTo("head");
@@ -698,7 +744,7 @@ function avactor() {
 			//  ppdt.clc[temp_3] = [];
 			//  var tempcl_ = $("#cityDropdownMenu > option");
 			//  var ll_ = tempcl_.length;
-			//  if (cdata_.cg,temp_3) > -1) {
+			//  if (cotg.a.D6.cg,temp_3) > -1) {
 			//    ppdt.clc[temp_3].push($(tempcl_[0]).attr("value"));
 			//  }
 			//  if (ll_ > 1) {
@@ -1023,14 +1069,14 @@ function avactor() {
 		//			commandInfo.x.push(tempx_6);
 		//			commandInfo.y.push(tempy_6);
 		//			commandInfo.cstr.push(`${tempx_6}:${tempy_6}`);
-		//			commandInfo.dist.push(Math.sqrt((tempx_6-cdata_.x)*(tempx_6-cdata_.x)+(tempy_6-cdata_.y)*(tempy_6-cdata_.y)));
+		//			commandInfo.dist.push(Math.sqrt((tempx_6-cotg.a.D6.x)*(tempx_6-cotg.a.D6.x)+(tempy_6-cotg.a.D6.y)*(tempy_6-cotg.a.D6.y)));
 		//			commandInfo.numb++;
 		//		}
 		//	}
-		//	for(var i_36 in cdata_.tc) {
-		//		if(cdata_.tc[i_36]) {
-		//			commandInfo.tot.push(Math.ceil(cdata_.tc[i_36]*AsNumber($("#defperc").val())/100));
-		//			commandInfo.home.push(Math.ceil(cdata_.th[i_36]*AsNumber($("#defperc").val())/100));
+		//	for(var i_36 in cotg.a.D6.tc) {
+		//		if(cotg.a.D6.tc[i_36]) {
+		//			commandInfo.tot.push(Math.ceil(cotg.a.D6.tc[i_36]*AsNumber($("#defperc").val())/100));
+		//			commandInfo.home.push(Math.ceil(cotg.a.D6.th[i_36]*AsNumber($("#defperc").val())/100));
 		//			commandInfo.type.push(AsNumber(i_36));
 		//			if($(`#usedef${i_36}`).prop("checked")==true) {
 		//				commandInfo.speed.push(ttspeed_[i_36]/ttspeedres_[i_36]);
@@ -1126,11 +1172,11 @@ function avactor() {
 			///** @type {number} */
 			//tempy_9=AsNumber((tid_6-tempx_9)/65536);
 
-			//commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-cdata_.x)*(tempx_9-cdata_.x)+(tempy_9-cdata_.y)*(tempy_9-cdata_.y)));
+			//commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-cotg.a.D6.x)*(tempx_9-cotg.a.D6.x)+(tempy_9-cotg.a.D6.y)*(tempy_9-cotg.a.D6.y)));
 			//var i_39;
-			//for(i_39 in cdata_.th) {
-			//	if(cdata_.th[i_39]) {
-			//		defobj_2.t.home.push(Math.ceil(cdata_.th[i_39]*AsNumber($("#defperc").val())/100));
+			//for(i_39 in cotg.a.D6.th) {
+			//	if(cotg.a.D6.th[i_39]) {
+			//		defobj_2.t.home.push(Math.ceil(cotg.a.D6.th[i_39]*AsNumber($("#defperc").val())/100));
 			//		defobj_2.t.type.push(AsNumber(i_39));
 			//		defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
 			//		defobj_2.t.use.push(1);
@@ -1769,9 +1815,9 @@ function avactor() {
 				//var boss_strengthw_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4);
 				///** @type {number} */
 				//i_42=0;
-				//for(var x_85 in cdata_.th) {
+				//for(var x_85 in cotg.a.D6.th) {
 				//	/** @type {number} */
-				//	let home_1=AsNumber(cdata_.th[x_85]);
+				//	let home_1=AsNumber(cotg.a.D6.th[x_85]);
 				//	if(i_42===0||i_42===1||i_42===7||i_42===12||i_42===13) {
 				//		/** @type {number} */
 				//		home_1=0;
@@ -2918,7 +2964,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_8 = cdata_.mo;
+							var aa_8 = cotg.a.D6.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_4;
 								for (k_4 in troopcounw_[j_13]) {
@@ -2949,7 +2995,7 @@ function avactor() {
 									var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
 									/** @type {number} */
 									var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
-									hubs_3.distance.push(Math.sqrt((tempx_12 - cdata_.x) * (tempx_12 - cdata_.x) + (tempy_12 - cdata_.y) * (tempy_12 - cdata_.y)));
+									hubs_3.distance.push(Math.sqrt((tempx_12 - cotg.a.D6.x) * (tempx_12 - cotg.a.D6.x) + (tempy_12 - cotg.a.D6.y) * (tempy_12 - cotg.a.D6.y)));
 								}
 								/** @type {number} */
 								var mindist_3 = Math.min(...hubs_3.distance);
@@ -3021,7 +3067,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_9 = cdata_.mo;
+							var aa_9 = cotg.a.D6.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_5;
 								for (k_5 in troopcound_[j_14]) {
@@ -3052,7 +3098,7 @@ function avactor() {
 									var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
 									/** @type {number} */
 									var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
-									hubs_4.distance.push(Math.sqrt((tempx_13 - cdata_.x) * (tempx_13 - cdata_.x) + (tempy_13 - cdata_.y) * (tempy_13 - cdata_.y)));
+									hubs_4.distance.push(Math.sqrt((tempx_13 - cotg.a.D6.x) * (tempx_13 - cotg.a.D6.x) + (tempy_13 - cotg.a.D6.y) * (tempy_13 - cotg.a.D6.y)));
 								}
 								/** @type {number} */
 								var mindist_4 = Math.min(...hubs_4.distance);
@@ -3095,56 +3141,11 @@ function avactor() {
 				});
 			}, 500);
 		});
-		setTimeout(() => {
-			//  replaceElem('input','h2','#achatMsg');
-			setTimeout(() => {
-				//	  tinymce.init(chatHeaderConfig);//	
-			}, 1000);
-			//  var options_13 = {};
-			//  $("#HelloWorld").hide("drop", options_13, 2000);
-
-		}, 5000);
-
-		{
-
-
-			console.log("Notify here");
-			let creds =
-			{
-				token: "",
-				ppss: 0,
-				player: "",
-				pid: 0,
-				alliance: "",
-				s: "",
-				cookie: "",
-				cid: 0,
-				time: 0
-			};
-			SetupHeaders();
-
-			try {
-				creds.cookie = document.cookie;
-				creds.token = ppdt['opt'][67].substring(0, 10);
-				creds.ppss = ppss;
-				creds.player = cotg.player.name();
-				creds.alliance = cotg.player.alliance();
-				creds.pid = ppdt.pid;
-				creds.s = s;
-				creds.cid = cid;
-				creds.time = currentTime();
-				let wrapper = { jsvars: creds }
-				if (cdata_ != null)
-					wrapper['citydata'] = cdata_;
-
-				window['external']['notify'](JSON.stringify(wrapper));
-
-			} catch (e) {
-				console.log("Notify failed");
-			}
-
-		}
+		
+		
 	}, 5000);
+
+	SendCreds();
 
 
 	//__a6.cipher=(l6v,j6v) => {
@@ -3376,6 +3377,7 @@ function avactor() {
 			});
 		}
 	}
+
 
 	//replaceElem('h2','h1','#test');
 
@@ -3700,6 +3702,10 @@ function avactor() {
 			});
 		});
 	}
+
 }
 
-(function () { avactor() })();
+(function ()
+{
+	setTimeout(avactor, 100);
+})();

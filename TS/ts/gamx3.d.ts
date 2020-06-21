@@ -7092,8 +7092,8 @@ declare function _s(a: any): any;
 declare let i011: {
     s6s: 2147483647;
     J0EE: null;
-    o55(a: string): any;
-    S55(a: number): any;
+    o55(a: number): string;
+    S55(a: number): string;
     J55(): any;
 };
 declare function K5SS(): typeof globalThis;
@@ -7164,6 +7164,11 @@ declare class Cotg {
     alliance: Alliance;
     city: CtogCity;
     player: Player;
+    a:
+        {
+            D6: jsonT.City
+            a6: {}
+        }
 }
 declare let cotg: Cotg;
 declare let cotgsubscribe: any;

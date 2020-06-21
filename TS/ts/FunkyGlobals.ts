@@ -414,9 +414,9 @@ function updatedef_() {
 						/// @todo
 
 		// var i_12;
-		// for(i_12 in cdata_.tc) {
-		// 	if(cdata_.tc[i_12]) {
-		// 		t_4.home.push(cdata_.tc[i_12]);
+		// for(i_12 in cotg.a.D6.tc) {
+		// 	if(cotg.a.D6.tc[i_12]) {
+		// 		t_4.home.push(cotg.a.D6.tc[i_12]);
 		// 		t_4.type.push(i_12);
 		// 	}
 		// }
@@ -632,7 +632,7 @@ function SendAttack_() {
 	// 				/** @type {number} */
 	// 				fakenumb_=fakenumb_+1;
 	// 			}
-	// 			commandInfo.dist.push(Math.sqrt((tempx_2-cdata_.x)*(tempx_2-cdata_.x)+(tempy_2-cdata_.y)*(tempy_2-cdata_.y)));
+	// 			commandInfo.dist.push(Math.sqrt((tempx_2-cotg.a.D6.x)*(tempx_2-cotg.a.D6.x)+(tempy_2-cotg.a.D6.y)*(tempy_2-cotg.a.D6.y)));
 	// 		}
 	// 	}
 
@@ -643,7 +643,7 @@ function SendAttack_() {
 	// 	var time_2;
 	// 	var faketss_;
 	// 	var fakeg_;
-	// 	var tscbr_=cdata_.tt;
+	// 	var tscbr_=cotg.a.D6.tt;
 	// 	if(tscbr_<20000) {
 	// 		/** @type {number} */
 	// 		faketss_=1;
@@ -1062,11 +1062,11 @@ function makebuildcount_() {
 		/** @type {number} */
 		let bdNumber_ = -1;
 		let i_16;
-		for (i_16 in cdata_.bd) {
-			if (buildings_.bid.indexOf(cdata_.bd[i_16].bid) > -1) {
-				if (currentbd_.bid.indexOf(cdata_.bd[i_16].bid) > -1) {
+		for (i_16 in cotg.a.D6.bd) {
+			if (buildings_.bid.indexOf(cotg.a.D6.bd[i_16].bid) > -1) {
+				if (currentbd_.bid.indexOf(cotg.a.D6.bd[i_16].bid) > -1) {
 					/** @type {number} */
-					j_4 = currentbd_.bid.indexOf(cdata_.bd[i_16].bid);
+					j_4 = currentbd_.bid.indexOf(cotg.a.D6.bd[i_16].bid);
 					currentbd_.count[j_4] += 1;
 					/** @type {number} */
 					bdNumber_ = bdNumber_ + 1;
@@ -1074,7 +1074,7 @@ function makebuildcount_() {
 					/** @type {number} */
 					bdtypecount_ = bdtypecount_ + 1;
 					/** @type {number} */
-					j_4 = buildings_.bid.indexOf(cdata_.bd[i_16].bid);
+					j_4 = buildings_.bid.indexOf(cotg.a.D6.bd[i_16].bid);
 					currentbd_.name[bdtypecount_] = buildings_.name[j_4];
 					currentbd_.bid[bdtypecount_] = buildings_.bid[j_4];
 					currentbd_.count[bdtypecount_] += 1;

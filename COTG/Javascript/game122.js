@@ -1,3 +1,4 @@
+cotg = {};
 I0rr(X0rr());
 I0VV(u0VV());
 B0KK(A0KK());
@@ -2262,15 +2263,15 @@ function gaFrep(E7c) {
 }
 
 var cotgsubscribe = amplify;
-(function() {
+(function outer() {
   var E6k = i011;
+  cotg.a = outer;
   var S1y = '565';
   var F8y = '23';
   var J1R = "4833";
   var n94 = "6477";
   var k8R = '3099';
-  var
-    u54 = "2570";
+  var u54 = "2570";
   var i1y = "553";
   var S9m = "3902";
   var K5y = "4669";
@@ -3428,7 +3429,6 @@ var cotgsubscribe = amplify;
   var j3q = -("2131767013" >> 37162656);
   if (!(
       E6k.d3q(+p0y, "465074" & E6k.s6s) !== j3q)) {
-    cotg = {};
     $(document)
       .ready(function() {
         var F3q = "1236768797" & E6k.s6s;
@@ -13328,7 +13328,7 @@ var cotgsubscribe = amplify;
     }
     if (typeof define == E6k.S55(n9p << 2117850400) && define.amd)
       define([E6k.o55(+"2299")], function() { return a6.ccazzx; });
-    this.msgpack || function(q2v) {
+      this.msgpack || function(q2v) {
       var i3p = "0x100";
 
       function Q8v(o0U) {

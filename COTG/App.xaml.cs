@@ -150,4 +150,17 @@ namespace COTG
             await ActivationService.ActivateFromShareTargetAsync(args);
         }
     }
+    public static class Note 
+    {
+        public static void Show(string s, int timeout=8000)
+        {
+            Views.ShellPage.inAppNote.Show(s, timeout);
+        }
+        public static string ToCoordinates(this int cid)
+		{
+            return $"<{cid/65536},{cid%65536}>";
+		}
+    }
+
+
 }

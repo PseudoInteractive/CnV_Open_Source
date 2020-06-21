@@ -71,8 +71,8 @@
             </uap5:AppExecutionAlias>
           </uap5:Extension>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="cptg">
-            <uap:Logo>Assets\Icon.png</uap:Logo>
+          <uap:Protocol Name="cotg" DesiredView="useMore">
+            <uap:Logo>images\castle0.png</uap:Logo>
             <uap:DisplayName>COTG</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>

@@ -26,6 +26,7 @@ using System.Collections.Concurrent;
 using Windows.Storage.Streams;
 using Windows.Storage;
 using COTG.Services;
+using System.Web;
 
 namespace COTG
 {
@@ -45,7 +46,7 @@ namespace COTG
         public static HttpClient httpClient;
         public static HttpClient downloadImageClient;
         public static int world = 19;
-        static Regex urlMatch = new Regex(@"w(\d\d).crownofthegods.com");
+        static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
         static HttpRequestMessage anyPost;
         // IHttpContent content;
@@ -522,7 +523,7 @@ namespace COTG
                                     city.points = jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
-                                    Views.ShellPage.note.Show(city.ToString());
+                                    Note.Show(city.ToString());
 
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
@@ -540,7 +541,25 @@ namespace COTG
                                 }
                                 city.LoadFromJson(jse);
                                 COTG.Views.MainPage.UpdateCityList();
-                                Views.ShellPage.note.Show(city.ToString());
+                                break;
+                            }
+                        case "stable":
+                            {
+                                var jse = jsp.Value;
+                                int counter = 0;
+                                StringBuilder sb = new StringBuilder();
+                                foreach (var i in jse.EnumerateArray())
+                                {
+                                    sb.Append('"');
+                                    
+                                    sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
+                                    sb.Append("\" /* " + counter++ + " */,"); 
+                                    
+                                }
+                                var s = sb.ToString();
+                                Log(s);
+                                break;
+
                             }
                             break;
                     }
