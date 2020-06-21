@@ -137,7 +137,7 @@
                                  ShowMode="Auto"
                     >
 
-                            <GridView x:Name="buildingList" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="Multiple">
+                            <GridView x:Name="buildingList" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="Game:BuildingCount">
                                         <Grid Width="30" Height="60" >

@@ -149,22 +149,22 @@ namespace COTG.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(cities)));
         }
 
-        static Dungeon lastTooltip;
-		private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-            var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
-            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-            var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-            var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
-            var hit = cell?.Item as Dungeon;
-            if(hit!=lastTooltip)
-			{
-                lastTooltip = hit;
-                if (hit != null)
-                    ToolTipService.SetToolTip(tip, hit.ToString());
-                else
-                    ToolTipService.SetToolTip(tip,"None");
-			}
-        }
+  //      static Dungeon lastTooltip;
+		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+  //          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+  //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+  //          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+  //          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+  //          var hit = cell?.Item as Dungeon;
+  //          if(hit!=lastTooltip)
+		//	{
+  //              lastTooltip = hit;
+  //              if (hit != null)
+  //                  ToolTipService.SetToolTip(tip, hit.ToString());
+  //              else
+  //                  ToolTipService.SetToolTip(tip,"None");
+		//	}
+  //      }
 	}
 }

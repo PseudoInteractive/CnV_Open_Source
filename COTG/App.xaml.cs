@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 //using ZLogger;
 
 using Cysharp.Text;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace COTG
 {
@@ -154,12 +155,56 @@ namespace COTG
     {
         public static void Show(string s, int timeout=8000)
         {
-            Views.ShellPage.inAppNote.Show(s, timeout);
+            var textBlock = new MarkdownTextBlock() { Text = s };
+			textBlock.LinkClicked += MarkDownLinkClicked;
+            Views.ShellPage.inAppNote.Show(textBlock, timeout);
         }
-        public static string ToCoordinates(this int cid)
+
+		private static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
-            return $"<{cid/65536},{cid%65536}>";
+
+			try
+			{
+				var paths = e.Link.Split('/');
+				Assert(paths[0].Length == 0);
+				switch (paths[1])
+				{
+					case "c":
+                        JSClient.ShowCity(paths[2].FromCoordinate());
+                        break;
+    			}
+			}
+			catch (Exception ex)
+			{
+				Log(ex);
+			}
 		}
+        public static string ToCoordinateMD(this int cid)
+		{
+            var coord = cid.ToCoordinate();
+            return $"[{coord}](/c/{coord})";
+
+        }
+
+		public static string ToCoordinate(this int cid)
+		{
+            return $"{cid%65536}.{cid/65536}";
+		}
+        public static int FromCoordinate(this string s)
+        {
+			try
+			{
+                var links = s.Split('.');
+                return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
+
+
+            }
+            catch (Exception e)
+			{
+                Log(e);
+                return JSClient.cid; // return current city
+			}
+        }
     }
 
 

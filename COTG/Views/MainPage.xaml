@@ -30,9 +30,8 @@
                         AutoGenerateColumns="False" CanDrag="True"
                         SelectionMode ="Extended"
                         CanUserChooseColumns="true"
-                        ToolTipService.ToolTip="Helllo!"
-                        SelectionUnit="Cell" EnsureCurrentItemIntoView="True" KeyboardAcceleratorPlacementMode="Auto" UserColumnReorderMode="Interactive" UserFilterMode="Auto" UserGroupMode="Auto" UserSortMode="Auto" XYFocusKeyboardNavigation="Enabled" UserEditMode="External" HideFlyoutOnBackButtonPressed="True" GridLinesVisibility="Both" GroupHeaderDisplayMode="Frozen" GroupPanelPosition="Bottom" KeyTipPlacementMode="Auto" ListenForNestedPropertyChange="False" XYFocusDownNavigationStrategy="Projection" TabFocusNavigation="Cycle" XYFocusLeftNavigationStrategy="NavigationDirectionDistance" XYFocusRightNavigationStrategy="NavigationDirectionDistance" XYFocusUpNavigationStrategy="NavigationDirectionDistance"
-                         >
+                        UserSortMode="Multiple"
+                        SelectionUnit="Cell" GridLinesVisibility="Both"  GroupPanelPosition="Bottom"  ListenForNestedPropertyChange="False" >
 
 
 			<tg:RadDataGrid.Commands>
@@ -58,25 +57,23 @@
 		<tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="dungeonGrid"
                         Grid.Row="1"
-                       
+                       UserGroupMode="Disabled"
                         ItemsSource="{x:Bind dungeons, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
                         SelectionMode ="Extended"
                         CanUserChooseColumns="true"
-                        SelectionUnit="Cell" Margin="0,14,0,0" PointerMoved="DungeonPointerMoved"
+                        UserSortMode="Multiple"
+                        SelectionUnit="Cell" Margin="0,14,0,0"
                        >
-			<ToolTipService.ToolTip>
-				<ToolTip x:Name="tip" Content="Hello" RequiresPointer="Never" Opacity="0.515" Foreground="{ThemeResource SystemControlForegroundChromeHighBrush}" Background="{ThemeResource Acryllic}"/>
-			</ToolTipService.ToolTip>
 			<tg:RadDataGrid.Commands>
 				<model:DungeonTapCommand />
 			</tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-				<tg:DataGridNumericalColumn PropertyName="dist" SortDirection="Ascending" />
+				<tg:DataGridNumericalColumn PropertyName="dist"  SortDirection="Ascending" />
 				<tg:DataGridTextColumn PropertyName="plan" />
 				<tg:DataGridNumericalColumn PropertyName="level" />
-				<tg:DataGridNumericalColumn PropertyName="complete" />
-				<tg:DataGridNumericalColumn PropertyName="type" />
+                <tg:DataGridNumericalColumn PropertyName="completion" />
+				<tg:DataGridTextColumn PropertyName="kind" />
 				<tg:DataGridTextColumn PropertyName="xy" />
 
 			</tg:RadDataGrid.Columns>

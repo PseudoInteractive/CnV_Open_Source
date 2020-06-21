@@ -84,7 +84,7 @@ namespace COTG.Game
             var trs = JsonSerializer.Serialize(tr);
             var args = new sndRaidArgs() { rcid = d.cid, type = raidOnce?1:2, co = r.reps, rt = "1", snd = 1, rut = 0, ts = "", tr = trs };
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-            Note.Show($"{city.cid.ToCoordinates()} is raiding {d.cid.ToCoordinates()}");
+            Note.Show($"{city.cid.ToCoordinateMD()} raid {d.cid.ToCoordinateMD()}");
             await snd.Post();
 
         }

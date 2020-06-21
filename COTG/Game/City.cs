@@ -14,9 +14,17 @@ namespace COTG.Game
 {
 	public class City
 	{
+        readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
+        const int pointSizeCount = 7;
+        int GetSize() {
+            for (int i = 0; i < pointSizeCount; ++i)
+                if (points <= pointSizes[i])
+                    return i;
+                return pointSizeCount;
+                }
         public string name { get; set; }
         public int cid; // x,y combined into 1 number
-        public string xy => $"{cid / 65536}:{cid % 65536}";
+        public string xy => $"{cid % 65536}:{cid / 65536}";
         public string owner { get; set; } // todo: this shoule be an int playerId
         public string alliance { get; set; }// todo:  this should be an into alliance id
         public string notes { get; set; }
@@ -26,7 +34,9 @@ namespace COTG.Game
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
         public int points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages(isCastle?"castle4.png" : "city4.png");
+        public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
+
+
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         // Abusing invalid jsE by returning it when we want to return null

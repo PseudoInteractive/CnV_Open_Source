@@ -1818,7 +1818,6 @@ let cdata_: jsonT.City = null;
 let resl_ = [[]];
 let OGA: jsonT.Command[] = [];
 let wdata_;
-let pldata_;
 /** @type {!Array} */
 let remarksl_ = [""];
 /** @type {!Array} */

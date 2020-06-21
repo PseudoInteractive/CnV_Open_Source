@@ -7168,6 +7168,8 @@ declare class Cotg {
         {
             D6: jsonT.City
             a6: {}
+            F5F: {}
+            j71: {}
         }
 }
 declare let cotg: Cotg;

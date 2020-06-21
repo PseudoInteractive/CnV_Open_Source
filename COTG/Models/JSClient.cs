@@ -125,15 +125,13 @@ namespace COTG
 
 		}
 
-        static Task read0Task;
-        static Task read1Task;
-        private static string GetJsString(string asm)
+		private static string GetJsString(string asm)
         {
             return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.Javascript.{asm}.js") ).ReadToEnd();
 
         }
-        static Task read2Task;
-        private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
+
+		private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
         {
             try
             {
@@ -151,7 +149,7 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        var js = GetJsString("stringTable") + GetJsString("J0EE") +  GetJsString("game122") + GetJsString("funky");
+                        var js = GetJsString("J0EE") +  GetJsString("game122") + GetJsString("funky");
 
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
@@ -520,8 +518,8 @@ namespace COTG
                                     city.points = jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
-                                    Note.Show(city.ToString());
-
+                                    Note.Show($"{city.name} {city.cid.ToCoordinateMD()}");
+                               
                                 }
                                 COTG.Views.MainPage.UpdateCityList();
                                 break;

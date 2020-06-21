@@ -14,10 +14,17 @@ namespace COTG.Game
     {
         public const int typeMountain = 2;
         public int cid;
-        public string xy => $"{cid / 65536}:{cid % 65536}";
+        public string xy => $"{cid % 65536}:{cid / 65536}";
         //          [JsonProperty("t")]
         public int type { get; set; }
-
+        public string kind => type switch
+        {
+            0 => "forest",
+            1 => "hill",
+            2 => "mountain",
+            _ => "water"
+        };
+           
         //        [JsonProperty("l")]
         public int level { get; set; }
 
@@ -38,7 +45,7 @@ namespace COTG.Game
         public string plan { get
             {
                 var r = Raiding.ComputeIdealReps(this,City.current);
-                return $"{r.reps} reps, carry={(int)r.averageCarry}%";
+                return $"{r.reps}x {(int)r.averageCarry}% carry";
             }
         }
 

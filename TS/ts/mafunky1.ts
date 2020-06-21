@@ -257,16 +257,13 @@ function __avatarAjaxDone(url: string,
 
 	if (Contains(url, "gC.php")) {
 		sendCityData(1000);
-		if (pendingBuildUpdate === false) {
-			pendingBuildUpdate = true;
 			setTimeout(function () {
 				/** @type {*} */
 				updateattack_();
 				updatedef_();
-				makebuildcount_();
 
 			}, 1000);
-		}
+		
 	}
 	else if(Contains(url,"gaLoy.php")) {
 		UpdateResearchAndFaith();
@@ -287,38 +284,25 @@ function __avatarAjaxDone(url: string,
 		},1000);
 	} else	if(Contains(url,"gPlA.php")) {
 		/** @type {*} */
-		pldata_=JSON.parse(data);
 	}
 	// if(url.endsWith("pD.php")) {
 	// 	pdata=JSON.parse(this.response);
 	// }
-	else if(Contains(url,"poll2.php")) {
-
+	else if (Contains(url, "poll2.php")) {
+		setTimeout(function () {
 		/** @type {*} */
-		let poll2_=JSON.parse(data) as jsonT.Poll;
+			let poll2_ =cotg.a.j71 as jsonT.Poll;
 		if('OGA' in poll2_)
 			OGA=poll2_.OGA;
 
 
 
-		if('city' in poll2_) {
-			{
-				sendCityData(4000);
-				if ('bd' in poll2_.city) {
-						//console.log("pollCity");
-						if (pendingBuildUpdate===false) {
-							pendingBuildUpdate = true;
-							
-							setTimeout(() => {
-								
+			if ('city' in poll2_) {
+				{
+					sendCityData(4000);
 
-								makebuildcount_;
-							}, 4000);
-						}
-					}
 				}
 			}
-
 
 		
 	}
@@ -1497,7 +1481,7 @@ function avactor() {
 							var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
 							/** @type {number} */
 							var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
-							var pname_12 = pldata_[pid_];
+							var pname_12 = cotg.a.F5F[pid_];
 							/** @type {!Array} */
 							var csn_ = [3, 4, 7, 8];
 							if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
