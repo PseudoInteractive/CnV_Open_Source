@@ -316,6 +316,7 @@ namespace COTG.Views
 
         public void Refresh(object o, RoutedEventArgs e)
         {
+            Log("Refresh");
             JSClient.Refresh(o, e);
 
         }

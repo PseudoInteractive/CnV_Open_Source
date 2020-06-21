@@ -89,10 +89,7 @@ namespace COTG
 			{
                 view = new WebView(WebViewExecutionMode.SeparateThread)
                 { HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    AllowFocusOnInteraction=true,
-                 IsAccessKeyScope=true,
-                 AccessKey="F11"
+                    VerticalAlignment = VerticalAlignment.Stretch
                 };
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;

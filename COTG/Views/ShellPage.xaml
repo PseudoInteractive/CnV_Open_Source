@@ -120,8 +120,10 @@
             </behaviors:NavigationViewHeaderBehavior>
         </i:Interaction.Behaviors>-->
 		<winui:NavigationView.PaneFooter>
-			<Grid>
-                <Button x:Name="buildingsButton"
+            <StackPanel x:Name="FooterStackPanel" Orientation="Vertical" Visibility="Visible">
+                <Button x:Name="RefreshAll" AccessKey="F5" Click="Refresh" Content="Refresh"
+                        />
+				<Button x:Name="buildingsButton"
         
                     Height="60"
                     Width="Auto"
@@ -161,7 +163,7 @@
                     </Button.Flyout>
                     <Image Source="/images/marketplace.png"/>
                 </Button>
-            </Grid>
+             </StackPanel>
 		</winui:NavigationView.PaneFooter>
 		<Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
 			<Grid.RowDefinitions>
