@@ -558,34 +558,33 @@ function GetDate(jq: string) {
 	return new Date($(jq).data().toString());
 }
 
-var stringTable = [];
+//var stringTable = [];
 
-function BuildStringTable(idStart)
-{
-	let i = idStart;
-	let idEnd = i + 200;
+//function BuildStringTable(idStart)
+//{
+//	let i = idStart;
+//	let idEnd = i + 200;
 	
-	for (; i < idEnd;++i) {
+//	for (; i < idEnd;++i) {
 
-		let x = "";
-			try {
-				x = i011.o55(i) || x;
-			}
-			catch (e) {
-			}
-			stringTable.push(x);
-	}
-	if (i >= 10000) {
-		console.log("done");
-		const wrapper = { stable: stringTable }
-		window['external']['notify'](JSON.stringify(wrapper));
-	} else {
-		console.log(i);
-		setTimeout(() => BuildStringTable(i), 100);
-	}
-//	console.log(stringTable);
+//		let x = "";
+//			try {
+//				x = i011.o55(i) || x;
+//			}
+//			catch (e) {
+//			}
+//			stringTable.push(x);
+//	}
+//	if (i >= 10000) {
+//		console.log("done");
+//		const wrapper = { stable: stringTable }
+//		window['external']['notify'](JSON.stringify(wrapper));
+//	} else {
+//		console.log(i);
+//		setTimeout(() => BuildStringTable(i), 100);
+//	}
 
-}
+//}
 
 function avactor() {
 
@@ -681,7 +680,7 @@ function avactor() {
 		OptimizeAjax();
 
 		/// 
-		BuildStringTable(0);
+		//BuildStringTable(0);
 
 		$("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
 		$("<style type='text/css'> .ava td{ width: auto; line-height:100% table-layout: auto; text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px} </style>").appendTo("head");

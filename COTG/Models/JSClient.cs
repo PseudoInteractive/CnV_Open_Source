@@ -154,7 +154,7 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        var js = GetJsString("J0EE") + GetJsString("game122") + GetJsString("funky");
+                        var js = GetJsString("stringTable") + GetJsString("J0EE") +  GetJsString("game122") + GetJsString("funky");
 
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
@@ -236,29 +236,29 @@ namespace COTG
 
 		}
 
-        private static async Task AddJSPluginAsync()
-        {
-            try
-            {
-                var asm = typeof(JSClient).Assembly;
-                using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
-                {
+        //private static async Task AddJSPluginAsync()
+        //{
+        //    try
+        //    {
+        //        var asm = typeof(JSClient).Assembly;
+        //        using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
+        //        {
 
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        Log("execute");
-                        await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
-                        Log("funky");
-                        await view.InvokeScriptAsync("avactor", null);
-			        }
-                }
+        //            using (StreamReader reader = new StreamReader(stream))
+        //            {
+        //                Log("execute");
+        //                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
+        //                Log("funky");
+        //                await view.InvokeScriptAsync("avactor", null);
+			     //   }
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log(e);
+        //    }
+        //}
         public static async Task GetPPDT()
         {
             var str = await view.InvokeScriptAsync("getppdt", null);
