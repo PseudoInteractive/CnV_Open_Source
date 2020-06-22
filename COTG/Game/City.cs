@@ -9,11 +9,14 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using COTG.Helpers;
 using System.Text.Json;
+using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
 	public class City
 	{
+        public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
+
         readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
         const int pointSizeCount = 7;
         int GetSize() {
@@ -33,14 +36,69 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
-        public int points { get; set; }
+        public ushort points { get; set; }
         public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
+        public int commandSlots
+        {
+			get { 
+                    var jse = jsE;
+                    if (!jse.IsValid())
+                    {
+                        return isCastle ? 15 : 5;
+                    }
+                    else
+					{
+                        var bd = jse.GetProperty("bd");
+                        foreach (var b in bd.EnumerateArray())
+                        {
+                            if (b.GetInt("bid") == bidCastle)
+                            {
+                                return (b.GetInt("bl") + 5);
+                            }
+                        }
+                        return 5;
+                    }
+            }
+
+        }
+        public int activeCommands =>  jsE.IsValid() ? jsE.GetInt("comm") : 0;
 
 
-        public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
+		public int freeCommandSlots => commandSlots - activeCommands;
 
-        // Abusing invalid jsE by returning it when we want to return null
-        public JsonElement troopsHome => !jsE.IsValid()?jsE : jsE.GetProperty("th");
+        public int carryCapacity
+        {
+            get {
+                // Todo: water
+                var _carryCapacity = 0;
+				{
+                    var jse = jsE;
+                    if (jse.IsValid())
+                    {
+                        var jst = troopsHome;
+                        if (jst.IsValid())
+                        {
+                            foreach (var troopType in ttLandRaiders)
+                            {
+                                _carryCapacity += jst[troopType].GetInt32() * ttCarry[troopType];
+                            }
+                        }
+                    }
+                }
+                return _carryCapacity;
+            }
+
+        }
+
+		internal void TroopsChanged()
+		{
+            if(current == this )
+                throw new NotImplementedException();
+		}
+
+
+		// Abusing invalid jsE by returning it when we want to return null
+		public JsonElement troopsHome => !jsE.IsValid()?jsE : jsE.GetProperty("th");
         public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 
         public int ts
@@ -71,6 +129,8 @@ namespace COTG.Game
             Debug.Assert(cid == jse.GetInt("cid"));
             name = jse.GetAsString("citn");
             owner = jse.GetAsString("pn");
+            COTG.Views.MainPage.CityChange(this);
+
         }
         const int bidCastle = 467;
         public (int commandSlotsInUse,int totalCommandSlots,int freeCommandSlots) GetCommandSlots()

@@ -23,13 +23,8 @@ namespace COTG.Game
         //
         // Templates not working for me
         //
-        public static int FindIndex(this string[] a, string b)
-        {
-            for (int i = 0; i < a.Length; ++i)
-                if (a[i] == b)
-                    return i;
-            return -1;
-        }
+      
+
         public static int FindIndex(this short[] a, short b)
         {
             for (int i = 0; i < a.Length; ++i)

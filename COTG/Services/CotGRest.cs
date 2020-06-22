@@ -306,6 +306,7 @@ namespace COTG.Services
 
                     });
                 }
+                rv.Sort((a, b) => a.dist.CompareTo( b.dist) );
                 // dont wait on this 
                 COTG.Views.MainPage.UpdateDungeonList(rv);
 

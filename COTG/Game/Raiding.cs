@@ -14,35 +14,23 @@ namespace COTG.Game
 {
     public static class Raiding
     {
-        public static float carryCapcity;
         public static float desiredCarry = 0.9f;
         public static bool raidOnce;
-        public static float UpdateCarryCapacity(City city) // for current city
-        {
-            carryCapcity = 0;
-            var jst = city.troopsHome;
-            if (!jst.IsValid())
-                return 0;
-            foreach(var troopType in ttLandRaiders )
-            {
-                carryCapcity += jst[troopType].GetInt32() * ttCarry[troopType];
-            }
-            Log("Carry Capacity:" + carryCapcity);
-            return carryCapcity;
-        }
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
-            var carry = UpdateCarryCapacity(city); // this should be on demand
+            var carry = city.carryCapacity; // this should be on demand
             if (carry <= 0)
                 return (0, 0);
             int ideal = (int)( carry/(loot * desiredCarry) + 0.5f);
             if (ideal < 1)
                 ideal = 1;
-            ideal = Math.Min(ideal, city.GetCommandSlots().freeCommandSlots);
+            ideal = Math.Min(ideal, city.freeCommandSlots );
             return (ideal, 100.0f * carry /(ideal*loot) );
         }
 
+
+        // for json
         internal struct sndRaidtr
         {
             public string tt { get; set; }
@@ -86,6 +74,7 @@ namespace COTG.Game
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.ToCoordinateMD()} raid {d.cid.ToCoordinateMD()}");
             await snd.Post();
+            Task.Run(city.TroopsChanged);
 
         }
     }

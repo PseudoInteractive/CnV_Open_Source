@@ -7164,13 +7164,14 @@ declare class Cotg {
     alliance: Alliance;
     city: CtogCity;
     player: Player;
-    a:
-        {
-            D6: jsonT.City
-            a6: {}
-            F5F: {}
-            j71: {}
-        }
 }
 declare let cotg: Cotg;
 declare let cotgsubscribe: any;
+declare let __c:
+    {
+            a6: any;
+            F5F: any;
+            D6: jsonT.City;
+            j71: any;
+        
+	}

@@ -19,14 +19,12 @@ using Telerik.Data;
 using System.Collections.Specialized;
 using Windows.Foundation;
 
-
 namespace COTG.Views
 {
 
-    public class DumbCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class DumbCollection<T> : List<T>, INotifyCollectionChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public override bool Equals(object obj)
         {
@@ -38,10 +36,17 @@ namespace COTG.Views
             return base.GetHashCode();
         }
 
-        public void NotifyChange()
+        public void NotifyReset()
         {
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset ));
-
+        }
+        public void NotifyChange(T item)
+        {
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,item,item,IndexOf(item)));
+        }
+        public void NotifyAdd(T item)
+        {
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, IndexOf(item)));
         }
 
         public override string ToString()
@@ -100,20 +105,39 @@ namespace COTG.Views
 
         //}
 
-        public async static void UpdateCityList()
+        public async static void CityChange( City city)
         {
             if (cache == null)
                 return;
 
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                var cities = cache.cities;
+                if (cities.Contains(city))
                 {
-                    var cities = cache.cities;
-                    cities.Clear();
-                    cities.AddRange(City.all.Values);
-                    cities.NotifyChange();
-                });
+                    cities.NotifyChange(city);
+                }
+                else
+                {
+                    cities.Add(city);
+                    cities.NotifyAdd(city);
 
-            
+                }
+            });
+        }
+        public async static void CityListChange()
+        {
+            if (cache == null)
+                return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                var cities = cache.cities;
+                cities.Clear();
+                cities.AddRange(City.all.Values); // use the most reset city list
+
+                cache.cities.NotifyReset();
+            });
         }
         public async static void UpdateDungeonList(List<Dungeon> dungoens)
         {
@@ -125,7 +149,7 @@ namespace COTG.Views
                 var l = cache.dungeons;
                 l.Clear();
                 l.AddRange(dungoens);
-                l.NotifyChange();
+                l.NotifyReset();
             });
 
 

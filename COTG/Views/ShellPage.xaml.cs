@@ -342,7 +342,7 @@ namespace COTG.Views
         }
         private async void GetPPDT(object sender, RoutedEventArgs e)
         {
-            await JSClient.GetPPDT();
+            await JSClient.GetCitylistOverview();
         }
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
@@ -350,15 +350,15 @@ namespace COTG.Views
 
 
         static DateTime flyoutCreatedTime;
-        private async void ShowBuildings(object sender, RoutedEventArgs e)
+        private void ShowBuildings(object sender, RoutedEventArgs e)
         {
             try
             {
+                // This should not happen
                 var jse = City.current.jsE;
                 if (!jse.IsValid())
                 {
-                    await COTG.Services.RestAPI.getCity.Post();
-                    jse=City.current.jsE;
+                    return;
                 }
                 Log("Show Buildings");
                 List<BuildingCount> bd = new List<BuildingCount>();

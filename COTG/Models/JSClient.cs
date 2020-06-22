@@ -254,7 +254,9 @@ namespace COTG
         //        Log(e);
         //    }
         //}
-        public static async Task GetPPDT()
+
+        // Gets an overview of all cities
+        public static async Task GetCitylistOverview()
         {
             var str = await view.InvokeScriptAsync("getppdt", null);
 
@@ -275,7 +277,7 @@ namespace COTG
                     
                     city.name = jsCity.GetProperty("2").GetString();
                     city.isCastle = jsCity.GetAsInt("12") != 0;
-                    city.points =  jsCity.GetAsInt("4");
+                    city.points =  (ushort)jsCity.GetAsInt("4");
                     city.lastUpdated = now;
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
@@ -288,7 +290,7 @@ namespace COTG
                 Log(City.all.ToString());
                 Log(City.all.Count());
              }
-             Views.MainPage.UpdateCityList();
+             Views.MainPage.CityListChange();
 
 
             // Log(ppdt.ToString());
@@ -515,13 +517,13 @@ namespace COTG
                                     city.name = jso.GetString("name");
                                     city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
                                     city.notes = jso.GetString("notes");
-                                    city.points = jso.GetAsInt("score");
+                                    city.points = (ushort)jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTime.Now;
+                                    COTG.Views.MainPage.CityChange(city);
+
                                     Note.Show($"{city.name} {city.cid.ToCoordinateMD()}");
-                               
                                 }
-                                COTG.Views.MainPage.UpdateCityList();
                                 break;
 
                             }
@@ -535,37 +537,36 @@ namespace COTG
                                     City.all.TryAdd(cid, city);
                                 }
                                 city.LoadFromJson(jse);
-                                COTG.Views.MainPage.UpdateCityList();
+                                Task.Run(RestAPI.ScanDungeons.Post);
                                 break;
                             }
-                        case "stable":
-                            {
-                                var jse = jsp.Value;
-                                int counter = 0;
-                                StringBuilder sb = new StringBuilder();
-                                foreach (var i in jse.EnumerateArray())
-                                {
-                                    sb.Append('"');
+                        //case "stable":
+                        //    {
+                        //        var jse = jsp.Value;
+                        //        int counter = 0;
+                        //        StringBuilder sb = new StringBuilder();
+                        //        foreach (var i in jse.EnumerateArray())
+                        //        {
+                        //            sb.Append('"');
                                     
-                                    sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
-                                    sb.Append("\" /* " + counter++ + " */,"); 
+                        //            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
+                        //            sb.Append("\" /* " + counter++ + " */,"); 
                                     
-                                }
-                                var s = sb.ToString();
-                                Log(s);
-                                break;
+                        //        }
+                        //        var s = sb.ToString();
+                        //        Log(s);
+                        //        break;
 
-                            }
-                            break;
+                        //    }
+                        //    break;
                     }
 
                 }
 
                 if (gotCreds)
                 {
-                    await RestAPI.getCity.Post();
-                    await GetPPDT();
-                    await RestAPI.ScanDungeons.Post();
+                    await GetCitylistOverview();
+                   
                 }
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();

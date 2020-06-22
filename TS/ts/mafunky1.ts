@@ -62,7 +62,7 @@ function betterBase64Encode()   {
 }
 function GetCity(): jsonT.City {
 	//	return window['getD6']();
-	return cotg.a.D6;//
+	return __c.D6;//
 }
 /*function DummyPromise(data:string) {
 	return new Promise<Response>();
@@ -244,7 +244,7 @@ function sendCityData(delayInMs) {
 		pendingCityUpdate = true;
 
 		setTimeout(() => {
-			const wrapper = { citydata: cotg.a.D6 }
+			const wrapper = { citydata: __c.D6 }
 			window['external']['notify'](JSON.stringify(wrapper));
 			pendingCityUpdate = false;
 		}, delayInMs);
@@ -257,32 +257,32 @@ function __avatarAjaxDone(url: string,
 
 	if (Contains(url, "gC.php")) {
 		sendCityData(1000);
-			setTimeout(function () {
-				/** @type {*} */
-				updateattack_();
-				updatedef_();
+		setTimeout(function () {
+			/** @type {*} */
+			updateattack_();
+			updatedef_();
 
-			}, 1000);
-		
+		}, 1000);
+
 	}
-	else if(Contains(url,"gaLoy.php")) {
+	else if (Contains(url, "gaLoy.php")) {
 		UpdateResearchAndFaith();
 	}
-	else if(Contains(url,"nBuu.php")||Contains(url,"UBBit.php")) {
+	else if (Contains(url, "nBuu.php") || Contains(url, "UBBit.php")) {
 		sendCityData(1000);
 	}
 
-	else if(Contains(url,"gWrd.php")) {
-		setTimeout(function() {
+	else if (Contains(url, "gWrd.php")) {
+		setTimeout(function () {
 			/** @type {*} */
-			const wrapper=JSON.parse(data);
+			const wrapper = JSON.parse(data);
 			/** @type {boolean} */
-			beentoworld_=true;
-			wdata_=DecodeWorldData(wrapper.a);
+			beentoworld_ = true;
+			wdata_ = DecodeWorldData(wrapper.a);
 			UpdateResearchAndFaith();
 			getbossinfo_();
-		},1000);
-	} else	if(Contains(url,"gPlA.php")) {
+		}, 1000);
+	} else if (Contains(url, "gPlA.php")) {
 		/** @type {*} */
 	}
 	// if(url.endsWith("pD.php")) {
@@ -291,22 +291,23 @@ function __avatarAjaxDone(url: string,
 	else if (Contains(url, "poll2.php")) {
 		setTimeout(function () {
 		/** @type {*} */
-			let poll2_ =cotg.a.j71 as jsonT.Poll;
-		if('OGA' in poll2_)
-			OGA=poll2_.OGA;
+			if (__c.hasOwnProperty('j71')) {
+
+				if (__c.j71.hasOwnProperty('OGA'))
+					OGA = __c.j71['OGA'];
 
 
 
-			if ('city' in poll2_) {
-				{
-					sendCityData(4000);
+				if (__c.j71.hasOwnProperty('city')) {
+					{
+						sendCityData(4000);
 
+					}
 				}
 			}
 
-		
+		}, 100);
 	}
-	
 }
 
 
@@ -526,8 +527,8 @@ function SendCreds()
 		creds.cid = cid;
 		creds.time = currentTime();
 		let wrapper = { jsvars: creds }
-		if (cotg.a.D6 != null)
-			wrapper['citydata'] = cotg.a.D6;
+		if (__c.D6 != null)
+			wrapper['citydata'] = __c.D6;
 
 		window['external']['notify'](JSON.stringify(wrapper));
 
@@ -727,7 +728,7 @@ function avactor() {
 			//  ppdt.clc[temp_3] = [];
 			//  var tempcl_ = $("#cityDropdownMenu > option");
 			//  var ll_ = tempcl_.length;
-			//  if (cotg.a.D6.cg,temp_3) > -1) {
+			//  if (__c.D6.cg,temp_3) > -1) {
 			//    ppdt.clc[temp_3].push($(tempcl_[0]).attr("value"));
 			//  }
 			//  if (ll_ > 1) {
@@ -1052,14 +1053,14 @@ function avactor() {
 		//			commandInfo.x.push(tempx_6);
 		//			commandInfo.y.push(tempy_6);
 		//			commandInfo.cstr.push(`${tempx_6}:${tempy_6}`);
-		//			commandInfo.dist.push(Math.sqrt((tempx_6-cotg.a.D6.x)*(tempx_6-cotg.a.D6.x)+(tempy_6-cotg.a.D6.y)*(tempy_6-cotg.a.D6.y)));
+		//			commandInfo.dist.push(Math.sqrt((tempx_6-__c.D6.x)*(tempx_6-__c.D6.x)+(tempy_6-__c.D6.y)*(tempy_6-__c.D6.y)));
 		//			commandInfo.numb++;
 		//		}
 		//	}
-		//	for(var i_36 in cotg.a.D6.tc) {
-		//		if(cotg.a.D6.tc[i_36]) {
-		//			commandInfo.tot.push(Math.ceil(cotg.a.D6.tc[i_36]*AsNumber($("#defperc").val())/100));
-		//			commandInfo.home.push(Math.ceil(cotg.a.D6.th[i_36]*AsNumber($("#defperc").val())/100));
+		//	for(var i_36 in __c.D6.tc) {
+		//		if(__c.D6.tc[i_36]) {
+		//			commandInfo.tot.push(Math.ceil(__c.D6.tc[i_36]*AsNumber($("#defperc").val())/100));
+		//			commandInfo.home.push(Math.ceil(__c.D6.th[i_36]*AsNumber($("#defperc").val())/100));
 		//			commandInfo.type.push(AsNumber(i_36));
 		//			if($(`#usedef${i_36}`).prop("checked")==true) {
 		//				commandInfo.speed.push(ttspeed_[i_36]/ttspeedres_[i_36]);
@@ -1155,11 +1156,11 @@ function avactor() {
 			///** @type {number} */
 			//tempy_9=AsNumber((tid_6-tempx_9)/65536);
 
-			//commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-cotg.a.D6.x)*(tempx_9-cotg.a.D6.x)+(tempy_9-cotg.a.D6.y)*(tempy_9-cotg.a.D6.y)));
+			//commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-__c.D6.x)*(tempx_9-__c.D6.x)+(tempy_9-__c.D6.y)*(tempy_9-__c.D6.y)));
 			//var i_39;
-			//for(i_39 in cotg.a.D6.th) {
-			//	if(cotg.a.D6.th[i_39]) {
-			//		defobj_2.t.home.push(Math.ceil(cotg.a.D6.th[i_39]*AsNumber($("#defperc").val())/100));
+			//for(i_39 in __c.D6.th) {
+			//	if(__c.D6.th[i_39]) {
+			//		defobj_2.t.home.push(Math.ceil(__c.D6.th[i_39]*AsNumber($("#defperc").val())/100));
 			//		defobj_2.t.type.push(AsNumber(i_39));
 			//		defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
 			//		defobj_2.t.use.push(1);
@@ -1481,7 +1482,7 @@ function avactor() {
 							var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
 							/** @type {number} */
 							var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
-							var pname_12 = cotg.a.F5F[pid_];
+							var pname_12 = __c.F5F[pid_];
 							/** @type {!Array} */
 							var csn_ = [3, 4, 7, 8];
 							if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
@@ -1798,9 +1799,9 @@ function avactor() {
 				//var boss_strengthw_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4);
 				///** @type {number} */
 				//i_42=0;
-				//for(var x_85 in cotg.a.D6.th) {
+				//for(var x_85 in __c.D6.th) {
 				//	/** @type {number} */
-				//	let home_1=AsNumber(cotg.a.D6.th[x_85]);
+				//	let home_1=AsNumber(__c.D6.th[x_85]);
 				//	if(i_42===0||i_42===1||i_42===7||i_42===12||i_42===13) {
 				//		/** @type {number} */
 				//		home_1=0;
@@ -2947,7 +2948,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_8 = cotg.a.D6.mo;
+							var aa_8 = __c.D6.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_4;
 								for (k_4 in troopcounw_[j_13]) {
@@ -2978,7 +2979,7 @@ function avactor() {
 									var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
 									/** @type {number} */
 									var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
-									hubs_3.distance.push(Math.sqrt((tempx_12 - cotg.a.D6.x) * (tempx_12 - cotg.a.D6.x) + (tempy_12 - cotg.a.D6.y) * (tempy_12 - cotg.a.D6.y)));
+									hubs_3.distance.push(Math.sqrt((tempx_12 - __c.D6.x) * (tempx_12 - __c.D6.x) + (tempy_12 - __c.D6.y) * (tempy_12 - __c.D6.y)));
 								}
 								/** @type {number} */
 								var mindist_3 = Math.min(...hubs_3.distance);
@@ -3050,7 +3051,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_9 = cotg.a.D6.mo;
+							var aa_9 = __c.D6.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_5;
 								for (k_5 in troopcound_[j_14]) {
@@ -3081,7 +3082,7 @@ function avactor() {
 									var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
 									/** @type {number} */
 									var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
-									hubs_4.distance.push(Math.sqrt((tempx_13 - cotg.a.D6.x) * (tempx_13 - cotg.a.D6.x) + (tempy_13 - cotg.a.D6.y) * (tempy_13 - cotg.a.D6.y)));
+									hubs_4.distance.push(Math.sqrt((tempx_13 - __c.D6.x) * (tempx_13 - __c.D6.x) + (tempy_13 - __c.D6.y) * (tempy_13 - __c.D6.y)));
 								}
 								/** @type {number} */
 								var mindist_4 = Math.min(...hubs_4.distance);
