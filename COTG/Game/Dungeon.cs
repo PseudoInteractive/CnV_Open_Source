@@ -12,8 +12,9 @@ namespace COTG.Game
 {
     public class Dungeon
     {
+        public City city; // city to raid this, where distance is calculated from 
         public const int typeMountain = 2;
-        public int cid;
+        public int cid; // dungeon id
         public string xy => $"{cid % 65536}:{cid / 65536}";
         //          [JsonProperty("t")]
         public int type { get; set; }
@@ -44,7 +45,7 @@ namespace COTG.Game
         public float loot => (type == typeMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
         public string plan { get
             {
-                var r = Raiding.ComputeIdealReps(this,City.current);
+                var r = Raiding.ComputeIdealReps(this,city);
                 return $"{r.reps}x {(int)r.averageCarry}% carry";
             }
         }

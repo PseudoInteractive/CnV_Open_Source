@@ -38,8 +38,9 @@
      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview1" />
+     <PackageReference Include="Microsoft.Toolkit" Version="6.1.0" />
      <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.0" />
+     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
      <PackageReference Include="PlayFabAllSDK" Version="1.74.200615" />
      <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.5.20278.1" />
      <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.0-preview.5.20278.1" />

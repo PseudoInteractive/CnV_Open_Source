@@ -61,14 +61,15 @@ namespace COTG.Views
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
 
-        public static City showingRowDetails;
+        //        public static City showingRowDetails;
 
-        public DataTemplate GetTsInfoDataTemplate()
-        {
-            var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
-            Assert(rv != null);
-            return rv;
-        }
+        //public DataTemplate GetTsInfoDataTemplate()
+        //{
+        //    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+        //    Assert(rv != null);
+        //    return rv;
+        //}
+        public static RadDataGrid CityGrid => cache.cityGrid;
 
         public MainPage()
         {
@@ -139,20 +140,23 @@ namespace COTG.Views
                 cache.cities.NotifyReset();
             });
         }
-        public async static void UpdateDungeonList(List<Dungeon> dungoens)
+        public static void UpdateDungeonList(List<Dungeon> dungeons)
         {
             if (cache == null)
                 return;
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 var l = cache.dungeons;
                 l.Clear();
-                l.AddRange(dungoens);
+                if(dungeons!=null)
+                    l.AddRange(dungeons);
                 l.NotifyReset();
             });
-
-
+        }
+        public static void ClearDungeonList()
+        {
+            UpdateDungeonList(null);
         }
 
 

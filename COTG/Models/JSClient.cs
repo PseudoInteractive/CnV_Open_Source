@@ -27,6 +27,7 @@ using Windows.Storage.Streams;
 using Windows.Storage;
 using COTG.Services;
 using System.Web;
+using COTG.Views;
 
 namespace COTG
 {
@@ -165,6 +166,7 @@ namespace COTG
                     }
                     catch (Exception e)
                     {
+                        Log(e);
                     }
 
                 }
@@ -529,6 +531,7 @@ namespace COTG
                             }
                         case "citydata":
                             {
+                                MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
                                 cid = jse.GetInt("cid");
                                 if (!City.all.TryGetValue(cid, out var city))
@@ -537,7 +540,6 @@ namespace COTG
                                     City.all.TryAdd(cid, city);
                                 }
                                 city.LoadFromJson(jse);
-                                Task.Run(RestAPI.ScanDungeons.Post);
                                 break;
                             }
                         //case "stable":

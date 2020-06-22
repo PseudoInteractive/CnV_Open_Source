@@ -51,7 +51,7 @@ namespace COTG.Game
         }
         internal static async Task SendRaids(Dungeon d)
         {
-            var city = City.current;
+            var city = d.city;
             if (city == null)
                 return;
             var r = ComputeIdealReps(d,city);

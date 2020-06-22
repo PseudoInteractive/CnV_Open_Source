@@ -1045,63 +1045,63 @@ function SendAttack_() {
 	// 	loop_();
 	}
 
-var pendingBuildUpdate = false;
+//var pendingBuildUpdate = false;
 
-function makebuildcount_() {
-		pendingBuildUpdate =false;
+//function makebuildcount_() {
+//		pendingBuildUpdate =false;
 
-		$("#bdtable").remove();
-		const currentbd_ = {
-			name: [],
-			bid: [],
-			count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		};
-		let j_4;
-		/** @type {number} */
-		let bdtypecount_ = -1;
-		/** @type {number} */
-		let bdNumber_ = -1;
-		let i_16;
-		for (i_16 in __c.D6.bd) {
-			if (buildings_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
-				if (currentbd_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
-					/** @type {number} */
-					j_4 = currentbd_.bid.indexOf(__c.D6.bd[i_16].bid);
-					currentbd_.count[j_4] += 1;
-					/** @type {number} */
-					bdNumber_ = bdNumber_ + 1;
-				} else {
-					/** @type {number} */
-					bdtypecount_ = bdtypecount_ + 1;
-					/** @type {number} */
-					j_4 = buildings_.bid.indexOf(__c.D6.bd[i_16].bid);
-					currentbd_.name[bdtypecount_] = buildings_.name[j_4];
-					currentbd_.bid[bdtypecount_] = buildings_.bid[j_4];
-					currentbd_.count[bdtypecount_] += 1;
-					/** @type {number} */
-					bdNumber_ = bdNumber_ + 1;
-				}
-			}
-		}
-		/** @type {string} */
-		let bdtable_ = "<table id='bdtable'><tbody><tr>";
-		for (i_16 in currentbd_.bid) {
-			if (i_16 < 9 || i_16 > 9 && i_16 < 19 || i_16 > 19 && i_16 < 29) {
-				/** @type {string} */
-				bdtable_ = `${bdtable_}<td style='text-align:center; width:30px; height:30px;'><div style='background-image: url(/images/city/buildings/icons/${currentbd_.name[i_16]}.png); background-size:contain;background-repeat:no-repeat;width:30px; height:30px;'></div>${AsNumber(currentbd_.count[i_16])}</td>`;
-			}
-			if (i_16 == 9 || i_16 == 19) {
-				/** @type {string} */
-				bdtable_ = `${bdtable_}</tr><tr>`;
-				/** @type {string} */
-				bdtable_ = `${bdtable_}<td style='text-align:center; width:30px; height:30px;'><div style='background-image: url(/images/city/buildings/icons/${currentbd_.name[i_16]}.png); background-size:contain;background-repeat:no-repeat;width:30px; height:30px;'></div>${AsNumber(currentbd_.count[i_16])}</td>`;
-			}
-		}
-		/** @type {string} */
-		bdtable_ = `${bdtable_}</tr></tbody></table>`;
-		$("#bdcountwin").html(bdtable_);
-		$("#numbdleft").html(bdNumber_.toLocaleString());
-	}
+//		$("#bdtable").remove();
+//		const currentbd_ = {
+//			name: [],
+//			bid: [],
+//			count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//		};
+//		let j_4;
+//		/** @type {number} */
+//		let bdtypecount_ = -1;
+//		/** @type {number} */
+//		let bdNumber_ = -1;
+//		let i_16;
+//		for (i_16 in __c.D6.bd) {
+//			if (buildings_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
+//				if (currentbd_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
+//					/** @type {number} */
+//					j_4 = currentbd_.bid.indexOf(__c.D6.bd[i_16].bid);
+//					currentbd_.count[j_4] += 1;
+//					/** @type {number} */
+//					bdNumber_ = bdNumber_ + 1;
+//				} else {
+//					/** @type {number} */
+//					bdtypecount_ = bdtypecount_ + 1;
+//					/** @type {number} */
+//					j_4 = buildings_.bid.indexOf(__c.D6.bd[i_16].bid);
+//					currentbd_.name[bdtypecount_] = buildings_.name[j_4];
+//					currentbd_.bid[bdtypecount_] = buildings_.bid[j_4];
+//					currentbd_.count[bdtypecount_] += 1;
+//					/** @type {number} */
+//					bdNumber_ = bdNumber_ + 1;
+//				}
+//			}
+//		}
+//		/** @type {string} */
+//		let bdtable_ = "<table id='bdtable'><tbody><tr>";
+//		for (i_16 in currentbd_.bid) {
+//			if (i_16 < 9 || i_16 > 9 && i_16 < 19 || i_16 > 19 && i_16 < 29) {
+//				/** @type {string} */
+//				bdtable_ = `${bdtable_}<td style='text-align:center; width:30px; height:30px;'><div style='background-image: url(/images/city/buildings/icons/${currentbd_.name[i_16]}.png); background-size:contain;background-repeat:no-repeat;width:30px; height:30px;'></div>${AsNumber(currentbd_.count[i_16])}</td>`;
+//			}
+//			if (i_16 == 9 || i_16 == 19) {
+//				/** @type {string} */
+//				bdtable_ = `${bdtable_}</tr><tr>`;
+//				/** @type {string} */
+//				bdtable_ = `${bdtable_}<td style='text-align:center; width:30px; height:30px;'><div style='background-image: url(/images/city/buildings/icons/${currentbd_.name[i_16]}.png); background-size:contain;background-repeat:no-repeat;width:30px; height:30px;'></div>${AsNumber(currentbd_.count[i_16])}</td>`;
+//			}
+//		}
+//		/** @type {string} */
+//		bdtable_ = `${bdtable_}</tr></tbody></table>`;
+//		$("#bdcountwin").html(bdtable_);
+//		$("#numbdleft").html(bdNumber_.toLocaleString());
+//	}
 
 	/**
 	 * @return {void}

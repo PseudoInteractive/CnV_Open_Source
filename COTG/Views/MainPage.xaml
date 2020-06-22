@@ -13,6 +13,8 @@
     xmlns:game="using:COTG.Game"
     x:Class="COTG.Views.MainPage"
     Style="{StaticResource PageStyle}"
+    xmlns:behaviors="using:COTG.Behaviors"
+    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d"
     NavigationCacheMode="Required"
     Background="{x:Null}">
@@ -28,31 +30,37 @@
                         x:Name="cityGrid"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
-                        SelectionMode ="Extended"
+                        SelectionMode ="Single"
+                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         CanUserChooseColumns="true"
                         UserSortMode="Multiple"
-                        SelectionUnit="Cell" GridLinesVisibility="Both"  GroupPanelPosition="Bottom"  ListenForNestedPropertyChange="False" >
+                        
+                        RowHeight="40"
+                        FontSize="12"
+                        SelectionUnit="Cell"  GroupPanelPosition="Bottom" ListenForNestedPropertyChange="False"
+                        AllowFocusOnInteraction="True" XYFocusKeyboardNavigation="Enabled" 
+                        >
 
 
 			<tg:RadDataGrid.Commands>
 				<model:CityTapCommand />
-			</tg:RadDataGrid.Commands>
+            </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-				<tg:DataGridImageColumn PropertyName="icon"   />
-				<tg:DataGridTextColumn PropertyName="name"   />
-				<tg:DataGridTextColumn PropertyName="xy" />
-				<tg:DataGridTextColumn PropertyName="ts"  />
-				<tg:DataGridTextColumn PropertyName="tsHome" />
-				<tg:DataGridNumericalColumn PropertyName="points" />
-				<tg:DataGridDateColumn PropertyName="owner" IsVisible="False" />
-				<tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False" />
-				<tg:DataGridDateColumn PropertyName="alliance" IsVisible="False" />
-				<tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False" />
-			</tg:RadDataGrid.Columns>
-            <tg:RadDataGrid.AggregateDescriptors>
-                <tdd:PropertyAggregateDescriptor PropertyName="ts" Function="Sum" />
-                <tdd:PropertyAggregateDescriptor PropertyName="tsHome" Function="Sum" />
-            </tg:RadDataGrid.AggregateDescriptors>
+                <tg:DataGridImageColumn PropertyName="icon" SizeMode="Fixed" Width="40"  />
+                <tg:DataGridTextColumn PropertyName="name" SizeMode="Fixed" Width="100" />
+                <tg:DataGridTextColumn PropertyName="xy"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridTextColumn PropertyName="ts"   SizeMode="Fixed" Width="80" />
+                <tg:DataGridTextColumn PropertyName="tsHome"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="points"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridDateColumn PropertyName="owner" IsVisible="False"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridDateColumn PropertyName="alliance" IsVisible="False"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="carryCapacity" IsVisible="False"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="activeCommands" IsVisible="False" SizeMode="Fixed" Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="commandSlots" IsVisible="False" SizeMode="Fixed" Width="80" />
+            </tg:RadDataGrid.Columns>
+            
         </tg:RadDataGrid>
 		<tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="dungeonGrid"
@@ -61,6 +69,8 @@
                         ItemsSource="{x:Bind dungeons, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
                         SelectionMode ="Extended"
+                        RowHeight="40"
+                        FontSize="12"
                         CanUserChooseColumns="true"
                         UserSortMode="Multiple"
                         SelectionUnit="Cell" Margin="0,14,0,0"

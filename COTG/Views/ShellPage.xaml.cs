@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 using System.Collections.Concurrent;
+using Windows.UI.Core;
 
 namespace COTG.Views
 {
@@ -95,7 +96,7 @@ namespace COTG.Views
             IdentityService.LoggedOut += OnLoggedOut;
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
 
             var webView = JSClient.Initialize(panel);
@@ -120,6 +121,7 @@ namespace COTG.Views
             Grid.SetColumn(shellFrame, 4);
             Grid.SetRow(shellFrame, 0);
             Grid.SetRowSpan(shellFrame, 5);
+            shellFrame.Margin = new Thickness(13,0,0,0);
             Canvas.SetZIndex(shellFrame, 3);
 
 
@@ -132,9 +134,12 @@ namespace COTG.Views
             var splitter = new GridSplitter();
             panel.Children.Add(splitter);
             Grid.SetColumn(splitter, 4);
+            // Grid.SetRowSpan(splitter, 4);
+            splitter.Height = 200;
+            splitter.Width = 8;
             Grid.SetRowSpan(splitter, 4);
-            splitter.Width = 16;
             splitter.HorizontalAlignment = HorizontalAlignment.Left;
+            splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
             Canvas.SetZIndex(splitter, 5);
 
@@ -190,7 +195,7 @@ namespace COTG.Views
             JSClient.TestGet();
         }
 
-        private async void OnUserProfile(object sender, RoutedEventArgs e)
+        private void OnUserProfile(object sender, RoutedEventArgs e)
         {
             if (IsLoggedIn)
             {
@@ -317,7 +322,18 @@ namespace COTG.Views
         public void Refresh(object o, RoutedEventArgs e)
         {
             Log("Refresh");
-            JSClient.Refresh(o, e);
+            var shiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
+            var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+
+            var isShiftDown = shiftState != CoreVirtualKeyStates.None;
+            var isCtrlDown = ctrlState != CoreVirtualKeyStates.None;
+            if (isShiftDown)
+                JSClient.Refresh(o, e);
+            else
+            {
+                // soft refresh
+                RestAPI.getCity.Post();
+            }
 
         }
 
@@ -346,8 +362,9 @@ namespace COTG.Views
         }
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
-        static short [] bidMap = new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, 455, 467 };
-
+        const short bidTownHall = 455;
+        static short [] bidMap = new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
+        
 
         static DateTime flyoutCreatedTime;
         private void ShowBuildings(object sender, RoutedEventArgs e)
@@ -368,11 +385,13 @@ namespace COTG.Views
                 foreach (var bdi in jse.GetProperty("bd").EnumerateArray())
                 {
                     var bid = bdi.GetAsInt("bid");
-                    bid= bidMap.FindIndex((short)bid);
-                    if (bid == -1)
+                    if (bid == bidTownHall)
+                        continue;
+                    var bi= bidMap.FindIndex((short)bid);
+                    if (bi == -1)
                         continue;
                     
-                    var s = buildings[bid];
+                    var s = buildings[bi];
                     if (!bdd.TryGetValue(s, out var counter))
                     {
                         bdd.Add(s, 0);
@@ -385,7 +404,7 @@ namespace COTG.Views
                 {
                     bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
                 }
-                bd.Add(new BuildingCount() { count = bCount-1, image = ImageHelper.FromImages("townhall.png") });
+                bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("townhall.png") });
 
                 //         
 
@@ -488,7 +507,7 @@ namespace COTG.Views
 
         private void TestRaid(object sender, RoutedEventArgs e)
         {
-            RestAPI.ScanDungeons.Post();
+ //          ScanDungeons.Post();
         }
     }
 }

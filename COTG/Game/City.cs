@@ -92,8 +92,8 @@ namespace COTG.Game
 
 		internal void TroopsChanged()
 		{
-            if(current == this )
-                throw new NotImplementedException();
+            if (current == this)
+                ;// throw new NotImplementedException();
 		}
 
 

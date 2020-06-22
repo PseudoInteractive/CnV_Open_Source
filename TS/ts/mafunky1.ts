@@ -238,10 +238,10 @@ function Contains(a:string,b:string) {
 let pendingCityUpdate = false;
 
 function sendCityData(delayInMs) {
-	console.log("sendCity");
 
 	if (pendingCityUpdate === false) {
 		pendingCityUpdate = true;
+		console.log("sendCity");
 
 		setTimeout(() => {
 			const wrapper = { citydata: __c.D6 }
@@ -251,18 +251,35 @@ function sendCityData(delayInMs) {
 	}
 }
 
+function gCPosted()
+{
+	sendCityData(1000);
+	setTimeout(function () {
+		/** @type {*} */
+		updateattack_();
+		updatedef_();
+
+	}, 1000);
+}
+
+function gWrdPosted(data) {
+	setTimeout(function () {
+		/** @type {*} */
+//		const wrapper = JSON.parse(data);
+		/** @type {boolean} */
+		beentoworld_ = true;
+		wdata_ = DecodeWorldData(data);
+		UpdateResearchAndFaith();
+		getbossinfo_();
+	}, 1000);
+}
+
 function __avatarAjaxDone(url: string,
 	data: string) {
 	//console.log("Change: " + this.readyState + " " + this.responseURL);
 
 	if (Contains(url, "gC.php")) {
-		sendCityData(1000);
-		setTimeout(function () {
-			/** @type {*} */
-			updateattack_();
-			updatedef_();
-
-		}, 1000);
+		
 
 	}
 	else if (Contains(url, "gaLoy.php")) {
@@ -282,32 +299,33 @@ function __avatarAjaxDone(url: string,
 			UpdateResearchAndFaith();
 			getbossinfo_();
 		}, 1000);
-	} else if (Contains(url, "gPlA.php")) {
-		/** @type {*} */
 	}
-	// if(url.endsWith("pD.php")) {
-	// 	pdata=JSON.parse(this.response);
-	// }
-	else if (Contains(url, "poll2.php")) {
-		setTimeout(function () {
-		/** @type {*} */
-			if (__c.hasOwnProperty('j71')) {
+	//else if (Contains(url, "gPlA.php")) {
+	//	/** @type {*} */
+	//}
+	//// if(url.endsWith("pD.php")) {
+	//// 	pdata=JSON.parse(this.response);
+	//// }
+	//else if (Contains(url, "poll2.php")) {
+	//	setTimeout(function () {
+	//	/** @type {*} */
+	//		if (__c.hasOwnProperty('j71')) {
 
-				if (__c.j71.hasOwnProperty('OGA'))
-					OGA = __c.j71['OGA'];
+	//			if (__c.j71.hasOwnProperty('OGA'))
+	//				OGA = __c.j71['OGA'];
 
 
 
-				if (__c.j71.hasOwnProperty('city')) {
-					{
-						sendCityData(4000);
+	//			if (__c.j71.hasOwnProperty('city')) {
+	//				{
+	//					sendCityData(4000);
 
-					}
-				}
-			}
+	//				}
+	//			}
+	//		}
 
-		}, 100);
-	}
+	//	}, 100);
+	//}
 }
 
 
@@ -326,30 +344,31 @@ function OptimizeAjax() {
 	});
 	//jQuery.ajaxSetup({dataType:"nada" } )
 	jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;;
-	setTimeout(function () {
-		(function (open_2) {
-			/**
-			 * @param {string=} p0
-			 * @param {string=} p1
-			 * @param {(boolean|null)=} p2
-			 * @param {(null|string)=} p3
-			 * @param {(null|string)=} p4
-			 * @return {void}
-			 */
-			XMLHttpRequest.prototype.open = function () {
-				this.addEventListener("readystatechange", function () {
-					//console.log("Change: " + this.readyState + " " + this.responseURL);
-					if (this.readyState == 4) {
-						__avatarAjaxDone(this.responseURL, this.response);
+	//setTimeout(function () {
+	//	(function (open_2) {
+	//		/**
+	//		 * @param {string=} p0
+	//		 * @param {string=} p1
+	//		 * @param {(boolean|null)=} p2
+	//		 * @param {(null|string)=} p3
+	//		 * @param {(null|string)=} p4
+	//		 * @return {void}
+	//		 */
+	//		XMLHttpRequest.prototype.open = function () {
+	//			this.addEventListener("readystatechange", function () {
+	//				//console.log("Change: " + this.readyState + " " + this.responseURL);
+	//				if (this.readyState == 4) {
+	//					__avatarAjaxDone(this.responseURL, this.response);
 
 						
 						
-					}
-				}, false);
-				open_2.apply(this, arguments);
-			};
-		})(XMLHttpRequest.prototype.open);
-	}, 100);	/*
+	//				}
+	//			}, false);
+	//			open_2.apply(this, arguments);
+	//		};
+	//	})(XMLHttpRequest.prototype.open);
+	//}, 100);
+	/*
 	__ajax=window['$']['ajax'];
 		try {
 			DoneWrapper.setup();
@@ -1247,14 +1266,32 @@ function avactor() {
 		});
 		/** @type {string} */
 		var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>TBA</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
-		/** @type {string} */
-		var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
-		/** @type {string} */
-		bdcountbox_ = `${bdcountbox_}<div id='bdcountbut' class='tradeqarr2'><div></div></div><span class='qbspan'>Current Buildings</span>`;
-		/** @type {string} */
-		bdcountbox_ = `${bdcountbox_}<div id='numbdleft' class='barRightFloat tooltipstered'>0</div>`;
-		/** @type {string} */
-		bdcountbox_ = `${bdcountbox_}</div><div id='bdcountwin' class='queueWindow' style='display: block;'></div></div>`;
+
+	///** @type {string} */
+	//	var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
+	//	/** @type {string} */
+	//	bdcountbox_ = `${bdcountbox_}<div id='bdcountbut' class='tradeqarr2'><div></div></div><span class='qbspan'>Current Buildings</span>`;
+	///** @type {string} */
+	//	bdcountbox_ = `${bdcountbox_}<div id='numbdleft' class='barRightFloat tooltipstered'>0</div>`;
+
+	///** @type {string} */
+	//	bdcountbox_ = `${bdcountbox_}</div><div id='bdcountwin' class='queueWindow' style='display: block;'></div></div>`;
+		//$("#recruitmentQueue").before(bdcountbox_);
+		//$("#bdcountbut").click(() => {
+		//	if (bdcountshow_) {
+		//		$("#bdcountwin").hide();
+		//		$("#bdcountbut").removeClass("tradeqarr2").addClass("tradeqarr1");
+		//		/** @type {boolean} */
+		//		bdcountshow_ = false;
+		//	} else {
+		//		$("#bdcountwin").show();
+		//		$("#bdcountbut").removeClass("tradeqarr1").addClass("tradeqarr2");
+		//		/** @type {boolean} */
+		//		bdcountshow_ = true;
+		//	}
+		//});
+
+
 		$("#buildQueue").before(fourbutton_);
 		/** @type {string} */
 		var fillbut_ = '<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
@@ -1354,20 +1391,6 @@ function avactor() {
 		});
 		$("#sumWin").click(() => {
 			console.log("popsum");
-		});
-		$("#recruitmentQueue").before(bdcountbox_);
-		$("#bdcountbut").click(() => {
-			if (bdcountshow_) {
-				$("#bdcountwin").hide();
-				$("#bdcountbut").removeClass("tradeqarr2").addClass("tradeqarr1");
-				/** @type {boolean} */
-				bdcountshow_ = false;
-			} else {
-				$("#bdcountwin").show();
-				$("#bdcountbut").removeClass("tradeqarr1").addClass("tradeqarr2");
-				/** @type {boolean} */
-				bdcountshow_ = true;
-			}
 		});
 		/** @type {string} */
 		var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";

@@ -104,9 +104,9 @@
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
 		</winui:NavigationView.MenuItems>
-		<!--<i:Interaction.Behaviors>
+        <i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior
-                DefaultHeader="{x:Bind Mode=OneWay, Path=Selected.Content}">
+                DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">
                 <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
                     <DataTemplate>
                         <Grid>
@@ -115,10 +115,10 @@
                                 Style="{ThemeResource TitleTextBlockStyle}"
                                 Margin="{StaticResource SmallLeftRightMargin}" />
                         </Grid>
-                    </DataTempl ate>
+                    </DataTemplate>
                 </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
             </behaviors:NavigationViewHeaderBehavior>
-        </i:Interaction.Behaviors>-->
+        </i:Interaction.Behaviors>
 		<winui:NavigationView.PaneFooter>
             <StackPanel x:Name="FooterStackPanel" Orientation="Vertical" Visibility="Visible">
                 <Button x:Name="RefreshAll" AccessKey="F5" Click="Refresh" Content="Refresh"
@@ -181,26 +181,6 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
             <tk:InAppNotification x:Name="InAppNote" StackMode="StackInFront" Grid.Row="4" Grid.ColumnSpan="5"  AnimationDuration="00:00:00.3000" Canvas.ZIndex="55"                                              >
-                <tk:InAppNotification.ContentTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock VerticalAlignment="Center"
-                                   Text="This a test message."
-                                   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-
-                            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                <Button Content="Action 1" />
-                                <Button Content="Action 2" />
-                                <Button Content="Close" />
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </tk:InAppNotification.ContentTemplate>
             </tk:InAppNotification>
         </Grid>
 	</winui:NavigationView>

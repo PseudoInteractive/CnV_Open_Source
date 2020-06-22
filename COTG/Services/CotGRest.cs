@@ -19,16 +19,18 @@ namespace COTG.Services
         public static List<RestAPI> all = new List<RestAPI>();
         public string localPath;
         public string secret;
+        public static JsonDocument emptyJson;
 
         public RestAPI(string _localPath, string _secret)
         {
             localPath = _localPath;
             secret = _secret;
+            emptyJson = JsonDocument.Parse("{}");
             all.Add(this);
         }
 
 
-        public virtual async Task Accept(Uri uri, HttpResponseMessage resp)
+        public virtual async Task<JsonDocument> Accept(Uri uri, HttpResponseMessage resp)
         {
 
             try
@@ -41,13 +43,15 @@ namespace COTG.Services
                 {
                     dataReader.ReadBytes(temp);
                 }
-                Log(uri.ToString()+ "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp)+ "\n\n>>>>>>>>>>>>>>\n\n");
+                Log(uri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
                 var json = JsonDocument.Parse(temp);
                 ProcessJson(json);
+                return json;
             }
             catch (Exception e)
             {
                 Log(e);
+                return emptyJson;
             }
 
         }
@@ -92,7 +96,7 @@ namespace COTG.Services
 
         }
 
-        async public Task Post()
+        async public Task<JsonDocument> Post()
         {
             try
             {
@@ -117,7 +121,7 @@ namespace COTG.Services
                     Log(resp.ExtendedError);
                 if (resp.Succeeded)
                 {
-                    await Accept(req.RequestUri, resp.ResponseMessage);
+                    return await Accept(req.RequestUri, resp.ResponseMessage);
                     //var b = await resp.Content.ReadAsInputStreamAsync();
 
                     //                    jso = await JsonDocument.ParseAsync(b.ToString);
@@ -133,7 +137,7 @@ namespace COTG.Services
             {
                 Log(e);
             }
-
+            return emptyJson;
 
 
         }
@@ -148,7 +152,7 @@ namespace COTG.Services
         static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");
         static RestAPI __9 = new RestAPI("includes/sndTtr.php", "JJx452Tdd2375sRAssa");
         // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
-        public static fCv ScanDungeons = new fCv();
+        // public static ScanRaids ScanDungeons = new ScanRaids();
         public static TroopsOverview troopsOverview = new TroopsOverview();
     }
 
@@ -254,22 +258,23 @@ namespace COTG.Services
 
     }
 
-    public class fCv : RestAPI
+    public class ScanDungeons : RestAPI
     {
-      
-        public static Dungeon[] dungeons = new Dungeon[0];
-        public fCv() : base("includes/fCv.php", "Xs4b2261f55dlme55s")
+        City city;
+
+        public ScanDungeons(City _cid) : base("includes/fCv.php", "Xs4b2261f55dlme55s")
         {
 
+            city = _cid;
         }
 
         public override string GetPostContent()
         {
-            var args = "cid=" + JSClient.cid;
+            var args = "cid=" + city.cid;
             return args;
         }
 
-        public override async Task Accept(Uri uri, HttpResponseMessage resp)
+        public override async Task<JsonDocument> Accept(Uri uri, HttpResponseMessage resp)
         {
             Log("Got fCv");
 
@@ -278,7 +283,7 @@ namespace COTG.Services
             {
                 var buff = await resp.Content.ReadAsBufferAsync();
 
-                var temp = new byte[buff.Length-1];
+                var temp = new byte[buff.Length - 1];
 
                 using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
                 {
@@ -288,8 +293,7 @@ namespace COTG.Services
                 var dec2 = Encoding.UTF8.GetString(temp);
                 var temps = Aes.Decode(dec2, secret);
                 var json = JsonDocument.Parse(temps);
-                Log(json.ToString());
-
+                
 
                 var jse = json.RootElement;
                 jse = jse[0];
@@ -298,6 +302,7 @@ namespace COTG.Services
                 {
                     rv.Add(new Dungeon()
                     {
+                        city = city,
                         cid = dung.GetAsInt("c"),
                         type = dung.GetAsByte("t"),
                         level = dung.GetAsByte("l"),
@@ -306,21 +311,20 @@ namespace COTG.Services
 
                     });
                 }
-                rv.Sort((a, b) => a.dist.CompareTo( b.dist) );
+                rv.Sort((a, b) => a.dist.CompareTo(b.dist));
                 // dont wait on this 
                 COTG.Views.MainPage.UpdateDungeonList(rv);
-
+                return json;
             }
             catch (Exception e)
             {
                 Log(e);
+                return emptyJson;
             }
 
         }
-
-       
-
     }
+
     public class OverviewApi : RestAPI
     {
         public OverviewApi(string addr) : base(addr, null) { }
@@ -333,7 +337,7 @@ namespace COTG.Services
         {
             jsd = json;
             dict = new Dictionary<int, JsonElement>();
-            foreach(var item in jsd.RootElement.EnumerateArray())
+            foreach (var item in jsd.RootElement.EnumerateArray())
             {
                 dict.Add(item.GetAsInt("id"), item);
             }
@@ -349,7 +353,35 @@ namespace COTG.Services
         }
 
     }
+    public class Post : RestAPI
+    {
+        public Post(string url, string secret = null) : base(url, secret) { }
+        public override void ProcessJson(JsonDocument json)
+        {
+            jsd = json;
+            dict = new Dictionary<int, JsonElement>();
+            foreach (var item in jsd.RootElement.EnumerateArray())
+            {
+                dict.Add(item.GetAsInt("id"), item);
+            }
+            Log("Got JS for troop overview");
+            Log(json.ToString());
+        }
+        public static JsonDocument jsd;
+        public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
+        public JsonElement Get(int cid)
+        {
+            return dict.GetValueOrDefault(cid);
 
+        }
+
+        async public static Task Send(string url, string secret = null)
+        {
+            var p = new Post(url, secret);
+            await p.Post();
+
+        }
+    }
 
 }
 

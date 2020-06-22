@@ -21,6 +21,7 @@ using Windows.UI.Xaml;
 
 using Cysharp.Text;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using COTG.Views;
 
 namespace COTG
 {
@@ -155,9 +156,9 @@ namespace COTG
     {
         public static void Show(string s, int timeout=8000)
         {
-            var textBlock = new MarkdownTextBlock() { Text = s };
+            var textBlock = new MarkdownTextBlock() { Text = s, Style= ShellPage.inAppNote.Style };
 			textBlock.LinkClicked += MarkDownLinkClicked;
-            Views.ShellPage.inAppNote.Show(textBlock, timeout);
+            ShellPage.inAppNote.Show(textBlock, timeout);
         }
 
 		private static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
