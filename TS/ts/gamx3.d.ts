@@ -6,6 +6,16 @@ declare let ppdt: {
     r: any;
     cb: string;
 };
+
+declare let __a6 : {
+    ccazzx:
+    {
+        encrypt: (a: string, b: string, c: number) => string,
+        decrypt: (a: string, b: string, c: number) => string
+    }
+};
+
+
 declare const __s: {
     0: string;
     1: string;

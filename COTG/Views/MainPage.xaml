@@ -18,7 +18,8 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required"
     Background="{x:Null}">
-	<Grid>
+
+    <Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
@@ -26,7 +27,7 @@
 			<RowDefinition Height="3*"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<tg:RadDataGrid ColumnDataOperationsMode="Flyout"
+        <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="cityGrid"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
@@ -34,12 +35,13 @@
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         CanUserChooseColumns="true"
                         UserSortMode="Multiple"
-                        
                         RowHeight="40"
+                        PointerMoved="DataGrid_PointerMoved"
                         FontSize="12"
                         SelectionUnit="Cell"  GroupPanelPosition="Bottom" ListenForNestedPropertyChange="False"
-                        AllowFocusOnInteraction="True" XYFocusKeyboardNavigation="Enabled" 
-                        >
+                        AllowFocusOnInteraction="True" XYFocusKeyboardNavigation="Enabled" >
+           
+            
 
 
 			<tg:RadDataGrid.Commands>

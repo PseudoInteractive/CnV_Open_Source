@@ -11,6 +11,7 @@ using COTG.Game;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using COTG.Services;
+using COTG.Views;
 
 namespace COTG.Models
 {
@@ -65,6 +66,26 @@ namespace COTG.Models
  
 //            if (base.CanExecute(parameter))
 		
+        }
+    }
+    public class CityGridToggleColumnVisibilityCommand : DataGridCommand
+    {
+        public CityGridToggleColumnVisibilityCommand()
+        {
+            this.Id = CommandId.ToggleColumnVisibility;
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            var context = parameter as ToggleColumnVisibilityContext;
+
+            return true;
+        }
+
+        public override void Execute(object parameter)
+        {
+            var context = parameter as ToggleColumnVisibilityContext;
+            MainPage.
         }
     }
     public class CityKeyCommand : DataGridCommand

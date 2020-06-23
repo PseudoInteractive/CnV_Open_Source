@@ -330,7 +330,7 @@ namespace COTG
                         httpsHost = new Uri($"https://{args.Uri.Host}");
                         downloadImageClient = new HttpClient();
                         downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
-                        downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
+                        downloadImageClient.DefaultRequestHeaders.Referer = new Uri(httpsHost , "/overview.php?s=0");
                         downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
                         downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 
@@ -374,7 +374,7 @@ namespace COTG
                         //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
                         httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
                         // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                        httpClient.DefaultRequestHeaders.Referer = httpsHost;// new Uri($"https://w{world}.crownofthegods.com");
+                        httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
                                                                              //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                         httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
@@ -478,7 +478,7 @@ namespace COTG
             try
             {
                 bool gotCreds = false;
-                Log($"Notify: {e.CallingUri} {e.Value} {sender}");
+                Log($"Notify: {e.CallingUri} {sender} {e.Value.Truncate(128) }");
                 var jsDoc = JsonDocument.Parse(e.Value);
                 var jsd = jsDoc.RootElement;
                 foreach (var jsp in jsd.EnumerateObject())
@@ -542,25 +542,41 @@ namespace COTG
                                 city.LoadFromJson(jse);
                                 break;
                             }
-                        //case "stable":
-                        //    {
-                        //        var jse = jsp.Value;
-                        //        int counter = 0;
-                        //        StringBuilder sb = new StringBuilder();
-                        //        foreach (var i in jse.EnumerateArray())
-                        //        {
-                        //            sb.Append('"');
-                                    
-                        //            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
-                        //            sb.Append("\" /* " + counter++ + " */,"); 
-                                    
-                        //        }
-                        //        var s = sb.ToString();
-                        //        Log(s);
-                        //        break;
+                        case "OGA":
+                            {
+                                Log(e.Value);
+                                break;
+                            }
+                        case "OGR":
+                            {
+                                Log(e.Value);
+                                break;
+                            }
+                        case "OGT":
+                            {
+                                Log(e.Value);
+                                break;
+                            }
 
-                        //    }
-                        //    break;
+                            //case "stable":
+                            //    {
+                            //        var jse = jsp.Value;
+                            //        int counter = 0;
+                            //        StringBuilder sb = new StringBuilder();
+                            //        foreach (var i in jse.EnumerateArray())
+                            //        {
+                            //            sb.Append('"');
+
+                            //            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
+                            //            sb.Append("\" /* " + counter++ + " */,"); 
+
+                            //        }
+                            //        var s = sb.ToString();
+                            //        Log(s);
+                            //        break;
+
+                            //    }
+                            //    break;
                     }
 
                 }
@@ -568,7 +584,7 @@ namespace COTG
                 if (gotCreds)
                 {
                     await GetCitylistOverview();
-                   
+                    await RaidOverview.Send();
                 }
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();

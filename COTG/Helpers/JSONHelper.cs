@@ -132,5 +132,15 @@ namespace COTG.Helpers
             return e.GetSingle();
 
         }
+
+            public static string Truncate(this string value, int maxLength)
+            {
+                if (string.IsNullOrEmpty(value)) return value;
+                return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+            }
+       public static int RoundToInt(this float f)
+        {
+            return f >= 0 ? (int)(f + 0.5f) : -( (int)(-f + 0.5f) );
+        }
     }
 }

@@ -13,8 +13,8 @@ using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
-	public class City
-	{
+    public class City
+    {
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
@@ -23,8 +23,8 @@ namespace COTG.Game
             for (int i = 0; i < pointSizeCount; ++i)
                 if (points <= pointSizes[i])
                     return i;
-                return pointSizeCount;
-                }
+            return pointSizeCount;
+        }
         public string name { get; set; }
         public int cid; // x,y combined into 1 number
         public string xy => $"{cid % 65536}:{cid / 65536}";
@@ -40,38 +40,38 @@ namespace COTG.Game
         public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
         public int commandSlots
         {
-			get { 
-                    var jse = jsE;
-                    if (!jse.IsValid())
+            get {
+                var jse = jsE;
+                if (!jse.IsValid())
+                {
+                    return isCastle ? 15 : 5;
+                }
+                else
+                {
+                    var bd = jse.GetProperty("bd");
+                    foreach (var b in bd.EnumerateArray())
                     {
-                        return isCastle ? 15 : 5;
-                    }
-                    else
-					{
-                        var bd = jse.GetProperty("bd");
-                        foreach (var b in bd.EnumerateArray())
+                        if (b.GetInt("bid") == bidCastle)
                         {
-                            if (b.GetInt("bid") == bidCastle)
-                            {
-                                return (b.GetInt("bl") + 5);
-                            }
+                            return (b.GetInt("bl") + 5);
                         }
-                        return 5;
                     }
+                    return 5;
+                }
             }
 
         }
-        public int activeCommands =>  jsE.IsValid() ? jsE.GetInt("comm") : 0;
+        public int activeCommands => jsE.IsValid() ? jsE.GetInt("comm") : 0;
 
 
-		public int freeCommandSlots => commandSlots - activeCommands;
+        public int freeCommandSlots => commandSlots - activeCommands;
 
         public int carryCapacity
         {
             get {
                 // Todo: water
                 var _carryCapacity = 0;
-				{
+                {
                     var jse = jsE;
                     if (jse.IsValid())
                     {
@@ -90,15 +90,15 @@ namespace COTG.Game
 
         }
 
-		internal void TroopsChanged()
-		{
+        internal void TroopsChanged()
+        {
             if (current == this)
                 ;// throw new NotImplementedException();
-		}
+        }
 
 
-		// Abusing invalid jsE by returning it when we want to return null
-		public JsonElement troopsHome => !jsE.IsValid()?jsE : jsE.GetProperty("th");
+        // Abusing invalid jsE by returning it when we want to return null
+        public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
         public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 
         public int ts
@@ -108,7 +108,7 @@ namespace COTG.Game
                 var tt = troopsTotal;
                 if (!tt.IsValid())
                     return -1;
-                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32() );
+                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
             }
         }
         public int tsHome
@@ -122,7 +122,7 @@ namespace COTG.Game
             }
         }
         public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
-        public static ConcurrentDictionary<int,City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
+        public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)
         {
             jsE = jse;
@@ -133,7 +133,7 @@ namespace COTG.Game
 
         }
         const int bidCastle = 467;
-        public (int commandSlotsInUse,int totalCommandSlots,int freeCommandSlots) GetCommandSlots()
+        public (int commandSlotsInUse, int totalCommandSlots, int freeCommandSlots) GetCommandSlots()
         {
             if (!jsE.IsValid())
             {
@@ -142,9 +142,9 @@ namespace COTG.Game
             }
             int total = 5;
             var bd = jsE.GetProperty("bd");
-            foreach(var b in bd.EnumerateArray())
+            foreach (var b in bd.EnumerateArray())
             {
-                if(b.GetInt("bid") == bidCastle )
+                if (b.GetInt("bid") == bidCastle)
                 {
                     total = b.GetInt("bl") + 5;
                 }
@@ -152,6 +152,8 @@ namespace COTG.Game
             var comm = jsE.GetInt("comm");
             return (comm, total, total - comm);
         }
+        public static DateTime raidCarryLastUpdate;
+        public byte raidCarry { get; set; }
 
         public override string ToString()
         {

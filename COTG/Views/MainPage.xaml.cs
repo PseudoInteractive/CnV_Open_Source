@@ -18,6 +18,9 @@ using Telerik.Data.Core;
 using Telerik.Data;
 using System.Collections.Specialized;
 using Windows.Foundation;
+using Microsoft.Toolkit.Uwp;
+using Windows.UI.Xaml.Input;
+using COTG.Services;
 
 namespace COTG.Views
 {
@@ -60,6 +63,7 @@ namespace COTG.Views
         public DumbCollection<City> cities { get; } = new DumbCollection<City>();
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
+        static City hoverTarget;
 
         //        public static City showingRowDetails;
 
@@ -70,12 +74,60 @@ namespace COTG.Views
         //    return rv;
         //}
         public static RadDataGrid CityGrid => cache.cityGrid;
-
+        static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
             Assert(cache == null);
             cache = this;
             InitializeComponent();
+            cityMenuFlyout = new MenuFlyout();
+            var c = new MenuFlyoutItem() { Text = "Return Slow" };
+            c.Click += ReturnSlowClick;
+            cityMenuFlyout.Items.Add( c );
+            c = new MenuFlyoutItem() { Text = "Return Fast" };
+            c.Click += ReturnFastClick;
+            cityMenuFlyout.Items.Add(c);
+
+            cityGrid.ContextFlyout=cityMenuFlyout;
+
+        }
+
+        
+
+        private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = sender as RadDataGrid;
+            var physicalPoint = e.GetCurrentPoint(grid);
+            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+            var cell =grid.HitTestService.CellInfoFromPoint(point);
+            var city = cell?.Item as City;
+            if(city != hoverTarget)
+            {
+                hoverTarget = city;
+                if(city != null)
+                {
+                    Log($"{cell.Column.Header?.ToString()} {city}");
+                }
+
+            }
+        }
+
+        private void ReturnSlowClick(object sender, RoutedEventArgs e)
+        {
+            if (hoverTarget != null)
+            {
+                var json = "{a:"+hoverTarget.cid+",c:0,b:1}";
+                Note.Show($"{hoverTarget.cid.ToCoordinateMD()} recall slow");
+                Post.SendEncrypted("includes/UrOA.php",json,"Rx3x5DdAxxerx3") ;
+            }
+        }
+        private void ReturnFastClick(object sender, RoutedEventArgs e)
+        {
+            if (hoverTarget != null)
+            {
+                Note.Show($"{hoverTarget.cid.ToCoordinateMD()} recall fast");
+                Post.Send("overview/rcallall.php", "a="+hoverTarget.cid);
+            }
         }
 
         //public string dungeonInfo { get
@@ -177,22 +229,34 @@ namespace COTG.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(cities)));
         }
 
-  //      static Dungeon lastTooltip;
-		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-		//{
-  //          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
-  //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-  //          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-  //          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
-  //          var hit = cell?.Item as Dungeon;
-  //          if(hit!=lastTooltip)
-		//	{
-  //              lastTooltip = hit;
-  //              if (hit != null)
-  //                  ToolTipService.SetToolTip(tip, hit.ToString());
-  //              else
-  //                  ToolTipService.SetToolTip(tip,"None");
-		//	}
-  //      }
-	}
+        private void RecallSlow(object sender, RoutedEventArgs e)
+        {
+            Log("RecallSlow")
+                ;
+        }
+
+        private void RecallFast(object sender, RoutedEventArgs e)
+        {
+            Log("RecallFast")
+                ;
+        }
+
+        //      static Dungeon lastTooltip;
+        //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        //{
+        //          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+        //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+        //          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+        //          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+        //          var hit = cell?.Item as Dungeon;
+        //          if(hit!=lastTooltip)
+        //	{
+        //              lastTooltip = hit;
+        //              if (hit != null)
+        //                  ToolTipService.SetToolTip(tip, hit.ToString());
+        //              else
+        //                  ToolTipService.SetToolTip(tip,"None");
+        //	}
+        //      }
+    }
 }

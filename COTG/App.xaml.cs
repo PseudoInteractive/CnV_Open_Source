@@ -156,7 +156,7 @@ namespace COTG
     {
         public static void Show(string s, int timeout=8000)
         {
-            var textBlock = new MarkdownTextBlock() { Text = s, Style= ShellPage.inAppNote.Style };
+            var textBlock = new MarkdownTextBlock() { Text = s};
 			textBlock.LinkClicked += MarkDownLinkClicked;
             ShellPage.inAppNote.Show(textBlock, timeout);
         }

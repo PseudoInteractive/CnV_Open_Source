@@ -4,62 +4,60 @@ let __base64Decode: Function = null;
 var encryptStr = [""];
 var decryptStr = [""];
 
-
-let __a6={
-	ccazzx: { encrypt: (a: string,b: string,c: number) => "",decrypt: (a: string,b: string,c: number) => "" } };
-function MakeGlobalGetter(a) {
-	return `window['get${a}'] = ()=> ${a};`;
-}
-function MakeGlobalCopy(a) {
-	return `window['__${a}'] = ${a};`;
-}
+// This gets replaced immediately
+//function MakeGlobalGetter(a) {
+//	return `window['get${a}'] = ()=> ${a};`;
+//}
+//function MakeGlobalCopy(a) {
+//	return `window['__${a}'] = ${a};`;
+//}
 function encryptJs(req,k2v) {
 	console.log(req);
 	console.log(k2v);
 	return __a6.ccazzx.encrypt(JSON.stringify(k2v),ekeys[req],256);
 };
 
-function betterBase64Decode() {
-	try {
-		//var me=arguments.callee.caller.caller.prototype;
-		//me.eval(MakeGlobalGetter("D6"));
-		//me.eval(MakeGlobalCopy("a6"));
-		//console.log(window['GetD6']());;
+//function betterBase64Decode() {
+//	try {
+//		//var me=arguments.callee.caller.caller.prototype;
+//		//me.eval(MakeGlobalGetter("D6"));
+//		//me.eval(MakeGlobalCopy("a6"));
+//		//console.log(window['GetD6']());;
 
-		__a6.ccazzx.decrypt=arguments.callee.caller as (a: string,b: string,c: number) => string;
+//		__a6.ccazzx.decrypt=arguments.callee.caller as (a: string,b: string,c: number) => string;
 
 
-		//console.log(window['__a6']);
-		// all done!
-		String.prototype['base64Encode']=__base64Decode;
-	}
-	catch(e) {
-		// not ready yet, try again later
-	}
-	let rv=__base64Decode.call(this);
-	//console.log(rv);
-	return rv;
-}
+//		//console.log(window['__a6']);
+//		// all done!
+//		String.prototype['base64Decode']=__base64Decode;
+//	}
+//	catch(e) {
+//		// not ready yet, try again later
+//	}
+//	let rv=__base64Decode.call(this);
+//	//console.log(rv);
+//	return rv;
+//}
 
-function betterBase64Encode()   {
-	try {
-		//var me=arguments.callee.caller.caller.prototype;
-		//me.eval(MakeGlobalGetter("D6"));
-		//me.eval(MakeGlobalCopy("a6"));
-		//console.log(window['GetD6']());;
+//function betterBase64Encode()   {
+//	try {
+//		//var me=arguments.callee.caller.caller.prototype;
+//		//me.eval(MakeGlobalGetter("D6"));
+//		//me.eval(MakeGlobalCopy("a6"));
+//		//console.log(window['GetD6']());;
 
-		__a6.ccazzx.encrypt = arguments.callee.caller as (a: string,b: string,c: number) => string;
+//		__a6.ccazzx.encrypt = arguments.callee.caller as (a: string,b: string,c: number) => string;
 	
-		//console.log(this);
-		//console.log(window['__a6']);
-		// all done!
-		String.prototype['base64Encode']=__base64Encode; 
-	}
-	catch(e) {
-		// not ready yet, try again later
-	}
-	return __base64Encode.call(this);
-}
+//		//console.log(this);
+//		//console.log(window['__a6']);
+//		// all done!
+//		String.prototype['base64Encode']=__base64Encode; 
+//	}
+//	catch(e) {
+//		// not ready yet, try again later
+//	}
+//	return __base64Encode.call(this);
+//}
 function GetCity(): jsonT.City {
 	//	return window['getD6']();
 	return __c.D6;//
@@ -239,7 +237,7 @@ let pendingCityUpdate = false;
 
 function sendCityData(delayInMs) {
 
-	if (pendingCityUpdate === false) {
+	if (pendingCityUpdate != true) {
 		pendingCityUpdate = true;
 		console.log("sendCity");
 
@@ -675,11 +673,11 @@ function avactor() {
 	}
 
 	setTimeout(() => {
-		__base64Encode = String.prototype['base64Encode'];
-		String.prototype['base64Encode'] = betterBase64Encode;
+	//	__base64Encode = String.prototype['base64Encode'];
+	//	String.prototype['base64Encode'] = betterBase64Encode;
 
-		__base64Decode = String.prototype['base64Decode'];
-		String.prototype['base64Decode'] = betterBase64Decode;
+	//	__base64Decode = String.prototype['base64Decode'];
+	//	String.prototype['base64Decode'] = betterBase64Decode;
 
 		OptimizeAjax();
 

@@ -11,6 +11,7 @@ using static COTG.Debug;
 using System.Web;
 using COTG.Game;
 using COTG.Helpers;
+using static COTG.Game.Enum;
 
 namespace COTG.Services
 {
@@ -30,7 +31,7 @@ namespace COTG.Services
         }
 
 
-        public virtual async Task<JsonDocument> Accept(Uri uri, HttpResponseMessage resp)
+        public virtual async Task Accept(HttpResponseMessage resp)
         {
 
             try
@@ -43,15 +44,13 @@ namespace COTG.Services
                 {
                     dataReader.ReadBytes(temp);
                 }
-                Log(uri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+                Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
                 var json = JsonDocument.Parse(temp);
                 ProcessJson(json);
-                return json;
             }
             catch (Exception e)
             {
                 Log(e);
-                return emptyJson;
             }
 
         }
@@ -73,40 +72,30 @@ namespace COTG.Services
         {
             return "a=error";
         }
-        async public static Task HandleResponse(Uri uri, HttpResponseMessage resp)
-        {
-            var localPath = uri.LocalPath;
-            foreach (var h in all)
-            {
-                if (uri.LocalPath.Contains(h.localPath))
-                {
 
-                    try
-                    {
-                        await h.Accept(uri, resp); // continue processing if appropriate
-                    }
-                    catch (Exception e)
-                    {
-                        Log(e);
-                    }
-
-                }
-
-            }
-
-        }
-
-        async public Task<JsonDocument> Post()
+        async public Task Post()
         {
             try
             {
 
+                await Accept(await Send(GetPostContent()));
+            }
+            catch (Exception e)
+            {
 
-                //            using var req  =anyPost;
+            }
+
+
+        }
+        async public Task<HttpResponseMessage> Send(string postContent)
+        {
+
+            try
+            {
+
+
                 var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath));
-                // req.TransportInformation.ver
-                //req.AllowAutoRedirect = true;
-                req.Content = new HttpStringContent((GetPostContent()),
+                req.Content = new HttpStringContent(postContent,
 
                             Windows.Storage.Streams.UnicodeEncoding.Utf8,
 
@@ -121,7 +110,7 @@ namespace COTG.Services
                     Log(resp.ExtendedError);
                 if (resp.Succeeded)
                 {
-                    return await Accept(req.RequestUri, resp.ResponseMessage);
+                    return resp.ResponseMessage;
                     //var b = await resp.Content.ReadAsInputStreamAsync();
 
                     //                    jso = await JsonDocument.ParseAsync(b.ToString);
@@ -137,7 +126,7 @@ namespace COTG.Services
             {
                 Log(e);
             }
-            return emptyJson;
+            return null;
 
 
         }
@@ -164,8 +153,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode("[249]", secret);
-            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            var args = "a=" + HttpUtility.UrlEncode(Aes.Encode("[249]", secret), Encoding.UTF8);
             return args;
 
 
@@ -274,7 +262,7 @@ namespace COTG.Services
             return args;
         }
 
-        public override async Task<JsonDocument> Accept(Uri uri, HttpResponseMessage resp)
+        public override async Task Accept(HttpResponseMessage resp)
         {
             Log("Got fCv");
 
@@ -293,7 +281,7 @@ namespace COTG.Services
                 var dec2 = Encoding.UTF8.GetString(temp);
                 var temps = Aes.Decode(dec2, secret);
                 var json = JsonDocument.Parse(temps);
-                
+
 
                 var jse = json.RootElement;
                 jse = jse[0];
@@ -314,12 +302,10 @@ namespace COTG.Services
                 rv.Sort((a, b) => a.dist.CompareTo(b.dist));
                 // dont wait on this 
                 COTG.Views.MainPage.UpdateDungeonList(rv);
-                return json;
             }
             catch (Exception e)
             {
                 Log(e);
-                return emptyJson;
             }
 
         }
@@ -351,34 +337,170 @@ namespace COTG.Services
             return dict.GetValueOrDefault(cid);
 
         }
+    }
+
+
+
+    struct A
+    {
 
     }
+    struct CityRaids
+    {
+
+    }
+
+    struct a0
+    {
+       public CityRaids[][] a { get; set; }
+
+    }
+    /*
+     {
+	"a": [
+		[
+			20447699,               // 0
+			"City of KittyKat",     // 1
+			"C 34 (467:312)",       // 2
+			4,                      // 3
+			5200,                   // 4
+			0,                      // 5
+			4,                      // 6
+			0,                      // 7
+			0, // 8
+			0,//9
+			0,//10
+			0,//11
+			[ // 12
+				[
+					8622089209966, // 0
+					1300,          // 1
+					"Mountain Cavern, Level 4 (91%)", // 2
+					0,   // 3
+					2, // 3
+					[  // 4
+						{
+							"tt": "2",
+							"tv": 308
+						},
+						{
+							"tt": "3",
+							"tv": 185
+						},
+						{
+							"tt": "5",
+							"tv": 807
+						}
+					],
+					{
+						"w": 0,
+						"s": 0,
+						"i": 0,
+						"f": 0,
+						"g": 0,
+						"r": "1",
+						"rut": 0,
+						"otr": [
+							{
+								"tt": "2",
+								"tv": 308
+							},
+							{
+								"tt": "3",
+								"tv": 185
+							},
+							{
+								"tt": "5",
+								"tv": 807
+							}
+						]
+					},
+					"01:51:31 23\/06",
+					20316624
+				],
+			]
+		]
+	],
+	"b": [
+		1,
+		5200,
+		0,
+		0,
+		[
+			0,
+			0,
+			4,
+			0
+		],
+		4
+	]
+}
+     */
+    public class RaidOverview : OverviewApi
+    {
+        public static RaidOverview inst = new RaidOverview();
+        public static async Task Send() => await inst.Post();
+        public RaidOverview() : base("overview/graid.php") { }
+        public override void ProcessJson(JsonDocument jsd)
+        {
+            var a = jsd.RootElement.GetProperty("a");
+            foreach (var cr in a.EnumerateArray())
+            {
+                int cid = cr[0].GetInt32();
+                var minCarry = 255;
+                foreach (var r in cr[12].EnumerateArray())
+                {
+                    string desc = r[2].GetString();
+                    //    Mountain Cavern, Level 4(91 %)
+                    var ss0 = desc.Split(',');
+                    Assert(ss0.Length == 2);
+                    var isMountain = ss0[0].Trim()[0] == 'M';
+                    var ss = ss0[1].Split(new char[] { ' ', '(',  ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
+                    Assert(ss.Length == 4);
+                    var level = int.Parse(ss[1]);
+                    var completion = int.Parse(ss[2]);
+                    var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
+                    int cc = 0;
+                    foreach (var ttr in r[5].EnumerateArray())
+                    {
+                        var tt = ttr.GetAsInt("tt");
+                        int tv = ttr.GetAsInt("tv");
+                        cc += ttCarry[tt] * tv;
+                        Log($"{tt}:{tv}");
+                    }
+                    var carry = (cc * 100.0f / res).RoundToInt();
+                    if (carry < minCarry)
+                        minCarry = carry;
+//                    Log($"cc:{cc}, res:{res}, carry:{cc/res}");
+
+                }
+                Log($"cid:{cid} carry: {minCarry}");
+                if( City.all.TryGetValue(cid,out var city))
+                {
+                    city.raidCarry = (byte)minCarry;
+                }
+            }
+        }
+    }
+
     public class Post : RestAPI
     {
         public Post(string url, string secret = null) : base(url, secret) { }
-        public override void ProcessJson(JsonDocument json)
-        {
-            jsd = json;
-            dict = new Dictionary<int, JsonElement>();
-            foreach (var item in jsd.RootElement.EnumerateArray())
-            {
-                dict.Add(item.GetAsInt("id"), item);
-            }
-            Log("Got JS for troop overview");
-            Log(json.ToString());
-        }
-        public static JsonDocument jsd;
-        public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
-        public JsonElement Get(int cid)
-        {
-            return dict.GetValueOrDefault(cid);
+       
 
-        }
-
-        async public static Task Send(string url, string secret = null)
+        // Does not wait for full response and does not parse json
+        // postContent is xml uri encoded
+        async public static Task Send(string url, string postContent, string secret = null)
         {
             var p = new Post(url, secret);
-            await p.Post();
+            await p.Send(postContent);
+
+        }
+        async public static Task SendEncrypted(string url, string postContentJson, string secret )
+        {
+            var p = new Post(url, secret);
+            await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8) );
+
 
         }
     }
