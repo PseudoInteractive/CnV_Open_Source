@@ -2,23 +2,12 @@
     x:Class="COTG.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-
     >
-
     <Application.Resources>
         <ResourceDictionary> 
 			<AcrylicBrush x:Key="Acryllic" TintColor="{ThemeResource SystemColorActiveCaptionColor}" TintOpacity="0.5" Opacity="0.6" TintLuminosityOpacity="0.7"/>
-        
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Chart.UWP/Themes/ThemeResourcesDark.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.DataVisualization.UWP/Themes/ThemeResourcesDark.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesDark.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Input.UWP/Themes/ThemeResourcesDark.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeResourcesDark.xaml" />
-                        <ResourceDictionary Source="{CustomResource DarkResourcesPath}" />
-                        <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" />
+                        <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" UseCompactResources="True" />
                         <ResourceDictionary Source="/Styles/_Colors.xaml" />
                         <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
                         <ResourceDictionary Source="/Styles/_Thickness.xaml" />
@@ -27,44 +16,6 @@
                         <ResourceDictionary Source="/Styles/Page.xaml"/>
                         <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
                     </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Chart.UWP/Themes/ThemeResourcesLight.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.DataVisualization.UWP/Themes/ThemeResourcesLight.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesLight.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Input.UWP/Themes/ThemeResourcesLight.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeResourcesLight.xaml" />
-                        <ResourceDictionary Source="{CustomResource LightResourcesPath}" />
-                        <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" />
-                        <ResourceDictionary Source="/Styles/_Colors.xaml" />
-                        <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-                        <ResourceDictionary Source="/Styles/_Thickness.xaml" />
-                        <ResourceDictionary Source="/Styles/TextBlock.xaml" />
-                        <ResourceDictionary Source="/Styles/CommandBar.xaml"/>
-                        <ResourceDictionary Source="/Styles/Page.xaml"/>
-                        <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Chart.UWP/Themes/ThemeResourcesHighContrast.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.DataVisualization.UWP/Themes/ThemeResourcesHighContrast.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesHighContrast.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Input.UWP/Themes/ThemeResourcesHighContrast.xaml" />
-                        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeResourcesHighContrast.xaml" />
-                        <ResourceDictionary Source="{CustomResource HighContrastResourcesPath}" />
-                        <XamlControlsResources  xmlns="using:Microsoft.UI.Xaml.Controls" />
-                        <ResourceDictionary Source="/Styles/_Colors.xaml" />
-                        <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-                        <ResourceDictionary Source="/Styles/_Thickness.xaml" />
-                        <ResourceDictionary Source="/Styles/TextBlock.xaml" />
-                        <ResourceDictionary Source="/Styles/CommandBar.xaml"/>
-                        <ResourceDictionary Source="/Styles/Page.xaml"/>
-                        <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

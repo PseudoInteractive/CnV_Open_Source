@@ -3051,45 +3051,28 @@ function avactor() {
             jQuery("#ui-id-19")[0].click();
         });
         /** @type {number} */
-        var autodemoon_ = 0;
         $("#fb4").click(function () {
-            if (autodemoon_ == 0) {
-                /** @type {number} */
-                autodemoon_ = 1;
-                $(this).removeClass("greenb");
-                $(this).addClass("redb");
-            }
-            else {
-                /** @type {number} */
-                autodemoon_ = 0;
-                $(this).removeClass("redb");
-                $(this).addClass("greenb");
-            }
+            setAutoDemo(!__autodemoon_);
         });
         $("#centarrowNextDiv").click(() => {
             /** @type {number} */
-            autodemoon_ = 0;
+            setAutoDemo(false);
             $("#fb4").removeClass("redb").addClass("greenb");
         });
         $("#centarrowPrevDiv").click(() => {
             /** @type {number} */
-            autodemoon_ = 0;
+            setAutoDemo(false);
             $("#fb4").removeClass("redb").addClass("greenb");
         });
         $("#ddctd").click(() => {
             /** @type {number} */
-            autodemoon_ = 0;
+            setAutoDemo(false);
             $("#fb4").removeClass("redb").addClass("greenb");
         });
         $("#qbuildtbButton").click(() => {
             /** @type {number} */
-            autodemoon_ = 0;
+            setAutoDemo(false);
             $("#fb4").removeClass("redb").addClass("greenb");
-        });
-        $("#city_map").click(() => {
-            if (autodemoon_ == 1) {
-                $("#buildingDemolishButton").trigger("click", "1");
-            }
         });
         /** @type {string} */
         var sumbut_ = "<button class='tabButton' id='Sum'>Summary</button>";
@@ -5389,6 +5372,26 @@ function avactor() {
                 $iframe_.contents().find("body").append(dhruv_);
             });
         });
+    }
+}
+/** @type {number} */
+var __autodemoon_ = false;
+function callDemo() {
+    $("#buildingDemolishButton").trigger("click", "1");
+}
+function setAutoDemo(_autodemoon) {
+    if (_autodemoon == __autodemoon_)
+        return;
+    __autodemoon_ = _autodemoon;
+    if (__autodemoon_ === true) {
+        $("#fb4").removeClass("greenb");
+        $("#fb4").addClass("redb");
+        $("#city_map").click(callDemo);
+    }
+    else {
+        $("#fb4").removeClass("redb");
+        $("#fb4").addClass("greenb");
+        $("#city_map").off("click", callDemo);
     }
 }
 (function () {

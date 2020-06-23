@@ -46,6 +46,7 @@
 
 			<tg:RadDataGrid.Commands>
 				<model:CityTapCommand />
+                <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon" SizeMode="Fixed" Width="40"  />
@@ -54,6 +55,7 @@
                 <tg:DataGridTextColumn PropertyName="ts"   SizeMode="Fixed" Width="80" />
                 <tg:DataGridTextColumn PropertyName="tsHome"  SizeMode="Fixed" Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="points"  SizeMode="Fixed" Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="raidCarry" SizeMode="Fixed" Width="80" IsVisible="False"  />
                 <tg:DataGridDateColumn PropertyName="owner" IsVisible="False"  SizeMode="Fixed" Width="80" />
                 <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False"  SizeMode="Fixed" Width="80" />
                 <tg:DataGridDateColumn PropertyName="alliance" IsVisible="False"  SizeMode="Fixed" Width="80" />

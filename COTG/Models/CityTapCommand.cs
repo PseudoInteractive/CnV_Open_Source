@@ -85,7 +85,15 @@ namespace COTG.Models
         public override void Execute(object parameter)
         {
             var context = parameter as ToggleColumnVisibilityContext;
-            MainPage.
+            if(context.Column.Header?.ToString() == "raidCarry")
+            {
+                if(context.IsColumnVisible)
+                {
+                    RaidOverview.Send();
+                }
+
+            }
+            context.Column.IsVisible = context.IsColumnVisible;
         }
     }
     public class CityKeyCommand : DataGridCommand

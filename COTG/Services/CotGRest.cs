@@ -12,6 +12,7 @@ using System.Web;
 using COTG.Game;
 using COTG.Helpers;
 using static COTG.Game.Enum;
+using COTG.Views;
 
 namespace COTG.Services
 {
@@ -480,6 +481,7 @@ namespace COTG.Services
                     city.raidCarry = (byte)minCarry;
                 }
             }
+            MainPage.CityListUpdateAll();
         }
     }
 

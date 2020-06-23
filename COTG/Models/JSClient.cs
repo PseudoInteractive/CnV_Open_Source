@@ -584,7 +584,7 @@ namespace COTG
                 if (gotCreds)
                 {
                     await GetCitylistOverview();
-                    await RaidOverview.Send();
+                   // await RaidOverview.Send();
                 }
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();

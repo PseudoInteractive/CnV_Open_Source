@@ -28,6 +28,7 @@ namespace COTG.Views
     public class DumbCollection<T> : List<T>, INotifyCollectionChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        
 
         public override bool Equals(object obj)
         {
@@ -64,7 +65,7 @@ namespace COTG.Views
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
         static City hoverTarget;
-
+       
         //        public static City showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -192,6 +193,17 @@ namespace COTG.Views
                 cache.cities.NotifyReset();
             });
         }
+        public async static void CityListUpdateAll ()
+        {
+            if (cache == null)
+                return;
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                cache.cities.NotifyReset();
+            });
+        }
+
         public static void UpdateDungeonList(List<Dungeon> dungeons)
         {
             if (cache == null)
