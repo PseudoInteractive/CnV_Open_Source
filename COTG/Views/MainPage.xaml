@@ -29,11 +29,12 @@
 		</Grid.RowDefinitions>
         <tg:RadDataGrid ColumnDataOperationsMode="Flyout"
                         x:Name="cityGrid"
+                        UseSystemFocusVisuals="True"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False" CanDrag="True"
                         SelectionMode ="Single"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                        CanUserChooseColumns="true"
+                        CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="40"
                         PointerMoved="DataGrid_PointerMoved"
@@ -75,7 +76,8 @@
                         SelectionMode ="Extended"
                         RowHeight="40"
                         FontSize="12"
-                        CanUserChooseColumns="true"
+                        CanUserChooseColumns="True"
+                        UseSystemFocusVisuals="True"
                         UserSortMode="Multiple"
                         SelectionUnit="Cell" Margin="0,14,0,0"
                        >

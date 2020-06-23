@@ -77,7 +77,6 @@ namespace COTG.Models
 
         public override bool CanExecute(object parameter)
         {
-            var context = parameter as ToggleColumnVisibilityContext;
 
             return true;
         }

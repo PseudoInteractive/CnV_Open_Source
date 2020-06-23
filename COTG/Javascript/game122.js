@@ -48228,7 +48228,7 @@ var cotgsubscribe = amplify;
                   $(_s(+W94))
                     .off(_s(C2y * 1));
                   $(_s(W94 | 24))
-                    .click(function(e66) { if (e66.hasOwnProperty(_s(+'6550'))) V3F(r46, A46); });
+                      .click(function (e66) { if (e66.hasOwnProperty("originalEvent")) V3F(r46, A46); });
                   var a46 =
                     _s(+'2362');
                   var q46 = _s('2362' ^ 0);
@@ -49188,7 +49188,7 @@ var cotgsubscribe = amplify;
               $(_s(W94 & E6k.s6s))
                 .off(_s(C2y * 1));
               $(_s(+W94))
-                .click(function(v66) { if (v66.hasOwnProperty(_s("6550" & E6k.s6s))) V3F(r46, A46); });
+                  .click(function (v66) { if (v66.hasOwnProperty("originalEvent")) V3F(r46, A46); });
               clearTimeout(Z7F);
               t0F(h36);
               if (h36 == +'1') {
@@ -49663,7 +49663,7 @@ var cotgsubscribe = amplify;
             var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, U7y & E6k
               .s6s);
             N6();
-            var k0w = $.post(q6 + _s(N6m ^ 0), { a: e0w, cid: cid });
+            var k0w = $.post(q6 + "nBuu.php", { a: e0w, cid: cid });
             F6();
             k0w.done(function(S0w) {
               if (!(S0w >= +"0")) {
@@ -49746,7 +49746,7 @@ var cotgsubscribe = amplify;
             var e0w = a6
               .ccazzx.encrypt(JSON.stringify(s0w), H0w, +U7y);
             N6();
-            var k0w = $.post(q6 + _s(+N6m), { cid: cid, a: e0w });
+            var k0w = $.post(q6 + "nBuu.php", { cid: cid, a: e0w });
             F6();
             k0w.done(function(V0w) {
               E6k.y6();
@@ -49765,7 +49765,7 @@ var cotgsubscribe = amplify;
             });
           }
       }
-      if (v0w == ('4' |
+      if (v0w == ('4' | // demo
           4)) {
         var M0w = +"0";
         for (var p9g = +'0'; p9g < C8.length; p9g++)
@@ -49829,7 +49829,7 @@ var cotgsubscribe = amplify;
               var e0w = a6
                 .ccazzx.encrypt(JSON.stringify(s0w), H0w, +U7y);
               N6();
-              var k0w = $.post(q6 + _s(N6m << 1995314560), { a: e0w, cid: cid });
+              var k0w = $.post(q6 + "nBuu.php", { a: e0w, cid: cid });
               F6();
               k0w.done(function(n0w) {
                 if (!(n0w >= ('0' | 0))) {
@@ -52864,7 +52864,7 @@ var cotgsubscribe = amplify;
                       b2() + _s(+z8R);
                     var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, U7y ^ 0);
                     N6();
-                    var x5w = $.post(q6 + _s(N6m << 1139976000), { a: l5w, cid: cid });
+                    var x5w = $.post(q6 + "nBuu.php", { a: l5w, cid: cid });
                     F6();
                     x5w.done(function(s7w) {
                       if (!(s7w >= "0" >> 1291368256)) {
@@ -52940,7 +52940,7 @@ var cotgsubscribe = amplify;
                     var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
                       Q5w, +U7y);
                     N6();
-                    var x5w = $.post(q6 + _s(N6m - 0), { a: l5w, cid: cid });
+                    var x5w = $.post(q6 + "nBuu.php", { a: l5w, cid: cid });
                     F6();
                     x5w.done(function(w7w) {
                       E6k.y6();
@@ -52996,7 +52996,7 @@ var cotgsubscribe = amplify;
                           b2() + _s(+z8R);
                         var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, U7y | 0);
                         N6();
-                        var x5w = $.post(q6 + _s(N6m - 0), { a: l5w, cid: cid });
+                        var x5w = $.post(q6 + "nBuu.php", { a: l5w, cid: cid });
                         F6();
                         x5w.done(function(l7w) {
                           E6k.R6();
@@ -53044,7 +53044,7 @@ var cotgsubscribe = amplify;
                     var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
                       Q5w, U7y & E6k.s6s);
                     N6();
-                    var x5w = $.post(q6 + _s(N6m * 1), { a: l5w, cid: cid });
+                    var x5w = $.post(q6 + "nBuu.php", { a: l5w, cid: cid });
                     F6();
                     x5w.done(function(x7w) {
                       E6k.y6();
@@ -53079,7 +53079,7 @@ var cotgsubscribe = amplify;
                   var l5w = a6.ccazzx.encrypt(
                     JSON.stringify(T5w), Q5w, +U7y);
                   N6();
-                  var x5w = $.post(q6 + _s(+N6m), { a: l5w, cid: cid });
+                  var x5w = $.post(q6 + "nBuu.php", { a: l5w, cid: cid });
                   F6();
                   x5w.done(function(o7w) {
                     if (!(o7w >= "0" >> 51400736)) {
@@ -57169,15 +57169,16 @@ var cotgsubscribe = amplify;
       else if (B1V == '4' - 0) document.getElementById(_s(+J1p))
         .value = t9;
     }
-    $(_s(n3R * 1))
+    $("#buildingDemolishButton")
       .click(function(J8g) {
-        if (!(J8g.originalEvent === undefined)) {
-          var S8g = $(_s(n3R ^ 0))
+       /* if (!(J8g.originalEvent === undefined))*/
+       {
+            var S8g = $("#buildingDemolishButton") //  "#buildingDemolishButton"
             .attr(_s(+Z9y));
           var b8g = D6.bd[S8g].bid;
           if (L2(b8g) != ("0" | 0)) b8g = L2(b8g);
           if (b8g ==
-            r6y >> 1938472320) C5F("4" & E6k.s6s);
+            r6y >> 1938472320) C5F(4); // demo
           else Y2(b8g, S8g, "3" << 1615251808);
         }
       });
@@ -59917,10 +59918,9 @@ var cotgsubscribe = amplify;
       R2(M2V);
     }
     var K0F = [p1R >> 559832000, +z1R, +n1R, +d1R, +"323", l1R >> 1486036800, +k1R, +o1R];
-    var e9 = [+
-      "3", '7' >> 1543228224, +m2y, s6y - 0, +D8y, S1R & E6k.s6s, t5R << 1955771840, +J5R, T5R * 1, +"433", x5R ^ 0,
+    var e9 = [3, 7, 13, s6y - 0, +D8y, S1R & E6k.s6s, t5R << 1955771840, +J5R, T5R * 1, +"433", x5R ^ 0,
       g5R * 1, +W5R, f5R * 1, U5R * 1, +N0R];
-    var C8 = [+"3", +"7", m2y * 1, s6y * 1, +D8y, +S1R, t5R >> 1859653696, +
+    var C8 = [3, 7, 13, s6y * 1, +D8y, +S1R, t5R >> 1859653696, +
       J5R, T5R * 1, +"433", x5R | 387, +g5R, +W5R, +f5R, +U5R, N0R ^ 0, p1R >> 65976256, +z1R, +n1R, d1R * 1,
       '323' >> 1614438880, l1R >> 1462928256, +k1R, +o1R];
     $(document)
