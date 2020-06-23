@@ -117,7 +117,7 @@ namespace COTG.Views
         {
             if (hoverTarget != null)
             {
-                var json = "{a:"+hoverTarget.cid+",c:0,b:1}";
+                var json = "{\"a\":"+hoverTarget.cid+",\"c\":0,\"b\":1}";
                 Note.Show($"{hoverTarget.cid.ToCoordinateMD()} recall slow");
                 Post.SendEncrypted("includes/UrOA.php",json,"Rx3x5DdAxxerx3") ;
             }

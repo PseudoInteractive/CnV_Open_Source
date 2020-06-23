@@ -99,7 +99,7 @@ namespace COTG.Views
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
 
-            var webView = JSClient.Initialize(panel);
+            var webView = JSClient.Initialize(grid);
             shellFrame = new Frame()
             {
                 Background = null
@@ -113,11 +113,11 @@ namespace COTG.Views
             //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
             //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
 
-            panel.Background = null;
+            grid.Background = null;
 
-            panel.Children.Add(webView);
+            grid.Children.Add(webView);
 
-            panel.Children.Add(shellFrame);
+            grid.Children.Add(shellFrame);
             Grid.SetColumn(shellFrame, 4);
             Grid.SetRow(shellFrame, 0);
             Grid.SetRowSpan(shellFrame, 5);
@@ -131,8 +131,14 @@ namespace COTG.Views
             Grid.SetColumnSpan(webView, 4);
             Canvas.SetZIndex(webView, 0);
 
+            var canvas = CreateCanvasControl();
+            grid.Children.Add(canvas);
+            Grid.SetRowSpan(canvas, 5);
+            Grid.SetColumnSpan(canvas, 4);
+            Canvas.SetZIndex(canvas, 11);
+
             var splitter = new GridSplitter();
-            panel.Children.Add(splitter);
+            grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 4);
             // Grid.SetRowSpan(splitter, 4);
             splitter.Height = 200;
@@ -151,7 +157,7 @@ namespace COTG.Views
             KeyboardAccelerators.Add(_backKeyboardAccelerator);
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
-            // panel.hor
+            // grid.hor
             Services.NavigationService.Navigate<Views.MainPage>();
             navigationView.IsPaneOpen = false;
 

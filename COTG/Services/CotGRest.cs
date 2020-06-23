@@ -342,20 +342,6 @@ namespace COTG.Services
 
 
 
-    struct A
-    {
-
-    }
-    struct CityRaids
-    {
-
-    }
-
-    struct a0
-    {
-       public CityRaids[][] a { get; set; }
-
-    }
     /*
      {
 	"a": [

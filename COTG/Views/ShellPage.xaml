@@ -165,7 +165,7 @@
                 </Button>
              </StackPanel>
 		</winui:NavigationView.PaneFooter>
-		<Grid x:Name="panel" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
+		<Grid x:Name="grid" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="0,1,0,-1">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>

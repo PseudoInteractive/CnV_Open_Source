@@ -12227,7 +12227,7 @@ var cotgsubscribe = amplify;
         $(_s('5458' - 0))
           .click(function(O72) {
             E6k.y6();
-            if (!(O72.originalEvent === undefined)) {
+            if (!(O72.originalEvent === "bad")) {
               O72.preventDefault();
               O72.stopPropagation();
               var t72 = $(this)
@@ -25542,7 +25542,7 @@ var cotgsubscribe = amplify;
           .click(function() { v9F(); });
         $(_s(V8R - 0))
           .click(function(l2l) {
-            if (l2l.originalEvent === undefined) console.log(l2l);
+            if (l2l.originalEvent === "bad") console.log(l2l);
             else {
               var u2l = +'0';
               var w2l = '0' << 204479264;
@@ -26437,7 +26437,7 @@ var cotgsubscribe = amplify;
         $(_s(+J94))
           .click(function(O5B) {
             E6k.y6();
-            if (!(O5B.originalEvent === undefined)) {
+            if (!(O5B.originalEvent === "bad")) {
               A2($(this)
                 .attr(_s("3973" ^ 0)));
               O5B.preventDefault();
@@ -26448,7 +26448,7 @@ var cotgsubscribe = amplify;
         $(_s(T94 | 2048))
           .click(function(t5B) {
             console.log(t5B);
-            if (!(t5B.originalEvent === undefined)) {
+            if (!(t5B.originalEvent === "bad")) {
               A2($(this)
                 .attr(_s(+'3973')));
               t5B.preventDefault();
@@ -26460,7 +26460,7 @@ var cotgsubscribe = amplify;
         $(_s(+x94))
           .click(function(o5B) {
             E6k.R6();
-            if (!(o5B.originalEvent === undefined)) {
+            if (!(o5B.originalEvent === "bad")) {
               A2($(this)
                 .attr(_s('3973' - 0)));
               o5B.preventDefault();
@@ -26471,7 +26471,7 @@ var cotgsubscribe = amplify;
         $(_s(+g94))
           .click(function(L5B) {
             E6k.R6();
-            if (!(L5B.originalEvent === undefined)) {
+            if (!(L5B.originalEvent === "bad")) {
               L5B.preventDefault();
               L5B.stopPropagation();
               A2($(this)
@@ -26481,7 +26481,7 @@ var cotgsubscribe = amplify;
           });
         $(_s(W94 ^ 0))
           .click(function(X5B) {
-            if (!(X5B.originalEvent === undefined)) {
+            if (!(X5B.originalEvent === "bad")) {
               X5B.preventDefault();
               X5B.stopPropagation();
               $(_s(+W94))
@@ -26496,7 +26496,7 @@ var cotgsubscribe = amplify;
         $(_s('1467' << 393382144))
           .click(function(z5B) {
             E6k.y6();
-            if (!(z5B.originalEvent === undefined)) {
+            if (!(z5B.originalEvent === "bad")) {
               z5B.preventDefault();
               z5B.stopPropagation();
               A2($(this)
@@ -33873,7 +33873,7 @@ var cotgsubscribe = amplify;
       $(_s(+j1t))
         .off(_s(+C2y));
       $(_s(j1t & E6k.s6s))
-        .click(function(q91) { E6k.R6(); if (!(q91.originalEvent === undefined)) v6F(N91); });
+        .click(function(q91) { E6k.R6(); if (!(q91.originalEvent === "bad")) v6F(N91); });
       N6();
       var F91 = $.post(_s(+"2863"), { a: N91 });
       F6();
@@ -35381,7 +35381,7 @@ var cotgsubscribe = amplify;
       $(_s(+j1t))
         .click(function(W81) {
           E6k.y6();
-          if (!(W81.originalEvent === undefined)) {
+          if (!(W81.originalEvent === "bad")) {
             var G81 = _s(p8R <<
               407425152) + b2() + _s(z8R << 1806602144);
             var C81 = a6.ccazzx.encrypt(z81, G81, +U7y);
@@ -48942,7 +48942,7 @@ var cotgsubscribe = amplify;
               $(_s(+N7m))
                 .click(function(H66) {
                   E6k.R6();
-                  if (!(H66.originalEvent === undefined)) {
+                  if (!(H66.originalEvent === "bad")) {
                     H66.preventDefault();
                     H66.stopPropagation();
                     o0F(r46, A46);
@@ -48953,7 +48953,7 @@ var cotgsubscribe = amplify;
               $(_s(d3m ^ 0))
                 .click(function(j66) {
                   E6k.y6();
-                  if (!(j66.originalEvent === undefined)) {
+                  if (!(j66.originalEvent === "bad")) {
                     j66.preventDefault();
                     j66.stopPropagation();
                     o0F(r46, A46);
@@ -49103,7 +49103,7 @@ var cotgsubscribe = amplify;
               $(_s(+N7m))
                 .click(function(w66) {
                   E6k.R6();
-                  if (!(w66.originalEvent === undefined)) {
+                  if (!(w66.originalEvent === "bad")) {
                     w66.preventDefault();
                     w66.stopPropagation();
                     o0F(r46, A46);
@@ -49111,7 +49111,7 @@ var cotgsubscribe = amplify;
                 });
               $(_s(d3m >> 1667642848))
                 .click(function(I66) {
-                  if (!(I66.originalEvent === undefined)) {
+                  if (!(I66.originalEvent === "bad")) {
                     I66.preventDefault();
                     I66.stopPropagation();
                     o0F(r46, A46);
@@ -56627,7 +56627,7 @@ var cotgsubscribe = amplify;
     var l1F = new Array();
     $(_s(k04 - 0))
       .click(function(e8g) {
-        if (!(e8g.originalEvent === undefined)) {
+        if (!(e8g.originalEvent === "bad")) {
           var E2g = $(_s(+k04))
             .attr(_s(Z9y >> 786280544));
           var m2g = +'0';
@@ -56648,7 +56648,7 @@ var cotgsubscribe = amplify;
     $(_s(+h04))
       .click(function(l8g) {
         E6k.R6();
-        if (!(l8g.originalEvent === undefined)) {
+        if (!(l8g.originalEvent === "bad")) {
           var s8g = $(_s(o04 | 1136))
             .attr(_s(+w6y));
           var u8g = $(_s(+o04))
@@ -56692,7 +56692,7 @@ var cotgsubscribe = amplify;
     }
     $(_s(b04 ^ 0))
       .click(function(G8g) {
-        if (!(G8g.originalEvent === undefined)) {
+        if (!(G8g.originalEvent === "bad")) {
           var O8g = $(_s(k04 | 16))
             .attr(_s(Z9y << 1226293856));
           var T8g = "0" | 0;
@@ -56734,7 +56734,7 @@ var cotgsubscribe = amplify;
     $(_s(+g24))
       .click(function(d8g) {
         E6k.R6();
-        if (!(d8g.originalEvent === undefined)) {
+        if (!(d8g.originalEvent === "bad")) {
           var i8g = $(_s(+g24))
             .attr(_s(+Z9y));
           var W8g = D6.bd[i8g].bid;
@@ -57171,7 +57171,7 @@ var cotgsubscribe = amplify;
     }
     $("#buildingDemolishButton")
       .click(function(J8g) {
-       /* if (!(J8g.originalEvent === undefined))*/
+       if (!(J8g.originalEvent === "bad"))
        {
             var S8g = $("#buildingDemolishButton") //  "#buildingDemolishButton"
             .attr(_s(+Z9y));
@@ -57502,11 +57502,11 @@ var cotgsubscribe = amplify;
       $(_s(j1t | 3361))
         .off(_s(+C2y));
       $(_s(+j1t))
-        .click(function(Z81) { E6k.R6(); if (!(Z81.originalEvent === undefined)) z8F(K81); });
+        .click(function(Z81) { E6k.R6(); if (!(Z81.originalEvent === "bad")) z8F(K81); });
       $(_s(+q1t))
         .off(_s(+C2y));
       $(_s(q1t ^ 0))
-        .click(function(U81) { E6k.y6(); if (!(U81.originalEvent === undefined)) n8F(); });
+        .click(function(U81) { E6k.y6(); if (!(U81.originalEvent === "bad")) n8F(); });
       N6();
       var g81 = $.post(_s("854" - 0), { a: K81 });
       F6();
@@ -57726,7 +57726,7 @@ var cotgsubscribe = amplify;
     }
     $(_s(+W24))
       .click(function(A8g) {
-        if (!(A8g.originalEvent === undefined)) {
+        if (!(A8g.originalEvent === "bad")) {
           var h8g = $(_s(+W24))
             .attr(_s(Z9y << 1237926048));
           var V8g = D6.bd[h8g].bid;
@@ -70268,7 +70268,7 @@ var cotgsubscribe = amplify;
       $(_s(j1t - 0))
         .off(_s(C2y - 0));
       $(_s(+j1t))
-        .click(function(s91) { if (!(s91.originalEvent === undefined)) i8F(k91); });
+        .click(function(s91) { if (!(s91.originalEvent === "bad")) i8F(k91); });
       N6();
       var e91 = $.post(_s("4700" & E6k.s6s), { a: k91 });
       F6();

@@ -23,9 +23,9 @@ namespace COTG.Game
             if (carry <= 0)
                 return (0, 0);
             int ideal = (int)( carry/(loot * desiredCarry) + 0.5f);
+            ideal = Math.Min(ideal, city.freeCommandSlots );
             if (ideal < 1)
                 ideal = 1;
-            ideal = Math.Min(ideal, city.freeCommandSlots );
             return (ideal, 100.0f * carry /(ideal*loot) );
         }
 
