@@ -128,7 +128,7 @@ namespace COTG
 
 		private static string GetJsString(string asm)
         {
-            return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.Javascript.{asm}.js") ).ReadToEnd();
+            return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}.js") ).ReadToEnd();
 
         }
 

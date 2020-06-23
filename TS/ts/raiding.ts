@@ -162,20 +162,19 @@ function openreturnwin_(data_33) {
  * @return {void}
  */
 class Boss {
-	cid=new Coord(0);
+	cid=0;
 	lvl=1;
 	data=null;
 	name:string=null;
 	distance=1.0;
 	minutes: number;
-	cont() { return this.cid.cont; }
 
 }
-let bossinfo_: Boss[];
-let bosslist_: Boss[];
+let bossinfo_: any [];
+let bosslist_: any [];
 function getbossinfo_() {
 
-	bossinfo_=new Boss[0];
+	bossinfo_= [];
 	var i_19;
 	for(i_19 in wdata_.bosses) {
 		var wb=wdata_.bosses[i_19];
@@ -187,10 +186,11 @@ function getbossinfo_() {
 		var tempx_3=AsNumber(wb.substr(7,3))-100;
 		/** @type {number} */
 		var cid=tempy_3*65536+tempx_3;
-		let boss=new Boss();
-		boss.cid=new Coord(cid);
-		boss.lvl=(templvl_);
-		boss.data=(wb);
+		let boss = {
+			cid: (cid),
+			lvl: (templvl_),
+			data: (wb)
+		}
 		bossinfo_.push(boss);
 	}
 }
@@ -600,7 +600,7 @@ function PostMMNIO(j_12) {
 	let res_=[0,0,0,0,1,130000,130000,130000,130000,0,0,0,0,1,0,0,0,0,0,250000,250000,250000,250000];
 	let aa_1=_city.mo;
 	let hubs_={
-		cid: Coord[0],
+		cid: [],
 		distance: []
 	};
 	$.each(ppdt.clc,(key_42,value_90) => {

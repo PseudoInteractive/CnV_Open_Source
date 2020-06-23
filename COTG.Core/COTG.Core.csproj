@@ -31,7 +31,7 @@
 
    <ItemGroup>
     <Folder Include="Models\" />
-  </ItemGroup>
+   </ItemGroup>
 
    <ItemGroup>
      <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
@@ -55,9 +55,4 @@
      <PackageReference Include="ZString" Version="2.1.2" />
    </ItemGroup>
 
-   <ItemGroup>
-     <Reference Include="ZLogger">
-       <HintPath>S:\source\ZLogger\src\ZLogger\bin\Debug\netstandard2.0\ZLogger.dll</HintPath>
-     </Reference>
-   </ItemGroup>
 </Project>

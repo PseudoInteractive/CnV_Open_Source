@@ -2738,7 +2738,7 @@ const __s = {
     2720: "#worldswitch9",
     2721: "' style='text-align:center'>",
     2722: "index",
-    2723: "display",
+    "display": "display",
     2724: "' w='",
     2725: " has come online",
     2726: "<div id=\"ranghoverpopup\" class = \"tooltiptable4\"> <table> <tr> <td ID = \"#trnamett\" colspan = \"2\" style = \"width:100%;\">Ranger</td> </tr> <tr> <td ID = \"#trtypett\" colspan = \"2\" style = \"width:100%;\">Defensive Infantry</td> </tr> <tr> <td ID = \"#trdesctt\" colspan = \"2\" style = \"width:100%;\">Rangers are capable of slaughtering infantry units before they reach your front lines. They are valuable when defending key locations.</td> </tr> <tr> <td>Cost:</td> <td ID = \"costttd\"> <div ID = \"ttwoodpic\"></div><span ID = \"#trcosttt\">160</span> </td> </tr> <tr> <td>Building Requirements:</td> <td ID = \"#rantrbureqtt\" class = \"trbureqtt\">Training Arena, Level 4</td> </tr> <tr> <td>Space Needed:</td> <td ID = \"#trspacett\">1</td> </tr> <tr> <td>Food Needed (/day):</td> <td ID = \"#trfoopdtt\">3</td> </tr> <tr> <td>Travel Speed<br/>(minutes /tile):</td> <td ID = \"#trmovett\">20</td> </tr> <tr> <td>Carry Capacity:</td> <td ID = \"#trcarrytt\">10</td> </tr> <tr> <td>Attack:</td> <td ID = \"#trattktt\">30</td> </tr> <tr> <td>Defense against Infantry:</td> <td ID = \"#trinfdftt\">40</td> </tr> <tr> <td>Defense against Cavalry:</td> <td ID = \"#trcavdftt\">10</td> </tr> <tr> <td>Defense against Mystic:</td> <td ID = \"#trmysdftt\">25</td> </tr> <tr> <td>Defense against Artillery:</td> <td ID = \"#trartdftt\">15</td> </tr> </table> </div>",

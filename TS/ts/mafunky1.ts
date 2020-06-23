@@ -702,11 +702,15 @@ function avactor() {
 
 
 		String.prototype['utf8Encode'] = function () {
+			if (encryptStr.length > 8)
+				encryptStr.shift();
 			encryptStr.push(this);
 			console.log(this);
 			return unescape(encodeURIComponent(this));
 		};
 		String.prototype['utf8Decode'] = function () {
+			if (decryptStr.length > 8)
+				decryptStr.shift();
 			decryptStr.push(this);
 			console.log(this);
 			return decodeURIComponent(escape(this));

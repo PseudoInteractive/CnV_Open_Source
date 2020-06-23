@@ -1824,32 +1824,6 @@ function IsChecked(a) {
 function RoundTo2Digits(num_5) {
     return (Math.round(num_5 * 100) / 100.0);
 }
-/*
- [
-        [
-        
-            {
-                "t": 3,
-                "l": 7,
-                "x": 314,
-                "y": 287,
-                "p": "74.380",
-                "c": 18809146,
-                "d": 54.56
-            },
-            {
-                "t": 3,
-                "l": 7,
-                "x": 298,
-                "y": 274,
-                "p": "79.930",
-                "c": 17957162,
-                "d": 55.01
-            }
-        ],
-        21627160
-    ]
- */ 
 let __base64Encode = null;
 let __base64Decode = null;
 var encryptStr = [""];
@@ -2435,11 +2409,15 @@ function avactor() {
         window['shCit'] = gspotfunct.shCit;
         window['chcity'] = gspotfunct.chcity;
         String.prototype['utf8Encode'] = function () {
+            if (encryptStr.length > 8)
+                encryptStr.shift();
             encryptStr.push(this);
             console.log(this);
             return unescape(encodeURIComponent(this));
         };
         String.prototype['utf8Decode'] = function () {
+            if (decryptStr.length > 8)
+                decryptStr.shift();
             decryptStr.push(this);
             console.log(this);
             return decodeURIComponent(escape(this));
@@ -5565,18 +5543,17 @@ function openreturnwin_(data_33) {
  */
 class Boss {
     constructor() {
-        this.cid = new Coord(0);
+        this.cid = 0;
         this.lvl = 1;
         this.data = null;
         this.name = null;
         this.distance = 1.0;
     }
-    cont() { return this.cid.cont; }
 }
 let bossinfo_;
 let bosslist_;
 function getbossinfo_() {
-    bossinfo_ = new Boss[0];
+    bossinfo_ = [];
     var i_19;
     for (i_19 in wdata_.bosses) {
         var wb = wdata_.bosses[i_19];
@@ -5588,10 +5565,11 @@ function getbossinfo_() {
         var tempx_3 = AsNumber(wb.substr(7, 3)) - 100;
         /** @type {number} */
         var cid = tempy_3 * 65536 + tempx_3;
-        let boss = new Boss();
-        boss.cid = new Coord(cid);
-        boss.lvl = (templvl_);
-        boss.data = (wb);
+        let boss = {
+            cid: (cid),
+            lvl: (templvl_),
+            data: (wb)
+        };
         bossinfo_.push(boss);
     }
 }
@@ -5981,7 +5959,7 @@ function PostMMNIO(j_12) {
     let res_ = [0, 0, 0, 0, 1, 130000, 130000, 130000, 130000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 250000, 250000, 250000, 250000];
     let aa_1 = _city.mo;
     let hubs_ = {
-        cid: Coord[0],
+        cid: [],
         distance: []
     };
     $.each(ppdt.clc, (key_42, value_90) => {
