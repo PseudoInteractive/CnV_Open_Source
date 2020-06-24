@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <LangVersion>8.0</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,14 +6,15 @@
     <Platforms>AnyCPU;x64</Platforms>
     <LangVersion>preview</LangVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Source\COTG\Backup\COTG.Core\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -23,38 +23,34 @@
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\KernelTraceControl.dll" />
     <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\msdia140.dll" />
   </ItemGroup>
-
-   <ItemGroup>
+  <ItemGroup>
     <Folder Include="Models\" />
-   </ItemGroup>
-
-   <ItemGroup>
-     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.0-preview.5.20279.2" />
-     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="Microsoft.Toolkit" Version="6.1.0" />
-     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.0" />
-     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
-     <PackageReference Include="PlayFabAllSDK" Version="1.74.200615" />
-     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Runtime.Caching" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Text.Json" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
-     <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.5.20278.1" />
-     <PackageReference Include="ZString" Version="2.1.2" />
-   </ItemGroup>
-
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.0-preview.5.20279.2" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Toolkit" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.74.200615" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Runtime.Caching" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="ZString" Version="2.1.2" />
+  </ItemGroup>
 </Project>
