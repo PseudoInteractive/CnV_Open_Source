@@ -22,6 +22,7 @@ using Windows.UI.Xaml;
 using Cysharp.Text;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using COTG.Views;
+using System.Numerics;
 
 namespace COTG
 {
@@ -205,6 +206,14 @@ namespace COTG
                 Log(e);
                 return JSClient.cid; // return current city
 			}
+        }
+
+        public static Vector2 ToWorldC(this int c)
+        {
+            var x = c % 65536;
+            var y = c >> 16;
+
+            return new Vector2(x * 64.0f, y * 64.0f);
         }
     }
 

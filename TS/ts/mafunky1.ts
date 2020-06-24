@@ -531,7 +531,11 @@ function SendCreds()
 			s: "",
 			cookie: "",
 			cid: 0,
-			time: 0
+			time: 0,
+			spanX : M8.clientWidth,
+			spanY: M8.clientHeight,
+			left: M8.clientLeft,
+			top: M8.clientTop,
 		};
 
 		creds.token = SetupHeaders();

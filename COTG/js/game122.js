@@ -22392,7 +22392,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       var c1D = window.event || arguments.callee.caller
         .arguments["0" & 2147483647];
-      var N1D = document.getElementById(_s('735' & 2147483647));
+      var N1D = document.getElementById('worldcanv');
       if (N1D) {
         var F1D =
           N1D.getBoundingClientRect();
@@ -22403,8 +22403,7 @@ var cotgsubscribe = amplify;
         c6.paused = ![];
        var Y1D = document.getElementById("mainMapDiv");
         var k6D = Y1D.clientWidth;
-        var e6D = Y1D
-          .clientHeight;
+        var e6D = Y1D.clientHeight;
         var s6D = m1D * +64 - k6D / ('1.5' - 0);
         var u6D = a1D * (64 ^ 0) - e6D / ("3" | 3);
         c6.camera.x = s6D;
@@ -47504,7 +47503,7 @@ var cotgsubscribe = amplify;
         if (o0g.style.display != "none") {
           L0g = +"1";
           var M0g =
-            document.getElementById(_s("735" & 2147483647));
+          document.getElementById('worldcanv');
           var t0g = M0g.getBoundingClientRect();
         }
         G0g.style
@@ -57702,7 +57701,7 @@ var cotgsubscribe = amplify;
     }
 
     function o7F(Z8D, U8D) {
-      var P8D = document.getElementById(_s("735" | 69));
+        var P8D = document.getElementById('worldcanv');
       E6k.R6();
       if (P8D) {
         Z8D = Math.floor(Z8D);
@@ -59092,10 +59091,11 @@ var cotgsubscribe = amplify;
           $(_s(+"507"))
             .val(D6.sts);
           E9();
-        } cityxx = D6.x * (64 >> 1901687072) - Number(window.innerWidth) / (t1m - 0);
-      cityyy = D6.y * 64 - (Number(window.innerHeight) / ("2" - 0) - (h8y - 0));
+        }
+      cityxx = D6.x * 64 - Number(window.innerWidth) / (1.65);
+      cityyy = D6.y * 64 - (Number(window.innerHeight) / ("2" - 0) - 32);
       cityxx = D6.x * 64 - M8.clientWidth / 1.65;
-      cityyy = D6.y * 64 - M8.clientHeight / 2 - (h8y >> 1543198304);
+      cityyy = D6.y * 64 - M8.clientHeight / 2 - (32);
     }
     var p5V = new Object();
 
@@ -59956,7 +59956,7 @@ var cotgsubscribe = amplify;
 
     function R7V(r8D, A8D) {
       var V5k = '0.35714285714285715';
-      var n8D = document.getElementById(_s(+"735"));
+        var n8D = document.getElementById('worldcanv');
       if (
         n8D) {
         r8D = Math.floor(r8D);
@@ -60428,8 +60428,7 @@ var cotgsubscribe = amplify;
           .css("display", "none");
         $(_s(+g04))
           .css("display", "none");
-        var A1D = document.getElementById(_s('735' >>
-          735355520));
+          var A1D = document.getElementById('worldcanv');
         if (A1D) {
           var n1D = A1D.getBoundingClientRect();
           var f1D = m5F(U1D.clientX - n1D.left, U1D
@@ -61606,8 +61605,7 @@ var cotgsubscribe = amplify;
         E6k.R6();
         if ($(_s(+j6p))
           .css("display") != "none") {
-          var Y0T = document.getElementById(_s(+
-            "735"));
+            var Y0T = document.getElementById('worldcanv');
           if (Y0T) {
             var N0T = Y0T.getBoundingClientRect();
             var h0T = m5F(F0T.clientX - N0T.left, F0T
@@ -66416,7 +66414,7 @@ var cotgsubscribe = amplify;
             .css("display") != "none" || $(_s(+E2p))
             .css("display") != "none" || G4F == +"0") allyiance = +"1";
           N6();
-          var a51 = $.post(_s('6050' | 5024), { world: E51, cid: cid, ai: allyiance, ss: s });
+            var a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php
           a51.fail(function() {
             E6k.R6();
             $(_s(+"2194"))
@@ -66433,6 +66431,10 @@ var cotgsubscribe = amplify;
             G4F = +'1';
             L8 = [];
             w8 = +'0';
+
+              const wrapper = {c:{c:cid,x:c6.camera.x,y:c6.camera.y}};
+              window['external']['notify'](JSON.stringify(wrapper));
+
           });
         } else if (w8 == ("0" | 0)) {
           N6();

@@ -28,6 +28,7 @@ using Windows.Storage;
 using COTG.Services;
 using System.Web;
 using COTG.Views;
+using System.Numerics;
 
 namespace COTG
 {
@@ -36,6 +37,7 @@ namespace COTG
 	/// </summary>
 	public class JSClient 
     {
+
 
    
         public static JsonDocument ppdt;
@@ -498,7 +500,12 @@ namespace COTG
                                 jsVars.gameMSAtSTart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTime.Now;
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
+                                ShellPage.clientSpan.X = jso.GetAsFloat("spanX");
+                                ShellPage.clientSpan.Y = jso.GetAsFloat("spanY");
+                                ShellPage.clientTL.X = jso.GetAsFloat("left");
+                                ShellPage.clientTL.Y = jso.GetAsFloat("top");
 
+                                Log($" {ShellPage.clientSpan} {ShellPage.clientTL} ");
                                 gotCreds = true;
 //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
@@ -555,6 +562,14 @@ namespace COTG
                         case "OGT":
                             {
                                 Log(e.Value);
+                                break;
+                            }
+                        case "c":
+                            {
+                                var jso = jsp.Value;
+                                cid = jso.GetInt("c");
+                                ShellPage.cameraC.X = jso.GetFloat("x");
+                                ShellPage.cameraC.Y = jso.GetFloat("y");
                                 break;
                             }
 
