@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jquery.TypeScript.DefinitelyTyped" Version="3.1.2" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.0-beta-20200622-1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="js\game122.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="js\J0EE.js">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

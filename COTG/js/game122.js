@@ -66400,6 +66400,8 @@ var cotgsubscribe = amplify;
     }
 
     var Z1FTimeout;
+
+
     function Z1F() {
       var k71 = +"0";
       if (M4F == +'0') try {
@@ -66432,8 +66434,20 @@ var cotgsubscribe = amplify;
             L8 = [];
             w8 = +'0';
 
-              const wrapper = {c:{c:cid,x:c6.camera.x,y:c6.camera.y}};
+              var _cameraX=0;
+              var _cameraY=0;
+              var _cid=0;
+              var _view=0;
+              let __view = citrender*1 +regrender*2 +worldrender*4;
+              if (_cameraX !== c6.camera.x || _cameraY !== c6.camera.y || _cid !== cid || __view != _view)
+              {
+                _view = __view;
+                _cid = cid;
+                  _cameraX = c6.camera.x;
+                  _cameraY = c6.camera.y;
+              const wrapper = {c:{c:cid,x:c6.camera.x,y:c6.camera.y,v:_view}};
               window['external']['notify'](JSON.stringify(wrapper));
+              }
 
           });
         } else if (w8 == ("0" | 0)) {

@@ -8,6 +8,7 @@ using System.Text.Json;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
 using Windows.Foundation.Diagnostics;
+using COTG.Helpers;
 
 namespace COTG
 {
@@ -56,7 +57,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            System.Diagnostics.Trace.WriteLine( $"{DateTime.Now.Millisecond}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Trace.WriteLine( $"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
         //    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
@@ -67,7 +68,7 @@ namespace COTG
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            System.Diagnostics.Debug.WriteLine( $"{DateTime.Now.Millisecond}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber} {s.GetType().Name}:{JsonSerializer.Serialize(s,(new JsonSerializerOptions() {MaxDepth=2}))} ");
+            System.Diagnostics.Debug.WriteLine( $"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber} {s.GetType().Name}:{JsonSerializer.Serialize(s,(new JsonSerializerOptions() {MaxDepth=2}))} ");
             //    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
@@ -77,20 +78,20 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.Millisecond}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
           //  System.Diagnostics.Debug.WriteLine(new StackTrace());
         }
         public static void Log(Exception e)
         {
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.Millisecond}:Exception:{e}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception:{e}");
         }
-        public async static Task Exception(string s,
+        public  static void Exception(string s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             //
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.Millisecond}:Exception:Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception:Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
 //            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
         }
 
@@ -101,7 +102,7 @@ namespace COTG
         {
             if (v)
                 return;
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.Millisecond}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
         }
     }
 }

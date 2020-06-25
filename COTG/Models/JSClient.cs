@@ -32,14 +32,20 @@ using System.Numerics;
 
 namespace COTG
 {
-	/// <summary>
-	/// The j s client.
-	/// </summary>
-	public class JSClient 
+    /// <summary>
+    /// The j s client.
+    /// </summary>
+    public class JSClient
     {
 
+          [Flags] public enum ViewMode  
+            {
+            city = 1,
+            region=2,
+            world=4
+            };
 
-   
+        public static ViewMode viewMode;
         public static JsonDocument ppdt;
         public static int cid; // cityId
         public static JSClient instance = new JSClient();
@@ -133,17 +139,20 @@ namespace COTG
             return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}.js") ).ReadToEnd();
 
         }
-
+       
 		private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
         {
             try
             {
                 var req = args.Request;
+               
+                    
                 if( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
                 {
                     try
                     {
-                        view.WebResourceRequested -= View_WebResourceRequested1;
+                       
+                            view.WebResourceRequested -= View_WebResourceRequested1;
                         string host = args.Request.RequestUri.Host;
                         string uri = args.Request.RequestUri.AbsoluteUri;
 
@@ -273,11 +282,7 @@ namespace COTG
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
 
-                    if (!City.all.TryGetValue(cid, out var city))
-                    {
-                        city = new City() { cid = cid };
-                        City.all.TryAdd(cid, city);
-                    }
+                    var city=City.all.GetOrAdd(cid,City.Factory);
                     
                     city.name = jsCity.GetProperty("2").GetString();
                     city.isCastle = jsCity.GetAsInt("12") != 0;
@@ -332,7 +337,7 @@ namespace COTG
                         httpsHost = new Uri($"https://{args.Uri.Host}");
                         downloadImageClient = new HttpClient();
                         downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
-                        downloadImageClient.DefaultRequestHeaders.Referer = new Uri(httpsHost , "/overview.php?s=0");
+                        downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
                         downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
                         downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 
@@ -372,12 +377,12 @@ namespace COTG
                                                                  //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
                                                                  //   headers.Add("Accept", @"*/*");
                         httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-                        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+                    //    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
                         //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
                         httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
                         // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                        httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-                                                                             //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                    //    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+                          httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                         httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
                         httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
@@ -460,7 +465,7 @@ namespace COTG
         static private async void View_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
         {
             
-            await Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
+            Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
             Log("Refresh");
             if (view!=null)
                 view.Refresh();
@@ -480,7 +485,7 @@ namespace COTG
             try
             {
                 bool gotCreds = false;
-                Log($"Notify: {e.CallingUri} {sender} {e.Value.Truncate(128) }");
+              //  Log($"Notify: {e.CallingUri} {sender} {e.Value.Truncate(128) }");
                 var jsDoc = JsonDocument.Parse(e.Value);
                 var jsd = jsDoc.RootElement;
                 foreach (var jsp in jsd.EnumerateObject())
@@ -491,6 +496,8 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 jsVars.token = jso.GetString("token");
+                                var agent = jso.GetString("agent");
+                                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
                                 jsVars.ppss = jso.GetAsInt("ppss");
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
@@ -517,11 +524,7 @@ namespace COTG
                                 var jso = jsp.Value;
                                 var cid = jso.GetAsInt("cid");
                                 {
-                                    if (!City.all.TryGetValue(cid, out var city))
-                                    {
-                                        city = new City() { cid = cid };
-                                        City.all.TryAdd(cid, city);
-                                    }
+                                    var city=City.all.GetOrAdd(cid,City.Factory);
                                     
                                     city.name = jso.GetString("name");
                                     city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
@@ -541,11 +544,7 @@ namespace COTG
                                 MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
                                 cid = jse.GetInt("cid");
-                                if (!City.all.TryGetValue(cid, out var city))
-                                {
-                                    city = new City() { cid = cid };
-                                    City.all.TryAdd(cid, city);
-                                }
+                                var city=City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
                                 break;
                             }
@@ -568,8 +567,12 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
+                                viewMode = (ViewMode)jso.GetInt("v");
                                 ShellPage.cameraC.X = jso.GetFloat("x");
                                 ShellPage.cameraC.Y = jso.GetFloat("y");
+                                ShellPage.T(ShellPage.cameraC.ToString() + " v:" + viewMode);
+                               // if((viewMode & ViewMode.region)!=0)
+                                    ShellPage.canvas?.Invalidate();
                                 break;
                             }
 

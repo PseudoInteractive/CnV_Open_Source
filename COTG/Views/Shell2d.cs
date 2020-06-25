@@ -10,11 +10,12 @@ using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas;
 using System.Numerics;
 using COTG.Game;
-using System.Drawing.Drawing2D;
+
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using COTG.Helpers;
+using Microsoft.Graphics.Canvas.Brushes;
 
 namespace COTG.Views
 {
@@ -24,7 +25,7 @@ namespace COTG.Views
         public static Vector2 clientTL;
         public static Vector2 cameraC;
 
-
+        static CanvasSolidColorBrush  raidBrush,shadowBrush;
 
         static public CanvasControl canvas;
         static Vector2 dxy;
@@ -39,11 +40,11 @@ namespace COTG.Views
 
         public CanvasControl CreateCanvasControl()
         {
-            canvas = new CanvasControl();
+            canvas = new CanvasControl() { IsHitTestVisible=false };
             canvas.Draw += Canvas_Draw;
-            canvas.IsHitTestVisible = false;
+           
             canvas.Unloaded += Canvas_Unloaded;
-         
+           
             return canvas;
 
         }
@@ -54,26 +55,43 @@ namespace COTG.Views
              canvas.RemoveFromVisualTree();
               canvas = null;
         }
+      
+        static void DrawLine(CanvasDrawingSession ds, Vector2 c0,Vector2 c1)
+        {
 
+        }
         private void Canvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
+            ShellPage.T("Draw");
+            if(shadowBrush==null)
+            {
+             raidBrush =new CanvasSolidColorBrush(canvas,Colors.BlueViolet);
+            shadowBrush =new CanvasSolidColorBrush(canvas,Colors.Black) { Opacity=0.5f };
+
+            }
             var ds = args.DrawingSession;
 
             dxy.X = (float)sender.ActualWidth;
             dxy.Y = (float)sender.ActualHeight;
 
             ds.DrawLine( SC(0.25f,.125f),SC(0.625f,0.9f), Colors.DarkMagenta, 8,defaultStrokeStyle);
-            ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.625f), Colors.AliceBlue, 8, defaultStrokeStyle);
+            ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.625f), shadowBrush, 8, defaultStrokeStyle);
             foreach(var city in City.all)
             {
                 var c = city.Value.cid.ToWorldC() ;
-                c -= cameraC;
-                c.X = canvas.ConvertPixelsToDips(c.X.RoundToInt());
-                c.Y = canvas.ConvertPixelsToDips(c.Y.RoundToInt());
-                ds.DrawCircle(c, 64, Colors.Magenta);
+              
+                ds.DrawCircle(c.WToC(), 64, Colors.Magenta);
 
             }
 
+        }
+    }
+    public static class CanvasHelpers
+    {
+        public static Vector2 WToC(this Vector2 c)
+        {
+            return new Vector2(ShellPage.canvas.ConvertPixelsToDips((c.X - ShellPage.cameraC.X).RoundToInt()),
+                ShellPage.canvas.ConvertPixelsToDips((c.Y - ShellPage.cameraC.Y).RoundToInt()));
         }
     }
 }

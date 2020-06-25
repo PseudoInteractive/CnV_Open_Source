@@ -160,9 +160,10 @@ namespace COTG
             var textBlock = new MarkdownTextBlock() { Text = s};
 			textBlock.LinkClicked += MarkDownLinkClicked;
             ShellPage.inAppNote.Show(textBlock, timeout);
+            ShellPage.T(s);
         }
 
-		private static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
+		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
 
 			try
@@ -213,7 +214,7 @@ namespace COTG
             var x = c % 65536;
             var y = c >> 16;
 
-            return new Vector2(x * 64.0f, y * 64.0f);
+            return new Vector2(x * 64.0f+32, y * 64.0f+32);
         }
     }
 

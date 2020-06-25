@@ -83,7 +83,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-
+                Log(e);
             }
 
 
@@ -209,12 +209,7 @@ namespace COTG.Services
         {
             var cid = json.RootElement.GetAsInt("cid");
             Log("Got JS " + cid);
-            if (!City.all.TryGetValue(cid, out var city))
-            {
-                city = new City() { cid = cid };
-                City.all.TryAdd(cid, city);
-            }
-
+             var city=City.all.GetOrAdd(cid,City.Factory);
             city.LoadFromJson(json.RootElement);
 
         }
@@ -363,9 +358,9 @@ namespace COTG.Services
 					8622089209966, // 0
 					1300,          // 1
 					"Mountain Cavern, Level 4 (91%)", // 2
-					0,   // 3
-					2, // 3
-					[  // 4
+					0,   // 3  1=is returning
+					2, // 4  repeat or once
+					[  // 5
 						{
 							"tt": "2",
 							"tv": 308
@@ -379,7 +374,7 @@ namespace COTG.Services
 							"tv": 807
 						}
 					],
-					{
+					{  // 6
 						"w": 0,
 						"s": 0,
 						"i": 0,
@@ -402,7 +397,7 @@ namespace COTG.Services
 							}
 						]
 					},
-					"01:51:31 23\/06",
+					"01:51:31 23\/06", // 7
 					20316624
 				],
 			]
@@ -434,6 +429,8 @@ namespace COTG.Services
             foreach (var cr in a.EnumerateArray())
             {
                 int cid = cr[0].GetInt32();
+                var city=City.all.GetOrAdd(cid,City.Factory);
+                
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())
                 {
@@ -458,14 +455,12 @@ namespace COTG.Services
                     var carry = (cc * 100.0f / res).RoundToInt();
                     if (carry < minCarry)
                         minCarry = carry;
-//                    Log($"cc:{cc}, res:{res}, carry:{cc/res}");
+                    Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
                 }
+                 city.raidCarry = (byte)minCarry;
                 Log($"cid:{cid} carry: {minCarry}");
-                if( City.all.TryGetValue(cid,out var city))
-                {
-                    city.raidCarry = (byte)minCarry;
-                }
+                
             }
             MainPage.CityListUpdateAll();
         }

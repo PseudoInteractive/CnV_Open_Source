@@ -152,10 +152,10 @@ namespace COTG.Game
             var comm = jsE.GetInt("comm");
             return (comm, total, total - comm);
         }
-        public static DateTime raidCarryLastUpdate;
+   
         public byte raidCarry { get; set; }
-
-        public override string ToString()
+        public static City Factory(int _id) => new City() { cid=_id };
+            public override string ToString()
         {
             return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(owner)}={owner}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }

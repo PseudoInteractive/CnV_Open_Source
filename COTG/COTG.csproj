@@ -19,7 +19,7 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>COTG_TemporaryKey.pfx</PackageCertificateKeyFile>
     <LangVersion>preview</LangVersion>
-    <PackageCertificateThumbprint>CC78A605958971AC5BF643F1EB22DE3004175444</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>5AC47FAD9C5242428EBC089566D91220181110C5</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -110,6 +110,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -127,9 +128,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.Platforms">
-      <Version>5.0.0-preview.5.20278.1</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
@@ -160,16 +158,10 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="System.Diagnostics.DiagnosticSource">
-      <Version>5.0.0-preview.5.20278.1</Version>
-    </PackageReference>
     <PackageReference Include="System.Memory">
       <Version>4.5.4</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>5.0.0-preview.5.20278.1</Version>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>5.0.0-preview.5.20278.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
@@ -177,9 +169,6 @@
     </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>5.0.0-preview.5.20278.1</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks.Extensions">
-      <Version>4.5.4</Version>
     </PackageReference>
     <PackageReference Include="System.Utf8String.Experimental">
       <Version>5.0.0-preview.5.20278.1</Version>
@@ -224,6 +213,7 @@
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\JSONHelper.cs" />
+    <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />

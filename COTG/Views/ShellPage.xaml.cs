@@ -25,9 +25,21 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 using System.Collections.Concurrent;
 using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
+using System.Text;
+using System.Collections.ObjectModel;
 
 namespace COTG.Views
 {
+    public class LogEntryStruct
+    {
+        public string t { get; set; }
+        public LogEntryStruct()
+        {
+
+        }
+        public LogEntryStruct(string _t) { t =_t; } 
+    }
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
@@ -40,6 +52,7 @@ namespace COTG.Views
         private bool _isBusy;
         private bool _isLoggedIn;
         private bool _isAuthorized;
+
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
@@ -137,6 +150,8 @@ namespace COTG.Views
             Grid.SetColumnSpan(canvas, 4);
             Canvas.SetZIndex(canvas, 11);
 
+    
+
             var splitter = new GridSplitter();
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 4);
@@ -163,6 +178,17 @@ namespace COTG.Views
 
         }
 
+        ObservableCollection<LogEntryStruct> logEntries = new ObservableCollection<LogEntryStruct>();// new string[]{"Hello", "there"});
+        async public static Task T(string s)
+        {
+             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low,() =>
+              {
+
+                  var str = $"{Tick.MSS()}:{s}";
+                  instance.logEntries.Insert(0,new LogEntryStruct(str));
+                 
+              });
+        }
 
         private void OnLoggedIn(object sender, EventArgs e)
         {
@@ -512,6 +538,11 @@ namespace COTG.Views
         private void TestRaid(object sender, RoutedEventArgs e)
         {
  //          ScanDungeons.Post();
+        }
+
+        private void MarkdownTextBlock_LinkClicked(object sender,LinkClickedEventArgs e)
+        {
+            Note.MarkDownLinkClicked(sender,e);
         }
     }
 }
