@@ -236,11 +236,9 @@ function Contains(a:string,b:string) {
 let pendingCityUpdate = false;
 
 function sendCityData(delayInMs) {
-
 	if (pendingCityUpdate != true) {
 		pendingCityUpdate = true;
 		console.log("sendCity");
-
 		setTimeout(() => {
 			const wrapper = { citydata: __c.D6 }
 			window['external']['notify'](JSON.stringify(wrapper));
@@ -329,7 +327,8 @@ function __avatarAjaxDone(url: string,
 
 function _pleaseNoMorePrefilters() { }
 
-function OptimizeAjax() {
+function OptimizeAjax()
+{
 
 //	priorPrefilter
 	jQuery.ajaxPrefilter(  (A7U, n7U, xhr)=> {
@@ -521,39 +520,31 @@ function SendCreds()
 	try {
 
 		console.log("Notify here");
-		let creds =
-		{
-			token: "",
-			ppss: 0,
-			player: "",
-			pid: 0,
-			alliance: "",
-			s: "",
-			cookie: "",
-			cid: 0,
-			time: 0,
-			spanX : M8.clientWidth,
+		console.log("Notify here");
+		let creds = {
+			token: SetupHeaders(),
+			ppss: ppss,
+			player: cotg.player.name(),
+			pid: ppdt.pid,
+			alliance: cotg.player.alliance(),
+			s: s,
+			cookie: document.cookie,
+			cid: cid,
+			time: currentTime(),
+			spanX: M8.clientWidth,
 			spanY: M8.clientHeight,
 			left: M8.clientLeft,
 			top: M8.clientTop,
 			agent: navigator.userAgent
 		};
 
-		creds.token = SetupHeaders();
-		creds.cookie = document.cookie;
-		creds.ppss = ppss;
-		creds.player = cotg.player.name();
-		creds.alliance = cotg.player.alliance();
-		creds.pid = ppdt.pid;
-		creds.s = s;
-		creds.cid = cid;
-		creds.time = currentTime();
+		
 		let wrapper = { jsvars: creds }
 		if (__c.D6 != null)
 			wrapper['citydata'] = __c.D6;
 
 		window['external']['notify'](JSON.stringify(wrapper));
-
+		//OptimizeAjax();
 	} catch (e) {
 		console.log("Notify failed");
 		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
@@ -678,13 +669,13 @@ function avactor() {
 	}
 
 	setTimeout(() => {
+
 	//	__base64Encode = String.prototype['base64Encode'];
 	//	String.prototype['base64Encode'] = betterBase64Encode;
 
 	//	__base64Decode = String.prototype['base64Decode'];
 	//	String.prototype['base64Decode'] = betterBase64Decode;
 
-		OptimizeAjax();
 
 		/// 
 		//BuildStringTable(0);
@@ -818,7 +809,7 @@ function avactor() {
 
 
 	setTimeout(() => {
-
+		SendCreds();
 		UpdateResearchAndFaith();
 		/** @type {string} */
 		var returnAllbut_ = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
@@ -2452,6 +2443,7 @@ function avactor() {
 				}, 4000);
 			}
 		});
+
 		$("#citynotes").draggable({
 			handle: ".popUpBar",
 			containment: "window",
@@ -3141,7 +3133,6 @@ function avactor() {
 		
 	}, 5000);
 
-	SendCreds();
 
 
 	//__a6.cipher=(l6v,j6v) => {

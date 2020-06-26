@@ -84,8 +84,8 @@ namespace COTG.Behaviors
             {
                 _currentPage = page;
 
-                UpdateHeader();
-                UpdateHeaderTemplate();
+             //   UpdateHeader();
+             //   UpdateHeaderTemplate();
             }
         }
 
@@ -93,33 +93,33 @@ namespace COTG.Behaviors
         {
             if (_currentPage != null)
             {
-                var headerMode = GetHeaderMode(_currentPage);
-                if (headerMode == NavigationViewHeaderMode.Never)
-                {
-                    AssociatedObject.Header = null;
-                    AssociatedObject.AlwaysShowHeader = false;
-                }
-                else
-                {
-                    var headerFromPage = GetHeaderContext(_currentPage);
-                    if (headerFromPage != null)
-                    {
-                        AssociatedObject.Header = headerFromPage;
-                    }
-                    else
-                    {
-                        AssociatedObject.Header = DefaultHeader;
-                    }
+                //var headerMode = GetHeaderMode(_currentPage);
+                //if (headerMode == NavigationViewHeaderMode.Never)
+                //{
+                //    AssociatedObject.Header = null;
+                //    AssociatedObject.AlwaysShowHeader = false;
+                //}
+                //else
+                //{
+                //    var headerFromPage = GetHeaderContext(_currentPage);
+                //    if (headerFromPage != null)
+                //    {
+                //        AssociatedObject.Header = headerFromPage;
+                //    }
+                //    else
+                //    {
+                //        AssociatedObject.Header = DefaultHeader;
+                //    }
 
-                    if (headerMode == NavigationViewHeaderMode.Always)
-                    {
-                        AssociatedObject.AlwaysShowHeader = true;
-                    }
-                    else
-                    {
-                        AssociatedObject.AlwaysShowHeader = false;
-                    }
-                }
+                //    if (headerMode == NavigationViewHeaderMode.Always)
+                //    {
+                //        AssociatedObject.AlwaysShowHeader = true;
+                //    }
+                //    else
+                //    {
+                //        AssociatedObject.AlwaysShowHeader = false;
+                //    }
+                //}
             }
         }
 
@@ -127,8 +127,8 @@ namespace COTG.Behaviors
         {
             if (_currentPage != null)
             {
-                var headerTemplate = GetHeaderTemplate(_currentPage);
-                AssociatedObject.HeaderTemplate = headerTemplate ?? DefaultHeaderTemplate;
+                //var headerTemplate = GetHeaderTemplate(_currentPage);
+                //AssociatedObject.HeaderTemplate = headerTemplate ?? DefaultHeaderTemplate;
             }
         }
     }

@@ -51,7 +51,7 @@ namespace COTG.Game
                     var bd = jse.GetProperty("bd");
                     foreach (var b in bd.EnumerateArray())
                     {
-                        if (b.GetInt("bid") == bidCastle)
+                        if (b.GetAsInt("bid") == bidCastle)
                         {
                             return (b.GetInt("bl") + 5);
                         }

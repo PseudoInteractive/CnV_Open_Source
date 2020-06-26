@@ -12,6 +12,43 @@ using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
+    // This is used for drawing only, we don't keep track of repeats, troops etc.
+    public struct Raid : IEquatable<Raid>
+    {
+        public int target;// cid
+        public DateTime arrval;
+        public bool isReturning;
+        public bool isRepeating; // neighter timed return nor raid once
+
+        public override bool Equals(object obj)
+        {
+            return obj is Raid raid && Equals(raid);
+        }
+
+        public bool Equals(Raid other)
+        {
+            return target == other.target &&
+                   arrval == other.arrval &&
+                   isReturning == other.isReturning &&
+                   isRepeating == other.isRepeating;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(target, arrval, isReturning, isRepeating);
+        }
+
+        public static bool operator ==(Raid left, Raid right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Raid left, Raid right)
+        {
+            return !(left == right);
+        }
+    }
+
     public static class Raiding
     {
         public static float desiredCarry = 0.9f;

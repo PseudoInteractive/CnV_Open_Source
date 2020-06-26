@@ -70,17 +70,19 @@ namespace COTG.Views
 
             }
             var ds = args.DrawingSession;
+            var scale = ShellPage.canvas.ConvertPixelsToDips(1);
+            ds.Transform = new Matrix3x2( scale, 0, 0, scale, -scale * ShellPage.cameraC.X, -scale * ShellPage.cameraC.Y );
 
             dxy.X = (float)sender.ActualWidth;
             dxy.Y = (float)sender.ActualHeight;
 
-            ds.DrawLine( SC(0.25f,.125f),SC(0.625f,0.9f), Colors.DarkMagenta, 8,defaultStrokeStyle);
+            ds.DrawLine( SC(0.25f,.125f),SC(0.625f,0.9f), raidBrush, 8,defaultStrokeStyle);
             ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.625f), shadowBrush, 8, defaultStrokeStyle);
             foreach(var city in City.all)
             {
                 var c = city.Value.cid.ToWorldC() ;
               
-                ds.DrawCircle(c.WToC(), 64, Colors.Magenta);
+                ds.DrawCircle(c, 32, Colors.Magenta);
 
             }
 

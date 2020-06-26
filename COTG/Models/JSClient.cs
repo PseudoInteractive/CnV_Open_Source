@@ -110,6 +110,7 @@ namespace COTG
 				view.NavigationStarting += View_NavigationStarting;
 				view.NavigationCompleted += View_NavigationCompletedAsync;
 				view.PermissionRequested += View_PermissionRequested;
+                view.NewWindowRequested += View_NewWindowRequested;
               //  view.WebResourceRequested += View_WebResourceRequested1;
 
 				//   view.CacheMode = CacheMode.
@@ -134,7 +135,14 @@ namespace COTG
 
 		}
 
-		private static string GetJsString(string asm)
+        async private static void View_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        {
+            args.Handled = true;
+            WebViewPage.DefaultUrl = args.Uri;
+            await WindowManagerService.Current.TryShowAsStandaloneAsync("overview", typeof(WebViewPage));
+        }
+
+        private static string GetJsString(string asm)
         {
             return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}.js") ).ReadToEnd();
 

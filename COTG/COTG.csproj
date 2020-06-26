@@ -19,7 +19,7 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>COTG_TemporaryKey.pfx</PackageCertificateKeyFile>
     <LangVersion>preview</LangVersion>
-    <PackageCertificateThumbprint>5AC47FAD9C5242428EBC089566D91220181110C5</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0F6485A40119E4C6B98ED255CAA24A3D1FDD0EA0</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -315,6 +315,9 @@
     <Compile Include="Views\TwoPaneViewPage.xaml.cs">
       <DependentUpon>TwoPaneViewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WebViewPage.xaml.cs">
+      <DependentUpon>WebViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\WhatsNewDialog.xaml.cs">
       <DependentUpon>WhatsNewDialog.xaml</DependentUpon>
     </Compile>
@@ -407,6 +410,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TwoPaneViewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WebViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -563,7 +570,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>COTG_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

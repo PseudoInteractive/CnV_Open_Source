@@ -24,6 +24,9 @@ namespace COTG.Services
 
         private event ViewReleasedHandler InternalReleased;
 
+        // Necessary to communicate with the window
+        public CoreDispatcher Dispatcher { get; private set; }
+
         // This id is used in all of the ApplicationViewSwitcher and ProjectionManager APIs
         public int Id { get; private set; }
 
@@ -60,6 +63,7 @@ namespace COTG.Services
 
         private ViewLifetimeControl(CoreWindow newWindow)
         {
+            Dispatcher = newWindow.Dispatcher;
             _window = newWindow;
             Id = ApplicationView.GetApplicationViewIdForWindow(_window);
             RegisterForEvents();
@@ -109,8 +113,7 @@ namespace COTG.Services
                     refCountCopy = --_refCount;
                     if (refCountCopy == 0)
                     {
-                        var d = _window.Dispatcher;
-                        d.RunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
+                        Dispatcher.RunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
                     }
                 }
             }
@@ -138,7 +141,7 @@ namespace COTG.Services
             StopViewInUse();
         }
 
-        private void FinalizeRelease()
+        private async void FinalizeRelease()
         {
             bool justReleased = false;
             lock (_lockObj)
@@ -155,11 +158,18 @@ namespace COTG.Services
                 UnregisterForEvents();
                 if (InternalReleased == null)
                 {
-                    // For more information about using Multiple Views, see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/features/multiple-views.md
-                    throw new InvalidOperationException("ExceptionViewLifeTimeControlMissingReleasedSubscription".GetLocalized());
-                }
+                    await WindowManagerService.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        WindowManagerService.Current.SecondaryViews.Remove(this);
+                    });
 
-                InternalReleased.Invoke(this, null);
+                    // For more information about using Multiple Views, see https://github.com/Microsoft/WindowsTemplateStudio/blob/release/docs/UWP/features/multiple-views.md
+                   // throw new InvalidOperationException("ExceptionViewLifeTimeControlMissingReleasedSubscription".GetLocalized());
+                }
+                else
+                {
+                    InternalReleased.Invoke(this, null);
+                }
             }
         }
     }
