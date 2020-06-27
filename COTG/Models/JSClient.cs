@@ -29,6 +29,7 @@ using COTG.Services;
 using System.Web;
 using COTG.Views;
 using System.Numerics;
+using Windows.UI.Xaml.Media;
 
 namespace COTG
 {
@@ -97,8 +98,10 @@ namespace COTG
 			try
 			{
                 view = new WebView(WebViewExecutionMode.SeparateThread)
-                { HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch
+                {
+                    //HorizontalAlignment = HorizontalAlignment.Stretch,
+                    //VerticalAlignment = VerticalAlignment.Stretch,
+                    //CacheMode=new BitmapCache()
                 };
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
@@ -153,9 +156,18 @@ namespace COTG
             try
             {
                 var req = args.Request;
-               
-                    
-                if( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
+
+    //            Log(req.RequestUri.ToString());
+                if(req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
+				{
+                    var js = GetJsString("jquery");
+
+                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+                   }
+                    if ( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
                 {
                     try
                     {
@@ -164,8 +176,8 @@ namespace COTG
                         string host = args.Request.RequestUri.Host;
                         string uri = args.Request.RequestUri.AbsoluteUri;
 
-                            var reqMsg = args.Request;
-                            var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
+                         //   var reqMsg = args.Request;
+                         //   var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
 
                         var asm = typeof(JSClient).Assembly;
 
@@ -394,7 +406,7 @@ namespace COTG
                         httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
                         httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                        Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+                        Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
 
                         view.WebResourceRequested -= View_WebResourceRequested1;
                         view.WebResourceRequested += View_WebResourceRequested1;

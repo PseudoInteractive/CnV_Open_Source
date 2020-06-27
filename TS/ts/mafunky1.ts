@@ -584,6 +584,23 @@ function GetDate(jq: string) {
 
 //}
 
+//(function () {
+//	let stringTable = [];
+//	for (let i = 0; i < 1000; ++i) {
+
+//		let x = '';
+//		try {
+//			x = o0FF.y5u(i) || x;
+//		}
+//		catch (e) {
+//		}
+//		stringTable.push(x);
+//	}
+//	return JSON.stringify(stringTable);
+
+//})();
+
+
 function avactor() {
 
 	//	var E3y="5894";
@@ -592,7 +609,7 @@ function avactor() {
 	var q3y = 16;
 	var U7y = 256;
 	var v1R = 192;
-	var P2y = 1000;
+//	var P2y = 1000;
 	var l9p = 0xffff;
 	var k9p = 0x100000000;
 	console.log("here");

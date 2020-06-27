@@ -13,6 +13,7 @@ using COTG.Game;
 using COTG.Helpers;
 using static COTG.Game.Enum;
 using COTG.Views;
+using System.Globalization;
 
 namespace COTG.Services
 {
@@ -398,7 +399,7 @@ namespace COTG.Services
 						]
 					},
 					"01:51:31 23/06", // 7
-					20316624
+					20316624 //
 				],
 			]
 		]
@@ -425,17 +426,26 @@ namespace COTG.Services
         public RaidOverview() : base("overview/graid.php") { }
         public override void ProcessJson(JsonDocument jsd)
         {
+            //           string dateExtra = DateTime.Now.Year
+            string dateFormat = "HH:mm:ss dd/MM";
             var a = jsd.RootElement.GetProperty("a");
             foreach (var cr in a.EnumerateArray())
             {
                 int cid = cr[0].GetInt32();
                 var city=City.all.GetOrAdd(cid,City.Factory);
-                
+                List<Raid> raids = new List<Raid>();
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())
                 {
                     string desc = r[2].GetString();
                     //    Mountain Cavern, Level 4(91 %)
+                    var raid = new Raid();
+                    raid.target = r[8].GetInt32();
+                    raid.arrival = DateTime.ParseExact(r[7].GetString(),dateFormat, CultureInfo.InvariantCulture);
+                    raid.isReturning = r[3].GetInt32() != 0;
+                    raid.isRepeating = r[4].GetInt32() == 2;
+                    Log(raid.ToString());
+                   // raid.arrival.Year = DateTime.Now.Year;
                     var ss0 = desc.Split(',');
                     Assert(ss0.Length == 2);
                     var isMountain = ss0[0].Trim()[0] == 'M';
@@ -457,8 +467,10 @@ namespace COTG.Services
                         minCarry = carry;
                     Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
+                    raids.Add(raid);
                 }
                  city.raidCarry = (byte)minCarry;
+                city.raids = raids.ToArray();
                 Log($"cid:{cid} carry: {minCarry}");
                 
             }

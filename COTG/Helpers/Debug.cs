@@ -51,7 +51,7 @@ namespace COTG
 
 
         }
-        public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
+       // public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
         public static void Log( string  s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",

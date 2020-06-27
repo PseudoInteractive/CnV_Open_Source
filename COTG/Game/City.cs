@@ -17,6 +17,8 @@ namespace COTG.Game
     {
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
+        public Raid[] raids = Array.Empty<Raid>();
+
         readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
         const int pointSizeCount = 7;
         int GetSize() {
@@ -155,7 +157,7 @@ namespace COTG.Game
    
         public byte raidCarry { get; set; }
         public static City Factory(int _id) => new City() { cid=_id };
-            public override string ToString()
+        public override string ToString()
         {
             return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(owner)}={owner}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }

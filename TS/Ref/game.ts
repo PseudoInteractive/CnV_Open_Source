@@ -15969,7 +15969,7 @@ let cotgsubscribe;
                             if (bam[_s(Q5y << 1042045696)][Number(m7w)])
                                 if (bam[_s(Q5y)][Number(m7w)][_s(h6R)][Number(e4w)]) {
                                     var H4w = bam[_s(Q5y )][Number(m7w)][_s(C5y << 1679485440)];
-                                    var k4w = Math.ceil(bam[_s(Q5y)][Number(m7w)][_s(h6R)][Number(e4w)][_s(X6R << 1544008512)] / (Number(u4w) / (X2y )));
+                                    var k4w = Math.ceil(bam[_s(Q5y)][Number(m7w)][_s(h6R)][Number(e4w)]["tu"] / (Number(u4w) / (X2y )));
                                     if (k4w < Number(ppdt.mibt))
                                         k4w = Number(ppdt.mibt);
                                     var E7w = Number(j4w) + Number(k4w);
@@ -15992,7 +15992,7 @@ let cotgsubscribe;
                             if (bam[_s(Q5y)][Number(m7w)])
                                 if (bam[_s(Q5y)][Number(m7w)][_s(h6R )][Number(e4w)]) {
                                     H4w = bam[_s(Q5y - 0)][Number(m7w)][_s(C5y << 371883424)];
-                                    k4w = Math.ceil(bam[_s(Q5y)][Number(m7w)][_s(h6R)][Number(e4w)][_s(X6R)] / (Number(u4w) / (X2y >> 1311859488)));
+                                    k4w = Math.ceil(bam[_s(Q5y)][Number(m7w)][_s(h6R)][Number(e4w)]["tu"] / (Number(u4w) / (X2y >> 1311859488)));
                                     if (k4w < Number(ppdt.mibt))
                                         k4w = Number(ppdt.mibt);
                                     E7w = Number(v4w) + Number(k4w);
@@ -21905,7 +21905,7 @@ let cotgsubscribe;
             if (s1U == (0 )) {
                 const U1U = bam[_s(Q5y)][Number(X1U)][_s(I04)];
                 const Z1U = bam[_s(Q5y)][Number(X1U)][_s(C5y)];
-                var j1U = bam[_s(Q5y )][Number(X1U)][_s(h6R )][+1][_s(X6R)];
+                var j1U = bam[_s(Q5y )][Number(X1U)][_s(h6R )][+1]["tu"];
                 w2();
                 var z1U = Q2(j1U);
                 $(_s('3605')).css({
@@ -21976,7 +21976,7 @@ let cotgsubscribe;
                     var u1U = Number(s1U) + (1 | 1);
                     if (bam[_s(Q5y)][Number(e1U)])
                         if (bam[_s(Q5y)][Number(e1U)][_s(h6R)][Number(u1U)]) {
-                            var j1U = Math.ceil(bam[_s(Q5y | 1035)][Number(e1U)][_s(h6R * 1)][Number(u1U)][_s(X6R)] / (Number(D6.cs) / (X2y * 1)));
+                            var j1U = Math.ceil(bam[_s(Q5y | 1035)][Number(e1U)][_s(h6R * 1)][Number(u1U)]["tu"] / (Number(D6.cs) / (X2y * 1)));
                             var w1U = Math.ceil(bam[_s(Q5y)][Number(e1U)][_s(h6R)][Number(u1U)][_s(n7y)] / (Number(D6.cs) / (X2y )));
                         } else {
                             var j1U = +D5y;
@@ -21990,7 +21990,7 @@ let cotgsubscribe;
                     var u1U = s1U;
                     if (bam[_s(Q5y )][Number(e1U)])
                         if (bam[_s(Q5y)][Number(e1U)][_s(h6R)][Number(u1U)]) {
-                            var j1U = Math.ceil(bam[_s(Q5y << 627088640)][Number(e1U)][_s(h6R << 344031008)][Number(u1U)][_s(X6R * 1)] / (Number(D6.cs) / +X2y));
+                            var j1U = Math.ceil(bam[_s(Q5y << 627088640)][Number(e1U)][_s(h6R << 344031008)][Number(u1U)]["tu"] / (Number(D6.cs) / +X2y));
                             var w1U = Math.ceil(bam[_s(Q5y * 1)][Number(e1U)][_s(h6R)][Number(u1U)][_s(n7y)] / (Number(D6.cs) / (X2y * 1)));
                         } else {
                             var j1U = +D5y;
@@ -22558,7 +22558,7 @@ let cotgsubscribe;
                 if (j3U != +0) {
                     const V3U = bam[_s(Q5y)][Number(j3U)][_s(I04)];
                     const J3U = bam[_s(Q5y)][Number(j3U)][_s(C5y << 593651392)];
-                    let o3U = Math.ceil(bam[_s(Q5y)][Number(j3U)][_s(h6R)][+1][_s(X6R)] / (Number(D6.cs) / +X2y));
+                    let o3U = Math.ceil(bam[_s(Q5y)][Number(j3U)][_s(h6R)][+1]["tu"] / (Number(D6.cs) / +X2y));
                     if (o3U < Number(ppdt.mibt))
                         o3U = Number(ppdt.mibt);
                     const h3U = Q2(o3U);
@@ -39199,7 +39199,7 @@ let cotgsubscribe;
                     var x6U = Number(T6U) + +1;
                     if (bam[_s(Q5y)][Number(l6U)])
                         if (bam[_s(Q5y )][Number(l6U)][_s(h6R)][Number(x6U)]) {
-                            var O6U = Math.ceil(bam[_s(Q5y)][Number(l6U)][_s(h6R)][Number(x6U)][_s(X6R - 0)] / (Number(D6.cs) / (X2y - 0)));
+                            var O6U = Math.ceil(bam[_s(Q5y)][Number(l6U)][_s(h6R)][Number(x6U)]["tu"] / (Number(D6.cs) / (X2y - 0)));
                             var t6U = Math.ceil(bam[_s(Q5y << 224922912)][Number(l6U)][_s(h6R)][Number(x6U)][_s(n7y << 414904256)] / (Number(D6.cs) / +X2y));
                         } else {
                             var O6U = +D5y;
@@ -39213,7 +39213,7 @@ let cotgsubscribe;
                     var x6U = T6U;
                     if (bam[_s(Q5y | 5643)][Number(l6U)])
                         if (bam[_s(Q5y)][Number(l6U)][_s(h6R | 257)][Number(x6U)]) {
-                            var O6U = Math.ceil(bam[_s(Q5y )][Number(l6U)][_s(h6R << 1534066944)][Number(x6U)][_s(X6R)] / (Number(D6.cs) / +X2y));
+                            var O6U = Math.ceil(bam[_s(Q5y )][Number(l6U)][_s(h6R << 1534066944)][Number(x6U)]["tu"] / (Number(D6.cs) / +X2y));
                             var t6U = Math.ceil(bam[_s(Q5y)][Number(l6U)][_s(h6R)][Number(x6U)][_s(n7y * 1)] / (Number(D6.cs) / (X2y >> 771308288)));
                         } else {
                             var O6U = D5y * 1;
@@ -39331,7 +39331,7 @@ let cotgsubscribe;
                     $(_s('1080')).show();
                     var h6U = _s(m24 | 2064) + T6U + _s(v6y ) + bam[_s(Q5y)][l6U][_s(C5y)];
                     if (x6U <= +'10' && x6U != +'0') {
-                        var O6U = Math.ceil(bam[_s(Q5y)][Number(l6U)][_s(h6R)][Number(x6U)][_s(X6R )] / (Number(D6.cs) / (X2y * 1)));
+                        var O6U = Math.ceil(bam[_s(Q5y)][Number(l6U)][_s(h6R)][Number(x6U)]["tu"] / (Number(D6.cs) / (X2y * 1)));
                         var U6U = Q2(O6U);
                         var W6U = Math.floor(bam[_s(Q5y >> 346017376)][Number(l6U)][_s(h6R)][Number(x6U)][_s(m1p)]);
                         var C6U = Math.floor(bam[_s(Q5y >> 1360341568)][Number(l6U)][_s(h6R >> 793737344)][Number(x6U)][_s(B1p)]);
@@ -43859,7 +43859,7 @@ let cotgsubscribe;
             if (v0w == +1) {
                 var Q0w = $(_s(x24)).css(_s(2723));
                 var R9g = '1' * 1;
-                var P9g = Math.ceil(Number(bam[_s(Q5y)][Number(Y9g)][_s(h6R * 1)][Number(R9g)][_s(X6R >> 727944640)]) / (Number(D6.cs) / (X2y | 64)));
+                var P9g = Math.ceil(Number(bam[_s(Q5y)][Number(Y9g)][_s(h6R * 1)][Number(R9g)]["tu"]) / (Number(D6.cs) / (X2y | 64)));
                 if (P9g < Number(ppdt.mibt))
                     P9g = Number(ppdt.mibt);
                 var N9g = O2();
@@ -43950,7 +43950,7 @@ let cotgsubscribe;
                     if (y9g == T0w)
                         R9g = Number(D6.bq[p9g].elvl) + ('1' - 0);
                 }
-                var P9g = Math.ceil(Number(bam[_s(Q5y)][Number(Y9g)][_s(h6R << 941978272)][Number(R9g)][_s(X6R)]) / (Number(D6.cs) / +X2y));
+                var P9g = Math.ceil(Number(bam[_s(Q5y)][Number(Y9g)][_s(h6R << 941978272)][Number(R9g)]["tu"]) / (Number(D6.cs) / +X2y));
                 if (P9g < Number(ppdt.mibt))
                     P9g = Number(ppdt.mibt);
                 var N9g = O2();
@@ -46642,12 +46642,12 @@ let cotgsubscribe;
                         dragUp = '0' >> 398415296;
                         if (dragDown == dragUp || n2 == _s('1146')) {
                             if (j5w < +2) {
-                                var v5w = Math.ceil(Number(bam[_s(Q5y - 0)][Number(u5w)][_s(h6R - 0)][Number(I5w)][_s(X6R)]) / (Number(D6.cs) / +X2y));
+                                var v5w = Math.ceil(Number(bam[_s(Q5y - 0)][Number(u5w)][_s(h6R - 0)][Number(I5w)]["tu"]) / (Number(D6.cs) / +X2y));
                                 if (v5w < Number(ppdt.mibt))
                                     v5w = Number(ppdt.mibt);
                             }
                             if (j5w == '4' - 0) {
-                                var v5w = Math.ceil(Number(bam[_s(Q5y)][Number(u5w)][_s(h6R )][Number(I5w)][_s(X6R )]) / (Number(D6.cs) / (X2y )));
+                                var v5w = Math.ceil(Number(bam[_s(Q5y)][Number(u5w)][_s(h6R )][Number(I5w)]["tu"]) / (Number(D6.cs) / (X2y )));
                                 if (v5w < Number(ppdt.mibt))
                                     v5w = Number(ppdt.mibt);
                             }
@@ -46814,7 +46814,7 @@ let cotgsubscribe;
                                                 f5w = R5w;
                                     }
                                     var w5w = Number(f5w + +1);
-                                    var d5w = Math.ceil(bam[_s(Q5y * 1)][u5w][_s(h6R - 0)][w5w][_s(X6R >> 1397305888)] / (Number(D6.cs) / +X2y));
+                                    var d5w = Math.ceil(bam[_s(Q5y * 1)][u5w][_s(h6R - 0)][w5w]["tu"] / (Number(D6.cs) / +X2y));
                                     var W5w = Math.ceil(bam[_s(Q5y)][u5w][_s(h6R)][w5w][_s(n7y * 1)] / (Number(D6.cs) / +X2y));
                                     var C5w = '0' << 1984466048;
                                     if (x9 == (1 | 1))
@@ -46870,7 +46870,7 @@ let cotgsubscribe;
                                     if (!(A5w < z5w && o5w == '0' << 566555776))
                                         if (!(n5w < M5w && o5w == +0)) {
                                             var w5w = Number(I5w);
-                                            var d5w = Math.ceil(bam[_s(Q5y)][u5w][_s(h6R)][w5w][_s(X6R)] / (Number(D6.cs) / (X2y )));
+                                            var d5w = Math.ceil(bam[_s(Q5y)][u5w][_s(h6R)][w5w]["tu"] / (Number(D6.cs) / (X2y )));
                                             var W5w = Math.ceil(bam[_s(Q5y)][u5w][_s(h6R)][w5w][_s(n7y)] / (Number(D6.cs) / +X2y));
                                             var C5w = '0' << 1836347520;
                                             if (x9 == +1)
@@ -46929,7 +46929,7 @@ let cotgsubscribe;
                                     else if (u5w == +467 && w5w == +0)
                                         Y6(_s('6957' ));
                                     else {
-                                        var d5w = Math.ceil(bam[_s(Q5y )][u5w][_s(h6R)][I5w][_s(X6R << 536577120)] / (Number(D6.cs) / (X2y )));
+                                        var d5w = Math.ceil(bam[_s(Q5y )][u5w][_s(h6R)][I5w]["tu"] / (Number(D6.cs) / (X2y )));
                                         var W5w = Math.ceil(bam[_s(Q5y)][u5w][_s(h6R )][I5w][_s(n7y)] / (Number(D6.cs) / (X2y << 246351808)));
                                         v9(u5w, w5w, d5w, W5w, s5w);
                                         z5w = Number(z5w) / (3 >> 206695104);
@@ -47816,7 +47816,7 @@ let cotgsubscribe;
                         var M5D = D6[_s(Q3m)][A5D - ('1' - 0)][_s('5828' )] + +e2R;
                         var r5D = M5D + z5D;
                     }
-                    D6[_s(X6R)] = D6[_s(X6R << 1563705184)] + b5D;
+                    D6["tu"] = D6["tu"] + b5D;
                     const n5D = {
                         tid: Number(p5D),
                         ttype: Number(x5D),
@@ -48541,7 +48541,7 @@ let cotgsubscribe;
                 if ($(_s(C24)).is(_s(x5t))) {
                     const c3U = D6[_s(N1R << 395352640)][Number(d2)]['bid'];
                     const m3U = D6[_s(N1R )][Number(d2)]['bl'];
-                    const a3U = Math.ceil(bam[_s(Q5y)][c3U][_s(h6R | 2049)][m3U][_s(X6R << 1836304064)] / (Number(D6.cs) / +X2y));
+                    const a3U = Math.ceil(bam[_s(Q5y)][c3U][_s(h6R | 2049)][m3U]["tu"] / (Number(D6.cs) / +X2y));
                     const E3U = Math.ceil(bam[_s(Q5y * 1)][c3U][_s(h6R - 0)][m3U][_s(n7y )] / (Number(D6.cs) / +X2y));
                     v9(c3U, m3U, a3U, E3U, d2);
                     e3F(d2);
@@ -51138,7 +51138,7 @@ let cotgsubscribe;
             const L9g = $(_s(o04 - 0)).attr(_s(Z9y));
             if (L2(o9g) != +'0')
                 o9g = L2(o9g);
-            const X9g = bam[_s(Q5y)][Number(o9g)][_s(h6R)][+1][_s(X6R)];
+            const X9g = bam[_s(Q5y)][Number(o9g)][_s(h6R)][+1]["tu"];
             const z9g = bam[_s(Q5y)][Number(o9g)][_s(h6R)][+1][_s(n7y)];
             if (o9g == +r6y) {
                 C5F(1 );
@@ -53119,7 +53119,7 @@ let cotgsubscribe;
                     var q0D = D6[_s(Q3m - 0)][m0D - ('1' >> 530040544)][_s('5828' | 580)] + +e2R;
                     var a0D = q0D + F0D;
                 }
-                D6[_s(X6R * 1)] = D6[_s(X6R << 516914176)] + w5D;
+                D6["tu"] = D6["tu"] + w5D;
                 const e5D = {
                     tid: Number(H5D),
                     ttype: Number(y0D),

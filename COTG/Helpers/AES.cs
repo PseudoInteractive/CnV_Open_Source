@@ -313,7 +313,7 @@ namespace COTG
             for (var N6v = +0; N6v < 4; N6v++)
                 q6v[N6v + (4)] = (byte)((t2v >> N6v * (8)) & 0xff);
             var payloadLength = payload.Length;
-            var buffer = new byte[payloadLength * 2]; // this should be smaller
+            var buffer = new byte[payloadLength * 2+8]; // this should be smaller
 
             {
                 int put = 0;

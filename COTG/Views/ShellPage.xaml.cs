@@ -126,6 +126,7 @@ namespace COTG.Views
             //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
             //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
 
+      
             grid.Background = null;
 
             grid.Children.Add(webView);
@@ -150,7 +151,6 @@ namespace COTG.Views
             Grid.SetColumnSpan(canvas, 4);
             Canvas.SetZIndex(canvas, 11);
 
-    
 
             var splitter = new GridSplitter();
             grid.Children.Add(splitter);
@@ -544,5 +544,9 @@ namespace COTG.Views
         {
             Note.MarkDownLinkClicked(sender,e);
         }
+
+      
+
+       
     }
 }

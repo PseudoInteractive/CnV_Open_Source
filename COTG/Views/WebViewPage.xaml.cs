@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+
+using static COTG.Debug;
 
 namespace COTG.Views
 {
@@ -11,7 +14,8 @@ namespace COTG.Views
     {
         // TODO WTS: Set the URI of the page to show by default
         public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
-
+        public static WebViewPage instance;
+        public WebView WebView => webView;
         private Uri _source;
 
         public Uri Source
@@ -78,11 +82,28 @@ namespace COTG.Views
             set { Set(ref _failedMesageVisibility, value); }
         }
 
-        private void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        public string stringTable;
+        async private void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             IsLoading = false;
             OnPropertyChanged(nameof(IsBackEnabled));
             OnPropertyChanged(nameof(IsForwardEnabled));
+
+//            stringTable = await webView.InvokeScriptAsync("eval", new [] {
+// 	"let stringTable = []; "+
+//    "for (let i = 0; i < 1000; ++i) { "+
+//    "	let x = ''; "+
+//    "	try { "+
+//    "		x = o0FF.y5u(i) || x; "+
+//    "	} "+
+//"		catch (e) { "+
+//"		} "+
+//"		stringTable.push(x); "+
+//"	} "+
+//"	JSON.stringify(stringTable); "
+
+//            });
+//            Log(stringTable);
         }
 
         private void OnNavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
@@ -134,7 +155,53 @@ namespace COTG.Views
             Source = (DefaultUrl);
             InitializeComponent();
             IsLoading = true;
+            Assert(instance == null);
+            instance = this;
+			webView.ContentLoading += WebView_ContentLoading;
+			webView.ScriptNotify += WebView_ScriptNotify;
+			webView.DOMContentLoaded += WebView_DOMContentLoaded;
+
+			webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
+			webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
+			webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
+			webView.NewWindowRequested += WebView_NewWindowRequested;
         }
+
+		private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void WebView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void WebView_UnsafeContentWarningDisplaying(WebView sender, object args)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void WebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+		{
+//			throw new NotImplementedException();
+		}
+
+		private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void WebView_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
+		{
+            Log("loading");
+		}
+       
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -150,5 +217,13 @@ namespace COTG.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+
+		protected override void OnNavigatedFrom(NavigationEventArgs e)
+		{
+            Assert(instance == this);
+            instance = null;
+			base.OnNavigatedFrom(e);
+
+		}
+	}
 }
