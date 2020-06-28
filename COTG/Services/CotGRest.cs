@@ -172,7 +172,7 @@ namespace COTG.Services
         {
             // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
             //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
-            var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTime()},\"e\":\"World\"}}";
+            var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.ServerTime()},\"e\":\"World\"}}";
             var encoded = Aes.Encode(json, secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
@@ -467,7 +467,7 @@ namespace COTG.Services
                         minCarry = carry;
                     Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
-                    raids.Add(raid);
+                    raids.AddIfAbsent(raid);
                 }
                  city.raidCarry = (byte)minCarry;
                 city.raids = raids.ToArray();

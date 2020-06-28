@@ -70,17 +70,22 @@ namespace COTG
             public string s { get; set; }
             public string cookie { get; set; }
             public DateTime launchTime;
-            public long gameMSAtSTart;
-           
+            public long gameMSAtStart;
+            public TimeSpan gameTOffset;
+
         };
        
 
 
         public static JSVars jsVars;
 
-        public static long GameTime()
+        public static long GameTimeMs()
         {
-            return (long)((DateTime.Now - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtSTart;
+            return (long)((DateTime.UtcNow - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtStart;
+        }
+        public static DateTime ServerTime()
+        {
+            return (DateTime.UtcNow + jsVars.gameTOffset);
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="JSClient"/> class.
@@ -297,7 +302,7 @@ namespace COTG
             ppdt = JsonDocument.Parse(str);
             // extract cities
             {
-                var now = DateTime.Now;
+                var now = DateTime.UtcNow;
                 foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
@@ -518,14 +523,17 @@ namespace COTG
                                 jsVars.token = jso.GetString("token");
                                 var agent = jso.GetString("agent");
                                 httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
+                                jsVars.gameTOffset =TimeSpan.FromMilliseconds(jso.GetAsInt64("timeoffset"));
+                                Log($"TOffset {jsVars.gameTOffset}");
+                                Log(ServerTime().ToString());
                                 jsVars.ppss = jso.GetAsInt("ppss");
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
                                 jsVars.alliance = jso.GetString("alliance");
                                 jsVars.s = jso.GetString("s");
                                 cid = jso.GetAsInt("cid");
-                                jsVars.gameMSAtSTart = jso.GetAsInt64("time");
-                                jsVars.launchTime = DateTime.Now;
+                                jsVars.gameMSAtStart = jso.GetAsInt64("time");
+                                jsVars.launchTime = DateTime.UtcNow;
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
                                 ShellPage.clientSpan.X = jso.GetAsFloat("spanX");
                                 ShellPage.clientSpan.Y = jso.GetAsFloat("spanY");
@@ -551,7 +559,7 @@ namespace COTG
                                     city.notes = jso.GetString("notes");
                                     city.points = (ushort)jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
-                                    city.lastAccessed = DateTime.Now;
+                                    city.lastAccessed = DateTime.UtcNow;
                                     COTG.Views.MainPage.CityChange(city);
 
                                     Note.Show($"{city.name} {city.cid.ToCoordinateMD()}");

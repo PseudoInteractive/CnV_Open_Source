@@ -34,13 +34,16 @@ namespace COTG.Views
         {
             return new Vector2(x, y) * dxy;
         }
-        CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { DashStyle=CanvasDashStyle.Dash,
+        CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 4 },
             DashCap=CanvasCapStyle.Triangle,
             EndCap=CanvasCapStyle.Triangle,
             StartCap=CanvasCapStyle.Triangle};
         public CanvasAnimatedControl CreateCanvasControl()
         {
-            canvas = new CanvasAnimatedControl() { IsHitTestVisible = false };
+            canvas = new CanvasAnimatedControl() { IsHitTestVisible = false
+                //,TargetElapsedTime=TimeSpan.FromSeconds(1.0f/15.0f)
+                ,IsFixedTimeStep=false
+            };
             canvas.Draw += Canvas_Draw;
 
             canvas.Unloaded += Canvas_Unloaded;
@@ -85,22 +88,29 @@ namespace COTG.Views
         {
 
         }
-        const float lineThickness = 6.0f;
-        const float dashLength = (2 + 2) * lineThickness;
-        static int counter;
+        const float lineThickness = 8.0f;
+        const float rectSpanMin = 8.0f;
+        const float rectSpanMax = 20.0f;
+        const float dashLength = (1 + 2) * lineThickness;
+        static Vector2 shadowOffset = new Vector2(lineThickness*0.375f, lineThickness*0.375f);
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
-          
-            float animT = DateTime.Now.Millisecond*.001f;
+
+            var serverNow = JSClient.ServerTime();
+            float animT = ((uint)Environment.TickCount%3000)*(1.0f/3000);
+            var animTLoop = animT.Wave();
+            var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
          //   ShellPage.T("Draw");
-            if(shadowBrush==null)
+            if (shadowBrush==null)
             {
              raidBrush =new CanvasSolidColorBrush(canvas,Colors.BlueViolet);
             shadowBrush =new CanvasSolidColorBrush(canvas,Colors.Black) { Opacity=0.5f };
 
             }
-            defaultStrokeStyle.DashOffset = animT* dashLength;
+            defaultStrokeStyle.DashOffset = (1-animT)* dashLength;
+            
             var ds = args.DrawingSession;
+            ds.Antialiasing = CanvasAntialiasing.Antialiased;
             var scale = ShellPage.canvas.ConvertPixelsToDips(1);
             ds.Transform = new Matrix3x2( scale, 0, 0, scale, -scale * ShellPage.cameraC.X, -scale * ShellPage.cameraC.Y );
 
@@ -113,10 +123,19 @@ namespace COTG.Views
             {
                 var c = city.Value.cid.ToWorldC() ;
               
-                ds.DrawCircle(c, 28+32*animT, Colors.Magenta);
+                ds.DrawCircle(c, 28+32* animTLoop, raidBrush);
                 foreach(var raid in city.Value.raids)
                 {
-                    ds.DrawLine(c, raid.target.ToWorldC(), raidBrush,lineThickness, defaultStrokeStyle);
+                    var ct = raid.target.ToWorldC();
+                    (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
+                    var progress = (1.0f-((float)(raid.arrival - serverNow).TotalHours) * 0.5f).Max(0.125f); // we don't know the duration so we approximate with 2 hours
+                    var mid = progress.Lerp(c0, c1);
+                    ds.DrawLine(c0 , c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                    ds.FillRectangle(mid.X - rectSpan * 0.5f, mid.Y - rectSpan * 0.5f, rectSpan, rectSpan, shadowBrush);
+                    var midS = mid - shadowOffset;
+                    ds.DrawLine(c0 - shadowOffset, midS, raidBrush,lineThickness, defaultStrokeStyle);
+                    ds.FillRectangle(midS.X-rectSpan*0.5f , midS.Y - rectSpan * 0.5f, rectSpan, rectSpan, raidBrush);
+
                 }
             }
 

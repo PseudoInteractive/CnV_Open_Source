@@ -43764,7 +43764,7 @@ var cotgsubscribe = amplify;
       var b76 = _s('1734' >> 1502077568);
       var S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
       N6();
-      var J76 = $.post(q6 + _s(+'6323'), { a: S76 });
+      var J76 = $.post(q6 + _s(+'6323'), { a: S76 }); // "rMp.php"
       F6();
       J76.done(function(Y76) {
         var r5m = '3023';
@@ -43788,14 +43788,14 @@ var cotgsubscribe = amplify;
             var U76 = JSON
               .parse(Y76);
             for (var P76 in U76) {
-              b = P76;
+              b = P76; // 306?
               if (U76[P76]) {
                 N76 = U76[P76];
                 if (N76 != !!0)
-                  for (var m76 in N76) {
+                  for (var m76 in N76) {  // for each tile in array
                     f76 = U76[P76][m76];
                     if (f76 && f76 != "") {
-                      var D76 = f76.indexOf("-" , '0' >> 1927231520);
+                      var D76 = f76.indexOf("-" , '0' >> 1927231520); // "1415-560414-KittyKat-City5",
                       var
                         y76 = f76.indexOf("-" , D76 + "1" * 1);
                       var c76 = f76.indexOf("-" ,
@@ -46966,14 +46966,14 @@ var cotgsubscribe = amplify;
     function A2F() {
       function S56() {
         var h56 = new Date();
-        c6.load.tilemap(_s(K9m << 218181696), _s("652" | 8) + h56, null, Phaser.Tilemap.TILED_JSON);
-        c6.load.image(_s("4798" ^ 0), _s(+'3054'));
-        c6.load.image(_s('1673' & 2147483647), _s(+'3495'));
+          c6.load.tilemap("regional", "/maps/newmap/rmap6.json?a=" + h56, null, Phaser.Tilemap.TILED_JSON);
+          c6.load.image("lnd", "/maps/newmap/land.jpg");
+          c6.load.image("wter", "/maps/newmap/watertiles.jpg" );
         E6k.R6();
-        c6.load.image(_s(+'4435'), _s(+'1508'));
-        c6.load.image(_s("4417" & 2147483647), _s(+'4443'));
-        c6.load.image(_s('2845' ^ 0), _s("3392" | 3392));
-        c6.load.image(_s('6386' - 0), _s(+"4177") + h56);
+          c6.load.image("terrain", "/maps/newmap/terrainfeatures.png");
+          c6.load.image("cties", "/maps/newmap/cities-only.png");
+          c6.load.image("nmbers", "/maps/newmap/numberedthings.png");
+          c6.load.image("names", "/maps/newmap/names2.png?a=" + h56);
       }
         c6 = new Phaser.Game(M8.clientWidth, M8.clientHeight, Phaser.CANVAS, E6k
         .o55(V04 - 0), { update: f2F, render: K2F, create: J56, preload: S56 });
@@ -46983,15 +46983,15 @@ var cotgsubscribe = amplify;
         E6k.R6();
         setTimeout(function() {
           c6.stage.backgroundColor = _s(+"4421");
-          k2 = c6.add.tilemap(_s(+K9m));
-          k2.addTilesetImage(_s(+'5263'), _s('1673' & 2147483647));
-          k2.addTilesetImage(_s('1012' | 884), _s("4435" | 337));
-          k2.addTilesetImage(_s(+'1338'), _s(+'4798'));
-          k2.addTilesetImage("city", _s("4417" | 4160));
-          k2.addTilesetImage(_s(+"2809"), _s("2845" >> 545227424));
-          k2.addTilesetImage(_s(+'3893'), _s(+"6386"));
-          G2 = k2.createLayer(_s('1338' << 53664352));
-          j7F = k2.createLayer(_s("5263" ^ 0));
+          k2 = c6.add.tilemap("regional");
+          k2.addTilesetImage("water", "wter");
+            k2.addTilesetImage("terrainfeatures", "terrain");
+            k2.addTilesetImage("land", "lnd");
+            k2.addTilesetImage("city", "cties");
+            k2.addTilesetImage("toplevel", "nmbers");
+            k2.addTilesetImage("names2", "names");
+          G2 = k2.createLayer("land");
+          j7F = k2.createLayer("water");
           s2 = k2.createLayer(_s("1417" >> 1135650688));
           u2 = k2.createLayer(_s(+'5321'));
           e8 = k2.createLayer(_s('6555' - 0));
@@ -47988,7 +47988,7 @@ var cotgsubscribe = amplify;
                   type: _s(+"4311"),
                   info: { time: z16, active: "1" | 0, name: k36 }
                 };
-                a2(_s(K9m & 2147483647), Y46);
+                a2("regional", Y46);
                 $(_s('5196' ^ 0))
                   .html(_s(+"6507") + z16);
                 $(_s("4732" >> 2088708320))
@@ -48034,7 +48034,7 @@ var cotgsubscribe = amplify;
                     active: +'0'
                   }
                 };
-                a2(_s(+K9m), Y46);
+                a2("regional", Y46);
               }
               $(_s(+"3203"))
                 .attr(_s(+'334'), r46 + _s(+A6y) + A46);
@@ -48076,7 +48076,7 @@ var cotgsubscribe = amplify;
                 type: _s(+'4599'),
                 info: { active: G36 }
               };
-              a2(_s(K9m | 2090), Y46);
+              a2("regional", Y46);
               if (G36 == '1' >> 752430464) {
                 var I36 = _s(+w9y) + r46 + E6k
                   .o55(+A6y) + A46 + _s(+"1200");
@@ -48160,7 +48160,7 @@ var cotgsubscribe = amplify;
                   water: E46
                 }
               };
-              a2(_s(+K9m), Y46);
+              a2("regional", Y46);
               if (v16 == ("1" ^ 0))
                 if (p46 == +'0') {
                   D46 = _s(+'5419');
@@ -48457,7 +48457,7 @@ var cotgsubscribe = amplify;
                   blessed: i16
                 }
               };
-              a2(_s(+K9m), Y46);
+              a2("regional", Y46);
               var p16 = Q36.substring(+'0', +"1");
               var Q36 = Q36.substring('1' & 2147483647,
                 B46.length);
@@ -48880,7 +48880,7 @@ var cotgsubscribe = amplify;
                   .S55('4410' << 83520960),
                 info: { lvl: f36, name: p36, active: t16 }
               };
-              a2(_s(K9m | 1032), Y46);
+              a2("regional", Y46);
               console.log(_s("6061" - 0) + f36 + _s('6409' ^ 0) + h16 + _s('2112' * 1) + c46 + E6k
                 .S55('4446' | 346) + p36 + _s(+"3196") + A16 + _s("6537" - 0) + O16);
               $(_s('6093' << 135849568))
@@ -49067,7 +49067,7 @@ var cotgsubscribe = amplify;
                   .S55(+v9R),
                 info: { prog: G16, lvl: u16, type: z36 }
               };
-              a2(_s(+K9m), Y46);
+              a2("regional", Y46);
               var R46 = I9(Number(cid), Number(n46));
               var j16 = +I2y;
               if (ppdt[_s(
@@ -66407,7 +66407,10 @@ var cotgsubscribe = amplify;
     }
 
     var Z1FTimeout;
-
+      var _cameraX = 0;
+      var _cameraY = 0;
+      var _cid = 0;
+      var _view = 0;
  
     function Z1F() {
       var k71 = +"0";
@@ -66436,10 +66439,7 @@ var cotgsubscribe = amplify;
           });
           F6();
           a51.done(function(e71) {
-              var _cameraX = 0;
-              var _cameraY = 0;
-              var _cid = 0;
-              var _view = 0;
+              
               let __view = citrender * 1 + regrender * 2 + worldrender * 4;
               if (_cameraX !== c6.camera.x || _cameraY !== c6.camera.y || _cid !== cid || __view !== _view) {
                   _view = __view;

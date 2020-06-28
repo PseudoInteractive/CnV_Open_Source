@@ -84,7 +84,7 @@ namespace COTG.Services
         {
             // TODO WTS: Call this method to Pin a Secondary Tile from a page.
             // You also must implement the navigation to this specific page in the OnLaunched event handler on App.xaml.cs
-            var tile = new SecondaryTile(DateTime.Now.Ticks.ToString());
+            var tile = new SecondaryTile(DateTime.UtcNow.Ticks.ToString());
             tile.Arguments = pageName;
             tile.DisplayName = pageName;
             tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.scale-200.png");

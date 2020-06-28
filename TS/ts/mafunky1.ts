@@ -535,6 +535,7 @@ function SendCreds()
 			spanY: M8.clientHeight,
 			left: M8.clientLeft,
 			top: M8.clientTop,
+			timeoffset: (ServerDate.getTime() - Date.now()),
 			agent: navigator.userAgent
 		};
 

@@ -214,7 +214,9 @@
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AES.cs" />
+    <Compile Include="Helpers\AMath.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\JSONHelper.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Models\CityTapCommand.cs" />

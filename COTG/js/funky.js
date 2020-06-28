@@ -2277,6 +2277,7 @@ function SendCreds() {
             spanY: M8.clientHeight,
             left: M8.clientLeft,
             top: M8.clientTop,
+            timeoffset: (ServerDate.getTime() - Date.now()),
             agent: navigator.userAgent
         };
         let wrapper = { jsvars: creds };
@@ -2316,6 +2317,19 @@ function GetDate(jq) {
 //		setTimeout(() => BuildStringTable(i), 100);
 //	}
 //}
+//(function () {
+//	let stringTable = [];
+//	for (let i = 0; i < 1000; ++i) {
+//		let x = '';
+//		try {
+//			x = o0FF.y5u(i) || x;
+//		}
+//		catch (e) {
+//		}
+//		stringTable.push(x);
+//	}
+//	return JSON.stringify(stringTable);
+//})();
 function avactor() {
     //	var E3y="5894";
     var q7y = 15;
