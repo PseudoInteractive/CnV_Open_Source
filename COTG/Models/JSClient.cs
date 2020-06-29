@@ -39,11 +39,11 @@ namespace COTG
     public class JSClient
     {
 
-          [Flags] public enum ViewMode  
+          public enum ViewMode  
             {
-            city = 1,
-            region=2,
-            world=4
+            city = 0,
+            region=1,
+            world=2
             };
 
         public static ViewMode viewMode;
@@ -596,9 +596,10 @@ namespace COTG
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
                                 viewMode = (ViewMode)jso.GetInt("v");
-                                ShellPage.cameraC.X = jso.GetFloat("x");
-                                ShellPage.cameraC.Y = jso.GetFloat("y");
-                                ShellPage.T(ShellPage.cameraC.ToString() + " v:" + viewMode);
+                                ShellPage.cameraC.X = jso.GetAsFloat("x");
+                                ShellPage.cameraC.Y = jso.GetAsFloat("y");
+                                ShellPage.cameraZoom = jso.GetAsFloat("z");
+                                ShellPage.T(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom +" v:" + viewMode);
                                // if((viewMode & ViewMode.region)!=0)
                                     ShellPage.canvas?.Invalidate();
                                 break;

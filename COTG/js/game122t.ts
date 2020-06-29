@@ -7092,8 +7092,6 @@ var __c =
   
 };
 var M8 = document.getElementById("mainMapDiv"); // region canvas
-
-/** @type {Phaser.Game} */
 var c6;// Phaser
 
 I0rr(X0rr());
@@ -13757,7 +13755,7 @@ var cotgsubscribe = amplify;
 
     function t8F(W0T, i0T) {
       var M0T = $("#city_map")
-          .panzoom("getMatrix");
+        .panzoom(_s(+Q1R));
       var G0T = W0T * (+"1" / M0T[+'0']);
       var C0T = i0T * (("1" - 0) / M0T['3' >>
         77007616]);
@@ -17004,8 +17002,8 @@ var cotgsubscribe = amplify;
           var c0g = D6.tt - D6.tu;
           $(_s(+x0p))
             .text(p6(c0g));
-        //  y9 = M8.clientWidth;
-        //  K9 = M8.clientHeight;
+       //   y9 = M8.clientWidth;
+      //    K9 = M8.clientHeight;
           i4F();
           if (D6[_s(+"2091")] == "0" * 1) {
             $(_s(g0p | 256))
@@ -17242,7 +17240,7 @@ var cotgsubscribe = amplify;
       c6.lockRender = ![];
       E6k.y6();
       c6.time.desiredFps = j7y ^ 0;
-      c6.fpsMax = +j7y;
+      // c6.fpsMax = +j7y;
     }
 
     function Z4V() {
@@ -19886,7 +19884,7 @@ var cotgsubscribe = amplify;
       y8D = Math.floor(y8D);
       D8D = Math.floor(D8D);
       var p8D = $("#city_map")
-        .panzoom("getMatrix");
+        .panzoom(_s(Q1R - 0));
       var Y8D = document.getElementById("city_map");
       var q8D = Y8D
         .clientWidth;
@@ -19903,7 +19901,7 @@ var cotgsubscribe = amplify;
           .panzoom("pan", e9D, F8D);
       E6k.y6();
       p8D = $("#city_map")
-          .panzoom("getMatrix");
+        .panzoom(_s(+Q1R));
     }
 
     function E8(Q5T, T5T) {
@@ -21156,7 +21154,7 @@ var cotgsubscribe = amplify;
       if (Q8 == ('0' | 0))
         if (T0F) {
           Q8 = '1' ^ 0;
-            $("#worldcanv")
+          $(_s("5215" << 976151936))
             .remove();
           var G8D;
           var Q2D;
@@ -21226,7 +21224,7 @@ var cotgsubscribe = amplify;
             .height();
           var U2D = P2D - +'2' * this.borderSize;
           var R2D = P2D - +'2' * this.borderSize;
-          $("#worldcanv")
+          $(_s('5215' >> 526214560))
             .addClass(_s("4164" | 4100));
           var S2D = this.canvas['0' >> 912732032].getContext(_s("5937" >>
             1020170272));
@@ -22414,9 +22412,9 @@ var cotgsubscribe = amplify;
           _viewMode = viewModeRegion;
         regrender = +"1";
         citrender = '0' ^ 0;
-        c6.time.advancedTiming = !!1;
+        // c6.time.advancedTiming = !!1;
         c6.time.desiredFps = 5;
-        c6.fpsMax = 5;
+        // c6.fpsMax = 5;
         c6.lockRender = !{};
         c6.raf.start();
         var H6D = document.getElementById("cvs");
@@ -23633,7 +23631,7 @@ var cotgsubscribe = amplify;
               regrender = +"0";
               worldrender = '0' * 1;
               citrender = '1' | 0;
-              c6.time.advancedTiming = !!1;
+              // c6.time.advancedTiming = !!1;
               c6.time.desiredFps = +'1';
               // c6.time.fpsMax = "1" << 1316140288;
               c6.raf.stop();
@@ -41739,9 +41737,9 @@ var cotgsubscribe = amplify;
         _viewMode = viewModeRegion;
       worldrender = '0' & 2147483647;
       citrender = +"0";
-      c6.time.advancedTiming = !![];
+      // c6.time.advancedTiming = !![];
       c6.time.desiredFps = +q7y;
-      c6.fpsMax = q7y ^ 0;
+      // c6.fpsMax = q7y ^ 0;
       Z9V = Number(Z9V);
       var g9V = Math.round(Z9V % +R5y);
       var U9V = Math.round((Z9V - g9V) / +R5y);
@@ -47050,9 +47048,9 @@ var cotgsubscribe = amplify;
             F1F();
           }, z9p);
           c6.paused = !0;
-          c6.time.advancedTiming = !![];
+          // c6.time.advancedTiming = !![];
           c6.time.desiredFps = '1' >> 1018505664;
-          c6.fpsMax = '1' >> 1337977440;
+          // c6.fpsMax = '1' >> 1337977440;
           regrender = '0' * 1;
           setTimeout(function() { r0F(); }, M1R - 0);
         }, '2200' >> 1001041248);
@@ -47241,9 +47239,9 @@ var cotgsubscribe = amplify;
           worldrender = +"0";
           citrender = "0" - 0;
           
-          c6.time.advancedTiming = !!"1";
+          // c6.time.advancedTiming = !!"1";
           c6.time.desiredFps = 5;
-          c6.time.fpsMax = 5;
+          // c6.time.fpsMax = 5;
           c6.raf.start();
           $("#wmapcoords")
             .css("display", "none");
@@ -47377,8 +47375,6 @@ var cotgsubscribe = amplify;
       X0V();
       k6F();
     }
-    var t0g;
-    var M0g;
 
     function p2F() {
       E6k.y6();
@@ -47407,9 +47403,9 @@ var cotgsubscribe = amplify;
           _viewMode = viewModeRegion;
           worldrender = +'0';
           citrender = '0' ^ 0;
-          c6.time.advancedTiming = !!1;
+          // c6.time.advancedTiming = !!1;
           c6.time.desiredFps = "5" ^ 0;
-          c6.time.fpsMax = +'5';
+          // c6.time.fpsMax = +'5';
           c6.raf.start();
           P9();
           $(_s(+S6p))
@@ -47449,9 +47445,9 @@ var cotgsubscribe = amplify;
           _viewMode = viewModeRegion;
         worldrender = +"0";
         citrender = '0' >> 1481842880;
-        c6.time.advancedTiming = !![];
+        // c6.time.advancedTiming = !![];
         c6.time.desiredFps = "5" & 2147483647;
-        c6.time.fpsMax = +"5";
+        // c6.time.fpsMax = +"5";
         c6.raf.start();
         P9();
         $(_s(+S6p))
@@ -47492,9 +47488,9 @@ var cotgsubscribe = amplify;
         E6k.R6();
         worldrender = +"0";
         citrender = +'0';
-        c6.time.advancedTiming = !"";
+        // c6.time.advancedTiming = !"";
         c6.time.desiredFps = '5' - 0;
-        c6.time.fpsMax = +"5";
+        // c6.time.fpsMax = +"5";
         c6.raf.start();
         P9();
         $(_s(+S6p))
@@ -47511,9 +47507,9 @@ var cotgsubscribe = amplify;
           .getElementById("city_map");
         if (o0g.style.display != "none") {
           L0g = +"1";
-          M0g =
+          var M0g =
           document.getElementById('worldcanv');
-          t0g = M0g.getBoundingClientRect();
+          var t0g = M0g.getBoundingClientRect();
         }
         G0g.style
           .display = "block";
@@ -47550,11 +47546,12 @@ var cotgsubscribe = amplify;
             c6.step();
           }
         } else {
-            var z0g = m5F(window.innerWidth * 0.5 - t0g.left, window.innerHeight * 0.5  - t0g.top);
-          var d0g = (z0g.x / (m6p * 1));
-          var C0g = (z0g.y / (m6p - 0));
-          c6.camera.x = d0g * 64 - Number(window.innerWidth) / (2);
-          c6.camera.y = C0g * 64 - (Number(window.innerHeight) / (2) );
+          var z0g = m5F(+"881" - t0g.left, ('334' << 1464709664) - t0g.top);
+          var d0g = Math
+            .floor(z0g.x / (m6p * 1));
+          var C0g = Math.floor(z0g.y / (m6p - 0));
+          c6.camera.x = d0g * +64 - Number(window.innerWidth) / (t1m * 1);
+          c6.camera.y = C0g * +64 - (Number(window.innerHeight) / ('2' - 0) - +h8y);
         }
       });
     $("#worldButton")
@@ -47565,9 +47562,9 @@ var cotgsubscribe = amplify;
         worldrender = +"1";
           _viewMode = viewModeWorld;
         citrender = "0" & 2147483647;
-        c6.time.advancedTiming = !!1;
+        // c6.time.advancedTiming = !!1;
         c6.time.desiredFps = 10;
-        c6.time.fpsMax = +"1";
+        // c6.time.fpsMax = +"1";
         c6.raf.stop();
         var b0g = +'0';
         var J0g = document.getElementById("cvs");
@@ -47632,9 +47629,9 @@ var cotgsubscribe = amplify;
         E6k.R6();
         citrender = '1' >> 1569667136;
           _viewMode = viewModeCity;
-        c6.time.advancedTiming = !!{};
+        // c6.time.advancedTiming = !!{};
         c6.time.desiredFps = "1" - 0;
-        c6.time.fpsMax = +'1';
+        // c6.time.fpsMax = +'1';
         c6.raf.stop();
         P9();
         $(_s(S6p | 1360))
@@ -51189,7 +51186,7 @@ var cotgsubscribe = amplify;
 
     function m5F(X0T, z0T) {
       var t0T = $("#content")
-          .panzoom("getMatrix");
+        .panzoom(_s(+Q1R));
       var o0T = X0T * (+'1' / t0T['0' ^ 0]);
       var L0T = z0T * (+'1' / t0T[+"3"]);
       E6k.y6();
@@ -56235,7 +56232,7 @@ var cotgsubscribe = amplify;
       c6.paused = !!"1";
       c6.lockRender = !"";
       c6.time.desiredFps = +"1";
-      c6.fpsMax = '1' - 0;
+      // c6.fpsMax = '1' - 0;
     }
 
     function e0V() {
@@ -57726,7 +57723,7 @@ var cotgsubscribe = amplify;
         Z8D = Math.floor(Z8D);
         U8D = Math.floor(U8D);
         var g8D = $("#content")
-            .panzoom("getMatrix");
+          .panzoom(_s(+Q1R));
         var B8D = Z8D * (m6p - 0) / (+'1' / g8D['0' | 0]) * -("1" * 1) + ("864" >>
           1177972608) + (g8D['0' & 2147483647] - +"1") * +j7y * ('126.65' * 1);
         var R8D = U8D * (m6p * 1) / (+"1" / g8D[
@@ -58895,7 +58892,7 @@ var cotgsubscribe = amplify;
 
     function x1F() {
       var U2g = $("#city_map")
-          .panzoom("getMatrix");
+        .panzoom(_s(+Q1R));
       var M2g = window.event || arguments.callee.caller.arguments[+"0"];
       $(_s("6938" << 271188576))
         .blur();
@@ -60250,9 +60247,9 @@ var cotgsubscribe = amplify;
           .val(ppdt.wmo[h8y ^ 0]);
       }
     }
-    var m0F = 255;
-    var j5F = 225;
-    var F9F = 1;
+    var m0F = P4p | 67;
+    var j5F = '225' - 0;
+    var F9F = "1" ^ 0;
 
     function N5V(c0D) {
       E6k.y6();
@@ -60469,9 +60466,9 @@ var cotgsubscribe = amplify;
             _viewMode = viewModeRegion;
           regrender = '1' & 2147483647;
           citrender = +'0';
-          c6.time.advancedTiming = !0;
+          // c6.time.advancedTiming = !0;
           c6.time.desiredFps = +'5';
-          c6.fpsMax = '5' ^ 0;
+          // c6.fpsMax = '5' ^ 0;
           c6.lockRender = ![];
           c6.raf.start();
           var D1D = document.getElementById("cvs");
@@ -61555,9 +61552,9 @@ var cotgsubscribe = amplify;
       .ready(function() {
         E6k.y6();
         var Y9D = $("#content")
-            .panzoom({ maxScale: 64 / 4.22166666666667 });
+          .panzoom({ maxScale: j2y - 0 });
         $("#content")
-          .panzoom("zoom", 2.8);
+          .panzoom("zoom", +'2.8');
         Y9D.parent()
           .on(_s(+'3159'), function(N9D) {
             N9D.preventDefault();
@@ -61569,7 +61566,7 @@ var cotgsubscribe = amplify;
             Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
             E6k.y6();
             var m9D = $("#content")
-                .panzoom("getMatrix");
+              .panzoom(_s(+Q1R));
             var F9D = Number(m9D[+"3"]) * +X2y;
             $(_s('1593' >> 1154537792))
               .slider(_s(+Q7y), _s(+a4R), F9D);
@@ -61584,7 +61581,7 @@ var cotgsubscribe = amplify;
               E6k.R6();
               G8F(a9D.value);
             },
-              max: 64/4.22166666666667*100
+            max: +'1100'
           });
         $(_s('5058' >> 660048960))
           .slider({
@@ -66420,9 +66417,6 @@ var cotgsubscribe = amplify;
         .remove();
     }
 
-    var gainx = 2;
-    var gainy = 2;
-
     var Z1FTimeout;
       var _cameraX = 0;
       var _cameraY = 0;
@@ -66463,38 +66457,24 @@ var cotgsubscribe = amplify;
               
               let _x = c6.camera.x;
               let _y = c6.camera.y;
-              let __zoom = 64 / 4.22166666666667;
-;
+              let __zoom = 1;
               if(_viewMode === viewModeWorld)
 			  {
-                  let matrix = $("#content").panzoom("getMatrix");
+                  var pzo = $("#content").panzoom;
 
-               //   _x = +matrix[4]+36000;
-              //    _y = +matrix[5]+36000;
-                  M0g =
-                      document.getElementById('worldcanv');
-                  t0g = M0g.getBoundingClientRect();
-                  var r1D = document.getElementById("mainMapDiv");
-                  var P1D = r1D.clientWidth;
-                  var B1D =
-                      r1D.clientHeight;
-                 
-                  let z0g = m5F(M0g.width * 0.5 - t0g.left, M0g.height * 0.5 - t0g.top);
-                  let d0g = (z0g.x / (+m6p * 1));
-                  let C0g = (z0g.y / (+m6p - 0));
-                  _x = d0g * 64 - M0g.width/ (gainx);
-                  _y = C0g * 64 - M0g.height / (gainy) ;
-
-                  __zoom = +matrix[0];
+                  let xy = pzo.getPan();
+                  _x = xy.x;
+                  _y = xy.z;
+                  __zoom = pzo.getZoom();
 			  }
               
               if (_cameraX !== _x || _cameraY !== _y || _cid !== cid ||_viewMode !== _viewModeCache || _zoom != __zoom ) {
-                  _viewModeCache= _viewMode;
+                  _viewMode = _viewModeCache;
                   _cid = cid;
                   _zoom = __zoom;
-                  _cameraX = _x;
-                  _cameraY = _y;
-                  const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z:__zoom } };
+                  _cameraX = c6.camera.x;
+                  _cameraY = c6.camera.y;
+                  const wrapper = { c: { c: cid, x: c6.camera.x, y: c6.camera.y, v: _viewMode, z:__zoom } };
                   window['external']['notify'](JSON.stringify(wrapper));
               }
               setTimeout( ()=>{
@@ -68060,7 +68040,7 @@ var cotgsubscribe = amplify;
             focal: n5g
           });
           var Z5g = $("#city_map")
-              .panzoom("getMatrix");
+            .panzoom(_s(+Q1R));
           var K5g = Number(Z5g["3" - 0]) / +"1.6" * ("160" & 2147483647);
           localStorage.setItem(_s('92' | 28), K5g);
           $(_s('5058' ^ 0))

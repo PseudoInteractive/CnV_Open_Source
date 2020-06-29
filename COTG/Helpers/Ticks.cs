@@ -11,7 +11,7 @@ namespace COTG.Helpers
        
         public static int MS()
         {
-            return  (int)(((DateTime.UtcNow.Ticks/10000)%1000000));
+            return  (int)(((Environment.TickCount)%100000));
         }
         public static string MSS()
         {

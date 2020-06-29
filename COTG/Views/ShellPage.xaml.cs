@@ -397,6 +397,7 @@ namespace COTG.Views
         
 
         static DateTime flyoutCreatedTime;
+
         private void ShowBuildings(object sender, RoutedEventArgs e)
         {
             try

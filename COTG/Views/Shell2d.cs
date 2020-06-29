@@ -24,6 +24,7 @@ namespace COTG.Views
         public static Vector2 clientSpan;
         public static Vector2 clientTL;
         public static Vector2 cameraC;
+        public static float cameraZoom;
 
         static CanvasSolidColorBrush  raidBrush,shadowBrush;
 
@@ -104,7 +105,7 @@ namespace COTG.Views
             if (shadowBrush==null)
             {
              raidBrush =new CanvasSolidColorBrush(canvas,Colors.BlueViolet);
-            shadowBrush =new CanvasSolidColorBrush(canvas,Colors.Black) { Opacity=0.5f };
+             shadowBrush =new CanvasSolidColorBrush(canvas,Colors.Black) { Opacity=0.5f };
 
             }
             defaultStrokeStyle.DashOffset = (1-animT)* dashLength;
@@ -112,7 +113,8 @@ namespace COTG.Views
             var ds = args.DrawingSession;
             ds.Antialiasing = CanvasAntialiasing.Antialiased;
             var scale = ShellPage.canvas.ConvertPixelsToDips(1);
-            ds.Transform = new Matrix3x2( scale, 0, 0, scale, -scale * ShellPage.cameraC.X, -scale * ShellPage.cameraC.Y );
+            var _gain = scale / (cameraZoom / (64.0f/ 4.22166666666667f) );
+            ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
 
  //           dxy.X = (float)sender.Width;
 //            dxy.Y = (float)sender.ActualHeight;

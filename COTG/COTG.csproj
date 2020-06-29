@@ -97,7 +97,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
@@ -187,7 +187,10 @@
     <PRIResource Include="Strings\en-us\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="JS\*.js" />
+    <EmbeddedResource Include="JS\funky.js" />
+    <EmbeddedResource Include="JS\game122.js" />
+    <EmbeddedResource Include="JS\J0EE.js" />
+    <EmbeddedResource Include="JS\jquery.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
@@ -567,6 +570,14 @@
       <Project>{7105B740-FB9F-43A6-ACF3-42A421DB81B0}</Project>
       <Name>COTG.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="JS\p2.d.ts" />
+    <None Include="JS\phaser.comments.d.ts" />
+    <None Include="JS\pixi.comments.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="JS\game122t.ts" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
