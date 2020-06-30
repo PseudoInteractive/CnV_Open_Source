@@ -91,5 +91,5 @@
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tk:GridSplitter Grid.Row="1" Height="13" VerticalAlignment="Top"/>
-	</Grid>
+    </Grid>
 </Page>

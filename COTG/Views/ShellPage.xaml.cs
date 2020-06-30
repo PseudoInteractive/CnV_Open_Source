@@ -151,6 +151,14 @@ namespace COTG.Views
             Grid.SetColumnSpan(canvas, 4);
             Canvas.SetZIndex(canvas, 11);
 
+            var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
+
+            grid.Children.Add(img);
+
+            Grid.SetRowSpan(img, 4);
+            Grid.SetColumnSpan(img, 4);
+            Canvas.SetZIndex(img, 12);
+
 
             var splitter = new GridSplitter();
             grid.Children.Add(splitter);

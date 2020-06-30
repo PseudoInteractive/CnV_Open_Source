@@ -45,9 +45,12 @@ namespace COTG.Game
             public byte level;
             public ushort x;
             public ushort y;
- 
 
-        }
+			public override string ToString()
+			{
+				return $"{{{x}:{y},level:{level}}}";
+			}
+		}
         public Boss[] bosses;
         public struct City
         {
@@ -65,8 +68,11 @@ namespace COTG.Game
 
             };
 
-
-        }
+			public override string ToString()
+			{
+				return $"{{{x}:{y},pid:{playerId},type:{type}}}";
+			}
+		}
         public City[] cities;
 
         static ulong AsNumber(string s) => ulong.Parse(s);
@@ -136,7 +142,7 @@ namespace COTG.Game
                     var digitCount = _t.SubStrAsInt(10, 1);
                     var pid = (int)_t.SubStrAsInt(11, (int)digitCount);
                     var c=(new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, type = _t.SubStrAsByte(3, 1) });
-                    if (pid == JSClient.jsVars.pid || rand.Next(32) == 0)
+                    if (pid == JSClient.jsVars.pid )
                     {
                         LogJS(c);
                         Log(_t);

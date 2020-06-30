@@ -487,6 +487,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\world.png" />
     <Content Include="images\barracks.png" />
     <Content Include="images\blacksmith.png" />
     <Content Include="images\castle.png" />

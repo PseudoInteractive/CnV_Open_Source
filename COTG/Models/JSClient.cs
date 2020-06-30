@@ -47,6 +47,10 @@ namespace COTG
             };
 
         public static ViewMode viewMode;
+        public static bool IsWorldView()	=> viewMode == ViewMode.world;
+        public static bool IsCityView() => viewMode == ViewMode.city;
+        public static bool IsRegionView() => viewMode == ViewMode.region;
+
         public static JsonDocument ppdt;
         public static int cid; // cityId
         public static JSClient instance = new JSClient();
@@ -596,9 +600,10 @@ namespace COTG
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
                                 viewMode = (ViewMode)jso.GetInt("v");
-                                ShellPage.cameraC.X = jso.GetAsFloat("x");
-                                ShellPage.cameraC.Y = jso.GetAsFloat("y");
                                 ShellPage.cameraZoom = jso.GetAsFloat("z");
+                                ShellPage.cameraC.X = jso.GetAsFloat("x") / ShellPage.cameraZoom;
+                                ShellPage.cameraC.Y = jso.GetAsFloat("y")/ShellPage.cameraZoom;
+
                                 ShellPage.T(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom +" v:" + viewMode);
                                // if((viewMode & ViewMode.region)!=0)
                                     ShellPage.canvas?.Invalidate();
