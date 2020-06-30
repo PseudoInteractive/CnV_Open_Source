@@ -214,7 +214,7 @@ namespace COTG
             var x = c % 65536;
             var y = c >> 16;
 
-            return new Vector2(x * 64.0f+32, y * 64.0f+32);
+            return new Vector2(x +0.5f, y + 0.5f);
         }
     }
 

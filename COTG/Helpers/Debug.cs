@@ -63,22 +63,22 @@ namespace COTG
 
         }
 
-        public static void LogJS(object s,
+        public static void LogJS<T>(T s,
        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            System.Diagnostics.Debug.WriteLine( $"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber} {s.GetType().Name}:{JsonSerializer.Serialize(s,(new JsonSerializerOptions() {MaxDepth=2}))} ");
+            System.Diagnostics.Debug.WriteLine( $"{Tick.MSS()}:{s.ToString()}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber} {s.GetType().Name}:{JsonSerializer.Serialize(s,(new JsonSerializerOptions() {MaxDepth=2}))} ");
             //    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
         }
-        public static void Log(object s,
+        public static void Log<T>(T s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:{s.ToString()}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
           //  System.Diagnostics.Debug.WriteLine(new StackTrace());
         }
         public static void Log(Exception e)

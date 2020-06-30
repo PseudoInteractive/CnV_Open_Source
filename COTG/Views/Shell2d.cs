@@ -139,7 +139,7 @@ namespace COTG.Views
 			if (worldBackground != null && IsWorldView())
 				ds.DrawImage(worldBackground,
 					new Rect(0, 0, halfSpan.X * 2, halfSpan.Y * 2),
-					new Rect(cameraC.X / (64 / bSizeGain), cameraC.Y / (64 / bSizeGain), halfSpan.X * 2 / (64 / bSizeGain) / pixelScale, halfSpan.Y * 2 / (64 / bSizeGain) / pixelScale));
+					new Rect(cameraC.X * bSizeGain, cameraC.Y * bSizeGain, halfSpan.X * 2 * bSizeGain / pixelScale, halfSpan.Y * 2* bSizeGain / pixelScale));
 
 			ds.Antialiasing = CanvasAntialiasing.Antialiased;
 			var scale = ShellPage.canvas.ConvertPixelsToDips(1);

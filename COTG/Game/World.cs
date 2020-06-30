@@ -58,7 +58,7 @@ namespace COTG.Game
             public ushort x;
             public ushort y;
             public byte type;
-            public bool isCastle() => type switch
+            public bool isCastle => type switch
             {
                 3 => true,
                 4 => true,
@@ -70,7 +70,7 @@ namespace COTG.Game
 
 			public override string ToString()
 			{
-				return $"{{{x}:{y},pid:{playerId},type:{type}}}";
+				return $"{{{x}:{y},pid:{playerId},type:{type},c:{isCastle}}}";
 			}
 		}
         public City[] cities;
