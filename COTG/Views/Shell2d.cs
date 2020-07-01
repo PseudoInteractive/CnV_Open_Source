@@ -146,7 +146,7 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, Colors.Black) { Opacity = 0.5f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, Colors.Maroon) { Opacity = 0.75f };
 
                 }
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;

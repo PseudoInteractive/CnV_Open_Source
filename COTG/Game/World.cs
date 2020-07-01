@@ -64,6 +64,7 @@ namespace COTG.Game
         public struct City
         {
             public int playerId;
+            public int alliance;
             public ushort x;
             public ushort y;
             public byte type;
@@ -194,8 +195,10 @@ namespace COTG.Game
                     var _t = dat_.ToString();
 
                     var digitCount = _t.SubStrAsInt(10, 1);
-                    var pid = (int)_t.SubStrAsInt(11, (int)digitCount);
-                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, type = _t.SubStrAsByte(3, 1) });
+                    var pid = (int) _t.SubStrAsInt(11, (int)digitCount);
+                    int aliStart = 11 + (int)digitCount;
+                    var alid = (int)_t.SubStrAsInt(aliStart,_t.Length-aliStart);
+                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, alliance=alid, type = _t.SubStrAsByte(3, 1) });
                     Assert(c.x >= 100);
                     Assert(c.y >= 100);
                     c.x -= 100;
@@ -209,10 +212,13 @@ namespace COTG.Game
                     var index = c.x + c.y * outSizeWorld;
                     pixels[index * 8 + 0] = 0;
                     pixels[index * 8 + 1] = 0;
-                    var r = (c.type & 1) == 0 ? 255u : 64u;
-                    var g = (c.type & 2) == 0 ? 255u : 64u;
-                    var b = (c.type & 4) == 0 ? 255u : 64u;
-                     pixels.SetColor(index, r,b,g);
+                    if (c.playerId == JSClient.jsVars.pid)
+                        pixels.SetColor(index, 0x70, 0x70, 0xff);
+                    else if (c.alliance == JSClient.jsVars.alliance)
+                        pixels.SetColor(index, 0x0, 0x0, 0xb0);
+                    else
+                        pixels.SetColor(index, 0xF0, 0x80, 0x20);
+
                     if (c.type ==  3|| c.type==4)
                     {
 
