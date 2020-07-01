@@ -17,6 +17,9 @@ declare let __a6 : {
 
 declare let M8: Element;
 declare let c6: Phaser;
+declare let aldt: {
+    id:number
+};
 
 declare const __s: {
     0: string;

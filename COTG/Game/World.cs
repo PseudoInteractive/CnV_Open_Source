@@ -64,7 +64,7 @@ namespace COTG.Game
         public struct City
         {
             public int playerId;
-            public int alliance;
+            public int allianceId;
             public ushort x;
             public ushort y;
             public byte type;
@@ -85,8 +85,12 @@ namespace COTG.Game
         }
         public City[] cities;
 
-        static ulong AsNumber(string s) => ulong.Parse(s);
-
+        static ulong AsNumber(string s)
+        {
+            if (ulong.TryParse(s, out var rv) == false)
+                rv = 0;
+            return rv;
+        }
         public static void UpdateCurrent(JsonDocument jsd)
         {
             current = Decode(jsd);
@@ -198,7 +202,7 @@ namespace COTG.Game
                     var pid = (int) _t.SubStrAsInt(11, (int)digitCount);
                     int aliStart = 11 + (int)digitCount;
                     var alid = (int)_t.SubStrAsInt(aliStart,_t.Length-aliStart);
-                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, alliance=alid, type = _t.SubStrAsByte(3, 1) });
+                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, allianceId=alid, type = _t.SubStrAsByte(3, 1) });
                     Assert(c.x >= 100);
                     Assert(c.y >= 100);
                     c.x -= 100;
@@ -213,8 +217,8 @@ namespace COTG.Game
                     pixels[index * 8 + 0] = 0;
                     pixels[index * 8 + 1] = 0;
                     if (c.playerId == JSClient.jsVars.pid)
-                        pixels.SetColor(index, 0x70, 0x70, 0xff);
-                    else if (c.alliance == JSClient.jsVars.alliance)
+                        pixels.SetColor(index, 0x70, 0xff, 0x70);
+                    else if (c.allianceId == JSClient.jsVars.allianceId)
                         pixels.SetColor(index, 0x0, 0x0, 0xb0);
                     else
                         pixels.SetColor(index, 0xF0, 0x80, 0x20);

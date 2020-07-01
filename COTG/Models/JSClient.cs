@@ -71,6 +71,7 @@ namespace COTG
             public string player { get; set; }
             public int pid { get; set; }
             public string alliance { get; set; }
+            public int allianceId { get; set; } // alliance ID
             public string s { get; set; }
             public string cookie { get; set; }
             public DateTime launchTime;
@@ -534,6 +535,7 @@ namespace COTG
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
                                 jsVars.alliance = jso.GetString("alliance");
+                                jsVars.allianceId = jso.GetAsInt("aid");
                                 jsVars.s = jso.GetString("s");
                                 cid = jso.GetAsInt("cid");
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");

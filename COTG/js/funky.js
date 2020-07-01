@@ -2269,6 +2269,7 @@ function SendCreds() {
             player: cotg.player.name(),
             pid: ppdt.pid,
             alliance: cotg.player.alliance(),
+            aid: aldt.id,
             s: s,
             cookie: document.cookie,
             cid: cid,

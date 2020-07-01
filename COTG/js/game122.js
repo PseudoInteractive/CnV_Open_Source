@@ -11361,7 +11361,7 @@ var cotgsubscribe = amplify;
             B9y)]["1" >> 329990016];
           if (ppdt.r >= L11) var X11 = bam[_s(+m9y)][l11]["n"];
         } if (D6) w6F();
-      var O11 = ppdt[_s(+R9y)][+'78'][_s(L9y | 32)];
+      var O11 = ppdt["rw"][+'78'][_s(L9y | 32)];
       if (O11 == "0" * 1)
         if (O11 < +y9y) {
           o5F(O11);
@@ -12242,7 +12242,7 @@ var cotgsubscribe = amplify;
     }
 
     function s0V() {
-      var P7l = ppdt[_s(+R9y)]['78' - 0][_s(L9y & 2147483647)];
+      var P7l = ppdt["rw"]['78' - 0][_s(L9y & 2147483647)];
       if (P7l < '1' - 0) P7l = '1' &
         2147483647;
       if (o2[P7l]["r"] != null) P7l = P7l + ("1" & 2147483647);
@@ -17150,8 +17150,7 @@ var cotgsubscribe = amplify;
           $(_s(+L2R))
             .animate({ scrollTop: $(_s(L2R ^ 0))[+"0"].scrollHeight }, +e2R);
         }
-      } else if (y6i == _s(+
-          v0p)) {
+      } else if (y6i == "alliance") {
         var U6i = _s(+q0p) + D6i + _s('1964' >> 569624192) + Y6i + _s(+F6y) + p6i + _s(
           D0p * 1) + B6i + _s(F6y ^ 0) + B6i + _s(+m0p) + R6i + _s(B0p | 1026);
         var P6i = $(_s(
@@ -17402,7 +17401,7 @@ var cotgsubscribe = amplify;
         else if (M0Z == ('6' ^ 0)) $(_s(a2p * 1))
           .text(_s(+'6871'));
         else if (M0Z == +"0") {
-          $(_s(+N2p))
+          $("#withAlliance")
             .show();
           $(_s(E2p & 2147483647))
             .css("display", "none");
@@ -17444,7 +17443,7 @@ var cotgsubscribe = amplify;
           if (Object.keys(ppdt[_s(+"738")])
             .length > +"0") k2F(ppdt[_s(+"738")]);
         setTimeout(function() {
-          var i5U = ppdt[_s(R9y & 2147483647)]['78' | 8][_s(L9y >> 516942048)];
+          var i5U = ppdt["rw"]['78' | 8][_s(L9y >> 516942048)];
           if (
             i5U == ("0" | 0))
             if (i5U < (y9y ^ 0)) {
@@ -18339,7 +18338,7 @@ var cotgsubscribe = amplify;
         .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
         .value = document.getElementById(_s(d4p - 0))
         .value + _s(l4p & 2147483647) + Y0v + _s(k4p ^ 0);
-      else if ($(_s(o4p << 922055232))
+      else if ($("#achat")
         .hasClass(_s(+n4p))) document.getElementById(_s(S4p << 551591104))
         .value = document.getElementById(_s(+S4p))
         .value + _s(+l4p) + Y0v + _s(k4p * 1);
@@ -18994,13 +18993,13 @@ var cotgsubscribe = amplify;
     function G2F() {
       if (aldt == +'0') {
         w2();
-        $(_s(N2p * 1))
+        $("#withAlliance")
           .css("display", "none");
         $(_s(E2p & 2147483647))
           .show();
       } else {
         w2();
-        $(_s(N2p >> 1532348768))
+        $("#withAlliance")
           .show();
         $(_s(E2p << 429601024))
           .css("display", "none");
@@ -23879,7 +23878,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
               .value = document.getElementById(_s(+d4p))
               .value + " " + a4U + " ";
-            else if ($(_s(+o4p))
+            else if ($("#achat")
               .hasClass(_s(+n4p))) document.getElementById(_s(S4p | 4138))
               .value = document.getElementById(_s(+S4p))
               .value + " " + a4U + " ";
@@ -23901,7 +23900,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p >> 1800304480))) document.getElementById(_s(d4p * 1))
               .value = document.getElementById(_s(d4p | 1536))
               .value + " " + E4U + " ";
-            else if ($(_s(o4p >> 416884864))
+            else if ($("#achat")
               .hasClass(_s(+n4p))) document.getElementById(_s(S4p * 1))
               .value = document.getElementById(_s(S4p << 932227168))
               .value + " " + E4U + " ";
@@ -23923,7 +23922,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p | 17))) document.getElementById(_s(d4p - 0))
               .value = document.getElementById(_s(+d4p))
               .value + " " + k3U + " ";
-            else if ($(_s(+o4p))
+            else if ($("#achat")
               .hasClass(_s(n4p ^ 0))) document.getElementById(_s(+S4p))
               .value = document.getElementById(_s(S4p & 2147483647))
               .value + " " + k3U + " ";
@@ -23945,7 +23944,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 64))
               .value = document.getElementById(_s(d4p | 1872))
               .value + " " + e3U + " ";
-            else if ($(_s(+o4p))
+            else if ($("#achat")
               .hasClass(_s(+n4p))) document.getElementById(_s(S4p << 1745067072))
               .value = document.getElementById(_s(S4p >> 1712374208))
               .value + " " + e3U + " ";
@@ -23967,7 +23966,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 840))
               .value = document.getElementById(_s(+d4p))
               .value + " " + s3U + " ";
-            else if ($(_s(o4p << 405781728))
+            else if ($("#achat")
               .hasClass(_s(n4p * 1))) document.getElementById(_s(S4p * 1))
               .value = document.getElementById(_s(+S4p))
               .value + " " + s3U + " ";
@@ -26251,7 +26250,7 @@ var cotgsubscribe = amplify;
                   .css("display", "none");
                 $(_s("5173" << 937095904))
                   .css("display", "none");
-                $(_s(N2p - 0))
+                $("#withAlliance")
                   .css("display", "none");
                 $(_s(E2p << 748033696))
                   .show();
@@ -26301,7 +26300,7 @@ var cotgsubscribe = amplify;
               .animate({ scrollTop: $(_s(c2R & 2147483647))["0" | 0].scrollHeight }, e2R << 2005813024);
             localStorage.setItem(_s(o74 | 1088), +'0');
           });
-        $(_s(+o4p))
+        $("#achat")
           .click(function() {
             E6k.y6();
             $(_s(+s2R))
@@ -27444,7 +27443,7 @@ var cotgsubscribe = amplify;
     function S3F(p7l) {
       e2();
       E6k.R6();
-      var R7l = ppdt[_s(R9y & 2147483647)][p7l][_s(L9y - 0)];
+      var R7l = ppdt["rw"][p7l][_s(L9y - 0)];
       if (R7l == "0" * 1) {
         $(_s(
             "3343" >> 774891168))
@@ -27456,11 +27455,10 @@ var cotgsubscribe = amplify;
         var
           k4l = qam[_s(+p34)][R7l]["d"];
         var Y7l = "0" & 2147483647;
-        if (ppdt[_s(R9y >>
-            1217381440)][p7l][_s(K2y & 2147483647)] > "0" << 1602724288)
-          if (ppdt[_s(+R9y)][p7l][_s(K2y ^ 0)] >= qam[_s(+p34)][R7l][_s(z34 & 2147483647)]) Y7l =
+        if (ppdt["rw"][p7l][_s(K2y & 2147483647)] > "0" << 1602724288)
+          if (ppdt["rw"][p7l][_s(K2y ^ 0)] >= qam[_s(+p34)][R7l][_s(z34 & 2147483647)]) Y7l =
             X2y - 0;
-          else Y7l = Math.floor(Number(ppdt[_s(R9y - 0)][p7l][_s(K2y << 699363744)]) / Number(qam[_s(
+          else Y7l = Math.floor(Number(ppdt["rw"][p7l][_s(K2y << 699363744)]) / Number(qam[_s(
             p34 - 0)][R7l][_s(z34 ^ 0)]) * (X2y - 0));
         var D7l = '';
         if (qam[_s(p34 ^ 0)][R7l]
@@ -31124,8 +31122,8 @@ var cotgsubscribe = amplify;
     }
 
     function l0V(s4l, j4l) {
-      var u4l = ppdt[_s(+R9y)][s4l][_s(+L9y)];
-      if (ppdt[_s(R9y << 1770719936)][
+      var u4l = ppdt["rw"][s4l][_s(+L9y)];
+      if (ppdt["rw"][
           s4l][_s(+K2y)] >= qam[_s(+p34)][u4l][_s(z34 >> 1809418112)]) {
         N6();
         var H4l = $.post(E6k
@@ -32417,7 +32415,7 @@ var cotgsubscribe = amplify;
             var S52 = $(_s('149' << 1564073632))
               .val();
             N6();
-            var J52 = $.post(q6 + _s('2191' - 0), { a: b52, b: S52 });
+              var J52 = $.post(q6 + "aDip.php", { a: b52, b: S52 });
             E6k.y6();
             F6();
             J52.done(function(h52) {
@@ -33748,8 +33746,8 @@ var cotgsubscribe = amplify;
       } else if ($(_s(t1p ^ 0))
         .css("display") != "none") $(_s(+t1p))
         .css("display", "none");
-      if ($(_s(o4p ^ 0))
-        .css("display") == "none") $(_s(o4p | 4100))
+      if ($("#achat")
+        .css("display") == "none") $("#achat")
         .show();
     }
 
@@ -34821,7 +34819,7 @@ var cotgsubscribe = amplify;
           1908206656; x7l <= +"7"; x7l++) {
         var h7l = "0" & 2147483647;
         if (x7l == +"7") {
-          var f7l = ppdt[_s(+R9y)][+
+          var f7l = ppdt["rw"][+
             '78'][_s(+L9y)];
           if (f7l >= y9y << 1253532352) h7l = "1" * 1;
         }
@@ -47023,7 +47021,7 @@ var cotgsubscribe = amplify;
             k2.putTile('1417' ^ 0, s2.getTileX(D6.x * +64), s2.getTileY(D6.y * (64 - 0)), s2);
             k2.putTile(+B6R, e8.getTileX(D6.x * +64), e8.getTileY(D6.y * (64 - 0)), e8);
             y4F(+v9y);
-            var A56 = ppdt[_s(R9y * 1)]['78' | 66][_s(+L9y)];
+            var A56 = ppdt["rw"]['78' | 66][_s(+L9y)];
             if (A56 == +"0")
               if (A56 < +y9y) {
                 o5F(A56);
@@ -50181,7 +50179,7 @@ var cotgsubscribe = amplify;
     function y7F() {
       N6();
       E6k.y6();
-      var O4B = $.post(q6 + _s(+"6324"));
+      var O4B = $.post(q6 + _s(+"6324")); // gDiplo.php
       F6();
       O4B.done(function(L4B) {
         var o4B = JSON.parse(L4B);
@@ -50906,7 +50904,7 @@ var cotgsubscribe = amplify;
                 0);
             } else { var C1V = q9(M1V); var z1V = _s(v6m << 247934304); }
             var V1V = {
-              type: _s(+v0p),
+                type: "alliance",
               message: X1V,
               time: d1V,
               player: o1V,
@@ -53125,15 +53123,15 @@ var cotgsubscribe = amplify;
     function s7V(j11) {
       if (j11 == +"0") {
         aldt = j11;
-        if ($(_s(+o4p))
-          .css("display") != "none") $(_s(o4p * 1))
+        if ($("#achat")
+          .css("display") != "none") $("#achat")
           .css("display", "none");
         if ($(_s(t1p * 1))
           .css("display") != "none") $(_s(t1p & 2147483647))
           .css("display", "none");
-        if ($(_s(N2p * 1))
+        if ($("#withAlliance")
           .css("display") == "block") {
-          $(_s(+N2p))
+          $("#withAlliance")
             .css("display", "none");
           $(_s(+b2p))
             .show();
@@ -54281,7 +54279,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(E2p ^ 0))
         .css("display", "none");
-      $(_s(N2p * 1))
+      $("#withAlliance")
         .css("display", "none");
       $(_s(+'4319'))
         .css("display", "none");
@@ -54914,7 +54912,7 @@ var cotgsubscribe = amplify;
           .value = _s(+A2R) + K9V + " ";
         document.getElementById(_s(+d4p))
           .focus();
-      } else if ($(_s(o4p * 1))
+      } else if ($("#achat")
         .hasClass(_s(+n4p))) {
         document.getElementById(_s(S4p >> 285647680))
           .value = _s(A2R | 4371) + K9V + " ";
@@ -54982,7 +54980,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(E2p ^ 0))
         .css("display", "none");
-      $(_s(N2p * 1))
+      $("#withAlliance")
         .css("display", "none");
       $(_s(+"4319"))
         .css("display", "none");
@@ -55316,7 +55314,7 @@ var cotgsubscribe = amplify;
       g0Z.done(function(P0Z) {
         E6k.y6();
         if (P0Z == '0' - 0) {
-          $(_s(N2p >> 1082657856))
+          $("#withAlliance")
             .show();
           $(_s(+E2p))
             .css("display", "none");
@@ -57244,8 +57242,8 @@ var cotgsubscribe = amplify;
         }
         var z71 = j71[_s("7061" | 4241)];
         U6F(z71);
-        if (j71.hasOwnProperty(_s(+v0p))) {
-          var M71 = j71[_s(+v0p)];
+          if (j71.hasOwnProperty("alliance")) {
+          var M71 = j71["alliance"];
           s7V(M71);
         }
         if (j71[_s('6623' >> 851752000)]) {
@@ -58438,7 +58436,7 @@ var cotgsubscribe = amplify;
             _s(I7R >> 2117785184))
           .hasClass(_s(n4p >> 1026196864))) var Z0v = document.getElementById(_s(d4p << 1033328224))
           .value;
-        else if ($(_s(+o4p))
+        else if ($("#achat")
           .hasClass(_s(+n4p))) var Z0v = document.getElementById(_s(+S4p))
           .value;
         else if ($(_s(t1p * 1))
@@ -58451,7 +58449,7 @@ var cotgsubscribe = amplify;
         if ($(_s(+I7R))
           .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
           .value = U0v;
-        else if ($(_s(o4p - 0))
+        else if ($("#achat")
           .hasClass(_s(n4p >> 994120032))) document.getElementById(_s(S4p & 2147483647))
           .value = U0v;
         else if ($(_s(+t1p))
@@ -58464,7 +58462,7 @@ var cotgsubscribe = amplify;
         .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
         .value = document.getElementById(_s(+d4p))
         .value + K0v;
-      else if ($(_s(o4p << 2117302432))
+      else if ($("#achat")
         .hasClass(_s(n4p << 1822444800))) document.getElementById(_s(+S4p))
         .value = document.getElementById(_s(S4p << 1778275584))
         .value + K0v;
@@ -59631,13 +59629,20 @@ var cotgsubscribe = amplify;
           N6();
             var k2D = $.post("/includes/gWrd.php", { a: E6D });
           F6();
-          k2D.done(function(e2D) {
-            var e2D = JSON.parse(e2D);
+          k2D.done(function(__e2D) {
+          if(__e2D && __e2D.length > 0)
+          {
+            var e2D = JSON.parse(__e2D);
             gWrdPosted(e2D['a']);
               T0F = y8F(e2D['a']);
             f8 = e2D[_s(+B9y)];
             R8();
             Y1F(+Y6y);
+            }
+            else
+		  {
+              X5F=0;
+		  }
           });
         }
       } else R8();
@@ -66436,7 +66441,7 @@ var cotgsubscribe = amplify;
           console.log(E51);
           }
           allyiance = "0" - 0;
-          if ($(_s(+N2p))
+          if ($("#withAlliance")
             .css("display") != "none" || $(_s(+E2p))
             .css("display") != "none" || G4F == +"0") allyiance = +"1";
           N6();
@@ -68677,7 +68682,7 @@ var cotgsubscribe = amplify;
         E6k.y6();
         if (T6i == _s(+i0p))
           e7F = '0' << 409369408;
-        else if (T6i == _s(+v0p)) Y0F = +'0';
+        else if (T6i == "alliance") Y0F = +'0';
         else if (T6i == _s('5088' * 1)) N0F = '0' >> 675883328;
         else if (T6i == _s("6149" << 1531458880)) R0F = "0" << 2130137024;
       },
@@ -68685,7 +68690,7 @@ var cotgsubscribe = amplify;
         E6k
           .R6();
         if (Q6i == _s(+i0p)) e7F = +'1';
-        else if (Q6i == _s(+v0p)) Y0F = +"1";
+        else if (Q6i == "alliance") Y0F = +"1";
         else if (Q6i == _s('5088' | 4768)) N0F = '1' & 2147483647;
         else if (Q6i == _s('6149' >> 428389792)) R0F = +'1';
       },
