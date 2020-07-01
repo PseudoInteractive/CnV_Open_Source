@@ -75,6 +75,7 @@
 		SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
 		<winui:NavigationView.ContextFlyout>
 			<MenuFlyout>
+				<MenuFlyoutItem Click="GetIncomingOverview" Text="IncomingOverview" />
 				<MenuFlyoutItem Click="TroopOverview" Text="TroopOverview" />
 				<MenuFlyoutItem Click="TestRaid" Text="TestRaid" />
 				<MenuFlyoutItem Click="GetWorldInfo" Text="GetWorldInfo" />

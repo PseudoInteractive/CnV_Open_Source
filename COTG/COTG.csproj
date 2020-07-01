@@ -161,10 +161,13 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="System.Memory">
-      <Version>4.5.4</Version>
+    <PackageReference Include="NETStandard.Library">
+      <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>5.0.0-preview.6.20305.6</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.AccessControl">
       <Version>5.0.0-preview.6.20305.6</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
@@ -212,6 +215,7 @@
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />
+    <Compile Include="Game\Incoming.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\World.cs" />
@@ -222,6 +226,9 @@
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\JSONHelper.cs" />
     <Compile Include="Helpers\Ticks.cs" />
+    <Compile Include="JSON\GetIO.cs" />
+    <Compile Include="JSON\gFRep2.cs" />
+    <Compile Include="JSON\incover.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />
@@ -574,12 +581,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\ofdf.cs" />
+    <None Include="JSON\incoverJSON.json" />
     <None Include="JS\p2.d.ts" />
     <None Include="JS\phaser.comments.d.ts" />
     <None Include="JS\pixi.comments.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="JS\game122t.ts" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
@@ -590,6 +596,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>JSON\incoverJSON.json</ApplicationManifest>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -45,12 +45,12 @@ namespace COTG.Views
 			canvas = new CanvasAnimatedControl()
 			{
 				IsHitTestVisible = false,
+                
 				//,TargetElapsedTime=TimeSpan.FromSeconds(1.0f/15.0f)
 				
 				IsFixedTimeStep = false
 			};
 			canvas.Draw += Canvas_Draw;
-
 			canvas.Unloaded += Canvas_Unloaded;
             canvas.LayoutUpdated += Canvas_LayoutUpdated;
 			canvas.SizeChanged += Canvas_SizeChanged;
@@ -59,16 +59,16 @@ namespace COTG.Views
 
 		}
 
+       
         private void Canvas_LayoutUpdated(object sender, object e)
         {
-            clientC = new Vector2(canvas.ActualOffset.X, canvas.ActualOffset.Y);
+            var c = canvas.ActualOffset;
+            clientC = new Vector2(c.X,c.Y); 
             clientSpan = canvas.ActualSize;
         }
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
-            clientSpan.X = (float)e.NewSize.Width;
-            clientSpan.Y = (float)e.NewSize.Height;
+            clientSpan = e.NewSize.ToVector2();
         }
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -121,9 +121,9 @@ namespace COTG.Views
         {
 
         }
-        const float lineThickness = 8.0f;
+        const float lineThickness = 4.0f;
         const float rectSpanMin = 8.0f;
-        const float rectSpanMax = 20.0f;
+        const float rectSpanMax = 14.0f;
         const float bSizeGain = 4.0f;
         const float bSizeGain2 = 4;//4.22166666666667f;
         const float srcImageSpan = 2400;
@@ -202,6 +202,23 @@ namespace COTG.Views
 
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
+                if (Attack.attacks != null)
+                {
+                    foreach (var attack in Attack.attacks)
+                    {
+
+                        var c1 = attack.targetCid.ToWorldC().WToC();
+                        var c0 = attack.sourceCid.ToWorldC().WToC();
+                        var progress = ((float)(serverNow - attack.spotted).TotalHours /
+                            ((float)(attack.time-attack.spotted).TotalHours).Max(1.0f/64.0f) ).Saturate(); // we don't know the duration so we approximate with 2 hours
+                        var mid = progress.Lerp(c0, c1);
+                        ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                        ds.FillRectangle(mid.X - rectSpan * 0.5f, mid.Y - rectSpan * 0.5f, rectSpan, rectSpan, shadowBrush);
+                        var midS = mid - shadowOffset;
+                        ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                        ds.FillRectangle(midS.X - rectSpan * 0.5f, midS.Y - rectSpan * 0.5f, rectSpan, rectSpan, raidBrush);
+                    }
+                }
                 foreach (var city in City.all)
                 {
                     var c = city.Value.cid.ToWorldC().WToC();

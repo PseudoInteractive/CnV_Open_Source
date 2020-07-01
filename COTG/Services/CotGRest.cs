@@ -47,13 +47,18 @@ namespace COTG.Services
                     dataReader.ReadBytes(temp);
                 }
                 Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
-                var json = JsonDocument.Parse(temp);
-                ProcessJson(json);
+                ProcessJsonRaw(temp);
             }
             catch (Exception e)
             {
                 Log(e);
             }
+
+        }
+        public virtual void ProcessJsonRaw(byte[] data)
+        {
+            var json = JsonDocument.Parse(data);
+            ProcessJson(json);
 
         }
 

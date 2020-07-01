@@ -23,6 +23,14 @@ namespace COTG
         {
             return (f >= min ? f : min);
         }
+        public static float Saturate(this float f)
+        {
+            return (f >= 0.0f ? (f <= 1.0f ? f : 1.0f) : 0.0f);
+        }
+        public static float ToFloat(this double f)
+        {
+            return (float)f;
+        }
         public static Vector2 Lerp(this float t, Vector2 c0,Vector2 c1)
         {
             return c0 + (c1 - c0) * t;
@@ -35,5 +43,14 @@ namespace COTG
         {
             return 0.5f+ 0.5f*MathF.Sin(t * (2 * MathF.PI));
         }
+        public static float SignOr0(this float t)
+        {
+            return t > 0 ? 1.0f : t < 0 ? -1.0f : 0;
+        }
+        public static float SignOr0(this int t)
+        {
+            return t > 0 ? 1.0f : t < 0 ? -1.0f : 0;
+        }
+
     }
 }

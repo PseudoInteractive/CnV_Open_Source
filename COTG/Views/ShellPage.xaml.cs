@@ -28,6 +28,7 @@ using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
 using System.Text;
 using System.Collections.ObjectModel;
+using COTG.JSON;
 
 namespace COTG.Views
 {
@@ -160,14 +161,15 @@ namespace COTG.Views
             Grid.SetRowSpan(canvas, 4);
             Grid.SetColumnSpan(canvas, 3);
             Canvas.SetZIndex(canvas, 11);
+ //           Task.Run(SetupCanvasInput);
 
-         //   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
+            //   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
 
-         //   grid.Children.Add(img);
+            //   grid.Children.Add(img);
 
-         //   Grid.SetRowSpan(img, 4);
-         //   Grid.SetColumnSpan(img, 4);
-         //   Canvas.SetZIndex(img, 12);
+            //   Grid.SetRowSpan(img, 4);
+            //   Grid.SetColumnSpan(img, 4);
+            //   Canvas.SetZIndex(img, 12);
 
 
             var splitter = new GridSplitter();
@@ -196,7 +198,7 @@ namespace COTG.Views
 
         }
 
-     
+        
 
 
         ObservableCollection<LogEntryStruct> logEntries = new ObservableCollection<LogEntryStruct>();// new string[]{"Hello", "there"});
@@ -567,8 +569,9 @@ namespace COTG.Views
             Note.MarkDownLinkClicked(sender,e);
         }
 
-      
-
-       
+        private void GetIncomingOverview(object sender, RoutedEventArgs e)
+        {
+            IncomingOverview.instance.Post();
+        }
     }
 }
