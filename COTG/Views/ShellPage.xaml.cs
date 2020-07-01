@@ -53,6 +53,7 @@ namespace COTG.Views
         private bool _isLoggedIn;
         private bool _isAuthorized;
 
+
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
@@ -113,9 +114,11 @@ namespace COTG.Views
         {
 
             var webView = JSClient.Initialize(grid);
+            
             shellFrame = new Frame()
             {
                 Background = null
+                
            //  HorizontalAlignment=HorizontalAlignment.Stretch,
            //   VerticalAlignment=VerticalAlignment.Stretch
            ,
@@ -126,7 +129,8 @@ namespace COTG.Views
             //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
             //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
 
-      
+
+            
             grid.Background = null;
 
             grid.Children.Add(webView);
@@ -146,25 +150,31 @@ namespace COTG.Views
             Canvas.SetZIndex(webView, 0);
 
             var canvas = CreateCanvasControl();
+            canvas.PointerMoved += Canvas_PointerMoved;
+            canvas.PointerWheelChanged += Canvas_PointerWheelChanged;
+            canvas.PointerPressed += Canvas_PointerPressed;
+            canvas.PointerReleased += Canvas_PointerReleased;
             grid.Children.Add(canvas);
-            Grid.SetRowSpan(canvas, 5);
-            Grid.SetColumnSpan(canvas, 4);
+            Grid.SetColumn(canvas, 1);
+            Grid.SetRow(canvas, 1);
+            Grid.SetRowSpan(canvas, 4);
+            Grid.SetColumnSpan(canvas, 3);
             Canvas.SetZIndex(canvas, 11);
 
-            var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
+         //   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
 
-            grid.Children.Add(img);
+         //   grid.Children.Add(img);
 
-            Grid.SetRowSpan(img, 4);
-            Grid.SetColumnSpan(img, 4);
-            Canvas.SetZIndex(img, 12);
+         //   Grid.SetRowSpan(img, 4);
+         //   Grid.SetColumnSpan(img, 4);
+         //   Canvas.SetZIndex(img, 12);
 
 
             var splitter = new GridSplitter();
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 4);
             // Grid.SetRowSpan(splitter, 4);
-            splitter.Height = 200;
+          //  splitter.Height = 200;
             splitter.Width = 8;
             Grid.SetRowSpan(splitter, 4);
             splitter.HorizontalAlignment = HorizontalAlignment.Left;
@@ -186,8 +196,11 @@ namespace COTG.Views
 
         }
 
+     
+
+
         ObservableCollection<LogEntryStruct> logEntries = new ObservableCollection<LogEntryStruct>();// new string[]{"Hello", "there"});
-        async public static Task T(string s)
+        async public static Task L(string s)
         {
              await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low,() =>
               {

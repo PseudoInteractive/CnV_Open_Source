@@ -21213,7 +21213,7 @@ var cotgsubscribe = amplify;
           this.mouseDownY = +'0';
           var J2D = this;
           if (J2D.canvas) J2D.canvas.remove();
-          J2D.canvas = $(_s('3139' >> 1433296608) + J2D.targetDiv.width() + _s(+'2221') + J2D.targetDiv
+          J2D.canvas = $("<canvas id='worldcanv' width='" + J2D.targetDiv.width() + _s(+'2221') + J2D.targetDiv
             .height() + _s('6682' & 2147483647));
           J2D.targetDiv.append(J2D.canvas);
           this.renderTime = new Date()
@@ -66479,8 +66479,8 @@ var cotgsubscribe = amplify;
                  // let C0g = (z0g.y / (+m6p - 0));
                  // _x = d0g * 64;//- M0g.width/ (gainx);
                  // _y = C0g * 64;// - M0g.height / (gainy) ;
-                   _x = -t0g.left;
-                   _y = -t0g.top;
+                  _x = -t0g.left;// * 4 / 4.22166666666667;
+                  _y = -t0g.top;// * 4 / 4.22166666666667;
                   __zoom = +matrix[0] * 4.22166666666667;
 			  }
               

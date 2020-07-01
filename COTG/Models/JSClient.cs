@@ -539,12 +539,12 @@ namespace COTG
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTime.UtcNow;
                                 Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
-                                ShellPage.clientSpan.X = jso.GetAsFloat("spanX");
-                                ShellPage.clientSpan.Y = jso.GetAsFloat("spanY");
+                                var clientSpanX = jso.GetAsFloat("spanX");
+                                var clientSpanY = jso.GetAsFloat("spanY");
                                 ShellPage.clientTL.X = jso.GetAsFloat("left");
                                 ShellPage.clientTL.Y = jso.GetAsFloat("top");
 
-                                Log($" {ShellPage.clientSpan} {ShellPage.clientTL} ");
+                                Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
                                 gotCreds = true;
 //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
@@ -599,14 +599,27 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
+                                var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
-                                ShellPage.cameraZoom = jso.GetAsFloat("z");
-                                ShellPage.cameraC.X = jso.GetAsFloat("x") / ShellPage.cameraZoom;
-                                ShellPage.cameraC.Y = jso.GetAsFloat("y")/ShellPage.cameraZoom;
+                                if(priorView!=viewMode )
+                                {
+                                    var isWorld = IsWorldView();
+                                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                                    {
+                                        ShellPage.canvas.IsHitTestVisible = isWorld;
 
-                                ShellPage.T(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom +" v:" + viewMode);
-                               // if((viewMode & ViewMode.region)!=0)
+                                    });
+                                }
+                                if (priorView != ViewMode.world || viewMode != ViewMode.world)
+                                {
+                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
+                                    ShellPage.cameraC.X = jso.GetAsFloat("x") / ShellPage.cameraZoom;
+                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
+
+                                    ShellPage.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
+                                    // if((viewMode & ViewMode.region)!=0)
                                     ShellPage.canvas?.Invalidate();
+                                }
                                 break;
                             }
 

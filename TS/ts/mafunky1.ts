@@ -240,9 +240,9 @@ function sendCityData(delayInMs) {
 		pendingCityUpdate = true;
 		console.log("sendCity");
 		setTimeout(() => {
+			pendingCityUpdate = false;
 			const wrapper = { citydata: __c.D6 }
 			window['external']['notify'](JSON.stringify(wrapper));
-			pendingCityUpdate = false;
 		}, delayInMs);
 	}
 }

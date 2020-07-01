@@ -15,7 +15,7 @@ namespace COTG.Helpers
         }
         public static string MSS()
         {
-            return  $"{MS():06d}";
+            return  $"{MS(),6}";
         }
 
     }

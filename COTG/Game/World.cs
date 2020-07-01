@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
-
+using Windows.UI.Xaml.Media.Imaging;
 using static COTG.Debug;
 
 namespace COTG.Game
@@ -33,24 +34,32 @@ namespace COTG.Game
         {
             return (byte)SubStrAsInt(s, start, count);
         }
-
+        public static uint RGB16(uint r, uint g, uint b) => ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
+        public static byte RGB16B0(uint r, uint g, uint b) => (byte)(RGB16(r, g, b) & 0xff);
+        public static byte RGB16B1(uint r, uint g, uint b) => (byte)(RGB16(r, g, b) >> 8);
+        public static void SetColor(this byte[] pixels, int index, uint r, uint g, uint b)
+        {
+            var c = RGB16(r, g, b);
+            pixels[index * 8 + 2] = (byte)(c);
+            pixels[index * 8 + 3] = (byte)(c >> 8);
+        }
     }
 
     public class World
     {
         public static World current;
-
+        public static byte[] pixels = new byte[outSize / 4 * outSize / 4 * 8];
         public struct Boss
         {
             public byte level;
             public ushort x;
             public ushort y;
 
-			public override string ToString()
-			{
-				return $"{{{x}:{y},level:{level}}}";
-			}
-		}
+            public override string ToString()
+            {
+                return $"{{{x}:{y},level:{level}}}";
+            }
+        }
         public Boss[] bosses;
         public struct City
         {
@@ -68,11 +77,11 @@ namespace COTG.Game
 
             };
 
-			public override string ToString()
-			{
-				return $"{{{x}:{y},pid:{playerId},type:{type},c:{isCastle}}}";
-			}
-		}
+            public override string ToString()
+            {
+                return $"{{{x}:{y},pid:{playerId},type:{type},c:{isCastle}}}";
+            }
+        }
         public City[] cities;
 
         static ulong AsNumber(string s) => ulong.Parse(s);
@@ -81,12 +90,57 @@ namespace COTG.Game
         {
             current = Decode(jsd);
         }
+        const int outSizeWorld = 600;
+        const int outSize = 2400;
+        public static (int size, byte[] pixels) CreateBitmap()
+        {
+            // fill with Alpha=clear
+            //for (int i = 0; i < outSize / 4 * outSize / 4 ; i ++)
+            //{
+            //    pixels[i * 8 + 0] = 0;
+            //    pixels[i * 8 + 1] = 0;
+            //    pixels[i * 8 + 2] = 0;
+            //    pixels[i * 8 + 3] = 0;
+            //    pixels[i * 8 + 4] = 0xff;
+            //    pixels[i * 8 + 5] = 0xff;
+            //    pixels[i * 8 + 6] = 0xff;
+            //    pixels[i * 8 + 7] = 0xff;
+            //}
+            //for (int i = 0; i < outSize / 4 * outSize / 4 - 8; i += 9)
+            //{
+            //    pixels[i * 8 + 0] = 0;
+            //    pixels[i * 8 + 1] = 0;
+            //    pixels[i * 8 + 2] = 0;
+            //    pixels[i * 8 + 3] = 0;
+            //    pixels[i * 8 + 4] = 0xf;
+            //    pixels[i * 8 + 5] = 0xff;
+            //    pixels[i * 8 + 6] = 0x0;
+            //    pixels[i * 8 + 7] = 0xf0;
+            //}
 
+            return (outSize, pixels);
+
+        }
+        
         public static World Decode(JsonDocument jsd)
         {
+            // fill with Alpha=clear
+            for (int i = 0; i < outSize / 4 * outSize / 4; i++)
+            {
+                pixels[i * 8 + 0] = 0;
+                pixels[i * 8 + 1] = 0;
+                pixels[i * 8 + 2] = 0;
+                pixels[i * 8 + 3] = 0;
+                pixels[i * 8 + 4] = 0xff;
+                pixels[i * 8 + 5] = 0xff;
+                pixels[i * 8 + 6] = 0xff;
+                pixels[i * 8 + 7] = 0xff;
+            }
+
             var data = jsd.RootElement.GetProperty("a").GetString(); // we do at least one utf16 <-> utf8 round trip here
             List<City> cities = new List<City>(1024);
             List<Boss> bosses = new List<Boss>(128);
+
             var temp = data.Split("|");
             var keys = temp[1].Split("l");
             var ckey = AsNumber(keys[0]);
@@ -137,17 +191,51 @@ namespace COTG.Game
                     var dat_ = AsNumber(id) + (ckey);
                     /** @type {string} */
                     ckey = dat_;
-                    var _t =  dat_.ToString();
+                    var _t = dat_.ToString();
 
                     var digitCount = _t.SubStrAsInt(10, 1);
                     var pid = (int)_t.SubStrAsInt(11, (int)digitCount);
-                    var c=(new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, type = _t.SubStrAsByte(3, 1) });
-                    if (pid == JSClient.jsVars.pid )
+                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, type = _t.SubStrAsByte(3, 1) });
+                    Assert(c.x >= 100);
+                    Assert(c.y >= 100);
+                    c.x -= 100;
+                    c.y -= 100;
+                    if (pid == JSClient.jsVars.pid)
                     {
                         LogJS(c);
                         Log(_t);
                     }
                     cities.Add(c);
+                    var index = c.x + c.y * outSizeWorld;
+                    pixels[index * 8 + 0] = 0;
+                    pixels[index * 8 + 1] = 0;
+                    var r = (c.type & 1) == 0 ? 255u : 64u;
+                    var g = (c.type & 2) == 0 ? 255u : 64u;
+                    var b = (c.type & 4) == 0 ? 255u : 64u;
+                     pixels.SetColor(index, r,b,g);
+                    if (c.type ==  3|| c.type==4)
+                    {
+
+                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                    }
+                    else if (c.type == 7 || c.type == 8)
+                    {
+
+                        pixels[index * 8 + 4] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+                        pixels[index * 8 + 5] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                    }
+                    else
+                    {
+                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                    }
                 }
                 catch (Exception e)
                 {

@@ -160,7 +160,7 @@ namespace COTG
             var textBlock = new MarkdownTextBlock() { Text = s};
 			textBlock.LinkClicked += MarkDownLinkClicked;
             ShellPage.inAppNote.Show(textBlock, timeout);
-            ShellPage.T(s);
+            ShellPage.L(s);
         }
 
 		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
