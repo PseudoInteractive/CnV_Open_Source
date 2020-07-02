@@ -2268,8 +2268,6 @@ function SendCreds() {
             ppss: ppss,
             player: cotg.player.name(),
             pid: ppdt.pid,
-            alliance: cotg.player.alliance(),
-            aid: aldt.id,
             s: s,
             cookie: document.cookie,
             cid: cid,
@@ -2331,6 +2329,17 @@ function GetDate(jq) {
 //	}
 //	return JSON.stringify(stringTable);
 //})();
+function SendAllianceInfo() {
+    //	$("#organiser").val("all").change();
+    if (aldt !== 0) {
+        if (aldt !== 1) {
+            const wrapper = { aldt: aldt };
+            window['external']['notify'](JSON.stringify(wrapper));
+        }
+        return;
+    }
+    setTimeout(SendAllianceInfo, 20000);
+}
 function avactor() {
     //	var E3y="5894";
     var q7y = 15;
@@ -2482,7 +2491,7 @@ function avactor() {
             //{
             //}
         }
-        //	$("#organiser").val("all").change();
+        SendAllianceInfo();
     }, 8000);
     //this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
     /** @type {number} */

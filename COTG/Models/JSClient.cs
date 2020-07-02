@@ -59,6 +59,9 @@ namespace COTG
         static HttpBaseProtocolFilter httpFilter;
         public static HttpClient httpClient;
         public static HttpClient downloadImageClient;
+        public static Dictionary<int, string> playerIdToName = new Dictionary<int, string>();
+        public static Dictionary<string,int> playerNameToId = new Dictionary<string,int>();
+
         public static int world = 19;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
@@ -70,16 +73,17 @@ namespace COTG
             public int ppss { get; set; }
             public string player { get; set; }
             public int pid { get; set; }
-            public string alliance { get; set; }
-            public int allianceId { get; set; } // alliance ID
             public string s { get; set; }
             public string cookie { get; set; }
             public DateTime launchTime;
             public long gameMSAtStart;
             public TimeSpan gameTOffset;
 
+            public override string ToString()
+            {
+                return $"{{{nameof(token)}={token}, {nameof(ppss)}={ppss.ToString()}, {nameof(player)}={player}, {nameof(pid)}={pid.ToString()},  {nameof(s)}={s}, {nameof(cookie)}={cookie}}}";
+            }
         };
-       
 
 
         public static JSVars jsVars;
@@ -243,20 +247,34 @@ namespace COTG
         }
 
         public async static Task ChangeCity(int cityId)
-		{
-			try
-			{
-				if (view != null)
-					await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+        {
+            try
+            {
+                if (view != null)
+                    await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
 
-			}
-			catch (Exception e)
-			{
-				Log(e);
-			}
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
 
+        }
+        internal async static void ShowCityWithoutViewChange(int cityId)
+        {
+            try
+            {
+                if (view != null)
+                {
+                    await view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
 
-		}
         public async static Task ShowCity(int cityId)
         {
 			try
@@ -321,7 +339,7 @@ namespace COTG
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
                     city.owner = jsVars.player;
-                    city.alliance = jsVars.alliance;
+                    city.alliance = Alliance.name;
                     
 
                 }
@@ -534,13 +552,11 @@ namespace COTG
                                 jsVars.ppss = jso.GetAsInt("ppss");
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
-                                jsVars.alliance = jso.GetString("alliance");
-                                jsVars.allianceId = jso.GetAsInt("aid");
                                 jsVars.s = jso.GetString("s");
                                 cid = jso.GetAsInt("cid");
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTime.UtcNow;
-                                Log(System.Text.Json.JsonSerializer.Serialize(jsVars));
+                                Log(jsVars.ToString());
                                 var clientSpanX = jso.GetAsFloat("spanX");
                                 var clientSpanY = jso.GetAsFloat("spanY");
                                 ShellPage.clientTL.X = jso.GetAsFloat("left");
@@ -597,6 +613,28 @@ namespace COTG
                                 Log(e.Value);
                                 break;
                             }
+                        case "aldt":
+                            {
+                                Alliance.Ctor(jsDoc);
+                                Task.Run(async () =>{ await Task.Delay(4000); await RestAPI.getWorldInfo.Post(); });
+
+                                break;
+                            }
+                        case "gPlA":
+                        {
+                                var _playerNameToId = new Dictionary<string, int>(1024);
+                                var _playerIdToName = new Dictionary<int, string>(1024);
+                                foreach(var entry in jsp.Value.EnumerateObject())
+                                {
+                                    var id = int.Parse(entry.Name);
+                                    var str = entry.Value.GetString();
+                                    _playerIdToName.Add(id, str);
+                                    _playerNameToId.Add(str, id);
+                                }
+                                playerIdToName = _playerIdToName;
+                                playerNameToId = _playerNameToId;
+                                break;
+                            }
                         case "c":
                             {
                                 var jso = jsp.Value;
@@ -651,7 +689,8 @@ namespace COTG
                 if (gotCreds)
                 {
                     await GetCitylistOverview();
-                   // await RaidOverview.Send();
+
+                    // await RaidOverview.Send();
                 }
                 //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                 //cookie.Clear();

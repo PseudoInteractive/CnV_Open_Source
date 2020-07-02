@@ -46,7 +46,7 @@ namespace COTG.Services
                 {
                     dataReader.ReadBytes(temp);
                 }
-                Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+             //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
                 ProcessJsonRaw(temp);
             }
             catch (Exception e)
@@ -141,7 +141,7 @@ namespace COTG.Services
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-        public static RestAPI getCity = new gC();
+        public static GetCity getCity = new GetCity(0);
         public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
@@ -197,25 +197,26 @@ namespace COTG.Services
         //}
     }
 
-    public class gC : RestAPI
+    public class GetCity : RestAPI
     {
-        public gC() : base("includes/gC.php", "X2U11s33S2375ccJx1e2")
+        public int cid;
+        public GetCity(int _cid) : base("includes/gC.php", "X2U11s33S2375ccJx1e2")
         {
-
+            cid = _cid;
         }
-
+        public int CID => (cid != 0 ? cid : JSClient.cid);
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(JSClient.cid.ToString(), secret);
+            var encoded = Aes.Encode(CID.ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
 
         public override void ProcessJson(JsonDocument json)
         {
-            var cid = json.RootElement.GetAsInt("cid");
-            Log("Got JS " + cid);
-             var city=City.all.GetOrAdd(cid,City.Factory);
+           // var cid = json.RootElement.GetAsInt("cid");
+            Log("Got JS " + CID);
+             var city=City.all.GetOrAdd(CID,City.Factory);
             city.LoadFromJson(json.RootElement);
 
         }

@@ -46,7 +46,7 @@ namespace COTG.Views
 			{
 				IsHitTestVisible = false,
                 
-				//,TargetElapsedTime=TimeSpan.FromSeconds(1.0f/15.0f)
+				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/15.0f),
 				
 				IsFixedTimeStep = false
 			};
@@ -76,10 +76,8 @@ namespace COTG.Views
             worldBackground = await CanvasBitmap.LoadAsync(canvas, new Uri($"ms-appx:///Assets/world.png"));
             while (JSClient.cid == 0)
                 await Task.Delay(5 * 1000);
-            await Task.Delay(5 * 1000); // wait another 10 s
-            await RestAPI.getWorldInfo.Post();
-            var ob = World.CreateBitmap();
-            worldObjects = CanvasBitmap.CreateFromBytes(canvas, ob.pixels, ob.size, ob.size, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+         //   var ob = World.CreateBitmap();
+         //   worldObjects = CanvasBitmap.CreateFromBytes(canvas, ob.pixels, ob.size, ob.size, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
         }
 
 
@@ -116,11 +114,7 @@ namespace COTG.Views
              canvas.RemoveFromVisualTree();
           
         }
-      
-        static void DrawLine(CanvasDrawingSession ds, Vector2 c0,Vector2 c1)
-        {
 
-        }
         const float lineThickness = 4.0f;
         const float rectSpanMin = 8.0f;
         const float rectSpanMax = 14.0f;
@@ -130,9 +124,23 @@ namespace COTG.Views
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale=1;
         const float dashLength = (1 + 2) * lineThickness;
-        static Vector2 shadowOffset = new Vector2(lineThickness*0.375f, lineThickness*0.375f);
+        static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
+            if(World.bitmapPixels!=null)
+            {
+                if (worldObjects != null)
+                {
+                    var w = worldObjects;
+                    worldObjects = null;
+                    w.Dispose();
+                }
+                var pixels = World.bitmapPixels;
+                World.bitmapPixels = null;
+                worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+
+
+            }
             if (!(IsWorldView() || IsRegionView()))
                 return;
 
@@ -146,7 +154,7 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, Colors.Maroon) { Opacity = 0.75f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, Colors.Black) { Opacity = 0.75f };
 
                 }
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
@@ -238,6 +246,10 @@ namespace COTG.Views
 
                     }
                 }
+                if(toolTip != null)
+                {
+                    ds.DrawText(toolTip, mousePosition + new Vector2(16, 16), Colors.Blue);
+                }
             }
             catch (Exception ex)
             {
@@ -280,3 +292,4 @@ namespace COTG.Views
       
     }
 }
+

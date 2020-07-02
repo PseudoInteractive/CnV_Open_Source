@@ -15,6 +15,11 @@ namespace COTG
             Assert(max >= min);
             return f >= min ? (f <= max ? f : max) : min;
         }
+        public static int Clamp(this int f, int min, int max)
+        {
+            Assert(max >= min);
+            return f >= min ? (f <= max ? f : max) : min;
+        }
         public static float Min(this float f,  float max)
         {
             return (f <= max ? f : max);

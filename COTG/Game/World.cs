@@ -43,12 +43,42 @@ namespace COTG.Game
             pixels[index * 8 + 2] = (byte)(c);
             pixels[index * 8 + 3] = (byte)(c >> 8);
         }
+        public static int WorldToCid( this (int x, int y) a )
+        {
+            return a.x + a.y*65536;
+        }
+        public static (int x,int y) CidToWorld(this int c)
+        {
+            return (c%65546,c/65536);
+        }
     }
 
     public class World
     {
         public static World current;
-        public static byte[] pixels = new byte[outSize / 4 * outSize / 4 * 8];
+        public const int worldDim = 600;
+        public const int outSize = 2400;
+        public const uint typeMask = 0xf0000000;
+        public const uint typeCity = 0x10000000;
+        public const uint typeNone = 0x00000000;
+        public const uint dataMask = 0x0fffffff;
+
+        public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
+
+        public static uint[,] cityLookup = new uint[worldDim, worldDim]; // reference with CID, stores playerID
+        public static int ClampCoord(int x)
+        {
+            return x.Clamp(0, worldDim);
+        }
+        public static (uint type, uint data) CityLookup( (int x, int y) c)
+        {
+            var x = c.x;
+            var y = c.y;
+            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? cityLookup[x, y] : 0u;
+            return (rv & typeMask, rv & dataMask);
+
+        }
+        
         public struct Boss
         {
             public byte level;
@@ -95,40 +125,41 @@ namespace COTG.Game
         {
             current = Decode(jsd);
         }
-        const int outSizeWorld = 600;
-        const int outSize = 2400;
-        public static (int size, byte[] pixels) CreateBitmap()
-        {
-            // fill with Alpha=clear
-            //for (int i = 0; i < outSize / 4 * outSize / 4 ; i ++)
-            //{
-            //    pixels[i * 8 + 0] = 0;
-            //    pixels[i * 8 + 1] = 0;
-            //    pixels[i * 8 + 2] = 0;
-            //    pixels[i * 8 + 3] = 0;
-            //    pixels[i * 8 + 4] = 0xff;
-            //    pixels[i * 8 + 5] = 0xff;
-            //    pixels[i * 8 + 6] = 0xff;
-            //    pixels[i * 8 + 7] = 0xff;
-            //}
-            //for (int i = 0; i < outSize / 4 * outSize / 4 - 8; i += 9)
-            //{
-            //    pixels[i * 8 + 0] = 0;
-            //    pixels[i * 8 + 1] = 0;
-            //    pixels[i * 8 + 2] = 0;
-            //    pixels[i * 8 + 3] = 0;
-            //    pixels[i * 8 + 4] = 0xf;
-            //    pixels[i * 8 + 5] = 0xff;
-            //    pixels[i * 8 + 6] = 0x0;
-            //    pixels[i * 8 + 7] = 0xf0;
-            //}
+        //public static (int size, byte[] pixels) CreateBitmap()
+        //{
+        //    // fill with Alpha=clear
+        //    //for (int i = 0; i < outSize / 4 * outSize / 4 ; i ++)
+        //    //{
+        //    //    pixels[i * 8 + 0] = 0;
+        //    //    pixels[i * 8 + 1] = 0;
+        //    //    pixels[i * 8 + 2] = 0;
+        //    //    pixels[i * 8 + 3] = 0;
+        //    //    pixels[i * 8 + 4] = 0xff;
+        //    //    pixels[i * 8 + 5] = 0xff;
+        //    //    pixels[i * 8 + 6] = 0xff;
+        //    //    pixels[i * 8 + 7] = 0xff;
+        //    //}
+        //    //for (int i = 0; i < outSize / 4 * outSize / 4 - 8; i += 9)
+        //    //{
+        //    //    pixels[i * 8 + 0] = 0;
+        //    //    pixels[i * 8 + 1] = 0;
+        //    //    pixels[i * 8 + 2] = 0;
+        //    //    pixels[i * 8 + 3] = 0;
+        //    //    pixels[i * 8 + 4] = 0xf;
+        //    //    pixels[i * 8 + 5] = 0xff;
+        //    //    pixels[i * 8 + 6] = 0x0;
+        //    //    pixels[i * 8 + 7] = 0xf0;
+        //    //}
 
-            return (outSize, pixels);
+        //    return (outSize, pixels);
 
-        }
+        //}
         
         public static World Decode(JsonDocument jsd)
         {
+             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
+            Array.Clear(cityLookup,0,cityLookup.Length); // Todo:  remove decaying cities?
+
             // fill with Alpha=clear
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
             {
@@ -174,7 +205,7 @@ namespace COTG.Game
                     /** @type {string} */
                     bkey_ = dat_;
                     var _t = dat_.ToString();
-                    var b = new Boss() { x = _t.SubStrAsShort(6, 3), y = _t.SubStrAsShort(3, 3), level = _t.SubStrAsByte(0, 2) };
+                    var b = new Boss() { x = (ushort)(_t.SubStrAsInt(6, 3)-100), y = (ushort)(_t.SubStrAsInt(3, 3)-100), level = _t.SubStrAsByte(0, 2) };
                     LogJS(b);
                     bosses.Add(b);
                 }
@@ -202,50 +233,65 @@ namespace COTG.Game
                     var pid = (int) _t.SubStrAsInt(11, (int)digitCount);
                     int aliStart = 11 + (int)digitCount;
                     var alid = (int)_t.SubStrAsInt(aliStart,_t.Length-aliStart);
-                    var c = (new City() { x = _t.SubStrAsShort(7, 3), y = _t.SubStrAsShort(4, 3), playerId = pid, allianceId=alid, type = _t.SubStrAsByte(3, 1) });
-                    Assert(c.x >= 100);
-                    Assert(c.y >= 100);
-                    c.x -= 100;
-                    c.y -= 100;
+                    var c = (new City() { x = (ushort)(_t.SubStrAsInt(7, 3)-100), y = (ushort)(_t.SubStrAsInt(4, 3)-100), playerId = pid, allianceId=alid, type = _t.SubStrAsByte(3, 1) });
                     if (pid == JSClient.jsVars.pid)
                     {
                         LogJS(c);
                         Log(_t);
                     }
                     cities.Add(c);
-                    var index = c.x + c.y * outSizeWorld;
+                    var index = c.x + c.y * worldDim;
                     pixels[index * 8 + 0] = 0;
                     pixels[index * 8 + 1] = 0;
                     if (c.playerId == JSClient.jsVars.pid)
-                        pixels.SetColor(index, 0x70, 0xff, 0x70);
-                    else if (c.allianceId == JSClient.jsVars.allianceId)
-                        pixels.SetColor(index, 0x0, 0x0, 0xb0);
+                        pixels.SetColor(index, 0x60, 0xd0, 0x40);
+                    else if (c.allianceId == Alliance.id)
+                        pixels.SetColor(index, 0x30, 0xa0,0x30);
                     else
-                        pixels.SetColor(index, 0xF0, 0x80, 0x20);
-
+                    {
+                        switch (Alliance.GetDiplomacy(c.allianceId))
+                        {
+                            case Diplomacy.none:
+                                pixels.SetColor(index, 0x80, 0x80, 0x80);
+                                break;
+                            case Diplomacy.allied:
+                                pixels.SetColor(index, 0x20, 0xA0, 0x00);
+                                break;
+                            case Diplomacy.nap:
+                                pixels.SetColor(index, 0x40, 0x80, 0x40);
+                                break;
+                            case Diplomacy.enemy:
+                                pixels.SetColor(index, 0xB0, 0x30, 0x20);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     if (c.type ==  3|| c.type==4)
                     {
 
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                        pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                     }
                     else if (c.type == 7 || c.type == 8)
                     {
 
-                        pixels[index * 8 + 4] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-                        pixels[index * 8 + 5] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                     }
                     else
                     {
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                        pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
-                        pixels[index * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (3 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
                     }
+                    cityLookup[c.x, c.y] = (uint)pid | typeCity ;
+                    
                 }
                 catch (Exception e)
                 {
@@ -302,6 +348,7 @@ namespace COTG.Game
 
             rv.cities = cities.ToArray();
             rv.bosses = bosses.ToArray();
+            bitmapPixels = pixels;
             return rv;
         }
 

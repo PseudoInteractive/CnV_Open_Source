@@ -212,6 +212,7 @@
     <Compile Include="EventHandlers\Ink\CopyPasteStrokesEventArgs.cs" />
     <Compile Include="EventHandlers\Ink\MoveStrokesEventArgs.cs" />
     <Compile Include="EventHandlers\Ink\RemoveEventArgs.cs" />
+    <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />

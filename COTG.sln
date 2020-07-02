@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COTG", "COTG\COTG.csproj", "{813F59C4-EC96-48EF-83E4-E3C7E671E368}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0307942A-8E65-47E5-984C-53D9BE01E7AC} = {0307942A-8E65-47E5-984C-53D9BE01E7AC}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTG.Core", "COTG.Core\COTG.Core.csproj", "{7105B740-FB9F-43A6-ACF3-42A421DB81B0}"
 EndProject
