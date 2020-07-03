@@ -218,6 +218,7 @@
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Incoming.cs" />
     <Compile Include="Game\Overview.cs" />
+    <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -105,10 +105,11 @@ namespace COTG.Views
             var c1 = point.Position.ToVector2();
             var c = MousePointToWorld(c1);
             (var type, var data) = World.CityLookup(c);
-            if(type != 0 )
+            if (type != 0)
             {
+                var player = Player.all.GetValueOrDefault((int)data, Player._default);
+                toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y/100}{c.x/100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
 
-                toolTip = JSClient.playerIdToName.GetValueOrDefault((int)data,"Error");
             }
             else
             {

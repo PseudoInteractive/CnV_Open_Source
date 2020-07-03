@@ -160,6 +160,8 @@ namespace COTG.Views
             Grid.SetRow(canvas, 1);
             Grid.SetRowSpan(canvas, 4);
             Grid.SetColumnSpan(canvas, 3);
+            canvas.BorderThickness = new Thickness(0,0,0,0);
+            canvas.Margin = new Thickness(0, 0, 0, 36);
             Canvas.SetZIndex(canvas, 11);
  //           Task.Run(SetupCanvasInput);
 
@@ -419,7 +421,7 @@ namespace COTG.Views
         static short [] bidMap = new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
         
 
-        static DateTime flyoutCreatedTime;
+        static DateTimeOffset flyoutCreatedTime;
 
         private void ShowBuildings(object sender, RoutedEventArgs e)
         {
@@ -470,7 +472,7 @@ namespace COTG.Views
                 buildingList.Height = Double.NaN;
                 buildingList.ItemsSource = bd;
                 buildingList.UpdateLayout();
-                flyoutCreatedTime = DateTime.Now;
+                flyoutCreatedTime = DateTimeOffset.Now;
              //   var flyout = FlyoutBase.GetAttachedFlyout(button);
                 //  flyout.OverlayInputPassThroughElement = shellPage;
                 //    flyout.XamlRoot = shellFrame.XamlRoot;
@@ -571,7 +573,7 @@ namespace COTG.Views
 
         private void GetIncomingOverview(object sender, RoutedEventArgs e)
         {
-            IncomingOverview.instance.Post();
+            IncomingOverview.Process(true);
         }
     }
 }

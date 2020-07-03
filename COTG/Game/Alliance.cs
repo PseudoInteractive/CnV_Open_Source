@@ -10,6 +10,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using COTG.Helpers;
 using System.Text.Json;
 using static COTG.Game.Enum;
+using COTG.Services;
+using System.Web;
 
 namespace COTG.Game
 {
@@ -21,12 +23,24 @@ namespace COTG.Game
         enemy = 3
     }
 
-    public static class Alliance
+    public class Alliance
     {
+        public int id;
+        public string name;
+
+
         public static JsonDocument aldt;
 
-        public static int id;
-        public static string name = string.Empty;
+        public static Alliance my = new Alliance();
+        public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
+        public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
+
+        public static string IdToName(int id)
+        {
+            if (all.TryGetValue(id, out var a))
+                return a.name;
+            return string.Empty;
+        }
 
         public static Diplomacy GetDiplomacy(int allianceId)
         {
@@ -41,15 +55,17 @@ namespace COTG.Game
             };
         }
         public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
-        public static void Ctor(JsonDocument _aldt)
+        public static async void Ctor(JsonDocument _aldt)
         {
             Log(_aldt);
             aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
-            id = element.GetAsInt("id");
-            name = element.GetString("n");
+            my.id = element.GetAsInt("id");
+            my.name = element.GetString("n");
+            // all.Add(my.id, my);
+            //  nameToId.Add(my.name, my.id);
 
-           if (element.TryGetProperty("d", out var dRoot))
+            if (element.TryGetProperty("d", out var dRoot))
             {
                 foreach (var prop in dRoot.EnumerateObject())
                 {
@@ -65,6 +81,63 @@ namespace COTG.Game
 
                 }
             }
+            await Task.Delay(10000);
+            var alliances = new List<Alliance>();
+            var _all = new Dictionary<int, Alliance>();
+            var _nameToId = new Dictionary<string, int>();
+
+            using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
+            {
+                var r = jso.RootElement;
+                var prop2 = r.GetProperty("1");
+                foreach (var alliance in prop2.EnumerateArray())
+                {
+                    var alName = alliance.GetAsString("1");
+                    var al = alName == my.name ? my : new Alliance() { name = alName };
+                    // Log(alName);
+                    alliances.Add(al);
+                }
+            }
+            foreach (var al in alliances)
+            {
+                var alName = al.name;
+                using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
+                {
+                    var id = jsa.RootElement.GetAsInt("id");
+                    _all.Add(id, al);
+                    _nameToId.Add(alName, id);
+                    int counter = 0;
+                    foreach (var me in jsa.RootElement.GetProperty("me").EnumerateArray())
+                    {
+                        var meName = me.GetString("n");
+                        if (meName == null)
+                        {
+                            Log("Missing name? " + counter);
+                            foreach (var member in me.EnumerateObject())
+                            {
+                                Log($"{member.Name}:{member.Value.ToString()}");
+                            }
+                        }
+                        else if (Player.nameToId.TryGetValue(meName, out var pId))
+                        {
+                            ++counter;
+                            var p = Player.all[pId];
+                            p.alliance = (ushort)id;
+                            p.cities = (byte)me.GetInt("c");
+                            p.pointsH = (ushort)(me.GetInt("s") / 100);
+
+                        }
+                        else
+                        {
+                            Log("Error: " + meName);
+                        }
+
+                    }
+                }
+            }
+        
+            nameToId = _nameToId;
+            all = _all;
         }
     }
 }

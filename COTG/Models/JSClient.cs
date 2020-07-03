@@ -59,8 +59,6 @@ namespace COTG
         static HttpBaseProtocolFilter httpFilter;
         public static HttpClient httpClient;
         public static HttpClient downloadImageClient;
-        public static Dictionary<int, string> playerIdToName = new Dictionary<int, string>();
-        public static Dictionary<string,int> playerNameToId = new Dictionary<string,int>();
 
         public static int world = 19;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
@@ -75,7 +73,7 @@ namespace COTG
             public int pid { get; set; }
             public string s { get; set; }
             public string cookie { get; set; }
-            public DateTime launchTime;
+            public DateTimeOffset launchTime;
             public long gameMSAtStart;
             public TimeSpan gameTOffset;
 
@@ -90,11 +88,11 @@ namespace COTG
 
         public static long GameTimeMs()
         {
-            return (long)((DateTime.UtcNow - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtStart;
+            return (long)((DateTimeOffset.UtcNow - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtStart;
         }
-        public static DateTime ServerTime()
+        public static DateTimeOffset ServerTime()
         {
-            return (DateTime.UtcNow + jsVars.gameTOffset);
+            return (DateTimeOffset.UtcNow + jsVars.gameTOffset);
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="JSClient"/> class.
@@ -325,7 +323,7 @@ namespace COTG
             ppdt = JsonDocument.Parse(str);
             // extract cities
             {
-                var now = DateTime.UtcNow;
+                var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
@@ -339,7 +337,7 @@ namespace COTG
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
                     city.owner = jsVars.player;
-                    city.alliance = Alliance.name;
+                    city.alliance = Alliance.my.name;
                     
 
                 }
@@ -546,7 +544,13 @@ namespace COTG
                                 jsVars.token = jso.GetString("token");
                                 var agent = jso.GetString("agent");
                                 httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-                                jsVars.gameTOffset =TimeSpan.FromMilliseconds(jso.GetAsInt64("timeoffset"));
+                                var timeOffset = jso.GetAsInt64("timeoffset");
+                                var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)  )*30.0f; // round to nearest half hour
+                                jsVars.gameTOffset =TimeSpan.FromMinutes(timeOffsetRounded);
+                                var str = timeOffsetRounded >= 0 ? " +" : " ";
+                                str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
+                                JSONHelper.timeZoneString = str;
+                                Log(JSONHelper.timeZoneString);
                                 Log($"TOffset {jsVars.gameTOffset}");
                                 Log(ServerTime().ToString());
                                 jsVars.ppss = jso.GetAsInt("ppss");
@@ -555,7 +559,7 @@ namespace COTG
                                 jsVars.s = jso.GetString("s");
                                 cid = jso.GetAsInt("cid");
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
-                                jsVars.launchTime = DateTime.UtcNow;
+                                jsVars.launchTime = DateTimeOffset.UtcNow;
                                 Log(jsVars.ToString());
                                 var clientSpanX = jso.GetAsFloat("spanX");
                                 var clientSpanY = jso.GetAsFloat("spanY");
@@ -581,7 +585,7 @@ namespace COTG
                                     city.notes = jso.GetString("notes");
                                     city.points = (ushort)jso.GetAsInt("score");
                                     city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
-                                    city.lastAccessed = DateTime.UtcNow;
+                                    city.lastAccessed = DateTimeOffset.UtcNow;
                                     COTG.Views.MainPage.CityChange(city);
 
                                     Note.Show($"{city.name} {city.cid.ToCoordinateMD()}");
@@ -622,17 +626,7 @@ namespace COTG
                             }
                         case "gPlA":
                         {
-                                var _playerNameToId = new Dictionary<string, int>(1024);
-                                var _playerIdToName = new Dictionary<int, string>(1024);
-                                foreach(var entry in jsp.Value.EnumerateObject())
-                                {
-                                    var id = int.Parse(entry.Name);
-                                    var str = entry.Value.GetString();
-                                    _playerIdToName.Add(id, str);
-                                    _playerNameToId.Add(str, id);
-                                }
-                                playerIdToName = _playerIdToName;
-                                playerNameToId = _playerNameToId;
+                                Player.Ctor(jsp.Value);
                                 break;
                             }
                         case "c":

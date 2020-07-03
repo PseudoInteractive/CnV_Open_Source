@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using static COTG.Debug;
+using System.Globalization;
 
 namespace COTG.Helpers
 {
@@ -141,6 +142,31 @@ namespace COTG.Helpers
        public static int RoundToInt(this float f)
         {
             return f >= 0 ? (int)(f + 0.5f) : -( (int)(-f + 0.5f) );
+        }
+        public static int RoundToInt(this double f)
+        {
+            return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
+        }
+        public static string timeZoneString=string.Empty;
+        public static DateTimeOffset ParseTime(this string src)
+        {
+            var format = "H:mm:ss MM/dd/yyyy";
+            var s = src; // src may be missing the date or year
+            var serverTime = JSClient.ServerTime();
+            var dateMarker = s.IndexOf('/');
+            if (dateMarker <= 0)
+            {
+                s = $"{s} {serverTime.Month:D2}/{serverTime.Day:D2}/{serverTime.Year}";
+            }
+            else
+            {
+                if( s.IndexOf('/',dateMarker+1) <= 0)
+                {
+                    s = $"{s}/{serverTime.Year}";
+
+                }
+            }
+            return DateTimeOffset.ParseExact(s ,format, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite|DateTimeStyles.AssumeUniversal);
         }
     }
 }

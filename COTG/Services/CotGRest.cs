@@ -55,6 +55,36 @@ namespace COTG.Services
             }
 
         }
+        public virtual async Task<byte[]> AcceptAndReturn(HttpResponseMessage resp)
+        {
+
+            try
+            {
+                var buff = await resp.Content.ReadAsBufferAsync();
+
+                var temp = new byte[buff.Length];
+
+                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+                {
+                    dataReader.ReadBytes(temp);
+                }
+                //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+                return temp;
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+            return Array.Empty<byte>();
+
+        }
+        public virtual async Task<JsonDocument> AcceptJSON(HttpResponseMessage resp)
+        {
+            var data = await AcceptAndReturn(resp);
+            return JsonDocument.Parse(data);
+
+        }
+
         public virtual void ProcessJsonRaw(byte[] data)
         {
             var json = JsonDocument.Parse(data);
@@ -447,7 +477,7 @@ namespace COTG.Services
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
                     raid.target = r[8].GetInt32();
-                    raid.arrival = DateTime.ParseExact(r[7].GetString(),dateFormat, CultureInfo.InvariantCulture);
+                    raid.arrival = DateTimeOffset.ParseExact(r[7].GetString(),dateFormat, CultureInfo.InvariantCulture);
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
                     Log(raid.ToString());
@@ -497,6 +527,14 @@ namespace COTG.Services
             await p.Send(postContent);
 
         }
+        async public static Task<JsonDocument> SendForJson(string url, string postContent, string secret = null)
+        {
+            var p = new Post(url, secret);
+            return await p.AcceptJSON( await p.Send(postContent) );
+
+
+        }
+
         async public static Task SendEncrypted(string url, string postContentJson, string secret )
         {
             var p = new Post(url, secret);

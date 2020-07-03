@@ -56,6 +56,21 @@ namespace COTG
         {
             return t > 0 ? 1.0f : t < 0 ? -1.0f : 0;
         }
+        public static float Squared(this float f)
+        {
+            return f * f;
+        }
+        public static float Squared(this int f)
+        {
+            return (float)f * (float)f;
+        }
+
+        public static float Distance(this (int x,int y) a,(int x, int y) b)
+        {
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            return MathF.Sqrt((a.x - b.x).Squared() + (a.y - b.y).Squared());
+        }
 
     }
 }

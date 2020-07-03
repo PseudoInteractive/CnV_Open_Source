@@ -245,7 +245,7 @@ namespace COTG.Game
                     pixels[index * 8 + 1] = 0;
                     if (c.playerId == JSClient.jsVars.pid)
                         pixels.SetColor(index, 0x60, 0xd0, 0x40);
-                    else if (c.allianceId == Alliance.id)
+                    else if (c.allianceId == Alliance.my.id)
                         pixels.SetColor(index, 0x30, 0xa0,0x30);
                     else
                     {

@@ -33,8 +33,8 @@ namespace COTG.Game
         public string owner { get; set; } // todo: this shoule be an int playerId
         public string alliance { get; set; }// todo:  this should be an into alliance id
         public string notes { get; set; }
-        public DateTime lastUpdated { get; set; }
-        public DateTime lastAccessed { get; set; } // lass user access
+        public DateTimeOffset lastUpdated { get; set; }
+        public DateTimeOffset lastAccessed { get; set; } // lass user access
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }

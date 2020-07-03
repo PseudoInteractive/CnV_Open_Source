@@ -25,7 +25,7 @@ namespace COTG
      //   static LoggingSession session;
         static Debug()
 		{
-            var now = new DateTime(2000, 12, 12);
+          //  var now = new DateTime(2000, 12, 12);
             //   Console.SetOut(Console.Error);
 
             //session = new LoggingSession("CotgS");

@@ -16,7 +16,7 @@ namespace COTG.Game
     public struct Raid : IEquatable<Raid>
     {
         public int target;// cid
-        public DateTime arrival;
+        public DateTimeOffset arrival;
         public bool isReturning;
         public bool isRepeating; // neighter timed return nor raid once
 

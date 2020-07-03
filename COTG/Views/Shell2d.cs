@@ -18,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.ApplicationModel.Core;
 using Microsoft.Graphics.Canvas.Svg;
 using COTG.Services;
+using Microsoft.Graphics.Canvas.Text;
 
 namespace COTG.Views
 {
@@ -32,7 +33,9 @@ namespace COTG.Views
         public static Vector2 cameraMid;
         public static float cameraZoom;
 
-        static CanvasSolidColorBrush  raidBrush,shadowBrush;
+        static CanvasSolidColorBrush raidBrush, shadowBrush;
+        static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
+        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};// { HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center};
 
         static public CanvasAnimatedControl canvas;
 
@@ -154,7 +157,18 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, Colors.Black) { Opacity = 0.75f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 64, G = 64, B = 64, R = 64 }) {Opacity = 0.5f };
+                    tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+                    {
+                        new CanvasGradientStop() { Position = 0.0f, Color = Colors.Gray },
+                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } })
+                    { Opacity = 0.5f };
+                    tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+                    {
+                        new CanvasGradientStop() { Position = 0.0f, Color = Colors.White },
+                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Blue }
+                    });
+                   ;
 
                 }
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
@@ -212,14 +226,32 @@ namespace COTG.Views
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 if (Attack.attacks != null)
                 {
+                    float postAttackDisplayTime = 180; // 3 min
                     foreach (var attack in Attack.attacks)
                     {
 
                         var c1 = attack.targetCid.ToWorldC().WToC();
                         var c0 = attack.sourceCid.ToWorldC().WToC();
-                        var progress = ((float)(serverNow - attack.spotted).TotalHours /
-                            ((float)(attack.time-attack.spotted).TotalHours).Max(1.0f/64.0f) ).Saturate(); // we don't know the duration so we approximate with 2 hours
+                        // cull (should do this pre-transform as that would be more efficient
+                        if (c0.X.Min(c1.X) >= clientSpan.X)
+                            continue;
+                        if (c0.X.Max(c1.X) <= 0.0f)
+                            continue;
+                        if (c0.Y.Min(c1.Y) >= clientSpan.Y)
+                            continue;
+                        if (c0.Y.Max(c1.Y) <= 0.0f)
+                            continue;
+                        var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
+
+                        // before attack
+                        var dt1 = (float)(attack.time - serverNow).TotalSeconds;
+                        if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
+                            continue;
+
+
+                        var progress = (dt1 / (dt0+dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                         var mid = progress.Lerp(c0, c1);
+
                         ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
                         ds.FillRectangle(mid.X - rectSpan * 0.5f, mid.Y - rectSpan * 0.5f, rectSpan, rectSpan, shadowBrush);
                         var midS = mid - shadowOffset;
@@ -248,7 +280,15 @@ namespace COTG.Views
                 }
                 if(toolTip != null)
                 {
-                    ds.DrawText(toolTip, mousePosition + new Vector2(16, 16), Colors.Blue);
+                    var rectD = new Vector2(32*4, 24*5);
+                    var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
+                    tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = mousePosition;
+                    tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = mousePosition + rectD * 1.5f;
+                    ds.FillRoundedRectangle(target, 8, 8, tipBackgroundBrush);
+                    target.X+= 12;
+                    target.Y += 8;
+
+                    ds.DrawText(toolTip, target, tipTextBrush, tipTextFormat);
                 }
             }
             catch (Exception ex)

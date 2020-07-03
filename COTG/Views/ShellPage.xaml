@@ -122,20 +122,6 @@
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
 		</winui:NavigationView.MenuItems>
-		<i:Interaction.Behaviors>
-			<behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">
-				<behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
-					<DataTemplate>
-						<Grid>
-							<TextBlock
-								Margin="{StaticResource SmallLeftRightMargin}"
-								Style="{ThemeResource TitleTextBlockStyle}"
-								Text="{Binding}" />
-						</Grid>
-					</DataTemplate>
-				</behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
-			</behaviors:NavigationViewHeaderBehavior>
-		</i:Interaction.Behaviors>
 		<winui:NavigationView.PaneFooter>
 			<StackPanel
 				x:Name="FooterStackPanel"
@@ -220,7 +206,8 @@
                 Grid.RowSpan="2"
 				Canvas.ZIndex="5"
 				ExpandDirection="Right"
-				IsExpanded="True">
+				IsExpanded="True"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled">
 				<tk:Expander.Background>
 					<AcrylicBrush Opacity="0.5" TintOpacity="0.8" />
 				</tk:Expander.Background>
@@ -230,7 +217,8 @@
 					ItemTemplate="{StaticResource logDataTemplate}"
 					ItemsSource="{x:Bind logEntries}"
                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Visible">
+                     ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          VerticalContentAlignment="Top">
 				</ListView>
 
 
