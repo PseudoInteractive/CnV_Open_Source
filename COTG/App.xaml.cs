@@ -23,6 +23,8 @@ using Cysharp.Text;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using COTG.Views;
 using System.Numerics;
+using Windows.ApplicationModel.Core;
+using System.Threading.Tasks;
 
 namespace COTG
 {
@@ -155,6 +157,10 @@ namespace COTG
     }
     public static class Note 
     {
+        async public static Task L(string s)
+        {
+            await ShellPage.L(s);
+        }
         public static void Show(string s, int timeout=8000)
         {
             var textBlock = new MarkdownTextBlock() { Text = s};

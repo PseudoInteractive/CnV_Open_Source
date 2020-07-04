@@ -33,39 +33,57 @@ namespace COTG.Models
 
         public override void Execute(object parameter)
         {
-            base.Execute(parameter);
+           // base.Execute(parameter);
             var context = parameter as DataGridCellInfo;
             var grid = Views.MainPage.CityGrid;
             // put your custom logic here
-            var i = context.Item as COTG.Game.City;
-            var cid = i.cid;
-            
-            var isSelected = grid.SelectedItem == context;
-            if (isSelected)
-                grid.DeselectCell(context);
-            else
-                grid.SelectCell(context);
+            Assert(MainPage.hoverTarget != null);
+            var i = MainPage.hoverTarget;
 
-            Log(context.Item.GetType());
-            Log(context.Item.ToString());
-            Log(context.Value);
-
-            Log(context.Column.Name);
-            Log(base.CanExecute(parameter));
-            if (context.Column.Header != null)
+            try
             {
-                Log(context.Column.Header);
-                switch (context.Column.Header.ToString())
-                {
-                    case "xy": JSClient.ShowCity(cid); break;
-                    case "icon": JSClient.ChangeCity(cid); break;
-                    case "tsHome": new ScanDungeons(i).Post(); break;
 
+                var cid = i.cid;
+
+                //var i = context.Item as COTG.Game.City;
+
+                var isSelected = grid.SelectedItem == i;
+                if (isSelected)
+                    grid.DeselectCell(context);
+                else
+                    grid.SelectCell(context);
+
+                Log(context.Item.GetType());
+                Log(context.Item.ToString());
+                Log(context.Value);
+
+                Log(context.Column.Name);
+                Log(base.CanExecute(parameter));
+                //   grid.BeginEdit(context);
+                if (context.Column.Header != null)
+                {
+                    Log(context.Column.Header);
+                    switch (context.Column.Header.ToString())
+                    {
+                        case "xy": JSClient.ShowCity(cid); break;
+                        case "icon": JSClient.ChangeCity(cid); break;
+                        case "tsHome":
+                            {
+                                ScanDungeons.Post(cid); break;
+                            }
+                    }
                 }
             }
- 
-//            if (base.CanExecute(parameter))
-		
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+
+
+            //   grid.CommitEdit();
+
+            //            if (base.CanExecute(parameter))
+
         }
     }
     public class CityGridToggleColumnVisibilityCommand : DataGridCommand

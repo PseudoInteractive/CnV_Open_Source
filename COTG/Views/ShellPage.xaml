@@ -22,7 +22,16 @@
 	mc:Ignorable="d">
 
 	<Page.Resources>
-		<converters:BoolNegationConverter x:Name="BoolNegationConverter" />
+        <Style x:Key="FlyoutStyle"
+               TargetType="FlyoutPresenter">
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+            <Setter Property="MaxWidth"
+                    Value="1020" />
+        </Style>
+        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
 		<converters:BoolToVisibilityConverter
 			x:Name="ReverseBoolToVisibility"
 			FalseValue="Visible"
@@ -122,7 +131,20 @@
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
 		</winui:NavigationView.MenuItems>
-		<winui:NavigationView.PaneFooter>
+        <i:Interaction.Behaviors>
+            <behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">
+                <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Margin="{StaticResource SmallLeftRightMargin}"
+                                       Style="{ThemeResource TitleTextBlockStyle}"
+                                       Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+            </behaviors:NavigationViewHeaderBehavior>
+        </i:Interaction.Behaviors>
+        <winui:NavigationView.PaneFooter>
 			<StackPanel
 				x:Name="FooterStackPanel"
 				Orientation="Vertical"
@@ -173,7 +195,29 @@
 					</Button.Flyout>
 					<Image Source="/images/marketplace.png" />
 				</Button>
-
+				<Button
+					Width="Auto"
+					Height="60"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Center">
+					<Button.Flyout>
+						<Flyout Placement="Right"
+                                FlyoutPresenterStyle="{StaticResource FlyoutStyle}" >
+                            <StackPanel>
+                                <TextBlock x:Name="eventTimeTravelText">Even Time Travel Offset</TextBlock>
+                                    <Slider x:Name="eventTimeTravelSlider"
+                                        ValueChanged="EventTimeTravelSliderChanged"
+                              Width="980"
+                              TickFrequency="1"
+                              StepFrequency="10"
+                              Maximum="1439.0"
+                              Minimum="-1439.0"
+                              Value="{x:Bind eventTimeOffset}" x:DefaultBindMode="TwoWay" />
+                            </StackPanel>
+                        </Flyout>
+					</Button.Flyout>
+					<Image Source="/images/marketplace.png" />
+				</Button>
 			</StackPanel>
 		</winui:NavigationView.PaneFooter>
 		<Grid
@@ -203,23 +247,22 @@
 				StackMode="StackInFront" />
 			<tk:Expander
 				x:Name="logExpander"
-                Grid.RowSpan="2"
+				Grid.RowSpan="2"
 				Canvas.ZIndex="5"
 				ExpandDirection="Right"
 				IsExpanded="True"
-                         ScrollViewer.VerticalScrollBarVisibility="Disabled">
+				ScrollViewer.VerticalScrollBarVisibility="Disabled">
 				<tk:Expander.Background>
 					<AcrylicBrush Opacity="0.5" TintOpacity="0.8" />
 				</tk:Expander.Background>
 				<ListView
 					x:Name="listView"
 					HorizontalAlignment="Stretch"
+					VerticalContentAlignment="Top"
 					ItemTemplate="{StaticResource logDataTemplate}"
 					ItemsSource="{x:Bind logEntries}"
-                    ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                          VerticalContentAlignment="Top">
-				</ListView>
+					ScrollViewer.VerticalScrollBarVisibility="Visible"
+					ScrollViewer.VerticalScrollMode="Enabled" />
 
 
 

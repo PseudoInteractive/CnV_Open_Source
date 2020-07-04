@@ -39,7 +39,7 @@
                         RowHeight="40"
                         PointerMoved="DataGrid_PointerMoved"
                         FontSize="12"
-                        SelectionUnit="Cell"  GroupPanelPosition="Bottom" ListenForNestedPropertyChange="False"
+                        SelectionUnit="Row"  GroupPanelPosition="Bottom"
                         >
 			<tg:RadDataGrid.Commands>
 				<model:CityTapCommand />

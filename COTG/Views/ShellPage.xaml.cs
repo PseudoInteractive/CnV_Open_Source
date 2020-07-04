@@ -53,7 +53,7 @@ namespace COTG.Views
         private bool _isBusy;
         private bool _isLoggedIn;
         private bool _isAuthorized;
-
+        
 
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
@@ -247,10 +247,6 @@ namespace COTG.Views
                 NavigationService.GoBack();
             }
         }
-        void TestGet(object sender, RoutedEventArgs e)
-        {
-            JSClient.TestGet();
-        }
 
         private void OnUserProfile(object sender, RoutedEventArgs e)
         {
@@ -373,7 +369,6 @@ namespace COTG.Views
 
         public void TestPost(object o, RoutedEventArgs e)
         {
-            JSClient.TestGet();
         }
 
         public void Refresh(object o, RoutedEventArgs e)
@@ -389,7 +384,7 @@ namespace COTG.Views
             else
             {
                 // soft refresh
-                RestAPI.getCity.Post();
+                GetCity.Post(JSClient.cid);
             }
 
         }
@@ -403,7 +398,7 @@ namespace COTG.Views
         }
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
-            await RestAPI.getCity.Post();
+            await GetCity.Post(JSClient.cid);
 
         }
         private async void GetWorldInfo(object sender, RoutedEventArgs e)
@@ -575,5 +570,7 @@ namespace COTG.Views
         {
             IncomingOverview.Process(true);
         }
+
+       
     }
 }

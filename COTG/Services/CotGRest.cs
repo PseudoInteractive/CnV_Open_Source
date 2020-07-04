@@ -126,28 +126,29 @@ namespace COTG.Services
         }
         async public Task<HttpResponseMessage> Send(string postContent)
         {
-
+            HttpClient client = null;
             try
             {
 
 
                 var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath));
                 req.Content = new HttpStringContent(postContent,
-
                             Windows.Storage.Streams.UnicodeEncoding.Utf8,
-
-                                                        "application/x-www-form-urlencoded");
+                            "application/x-www-form-urlencoded");
 
                 req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
 
-                var resp = await JSClient.httpClient.TrySendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
-                Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
-                Log($"req: {resp.RequestMessage.ToString()}");
-                if (resp.ExtendedError != null)
-                    Log(resp.ExtendedError);
-                if (resp.Succeeded)
+                client = JSClient.clientPool.Take();
+                var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+                //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
+                //     Log($"req: {resp.RequestMessage.ToString()}");
+                //   if (resp.ExtendedError != null)
+                //      Log(resp.ExtendedError);
+                JSClient.clientPool.Add(client);
+                client = null;
+                if (resp!=null)
                 {
-                    return resp.ResponseMessage;
+                    return resp;
                     //var b = await resp.Content.ReadAsInputStreamAsync();
 
                     //                    jso = await JsonDocument.ParseAsync(b.ToString);
@@ -161,6 +162,9 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
+                if(client!=null)
+                JSClient.clientPool.Add(client);
+                client = null;
                 Log(e);
             }
             return null;
@@ -171,7 +175,7 @@ namespace COTG.Services
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-        public static GetCity getCity = new GetCity(0);
+     //  public static GetCity getCity = new GetCity(0);
         public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
@@ -234,10 +238,9 @@ namespace COTG.Services
         {
             cid = _cid;
         }
-        public int CID => (cid != 0 ? cid : JSClient.cid);
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(CID.ToString(), secret);
+            var encoded = Aes.Encode(cid.ToString(), secret);
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -245,9 +248,14 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
            // var cid = json.RootElement.GetAsInt("cid");
-            Log("Got JS " + CID);
-             var city=City.all.GetOrAdd(CID,City.Factory);
+            Log("Got JS " + cid);
+             var city=City.all.GetOrAdd(cid,City.Factory);
             city.LoadFromJson(json.RootElement);
+
+        }
+        public static async Task Post(int _cid)
+        {
+            await (new GetCity(_cid)).Post();
 
         }
 
@@ -281,17 +289,26 @@ namespace COTG.Services
 
     public class ScanDungeons : RestAPI
     {
-        City city;
+        int cid;
 
-        public ScanDungeons(City _cid) : base("includes/fCv.php", "Xs4b2261f55dlme55s")
+        public ScanDungeons(int _cid) : base("includes/fCv.php", "Xs4b2261f55dlme55s")
         {
 
-            city = _cid;
-        }
+            cid = _cid;
 
+        }
+        public static async Task Post(int _cid)
+        {
+            Log(_cid.ToCoordinate());
+            await GetCity.Post(_cid);
+         //   await Task.Delay(2000);
+         //   COTG.Views.MainPage.CityListUpdateAll();
+         //   await new ScanDungeons(_cid).Post();
+            
+        }
         public override string GetPostContent()
         {
-            var args = "cid=" + city.cid;
+            var args = "cid=" + cid;
             return args;
         }
 
@@ -302,6 +319,7 @@ namespace COTG.Services
 
             try
             {
+                var city = City.all[cid];
                 var buff = await resp.Content.ReadAsBufferAsync();
 
                 var temp = new byte[buff.Length - 1];
@@ -463,7 +481,6 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument jsd)
         {
             //           string dateExtra = DateTime.Now.Year
-            string dateFormat = "HH:mm:ss dd/MM";
             var a = jsd.RootElement.GetProperty("a");
             foreach (var cr in a.EnumerateArray())
             {
@@ -477,7 +494,7 @@ namespace COTG.Services
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
                     raid.target = r[8].GetInt32();
-                    raid.arrival = DateTimeOffset.ParseExact(r[7].GetString(),dateFormat, CultureInfo.InvariantCulture);
+                    raid.arrival =  r[7].GetString().ParseDateTime();
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
                     Log(raid.ToString());

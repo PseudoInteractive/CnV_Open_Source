@@ -123,6 +123,10 @@ namespace COTG.Helpers
             return e.ToString();
 
         }
+        public static string GetAsString(this JsonElement js)
+        {
+            return js.ToString();
+        }
         public static float GetFloat(this JsonElement js, string prop)
         {
             if (!js.TryGetProperty(prop, out var e))
@@ -148,15 +152,15 @@ namespace COTG.Helpers
             return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
         }
         public static string timeZoneString=string.Empty;
-        public static DateTimeOffset ParseTime(this string src)
+        public static DateTimeOffset ParseDateTime(this string src)
         {
-            var format = "H:mm:ss MM/dd/yyyy";
+            var format = "H:mm:ss dd/MM/yyyy";
             var s = src; // src may be missing the date or year
             var serverTime = JSClient.ServerTime();
             var dateMarker = s.IndexOf('/');
             if (dateMarker <= 0)
             {
-                s = $"{s} {serverTime.Month:D2}/{serverTime.Day:D2}/{serverTime.Year}";
+                s = $"{s} {serverTime.Day:D2}/{serverTime.Month:D2}/{serverTime.Year}";
             }
             else
             {

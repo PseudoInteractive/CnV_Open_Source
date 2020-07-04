@@ -21,14 +21,18 @@ using Windows.Foundation;
 using Microsoft.Toolkit.Uwp;
 using Windows.UI.Xaml.Input;
 using COTG.Services;
+using System.Collections;
 
 namespace COTG.Views
 {
 
-    public class DumbCollection<T> : List<T>, INotifyCollectionChanged
+    public class DumbCollection<T> : List<T>, INotifyCollectionChanged,INotifyPropertyChanged
     {
+        public void OnPropertyChanged(T city,string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+        public event PropertyChangedEventHandler PropertyChanged;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
-        
+
+       
 
         public override bool Equals(object obj)
         {
@@ -46,6 +50,7 @@ namespace COTG.Views
         }
         public void NotifyChange(T item)
         {
+         //   OnPropertyChanged(item,null);
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,item,item,IndexOf(item)));
         }
         public void NotifyAdd(T item)
@@ -64,8 +69,8 @@ namespace COTG.Views
         public DumbCollection<City> cities { get; } = new DumbCollection<City>();
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
-        static City hoverTarget;
-       
+        public static City hoverTarget;
+        public static string hoverTargetColumn;
         //        public static City showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -91,6 +96,7 @@ namespace COTG.Views
 
             cityGrid.ContextFlyout=cityMenuFlyout;
 
+            
         }
 
         
@@ -102,12 +108,14 @@ namespace COTG.Views
             var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
             var cell =grid.HitTestService.CellInfoFromPoint(point);
             var city = cell?.Item as City;
-            if(city != hoverTarget)
+            var cellName = cell?.Column.Header?.ToString();
+            if(city != hoverTarget || hoverTargetColumn != cellName )
             {
+                hoverTargetColumn = cellName;
                 hoverTarget = city;
                 if(city != null)
                 {
-                    Log($"{cell.Column.Header?.ToString()} {city}");
+                    Note.L($"{cellName} {city.cid.ToCoordinate()}");
                 }
 
             }
@@ -163,16 +171,22 @@ namespace COTG.Views
         {
             if (cache == null)
                 return;
-
+            
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 var cities = cache.cities;
                 if (cities.Contains(city))
                 {
+                    Note.L($"Change: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
+                    //                    cache.cityGrid.BeginEdit(city);
+                 //   cache.cityGrid.BeginEdit(cache.cityGrid.SelectedItem ?? city);
+                 //   cache.cityGrid.CommitEdit();
+
                     cities.NotifyChange(city);
                 }
                 else
                 {
+                    Note.L($"Add: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
                     cities.Add(city);
                     cities.NotifyAdd(city);
 
@@ -186,6 +200,8 @@ namespace COTG.Views
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
+                Note.L("ListChange: ");
+
                 var cities = cache.cities;
                 cities.Clear();
                 cities.AddRange(City.all.Values); // use the most reset city list
@@ -197,9 +213,10 @@ namespace COTG.Views
         {
             if (cache == null)
                 return;
-
+            Note.L("UpdateAll: ");
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
+
                 cache.cities.NotifyReset();
             });
         }
@@ -237,9 +254,7 @@ namespace COTG.Views
         }
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        public void OnCityGridChange()  {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(cities)));
-        }
+       
 
         private void RecallSlow(object sender, RoutedEventArgs e)
         {

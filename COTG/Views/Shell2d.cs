@@ -32,14 +32,15 @@ namespace COTG.Views
         public static Vector2 clientSpan;
         public static Vector2 cameraMid;
         public static float cameraZoom;
-
+        public float eventTimeOffset;
+        public float eventTimeEnd;
         static CanvasSolidColorBrush raidBrush, shadowBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};// { HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center};
 
         static public CanvasAnimatedControl canvas;
 
-        CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 4 },
+        CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
             DashCap=CanvasCapStyle.Triangle,
             EndCap=CanvasCapStyle.Triangle,
             StartCap=CanvasCapStyle.Triangle};
@@ -119,14 +120,14 @@ namespace COTG.Views
         }
 
         const float lineThickness = 4.0f;
-        const float rectSpanMin = 8.0f;
-        const float rectSpanMax = 14.0f;
+        const float rectSpanMin = 4.0f;
+        const float rectSpanMax = 6.0f;
         const float bSizeGain = 4.0f;
         const float bSizeGain2 = 4;//4.22166666666667f;
         const float srcImageSpan = 2400;
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale=1;
-        const float dashLength = (1 + 2) * lineThickness;
+        const float dashLength = (1 + 3) * lineThickness;
         static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
@@ -149,7 +150,7 @@ namespace COTG.Views
 
             try
             {
-                var serverNow = JSClient.ServerTime();
+                var serverNow = JSClient.ServerTime() + TimeSpan.FromMinutes(eventTimeOffset);
                 float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
                 var animTLoop = animT.Wave();
                 var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
@@ -157,7 +158,7 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 64, G = 64, B = 64, R = 64 }) {Opacity = 0.5f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.5f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = Colors.Gray },
@@ -226,10 +227,11 @@ namespace COTG.Views
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 if (Attack.attacks != null)
                 {
-                    float postAttackDisplayTime = 180; // 3 min
+                    const float postAttackDisplayTime = 5*60; // 5 min
                     foreach (var attack in Attack.attacks)
                     {
-
+                        if (selectedTarget != 0 && selectedTarget != attack.targetCid)
+                            continue;
                         var c1 = attack.targetCid.ToWorldC().WToC();
                         var c0 = attack.sourceCid.ToWorldC().WToC();
                         // cull (should do this pre-transform as that would be more efficient
@@ -249,14 +251,16 @@ namespace COTG.Views
                             continue;
 
 
-                        var progress = (dt1 / (dt0+dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
+                        var progress = (dt0 / (dt0+dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                         var mid = progress.Lerp(c0, c1);
-
+                        var span = rectSpan;
+                        if (dt1 < postAttackDisplayTime)
+                            span *= 2.5f;
                         ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillRectangle(mid.X - rectSpan * 0.5f, mid.Y - rectSpan * 0.5f, rectSpan, rectSpan, shadowBrush);
+                        ds.FillCircle(mid ,  span, shadowBrush);
                         var midS = mid - shadowOffset;
                         ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillRectangle(midS.X - rectSpan * 0.5f, midS.Y - rectSpan * 0.5f, rectSpan, rectSpan, raidBrush);
+                        ds.FillCircle(midS, span, raidBrush);
                     }
                 }
                 foreach (var city in City.all)
@@ -271,14 +275,15 @@ namespace COTG.Views
                         var progress = (1.0f - ((float)(raid.arrival - serverNow).TotalHours) * 0.5f).Max(0.125f); // we don't know the duration so we approximate with 2 hours
                         var mid = progress.Lerp(c0, c1);
                         ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillRectangle(mid.X - rectSpan * 0.5f, mid.Y - rectSpan * 0.5f, rectSpan, rectSpan, shadowBrush);
+                        ds.FillCircle(mid, rectSpan,  shadowBrush);
                         var midS = mid - shadowOffset;
                         ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillRectangle(midS.X - rectSpan * 0.5f, midS.Y - rectSpan * 0.5f, rectSpan, rectSpan, raidBrush);
+                        ds.FillCircle(midS,rectSpan, raidBrush);
 
                     }
                 }
-                if(toolTip != null)
+                var _toolTip =toolTip;
+                if(_toolTip != null)
                 {
                     var rectD = new Vector2(32*4, 24*5);
                     var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
@@ -288,7 +293,7 @@ namespace COTG.Views
                     target.X+= 12;
                     target.Y += 8;
 
-                    ds.DrawText(toolTip, target, tipTextBrush, tipTextFormat);
+                    ds.DrawText(_toolTip, target, tipTextBrush, tipTextFormat);
                 }
             }
             catch (Exception ex)

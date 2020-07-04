@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
 namespace COTG.Views
@@ -21,6 +22,7 @@ namespace COTG.Views
         public static Vector2 mousePosition;
         public static Vector2 lastMousePressPosition;
         public static string toolTip;
+        public static int selectedTarget;
         
 
         //private void SetupCanvasInput()
@@ -51,6 +53,10 @@ namespace COTG.Views
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
                 var info = World.CityLookup(worldC);
+                if (cid == selectedTarget)
+                    selectedTarget = 0;
+                else
+                    selectedTarget = cid;
                 // If clicking on our city, change city to that, otherwise show the city info
                 // for non cities we show info
                 if(info.type == World.typeCity && info.data == JSClient.jsVars.pid)
@@ -126,6 +132,12 @@ namespace COTG.Views
             }
 
             mousePosition = c1;
+        }
+        private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            var dt = TimeSpan.FromMinutes(e.NewValue);
+            var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
+            eventTimeTravelText.Text = $"Event Time Travel Offset: {dt.Hours}hr:{dt.Minutes}min,  T:{serverTime.Hour}:{serverTime.Minute:D2}";
         }
     }
 }

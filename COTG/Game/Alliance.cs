@@ -57,7 +57,7 @@ namespace COTG.Game
         public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
         public static async void Ctor(JsonDocument _aldt)
         {
-            Log(_aldt);
+           // Log(_aldt);
             aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
             my.id = element.GetAsInt("id");
@@ -81,7 +81,7 @@ namespace COTG.Game
 
                 }
             }
-            await Task.Delay(10000);
+            await Task.Delay(5000);
             var alliances = new List<Alliance>();
             var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();
@@ -98,9 +98,10 @@ namespace COTG.Game
                     alliances.Add(al);
                 }
             }
-            foreach (var al in alliances)
+            foreach (var _al in alliances)
             {
-                var alName = al.name;
+                var alName = _al.name;
+                var al = _al;
                 using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
                 {
                     var id = jsa.RootElement.GetAsInt("id");

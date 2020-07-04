@@ -131,7 +131,10 @@ namespace COTG.Game
             Debug.Assert(cid == jse.GetInt("cid"));
             name = jse.GetAsString("citn");
             owner = jse.GetAsString("pn");
-            COTG.Views.MainPage.CityChange(this);
+
+            if(COTG.Views.MainPage.cache.cities.Count!=0)
+                COTG.Views.MainPage.CityChange(this);
+//            COTG.Views.MainPage.CityListUpdateAll();
 
         }
         const int bidCastle = 467;

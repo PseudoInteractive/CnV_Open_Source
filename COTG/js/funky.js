@@ -2030,7 +2030,7 @@ function sendCityData(delayInMs) {
     }
 }
 function gCPosted() {
-    sendCityData(1000);
+    sendCityData(100);
     setTimeout(function () {
         /** @type {*} */
         updateattack_();

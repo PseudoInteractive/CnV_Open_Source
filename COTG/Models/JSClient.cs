@@ -57,7 +57,8 @@ namespace COTG
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
         static HttpBaseProtocolFilter httpFilter;
-        public static HttpClient httpClient;
+        const int clientCount = 4;
+        public static BlockingCollection<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
         public static int world = 19;
@@ -168,7 +169,7 @@ namespace COTG
             try
             {
                 var req = args.Request;
-
+               
     //            Log(req.RequestUri.ToString());
                 if(req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
@@ -184,7 +185,7 @@ namespace COTG
                     try
                     {
                        
-                            view.WebResourceRequested -= View_WebResourceRequested1;
+                        view.WebResourceRequested -= View_WebResourceRequested1;
                         string host = args.Request.RequestUri.Host;
                         string uri = args.Request.RequestUri.AbsoluteUri;
 
@@ -393,7 +394,7 @@ namespace COTG
                       //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
                         httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
                         httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
-                        httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
+                        httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
                         httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
     //                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
   //                      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
@@ -407,33 +408,37 @@ namespace COTG
                         httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted );
 
 //                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
-                        httpFilter.AllowUI = true;
+ //                       httpFilter.AllowUI = true;
                         httpFilter.AutomaticDecompression = true;
                         httpFilter.MaxVersion = HttpVersion.Http20;
-                      
-//                        httpFilter.User.
 
-                        
-                        httpClient = new HttpClient(httpFilter); // reset
-                                                                 //   httpClient = new HttpClient(); // reset
-                                                                 //                        var headers = httpClient.DefaultRequestHeaders;
-                                                                 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
-                                                                 // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
-                                                                 //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                                                                 //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
-                                                                 //   headers.Add("Accept", @"*/*");
-                        httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-                    //    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
-                        //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
-                        httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
-                        // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-                    //    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-                          httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                        httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
+                        //                        httpFilter.User.
 
-                        httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                        Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
+                        clientPool = new BlockingCollection<HttpClient>(clientCount);
+                        for (int i = 0; i < clientCount; ++i)
+                        {
+                            var httpClient = new HttpClient(httpFilter); // reset
+                                                                         //   httpClient = new HttpClient(); // reset
+                                                                         //                        var headers = httpClient.DefaultRequestHeaders;
+                                                                         //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
+                                                                         // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
+                                                                         //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                                                                         //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
+                                                                         //   headers.Add("Accept", @"*/*");
+                            httpClient.DefaultRequestHeaders.Clear();
+                            httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
+                            //    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+                            //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
+                            httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
+                            // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+                            //    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+                            httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
+                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                            //   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
+                            clientPool.Add(httpClient);
+                        }
                         view.WebResourceRequested -= View_WebResourceRequested1;
                         view.WebResourceRequested += View_WebResourceRequested1;
 
@@ -541,9 +546,16 @@ namespace COTG
                         case "jsvars":
                             {
                                 var jso = jsp.Value;
+                                jsVars.s = jso.GetString("s");
                                 jsVars.token = jso.GetString("token");
                                 var agent = jso.GetString("agent");
-                                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
+                                jsVars.cookie = jso.GetString("cookie");
+                                var clients = clientPool.ToArray();
+                                foreach (var httpClient in clients)
+                                {
+                                    httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
+                                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+                                }
                                 var timeOffset = jso.GetAsInt64("timeoffset");
                                 var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)  )*30.0f; // round to nearest half hour
                                 jsVars.gameTOffset =TimeSpan.FromMinutes(timeOffsetRounded);
@@ -556,8 +568,9 @@ namespace COTG
                                 jsVars.ppss = jso.GetAsInt("ppss");
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
-                                jsVars.s = jso.GetString("s");
+                               
                                 cid = jso.GetAsInt("cid");
+                                Note.L("cid=" + cid.ToCoordinate());
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTimeOffset.UtcNow;
                                 Log(jsVars.ToString());
@@ -598,6 +611,7 @@ namespace COTG
                                 MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
                                 cid = jse.GetInt("cid");
+                                Note.L("cid=" + cid.ToCoordinate());
                                 var city=City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
                                 break;
@@ -633,6 +647,7 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
+                                Note.L("cid=" + cid.ToCoordinate());
                                 var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
                                 if(priorView!=viewMode )
@@ -720,74 +735,74 @@ namespace COTG
             Exception("Unsafe");
         }
 
-        public static async void TestGet()
-        {
-            Log("TestGet");
-            //     using var req = new HttpRequestMessage(HttpMethod.Post, new Uri( new Uri($"https://w{world}.crownofthegods.com"), "poll2.php"));
+//        public static async void TestGet()
+//        {
+//            Log("TestGet");
+//            //     using var req = new HttpRequestMessage(HttpMethod.Post, new Uri( new Uri($"https://w{world}.crownofthegods.com"), "poll2.php"));
 
-            //            AddDefaultHeaders(req.Headers);
+//            //            AddDefaultHeaders(req.Headers);
 
 
-            try
-            {
-                var url =
-                       "world=&" +
-                       "cid=17367265&" +
-                       "ai=0&" +
-                       $"ss={jsVars.s}";
+//            try
+//            {
+//                var url =
+//                       "world=&" +
+//                       "cid=17367265&" +
+//                       "ai=0&" +
+//                       $"ss={jsVars.s}";
 
-                //            using var req  =anyPost;
-                var req = new HttpRequestMessage(HttpMethod.Post, new Uri(httpsHost, @"includes/poll2.php"));
-               // req.TransportInformation.ver
-                //req.AllowAutoRedirect = true;
-                req.Content = new HttpStringContent(url,
+//                //            using var req  =anyPost;
+//                var req = new HttpRequestMessage(HttpMethod.Post, new Uri(httpsHost, @"includes/poll2.php"));
+//               // req.TransportInformation.ver
+//                //req.AllowAutoRedirect = true;
+//                req.Content = new HttpStringContent(url,
 
-                                                        Windows.Storage.Streams.UnicodeEncoding.Utf8,
+//                                                        Windows.Storage.Streams.UnicodeEncoding.Utf8,
 
-                                                        "application/x-www-form-urlencoded");//CONTENT-TYPE header UrlEncodeToBytes( url,  );
-                                                                                             //    req.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
-                                                                                             //       req.Headers.Accept.TryParseAdd(@"application/json");
-                                                                                             //            req.Headers.Accept.TryParseAdd(@"*/*");
+//                                                        "application/x-www-form-urlencoded");//CONTENT-TYPE header UrlEncodeToBytes( url,  );
+//                                                                                             //    req.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
+//                                                                                             //       req.Headers.Accept.TryParseAdd(@"application/json");
+//                                                                                             //            req.Headers.Accept.TryParseAdd(@"*/*");
                
-  //              var value = new Windows.Networking.HostName(req.RequestUri.Host);
- //               req.Headers.Host = value;
-                //if (anyPost != null)
-                //    foreach (var h in anyPost.Headers)
-                //    {
-                //        req.Headers.TryAdd(h.Key, h.Value);
-                //    }
+//  //              var value = new Windows.Networking.HostName(req.RequestUri.Host);
+// //               req.Headers.Host = value;
+//                //if (anyPost != null)
+//                //    foreach (var h in anyPost.Headers)
+//                //    {
+//                //        req.Headers.TryAdd(h.Key, h.Value);
+//                //    }
 
 
-                //            req.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
+//                //            req.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
 
-                //            req.Content.Headers.ContentType.CharSet = "UTF-8";
+//                //            req.Content.Headers.ContentType.CharSet = "UTF-8";
 
-                req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
+//                req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", jsVars.token);
 
-                var resp = await httpClient.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
-                Log($"Error: {resp.StatusCode}");
-                Log($"Error: {resp.RequestMessage.ToString()}");
-                if (resp.IsSuccessStatusCode)
-                {
-                    var b = await resp.Content.ReadAsStringAsync();
+//                var resp = await httpClient.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+//                Log($"Error: {resp.StatusCode}");
+//                Log($"Error: {resp.RequestMessage.ToString()}");
+//                if (resp.IsSuccessStatusCode)
+//                {
+//                    var b = await resp.Content.ReadAsStringAsync();
 
-//                    jso = await JsonDocument.ParseAsync(b.ToString);
+////                    jso = await JsonDocument.ParseAsync(b.ToString);
 
-                    Log(b.ToString());
-                }
-                else
-                {
+//                    Log(b.ToString());
+//                }
+//                else
+//                {
 
-                };
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-
-
+//                };
+//            }
+//            catch (Exception e)
+//            {
+//                Log(e);
+//            }
 
 
-        }
+
+
+//        }
     }
 }

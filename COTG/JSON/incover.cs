@@ -10,11 +10,90 @@ using static COTG.Debug;
 using COTG.Services;
 using COTG.Game;
 using COTG.Helpers;
+using COTG.Views;
+using System.Collections.Concurrent;
 
 namespace COTG.JSON
 {
     public static class IncomingOverview 
     {
+            public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
+            {
+                async Task AwaitPartition(IEnumerator<T> partition)
+                {
+                    using (partition)
+                    {
+                        while (partition.MoveNext())
+                        { await funcBody(partition.Current); }
+                    }
+                }
+
+                return Task.WhenAll(
+                    Partitioner
+                        .Create(source)
+                        .GetPartitions(maxDoP)
+                        .AsParallel()
+                        .Select(p => AwaitPartition(p)));
+            }
+
+            public static Task ParallelForEachAsync<T1, T2>(this IEnumerable<T1> source, Func<T1, T2, Task> funcBody, T2 inputClass, int maxDoP = 4)
+            {
+                async Task AwaitPartition(IEnumerator<T1> partition)
+                {
+                    using (partition)
+                    {
+                        while (partition.MoveNext())
+                        { await funcBody(partition.Current, inputClass); }
+                    }
+                }
+
+                return Task.WhenAll(
+                    Partitioner
+                        .Create(source)
+                        .GetPartitions(maxDoP)
+                        .AsParallel()
+                        .Select(p => AwaitPartition(p)));
+            }
+
+            public static Task ParallelForEachAsync<T1, T2, T3>(this IEnumerable<T1> source, Func<T1, T2, T3, Task> funcBody, T2 inputClass, T3 secondInputClass, int maxDoP = 4)
+            {
+                async Task AwaitPartition(IEnumerator<T1> partition)
+                {
+                    using (partition)
+                    {
+                        while (partition.MoveNext())
+                        { await funcBody(partition.Current, inputClass, secondInputClass); }
+                    }
+                }
+
+                return Task.WhenAll(
+                    Partitioner
+                        .Create(source)
+                        .GetPartitions(maxDoP)
+                        .AsParallel()
+                        .Select(p => AwaitPartition(p)));
+            }
+
+            public static Task ParallelForEachAsync<T1, T2, T3, T4>(this IEnumerable<T1> source, Func<T1, T2, T3, T4, Task> funcBody, T2 inputClass, T3 secondInputClass, T4 thirdInputClass, int maxDoP = 4)
+            {
+                async Task AwaitPartition(IEnumerator<T1> partition)
+                {
+                    using (partition)
+                    {
+                        while (partition.MoveNext())
+                        { await funcBody(partition.Current, inputClass, secondInputClass, thirdInputClass); }
+                    }
+                }
+
+                return Task.WhenAll(
+                    Partitioner
+                        .Create(source)
+                        .GetPartitions(maxDoP)
+                        .AsParallel()
+                        .Select(p => AwaitPartition(p)));
+            }
+       
+
         const float averageSpeed = 10f;
         const float averageScoutSpeed = 5f;
         static string[] attackTypes = { "assault", "siege" };
@@ -40,7 +119,7 @@ namespace COTG.JSON
 
         public async static Task Process(bool fetchHistory)
         {
-            Dictionary<int, Attack> attacks = new Dictionary<int, Attack>();
+            ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
             {
                 var jse = jsd.RootElement.GetProperty("b");
@@ -52,8 +131,8 @@ namespace COTG.JSON
                     var spotted = b.GetString("spotted");
                     var arrival = b.GetString("arrival");
 
-                    attack.spotted = spotted.ParseTime();
-                    attack.time = (arrival).ParseTime();
+                    attack.spotted = spotted.ParseDateTime();
+                    attack.time = (arrival).ParseDateTime();
                     attacks.TryAdd(attack.GetHashCode(),attack);
                 }
             }
@@ -62,7 +141,8 @@ namespace COTG.JSON
                 // defense history
                 using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2"))
                 {
-                    foreach(var inc in jsd.RootElement.EnumerateArray())
+                    int counter = 0;
+                    await jsd.RootElement.EnumerateArray().ParallelForEachAsync( async (inc) =>
                     {
 
                         /*
@@ -107,13 +187,13 @@ namespace COTG.JSON
 		18612449 // 16
 	],
                          */
-                        var target = TryDecodeCid(0,inc[4].GetString());
+                        var target = TryDecodeCid(0, inc[4].GetString());
                         if (target <= 0)
-                            continue;
-                        var time = inc[5].GetString().ParseTime();
-                        var source = TryDecodeCid(0,inc[7].GetString());
-                        var recId = inc[11].GetString();
-                        if(source > 0)
+                            return;
+                        var time = inc[5].GetString().ParseDateTime();
+                        var source = TryDecodeCid(0, inc[7].GetString());
+                        var recId = inc[11].GetAsString();
+                        if (source > 0)
                         {
                             // Scout
                             // this is a scout
@@ -124,19 +204,19 @@ namespace COTG.JSON
                                 time = time,
                                 spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageScoutSpeed)
                             };
-                            attacks.TryAdd(a.GetHashCode(),a);
+                            attacks.TryAdd(a.GetHashCode(), a);
 
 
                         }
                         else
                         {
                             // we have to look up the report
-                            using(var jsdr = await Post.SendForJson("includes/gFrep2.php", "r="+recId ) )
+                            using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
                             {
                                 var reports = jsdr.RootElement;
-                                foreach(var attackType in attackTypes)
+                                foreach (var attackType in attackTypes)
                                 {
-                                    if(reports.TryGetProperty(attackType,out var reportsByType))
+                                    if (reports.TryGetProperty(attackType, out var reportsByType))
                                     {
                                         foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
                                         {
@@ -158,7 +238,11 @@ namespace COTG.JSON
 
                             }
                         }
-                    }
+                        if ((counter++ & 63) == 0)
+                        {
+                            ShellPage.L("Attacks " + attacks.Count);
+                        }
+                    },4);
                 }
 
              }
