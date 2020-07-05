@@ -2529,9 +2529,9 @@ function avactor() {
     // };
     /** @type {!Array} */
     var shrinec_ = [[]];
- //   var _mru = localStorage.getItem("mru");
- //   if (_mru != null)
-  //      mru = JSON.parse(_mru);
+    //var _mru = localStorage.getItem("mru");
+    //if (_mru != null)
+    //	mru = JSON.parse(_mru);
     setTimeout(() => {
         SendCreds();
         UpdateResearchAndFaith();
@@ -3880,22 +3880,22 @@ function avactor() {
                 //var maxCount = 32;
                 ///** @type {AsNumber} */
                 //for (var i = 0; i < mru.length; ++i) {
-                //    var _i = mru[i];
-                //    if (_i.cid == _cid) {
-                //        toAdd = _i;
-                //        toAdd.last = new Date();
-                //        mru.splice(AsNumber(i), 1);
-                //        break;
-                //    }
+                //	var _i = mru[i];
+                //	if (_i.cid == _cid) {
+                //		toAdd = _i;
+                //		toAdd.last = new Date();
+                //		mru.splice(AsNumber(i), 1);
+                //		break;
+                //	}
                 //}
                 //if (mru.length > maxCount) {
-                //    /** @type {number} */
-                //    for (var i = mru.length; --i >= 0;) {
-                //        if (!mru[i].pin) {
-                //            mru.splice(i, 1);
-                //            break;
-                //        }
-                //    }
+                //	/** @type {number} */
+                //	for (var i = mru.length; --i >= 0;) {
+                //		if (!mru[i].pin) {
+                //			mru.splice(i, 1);
+                //			break;
+                //		}
+                //	}
                 //}
                 toAdd.player = clickInfo.info.player;
                 toAdd.last = new Date();
@@ -3905,10 +3905,10 @@ function avactor() {
                 toAdd.cid = _cid;
                 toAdd.score = clickInfo.info.score;
                 toAdd.ptype = clickInfo.info.ptype;
-               // mru.push(toAdd);
-               // mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf(); });
-               // console.log(mru);
-               // localStorage.setItem("mru", JSON.stringify(mru));
+                //mru.push(toAdd);
+                //mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
+                //console.log(mru);
+                //localStorage.setItem("mru", JSON.stringify(mru));
                 const wrapper = { cityclick: toAdd };
                 window['external']['notify'](JSON.stringify(wrapper));
             }
@@ -6638,7 +6638,7 @@ function UpdateFromRecent() {
             }
         }
     });
-   // console.log(mru);
+    //	console.log(mru);
 }
 /**
  * @param {!Object} data_44

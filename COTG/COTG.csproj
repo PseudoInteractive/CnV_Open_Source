@@ -110,7 +110,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
-    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -231,6 +231,7 @@
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\incover.cs" />
+    <Compile Include="JSON\Report.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />
@@ -288,6 +289,9 @@
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
     <Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
       <DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DefensePage.xaml.cs">
+      <DependentUpon>DefensePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
@@ -372,6 +376,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CmdLineActivationSamplePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DefensePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

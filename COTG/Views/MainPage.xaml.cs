@@ -56,6 +56,13 @@ namespace COTG.Views
         {
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset ));
         }
+        public void Reset(IEnumerable<T> src)
+        {
+            // catch for thread safety
+            Clear();
+            AddRange(src);
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
         public void NotifyChange(T item)
         {
          //   OnPropertyChanged(item,null);
@@ -217,7 +224,7 @@ namespace COTG.Views
                 cities.Clear();
                 cities.AddRange(City.all.Values); // use the most reset city list
 
-                cache.cities.NotifyReset();
+                cities.NotifyReset();
             });
         }
         public async static void CityListUpdateAll ()

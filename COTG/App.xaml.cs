@@ -214,6 +214,8 @@ namespace COTG
                 return JSClient.cid; // return current city
 			}
         }
+        // 20 bit mash
+       
 
         public static Vector2 ToWorldC(this int c)
         {

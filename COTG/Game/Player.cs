@@ -17,6 +17,14 @@ namespace COTG.Game
         public byte title;
         public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
+        public static string IdToName(int id)
+        {
+            return all.GetValueOrDefault(id, _default).name;
+         }
+        public static int NameToId(string name)
+        {
+            return nameToId.GetValueOrDefault(name);
+        }
         internal static Player _default = new Player() { name = "Error" };
 
         public static void Ctor(JsonElement json)

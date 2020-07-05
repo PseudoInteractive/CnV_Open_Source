@@ -112,8 +112,8 @@
 					<SymbolIcon Symbol="Document" />
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_TwoPaneView"
-									  helpers:NavHelper.NavigateTo="views:TwoPaneViewPage">
+			<winui:NavigationViewItem x:Uid="Shell_Defense"
+									  helpers:NavHelper.NavigateTo="views:DefensePage">
 				<winui:NavigationViewItem.Icon>
 					<SymbolIcon Symbol="Document" />
 				</winui:NavigationViewItem.Icon>

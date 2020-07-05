@@ -137,6 +137,16 @@
     <value>TwoPaneView</value>
     <comment>Navigation view item name for TwoPaneView</comment>
   </data>
+	<data name="DefenseTitle.Text"
+		  xml:space="preserve">
+    <value>Defense</value>
+    <comment>Title for DefensePaneViewPage</comment>
+  </data>
+	<data name="Shell_Defense.Content"
+		  xml:space="preserve">
+    <value>Defense</value>
+    <comment>Navigation view item name for Defense</comment>
+  </data>
   <data name="MasterDetail_NoSelection.Text" xml:space="preserve">
     <value>Select an item from the list.</value>
     <comment>No selection text for MasterDetail</comment>

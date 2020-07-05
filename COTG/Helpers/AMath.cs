@@ -71,6 +71,21 @@ namespace COTG
             var dy = a.y - b.y;
             return MathF.Sqrt((a.x - b.x).Squared() + (a.y - b.y).Squared());
         }
+        public static uint ToCompactCid(this int c)
+        {
+            var x = c % 65536;
+            var y = c >> 16;
+            return ToCompactCid((x, y));
 
+        }
+        public static uint ToCompactCid(this (int x,int y) c)
+        {
+            return (uint)c.x | (uint)c.y * 1024u;
+        }
+        public static (int x,int y) FromCompactCid(this uint c)
+        {
+
+            return ( (int)(c&1023u),(int)(c/1024u) );
+        }
     }
 }
