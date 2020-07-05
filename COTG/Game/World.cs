@@ -206,7 +206,7 @@ namespace COTG.Game
                     bkey_ = dat_;
                     var _t = dat_.ToString();
                     var b = new Boss() { x = (ushort)(_t.SubStrAsInt(6, 3)-100), y = (ushort)(_t.SubStrAsInt(3, 3)-100), level = _t.SubStrAsByte(0, 2) };
-                    LogJS(b);
+                  //  LogJS(b);
                     bosses.Add(b);
                 }
                 catch (Exception e)
@@ -234,11 +234,11 @@ namespace COTG.Game
                     int aliStart = 11 + (int)digitCount;
                     var alid = (int)_t.SubStrAsInt(aliStart,_t.Length-aliStart);
                     var c = (new City() { x = (ushort)(_t.SubStrAsInt(7, 3)-100), y = (ushort)(_t.SubStrAsInt(4, 3)-100), playerId = pid, allianceId=alid, type = _t.SubStrAsByte(3, 1) });
-                    if (pid == JSClient.jsVars.pid)
-                    {
-                        LogJS(c);
-                        Log(_t);
-                    }
+                    //if (pid == JSClient.jsVars.pid)
+                    //{
+                    //    LogJS(c);
+                    //    Log(_t);
+                    //}
                     cities.Add(c);
                     var index = c.x + c.y * worldDim;
                     pixels[index * 8 + 0] = 0;

@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Ref\game.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.0-beta-20200622-1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="Ref\" />
   </ItemGroup>
 
 

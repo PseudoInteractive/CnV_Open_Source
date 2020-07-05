@@ -20,7 +20,9 @@ namespace COTG.Game
         public Raid[] raids = Array.Empty<Raid>();
 
         readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
+
         const int pointSizeCount = 7;
+
         int GetSize() {
             for (int i = 0; i < pointSizeCount; ++i)
                 if (points <= pointSizes[i])
@@ -61,10 +63,9 @@ namespace COTG.Game
                     return 5;
                 }
             }
-
         }
-        public int activeCommands => jsE.IsValid() ? jsE.GetInt("comm") : 0;
 
+        public int activeCommands => jsE.IsValid() ? jsE.GetInt("comm") : 0;
 
         public int freeCommandSlots => commandSlots - activeCommands;
 
@@ -89,7 +90,6 @@ namespace COTG.Game
                 }
                 return _carryCapacity;
             }
-
         }
 
         internal void TroopsChanged()
@@ -130,13 +130,14 @@ namespace COTG.Game
             jsE = jse;
             Debug.Assert(cid == jse.GetInt("cid"));
             name = jse.GetAsString("citn");
+            Note.L($"{name} {jse.GetInt("cid")}");
             owner = jse.GetAsString("pn");
 
-            if(COTG.Views.MainPage.cache.cities.Count!=0)
-                COTG.Views.MainPage.CityChange(this);
+//            if(COTG.Views.MainPage.cache.cities.Count!=0)
+              COTG.Views.MainPage.CityChange(this);
 //            COTG.Views.MainPage.CityListUpdateAll();
-
         }
+
         const int bidCastle = 467;
         public (int commandSlotsInUse, int totalCommandSlots, int freeCommandSlots) GetCommandSlots()
         {

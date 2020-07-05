@@ -19,7 +19,7 @@ namespace COTG.Services
 {
     public class RestAPI
     {
-        public static List<RestAPI> all = new List<RestAPI>();
+     //   public static List<RestAPI> all = new List<RestAPI>();
         public string localPath;
         public string secret;
         public static JsonDocument emptyJson;
@@ -29,7 +29,7 @@ namespace COTG.Services
             localPath = _localPath;
             secret = _secret;
             emptyJson = JsonDocument.Parse("{}");
-            all.Add(this);
+          //  all.Add(this);
         }
 
 
@@ -234,7 +234,7 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
-        public GetCity(int _cid) : base("includes/gC.php", "X2U11s33S2375ccJx1e2")
+        public GetCity(int _cid) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
         {
             cid = _cid;
         }
@@ -293,9 +293,7 @@ namespace COTG.Services
 
         public ScanDungeons(int _cid) : base("includes/fCv.php", "Xs4b2261f55dlme55s")
         {
-
             cid = _cid;
-
         }
         public static async Task Post(int _cid)
         {
@@ -303,7 +301,7 @@ namespace COTG.Services
             await GetCity.Post(_cid);
          //   await Task.Delay(2000);
          //   COTG.Views.MainPage.CityListUpdateAll();
-         //   await new ScanDungeons(_cid).Post();
+            await new ScanDungeons(_cid).Post();
             
         }
         public override string GetPostContent()

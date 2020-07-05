@@ -62,6 +62,7 @@ namespace COTG.Game
             var element = _aldt.RootElement.GetProperty("aldt");
             my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
+            diplomacy = new SortedList<byte, byte>();
             // all.Add(my.id, my);
             //  nameToId.Add(my.name, my.id);
 
@@ -81,7 +82,12 @@ namespace COTG.Game
 
                 }
             }
-            await Task.Delay(5000);
+            for (; ; )
+            {
+                await Task.Delay(5000);
+                if (Player.all.Count != 0)
+                    break;
+            }
             var alliances = new List<Alliance>();
             var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();

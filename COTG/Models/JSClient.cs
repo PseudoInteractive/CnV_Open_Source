@@ -57,7 +57,7 @@ namespace COTG
         public static WebView view;
         static KeyboardAccelerator refreshAccelerator;
         static HttpBaseProtocolFilter httpFilter;
-        const int clientCount = 4;
+        const int clientCount = 8;
         public static BlockingCollection<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
@@ -250,8 +250,10 @@ namespace COTG
             try
             {
                 if (view != null)
+                {
+                    Log("invokeJS");
                     await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
-
+                }
             }
             catch (Exception e)
             {
@@ -265,6 +267,7 @@ namespace COTG
             {
                 if (view != null)
                 {
+                    Log("invokeJS");
                     await view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
                 }
             }
@@ -280,7 +283,9 @@ namespace COTG
 			{
 				if (view != null)
 				{
-					await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+                    Log("invokeJS");
+
+                    await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
 				}
 			}
 			catch (Exception e)
@@ -318,6 +323,8 @@ namespace COTG
         // Gets an overview of all cities
         public static async Task GetCitylistOverview()
         {
+            Log("invokeJS");
+
             var str = await view.InvokeScriptAsync("getppdt", null);
 
             Log(str);
@@ -536,7 +543,7 @@ namespace COTG
             try
             {
                 bool gotCreds = false;
-              //  Log($"Notify: {e.CallingUri} {sender} {e.Value.Truncate(128) }");
+                Log($"Notify: {e.Value.Length},{e.CallingUri},{sender}:{e.Value.Truncate(128) }");
                 var jsDoc = JsonDocument.Parse(e.Value);
                 var jsd = jsDoc.RootElement;
                 foreach (var jsp in jsd.EnumerateObject())
@@ -601,7 +608,7 @@ namespace COTG
                                     city.lastAccessed = DateTimeOffset.UtcNow;
                                     COTG.Views.MainPage.CityChange(city);
 
-                                    Note.Show($"{city.name} {city.cid.ToCoordinateMD()}");
+                                    Note.Show($"CityClick {city.name} {city.cid.ToCoordinateMD()}");
                                 }
                                 break;
 
@@ -611,7 +618,7 @@ namespace COTG
                                 MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
                                 cid = jse.GetInt("cid");
-                                Note.L("cid=" + cid.ToCoordinate());
+                                Note.L("citydata=" + cid.ToCoordinate());
                                 var city=City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
                                 break;
@@ -653,7 +660,7 @@ namespace COTG
                                 if(priorView!=viewMode )
                                 {
                                     var isWorld = IsWorldView();
-                                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                                     {
                                         ShellPage.canvas.IsHitTestVisible = isWorld;
 
@@ -667,7 +674,7 @@ namespace COTG
 
                                     ShellPage.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
                                     // if((viewMode & ViewMode.region)!=0)
-                                    ShellPage.canvas?.Invalidate();
+                                 //   ShellPage.canvas?.Invalidate();
                                 }
                                 break;
                             }

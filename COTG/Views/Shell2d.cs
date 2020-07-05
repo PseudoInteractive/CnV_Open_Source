@@ -227,7 +227,7 @@ namespace COTG.Views
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 if (Attack.attacks != null)
                 {
-                    const float postAttackDisplayTime = 5*60; // 5 min
+                    const float postAttackDisplayTime = 11*60; // 5 min
                     foreach (var attack in Attack.attacks)
                     {
                         if (selectedTarget != 0 && selectedTarget != attack.targetCid)

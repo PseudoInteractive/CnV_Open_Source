@@ -1306,7 +1306,7 @@ function UpdateFromRecent() {
 
 	});
 
-	console.log(mru);
+//	console.log(mru);
 
 }
 /**

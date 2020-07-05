@@ -28,7 +28,15 @@ namespace COTG.Views
 
     public class DumbCollection<T> : List<T>, INotifyCollectionChanged,INotifyPropertyChanged
     {
-        public void OnPropertyChanged(T city,string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+		public DumbCollection(IEnumerable<T> collection) : base(collection)
+		{
+		}
+
+		public DumbCollection()
+		{
+		}
+
+		public void OnPropertyChanged(T city,string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
         public event PropertyChangedEventHandler PropertyChanged;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -57,7 +65,10 @@ namespace COTG.Views
         {
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, IndexOf(item)));
         }
-
+        public void NotifyAdd(T item, int index)
+        {
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+        }
         public override string ToString()
         {
             return base.ToString();
@@ -115,7 +126,7 @@ namespace COTG.Views
                 hoverTarget = city;
                 if(city != null)
                 {
-                    Note.L($"{cellName} {city.cid.ToCoordinate()}");
+                  //  Note.L($"{cellName} {city.cid.ToCoordinate()}");
                 }
 
             }
@@ -169,15 +180,15 @@ namespace COTG.Views
 
         public async static void CityChange( City city)
         {
-            if (cache == null)
+            if (cache == null || cache.cities.Count == 0 )
                 return;
             
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var cities = cache.cities;
                 if (cities.Contains(city))
                 {
-                    Note.L($"Change: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
+                 //   Note.L($"Change: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
                     //                    cache.cityGrid.BeginEdit(city);
                  //   cache.cityGrid.BeginEdit(cache.cityGrid.SelectedItem ?? city);
                  //   cache.cityGrid.CommitEdit();
@@ -186,7 +197,7 @@ namespace COTG.Views
                 }
                 else
                 {
-                    Note.L($"Add: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
+                 //   Note.L($"Add: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
                     cities.Add(city);
                     cities.NotifyAdd(city);
 
@@ -198,7 +209,7 @@ namespace COTG.Views
             if (cache == null)
                 return;
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Note.L("ListChange: ");
 
@@ -214,7 +225,7 @@ namespace COTG.Views
             if (cache == null)
                 return;
             Note.L("UpdateAll: ");
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
                 cache.cities.NotifyReset();
@@ -226,7 +237,7 @@ namespace COTG.Views
             if (cache == null)
                 return;
 
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var l = cache.dungeons;
                 l.Clear();

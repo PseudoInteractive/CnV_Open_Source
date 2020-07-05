@@ -32,15 +32,15 @@ using COTG.JSON;
 
 namespace COTG.Views
 {
-    public class LogEntryStruct
-    {
-        public string t { get; set; }
-        public LogEntryStruct()
-        {
+    //public class LogEntryStruct
+    //{
+    //    public string t { get; set; }
+    //    public LogEntryStruct()
+    //    {
 
-        }
-        public LogEntryStruct(string _t) { t =_t; } 
-    }
+    //    }
+    //    public LogEntryStruct(string _t) { t =_t; } 
+    //}
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
@@ -200,19 +200,35 @@ namespace COTG.Views
 
         }
 
-        
 
 
-        ObservableCollection<LogEntryStruct> logEntries = new ObservableCollection<LogEntryStruct>();// new string[]{"Hello", "there"});
+
+        DumbCollection<string> logEntries = new  DumbCollection<string>( new [] { "Hello","there" }  );
         async public static Task L(string s)
         {
-             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low,() =>
+            var entries = instance.logEntries;
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
               {
 
                   var str = $"{Tick.MSS()}:{s}";
-                  instance.logEntries.Insert(0,new LogEntryStruct(str));
-                 
+                  //  instance.logEntries
+                  int id = entries.Count;
+                  entries.Add(str);
+                  entries.NotifyAdd(str,id);
+                  Log(str);
+
               });
+            await Task.Delay(300);
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+
+                var ui = instance.logBox.TryGetElement(entries.Count-1);
+                if (ui != null)
+                    ui.StartBringIntoView();
+                else
+                    Log("missing!");
+            });
         }
 
         private void OnLoggedIn(object sender, EventArgs e)

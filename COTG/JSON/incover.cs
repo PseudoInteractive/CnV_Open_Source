@@ -17,7 +17,7 @@ namespace COTG.JSON
 {
     public static class IncomingOverview 
     {
-            public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
+            public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 7)
             {
                 async Task AwaitPartition(IEnumerator<T> partition)
                 {
@@ -36,7 +36,7 @@ namespace COTG.JSON
                         .Select(p => AwaitPartition(p)));
             }
 
-            public static Task ParallelForEachAsync<T1, T2>(this IEnumerable<T1> source, Func<T1, T2, Task> funcBody, T2 inputClass, int maxDoP = 4)
+            public static Task ParallelForEachAsync<T1, T2>(this IEnumerable<T1> source, Func<T1, T2, Task> funcBody, T2 inputClass, int maxDoP = 7)
             {
                 async Task AwaitPartition(IEnumerator<T1> partition)
                 {
@@ -55,7 +55,7 @@ namespace COTG.JSON
                         .Select(p => AwaitPartition(p)));
             }
 
-            public static Task ParallelForEachAsync<T1, T2, T3>(this IEnumerable<T1> source, Func<T1, T2, T3, Task> funcBody, T2 inputClass, T3 secondInputClass, int maxDoP = 4)
+            public static Task ParallelForEachAsync<T1, T2, T3>(this IEnumerable<T1> source, Func<T1, T2, T3, Task> funcBody, T2 inputClass, T3 secondInputClass, int maxDoP = 7)
             {
                 async Task AwaitPartition(IEnumerator<T1> partition)
                 {
@@ -74,7 +74,7 @@ namespace COTG.JSON
                         .Select(p => AwaitPartition(p)));
             }
 
-            public static Task ParallelForEachAsync<T1, T2, T3, T4>(this IEnumerable<T1> source, Func<T1, T2, T3, T4, Task> funcBody, T2 inputClass, T3 secondInputClass, T4 thirdInputClass, int maxDoP = 4)
+            public static Task ParallelForEachAsync<T1, T2, T3, T4>(this IEnumerable<T1> source, Func<T1, T2, T3, T4, Task> funcBody, T2 inputClass, T3 secondInputClass, T4 thirdInputClass, int maxDoP = 7)
             {
                 async Task AwaitPartition(IEnumerator<T1> partition)
                 {
@@ -240,9 +240,9 @@ namespace COTG.JSON
                         }
                         if ((counter++ & 63) == 0)
                         {
-                            ShellPage.L("Attacks " + attacks.Count);
+                            Log("Attacks " + attacks.Count);
                         }
-                    },4);
+                    },7);
                 }
 
              }

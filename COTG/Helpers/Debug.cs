@@ -102,7 +102,10 @@ namespace COTG
         {
             if (v)
                 return;
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            var str = $"{Tick.MSS()}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}";
+            System.Diagnostics.Debug.WriteLine(str);
+
+            Note.Show(str);
         }
     }
 }

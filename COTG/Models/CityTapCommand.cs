@@ -38,14 +38,14 @@ namespace COTG.Models
             var grid = Views.MainPage.CityGrid;
             // put your custom logic here
             Assert(MainPage.hoverTarget != null);
-            var i = MainPage.hoverTarget;
+          //  var i = MainPage.hoverTarget;
 
             try
             {
 
+            
+                var i = context.Item as COTG.Game.City;
                 var cid = i.cid;
-
-                //var i = context.Item as COTG.Game.City;
 
                 var isSelected = grid.SelectedItem == i;
                 if (isSelected)
