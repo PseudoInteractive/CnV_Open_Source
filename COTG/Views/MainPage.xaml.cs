@@ -119,7 +119,7 @@ namespace COTG.Views
 
         
 
-        private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             var grid = sender as RadDataGrid;
             var physicalPoint = e.GetCurrentPoint(grid);

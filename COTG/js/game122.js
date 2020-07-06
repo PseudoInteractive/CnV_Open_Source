@@ -16371,7 +16371,7 @@ var cotgsubscribe = amplify;
           .prop(_s('286' >> 239749088), !![]);
       }
     }
-    gspotfunct[_s(+'6549')] = function(N9V) {
+    gspotfunct["shCit"] = function(N9V) {
       E6k.y6();
       O8(N9V);
     };

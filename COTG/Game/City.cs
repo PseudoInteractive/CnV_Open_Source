@@ -13,35 +13,16 @@ using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
-    public class City
+    public class City : Spot
     {
+      
+
+        public string notes { get; set; }
+
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         public Raid[] raids = Array.Empty<Raid>();
 
-        readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
-
-        const int pointSizeCount = 7;
-
-        int GetSize() {
-            for (int i = 0; i < pointSizeCount; ++i)
-                if (points <= pointSizes[i])
-                    return i;
-            return pointSizeCount;
-        }
-        public string name { get; set; }
-        public int cid; // x,y combined into 1 number
-        public string xy => $"{cid % 65536}:{cid / 65536}";
-        public string owner { get; set; } // todo: this shoule be an int playerId
-        public string alliance { get; set; }// todo:  this should be an into alliance id
-        public string notes { get; set; }
-        public DateTimeOffset lastUpdated { get; set; }
-        public DateTimeOffset lastAccessed { get; set; } // lass user access
-        public bool isCastle { get; set; }
-        public bool isOnWater { get; set; }
-        public bool isTemple { get; set; }
-        public ushort points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
         public int commandSlots
         {
             get {
@@ -131,7 +112,7 @@ namespace COTG.Game
             Debug.Assert(cid == jse.GetInt("cid"));
             name = jse.GetAsString("citn");
             Note.L($"{name} {jse.GetInt("cid")}");
-            owner = jse.GetAsString("pn");
+            pid = jse.GetAsInt("pid");
 
 //            if(COTG.Views.MainPage.cache.cities.Count!=0)
               COTG.Views.MainPage.CityChange(this);
@@ -163,7 +144,7 @@ namespace COTG.Game
         public static City Factory(int _id) => new City() { cid=_id };
         public override string ToString()
         {
-            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(owner)}={owner}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
     }
     public class BuildingCount

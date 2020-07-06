@@ -220,6 +220,7 @@
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Raiding.cs" />
+    <Compile Include="Game\Spot.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\AES.cs" />

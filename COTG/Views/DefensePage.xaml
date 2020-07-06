@@ -32,12 +32,10 @@
 			x:Name="historyGrid"
 			AutoGenerateColumns="False"
 			CanUserChooseColumns="True"
-			ColumnDataOperationsMode="Flyout"
 			ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 			FontSize="12"
 			GroupPanelPosition="Bottom"
 			ItemsSource="{x:Bind history, Mode=OneWay}"
-			PointerMoved="DataGrid_PointerMoved"
 			RowHeight="34"
 			SelectionMode="Single"
 			SelectionUnit="Row"
@@ -70,32 +68,39 @@
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tg:RadDataGrid
-			x:Name="dungeonGrid"
+			x:Name="defenderGrid"
 			Grid.Row="1"
 			Margin="0,14,0,0"
 			AutoGenerateColumns="False"
-			CanDrag="True"
 			CanUserChooseColumns="True"
-			ColumnDataOperationsMode="Flyout"
-			FontSize="12"
-			ItemsSource="{x:Bind dungeons, Mode=OneWay}"
-			RowHeight="40"
-			SelectionMode="Single"
-			SelectionUnit="Cell"
-			UseSystemFocusVisuals="True"
-			UserGroupMode="Disabled"
+            PointerMoved="DefenderGrid_PointerMoved"
+            FontSize="12"
+			ItemsSource="{x:Bind defenders, Mode=OneWay}"
+			RowHeight="34"
+			SelectionMode="Multiple"
+			SelectionUnit="Row"
 			UserSortMode="Multiple">
-			<tg:RadDataGrid.Commands>
-				<model:DungeonTapCommand />
-			</tg:RadDataGrid.Commands>
-			<tg:RadDataGrid.Columns>
-				<tg:DataGridNumericalColumn PropertyName="dist" />
-				<tg:DataGridTextColumn PropertyName="plan" />
-				<tg:DataGridNumericalColumn PropertyName="level" />
-				<tg:DataGridNumericalColumn PropertyName="completion" />
-				<tg:DataGridTextColumn PropertyName="kind" />
-				<tg:DataGridTextColumn PropertyName="xy" />
-			</tg:RadDataGrid.Columns>
+            <tg:RadDataGrid.Commands>
+                    <model:CityTapCommand />
+            </tg:RadDataGrid.Commands>
+
+            <tg:RadDataGrid.Columns>
+                    <tg:DataGridImageColumn PropertyName="icon"
+                                            SizeMode="Fixed"
+                                            Width="40" />
+                    <tg:DataGridTextColumn PropertyName="name"
+                                           Width="100" />
+                    <tg:DataGridTextColumn PropertyName="xy"
+                                           Width="80" />
+                    <tg:DataGridNumericalColumn PropertyName="points"
+                                                Width="80" />
+                    <tg:DataGridDateColumn PropertyName="player"
+                                           IsVisible="False"
+                                           Width="80" />
+                    <tg:DataGridDateColumn PropertyName="alliance"
+                                           IsVisible="False"
+                                           Width="80" />
+                </tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tk:GridSplitter
 			Grid.Row="1"

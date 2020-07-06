@@ -366,8 +366,7 @@ namespace COTG
                     city.lastUpdated = now;
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
-                    city.owner = jsVars.player;
-                    city.alliance = Alliance.my.name;
+                    city.pid = jsVars.pid;
                     
 
                 }
@@ -623,10 +622,11 @@ namespace COTG
                                     var city=City.all.GetOrAdd(cid,City.Factory);
                                     
                                     city.name = jso.GetString("name");
-                                    city.owner = jso.GetString("player"); // todo: this shoule be an int playerId
+                                    city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
+                                    Assert(city.pid > 0);
                                     city.notes = jso.GetString("notes");
                                     city.points = (ushort)jso.GetAsInt("score");
-                                    city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
+                                 //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTimeOffset.UtcNow;
                                     COTG.Views.MainPage.CityChange(city);
 
