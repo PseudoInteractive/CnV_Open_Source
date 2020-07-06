@@ -19,7 +19,7 @@ namespace COTG.Services
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal, async () =>
                 {
-                    if (SystemInformation.IsFirstRun && !shown)
+                    if (SystemInformation.Instance.IsFirstRun && !shown)
                     {
                         //shown = true;
                         //var dialog = new FirstRunDialog();

@@ -15,18 +15,21 @@ namespace COTG.Game
         public ushort pointsH;// divided by 100
         public byte cities;
         public byte title;
+
+        public string allianceName => Alliance.IdToName(alliance);
+
         public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static string IdToName(int id)
         {
-            return all.GetValueOrDefault(id, _default).name;
+            return Get(id).name;
          }
         public static int NameToId(string name)
         {
-            return nameToId.GetValueOrDefault(name);
+            return name!=null ? nameToId.GetValueOrDefault(name) : -1;
         }
         internal static Player _default = new Player() { name = "Error" };
-
+        public static Player Get(int id) => all.GetValueOrDefault(id, _default);
         public static void Ctor(JsonElement json)
         {
             var _nameToId = new Dictionary<string, int>(1024);
@@ -40,6 +43,8 @@ namespace COTG.Game
             }
             all = _all;
             nameToId = _nameToId;
+            Note.Show("Got Players");
+
         }
     }
 }

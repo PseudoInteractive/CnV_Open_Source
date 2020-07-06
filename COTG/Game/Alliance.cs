@@ -85,7 +85,7 @@ namespace COTG.Game
             for (; ; )
             {
                 await Task.Delay(5000);
-                if (Player.all.Count != 0)
+                if (!Player.all.IsNullOrEmpty())
                     break;
             }
             var alliances = new List<Alliance>();
@@ -145,6 +145,7 @@ namespace COTG.Game
         
             nameToId = _nameToId;
             all = _all;
+            Note.Show("Got Alliances");
         }
     }
 }

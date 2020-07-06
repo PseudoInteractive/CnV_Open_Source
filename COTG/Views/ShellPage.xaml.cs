@@ -137,7 +137,7 @@ namespace COTG.Views
             grid.Children.Add(webView);
 
             grid.Children.Add(shellFrame);
-            Grid.SetColumn(shellFrame, 4);
+            Grid.SetColumn(shellFrame, 2);
             Grid.SetRow(shellFrame, 0);
             Grid.SetRowSpan(shellFrame, 6);
             shellFrame.Margin = new Thickness(13,0,0,0);
@@ -147,7 +147,7 @@ namespace COTG.Views
             Grid.SetColumn(webView, 0);
             Grid.SetRow(webView, 0);
             Grid.SetRowSpan(webView, 6);
-            Grid.SetColumnSpan(webView, 4);
+            Grid.SetColumnSpan(webView, 2);
             Canvas.SetZIndex(webView, 0);
 
             var canvas = CreateCanvasControl();
@@ -159,7 +159,7 @@ namespace COTG.Views
             Grid.SetColumn(canvas, 1);
             Grid.SetRow(canvas, 1);
             Grid.SetRowSpan(canvas, 4);
-            Grid.SetColumnSpan(canvas, 3);
+            Grid.SetColumnSpan(canvas, 1);
             canvas.BorderThickness = new Thickness(0,0,0,0);
             canvas.Margin = new Thickness(0, 0, 0, 36);
             Canvas.SetZIndex(canvas, 11);
@@ -176,7 +176,7 @@ namespace COTG.Views
 
             var splitter = new GridSplitter();
             grid.Children.Add(splitter);
-            Grid.SetColumn(splitter, 4);
+            Grid.SetColumn(splitter, 2);
             // Grid.SetRowSpan(splitter, 4);
           //  splitter.Height = 200;
             splitter.Width = 8;

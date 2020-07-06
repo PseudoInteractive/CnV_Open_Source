@@ -28,6 +28,10 @@ namespace COTG
         {
             return (f >= min ? f : min);
         }
+        public static int Max(this int f, int min)
+        {
+            return (f >= min ? f : min);
+        }
         public static float Saturate(this float f)
         {
             return (f >= 0.0f ? (f <= 1.0f ? f : 1.0f) : 0.0f);
@@ -86,6 +90,18 @@ namespace COTG
         {
 
             return ( (int)(c&1023u),(int)(c/1024u) );
+        }
+        static public bool IsNullOrEmpty<T>(this T[] a)
+        {
+            return a == null || a.Length == 0;
+        }
+        static public bool IsNullOrEmpty<Tkey,T>(this Dictionary<Tkey,T> a)
+        {
+            return a == null || a.Count == 0;
+        }
+        static public bool IsNullOrEmpty(this string a)
+        {
+            return string.IsNullOrEmpty(a);
         }
     }
 }

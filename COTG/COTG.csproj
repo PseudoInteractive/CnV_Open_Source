@@ -129,31 +129,31 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="directxtex_uwp">
-      <Version>2020.6.15.1</Version>
+      <Version>2020.7.2.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
-      <Version>6.1.0</Version>
+      <Version>7.0.0-build.54</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0-prerelease.200609001</Version>
@@ -165,19 +165,19 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>5.0.0-preview.6.20305.6</Version>
+      <Version>5.0.0-preview.8.20354.5</Version>
     </PackageReference>
     <PackageReference Include="System.Security.AccessControl">
-      <Version>5.0.0-preview.6.20305.6</Version>
+      <Version>5.0.0-preview.8.20354.5</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
-      <Version>5.0.0-preview.6.20305.6</Version>
+      <Version>5.0.0-preview.8.20354.5</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>5.0.0-preview.6.20305.6</Version>
+      <Version>5.0.0-preview.8.20354.5</Version>
     </PackageReference>
     <PackageReference Include="System.Utf8String.Experimental">
-      <Version>5.0.0-preview.6.20305.6</Version>
+      <Version>5.0.0-preview.8.20352.3</Version>
     </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
       <Version>1.0.1.9</Version>

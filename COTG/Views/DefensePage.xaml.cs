@@ -35,6 +35,7 @@ namespace COTG.Views
         public static DefensePage cache;
         public static Report hoverTarget;
         public static string hoverTargetColumn;
+        public static RadDataGrid HistoryGrid => cache.historyGrid;
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()

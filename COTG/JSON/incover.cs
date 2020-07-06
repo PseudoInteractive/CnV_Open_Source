@@ -1,17 +1,15 @@
-﻿using System;
+﻿using COTG.Game;
+using COTG.Helpers;
+using COTG.Services;
+using COTG.Views;
+
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
-using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using System.Text.Json.Serialization;
+
 using static COTG.Debug;
-using COTG.Services;
-using COTG.Game;
-using COTG.Helpers;
-using COTG.Views;
-using System.Collections.Concurrent;
 
 namespace COTG.JSON
 {
@@ -119,8 +117,15 @@ namespace COTG.JSON
 
         public async static Task Process(bool fetchHistory)
         {
+            for (; ; )
+            {
+                if (!Alliance.all.IsNullOrEmpty())
+                    break;
+                await Task.Delay(5000);
+            }
+
             ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
-            SortedList<long, Report> rs = new SortedList<long, Report>();
+            ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
             using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
             {
                 var jse = jsd.RootElement.GetProperty("b");
@@ -135,6 +140,19 @@ namespace COTG.JSON
                     attack.spotted = spotted.ParseDateTime();
                     attack.time = (arrival).ParseDateTime();
                     attacks.TryAdd(attack.GetHashCode(),attack);
+
+                    Report rep = new Report();
+                    rep.atkCid = attack.sourceCid;
+                    rep.defCid = attack.targetCid;
+                    rep.time = attack.time;
+                    rep.spotted = attack.spotted;
+                    rep.atkCN = b.GetAsString("attacker_city");
+                    rep.defCN = b.GetAsString("defender_city");
+                    rep.atkTS = b.GetAsInt("attack_ts");
+                    rep.defTS = b.GetAsInt("defender_ts");
+                    rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSiege : Report.typeUnknown;
+                    rep.claim = b.GetAsFloat("baron cap %");
+                    rs.TryAdd(rep.GetHashCode(),rep);
                 }
             }
             if (fetchHistory)
@@ -191,7 +209,8 @@ namespace COTG.JSON
                         var target = TryDecodeCid(0, inc[4].GetString());
                         if (target <= 0)
                             return;
-                        var defP = Player.NameToId(inc[6].GetString());
+                        var defP = Player.NameToId(inc[1].GetString());
+                        var atkPNS = inc[6].GetString();
                         var defCN = inc[3].ToString();
                         var time = inc[5].GetString().ParseDateTime();
                         var source = TryDecodeCid(0, inc[7].GetString());
@@ -216,7 +235,9 @@ namespace COTG.JSON
                                 defCN=defCN,
                                 atkCN = inc[14].GetString(),
                                 defP=defP,
+                                atkP=Player.NameToId(atkPNS),
                                 time = time,
+                                reportId = recId,
                                 spotted = a.spotted,
                                 type = Report.typeScout
                                 // todo TS info
@@ -277,14 +298,17 @@ namespace COTG.JSON
                                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageSpeed)
                                                 };
                                                 attacks.TryAdd(a.GetHashCode(), a);
+                                                var atkTS = report.GetAsInt("ts_sent");
+                                                var atkTSLeft = report.GetAsInt("ts_left");
                                                 var atkPN = report.GetAsString("apn");
                                                 var rep = new Report()
                                                 {
-                                                    defTS=defTS,
+                                                    reportId = recId,
+                                                    defTS =defTS,
                                                     defTSLeft=defTSLeft,
-                                                    atkTSKilled=atkTSKilled,
-                                                    atkTS = report.GetAsInt("ts_sent"),
-                                                    atkTSLeft = report.GetAsInt("ts_left"),
+                                                    atkTSKilled=atkTSKilled.Max(atkTS-atkTSLeft),
+                                                    atkTS = atkTS,
+                                                    atkTSLeft = atkTSLeft,
                                                     atkCid = source,
                                                     defCid = target,
                                                     hasSE=hasSE,
@@ -301,7 +325,10 @@ namespace COTG.JSON
                                                     // todo TS info
 
                                                 };
-                                                rs.TryAdd(rep.GetHashCode(), rep);
+                                                if(!rs.TryAdd(rep.GetHashCode(), rep) )
+                                                {
+                                                    Assert(false);
+                                                }
                                             }
                                         }
                                     }
@@ -311,7 +338,7 @@ namespace COTG.JSON
                         }
                         if ((counter++ & 63) == 0)
                         {
-                            Log("Attacks " + attacks.Count);
+                            Note.L("Attacks " + attacks.Count);
                         }
                     },7);
                 }

@@ -33,7 +33,6 @@ namespace COTG.Models
 
         public override void Execute(object parameter)
         {
-           // base.Execute(parameter);
             var context = parameter as DataGridCellInfo;
             var grid = Views.MainPage.CityGrid;
             // put your custom logic here
@@ -83,8 +82,87 @@ namespace COTG.Models
             //   grid.CommitEdit();
 
             //            if (base.CanExecute(parameter))
+            base.Execute(parameter);
 
         }
+
+    }
+
+    public class DefenseTapCommand : DataGridCommand
+    {
+        public DefenseTapCommand()
+        {
+            this.Id = CommandId.CellTap;
+
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            var context = parameter as DataGridCellInfo;
+            // put your custom logic here
+            Log("CanExecute");
+            return true;
+        }
+
+        public override void Execute(object parameter)
+        {
+            var context = parameter as DataGridCellInfo;
+            var grid = Views.DefensePage.HistoryGrid;
+            // put your custom logic here
+      //      Assert(MainPage.hoverTarget != null);
+            //  var i = MainPage.hoverTarget;
+
+            try
+            {
+
+
+                var i = context.Item as COTG.JSON.Report;
+             
+                var isSelected = grid.SelectedItem == i;
+                if (isSelected)
+                    grid.DeselectCell(context);
+                else
+                    grid.SelectCell(context);
+
+                Log(context.Item.GetType());
+                Log(context.Item.ToString());
+                Log(context.Value);
+
+                Log(context.Column.Name);
+                Log(base.CanExecute(parameter));
+                //   grid.BeginEdit(context);
+                if (context.Column.Header != null)
+                {
+                    Log(context.Column.Header);
+                    switch (context.Column.Header.ToString())
+                    {
+                        case "atkType": JSClient.ShowReport(i.reportId); break;
+                        case "atkC":
+                        case "atkCN": JSClient.ShowCity(i.atkCid); break;
+                        case "defC":
+                        case "defCN": JSClient.ShowCity(i.defCid); break;
+                        case "atkAli": JSClient.ShowAlliance(i.atkAli);break;
+                        case "defAli": JSClient.ShowAlliance(i.defAli); break;
+                        case "atkName": JSClient.ShowPlayer(i.atkName);break;
+                        case "defName": JSClient.ShowPlayer(i.defName); break;
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+
+
+            //   grid.CommitEdit();
+
+            //            if (base.CanExecute(parameter))
+            base.Execute(parameter);
+
+        }
+
     }
     public class CityGridToggleColumnVisibilityCommand : DataGridCommand
     {

@@ -249,11 +249,7 @@ namespace COTG
         {
             try
             {
-                if (view != null)
-                {
-                    Log("invokeJS");
-                    await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
-                }
+                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
             }
             catch (Exception e)
             {
@@ -261,15 +257,45 @@ namespace COTG
             }
 
         }
+        public async static Task ShowPlayer(string pid)
+        {
+            try
+            {
+                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{pid}')" });
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
+        public async static Task ShowAlliance(string id)
+        {
+            try
+            {
+                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{id}')" });
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
+        public async static Task ShowReport(string report)
+        {
+            try
+            {
+                    await view.InvokeScriptAsync("eval", new string[] { $"__c.showreport('{report}')" });
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
+
         internal async static void ShowCityWithoutViewChange(int cityId)
         {
             try
             {
-                if (view != null)
-                {
-                    Log("invokeJS");
                     await view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
-                }
             }
             catch (Exception e)
             {
@@ -281,12 +307,8 @@ namespace COTG
         {
 			try
 			{
-				if (view != null)
-				{
-                    Log("invokeJS");
 
                     await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
-				}
 			}
 			catch (Exception e)
 			{

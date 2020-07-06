@@ -28,7 +28,9 @@
 					Value="Stretch" />
 			<Setter Property="MaxWidth"
 					Value="1020" />
-		</Style>
+            <Setter Property="Background"
+                    Value="{x:Null}" />
+        </Style>
 		<converters:BoolNegationConverter x:Name="BoolNegationConverter" />
 		<converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
 											  FalseValue="Visible"
@@ -67,7 +69,7 @@
 			</GridView>
 		</Flyout>
 		<SolidColorBrush x:Key="LogBufferForeground"
-						 Color="#FFBF0F9F" />
+						 Color="#900238" />
 	</Page.Resources>
 	<winui:NavigationView x:Name="navigationView"
 						  Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
@@ -158,7 +160,66 @@
 						AccessKey="F5"
 						Click="Refresh"
 						Content="Refresh" />
-				<Button x:Name="buildingsButton"
+                <Button x:Name="logFlyoutButton"
+                        Width="Auto"
+                        Height="60"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
+                    <Button.Flyout>
+                        
+                        <Flyout ShowMode="Standard"
+                                 Placement="Right"
+                                
+
+                                FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
+                            <Grid Background="{x:Null}">
+                                
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="400" />
+                                    <ColumnDefinition Width="50" />
+                                </Grid.ColumnDefinitions>
+                                <ScrollViewer Canvas.ZIndex="11"
+                                              MaxWidth="2048"
+                                              Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch">
+                                    <ScrollViewer.Background>
+                                        <AcrylicBrush Opacity="0.8"
+                                                      TintColor="{ThemeResource SystemColorActiveCaptionColor}"
+                                                      TintLuminosityOpacity="0.7"
+                                                      TintOpacity="0.7" />
+                                    </ScrollViewer.Background>
+                                    <winui:ItemsRepeater x:Name="logBox"
+                                                         ItemsSource="{x:Bind logEntries,Mode=OneTime}"
+                                                         Margin="4,4,8,4"
+                                                         HorizontalAlignment="Stretch"
+                                                         VerticalAlignment="Stretch">
+                                        <winui:ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <tk:MarkdownTextBlock Text="{x:Bind}"
+                                                                      Height="20"
+                                                                      Visibility="Visible"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      VerticalAlignment="Stretch"
+                                                                      FontSize="14"
+                                                                      LinkClicked="MarkdownTextBlock_LinkClicked"
+                                                                      Foreground="{StaticResource LogBufferForeground}"
+                                                                      FontFamily="Tw Cen MT Condensed"
+                                                                      Background="{x:Null}" />
+                                            </DataTemplate>
+                                        </winui:ItemsRepeater.ItemTemplate>
+                                    </winui:ItemsRepeater>
+                                </ScrollViewer>
+                                <tk:GridSplitter Canvas.ZIndex="70"
+                                                 ResizeDirection="Columns"
+                                                 Width="8"
+                                                 HorizontalAlignment="Right" />
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                    <Image Source="/images/marketplace.png" />
+                </Button>
+                <Button x:Name="buildingsButton"
 						Width="Auto"
 						Height="60"
 						HorizontalAlignment="Stretch"
@@ -215,8 +276,7 @@
 										StepFrequency="10"
 										Maximum="1439.0"
 										Minimum="-1439.0"
-										Value="{x:Bind eventTimeOffset}"
-										x:DefaultBindMode="TwoWay" />
+										Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
 							</StackPanel>
 						</Flyout>
 					</Button.Flyout>
@@ -235,73 +295,12 @@
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="405" />
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition />
+				<ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*" />
 			</Grid.ColumnDefinitions>
-			<!--<tk:Expander
-				x:Name="logExpander"
-				Grid.RowSpan="2"
-				Canvas.ZIndex="5"
-				ExpandDirection="Right"
-				IsExpanded="True">
-				<tk:Expander.Background>
-					<AcrylicBrush Opacity="0.5" TintOpacity="0.8" />
-				</tk:Expander.Background>-->
-			<ScrollViewer HorizontalScrollBarVisibility="Auto"
-                          Grid.Column="3"
-                          Grid.RowSpan="2"
-						  Grid.ColumnSpan="1"
-                          Grid.Row="1"
-						  Canvas.ZIndex="11"
-						  Width="492"
-						  Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
-						  HorizontalAlignment="Stretch"
-						  VerticalAlignment="Stretch">
-				<ScrollViewer.Background>
-					<AcrylicBrush Opacity="0.8"
-								  TintColor="{ThemeResource SystemColorActiveCaptionColor}"
-								  TintLuminosityOpacity="0.7"
-								  TintOpacity="0.8" />
-				</ScrollViewer.Background>
-                <winui:ItemsRepeater x:Name="logBox"
-                                      ItemsSource="{x:Bind logEntries}"
-									 x:DefaultBindMode="OneWay"
-									 MinWidth="500"
-                                     HorizontalAlignment="Stretch"
-                                     VerticalAlignment="Stretch"
-									 MinHeight="500">
-					<winui:ItemsRepeater.ItemTemplate>
-						<DataTemplate x:DataType="x:String">
-                            <tk:MarkdownTextBlock Text="{x:Bind}"
-									   Width="400"
-									   Height="20"
-									   Visibility="Visible"
-									   HorizontalAlignment="Stretch"
-									   VerticalAlignment="Stretch"
-									   FontSize="14"
-                                                  LinkClicked="MarkdownTextBlock_LinkClicked"
-									   Foreground="{StaticResource LogBufferForeground}"
-									   FontFamily="Arial Narrow"
-												  Background="{x:Null}" />
-						</DataTemplate>
-					</winui:ItemsRepeater.ItemTemplate>
-				</winui:ItemsRepeater>
-			</ScrollViewer>
-            <tk:GridSplitter
-                Grid.Column="3"
-                Grid.RowSpan="2"
-                Grid.Row="1"
-                Canvas.ZIndex="70"
-                ResizeDirection="Columns"
-                Width="8"
-                HorizontalAlignment="Left"
-                 />
-            <!--</tk:Expander>-->
 			<tk:InAppNotification x:Name="InAppNote"
 								  Grid.Row="4"
-								  Grid.ColumnSpan="5"
+								  Grid.ColumnSpan="3"
 								  AnimationDuration="00:00:00.3000"
 								  Canvas.ZIndex="55"
 								  StackMode="StackInFront" />

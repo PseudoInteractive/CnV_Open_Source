@@ -31,7 +31,6 @@
 		<tg:RadDataGrid
 			x:Name="historyGrid"
 			AutoGenerateColumns="False"
-			CanDrag="True"
 			CanUserChooseColumns="True"
 			ColumnDataOperationsMode="Flyout"
 			ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
@@ -39,20 +38,35 @@
 			GroupPanelPosition="Bottom"
 			ItemsSource="{x:Bind history, Mode=OneWay}"
 			PointerMoved="DataGrid_PointerMoved"
-			RowHeight="40"
+			RowHeight="34"
 			SelectionMode="Single"
 			SelectionUnit="Row"
-			UseSystemFocusVisuals="True"
-			UserSortMode="Multiple">
-			<tg:RadDataGrid.Commands />
+			UserSortMode="Auto"  >
+            <tg:RadDataGrid.Commands>
+                <model:DefenseTapCommand />
+            </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-                <tg:DataGridTextColumn Width="60" PropertyName="aType" />
-                <tg:DataGridTextColumn Width="40" PropertyName="defC"  />
+                <tg:DataGridDateColumn Width="80" PropertyName="time" CellContentFormat="{}{0:dd HH':'mm':'ss}" />
+                <tg:DataGridTextColumn Width="60" PropertyName="atkType" />
                 <tg:DataGridTextColumn Width="100" PropertyName="defName" />
-                <tg:DataGridTextColumn Width="60" PropertyName="atkC"  />
+                <tg:DataGridTextColumn Width="40" PropertyName="defC"  />
+                <tg:DataGridTextColumn Width="40" PropertyName="defCN"  />
+                <tg:DataGridTextColumn Width="60" PropertyName="defAli"  />
 				<tg:DataGridTextColumn Width="100" PropertyName="atkName"  />
-				<tg:DataGridNumericalColumn Width="80" PropertyName="defTS" />
+                <tg:DataGridTextColumn Width="60" PropertyName="atkC"  />
+                <tg:DataGridTextColumn Width="60" PropertyName="atkCN"  />
+                <tg:DataGridTextColumn Width="60" PropertyName="atkAli"  />
+                <tg:DataGridNumericalColumn Width="80" PropertyName="claim" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="Cont" />
 				<tg:DataGridBooleanColumn Width="30"  PropertyName="hasSen" />
+				<tg:DataGridBooleanColumn Width="30"  PropertyName= "isNaval"  />
+				<tg:DataGridBooleanColumn Width="30"  PropertyName="hasSE" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="defTS" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="atkTS" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="defTSKilled" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="atkTSKilled" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="defTSLeft" />
+				<tg:DataGridNumericalColumn Width="80" PropertyName="atkTSLeft" />
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tg:RadDataGrid

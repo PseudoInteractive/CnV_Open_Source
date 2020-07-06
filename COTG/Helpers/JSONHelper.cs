@@ -47,7 +47,7 @@ namespace COTG.Helpers
             switch (e.ValueKind)
             {
                 case JsonValueKind.String:
-                    return float.Parse(e.GetString());
+                    return float.TryParse(e.GetString(), out var v) ? v : -1;
                 case JsonValueKind.Number:
                     return e.GetSingle();
                 case JsonValueKind.True:
@@ -76,7 +76,7 @@ namespace COTG.Helpers
             switch (e.ValueKind)
             {
                 case JsonValueKind.String:
-                    return long.Parse(e.GetString());
+                    return long.TryParse(e.GetString(), out var v) ? v : -1;
                 case JsonValueKind.Number:
                     return e.GetInt64();
                 case JsonValueKind.True:
