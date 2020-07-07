@@ -24,6 +24,71 @@ namespace COTG.Game
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
 
+        public static List<int> GetSelected()
+        {
+            var rv = new List<int>();
+            try
+            {
+                selected.EnterReadLock();
+                rv.AddRange(selected._hashSet);
+                if (uiHover != 0 && !selected.Contains(uiHover))
+                {
+                        rv.Add(uiHover);
+                }
+                if (viewHover != 0 && viewHover != uiHover &&
+                    !selected.Contains(viewHover))
+                        rv.Add(viewHover);
+
+            }
+            finally
+            {
+                selected.ExitReadlLock();
+            }
+            return rv;
+
+        }
+        public static List<Spot> GetSelectedSpots()
+        {
+            var rv = new List<Spot>();
+            var selected= GetSelected();
+            foreach(var sel in selected)
+            {
+                if (allSpots.TryGetValue(sel, out var v))
+                    rv.Add(v);
+
+            }
+            return rv;
+
+        }
+        public static void ToggleSelected(int cid)
+        {
+            try
+            {
+                selected._lock.EnterWriteLock();
+
+                if (selected._hashSet.Contains(cid))
+                    selected._hashSet.Remove(cid);
+                else
+                    selected._hashSet.Add(cid);
+            }
+            finally
+            {
+                selected._lock.ExitWriteLock();
+            }
+        }
+        public void ToggleSelected()
+        {
+            Spot.ToggleSelected(cid);
+        }
+        public static bool AreAnySelected()
+        {
+            return selected.Count != 0 || viewHover != 0 || uiHover != 0;
+        }
+        public static bool IsSelected( int cid)
+        {
+            return (cid == viewHover || cid == uiHover || selected.Contains(cid));
+        }
+
         public static int viewHover; // in the view menu
 
         public static int uiHover; // in the DataGrids
@@ -139,6 +204,7 @@ namespace COTG.Game
                 {
                     case "xy": JSClient.ShowCity(cid); break;
                     case "icon": JSClient.ChangeCity(cid); break;
+                    case "ts":
                     case "tsHome":
                         {
                             ScanDungeons.Post(cid); break;

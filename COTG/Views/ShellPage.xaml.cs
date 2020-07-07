@@ -115,11 +115,11 @@ namespace COTG.Views
         {
 
             var webView = JSClient.Initialize(grid);
-            
+
             shellFrame = new Frame()
             {
                 Background = null
-                
+
            //  HorizontalAlignment=HorizontalAlignment.Stretch,
            //   VerticalAlignment=VerticalAlignment.Stretch
            ,
@@ -131,7 +131,7 @@ namespace COTG.Views
             //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
 
 
-            
+
             grid.Background = null;
 
             grid.Children.Add(webView);
@@ -140,7 +140,7 @@ namespace COTG.Views
             Grid.SetColumn(shellFrame, 2);
             Grid.SetRow(shellFrame, 0);
             Grid.SetRowSpan(shellFrame, 6);
-            shellFrame.Margin = new Thickness(13,0,0,0);
+            shellFrame.Margin = new Thickness(13, 0, 0, 0);
             Canvas.SetZIndex(shellFrame, 3);
 
 
@@ -152,18 +152,20 @@ namespace COTG.Views
 
             var canvas = CreateCanvasControl();
             canvas.PointerMoved += Canvas_PointerMoved;
+            canvas.PointerExited += Canvas_PointerExited;
             canvas.PointerWheelChanged += Canvas_PointerWheelChanged;
             canvas.PointerPressed += Canvas_PointerPressed;
             canvas.PointerReleased += Canvas_PointerReleased;
+            canvas.PointerCaptureLost += Canvas_PointerCaptureLost;
             grid.Children.Add(canvas);
             Grid.SetColumn(canvas, 1);
             Grid.SetRow(canvas, 1);
             Grid.SetRowSpan(canvas, 4);
             Grid.SetColumnSpan(canvas, 1);
-            canvas.BorderThickness = new Thickness(0,0,0,0);
+            canvas.BorderThickness = new Thickness(0, 0, 0, 0);
             canvas.Margin = new Thickness(0, 0, 0, 36);
             Canvas.SetZIndex(canvas, 11);
- //           Task.Run(SetupCanvasInput);
+            //           Task.Run(SetupCanvasInput);
 
             //   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
 
@@ -178,7 +180,7 @@ namespace COTG.Views
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 2);
             // Grid.SetRowSpan(splitter, 4);
-          //  splitter.Height = 200;
+            //  splitter.Height = 200;
             splitter.Width = 8;
             Grid.SetRowSpan(splitter, 4);
             splitter.HorizontalAlignment = HorizontalAlignment.Left;
@@ -196,40 +198,47 @@ namespace COTG.Views
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor
             Services.NavigationService.Navigate<Views.DefensePage>();
-            Services.NavigationService.Navigate<Views.MainPage>();
-            navigationView.IsPaneOpen = false;
 
+            navigationView.IsPaneOpen = false;
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                Services.NavigationService.Navigate<Views.MainPage>();
+            });
+    
         }
 
-
+       
 
 
         DumbCollection<string> logEntries = new  DumbCollection<string>( new [] { "Hello","there" }  );
-        async public static Task L(string s)
+        static object logLock = new object();
+        public static void L(string s)
         {
             var entries = instance.logEntries;
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+           CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
               {
-
-                  var str = $"{Tick.MSS()}:{s}";
-                  //  instance.logEntries
-                  int id = entries.Count;
-                  entries.Add(str);
-                  entries.NotifyAdd(str,id);
-                  Log(str);
-
+                  lock (logLock)
+                  {
+                      var str = $"{Tick.MSS()}:{s}";
+                      //  instance.logEntries
+                      int id = entries.Count;
+                      entries.Add(str);
+                      entries.NotifyAdd(str, id);
+                      
+                  }
               });
-            await Task.Delay(500);
+            //await Task.Delay(500);
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
+            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //{
+            //    lock (logLock)
+            //    {
 
-                var ui = instance.logBox.TryGetElement(entries.Count-1);
-                if (ui != null)
-                    ui.StartBringIntoView();
-                else
-                    Log("missing!");
-            });
+            //        var ui = instance.logBox.TryGetElement(entries.Count - 1);
+            //        if (ui != null)
+            //            ui.StartBringIntoView();
+            //      }
+            //});
         }
 
         private void OnLoggedIn(object sender, EventArgs e)
@@ -393,8 +402,21 @@ namespace COTG.Views
         }
 
 
-        public void TestPost(object o, RoutedEventArgs e)
+        public async void TestPost(object o, RoutedEventArgs e)
         {
+            await Raiding.UpdateTS();
+            //var a = await Post.SendForJson("overview/senfind.php","a=0");
+            //foreach(var cit in a.RootElement.GetProperty("b").EnumerateArray())
+            //{
+            //    var cid = cit[0].GetInt32();
+            //    Log(cid.ToString());
+            //    foreach(var target in cit[8].EnumerateArray())
+            //    {
+            //        Log(target.ToString());
+            //    }
+
+            //}
+
         }
 
         public void Refresh(object o, RoutedEventArgs e)
@@ -444,10 +466,12 @@ namespace COTG.Views
 
         static DateTimeOffset flyoutCreatedTime;
 
-        private void ShowBuildings(object sender, RoutedEventArgs e)
+        private async void ShowBuildings(object sender, RoutedEventArgs e)
         {
             try
             {
+                await GetCity.Post(JSClient.cid);
+
                 // This should not happen
                 var jse = City.current.jsE;
                 if (!jse.IsValid())

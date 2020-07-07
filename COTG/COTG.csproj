@@ -233,6 +233,7 @@
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\incover.cs" />
     <Compile Include="JSON\Report.cs" />
+    <Compile Include="Models\BoundCollection.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />

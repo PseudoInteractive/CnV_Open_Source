@@ -2244,6 +2244,11 @@ function avapost(url, args) {
         console.log(s);
     });
 }
+// returns for current city
+function avagetts() {
+    var rv = { tc: __c.D6.tc, th: __c.D6.th };
+    return JSON.stringify(rv);
+}
 function avafetch(url, args) {
     return __awaiter(this, void 0, void 0, function* () {
         let req = fetch(url, {

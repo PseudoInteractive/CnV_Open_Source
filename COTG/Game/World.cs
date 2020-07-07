@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.Json;
@@ -49,9 +50,14 @@ namespace COTG.Game
         }
         public static (int x,int y) CidToWorld(this int c)
         {
-            return (c%65546,c/65536);
+            return (c%65536,c/65536);
         }
-        public static int WorldToContinent(this (int x, int y) c) =>   c.y* 10 + c.x;
+        public static Vector2 CidToWorldV(this int c)
+        {
+            var c2 = CidToWorld(c);
+            return new Vector2((float)c2.x, (float)c2.y);
+        }
+        public static int WorldToContinent(this (int x, int y) c) =>   (c.y/100)* 10 + (c.x/100);
         public static int CidToContinent(this int cid) => WorldToContinent( CidToWorld(cid) );
 
     }
@@ -64,7 +70,7 @@ namespace COTG.Game
         public const uint typeMask = 0xf0000000;
         public const uint typeCity = 0x10000000;
         public const uint typeNone = 0x00000000;
-        public const uint dataMask = 0x0fffffff;
+        public const  int dataMask = 0x0fffffff;
 
         public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
@@ -73,12 +79,12 @@ namespace COTG.Game
         {
             return x.Clamp(0, worldDim);
         }
-        public static (uint type, uint data) CityLookup( (int x, int y) c)
+        public static (uint type, int data) CityLookup( (int x, int y) c)
         {
             var x = c.x;
             var y = c.y;
             uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? cityLookup[x, y] : 0u;
-            return (rv & typeMask, rv & dataMask);
+            return (rv & typeMask, (int)(rv & dataMask));
 
         }
         

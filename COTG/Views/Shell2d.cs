@@ -230,9 +230,8 @@ namespace COTG.Views
                     const float postAttackDisplayTime = 11*60; // 5 min
                     foreach (var attack in Attack.attacks)
                     {
-                        if (selectedTarget != 0 && selectedTarget != attack.targetCid)
-                            continue;
-                        var c1 = attack.targetCid.ToWorldC().WToC();
+                        var targetCid = attack.targetCid;
+                        var c1 =targetCid.ToWorldC().WToC();
                         var c0 = attack.sourceCid.ToWorldC().WToC();
                         // cull (should do this pre-transform as that would be more efficient
                         if (c0.X.Min(c1.X) >= clientSpan.X)
@@ -249,7 +248,8 @@ namespace COTG.Views
                         var dt1 = (float)(attack.time - serverNow).TotalSeconds;
                         if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
                             continue;
-
+                        if (Spot.AreAnySelected() && !Spot.IsSelected(targetCid))
+                            continue;
 
                         var progress = (dt0 / (dt0+dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                         var mid = progress.Lerp(c0, c1);
@@ -269,7 +269,8 @@ namespace COTG.Views
                     {
                         var c = city.Value.cid.ToWorldC().WToC();
 
-                        ds.DrawCircle(c, 28 + 32 * animTLoop, raidBrush);
+                        ds.DrawCircle(c, 28 + 32 * animTLoop, shadowBrush);
+                        ds.DrawCircle(c - shadowOffset, 28 + 32 * animTLoop, raidBrush);
                         foreach (var raid in city.Value.raids)
                         {
                             var ct = raid.target.ToWorldC().WToC();
@@ -285,6 +286,19 @@ namespace COTG.Views
                         }
                     }
                 }
+                {
+                    foreach(var city in Spot.GetSelected())
+                    {
+                        var c = city.ToWorldC().WToC();
+
+
+                        ds.DrawCircle(c, 28 + 32 * animTLoop, shadowBrush);
+                        ds.DrawCircle(c-shadowOffset, 28 + 32 * animTLoop, raidBrush);
+
+                    }
+
+                }
+                // show selected
                 var _toolTip =toolTip;
                 if(_toolTip != null)
                 {
@@ -336,6 +350,13 @@ namespace COTG.Views
         {
             return
                 (c - ShellPage.cameraC.Y) * ShellPage.pixelScale - ShellPage.clientC.Y;
+        }
+        public static void BringCidIntoWorldView(this int cid)
+        {
+            var v = cid.CidToWorldV();
+            ShellPage.cameraC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
+
+
         }
       
     }

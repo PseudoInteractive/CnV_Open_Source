@@ -73,31 +73,21 @@ namespace COTG.Views
         public static Spot GetDefender(int cid)
         {
             // Toggle Selected
-            if (Spot.selected.Contains(cid))
+            if (!Spot.allSpots.TryGetValue(cid, out var rv))
             {
-                Spot.selected.Remove(cid);
-            }
-            else
-            {
-                Spot.selected.Add(cid);
-            }
-            var def = Defenders;
-            foreach (var i in def)
-            {
-                if (i.cid == cid)
+                if (City.all.TryGetValue(cid, out var city))
+                    rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
+                else
+                    rv = new Spot() { cid = cid };
+                Spot.allSpots.TryAdd(cid, rv);
+
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    // Todo:notify Change
-                    return i;
-                }
+                    Defenders.Add(rv);
+                });
 
             }
-            var rv = new Spot() { cid = cid };
-
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                def.Add(rv);
-            });
-
+           // Spot.ToggleSelected(cid);
             return rv;
 
         }

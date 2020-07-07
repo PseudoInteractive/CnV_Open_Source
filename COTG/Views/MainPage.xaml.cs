@@ -77,15 +77,12 @@ namespace COTG.Views
         {
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
         }
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+        
     }
 
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        public DumbCollection<City> cities { get; } = new DumbCollection<City>();
+        public BoundCollection<City> cities { get; } = new BoundCollection<City>();
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
         //        public static City showingRowDetails;
@@ -181,7 +178,7 @@ namespace COTG.Views
 
         //}
 
-        public async static void CityChange( City city)
+        public async static void CityChange( City city,string memberName=null)
         {
             if (cache == null || cache.cities.Count == 0 )
                 return;
@@ -196,13 +193,12 @@ namespace COTG.Views
                  //   cache.cityGrid.BeginEdit(cache.cityGrid.SelectedItem ?? city);
                  //   cache.cityGrid.CommitEdit();
 
-                    cities.NotifyChange(city);
+                    city.OnPropertyChanged(memberName);
                 }
                 else
                 {
                  //   Note.L($"Add: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
                     cities.Add(city);
-                    cities.NotifyAdd(city);
 
                 }
             });
@@ -217,10 +213,7 @@ namespace COTG.Views
                 Note.L("ListChange: ");
 
                 var cities = cache.cities;
-                cities.Clear();
-                cities.AddRange(City.all.Values); // use the most reset city list
-
-                cities.NotifyReset();
+                cities.Reset(City.all.Values);
             });
         }
         public async static void CityListUpdateAll ()

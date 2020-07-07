@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using static COTG.Debug;
 using static COTG.Game.Enum;
+using COTG.Services;
 
 namespace COTG.Game
 {
@@ -115,8 +116,25 @@ namespace COTG.Game
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.ToCoordinateMD()} raid {d.cid.ToCoordinateMD()}");
             await snd.Post();
-            Task.Run(city.TroopsChanged);
+            await UpdateTS();
 
+        }
+        public static async Task UpdateTS()
+        {
+
+            var jso = await Post.SendForJson("includes/gIDl.php", "");
+            foreach (var ci in jso.RootElement.EnumerateArray())
+            {
+                var cid = ci.GetAsInt("i");
+                var ts = ci.GetAsInt("ts");
+                var v = City.all[cid];
+                if ( (v.tsHome - ts).Abs() > 16 )
+                {
+                    v.tsHome = ts;
+
+                    v.OnPropertyChanged(nameof(v.tsHome));
+                }
+            }
         }
     }
 }

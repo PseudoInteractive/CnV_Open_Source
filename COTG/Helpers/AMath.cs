@@ -32,6 +32,15 @@ namespace COTG
         {
             return (f >= min ? f : min);
         }
+        public static int Abs(this int f)
+        {
+            return (f >= 0 ? f : -f);
+        }
+        public static float Abs(this float f)
+        {
+            return (f >= 0f ? f : -f);
+        }
+
         public static float Saturate(this float f)
         {
             return (f >= 0.0f ? (f <= 1.0f ? f : 1.0f) : 0.0f);

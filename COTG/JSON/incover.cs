@@ -142,6 +142,8 @@ namespace COTG.JSON
                     attacks.TryAdd(attack.GetHashCode(),attack);
 
                     Report rep = new Report();
+                    rep.atkP = Player.NameToId(b.GetAsString("attacker_player") );
+                    rep.defP = Player.NameToId(b.GetAsString("defender_player"));
                     rep.atkCid = attack.sourceCid;
                     rep.defCid = attack.targetCid;
                     rep.time = attack.time;
@@ -327,7 +329,7 @@ namespace COTG.JSON
                                                 };
                                                 if(!rs.TryAdd(rep.GetHashCode(), rep) )
                                                 {
-                                                    Assert(false);
+                                                   // Assert(false);
                                                 }
                                             }
                                         }
@@ -338,7 +340,7 @@ namespace COTG.JSON
                         }
                         if ((counter++ & 63) == 0)
                         {
-                            Note.L("Attacks " + attacks.Count);
+                            Note.L("Attacks " + rs.Count);
                         }
                     },7);
                 }
@@ -350,7 +352,7 @@ namespace COTG.JSON
                 defPage.history.Reset(rs.Values);
 
              Attack.attacks = attacks.Values.ToArray();
-            Note.Show($"Complete: {Attack.attacks.Length} attacks");
+            Note.Show($"Complete: {rs.Count} attacks");
         }
     }
 

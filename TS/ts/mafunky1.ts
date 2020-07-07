@@ -499,6 +499,11 @@ function avapost(url: string, args: string) {
 	});
 }
 
+// returns for current city
+function avagetts() {
+	var rv = { tc: __c.D6.tc, th: __c.D6.th };
+	return JSON.stringify(rv);
+}
 async function avafetch(url: string, args: string) {
 	let req = fetch(url, {
 		method: 'POST',

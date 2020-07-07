@@ -307,8 +307,14 @@ namespace COTG
         {
 			try
 			{
-
+                if (JSClient.IsWorldView())
+                {
+                    ShowCityWithoutViewChange(cityId);
+                }
+                else
+                {
                     await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+                }
 			}
 			catch (Exception e)
 			{
@@ -345,8 +351,7 @@ namespace COTG
         // Gets an overview of all cities
         public static async Task GetCitylistOverview()
         {
-            Log("invokeJS");
-
+          
             var str = await view.InvokeScriptAsync("getppdt", null);
 
             Log(str);
@@ -629,6 +634,12 @@ namespace COTG
                                     city.lastAccessed = DateTimeOffset.UtcNow;
 
                                     Note.Show($"CityClick {city.name} {city.cid.ToCoordinateMD()}");
+                                    if(IsWorldView())
+                                    {
+                                        // bring city into view
+                                        cid.BringCidIntoWorldView();
+
+                                    }    
                                 }
                                 break;
 

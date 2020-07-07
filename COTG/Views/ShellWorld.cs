@@ -22,7 +22,6 @@ namespace COTG.Views
         public static Vector2 mousePosition;
         public static Vector2 lastMousePressPosition;
         public static string toolTip;
-        public static int selectedTarget;
         
 
         //private void SetupCanvasInput()
@@ -45,6 +44,7 @@ namespace COTG.Views
 
         private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            canvas.ReleasePointerCapture(e.Pointer);
             ShellPage.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
             isMouseDown = false;
             mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
@@ -53,16 +53,24 @@ namespace COTG.Views
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
                 var info = World.CityLookup(worldC);
-                if (cid == selectedTarget)
-                    selectedTarget = 0;
-                else
-                    selectedTarget = cid;
-                // If clicking on our city, change city to that, otherwise show the city info
-                // for non cities we show info
-                if(info.type == World.typeCity && info.data == JSClient.jsVars.pid)
-                    JSClient.ChangeCity(cid);
-                else
-                    JSClient.ShowCityWithoutViewChange(cid);
+                if (info.type == World.typeCity)
+                {
+                    var spot = DefensePage.GetDefender(cid); // cache it
+                    spot.pid = info.data; // Set player id from world data.
+                                          // If this has already been selected it will have no effect
+                }
+                
+                    // If clicking on our city, change city to that, otherwise show the city info
+                    // for non cities we show info
+                    if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
+                    {
+                        JSClient.ChangeCity(cid);
+                        Spot.ToggleSelected(cid);
+                    }
+                    else
+                    {
+                        JSClient.ShowCityWithoutViewChange(cid);
+                    }
                 //   JSClient.ShowCity(MousePointToCid(mousePosition));
 
             }
@@ -71,9 +79,24 @@ namespace COTG.Views
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             isMouseDown = true;
+            canvas.CapturePointer(e.Pointer);
             mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
             lastMousePressPosition = mousePosition;
             ShellPage.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
+        }
+        private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if(isMouseDown )
+            {
+                isMouseDown = false;
+                canvas.ReleasePointerCapture(e.Pointer);
+            }
+            Spot.viewHover = 0;
+        }
+        private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            isMouseDown = false;
+            Spot.viewHover = 0;
         }
 
         private void Canvas_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -113,12 +136,14 @@ namespace COTG.Views
             (var type, var data) = World.CityLookup(c);
             if (type != 0)
             {
-                var player = Player.all.GetValueOrDefault((int)data, Player._default);
+                Spot.viewHover = c.WorldToCid();
+                var player = Player.all.GetValueOrDefault(data, Player._default);
                 toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y/100}{c.x/100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
 
             }
             else
             {
+                Spot.viewHover = 0;
                 toolTip = null;
             }
             if (isMouseDown)

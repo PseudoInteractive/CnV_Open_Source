@@ -10,12 +10,15 @@ using Windows.UI.Xaml.Media.Imaging;
 using COTG.Helpers;
 using System.Text.Json;
 using static COTG.Game.Enum;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace COTG.Game
 {
-    public class City : Spot
+    public class City : Spot, INotifyPropertyChanged
     {
-      
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string notes { get; set; }
 
@@ -94,16 +97,7 @@ namespace COTG.Game
                 return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
             }
         }
-        public int tsHome
-        {
-            get
-            {
-                var tt = troopsHome;
-                if (!tt.IsValid())
-                    return -1;
-                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
-            }
-        }
+        public int tsHome   {  get;set;  }
         public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
         public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)
@@ -114,8 +108,15 @@ namespace COTG.Game
             Note.L($"{name} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
 
-//            if(COTG.Views.MainPage.cache.cities.Count!=0)
-              COTG.Views.MainPage.CityChange(this);
+            {
+                var tt = troopsHome;
+                if (tt.IsValid())
+                {
+                    tsHome = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
+                }
+            }
+            //            if(COTG.Views.MainPage.cache.cities.Count!=0)
+            COTG.Views.MainPage.CityChange(this);
 //            COTG.Views.MainPage.CityListUpdateAll();
         }
 
@@ -142,6 +143,19 @@ namespace COTG.Game
    
         public byte raidCarry { get; set; }
         public static City Factory(int _id) => new City() { cid=_id };
+
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value))
+            {
+                return;
+            }
+            storage = value;
+            OnPropertyChanged(propertyName);
+        }
+
+        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         public override string ToString()
         {
             return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";

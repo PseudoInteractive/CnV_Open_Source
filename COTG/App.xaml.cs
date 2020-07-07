@@ -25,6 +25,7 @@ using COTG.Views;
 using System.Numerics;
 using Windows.ApplicationModel.Core;
 using System.Threading.Tasks;
+using Windows.Foundation;
 
 namespace COTG
 {
@@ -157,19 +158,28 @@ namespace COTG
     }
     public static class Note 
     {
-        async public static Task L(string s)
+        public static void L(string s)
         {
-            await ShellPage.L(s);
+            ShellPage.L(s);
         }
         public static void Show(string s, int timeout=8000)
         {
+
             var textBlock = new MarkdownTextBlock() { Text = s, Background=null};
 			textBlock.LinkClicked += MarkDownLinkClicked;
-            ShellPage.inAppNote.Show(textBlock, timeout);
+            DispatchOnUIThreadLow(() => ShellPage.inAppNote.Show(textBlock, timeout));
             ShellPage.L(s);
         }
 
-		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
+        private static IAsyncAction DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+        {
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, action);
+        }
+        private static IAsyncAction DispatchOnUIThreadLow(DispatchedHandler action)
+        {
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
+        }
+        public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
 
 			try
