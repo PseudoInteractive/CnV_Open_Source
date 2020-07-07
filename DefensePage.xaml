@@ -73,17 +73,16 @@
 			Margin="0,14,0,0"
 			AutoGenerateColumns="False"
 			CanUserChooseColumns="True"
-            PointerMoved="gridPointerMoved"
-            PointerPressed="gridPointerPress"
-            PointerExited="gridPointerExited"
+            PointerMoved="DefenderGrid_PointerMoved"
             FontSize="12"
 			ItemsSource="{x:Bind defenders, Mode=OneWay}"
 			RowHeight="34"
 			SelectionMode="Multiple"
 			SelectionUnit="Row"
-                        GroupPanelPosition="Bottom"
-                        UserSortMode="Multiple">
-
+			UserSortMode="Multiple">
+            <tg:RadDataGrid.Commands>
+                    <model:CityTapCommand />
+            </tg:RadDataGrid.Commands>
 
             <tg:RadDataGrid.Columns>
                     <tg:DataGridImageColumn PropertyName="icon"

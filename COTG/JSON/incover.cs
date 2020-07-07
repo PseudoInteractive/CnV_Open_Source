@@ -345,7 +345,7 @@ namespace COTG.JSON
 
              }
 
-            var defPage = DefensePage.cache;
+            var defPage = DefensePage.instance;
             if (defPage != null)
                 defPage.history.Reset(rs.Values);
 

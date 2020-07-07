@@ -619,16 +619,14 @@ namespace COTG
                                 var jso = jsp.Value;
                                 var cid = jso.GetAsInt("cid");
                                 {
-                                    var city=City.all.GetOrAdd(cid,City.Factory);
+                                    var city=COTG.Views.DefensePage.GetDefender(cid);
                                     
                                     city.name = jso.GetString("name");
                                     city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
                                     Assert(city.pid > 0);
-                                    city.notes = jso.GetString("notes");
                                     city.points = (ushort)jso.GetAsInt("score");
                                  //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTimeOffset.UtcNow;
-                                    COTG.Views.MainPage.CityChange(city);
 
                                     Note.Show($"CityClick {city.name} {city.cid.ToCoordinateMD()}");
                                 }

@@ -22,6 +22,7 @@ using Microsoft.Toolkit.Uwp;
 using Windows.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
+using Windows.UI.Input;
 
 namespace COTG.Views
 {
@@ -87,8 +88,6 @@ namespace COTG.Views
         public DumbCollection<City> cities { get; } = new DumbCollection<City>();
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage cache;
-        public static City hoverTarget;
-        public static string hoverTargetColumn;
         //        public static City showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -107,53 +106,50 @@ namespace COTG.Views
             cityMenuFlyout = new MenuFlyout();
             var c = new MenuFlyoutItem() { Text = "Return Slow" };
             c.Click += ReturnSlowClick;
-            cityMenuFlyout.Items.Add( c );
+            cityMenuFlyout.Items.Add(c);
             c = new MenuFlyoutItem() { Text = "Return Fast" };
             c.Click += ReturnFastClick;
             cityMenuFlyout.Items.Add(c);
 
-            cityGrid.ContextFlyout=cityMenuFlyout;
+            cityGrid.ContextFlyout = cityMenuFlyout;
 
-            
+
         }
 
-        
+
+       
 
         private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            var grid = sender as RadDataGrid;
-            var physicalPoint = e.GetCurrentPoint(grid);
-            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-            var cell =grid.HitTestService.CellInfoFromPoint(point);
-            var city = cell?.Item as City;
-            var cellName = cell?.Column.Header?.ToString();
-            if(city != hoverTarget || hoverTargetColumn != cellName )
-            {
-                hoverTargetColumn = cellName;
-                hoverTarget = city;
-                if(city != null)
-                {
-                  //  Note.L($"{cellName} {city.cid.ToCoordinate()}");
-                }
-
-            }
+            Spot.ProcessPointerMoved(sender, e);
         }
+        private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
+        {
+            Spot.ProcessPointerPress(sender,e);
+        }
+        private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Spot.ProcessPointerExited();
+        }
+
 
         private void ReturnSlowClick(object sender, RoutedEventArgs e)
         {
-            if (hoverTarget != null)
+            var cid = Spot.uiPress;
+            if (cid != 0)
             {
-                var json = "{\"a\":"+hoverTarget.cid+",\"c\":0,\"b\":1}";
-                Note.Show($"{hoverTarget.cid.ToCoordinateMD()} recall slow");
+                var json = "{\"a\":"+cid+",\"c\":0,\"b\":1}";
+                Note.Show($"{cid.ToCoordinateMD()} recall slow");
                 Post.SendEncrypted("includes/UrOA.php",json,"Rx3x5DdAxxerx3") ;
             }
         }
         private void ReturnFastClick(object sender, RoutedEventArgs e)
         {
-            if (hoverTarget != null)
+            var cid = Spot.uiPress;
+            if (cid != 0)
             {
-                Note.Show($"{hoverTarget.cid.ToCoordinateMD()} recall fast");
-                Post.Send("overview/rcallall.php", "a="+hoverTarget.cid);
+                Note.Show($"{cid.ToCoordinateMD()} recall fast");
+                Post.Send("overview/rcallall.php", "a="+cid);
             }
         }
 
@@ -285,6 +281,15 @@ namespace COTG.Views
             Log("RecallFast")
                 ;
         }
+
+        private void cityGrid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Log("Tapped");
+        }
+
+        
+
+
 
         //      static Dungeon lastTooltip;
         //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

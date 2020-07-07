@@ -27,14 +27,8 @@ namespace COTG.JSON
         public string atkCN { get; set; }
         public string atkC => atkCid.ToCoordinate();
 
-        public int Cont
-        {
-            get
-            {
-                var c = defCid.CidToWorld();
-                return c.y * 10 + c.x;
-            }
-        }
+        public int Cont => defCid.CidToContinent();
+
         public float claim { get; set; }
         public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }

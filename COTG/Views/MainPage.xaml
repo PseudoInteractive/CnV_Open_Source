@@ -37,11 +37,12 @@
                         UserSortMode="Multiple"
                         RowHeight="40"
                         PointerMoved="CityGrid_PointerMoved"
+                        PointerPressed="CityGrid_PointerPress"
+                        PointerExited="cityGrid_PointerExited"
                         FontSize="12"
                         SelectionUnit="Row"  GroupPanelPosition="Bottom"
                         >
 			<tg:RadDataGrid.Commands>
-				<model:CityTapCommand />
                 <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>

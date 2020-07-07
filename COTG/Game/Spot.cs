@@ -1,15 +1,36 @@
 ﻿using COTG.Helpers;
+using COTG.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telerik.UI.Xaml.Controls.Grid;
+using Windows.Foundation;
+using Windows.UI.Input;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
-
+using static COTG.Debug;
 namespace COTG.Game
 {
-    public class Spot
+    public interface IKeyedItem
     {
+      public  int GetKey();
+      public  void Ctor(int id);
+    }
+    public class Spot : IEquatable<Spot>, IKeyedItem
+    {
+        public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
+        public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
+
+        public static int viewHover; // in the view menu
+
+        public static int uiHover; // in the DataGrids
+        public static string uiHoverColumn = string.Empty;
+        public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
+        public static string uiPressColumn = string.Empty;
+
         readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
 
         const int pointSizeCount = 7;
@@ -21,6 +42,32 @@ namespace COTG.Game
                     return i;
             return pointSizeCount;
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Spot);
+        }
+
+        public bool Equals(Spot other)
+        {
+            return other != null &&
+                   cid == other.cid;
+        }
+
+        public override int GetHashCode()
+        {
+            return cid;
+        }
+
+         int IKeyedItem.GetKey()
+        {
+           return cid;
+        }
+         void IKeyedItem.Ctor(int i)
+        {
+            cid = i;
+        }
+
         public string name { get; set; }
         public int cid; // x,y combined into 1 number
         public string xy => $"{cid % 65536}:{cid / 65536}";
@@ -34,6 +81,72 @@ namespace COTG.Game
         public bool isTemple { get; set; }
         public ushort points { get; set; }
         public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
+        public int continent => cid.CidToContinent();
+
+        public static bool operator ==(Spot left, Spot right)
+        {
+            return EqualityComparer<Spot>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Spot left, Spot right)
+        {
+            return !(left == right);
+        }
+
+        
+
+        public static (Spot spot, string column, PointerPoint pt) HitTest(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = sender as RadDataGrid;
+            var physicalPoint = e.GetCurrentPoint(grid);
+            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+            var cell = grid.HitTestService.CellInfoFromPoint(point);
+            var spot = (cell?.Item as Spot);
+            uiHover = spot != null ? spot.cid : 0;
+            uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
+            
+            return (spot, uiHoverColumn, physicalPoint);
+        }
+        public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            HitTest(sender, e);
+        }
+        public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
+        {
+            var hit= Spot.HitTest(sender, e);
+            var spot = hit.spot;
+            uiPress = spot != null ? spot.cid : 0;
+            uiPressColumn = hit.column;
+            if (spot != null)
+                spot.ProcessClick(hit.column, hit.pt);
+        }
+        public static void ProcessPointerExited()
+        {
+            ClearHover();
+        }
+
+        public static void ClearHover()
+        {
+            uiHover = 0;
+            uiHoverColumn = string.Empty;
+        }
+
+        public void ProcessClick(string column, PointerPoint pt)
+        {
+            if (pt.Properties.IsLeftButtonPressed)
+            {
+                switch (column)
+                {
+                    case "xy": JSClient.ShowCity(cid); break;
+                    case "icon": JSClient.ChangeCity(cid); break;
+                    case "tsHome":
+                        {
+                            ScanDungeons.Post(cid); break;
+                        }
+                }
+            }
+        }
+
 
     }
 }

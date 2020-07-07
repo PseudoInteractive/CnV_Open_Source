@@ -263,23 +263,26 @@ namespace COTG.Views
                         ds.FillCircle(midS, span, raidBrush);
                     }
                 }
-                foreach (var city in City.all)
+                if (IsPageRaid())
                 {
-                    var c = city.Value.cid.ToWorldC().WToC();
-
-                    ds.DrawCircle(c, 28 + 32 * animTLoop, raidBrush);
-                    foreach (var raid in city.Value.raids)
+                    foreach (var city in City.all)
                     {
-                        var ct = raid.target.ToWorldC().WToC();
-                        (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                        var progress = (1.0f - ((float)(raid.arrival - serverNow).TotalHours) * 0.5f).Max(0.125f); // we don't know the duration so we approximate with 2 hours
-                        var mid = progress.Lerp(c0, c1);
-                        ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillCircle(mid, rectSpan,  shadowBrush);
-                        var midS = mid - shadowOffset;
-                        ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillCircle(midS,rectSpan, raidBrush);
+                        var c = city.Value.cid.ToWorldC().WToC();
 
+                        ds.DrawCircle(c, 28 + 32 * animTLoop, raidBrush);
+                        foreach (var raid in city.Value.raids)
+                        {
+                            var ct = raid.target.ToWorldC().WToC();
+                            (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
+                            var progress = (1.0f - ((float)(raid.arrival - serverNow).TotalHours) * 0.5f).Max(0.125f); // we don't know the duration so we approximate with 2 hours
+                            var mid = progress.Lerp(c0, c1);
+                            ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                            ds.FillCircle(mid, rectSpan, shadowBrush);
+                            var midS = mid - shadowOffset;
+                            ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                            ds.FillCircle(midS, rectSpan, raidBrush);
+
+                        }
                     }
                 }
                 var _toolTip =toolTip;

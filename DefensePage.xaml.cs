@@ -23,21 +23,19 @@ using Windows.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
 using COTG.JSON;
-using Windows.UI.Input;
 
 namespace COTG.Views
 {
 
+    
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public ObservableCollection<Spot> defenders { get; } = new ObservableCollection<Spot>();
-
-        public static ObservableCollection<Spot> Defenders => instance.defenders;
-
-
-        public static DefensePage instance;
-        public static RadDataGrid HistoryGrid => instance.historyGrid;
+        public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
+        public static DefensePage cache;
+        public static Report hoverTarget;
+        public static string hoverTargetColumn;
+        public static RadDataGrid HistoryGrid => cache.historyGrid;
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -48,8 +46,8 @@ namespace COTG.Views
         //}
         public DefensePage()
         {
-            Assert(instance == null);
-            instance = this;
+            Assert(cache == null);
+            cache = this;
 
             InitializeComponent();
            
@@ -57,54 +55,28 @@ namespace COTG.Views
 
 
         }
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerPress(sender, e);
-        }
-        private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerMoved(sender, e);
-        }
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-        }
 
-        public static Spot GetDefender(int cid)
+
+
+        private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            // Toggle Selected
-            if (Spot.selected.Contains(cid))
+            var grid = sender as RadDataGrid;
+            var physicalPoint = e.GetCurrentPoint(grid);
+            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+            var cell = grid.HitTestService.CellInfoFromPoint(point);
+            var city = cell?.Item as Report;
+            var cellName = cell?.Column.Header?.ToString();
+            if (city != hoverTarget || hoverTargetColumn != cellName)
             {
-                Spot.selected.Remove(cid);
-            }
-            else
-            {
-                Spot.selected.Add(cid);
-            }
-            var def = Defenders;
-            foreach (var i in def)
-            {
-                if (i.cid == cid)
+                hoverTargetColumn = cellName;
+                hoverTarget = city;
+                if (city != null)
                 {
-                    // Todo:notify Change
-                    return i;
+                    //  Note.L($"{cellName} {city.cid.ToCoordinate()}");
                 }
 
             }
-            var rv = new Spot() { cid = cid };
-
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                def.Add(rv);
-            });
-
-            return rv;
-
         }
-
-
-
-      
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -121,6 +93,7 @@ namespace COTG.Views
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-      
+
+        
     }
 }

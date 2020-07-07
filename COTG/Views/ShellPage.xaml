@@ -109,12 +109,14 @@
 				Edit String/en-US/Resources.resw: Add a menu item title for each page
 			-->
 			<winui:NavigationViewItem x:Uid="Shell_Main"
+                                      x:Name="raid"
 									  helpers:NavHelper.NavigateTo="views:MainPage"  >
 				<winui:NavigationViewItem.Icon>
 					<SymbolIcon Symbol="Go" />
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
 			<winui:NavigationViewItem x:Uid="Shell_Defense"
+                                      x:Name="defense"
 									  helpers:NavHelper.NavigateTo="views:DefensePage">
 				<winui:NavigationViewItem.Icon>
 					<SymbolIcon Symbol="Download" />

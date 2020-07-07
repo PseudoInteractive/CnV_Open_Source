@@ -51,6 +51,9 @@ namespace COTG.Game
         {
             return (c%65546,c/65536);
         }
+        public static int WorldToContinent(this (int x, int y) c) =>   c.y* 10 + c.x;
+        public static int CidToContinent(this int cid) => WorldToContinent( CidToWorld(cid) );
+
     }
 
     public class World

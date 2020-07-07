@@ -195,6 +195,7 @@ namespace COTG.Views
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor
+            Services.NavigationService.Navigate<Views.DefensePage>();
             Services.NavigationService.Navigate<Views.MainPage>();
             navigationView.IsPaneOpen = false;
 
@@ -218,7 +219,7 @@ namespace COTG.Views
                   Log(str);
 
               });
-            await Task.Delay(300);
+            await Task.Delay(500);
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
@@ -303,7 +304,16 @@ namespace COTG.Views
             if (selectedItem != null)
             {
                 Selected = selectedItem;
+                L(IsPageDefense().ToString());
             }
+        }
+        public static bool IsPageRaid()
+        {
+            return instance.Selected == instance.raid;
+        }
+        public static bool IsPageDefense()
+        {
+            return instance.Selected == instance.defense;
         }
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)

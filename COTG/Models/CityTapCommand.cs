@@ -15,78 +15,78 @@ using COTG.Views;
 
 namespace COTG.Models
 {
-    public class CityTapCommand : DataGridCommand
-    {
-        public CityTapCommand()
-        {
-            this.Id = CommandId.CellTap;
+    //public class CityTapCommand : DataGridCommand
+    //{
+    //    public CityTapCommand()
+    //    {
+    //        this.Id = CommandId.CellTap;
            
-        }
+    //    }
 
-        public override bool CanExecute(object parameter)
-        {
-            var context = parameter as DataGridCellInfo;
-            // put your custom logic here
-            Log("CanExecute");
-            return true;
-        }
+    //    public override bool CanExecute(object parameter)
+    //    {
+    //        var context = parameter as DataGridCellInfo;
+    //        // put your custom logic here
+    //        Log("CanExecute");
+    //        return true;
+    //    }
 
-        public override void Execute(object parameter)
-        {
-            var context = parameter as DataGridCellInfo;
-            var grid = Views.MainPage.CityGrid;
-            // put your custom logic here
-            Assert(MainPage.hoverTarget != null);
-          //  var i = MainPage.hoverTarget;
+    //    //public override void Execute(object parameter)
+    //    //{
+    //    //    var context = parameter as DataGridCellInfo;
+    //    //    var grid = Views.MainPage.CityGrid;
+    //    //    // put your custom logic here
+    //    //    Assert(MainPage.hoverTarget != null);
+    //    //  //  var i = MainPage.hoverTarget;
 
-            try
-            {
+    //    //    try
+    //    //    {
 
             
-                var i = context.Item as COTG.Game.City;
-                var cid = i.cid;
+    //    //        var i = context.Item as COTG.Game.Spot;
+    //    //        var cid = i.cid;
 
-                var isSelected = grid.SelectedItem == i;
-                if (isSelected)
-                    grid.DeselectCell(context);
-                else
-                    grid.SelectCell(context);
+    //    //        var isSelected = grid.SelectedItem == i;
+    //    //        if (isSelected)
+    //    //            grid.DeselectCell(context);
+    //    //        else
+    //    //            grid.SelectCell(context);
 
-                Log(context.Item.GetType());
-                Log(context.Item.ToString());
-                Log(context.Value);
+    //    //        Log(context.Item.GetType());
+    //    //        Log(context.Item.ToString());
+    //    //        Log(context.Value);
 
-                Log(context.Column.Name);
-                Log(base.CanExecute(parameter));
-                //   grid.BeginEdit(context);
-                if (context.Column.Header != null)
-                {
-                    Log(context.Column.Header);
-                    switch (context.Column.Header.ToString())
-                    {
-                        case "xy": JSClient.ShowCity(cid); break;
-                        case "icon": JSClient.ChangeCity(cid); break;
-                        case "tsHome":
-                            {
-                                ScanDungeons.Post(cid); break;
-                            }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
+    //    //        Log(context.Column.Name);
+    //    //        Log(base.CanExecute(parameter));
+    //    //        //   grid.BeginEdit(context);
+    //    //        if (context.Column.Header != null)
+    //    //        {
+    //    //            Log(context.Column.Header);
+    //    //            switch (context.Column.Header.ToString())
+    //    //            {
+    //    //                case "xy": JSClient.ShowCity(cid); break;
+    //    //                case "icon": JSClient.ChangeCity(cid); break;
+    //    //                case "tsHome":
+    //    //                    {
+    //    //                        ScanDungeons.Post(cid); break;
+    //    //                    }
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //    catch (Exception ex)
+    //    //    {
+    //    //        Log(ex);
+    //    //    }
 
 
-            //   grid.CommitEdit();
+    //    //    //   grid.CommitEdit();
 
-            //            if (base.CanExecute(parameter))
-            base.Execute(parameter);
+    //    //    //            if (base.CanExecute(parameter))
+    //    //    base.Execute(parameter);
 
-        }
+    //    //}
 
-    }
+    //}
 
     public class DefenseTapCommand : DataGridCommand
     {
