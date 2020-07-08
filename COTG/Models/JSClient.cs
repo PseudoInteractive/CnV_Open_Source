@@ -736,6 +736,7 @@ namespace COTG
                 if (gotCreds)
                 {
                     await GetCitylistOverview();
+                    await Raiding.UpdateTS();
 
                     // await RaidOverview.Send();
                 }

@@ -17,12 +17,12 @@ namespace COTG.JSON
 
         public string reportId;
         public int defP;
-        public string defName => Player.IdToName(defP);
+        public string defPlayer => Player.IdToName(defP);
         public int defCid;
         public string defCN { get; set; }
         public string defC => defCid.ToCoordinate();
         public int atkP;
-        public string atkName => Player.IdToName(atkP);
+        public string atkPlayer => Player.IdToName(atkP);
         public int atkCid;
         public string atkCN { get; set; }
         public string atkC => atkCid.ToCoordinate();

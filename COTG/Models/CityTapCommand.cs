@@ -143,8 +143,8 @@ namespace COTG.Models
                         case "defCN": JSClient.ShowCity(i.defCid); break;
                         case "atkAli": JSClient.ShowAlliance(i.atkAli);break;
                         case "defAli": JSClient.ShowAlliance(i.defAli); break;
-                        case "atkName": JSClient.ShowPlayer(i.atkName);break;
-                        case "defName": JSClient.ShowPlayer(i.defName); break;
+                        case "atkName": JSClient.ShowPlayer(i.atkPlayer);break;
+                        case "defName": JSClient.ShowPlayer(i.defPlayer); break;
 
 
                     }
@@ -180,13 +180,13 @@ namespace COTG.Models
         public override void Execute(object parameter)
         {
             var context = parameter as ToggleColumnVisibilityContext;
-            if(context.Column.Header?.ToString() == "raidCarry")
+            if (context.IsColumnVisible)
             {
-                if(context.IsColumnVisible)
+                switch (context.Column.Header?.ToString() )
                 {
-                    RaidOverview.Send();
+                    case "raidCarry": RaidOverview.Send();break;
+                    case "senny": City.UpdateSenatorInfo(); break;
                 }
-
             }
             context.Column.IsVisible = context.IsColumnVisible;
         }

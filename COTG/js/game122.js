@@ -13686,7 +13686,7 @@ var cotgsubscribe = amplify;
 
     function H1F() {
       if (D6.bq)
-        if (D6.bq[+'0']) {
+        if (D6.bq[0]) {
         let callDelay = 4000;
           var n1g = Number(D6.bq['0' - 0].bid);
           var Y1g = Number(D6.bq[+'0'].btype);
@@ -13713,13 +13713,15 @@ var cotgsubscribe = amplify;
               B1g * (100));
             var Z1g = Number(h1g) - Number(f1g);
             var g1g = Q2(Number(Z1g));
-            if (Z1g > 500)
+            if (Z1g > 200)
             {
-                if (Z1g < callDelay)
-                    callDelay=Z1g;
+                if (Z1g+100 < callDelay)
+                    callDelay=Z1g+100;
              I0V(J1g, A1g, n1g, g1g);
+             console.log("progress " + callDelay);
             }
             else {
+                console.log("done!");
               D6.bd[J1g].bid = V1g;
               D6.bd[J1g].bl = P1g;
               $(_s(+"6875"))
@@ -13730,12 +13732,28 @@ var cotgsubscribe = amplify;
               V8();
               N2();
               DoPoll2(500);
-              callDelay=300;
+              callDelay=0;
             }
           }
+          else
+		  {
+              console.log("pa?");
+              DoPoll2(500);
+
+
+		  }
+          if(callDelay != 0)
+          {
           clearTimeout(i8);
           i8 = setTimeout(H1F, callDelay);
+          }
         }
+        else
+		{
+            console.log("no q");
+            DoPoll2(500);
+
+		}
     }
     var t9 = '';
     var F9 = '';
@@ -49204,8 +49222,8 @@ var cotgsubscribe = amplify;
                 .off(_s(C2y * 1));
               $(_s(+W94))
                   .click(function (v66) { if (v66.hasOwnProperty("originalEvent")) V3F(r46, A46); });
-              clearTimeout(Z7F);
-              t0F(h36);
+              
+              t0F();
               if (h36 == +'1') {
                 $(_s(U6m * 1))
                   .closest(_s('622' << 1856291872))
@@ -49513,6 +49531,13 @@ var cotgsubscribe = amplify;
         });
     }
 
+    function ProcessBuuPoll()
+	{
+        if (D6.bq.length==1)
+            DoPoll2(200);
+
+	}
+
     function C5F(v0w) {
       J9();
       var Y9g = r6y >> 790423264;
@@ -49554,7 +49579,7 @@ var cotgsubscribe = amplify;
         }
         var a9g = D6.bq.length;
         var w0w = D6.bd[_s(+I7p)].bl;
-        var L0w = D6.bq.length;
+      //  var L0w = D6.bq.length;
         var
           O0w = Number(w0w) * ('10' << 1541942912);
         var G0w = +"0";
@@ -49607,7 +49632,7 @@ var cotgsubscribe = amplify;
                 X2('7' * 1);
                 var d0w = y9g % (A5y & 2147483647);
                 var b0w = (y9g - d0w) / (A5y & 2147483647);
-                DoPoll2(200);
+                ProcessBuuPoll();
               }
             });
           }
@@ -49697,7 +49722,7 @@ var cotgsubscribe = amplify;
                 X2("7" * 1);
                 var J0w = y9g % +A5y;
                 var h0w = (y9g - J0w) / +A5y;
-                  DoPoll2(200);
+                  ProcessBuuPoll();
 
               }
             });
@@ -49782,7 +49807,7 @@ var cotgsubscribe = amplify;
                 X2(+"7");
                 var r0w = y9g % +A5y;
                 var A0w = (y9g - r0w) / (A5y - 0);
-                  DoPoll2(200);
+                  ProcessBuuPoll();
 
               }
             });
@@ -49866,7 +49891,7 @@ var cotgsubscribe = amplify;
                   n8();
                   var f0w = y9g % +A5y;
                   var K0w = (y9g - f0w) / +A5y;
-                    DoPoll2(200);
+                    ProcessBuuPoll();
 
                 }
               });
@@ -52315,7 +52340,7 @@ var cotgsubscribe = amplify;
           H3F(S1g);
         });
       clearTimeout(i8);
-      i8 = setTimeout(H1F, e2R - 0);
+      i8 = setTimeout(H1F, 250);
     }
     var p7V;
 
@@ -52907,7 +52932,7 @@ var cotgsubscribe = amplify;
                         var H7w = s5w % (A5y - 0);
                         var j7w = (s5w - H7w) / (A5y |
                           5);
-                          DoPoll2(200);
+                          ProcessBuuPoll();
 
                       }
                     });
@@ -52979,7 +53004,7 @@ var cotgsubscribe = amplify;
                         var I7w = s5w % (A5y * 1);
                         var v7w = (s5w - I7w) / (A5y *
                           1);
-                          DoPoll2(200);
+                          ProcessBuuPoll();
 
                       }
                     });
@@ -53036,7 +53061,7 @@ var cotgsubscribe = amplify;
                             X2(+"7");
                             var Q7w = s5w % +A5y;
                             var T7w = (s5w - Q7w) / (A5y - 0);
-                              DoPoll2(200);
+                              ProcessBuuPoll();;
                           }
 
                         });
@@ -53085,7 +53110,7 @@ var cotgsubscribe = amplify;
                         var O7w = s5w % (A5y * 1);
                         var t7w = (s5w - O7w) / (A5y & 2147483647);
                         N2();
-                          DoPoll2(200);
+                          ProcessBuuPoll();
 
                       }
                     });
@@ -53121,7 +53146,7 @@ var cotgsubscribe = amplify;
                       var L7w = s5w % +A5y;
                       var X7w = (s5w - L7w) / +A5y;
                       N2();
-                        DoPoll2(200);
+                        ProcessBuuPoll();
 
                     }
                   });
@@ -66462,14 +66487,14 @@ var cotgsubscribe = amplify;
 
     var gainx = 2;
     var gainy = 2;
-
+    var Z1FTimeout;
     function DoPoll2(delay)
 	{
         clearTimeout(Z1FTimeout);
         Z1FTimeout = setTimeout(Z1F, delay);
 	}
 
-    var Z1FTimeout;
+    
       var _cameraX = 0;
       var _cameraY = 0;
       var _zoom = 1;
@@ -68785,8 +68810,8 @@ var cotgsubscribe = amplify;
       shrine: function(z6i, M6i) { return t6F(z6i, M6i); }
     };
 
-    function t0F(s9B) {
-      clearTimeout(Z7F);
+    function t0F() {
+     clearTimeout(Z7F);
       var D8B = $(_s(+m5y))
         .val();
       var c8B = $(_s(B5y | 595))
@@ -68857,8 +68882,8 @@ var cotgsubscribe = amplify;
           .text(p6(P8B));
       }
       if ($(_s(o5y | 529))
-        .attr("display") != "none") Z7F = setTimeout(function() { t0F(s9B); }, '2000' >>
-        288022560);
+        .attr("display") != "none")     
+        Z7F = setTimeout(t0F, 4000);
     }
 
     function T7F(D06, Y06) {

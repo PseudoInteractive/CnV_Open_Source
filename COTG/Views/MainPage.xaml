@@ -28,11 +28,10 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
         <tg:RadDataGrid x:Name="cityGrid"
-                        UseSystemFocusVisuals="True"
+ ColumnResizeHandleDisplayMode="Always"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
                         SelectionMode ="Single"
-                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="40"
@@ -46,18 +45,19 @@
                 <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icon" SizeMode="Fixed" Width="40"  />
+                <tg:DataGridImageColumn PropertyName="icon" Width="40"  />
                 <tg:DataGridTextColumn PropertyName="name"  Width="100" />
                 <tg:DataGridTextColumn PropertyName="xy"   Width="80" />
                 <tg:DataGridTextColumn PropertyName="ts"    Width="80" />
                 <tg:DataGridTextColumn PropertyName="tsHome"   Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="points"   Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"  Width="80" IsVisible="False"  />
-                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False"   Width="80" />
-                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False"   Width="80" />
+                <tg:DataGridTextColumn PropertyName="senny"  Width="40" IsVisible="False"  />
+                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False"   Width="40" />
+                <tg:DataGridDateColumn PropertyName="lastAccessed" IsVisible="False"   Width="40" />
                 <tg:DataGridNumericalColumn PropertyName="carryCapacity" IsVisible="False"   Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="activeCommands" IsVisible="False"  Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="commandSlots" IsVisible="False"  Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="activeCommands" IsVisible="False"  Width="40" />
+                <tg:DataGridNumericalColumn PropertyName="commandSlots" IsVisible="False"  Width="40" />
             </tg:RadDataGrid.Columns>
             
         </tg:RadDataGrid>

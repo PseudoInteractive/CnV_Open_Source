@@ -60,31 +60,39 @@ namespace COTG.Game
             return rv;
 
         }
-        public static void ToggleSelected(int cid)
+        public static bool ToggleSelected(int cid)
         {
+            bool rv = false;
             try
             {
                 selected._lock.EnterWriteLock();
 
                 if (selected._hashSet.Contains(cid))
+                {
+                    rv = false;
                     selected._hashSet.Remove(cid);
+                }
                 else
+                {
+                    rv = true;
                     selected._hashSet.Add(cid);
+                }
             }
             finally
             {
                 selected._lock.ExitWriteLock();
             }
+            return rv;
         }
-        public void ToggleSelected()
+        public bool ToggleSelected()
         {
-            Spot.ToggleSelected(cid);
+            return Spot.ToggleSelected(cid);
         }
         public static bool AreAnySelected()
         {
-            return selected.Count != 0 || viewHover != 0 || uiHover != 0;
+            return selected.Count != 0;// || viewHover != 0 || uiHover != 0;
         }
-        public static bool IsSelected( int cid)
+        public static bool IsSelectedOrHovered( int cid)
         {
             return (cid == viewHover || cid == uiHover || selected.Contains(cid));
         }

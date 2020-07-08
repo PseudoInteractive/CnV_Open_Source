@@ -34,9 +34,10 @@ namespace COTG.Views
         public static float cameraZoom;
         public float eventTimeOffset;
         public float eventTimeEnd;
-        static CanvasSolidColorBrush raidBrush, shadowBrush;
+        static public CanvasSolidColorBrush raidBrush, shadowBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
-        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};// { HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center};
+        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};
+        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center};
 
         static public CanvasAnimatedControl canvas;
 
@@ -118,7 +119,8 @@ namespace COTG.Views
              canvas.RemoveFromVisualTree();
           
         }
-
+        const float circleRadMin = 3.0f;
+        const float circleRadMax = 5.5f;
         const float lineThickness = 4.0f;
         const float rectSpanMin = 4.0f;
         const float rectSpanMax = 6.0f;
@@ -128,7 +130,7 @@ namespace COTG.Views
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale=1;
         const float dashLength = (1 + 3) * lineThickness;
-        static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
+        public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
             if(World.bitmapPixels!=null)
@@ -152,6 +154,7 @@ namespace COTG.Views
             {
                 var serverNow = JSClient.ServerTime() + TimeSpan.FromMinutes(eventTimeOffset);
                 float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
+                int tick = (Environment.TickCount>>3) & 0xfffff;
                 var animTLoop = animT.Wave();
                 var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
                 //   ShellPage.T("Draw");
@@ -173,7 +176,7 @@ namespace COTG.Views
 
                 }
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
-
+                
                 var ds = args.DrawingSession;
 
                 if (worldBackground != null && IsWorldView())
@@ -215,9 +218,12 @@ namespace COTG.Views
                             new Rect(destP0, destP1),
                             new Rect(srcP0, srcP1));
                 }
-                ds.Antialiasing = CanvasAntialiasing.Antialiased;
+           //     ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 var scale = ShellPage.canvas.ConvertPixelsToDips(1);
                 pixelScale = scale * (cameraZoom);
+                var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
+                var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
+                var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 // ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
 
                 //           dxy.X = (float)sender.Width;
@@ -225,75 +231,90 @@ namespace COTG.Views
 
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
-                if (Attack.attacks != null)
+                if (IsPageDefense())
                 {
-                    const float postAttackDisplayTime = 11*60; // 5 min
-                    foreach (var attack in Attack.attacks)
+                    if (Attack.attacks != null)
                     {
-                        var targetCid = attack.targetCid;
-                        var c1 =targetCid.ToWorldC().WToC();
-                        var c0 = attack.sourceCid.ToWorldC().WToC();
-                        // cull (should do this pre-transform as that would be more efficient
-                        if (c0.X.Min(c1.X) >= clientSpan.X)
-                            continue;
-                        if (c0.X.Max(c1.X) <= 0.0f)
-                            continue;
-                        if (c0.Y.Min(c1.Y) >= clientSpan.Y)
-                            continue;
-                        if (c0.Y.Max(c1.Y) <= 0.0f)
-                            continue;
-                        var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
+                        const float postAttackDisplayTime = 11 * 60; // 5 min
+                        foreach (var attack in Attack.attacks)
+                        {
+                            var targetCid = attack.targetCid;
+                            var c1 = targetCid.ToWorldC().WToC();
+                            var c0 = attack.sourceCid.ToWorldC().WToC();
+                            // cull (should do this pre-transform as that would be more efficient
+                            if (c0.X.Min(c1.X) >= clientSpan.X)
+                                continue;
+                            if (c0.X.Max(c1.X) <= 0.0f)
+                                continue;
+                            if (c0.Y.Min(c1.Y) >= clientSpan.Y)
+                                continue;
+                            if (c0.Y.Max(c1.Y) <= 0.0f)
+                                continue;
+                            var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
 
-                        // before attack
-                        var dt1 = (float)(attack.time - serverNow).TotalSeconds;
-                        if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
-                            continue;
-                        if (Spot.AreAnySelected() && !Spot.IsSelected(targetCid))
-                            continue;
-
-                        var progress = (dt0 / (dt0+dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
-                        var mid = progress.Lerp(c0, c1);
-                        var span = rectSpan;
-                        if (dt1 < postAttackDisplayTime)
-                            span *= 2.5f;
-                        ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillCircle(mid ,  span, shadowBrush);
-                        var midS = mid - shadowOffset;
-                        ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                        ds.FillCircle(midS, span, raidBrush);
+                            // before attack
+                            var dt1 = (float)(attack.time - serverNow).TotalSeconds;
+                            if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
+                                continue;
+                            if (Spot.AreAnySelected() && !Spot.IsSelectedOrHovered(targetCid))
+                                continue;
+                            var span = rectSpan;
+                            if (dt1 < postAttackDisplayTime)
+                                span *= 2.5f;
+                            DrawAction(serverNow, ds, span, attack.time, attack.time-attack.spotted, c0, c1);
+                            //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
+                            //var mid = progress.Lerp(c0, c1);
+                            //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                            //ds.FillCircle(mid, span, shadowBrush);
+                            //var midS = mid - shadowOffset;
+                            //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                            //ds.FillCircle(midS, span, raidBrush);
+                        }
                     }
                 }
                 if (IsPageRaid())
                 {
-                    foreach (var city in City.all)
+                    foreach (var city in City.all.Values)
                     {
-                        var c = city.Value.cid.ToWorldC().WToC();
-
-                        ds.DrawCircle(c, 28 + 32 * animTLoop, shadowBrush);
-                        ds.DrawCircle(c - shadowOffset, 28 + 32 * animTLoop, raidBrush);
-                        foreach (var raid in city.Value.raids)
+                        var c = city.cid.ToWorldC().WToC();
+                       // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                        //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                        //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+                        foreach (var raid in city.raids)
                         {
                             var ct = raid.target.ToWorldC().WToC();
                             (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                            var progress = (1.0f - ((float)(raid.arrival - serverNow).TotalHours) * 0.5f).Max(0.125f); // we don't know the duration so we approximate with 2 hours
-                            var mid = progress.Lerp(c0, c1);
-                            ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                            ds.FillCircle(mid, rectSpan, shadowBrush);
-                            var midS = mid - shadowOffset;
-                            ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                            ds.FillCircle(midS, rectSpan, raidBrush);
+                            DrawAction(serverNow, ds, rectSpan, raid.arrival,TimeSpan.FromHours(2), c0, c1);
 
+                        }
+                        if (city.senatorInfo.Length != 0)
+                        {
+                            foreach(var sen in city.senatorInfo)
+                            {
+                                if(sen.target != 0)
+                                {
+                                    var c1 = sen.target.ToWorldC().WToC();
+                                    DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1);
+                                }
+                            }
+                            var _c = c;
+                            _c.Y += 10 + 4;
+                            var sz = new Vector2(15, 20);
+                            var target = new Rect((_c - sz * 0.5f).ToPoint(), sz.ToSize());
+                            ds.FillRoundedRectangle(target, 4, 4, shadowBrush);
+                            ds.DrawText(city.senatorInfo.Length.ToString(), target, Colors.Cyan, tipTextFormatCentered);
+                            
                         }
                     }
                 }
+                if(!IsCityView())
                 {
                     foreach(var city in Spot.GetSelected())
                     {
                         var c = city.ToWorldC().WToC();
-
-
-                        ds.DrawCircle(c, 28 + 32 * animTLoop, shadowBrush);
-                        ds.DrawCircle(c-shadowOffset, 28 + 32 * animTLoop, raidBrush);
+                        var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f))+0.25f;
+                        var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                        ds.DrawRoundedSquareWithShadow(c, r, raidBrush);
 
                     }
 
@@ -322,7 +343,18 @@ namespace COTG.Views
 
         }
 
-		private static bool IsWorldView()
+        private void DrawAction(DateTimeOffset serverNow, CanvasDrawingSession ds, float rectSpan, DateTimeOffset arrival,TimeSpan dt, Vector2 c0, Vector2 c1)
+		{
+            var progress = (1f-(float)(((arrival-serverNow).TotalSeconds) /dt.TotalSeconds )).Max(0.125f); // we don't know the duration so we approximate with 2 hours
+            var mid = progress.Lerp(c0, c1);
+            ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+            ds.FillCircle(mid, rectSpan, shadowBrush);
+            var midS = mid - shadowOffset;
+            ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+            ds.FillCircle(midS, rectSpan, raidBrush);
+        }
+
+        private static bool IsWorldView()
 		{
 			return JSClient.IsWorldView();
 		}
@@ -337,6 +369,16 @@ namespace COTG.Views
     }
     public static class CanvasHelpers
     {
+        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush)
+        {
+            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2,circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, brush,1.5f);
+        }
+        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush)
+        {
+            DrawRoundedSquare(ds, c, circleRadius, ShellPage.shadowBrush);
+            DrawRoundedSquare(ds, c- ShellPage.shadowOffset, circleRadius, brush);
+        }
+
         public static Vector2 WToC(this Vector2 c)
         {
             return (c - ShellPage.cameraC) * ShellPage.pixelScale - ShellPage.clientC;
@@ -354,7 +396,12 @@ namespace COTG.Views
         public static void BringCidIntoWorldView(this int cid)
         {
             var v = cid.CidToWorldV();
-            ShellPage.cameraC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
+            var newC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
+            var dc = newC - ShellPage.cameraC;
+            // only move if needed
+            if( dc.X.Abs()*ShellPage.pixelScale > ShellPage.clientSpan.X*0.5f ||
+                dc.Y.Abs()*ShellPage.pixelScale > ShellPage.clientSpan.Y*0.5f)
+                ShellPage.cameraC = newC;
 
 
         }

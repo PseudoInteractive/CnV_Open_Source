@@ -12,6 +12,7 @@ using System.Text.Json;
 using static COTG.Game.Enum;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using COTG.Services;
 
 namespace COTG.Game
 {
@@ -144,6 +145,34 @@ namespace COTG.Game
         public byte raidCarry { get; set; }
         public static City Factory(int _id) => new City() { cid=_id };
 
+        public SenatorInfo[] senatorInfo = Array.Empty<SenatorInfo>();
+        public string senny
+        { get {
+                if (senatorInfo.Length == 0)
+                    return string.Empty;
+                string rv = string.Empty;
+                bool wantSpace = false;
+                foreach(var s in senatorInfo)
+                {
+                    if (wantSpace)
+                        rv += ",";
+                    wantSpace = true;
+                    var type = s.type switch
+                    {
+                        SenatorInfo.Type.idle => "zzz",
+                        SenatorInfo.Type.recruit=>"recr",
+                        SenatorInfo.Type.settle => "setl",
+                        SenatorInfo.Type.siege  => "seig",
+                        _ => "Error"
+                    };
+                    rv += $"{type}:{s.count}";
+
+                }
+                return rv;
+
+            }
+        }
+
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
@@ -160,6 +189,76 @@ namespace COTG.Game
         {
             return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
+        public async static void UpdateSenatorInfo()
+        {
+            var a = await Post.SendForJson("overview/senfind.php", "a=0");
+            var empty = Array.Empty<SenatorInfo>();
+            foreach (var city in City.all.Values)
+            {
+                if (city.senatorInfo != empty)
+                {
+                    city.senatorInfo = empty;
+                    city.OnPropertyChanged(nameof(City.senny));
+                }
+
+            }
+
+            foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
+            {
+                var cid = cit[0].GetInt32();
+                Log(cid.ToString());
+                var city = City.all[cid];
+                List<SenatorInfo> sens = new List<SenatorInfo>();
+                foreach (var target in cit[7].EnumerateArray())
+                {
+                    sens.Add(new SenatorInfo()
+                    {
+                        type = SenatorInfo.Type.recruit,
+                        count = (byte)target[0].GetInt32(),
+                        time = target[1].GetString().ParseDateTime()
+                    });
+                }
+                var idle = cit[4].GetByte();
+                if(idle != 0)
+                {
+                    sens.Add(new SenatorInfo()
+                    {
+                        type = SenatorInfo.Type.idle,
+                        count = idle
+                    });
+                }
+
+                foreach (var target in cit[8].EnumerateArray())
+                {
+                    sens.Add(new SenatorInfo()
+                    {
+                        type = SenatorInfo.Type.settle,
+                        count = 1,
+                        target=target[0].GetInt32(),
+                        time=target[1].GetString().ParseDateTime()
+                    });
+                }
+                city.senatorInfo = sens.ToArray();
+                city.OnPropertyChanged(nameof(City.senny));
+
+            }
+
+        }
+
+    }
+    public class SenatorInfo
+    {
+        public enum Type : byte
+        {
+            recruit,
+            settle,
+            siege,
+            idle,
+        }
+        public Type type;
+        public byte count;
+        public int target; // only for seige and settle
+        public DateTimeOffset time;  // not for idle
     }
     public class BuildingCount
     {

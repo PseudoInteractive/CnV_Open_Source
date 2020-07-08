@@ -53,19 +53,19 @@ namespace COTG.Views
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
                 var info = World.CityLookup(worldC);
-                if (info.type == World.typeCity)
-                {
-                    var spot = DefensePage.GetDefender(cid); // cache it
-                    spot.pid = info.data; // Set player id from world data.
-                                          // If this has already been selected it will have no effect
-                }
+                //if (info.type == World.typeCity)
+                //{
+                //    var spot = DefensePage.GetDefender(cid); // cache it
+                //    spot.pid = info.data; // Set player id from world data.
+                //                          // If this has already been selected it will have no effect
+                //}
                 
                     // If clicking on our city, change city to that, otherwise show the city info
                     // for non cities we show info
                     if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
                     {
+                        var city = DefensePage.GetDefender(cid); // this will add it to the list if it isn't present and then toggle selection
                         JSClient.ChangeCity(cid);
-                        Spot.ToggleSelected(cid);
                     }
                     else
                     {

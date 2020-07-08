@@ -69,13 +69,15 @@ namespace COTG.Views
          //   OnPropertyChanged(item,null);
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,item,item,IndexOf(item)));
         }
-        public void NotifyAdd(T item)
+        public void Replace(T newItem, T oldItem,int index)
         {
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, IndexOf(item)));
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,newItem,oldItem, index));
         }
-        public void NotifyAdd(T item, int index)
+        public void AddAndNotify(T item)
         {
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            var id = Count;
+            Add(item);
+            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
         }
         
     }

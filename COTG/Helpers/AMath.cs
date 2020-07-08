@@ -112,5 +112,37 @@ namespace COTG
         {
             return string.IsNullOrEmpty(a);
         }
+        // Randomish hash for city ids
+        public static float CidToRandom(this int cid)
+        {
+            var x = cid % 65536;
+            var y = cid / 65536;
+            const uint c1 = 0xcc9e2d51;
+            const uint c2 = 0x1b873593;
+            var result = (((int)(x * c1 + y * c2) >> 8)&0xffff);
+            return result * (1.0f / 0x10000);
+
+        }
+        public static float CidToRandom(this int cid,int offset)
+        {
+            var x = cid % 65536;
+            var y = cid / 65536;
+            const uint c1 = 0xcc9e2d51;
+            const uint c2 = 0x1b873593;
+            var result = ((((int)(x * c1 + y * c2) >> 8)+offset ) & 0xffff);
+            return result * (1.0f / 0x10000);
+
+        }
+        // adds an offset (i.e. time)
+        public static float CidToRandom(this int cid, float offset)
+        {
+            var x = cid % 65536;
+            var y = cid / 65536;
+            const uint c1 = 0xcc9e2d51;
+            const uint c2 = 0x1b873593;
+            var result = ((((int)(x * c1 + y * c2) >> 8) + (int)(offset*0x10000) ) & 0xffff);
+            return result * (1.0f / 0x10000);
+
+        }
     }
 }

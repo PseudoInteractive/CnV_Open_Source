@@ -31,9 +31,9 @@ namespace COTG.Views
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public ObservableCollection<Spot> defenders { get; } = new ObservableCollection<Spot>();
+        public DumbCollection<Spot> defenders { get; } = new DumbCollection<Spot>();
 
-        public static ObservableCollection<Spot> Defenders => instance.defenders;
+        public static DumbCollection<Spot> Defenders => instance.defenders;
 
 
         public static DefensePage instance;
@@ -52,11 +52,28 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
-           
-//            historyGrid.ContextFlyout = cityMenuFlyout;
+
+            //            historyGrid.ContextFlyout = cityMenuFlyout;
+            defenderGrid.SelectionChanged += DefenderGrid_SelectionChanged;
 
 
         }
+
+        private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        {
+            foreach (var __item in e.RemovedItems)
+            {
+                var item = __item as Spot;
+                 Spot.selected.Remove(item.cid);
+                
+            }
+            foreach (var __item in e.AddedItems)
+            {
+                var item = __item as Spot;
+                Spot.selected.Add(item.cid);
+            }
+        }
+
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerPress(sender, e);
@@ -81,20 +98,44 @@ namespace COTG.Views
                     rv = new Spot() { cid = cid };
                 Spot.allSpots.TryAdd(cid, rv);
 
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
-                    Defenders.Add(rv);
+                    var def = Defenders;
+                    if (def.Count == 0 && rv is City)
+                    {
+                        // workaround:  First add cannot be a derived type.  It seems to assume that all contained types are the same as the first added on
+                        var temp = new Spot();
+                        def.AddAndNotify(temp);
+                        def[0] = rv;
+                        def.Replace(rv, temp, 0);
+
+                    }
+                    else
+                        def.AddAndNotify(rv);
+                    instance.defenderGrid.SelectItem(rv);
                 });
 
             }
-           // Spot.ToggleSelected(cid);
+            else
+            {
+                ToggleSelected(rv);
+            }
             return rv;
+
+        }
+        public static void ToggleSelected(Spot rv)
+        {
+            var isSelected = rv.ToggleSelected();
+            if (isSelected)
+                instance.defenderGrid.SelectItem(rv);
+            else
+                instance.defenderGrid.DeselectItem(rv);
 
         }
 
 
 
-      
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

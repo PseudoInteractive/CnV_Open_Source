@@ -29,6 +29,7 @@ using Windows.ApplicationModel.Core;
 using System.Text;
 using System.Collections.ObjectModel;
 using COTG.JSON;
+using System.Threading;
 
 namespace COTG.Views
 {
@@ -211,22 +212,36 @@ namespace COTG.Views
 
 
         DumbCollection<string> logEntries = new  DumbCollection<string>( new [] { "Hello","there" }  );
-        static object logLock = new object();
-        public static void L(string s)
+        private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        public async static void L(string s)
         {
-            var entries = instance.logEntries;
-           CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await _logSemaphore.WaitAsync();
+            try
+            {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
               {
-                  lock (logLock)
+                  try
                   {
                       var str = $"{Tick.MSS()}:{s}";
                       //  instance.logEntries
-                      int id = entries.Count;
-                      entries.Add(str);
-                      entries.NotifyAdd(str, id);
+                      var entries = instance.logEntries;
                       
+                      entries.AddAndNotify(str);
                   }
+                  catch (Exception e)
+                  {
+                      Log(e);
+                  }
+
+
+
+
               });
+            }
+            finally
+            {
+                _logSemaphore.Release();
+            }
             //await Task.Delay(500);
 
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -405,17 +420,6 @@ namespace COTG.Views
         public async void TestPost(object o, RoutedEventArgs e)
         {
             await Raiding.UpdateTS();
-            //var a = await Post.SendForJson("overview/senfind.php","a=0");
-            //foreach(var cit in a.RootElement.GetProperty("b").EnumerateArray())
-            //{
-            //    var cid = cit[0].GetInt32();
-            //    Log(cid.ToString());
-            //    foreach(var target in cit[8].EnumerateArray())
-            //    {
-            //        Log(target.ToString());
-            //    }
-
-            //}
 
         }
 
@@ -441,8 +445,6 @@ namespace COTG.Views
 
         private async void TestPost2(object sender, RoutedEventArgs e)
         {
-            await RestAPI.regionView.Post();
-
         }
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
