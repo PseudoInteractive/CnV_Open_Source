@@ -137,9 +137,15 @@ namespace COTG.Views
             if (type != 0)
             {
                 Spot.viewHover = c.WorldToCid();
-                var player = Player.all.GetValueOrDefault(data, Player._default);
-                toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y/100}{c.x/100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-
+                if (data == 0)
+                {
+                    toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                }
+                else
+                {
+                    var player = Player.all.GetValueOrDefault(data, Player._default);
+                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                }
             }
             else
             {
@@ -162,7 +168,7 @@ namespace COTG.Views
         {
             var dt = TimeSpan.FromMinutes(e.NewValue);
             var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
-            eventTimeTravelText.Text = $"Event Time Travel Offset: {dt.Hours}hr:{dt.Minutes}min,  T:{serverTime.Hour}:{serverTime.Minute:D2}";
+            eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Hour}:{serverTime.Minute:D2}";
         }
     }
 }

@@ -44,7 +44,7 @@
                 <model:DefenseTapCommand />
             </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-                <tg:DataGridDateColumn Width="80" PropertyName="time" CellContentFormat="{}{0:dd HH':'mm':'ss}" />
+                <tg:DataGridTextColumn Width="80" PropertyName="TT" SizeMode="Auto" />
                 <tg:DataGridTextColumn Width="60" PropertyName="atkType" />
                 <tg:DataGridTextColumn Width="100" PropertyName="defPlayer" />
                 <tg:DataGridTextColumn Width="40" PropertyName="defC"  />
@@ -54,8 +54,8 @@
                 <tg:DataGridTextColumn Width="60" PropertyName="atkC"  />
                 <tg:DataGridTextColumn Width="60" PropertyName="atkCN"  />
                 <tg:DataGridTextColumn Width="60" PropertyName="atkAli"  />
-                <tg:DataGridNumericalColumn Width="80" PropertyName="claim" />
-				<tg:DataGridNumericalColumn Width="80" PropertyName="Cont" />
+                <tg:DataGridNumericalColumn Width="40" PropertyName="claim" />
+				<tg:DataGridNumericalColumn Width="34" PropertyName="Cont" />
 				<tg:DataGridBooleanColumn Width="30"  PropertyName="hasSen" />
 				<tg:DataGridBooleanColumn Width="30"  PropertyName= "isNaval"  />
 				<tg:DataGridBooleanColumn Width="30"  PropertyName="hasSE" />
@@ -89,8 +89,11 @@
 
             <tg:RadDataGrid.Columns>
                     <tg:DataGridImageColumn PropertyName="icon"
-                                            Width="32" />
+                                            SizeMode="Fixed"
+                                            Width="40" />
                     <tg:DataGridTextColumn PropertyName="name"
+                                           SizeMode="Auto"
+                                           
                                            Width="100" />
                     <tg:DataGridTextColumn PropertyName="xy"
                                            Width="80" />

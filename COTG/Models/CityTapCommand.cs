@@ -124,12 +124,12 @@ namespace COTG.Models
                 else
                     grid.SelectCell(context);
 
-                Log(context.Item.GetType());
-                Log(context.Item.ToString());
-                Log(context.Value);
+              //  Log(context.Item.GetType());
+              //  Log(context.Item.ToString());
+              //  Log(context.Value);
 
-                Log(context.Column.Name);
-                Log(base.CanExecute(parameter));
+              //  Log(context.Column.Name);
+              //  Log(base.CanExecute(parameter));
                 //   grid.BeginEdit(context);
                 if (context.Column.Header != null)
                 {

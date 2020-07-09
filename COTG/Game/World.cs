@@ -183,7 +183,7 @@ namespace COTG.Game
             }
 
             var data = jsd.RootElement.GetProperty("a").GetString(); // we do at least one utf16 <-> utf8 round trip here
-            List<City> cities = new List<City>(1024);
+  //          List<City> cities = new List<City>(1024);
             List<Boss> bosses = new List<Boss>(128);
 
             var temp = data.Split("|");
@@ -225,89 +225,114 @@ namespace COTG.Game
 
 
             }
-            var rand = new Random();
-            foreach (var id in cities_)
+            for (int isLL = 0; isLL < 2; ++isLL)
             {
-                try
+                var ll = isLL == 1;
+                var key = ll ? lkey_ : ckey;
+                foreach (var id in ll ? lawless_ : cities_)
                 {
-                    if (id == "")
-                        continue;
-                    /** @type {string} */
-                    var dat_ = AsNumber(id) + (ckey);
-                    /** @type {string} */
-                    ckey = dat_;
-                    var _t = dat_.ToString();
-
-                    var digitCount = _t.SubStrAsInt(10, 1);
-                    var pid = (int) _t.SubStrAsInt(11, (int)digitCount);
-                    int aliStart = 11 + (int)digitCount;
-                    var alid = (int)_t.SubStrAsInt(aliStart,_t.Length-aliStart);
-                    var c = (new City() { x = (ushort)(_t.SubStrAsInt(7, 3)-100), y = (ushort)(_t.SubStrAsInt(4, 3)-100), playerId = pid, allianceId=alid, type = _t.SubStrAsByte(3, 1) });
-                    //if (pid == JSClient.jsVars.pid)
-                    //{
-                    //    LogJS(c);
-                    //    Log(_t);
-                    //}
-                    cities.Add(c);
-                    var index = c.x + c.y * worldDim;
-                    pixels[index * 8 + 0] = 0;
-                    pixels[index * 8 + 1] = 0;
-                    if (c.playerId == JSClient.jsVars.pid)
-                        pixels.SetColor(index, 0x60, 0xd0, 0x40);
-                    else if (c.allianceId == Alliance.my.id)
-                        pixels.SetColor(index, 0x30, 0xa0,0x30);
-                    else
+                    try
                     {
-                        switch (Alliance.GetDiplomacy(c.allianceId))
+                        if (id == "")
+                            continue;
+                        /** @type {string} */
+                        var dat_ = AsNumber(id) + (key);
+                        /** @type {string} */
+                        key = dat_;
+                        var _t = dat_.ToString();
+                        uint x, y, pid, alliance, type;
+                        if (ll)
                         {
-                            case Diplomacy.none:
-                                pixels.SetColor(index, 0x80, 0x80, 0x80);
-                                break;
-                            case Diplomacy.allied:
-                                pixels.SetColor(index, 0x20, 0xA0, 0x00);
-                                break;
-                            case Diplomacy.nap:
-                                pixels.SetColor(index, 0x40, 0x80, 0x40);
-                                break;
-                            case Diplomacy.enemy:
-                                pixels.SetColor(index, 0xB0, 0x30, 0x20);
-                                break;
-                            default:
-                                break;
+                            x = (_t.SubStrAsInt(4, 3) - 100);
+                            y = (_t.SubStrAsInt(1, 3) - 100);
+                            Assert(x < 600);
+                            Assert(y < 600);
+                            Log($"{x}:{y},{_t.SubStrAsInt(0, 1)}");
+                            pid = 0;
+                            alliance = 0;
+                            // TODO:
+                            type = _t.SubStrAsInt(0, 1) == 1 ? 1u : 7u;
                         }
-                    }
-                    if (c.type ==  3|| c.type==4)
-                    {
+                        else
+                        {
+                            var digitCount = _t.SubStrAsInt(10, 1);
+                            pid = _t.SubStrAsInt(11, (int)digitCount);
+                            int aliStart = 11 + (int)digitCount;
+                            alliance = (_t.SubStrAsInt(aliStart, _t.Length - aliStart));
+                            x = (_t.SubStrAsInt(7, 3) - 100);
+                            y = (_t.SubStrAsInt(4, 3) - 100);
+                            type = _t.SubStrAsByte(3, 1);
+                        }
+                        //if (pid == JSClient.jsVars.pid)
+                        //{
+                        //    LogJS(c);
+                        //    Log(_t);
+                        //}
+                        // cities.Add(c);
+                        var index = (int)( x + y * worldDim);
+                        pixels[index * 8 + 0] = 0;
+                        pixels[index * 8 + 1] = 0;
+                        if(pid == 0)
+                        {
+                            pixels.SetColor(index, 0xA0, 0x00, 0xB0);
+                        }
+                        else if (pid == JSClient.jsVars.pid)
+                            pixels.SetColor(index, 0x60, 0xd0, 0x40);
+                        else if (alliance == Alliance.my.id)
+                            pixels.SetColor(index, 0x30, 0xa0, 0x30);
+                        else
+                        {
+                            switch (Alliance.GetDiplomacy((int)alliance))
+                            {
+                                case Diplomacy.none:
+                                    pixels.SetColor(index, 0x80, 0x80, 0x80);
+                                    break;
+                                case Diplomacy.allied:
+                                    pixels.SetColor(index, 0x20, 0xA0, 0x00);
+                                    break;
+                                case Diplomacy.nap:
+                                    pixels.SetColor(index, 0x40, 0x80, 0x40);
+                                    break;
+                                case Diplomacy.enemy:
+                                    pixels.SetColor(index, 0xB0, 0x30, 0x20);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if (type == 3 || type == 4)
+                        {
 
-                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                        pixels[index * 8 + 5] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
-                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-                    }
-                    else if (c.type == 7 || c.type == 8)
-                    {
+                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                            pixels[index * 8 + 5] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+                            pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                            pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                        }
+                        else if (type == 7 || type == 8)
+                        {
 
-                        pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
-                        pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                            pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+                            pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                            pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                            pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                        }
+                        else
+                        {
+                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                            pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                            pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                            pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+                        }
+                        cityLookup[x, y] = (uint)pid | typeCity;
+
                     }
-                    else
+                    catch (Exception e)
                     {
-                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                        pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-                        pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                        pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+                        Log(e);
                     }
-                    cityLookup[c.x, c.y] = (uint)pid | typeCity ;
-                    
+
+
                 }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
-
-
             }
             //foreach (var id in lawless_) {
             //              /** @type {string} */
@@ -355,7 +380,7 @@ namespace COTG.Game
             // 	}
             // });
 
-            rv.cities = cities.ToArray();
+//            rv.cities = cities.ToArray();
             rv.bosses = bosses.ToArray();
             bitmapPixels = pixels;
             return rv;

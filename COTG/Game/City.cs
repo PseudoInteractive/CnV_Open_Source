@@ -152,7 +152,12 @@ namespace COTG.Game
                     return string.Empty;
                 string rv = string.Empty;
                 bool wantSpace = false;
-                foreach(var s in senatorInfo)
+                //var summary = new SortedList<byte,byte>();
+                //foreach (var si in senatorInfo)
+                //{
+                //    var sv = summary.GetOrAdd((byte)si.type);
+                //}
+                foreach (var s in senatorInfo)
                 {
                     if (wantSpace)
                         rv += ",";

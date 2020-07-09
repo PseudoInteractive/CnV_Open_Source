@@ -245,11 +245,11 @@ namespace COTG
             Services.NavigationService.Navigate<Views.MainPage>();
         }
 
-        public async static Task ChangeCity(int cityId)
+        public static void ChangeCity(int cityId)
         {
             try
             {
-                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
             }
             catch (Exception e)
             {
@@ -257,45 +257,35 @@ namespace COTG
             }
 
         }
-        public async static Task ShowPlayer(string pid)
+        public static void ShowPlayer(string pid)
         {
             try
             {
-                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{pid}')" });
+                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{pid}')" });
             }
             catch (Exception e)
             {
                 Log(e);
             }
         }
-        public async static Task ShowAlliance(string id)
+        public  static void ShowAlliance(string id)
         {
             try
             {
-                await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{id}')" });
+                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{id}')" });
             }
             catch (Exception e)
             {
                 Log(e);
             }
         }
-        public async static Task ShowReport(string report)
+        public static void ShowReport(string report)
         {
+            if (report.IsNullOrEmpty())
+                return;
             try
             {
-                    await view.InvokeScriptAsync("eval", new string[] { $"__c.showreport('{report}')" });
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-        }
-
-        internal async static void ShowCityWithoutViewChange(int cityId)
-        {
-            try
-            {
-                    await view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
+                    view.InvokeScriptAsync("eval", new string[] { $"__c.showreport('{report}')" });
             }
             catch (Exception e)
             {
@@ -303,7 +293,19 @@ namespace COTG
             }
         }
 
-        public async static Task ShowCity(int cityId)
+        internal static void ShowCityWithoutViewChange(int cityId)
+        {
+            try
+            {
+                  view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
+
+        public static void ShowCity(int cityId)
         {
 			try
 			{
@@ -313,7 +315,7 @@ namespace COTG
                 }
                 else
                 {
-                    await view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+                    view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
                 }
 			}
 			catch (Exception e)
@@ -546,7 +548,7 @@ namespace COTG
             Log(args.ToString());
         }
 
-        static private async void View_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
+        static private void View_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
         {
             
             Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
@@ -555,7 +557,7 @@ namespace COTG
                 view.Refresh();
         }
 
-        static async private void View_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        static private void View_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
             //Log($"Dom loaded {args.Uri}");
             //if (urlMatch.IsMatch(args.Uri.Host))
@@ -664,6 +666,11 @@ namespace COTG
                                 Log(e.Value);
                                 break;
                             }
+                        case "snd":
+                            {
+                                City.UpdateSenatorInfo();
+                                break;
+                            }
                         case "OGT":
                             {
                                 Log(e.Value);
@@ -736,6 +743,7 @@ namespace COTG
                 if (gotCreds)
                 {
                     await GetCitylistOverview();
+                    City.UpdateSenatorInfo();  // no async
                     await Raiding.UpdateTS();
 
                     // await RaidOverview.Send();

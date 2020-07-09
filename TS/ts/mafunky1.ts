@@ -1794,7 +1794,7 @@ function avactor() {
 				}
 
 			}
-			if (dtype_ === "boss") {
+			else if (dtype_ === "boss") {
 				/// @todo
 				//if($("#cityplayerInfo div table tbody tr").length===11) {
 				//	bossele_();
@@ -2194,12 +2194,12 @@ function avactor() {
 				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
 				//}
 			}
-			if (dtype_ === "city") {
+			else if (dtype_ === "city" || dtype_ === "lawless") {
 				$("#cityplayerInfo div table tbody tr:gt(6)").remove();
 				// var coords = $("#citycoords")[0].innerText.split(":");
 				let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
 				var toAdd = { ...defaultMru }; // clone defaults
-
+				let isCity = (dtype_ === "city");
 
 				//var maxCount = 32;
 
@@ -2222,14 +2222,20 @@ function avactor() {
 				//		}
 				//	}
 				//}
-				toAdd.player = clickInfo.info.player;
+				if (isCity) {
+					toAdd.player = clickInfo.info.player;
+					toAdd.name = clickInfo.info.name;
+					toAdd.notes = clickInfo.info.remarks;
+					toAdd.ptype = clickInfo.info.ptype;
+				}
+				else {
+					toAdd.player = dtype_;
+					toAdd.name = dtype_;
+				}
 				toAdd.last = new Date();
-				toAdd.alliance = clickInfo.info.alliance;
-				toAdd.name = clickInfo.info.name;
-				toAdd.notes = clickInfo.info.remarks;
+			//	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
 				toAdd.cid = _cid;
 				toAdd.score = clickInfo.info.score;
-				toAdd.ptype = clickInfo.info.ptype;
 				//mru.push(toAdd);
 				//mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
 				//console.log(mru);

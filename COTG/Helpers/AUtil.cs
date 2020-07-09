@@ -19,6 +19,24 @@ namespace COTG
             }
             l.Add(a);
         }
+        public static TValue GetOrAdd<TKey,TValue>(this SortedList<TKey,TValue> l,TKey key, Func<TKey, TValue> factory )
+        {
+            if (!l.TryGetValue(key, out var value))
+            {
+                value = factory(key);
+                l.Add(key, value);
+            }
+            return value;
+        }
+        public static TValue GetOrAdd<TKey, TValue>(this SortedList<TKey, TValue> l, TKey key) where TValue : new()
+        {
+            if (!l.TryGetValue(key, out var value))
+            {
+                value = new TValue();
+                l.Add(key, value);
+            }
+            return value;
+        }
     }
     public class ConcurrentHashSet<T> : IDisposable
     {

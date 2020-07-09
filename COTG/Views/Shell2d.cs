@@ -37,7 +37,7 @@ namespace COTG.Views
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};
-        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center};
+        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center,WordWrapping=CanvasWordWrapping.NoWrap};
 
         static public CanvasAnimatedControl canvas;
 
@@ -119,11 +119,20 @@ namespace COTG.Views
              canvas.RemoveFromVisualTree();
           
         }
+
+        class IncomingCounts
+        {
+            public int prior;
+            public int incoming;
+        };
+
+        const float postAttackDisplayTime = 11 * 60; // 11 min
+
         const float circleRadMin = 3.0f;
         const float circleRadMax = 5.5f;
         const float lineThickness = 4.0f;
-        const float rectSpanMin = 4.0f;
-        const float rectSpanMax = 6.0f;
+        const float rectSpanMin = 2.0f;
+        const float rectSpanMax = 8.0f;
         const float bSizeGain = 4.0f;
         const float bSizeGain2 = 4;//4.22166666666667f;
         const float srcImageSpan = 2400;
@@ -161,7 +170,7 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.5f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = Colors.Gray },
@@ -235,7 +244,8 @@ namespace COTG.Views
                 {
                     if (Attack.attacks != null)
                     {
-                        const float postAttackDisplayTime = 11 * 60; // 5 min
+                       
+                        var counts = new Dictionary<int, IncomingCounts> ();
                         foreach (var attack in Attack.attacks)
                         {
                             var targetCid = attack.targetCid;
@@ -254,14 +264,25 @@ namespace COTG.Views
 
                             // before attack
                             var dt1 = (float)(attack.time - serverNow).TotalSeconds;
+							{
+                                // register attack
+                                if(!counts.TryGetValue(targetCid, out var count) )
+								{
+                                    count = new IncomingCounts();
+                                    counts.Add(targetCid, count);
+								}
+                                if (dt1 > 0)
+                                    ++count.incoming;
+                                else
+                                    ++count.prior;
+							}
+
                             if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
                                 continue;
                             if (Spot.AreAnySelected() && !Spot.IsSelectedOrHovered(targetCid))
                                 continue;
-                            var span = rectSpan;
-                            if (dt1 < postAttackDisplayTime)
-                                span *= 2.5f;
-                            DrawAction(serverNow, ds, span, attack.time, attack.time-attack.spotted, c0, c1);
+                           
+                            DrawAction(serverNow, ds, rectSpan, attack.time, attack.time-attack.spotted, c0, c1);
                             //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                             //var mid = progress.Lerp(c0, c1);
                             //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
@@ -269,6 +290,15 @@ namespace COTG.Views
                             //var midS = mid - shadowOffset;
                             //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
                             //ds.FillCircle(midS, span, raidBrush);
+                        }
+                        foreach(var i in counts)
+						{
+                            var cid = i.Key;
+                            var count = i.Value;
+                            var c = cid.ToWorldC().WToC();
+                            DrawTextBox(ds,$"{count.prior},{count.incoming}", c, tipTextFormatCentered);
+
+
                         }
                     }
                 }
@@ -289,21 +319,25 @@ namespace COTG.Views
                         }
                         if (city.senatorInfo.Length != 0)
                         {
-                            foreach(var sen in city.senatorInfo)
+                            var idle = 0;
+                            var active = 0;
+                            var recruiting=0;
+                            foreach (var sen in city.senatorInfo) 
                             {
+                                if (sen.type == SenatorInfo.Type.idle)
+                                    idle += sen.count;
+                                else if (sen.type == SenatorInfo.Type.recruit)
+                                    recruiting += sen.count;
+                                else
+                                    active += sen.count;
                                 if(sen.target != 0)
                                 {
                                     var c1 = sen.target.ToWorldC().WToC();
                                     DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1);
                                 }
                             }
-                            var _c = c;
-                            _c.Y += 10 + 4;
-                            var sz = new Vector2(15, 20);
-                            var target = new Rect((_c - sz * 0.5f).ToPoint(), sz.ToSize());
-                            ds.FillRoundedRectangle(target, 4, 4, shadowBrush);
-                            ds.DrawText(city.senatorInfo.Length.ToString(), target, Colors.Cyan, tipTextFormatCentered);
-                            
+                            DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
+
                         }
                     }
                 }
@@ -342,10 +376,27 @@ namespace COTG.Views
 
 
         }
+        private static void DrawTextBox(CanvasDrawingSession ds, string text, Vector2 at, CanvasTextFormat format)
+        {
+            float xLoc = at.X;
+            float yLoc = at.Y;
+            CanvasTextLayout textLayout = new CanvasTextLayout(ds, text, format, 0.0f, 0.0f);
+            var bounds = textLayout.DrawBounds;
+            const float expand = 4;
+            bounds.X += at.X -expand;
+            bounds.Y += at.Y -expand;
+            bounds.Width += expand * 2;
+            bounds.Height += expand * 2;
+            ds.FillRoundedRectangle(bounds,3,3, shadowBrush);
+            ds.DrawTextLayout(textLayout, at.X,at.Y, Colors.White );
+        }
 
         private void DrawAction(DateTimeOffset serverNow, CanvasDrawingSession ds, float rectSpan, DateTimeOffset arrival,TimeSpan dt, Vector2 c0, Vector2 c1)
 		{
-            var progress = (1f-(float)(((arrival-serverNow).TotalSeconds) /dt.TotalSeconds )).Max(0.125f); // we don't know the duration so we approximate with 2 hours
+            var dt1 = (float)(arrival - serverNow).TotalSeconds;
+            var progress = (1f-(float)(dt1 /dt.TotalSeconds )).Max(0.125f).Min(1.0f); // we don't know the duration so we approximate with 2 hours
+            if (dt1 < postAttackDisplayTime)
+                rectSpan *= 2.0f;
             var mid = progress.Lerp(c0, c1);
             ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
             ds.FillCircle(mid, rectSpan, shadowBrush);

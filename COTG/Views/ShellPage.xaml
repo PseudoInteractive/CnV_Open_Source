@@ -20,18 +20,27 @@
 	  Loaded="OnLoaded"
 	  mc:Ignorable="d">
 	<Page.Resources>
-		<Style x:Key="FlyoutStyle"
+		<Style x:Key="DebugFlyoutStyle"
 			   TargetType="FlyoutPresenter">
 			<Setter Property="HorizontalContentAlignment"
 					Value="Stretch" />
 			<Setter Property="VerticalContentAlignment"
 					Value="Stretch" />
 			<Setter Property="MaxWidth"
-					Value="1020" />
+					Value="1900" />
 			<Setter Property="Background"
 					Value="{x:Null}" />
 		</Style>
-		<converters:BoolNegationConverter x:Name="BoolNegationConverter" />
+        <Style x:Key="TimeFlyoutStyle"
+			   TargetType="FlyoutPresenter">
+            <Setter Property="HorizontalContentAlignment"
+					Value="Stretch" />
+            <Setter Property="VerticalContentAlignment"
+					Value="Stretch" />
+            <Setter Property="MaxWidth"
+					Value="1900" />
+        </Style>
+        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
 		<converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
 											  FalseValue="Visible"
 											  TrueValue="Collapsed" />
@@ -170,11 +179,12 @@
 					<Button.Flyout>
 						<Flyout ShowMode="Standard"
 								Placement="Right"
-								FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
+                                FlyoutPresenterStyle="{StaticResource DebugFlyoutStyle}">
+                            
 							<Grid Background="{x:Null}">
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="400" />
-									<ColumnDefinition Width="50" />
+									<ColumnDefinition Width="20" />
 								</Grid.ColumnDefinitions>
 								<ScrollViewer Canvas.ZIndex="11"
 											  MaxWidth="2048"
@@ -258,16 +268,17 @@
 							  Icon="Shuffle">
 					<Button.Flyout>
 						<Flyout Placement="Right"
-								FlyoutPresenterStyle="{StaticResource FlyoutStyle}">
-							<StackPanel>
-								<TextBlock x:Name="eventTimeTravelText">Even Time Travel Offset</TextBlock>
+								FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
+                            <StackPanel Width="1840">
+								<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
 								<Slider x:Name="eventTimeTravelSlider"
 										ValueChanged="EventTimeTravelSliderChanged"
-										Width="980"
-										TickFrequency="1"
+										TickFrequency="10"
 										StepFrequency="10"
-										Maximum="1439.0"
-										Minimum="-1439.0"
+                                        HorizontalAlignment="Stretch"
+                                        
+										Maximum="1430.0"
+										Minimum="-1430.0"
 										Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
 							</StackPanel>
 						</Flyout>

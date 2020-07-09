@@ -28,7 +28,7 @@ namespace COTG.Game
         {
             return name!=null ? nameToId.GetValueOrDefault(name) : -1;
         }
-        internal static Player _default = new Player() { name = "Error" };
+        internal static Player _default = new Player() { name = "!Zut!" };
         public static Player Get(int id) => all.GetValueOrDefault(id, _default);
         public static void Ctor(JsonElement json)
         {

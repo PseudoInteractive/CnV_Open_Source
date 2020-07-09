@@ -31,6 +31,7 @@ namespace COTG.JSON
 
         public float claim { get; set; }
         public DateTimeOffset time { get; set; }
+        public string TT => time.ToString("dd HH':'mm':'ss");
         public DateTimeOffset spotted { get; set; }
         public byte type;
         public string atkType => type switch
