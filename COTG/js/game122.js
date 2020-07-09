@@ -21844,8 +21844,8 @@ var cotgsubscribe = amplify;
                 s2D.data[index + ("1" ^ 0)] = u2D;
                 s2D.data[index + ("2" << 180402528)] = j2D;
                 s2D.data[index + "3" * 1] = "1000" - 0;
-              } else if (O2D == '9' * 1 && Q2D == +'1' && $(_s(l6p >>
-                  616860000))
+              } else if (O2D == '9' * 1 && Q2D == +'1' && $("#worldswitch13") // shrine inactive
+                 
                 .prop(_s('286' * 1))) {
                 var v2D = parseInt(y2D, +"16");
                 var H2D = v2D >> +"16" & (P4p ^ 0);
@@ -21872,8 +21872,7 @@ var cotgsubscribe = amplify;
                 s2D.data[index + ("1" ^ 0)] = u2D;
                 s2D.data[index + ('2' & 2147483647)] = j2D;
                 s2D.data[index + ('3' | 3)] = "1000" - 0;
-              } else if (O2D == ("9" & 2147483647) && Q2D == +"2" && $(_s(
-                  l6p >> 723400640))
+              } else if (O2D == ("9" & 2147483647) && Q2D == +"2" && $("#worldswitch13") // shrine active
                 .prop(_s('286' - 0))) {
                 stype = Number(l2D.substring(+'2', '3' - 0));
                 var x2D = _s(+

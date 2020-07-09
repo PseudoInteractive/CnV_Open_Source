@@ -57,6 +57,8 @@ namespace COTG.Game
         public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
         public static async void Ctor(JsonDocument _aldt)
         {
+            if (aldt != null)
+                return;
            // Log(_aldt);
             aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
@@ -146,6 +148,7 @@ namespace COTG.Game
             nameToId = _nameToId;
             all = _all;
             Note.Show("Got Alliances");
+            await RestAPI.getWorldInfo.Post();
         }
     }
 }

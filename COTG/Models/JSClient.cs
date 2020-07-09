@@ -679,7 +679,7 @@ namespace COTG
                         case "aldt":
                             {
                                 Alliance.Ctor(jsDoc);
-                                Task.Run(async () =>{ await Task.Delay(4000); await RestAPI.getWorldInfo.Post(); });
+                                
 
                                 break;
                             }

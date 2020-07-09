@@ -2343,7 +2343,7 @@ function SendAllianceInfo() {
         }
         return;
     }
-    setTimeout(SendAllianceInfo, 20000);
+    setTimeout(SendAllianceInfo, 4000);
 }
 function avactor() {
     //	var E3y="5894";

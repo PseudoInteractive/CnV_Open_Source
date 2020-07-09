@@ -93,13 +93,18 @@ namespace COTG.Game
             public byte level;
             public ushort x;
             public ushort y;
-
-            public override string ToString()
-            {
-                return $"{{{x}:{y},level:{level}}}";
-            }
         }
         public Boss[] bosses;
+
+        public struct Shrine
+        {
+            public byte type;
+            public ushort x;
+            public ushort y;
+
+        }
+        public Shrine[] shrines;
+
         public struct City
         {
             public int playerId;
@@ -116,11 +121,6 @@ namespace COTG.Game
                 _ => false
 
             };
-
-            public override string ToString()
-            {
-                return $"{{{x}:{y},pid:{playerId},type:{type},c:{isCastle}}}";
-            }
         }
         public City[] cities;
 
@@ -184,7 +184,8 @@ namespace COTG.Game
 
             var data = jsd.RootElement.GetProperty("a").GetString(); // we do at least one utf16 <-> utf8 round trip here
   //          List<City> cities = new List<City>(1024);
-            List<Boss> bosses = new List<Boss>(128);
+            List<Boss> bosses = new List<Boss>(32);
+            List<Shrine> shrines = new List<Shrine>(128);
 
             var temp = data.Split("|");
             var keys = temp[1].Split("l");
@@ -204,9 +205,6 @@ namespace COTG.Game
             /** @type {string} */
             foreach (var id in bosses_1)
             {
-
-                try
-                {
                     if (id == "")
                         continue;
                     /** @type {string} */
@@ -215,24 +213,55 @@ namespace COTG.Game
                     bkey_ = dat_;
                     var _t = dat_.ToString();
                     var b = new Boss() { x = (ushort)(_t.SubStrAsInt(6, 3)-100), y = (ushort)(_t.SubStrAsInt(3, 3)-100), level = _t.SubStrAsByte(0, 2) };
-                  //  LogJS(b);
+                    //  LogJS(b);
                     bosses.Add(b);
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
-
-
+                    var index = (int)(b.x + b.y * worldDim);
+                    pixels.SetColor(index, 0xF0, 0xF0, 0x40);
+                    pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+                    pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
+                    pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                    pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
             }
+
+            foreach (var id in shrines_)
+            {
+                if (id == "")
+                    continue;
+                /** @type {string} */
+                var dat_ = AsNumber(id) + (skey_);
+                /** @type {string} */
+                skey_ = dat_;
+                var _t = dat_.ToString();
+                var b = new Shrine() { x = (ushort)(_t.SubStrAsInt(5, 3) - 100), y = (ushort)(_t.SubStrAsInt(2, 3) - 100),
+                    type = (byte)(_t.SubStrAsInt(0,1)==1?255:_t.SubStrAsByte(1, 1)) };
+                //  LogJS(b);
+                shrines.Add(b);
+                var index = (int)(b.x + b.y * worldDim);
+                if (b.type == 255)
+                {
+                    pixels.SetColor(index, 0xF0, 0xF0, 0xF0);
+                    pixels[index * 8 + 4] = 1 | (1 << 2) | (1 << 4) | (3 << 6);
+                    pixels[index * 8 + 5] = 3 | (2 << 2) | (2 << 4) | (2 << 6); // color index 0
+                    pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                    pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                }
+                else
+                {
+                    pixels.SetColor(index, (b.type&1)!=0?0xF0u:0x3Fu, (b.type & 2) != 0 ? 0xF0u : 0x3Fu, (b.type & 4) != 0 ? 0xF0u : 0x3Fu);
+                    pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+                    pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
+                    pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
+                    pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+
+                }
+            }
+
             for (int isLL = 0; isLL < 2; ++isLL)
             {
                 var ll = isLL == 1;
                 var key = ll ? lkey_ : ckey;
                 foreach (var id in ll ? lawless_ : cities_)
                 {
-                    try
-                    {
                         if (id == "")
                             continue;
                         /** @type {string} */
@@ -247,7 +276,6 @@ namespace COTG.Game
                             y = (_t.SubStrAsInt(1, 3) - 100);
                             Assert(x < 600);
                             Assert(y < 600);
-                            Log($"{x}:{y},{_t.SubStrAsInt(0, 1)}");
                             pid = 0;
                             alliance = 0;
                             // TODO:
@@ -270,8 +298,6 @@ namespace COTG.Game
                         //}
                         // cities.Add(c);
                         var index = (int)( x + y * worldDim);
-                        pixels[index * 8 + 0] = 0;
-                        pixels[index * 8 + 1] = 0;
                         if(pid == 0)
                         {
                             pixels.SetColor(index, 0xA0, 0x00, 0xB0);
@@ -300,7 +326,7 @@ namespace COTG.Game
                                     break;
                             }
                         }
-                        if (type == 3 || type == 4)
+                        if (type == 3 || type == 4) // 3,4 is on/off water
                         {
 
                             pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
@@ -308,7 +334,7 @@ namespace COTG.Game
                             pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                             pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                         }
-                        else if (type == 7 || type == 8)
+                        else if (type == 7 || type == 8) // on off water
                         {
 
                             pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
@@ -325,11 +351,6 @@ namespace COTG.Game
                         }
                         cityLookup[x, y] = (uint)pid | typeCity;
 
-                    }
-                    catch (Exception e)
-                    {
-                        Log(e);
-                    }
 
 
                 }
@@ -380,7 +401,8 @@ namespace COTG.Game
             // 	}
             // });
 
-//            rv.cities = cities.ToArray();
+            //            rv.cities = cities.ToArray();
+            rv.shrines= shrines.ToArray();
             rv.bosses = bosses.ToArray();
             bitmapPixels = pixels;
             return rv;
