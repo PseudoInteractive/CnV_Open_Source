@@ -36,7 +36,7 @@ namespace COTG.Views
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
-        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14};
+        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14, WordWrapping = CanvasWordWrapping.NoWrap };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center,WordWrapping=CanvasWordWrapping.NoWrap};
 
         static public CanvasAnimatedControl canvas;
@@ -64,7 +64,22 @@ namespace COTG.Views
 
 		}
 
-       
+        public static void SetCanvasVisibility(bool visible)
+		{
+            if ( canvas.Visibility == Visibility.Visible )
+			{
+                if (!visible)
+                    canvas.Visibility = Visibility.Collapsed;
+            }
+            else
+			{
+                if (visible)
+                    canvas.Visibility = Visibility.Visible;
+            }
+
+
+        }
+
         private void Canvas_LayoutUpdated(object sender, object e)
         {
             var c = canvas.ActualOffset;
@@ -357,15 +372,24 @@ namespace COTG.Views
                 var _toolTip =toolTip;
                 if(_toolTip != null)
                 {
-                    var rectD = new Vector2(32*4, 24*5);
-                    var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
-                    tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = mousePosition;
-                    tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = mousePosition + rectD * 1.5f;
-                    ds.FillRoundedRectangle(target, 8, 8, tipBackgroundBrush);
-                    target.X+= 12;
-                    target.Y += 8;
+                    CanvasTextLayout textLayout = new CanvasTextLayout(ds, _toolTip, tipTextFormat, 0.0f, 0.0f);
+                    var bounds = textLayout.DrawBounds;
+                    Vector2 c = mousePosition + new Vector2(16, 16);
+                    const float expand = 7;
+                    bounds.X += c.X - expand;
+                    bounds.Y += c.Y - expand;
+                    bounds.Width += expand * 2;
+                    bounds.Height += expand * 2;
 
-                    ds.DrawText(_toolTip, target, tipTextBrush, tipTextFormat);
+                    //  var rectD = new Vector2(32*4, 24*5);
+                    // var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
+                    tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
+                    tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right,(float)bounds.Bottom);
+                    ds.FillRoundedRectangle(bounds, 8, 8, tipBackgroundBrush);
+//                    target.X+= 12;
+  //                  target.Y += 8;
+
+                    ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
                 }
             }
             catch (Exception ex)
@@ -399,10 +423,10 @@ namespace COTG.Views
                 rectSpan *= 2.0f;
             var mid = progress.Lerp(c0, c1);
             ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-            ds.FillCircle(mid, rectSpan, shadowBrush);
+            ds.DrawRoundedSquare(mid, rectSpan, shadowBrush,2.0f);
             var midS = mid - shadowOffset;
             ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-            ds.FillCircle(midS, rectSpan, raidBrush);
+            ds.DrawRoundedSquare(midS, rectSpan, raidBrush, 2.0f) ;
         }
 
         private static bool IsWorldView()
@@ -420,14 +444,22 @@ namespace COTG.Views
     }
     public static class CanvasHelpers
     {
-        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush)
+        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush,float thickness = 1.5f)
         {
-            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2,circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, brush,1.5f);
+            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2,circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, brush, thickness);
         }
-        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush)
+        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush, float thickness = 1.5f)
         {
-            DrawRoundedSquare(ds, c, circleRadius, ShellPage.shadowBrush);
-            DrawRoundedSquare(ds, c- ShellPage.shadowOffset, circleRadius, brush);
+            DrawRoundedSquareShadow(ds, c, circleRadius, thickness);
+            DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
+        }
+        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius,  float thickness = 1.5f)
+        {
+            DrawRoundedSquare(ds, c, circleRadius, ShellPage.shadowBrush, thickness);
+        }
+        public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush, float thickness = 1.5f)
+        {
+            DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
         }
 
         public static Vector2 WToC(this Vector2 c)

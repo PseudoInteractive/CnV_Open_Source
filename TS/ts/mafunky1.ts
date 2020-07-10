@@ -525,7 +525,6 @@ function SendCreds()
 	try {
 
 		console.log("Notify here");
-		console.log("Notify here");
 		let creds = {
 			token: SetupHeaders(),
 			ppss: ppss,
@@ -733,17 +732,17 @@ function avactor() {
 
 
 		String.prototype['utf8Encode'] = function () {
-			if (encryptStr.length > 8)
-				encryptStr.shift();
-			encryptStr.push(this);
-			console.log(this);
+		//	if (encryptStr.length > 8)
+		//		encryptStr.shift();
+		//	encryptStr.push(this);
+		//	console.log(this);
 			return unescape(encodeURIComponent(this));
 		};
 		String.prototype['utf8Decode'] = function () {
-			if (decryptStr.length > 8)
-				decryptStr.shift();
-			decryptStr.push(this);
-			console.log(this);
+		//	if (decryptStr.length > 8)
+	//			decryptStr.shift();
+	//		decryptStr.push(this);
+//			console.log(this);
 			return decodeURIComponent(escape(this));
 		};
 		// if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))

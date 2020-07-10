@@ -417,9 +417,9 @@ namespace COTG.Views
         }
 
 
-        public async void TestPost(object o, RoutedEventArgs e)
+        public  void TestPost(object o, RoutedEventArgs e)
         {
-            await Raiding.UpdateTS();
+            Raiding.UpdateTS(true);
 
         }
 

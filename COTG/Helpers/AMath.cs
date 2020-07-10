@@ -32,6 +32,10 @@ namespace COTG
         {
             return (f >= min ? f : min);
         }
+        public static int Min(this int f, int max)
+        {
+            return (f <= max ? f : max);
+        }
         public static int Abs(this int f)
         {
             return (f >= 0 ? f : -f);

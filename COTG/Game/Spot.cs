@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
+using Telerik.UI.Xaml.Controls.Input;
 using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Input;
@@ -147,7 +148,7 @@ namespace COTG.Game
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
-        public DateTimeOffset lastUpdated { get; set; }
+       // public DateTimeOffset lastUpdated { get; set; }
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }

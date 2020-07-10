@@ -130,29 +130,55 @@ namespace COTG.Views
 
         private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            Spot.viewHover = 0;
+            toolTip = null;
+
             var point = e.GetCurrentPoint(canvas);
             var c1 = point.Position.ToVector2();
             var c = MousePointToWorld(c1);
             (var type, var data) = World.CityLookup(c);
-            if (type != 0)
+            switch (type)
             {
-                Spot.viewHover = c.WorldToCid();
-                if (data == 0)
-                {
-                    toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-                }
-                else
-                {
-                    var player = Player.all.GetValueOrDefault(data, Player._default);
-                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-                }
+                case World.typeCity:
+                    {
+                        Spot.viewHover = c.WorldToCid();
+
+                        if (data == 0)
+                        {
+                            toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                        }
+                        else
+                        {
+                            var player = Player.all.GetValueOrDefault(data, Player._default);
+                            if (Player.IsMe(data))
+                            {
+                                if (City.all.TryGetValue(c.WorldToCid(), out var city))
+                                {
+                                    var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0,city.remarks.Length.Min(40) ) + "\n";
+                                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\ntsh:{city.tsHome}\n{city.name}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                                    Raiding.UpdateTS();
+                                }
+
+                            }
+                            else
+                            {
+                                toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                            }
+                        }
+                        break;
+                    }
+                case World.typeShrine:
+                    toolTip = $"Shrine\n{(data == 255 ? "Unlit" : "Lit")}";
+                    break;
+                case World.typeBoss:
+                    toolTip = $"Boss\nLevel:{data & 0xf}"; // \ntype:{data >> 4}";
+                    break;
+                case World.typePortal:
+                    toolTip = $"Portal\n{(data == 0 ? "Inactive" : "Active")}";
+                    break;
             }
-            else
-            {
-                Spot.viewHover = 0;
-                toolTip = null;
-            }
-            if (isMouseDown)
+
+             if (isMouseDown)
             {
                 // If the mouse drags off the surface we will miss the mouse up
                 // TODO:  mouse should be hooked.

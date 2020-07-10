@@ -10410,7 +10410,6 @@ var cotgsubscribe = amplify;
   const f2p = '3648';
   const M9t = "1000000";
   const O44 = '3722';
-  const H8y = '24';
   const r14 = "1784";
   const V34 =
     '366';
@@ -12564,7 +12563,7 @@ var cotgsubscribe = amplify;
           h1v.g = aldt["r"][A5y >> 833232512];
           h1v.h = aldt["r"][+j6y];
           h1v.i = aldt["r"][+F8y];
-          h1v.j = aldt["r"][H8y ^ 0];
+          h1v.j = aldt["r"]['24' ^ 0];
           h1v.k = aldt["r"]['25' ^ 0];
           h1v.l = aldt["r"][+A8y];
           h1v.m = aldt["r"][+e2y];
@@ -13373,8 +13372,8 @@ var cotgsubscribe = amplify;
         .prop(_s(+'286')) == !!{}) ppdt.opt[u6y & 2147483647] = "1" << 104620992;
       else ppdt.opt[u6y | 0] = "0" & 2147483647;
       if ($(_s(+"2444"))
-        .prop(_s('286' >> 849683072)) == !![]) ppdt.opt[H8y ^ 0] = +"1";
-      else ppdt.opt[+H8y] = +"0";
+        .prop(_s('286' >> 849683072)) == !![]) ppdt.opt['24' ^ 0] = +"1";
+      else ppdt.opt[+'24'] = +"0";
       if ($(_s(+'2541'))
         .prop(_s(+'286')) == !0) {
         ppdt.opt[+'25'] = '1' ^ 0;
@@ -14514,7 +14513,7 @@ var cotgsubscribe = amplify;
           else var k8U = +"0";
           if (a2U != +"0") var E2U = bam[_s(+Q5y)][P2U][_s(+t1R)][a2U];
           else var E2U = +'0';
-          var p2U = { 24: { rdh: k8U, ruh: E2U, rh: s8U, rt: +H8y } };
+          var p2U = { 24: { rdh: k8U, ruh: E2U, rh: s8U, rt: +'24' } };
           D6[_s(+N1R)][U2U][_s(+D1R)] = p2U;
           D6[_s(N1R ^ 0)][U2U][_s(i5R >> 1722621024)] = {};
         }
@@ -20067,7 +20066,7 @@ var cotgsubscribe = amplify;
         var J4g = +Y6y + Number(ppdt
           .r);
         var M4g = "16" * 1 + Number(ppdt.r);
-        var z4g = +H8y + Number(ppdt.r);
+        var z4g = +'24' + Number(ppdt.r);
         var X4g = +h8y + Number(ppdt
           .r);
       } else if (ppdt.r >= '3' - 0) {
@@ -20724,24 +20723,24 @@ var cotgsubscribe = amplify;
               S8v.push(+'0xd1', d8v >> +"8", d8v & +N9p);
             } else if (d8v > -(j3p * 1)) {
               d8v += k9p - 0;
-              S8v.push(+'0xd2', d8v >>> +H8y, d8v >> +"16" & N9p >> 1344517632, d8v >> ('8' << 1328024768) & +N9p,
+              S8v.push(+'0xd2', d8v >>> +'24', d8v >> +"16" & N9p >> 1344517632, d8v >> ('8' << 1328024768) & +N9p,
                 d8v & +N9p);
             } else {
               J8v = Math.floor(d8v / +k9p);
               h8v = d8v & G3p * 1;
-              S8v.push(+"0xd3", J8v >> (H8y ^ 0) & N9p >> 1832001216, J8v >> +"16" & +N9p, J8v >> ("8" & 2147483647) &
-                +N9p, J8v & N9p - 0, h8v >> +H8y & +N9p, h8v >> +"16" & N9p * 1, h8v >> ("8" ^ 0) & (N9p ^ 0),
+              S8v.push(+"0xd3", J8v >> ('24' ^ 0) & N9p >> 1832001216, J8v >> +"16" & +N9p, J8v >> ("8" & 2147483647) &
+                +N9p, J8v & N9p - 0, h8v >> +'24' & +N9p, h8v >> +"16" & N9p * 1, h8v >> ("8" ^ 0) & (N9p ^ 0),
                 h8v & +N9p);
             } else if (d8v < (g1p & 2147483647)) S8v.push(d8v);
             else if (d8v < +i3p) S8v.push("0xcc" >> 1794896704, d8v);
             else if (d8v < +y3p) S8v.push('0xcd' * 1, d8v >> ('8' & 2147483647), d8v & N9p << 314864064);
-            else if (d8v < k9p * 1) S8v.push('0xce' * 1, d8v >>> H8y * 1, d8v >> +"16" & +N9p, d8v >> '8' - 0 & +
+            else if (d8v < k9p * 1) S8v.push('0xce' * 1, d8v >>> '24' * 1, d8v >> +"16" & +N9p, d8v >> '8' - 0 & +
               N9p, d8v & N9p - 0);
             else {
               J8v = Math.floor(d8v / (k9p * 1));
               h8v = d8v & G3p * 1;
-              S8v.push(+'0xcf', J8v >> (H8y >> 610835584) & N9p << 453886112, J8v >> "16" - 0 & +N9p, J8v >> +"8" &
-                +N9p, J8v & +N9p, h8v >> H8y - 0 & +N9p, h8v >> +"16" & +N9p, h8v >> ("8" | 0) & +N9p, h8v & (
+              S8v.push(+'0xcf', J8v >> ('24' >> 610835584) & N9p << 453886112, J8v >> "16" - 0 & +N9p, J8v >> +"8" &
+                +N9p, J8v & +N9p, h8v >> '24' - 0 & +N9p, h8v >> +"16" & +N9p, h8v >> ("8" | 0) & +N9p, h8v & (
                   N9p ^ 0));
             } else {
               g8v = d8v < ("0" ^ 0);
@@ -20751,8 +20750,8 @@ var cotgsubscribe = amplify;
               h8v = K8v & G3p * 1;
               g8v && (f8v |= "0x800" | 0);
               J8v = K8v / (k9p - 0) & +"0xfffff" | f8v << +u6y;
-              S8v.push(+M9p, J8v >> +H8y & +N9p, J8v >> "16" - 0 & +N9p, J8v >> "8" - 0 & +N9p, J8v & (N9p | 245),
-                h8v >> +H8y & N9p << 2113582592, h8v >> +"16" & N9p - 0, h8v >> +'8' & (N9p & 2147483647), h8v & (
+              S8v.push(+M9p, J8v >> +'24' & +N9p, J8v >> "16" - 0 & +N9p, J8v >> "8" - 0 & +N9p, J8v & (N9p | 245),
+                h8v >> +'24' & N9p << 2113582592, h8v >> +"16" & N9p - 0, h8v >> +'8' & (N9p & 2147483647), h8v & (
                   N9p ^ 0));
             }
             break;
@@ -20774,7 +20773,7 @@ var cotgsubscribe = amplify;
               2147483647) + b8v;
             else if (b8v < +i3p) S8v.splice(A8v, '1' * 1, "0xd9" * 1, b8v);
             else if (b8v < y3p << 1533796672) S8v.splice(A8v, +"1", "0xda" * 1, b8v >> +"8", b8v & +N9p);
-            else if (b8v < k9p - 0) S8v.splice(A8v, '1' ^ 0, '0xdb' << 1887344160, b8v >>> +H8y, b8v >> ("16" <<
+            else if (b8v < k9p - 0) S8v.splice(A8v, '1' ^ 0, '0xdb' << 1887344160, b8v >>> +'24', b8v >> ("16" <<
               38202080) & +N9p, b8v >> '8' * 1 & +N9p, b8v & N9p * 1);
             break;
           default:
@@ -20782,7 +20781,7 @@ var cotgsubscribe = amplify;
               b8v = d8v.length;
               if (b8v < (i3p ^ 0)) S8v.push("0xc4" >> 69771136, b8v);
               else if (b8v < (y3p | 0)) S8v.push(+'0xc5', b8v >> +'8', b8v & +N9p);
-              else if (b8v < +k9p) S8v.push(+'0xc6', b8v >>> H8y * 1, b8v >> ("16" >> 1472253152) & N9p * 1, b8v >>
+              else if (b8v < +k9p) S8v.push(+'0xc6', b8v >>> '24' * 1, b8v >> ("16" >> 1472253152) & N9p * 1, b8v >>
                 +"8" & +N9p, b8v & (N9p | 82));
               Array.prototype.push.apply(S8v, d8v);
               break;
@@ -20797,7 +20796,7 @@ var cotgsubscribe = amplify;
               if (b8v < +"16") S8v.push((D9p & 2147483647) +
                 b8v);
               else if (b8v < y3p * 1) S8v.push("0xdc" ^ 0, b8v >> +'8', b8v & N9p - 0);
-              else if (b8v < k9p * 1) S8v.push("0xdd" - 0, b8v >>> +H8y, b8v >> ("16" | 0) & N9p * 1, b8v >> +'8' &
+              else if (b8v < k9p * 1) S8v.push("0xdd" - 0, b8v >>> +'24', b8v >> ("16" | 0) & N9p * 1, b8v >> +'8' &
                 N9p >> 964862368, b8v & +N9p);
               for (V8v = "0" << 877817888; V8v < b8v; ++V8v) k8v(S8v, d8v[V8v],
                 n8v);
@@ -20813,7 +20812,7 @@ var cotgsubscribe = amplify;
               if (b8v < +"16") S8v[A8v] = g1p - 0 + b8v;
               else if (b8v < y3p * 1) S8v.splice(A8v, "1" & 2147483647, "0xde" >> 428831904, b8v >> ('8' ^ 0), b8v &
                 N9p * 1);
-              else if (b8v < k9p - 0) S8v.splice(A8v, +"1", '0xdf' << 667663808, b8v >>> (H8y >> 1051943072),
+              else if (b8v < k9p - 0) S8v.splice(A8v, +"1", '0xdf' << 667663808, b8v >>> ('24' >> 1051943072),
                 b8v >> +"16" & N9p << 1682394336, b8v >> '8' - 0 & +N9p, b8v & (N9p & 2147483647));
             }
         }
@@ -21185,7 +21184,7 @@ var cotgsubscribe = amplify;
           var C2D;
           var T2D = '0' - 0;
           var n2D = '1' & 2147483647;
-          var t2D;
+          var isCastle;
           var
             o2D;
           var L2D;
@@ -21311,9 +21310,9 @@ var cotgsubscribe = amplify;
               w2D = b2D / e8D;
               I2D = parseInt(('0' & 2147483647) + I2D * U2D);
               w2D = parseInt(+'0' + (R2D - w2D * R2D));
-              if (O2D == "9" - 0) Q2D = Number(l2D.substring(+"1", '2' >>
+              if (O2D == "9" - 0) Q2D = Number(l2D.substring(+"1", '2' >> // shrine
                 1286753472));
-              else if (O2D == '8' * 1) Q2D = Number(l2D.substring("1" - 0, "2" - 0));
+              else if (O2D == '8' * 1) Q2D = Number(l2D.substring("1" - 0, "2" - 0)); // portal
               else if (O2D == "7" >> 252447552) Q2D = Number(l2D.substring('7' ^ 0, +'8'));
               else if (O2D == "3" * 1) Q2D = Number(l2D.substring(+'7', "8" << 1526753536));
               if (O2D == +"2") {
@@ -21323,35 +21322,35 @@ var cotgsubscribe = amplify;
                 var i2D = Number(l2D.substring(+'4', +
                   "5"));
                 if (i2D == ("1" | 1)) {
-                  t2D = '0' ^ 0;
+                  isCastle = '0' ^ 0;
                   o2D = '0' & 2147483647;
                   W2D = +'1';
                 } else if (i2D == "2" - 0) {
-                  t2D = '0' - 0;
+                  isCastle = '0' - 0;
                   o2D = +'1';
                   W2D = "1" * 1;
                 } else if (i2D == "3" - 0) {
-                  t2D = "1" & 2147483647;
+                  isCastle = "1" & 2147483647;
                   o2D = +'1';
                   W2D = '1' >> 1518184352;
                 } else if (i2D == +'4') {
-                  t2D = '1' << 1277342624;
+                  isCastle = '1' << 1277342624;
                   o2D = "0" >> 1453211680;
                   W2D = +'1';
                 } else if (i2D == ('5' ^ 0)) {
-                  t2D = "0" << 1546110720;
+                  isCastle = "0" << 1546110720;
                   o2D = '0' >> 1296588192;
                   W2D = +"8";
                 } else if (i2D == +'6') {
-                  t2D = '0' << 1314423968;
+                  isCastle = '0' << 1314423968;
                   o2D = "1" - 0;
                   W2D = '8' << 1076494912;
                 } else if (i2D == +"7") {
-                  t2D = +'1';
+                  isCastle = +'1';
                   o2D = '1' >> 131295392;
                   W2D = +'8';
                 } else if (i2D == +'8') {
-                  t2D = '1' & 2147483647;
+                  isCastle = '1' & 2147483647;
                   o2D = +"0";
                   W2D = +"8";
                 }
@@ -21426,8 +21425,8 @@ var cotgsubscribe = amplify;
                     if ($("#worldswitch1")
                     .prop("checked"))
                         if ($("#worldswitch9").prop("checked") == !!"" && o2D == +"0" || 
-                      $("#worldswitch8").prop("checked") == ![] && t2D == +"0" && 
-                      ($(_s(+L6p)).prop("checked") && L2D == '0' >> 1444598464)) T2D = "0" & 2147483647;
+                      $("#worldswitch8").prop("checked") == ![] && isCastle == +"0" && 
+                        ($("worldswitch10").prop("checked") && L2D == '0' >> 1444598464)) T2D = "0" & 2147483647;
                     else T2D = '1' | 0;
                 } else if (Q2D == +"2") {
                   C2D = x8D;
@@ -21435,7 +21434,7 @@ var cotgsubscribe = amplify;
                         .prop("checked"))
                     if ($(_s(+R6p))
                       .prop(_s('286' * 1)) == !"1" && o2D == +'0' || $("#worldswitch8")
-                      .prop(_s("286" | 270)) == !"1" && t2D == +"0" || $(_s(L6p * 1))
+                      .prop(_s("286" | 270)) == !"1" && isCastle == +"0" || $("worldswitch10")
                       .prop(_s(+'286')) == !{} && L2D == +"0") T2D = "0" | 0;
                     else T2D = "1" - 0;
                 } else if (Q2D == "3" >> 1359359648) {
@@ -21444,7 +21443,7 @@ var cotgsubscribe = amplify;
                     .prop(_s(+"286")))
                     if ($(_s(+R6p))
                       .prop(_s('286' & 2147483647)) == !{} && o2D == +"0" || $("#worldswitch8")
-                      .prop(_s(+'286')) == ![] && t2D == ("0" | 0) || $(_s(L6p | 8))
+                      .prop(_s(+'286')) == ![] && isCastle == ("0" | 0) || $("worldswitch10")
                       .prop(_s(+"286")) == ![] && L2D == +'0') T2D = '0' << 1517647968;
                     else T2D = "1" - 0;
                 } else if (Q2D == '5' * 1) {
@@ -21453,7 +21452,7 @@ var cotgsubscribe = amplify;
                     .prop(_s(+'286')))
                     if ($(_s(R6p | 128))
                       .prop(_s(+'286')) == !!0 && o2D == +'0' || $("#worldswitch8")
-                      .prop(_s(+'286')) == !"1" && t2D == +"0" || $(_s(+L6p))
+                      .prop(_s(+'286')) == !"1" && isCastle == +"0" || $(_s(+L6p))
                       .prop(_s("286" & 2147483647)) == !1 && L2D == "0" * 1) T2D = '0' ^ 0;
                     else T2D = "1" * 1;
                 } else if (Q2D == +"6") {
@@ -21462,7 +21461,7 @@ var cotgsubscribe = amplify;
                     .prop(_s('286' >> 215679680)))
                     if ($(_s(R6p - 0))
                       .prop(_s(+"286")) == !1 && o2D == ("0" & 2147483647) || $("#worldswitch8")
-                      .prop(_s(+'286')) == ![] && t2D == '0' - 0 || $(_s(L6p ^ 0))
+                      .prop(_s(+'286')) == ![] && isCastle == '0' - 0 || $(_s(L6p ^ 0))
                       .prop(_s(+'286')) == !{} && L2D == +"0") T2D = '0' - 0;
                     else T2D = +'1';
                 } else if (Q2D == +"7") {
@@ -21471,7 +21470,7 @@ var cotgsubscribe = amplify;
                     .prop(_s('286' * 1)))
                     if ($(_s(+R6p))
                       .prop(_s("286" & 2147483647)) == !!0 && o2D == "0" - 0 || $("#worldswitch8")
-                      .prop(_s(+'286')) == !!"" && t2D == "0" >> 2057365536 || $(_s(+L6p))
+                      .prop(_s(+'286')) == !!"" && isCastle == "0" >> 2057365536 || $(_s(+L6p))
                       .prop(_s('286' << 1049736096)) == ![] && L2D == +'0') T2D = +'0';
                     else T2D = '1' >> 1315806816;
                 } else if (Q2D == +'4') {
@@ -21480,25 +21479,25 @@ var cotgsubscribe = amplify;
                     .prop(_s("286" ^ 0)))
                     if ($(_s(R6p * 1))
                       .prop(_s('286' << 555640768)) == !{} && o2D == '0' - 0 || $("#worldswitch8")
-                      .prop(_s("286" >> 1082675936)) == !!0 && t2D == +"0" || $(_s(L6p ^ 0))
+                      .prop(_s("286" >> 1082675936)) == !!0 && isCastle == +"0" || $(_s(L6p ^ 0))
                       .prop(_s(+'286')) == !!0 && L2D == +"0") T2D = '0' << 1948151520;
                     else T2D = +"1";
                 } else if (Q2D == "8" - 0) {
                   C2D = D2D;
                   if ($(_s(+R6p))
                     .prop(_s('286' >> 159842240)) == ![] && o2D == +"0" || $("#worldswitch8")
-                    .prop(_s(+'286')) == !"1" && t2D == +"0" || $(_s(L6p ^ 0))
+                    .prop(_s(+'286')) == !"1" && isCastle == +"0" || $(_s(L6p ^ 0))
                     .prop(_s(+"286")) == !1 && L2D == +"0") T2D = '0' >> 236919648;
                   else T2D = "1" - 0;
                 } else if (Q2D == ("9" ^ 0)) {
                   C2D = N2D;
                   if ($(_s(R6p | 544))
                     .prop(_s("286" ^ 0)) == !{} && o2D == "0" - 0 || $("#worldswitch8")
-                    .prop(_s(+"286")) == !!0 && t2D == ('0' | 0) || $(_s(+L6p))
+                    .prop(_s(+"286")) == !!0 && isCastle == ('0' | 0) || $(_s(+L6p))
                     .prop(_s('286' >> 2130583968)) == !1 && L2D == +'0') T2D = +"0";
                   else T2D = '1' >> 992745792;
                 }
-                if (t2D == +"1" && T2D == +"1" && L2D == '0' - 0) {
+                if (isCastle == +"1" && T2D == +"1" && L2D == '0' - 0) {
                   var v2D =
                     parseInt(C2D, +"16");
                   var H2D = v2D >> +"16" & P4p >> 1585185024;
@@ -21692,7 +21691,7 @@ var cotgsubscribe = amplify;
                 graphics.lineTo(g2D * (I6p * 1) + (p6p - 0), b2D * +I6p + +p6p);
                 graphics.lineTo(g2D * (I6p * 1) + +p6p, b2D * (I6p - 0) - +p6p);
                 graphics.endFill();
-              } else if (O2D == +"8" && Q2D == +'1' && $(_s(+"197"))
+              } else if (O2D == +"8" && Q2D == +'1' && $(_s(+"197")) // portal
                 .prop(_s(+"286"))) {
                 var v2D = parseInt(k8D, +"16");
                 var H2D = v2D >> +"16" & +P4p;
@@ -21729,9 +21728,7 @@ var cotgsubscribe = amplify;
                 s2D.data[index + +'1'] = u2D;
                 s2D.data[index + +'2'] = j2D;
                 s2D.data[index + ("3" & 2147483647)] = +"1000";
-              } else if (O2D == '8' - 0 && Q2D == +'2' && $(_s(n6p -
-                  0))
-                .prop(_s(+'286'))) {
+              } else if (O2D == '8' - 0 && Q2D == +'2' && $("worldswitch15").prop(_s(+'286'))) { // active portal
                 var v2D = parseInt(o8D, "16" >> 2122379520);
                 var H2D = v2D >> +"16" & +
                   P4p;
@@ -22462,7 +22459,7 @@ var cotgsubscribe = amplify;
       F9w.b = bam[_s("4619" ^ 0)][c9w].ic * m9w;
       F9w.c = bam[_s("4619" ^ 0)][c9w].sc * m9w;
       F9w.d = bam[_s(+"4619")][c9w].gc * m9w;
-      F9w.e = Math.floor(Number(bam[_s("4619" - 0)][c9w].fo) / (H8y << 410121344) * m9w * ("100" >> 411178688)) / (
+      F9w.e = Math.floor(Number(bam[_s("4619" - 0)][c9w].fo) / ('24' << 410121344) * m9w * ("100" >> 411178688)) / (
         "100" & 2147483647);
       if (c9w == "0" >> 1095383552) F9w.f = - +'999999999';
       else F9w.f = bam[_s("4619" & 2147483647)][c9w].ts * m9w;
@@ -25664,7 +25661,7 @@ var cotgsubscribe = amplify;
                   } else if (M2l == +"16") Y6(_s("2997" | 672));
                   else if (M2l == (j6y ^ 0)) Y6(_s('6288' * 1));
                   else if (M2l == +F8y) Y6(_s(+"5770"));
-                  else if (M2l == H8y * 1) Y6(_s(+"2997"));
+                  else if (M2l == '24' * 1) Y6(_s(+"2997"));
                   else if (M2l == +'25') Y6(_s("4005" << 96806048));
                   else if (M2l == +'25') Y6(_s(+'4005'));
                   else if (M2l == A8y >> 674415328) Y6(_s("6378" * 1));
@@ -27681,7 +27678,7 @@ var cotgsubscribe = amplify;
         $(document)
           .keypress(function(O7Z) {
             E6k.y6();
-            if (ppdt.opt[+H8y] == '1' - 0) {
+            if (ppdt.opt[+'24'] == '1' - 0) {
               var H7Z = p3F(O7Z);
               if (!$(_s(+
                   '1369'))
@@ -31471,11 +31468,11 @@ var cotgsubscribe = amplify;
     }
 
     function G6F() {
-      var P6n = $(_s("844" ^ 0))
+     var P6n = $("#regionButton")
         .offset();
-      var U6n = $(_s(+"844"))
+     var U6n = $("#regionButton")
         .height() + P6n.top + +q7y;
-      var R6n = $(_s(+"844"))
+      var R6n = $("#regionButton")
         .width() / ('2' & 2147483647) + P6n.left;
       var B6n = U6n - +'10';
       $(_s('94' ^ 0))
@@ -35192,7 +35189,7 @@ var cotgsubscribe = amplify;
         $(_s(+"4630"))
           .click(function() {
             $(_s('4717' | 4613))
-              .val(+H8y);
+              .val(+'24');
           });
         $(_s("4108" * 1))
           .click(function() {
@@ -43727,7 +43724,7 @@ var cotgsubscribe = amplify;
             else if (u0Z == +s6y) Y6(_s(+'2997'));
             else if (u0Z == (j6y | 6)) Y6(_s(+'6288'));
             else if (u0Z == +F8y) Y6(_s("3900" | 2604));
-            else if (u0Z == +H8y) Y6(_s(+'7078'));
+            else if (u0Z == +'24') Y6(_s(+'7078'));
             else if (u0Z == ('25' ^ 0)) Y6(_s('6760' * 1));
             else if (u0Z == +A8y) Y6(_s("5380" | 4));
             else if (u0Z == +e2y) Y6(_s(E8y & 2147483647));
@@ -45291,7 +45288,7 @@ var cotgsubscribe = amplify;
       var z76 = Math.floor(W76 / +64);
       var M76 = Math.floor(i76 / +64);
       D2F(z76, M76);
-      var t76 = (H8y << 2124911712) * Math.floor(M76 / ('25' >> 1646094176)) + Math.floor(z76 / +
+      var t76 = ('24' << 2124911712) * Math.floor(M76 / ('25' >> 1646094176)) + Math.floor(z76 / +
         '25');
       var C76 = z76 % +'25';
       var G76 = M76 % ('25' - 0);
@@ -45350,8 +45347,8 @@ var cotgsubscribe = amplify;
         }
       }
       if (G76 >= +'5')
-        if (t76 + (H8y - 0) <= +'575') {
-          O76 = Number(t76 + +H8y);
+        if (t76 + ('24' - 0) <= +'575') {
+          O76 = Number(t76 + +'24');
           x76 = +"0";
           if (C2.length != ("0" ^ 0))
             for (var T76 = +'0'; T76 < C2.length; T76++) {
@@ -45371,11 +45368,11 @@ var cotgsubscribe = amplify;
               c: O76,
               t: currentTime()
             });
-            X76.push(Number(t76) + H8y * 1);
+            X76.push(Number(t76) + '24' * 1);
           }
         } if (G76 <= '5' >> 1204151808)
-        if (t76 - (H8y >> 757973376) >= ('0' & 2147483647)) {
-          O76 = Number(t76 - +H8y);
+        if (t76 - ('24' >> 757973376) >= ('0' & 2147483647)) {
+          O76 = Number(t76 - +'24');
           x76 = '0' - 0;
           if (C2.length != ("0" ^ 0))
             for (var T76 = "0" * 1; T76 < C2.length; T76++) {
@@ -45395,11 +45392,11 @@ var cotgsubscribe = amplify;
               c: O76,
               t: currentTime()
             });
-            X76.push(Number(t76) - (H8y | 24));
+            X76.push(Number(t76) - ('24' | 24));
           }
         } if (X76.length > +"0")
         {
-        //console.log("rmp");
+            console.log("rmp:" + X76);
         B1F(X76);
         }
     }
@@ -47503,7 +47500,7 @@ var cotgsubscribe = amplify;
         x0g.style.display = "block";
         O0g.style.display = "none";
       });
-    $(_s("844" | 840))
+      $("#regionButton")
       .click(function() {
         c6.paused = !"1";
         c6.lockRender = !"1";
@@ -47553,8 +47550,7 @@ var cotgsubscribe = amplify;
         $(_s(+T24))
           .css("display", "none");
         var X0g = new Array();
-        var W0g = +H8y * Math.floor(D6.y / (
-          "25" * 1)) + Math.floor(D6.x / ('25' | 8));
+        var W0g = 24 * Math.floor(D6.y / 25) + Math.floor(D6.x / 25);
         X0g.push(Number(W0g));
         B1F(X0g);
         w2();
@@ -49352,7 +49348,7 @@ var cotgsubscribe = amplify;
     function p0V() {
       if ($(_s(d2y | 180))
         .css("display") == "none" && Z9 == ('0' ^ 0))
-        if (ppdt.opt[+H8y] == +"1") W1F(+'10');
+        if (ppdt.opt[+'24'] == +"1") W1F(+'10');
     }
 
     function z0F(N8l, F8l) {
@@ -49422,7 +49418,7 @@ var cotgsubscribe = amplify;
       var y22 = $(_s("3434" -
         0));
       if (B22.val() == "") B22.val(+"1000");
-      if (R22.val() == '') R22.val(+H8y);
+      if (R22.val() == '') R22.val(+'24');
       y22.html("");
       $(_s(y6R >> 1084619648))
         .val("0" * 1);
@@ -56236,9 +56232,9 @@ var cotgsubscribe = amplify;
           .css(_s(b9R << 2116059488), _s(g6p | 2560));
       }
       if (l22 == "") {
-        l22 = H8y | 8;
+        l22 = '24' | 8;
         $(_s(+v4k))
-          .val(H8y | 16);
+          .val('24' | 16);
         $(_s(+v4k))
           .css(_s(b9R >> 1024630144), _s(g6p * 1));
       }
@@ -57515,7 +57511,7 @@ var cotgsubscribe = amplify;
           else if (H2B == A5y * 1) Y6(_s(+'4005'));
           else if (H2B == +j6y) Y6(_s("6288" * 1));
           else if (H2B == +F8y) Y6(_s(+"5380"));
-          else if (H2B == (H8y ^ 0)) Y6(_s(+"4989"));
+          else if (H2B == ('24' ^ 0)) Y6(_s(+"4989"));
           else if (H2B == '25' >> 342603840) Y6(_s(+'4472'));
           else if (H2B == (A8y ^ 0)) Y6(_s(E8y - 0));
           else if (H2B == e2y >> 2134266976) Y6(_s(+"6261"));
@@ -58343,7 +58339,7 @@ var cotgsubscribe = amplify;
       if ($(_s(+R6p))
         .prop(_s("286" << 1918438880))) ppdt.wmo[+'8'] = "1" << 138057888;
       else ppdt.wmo['8' - 0] = +"0";
-      if ($(_s(+L6p))
+        if ($("worldswitch10")
         .prop(_s(+"286"))) ppdt.wmo[+"9"] = +'1';
       else ppdt.wmo[+'9'] = "0" ^ 0;
       if ($(_s(+k6p))
@@ -58358,7 +58354,7 @@ var cotgsubscribe = amplify;
       if ($(_s("197" - 0))
         .prop(_s(+'286'))) ppdt.wmo[m2y << 1932556704] = '1' ^ 0;
       else ppdt.wmo[+m2y] = +'0';
-      if ($(_s(n6p ^ 0))
+        if ($("worldswitch15")
         .prop(_s(+'286'))) ppdt.wmo[+B2y] = '1' << 2116381440;
       else ppdt.wmo[+B2y] = +'0';
       if ($(_s(+w6p))
@@ -58373,7 +58369,7 @@ var cotgsubscribe = amplify;
       ppdt.wmo[+A5y] = M9.replace(_s(m7y | 5169), '');
       ppdt.wmo[+j6y] = z9.replace(_s(+m7y), '');
       ppdt.wmo[F8y * 1] = X9.replace(_s(m7y >> 133268736), '');
-      ppdt.wmo[+H8y] = L9.replace(_s(+m7y), "");
+      ppdt.wmo[+'24'] = L9.replace(_s(+m7y), "");
       ppdt.wmo[+'25'] = o9.replace(_s(+m7y), '');
       ppdt.wmo[+A8y] = O9.replace(_s(m7y - 0), '');
       ppdt.wmo[e2y & 2147483647] = m8.replace(_s(+m7y), "");
@@ -59824,8 +59820,8 @@ var cotgsubscribe = amplify;
         .prop(_s(+'286')) == !!{}) ppdt.opt[+u6y] = '1' - 0;
       else ppdt.opt[u6y ^ 0] = +'0';
       if ($(_s(+'2444'))
-        .prop(_s("286" ^ 0)) == !![]) ppdt.opt[+H8y] = '1' ^ 0;
-      else ppdt.opt[+H8y] = "0" >> 1630612128;
+        .prop(_s("286" ^ 0)) == !![]) ppdt.opt[+'24'] = '1' ^ 0;
+      else ppdt.opt[+'24'] = "0" >> 1630612128;
       if ($(_s('1156' >> 49041920))
         .prop(_s(+'286')) == !"") ppdt.opt[+R2y] = +"1";
       else ppdt.opt[+R2y] = +'0';
@@ -60109,9 +60105,9 @@ var cotgsubscribe = amplify;
           .prop(_s('286' * 1), !!"1");
         else $(_s(R6p & 2147483647))
           .prop(_s("286" | 262), !{});
-        if (ppdt.wmo["9" << 1998806944] == +"1") $(_s(+L6p))
+          if (ppdt.wmo["9" << 1998806944] == +"1") $("worldswitch10")
           .prop(_s("286" | 24), !0);
-        else $(_s(L6p << 236282720))
+        else $("worldswitch10")
           .prop(_s(+'286'), !!"");
         if (ppdt.wmo[+'10'] == ('1' ^ 0)) $(_s(k6p - 0))
           .prop(_s(+'286'), !!{});
@@ -60129,9 +60125,9 @@ var cotgsubscribe = amplify;
           .prop(_s('286' | 276), !0);
         else $(_s('197' << 434818976))
           .prop(_s(+'286'), !{});
-        if (ppdt.wmo[+B2y] == +'1') $(_s(+n6p))
+        if (ppdt.wmo[+B2y] == +'1') $("worldswitch15")
           .prop(_s(+'286'), !0);
-        else $(_s(+n6p))
+        else $("worldswitch15")
           .prop(_s(+'286'), !!"");
         if (ppdt.wmo[q7y * 1] == +'1') $(_s(+w6p))
           .prop(_s(+'286'), !![]);
@@ -60145,7 +60141,7 @@ var cotgsubscribe = amplify;
         M9 = _s(+m7y) + ppdt.wmo[+A5y];
         z9 = _s(+m7y) + ppdt.wmo[+j6y];
         X9 = _s(m7y ^ 0) + ppdt.wmo[+F8y];
-        L9 = _s(m7y ^ 0) + ppdt.wmo[+H8y];
+        L9 = _s(m7y ^ 0) + ppdt.wmo[+'24'];
         o9 = _s(+m7y) + ppdt.wmo[+'25'];
         O9 = _s(m7y << 521407712) + ppdt.wmo[+A8y];
         m8 = _s(m7y >> 1876365824) + ppdt.wmo[e2y >> 1343235808];
@@ -60267,7 +60263,7 @@ var cotgsubscribe = amplify;
         ppdt.wmo[+A5y] = _s(+"4133");
         ppdt.wmo[+j6y] = _s(S5R - 0);
         ppdt.wmo[F8y | 2] = _s("4371" - 0);
-        ppdt.wmo[+H8y] = _s(S5R & 2147483647);
+        ppdt.wmo[+'24'] = _s(S5R & 2147483647);
         ppdt.wmo[+'25'] = _s("968" << 1926917952);
         ppdt.wmo[+A8y] = _s("968" * 1);
         ppdt.wmo[+e2y] = _s("2611" & 2147483647);
@@ -60290,7 +60286,7 @@ var cotgsubscribe = amplify;
           .prop(_s('286' >> 593377792), !"");
         $(_s(R6p ^ 0))
           .prop(_s("286" | 2), !0);
-        $(_s(L6p * 1))
+        $("worldswitch10")
           .prop(_s(+'286'), !!1);
         $(_s(k6p & 2147483647))
           .prop(_s('286' * 1), !"");
@@ -60300,7 +60296,7 @@ var cotgsubscribe = amplify;
           .prop(_s('286' - 0), !!"1");
         $(_s(+"197"))
           .prop(_s(+'286'), !0);
-        $(_s(n6p - 0))
+          $("worldswitch15")
           .prop(_s('286' ^ 0), !!"1");
         $(_s(+w6p))
           .prop(_s(+"286"), !"");
@@ -66501,6 +66497,8 @@ var cotgsubscribe = amplify;
       var _cid = 0;
       var _viewMode = 0; // 
       var _viewModeCache=0; 
+      var _popupCountCache =0;
+      var _popupCount=0;
       const viewModeCity = 0;
       const viewModeRegion = 1;
       const viewModeWorld = 2;
@@ -66541,13 +66539,15 @@ var cotgsubscribe = amplify;
                       // __zoom = +matrix[0] * 4.22166666666667;
                   }
 
-                  if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache || _zoom != __zoom) {
+                  if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
+                      || _zoom != __zoom || _popupCountCache !=_popupCount) {
                       _viewModeCache = _viewMode;
                       _cid = cid;
                       _zoom = __zoom;
                       _cameraX = _x;
                       _cameraY = _y;
-                      const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom } };
+                      _popupCountCache = _popupCount;
+                      const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p:_popupCount } };
                       window['external']['notify'](JSON.stringify(wrapper));
                   }
             
@@ -67004,7 +67004,7 @@ var cotgsubscribe = amplify;
                 ppdt[_s(+r0R)][_s(+w6y)];
               if (S5i >= s5i) var J5i = _s(+e9k) + p6(s5i) + _s(+
                 "6021");
-              else var J5i = _s(C1R & 2147483647) + p6(s5i) + _s(H8y << 40808704) + p6(Math.floor(Number(
+              else var J5i = _s(C1R & 2147483647) + p6(s5i) + _s('24' << 40808704) + p6(Math.floor(Number(
                 s5i) - Number(S5i))) + _s(+K4p);
             }
             for (var O5i in qam[_s(G2y * 1)][Number(q0i)][E6k
@@ -67016,28 +67016,28 @@ var cotgsubscribe = amplify;
                   var r5i = ppdt["pr"][+"1"];
                   if (r5i >= N0i) var A5i = _s(e9k >> 877654624) +
                     p6(N0i) + _s(+'6021');
-                  else var A5i = _s(C1R << 322256544) + p6(N0i) + _s(H8y - 0) + p6(Number(N0i) - Number(
+                  else var A5i = _s(C1R << 322256544) + p6(N0i) + _s('24' - 0) + p6(Number(N0i) - Number(
                     r5i)) + _s(+K4p);
                   break;
                 case _s(+"5872"):
                   var n5i = ppdt["pr"][+'2'];
                   if (n5i >= N0i) var V5i = _s(e9k - 0) + p6(N0i) + E6k
                     .o55('6021' * 1);
-                  else var V5i = _s(+C1R) + p6(N0i) + _s(H8y | 24) + p6(Number(N0i) - Number(n5i)) + E6k
+                  else var V5i = _s(+C1R) + p6(N0i) + _s('24' | 24) + p6(Number(N0i) - Number(n5i)) + E6k
                     .S55(K4p >> 1762372704);
                   break;
                 case _s(+E4p):
                   var b5i = ppdt["pr"]["3" & 2147483647];
                   if (b5i >= N0i) var d5i = _s(
                     e9k & 2147483647) + p6(N0i) + _s(+'6021');
-                  else var d5i = _s(C1R & 2147483647) + p6(N0i) + _s(H8y >> 1429001472) + p6(Number(N0i) -
+                  else var d5i = _s(C1R & 2147483647) + p6(N0i) + _s('24' >> 1429001472) + p6(Number(N0i) -
                     Number(b5i)) + _s(K4p ^ 0);
                   break;
                 case _s(+F4R):
                   var i5i = ppdt["pr"]['4' & 2147483647];
                   if (i5i >= N0i) var W5i = _s(+e9k) + p6(
                     N0i) + _s(+"6021");
-                  else var W5i = _s(+C1R) + p6(N0i) + _s(H8y * 1) + p6(Number(N0i) - Number(i5i)) + E6k
+                  else var W5i = _s(+C1R) + p6(N0i) + _s('24' * 1) + p6(Number(N0i) - Number(i5i)) + E6k
                     .o55(K4p | J5s);
                   break;
                 default:
@@ -67906,7 +67906,7 @@ var cotgsubscribe = amplify;
           .prop(_s(+"286"), !![]);
         else $(_s(s4R * 1))
           .prop(_s(+"286"), !1);
-        if (ppdt.opt[+H8y]) $(_s(+"2444"))
+        if (ppdt.opt[+'24']) $(_s(+"2444"))
           .prop(_s('286' | 4), !!{});
         else $(_s("2444" ^ 0))
           .prop(_s("286" >> 374631520), ![]);
@@ -68976,7 +68976,7 @@ var cotgsubscribe = amplify;
                   c6i += _s(+"3414") + q6i[A5y << 677852736] + _s(+'5298');
                   c6i += _s(+'4343') + q6i[j6y ^ 0] + _s(+'5742');
                   c6i += _s("1829" << 1894305792) + q6i[+F8y] + _s(+'5555');
-                  c6i += _s(+"609") + q6i[H8y ^ 0] + _s('6356' & 2147483647);
+                  c6i += _s(+"609") + q6i['24' ^ 0] + _s('6356' & 2147483647);
                   c6i += _s("5928" * 1);
                   $(_s(+E5y))
                     .append(c6i);
@@ -69037,7 +69037,7 @@ var cotgsubscribe = amplify;
                         .val()));
                       m6i[+F8y] = Math.abs(Number($(_s('2242' & 2147483647))
                         .val()));
-                      m6i[H8y - 0] = Math.abs(Number($(_s('6863' >> 634769888))
+                      m6i['24' - 0] = Math.abs(Number($(_s('6863' >> 634769888))
                         .val()));
                       var a6i = $.post(_s("4603" << 1817672032), {
                         a: +'1',

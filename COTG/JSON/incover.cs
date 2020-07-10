@@ -342,7 +342,7 @@ namespace COTG.JSON
                         {
                             Note.L("Attacks " + rs.Count);
                         }
-                    },4);
+                    } );
                 }
 
              }
@@ -350,8 +350,8 @@ namespace COTG.JSON
             var defPage = DefensePage.instance;
             if (defPage != null)
                 defPage.history.Reset(rs.Values);
-
-             Attack.attacks = attacks.Values.ToArray();
+            Attack.attacks = attacks.Values.OrderBy( (atk)=>atk.time.Ticks ).ToArray();
+            
             Note.Show($"Complete: {rs.Count} attacks");
         }
     }

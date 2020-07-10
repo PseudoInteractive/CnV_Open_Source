@@ -18,15 +18,18 @@ namespace COTG.Game
 {
     public class City : Spot, INotifyPropertyChanged
     {
-
+     
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string notes { get; set; }
+        public string remarks { get; set; }
 
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         public Raid[] raids = Array.Empty<Raid>();
-
+        public static bool IsMine(int cid)
+        {
+            return all.ContainsKey(cid);
+        }
         public int commandSlots
         {
             get {
@@ -192,7 +195,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(notes)}={notes}, {nameof(lastUpdated)}={lastUpdated.ToString()}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(remarks)}={remarks}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
         public async static void UpdateSenatorInfo()
         {
@@ -270,6 +273,15 @@ namespace COTG.Game
         public BitmapImage image { get; set; }
         public int count { get; set; }
 
+    }
+    public class CityList 
+    {
+        public string name { get; set; }
+        public int id { get; set; } // 0 is unassigned, others are pids
+        public HashSet<int> cities= new HashSet<int>(); // list of cities
+
+        public static CityList[] all = Array.Empty<CityList>();
+        public static CityList[] allWithAll; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
     }
 
 }

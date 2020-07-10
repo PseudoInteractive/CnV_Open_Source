@@ -44,7 +44,7 @@
                 <model:DefenseTapCommand />
             </tg:RadDataGrid.Commands>
 			<tg:RadDataGrid.Columns>
-                <tg:DataGridTextColumn Width="80" PropertyName="TT" SizeMode="Auto" />
+                <tg:DataGridDateColumn Width="80" PropertyName="time" CellContentFormat="{}{0:dd HH':'mm':'ss}" />
                 <tg:DataGridTextColumn Width="60" PropertyName="atkType" />
                 <tg:DataGridTextColumn Width="100" PropertyName="defPlayer" />
                 <tg:DataGridTextColumn Width="40" PropertyName="defC"  />

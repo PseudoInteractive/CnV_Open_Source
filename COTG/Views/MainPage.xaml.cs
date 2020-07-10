@@ -282,7 +282,13 @@ namespace COTG.Views
             Log("Tapped");
         }
 
-        
+        public static ComboBox CityListBox => cache.cityListBox;
+        public static int selectedCityList;
+        private int selectedCityListBind {
+            get { return selectedCityList; }
+            set { selectedCityList = value; }
+
+        }
 
 
 

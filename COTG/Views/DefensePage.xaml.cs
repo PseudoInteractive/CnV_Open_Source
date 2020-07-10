@@ -24,6 +24,7 @@ using COTG.Services;
 using System.Collections;
 using COTG.JSON;
 using Windows.UI.Input;
+using Telerik.UI.Xaml.Controls.Input;
 
 namespace COTG.Views
 {
@@ -55,8 +56,7 @@ namespace COTG.Views
 
             //            historyGrid.ContextFlyout = cityMenuFlyout;
             defenderGrid.SelectionChanged += DefenderGrid_SelectionChanged;
-
-
+        
         }
 
         private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)

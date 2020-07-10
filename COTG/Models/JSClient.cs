@@ -250,6 +250,8 @@ namespace COTG
             try
             {
                 view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+                Raiding.UpdateTS();
+
             }
             catch (Exception e)
             {
@@ -316,6 +318,8 @@ namespace COTG
                 else
                 {
                     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+                    if( City.IsMine(cityId)  )
+                        Raiding.UpdateTS();
                 }
 			}
 			catch (Exception e)
@@ -358,8 +362,50 @@ namespace COTG
 
             Log(str);
             ppdt = JsonDocument.Parse(str);
+            // City lists
+            {
+                List<CityList> lists = new List<CityList>();
+                
+                if (ppdt.RootElement.TryGetProperty("cl", out var cityListNames))
+                {
+                    var clList = new List<string>();
+                    foreach (var cn in cityListNames.EnumerateObject())
+                    {
+                        var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
+                        lists.Add(l);
+                    }
+
+                }
+                if (ppdt.RootElement.TryGetProperty("clc", out var cityListCities))
+                {
+                    foreach (var clc in cityListCities.EnumerateObject())
+                    {
+                        var id = int.Parse(clc.Name);
+                        var cityList = lists.Find((a) => a.id == id);
+                        foreach (var cityId in clc.Value.EnumerateArray())
+                        {
+                            cityList.cities.Add(cityId.GetInt32());
+
+                        }
+                    }
+
+                }
+
+                CityList.allWithAll = new CityList[lists.Count + 1];
+                CityList.allWithAll[0] = new CityList() { id = -1, name = "All" };
+                for (int i = 1; i < CityList.allWithAll.Length; ++i)
+                    CityList.allWithAll[i] = lists[i - 1];
+
+                CityList.all = lists.ToArray();
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, ()=>
+                {
+                    MainPage.CityListBox.ItemsSource = CityList.allWithAll;
+                } );
+
+            }
             // extract cities
             {
+
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
                 {
@@ -368,9 +414,15 @@ namespace COTG
                     var city=City.all.GetOrAdd(cid,City.Factory);
                     
                     city.name = jsCity.GetProperty("2").GetString();
+                    int i = city.name.IndexOf('-');
+                    if(i!= -1)
+                    {
+                        city.remarks = city.name.Substring(i + 2);
+                        city.name = city.name.Substring(0, i - 1);
+                    }
                     city.isCastle = jsCity.GetAsInt("12") != 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
-                    city.lastUpdated = now;
+                    
                     city.isOnWater = jsCity.GetAsInt("16") != 0;
                     city.isTemple = jsCity.GetAsInt("15") != 0;
                     city.pid = jsVars.pid;
@@ -692,6 +744,7 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
+                                var noPopup = jso.GetAsInt("p") <= 0;
                                 Note.L("cid=" + cid.ToCoordinate());
                                 var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
@@ -714,6 +767,7 @@ namespace COTG
                                     // if((viewMode & ViewMode.region)!=0)
                                  //   ShellPage.canvas?.Invalidate();
                                 }
+                                ShellPage.SetCanvasVisibility(noPopup);
                                 break;
                             }
 
@@ -744,7 +798,7 @@ namespace COTG
                 {
                     await GetCitylistOverview();
                     City.UpdateSenatorInfo();  // no async
-                    await Raiding.UpdateTS();
+                    Raiding.UpdateTS(true);
 
                     // await RaidOverview.Send();
                 }

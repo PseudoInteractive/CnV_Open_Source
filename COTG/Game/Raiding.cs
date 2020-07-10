@@ -116,23 +116,28 @@ namespace COTG.Game
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.ToCoordinateMD()} raid {d.cid.ToCoordinateMD()}");
             await snd.Post();
-            await UpdateTS();
+            UpdateTS(true);
 
         }
-        public static async Task UpdateTS()
+        public static DateTimeOffset nextAllowedTsUpdate;
+        public static async void UpdateTS(bool force = false)
         {
-
-            var jso = await Post.SendForJson("includes/gIDl.php", "");
-            foreach (var ci in jso.RootElement.EnumerateArray())
+            var n = DateTimeOffset.UtcNow;
+            if (n > nextAllowedTsUpdate || force)
             {
-                var cid = ci.GetAsInt("i");
-                var ts = ci.GetAsInt("ts");
-                var v = City.all[cid];
-                if ( (v.tsHome - ts).Abs() > 16 )
+                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(8);
+                var jso = await Post.SendForJson("includes/gIDl.php", "");
+                foreach (var ci in jso.RootElement.EnumerateArray())
                 {
-                    v.tsHome = ts;
+                    var cid = ci.GetAsInt("i");
+                    var ts = ci.GetAsInt("ts");
+                    var v = City.all[cid];
+                    if ((v.tsHome - ts).Abs() > 8)
+                    {
+                        v.tsHome = ts;
 
-                    v.OnPropertyChanged(nameof(v.tsHome));
+                        v.OnPropertyChanged(nameof(v.tsHome));
+                    }
                 }
             }
         }
