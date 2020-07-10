@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using COTG.Core.Helpers;
 using COTG.Core.Services;
+using COTG.Game;
 using COTG.Helpers;
 using COTG.Models;
 using COTG.Services;
@@ -165,6 +167,23 @@ namespace COTG.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private void SetContinentCityLists(object sender, RoutedEventArgs e)
+        {
+            var continents = new SortedSet<int>();
+            foreach(var city in City.all.Values)
+            {
+                continents.Add(city.continent);
+            }
+            foreach (var continent in continents)
+            {
+                if(CityList.FindForContinent(continent) == null )
+                {
+
+                }
+            }
+
+        }
 
         //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
         //{

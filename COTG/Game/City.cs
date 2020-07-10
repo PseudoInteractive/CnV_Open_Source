@@ -274,14 +274,32 @@ namespace COTG.Game
         public int count { get; set; }
 
     }
-    public class CityList 
+    public class CityList
     {
         public string name { get; set; }
         public int id { get; set; } // 0 is unassigned, others are pids
-        public HashSet<int> cities= new HashSet<int>(); // list of cities
+        public HashSet<int> cities = new HashSet<int>(); // list of cities
 
+        public static CityList Find(int id)
+        {
+            foreach (var c in all)
+                if (c.id == id)
+                    return c;
+            return null;
+        }
+        public static CityList Find(string name)
+        {
+            foreach (var c in all)
+                if (c.name == name)
+                    return c;
+            return null;
+        }
+        public static CityList FindForContinent(int id) => Find(id.ToString());
+
+
+        public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();
-        public static CityList[] allWithAll; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+        public static List<CityList> selections = new List<CityList>( new[] { allCities }); // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
     }
 
 }

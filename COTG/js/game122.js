@@ -7098,6 +7098,16 @@ var c6;// Phaser
 
 var gStphp; // gSt post call
 
+var _cameraX = 0;
+var _cameraY = 0;
+
+// When we move in world view, notify Javascript
+function setCameraC( a, b)
+{
+    _cameraX =c6.camera.x = +a;
+    _cameraY =c6.camera.y = +b;
+    console.log("Set camera");
+}
 
 I0rr(X0rr());
 I0VV(u0VV());
@@ -9333,9 +9343,9 @@ function gaFrep(E7c) {
     if (O4c) O4c = O4c.substring(+'3');
     else O4c = +"0";
     $(_s('1018' & 2147483647))
-      .attr(_s(+"334"), X4c);
+      .attr("data", X4c);
     $(_s(+"118"))
-      .attr(_s(+"334"), O4c);
+      .attr("data", O4c);
       var M4c = 'gFrep(' + E7c + ")";
     setPoP(M4c);
     if ($(_s("4402" >> 89300384) + E7c)
@@ -10581,7 +10591,7 @@ var cotgsubscribe = amplify;
       var Q62 = N8();
       if (Q62.g == +'1') {
         var T62 = $(_s('5964' ^ 0) + l62)
-          .attr(_s("334" ^ 0));
+          .attr("data");
         var v62 = $(_s(+"5964") + l62)
           .attr(_s(+K2y));
         if (v62 == +'6') var I62 = +'1';
@@ -10592,7 +10602,7 @@ var cotgsubscribe = amplify;
         else if (v62 == +"1") var I62 = "6" ^ 0;
         else var I62 = +'6';
         $(_s("3823" << 1383363072))
-          .attr(_s("334" & 2147483647), l62);
+          .attr("data", l62);
         $(_s(+"72"))
           .val(I62);
         $(_s('771' >> 2054591968))
@@ -11787,7 +11797,7 @@ var cotgsubscribe = amplify;
             var w12 = j12 * +"16" + (u7y - 0);
             $(_s('6705' * 1))
               .animate({ scrollTop: w12 }, "100" ^ 0);
-            var H12 = document.getElementById(_s("3347" | 2322));
+            var H12 = document.getElementById("data");
             sorttable.makeSortable(H12);
           }
           if (e12[+'8']) {
@@ -12160,7 +12170,7 @@ var cotgsubscribe = amplify;
           .each(function() {
             E6k.R6();
             var e4B = $(this)
-              .attr(_s("334" * 1));
+              .attr("data");
             if (e4B != ppdt.pid) $(this)
               .addClass(_s(+'6958'));
           });
@@ -12740,7 +12750,7 @@ var cotgsubscribe = amplify;
           $(_s(+P0R) + L3g)
             .addClass(_s(+'6769'));
           V2[L3g] = new ProgressBar.Circle(_s(+"2887") + L3g, {
-            easing: _s("3340" & 2147483647),
+            easing: "data",
             strokeWidth: +
               q7y,
             color: _s("961" * 1),
@@ -13327,7 +13337,7 @@ var cotgsubscribe = amplify;
           .each(function() {
             E6k.R6();
             var N09 = $(this)
-              .attr(_s('334' << 1401977440));
+              .attr("data");
             if (N09 != ppdt.pid) $(this)
               .addClass(_s("1316" >> 120858624));
           });
@@ -13717,6 +13727,11 @@ var cotgsubscribe = amplify;
             {
                 if (Z1g+100 < callDelay)
                     callDelay=Z1g+100;
+                if ( D6["itu"] && D6["itu"][6] && D6["itu"][6] > 0)
+				{
+                  DoPoll2(500);
+                  callDelay = 600;
+				}
              I0V(J1g, A1g, n1g, g1g);
           //   console.log("progress " + callDelay);
             }
@@ -13938,7 +13953,7 @@ var cotgsubscribe = amplify;
         D2U = D6[_s(+N1R)][U2U][_s(+i1R)];
         U2U = Number(U2U);
         f9U = $(_s(+B1R) + U2U)
-          .data(_s("334" * 1));
+          .data("data");
         if (f9U.bid != P2U || D2U != f9U.bl) {
           if (U2U == +'0') t9F();
           if (P2U == R1R *
@@ -15492,13 +15507,13 @@ var cotgsubscribe = amplify;
               .click(function() {
                 E6k.R6();
                 var N2V = $(this)
-                  .attr(_s(+'334'));
+                  .attr("data");
                 V4F(N2V);
               });
             $(_s('4107' >> 1692909024))
               .click(function() {
                 var F2V = $(this)
-                  .attr(_s('334' << 624443296));
+                  .attr("data");
                 J3F(F2V);
               });
           });
@@ -15510,17 +15525,17 @@ var cotgsubscribe = amplify;
               .length) Y6(_s('2684' & 2147483647));
             else {
               var q2V = [];
-              $(_s("6235" | 2114))
+              $("#currclistabody tr")
                 .each(function() {
                   E6k.y6();
                   q2V.push($(this)
-                    .children(_s('972' << 47937664))
-                    .attr(_s(+'334')) + '' + $(this)
-                    .children(_s(+'972'))
+                    .children("td:first")
+                    .attr("data") + '' + $(this)
+                    .children("td:first")
                     .text());
                 });
               N6();
-              var c2V = $.post(q6 + _s(+'6082'), { a: JSON.stringify(q2V) });
+              var c2V = $.post(q6 + "sLi.php", { a: JSON.stringify(q2V) });
               F6();
               c2V.done(function(m2V) {
                 setTimeout(function() {
@@ -15535,18 +15550,18 @@ var cotgsubscribe = amplify;
           .click(function() {
             var a2V = $(this)
               .closest(_s(+'622'))
-              .children(_s('972' ^ 0))
+              .children("td:first")
               .text();
             $(this)
               .closest(_s(+'622'))
-              .children(_s(+"972"))
+              .children("td:first")
               .html(_s(+"3232") + a2V + _s(+'1722'));
           });
         $(_s(+"5348"))
           .click(function() {
             E6k.R6();
             var E2V = $(this)
-              .attr(_s('334' * 1));
+              .attr("data");
             C4F(E2V);
           });
         $(_s(+'6326'))
@@ -15564,20 +15579,20 @@ var cotgsubscribe = amplify;
         $(_s(+'4192'))
           .click(function() {
             var u8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             E6k.y6();
             O8(u8V);
           });
         $(_s('982' * 1))
           .click(function() {
             var H8V = $(this)
-              .attr(_s('334' >> 849005888));
+              .attr("data");
             R2(H8V);
           });
         $(_s(A4y * 1))
           .click(function() {
             var j8V = $(this)
-              .attr(_s('334' | 266));
+              .attr("data");
             C4F(j8V);
           });
       });
@@ -15652,15 +15667,15 @@ var cotgsubscribe = amplify;
           .on(_s(C2y & 2147483647), _s('1106' << 736239456), function() {
             E6k.y6();
             var G8V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             J6F(G8V);
           });
         $(document)
           .on(_s(C2y << 1634464448), ".shcitt", function() {
             if ($(this)
-              .attr(_s("334" * 1))) {
+              .attr("data")) {
               var b8V = $(this)
-                .attr(_s("334" | 74));
+                .attr("data");
               O8(b8V);
             } else {
               var i8V = $(this)
@@ -15688,13 +15703,13 @@ var cotgsubscribe = amplify;
         $(document)
           .on(_s(+C2y), _s("2021" ^ 0), function() {
             var h8V = $(this)
-              .attr(_s("334" * 1));
+              .attr("data");
             d8F(h8V);
           });
         $(document)
           .on(_s(C2y ^ 0), _s(+"1402"), function() {
             var V8V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             E6k.y6();
             x2F(V8V);
           });
@@ -15702,14 +15717,14 @@ var cotgsubscribe = amplify;
           .on(_s(+C2y), _s(+'3794'), function() {
             E6k.y6();
             var r8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             t2F(r8V);
           });
         $(document)
           .on(_s(+C2y), _s(+"6410"), function() {
             E6k.R6();
             var A8V = $(this)
-              .attr(_s('334' & 2147483647));
+              .attr("data");
             X2F(A8V);
           });
         $(document)
@@ -15724,77 +15739,77 @@ var cotgsubscribe = amplify;
         $(document)
           .on(_s(+C2y), _s('2491' ^ 0), function() {
             var K8V = $(this)
-              .attr(_s("334" & 2147483647));
+              .attr("data");
             T2F(K8V);
           });
         $(document)
           .on(_s(C2y * 1), _s("4651" << 971198048), function() {
             E6k.y6();
             var g8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             o6F(g8V);
           });
         $(document)
           .on(_s(+C2y), _s("2470" >> 359451648), function() {
             var Z8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             c2F(Z8V);
           });
         $(document)
           .on(_s(C2y ^ 0), _s("1353" >> 2059001984), function() {
             var U8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             u2F(U8V);
           });
         $(document)
           .on(_s(C2y >> 296097216), _s(+'0'), function() {
             var P8V = $(this)
-              .attr(_s('334' ^ 0));
+              .attr("data");
             q2F(P8V);
           });
         $(document)
           .on(_s(C2y << 249264480), _s('390' - 0), function() {
             E6k.R6();
             var B8V = $(this)
-              .attr(_s('334' << 869853408));
+              .attr("data");
             M2F(B8V);
           });
         $(document)
           .on(_s(C2y >> 318870656), _s(+'6424'), function() {
             var R8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             X3F(R8V);
           });
         $(document)
           .on(_s(+C2y), _s('2563' | 512), function() {
             E6k.y6();
             var y8V = $(this)
-              .attr(_s('334' - 0));
+              .attr("data");
             X9F(y8V);
           });
         $(document)
           .on(_s(C2y - 0), _s('3801' & 2147483647), function() {
             var D8V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             U9F(D8V);
           });
         $(document)
           .on(_s(+C2y), _s(+"5902"), function() {
             var p8V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             s0V(p8V);
           });
         $(document)
           .on(_s(C2y << 1335951808), _s('5330' - 0), function() {
             E6k.y6();
             var Y8V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             S3F(Y8V);
           });
         $(document)
           .on(_s(C2y & 2147483647), _s(A8y & 2147483647), function() {
             var N8V = $(this)
-              .attr(_s('334' >> 488587552));
+              .attr("data");
             Y3F(N8V);
           });
         $(document)
@@ -15852,13 +15867,13 @@ var cotgsubscribe = amplify;
           .click(function() {
             E6k.R6();
             var I9V = $(this)
-              .attr(_s('334' * 1));
+              .attr("data");
             O8(I9V);
           });
         $(_s(+"6894"))
           .click(function() {
             var v9V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             X3F(v9V);
           });
       });
@@ -16071,7 +16086,7 @@ var cotgsubscribe = amplify;
         $(_s(+"4241"))
           .click(function() {
             var L9V = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
           });
         $(document)
           .click(function(X9V) {
@@ -16123,7 +16138,7 @@ var cotgsubscribe = amplify;
     function J7F(Z12) {
       e2();
       $(_s(+o3R))
-        .attr(_s(+"334"), Z12);
+        .attr("data", Z12);
       h5F = $(_s(+'5964') + Z12)
         .text();
       E6k.y6();
@@ -17012,7 +17027,7 @@ var cotgsubscribe = amplify;
           $(_s('6348' ^ 0) + q0g + ")")
             .attr(_s(+X4y), !!"1");
           $(_s('6456' * 1))
-            .attr(_s('334' >> 996577280), cid);
+            .attr("data", cid);
           setTimeout(function() {
             E6k.y6();
             b9F(cit_type);
@@ -17053,7 +17068,7 @@ var cotgsubscribe = amplify;
 
     function w0V(H62, j62) {
       E6k.R6();
-      var s62 = tinyMCE.get(_s(+"3348"))
+      var s62 = tinyMCE.get("data")
         .getContent();
       if (s62 == '') Y6(_s(+F4R));
       else {
@@ -17065,7 +17080,7 @@ var cotgsubscribe = amplify;
           if (w62 == +"1") Y6(_s(E2y & 2147483647));
           else if (w62 == "2" >> 1486677472) Y6(_s(+F4R));
           else if (w62 == "0" << 104829440) {
-            tinyMCE.get(_s(+'3348'))
+            tinyMCE.get("data")
               .setContent(" ");
             $(_s(+Q0p))
               .show();
@@ -17550,7 +17565,7 @@ var cotgsubscribe = amplify;
         .show();
       $(_s(+h2p))
         .show();
-      $(_s(+X2p))
+      $("#quickBuildMenu")
         .css("display", "none");
       for (var M5g = "0" << 2090509888; M5g < (u7y | 16); M5g++) {
         $
@@ -17864,7 +17879,7 @@ var cotgsubscribe = amplify;
 
     function E9F() {
       var n12 = $(_s("5826" >> 1412832384))
-        .attr(_s(+"334"));
+        .attr("data");
       var f12 = tinyMCE.get(_s(+'4294'))
         .getContent();
       if (f12 == "") Y6(_s(+F4R));
@@ -18472,7 +18487,7 @@ var cotgsubscribe = amplify;
         var j5g =
           D6[_s(N1R << 144781440)][k5g][_s(i1R - 0)];
         $(_s(B1R << 1102389152) + k5g)
-          .data(_s("334" - 0), { "bl": j5g, "bid": e5g });
+          .data("data", { "bl": j5g, "bid": e5g });
         if (e5g != '0' * 1)
           if (e5g == R1R << 516756128) {
             if (j5g != +'0' && k5g != "0" >> 771681760) {
@@ -19372,7 +19387,7 @@ var cotgsubscribe = amplify;
         $(_s("4425" & 2147483647))
           .click(function() {
             var R5U = $(this)
-              .attr(_s("334" - 0));
+              .attr("data");
             N6();
             var y5U = $.post(_s(+s7R), { a: R5U });
             F6();
@@ -19771,13 +19786,13 @@ var cotgsubscribe = amplify;
         $(_s(w9R >> 36368608) + M6V)
           .text(_s('3222' ^ 0));
         $(_s(+w9R) + M6V)
-          .attr(_s("334" & 2147483647), M6V);
+          .attr("data", M6V);
         $(_s(+w9R) + M6V)
           .off(_s(C2y - 0));
         $(_s(+w9R) + M6V)
           .click(function() {
             var C6V = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             E6k.y6();
             Z9F(C6V);
           });
@@ -22286,7 +22301,7 @@ var cotgsubscribe = amplify;
         $(_s("4634" & 2147483647))
           .remove();
         $(_s(+"5333"))
-          .attr(_s(+"334"), l42);
+          .attr("data", l42);
         var T42 = +q7y;
         var x42 = '';
         var O42 = s9();
@@ -22422,6 +22437,7 @@ var cotgsubscribe = amplify;
         var e6D = Y1D.clientHeight;
         var s6D = m1D * +64 - k6D / ('1.5' - 0);
         var u6D = a1D * (64 ^ 0) - e6D / ("3" | 3);
+        console.log("r7v??");
         c6.camera.x = s6D;
         c6.camera.y = u6D;
         P9();
@@ -22434,8 +22450,7 @@ var cotgsubscribe = amplify;
         c6.lockRender = !{};
         c6.raf.start();
         var H6D = document.getElementById("cvs");
-        var j6D = document.getElementById(_s(+
-          q6p));
+          var j6D = document.getElementById("content");
         var E1D = document.getElementById("city_map");
         H6D.style.display = "block";
         j6D.style.display = "none";
@@ -23342,7 +23357,7 @@ var cotgsubscribe = amplify;
         $(_s(P04 - 0))
           .css("display", "none");
         w2();
-        $(_s(C24 ^ 0))
+        $("#citySpotMenu")
           .show();
         var f1U = L2(Number(e1U));
         if (f1U != '0' * 1) e1U = f1U;
@@ -23580,7 +23595,7 @@ var cotgsubscribe = amplify;
           .each(function() {
             E6k.R6();
             var N7B = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             if (N7B != ppdt.pid) $(this)
               .addClass(_s(+"5516"));
           });
@@ -23893,7 +23908,7 @@ var cotgsubscribe = amplify;
           .click(function() {
             E6k.y6();
             var a4U = $(_s(+"6660"))
-              .attr(_s(+'334'));
+              .attr("data");
             a4U = _s(a44 << 300627104) + a4U + _s(N44 ^ 0);
             if ($(_s(I7R | 137))
               .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
@@ -23915,7 +23930,7 @@ var cotgsubscribe = amplify;
         $(_s("486" & 2147483647))
           .click(function() {
             var E4U = $(_s("486" >> 1970881440))
-              .attr(_s("334" << 315362080));
+              .attr("data");
             E4U = _s(a44 | 1054) + E4U + _s(+N44);
             if ($(_s(I7R << 1328136192))
               .hasClass(_s(n4p >> 1800304480))) document.getElementById(_s(d4p * 1))
@@ -23937,7 +23952,7 @@ var cotgsubscribe = amplify;
         $(_s('3203' & 2147483647))
           .click(function() {
             var k3U = $(_s('3203' ^ 0))
-              .attr(_s(+'334'));
+              .attr("data");
             k3U = _s(a44 << 661390592) + k3U + _s(+N44);
             if ($(_s(I7R >> 2053428128))
               .hasClass(_s(n4p | 17))) document.getElementById(_s(d4p - 0))
@@ -23959,7 +23974,7 @@ var cotgsubscribe = amplify;
         $(_s(+'2430'))
           .click(function() {
             var e3U = $(_s('2430' | 100))
-              .attr(_s(+'334'));
+              .attr("data");
             e3U = _s(+a44) + e3U + _s(N44 * 1);
             if ($(_s(I7R - 0))
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 64))
@@ -23981,7 +23996,7 @@ var cotgsubscribe = amplify;
         $(_s("6919" >> 1489667104))
           .click(function() {
             var s3U = $(_s("6919" | 6407))
-              .attr(_s('334' | 330));
+              .attr("data");
             s3U = _s(a44 | 262) + s3U + _s(+N44);
             if ($(_s(I7R * 1))
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 840))
@@ -24305,7 +24320,7 @@ var cotgsubscribe = amplify;
 
     function S7F(D12) {
       $(_s('5826' & 2147483647))
-        .attr(_s('334' << 1187153792), D12);
+        .attr("data", D12);
       p1F = $(_s(+"422") + D12)
         .text();
       $(_s(+"2269"))
@@ -24369,7 +24384,7 @@ var cotgsubscribe = amplify;
                 .attr(_s(+B9y));
               var e62 = $(this)
                 .attr(_s(x9y ^ 0));
-              tinyMCE.get(_s(+"3348"))
+              tinyMCE.get("data")
                 .setContent(k62);
               $(_s(+Z0p))
                 .removeClass(_s(+u0p))
@@ -25136,7 +25151,7 @@ var cotgsubscribe = amplify;
           .each(function() {
             E6k.y6();
             var f4w = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             var K4w = r4w.indexOf(Number(f4w));
             A4w.push(Number(f4w));
             if (K4w == - +"1") h9(f4w);
@@ -25297,7 +25312,7 @@ var cotgsubscribe = amplify;
       if (S9g == +'0') {
         I8(b9g);
         $(_s(B1R ^ 0) + b9g)
-          .data(_s('334' << 1111892672), { "bid": +"0", "bl": +"0" });
+          .data("data", { "bid": +"0", "bl": +"0" });
       } else {
         var A9g = S9g;
         S9g = S9g - ("443" & 2147483647);
@@ -25306,7 +25321,7 @@ var cotgsubscribe = amplify;
         h9g = h9g * +G5y;
         r9g = r9g * +G5y;
         $(_s(B1R * 1) + b9g)
-          .data(_s('334' >> 945353152), { "bid": S9g, "bl": D6[_s(N1R * 1)][b9g][_s(+i1R)] });
+          .data("data", { "bid": S9g, "bl": D6[_s(N1R * 1)][b9g][_s(+i1R)] });
         var
           J9g = S9g % +'4';
         var V9g = (S9g - J9g) / +"4";
@@ -25965,7 +25980,7 @@ var cotgsubscribe = amplify;
                 800) && w0B != _s('224' - 0) && w0B != _s("4203" ^ 0) && w0B != _s('6522' - 0) &&
               j0B != _s("98" ^ 0) && w0B != _s(+"4380") && j0B != _s(+'2014') && j0B != _s(
                 '6522' - 0) && j0B != _s(+'36') && j0B != _s('6807' ^ 0) && j0B != _s(+'4294') &&
-              j0B != _s('3348' | 2068) && j0B != _s(+'3700') && j0B != _s(+'6244') && j0B != E6k
+              j0B != "data" && j0B != _s(+'3700') && j0B != _s(+'6244') && j0B != E6k
               .S55("6403" >> 110913760) && w0B != _s(+"4313") && v0B != _s("1803" << 57085216) && Q0B !=
               _s("4547" >> 1715450304) && j0B != _s(+'1779') && l0B != _s(+'4547') && j0B != E6k
               .S55(+'3633') && v0B != _s(+'3880')) I0B.preventDefault();
@@ -26046,14 +26061,14 @@ var cotgsubscribe = amplify;
             $(_s(+'5133'))
               .click(function() {
                 var X0B = $(this)
-                  .attr(_s(+'334'));
+                  .attr("data");
                 V4F(X0B);
               });
             $(_s("4107" & 2147483647))
               .click(function() {
                 E6k.R6();
                 var z0B = $(this)
-                  .attr(_s('334' * 1));
+                  .attr("data");
                 J3F(z0B);
               });
             $(_s('2219' - 0))
@@ -27554,7 +27569,7 @@ var cotgsubscribe = amplify;
           .text(E7l);
         $(_s('465' >> 1763565824))
           .text(k4l);
-        $(_s(+'3343'))
+        $("data")
           .show();
       }
     }
@@ -27700,7 +27715,7 @@ var cotgsubscribe = amplify;
                 else if (y5Z()) p8(+'6', +k7y, +'1');
                 else if (H7Z == "d") k8F();
                 else if (H7Z == _s('1394' >> 1050439360)) {
-                  var I7Z = $(_s(+C24))
+                  var I7Z = $("#citySpotMenu")
                     .css("display");
                   if (I7Z != _s(+X2R) && I7Z != "none") {
                     J9
@@ -28868,13 +28883,13 @@ var cotgsubscribe = amplify;
             var i4v = f7v.acy * (R5y ^ 0) + f7v.acx;
             var h4v = f7v.tcy * (R5y * 1) + f7v.tcx;
             $(_s("5769" * 1))
-              .attr(_s(+"334"), i4v);
+              .attr("data", i4v);
             $(_s("808" - 0))
-              .attr(_s('334' >> 621857600), h4v);
+              .attr("data", h4v);
             $(_s("4505" ^ 0))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s(+'5449'))
-              .attr(_s(+"334"), h4v);
+              .attr("data", h4v);
             $(_s('4802' - 0))
               .css("display", "none");
             $(_s(+"4069"))
@@ -29006,13 +29021,13 @@ var cotgsubscribe = amplify;
             var h4v = f7v.tcy * (R5y >> 1871621312) + f7v
               .tcx;
             $(_s('5769' * 1))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s(+"808"))
-              .attr(_s("334" | 4), h4v);
+              .attr("data", h4v);
             $(_s(+'4505'))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s(+"5449"))
-              .attr(_s('334' - 0), h4v);
+              .attr("data", h4v);
             $(_s('4802' * 1))
               .css("display", "none");
             $(_s(+'4069'))
@@ -29445,13 +29460,13 @@ var cotgsubscribe = amplify;
             var i4v = f7v.acy * +R5y + f7v.acx;
             var h4v = f7v.tcy * (R5y | 0) + f7v.tcx;
             $(_s('5769' | 1672))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s(+"808"))
-              .attr(_s(+'334'), h4v);
+              .attr("data", h4v);
             $(_s('4505' ^ 0))
-              .attr(_s(+"334"), i4v);
+              .attr("data", i4v);
             $(_s(+'5449'))
-              .attr(_s("334" << 2046002016), h4v);
+              .attr("data", h4v);
             $(_s(+'1826'))
               .text(f7v.moon + _s(o9y & 2147483647));
             $(_s(+"1491"))
@@ -30312,13 +30327,13 @@ var cotgsubscribe = amplify;
             var i4v = f7v.acy * (R5y >> 1872808064) + f7v.acx;
             var h4v = f7v.tcy * +R5y + f7v.tcx;
             $(_s(+'5769'))
-              .attr(_s(+"334"), i4v);
+              .attr("data", i4v);
             $(_s('808' * 1))
-              .attr(_s(+'334'), h4v);
+              .attr("data", h4v);
             $(_s("4505" << 1631560800))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s('5449' | 5184))
-              .attr(_s('334' & 2147483647), h4v);
+              .attr("data", h4v);
             if (f7v.ofame) $(_s(+'1813'))
               .text(Math.floor(f7v.ofame));
             else $(_s('1813' >> 188050976))
@@ -30544,9 +30559,9 @@ var cotgsubscribe = amplify;
               .text(f7v.apn);
             var i4v = f7v.acy * +R5y + f7v.acx;
             $(_s(+"5769"))
-              .attr(_s(+'334'), i4v);
+              .attr("data", i4v);
             $(_s(+"4505"))
-              .attr(_s('334' << 640346400), i4v);
+              .attr("data", i4v);
             $(_s('1611' & 2147483647))
               .html(_s(+'6212') + f7v.rid + _s("634" << 1683385696) + f7v.rid + _s("6021" | 1668));
             $(_s('5836' >> 1221185088))
@@ -30691,10 +30706,10 @@ var cotgsubscribe = amplify;
           {
             b3v = b3v.substring('3' - 0);
             $(_s(+'1018'))
-            .attr(_s(+"334"), b3v);
+            .attr("data", b3v);
            }
           $(_s('118' << 996026720))
-            .attr(_s(+'334'), I3v);
+            .attr("data", I3v);
             var R3v = "gFrep(" + A7v + ")";
           W0F(R3v);
           if ($(_s("4402" | 32) + A7v)
@@ -30757,9 +30772,11 @@ var cotgsubscribe = amplify;
       if (D6["itu"])
         if (D6["itu"][+"6"])
           if (D6["itu"][+'6'] > +'0') x3w = D6["itu"]["6" >> 2049692704];
-      if (x3w > +'0') var w3w =
-        _s(+"2348") + Q2(x3w);
-      else var w3w = '';
+      var w3w = '';
+      if (x3w > +'0') 
+      {
+            w3w ="<br>Speedup time: " + Q2(x3w);
+      }
       $(_s(i7y - 0))
         .html(_s("5359" << 853170880) + p6(D6[_s(+u5R)]) + _s(+"5227") + w3w);
       var H3w = Math.floor(D6
@@ -31333,7 +31350,7 @@ var cotgsubscribe = amplify;
               $(_s(F0t << 279350528))
                 .css("display", "none");
               $(_s(A4y ^ 0))
-                .attr(_s('334' - 0), c);
+                .attr("data", c);
               var M66 = L66.indexOf(_s(n24 * 1), +'0');
               var K66 = L66
                 .indexOf(_s(+n24), M66 + '1' * 1);
@@ -31962,7 +31979,7 @@ var cotgsubscribe = amplify;
             var M6Z = [];
             var G6Z = '0' - 0;
             var C6Z = $(_s("7" ^ 0))
-              .attr(_s(+'334'));
+              .attr("data");
             $(_s(+"1021"))
               .each(function() {
                 var S6Z = $(this)
@@ -32003,7 +32020,7 @@ var cotgsubscribe = amplify;
                 E6k.y6();
                 V6Z = V6Z.substring(+"5", V6Z.length);
                 var A6Z = Number($(_s(+"5838") + V6Z)
-                  .attr(_s(+"334")));
+                  .attr("data"));
                 r6Z.val(A6Z);
               });
           });
@@ -33284,7 +33301,7 @@ var cotgsubscribe = amplify;
                 if (N42 != "0" << 1934499424) {
                   $row = $(this);
                   var Y42 = $row.attr(
-                    _s('334' >> 721851552));
+                    "data");
                   if (Y42.indexOf(p42) == - +'1') $(this)
                     .css("display", "none");
                   else $(this)
@@ -33301,7 +33318,7 @@ var cotgsubscribe = amplify;
               .each(function(c42) {
                 if (c42 != +"0") {
                   $row = $(this);
-                  var q42 = $row.attr(_s(+"334"));
+                  var q42 = $row.attr("data");
                   if (
                     q42.indexOf(F42) == -("1" << 1750632768)) $(this)
                     .css("display", "none");
@@ -33320,8 +33337,7 @@ var cotgsubscribe = amplify;
               .each(function(E42) {
                 if (E42 != ("0" | 0)) {
                   $row = $(this);
-                  var a42 = $row.attr(_s("334" ^
-                    0));
+                  var a42 = $row.attr("data");
                   if (a42.indexOf(m42) == -('1' | 0)) $(this)
                     .css("display", "none");
                   else $(this)
@@ -33422,7 +33438,7 @@ var cotgsubscribe = amplify;
                 if (t32 != ('0' & 2147483647)) {
                   $row = $(this);
                   var O32 = $row.attr(
-                    _s(+'334'));
+                    "data");
                   if (O32.indexOf(x32) == -('1' << 1107181920)) $(this)
                     .css("display", "none");
                   else $(this)
@@ -33441,7 +33457,7 @@ var cotgsubscribe = amplify;
                 if (X32 != '0' << 1708082432) {
                   $row = $(this);
                   var L32 = $row.attr(
-                    _s(+'334'));
+                    "data");
                   if (L32.indexOf(o32) == -('1' & 2147483647)) $(this)
                     .css("display", "none");
                   else $(this)
@@ -33461,7 +33477,7 @@ var cotgsubscribe = amplify;
                 if (G32 != "0" << 1615177312) {
                   $row = $(this);
                   var M32 = $row.attr(
-                    _s('334' - 0));
+                    "data");
                   if (M32.indexOf(z32) == - +"1") $(this)
                     .css("display", "none");
                   else $(this)
@@ -33478,8 +33494,7 @@ var cotgsubscribe = amplify;
               .each(function(i32) {
                 if (i32 != +"0") {
                   $row = $(this);
-                  var W32 = $row.attr(_s('334' -
-                    0));
+                  var W32 = $row.attr("data");
                   if (W32.indexOf(C32) == - +'1') $(this)
                     .css("display", "none");
                   else $(this)
@@ -33496,7 +33511,7 @@ var cotgsubscribe = amplify;
               .each(function(J32) {
                 if (J32 != +"0") {
                   $row = $(this);
-                  var b32 = $row.attr(_s(+"334"));
+                  var b32 = $row.attr("data");
                   if (
                     b32.indexOf(d32) == -('1' * 1)) $(this)
                     .css("display", "none");
@@ -33517,7 +33532,7 @@ var cotgsubscribe = amplify;
                 if (r32 != '0' << 1936909504) {
                   $row = $(this);
                   var V32 = $row.attr(
-                    _s('334' << 351472416));
+                    "data");
                   if (V32.indexOf(h32) == - +'1') $(this)
                     .css("display", "none");
                   else $(this)
@@ -33931,7 +33946,7 @@ var cotgsubscribe = amplify;
           H0v = c91[_s(+"622")][a91][_s(+r1t)];
           j0v = bam[_s(+'4619')][E91][_s('3286' * 1)];
           trot = bam[_s(+"4619")][E91][_s(+"25")];
-          m91 = m91 + _s("5612" & 2147483647) + j0v + _s('3907' * 1) + trot + _s(+'3344') + p6(Number(
+          m91 = m91 + _s("5612" & 2147483647) + j0v + _s('3907' * 1) + trot + "data" + p6(Number(
             H0v)) + _s(+'3665');
         }
         m91 = m91 + _s(A0R << 230581888);
@@ -33966,7 +33981,7 @@ var cotgsubscribe = amplify;
       e2();
       o8V = Number(o8V);
       $(_s("4192" << 364792320))
-        .attr(_s('334' * 1), o8V);
+        .attr("data", o8V);
       N6();
       var L8V = $.post(_s('5401' & 2147483647), { a: o8V });
       F6();
@@ -33988,11 +34003,11 @@ var cotgsubscribe = amplify;
           $(_s("4874" - 0))
             .text(X8V.a);
           $(_s(+"4874"))
-            .attr(_s(+'334'), X8V.a);
+            .attr("data", X8V.a);
           $(_s(+"2134"))
             .text(X8V.b);
           $(_s("2134" - 0))
-            .attr(_s(+"334"), X8V.b);
+            .attr("data", X8V.b);
           $(_s(+'6775'))
             .html(X8V.j);
           if (X8V.i != +'0') {
@@ -34003,7 +34018,7 @@ var cotgsubscribe = amplify;
             .text(_s('6282' * 1));
           if (X8V.k != +'0') {
             $(_s(+"982"))
-              .attr(_s(+"334"), X8V.k);
+              .attr("data", X8V.k);
             $(_s(+'982'))
               .show();
           } else $(_s(+"982"))
@@ -34214,7 +34229,7 @@ var cotgsubscribe = amplify;
         $(_s("6263" | 6210))
           .click(function() {
             var L12 = $(_s(+o3R))
-              .attr(_s("334" >> 726529952));
+              .attr("data");
             var X12 = $(_s(+'6887'))
               .val();
             var z12 = tinyMCE.get(_s("6244" * 1))
@@ -34251,7 +34266,7 @@ var cotgsubscribe = amplify;
             E6k.y6();
             var C12 = x0V();
             var W12 = $(_s(+o3R))
-              .attr(_s('334' << 971542272));
+              .attr("data");
             N6();
             var i12 = $.post(q6 + _s(+"3285"), { rep: JSON.stringify(C12) });
             F6();
@@ -34265,13 +34280,13 @@ var cotgsubscribe = amplify;
           .click(function() {
             E6k.R6();
             var b12 = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             m1F(b12);
           });
         $(_s('3823' | 3206))
           .click(function() {
             var J12 = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             m1F(J12);
           });
         $(_s(+"1862"))
@@ -34292,7 +34307,7 @@ var cotgsubscribe = amplify;
         var q2T = F2T.attr(_s(+x9y));
         var w8T = Math.ceil(Number($(_s(e5t <<
             193584288))
-          .attr(_s('334' ^ 0))));
+          .attr("data")));
         var k8T = Number($(_s(e5t - 0))
           .attr(_s(i1y ^ 0)));
         var E2T = m6[k8T]["r"][_s(+W8y)];
@@ -34540,7 +34555,7 @@ var cotgsubscribe = amplify;
     function c9F() {
       var h12 = O0V();
       var V12 = $(_s(+o3R))
-        .attr(_s(+"334"));
+        .attr("data");
       N6();
       var r12 = $.post(q6 + _s(+"3305"), { rep: JSON.stringify(h12) });
       E6k.R6();
@@ -35066,7 +35081,7 @@ var cotgsubscribe = amplify;
         else $(_s("5565" * 1))
           .each(function() {
             var m7B = $(this)
-              .attr(_s("334" & 2147483647));
+              .attr("data");
             if (m7B != ppdt.pid) $(this)
               .addClass(_s("5" & 2147483647));
           });
@@ -35445,7 +35460,7 @@ var cotgsubscribe = amplify;
           A81 = i81[_s(+'622')][b81][_s(+r1t)];
           n81 = bam[_s(+'4619')][S81][_s("3286" >> 1472839776)];
           trot = bam[_s('4619' >> 24961152)][S81][_s(+'25')];
-          d81 = d81 + _s(+"5612") + n81 + _s(+"3907") + trot + _s(+'3344') + p6(Number(A81)) + E6k
+          d81 = d81 + _s(+"5612") + n81 + _s(+"3907") + trot + "data" + p6(Number(A81)) + E6k
             .o55('3665' ^ 0);
         }
         d81 = d81 + _s(+A0R);
@@ -38219,7 +38234,7 @@ var cotgsubscribe = amplify;
         $(_s("6238" | 2128))
           .click(function() {
             var v7U = $(this)
-              .attr(_s("334" ^ 0));
+              .attr("data");
             N6();
             var l7U = $.post(_s('1605' << 143879104), { a: worldidnumid, b: v7U });
             F6();
@@ -39376,7 +39391,7 @@ var cotgsubscribe = amplify;
             $(_s("4075" ^ 0))
               .toggle();
             var P2n = $(this)
-              .attr(_s("334" * 1));
+              .attr("data");
             e2();
             Z5F(P2n);
           });
@@ -40414,7 +40429,7 @@ var cotgsubscribe = amplify;
           .click(function() {
             E6k.R6();
             w2();
-            $(_s(+X2p))
+            $("#quickBuildMenu")
               .show();
             R1F();
             I9n = +"1";
@@ -41726,13 +41741,12 @@ var cotgsubscribe = amplify;
       c6.paused = !!0;
       c6.raf.start();
       var y9V = document.getElementById("cvs");
-      var Y9V = document.getElementById(_s(+
-        q6p));
+      var Y9V = document.getElementById("content");
       var B9V = document.getElementById("city_map");
       y9V.style.display = "block";
       Y9V.style.display = "none";
       B9V.style.display = "none";
-      $(_s(+X2p))
+      $("#quickBuildMenu")
         .css("display", "none");
       $(_s(+'1509'))
         .show();
@@ -41767,6 +41781,7 @@ var cotgsubscribe = amplify;
         0) - +h8y);
       var P9V = Math.round(Z9V % (l9p * 1));
       var R9V = Math.round((Z9V - P9V) / +l9p);
+      console.log("Set camera O8");
       c6.camera.x = D9V;
       c6.camera.y = p9V;
       l2.x = P9V * +64;
@@ -42581,7 +42596,7 @@ var cotgsubscribe = amplify;
       $(_s(T6t - 0) + G1i + _s('3097' ^ 0))
         .tooltipster({ content: $(_s(+"6781")), position: _s(M64 - 0) });
       $(_s(T6t - 0) + G1i + _s(+'4536'))
-        .tooltipster({ content: $(_s("2983" >> 1849112896)), position: _s(+M64) });
+          .tooltipster({ content: $(_s("2983" >> 1849112896)), position: _s(+M64) });
       $(_s(+T6t) + G1i + _s(+"4420"))
         .tooltipster({ content: $(_s(+"3070")), position: _s(M64 - 0) });
       $(_s(T6t & 2147483647) + G1i + _s(F1m & 2147483647))
@@ -42921,7 +42936,7 @@ var cotgsubscribe = amplify;
           }
         });
       var h72 = $(_s('5333' - 0))
-        .attr(_s('334' ^ 0));
+        .attr("data");
       var d72 = $(_s(+'3300'))
         .val();
       var M72 = $(_s(+'5385'))
@@ -43336,7 +43351,7 @@ var cotgsubscribe = amplify;
           $(_s('3534' - 0))
             .addClass(_s(+"3694"));
           $(_s('3534' >> 930399680))
-            .attr(_s(+"334"), k01.a);
+            .attr("data", k01.a);
           $(_s(+C5m))
             .attr("a", k01[_s(+Z5m)]);
           $(_s(+C5m))
@@ -44105,7 +44120,7 @@ var cotgsubscribe = amplify;
             .attr(_s(+p9y), !0);
         }
         w2();
-        $(_s(+C24))
+        $("#citySpotMenu")
           .show();
         var d6U = L2(Number(l6U));
         if (d6U != +'0') l6U = d6U;
@@ -44421,7 +44436,7 @@ var cotgsubscribe = amplify;
       $(_s('2211' >> 1756950528))
         .each(function() {
           var V9V = $(this)
-            .attr(_s('334' | 262));
+            .attr("data");
           if (V9V.toLowerCase() != H2.toLowerCase()) b9V = b9V + V9V + _s(+
             e8y);
         });
@@ -44547,7 +44562,7 @@ var cotgsubscribe = amplify;
         $(_s("3938" << 2102159808))
           .click(function() {
             var i7U = $(this)
-              .attr(_s(+"334"));
+              .attr("data");
             N6();
             var d7U = $.post(_s("4290" | 192), { b: i7U, a: worldidnumid });
             F6();
@@ -45620,7 +45635,7 @@ var cotgsubscribe = amplify;
           $(_s(P0R ^ 0) + l3g)
             .addClass(_s(+"6769"));
           V2[l3g] = new ProgressBar.Circle(_s('2887' & 2147483647) + l3g, {
-            easing: _s('3340' & 2147483647),
+            easing: "data",
             strokeWidth: +q7y,
             color: _s(+'4462'),
             trailColor: _s('2628' & 2147483647),
@@ -46214,7 +46229,7 @@ var cotgsubscribe = amplify;
       $(_s('5823' * 1))
         .each(function() {
           var I6g = $(this)
-            .attr(_s(+'334'));
+            .attr("data");
           var v6g = c1g.indexOf(Number(I6g));
           m1g.push(Number(I6g));
           if (v6g == - +"1") h9(I6g);
@@ -47241,8 +47256,7 @@ var cotgsubscribe = amplify;
     $("#coordsel")
       .change(function() {
         var m96 = document.getElementById("cvs");
-        var F96 = document.getElementById(E6k
-          .o55(q6p & 2147483647));
+        var F96 = document.getElementById("content");
         if (F96.style.display != "none") {
           var Y96 = $(_s(+
               "80"))
@@ -47452,8 +47466,7 @@ var cotgsubscribe = amplify;
           O8(H0g);
           f0F(e0g, s0g);
           var j0g = document.getElementById("cvs");
-          var w0g = document.getElementById(E6k
-            .S55(q6p << 925436640));
+          var w0g = document.getElementById("content");
           j0g.style.display = "block";
           w0g.style.display = "none";
         }
@@ -47508,7 +47521,6 @@ var cotgsubscribe = amplify;
        _viewMode = viewModeRegion;
         E6k.R6();
         worldrender = +"0";
-        citrender = +'0';
         c6.time.advancedTiming = !"";
         c6.time.desiredFps = '5' - 0;
         c6.time.fpsMax = +"5";
@@ -47521,23 +47533,23 @@ var cotgsubscribe = amplify;
         $(_s(+S4m))
           .css("display", "none");
         var L0g = +"0";
-        var G0g = document.getElementById(
-          "cvs");
+        var G0g = document.getElementById("cvs");
         var o0g = document.getElementById("content");
         var i0g = document
           .getElementById("city_map");
-        if (o0g.style.display != "none") {
+       if (citrender != 1) {
           L0g = +"1";
           M0g =
           document.getElementById('worldcanv');
           if(M0g)
             t0g = M0g.getBoundingClientRect();
         }
+        citrender=0;
         G0g.style
           .display = "block";
         o0g.style.display = "none";
         i0g.style.display = "none";
-        $(_s(X2p * 1))
+        $("#quickBuildMenu")
           .css("display", "none");
         $(_s("1509" & 2147483647))
           .show();
@@ -47566,16 +47578,17 @@ var cotgsubscribe = amplify;
             T2.y = D6.y * (64 - 0);
             c6.step();
           }
-        } else {
-        if(t0g)
-        {
-            var z0g = m5F(window.innerWidth * 0.5 - t0g.left, window.innerHeight * 0.5  - t0g.top);
-          var d0g = (z0g.x / (m6p * 1));
-          var C0g = (z0g.y / (m6p - 0));
-          c6.camera.x = d0g * 64 - Number(window.innerWidth) / (2);
-          c6.camera.y = C0g * 64 - (Number(window.innerHeight) / (2) );
-          }
         }
+        // else {
+        //if(t0g)
+        //{
+        //    var z0g = m5F(window.innerWidth * 0.5 - t0g.left, window.innerHeight * 0.5  - t0g.top);
+        //  var d0g = (z0g.x / (m6p * 1));
+        //  var C0g = (z0g.y / (m6p - 0));
+        //  c6.camera.x = d0g * 64 - Number(window.innerWidth) / (2);
+        //  c6.camera.y = C0g * 64 - (Number(window.innerHeight) / (2) );
+        //  }
+        //}
       });
     $("#worldButton")
       .click(function() {
@@ -47596,7 +47609,7 @@ var cotgsubscribe = amplify;
         var S0g = document.getElementById("city_map");
         if (S0g.style
           .display != "none") b0g = +"1";
-        $(_s(X2p ^ 0))
+        $("#quickBuildMenu")
           .css("display", "none");
         $(_s('1509' >> 1976911200))
           .show();
@@ -48072,7 +48085,7 @@ var cotgsubscribe = amplify;
                 a2("regional", Y46);
               }
               $(_s(+"3203"))
-                .attr(_s(+'334'), r46 + _s(+A6y) + A46);
+                .attr("data", r46 + _s(+A6y) + A46);
               var r36 = 'Shrine<br>Status:' + I36 + _s(+
                 '3331') + N46;
               $(_s(+'6717'))
@@ -48134,7 +48147,7 @@ var cotgsubscribe = amplify;
                   .css("display", "block");
               }
               $(_s(+'2430'))
-                .attr(_s(+'334'), r46 + _s(+A6y) + A46);
+                .attr("data", r46 + _s(+A6y) + A46);
               $(_s(S9m * 1))
                 .show();
               $(_s(S9m - 0))
@@ -48312,7 +48325,7 @@ var cotgsubscribe = amplify;
               $(_s(+"514"))
                 .text(r46 + _s(A6y >> 1139214560) + A46);
               $(_s(+'6660'))
-                .attr(_s('334' - 0), r46 + _s(A6y | 3072) + A46);
+                .attr("data", r46 + _s(A6y | 3072) + A46);
               $(_s("148" ^ 0))
                 .html(U36);
               $(_s(+'2440'))
@@ -48405,7 +48418,7 @@ var cotgsubscribe = amplify;
               $(_s(+F0t))
                 .css("display", "none");
               $(_s(A4y << 572912736))
-                .attr(_s('334' ^ 0), n46);
+                .attr("data", n46);
               var K36 = B46.indexOf(_s(n24 << 1907619136), "0" - 0);
               var
                 w16 = B46.indexOf(_s(n24 & 2147483647), K36 + ('1' - 0));
@@ -48800,7 +48813,7 @@ var cotgsubscribe = amplify;
               $(_s('514' | 514))
                 .text(r46 + _s(+A6y) + A46);
               $(_s("6660" | 516))
-                .attr(_s('334' << 2104588032), r46 + _s(+A6y) + A46);
+                .attr("data", r46 + _s(+A6y) + A46);
               $(_s(+'148'))
                 .html(U36);
               $(_s("2440" - 0))
@@ -48934,7 +48947,7 @@ var cotgsubscribe = amplify;
                   .attr(_s(+"4904"), !!1);
               }
               $(_s("6919" << 587601696))
-                .attr(_s('334' << 531342496), r46 + _s(A6y & 2147483647) + A46);
+                .attr("data", r46 + _s(A6y & 2147483647) + A46);
               $(_s("4210" - 0))
                 .html(B36);
               $(_s(+"4495"))
@@ -48961,9 +48974,9 @@ var cotgsubscribe = amplify;
               $(_s(d3m * 1))
                 .text(_s(+"225"));
               $(_s(+N7m))
-                .attr(_s("334" & 2147483647), B46);
+                .attr("data", B46);
               $(_s(d3m - 0))
-                .attr(_s("334" ^ 0), B46);
+                .attr("data", B46);
               $(_s(N7m << 2128635328))
                 .off(_s(+C2y));
               $(_s(+N7m))
@@ -49109,7 +49122,7 @@ var cotgsubscribe = amplify;
                   W5t - 0)])
                 if (ppdt[_s(+W5t)] * +"1000" > currentTime()) j16 = "900000" ^ 0;
               $(_s("6919" - 0))
-                .attr(_s(+"334"), r46 + _s(A6y | 273) + A46);
+                .attr("data", r46 + _s(A6y | 273) + A46);
               $(_s(+'688'))
                 .text(M2(R46[_s(y2y >> 352149408)] + j16));
               $(_s("878" << 186784928))
@@ -49120,9 +49133,9 @@ var cotgsubscribe = amplify;
                 1)], R46[_s(+w2y)], R46[_s(e3m * 1)], R46[_s(H2y | 548)], R46[_s(Y5y -
                 0)], F46);
               $(_s(N7m - 0))
-                .attr(_s('334' * 1), B46);
+                .attr("data", B46);
               $(_s(d3m & 2147483647))
-                .attr(_s("334" & 2147483647), B46);
+                .attr("data", B46);
               $(_s(N7m ^ 0))
                 .off(_s(+C2y));
               $(_s(d3m << 365206144))
@@ -49240,7 +49253,7 @@ var cotgsubscribe = amplify;
                 null) {
                 var H36 = o36[_s(X5m - 0)];
                 $(_s(+'486'))
-                  .attr(_s(+"334"), r46 + _s(A6y | 3089) + A46);
+                  .attr("data", r46 + _s(A6y | 3089) + A46);
                 $(_s("2933" & 2147483647))
                   .text(_s('6431' | 6154));
                 $(_s(+'3379'))
@@ -51577,7 +51590,7 @@ var cotgsubscribe = amplify;
       var z3B = Number(E8(P4B, B4B));
       var m4B = $(_s(d3m -
           0))
-        .attr(_s(+'334'));
+        .attr("data");
       if (m4B) {
         var b4B = m4B;
         var J4B = b4B.substring("0" * 1, +"1");
@@ -51734,7 +51747,7 @@ var cotgsubscribe = amplify;
         var U8T = Z8T.attr(_s(Z9y * 1));
         var P8T =
           Math.ceil(Number($(_s(+V8m))
-            .attr(_s(+"334"))));
+            .attr("data")));
         var D8T = $(_s(V8m * 1))
           .attr(_s(+i1y));
         if (g8T > +'0') {
@@ -52248,7 +52261,7 @@ var cotgsubscribe = amplify;
                     K4y * 1 || u1g == +R1R) var e1g = '';
                   else var e1g = _s(+"6014") + y3g + _s('3566' >> 1599353120);
                   E3g = _s("4983" << 282803072) + w1g;
-                  var O1g = _s("1364" | 84) + w1g + _s("6021" &
+                    var O1g = "<span class = 'btimetdsp'>Build time: " + w1g + _s("6021" &
                     2147483647);
                   if (D3g == '0' >> 1192657760) {
                     E3g = text = Q2(Number(T1g));
@@ -52476,7 +52489,7 @@ var cotgsubscribe = amplify;
         $(_s(e5t & 2147483647))
           .text(" " + G2T);
         $(_s(e5t * 1))
-          .attr(_s(+'334'), Number(G2T));
+          .attr("data", Number(G2T));
         $(_s(+e5t))
           .attr(_s(+i1y), Number(M2T));
         var h2T;
@@ -54330,9 +54343,9 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(+T24))
         .css("display", "none");
-      $(_s(+X2p))
+      $("#quickBuildMenu")
         .css("display", "none");
-      $(_s(+C24))
+      $("#citySpotMenu")
         .css("display", "none");
       $(_s(+D44))
         .css("display", "none");
@@ -54383,7 +54396,7 @@ var cotgsubscribe = amplify;
         else $(_s(+'1013'))
           .each(function() {
             var y09 = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             if (y09 != ppdt.pid) $(this)
               .addClass(_s("607" ^ 0));
           });
@@ -54424,14 +54437,14 @@ var cotgsubscribe = amplify;
       $(_s(w9R << 709396960) + W6V)
         .text(_s(+"1089"));
       $(_s(w9R * 1) + W6V)
-        .attr(_s('334' & 2147483647), W6V);
+        .attr("data", W6V);
       $(_s(+w9R) + W6V)
         .off(_s(+C2y));
       $(_s(+w9R) + W6V)
         .click(function() {
           E6k.R6();
           var d6V = $(this)
-            .attr(_s("334" | 264));
+            .attr("data");
           V4F(d6V);
         });
     }
@@ -55031,9 +55044,9 @@ var cotgsubscribe = amplify;
       $(_s(T24 << 1833927648))
         .css("display", "none");
       E6k.R6();
-      $(_s(X2p & 2147483647))
+      $("#quickBuildMenu")
         .css("display", "none");
-      $(_s(+C24))
+      $("#citySpotMenu")
         .css("display", "none");
       $(_s(+D44))
         .css("display", "none");
@@ -55068,7 +55081,7 @@ var cotgsubscribe = amplify;
       F3U.done(function(k1U) {
           D6 = JSON.parse(k1U); __c.D6 = D6;
           gCPosted();
-        if ($(_s(+C24))
+        if ($("#citySpotMenu")
           .is(_s(+x5t))) {
           var c3U = D6[_s(N1R << 395352640)][Number(d2)][_s(m1R * 1)];
           var m3U =
@@ -55258,7 +55271,7 @@ var cotgsubscribe = amplify;
         $(_s(+"2540"))
           .click(function() {
             var i31 = $(this)
-              .attr(_s(+'334'));
+              .attr("data");
             B0V(i31);
           });
       }
@@ -56032,9 +56045,7 @@ var cotgsubscribe = amplify;
             .html(p6(Math.floor(j6w)));
         }
         D6[_s("5932" * 1)] = Math.round(currentTime() / ("1000" * 1));
-        if ($(E6k
-            .o55(C24 | 1124))
-          .css("display") != "none")
+          if ($("#citySpotMenu").css("display") != "none")
           if ($(_s(+k04))
             .attr(_s(Z9y * 1)) == +"0") wallspot();
           else v9(B8F, Y8F, N8F, e9F, H9F);
@@ -57649,7 +57660,7 @@ var cotgsubscribe = amplify;
           m81 = P81[_s(+'622')][y81][_s(r1t - 0)];
           c81 = bam[_s('4619' - 0)][p81][_s("3286" >> 2118426816)];
           trot = bam[_s('4619' - 0)][p81][_s("25" ^ 0)];
-          R81 = R81 + _s(+'5612') + c81 + _s("3907" & 2147483647) + trot + _s('3344' >> 588459264) +
+          R81 = R81 + _s(+'5612') + c81 + _s("3907" & 2147483647) + trot + "data" +
             p6(Number(m81)) + _s(+'3665');
         }
         R81 = R81 + _s(+A0R);
@@ -57833,7 +57844,7 @@ var cotgsubscribe = amplify;
             $(_s(G2p - 0))
               .removeClass(_s(+r2p));
           } else {
-            n2 = $(_s(X2p ^ 0))
+            n2 = $("#quickBuildMenu")
               .css("display");
             if (n2 != "none") {
               n2 = +'0';
@@ -57844,7 +57855,7 @@ var cotgsubscribe = amplify;
                 .show();
               $(_s(h2p | 2988))
                 .show();
-              $(_s(+X2p))
+              $("#quickBuildMenu")
                 .css("display", "none");
             }
           }
@@ -58974,7 +58985,7 @@ var cotgsubscribe = amplify;
       var O2g = S2g * +A5y + V2g;
       h8 = x2g;
       S8 = o2g;
-      n2 = $(_s(+X2p))
+      n2 = $("#quickBuildMenu")
         .css("display");
       var Z2g = _s(+m8y) + O2g + _s(m8y | 1452);
       var g2g = O2g;
@@ -58992,7 +59003,7 @@ var cotgsubscribe = amplify;
         d2 =
           X2g * (A5y & 2147483647) + L2g;
         var I2g = X2g * (A5y - 0) + L2g;
-        n2 = $(_s(+X2p))
+        n2 = $("#quickBuildMenu")
           .css("display");
         var v2g = D6.bd[d2].bid;
         if (v2g == ("0" & 2147483647) || v2g == undefined || v2g ==
@@ -59200,7 +59211,7 @@ var cotgsubscribe = amplify;
         $(_s(+V8m))
           .text(" " + l8T);
         $(_s(+V8m))
-          .attr(_s(+'334'), Number(l8T));
+          .attr("data", Number(l8T));
         $(_s(V8m ^ 0))
           .attr(_s(+i1y), Number(v8T));
         var z8T;
@@ -59737,7 +59748,7 @@ var cotgsubscribe = amplify;
         $(_s(+'5082'))
           .text(" " + S6T);
         $(_s(+'5082'))
-          .attr(_s(+"334"), Number(S6T));
+          .attr("data", Number(S6T));
         $(_s('5082' ^ 0))
           .attr(_s(i1y - 0), Number(b6T));
         var g6T;
@@ -59851,7 +59862,7 @@ var cotgsubscribe = amplify;
 
     function d8F(n6Z) {
       $(_s("7" - 0))
-        .attr(_s('334' & 2147483647), n6Z);
+        .attr("data", n6Z);
       N6();
       var f6Z = $.post(q6 + _s(+'3154'), { a: n6Z, cid: cid });
       F6();
@@ -60198,7 +60209,7 @@ var cotgsubscribe = amplify;
               var T7T = '';
               if (t7T == +'1') T7T = _s('286' ^ 0);
               Q7T = Q7T + _s("3135" ^ 0) + v7T + _s(+i3R) + T7T + _s(+"6089") + v7T + _s("2831" -
-                0) + x7T + _s(+"2369") + v7T + _s('2656' * 1) + O7T + _s(+"4512");
+                  0) + x7T + "Total Build Time: " + v7T + _s('2656' * 1) + O7T + _s(+"4512");
             }
             Q7T = Q7T + E6k
               .S55(+'5279');
@@ -63037,7 +63048,7 @@ var cotgsubscribe = amplify;
     function R1F() {
       var o6w = d2;
       if ($(_s(D44 - 0))
-        .css("display") != "none" || $(_s(+X2p))
+        .css("display") != "none" || $("#quickBuildMenu")
         .css("display") != "none") {
         var t6w = D6.bd[_s(I7p - 0)].bl;
         var L6w = D6.bq
@@ -63054,7 +63065,7 @@ var cotgsubscribe = amplify;
           if (K0F.indexOf(o6w) >= +'0') z5V();
           else if (C8.indexOf(o6w) >= ("0" ^ 0)) M5V();
         else G5V();
-        if ($(_s(+X2p))
+        if ($("#quickBuildMenu")
           .css("display") != "none") C5V();
       }
     }
@@ -63151,7 +63162,7 @@ var cotgsubscribe = amplify;
             var c8T = Number($(_s(+V8m))
               .attr(_s(+i1y)));
             var m8T = Math.ceil(Number($(_s(V8m | 2090))
-              .attr(_s(+"334"))));
+              .attr("data")));
             var E8T = $(_s(+U8m))
               .val();
             var w9T = m6[c8T]["n"];
@@ -63191,7 +63202,7 @@ var cotgsubscribe = amplify;
             var Q9T = Number($(_s(e5t & 2147483647))
               .attr(_s(i1y - 0)));
             var T9T = Math.ceil(Number($(_s(+e5t))
-              .attr(_s(+"334"))));
+              .attr("data")));
             var O9T = $(_s(B5t >> 250631328))
               .val();
             var G9T = m6[Q9T]["n"];
@@ -66491,8 +66502,6 @@ var cotgsubscribe = amplify;
 	}
 
     
-      var _cameraX = 0;
-      var _cameraY = 0;
       var _zoom = 1;
       var _cid = 0;
       var _viewMode = 0; // 
@@ -66800,7 +66809,7 @@ var cotgsubscribe = amplify;
             offsetX: _s('2204' ^ 0),
             arrow: !{}
           });
-        $(_s(+'3349'))
+        $("data")
           .tooltipster({ content: _s(+'2990') });
         $(_s(c4y - 0))
           .tooltipster({ content: $(_s('697' | 689)), position: _s(+M64) });
@@ -67079,8 +67088,7 @@ var cotgsubscribe = amplify;
             if (ppdt[_s(+C9y)][_s(K9y | 552)] * +"1000" >= currentTime() && ppdt[
                 _s(C9y & 2147483647)][_s(Z9y >> 413875072)] * +"1000" <= currentTime()) $(_s(M9y - 0))
               .tooltipster({
-                content: _s('2347' & 2147483647) + ppdt[_s(C9y - 0)][_s("3341" & E6k
-                  .s6s)]
+                content: _s('2347' & 2147483647) + ppdt[_s(C9y - 0)]["data"]
               });
             else if (ppdt[_s(C9y ^ 0)][_s(+Z9y)] * +"1000" >= currentTime()) $(_s(+M9y))
               .tooltipster({ content: _s(+"1469") + ppdt[_s(C9y * 1)][_s(+"4521")] });
@@ -67827,7 +67835,7 @@ var cotgsubscribe = amplify;
             position: _s(+M64)
           });
         $(_s("4269" | 4232))
-          .tooltipster({ content: _s("3346" * 1) });
+          .tooltipster({ content: "data" });
       });
 
     function C0F() {
@@ -68180,7 +68188,7 @@ var cotgsubscribe = amplify;
       $(_s(Z8R << 1232783360))
         .hover(function() {
           var k7g = Number($(this)
-            .attr(_s(+"334")));
+            .attr("data"));
           var e7g = D5F(k7g);
           E6k.R6();
           $(_s('4591' << 2071034304))
@@ -68199,7 +68207,7 @@ var cotgsubscribe = amplify;
           if (D6[_s(N1R * 1)][+"0"][_s(+i1R)] > +'0' &&
             e7g == _s(g4p >> 510267584) || e7g == _s(G2k ^ 0) || e7g == _s(L9y >> 1004387488)) {
             n2 =
-              $(_s(+X2p))
+              $("#quickBuildMenu")
               .css("display");
             if (g2 == ("1" & 2147483647) && E6 != '') {
               var m5g =
@@ -68957,7 +68965,7 @@ var cotgsubscribe = amplify;
                   c6i += _s(+'4769') + F6i + _s(+"5783");
                   F6i = "";
                   if (q6i['4' & 2147483647] == +'1') F6i = _s(M7R - 0);
-                  c6i += _s(+"3342") + F6i + _s(+"7074");
+                  c6i += "data" + F6i + _s(+"7074");
                   F6i = "";
                   if (q6i[+"5"] == '1' >> 125538080) F6i = _s(M7R & E6k
                     .s6s);

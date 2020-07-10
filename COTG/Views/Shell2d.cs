@@ -482,9 +482,13 @@ namespace COTG.Views
             var newC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
             var dc = newC - ShellPage.cameraC;
             // only move if needed
-            if( dc.X.Abs()*ShellPage.pixelScale > ShellPage.clientSpan.X*0.5f ||
-                dc.Y.Abs()*ShellPage.pixelScale > ShellPage.clientSpan.Y*0.5f)
+            if (dc.X.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.X * 0.5f ||
+                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.Y * 0.5f)
+            {
+
                 ShellPage.cameraC = newC;
+                JSClient.SetJSCamera();
+            }
 
 
         }

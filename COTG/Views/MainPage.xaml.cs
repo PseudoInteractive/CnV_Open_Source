@@ -86,7 +86,7 @@ namespace COTG.Views
     {
         public BoundCollection<City> cities { get; } = new BoundCollection<City>();
         public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
-        public static MainPage cache;
+        public static MainPage instance;
         //        public static City showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -95,12 +95,12 @@ namespace COTG.Views
         //    Assert(rv != null);
         //    return rv;
         //}
-        public static RadDataGrid CityGrid => cache.cityGrid;
+        public static RadDataGrid CityGrid => instance.cityGrid;
         static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
-            Assert(cache == null);
-            cache = this;
+            Assert(instance == null);
+            instance = this;
             InitializeComponent();
             cityMenuFlyout = new MenuFlyout();
             var c = new MenuFlyoutItem() { Text = "Return Slow" };
@@ -182,12 +182,12 @@ namespace COTG.Views
 
         public async static void CityChange( City city,string memberName=null)
         {
-            if (cache == null || cache.cities.Count == 0 )
+            if (instance == null || instance.cities.Count == 0 )
                 return;
             
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                var cities = cache.cities;
+                var cities = instance.cities;
                 if (cities.Contains(city))
                 {
                  //   Note.L($"Change: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
@@ -207,37 +207,59 @@ namespace COTG.Views
         }
         public async static void CityListChange()
         {
-            if (cache == null)
+            if (instance == null)
                 return;
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Note.L("ListChange: ");
 
-                var cities = cache.cities;
-                cities.Reset(City.all.Values);
+                var cities = instance.cities;
+                if (selectedCityList == -1)
+                {
+                    cities.Reset(City.all.Values);
+                }
+                else
+                {
+                    var cityList = CityList.Find(selectedCityList);
+                    if(cityList!=null)
+                    {
+                        var filtered = new List<City>();
+                        foreach(var cid in cityList.cities)
+                        {
+                            if(City.all.TryGetValue(cid,out var c))
+                            {
+                                filtered.Add(c);
+                            }
+                        }
+                        cities.Reset(filtered);
+
+                    }
+
+
+                }
             });
         }
         public async static void CityListUpdateAll ()
         {
-            if (cache == null)
+            if (instance == null)
                 return;
             Note.L("UpdateAll: ");
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-                cache.cities.NotifyReset();
+                instance.cities.NotifyReset();
             });
         }
 
         public static void UpdateDungeonList(List<Dungeon> dungeons)
         {
-            if (cache == null)
+            if (instance == null)
                 return;
 
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                var l = cache.dungeons;
+                var l = instance.dungeons;
                 l.Clear();
                 if(dungeons!=null)
                     l.AddRange(dungeons);
@@ -282,11 +304,16 @@ namespace COTG.Views
             Log("Tapped");
         }
 
-        public static ComboBox CityListBox => cache.cityListBox;
-        public static int selectedCityList;
+        public static ComboBox CityListBox => instance.cityListBox;
+        private List<CityList> cityListSelections = CityList.selections;
+        public static int selectedCityList=-1;
         private int selectedCityListBind {
             get { return selectedCityList; }
-            set { selectedCityList = value; }
+            set
+            {
+                selectedCityList = value;
+                CityListChange();
+            }
 
         }
 

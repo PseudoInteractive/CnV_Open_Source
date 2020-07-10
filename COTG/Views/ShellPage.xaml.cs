@@ -425,9 +425,9 @@ namespace COTG.Views
 
         public void Refresh(object o, RoutedEventArgs e)
         {
-            Log("Refresh");
             var shiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
             var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+            Log($"Refresh {shiftState},{ctrlState}");
 
             var isShiftDown = shiftState != CoreVirtualKeyStates.None;
             var isCtrlDown = ctrlState != CoreVirtualKeyStates.None;

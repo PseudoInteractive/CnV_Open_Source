@@ -18,6 +18,7 @@
     </Page.Resources>
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <StackPanel x:Name="ContentArea">
+            <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
             <TextBlock x:Uid="Settings_Personalization"
                        Style="{ThemeResource SubtitleTextBlockStyle}" />
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}">

@@ -48,7 +48,7 @@ namespace COTG.Views
             ShellPage.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
             isMouseDown = false;
             mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
-            if( (lastMousePressPosition-mousePosition).Length() < 8.0f )
+            if ((lastMousePressPosition - mousePosition).Length() < 8.0f)
             {
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
@@ -59,20 +59,24 @@ namespace COTG.Views
                 //    spot.pid = info.data; // Set player id from world data.
                 //                          // If this has already been selected it will have no effect
                 //}
-                
-                    // If clicking on our city, change city to that, otherwise show the city info
-                    // for non cities we show info
-                    if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
-                    {
-                        var city = DefensePage.GetDefender(cid); // this will add it to the list if it isn't present and then toggle selection
-                        JSClient.ChangeCity(cid);
-                    }
-                    else
-                    {
-                        JSClient.ShowCityWithoutViewChange(cid);
-                    }
+
+                // If clicking on our city, change city to that, otherwise show the city info
+                // for non cities we show info
+                if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
+                {
+                    var city = DefensePage.GetDefender(cid); // this will add it to the list if it isn't present and then toggle selection
+                    JSClient.ChangeCity(cid);
+                }
+                else
+                {
+                    JSClient.ShowCityWithoutViewChange(cid);
+                }
                 //   JSClient.ShowCity(MousePointToCid(mousePosition));
 
+            }
+            else
+            {
+                JSClient.SetJSCamera();
             }
         }
 

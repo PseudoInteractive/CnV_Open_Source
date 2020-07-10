@@ -242,7 +242,7 @@ namespace COTG
             if (view == null)
                 return;
             view.Refresh();
-            Services.NavigationService.Navigate<Views.MainPage>();
+//            Services.NavigationService.Navigate<Views.MainPage>();
         }
 
         public static void ChangeCity(int cityId)
@@ -259,6 +259,23 @@ namespace COTG
             }
 
         }
+        public static void SetJSCamera()
+        {
+            try
+            {
+                view.InvokeScriptAsync("setCameraC", new string[] {
+                    (ShellPage.cameraC.X*64).RoundToInt().ToString(),
+                    (ShellPage.cameraC.Y*64).RoundToInt().ToString()
+                });
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+        }
+
         public static void ShowPlayer(string pid)
         {
             try
@@ -391,15 +408,16 @@ namespace COTG
 
                 }
 
-                CityList.allWithAll = new CityList[lists.Count + 1];
-                CityList.allWithAll[0] = new CityList() { id = -1, name = "All" };
-                for (int i = 1; i < CityList.allWithAll.Length; ++i)
-                    CityList.allWithAll[i] = lists[i - 1];
+                CityList.selections.Clear();
+                CityList.selections.Add(CityList.allCities);
+               for (int i = 0; i < lists.Count; ++i)
+                    CityList.selections.Add( lists[i] );
 
                 CityList.all = lists.ToArray();
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, ()=>
                 {
-                    MainPage.CityListBox.ItemsSource = CityList.allWithAll;
+                    // is this valid?
+                    MainPage.CityListBox.ItemsSource = CityList.selections;
                 } );
 
             }
