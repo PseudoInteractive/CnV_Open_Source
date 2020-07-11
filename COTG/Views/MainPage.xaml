@@ -27,7 +27,7 @@
             <RowDefinition Height="3*"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-        <ComboBox x:Name="cityListBox" Width="200" ItemsSource="{x:Bind cityListSelections, Mode=OneWay}" SelectedValuePath="id" DisplayMemberPath="name" SelectedValue="{x:Bind selectedCityListBind, Mode=TwoWay}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        <ComboBox x:Name="cityListBox" Width="200" ItemsSource="{x:Bind cityListSelections, Mode=OneWay}" SelectedValuePath="id" DisplayMemberPath="name" SelectedItem="{x:Bind selectedCityListBind, Mode=TwoWay}" VerticalAlignment="Center" Margin="10,0,0,0"/>
         <tg:RadDataGrid x:Name="cityGrid"
                          ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="1"

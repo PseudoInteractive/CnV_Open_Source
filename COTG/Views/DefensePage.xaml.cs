@@ -25,6 +25,7 @@ using System.Collections;
 using COTG.JSON;
 using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
+using COTG.Helpers;
 
 namespace COTG.Views
 {

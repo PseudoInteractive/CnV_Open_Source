@@ -23,64 +23,12 @@ using Windows.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
 using Windows.UI.Input;
+using COTG.Helpers;
 
 namespace COTG.Views
 {
 
-    public class DumbCollection<T> : List<T>, INotifyCollectionChanged,INotifyPropertyChanged
-    {
-		public DumbCollection(IEnumerable<T> collection) : base(collection)
-		{
-		}
 
-		public DumbCollection()
-		{
-		}
-
-		public void OnPropertyChanged(T city,string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-       
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public void NotifyReset()
-        {
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset ));
-        }
-        public void Reset(IEnumerable<T> src)
-        {
-            // catch for thread safety
-            Clear();
-            AddRange(src);
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-        public void NotifyChange(T item)
-        {
-         //   OnPropertyChanged(item,null);
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,item,item,IndexOf(item)));
-        }
-        public void Replace(T newItem, T oldItem,int index)
-        {
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,newItem,oldItem, index));
-        }
-        public void AddAndNotify(T item)
-        {
-            var id = Count;
-            Add(item);
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
-        }
-        
-    }
 
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
@@ -215,13 +163,13 @@ namespace COTG.Views
                 Note.L("ListChange: ");
 
                 var cities = instance.cities;
-                if (selectedCityList == -1)
+                if (selectedCityList == null || selectedCityList.id==-1)
                 {
                     cities.Reset(City.all.Values);
                 }
                 else
                 {
-                    var cityList = CityList.Find(selectedCityList);
+                    var cityList = selectedCityList;// CityList.Find(selectedCityList);
                     if(cityList!=null)
                     {
                         var filtered = new List<City>();
@@ -305,13 +253,17 @@ namespace COTG.Views
         }
 
         public static ComboBox CityListBox => instance.cityListBox;
-        private List<CityList> cityListSelections =  CityList.selections;
-        public static int selectedCityList=-1;
-        private int selectedCityListBind {
-            get { return selectedCityList; }
+        private DumbCollection<CityList> cityListSelections =>  CityList.selections;
+        public static CityList selectedCityList = null;
+        private CityList selectedCityListBind {
+            get {
+                Log("Read!");
+                return selectedCityList;
+            }
             set
             {
                 selectedCityList = value;
+                Log("Write!");
                 CityListChange();
             }
 

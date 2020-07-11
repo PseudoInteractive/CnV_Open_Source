@@ -121,11 +121,11 @@ namespace COTG.Game
                         var meName = me.GetString("n");
                         if (meName == null)
                         {
-                            Log("Missing name? " + counter);
-                            foreach (var member in me.EnumerateObject())
-                            {
-                                Log($"{member.Name}:{member.Value.ToString()}");
-                            }
+                            //Log("Missing name? " + counter);
+                            //foreach (var member in me.EnumerateObject())
+                            //{
+                            //    Log($"{member.Name}:{member.Value.ToString()}");
+                            //}
                         }
                         else if (Player.nameToId.TryGetValue(meName, out var pId))
                         {

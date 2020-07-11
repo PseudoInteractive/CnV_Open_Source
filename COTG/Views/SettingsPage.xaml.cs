@@ -172,10 +172,10 @@ namespace COTG.Views
         private async void SetContinentCityLists(object sender, RoutedEventArgs e)
         {
             var r = new Random();
-            var added = false;
+            var addedContinents = 0;
             List<int> changed = new List<int>();
             var temp = new List<string>();
-            var sli = new List<string>();
+            string sli = null;
             var cgs = new List<string>();
             foreach(var city in City.all.Values)
             {
@@ -185,13 +185,13 @@ namespace COTG.Views
                     var id = r.Next(65536) + 10000;
                     cl = new CityList() { id = id, name = city.continent.ToString() };
                     CityList.all = CityList.all.ArrayAppend(cl );
-                    added = true;
+                    ++addedContinents;
                 }
 
                 if (cl.cities.Add(city.cid))
                     changed.Add(city.cid);
             }
-            if(added)
+            if(addedContinents > 0)
             {
                 var cityList = new List<string>();
                 foreach(var l in CityList.all)
@@ -200,7 +200,7 @@ namespace COTG.Views
                         continue;
                     cityList.Add(l.id.ToString() + l.name);
                 }
-                sli.Add("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
+                sli=("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
 //                await Post.Send("includes/sLi.php",);
             }
             foreach (var cid in changed)
@@ -216,15 +216,17 @@ namespace COTG.Views
                         temp.Add(l.id.ToString());
                     }
 
-                    cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
   //                  await Post.Send("includes/cgS.php",  );
                 }
+                cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
             }
-            foreach(var it in sli)
-                await Post.Send("includes/sLi.php",it);
+            if (sli!=null)
+                await Post.Send("includes/sLi.php",sli);
+            Note.Show($"Added {addedContinents} continent citylists, updating {cgs.Count} cities");
             foreach (var it in cgs)
                 await Post.Send("includes/cgS.php", it );
             //   JSClient.GetCitylistOverview();
+            Note.Show($"Successfully added continent citylists :)");
         }
 
         //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)

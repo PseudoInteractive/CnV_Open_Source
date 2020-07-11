@@ -299,7 +299,7 @@ namespace COTG.Game
 
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();
-        public static List<CityList> selections = new List<CityList>( new[] { allCities }); // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+        public static DumbCollection<CityList> selections = new DumbCollection<CityList>( new[] { allCities }); // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
     }
 
 }

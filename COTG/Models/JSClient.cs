@@ -402,6 +402,8 @@ namespace COTG
                     ++clChanged;
                     foreach (var clc in cityListCities.EnumerateObject())
                     {
+                        if (clc.Value.ValueKind == JsonValueKind.Null)
+                            continue;
                         var id = int.Parse(clc.Name);
                         var cityList = lists.Find((a) => a.id == id);
                         foreach (var cityId in clc.Value.EnumerateArray())
@@ -414,6 +416,7 @@ namespace COTG
                 }
                 if (clChanged>0)
                 {
+                    Log("Change2");
                     Assert(clChanged == 2);
                     CityList.selections.Clear();
                     CityList.selections.Add(CityList.allCities);
@@ -423,8 +426,10 @@ namespace COTG
                     CityList.all = lists.ToArray();
                     CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                     {
-                    // is this valid?
-                        MainPage.CityListBox.ItemsSource = CityList.selections;
+                        // is this valid?
+                        Log("Reset");
+
+                        CityList.selections.NotifyReset();
                     });
                 }
             }

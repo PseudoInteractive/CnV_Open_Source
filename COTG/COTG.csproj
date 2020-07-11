@@ -223,6 +223,7 @@
     <Compile Include="Game\Spot.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
