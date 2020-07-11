@@ -19,6 +19,18 @@ namespace COTG
             }
             l.Add(a);
         }
+        public static T[] ArrayAppend<T>(this T[] l, T a)
+        {
+            int lg = l.Length;
+            var result = new T[lg + 1];
+            for(int i=0;i<lg;++i)
+            {
+                result[i] = l[i];
+            }
+            result[lg] = a;
+            return result;
+
+        }
         public static TValue GetOrAdd<TKey,TValue>(this SortedList<TKey,TValue> l,TKey key, Func<TKey, TValue> factory )
         {
             if (!l.TryGetValue(key, out var value))

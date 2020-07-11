@@ -8989,7 +8989,35 @@ i011.d3q = function() {
 i011.s6s = 2147483647;
 i011.R6 = function() { return typeof i011.B6.Y7 === 'function' ? i011.B6.Y7.apply(i011.B6, arguments) : i011.B6.Y7; };
 var gspotfunct = new Object();
+
 var setcitybind;
+
+
+function ppdtChanged(__ppdt)
+{
+  let wrapper = { ppdt: {} };
+  let wantUpdate=false;
+  if(__ppdt.hasOwnProperty("clc"))
+  {
+    wrapper.ppdt['clc'] = __ppdt['clc'];
+    wrapper.ppdt['cl'] = __ppdt['cl'];
+    wantUpdate = true;
+  }
+    if (__ppdt.hasOwnProperty("c")) {
+        wrapper.ppdt['c'] = __ppdt['c'];
+        wantUpdate = true;
+    }
+  if(!wantUpdate)
+    return;
+   console.log("Update ppdt");
+  setTimeout( ()=>
+    {
+      
+      window['external']['notify'](JSON.stringify(wrapper));
+    }
+      ,300);
+}
+
 
 function gaFrep(E7c) {
   var N6k = i011;
@@ -11310,6 +11338,7 @@ var cotgsubscribe = amplify;
     }
 
     function u7V(T11) {
+      ppdtChanged(T11);
       plDa.playstr = T11;
       var t11 = {};
       for (var v11 in ppdt) t11[v11] = ppdt[v11];
@@ -11324,7 +11353,7 @@ var cotgsubscribe = amplify;
       if (T11[_s(c9y ^ 0)])
         if (Object.keys(ppdt[_s(c9y | 4112)])
           .length > +'0') Q4F(ppdt[_s(c9y * 1)]);
-      if (T11.hasOwnProperty(_s(+"1034"))) X8();
+        if (T11.hasOwnProperty("clc")) X8();
       var w11 = $(E6k
         .o55(+M9y));
       if (ppdt["#city_map"] * +"1000" >= currentTime() && w11.css("display") == _s(
@@ -18197,6 +18226,7 @@ var cotgsubscribe = amplify;
           else if (R9T == +"4") Y6(_s('2121' & 2147483647));
           else {
             var q9T = JSON.parse(R9T);
+            ppdtChanged(q9T);
             var y9T = {};
             for (var P9T in ppdt) y9T[P9T] = ppdt[P9T];
             for (var
@@ -31172,6 +31202,7 @@ var cotgsubscribe = amplify;
         H4l.done(function(w4l) {
           if (w4l != '0' * 1) {
             ppdt = JSON.parse(w4l);
+            ppdtChanged(ppdt);
             S3F(s4l);
             X2('2' ^ 0);
             u4F();
@@ -43353,15 +43384,15 @@ var cotgsubscribe = amplify;
           $(_s('3534' >> 930399680))
             .attr("data", k01.a);
           $(_s(+C5m))
-            .attr("a", k01[_s(+Z5m)]);
+            .attr("a", k01["player"]);
           $(_s(+C5m))
             .attr(_s(B9y * 1), k01[_s(+K5m)]);
           $(_s(+u5m))
-            .attr("a", k01[_s(Z5m | 113)]);
+            .attr("a", k01["player"]);
           $(_s(u5m - 0))
             .attr(_s(B9y >> 1482977664), k01[_s(+K5m)]);
           $(_s(a5m << 1321703232))
-            .attr('a', k01[_s(+Z5m)]);
+            .attr('a', k01["player"]);
           $(_s(+a5m))
             .attr(_s(B9y >> 660535424), k01[_s(+K5m)]);
           if (ppdt["wmo"])
@@ -45208,6 +45239,7 @@ var cotgsubscribe = amplify;
           F6();
           g9Z.done(function(Z9Z) {
             ppdt = JSON.parse(Z9Z);
+            ppdtChanged(ppdt);
             E6k.y6();
             x5F();
             $(_s(+J8p))
@@ -50705,7 +50737,7 @@ var cotgsubscribe = amplify;
                   .length !== +"0")
                   if (retobj.constructor === Object) {
                     type = retobj[_s(R5m ^ 0)];
-                    o1V = retobj[_s(+Z5m)];
+                    o1V = retobj["player"];
                     X1V = retobj[_s(x4y << 2021519296)];
                     d1V = retobj[_s(b6m - 0)];
                     z1V = retobj[_s(+S2y)];
@@ -50781,7 +50813,7 @@ var cotgsubscribe = amplify;
                   .length !== ("0" ^ 0))
                   if (retobj.constructor === Object) {
                     type = retobj[_s(R5m * 1)];
-                    o1V = retobj[_s(Z5m ^ 0)];
+                    o1V = retobj["player"];
                     X1V = retobj[_s(+x4y)];
                     d1V = retobj[_s(+b6m)];
                     z1V = retobj[_s(S2y >> 1490361920)];
@@ -50892,7 +50924,7 @@ var cotgsubscribe = amplify;
                   .length !== '0' * 1)
                   if (retobj.constructor === Object) {
                     type = retobj[_s(R5m * 1)];
-                    o1V = retobj[_s(+Z5m)];
+                    o1V = retobj["player"];
                     X1V = retobj[_s(+x4y)];
                     d1V = retobj[_s(+b6m)];
                     z1V = retobj[_s(S2y & 2147483647)];
@@ -50982,7 +51014,7 @@ var cotgsubscribe = amplify;
                   .length !== +'0')
                   if (retobj.constructor === Object) {
                     type = retobj[_s(R5m - 0)];
-                    o1V = retobj[_s(+Z5m)];
+                    o1V = retobj["player"];
                     X1V = retobj[_s(x4y | 197)];
                     d1V = retobj[_s(+b6m)];
                     z1V = retobj[_s(S2y | 193)];
@@ -51067,7 +51099,7 @@ var cotgsubscribe = amplify;
                   .length !== +'0')
                   if (retobj.constructor === Object) {
                     type = retobj[_s(+R5m)];
-                    o1V = retobj[_s(+Z5m)];
+                    o1V = retobj["player"];
                     X1V = retobj[_s(+x4y)];
                     d1V = retobj[_s(+b6m)];
                     z1V = retobj[_s(+S2y)];
@@ -53748,6 +53780,7 @@ var cotgsubscribe = amplify;
         F6();
         B9Z.done(function(R9Z) {
           ppdt = JSON.parse(R9Z);
+          ppdtChanged(ppdt);
           x5F();
           E6k.y6();
           $(_s(+J8p))
@@ -56424,6 +56457,7 @@ var cotgsubscribe = amplify;
         Z4T.done(function(U4T) {
           if (U4T) {
             ppdt = JSON.parse(U4T);
+            ppdtChanged(ppdt);
             $(_s(h54 & 2147483647) + f4T)
               .val("");
           }
@@ -57258,7 +57292,7 @@ var cotgsubscribe = amplify;
         }
           if (j71.hasOwnProperty("resregion"))
           if (j71["resregion"] == +"1") n2F();
-        var w71 = j71[_s(+Z5m)];
+        var w71 = j71["player"];
         if (w71 != "" && w71 != _s(h2R & 2147483647) && w71 != undefined) u7V(w71);
         Q1F = j71[_s(+'6286')];
         if (!(Q1F == +'1')) {
@@ -58137,8 +58171,8 @@ var cotgsubscribe = amplify;
               d2V = _s("286" ^ 0);
               if (G2V == '') G2V = G2V + i2V;
               else G2V = G2V + _s(+m8y) + i2V;
-            } W2V = W2V + _s("3124" << 815780864) + i2V + _s(
-            "1760" * 1) + C2V + _s("3066" & 2147483647) + d2V + _s('5260' - 0);
+                } W2V = W2V + _s("3124" << 815780864) + i2V + "</td><td><input id=\"citylistaddCD\" value=\""
+                + C2V + _s("3066" & 2147483647) + d2V + _s('5260' - 0);
         }
       }
       $(_s("4163" <<
@@ -58174,6 +58208,7 @@ var cotgsubscribe = amplify;
         u0i.done(function(H0i) {
           if (H0i) {
             ppdt = JSON.parse(H0i);
+            ppdtChanged(ppdt);
             $(_s(h54 << 2118462624) + k0i)
               .val('');
           }

@@ -361,7 +361,7 @@ namespace COTG
         //                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
         //                Log("funky");
         //                await view.InvokeScriptAsync("avactor", null);
-			     //   }
+        //   }
         //        }
 
         //    }
@@ -374,18 +374,22 @@ namespace COTG
         // Gets an overview of all cities
         public static async Task GetCitylistOverview()
         {
-          
-            var str = await view.InvokeScriptAsync("getppdt", null);
 
-            Log(str);
+            var str = await view.InvokeScriptAsync("getppdt", null);
             ppdt = JsonDocument.Parse(str);
+            UpdatePPDT(ppdt.RootElement);
+        }
+
+        public static void UpdatePPDT(JsonElement jse)
+        {
+            int clChanged = 0;
             // City lists
             {
                 List<CityList> lists = new List<CityList>();
-                
-                if (ppdt.RootElement.TryGetProperty("cl", out var cityListNames))
+                if (jse.TryGetProperty("cl", out var cityListNames))
                 {
-                    var clList = new List<string>();
+                    ++clChanged;
+                  //  var clList = new List<string>();
                     foreach (var cn in cityListNames.EnumerateObject())
                     {
                         var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
@@ -393,8 +397,9 @@ namespace COTG
                     }
 
                 }
-                if (ppdt.RootElement.TryGetProperty("clc", out var cityListCities))
+                if (jse.TryGetProperty("clc", out var cityListCities))
                 {
+                    ++clChanged;
                     foreach (var clc in cityListCities.EnumerateObject())
                     {
                         var id = int.Parse(clc.Name);
@@ -407,25 +412,30 @@ namespace COTG
                     }
 
                 }
-
-                CityList.selections.Clear();
-                CityList.selections.Add(CityList.allCities);
-               for (int i = 0; i < lists.Count; ++i)
-                    CityList.selections.Add( lists[i] );
-
-                CityList.all = lists.ToArray();
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, ()=>
+                if (clChanged>0)
                 {
-                    // is this valid?
-                    MainPage.CityListBox.ItemsSource = CityList.selections;
-                } );
+                    Assert(clChanged == 2);
+                    CityList.selections.Clear();
+                    CityList.selections.Add(CityList.allCities);
+                    for (int i = 0; i < lists.Count; ++i)
+                        CityList.selections.Add(lists[i]);
 
+                    CityList.all = lists.ToArray();
+                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                    {
+                    // is this valid?
+                        MainPage.CityListBox.ItemsSource = CityList.selections;
+                    });
+                }
             }
+            var cUpdated = false;
             // extract cities
+            if (jse.TryGetProperty("c", out var cProp))
             {
+                cUpdated = true;
 
                 var now = DateTimeOffset.UtcNow;
-                foreach (var jsCity in ppdt.RootElement.GetProperty("c").EnumerateArray())
+                foreach (var jsCity in cProp.EnumerateArray())
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
 
@@ -450,14 +460,15 @@ namespace COTG
 
                 Log(City.all.ToString());
                 Log(City.all.Count());
-             }
-             Views.MainPage.CityListChange();
+                Views.MainPage.CityListChange();
+            }
 
+            Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
             // Log(ppdt.ToString());
         }
 
-        
+
 
         static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {
@@ -756,6 +767,11 @@ namespace COTG
                         case "gPlA":
                         {
                                 Player.Ctor(jsp.Value);
+                                break;
+                            }
+                        case "ppdt":
+                            {
+                                UpdatePPDT(jsp.Value);
                                 break;
                             }
                         case "c":

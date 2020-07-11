@@ -305,7 +305,7 @@ namespace COTG.Views
         }
 
         public static ComboBox CityListBox => instance.cityListBox;
-        private List<CityList> cityListSelections = CityList.selections;
+        private List<CityList> cityListSelections =  CityList.selections;
         public static int selectedCityList=-1;
         private int selectedCityListBind {
             get { return selectedCityList; }

@@ -18,12 +18,12 @@
     </Page.Resources>
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <StackPanel x:Name="ContentArea">
-            <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
-            <TextBlock x:Uid="Settings_Personalization"
-                       Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
+            <TextBlock Text="Game" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+            <StackPanel Margin="{StaticResource SmallTopBottomMargin}"
+                       >
+                <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
                 <TextBlock x:Uid="Settings_Theme" />
-                <StackPanel Margin="{StaticResource XSmallTopMargin}">
+            <StackPanel Margin="{StaticResource XSmallTopMargin}">
                     <RadioButton x:Uid="Settings_Theme_Light"
                                  Checked="ThemeChanged_CheckedAsync"
                                  IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"

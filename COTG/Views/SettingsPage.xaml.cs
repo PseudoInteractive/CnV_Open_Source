@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
-
+using System.Web;
 using COTG.Core.Helpers;
 using COTG.Core.Services;
 using COTG.Game;
@@ -168,21 +169,62 @@ namespace COTG.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private void SetContinentCityLists(object sender, RoutedEventArgs e)
+        private async void SetContinentCityLists(object sender, RoutedEventArgs e)
         {
-            var continents = new SortedSet<int>();
+            var r = new Random();
+            var added = false;
+            List<int> changed = new List<int>();
+            var temp = new List<string>();
+            var sli = new List<string>();
+            var cgs = new List<string>();
             foreach(var city in City.all.Values)
             {
-                continents.Add(city.continent);
-            }
-            foreach (var continent in continents)
-            {
-                if(CityList.FindForContinent(continent) == null )
+                var cl = CityList.FindForContinent(city.continent);
+                if (cl==null)
                 {
+                    var id = r.Next(65536) + 10000;
+                    cl = new CityList() { id = id, name = city.continent.ToString() };
+                    CityList.all = CityList.all.ArrayAppend(cl );
+                    added = true;
+                }
 
+                if (cl.cities.Add(city.cid))
+                    changed.Add(city.cid);
+            }
+            if(added)
+            {
+                var cityList = new List<string>();
+                foreach(var l in CityList.all)
+                {
+                    if (l.id == 0)
+                        continue;
+                    cityList.Add(l.id.ToString() + l.name);
+                }
+                sli.Add("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
+//                await Post.Send("includes/sLi.php",);
+            }
+            foreach (var cid in changed)
+            {
+                // enumerate all city
+                temp.Clear();
+                foreach (var l in CityList.all)
+                {
+                    if (l.id == 0)
+                        continue;
+                    if (l.cities.Contains(cid))
+                    {
+                        temp.Add(l.id.ToString());
+                    }
+
+                    cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
+  //                  await Post.Send("includes/cgS.php",  );
                 }
             }
-
+            foreach(var it in sli)
+                await Post.Send("includes/sLi.php",it);
+            foreach (var it in cgs)
+                await Post.Send("includes/cgS.php", it );
+            //   JSClient.GetCitylistOverview();
         }
 
         //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
