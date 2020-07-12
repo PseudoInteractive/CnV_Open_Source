@@ -8,8 +8,8 @@ namespace COTG.Game
 {
     public struct Attack
     {
-        public int targetCid;
-        public int sourceCid;
+        public int defCid;
+        public int atkCid;
         public DateTimeOffset time;
         public DateTimeOffset spotted;
 
@@ -19,20 +19,20 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{targetCid.ToCoordinate()}<={sourceCid.ToCoordinate()} eta:{time.ToString()} spot:{spotted.ToString()}";
+            return $"{defCid.ToCoordinate()}<={atkCid.ToCoordinate()} eta:{time.ToString()} spot:{spotted.ToString()}";
         }
 
         public override bool Equals(object obj)
         {
             return obj is Attack attack &&
-                   targetCid == attack.targetCid &&
-                   sourceCid == attack.sourceCid &&
+                   defCid == attack.defCid &&
+                   atkCid == attack.atkCid &&
                    time == attack.time;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(targetCid, sourceCid, (int)(time.Ticks>>20) );
+            return HashCode.Combine(defCid, atkCid, (int)(time.Ticks>>20) );
         }
 
         public static bool operator ==(Attack left, Attack right)

@@ -125,7 +125,7 @@ namespace COTG.Game
             var n = DateTimeOffset.UtcNow;
             if (n > nextAllowedTsUpdate || force)
             {
-                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(8);
+                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
                 var jso = await Post.SendForJson("includes/gIDl.php", "");
                 foreach (var ci in jso.RootElement.EnumerateArray())
                 {

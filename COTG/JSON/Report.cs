@@ -9,20 +9,21 @@ namespace COTG.JSON
 {
 	public class Report : IEquatable<Report>
 	{
-        public const byte typeAsault = 0;
-        public const byte typeSiege = 1;
+        public const byte typeAssault = 0;
+        public const byte typeSiege = 1; // siege in history
         public const byte typePlunder= 2;
         public const byte typeScout = 3;
-        public const byte typeUnknown = 255;
+        public const byte typeSieging = 4; // siege in progress
+        public const byte typePending = 5;
 
         public string reportId;
         public int defP;
-        public string defPlayer => Player.IdToName(defP);
+        public string dPlyr => Player.IdToName(defP);
         public int defCid;
         public string defCN { get; set; }
         public string defC => defCid.ToCoordinate();
         public int atkP;
-        public string atkPlayer => Player.IdToName(atkP);
+        public string aPlyr => Player.IdToName(atkP);
         public int atkCid;
         public string atkCN { get; set; }
         public string atkC => atkCid.ToCoordinate();
@@ -30,29 +31,30 @@ namespace COTG.JSON
         public int Cont => defCid.CidToContinent();
 
         public float claim { get; set; }
-        public DateTimeOffset time { get; set; }
+        public DateTimeOffset Time { get; set; }
         // No longer used
-        public string TT => time.ToString("dd HH':'mm':'ss");
+        public string TT => Time.ToString("dd HH':'mm':'ss");
         public DateTimeOffset spotted { get; set; }
         public byte type;
-        public string atkType => type switch
+        public string Type => type switch
         {
             0 => "assault",
             1 => "siege",
             2 => "plunder",
             3 => "scout",
-            _ => "unknown"
+            4 => "sieging",
+            _ => "income"
 
         };
-        public bool hasSen { get; set; }
-        public bool hasSE { get; set; }
-        public bool isNaval { get; set; }
-        public int defTS { get; set; }
-        public int defTSKilled => defTS - defTSLeft;
-        public int defTSLeft { get; set; }
-        public int atkTSKilled { get; set; }
-        public int atkTS { get; set; }
-        public int atkTSLeft { get; set; }
+        public bool Sen { get; set; }
+        public bool SE { get; set; }
+        public bool Nvl { get; set; }
+        public int dTS { get; set; }
+        public int dTsKill => dTS - dTsLeft;
+        public int dTsLeft { get; set; }
+        public int aTsKill { get; set; }
+        public int aTS { get; set; }
+        public int aTsLeft { get; set; }
 
         public string atkAli => Player.Get(atkP).allianceName;
         public string defAli => Player.Get(defP).allianceName;
@@ -70,12 +72,12 @@ namespace COTG.JSON
 			return other != null &&
 				   defCid == other.defCid &&
 				   atkCid == other.atkCid &&
-				   time.Equals(other.time);
+				   Time.Equals(other.Time);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(defCid, atkCid, time,reportId);
+			return HashCode.Combine(defCid, atkCid, Time,reportId);
 		}
 
 		public static bool operator ==(Report left, Report right)

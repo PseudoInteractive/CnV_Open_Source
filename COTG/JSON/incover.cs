@@ -15,81 +15,7 @@ namespace COTG.JSON
 {
     public static class IncomingOverview 
     {
-            public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
-            {
-                async Task AwaitPartition(IEnumerator<T> partition)
-                {
-                    using (partition)
-                    {
-                        while (partition.MoveNext())
-                        { await funcBody(partition.Current); }
-                    }
-                }
-
-                return Task.WhenAll(
-                    Partitioner
-                        .Create(source)
-                        .GetPartitions(maxDoP)
-                        .AsParallel()
-                        .Select(p => AwaitPartition(p)));
-            }
-
-            public static Task ParallelForEachAsync<T1, T2>(this IEnumerable<T1> source, Func<T1, T2, Task> funcBody, T2 inputClass, int maxDoP = 4)
-            {
-                async Task AwaitPartition(IEnumerator<T1> partition)
-                {
-                    using (partition)
-                    {
-                        while (partition.MoveNext())
-                        { await funcBody(partition.Current, inputClass); }
-                    }
-                }
-
-                return Task.WhenAll(
-                    Partitioner
-                        .Create(source)
-                        .GetPartitions(maxDoP)
-                        .AsParallel()
-                        .Select(p => AwaitPartition(p)));
-            }
-
-            public static Task ParallelForEachAsync<T1, T2, T3>(this IEnumerable<T1> source, Func<T1, T2, T3, Task> funcBody, T2 inputClass, T3 secondInputClass, int maxDoP = 4)
-            {
-                async Task AwaitPartition(IEnumerator<T1> partition)
-                {
-                    using (partition)
-                    {
-                        while (partition.MoveNext())
-                        { await funcBody(partition.Current, inputClass, secondInputClass); }
-                    }
-                }
-
-                return Task.WhenAll(
-                    Partitioner
-                        .Create(source)
-                        .GetPartitions(maxDoP)
-                        .AsParallel()
-                        .Select(p => AwaitPartition(p)));
-            }
-
-            public static Task ParallelForEachAsync<T1, T2, T3, T4>(this IEnumerable<T1> source, Func<T1, T2, T3, T4, Task> funcBody, T2 inputClass, T3 secondInputClass, T4 thirdInputClass, int maxDoP = 4)
-            {
-                async Task AwaitPartition(IEnumerator<T1> partition)
-                {
-                    using (partition)
-                    {
-                        while (partition.MoveNext())
-                        { await funcBody(partition.Current, inputClass, secondInputClass, thirdInputClass); }
-                    }
-                }
-
-                return Task.WhenAll(
-                    Partitioner
-                        .Create(source)
-                        .GetPartitions(maxDoP)
-                        .AsParallel()
-                        .Select(p => AwaitPartition(p)));
-            }
+       
        
 
         const float averageSpeed = 10f;
@@ -125,45 +51,55 @@ namespace COTG.JSON
             }
 
             ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
-            ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
-            using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
-            {
-                var jse = jsd.RootElement.GetProperty("b");
-                foreach (var b in jse.EnumerateArray())
-                {
-                    Attack attack = new Attack();
-                    attack.sourceCid = DecodeCid(5,b.GetString("attacker_locatuin"));
-                    attack.targetCid = DecodeCid(5,b.GetString("defender_location"));
-                    var spotted = b.GetString("spotted");
-                    var arrival = b.GetString("arrival");
+            var reportParts = new [] { new List<Report>(), new List<Report>(), new List<Report>(), new List<Report>() };
+            var reportsIncoming = new List<Report>();
 
-                    attack.spotted = spotted.ParseDateTime();
-                    attack.time = (arrival).ParseDateTime();
-                    attacks.TryAdd(attack.GetHashCode(),attack);
+            var task0 = Task.Run(async () =>
+              {
+                //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
+                using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
+                  {
+                      var jse = jsd.RootElement.GetProperty("b");
+                      foreach (var b in jse.EnumerateArray())
+                      {
+                          Attack attack = new Attack();
+                          attack.atkCid = DecodeCid(5, b.GetString("attacker_locatuin"));
+                          attack.defCid = DecodeCid(5, b.GetString("defender_location"));
+                          var spotted = b.GetString("spotted");
+                          var arrival = b.GetString("arrival");
 
-                    Report rep = new Report();
-                    rep.atkP = Player.NameToId(b.GetAsString("attacker_player") );
-                    rep.defP = Player.NameToId(b.GetAsString("defender_player"));
-                    rep.atkCid = attack.sourceCid;
-                    rep.defCid = attack.targetCid;
-                    rep.time = attack.time;
-                    rep.spotted = attack.spotted;
-                    rep.atkCN = b.GetAsString("attacker_city");
-                    rep.defCN = b.GetAsString("defender_city");
-                    rep.atkTS = b.GetAsInt("attack_ts");
-                    rep.defTS = b.GetAsInt("defender_ts");
-                    rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSiege : Report.typeUnknown;
-                    rep.claim = b.GetAsFloat("baron cap %");
-                    rs.TryAdd(rep.GetHashCode(),rep);
-                }
-            }
+                          attack.spotted = spotted.ParseDateTime();
+                          attack.time = (arrival).ParseDateTime();
+                          attacks.TryAdd(attack.GetHashCode(), attack);
+
+                          Report rep = new Report();
+                          rep.atkP = Player.NameToId(b.GetAsString("attacker_player"));
+                          rep.defP = Player.NameToId(b.GetAsString("defender_player"));
+                          rep.atkCid = attack.atkCid;
+                          rep.defCid = attack.defCid;
+                          rep.Time = attack.time;
+                          rep.spotted = attack.spotted;
+                          rep.atkCN = b.GetAsString("attacker_city");
+                          rep.defCN = b.GetAsString("defender_city");
+                          rep.aTS = b.GetAsInt("attack_ts");
+                          rep.dTS = b.GetAsInt("defender_ts");
+                          rep.dTsLeft = rep.dTS;
+                          rep.aTsLeft = rep.aTS;
+                          rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
+                          rep.claim = b.GetAsFloat("baron cap %");
+                          rep.Sen = rep.claim > 0.0f;
+                          reportsIncoming.Add(rep);
+                      }
+                  }
+              });
             if (fetchHistory)
             {
                 // defense history
                 using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2"))
                 {
-                    int counter = 0;
-                    await jsd.RootElement.EnumerateArray().ParallelForEachAsync( async (inc) =>
+                    //int counter = 0;
+                    await jsd.RootElement.EnumerateArray().ToArray().ParallelForAsync4(reportParts,
+                        async (inc,part,index,parts) =>
                     {
 
                         /*
@@ -224,8 +160,8 @@ namespace COTG.JSON
                             var a = new Attack()
                             {
                                 // todo: attacker name?
-                                sourceCid = source,
-                                targetCid = target,
+                                atkCid = source,
+                                defCid = target,
                                 time = time,
                                 spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageScoutSpeed)
                             };
@@ -238,14 +174,14 @@ namespace COTG.JSON
                                 atkCN = inc[14].GetString(),
                                 defP=defP,
                                 atkP=Player.NameToId(atkPNS),
-                                time = time,
+                                Time = time,
                                 reportId = recId,
                                 spotted = a.spotted,
                                 type = Report.typeScout
                                 // todo TS info
 
                             };
-                            rs.TryAdd(report.GetHashCode(), report);
+                            parts[part].Add( report);
 
 
                         }
@@ -294,8 +230,8 @@ namespace COTG.JSON
                                             {
                                                 var a = new Attack()
                                                 {
-                                                    sourceCid = source,
-                                                    targetCid = target,
+                                                    atkCid = source,
+                                                    defCid = target,
                                                     time = time,
                                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageSpeed)
                                                 };
@@ -306,31 +242,34 @@ namespace COTG.JSON
                                                 var rep = new Report()
                                                 {
                                                     reportId = recId,
-                                                    defTS =defTS,
-                                                    defTSLeft=defTSLeft,
-                                                    atkTSKilled=atkTSKilled.Max(atkTS-atkTSLeft),
-                                                    atkTS = atkTS,
-                                                    atkTSLeft = atkTSLeft,
+                                                    dTS =defTS,
+                                                    dTsLeft=defTSLeft,
+                                                    aTsKill=atkTSKilled.Max(atkTS-atkTSLeft),
+                                                    aTS = atkTS,
+                                                    aTsLeft = atkTSLeft,
                                                     atkCid = source,
                                                     defCid = target,
-                                                    hasSE=hasSE,
-                                                    isNaval=hasNavy,
-                                                    hasSen=hasSen,
+                                                    SE=hasSE,
+                                                    Nvl=hasNavy,
+                                                    Sen=hasSen,
                                                     claim = hasSen&& root.GetAsString("senatorapn")==atkPN ? root.GetAsFloat("senator") : -1,
                                                     defCN = defCN,
                                                     atkCN = report.GetAsString("acn"),
                                                     defP = defP,
                                                     atkP = Player.NameToId(atkPN),
-                                                    time = time,
+                                                    Time = time,
                                                     spotted = a.spotted,
                                                     type = (byte)reportType
                                                     // todo TS info
 
                                                 };
-                                                if(!rs.TryAdd(rep.GetHashCode(), rep) )
-                                                {
-                                                   // Assert(false);
-                                                }
+												{
+                                                    var lg = rep.atkCN.Length;
+                                                    if (lg > 9)  // trim off '(000:000)'
+                                                        rep.atkCN = rep.atkCN.Substring(0, lg - 9);
+
+                                                }                                                
+                                                parts[part].Add(rep);
                                             }
                                         }
                                     }
@@ -338,21 +277,24 @@ namespace COTG.JSON
 
                             }
                         }
-                        if ((counter++ & 63) == 0)
-                        {
-                            Note.L("Attacks " + rs.Count);
-                        }
                     } );
                 }
 
-             }
+            }
+
+            await task0;
 
             var defPage = DefensePage.instance;
             if (defPage != null)
-                defPage.history.Reset(rs.Values);
-            Attack.attacks = attacks.Values.OrderBy( (atk)=>atk.time.Ticks ).ToArray();
+            {
+                for (int i = 0; i < reportParts.Length; ++i)
+                    reportsIncoming.AddRange(reportParts[i]);
+;
+                defPage.history.Reset(reportsIncoming.OrderByDescending((atk) => atk.Time.Ticks));
+            }
+            Attack.attacks = attacks.Values.ToArray();
             
-            Note.Show($"Complete: {rs.Count} attacks");
+            Note.Show($"Complete: {reportsIncoming.Count} attacks");
         }
     }
 

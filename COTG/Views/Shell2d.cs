@@ -263,9 +263,9 @@ namespace COTG.Views
                         var counts = new Dictionary<int, IncomingCounts> ();
                         foreach (var attack in Attack.attacks)
                         {
-                            var targetCid = attack.targetCid;
+                            var targetCid = attack.defCid;
                             var c1 = targetCid.ToWorldC().WToC();
-                            var c0 = attack.sourceCid.ToWorldC().WToC();
+                            var c0 = attack.atkCid.ToWorldC().WToC();
                             // cull (should do this pre-transform as that would be more efficient
                             if (c0.X.Min(c1.X) >= clientSpan.X)
                                 continue;

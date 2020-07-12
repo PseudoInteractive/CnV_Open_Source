@@ -29,7 +29,62 @@ using COTG.Helpers;
 
 namespace COTG.Views
 {
+    public class ReportKillStyleSelector : StyleSelector
+    {
+        public Style attackerWinStyle { get; set; }
 
+        public Style defenderWinStyle { get; set; }
+
+        public Style tieStyle { get; set; }
+        public Style noKillsStyle { get; set; }
+
+        protected override Style SelectStyleCore(object item, DependencyObject container)
+        {
+            var cell = (item as DataGridCellInfo);
+            var report = cell.Item as Report;
+            if (report.type == Report.typePending)
+                return noKillsStyle;
+            if(report.type == Report.typeSieging)
+                return report.claim > 0 ? attackerWinStyle : tieStyle;
+
+            var dKill = report.dTsKill;
+            var aKill = report.aTsKill;
+            if (dKill < 1000 && aKill < 1000)
+                return report.type == Report.typeScout ? attackerWinStyle : noKillsStyle;
+            if (dKill > aKill * 3 / 2)
+                return defenderWinStyle;
+            if (aKill > dKill * 3 / 2)
+                return attackerWinStyle;
+            return tieStyle;
+        }
+    }
+    public class ReportTypeStyleSelector : StyleSelector
+    {
+        public Style pendingStyle { get; set; }
+
+        public Style siegingStyle { get; set; }
+        public Style siegeStyle { get; set; }
+
+        public Style scoutStyle { get; set; }
+        public Style assaultStyle { get; set; }
+        public Style plunderStyle { get; set; }
+
+
+        protected override Style SelectStyleCore(object item, DependencyObject container)
+        {
+            var cell = (item as DataGridCellInfo);
+            var report = cell.Item as Report;
+            switch (report.type)
+			{
+                case Report.typeAssault: return assaultStyle;
+                case Report.typeSiege: return siegeStyle;
+                case Report.typeSieging: return siegingStyle;
+                case Report.typePlunder: return plunderStyle;
+                default: return scoutStyle;
+            }
+
+        }
+    }
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();

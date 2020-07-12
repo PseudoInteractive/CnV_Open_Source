@@ -17302,7 +17302,7 @@ var cotgsubscribe = amplify;
       c6.lockRender = ![];
       E6k.y6();
       c6.time.desiredFps = '10' ^ 0;
-      c6.fpsMax = +'10';
+      c6.time.fpsMax = +'10';
     }
 
     function Z4V() {
@@ -22476,7 +22476,7 @@ var cotgsubscribe = amplify;
         citrender = '0' ^ 0;
         c6.time.advancedTiming = !!1;
         c6.time.desiredFps = 5;
-        c6.fpsMax = 5;
+        c6.time.fpsMax = 5;
         c6.lockRender = !{};
         c6.raf.start();
         var H6D = document.getElementById("cvs");
@@ -23694,7 +23694,7 @@ var cotgsubscribe = amplify;
               citrender = '1' | 0;
               c6.time.advancedTiming = !!1;
               c6.time.desiredFps = +'1';
-              // c6.time.fpsMax = "1" << 1316140288;
+              c6.time.fpsMax = "1" << 1316140288;
               c6.raf.stop();
               R2(Q46);
             }
@@ -27507,7 +27507,6 @@ var cotgsubscribe = amplify;
     }
 
     function S3F(p7l) {
-        console.log("S3F:" );
       e2();
       E6k.R6();
       var R7l = ppdt["rw"][p7l][_s(L9y - 0)];
@@ -30825,7 +30824,7 @@ var cotgsubscribe = amplify;
       var j3w = +'0';
       for (var v3w = +"0"; v3w < D6.th
         .length; v3w++) j3w = j3w + D6.th[v3w];
-      if (D6.trin.length == ("0" | 0) && j3w == ('0' & 2147483647)) {
+      if ((!D6.hasOwnProperty('trin') || D6.trin.length == 0) && j3w == ('0' & 2147483647)) {
         if ($(E6k
             .S55('6132' << 215096032))
           .css("display") != "none") {
@@ -41799,8 +41798,8 @@ var cotgsubscribe = amplify;
       worldrender = '0' & 2147483647;
       citrender = +"0";
       c6.time.advancedTiming = !![];
-      c6.time.desiredFps = +q7y;
-      c6.fpsMax = q7y ^ 0;
+      c6.time.desiredFps = 10;
+      c6.time.fpsMax = 10;
       Z9V = Number(Z9V);
       var g9V = Math.round(Z9V % +R5y);
       var U9V = Math.round((Z9V - g9V) / +R5y);
@@ -45445,7 +45444,7 @@ var cotgsubscribe = amplify;
           }
         } if (X76.length > +"0")
         {
-            console.log("rmp:" + X76);
+      //      console.log("rmp:" + X76);
         B1F(X76);
         }
     }
@@ -47117,7 +47116,7 @@ var cotgsubscribe = amplify;
           c6.paused = !0;
           c6.time.advancedTiming = !![];
           c6.time.desiredFps = '1' >> 1018505664;
-          c6.fpsMax = '1' >> 1337977440;
+          c6.time.fpsMax = '1' >> 1337977440;
           regrender = '0' * 1;
           setTimeout(function() { r0F(); }, M1R - 0);
         }, '2200' >> 1001041248);
@@ -56323,7 +56322,7 @@ var cotgsubscribe = amplify;
       c6.paused = !!"1";
       c6.lockRender = !"";
       c6.time.desiredFps = +"1";
-      c6.fpsMax = '1' - 0;
+      c6.time.fpsMax = '1' - 0;
     }
 
     function e0V() {
@@ -60579,7 +60578,7 @@ var cotgsubscribe = amplify;
           citrender = +'0';
           c6.time.advancedTiming = !0;
           c6.time.desiredFps = +'5';
-          c6.fpsMax = '5' ^ 0;
+          c6.time.fpsMax = '5' ^ 0;
           c6.lockRender = ![];
           c6.raf.start();
           var D1D = document.getElementById("cvs");

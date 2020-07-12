@@ -84,11 +84,7 @@
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClientServer" />
     <Capability Name="internetClient" />
-    <Capability Name="codeGeneration"/>
-    <Capability Name="privateNetworkClientServer"/>
-    <DeviceCapability Name="lowLevel"/>
   </Capabilities>
 
   <genTemplate:Metadata>

@@ -69,9 +69,9 @@ function GetCity(): jsonT.City {
 var __fetch=Window.prototype.fetch;
 var __debugMe: any;
 
-function sleep(time) {
-	return new Promise((resolve) => setTimeout(resolve,time));
-}
+//function sleep(time) {
+//	return new Promise((resolve) => setTimeout(resolve,time));
+//}
 
 let defaultHeaders: Record<string,string>;
 

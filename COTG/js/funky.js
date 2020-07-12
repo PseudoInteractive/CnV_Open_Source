@@ -1886,9 +1886,9 @@ function GetCity() {
 */
 var __fetch = Window.prototype.fetch;
 var __debugMe;
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+//function sleep(time) {
+//	return new Promise((resolve) => setTimeout(resolve,time));
+//}
 let defaultHeaders;
 function SetupHeaders() {
     const cookie = ppdt['opt'][67].substring(0, 10);

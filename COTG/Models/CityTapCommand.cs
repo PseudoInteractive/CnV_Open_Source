@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using COTG.Services;
 using COTG.Views;
+using COTG.JSON;
 
 namespace COTG.Models
 {
@@ -93,6 +94,7 @@ namespace COTG.Models
         public DefenseTapCommand()
         {
             this.Id = CommandId.CellTap;
+            
 
         }
 
@@ -120,9 +122,9 @@ namespace COTG.Models
              
                 var isSelected = grid.SelectedItem == i;
                 if (isSelected)
-                    grid.DeselectCell(context);
+                    grid.DeselectItem(context);
                 else
-                    grid.SelectCell(context);
+                    grid.SelectItem(context);
 
               //  Log(context.Item.GetType());
               //  Log(context.Item.ToString());
@@ -136,15 +138,15 @@ namespace COTG.Models
                     Log(context.Column.Header);
                     switch (context.Column.Header.ToString())
                     {
-                        case "atkType": JSClient.ShowReport(i.reportId); break;
-                        case "atkC":
-                        case "atkCN": JSClient.ShowCity(i.atkCid); break;
-                        case "defC":
-                        case "defCN": JSClient.ShowCity(i.defCid); break;
-                        case "atkAli": JSClient.ShowAlliance(i.atkAli);break;
-                        case "defAli": JSClient.ShowAlliance(i.defAli); break;
-                        case "atkName": JSClient.ShowPlayer(i.atkPlayer);break;
-                        case "defName": JSClient.ShowPlayer(i.defPlayer); break;
+                        case nameof(Report.Type): JSClient.ShowReport(i.reportId); break;
+                        case nameof(Report.atkC):
+                        case nameof(Report.atkCN): JSClient.ShowCity(i.atkCid); break;
+                        case nameof(Report.defC):
+                        case nameof(Report.defCN): JSClient.ShowCity(i.defCid); break;
+                        case nameof(Report.atkAli): JSClient.ShowAlliance(i.atkAli);break;
+                        case nameof(Report.defAli): JSClient.ShowAlliance(i.defAli); break;
+                        case nameof(Report.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
+                        case nameof(Report.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
 
 
                     }

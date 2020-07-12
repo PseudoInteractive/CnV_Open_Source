@@ -1,39 +1,47 @@
-﻿<Page xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"  xmlns:my="using:Microsoft.UI.Xaml.Controls"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-    xmlns:tl="using:Telerik.UI.Xaml.Controls"
-    xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
-    xmlns:tdd="using:Telerik.Data.Core"
-    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
-    xmlns:model="using:COTG.Models"
-    xmlns:game="using:COTG.Game"
-    x:Class="COTG.Views.MainPage"
-    Style="{StaticResource PageStyle}"
-    xmlns:behaviors="using:COTG.Behaviors"
-    mc:Ignorable="d"
-    NavigationCacheMode="Required"
-    Background="{x:Null}">
-
+﻿<Page xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
+      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:tl="using:Telerik.UI.Xaml.Controls"
+      xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
+      xmlns:tdd="using:Telerik.Data.Core"
+      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
+      xmlns:model="using:COTG.Models"
+      xmlns:game="using:COTG.Game"
+      x:Class="COTG.Views.MainPage"
+      Style="{StaticResource PageStyle}"
+      xmlns:behaviors="using:COTG.Behaviors"
+      mc:Ignorable="d"
+      NavigationCacheMode="Required"
+      Background="{x:Null}">
     <Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-            <RowDefinition Height="34"/>
-            <RowDefinition Height="3*"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-        <ComboBox x:Name="cityListBox" Width="200" ItemsSource="{x:Bind cityListSelections, Mode=OneWay}" SelectedValuePath="id" DisplayMemberPath="name" SelectedItem="{x:Bind selectedCityListBind, Mode=TwoWay}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="34" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="cityListBox"
+                  Width="200"
+                  ItemsSource="{x:Bind cityListSelections, Mode=OneWay}"
+                  SelectedValuePath="id"
+                  DisplayMemberPath="name"
+                  SelectedItem="{x:Bind selectedCityListBind, Mode=TwoWay}"
+                  VerticalAlignment="Center"
+                  Margin="10,0,0,0" />
         <tg:RadDataGrid x:Name="cityGrid"
-                         ColumnResizeHandleDisplayMode="Always"
+                        ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="1"
+                        AlternationStep="2"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode ="Single"
+                        SelectionMode="Single"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="34"
@@ -41,53 +49,84 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
-                        SelectionUnit="Row"  GroupPanelPosition="Bottom"
-                        >
-			<tg:RadDataGrid.Commands>
-                <model:CityGridToggleColumnVisibilityCommand  />
+                        SelectionUnit="Row"
+                        GroupPanelPosition="Bottom">
+            <tg:RadDataGrid.Commands>
+                <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
-			<tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icon" SizeMode="Fixed" Width="40"  />
-                <tg:DataGridTextColumn PropertyName="name" SizeMode="Auto" Width="100" />
-                <tg:DataGridTextColumn PropertyName="xy"   Width="80" />
-                <tg:DataGridTextColumn PropertyName="ts"    Width="80" />
-                <tg:DataGridTextColumn PropertyName="tsHome"   Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="points"   Width="80" />
-                <tg:DataGridTextColumn PropertyName="remarks"  Width="60" IsVisible="False"  />
-                <tg:DataGridNumericalColumn PropertyName="raidCarry"  Width="80" IsVisible="False"  />
-                <tg:DataGridTextColumn PropertyName="senny"  Width="40" IsVisible="False"  />
-                <tg:DataGridBooleanColumn PropertyName="isCastle" IsVisible="False"   Width="40" />
-                <tg:DataGridNumericalColumn PropertyName="carryCapacity" IsVisible="False"   Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="activeCommands" IsVisible="False"  Width="40" />
-                <tg:DataGridNumericalColumn PropertyName="commandSlots" IsVisible="False"  Width="40" />
+            <tg:RadDataGrid.Columns>
+                <tg:DataGridImageColumn PropertyName="icon"
+                                        SizeMode="Fixed"
+                                        Width="40" />
+                <tg:DataGridTextColumn PropertyName="name"
+                                       SizeMode="Auto"
+                                       Width="100" />
+                <tg:DataGridTextColumn PropertyName="xy"
+                                       Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="ts"
+                                            CellContentFormat="{}{0,7:N0}"
+                                       Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="tsHome"
+                                            CellContentFormat="{}{0,7:N0}"
+                                       Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="points"
+                                            CellContentFormat="{}{0,6:N0}"
+                                            Width="80" />
+                <tg:DataGridTextColumn PropertyName="remarks"
+                                       Width="60"
+                                       IsVisible="False" />
+                <tg:DataGridNumericalColumn PropertyName="raidCarry"
+                                            CellContentFormat="{}{0,3:P1}"
+                                            Width="80"
+                                            IsVisible="False" />
+                <tg:DataGridTextColumn PropertyName="senny"
+                                       Width="40"
+                                       IsVisible="False" />
+                <tg:DataGridBooleanColumn PropertyName="isCastle"
+                                          IsVisible="False"
+                                          Width="40" />
+                <tg:DataGridNumericalColumn PropertyName="carryCapacity"
+                                            CellContentFormat="{}{0,8:N0}"
+                                            IsVisible="False"
+                                            Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="activeCommands"
+                                            CellContentFormat="{}{0,2:N0}"
+                                            IsVisible="False"
+                                            Width="40" />
+                <tg:DataGridNumericalColumn PropertyName="commandSlots"
+                                            CellContentFormat="{}{0,2:N0}"
+                                            IsVisible="False"
+                                            Width="40" />
             </tg:RadDataGrid.Columns>
-            
         </tg:RadDataGrid>
-		<tg:RadDataGrid x:Name="dungeonGrid"
+        <tg:RadDataGrid x:Name="dungeonGrid"
                         Grid.Row="2"
-                       UserGroupMode="Disabled"
+                        AlternationStep="2"
+                        UserGroupMode="Disabled"
                         ItemsSource="{x:Bind dungeons, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode ="Single"
+                        SelectionMode="Single"
                         RowHeight="40"
                         FontSize="12"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
-                        SelectionUnit="Row" Margin="0,14,0,0"
-                       >
-			<tg:RadDataGrid.Commands>
-				<model:DungeonTapCommand />
-			</tg:RadDataGrid.Commands>
-			<tg:RadDataGrid.Columns>
-				<tg:DataGridNumericalColumn PropertyName="dist" />
-				<tg:DataGridTextColumn PropertyName="plan" />
-				<tg:DataGridNumericalColumn PropertyName="level" />
-                <tg:DataGridNumericalColumn PropertyName="completion" />
-				<tg:DataGridTextColumn PropertyName="kind" />
-				<tg:DataGridTextColumn PropertyName="xy" />
-
-			</tg:RadDataGrid.Columns>
-		</tg:RadDataGrid>
-		<tk:GridSplitter Grid.Row="2" Height="10" VerticalAlignment="Top"/>
+                        SelectionUnit="Row"
+                        Margin="0,14,0,0">
+            <tg:RadDataGrid.Commands>
+                <model:DungeonTapCommand />
+            </tg:RadDataGrid.Commands>
+            <tg:RadDataGrid.Columns>
+                <tg:DataGridNumericalColumn PropertyName="dist" />
+                <tg:DataGridTextColumn PropertyName="plan" />
+                <tg:DataGridNumericalColumn PropertyName="level" />
+                <tg:DataGridNumericalColumn PropertyName="completion"
+                                            CellContentFormat="{}{0,4:P1}" />
+                <tg:DataGridTextColumn PropertyName="kind" />
+                <tg:DataGridTextColumn PropertyName="xy" />
+            </tg:RadDataGrid.Columns>
+        </tg:RadDataGrid>
+        <tk:GridSplitter Grid.Row="2"
+                         Height="10"
+                         VerticalAlignment="Top" />
     </Grid>
 </Page>
