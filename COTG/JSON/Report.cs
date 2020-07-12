@@ -43,7 +43,7 @@ namespace COTG.JSON
             2 => "plunder",
             3 => "scout",
             4 => "sieging",
-            _ => "income"
+            _ => "incom"
 
         };
         public bool Sen { get; set; }

@@ -76,7 +76,7 @@
                                        Width="60"
                                        IsVisible="False" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
-                                            CellContentFormat="{}{0,3:P1}"
+                                            CellContentFormat="{}{0,5:N1}"
                                             Width="80"
                                             IsVisible="False" />
                 <tg:DataGridTextColumn PropertyName="senny"
@@ -120,7 +120,7 @@
                 <tg:DataGridTextColumn PropertyName="plan" />
                 <tg:DataGridNumericalColumn PropertyName="level" />
                 <tg:DataGridNumericalColumn PropertyName="completion"
-                                            CellContentFormat="{}{0,4:P1}" />
+                                            CellContentFormat="{}{0,6:N1}" />
                 <tg:DataGridTextColumn PropertyName="kind" />
                 <tg:DataGridTextColumn PropertyName="xy" />
             </tg:RadDataGrid.Columns>

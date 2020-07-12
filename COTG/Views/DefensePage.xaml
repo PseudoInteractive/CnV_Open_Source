@@ -150,7 +150,7 @@
                                        PropertyName="defAli" />
                 <tg:DataGridNumericalColumn Width="38"
                                             PropertyName="claim"
-                                            CellContentFormat="{}{0,3:P0}"
+                                            CellContentFormat="{}{0,3:N0}"
                                             SizeMode="Fixed" />
                 <tg:DataGridNumericalColumn Width="34"
                                             PropertyName="Cont"
