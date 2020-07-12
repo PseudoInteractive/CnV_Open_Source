@@ -531,7 +531,7 @@ namespace COTG
 //                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
  //                       httpFilter.AllowUI = true;
                         httpFilter.AutomaticDecompression = true;
-                        httpFilter.MaxVersion = HttpVersion.Http20;
+                        httpFilter.MaxVersion = HttpVersion.Http11;
 
                         //                        httpFilter.User.
 

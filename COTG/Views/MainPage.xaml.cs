@@ -37,6 +37,7 @@ namespace COTG.Views
         public static MainPage instance;
         //        public static City showingRowDetails;
 
+        
         //public DataTemplate GetTsInfoDataTemplate()
         //{
         //    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
@@ -47,6 +48,7 @@ namespace COTG.Views
         static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
+//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
             Assert(instance == null);
             instance = this;
             InitializeComponent();

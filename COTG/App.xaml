@@ -7,10 +7,10 @@
             <!-- Style definition -->
             <Style x:Key="BaseTextStyle"
                    TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Bahnschrift Light Condensed" />
                 <Setter Property="FontWeight"
                         Value="SemiBold" />
             </Style>
+
             <AcrylicBrush
 				x:Key="Acryllic"
 				Opacity="0.6"

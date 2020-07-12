@@ -45331,26 +45331,26 @@ var cotgsubscribe = amplify;
     }
 
     function f0F(W76, i76) {
-      var Y7m = "90000";
-      E6k.y6();
-      var z76 = Math.floor(W76 / +64);
-      var M76 = Math.floor(i76 / +64);
+      const Y7m = "90000";
+     
+      let z76 = Math.floor(W76 / +64);
+      let M76 = Math.floor(i76 / +64);
       D2F(z76, M76);
-      var t76 = ('24' << 2124911712) * Math.floor(M76 / ('25' >> 1646094176)) + Math.floor(z76 / +
+      let t76 = ('24' << 2124911712) * Math.floor(M76 / ('25' >> 1646094176)) + Math.floor(z76 / +
         '25');
-      var C76 = z76 % +'25';
-      var G76 = M76 % ('25' - 0);
-      var X76 = new Array();
-      var O76;
-      var L76;
-      var o76;
-      var
+      let C76 = z76 % +'25';
+      let G76 = M76 % ('25' - 0);
+      let X76 = new Array();
+      let O76;
+      let L76;
+      let o76;
+      let
         x76;
       if (C76 >= ('5' | 0)) {
         O76 = Number(t76 + '1' * 1);
         x76 = +"0";
         if (C2.length != "0" << 320017600)
-          for (var T76 = "0" | 0; T76 < C2.length; T76++) {
+          for (let T76 = "0" | 0; T76 < C2.length; T76++) {
             L76 = C2[T76][_s(x9y * 1)];
             o76 = C2[T76][_s(w6y ^ 0)];
             if (L76 == O76) {
@@ -45374,7 +45374,7 @@ var cotgsubscribe = amplify;
         O76 = Number(t76 - +'1');
         x76 = '0' & 2147483647;
         if (C2.length != "0" - 0)
-          for (var T76 = '0' >> 865035392; T76 < C2.length; T76++) {
+          for (let T76 = '0' >> 865035392; T76 < C2.length; T76++) {
             L76 = C2[T76][_s(+x9y)];
             o76 = C2[T76][_s(w6y * 1)];
             if (L76 == O76) {
@@ -45399,7 +45399,7 @@ var cotgsubscribe = amplify;
           O76 = Number(t76 + +'24');
           x76 = +"0";
           if (C2.length != ("0" ^ 0))
-            for (var T76 = +'0'; T76 < C2.length; T76++) {
+            for (let T76 = +'0'; T76 < C2.length; T76++) {
               L76 = C2[T76][_s(x9y ^ 0)];
               o76 = C2[T76][_s(w6y << 2023393696)];
               if (L76 == O76) {
@@ -45423,7 +45423,7 @@ var cotgsubscribe = amplify;
           O76 = Number(t76 - +'24');
           x76 = '0' - 0;
           if (C2.length != ("0" ^ 0))
-            for (var T76 = "0" * 1; T76 < C2.length; T76++) {
+            for (let T76 = "0" * 1; T76 < C2.length; T76++) {
               L76 = C2[T76][_s(x9y ^ 0)];
               o76 = C2[T76][_s(+w6y)];
               if (L76 == O76) {

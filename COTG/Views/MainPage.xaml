@@ -10,6 +10,7 @@
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
+      xmlns:gridControls="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:model="using:COTG.Models"
       xmlns:game="using:COTG.Game"
       x:Class="COTG.Views.MainPage"
@@ -38,6 +39,7 @@
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="1"
+                        GridLinesThickness="0.5"
                         AlternationStep="2"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
@@ -49,8 +51,37 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
+                        
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom">
+            <tg:RadDataGrid.Resources>
+                <Style  x:Name="RightAlign" TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0" />
+                </Style>
+                <Style x:Name="LeftAlign" TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                </Style>
+                <Style x:Name="CenterAlign"
+                       TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="Margin"
+                            Value="0,0,0,0" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Center" />
+                </Style>
+            </tg:RadDataGrid.Resources>
+
             <tg:RadDataGrid.Commands>
                 <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
@@ -59,41 +90,51 @@
                                         SizeMode="Fixed"
                                         Width="40" />
                 <tg:DataGridTextColumn PropertyName="name"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        SizeMode="Auto"
                                        Width="100" />
                 <tg:DataGridTextColumn PropertyName="xy"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="ts"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="tsHome"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="points"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,6:N0}"
                                             Width="80" />
                 <tg:DataGridTextColumn PropertyName="remarks"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        Width="60"
                                        IsVisible="False" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,5:N1}"
                                             Width="80"
                                             IsVisible="False" />
                 <tg:DataGridTextColumn PropertyName="senny"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        Width="40"
                                        IsVisible="False" />
                 <tg:DataGridBooleanColumn PropertyName="isCastle"
                                           IsVisible="False"
                                           Width="40" />
                 <tg:DataGridNumericalColumn PropertyName="carryCapacity"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,8:N0}"
                                             IsVisible="False"
                                             Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="activeCommands"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,2:N0}"
                                             IsVisible="False"
                                             Width="40" />
                 <tg:DataGridNumericalColumn PropertyName="commandSlots"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             CellContentFormat="{}{0,2:N0}"
                                             IsVisible="False"
                                             Width="40" />

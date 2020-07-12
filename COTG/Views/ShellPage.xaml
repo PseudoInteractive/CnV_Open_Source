@@ -212,7 +212,6 @@
 																	  FontSize="14"
 																	  LinkClicked="MarkdownTextBlock_LinkClicked"
 																	  Foreground="{StaticResource LogBufferForeground}"
-																	  FontFamily="Tw Cen MT Condensed"
 																	  Background="{x:Null}" />
 											</DataTemplate>
 										</winui:ItemsRepeater.ItemTemplate>

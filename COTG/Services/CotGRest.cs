@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Web.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Windows.Web.Http.Headers;
 using Windows.Web.Http.Filters;
 using static COTG.Debug;
 using System.Web;
@@ -19,7 +20,7 @@ namespace COTG.Services
 {
     public class RestAPI
     {
-     //   public static List<RestAPI> all = new List<RestAPI>();
+        //   public static List<RestAPI> all = new List<RestAPI>();
         public string localPath;
         public string secret;
         public static JsonDocument emptyJson;

@@ -26,24 +26,48 @@
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#6630AF" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.assaultStyle>
             <local:ReportTypeStyleSelector.siegeStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#AF4000" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.siegeStyle>
             <local:ReportTypeStyleSelector.siegingStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#AE7040" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.siegingStyle>
             <local:ReportTypeStyleSelector.scoutStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#96208F" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.scoutStyle>
         </local:ReportTypeStyleSelector>
@@ -52,24 +76,48 @@
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#109E20" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0"/>
                 </Style>
             </local:ReportKillStyleSelector.attackerWinStyle>
             <local:ReportKillStyleSelector.defenderWinStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#AE2040" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0" />
                 </Style>
             </local:ReportKillStyleSelector.defenderWinStyle>
             <local:ReportKillStyleSelector.noKillsStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#1D443F" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0" />
                 </Style>
             </local:ReportKillStyleSelector.noKillsStyle>
             <local:ReportKillStyleSelector.tieStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
                             Value="#1D2D5F" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0" />
                 </Style>
             </local:ReportKillStyleSelector.tieStyle>
         </local:ReportKillStyleSelector>
@@ -84,7 +132,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <tg:RadDataGrid x:Name="historyGrid"
-                        GridLinesThickness="1"
+                        GridLinesThickness="0.5"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
@@ -97,6 +145,35 @@
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
+            <tg:RadDataGrid.Resources>
+                <Style  x:Name="RightAlign"
+                        TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="Margin"
+                            Value="0,0,4,0" />
+                </Style>
+                <Style x:Name="LeftAlign"
+                       TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                </Style>
+                <Style x:Name="CenterAlign"
+                       TargetType="TextBlock">
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="Margin"
+                            Value="0,0,0,0" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Center" />
+                </Style>
+            </tg:RadDataGrid.Resources>
             <tg:RadDataGrid.Commands >
                 <model:DefenseTapCommand   />
             </tg:RadDataGrid.Commands>
@@ -110,70 +187,84 @@
                                        PropertyName="Type"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <tg:DataGridTextColumn Width="100"
+                <tg:DataGridTextColumn Width="80"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        PropertyName="dPlyr" />
-                <tg:DataGridTextColumn Width="100"
+                <tg:DataGridTextColumn Width="80"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        PropertyName="aPlyr" />
                 <tg:DataGridTextColumn Width="60"
                                        PropertyName="defC"
+                                       CellContentStyle="{x:Bind CenterAlign}"
                                        SizeMode="Fixed" />
                 <tg:DataGridTextColumn Width="60"
                                        PropertyName="atkC"
+                                       CellContentStyle="{x:Bind CenterAlign}"
                                        SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="dTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="aTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="dTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="aTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
                 <tg:DataGridTextColumn Width="50"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        PropertyName="defCN" />
                 <tg:DataGridTextColumn Width="50"
+                                       CellContentStyle="{x:Bind LeftAlign}"
                                        PropertyName="atkCN" />
-                <tg:DataGridTextColumn Width="60"
-                                       PropertyName="atkAli" />
-                <tg:DataGridTextColumn Width="60"
-                                       PropertyName="defAli" />
-                <tg:DataGridNumericalColumn Width="38"
+                <tg:DataGridNumericalColumn Width="32"
                                             PropertyName="claim"
                                             CellContentFormat="{}{0,3:N0}"
+                                            CellContentStyle="{x:Bind RightAlign}"
                                             SizeMode="Fixed" />
                 <tg:DataGridNumericalColumn Width="34"
                                             PropertyName="Cont"
+                                            CellContentStyle="{x:Bind CenterAlign}"
                                             SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
+                                          CellContentStyle="{x:Bind CenterAlign}"
                                           PropertyName="Sen"
                                           SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
+                                          CellContentStyle="{x:Bind CenterAlign}"
                                           PropertyName="Nvl"
                                           SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
                                           PropertyName="SE"
+                                          CellContentStyle="{x:Bind CenterAlign}"
                                           SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="dTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="80"
+                <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="aTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
+                <tg:DataGridTextColumn Width="60"
+                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       PropertyName="atkAli" />
+                <tg:DataGridTextColumn Width="60"
+                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       PropertyName="defAli"
+                                       IsVisible="False" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tg:RadDataGrid x:Name="defenderGrid"
