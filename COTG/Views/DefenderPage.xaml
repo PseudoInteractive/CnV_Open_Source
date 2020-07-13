@@ -40,7 +40,6 @@
                         PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind defenders, Mode=OneWay}"
-                        RowHeight="30"
                         RowDetailsDisplayMode="Single"
                         AlternationStep="2"
                         SelectionMode="Single"
@@ -60,16 +59,15 @@
                                     GroupPanelPosition="Bottom"
                                     Tapped="ArmyTapped"
                                     AlternationStep="2"
-                                    RowHeight="30"
                                     AutoGenerateColumns="False">
                         <tg:RadDataGrid.Columns>
                             <tg:DataGridTimeColumn Width="80"
                                                    PropertyName="arrival"
-                                                   CellContentFormat="{}{0:dd HH':'mm':'ss}"
+                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
                                                    SizeMode="Fixed"
                                                    CellContentStyle="{StaticResource CenterAlign}"
                                                    />
-                            
+
                             <tg:DataGridNumericalColumn PropertyName="ts"
                                                         Width="70"
                                                         SizeMode="Fixed"
@@ -91,16 +89,25 @@
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridBooleanColumn PropertyName="isDefense"
-                                                                Width="40"
+                                                                Width="30"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridTextColumn PropertyName="details"
                                                    Width="100"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
+                            <tg:DataGridNumericalColumn PropertyName="sumTs"
+                                                        Width="70"
+                                                        SizeMode="Fixed"
+                                                        CellContentFormat="{}{0,7:N0}"
+                                                        CellContentStyle="{StaticResource RightAlign}" />
+                            <tg:DataGridTextColumn PropertyName="sumDef"
+                                                   Width="200"
+                                                   SizeMode="Auto"
+                                                   CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridTimeColumn Width="80"
                                                    PropertyName="spotted"
-                                                   CellContentFormat="{}{0:dd HH':'mm':'ss}"
+                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
                                                    CellContentStyle="{StaticResource CenterAlign}"
                                                    SizeMode="Fixed" />
                             
@@ -111,7 +118,10 @@
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
-                                        Width="40" />
+                                        Width="30" />
+                <tg:DataGridNumericalColumn PropertyName="claim"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            Width="30" />
                 <tg:DataGridTextColumn PropertyName="name"
                                        SizeMode="Auto"
                                        CellContentStyle="{StaticResource LeftAlign}"
@@ -130,9 +140,6 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="scoutRange"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            Width="40" />
-                <tg:DataGridNumericalColumn PropertyName="points"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             Width="40" />
             </tg:RadDataGrid.Columns>

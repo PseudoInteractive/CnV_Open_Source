@@ -48012,7 +48012,7 @@ var cotgsubscribe = amplify;
             if (N46 == ('9' | 9)) {
               var G36 = Number(B46.substring("7" ^ 0, +
                 '8'));
-              var p46 = Number(B46.substring("8" << 109514880, +"9"));
+              var p46 = Number(B46.substring("8" << 109514880, +"9"));// is castle?
               var W16 = Number(B46.substring(
                 '9' * 1, p0y & 2147483647));
               w2();
@@ -48476,10 +48476,10 @@ var cotgsubscribe = amplify;
                 .indexOf(_s(n24 * 1), k16 + ('1' & 2147483647));
               var o16 = B46.indexOf(_s(+n24), e16 + +
                 '1');
-              var p46 = Number(B46.substring('7' ^ 0, '8' & 2147483647));
+              var p46 = Number(B46.substring('7' ^ 0, '8' & 2147483647)); // is castle?
               var E46 = Number(B46.substring(+
                 '8', +"9"));
-              var e36 = Number(B46.substring(+'9', "11" - 0));
+              var e36 = Number(B46.substring(+'9', "11" - 0)); // water?
               var s36 = Number(B46.substring("11" |
                 1, +'12'));
               var u36 = Number(B46.substring(+'12', +m2y));
@@ -48495,10 +48495,10 @@ var cotgsubscribe = amplify;
                 var y46 = Number(B46.substring(F8y | 18, K36));
               }
               e36 = e36 - ('10' - 0);
-              var W36 =
+              var W36 = // Player name
                 B46.substring(K36 + ("1" - 0), w16);
-              var i36 = B46.substring(w16 + ('1' | 0), I16);
-              var m46 = B46
+              var i36 = B46.substring(w16 + ('1' | 0), I16); // alliance
+              var m46 = B46 // City name
                 .substring(I16 + +'1', y36);
               var y16 = B46.substring(y36 + +'1', D36);
               var D16 = B46.substring(
@@ -48534,7 +48534,9 @@ var cotgsubscribe = amplify;
                   player: W36,
                   score: y46,
                   alliance: i36,
-                  blessed: i16
+                  blessed: i16,
+                  castle: p46,
+                  water:e36
                 }
               };
               a2("regional", Y46);

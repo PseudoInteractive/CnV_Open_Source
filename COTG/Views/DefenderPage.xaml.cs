@@ -55,7 +55,33 @@ namespace COTG.Views
 
         }
 
-        
+        public class ArmyTypeStyleSelector : StyleSelector
+        {
+            public Style pendingStyle { get; set; }
+
+            public Style siegingStyle { get; set; }
+            public Style siegeStyle { get; set; }
+
+            public Style scoutStyle { get; set; }
+            public Style assaultStyle { get; set; }
+            public Style plunderStyle { get; set; }
+
+
+            protected override Style SelectStyleCore(object item, DependencyObject container)
+            {
+                var cell = (item as DataGridCellInfo);
+                var report = cell.Item as Report;
+                switch (report.type)
+                {
+                    case Report.typeAssault: return assaultStyle;
+                    case Report.typeSiege: return siegeStyle;
+                    case Report.typeSieging: return siegingStyle;
+                    case Report.typePlunder: return plunderStyle;
+                    default: return scoutStyle;
+                }
+
+            }
+        }
 
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
@@ -113,7 +139,6 @@ namespace COTG.Views
 
         private void ArmyTapped(object sender, TappedRoutedEventArgs e)
         {
-            Log("army Tapped");
                 (var hit, var column, var pointerPoint) = Army.HitTest(sender, e);
                 if (hit != null)
                     hit.ProcessTap(column);

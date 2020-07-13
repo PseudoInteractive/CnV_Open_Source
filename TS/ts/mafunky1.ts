@@ -2256,15 +2256,20 @@ function avactor() {
 					toAdd.player = clickInfo.info.player;
 					toAdd.name = clickInfo.info.name;
 					toAdd.notes = clickInfo.info.remarks;
-					toAdd.ptype = clickInfo.info.ptype;
+					toAdd.plvl = clickInfo.info.plvl;
 				}
 				else {
 					toAdd.player = dtype_;
 					toAdd.name = dtype_;
+					toAdd.plvl = 0;
+					toAdd.notes = dtype_;
 				}
 				toAdd.last = new Date();
 			//	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
 				toAdd.cid = _cid;
+				toAdd.castle = clickInfo.info.castle;
+				toAdd.water = clickInfo.info.water;
+				toAdd.bless = clickInfo.info.blessed;
 				toAdd.score = clickInfo.info.score;
 				//mru.push(toAdd);
 				//mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });

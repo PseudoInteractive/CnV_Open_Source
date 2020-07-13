@@ -162,7 +162,7 @@ namespace COTG.Views
 
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                Note.L("ListChange: ");
+             //   Note.L("ListChange: ");
 
                 var cities = instance.cities;
                 if (selectedCityList == null || selectedCityList.id==-1)

@@ -212,13 +212,14 @@ namespace COTG.Views
 
 
         DumbCollection<string> logEntries = new  DumbCollection<string>( new [] { "Hello","there" }  );
-        private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-        public async static void L(string s)
+        //private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        public static void L(string s)
         {
-            await _logSemaphore.WaitAsync();
-            try
-            {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            
+          //  await _logSemaphore.WaitAsync();
+          //  try
+          //  {
+             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
               {
                   try
                   {
@@ -237,11 +238,11 @@ namespace COTG.Views
 
 
               });
-            }
-            finally
-            {
-                _logSemaphore.Release();
-            }
+           // }
+            //finally
+            //{
+            //    _logSemaphore.Release();
+            //}
             //await Task.Delay(500);
 
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>

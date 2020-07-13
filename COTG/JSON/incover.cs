@@ -108,7 +108,8 @@ namespace COTG.JSON
                               spot.name = val.GetAsString("1");
                               spot.tsHome = val.GetAsInt("8");
                               spot.pid = Player.NameToId(val.GetAsString("0"));
-                              spot.scoutRange = (float)TimeSpan.Parse( val.GetAsString("6") ).TotalHours; // is this parsed correctly?
+                              spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
+                             // spot.scoutRange = (float)TimeSpan.Parse( val.GetAsString("6") ).TotalHours; // is this parsed correctly?
 
                                var sumDef = new List<TroopTypeCount>();
                               var processedTroopsHome = false; // for some reason, these repeat
@@ -194,10 +195,11 @@ namespace COTG.JSON
 
                                               }
                                               if (!present)
-                                                  sumDef.Add(tti);
+                                                  sumDef.Add(new TroopTypeCount(tti) ); // make a copy
                                           }
                                       }
-                                      army.sumDef = 
+                                      army.sumDef = TroopTypeCount.Format(sumDef);
+                                      army.sumTs = TroopTypeCount.TS(sumDef);
                                       army.troops = ttl.ToArray();
                                       spot.incoming.Enqueue(army);
                                   }

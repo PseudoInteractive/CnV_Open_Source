@@ -34,7 +34,16 @@ namespace COTG.Game
                 if (City.all.TryGetValue(cid, out var city))
                     rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
                 else
+                {
                     rv = new Spot() { cid = cid };
+                    var worldC = cid.CidToWorld();
+                    var info = World.CityLookup(worldC);
+                    rv.pid = info.player;
+                    rv.isTemple = info.isTemple;
+                    rv.isOnWater = info.isWater;
+                    rv.isCastle = info.isCastle;
+                    rv.points = (ushort)(info.isBig ? 8000 : 1);
+                }
                 Spot.allSpots.TryAdd(cid, rv);
             }
             return (rv);
@@ -65,9 +74,11 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
+        public byte claim { get; set; } // only if this is under attack
+        public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
         public ushort points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
+        public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" : isTemple? "templeIcon.png" : ($"{(isCastle ? "castle" : "city")}{GetSize()}.png") );
         public int continent => cid.CidToContinent();
 
         public static bool operator ==(Spot left, Spot right)
@@ -232,7 +243,7 @@ namespace COTG.Game
         int GetSize()
         {
             for (int i = 0; i < pointSizeCount; ++i)
-                if (points <= pointSizes[i])
+                if (points < pointSizes[i])
                     return i;
             return pointSizeCount;
         }

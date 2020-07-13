@@ -428,7 +428,7 @@ namespace COTG
                     CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                     {
                         // is this valid?
-                        Log("Reset");
+                     //   Log("Reset");
 
                         CityList.selections.NotifyReset();
                     });
@@ -717,10 +717,15 @@ namespace COTG
                                     
                                     city.name = jso.GetString("name");
                                     city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
-                                    Assert(city.pid > 0);
+                                    //Assert(city.pid > 0);
                                     city.points = (ushort)jso.GetAsInt("score");
                                  //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTimeOffset.UtcNow;
+                                    city.isCastle = jso.GetAsInt("castle")==1;
+                                    city.isBlessed = city.pid!=0 ? jso.GetAsInt("bless")!=0 : false;
+                                    city.isOnWater = jso.GetAsInt("water") != 0;
+                                    city.isTemple = jso.GetAsInt("plvl") != 0;
+
 
                                     Note.Show($"CityClick {city.name} {city.cid.CidToStringMD()}");
                                     if(IsWorldView())

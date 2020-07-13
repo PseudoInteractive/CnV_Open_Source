@@ -84,7 +84,11 @@ namespace COTG.Game
         public const uint typePortal = 0x30000000;
         public const uint typeBoss = 0x40000000;
         public const uint typeNone = 0x00000000;
-        public const  int dataMask = 0x0fffffff;
+        public const  int playerMask = 0x00ffffff;
+        public const int typeCityFlagCastle = 0x1000000;
+        public const int typeCityFlagTemple = 0x2000000;
+        public const int typeCityFlagWater = 0x4000000;
+        public const int typeCityFlagBig = 0x8000000;
 
         public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
@@ -93,12 +97,16 @@ namespace COTG.Game
         {
             return x.Clamp(0, worldDim);
         }
-        public static (uint type, int data) CityLookup( (int x, int y) c)
+        public static (uint type, int player,bool isCastle,bool isBig,bool isWater,bool isTemple) CityLookup( (int x, int y) c)
         {
             var x = c.x;
             var y = c.y;
             uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? cityLookup[x, y] : 0u;
-            return (rv & typeMask, (int)(rv & dataMask));
+            return (rv & typeMask, (int)(rv & playerMask),
+                (rv & typeCityFlagCastle)!=0,
+                (rv & typeCityFlagBig) != 0,
+                (rv & typeCityFlagWater) != 0,
+                (rv & typeCityFlagTemple) != 0);
 
         }
         
@@ -129,24 +137,24 @@ namespace COTG.Game
         }
         public Portal[] portals;
 
-        public struct City
-        {
-            public int playerId;
-            public int allianceId;
-            public ushort x;
-            public ushort y;
-            public byte type;
-            public bool isCastle => type switch
-            {
-                3 => true,
-                4 => true,
-                7 => true,
-                8 => true,
-                _ => false
+//        public struct City
+//        {
+//            public int playerId;
+//            public int allianceId;
+//            public ushort x;
+//            public ushort y;
+//            public byte type;
+//            public bool isCastle => type switch
+//            {
+//                3 => true,
+//                4 => true,
+//                7 => true,
+//                8 => true,
+//                _ => false
 
-            };
-        }
-        public City[] cities;
+//            };
+//        }
+////        public City[] cities;
 
         static ulong AsNumber(string s)
         {
@@ -394,9 +402,13 @@ namespace COTG.Game
                                     break;
                             }
                         }
-                        if (type == 3 || type == 4) // 3,4 is on/off water
-                        {
+                        var isBig = type >= 5 ? 1:0;
+                    var isCastle = 0;
+                    var isWater = (type & 1);
 
+                    if (type == 3 || type == 4) // 3,4 is on/off water
+                        {
+                            isCastle =1;
                             pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
                             pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
                             pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
@@ -404,20 +416,29 @@ namespace COTG.Game
                         }
                         else if (type == 7 || type == 8) // 7 is on water
                         {
-
+                            isCastle = 1;
                             pixels[index * 8 + 4] =(byte)( 1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
                             pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                             pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                             pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                         }
-                        else
+                        else if(type == 1 || type == 2)
                         {
+                         // City
+                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                            pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
+                            pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                            pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+                        }
+                        else // if (type == 5 || type == 6)
+                        {
+                            // City
                             pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
                             pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
                             pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                             pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
                         }
-                        cityLookup[x, y] = (uint)pid | typeCity;
+                        cityLookup[x, y] = (uint)(pid | typeCity | isBig*typeCityFlagBig | isCastle*typeCityFlagCastle | (isTemple?typeCityFlagTemple:0) | isWater*typeCityFlagWater);
 
 
 

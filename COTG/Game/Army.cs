@@ -53,6 +53,13 @@ namespace COTG.Game
 	{
         public int type;
         public int count;
+
+        public TroopTypeCount() { }
+        public TroopTypeCount(TroopTypeCount b)
+        {
+            type = b.type;
+            count = b.count;
+        }
         public static string Format( IEnumerable<TroopTypeCount> l )
         {
             string rv = "";
@@ -66,5 +73,14 @@ namespace COTG.Game
             }
             return rv;
         }
-	}
+        public static int TS(IEnumerable<TroopTypeCount> l)
+        {
+            var rv = 0;
+            foreach (var ttc in l)
+            {
+                rv += ttc.count * Enum.ttTs[ttc.type];
+            }
+            return rv;
+        }
+    }
 }

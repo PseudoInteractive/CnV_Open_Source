@@ -62,7 +62,7 @@ namespace COTG.Views
 
                 // If clicking on our city, change city to that, otherwise show the city info
                 // for non cities we show info
-                if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
+                if (info.type == World.typeCity && info.player == JSClient.jsVars.pid)
                 {
                     var city = DefensePage.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
                     JSClient.ChangeCity(cid);
@@ -149,21 +149,21 @@ namespace COTG.Views
             var point = e.GetCurrentPoint(canvas);
             var c1 = point.Position.ToVector2();
             var c = MousePointToWorld(c1);
-            (var type, var data) = World.CityLookup(c);
-            switch (type)
+            var data =  World.CityLookup(c);
+            switch (data.type)
             {
                 case World.typeCity:
                     {
                         Spot.viewHover = c.WorldToCid();
 
-                        if (data == 0)
+                        if (data.player == 0)
                         {
                             toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
                         }
                         else
                         {
-                            var player = Player.all.GetValueOrDefault(data, Player._default);
-                            if (Player.IsMe(data))
+                            var player = Player.all.GetValueOrDefault(data.player, Player._default);
+                            if (Player.IsMe(data.player))
                             {
                                 if (City.all.TryGetValue(c.WorldToCid(), out var city))
                                 {
@@ -181,13 +181,13 @@ namespace COTG.Views
                         break;
                     }
                 case World.typeShrine:
-                    toolTip = $"Shrine\n{(data == 255 ? "Unlit" : "Lit")}";
+                    toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
                     break;
                 case World.typeBoss:
-                    toolTip = $"Boss\nLevel:{data & 0xf}"; // \ntype:{data >> 4}";
+                    toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
                     break;
                 case World.typePortal:
-                    toolTip = $"Portal\n{(data == 0 ? "Inactive" : "Active")}";
+                    toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
                     break;
             }
 
