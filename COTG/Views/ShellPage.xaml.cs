@@ -490,7 +490,7 @@ namespace COTG.Views
                     var bid = bdi.GetAsInt("bid");
                     if (bid == bidTownHall)
                         continue;
-                    var bi= bidMap.FindIndex((short)bid);
+                    var bi= bidMap.IndexOf((short)bid);
                     if (bi == -1)
                         continue;
                     

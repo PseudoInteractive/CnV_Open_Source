@@ -37,6 +37,7 @@ namespace COTG.Helpers
 
         public void NotifyReset()
         {
+            if(CollectionChanged!=null)
             CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         public void Reset(IEnumerable<T> src)

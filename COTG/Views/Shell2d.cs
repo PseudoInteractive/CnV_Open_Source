@@ -257,11 +257,12 @@ namespace COTG.Views
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 if (IsPageDefense())
                 {
-                    if (Attack.attacks != null)
+                    var reports =  DefensePage.instance.history;
+                    if (reports.Count > 0)
                     {
                        
                         var counts = new Dictionary<int, IncomingCounts> ();
-                        foreach (var attack in Attack.attacks)
+                        foreach (var attack in reports)
                         {
                             var targetCid = attack.defCid;
                             var c1 = targetCid.ToWorldC().WToC();
@@ -487,7 +488,7 @@ namespace COTG.Views
             {
 
                 ShellPage.cameraC = newC;
-                JSClient.SetJSCamera();
+                ShellPage.SetJSCamera();
             }
 
 

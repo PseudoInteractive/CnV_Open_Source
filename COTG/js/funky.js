@@ -2987,7 +2987,7 @@ function avactor() {
             });
         });
         /** @type {string} */
-        var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>TBA</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
+        var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>flip q</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
         ///** @type {string} */
         //	var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
         //	/** @type {string} */
@@ -3025,25 +3025,53 @@ function avactor() {
             OverviewPost('overview/mconv.php', { a: cotg.city.id() });
             event.stopPropagation();
         });
-        //$("#fb1").click(function() {
-        //  $("#councillorPopUpBox").show();
-        //  jQuery("#ui-id-11")[0].click();
-        //  jQuery("#couonoffdv")[0].click();
-        //  setTimeout(() => {
-        //	jQuery("#councillorXbutton")[0].click();
-        //  }, 100);
-        //  if (coon_ == 0) {
-        //	/** @type {number} */
-        //	coon_ = 1;
-        //	$(this).removeClass("greenb");
-        //	$(this).addClass("redb");
-        //  } else {
-        //	/** @type {number} */
-        //	coon_ = 0;
-        //	$(this).removeClass("redb");
-        //	$(this).addClass("greenb");
-        //  }
-        //});
+        $("#fb1").click(function () {
+            if ($("#buildQueueWindow").is(":visible")) {
+                $("#commandWindow").hide();
+                $("#recruitmentQueueWindow").hide();
+                $("#favoredDiv").hide();
+                //	$("#citycitadeldiv").hide();
+                $("#buildQueueWindow").hide();
+                $("#defensesWindow").hide();
+                $("#reinforcementsWindow").hide();
+                $("#tradesWindow").hide();
+                //		$("#quecontent").children(".tradeqarr2").each(function () { $(this).removeClass("tradeqarr2").addClass("tradeqarr1") });
+                $(".tradeqarr2").removeClass("tradeqarr2").addClass("tradeqarr1"); //
+                $("#increstable").hide();
+                //$("#topIRsecd2s").hide();
+            }
+            else {
+                $("#commandWindow").show();
+                $("#recruitmentQueueWindow").show();
+                $("#favoredDiv").show();
+                //	$("#citycitadeldiv").show();
+                $("#buildQueueWindow").show();
+                $("#defensesWindow").show();
+                $("#reinforcementsWindow").show();
+                $("#tradesWindow").show();
+                //		$("#quecontent").children(".tradeqarr2").each(function () { $(this).removeClass("tradeqarr2").addClass("tradeqarr1") });
+                $(".tradeqarr1").removeClass("tradeqarr1").addClass("tradeqarr2"); //
+                $("#increstable").show();
+                //	$("#topIRsecd2s").show();
+            }
+            //  $("#councillorPopUpBox").show();
+            //  jQuery("#ui-id-11")[0].click();
+            //  jQuery("#couonoffdv")[0].click();
+            //  setTimeout(() => {
+            //	jQuery("#councillorXbutton")[0].click();
+            //  }, 100);
+            //  if (coon_ == 0) {
+            //	/** @type {number} */
+            //	coon_ = 1;
+            //	$(this).removeClass("greenb");
+            //	$(this).addClass("redb");
+            //  } else {
+            //	/** @type {number} */
+            //	coon_ = 0;
+            //	$(this).removeClass("redb");
+            //	$(this).addClass("greenb");
+            //  }
+        });
         $("#fb2").click(() => {
             $("#tradePopUpBox").show();
             setTimeout(() => {

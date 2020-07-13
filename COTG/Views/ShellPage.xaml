@@ -131,8 +131,8 @@
 					<SymbolIcon Symbol="Download" />
 				</winui:NavigationViewItem.Icon>
 			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_MasterDetail"
-									  helpers:NavHelper.NavigateTo="views:MasterDetailPage">
+			<winui:NavigationViewItem x:Uid="Shell_Defender"
+									  helpers:NavHelper.NavigateTo="views:DefenderPage">
 				<winui:NavigationViewItem.Icon>
 					<SymbolIcon Symbol="Document" />
 				</winui:NavigationViewItem.Icon>

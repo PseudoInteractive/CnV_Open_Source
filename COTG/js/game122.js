@@ -61665,190 +61665,190 @@ var cotgsubscribe = amplify;
         var Y9D = $("#content")
             .panzoom({ maxScale: 64 / 4.22166666666667 });
         $("#content")
-          .panzoom("zoom", 2.8);
-        Y9D.parent()
-          .on(_s(+'3159'), function(N9D) {
-            N9D.preventDefault();
-            var q9D = N9D.delta || N9D.originalEvent
-              .wheelDelta;
-            var c9D = q9D ? q9D < "0" >> 1510495552 : N9D.originalEvent.deltaY > +"0";
-            var F9D =
-              c9D * ("100" - 0);
-            Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
-            E6k.y6();
-            var m9D = $("#content")
-                .panzoom("getMatrix");
-            var F9D = Number(m9D[+"3"]) * +"100";
-            $(_s('1593' >> 1154537792))
-              .slider(_s(+Q7y), _s(+a4R), F9D);
-          });
-        $(_s('1593' & 2147483647))
-          .slider({
-            value: '280' << 1000329856,
-            orientation: _s('2531' << 1890032224),
-            step: '10' >> 1724860864,
-            min: +u6y,
-            slide: function(E9D, a9D) {
-              E6k.R6();
-              G8F(a9D.value);
-            },
-              max: 64/4.22166666666667*100
-          });
-        $(_s('5058' >> 660048960))
-          .slider({
-            value: "100" >> 1790009312,
-            orientation: _s(+'2531'),
-            step: '1' & 2147483647,
-            min: '10' - 0,
-            slide: function(e0T, k0T) {
-              E6k.R6();
-              R4F(k0T.value);
-            },
-            max: "160" >> 830997056
-          });
-        $(_s('330' >> 1943210848))
-          .slider({
-            max: +"100",
-            step: +'1',
-            slide: function(u0T, s0T) {
-              O5F = s0T.value;
-              n0V(s0T.value);
-            },
-            value: L0R * 1,
-            min: "0" << 188279936
-          });
-        $(_s('2779' * 1))
-          .slider({
-            max: +e2R,
-            value: +"100",
-            step: +'1',
-            min: '0' & 2147483647,
-            slide: function(j0T, H0T) {
-              y4F(H0T
-                .value);
-            }
-          });
-      });
-    $("#content")
-      .mousemove(function(F0T) {
-        E6k.R6();
-        if ($("#content")
-          .css("display") != "none") {
-            var Y0T = document.getElementById('worldcanv');
-          if (Y0T) {
-            var N0T = Y0T.getBoundingClientRect();
-            var h0T = m5F(F0T.clientX - N0T.left, F0T
-              .clientY - N0T.top);
-            var K0T = Math.floor(h0T.x / +m6p);
-            var g0T = Math.floor(h0T.y / (m6p - 0));
-            var
-              c0T = E8(K0T, g0T);
-            var h0T = _s('74' * 1) + c0T + _s('2397' - 0) + K0T + _s(A6y >>
-              930857152) + g0T + ")";
-            K0T = K0T + ("100" | 68);
-            g0T = g0T + ("100" ^ 0);
-            var D0T = K0T + '' + g0T;
-            if (P5F.hasOwnProperty(D0T)) {
-              var V0T =
-                P5F[D0T];
-              var P0T = V0T.substring("0" | 0, '1' | 0);
-              var B0T;
-              var E0T;
-              var A0T;
-              var f0T;
-              var
-                r0T;
-              var k5T;
-              if (P0T == +"2") {
-                B0T = Number(V0T.substring(+"1", +"3"));
-                E0T = Number(V0T.substring('3' & 2147483647, "4" ^ 0));
-                var n0T = Number(V0T.substring(+'4', +
-                  "5"));
-                if (n0T == +"1") {
-                  A0T = '0' >> 816327520;
-                  r0T = '0' ^ 0;
-                  f0T = +"1";
-                } else if (n0T == "2" * 1) {
-                  A0T = +"0";
-                  r0T = +"1";
-                  f0T = +"1";
-                } else if (n0T == ('3' & 2147483647)) {
-                  A0T = '1' ^ 0;
-                  r0T = '1' ^ 0;
-                  f0T = +"1";
-                } else if (n0T == ('4' ^ 0)) {
-                  A0T = +"1";
-                  r0T = +'0';
-                  f0T = "1" * 1;
-                } else if (n0T == +"5") {
-                  A0T = +'0';
-                  r0T = +"0";
-                  f0T = +"8";
-                } else if (n0T == +'6') {
-                  A0T = +'0';
-                  r0T = +'1';
-                  f0T = '8' & 2147483647;
-                } else if (n0T == '7' << 399124576) {
-                  A0T = "1" & 2147483647;
-                  r0T = +"1";
-                  f0T = +"8";
-                } else if (n0T == "8" * 1) {
-                  A0T = +'1';
-                  r0T = '0' >> 102353824;
-                  f0T = '8' - 0;
-                }
-                k5T = "0" << 1891454208;
-                B0T = B0T - '10' * 1;
-                var p0T = Number(V0T.substring(+"11", +'12'));
-                var y0T = Number(V0T.substring(
-                  '12' * 1, ('12' << 590475872) + p0T));
-                var a0T = Number(V0T.substring('12' - 0 + p0T));
-                if (F5F)
-                  if (F5F.hasOwnProperty(y0T)) {
-                    var m0T = F5F[y0T];
-                    var U0T = "";
-                    var
-                      Z0T = "";
-                    if (r0T == +"1") Z0T = _s(+'6764');
-                    if (B0T >= +"1")
-                      U0T = _s('1170' >> 337519968) + Z0T + " " + B0T + ")";
-                    else if (A0T >= +'1') U0T = _s(+'4682') + Z0T + ")";
-                    else if (r0T == ('1' | 1)) U0T = _s(+"2397") + Z0T + ")";
-                    h0T = h0T + _s(w54 << 583612544) + m0T + U0T;
-                  } else 
-                  {
- //                 console.log(_s('1136' - 0) +0T);
-                  }
-              } else if (P0T == +"7") {
-                var q0T = Number(V0T.substring(+"1", +"3")) - ('10' >> 829981376);
-                h0T = h0T + _s(+'1703') + q0T + ")";
-              } else if (P0T == "8" << 1609177312) {
-                var
-                  R0T = Number(V0T.substring('1' - 0, +'2'));
-                if (R0T == ("1" ^ 0)) h0T = h0T + _s('6364' - 0);
-                else h0T = h0T + _s("2171" - 0);
-              } else if (P0T == +"9") {
-                var R0T = Number(V0T.substring(+'1',
-                  "2" >> 1594991072));
-                if (R0T == +"1") h0T = h0T + _s(+"5009");
-                else {
-                  stype = Number(V0T.substring(+'2', +'3'));
-                  if (stype == +"1") shrtype = _s('3930' ^ 0);
-                  else if (stype == +'2') shrtype = _s("1534" * 1);
-                  else if (stype == '3' >> 1673039520) shrtype = _s(+"495");
-                  else if (stype == "4" << 1298554016) shrtype = _s("6372" * 1);
-                  else if (stype == ('5' ^ 0)) shrtype = _s(+"156");
-                  else if (stype == ("6" | 2)) shrtype = _s(+"1474");
-                  else if (stype == +'7') shrtype = _s('1588' * 1);
-                  else if (stype == +'8') shrtype = _s("4474" * 1);
-                  h0T = h0T + _s(w54 & 2147483647) + shrtype;
-                }
-              }
-            }
-            $(_s('1243' | 1112))
-              .text(h0T);
-          }
-        }
+          .panzoom("zoom", 64 / 4.22166666666667 );
+        //Y9D.parent()
+        //  .on(_s(+'3159'), function(N9D) {
+        //    N9D.preventDefault();
+        //    var q9D = N9D.delta || N9D.originalEvent
+        //      .wheelDelta;
+        //    var c9D = q9D ? q9D < "0" >> 1510495552 : N9D.originalEvent.deltaY > +"0";
+        //    var F9D =
+        //      c9D * ("100" - 0);
+        //    Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
+        //    E6k.y6();
+        //    var m9D = $("#content")
+        //        .panzoom("getMatrix");
+        //    var F9D = Number(m9D[+"3"]) * +"100";
+        //    $(_s('1593' >> 1154537792))
+        //      .slider(_s(+Q7y), _s(+a4R), F9D);
+        //  });
+        //$(_s('1593' & 2147483647))
+        //  .slider({
+        //    value: '280' << 1000329856,
+        //    orientation: _s('2531' << 1890032224),
+        //    step: '10' >> 1724860864,
+        //    min: +u6y,
+        //    slide: function(E9D, a9D) {
+        //      E6k.R6();
+        //      G8F(a9D.value);
+        //    },
+        //      max: 64/4.22166666666667*100
+        //  });
+        //$(_s('5058' >> 660048960))
+        //  .slider({
+        //    value: "100" >> 1790009312,
+        //    orientation: _s(+'2531'),
+        //    step: '1' & 2147483647,
+        //    min: '10' - 0,
+        //    slide: function(e0T, k0T) {
+        //      E6k.R6();
+        //      R4F(k0T.value);
+        //    },
+        //    max: "160" >> 830997056
+        //  });
+        //$(_s('330' >> 1943210848))
+        //  .slider({
+        //    max: +"100",
+        //    step: +'1',
+        //    slide: function(u0T, s0T) {
+        //      O5F = s0T.value;
+        //      n0V(s0T.value);
+        //    },
+        //    value: L0R * 1,
+        //    min: "0" << 188279936
+        //  });
+        //$(_s('2779' * 1))
+        //  .slider({
+        //    max: +e2R,
+        //    value: +"100",
+        //    step: +'1',
+        //    min: '0' & 2147483647,
+        //    slide: function(j0T, H0T) {
+        //      y4F(H0T
+        //        .value);
+        //    }
+        //  });
+      //});
+ //   $("#content")
+ //     .mousemove(function(F0T) {
+ //       E6k.R6();
+ //       if ($("#content")
+ //         .css("display") != "none") {
+ //           var Y0T = document.getElementById('worldcanv');
+ //         if (Y0T) {
+ //           var N0T = Y0T.getBoundingClientRect();
+ //           var h0T = m5F(F0T.clientX - N0T.left, F0T
+ //             .clientY - N0T.top);
+ //           var K0T = Math.floor(h0T.x / +m6p);
+ //           var g0T = Math.floor(h0T.y / (m6p - 0));
+ //           var
+ //             c0T = E8(K0T, g0T);
+ //           var h0T = _s('74' * 1) + c0T + _s('2397' - 0) + K0T + _s(A6y >>
+ //             930857152) + g0T + ")";
+ //           K0T = K0T + ("100" | 68);
+ //           g0T = g0T + ("100" ^ 0);
+ //           var D0T = K0T + '' + g0T;
+ //           if (P5F.hasOwnProperty(D0T)) {
+ //             var V0T =
+ //               P5F[D0T];
+ //             var P0T = V0T.substring("0" | 0, '1' | 0);
+ //             var B0T;
+ //             var E0T;
+ //             var A0T;
+ //             var f0T;
+ //             var
+ //               r0T;
+ //             var k5T;
+ //             if (P0T == +"2") {
+ //               B0T = Number(V0T.substring(+"1", +"3"));
+ //               E0T = Number(V0T.substring('3' & 2147483647, "4" ^ 0));
+ //               var n0T = Number(V0T.substring(+'4', +
+ //                 "5"));
+ //               if (n0T == +"1") {
+ //                 A0T = '0' >> 816327520;
+ //                 r0T = '0' ^ 0;
+ //                 f0T = +"1";
+ //               } else if (n0T == "2" * 1) {
+ //                 A0T = +"0";
+ //                 r0T = +"1";
+ //                 f0T = +"1";
+ //               } else if (n0T == ('3' & 2147483647)) {
+ //                 A0T = '1' ^ 0;
+ //                 r0T = '1' ^ 0;
+ //                 f0T = +"1";
+ //               } else if (n0T == ('4' ^ 0)) {
+ //                 A0T = +"1";
+ //                 r0T = +'0';
+ //                 f0T = "1" * 1;
+ //               } else if (n0T == +"5") {
+ //                 A0T = +'0';
+ //                 r0T = +"0";
+ //                 f0T = +"8";
+ //               } else if (n0T == +'6') {
+ //                 A0T = +'0';
+ //                 r0T = +'1';
+ //                 f0T = '8' & 2147483647;
+ //               } else if (n0T == '7' << 399124576) {
+ //                 A0T = "1" & 2147483647;
+ //                 r0T = +"1";
+ //                 f0T = +"8";
+ //               } else if (n0T == "8" * 1) {
+ //                 A0T = +'1';
+ //                 r0T = '0' >> 102353824;
+ //                 f0T = '8' - 0;
+ //               }
+ //               k5T = "0" << 1891454208;
+ //               B0T = B0T - '10' * 1;
+ //               var p0T = Number(V0T.substring(+"11", +'12'));
+ //               var y0T = Number(V0T.substring(
+ //                 '12' * 1, ('12' << 590475872) + p0T));
+ //               var a0T = Number(V0T.substring('12' - 0 + p0T));
+ //               if (F5F)
+ //                 if (F5F.hasOwnProperty(y0T)) {
+ //                   var m0T = F5F[y0T];
+ //                   var U0T = "";
+ //                   var
+ //                     Z0T = "";
+ //                   if (r0T == +"1") Z0T = _s(+'6764');
+ //                   if (B0T >= +"1")
+ //                     U0T = _s('1170' >> 337519968) + Z0T + " " + B0T + ")";
+ //                   else if (A0T >= +'1') U0T = _s(+'4682') + Z0T + ")";
+ //                   else if (r0T == ('1' | 1)) U0T = _s(+"2397") + Z0T + ")";
+ //                   h0T = h0T + _s(w54 << 583612544) + m0T + U0T;
+ //                 } else 
+ //                 {
+ ////                 console.log(_s('1136' - 0) +0T);
+ //                 }
+ //             } else if (P0T == +"7") {
+ //               var q0T = Number(V0T.substring(+"1", +"3")) - ('10' >> 829981376);
+ //               h0T = h0T + _s(+'1703') + q0T + ")";
+ //             } else if (P0T == "8" << 1609177312) {
+ //               var
+ //                 R0T = Number(V0T.substring('1' - 0, +'2'));
+ //               if (R0T == ("1" ^ 0)) h0T = h0T + _s('6364' - 0);
+ //               else h0T = h0T + _s("2171" - 0);
+ //             } else if (P0T == +"9") {
+ //               var R0T = Number(V0T.substring(+'1',
+ //                 "2" >> 1594991072));
+ //               if (R0T == +"1") h0T = h0T + _s(+"5009");
+ //               else {
+ //                 stype = Number(V0T.substring(+'2', +'3'));
+ //                 if (stype == +"1") shrtype = _s('3930' ^ 0);
+ //                 else if (stype == +'2') shrtype = _s("1534" * 1);
+ //                 else if (stype == '3' >> 1673039520) shrtype = _s(+"495");
+ //                 else if (stype == "4" << 1298554016) shrtype = _s("6372" * 1);
+ //                 else if (stype == ('5' ^ 0)) shrtype = _s(+"156");
+ //                 else if (stype == ("6" | 2)) shrtype = _s(+"1474");
+ //                 else if (stype == +'7') shrtype = _s('1588' * 1);
+ //                 else if (stype == +'8') shrtype = _s("4474" * 1);
+ //                 h0T = h0T + _s(w54 & 2147483647) + shrtype;
+ //               }
+ //             }
+ //           }
+ //           $(_s('1243' | 1112))
+ //             .text(h0T);
+ //         }
+ //       }
       });
     var F5F;
 

@@ -21,19 +21,19 @@ namespace COTG.JSON
         public string dPlyr => Player.IdToName(defP);
         public int defCid;
         public string defCN { get; set; }
-        public string defC => defCid.ToCoordinate();
+        public string defC => defCid.CidToString();
         public int atkP;
         public string aPlyr => Player.IdToName(atkP);
         public int atkCid;
         public string atkCN { get; set; }
-        public string atkC => atkCid.ToCoordinate();
+        public string atkC => atkCid.CidToString();
 
         public int Cont => defCid.CidToContinent();
 
         public float claim { get; set; }
-        public DateTimeOffset Time { get; set; }
+        public DateTimeOffset time { get; set; }
         // No longer used
-        public string TT => Time.ToString("dd HH':'mm':'ss");
+        public string TT => time.ToString("dd HH':'mm':'ss");
         public DateTimeOffset spotted { get; set; }
         public byte type;
         public string Type => type switch
@@ -72,12 +72,12 @@ namespace COTG.JSON
 			return other != null &&
 				   defCid == other.defCid &&
 				   atkCid == other.atkCid &&
-				   Time.Equals(other.Time);
+				   time.Equals(other.time);
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(defCid, atkCid, Time,reportId);
+			return HashCode.Combine(defCid, atkCid, time,reportId);
 		}
 
 		public static bool operator ==(Report left, Report right)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
@@ -25,6 +26,125 @@ namespace COTG.Game
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
 
+        public static Spot invalid = new Spot() { name = "Null" };
+        public static Spot GetOrAdd(int cid)
+        {
+            if (!Spot.allSpots.TryGetValue(cid, out var rv))
+            {
+                if (City.all.TryGetValue(cid, out var city))
+                    rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
+                else
+                    rv = new Spot() { cid = cid };
+                Spot.allSpots.TryAdd(cid, rv);
+            }
+            return (rv);
+        }
+        public static Spot Get(int cid)
+        {
+            if (Spot.allSpots.TryGetValue(cid, out var rv))
+                return rv;
+            
+                if (City.all.TryGetValue(cid, out var city))
+                    return city;
+             
+            return invalid;
+        }
+
+        public string _name;
+        public string name
+        { get { return _name ?? xy; } set {_name = value; } }
+
+        public int cid; // x,y combined into 1 number
+        public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
+        public int tsHome { get; set; }
+        public int pid { get; set; }
+        public string player => Player.Get(pid).name;
+        public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
+       // public DateTimeOffset lastUpdated { get; set; }
+        public DateTimeOffset lastAccessed { get; set; } // lass user access
+        public bool isCastle { get; set; }
+        public bool isOnWater { get; set; }
+        public bool isTemple { get; set; }
+        public float scoutRange { get; set; }
+        public ushort points { get; set; }
+        public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
+        public int continent => cid.CidToContinent();
+
+        public static bool operator ==(Spot left, Spot right)
+        {
+            return EqualityComparer<Spot>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Spot left, Spot right)
+        {
+            return !(left == right);
+        }
+
+        
+
+        public static (Spot spot, string column, PointerPoint pt) HitTest(object sender, PointerRoutedEventArgs e)
+        {
+            var grid = sender as RadDataGrid;
+            var physicalPoint = e.GetCurrentPoint(grid);
+            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+            var cell = grid.HitTestService.CellInfoFromPoint(point);
+            var spot = (cell?.Item as Spot);
+            uiHover = spot != null ? spot.cid : 0;
+            uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
+            
+            return (spot, uiHoverColumn, physicalPoint);
+        }
+
+
+        
+        public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            HitTest(sender, e);
+        }
+        public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
+        {
+            var hit= Spot.HitTest(sender, e);
+            var spot = hit.spot;
+            uiPress = spot != null ? spot.cid : 0;
+            uiPressColumn = hit.column;
+            if (spot != null)
+                spot.ProcessClick(hit.column, hit.pt);
+        }
+        public static void ProcessPointerExited()
+        {
+            ClearHover();
+        }
+
+        public static void ClearHover()
+        {
+            uiHover = 0;
+            uiHoverColumn = string.Empty;
+        }
+
+        
+        public void ProcessClick(string column, PointerPoint pt)
+        {
+            if (pt.Properties.IsLeftButtonPressed)
+            {
+                switch (column)
+                {
+                    case "xy": JSClient.ShowCity(cid); break;
+                    case "icon": if (City.IsMine(cid))
+                                     JSClient.ChangeCity(cid);
+                                else JSClient.ShowCity(cid);
+                        break;
+                    case "ts":
+                    case "tsHome":
+                        {
+                            if (City.IsMine(cid)  ) // Only valid for my own cities
+                                ScanDungeons.Post(cid); break;
+                        }
+                }
+            }
+        }
+        // Incoming attacks
+        public ConcurrentQueue<Army> incoming { get; set; } = new ConcurrentQueue<Army>();
+
         public static List<int> GetSelected()
         {
             var rv = new List<int>();
@@ -34,11 +154,11 @@ namespace COTG.Game
                 rv.AddRange(selected._hashSet);
                 if (uiHover != 0 && !selected.Contains(uiHover))
                 {
-                        rv.Add(uiHover);
+                    rv.Add(uiHover);
                 }
                 if (viewHover != 0 && viewHover != uiHover &&
                     !selected.Contains(viewHover))
-                        rv.Add(viewHover);
+                    rv.Add(viewHover);
 
             }
             finally
@@ -51,8 +171,8 @@ namespace COTG.Game
         public static List<Spot> GetSelectedSpots()
         {
             var rv = new List<Spot>();
-            var selected= GetSelected();
-            foreach(var sel in selected)
+            var selected = GetSelected();
+            foreach (var sel in selected)
             {
                 if (allSpots.TryGetValue(sel, out var v))
                     rv.Add(v);
@@ -93,7 +213,7 @@ namespace COTG.Game
         {
             return selected.Count != 0;// || viewHover != 0 || uiHover != 0;
         }
-        public static bool IsSelectedOrHovered( int cid)
+        public static bool IsSelectedOrHovered(int cid)
         {
             return (cid == viewHover || cid == uiHover || selected.Contains(cid));
         }
@@ -133,95 +253,13 @@ namespace COTG.Game
             return cid;
         }
 
-         int IKeyedItem.GetKey()
+        int IKeyedItem.GetKey()
         {
-           return cid;
+            return cid;
         }
-         void IKeyedItem.Ctor(int i)
+        void IKeyedItem.Ctor(int i)
         {
             cid = i;
         }
-
-        public string name { get; set; }
-        public int cid; // x,y combined into 1 number
-        public string xy => $"{cid % 65536}:{cid / 65536}";
-        public int pid { get; set; }
-        public string player => Player.Get(pid).name;
-        public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
-       // public DateTimeOffset lastUpdated { get; set; }
-        public DateTimeOffset lastAccessed { get; set; } // lass user access
-        public bool isCastle { get; set; }
-        public bool isOnWater { get; set; }
-        public bool isTemple { get; set; }
-        public ushort points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages($"{(isCastle ? "castle" : "city")}{GetSize()}.png");
-        public int continent => cid.CidToContinent();
-
-        public static bool operator ==(Spot left, Spot right)
-        {
-            return EqualityComparer<Spot>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(Spot left, Spot right)
-        {
-            return !(left == right);
-        }
-
-        
-
-        public static (Spot spot, string column, PointerPoint pt) HitTest(object sender, PointerRoutedEventArgs e)
-        {
-            var grid = sender as RadDataGrid;
-            var physicalPoint = e.GetCurrentPoint(grid);
-            var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-            var cell = grid.HitTestService.CellInfoFromPoint(point);
-            var spot = (cell?.Item as Spot);
-            uiHover = spot != null ? spot.cid : 0;
-            uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
-            
-            return (spot, uiHoverColumn, physicalPoint);
-        }
-        public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            HitTest(sender, e);
-        }
-        public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-            var hit= Spot.HitTest(sender, e);
-            var spot = hit.spot;
-            uiPress = spot != null ? spot.cid : 0;
-            uiPressColumn = hit.column;
-            if (spot != null)
-                spot.ProcessClick(hit.column, hit.pt);
-        }
-        public static void ProcessPointerExited()
-        {
-            ClearHover();
-        }
-
-        public static void ClearHover()
-        {
-            uiHover = 0;
-            uiHoverColumn = string.Empty;
-        }
-
-        public void ProcessClick(string column, PointerPoint pt)
-        {
-            if (pt.Properties.IsLeftButtonPressed)
-            {
-                switch (column)
-                {
-                    case "xy": JSClient.ShowCity(cid); break;
-                    case "icon": JSClient.ChangeCity(cid); break;
-                    case "ts":
-                    case "tsHome":
-                        {
-                            ScanDungeons.Post(cid); break;
-                        }
-                }
-            }
-        }
-
-
     }
 }

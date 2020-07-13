@@ -47,7 +47,7 @@ namespace COTG.Helpers
             switch (e.ValueKind)
             {
                 case JsonValueKind.String:
-                    return float.TryParse(e.GetString(), out var v) ? v : -1;
+                    return float.TryParse(e.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo , out var v) ? v : -1;
                 case JsonValueKind.Number:
                     return e.GetSingle();
                 case JsonValueKind.True:
@@ -76,7 +76,7 @@ namespace COTG.Helpers
             switch (e.ValueKind)
             {
                 case JsonValueKind.String:
-                    return long.TryParse(e.GetString(), out var v) ? v : -1;
+                    return long.TryParse(e.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
                 case JsonValueKind.Number:
                     return e.GetInt64();
                 case JsonValueKind.True:
@@ -154,23 +154,36 @@ namespace COTG.Helpers
         public static string timeZoneString=string.Empty;
         public static DateTimeOffset ParseDateTime(this string src)
         {
-            var format = "H:mm:ss dd/MM/yyyy";
+            var format = "s";
             var s = src; // src may be missing the date or year
             var serverTime = JSClient.ServerTime();
-            var dateMarker = s.IndexOf('/');
-            if (dateMarker <= 0)
+            var split = src.Split(' ', StringSplitOptions.RemoveEmptyEntries) ;
+            if (split.Length == 1)
             {
-                s = $"{s} {serverTime.Day:D2}/{serverTime.Month:D2}/{serverTime.Year}";
+                s = $"{serverTime.Year}-{serverTime.Month:D2}-{serverTime.Day:D2}T{split[0]}";
+
             }
             else
             {
-                if( s.IndexOf('/',dateMarker+1) <= 0)
+                var dateEtc = split[1].Split('/', StringSplitOptions.RemoveEmptyEntries);
+                if (dateEtc.Length == 1)
                 {
-                    s = $"{s}/{serverTime.Year}";
-
+                    // only day
+                    s = $"{serverTime.Year}-{serverTime.Month:D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
+                }
+                else if (dateEtc.Length == 2)
+                {
+                    // month then day
+                    s = $"{serverTime.Year}-{int.Parse(dateEtc[1]):D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
+                }
+                else
+                {
+                    // month then day
+                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[1]):D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
                 }
             }
-            return DateTimeOffset.ParseExact(s ,format, CultureInfo.InvariantCulture, DateTimeStyles.AllowInnerWhite|DateTimeStyles.AssumeUniversal);
+
+            return DateTimeOffset.ParseExact(s ,format, DateTimeFormatInfo.InvariantInfo,  DateTimeStyles.AllowInnerWhite|DateTimeStyles.AssumeUniversal);
         }
     }
 }

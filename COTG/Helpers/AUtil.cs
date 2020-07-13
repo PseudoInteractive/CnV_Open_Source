@@ -9,6 +9,7 @@ namespace COTG
 {
     public static class AUtil
     {
+        public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);
         // Lists
         public static void AddIfAbsent<T>(this List<T> l, T a) where T: IEquatable<T>
         {

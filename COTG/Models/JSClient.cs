@@ -259,13 +259,14 @@ namespace COTG
             }
 
         }
-        public static void SetJSCamera()
+        public static void SetJSCamera(Vector2 cameraC)
         {
+            // Thiis is not working as it should
             try
-            {
+            { 
                 view.InvokeScriptAsync("setCameraC", new string[] {
-                    (ShellPage.cameraC.X*64).RoundToInt().ToString(),
-                    (ShellPage.cameraC.Y*64).RoundToInt().ToString()
+                    (cameraC.X).RoundToInt().ToString(),
+                    (cameraC.Y).RoundToInt().ToString()
                 });
 
             }
@@ -691,7 +692,7 @@ namespace COTG
                                 jsVars.pid = jso.GetAsInt("pid");
                                
                                 cid = jso.GetAsInt("cid");
-                                Note.L("cid=" + cid.ToCoordinate());
+                                Note.L("cid=" + cid.CidToString());
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTimeOffset.UtcNow;
                                 Log(jsVars.ToString());
@@ -712,7 +713,7 @@ namespace COTG
                                 var jso = jsp.Value;
                                 var cid = jso.GetAsInt("cid");
                                 {
-                                    var city=COTG.Views.DefensePage.GetDefender(cid);
+                                    var city =COTG.Views.DefensePage.TouchSpot(cid);
                                     
                                     city.name = jso.GetString("name");
                                     city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
@@ -721,13 +722,13 @@ namespace COTG
                                  //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                     city.lastAccessed = DateTimeOffset.UtcNow;
 
-                                    Note.Show($"CityClick {city.name} {city.cid.ToCoordinateMD()}");
+                                    Note.Show($"CityClick {city.name} {city.cid.CidToStringMD()}");
                                     if(IsWorldView())
                                     {
                                         // bring city into view
                                         cid.BringCidIntoWorldView();
 
-                                    }    
+                                    }
                                 }
                                 break;
 
@@ -737,7 +738,7 @@ namespace COTG
                                 MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
                                 cid = jse.GetInt("cid");
-                                Note.L("citydata=" + cid.ToCoordinate());
+                                Note.L("citydata=" + cid.CidToString());
                                 var city=City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
                                 break;
@@ -784,7 +785,7 @@ namespace COTG
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
                                 var noPopup = jso.GetAsInt("p") <= 0;
-                                Note.L("cid=" + cid.ToCoordinate());
+                                Note.L("cid=" + cid.CidToString());
                                 var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
                                 if(priorView!=viewMode )

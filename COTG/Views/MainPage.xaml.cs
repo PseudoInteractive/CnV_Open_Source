@@ -88,7 +88,7 @@ namespace COTG.Views
             if (cid != 0)
             {
                 var json = "{\"a\":"+cid+",\"c\":0,\"b\":1}";
-                Note.Show($"{cid.ToCoordinateMD()} recall slow");
+                Note.Show($"{cid.CidToStringMD()} recall slow");
                 Post.SendEncrypted("includes/UrOA.php",json,"Rx3x5DdAxxerx3") ;
             }
         }
@@ -97,7 +97,7 @@ namespace COTG.Views
             var cid = Spot.uiPress;
             if (cid != 0)
             {
-                Note.Show($"{cid.ToCoordinateMD()} recall fast");
+                Note.Show($"{cid.CidToStringMD()} recall fast");
                 Post.Send("overview/rcallall.php", "a="+cid);
             }
         }

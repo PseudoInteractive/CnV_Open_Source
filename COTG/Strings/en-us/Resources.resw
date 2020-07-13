@@ -155,9 +155,9 @@
     <value>MasterDetail</value>
     <comment>Title for MasterDetailPage</comment>
   </data>
-  <data name="Shell_MasterDetail.Content" xml:space="preserve">
-    <value>MasterDetail</value>
-    <comment>Navigation view item name for MasterDetail</comment>
+  <data name="Shell_Defender.Content" xml:space="preserve">
+    <value>Defender</value>
+    <comment>Navigation view item name for Defender</comment>
   </data>
   <data name="WebView_FailedMessage.Text" xml:space="preserve">
     <value>Page failed to load. Check connection and retry.</value>

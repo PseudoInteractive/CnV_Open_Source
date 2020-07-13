@@ -64,7 +64,7 @@ namespace COTG.Views
                 // for non cities we show info
                 if (info.type == World.typeCity && info.data == JSClient.jsVars.pid)
                 {
-                    var city = DefensePage.GetDefender(cid); // this will add it to the list if it isn't present and then toggle selection
+                    var city = DefensePage.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
                     JSClient.ChangeCity(cid);
                 }
                 else
@@ -76,8 +76,17 @@ namespace COTG.Views
             }
             else
             {
-                JSClient.SetJSCamera();
+                SetJSCamera();
             }
+        }
+
+        public static void SetJSCamera()
+        {
+            var cBase = clientSpan * 0.5f + clientC;
+            var c0 = cBase / cameraZoom;
+            var c1 = cBase / 64.0f;
+            var regionC = (cameraC + c0 - c1) * 64.0f;
+            JSClient.SetJSCamera(regionC);
         }
 
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)

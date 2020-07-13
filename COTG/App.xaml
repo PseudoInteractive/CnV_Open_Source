@@ -5,12 +5,39 @@
 	<Application.Resources>
         <ResourceDictionary>
             <!-- Style definition -->
-            <Style x:Key="BaseTextStyle"
+            <!--<Style x:Key="BaseTextStyle"
                    TargetType="TextBlock">
                 <Setter Property="FontWeight"
                         Value="SemiBold" />
+            </Style>-->
+            <Style  x:Key="RightAlign"
+                    TargetType="TextBlock">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="Margin"
+                        Value="0,0,4,0" />
             </Style>
-
+            <Style x:Key="LeftAlign"
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="4,0,0,0" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+            </Style>
+            <Style x:Key="CenterAlign"
+                   TargetType="TextBlock">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="0,0,0,0" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Center" />
+            </Style>
+            
             <AcrylicBrush
 				x:Key="Acryllic"
 				Opacity="0.6"

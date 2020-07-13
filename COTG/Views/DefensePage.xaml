@@ -7,6 +7,7 @@
       xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:COTG.Models"
+      xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
@@ -15,7 +16,6 @@
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:local="using:COTG.Views"
-      behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
       Background="{x:Null}"
       NavigationCacheMode="Required"
       Style="{StaticResource PageStyle}"
@@ -132,54 +132,27 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <tg:RadDataGrid x:Name="historyGrid"
-                        GridLinesThickness="0.5"
+                        GridLinesThickness="0.75"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="12"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind history, Mode=OneWay}"
-                        RowHeight="34"
+                        RowHeight="30"
                         AlternationStep="2"
                         SelectionMode="Single"
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
-            <tg:RadDataGrid.Resources>
-                <Style  x:Name="RightAlign"
-                        TargetType="TextBlock">
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                    <Setter Property="Margin"
-                            Value="0,0,4,0" />
-                </Style>
-                <Style x:Name="LeftAlign"
-                       TargetType="TextBlock">
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                </Style>
-                <Style x:Name="CenterAlign"
-                       TargetType="TextBlock">
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="Margin"
-                            Value="0,0,0,0" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Center" />
-                </Style>
-            </tg:RadDataGrid.Resources>
-            <tg:RadDataGrid.Commands >
+            
+            <tg:RadDataGrid.Commands  >
                 <model:DefenseTapCommand   />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
                 <tg:DataGridDateColumn Width="80"
-                                       PropertyName="Time"
+                                       PropertyName="time"
+                                       Header="Time"
                                        CellContentFormat="{}{0:dd HH':'mm':'ss}"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
@@ -188,18 +161,18 @@
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <tg:DataGridTextColumn Width="80"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="dPlyr" />
                 <tg:DataGridTextColumn Width="80"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="aPlyr" />
                 <tg:DataGridTextColumn Width="60"
                                        PropertyName="defC"
-                                       CellContentStyle="{x:Bind CenterAlign}"
+                                       CellContentStyle="{StaticResource CenterAlign}"
                                        SizeMode="Fixed" />
                 <tg:DataGridTextColumn Width="60"
                                        PropertyName="atkC"
-                                       CellContentStyle="{x:Bind CenterAlign}"
+                                       CellContentStyle="{StaticResource CenterAlign}"
                                        SizeMode="Fixed" />
                 <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="dTS"
@@ -222,31 +195,31 @@
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
                 <tg:DataGridTextColumn Width="50"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="defCN" />
                 <tg:DataGridTextColumn Width="50"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="atkCN" />
                 <tg:DataGridNumericalColumn Width="32"
                                             PropertyName="claim"
                                             CellContentFormat="{}{0,3:N0}"
-                                            CellContentStyle="{x:Bind RightAlign}"
+                                            CellContentStyle="{StaticResource RightAlign}"
                                             SizeMode="Fixed" />
                 <tg:DataGridNumericalColumn Width="34"
                                             PropertyName="Cont"
-                                            CellContentStyle="{x:Bind CenterAlign}"
+                                            CellContentStyle="{StaticResource CenterAlign}"
                                             SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
-                                          CellContentStyle="{x:Bind CenterAlign}"
+                                          CellContentStyle="{StaticResource CenterAlign}"
                                           PropertyName="Sen"
                                           SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
-                                          CellContentStyle="{x:Bind CenterAlign}"
+                                          CellContentStyle="{StaticResource CenterAlign}"
                                           PropertyName="Nvl"
                                           SizeMode="Fixed" />
                 <tg:DataGridBooleanColumn Width="30"
                                           PropertyName="SE"
-                                          CellContentStyle="{x:Bind CenterAlign}"
+                                          CellContentStyle="{StaticResource CenterAlign}"
                                           SizeMode="Fixed" />
                 <tg:DataGridNumericalColumn Width="50"
                                             PropertyName="dTsLeft"
@@ -259,10 +232,10 @@
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
                 <tg:DataGridTextColumn Width="60"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="atkAli" />
                 <tg:DataGridTextColumn Width="60"
-                                       CellContentStyle="{x:Bind LeftAlign}"
+                                       CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="defAli"
                                        IsVisible="False" />
             </tg:RadDataGrid.Columns>

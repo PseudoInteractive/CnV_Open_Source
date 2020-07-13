@@ -202,12 +202,14 @@ namespace COTG
         {
             ShellPage.L(s);
         }
-        public static void Show(string s, int timeout=8000)
+        public static void Show(string s, int timeout = 8000)
         {
 
-            var textBlock = new MarkdownTextBlock() { Text = s, Background=null};
-			textBlock.LinkClicked += MarkDownLinkClicked;
-            DispatchOnUIThreadLow(() => ShellPage.inAppNote.Show(textBlock, timeout));
+            DispatchOnUIThreadLow(() => { 
+            var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+            textBlock.LinkClicked += MarkDownLinkClicked;
+            ShellPage.inAppNote.Show(textBlock, timeout); });
+
             ShellPage.L(s);
         }
 
@@ -238,14 +240,14 @@ namespace COTG
 				Log(ex);
 			}
 		}
-        public static string ToCoordinateMD(this int cid)
+        public static string CidToStringMD(this int cid)
 		{
-            var coord = cid.ToCoordinate();
+            var coord = cid.CidToString();
             return $"[{coord}](/c/{coord})";
 
         }
 
-		public static string ToCoordinate(this int cid)
+		public static string CidToString(this int cid)
 		{
             return $"{cid%65536}.{cid/65536}";
 		}

@@ -101,7 +101,7 @@ namespace COTG.Game
                 return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
             }
         }
-        public int tsHome   {  get;set;  }
+        
         public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
         public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)

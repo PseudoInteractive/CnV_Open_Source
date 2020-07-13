@@ -143,40 +143,44 @@ namespace COTG.Views
             Spot.ProcessPointerExited();
         }
 
-        public static Spot GetDefender(int cid)
+        public static Spot TouchSpot(int cid)
+        {
+            var spot = Spot.GetOrAdd(cid);
+            AddToGrid(spot);
+            return spot;
+
+        }
+        public static void AddToGrid(Spot spot)
         {
             // Toggle Selected
-            if (!Spot.allSpots.TryGetValue(cid, out var rv))
-            {
-                if (City.all.TryGetValue(cid, out var city))
-                    rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
-                else
-                    rv = new Spot() { cid = cid };
-                Spot.allSpots.TryAdd(cid, rv);
-
+          
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
+                    var cid = spot.cid;
                     var def = Defenders;
-                    if (def.Count == 0 && rv is City)
+                    if (!def.Contains(spot))
                     {
-                        // workaround:  First add cannot be a derived type.  It seems to assume that all contained types are the same as the first added on
-                        var temp = new Spot();
-                        def.AddAndNotify(temp);
-                        def[0] = rv;
-                        def.Replace(rv, temp, 0);
+                        if (def.Count == 0 && spot is City)
+                        {
+                            // workaround:  First add cannot be a derived type.  It seems to assume that all contained types are the same as the first added on
+                            var temp = new Spot();
+                            def.AddAndNotify(temp);
+                            def[0] = spot;
+                            def.Replace(spot, temp, 0);
 
+                        }
+                        else
+                        {
+                            def.AddAndNotify(spot);
+                        }
+                        instance.defenderGrid.SelectItem(spot);
                     }
                     else
-                        def.AddAndNotify(rv);
-                    instance.defenderGrid.SelectItem(rv);
-                });
+                    {
+                        ToggleSelected(spot);
 
-            }
-            else
-            {
-                ToggleSelected(rv);
-            }
-            return rv;
+                    }
+                });
 
         }
         public static void ToggleSelected(Spot rv)

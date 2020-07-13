@@ -298,7 +298,7 @@ namespace COTG.Services
         }
         public static async Task Post(int _cid)
         {
-            Log(_cid.ToCoordinate());
+            Log(_cid.CidToString());
             await GetCity.Post(_cid);
          //   await Task.Delay(2000);
          //   COTG.Views.MainPage.CityListUpdateAll();
