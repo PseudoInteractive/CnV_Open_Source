@@ -152,6 +152,7 @@ namespace COTG.JSON
                               spot.tsHome = val.GetAsInt("8");
                               spot.pid = Player.NameToId(val.GetAsString("0"));
                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
+                                  try
                                   {
                                       var scoutRange = val.GetAsString("6");
                                       var hrsMark = scoutRange.IndexOf('h');
@@ -164,6 +165,10 @@ namespace COTG.JSON
                                               spot.scoutRange = float.Parse(scoutRange.Substring(0, minMark)) / 60.0f;
 
                                       }
+                                  }
+                                  catch(Exception e)
+                                  {
+                                      Log(e);
                                   }
                                var sumDef = new List<TroopTypeCount>();
                               var processedTroopsHome = false; // for some reason, these repeat
@@ -458,7 +463,7 @@ namespace COTG.JSON
 
             await task0;
 
-            if(ShellPage.IsPageDefense())
+            //if(ShellPage.IsPageDefense())
             {
                 var defPage = DefensePage.instance;
                     for (int i = 0; i < reportParts.Length; ++i)

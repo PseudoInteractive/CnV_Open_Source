@@ -51,7 +51,8 @@ namespace COTG
 
 
         }
-       // public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
+        // public static CoreWindow coreWindow => CoreWindow.GetForCurrentThread();
+        [Conditional("DEBUG")]
         public static void Log( string  s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -63,16 +64,7 @@ namespace COTG
 
         }
 
-        public static void LogJS<T>(T s,
-       [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-       [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-       [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
-        {
-            System.Diagnostics.Debug.WriteLine( $"{Tick.MSS()}:{s.ToString()}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber} {s.GetType().Name}:{JsonSerializer.Serialize(s,(new JsonSerializerOptions() {MaxDepth=2}))} ");
-            //    System.Diagnostics.Debug.WriteLine(new StackTrace());
-
-
-        }
+        [Conditional("DEBUG")]
         public static void Log<T>(T s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -81,20 +73,30 @@ namespace COTG
             System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:{s.ToString()}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
           //  System.Diagnostics.Debug.WriteLine(new StackTrace());
         }
-        public static void Log(Exception e)
+        [Conditional("TRACE")]
+        public static void Log(Exception e,
+        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+
         {
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception:{e}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception: {e.Message} {e.StackTrace} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            Note.Show(e.Message);
+
         }
+        [Conditional("TRACE")]
         public  static void Exception(string s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             //
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception:Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
-//            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception: {s} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            //            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            Note.Show(s);
         }
 
+        [Conditional("DEBUG")]
         public static void Assert(bool v,
             [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",

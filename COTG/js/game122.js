@@ -9418,7 +9418,6 @@ var cotgsubscribe = amplify;
     "6079";
   const X8R = "4060";
   const J8p = "5767";
-  const f0R = '50';
   const h7p = '7020';
   const Y9y = "1023";
   const Q1R =
@@ -10887,8 +10886,8 @@ var cotgsubscribe = amplify;
           .append(D71);
         $(_s('85' ^ 0))
           .draggable({ handle: _s('2633' >> 1763659040), containment: _s(+q5y), scroll: !{} });
-        setTimeout(function() {}, D5y ^ 0);
-        setTimeout(function() {}, +'13000');
+       // setTimeout(function() {}, D5y ^ 0);
+      //  setTimeout(function() {}, +'13000');
       }
     }
 
@@ -12633,7 +12632,7 @@ var cotgsubscribe = amplify;
           h1v.g = aldt["r"][x0R | 0];
           h1v.h = aldt["r"][+g0R];
           h1v.i = aldt["r"]['49' - 0];
-          h1v.j = aldt["r"][+f0R];
+          h1v.j = aldt["r"][+'50'];
           h1v.k = aldt["r"][+"51"];
           h1v.l = aldt["r"][V0R >> 604406240];
           h1v.m = aldt["r"][+"53"];
@@ -12915,7 +12914,7 @@ var cotgsubscribe = amplify;
         function E1V() {
           E6k.y6();
           var k6V = q1V - +"1";
-          if (k6V == (K0R & 2147483647) || k6V == (f0R ^ 0) || k6V == (
+          if (k6V == (K0R & 2147483647) || k6V == ('50' ^ 0) || k6V == (
               c8y ^ 0) || k6V == r8y - 0 || k6V == +u6y || k6V <= +'10') {
             var j6V = currentTime();
             var w6V = new Date(
@@ -17956,12 +17955,12 @@ var cotgsubscribe = amplify;
             if (localStorage.getItem(_s(+Y4p)) === null) var r11 = L0R - 0;
             else var r11 = Number(localStorage.getItem(_s(+Y4p)));
             if (localStorage.getItem(_s(+
-                O4p)) === null) var A11 = f0R & 2147483647;
+                O4p)) === null) var A11 = '50' & 2147483647;
             else var A11 = Number(localStorage.getItem(_s(+O4p)));
             if (r11 == +'0' && A11 == +
               '0') {
               localStorage.setItem(_s(+Y4p), L0R >> 495556096);
-              localStorage.setItem(_s(+O4p), +f0R);
+              localStorage.setItem(_s(+O4p), +'50');
             } else {
               localStorage.setItem(_s(Y4p >> 231596576),
                 +"0");
@@ -17984,7 +17983,7 @@ var cotgsubscribe = amplify;
         $(window)
           .focus(function() {
             E6k.y6();
-            if (localStorage.getItem(_s(O4p ^ 0)) === null) var f11 = +f0R;
+            if (localStorage.getItem(_s(O4p ^ 0)) === null) var f11 = +'50';
             else var f11 = localStorage.getItem(_s(O4p << 1708785920));
             V9.volume(Number(f11) / +"100");
           });
@@ -18672,7 +18671,7 @@ var cotgsubscribe = amplify;
         setTimeout(function() {
           E6k.y6();
           r0F();
-        }, M1R * 1);
+        }, 900);
       }
       if (B7F == '1' << 718585760) {
         B7F = '0' ^ 0;
@@ -19049,7 +19048,7 @@ var cotgsubscribe = amplify;
         } setTimeout(function() {
         w8F
           ();
-      }, +"10500");
+      }, +"5500");
     }
     a6.rotWord = function(D6v) {
       var Y6v = D6v[+'0'];
@@ -24557,7 +24556,7 @@ var cotgsubscribe = amplify;
           var j56 = o2[E06]["r"][_s(+a4p)];
           var o56 = m6[j56]["n"];
           var Q56 = m6[j56]["d"];
-          var X56 = I2(j56, f0R - 0);
+          var X56 = I2(j56, '50' - 0);
           s56 = s56 + _s("4799" >> 1524417120) + Q56 + _s(+"4037") + X56 + _s(+d1R) + Q56 + _s(+
             F6y) + o56 + _s(+'5711');
           T56 = j56;
@@ -27494,7 +27493,7 @@ var cotgsubscribe = amplify;
       if (localStorage.getItem(_s(O4p << 189163328)) === null) var N11 = +L0R;
       else var N11 = localStorage.getItem(_s(O4p - 0));
       if (localStorage.getItem(_s(Y4p ^ 0)) === null) var
-        F11 = f0R | 32;
+        F11 = '50' | 32;
       else var F11 = localStorage.getItem(_s(+Y4p));
       V9 = new Howl({
         autoplay: !!{},
@@ -27783,9 +27782,10 @@ var cotgsubscribe = amplify;
                   if (w7Z > +'0' && w7Z < '10' >> 1055042016 && (H7Z == E6k
                       .o55(+p9R) || H7Z == _s(+F1R) || H7Z == _s(+C7R) || H7Z == _s(f14 ^ 0) ||
                       H7Z == _s(a4p | 4306) || H7Z == _s("5872" ^ 0) || H7Z == _s(E4p <<
-                        911013472) || H7Z == _s(+F4R) || H7Z == _s(d3R & 2147483647))) {
-                    H7Z = Number(
-                      H7Z);
+                        911013472) || H7Z == _s(+F4R)|| H7Z==0 || H7Z == _s(d3R & 2147483647))) {
+                    H7Z = Number(H7Z);
+                    if(H7Z==0)
+                       H7Z = 10; // 0 maps to 10
                     if (H7Z > w7Z) W1F(H7Z);
                   } else {
                     var I7Z = $(_s(+D44))
@@ -30311,7 +30311,7 @@ var cotgsubscribe = amplify;
                 .text(p6(f7v[_s(+"2922")]));
               $(_s("4678" >> 105044288))
                 .text(p6(k3v));
-              var J3v = Math.floor(Number(f7v[_s(+'949')]) * +f0R);
+              var J3v = Math.floor(Number(f7v[_s(+'949')]) * +'50');
               var g3v = Math.floor(
                 Number(J3v) / k3v * ("100" | 96));
               $(_s("5358" ^ 0))
@@ -36948,7 +36948,7 @@ var cotgsubscribe = amplify;
                         .top);
                     clearInterval(P5n);
                   }
-                }, +f0R);
+                }, +'150');
                 else {
                   Z89(Z5n, !0);
                   y29(document)
@@ -37001,7 +37001,7 @@ var cotgsubscribe = amplify;
         trackClickRepeatFreq: +y9y,
         verticalGutter: +'4',
         hijackInternalLinks: !!"",
-        arrowRepeatFreq: f0R << 898590080,
+        arrowRepeatFreq: '250' << 898590080,
         arrowButtonSpeed: +
           '0',
         verticalArrowPositions: _s("780" ^ 0),
@@ -38017,7 +38017,7 @@ var cotgsubscribe = amplify;
       function x6V() {
         var O6V = Q6V - +"1";
         E6k.R6();
-        if (O6V == K0R >> 964515008 || O6V == (f0R & 2147483647) || O6V == +c8y || O6V == (r8y ^ 0) || O6V ==
+        if (O6V == K0R >> 964515008 || O6V == ('50' & 2147483647) || O6V == +c8y || O6V == (r8y ^ 0) || O6V ==
           u6y >> 534188416 || O6V <= +'10') {
           var o6V = currentTime();
           var L6V = new Date(o6V);
@@ -42748,17 +42748,17 @@ var cotgsubscribe = amplify;
         if (J3D == +G1R || J3D == (C6y & 2147483647) || J3D == +r1R || J3D == +b1R)
           A3D += +'1';
       }
-      var N3D = p6(f3D * +f0R);
+      var N3D = p6(f3D * +'50');
       var F3D = p6(f3D * (p3t | 25));
-      var q3D = p6(n3D * +f0R);
+      var q3D = p6(n3D * +'50');
       var c3D =
         p6(n3D * (p3t >> 484886912));
-      var B3D = p6(V3D * (f0R << 519132960));
+      var B3D = p6(V3D * ('50' << 519132960));
       var R3D = p6(V3D * +p3t);
       var y3D = p6(
-        r3D * (f0R * 1));
+        r3D * ('50' * 1));
       var D3D = p6(r3D * +p3t);
-      var p3D = p6(A3D * +f0R);
+      var p3D = p6(A3D * +'50');
       var Y3D = p6(A3D * (p3t - 0));
       if (
         f3D != '0' >> 359967392) var g3D = _s(+"133") + f3D + _s(+"806") + N3D + _s(n1m - 0) + F3D +
@@ -43664,6 +43664,7 @@ var cotgsubscribe = amplify;
             X2("7" - 0);
           } else if (e5w == +"1") Y6(_s("6910" - 0));
           else if (e5w == +"2") Y6(_s(+'4507'));
+            ProcessBuuPoll()
         });
       }
       Z9 = '1' | 1;
@@ -45868,7 +45869,7 @@ var cotgsubscribe = amplify;
         $(_s(s9R * 1))
           .iconselectmenu({ change: function(k2V, E6V) { R2(E6V.item.value); } })
           .iconselectmenu(_s(+'3563'))
-          .addClass(_s(f0R & 2147483647));
+          .addClass(_s('50' & 2147483647));
         $(_s(+"4945"))
           .css(_s(t7y ^ 0), +"10000000");
         $(_s(+s9R))
@@ -47218,7 +47219,7 @@ var cotgsubscribe = amplify;
                     z1D = "49" * 1;
                     C1D = +"46";
                   } else {
-                    z1D = +f0R;
+                    z1D = +'50';
                     C1D = x0R << 1412177632;
                   } else if (M1D == _s('6989' ^ 0) && D6.bd[X1D][_s(m1R ^ 0)] !=
                     (h4y & 2147483647) && D6.bd[X1D][_s(m1R & 2147483647)] != +P4y && D6.bd[X1D][_s(+m1R)] !=
@@ -49576,6 +49577,8 @@ var cotgsubscribe = amplify;
 	{
         if (D6.bq.length==1)
             DoPoll2(200);
+        else
+            DoPoll2(1000);
 
 	}
 
@@ -49943,7 +49946,7 @@ var cotgsubscribe = amplify;
       K7F = setTimeout(function() {
         E6k.y6();
         D7F();
-      }, +f0R);
+      }, +'250');
     }
     var g2 = +'0';
 
@@ -51555,8 +51558,8 @@ var cotgsubscribe = amplify;
             .val(D6.mo[+"49"]);
           else $(_s(O94 ^ 0))
             .val(+"0");
-          if (D6.mo[f0R * 1]) $(_s(w94 | 281))
-            .val(D6.mo[f0R | 50]);
+          if (D6.mo['50' * 1]) $(_s(w94 | 281))
+            .val(D6.mo['50' | 50]);
           else $(_s(w94 * 1))
             .val(+"0");
           if (D6.mo[z8y | 4]) $(_s('2188' >> 529674048) + D6.mo[z8y ^ 0])
@@ -53318,7 +53321,7 @@ var cotgsubscribe = amplify;
       K7F = setTimeout(function() {
         E6k.y6();
         D7F();
-      }, +f0R);
+      }, +'250');
     }
 
     function Y6(u2n) {
@@ -54809,8 +54812,8 @@ var cotgsubscribe = amplify;
               .val(ppdt[_s(+r9p)][b3Z]["49" << 801541632]);
             else $(_s(+O94))
               .val('0' ^ 0);
-            if (ppdt[_s(r9p - 0)][b3Z][f0R | 34]) $(_s(w94 | 793))
-              .val(ppdt[_s(+r9p)][b3Z][+f0R]);
+            if (ppdt[_s(r9p - 0)][b3Z]['50' | 34]) $(_s(w94 | 793))
+              .val(ppdt[_s(+r9p)][b3Z][+'50']);
             else $(_s(w94 * 1))
               .val('0' | 0);
             if (ppdt[_s(r9p * 1)][b3Z][+z8y]) $(_s('2188' >> 1192396288) + ppdt[_s(+
@@ -56602,10 +56605,10 @@ var cotgsubscribe = amplify;
           .removeClass();
         $(_s(b4k >> 939751584))
           .removeClass();
-        var t1T = I2(x1T, +f0R);
+        var t1T = I2(x1T, +'50');
         $(_s(+b4k))
           .attr(_s(l34 ^ 0), t1T);
-        var t1T = I2(O1T, f0R - 0);
+        var t1T = I2(O1T, '50' - 0);
         $(_s(+X4k))
           .attr(_s(+l34), t1T);
         $(_s(+b4k))
@@ -56716,7 +56719,7 @@ var cotgsubscribe = amplify;
     }
 
     function f6F() {
-      if (localStorage.getItem(_s(+O4p)) === null) var q11 = f0R & 2147483647;
+      if (localStorage.getItem(_s(+O4p)) === null) var q11 = '50' & 2147483647;
       else var q11 = localStorage.getItem(_s(+O4p));
       clearTimeout(a3F);
       clearInterval(T6F);
@@ -57247,7 +57250,7 @@ var cotgsubscribe = amplify;
       if (localStorage.getItem(_s(+Y4p)) === null) var R11 = +L0R;
       else var R11 = localStorage.getItem(_s(Y4p | 1152));
       if (localStorage.getItem(_s(O4p >>
-          1646923488)) === null) var y11 = f0R - 0;
+          1646923488)) === null) var y11 = '50' - 0;
       else var y11 = localStorage.getItem(_s(O4p * 1));
       $(_s('5705' * 1))
         .slider(_s(+Q7y), _s(a4R << 1390935520), y11);
@@ -61668,69 +61671,69 @@ var cotgsubscribe = amplify;
             .panzoom({ maxScale: 64 / 4.22166666666667 });
         $("#content")
           .panzoom("zoom", 64 / 4.22166666666667 );
-        //Y9D.parent()
-        //  .on(_s(+'3159'), function(N9D) {
-        //    N9D.preventDefault();
-        //    var q9D = N9D.delta || N9D.originalEvent
-        //      .wheelDelta;
-        //    var c9D = q9D ? q9D < "0" >> 1510495552 : N9D.originalEvent.deltaY > +"0";
-        //    var F9D =
-        //      c9D * ("100" - 0);
-        //    Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
-        //    E6k.y6();
-        //    var m9D = $("#content")
-        //        .panzoom("getMatrix");
-        //    var F9D = Number(m9D[+"3"]) * +"100";
-        //    $(_s('1593' >> 1154537792))
-        //      .slider(_s(+Q7y), _s(+a4R), F9D);
-        //  });
-        //$(_s('1593' & 2147483647))
-        //  .slider({
-        //    value: '280' << 1000329856,
-        //    orientation: _s('2531' << 1890032224),
-        //    step: '10' >> 1724860864,
-        //    min: +u6y,
-        //    slide: function(E9D, a9D) {
-        //      E6k.R6();
-        //      G8F(a9D.value);
-        //    },
-        //      max: 64/4.22166666666667*100
-        //  });
-        //$(_s('5058' >> 660048960))
-        //  .slider({
-        //    value: "100" >> 1790009312,
-        //    orientation: _s(+'2531'),
-        //    step: '1' & 2147483647,
-        //    min: '10' - 0,
-        //    slide: function(e0T, k0T) {
-        //      E6k.R6();
-        //      R4F(k0T.value);
-        //    },
-        //    max: "160" >> 830997056
-        //  });
-        //$(_s('330' >> 1943210848))
-        //  .slider({
-        //    max: +"100",
-        //    step: +'1',
-        //    slide: function(u0T, s0T) {
-        //      O5F = s0T.value;
-        //      n0V(s0T.value);
-        //    },
-        //    value: L0R * 1,
-        //    min: "0" << 188279936
-        //  });
-        //$(_s('2779' * 1))
-        //  .slider({
-        //    max: +e2R,
-        //    value: +"100",
-        //    step: +'1',
-        //    min: '0' & 2147483647,
-        //    slide: function(j0T, H0T) {
-        //      y4F(H0T
-        //        .value);
-        //    }
-        //  });
-      //});
+        Y9D.parent()
+          .on(_s(+'3159'), function(N9D) {
+            N9D.preventDefault();
+            var q9D = N9D.delta || N9D.originalEvent
+              .wheelDelta;
+            var c9D = q9D ? q9D < "0" >> 1510495552 : N9D.originalEvent.deltaY > +"0";
+            var F9D =
+              c9D * ("100" - 0);
+            Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
+            E6k.y6();
+            var m9D = $("#content")
+                .panzoom("getMatrix");
+            var F9D = Number(m9D[+"3"]) * +"100";
+            $(_s('1593' >> 1154537792))
+              .slider(_s(+Q7y), _s(+a4R), F9D);
+          });
+        $(_s('1593' & 2147483647))
+          .slider({
+            value: '280' << 1000329856,
+            orientation: _s('2531' << 1890032224),
+            step: '10' >> 1724860864,
+            min: +u6y,
+            slide: function(E9D, a9D) {
+              E6k.R6();
+              G8F(a9D.value);
+            },
+              max: 64/4.22166666666667*100
+          });
+        $(_s('5058' >> 660048960))
+          .slider({
+            value: "100" >> 1790009312,
+            orientation: _s(+'2531'),
+            step: '1' & 2147483647,
+            min: '10' - 0,
+            slide: function(e0T, k0T) {
+              E6k.R6();
+              R4F(k0T.value);
+            },
+            max: "160" >> 830997056
+          });
+        $(_s('330' >> 1943210848))
+          .slider({
+            max: +"100",
+            step: +'1',
+            slide: function(u0T, s0T) {
+              O5F = s0T.value;
+              n0V(s0T.value);
+            },
+            value: L0R * 1,
+            min: "0" << 188279936
+          });
+        $(_s('2779' * 1))
+          .slider({
+            max: +e2R,
+            value: +"100",
+            step: +'1',
+            min: '0' & 2147483647,
+            slide: function(j0T, H0T) {
+              y4F(H0T
+                .value);
+            }
+          });
+ //     });
  //   $("#content")
  //     .mousemove(function(F0T) {
  //       E6k.R6();
@@ -61921,7 +61924,7 @@ var cotgsubscribe = amplify;
             .val());
           D6.mo[+'49'] = Number($(_s(O94 | 13))
             .val());
-          D6.mo[f0R | 2] = Number($(_s(w94 ^ 0))
+          D6.mo['50' | 2] = Number($(_s(w94 ^ 0))
             .val());
           if ($(_s(+H94))
             .prop(_s(+'286'))) D6.mo[t0R >> 1530429792] = +'1';
@@ -63905,7 +63908,7 @@ var cotgsubscribe = amplify;
         "n": _s("3824" | 752),
         "d": E6k
           .S55('2614' >> 749179488),
-        "sy": +f0R,
+        "sy": +'50',
         "w": "2" << 1655060576,
         "y": +'0',
         "r": { "2": +z9p },
@@ -64048,7 +64051,7 @@ var cotgsubscribe = amplify;
           '7',
         "n": _s(+"2507"),
         "d": _s('6952' & 2147483647),
-        "r": { "15": +f0R },
+        "r": { "15": +'50' },
         "c": "100" ^ 0,
         "sw": '2' <<
           389526208,
@@ -64173,7 +64176,7 @@ var cotgsubscribe = amplify;
         "sw": +"3",
         "w": "0" ^ 0,
         "den": +p3t,
-        "c": +f0R
+        "c": +'50'
       },
       "139": {
         "g": +"8",
@@ -64233,7 +64236,7 @@ var cotgsubscribe = amplify;
         "y": '2' <<
           1345146240,
         "w": +'0',
-        "c": f0R | 48,
+        "c": '50' | 48,
         "sy": +'0',
         "sw": +'3',
         "r": { "27": +'1' },
@@ -64312,7 +64315,7 @@ var cotgsubscribe = amplify;
           '6',
         "n": _s('4683' - 0),
         "d": _s("6045" | 773),
-        "sy": +f0R,
+        "sy": +'50',
         "c": "1000" - 0,
         "y": +'0',
         "den": +
@@ -64471,7 +64474,7 @@ var cotgsubscribe = amplify;
         "y": '0' - 0,
         "den": s7R | 258,
         "sw": +"1",
-        "sy": +f0R,
+        "sy": +'50',
         "c": +"1000",
         "w": "2" -
           0,
@@ -64783,7 +64786,7 @@ var cotgsubscribe = amplify;
           32,
         "sw": +"2",
         "den": +l8y,
-        "r": { "14": +f0R },
+        "r": { "14": +'50' },
         "w": '7' | 5,
         "y": '4' | 0,
         "sy": J4m & E6k
@@ -64855,7 +64858,7 @@ var cotgsubscribe = amplify;
         "d": _s("2770" - 0),
         "w": +'2',
         "sy": +
-          f0R,
+          '50',
         "r": { "2": T44 | 17920 },
         "y": +"0",
         "sw": +'1',
@@ -65060,7 +65063,7 @@ var cotgsubscribe = amplify;
         "sw": '3' ^ 0,
         "y": +"2",
         "den": p3t | 24,
-        "c": f0R | 48,
+        "c": '50' | 48,
         "sy": "0" <<
           308755008,
         "w": '0' ^ 0
@@ -65093,7 +65096,7 @@ var cotgsubscribe = amplify;
         "sy": +'0',
         "sw": '3' >> 285918624,
         "c": +
-          f0R
+          '50'
       },
       "26": {
         "g": "3" << 1205312224,
@@ -65159,7 +65162,7 @@ var cotgsubscribe = amplify;
         "d": _s('6712' <<
           2064531200),
         "c": +"1000",
-        "sy": +f0R,
+        "sy": +'50',
         "sw": +"1",
         "w": +'2',
         "y": +'0',
@@ -65294,7 +65297,7 @@ var cotgsubscribe = amplify;
         "sy": +'0',
         "w": +
           "0",
-        "c": f0R >> 954844736,
+        "c": '50' >> 954844736,
         "r": { "27": +'1' },
         "y": "2" >> 675332032
       },
@@ -65368,7 +65371,7 @@ var cotgsubscribe = amplify;
         "den": +
           p3t,
         "sy": '0' & 2147483647,
-        "c": +f0R,
+        "c": +'50',
         "sw": +'3'
       },
       "141": {
@@ -65766,7 +65769,7 @@ var cotgsubscribe = amplify;
         "w": +'2',
         "den": R2t & 2147483647,
         "r": { "2": D5y - 0 },
-        "sy": f0R ^ 0
+        "sy": '50' ^ 0
       },
       "54": {
         "g": +'7',
@@ -65790,7 +65793,7 @@ var cotgsubscribe = amplify;
         "n": _s(+g9k),
         "d": _s(h7R >>
           1131756576),
-        "c": f0R << 1379243200,
+        "c": '50' << 1379243200,
         "r": { "27": +'1' },
         "sw": +"3",
         "w": '0' ^ 0,
@@ -65804,7 +65807,7 @@ var cotgsubscribe = amplify;
         "n": _s(+g9k),
         "d": _s(h7R & 2147483647),
         "c": +
-          f0R,
+          '50',
         "den": p3t << 1150983200,
         "w": "0" ^ 0,
         "y": +"2",
@@ -65898,7 +65901,7 @@ var cotgsubscribe = amplify;
         "w": +"2",
         "sw": +'1',
         "c": +"1000",
-        "sy": f0R ^ 0
+        "sy": '50' ^ 0
       },
       "4": {
         "g": '5' & E6k
@@ -66314,7 +66317,7 @@ var cotgsubscribe = amplify;
         "d": _s('5205' - 0),
         "den": n5y | 1,
         "c": +"1000",
-        "sy": f0R *
+        "sy": '50' *
           1,
         "r": { "2": B7k - 0 },
         "sw": '1' & 2147483647,
@@ -66583,6 +66586,18 @@ var cotgsubscribe = amplify;
                       // _y = C0g * 64;// - M0g.height / (gainy) ;
                       // __zoom = +matrix[0] * 4.22166666666667;
                   }
+//              popUpBox atkpops ui - draggable
+              _popupCount=0;
+              $(".popUpBox").each(
+              function ()
+              {
+                   if(  this.style.display == "block" )
+                   {
+                    console.log(this.innerText);
+                       _popupCount++;
+                   }
+              }
+              );
 
                   if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
                       || _zoom != __zoom || _popupCountCache !=_popupCount) {
@@ -66602,7 +66617,7 @@ var cotgsubscribe = amplify;
               }
         finally
 		  {
-            setTimeout(SyncViewMode,1000);
+            setTimeout(SyncViewMode,2000);
 
 		  }
 
@@ -68968,7 +68983,7 @@ var cotgsubscribe = amplify;
       K7F = setTimeout(function() {
         E6k.y6();
         D7F();
-      }, f0R & 2147483647);
+      }, '50' & 2147483647);
     }
     $(document)
       .ready(function() {

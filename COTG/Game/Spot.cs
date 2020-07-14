@@ -104,7 +104,7 @@ namespace COTG.Game
             var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
             var cell = grid.HitTestService.CellInfoFromPoint(point);
             var spot = (cell?.Item as Spot);
-            uiHover = spot != null ? spot.cid : 0;
+            viewHover = spot != null ? spot.cid : 0;
             uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             
             return (spot, uiHoverColumn, physicalPoint);
@@ -132,7 +132,7 @@ namespace COTG.Game
 
         public static void ClearHover()
         {
-            uiHover = 0;
+            viewHover = 0;
             uiHoverColumn = string.Empty;
         }
 
@@ -167,13 +167,11 @@ namespace COTG.Game
             {
                 selected.EnterReadLock();
                 rv.AddRange(selected._hashSet);
-                if (uiHover != 0 && !selected.Contains(uiHover))
+                if (viewHover != 0 && !selected.Contains(viewHover))
                 {
-                    rv.Add(uiHover);
-                }
-                if (viewHover != 0 && viewHover != uiHover &&
-                    !selected.Contains(viewHover))
                     rv.Add(viewHover);
+                }
+            
 
             }
             finally
@@ -230,12 +228,11 @@ namespace COTG.Game
         }
         public static bool IsSelectedOrHovered(int cid)
         {
-            return (cid == viewHover || cid == uiHover || selected.Contains(cid));
+            return (cid == viewHover || selected.Contains(cid));
         }
 
         public static int viewHover; // in the view menu
 
-        public static int uiHover; // in the DataGrids
         public static string uiHoverColumn = string.Empty;
         public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
         public static string uiPressColumn = string.Empty;

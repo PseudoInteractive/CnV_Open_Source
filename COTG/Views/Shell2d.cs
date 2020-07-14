@@ -202,7 +202,8 @@ namespace COTG.Views
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
                 
                 var ds = args.DrawingSession;
-
+//                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
+                
                 if (worldBackground != null && IsWorldView())
                 {
                     var srcP0 = new Point(cameraC.X * bSizeGain2+ clientC.X * bSizeGain2 / pixelScale, cameraC.Y * bSizeGain2+ clientC.Y * bSizeGain2 / pixelScale);
@@ -255,7 +256,7 @@ namespace COTG.Views
 
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
-                if (IsPageDefense())
+               // if (IsPageDefense())
                 {
                     var reports =  DefensePage.instance.history;
                     if (reports.Count > 0)
