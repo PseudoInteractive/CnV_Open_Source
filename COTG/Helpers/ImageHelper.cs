@@ -43,6 +43,15 @@ namespace COTG.Helpers
             imagesCache.Add(fileName, image);
             return image;
         }
+        public static BitmapImage FromImages(string fileName,int top, int left, int width, int height)
+        {
+            if (imagesCache.TryGetValue(fileName, out var o))
+                return o;
+            var image = new BitmapImage(new Uri($"ms-appx:///images/{fileName}"));
+      
+            imagesCache.Add(fileName, image);
+            return image;
+        }
 
         public static async Task<StorageFile> LoadImageFileAsync()
         {

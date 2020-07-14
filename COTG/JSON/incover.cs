@@ -184,22 +184,23 @@ namespace COTG.JSON
                                           foreach(var tti in ttl)
                                           {
                                               var present = false;
-                                              foreach(var def in sumDef)
+                                              for (int i = 0; i < sumDef.Count;++i)
                                               {
-                                                  if(def.type == tti.type)
+                                                  if(sumDef[i].type == tti.type)
                                                   {
+                                                      var def = new TroopTypeCount(sumDef[i]);// copy on modify
                                                       def.count += tti.count;
+                                                      sumDef[i] = def; // copy
                                                       present = true;
                                                       break;
                                                   }
 
                                               }
                                               if (!present)
-                                                  sumDef.Add(new TroopTypeCount(tti) ); // make a copy
+                                                  sumDef.Add( tti ); // reference in, this is safe as it is unmodified
                                           }
                                       }
-                                      army.sumDef = TroopTypeCount.Format(sumDef);
-                                      army.sumTs = TroopTypeCount.TS(sumDef);
+                                      army.sumDef = sumDef.ToArray();
                                       army.troops = ttl.ToArray();
                                       spot.incoming.Enqueue(army);
                                   }
@@ -269,7 +270,7 @@ namespace COTG.JSON
                         var defP = Player.NameToId(inc[1].GetString());
                         var atkPNS = inc[6].GetString();
                         var defCN = inc[3].ToString();
-                        var time = inc[5].GetString().ParseDateTime();
+                        var time = inc[5].GetString().ParseDateTime(false);
                         var source = TryDecodeCid(0, inc[7].GetString());
                         var recId = inc[11].GetAsString();
                         if (source > 0)

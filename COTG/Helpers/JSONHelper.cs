@@ -152,7 +152,7 @@ namespace COTG.Helpers
             return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
         }
         public static string timeZoneString=string.Empty;
-        public static DateTimeOffset ParseDateTime(this string src)
+        public static DateTimeOffset ParseDateTime(this string src, bool monthThenDay=true)
         {
             var format = "s";
             var s = src; // src may be missing the date or year
@@ -174,12 +174,12 @@ namespace COTG.Helpers
                 else if (dateEtc.Length == 2)
                 {
                     // month then day
-                    s = $"{serverTime.Year}-{int.Parse(dateEtc[1]):D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
+                    s = $"{serverTime.Year}-{int.Parse(dateEtc[monthThenDay?0:1]):D2}-{int.Parse(dateEtc[monthThenDay?1:0]):D2}T{split[0]}";
                 }
                 else
                 {
                     // month then day
-                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[1]):D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
+                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[monthThenDay?0:1]):D2}-{int.Parse(dateEtc[monthThenDay?1:0]):D2}T{split[0]}";
                 }
             }
 

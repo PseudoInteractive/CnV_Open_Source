@@ -621,7 +621,7 @@ namespace COTG.Views
 
         private void GetIncomingOverview(object sender, RoutedEventArgs e)
         {
-            IncomingOverview.Process(true);
+            IncomingOverview.Process(false);
         }
 
        
