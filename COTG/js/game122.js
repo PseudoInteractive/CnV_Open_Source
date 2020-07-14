@@ -23214,7 +23214,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       if (s1U == ("0" & 2147483647)) {
         var U1U = bam[_s(+
-          Q5y)][Number(X1U)][_s(+I04)];
+          Q5y)][Number(X1U)]["ds"];
         var Z1U = bam[_s(+Q5y)][Number(X1U)][_s(+C5y)];
         var j1U = bam[
           _s(Q5y ^ 0)][Number(X1U)][_s(h6R & 2147483647)][+"1"][_s(+X6R)];
@@ -23569,7 +23569,7 @@ var cotgsubscribe = amplify;
               2092)];
             var I1U = Q2(I1U);
           }
-          var J1U = bam[_s(Q5y | 3)][e1U][_s(I04 & 2147483647)];
+          var J1U = bam[_s(Q5y | 3)][e1U]["ds"];
         }
         z1U = Q2(
           j1U);
@@ -24061,9 +24061,9 @@ var cotgsubscribe = amplify;
               .css("display", "none");
             var j3U = $(this)
               .attr(_s(+a4R));
-            if (j3U != +"0") {
-              var V3U = bam[_s(+Q5y)][Number(j3U)][_s(+
-                I04)];
+//            if (j3U != +"0" && j3U != undefined) {
+              if (j3U && j3U != 0 ) {
+              var V3U = bam[_s(+Q5y)][Number(j3U)]["ds"];
               var J3U = bam[_s(+Q5y)][Number(j3U)][_s(C5y << 593651392)];
               var o3U = Math.ceil(
                 bam[_s(+Q5y)][Number(j3U)][_s(+h6R)][+"1"][_s(+X6R)] / (Number(D6.cs) / +"100")
@@ -30980,7 +30980,7 @@ var cotgsubscribe = amplify;
           bam[_s(Q5y << 662623968)][+R1R][_s(c1R & 2147483647)] = shrinesarr[Number(D6.ble["2" - 0])][_s(+
             c1R)];
           bam[_s(Q5y << 1535016832)][R1R ^ 0][_s(+C5y)] = _s(+"930") + c4w;
-          bam[_s(+Q5y)][+R1R][_s(+I04)] = shrinesarr[Number(D6.ble[+"2"])]["d"];
+          bam[_s(+Q5y)][+R1R]["ds"] = shrinesarr[Number(D6.ble[+"2"])]["d"];
           if (Math.floor(D6
               .ble[+'10']) == '0' >> 154065792 && Math.floor(D6.ble[+"11"]) == "0" - 0) {
             $(_s(g0t ^ 0))
@@ -31048,7 +31048,7 @@ var cotgsubscribe = amplify;
           .attr(_s(p9y * 1), !!{});
         bam[_s(+Q5y)][+R1R][_s(c1R >> 996830272)] = shrinesarr[Number(D6.ble["4" - 0])][_s(c1R * 1)];
         bam[_s(+Q5y)][R1R << 418261952][_s(C5y * 1)] = _s('930' ^ 0) + c4w;
-        bam[_s(+Q5y)][R1R ^ 0][_s(+I04)] = shrinesarr[Number(D6.ble[+"4"])]["d"];
+        bam[_s(+Q5y)][R1R ^ 0]["ds"] = shrinesarr[Number(D6.ble[+"4"])]["d"];
         if (D6.ble[+
             "5"] == +'10') $(_s(s0t ^ 0))
           .css("display", "none");
@@ -44352,7 +44352,7 @@ var cotgsubscribe = amplify;
               508747360)];
             var o6U = Q2(o6U);
           }
-          var J6U = bam[_s(Q5y >> 925387456)][l6U][_s(+I04)];
+          var J6U = bam[_s(Q5y >> 925387456)][l6U]["ds"];
         }
         if (
           l6U >= +R1R) {

@@ -45,6 +45,7 @@ namespace COTG.Views
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
+        
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
         static public ShellPage instance;
@@ -198,12 +199,17 @@ namespace COTG.Views
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor
-            Services.NavigationService.Navigate<Views.DefensePage>();
+            /// we pass this as an argument to let the page know that it is a programmatic navigation
+            Services.NavigationService.Navigate<Views.DefensePage>(this);
 
             navigationView.IsPaneOpen = false;
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                Services.NavigationService.Navigate<Views.MainPage>();
+                Services.NavigationService.Navigate<Views.DefenderPage>(this);
+                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                {
+                    Services.NavigationService.Navigate<Views.MainPage>(this);
+                });
             });
     
         }
@@ -339,6 +345,10 @@ namespace COTG.Views
         public static bool IsPageDefense()
         {
             return instance.Selected == instance.defense;
+        }
+        public static bool IsPageDefender()
+        {
+            return instance.Selected == instance.defender;
         }
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
@@ -626,7 +636,7 @@ namespace COTG.Views
 
         private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
         {
-            logTip.IsOpen = !logTip.IsOpen;
+          //  logTip.IsOpen = !logTip.IsOpen;
         }
     }
 }

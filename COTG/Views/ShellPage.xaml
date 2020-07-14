@@ -1,311 +1,312 @@
 ﻿<Page x:Class="COTG.Views.ShellPage"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:App="using:COTG"
-	  xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
-	  xmlns:Game="using:COTG.Game"
-	  xmlns:Models="using:COTG.Models"
-	  xmlns:behaviors="using:COTG.Behaviors"
-	  xmlns:canvasx="using:Microsoft.Graphics.Canvas.UI.Xaml"
-	  xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:helpers="using:COTG.Helpers"
-	  xmlns:i="using:Microsoft.Xaml.Interactivity"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-	  xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-	  xmlns:views="using:COTG.Views"
-	  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-	  x:Name="shellPage"
-	  Loaded="OnLoaded"
-	  mc:Ignorable="d">
-	<Page.Resources>
-		<Style x:Key="DebugFlyoutStyle"
-			   TargetType="FlyoutPresenter">
-			<Setter Property="HorizontalContentAlignment"
-					Value="Stretch" />
-			<Setter Property="VerticalContentAlignment"
-					Value="Stretch" />
-			<Setter Property="MaxWidth"
-					Value="1900" />
-			<Setter Property="Background"
-					Value="{x:Null}" />
-		</Style>
-        <Style x:Key="TimeFlyoutStyle"
-			   TargetType="FlyoutPresenter">
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:App="using:COTG"
+      xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
+      xmlns:Game="using:COTG.Game"
+      xmlns:Models="using:COTG.Models"
+      xmlns:behaviors="using:COTG.Behaviors"
+      xmlns:canvasx="using:Microsoft.Graphics.Canvas.UI.Xaml"
+      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:helpers="using:COTG.Helpers"
+      xmlns:i="using:Microsoft.Xaml.Interactivity"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:views="using:COTG.Views"
+      xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+      x:Name="shellPage"
+      Loaded="OnLoaded"
+      mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="DebugFlyoutStyle"
+               TargetType="FlyoutPresenter">
             <Setter Property="HorizontalContentAlignment"
-					Value="Stretch" />
+                    Value="Stretch" />
             <Setter Property="VerticalContentAlignment"
-					Value="Stretch" />
+                    Value="Stretch" />
             <Setter Property="MaxWidth"
-					Value="1900" />
+                    Value="1900" />
+            <Setter Property="Background"
+                    Value="{x:Null}" />
+        </Style>
+        <Style x:Key="TimeFlyoutStyle"
+               TargetType="FlyoutPresenter">
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+            <Setter Property="MaxWidth"
+                    Value="1900" />
         </Style>
         <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
-		<converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
-											  FalseValue="Visible"
-											  TrueValue="Collapsed" />
-		<Flyout x:Key="buildingFlyout"
-				Closing="FlyoutClosing"
-				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				ScrollViewer.VerticalScrollBarVisibility="Disabled"
-				ShowMode="Auto">
-			<GridView x:Name="miscList"
-					  PointerExited="GridLostMouse"
-					  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-				<GridView.ItemTemplate>
-					<DataTemplate x:DataType="Game:BuildingCount">
-						<Grid Width="30"
-							  Height="60">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="30" />
-								<RowDefinition Height="30" />
-							</Grid.RowDefinitions>
-							<Image Source="{x:Bind image, Mode=OneTime}"
-								   Stretch="UniformToFill" />
-							<TextBlock Grid.Row="1"
-									   HorizontalAlignment="Center"
-									   VerticalAlignment="Center"
-									   Text="{x:Bind count, Mode=OneTime}" />
-						</Grid>
-					</DataTemplate>
-				</GridView.ItemTemplate>
-				<GridView.ItemsPanel>
-					<ItemsPanelTemplate>
-						<ItemsWrapGrid MaximumRowsOrColumns="6"
-									   Orientation="Horizontal" />
-					</ItemsPanelTemplate>
-				</GridView.ItemsPanel>
-			</GridView>
-		</Flyout>
-		<SolidColorBrush x:Key="LogBufferForeground"
-						 Color="#900238" />
-	</Page.Resources>
-	<winui:NavigationView x:Name="navigationView"
-						  Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
-						  IsBackButtonVisible="Visible"
-						  IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
-						  IsSettingsVisible="True"
-						  ItemInvoked="OnItemInvoked"
-						  SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
-		<winui:NavigationView.ContextFlyout>
-			<MenuFlyout>
-				<MenuFlyoutItem Click="GetIncomingOverview"
-								Text="IncomingOverview" />
-				<MenuFlyoutItem Click="TroopOverview"
-								Text="TroopOverview" />
-				<MenuFlyoutItem Click="TestRaid"
-								Text="TestRaid" />
-				<MenuFlyoutItem Click="GetWorldInfo"
-								Text="GetWorldInfo" />
-				<MenuFlyoutItem Click="GetPPDT"
-								Text="GetPPDT" />
-				<MenuFlyoutItem Click="TestPost"
-								Text="TestPost" />
-				<MenuFlyoutItem Click="TestPost2"
-								Text="TestPost2" />
-				<MenuFlyoutItem Click="TestGoCity"
-								Text="TestGoCity" />
-				<MenuFlyoutItem AccessKey="F5"
-								Click="Refresh"
-								Text="Refresh" />
-			</MenuFlyout>
-		</winui:NavigationView.ContextFlyout>
-		<winui:NavigationView.MenuItems>
-			<!--
+        <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
+                                              FalseValue="Visible"
+                                              TrueValue="Collapsed" />
+        <Flyout x:Key="buildingFlyout"
+                Closing="FlyoutClosing"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                ShowMode="Auto">
+            <GridView x:Name="miscList"
+                      PointerExited="GridLostMouse"
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="Game:BuildingCount">
+                        <Grid Width="30"
+                              Height="60">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
+                            </Grid.RowDefinitions>
+                            <Image Source="{x:Bind image, Mode=OneTime}"
+                                   Stretch="UniformToFill" />
+                            <TextBlock Grid.Row="1"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Text="{x:Bind count, Mode=OneTime}" />
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid MaximumRowsOrColumns="6"
+                                       Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+        </Flyout>
+        <SolidColorBrush x:Key="LogBufferForeground"
+                         Color="#900238" />
+    </Page.Resources>
+    <winui:NavigationView x:Name="navigationView"
+                          Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                          IsBackButtonVisible="Visible"
+                          IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
+                          IsSettingsVisible="True"
+                          ItemInvoked="OnItemInvoked"
+                          SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
+        <winui:NavigationView.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem Click="GetIncomingOverview"
+                                Text="IncomingOverview" />
+                <MenuFlyoutItem Click="TroopOverview"
+                                Text="TroopOverview" />
+                <MenuFlyoutItem Click="TestRaid"
+                                Text="TestRaid" />
+                <MenuFlyoutItem Click="GetWorldInfo"
+                                Text="GetWorldInfo" />
+                <MenuFlyoutItem Click="GetPPDT"
+                                Text="GetPPDT" />
+                <MenuFlyoutItem Click="TestPost"
+                                Text="TestPost" />
+                <MenuFlyoutItem Click="TestPost2"
+                                Text="TestPost2" />
+                <MenuFlyoutItem Click="TestGoCity"
+                                Text="TestGoCity" />
+                <MenuFlyoutItem AccessKey="F5"
+                                Click="Refresh"
+                                Text="Refresh" />
+            </MenuFlyout>
+        </winui:NavigationView.ContextFlyout>
+        <winui:NavigationView.MenuItems>
+            <!--
 				TODO WTS: Change the symbols for each item as appropriate for your app
 				More on Segoe UI Symbol icons: https://docs.microsoft.com/windows/uwp/style/segoe-ui-symbol-font
 				Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/projectTypes/navigationpane.md
 				Edit String/en-US/Resources.resw: Add a menu item title for each page
 			-->
-			<winui:NavigationViewItem x:Uid="Shell_Main"
+            <winui:NavigationViewItem x:Uid="Shell_Main"
                                       x:Name="raid"
-									  helpers:NavHelper.NavigateTo="views:MainPage"  >
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Go" />
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_Defense"
+                                      helpers:NavHelper.NavigateTo="views:MainPage">
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Go" />
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_Defense"
                                       x:Name="defense"
-									  helpers:NavHelper.NavigateTo="views:DefensePage">
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Download" />
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_Defender"
-									  helpers:NavHelper.NavigateTo="views:DefenderPage">
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document" />
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_TreeView"
-									  helpers:NavHelper.NavigateTo="views:TreeViewPage">
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document" />
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-			<winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample"
-									  helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage">
-				<winui:NavigationViewItem.Icon>
-					<SymbolIcon Symbol="Document" />
-				</winui:NavigationViewItem.Icon>
-			</winui:NavigationViewItem>
-		</winui:NavigationView.MenuItems>
-		<i:Interaction.Behaviors>
-			<behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">
-				<behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
-					<DataTemplate>
-						<Grid>
-							<TextBlock Margin="{StaticResource SmallLeftRightMargin}"
-									   Style="{ThemeResource TitleTextBlockStyle}"
-									   Text="{Binding}" />
-						</Grid>
-					</DataTemplate>
-				</behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
-			</behaviors:NavigationViewHeaderBehavior>
-		</i:Interaction.Behaviors>
-		<winui:NavigationView.PaneFooter>
-			<StackPanel x:Name="FooterStackPanel"
-						Orientation="Vertical"
-						Visibility="Visible">
-				<AppBarButton x:Name="RefreshAll"
+                                      helpers:NavHelper.NavigateTo="views:DefensePage">
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Download" />
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_Defender"
+                                      x:Name="defender"
+                                      helpers:NavHelper.NavigateTo="views:DefenderPage">
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document" />
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_TreeView"
+                                      helpers:NavHelper.NavigateTo="views:TreeViewPage">
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document" />
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample"
+                                      helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage">
+                <winui:NavigationViewItem.Icon>
+                    <SymbolIcon Symbol="Document" />
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+        </winui:NavigationView.MenuItems>
+        <i:Interaction.Behaviors>
+            <behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">
+                <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Margin="{StaticResource SmallLeftRightMargin}"
+                                       Style="{ThemeResource TitleTextBlockStyle}"
+                                       Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+            </behaviors:NavigationViewHeaderBehavior>
+        </i:Interaction.Behaviors>
+        <winui:NavigationView.PaneFooter>
+            <StackPanel x:Name="FooterStackPanel"
+                        Orientation="Vertical"
+                        Visibility="Visible">
+                <AppBarButton x:Name="RefreshAll"
                               Label="Refresh"
-							  AccessKey="F5"
+                              AccessKey="F5"
                               Click="Refresh"
-							  Content="Refresh"
-							  Icon="RepeatAll" />
+                              Content="Refresh"
+                              Icon="RepeatAll" />
                 <AppBarButton x:Name="logFlyoutButton"
                               Label="Dbg"
                               Icon="Keyboard"
                               Click="logFlyoutButton_Click">
                     <AppBarButton.Resources>
-                <winui:TeachingTip x:Name="logTip"
-                                   Target="{x:Bind logFlyoutButton}">
-                    <winui:TeachingTip.Content>
-                        <Grid Background="{x:Null}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="400" />
-                                <ColumnDefinition Width="20" />
-                            </Grid.ColumnDefinitions>
-                            <ScrollViewer Canvas.ZIndex="11"
-                                          MaxWidth="2048"
-                                          Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch">
-                                <ScrollViewer.Background>
-                                    <AcrylicBrush Opacity="0.8"
-                                                  TintColor="{ThemeResource SystemColorActiveCaptionColor}"
-                                                  TintLuminosityOpacity="0.7"
-                                                  TintOpacity="0.7" />
-                                </ScrollViewer.Background>
-                                <winui:ItemsRepeater x:Name="logBox"
-                                                     ItemsSource="{x:Bind logEntries,Mode=OneTime}"
-                                                     Margin="4,4,8,4"
-                                                     HorizontalAlignment="Stretch"
-                                                     VerticalAlignment="Stretch">
-                                    <winui:ItemsRepeater.ItemTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <tk:MarkdownTextBlock Text="{x:Bind}"
-                                                                  Height="20"
-                                                                  Visibility="Visible"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  VerticalAlignment="Stretch"
-                                                                  FontSize="14"
-                                                                  LinkClicked="MarkdownTextBlock_LinkClicked"
-                                                                  Foreground="{StaticResource LogBufferForeground}"
-                                                                  Background="{x:Null}" />
-                                        </DataTemplate>
-                                    </winui:ItemsRepeater.ItemTemplate>
-                                </winui:ItemsRepeater>
-                            </ScrollViewer>
-                            <tk:GridSplitter Canvas.ZIndex="70"
-                                             ResizeDirection="Columns"
-                                             Width="8"
-                                             HorizontalAlignment="Right" />
-                        </Grid>
-                    </winui:TeachingTip.Content>
-                </winui:TeachingTip>
+                        <winui:TeachingTip x:Name="logTip"
+                                           Target="{x:Bind logFlyoutButton}"
+                                           Background="{x:Null}">
+                            <winui:TeachingTip.Content>
+                                <Grid Background="{x:Null}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="400" />
+                                        <ColumnDefinition Width="20" />
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer Canvas.ZIndex="11"
+                                                  MaxWidth="2048"
+                                                  Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
+                                                  HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Stretch">
+                                        <ScrollViewer.Background>
+                                            <AcrylicBrush Opacity="0.8"
+                                                          TintColor="{ThemeResource SystemColorActiveCaptionColor}"
+                                                          TintLuminosityOpacity="0.7"
+                                                          TintOpacity="0.7" />
+                                        </ScrollViewer.Background>
+                                        <winui:ItemsRepeater x:Name="logBox"
+                                                             ItemsSource="{x:Bind logEntries,Mode=OneTime}"
+                                                             Margin="4,4,8,4"
+                                                             HorizontalAlignment="Stretch"
+                                                             VerticalAlignment="Stretch">
+                                            <winui:ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <tk:MarkdownTextBlock Text="{x:Bind}"
+                                                                          Height="20"
+                                                                          Visibility="Visible"
+                                                                          HorizontalAlignment="Stretch"
+                                                                          VerticalAlignment="Stretch"
+                                                                          FontSize="14"
+                                                                          LinkClicked="MarkdownTextBlock_LinkClicked"
+                                                                          Foreground="{StaticResource LogBufferForeground}"
+                                                                          Background="{x:Null}" />
+                                                </DataTemplate>
+                                            </winui:ItemsRepeater.ItemTemplate>
+                                        </winui:ItemsRepeater>
+                                    </ScrollViewer>
+                                    <tk:GridSplitter Canvas.ZIndex="70"
+                                                     ResizeDirection="Columns"
+                                                     Width="8"
+                                                     HorizontalAlignment="Right" />
+                                </Grid>
+                            </winui:TeachingTip.Content>
+                        </winui:TeachingTip>
                     </AppBarButton.Resources>
                 </AppBarButton>
                 <AppBarButton  x:Name="buildingsButton"
-							   Label="Sum"
-							   Click="ShowBuildings"
-							   Icon="Street">
-					<Button.Flyout>
-						<Flyout Closing="FlyoutClosing"
-								ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-								ScrollViewer.VerticalScrollBarVisibility="Disabled"
-								ShowMode="Auto">
-							<GridView x:Name="buildingList"
-									  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-								<GridView.ItemTemplate>
-									<DataTemplate x:DataType="Game:BuildingCount">
-										<Grid Width="30"
-											  Height="60">
-											<Grid.RowDefinitions>
-												<RowDefinition Height="30" />
-												<RowDefinition Height="30" />
-											</Grid.RowDefinitions>
-											<Image Source="{x:Bind image, Mode=OneTime}"
-												   Stretch="UniformToFill" />
-											<TextBlock Grid.Row="1"
-													   HorizontalAlignment="Center"
-													   VerticalAlignment="Center"
-													   Text="{x:Bind count, Mode=OneTime}" />
-										</Grid>
-									</DataTemplate>
-								</GridView.ItemTemplate>
-								<GridView.ItemsPanel>
-									<ItemsPanelTemplate>
-										<ItemsWrapGrid MaximumRowsOrColumns="6"
-													   Orientation="Horizontal" />
-									</ItemsPanelTemplate>
-								</GridView.ItemsPanel>
-							</GridView>
-						</Flyout>
-					</Button.Flyout>
-				</AppBarButton>
-				<AppBarButton Label="Time"
-							  Icon="Shuffle">
-					<Button.Flyout>
-						<Flyout Placement="Right"
-								FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
+                               Label="Sum"
+                               Click="ShowBuildings"
+                               Icon="Street">
+                    <Button.Flyout>
+                        <Flyout Closing="FlyoutClosing"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                ShowMode="Auto">
+                            <GridView x:Name="buildingList"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="Game:BuildingCount">
+                                        <Grid Width="30"
+                                              Height="60">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30" />
+                                                <RowDefinition Height="30" />
+                                            </Grid.RowDefinitions>
+                                            <Image Source="{x:Bind image, Mode=OneTime}"
+                                                   Stretch="UniformToFill" />
+                                            <TextBlock Grid.Row="1"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Text="{x:Bind count, Mode=OneTime}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid MaximumRowsOrColumns="6"
+                                                       Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
+                        </Flyout>
+                    </Button.Flyout>
+                </AppBarButton>
+                <AppBarButton Label="Time"
+                              Icon="Shuffle">
+                    <Button.Flyout>
+                        <Flyout Placement="Right"
+                                FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
                             <StackPanel Width="1840">
-								<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
-								<Slider x:Name="eventTimeTravelSlider"
-										ValueChanged="EventTimeTravelSliderChanged"
-										TickFrequency="10"
-										StepFrequency="10"
+                                <TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
+                                <Slider x:Name="eventTimeTravelSlider"
+                                        ValueChanged="EventTimeTravelSliderChanged"
+                                        TickFrequency="10"
+                                        StepFrequency="10"
                                         HorizontalAlignment="Stretch"
-                                        
-										Maximum="1430.0"
-										Minimum="-1430.0"
-										Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-							</StackPanel>
-						</Flyout>
-					</Button.Flyout>
-				</AppBarButton>
-			</StackPanel>
-		</winui:NavigationView.PaneFooter>
-		<Grid x:Name="grid"
-			  ScrollViewer.VerticalScrollBarVisibility="Disabled">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="95" />
-				<RowDefinition />
-				<RowDefinition />
-				<RowDefinition />
-				<RowDefinition />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="405" />
-				<ColumnDefinition Width="2*" />
-				<ColumnDefinition Width="1*" />
-			</Grid.ColumnDefinitions>
-			<tk:InAppNotification x:Name="InAppNote"
-								  Grid.Row="4"
-								  Grid.ColumnSpan="3"
-								  AnimationDuration="00:00:00.3000"
-								  Canvas.ZIndex="55"
-								  StackMode="StackInFront" />
-		</Grid>
-	</winui:NavigationView>
+                                        Maximum="1430.0"
+                                        Minimum="-1430.0"
+                                        Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </AppBarButton>
+            </StackPanel>
+        </winui:NavigationView.PaneFooter>
+        <Grid x:Name="grid"
+              ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="95" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="405" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <tk:InAppNotification x:Name="InAppNote"
+                                  Grid.Row="4"
+                                  Grid.ColumnSpan="3"
+                                  AnimationDuration="00:00:00.3000"
+                                  Canvas.ZIndex="55"
+                                  StackMode="StackInFront" />
+        </Grid>
+    </winui:NavigationView>
 </Page>

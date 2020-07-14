@@ -125,16 +125,39 @@ namespace COTG.Views
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+
+        public void NotifyIncomingUpdated()
+        {
+            if(ShellPage.IsPageDefender())
+            {
+               Refresh();
+            }
+
+        }
+
+        private void Refresh()
+        {
+
+
+            App.DispatchOnUIThread(() =>
+            {
+                defenders.Clear();
+                foreach (var spot in Spot.allSpots)
+                {
+                    if (spot.Value.incoming.Count > 0)
+                        defenders.Add(spot.Value);
+                }
+                defenders.NotifyReset();
+            });
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            defenders.Clear();
-            foreach(var spot in Spot.allSpots)
-            {
-                if (spot.Value.incoming.Count > 0)
-                    defenders.Add(spot.Value);
-            }
-            defenders.NotifyReset();
+            if (e.Parameter is ShellPage)
+                return;
+
+           IncomingOverview.Process(false);
         }
 
         private void ArmyTapped(object sender, TappedRoutedEventArgs e)

@@ -21,7 +21,7 @@ namespace COTG.Game
         public string xy => sourceCid.CidToString();
         public int targetCid;
         public int sourceCid;
-        public string sourceCN => Spot.Get(sourceCid).name;
+        public string sourceCN => Spot.Get(sourceCid).cityName;
         public DateTimeOffset arrival { get; set; }
         public DateTimeOffset spotted { get; set; }
         public string ts => troops.Sum((t) => t.ts).ToString("N0");

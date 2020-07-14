@@ -69,25 +69,20 @@
                                                    CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridTextColumn PropertyName="playerName"
                                                    Header="Player"
-                                                   Width="60"
+                                                   Width="65"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridTextColumn PropertyName="xy"
                                                    Width="44"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
-                            <tg:DataGridTextColumn PropertyName="sourceCN"
-                                                   Header="city"
-                                                   Width="60"
-                                                   SizeMode="Auto"
-                                                   CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridBooleanColumn PropertyName="isDefense"
                                                       Width="30"
                                                       
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridTemplateColumn Header="Troops"
-                                                       Width="40"
+                                                       Width="20"
                                                        SizeMode="Auto">
                                 <tg:DataGridTemplateColumn.CellContentTemplate  >
                                     <DataTemplate>
@@ -144,12 +139,6 @@
                                     </DataTemplate>
                                 </tg:DataGridTemplateColumn.CellContentTemplate>
                             </tg:DataGridTemplateColumn>
-                            <tg:DataGridTimeColumn Width="80"
-                                                   PropertyName="spotted"
-                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
-                                                   CellContentStyle="{StaticResource CenterAlign}"
-                                                   
-                                                   SizeMode="Fixed" />
                             <tg:DataGridTemplateColumn Header="Total Def"
                                                        Width="20"
                                                        SizeMode="Auto">
@@ -161,46 +150,46 @@
                                                         Height="54">
                                                 <StackPanel Orientation="Vertical"
                                                             Width="Auto">
-                                                    <Image Source="{Binding i0}"
+                                                    <Image Source="{Binding si0}"
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
-                                                    <TextBlock Text="{Binding c0}"
+                                                    <TextBlock Text="{Binding sc0}"
                                                                FontSize="12"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Width="Auto">
-                                                    <Image Source="{Binding i1}"
+                                                    <Image Source="{Binding si1}"
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
-                                                    <TextBlock Text="{Binding c1}"
+                                                    <TextBlock Text="{Binding sc1}"
                                                                FontSize="12"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Width="Auto">
-                                                    <Image Source="{Binding i2}"
+                                                    <Image Source="{Binding si2}"
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
-                                                    <TextBlock Text="{Binding c2}"
+                                                    <TextBlock Text="{Binding sc2}"
                                                                FontSize="12"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Width="Auto">
-                                                    <Image Source="{Binding i3}"
+                                                    <Image Source="{Binding si3}"
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
-                                                    <TextBlock Text="{Binding c3}"
+                                                    <TextBlock Text="{Binding sc3}"
                                                                FontSize="12"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                                 </StackPanel>
                                             </StackPanel>
-                                            <TextBlock Text="{Binding ts}"
+                                            <TextBlock Text="{Binding defTs}"
                                                        FontSize="12"
                                                        HorizontalAlignment="Center"
                                                        Height="22" />
@@ -208,6 +197,16 @@
                                     </DataTemplate>
                                 </tg:DataGridTemplateColumn.CellContentTemplate>
                             </tg:DataGridTemplateColumn>
+                            <tg:DataGridTextColumn PropertyName="sourceCN"
+                                                   Header="City"
+                                                   Width="70"
+                                                   SizeMode="Auto"
+                                                   CellContentStyle="{StaticResource LeftAlign}" />
+                            <tg:DataGridTimeColumn Width="80"
+                                                   PropertyName="spotted"
+                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
+                                                   CellContentStyle="{StaticResource CenterAlign}"
+                                                   SizeMode="Fixed" />
                         </tg:RadDataGrid.Columns>
                     </tg:RadDataGrid>
                 </DataTemplate>
@@ -227,12 +226,11 @@
                                        
                                        CellContentStyle="{StaticResource CenterAlign}"
                                        Width="44" />
-                <tg:DataGridTextColumn PropertyName="TSMax"
+                <tg:DataGridTextColumn PropertyName="TS_Max"
                                             SizeMode="Fixed"
-                                       
                                        CellContentStyle="{StaticResource RightAlign}"
                                             Width="50" />
-                <tg:DataGridTextColumn PropertyName="TSNow"
+                <tg:DataGridTextColumn PropertyName="TS_Now"
                                             SizeMode="Fixed"
                                        
                                        CellContentStyle="{StaticResource RightAlign}"
@@ -241,7 +239,7 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />
-                <tg:DataGridTextColumn PropertyName="name"
+                <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Width="60" />

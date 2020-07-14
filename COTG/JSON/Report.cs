@@ -67,15 +67,16 @@ namespace COTG.JSON
 			return Equals(obj as Report);
 		}
 
-		public bool Equals(Report other)
-		{
-			return other != null &&
-				   defCid == other.defCid &&
-				   atkCid == other.atkCid &&
-				   time.Equals(other.time);
-		}
-
-		public override int GetHashCode()
+        public bool Equals(Report other)
+        {
+            return other != null &&
+                   defCid == other.defCid &&
+                   atkCid == other.atkCid &&
+                   time.Equals(other.time);
+        }
+        public static int ReportHash(string reportId) => HashCode.Combine(reportId);
+        public static int ReportHash(Report report) => ReportHash(report.reportId);
+        public override int GetHashCode()
 		{
 			return HashCode.Combine(defCid, atkCid, time,reportId);
 		}

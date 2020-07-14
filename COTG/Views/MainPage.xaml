@@ -63,7 +63,7 @@
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
                                         Width="40" />
-                <tg:DataGridTextColumn PropertyName="name"
+                <tg:DataGridTextColumn PropertyName="cityName"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Auto"
                                        Width="100" />

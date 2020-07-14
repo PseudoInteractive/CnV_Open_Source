@@ -26,7 +26,7 @@ namespace COTG.Game
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
 
-        public static Spot invalid = new Spot() { name = "Null" };
+        public static Spot invalid = new Spot() { _cityName = "Null" };
         public static Spot GetOrAdd(int cid)
         {
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
@@ -59,16 +59,16 @@ namespace COTG.Game
             return invalid;
         }
 
-        public string _name;
-        public string name
-        { get { return _name ?? xy; } set {_name = value; } }
+        public string _cityName;
+        public string cityName
+        { get { return _cityName ?? xy; } set {_cityName = value; } }
 
         public int cid; // x,y combined into 1 number
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
         public int tsHome { get; set; }
         public int tsMax { get; set; }
-        public string TSNow => tsHome.ToString("N0");
-        public string TSMax => tsMax.ToString("N0");
+        public string TS_Now => tsHome.ToString("N0");
+        public string TS_Max => tsMax.ToString("N0");
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id

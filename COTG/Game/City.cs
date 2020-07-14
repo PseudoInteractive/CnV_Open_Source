@@ -108,8 +108,8 @@ namespace COTG.Game
         {
             jsE = jse;
             Debug.Assert(cid == jse.GetInt("cid"));
-            name = jse.GetAsString("citn");
-            Note.L($"{name} {jse.GetInt("cid")}");
+            cityName = jse.GetAsString("citn");
+            Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
 
             {
@@ -195,7 +195,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(name)}={name}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(remarks)}={remarks}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(remarks)}={remarks}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
         public async static void UpdateSenatorInfo()
         {

@@ -53,7 +53,7 @@ namespace COTG
         
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
-            UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
+            //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
 
         }
 
@@ -159,43 +159,54 @@ namespace COTG
         {
             await ActivationService.ActivateFromShareTargetAsync(args);
         }
-    }
-    public static class UserAgent
-    {
-        const int URLMON_OPTION_USERAGENT = 0x10000001;
-
-        [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-        private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
-
-        [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-        private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
-
-        public static string GetUserAgent()
+        public static IAsyncAction DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
         {
-            int capacity = 255;
-            var buf = new StringBuilder(capacity);
-            int length = 0;
-
-            UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
-
-            return buf.ToString();
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, action);
         }
-
-        public static void SetUserAgent(string agent)
+        public static IAsyncAction DispatchOnUIThreadLow(DispatchedHandler action)
         {
-            var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
-            var ex = Marshal.GetExceptionForHR(hr);
-            if (null != ex)
-            {
-                throw ex;
-            }
-        }
-
-        public static void AppendUserAgent(string suffix)
-        {
-            SetUserAgent(GetUserAgent() + suffix);
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
         }
     }
+
+    
+
+    //public static class UserAgent
+    //{
+    //    const int URLMON_OPTION_USERAGENT = 0x10000001;
+
+    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+    //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+
+    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+    //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
+
+    //    public static string GetUserAgent()
+    //    {
+    //        int capacity = 255;
+    //        var buf = new StringBuilder(capacity);
+    //        int length = 0;
+
+    //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+
+    //        return buf.ToString();
+    //    }
+
+    //    public static void SetUserAgent(string agent)
+    //    {
+    //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
+    //        var ex = Marshal.GetExceptionForHR(hr);
+    //        if (null != ex)
+    //        {
+    //            throw ex;
+    //        }
+    //    }
+
+    //    public static void AppendUserAgent(string suffix)
+    //    {
+    //        SetUserAgent(GetUserAgent() + suffix);
+    //    }
+    //}
     public static class Note 
     {
         public static void L(string s)
@@ -205,21 +216,14 @@ namespace COTG
         public static void Show(string s, int timeout = 8000)
         {
 
-            DispatchOnUIThreadLow(() => { 
+            App.DispatchOnUIThreadLow(() =>
+            { 
             var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
             textBlock.LinkClicked += MarkDownLinkClicked;
-            ShellPage.inAppNote.Show(textBlock, timeout); });
+            ShellPage.inAppNote.Show(textBlock, timeout);
+            });
 
             ShellPage.L(s);
-        }
-
-        private static IAsyncAction DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
-        {
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, action);
-        }
-        private static IAsyncAction DispatchOnUIThreadLow(DispatchedHandler action)
-        {
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
         }
         public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{

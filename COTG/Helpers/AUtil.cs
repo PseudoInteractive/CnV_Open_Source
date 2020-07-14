@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace COTG
 {
+    public enum RefreshState
+    {
+        dirty,
+        updating,
+        clean,
+    }
     public static class AUtil
     {
         public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);

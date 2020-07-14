@@ -250,7 +250,7 @@
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="12"
-                        ItemsSource="{x:Bind defenderCache, Mode=OneWay}"
+                        ItemsSource="{x:Bind defendersMRU, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
                         SelectionMode="Multiple"
@@ -261,7 +261,7 @@
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
                                         Width="40" />
-                <tg:DataGridTextColumn PropertyName="name"
+                <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Auto"
                                        Width="100" />
                 <tg:DataGridTextColumn PropertyName="xy"

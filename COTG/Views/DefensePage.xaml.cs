@@ -26,6 +26,7 @@ using COTG.JSON;
 using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
+using Windows.UI.Xaml.Navigation;
 
 namespace COTG.Views
 {
@@ -88,9 +89,9 @@ namespace COTG.Views
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public DumbCollection<Spot> defenderCache { get; } = new DumbCollection<Spot>();
+        public DumbCollection<Spot> defendersMRU { get; } = new DumbCollection<Spot>();
 
-        public static DumbCollection<Spot> Defenders => instance.defenderCache;
+        public static DumbCollection<Spot> Defenders => instance.defendersMRU;
 
 
         public static DefensePage instance;
@@ -113,6 +114,12 @@ namespace COTG.Views
             //            historyGrid.ContextFlyout = cityMenuFlyout;
             defenderGrid.SelectionChanged += DefenderGrid_SelectionChanged;
         
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if(!(e.Parameter is ShellPage))
+                IncomingOverview.Process(true); // Todo: throttle
         }
 
         private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)

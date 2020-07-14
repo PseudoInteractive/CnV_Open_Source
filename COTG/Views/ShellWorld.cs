@@ -168,7 +168,7 @@ namespace COTG.Views
                                 if (City.all.TryGetValue(c.WorldToCid(), out var city))
                                 {
                                     var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0,city.remarks.Length.Min(40) ) + "\n";
-                                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\ntsh:{city.tsHome}\n{city.name}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\ntsh:{city.tsHome}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
                                     Raiding.UpdateTS();
                                 }
 

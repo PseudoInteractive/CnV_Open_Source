@@ -447,12 +447,12 @@ namespace COTG
 
                     var city=City.all.GetOrAdd(cid,City.Factory);
                     
-                    city.name = jsCity.GetProperty("2").GetString();
-                    int i = city.name.IndexOf('-');
+                    city.cityName = jsCity.GetProperty("2").GetString();
+                    int i = city.cityName.IndexOf('-');
                     if(i!= -1)
                     {
-                        city.remarks = city.name.Substring(i + 2);
-                        city.name = city.name.Substring(0, i - 1);
+                        city.remarks = city.cityName.Substring(i + 2);
+                        city.cityName = city.cityName.Substring(0, i - 1);
                     }
                     city.isCastle = jsCity.GetAsInt("12") != 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
@@ -715,7 +715,7 @@ namespace COTG
                                 {
                                     var city =COTG.Views.DefensePage.TouchSpot(cid);
                                     
-                                    city.name = jso.GetString("name");
+                                    city.cityName = jso.GetString("name");
                                     city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
                                     //Assert(city.pid > 0);
                                     city.points = (ushort)jso.GetAsInt("score");
@@ -727,7 +727,7 @@ namespace COTG
                                     city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-                                    Note.Show($"CityClick {city.name} {city.cid.CidToStringMD()}");
+                                    Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
                                     if(IsWorldView())
                                     {
                                         // bring city into view
