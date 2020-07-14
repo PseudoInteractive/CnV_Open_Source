@@ -99,7 +99,7 @@ namespace COTG.JSON
                       foreach (var prop in jse.EnumerateObject())
                       {
                           var val = prop.Value;
-                          var cid = DecodeCid(5,val.GetString("2"));
+                          var cid = DecodeCid(5, val.GetString("2"));
                           if (cid >= 0)
                           {
 
@@ -109,8 +109,19 @@ namespace COTG.JSON
                               spot.tsHome = val.GetAsInt("8");
                               spot.pid = Player.NameToId(val.GetAsString("0"));
                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
-                             // spot.scoutRange = (float)TimeSpan.Parse( val.GetAsString("6") ).TotalHours; // is this parsed correctly?
+                                  {
+                                      var scoutRange = val.GetAsString("6");
+                                      var hrsMark = scoutRange.IndexOf('h');
+                                      if (hrsMark >= 1)
+                                          spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark));
+                                      else
+                                      {
+                                          var minMark = scoutRange.IndexOf('m');
+                                          if (minMark >= 1)
+                                              spot.scoutRange = float.Parse(scoutRange.Substring(0, minMark)) / 60.0f;
 
+                                      }
+                                  }
                                var sumDef = new List<TroopTypeCount>();
                               var processedTroopsHome = false; // for some reason, these repeat
                               foreach (var armyV in val.GetProperty("9").EnumerateArray())
@@ -201,9 +212,12 @@ namespace COTG.JSON
                                           }
                                       }
                                       army.sumDef = sumDef.ToArray();
+                                      Array.Sort(army.sumDef);
                                       army.troops = ttl.ToArray();
+                                      Array.Sort(army.troops);
                                       spot.incoming.Enqueue(army);
                                   }
+                                  spot.tsMax = TroopTypeCount.TS(sumDef);
                               }
                           else
                               { Assert(false); }

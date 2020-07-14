@@ -66,6 +66,9 @@ namespace COTG.Game
         public int cid; // x,y combined into 1 number
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
         public int tsHome { get; set; }
+        public int tsMax { get; set; }
+        public string TSNow => tsHome.ToString("N0");
+        public string TSMax => tsMax.ToString("N0");
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -74,8 +77,9 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
-        public byte claim { get; set; } // only if this is under attack
-        public bool isBlessed { get; set; }
+        public byte claim; // only if this is under attack
+        public string Claim => $"{(int)claim,3:D0}%";
+            public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
         public ushort points { get; set; }
         public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" : isTemple? "templeIcon.png" : ($"{(isCastle ? "castle" : "city")}{GetSize()}.png") );

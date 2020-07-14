@@ -14,8 +14,8 @@ namespace COTG.Game
 {
     public class Army
     {
-        public TroopTypeCount[] troops;
-        public TroopTypeCount[] sumDef;
+        public TroopTypeCount[] troops { get; set; }
+        public TroopTypeCount[] sumDef { get; set; }
         public bool isAttack;
         public bool isDefense => !isAttack;
         public string xy => sourceCid.CidToString();
@@ -24,8 +24,8 @@ namespace COTG.Game
         public string sourceCN => Spot.Get(sourceCid).name;
         public DateTimeOffset arrival { get; set; }
         public DateTimeOffset spotted { get; set; }
-        public int ts => troops.Sum((t) => t.ts);
-        public int sumTs => sumDef.Sum((t) => t.ts);
+        public string ts => troops.Sum((t) => t.ts).ToString("N0");
+        public string defTs => sumDef.Sum((t) => t.ts).ToString("N0");
         public string details => TroopTypeCount.Format(troops);
         public int pid;
         public string playerName => Player.IdToName(pid);
@@ -85,6 +85,8 @@ namespace COTG.Game
     {
         public int type;
         public int count;
+        public string Count => count.ToString(" N0 ");
+        public BitmapImage Type => ImageHelper.FromImages($"troops{type}.png");
 
         public TroopTypeCount() { }
         public TroopTypeCount(TroopTypeCount b)

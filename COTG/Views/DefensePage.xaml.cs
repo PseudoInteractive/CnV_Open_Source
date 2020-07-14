@@ -88,9 +88,9 @@ namespace COTG.Views
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public DumbCollection<Spot> defenders { get; } = new DumbCollection<Spot>();
+        public DumbCollection<Spot> defenderCache { get; } = new DumbCollection<Spot>();
 
-        public static DumbCollection<Spot> Defenders => instance.defenders;
+        public static DumbCollection<Spot> Defenders => instance.defenderCache;
 
 
         public static DefensePage instance;

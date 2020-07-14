@@ -624,6 +624,9 @@ namespace COTG.Views
             IncomingOverview.Process(false);
         }
 
-       
+        private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            logTip.IsOpen = !logTip.IsOpen;
+        }
     }
 }

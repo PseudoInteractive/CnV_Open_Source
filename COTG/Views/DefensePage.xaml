@@ -250,7 +250,7 @@
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="12"
-                        ItemsSource="{x:Bind defenders, Mode=OneWay}"
+                        ItemsSource="{x:Bind defenderCache, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
                         SelectionMode="Multiple"
