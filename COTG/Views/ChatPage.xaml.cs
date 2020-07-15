@@ -15,8 +15,9 @@ namespace COTG.Views
     // For more info about the TabView Control see
     // https://docs.microsoft.com/uwp/api/microsoft.ui.xaml.controls.tabview?view=winui-2.2
     // For other samples, get the XAML Controls Gallery app http://aka.ms/XamlControlsGallery
-    public sealed partial class TabViewPage : Page, INotifyPropertyChanged
+    public sealed partial class ChatPage : Page, INotifyPropertyChanged
     {
+        public static ChatPage instance;
         public ObservableCollection<TabViewItemData> Tabs { get; } = new ObservableCollection<TabViewItemData>()
         {
             new TabViewItemData()
@@ -40,7 +41,7 @@ namespace COTG.Views
             }
         };
 
-        public TabViewPage()
+        public ChatPage()
         {
             InitializeComponent();
         }

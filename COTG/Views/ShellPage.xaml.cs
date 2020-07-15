@@ -638,5 +638,14 @@ namespace COTG.Views
         {
           //  logTip.IsOpen = !logTip.IsOpen;
         }
-    }
+
+		private void ChatOpen(object sender, RoutedEventArgs e)
+		{
+            if(ChatPage.instance == null )
+			{
+                WindowManagerService.Current.TryShowAsStandaloneAsync("Hello!", typeof(ChatPage));
+
+            }
+        }
+	}
 }

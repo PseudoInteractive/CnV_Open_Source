@@ -10886,8 +10886,8 @@ var cotgsubscribe = amplify;
           .append(D71);
         $(_s('85' ^ 0))
           .draggable({ handle: _s('2633' >> 1763659040), containment: _s(+q5y), scroll: !{} });
-       // setTimeout(function() {}, D5y ^ 0);
-      //  setTimeout(function() {}, +'13000');
+        setTimeout(function() {}, D5y ^ 0);
+        setTimeout(function() {}, +'13000');
       }
     }
 
@@ -17470,7 +17470,7 @@ var cotgsubscribe = amplify;
         else if (M0Z == +"0") {
           $("#withAlliance")
             .show();
-          $(_s(E2p & 2147483647))
+          $("#withoutAlliance")
             .css("display", "none");
         }
       });
@@ -18671,7 +18671,7 @@ var cotgsubscribe = amplify;
         setTimeout(function() {
           E6k.y6();
           r0F();
-        }, 900);
+        }, 300);
       }
       if (B7F == '1' << 718585760) {
         B7F = '0' ^ 0;
@@ -19063,13 +19063,13 @@ var cotgsubscribe = amplify;
         w2();
         $("#withAlliance")
           .css("display", "none");
-        $(_s(E2p & 2147483647))
+        $("#withoutAlliance")
           .show();
       } else {
         w2();
         $("#withAlliance")
           .show();
-        $(_s(E2p << 429601024))
+        $("#withoutAlliance")
           .css("display", "none");
         $(_s(+"4353"))
           .html(atob(aldt[_s(+'6330')]));
@@ -26317,7 +26317,7 @@ var cotgsubscribe = amplify;
                   .css("display", "none");
                 $("#withAlliance")
                   .css("display", "none");
-                $(_s(E2p << 748033696))
+                $("#withoutAlliance")
                   .show();
                 $(_s('3277' & 2147483647))
                   .css("display", "none");
@@ -32057,7 +32057,8 @@ var cotgsubscribe = amplify;
           });
       });
 
-    function D7F() {} $(document)
+
+    $(document)
       .ready(function() {
         $(_s("5243" & 2147483647))
           .click(function() {
@@ -43821,37 +43822,38 @@ var cotgsubscribe = amplify;
     }
 
     function B1F(h76) {
-      var d76 = JSON.stringify(h76);
-    //    console.log("rMP 0 " + d76);
+      let d76 = JSON.stringify(h76);
+        console.log((new Date()).getTime() +" rMP 0 " + d76);
       E6k.y6();
-      var b76 = _s('1734' >> 1502077568);
-      var S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
+      let b76 = _s('1734' >> 1502077568);
+     
+      let S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
       N6();
-      var J76 = $.post(q6 + _s(+'6323'), { a: S76 }); // "rMp.php"
+        let J76 = $.post(q6 + "rMp.php", { a: S76 }); // "rMp.php"
       F6();
       J76.done(function(Y76) {
-        var r5m = '3023';
+        let r5m = '3023';
         if (Y76)
           if (k2 && Y76.length > +"1") {
-         // console.log("rMP start");
-            var n76;
-            var A76;
-            var j46;
-            var K76;
-            var g76;
-            var p76;
-            var Z76;
-            var e46 =
+          console.log((new Date()).getTime() +" rMP start");
+            let n76;
+            let A76;
+            let j46;
+            let K76;
+            let g76;
+            let p76;
+            let Z76;
+            let e46 =
               new Object();
-            var H46;
-            var u46;
-            var s46;
-            var k46 = new Object();
-            var f76;
-            var N76;
+            let H46;
+            let u46;
+            let s46;
+            let k46 = new Object();
+            let f76;
+            let N76;
             _viewMode = viewModeRegion;
-            var U76 = JSON.parse(Y76);
-            for (var P76 in U76) {
+            let U76 = JSON.parse(Y76);
+            for (let P76 in U76) {
               b = P76; // 306?
               if (U76[P76]) {
                 N76 = U76[P76];
@@ -43976,9 +43978,10 @@ var cotgsubscribe = amplify;
               }
             }
           }
+          console.log((new Date()).getTime() +" rMP done");
 
       });
-      //  console.log("rMP exit");
+        console.log((new Date()).getTime() +" rMP exit");
     }
 
     function s1F(p3T, c3T) {
@@ -45445,7 +45448,7 @@ var cotgsubscribe = amplify;
           }
         } if (X76.length > +"0")
         {
-      //      console.log("rmp:" + X76);
+            console.log((new Date()).getTime() +" rmp:" + X76);
         B1F(X76);
         }
     }
@@ -49943,10 +49946,6 @@ var cotgsubscribe = amplify;
         }
       }
       n8();
-      K7F = setTimeout(function() {
-        E6k.y6();
-        D7F();
-      }, +'250');
     }
     var g2 = +'0';
 
@@ -51762,13 +51761,17 @@ var cotgsubscribe = amplify;
         var f4B = document.getElementById(E6k
           .o55(+q6p));
         var A4B = document.getElementById("city_map");
-        K4B.style.display = "block";
+          let isWorld = _viewMode === viewModeWorld;
+        K4B.style.display = !isWorld ?  "block" : "none";
         f4B.style.display = "none";
         A4B.style.display = "none";
+        if (!isWorld)
+        {
         if ($(_s(+o5y))
           .attr("display") != "none");
         l2.x = G2.getTileX(P4B * +64);
         l2.y = G2.getTileY(B4B * (64 ^ 0));
+        }
       }
     }
     var W2;
@@ -53215,7 +53218,7 @@ var cotgsubscribe = amplify;
       $(_s('2388' * 1))
         .css("display", "none");
       E6k.R6();
-      if ($(_s(+E2p))
+      if ($("#withoutAlliance")
         .css("display") != "none") {
         var H11 = "";
         for (var u11 in s11)
@@ -53318,10 +53321,7 @@ var cotgsubscribe = amplify;
         z2.postUpdate();
         r5F();
       }
-      K7F = setTimeout(function() {
-        E6k.y6();
-        D7F();
-      }, +'250');
+     
     }
 
     function Y6(u2n) {
@@ -54387,7 +54387,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(+D44))
         .css("display", "none");
-      $(_s(E2p ^ 0))
+      $("#withoutAlliance")
         .css("display", "none");
       $("#withAlliance")
         .css("display", "none");
@@ -55044,7 +55044,6 @@ var cotgsubscribe = amplify;
       $(_s(+p3R))
         .css("display", "none");
     }
-    var K7F;
 //    var y9 = M8.clientWidth;
 //    var K9 = M8.clientHeight;
 
@@ -55088,7 +55087,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(+D44))
         .css("display", "none");
-      $(_s(E2p ^ 0))
+      $("#withoutAlliance")
         .css("display", "none");
       $("#withAlliance")
         .css("display", "none");
@@ -55426,7 +55425,7 @@ var cotgsubscribe = amplify;
         if (P0Z == '0' - 0) {
           $("#withAlliance")
             .show();
-          $(_s(+E2p))
+          $("#withoutAlliance")
             .css("display", "none");
           $(_s(+"5173"))
             .show();
@@ -60534,7 +60533,7 @@ var cotgsubscribe = amplify;
 
     function q7V() {
       N6();
-      var U96 = $.post(_s(+"5389"));
+      var U96 = $.post(_s(+"5389")); //     "/includes/gTp.php",
       F6();
       E6k.R6();
       U96.done(function(y96) {
@@ -66593,7 +66592,7 @@ var cotgsubscribe = amplify;
               {
                    if(  this.style.display == "block" )
                    {
-                    console.log(this.innerText);
+           //         console.log(this.innerText);
                        _popupCount++;
                    }
               }
@@ -66638,7 +66637,7 @@ var cotgsubscribe = amplify;
           }
           allyiance = "0" - 0;
           if ($("#withAlliance")
-            .css("display") != "none" || $(_s(+E2p))
+            .css("display") != "none" || $("#withoutAlliance")
             .css("display") != "none" || G4F == +"0") allyiance = +"1";
           N6();
             var a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php
@@ -66690,7 +66689,7 @@ var cotgsubscribe = amplify;
         w8 = "0" - 0;
           
       } finally {
-          DoPoll2(4000);
+          DoPoll2(3000);
       }
     }
 
@@ -68980,10 +68979,6 @@ var cotgsubscribe = amplify;
         z2.postUpdate();
         r5F();
       }
-      K7F = setTimeout(function() {
-        E6k.y6();
-        D7F();
-      }, '50' & 2147483647);
     }
     $(document)
       .ready(function() {

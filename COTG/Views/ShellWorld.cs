@@ -186,6 +186,9 @@ namespace COTG.Views
                 case World.typeBoss:
                     toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
                     break;
+                case World.typeDungeon:
+                    toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+                    break;
                 case World.typePortal:
                     toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
                     break;

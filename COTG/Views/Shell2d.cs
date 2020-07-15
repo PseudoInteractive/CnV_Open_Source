@@ -39,6 +39,11 @@ namespace COTG.Views
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14, WordWrapping = CanvasWordWrapping.NoWrap };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center,WordWrapping=CanvasWordWrapping.NoWrap};
 
+        const int cotgPopupWidth = 550;
+        const int cotgPopupLeft = 438;
+        const int cotgPopupRight = cotgPopupLeft+cotgPopupWidth;
+        const int cotgPanelRight = 410;
+
         static public CanvasAnimatedControl canvas;
 
         CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
@@ -51,7 +56,7 @@ namespace COTG.Views
 			{
 				IsHitTestVisible = false,
                 
-				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/15.0f),
+				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/1.0f),
 				
 				IsFixedTimeStep = false
 			};

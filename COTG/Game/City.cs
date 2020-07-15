@@ -223,7 +223,7 @@ namespace COTG.Game
                     {
                         type = SenatorInfo.Type.recruit,
                         count = (byte)target[0].GetInt32(),
-                        time = target[1].GetString().ParseDateTime()
+                        time = target[1].GetString().ParseDateTime(false)
                     });
                 }
                 var idle = cit[4].GetByte();
@@ -243,7 +243,7 @@ namespace COTG.Game
                         type = SenatorInfo.Type.settle,
                         count = 1,
                         target=target[0].GetInt32(),
-                        time=target[1].GetString().ParseDateTime()
+                        time=target[1].GetString().ParseDateTime(false)
                     });
                 }
                 city.senatorInfo = sens.ToArray();
