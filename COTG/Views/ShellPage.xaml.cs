@@ -30,6 +30,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using COTG.JSON;
 using System.Threading;
+using Microsoft.UI.Xaml.Controls;
 
 namespace COTG.Views
 {
@@ -109,12 +110,14 @@ namespace COTG.Views
             NavigationService.Navigated += Frame_Navigated;
             NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
             navigationView.BackRequested += OnBackRequested;
-            IdentityService.LoggedIn += OnLoggedIn;
-            IdentityService.LoggedOut += OnLoggedOut;
+          //  IdentityService.LoggedIn += OnLoggedIn;
+         //   IdentityService.LoggedOut += OnLoggedOut;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+         
+
 
             var webView = JSClient.Initialize(grid);
 
@@ -217,51 +220,7 @@ namespace COTG.Views
        
 
 
-        DumbCollection<string> logEntries = new  DumbCollection<string>( new [] { "Hello","there" }  );
-        //private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-        public static void L(string s)
-        {
-            
-          //  await _logSemaphore.WaitAsync();
-          //  try
-          //  {
-             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-              {
-                  try
-                  {
-                      var str = $"{Tick.MSS()}:{s}";
-                      //  instance.logEntries
-                      var entries = instance.logEntries;
-                      
-                      entries.AddAndNotify(str);
-                  }
-                  catch (Exception e)
-                  {
-                      Log(e);
-                  }
 
-
-
-
-              });
-           // }
-            //finally
-            //{
-            //    _logSemaphore.Release();
-            //}
-            //await Task.Delay(500);
-
-            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            //{
-            //    lock (logLock)
-            //    {
-
-            //        var ui = instance.logBox.TryGetElement(entries.Count - 1);
-            //        if (ui != null)
-            //            ui.StartBringIntoView();
-            //      }
-            //});
-        }
 
         private void OnLoggedIn(object sender, EventArgs e)
         {
@@ -335,7 +294,7 @@ namespace COTG.Views
             if (selectedItem != null)
             {
                 Selected = selectedItem;
-                L(IsPageDefense().ToString());
+                ChatTab.L(IsPageDefense().ToString());
             }
         }
         public static bool IsPageRaid()
@@ -624,11 +583,7 @@ namespace COTG.Views
  //          ScanDungeons.Post();
         }
 
-        private void MarkdownTextBlock_LinkClicked(object sender,LinkClickedEventArgs e)
-        {
-            Note.MarkDownLinkClicked(sender,e);
-        }
-
+        
         private void GetIncomingOverview(object sender, RoutedEventArgs e)
         {
             IncomingOverview.Process(false);
@@ -636,15 +591,25 @@ namespace COTG.Views
 
         private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
         {
-            logTip.IsOpen = !logTip.IsOpen;
-        }
+            if (!logTip.IsOpen)
+            {
+                chatTabFrame.Navigate(typeof(TabPage));
 
-		private void ChatOpen(object sender, RoutedEventArgs e)
-		{
-           {
-                WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
-
+                logTip.IsOpen = true;
+            }
+            else
+            {
+                chatTabFrame.Navigate(null);
+                logTip.IsOpen = false;
             }
         }
+
+		//private void ChatOpen(object sender, RoutedEventArgs e)
+		//{
+		//         {
+		//              WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
+
+		//          }
+		//      }
 	}
 }

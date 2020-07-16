@@ -112,6 +112,18 @@
             </tg:RadDataGrid.Columns>
           
         </tg:RadDataGrid>
+        <ComboBox Header="Carry%" SelectedValue= "x:Bind raidCarry" Width="200" Grid.Row="2">
+            <x:String>69</x:String>
+            <x:Sting>88.8</x:Sting>
+            <x:float>95</x:float>
+            <x:float>100</x:float>
+            <x:float>105</x:float>
+            <x:float>110</x:float>
+            <x:float>115</x:float>
+            <x:float>120</x:float>
+            <x:float>125</x:float>
+            <x:float>130</x:float>
+        </ComboBox>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Grid.Row="2"
                         AlternationStep="2"
@@ -124,7 +136,7 @@
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         SelectionUnit="Row"
-                        Margin="0,14,0,0">
+                        Margin="0,34,0,0">
             <tg:RadDataGrid.Commands>
                 <model:DungeonTapCommand />
             </tg:RadDataGrid.Commands>

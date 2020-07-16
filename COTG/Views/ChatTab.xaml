@@ -5,22 +5,45 @@
     xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerik="using:Telerik.UI.Xaml.Controls.Data"
+    xmlns:telerikData="using:Telerik.Data.Core"
+    xmlns:listview="using:Telerik.UI.Xaml.Controls.Data.ListView"
+    xmlns:listViewPrimitives="using:Telerik.UI.Xaml.Controls.Data.ListView.Primitives"
+    xmlns:listviewCommands="using:Telerik.UI.Xaml.Controls.Data.ListView.Commands"
+    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
-        <TextBlock Text="Hello there!" >
-			<TextBlock.Foreground>
-				<SolidColorBrush Color="#FFF266E3"/>
-			</TextBlock.Foreground>
-			<TextBlock.Shadow>
-				<ThemeShadow/>
-			</TextBlock.Shadow></TextBlock>
-		<Image Source="/images/defender.png" Opacity="0.5" Stretch="Uniform">
-			<Image.FocusVisualPrimaryBrush>
-				<AcrylicBrush TintColor="#CCD12929" FallbackColor="#FF344991"/>
-			</Image.FocusVisualPrimaryBrush>
-		</Image>
-	</Grid>
+        <telerik:RadListView x:Name="logBox"
+                             Margin="20 0 0 0" 
+                       
+                 
+                             SelectionMode="Single" 
+                             Orientation="Vertical" 
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Stretch" 
+                             IsActionOnSwipeEnabled="True"
+                             
+                              ItemsSource="{x:Bind logEntries,Mode=OneTime}" >
+            <telerik:RadListView.ItemTemplate >
+
+                <DataTemplate x:DataType="local:LogEntry" >
+                    <TextBlock Text="{x:Bind text}" HorizontalAlignment="Stretch" />
+                </DataTemplate>
+            </telerik:RadListView.ItemTemplate>
+            <telerik:RadListView.SwipeActionContent>
+                <Grid>
+                    <Button x:Name="checkBtn" Content="&#xE0E7;"  HorizontalAlignment="Left"/>
+                    <Button x:Name="deleteBtn" Content="&#xE107;"  HorizontalAlignment="Right"/>
+                </Grid>
+            </telerik:RadListView.SwipeActionContent>
+            <telerik:RadListView.LayoutDefinition>
+                <listview:StackLayoutDefinition />
+            </telerik:RadListView.LayoutDefinition>
+            <telerik:RadListView.Commands>
+            </telerik:RadListView.Commands>
+        </telerik:RadListView>
+    </Grid>
 </UserControl>

@@ -51,7 +51,7 @@
             <tg:RadDataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <tg:RadDataGrid x:Name="armyGrid"
-                                    ItemsSource="{Binding incoming}"
+                                    ItemsSource="{x:Bind incoming}"
                                     CanUserChooseColumns="True"
                                     GridLinesThickness="1"
                                     FontSize="12"

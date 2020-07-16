@@ -45,7 +45,7 @@ namespace COTG.Views
         private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             canvas.ReleasePointerCapture(e.Pointer);
-            ShellPage.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
+            ChatTab.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
             isMouseDown = false;
             mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
             if ((lastMousePressPosition - mousePosition).Length() < 8.0f)
@@ -95,7 +95,7 @@ namespace COTG.Views
             canvas.CapturePointer(e.Pointer);
             mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
             lastMousePressPosition = mousePosition;
-            ShellPage.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
+            ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
         }
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
         {
@@ -124,7 +124,7 @@ namespace COTG.Views
             cameraC += c0 - c1;
 
             cameraZoom = newZoom;
-        //    ShellPage.L("CWheel " + wheel);
+        //    ChatTab.L("CWheel " + wheel);
         }
         static (int x,int y) MousePointToWorld(Vector2 c1)
         {

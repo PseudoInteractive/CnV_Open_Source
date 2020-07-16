@@ -39,9 +39,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.4-runtime.20202.6" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.0-preview.8.20360.11" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-preview.4-runtime.20202.6" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-build.54" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-build.54" />
-    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="7.0.0-build.54" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.75.200629" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.8.20360.8" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-preview.8.20360.8" />

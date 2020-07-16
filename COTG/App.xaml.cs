@@ -211,7 +211,7 @@ namespace COTG
     {
         public static void L(string s)
         {
-            ShellPage.L(s);
+            ChatTab.L(s);
         }
         public static void Show(string s, int timeout = 8000)
         {
@@ -223,7 +223,7 @@ namespace COTG
             ShellPage.inAppNote.Show(textBlock, timeout);
             });
 
-            ShellPage.L(s);
+            ChatTab.L(s);
         }
         public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{

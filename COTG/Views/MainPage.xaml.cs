@@ -162,6 +162,8 @@ namespace COTG.Views
                 }
             });
         }
+        float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value; }
+
         public async static void CityListChange()
         {
             if (instance == null)

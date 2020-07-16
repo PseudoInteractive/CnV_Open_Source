@@ -57,7 +57,7 @@ namespace COTG.Game
 
     public static class Raiding
     {
-        public static float desiredCarry = 0.9f;
+        public static float desiredCarry = 0.96f;
         public static bool raidOnce;
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
         {

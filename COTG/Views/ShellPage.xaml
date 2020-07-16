@@ -176,61 +176,16 @@
                               AccessKey="F5"
                               Click="Refresh"
                               Icon="RepeatAll" />
-                <AppBarButton x:Name="Chat"
-                              Label="Hello!"
-                              AccessKey="F1"
-                              Click="ChatOpen"
-                              Icon="Phone" />
                 <AppBarButton x:Name="logFlyoutButton"
-                              Label="Dbg"
-                              Icon="Keyboard"
+                              Label="Chat"
+                              Icon="Phone"
                               Click="logFlyoutButton_Click">
                     <AppBarButton.Resources>
                         <winui:TeachingTip x:Name="logTip"
                                            Target="{x:Bind logFlyoutButton}"
                                            Background="{x:Null}">
                             <winui:TeachingTip.Content>
-                                <Grid Background="{x:Null}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="400" />
-                                        <ColumnDefinition Width="20" />
-                                    </Grid.ColumnDefinitions>
-                                    <ScrollViewer Canvas.ZIndex="21"
-                                                  MaxWidth="2048"
-                                                  Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch">
-                                        <ScrollViewer.Background>
-                                            <AcrylicBrush Opacity="0.8"
-                                                          TintColor="{ThemeResource SystemColorActiveCaptionColor}"
-                                                          TintLuminosityOpacity="0.7"
-                                                          TintOpacity="0.7" />
-                                        </ScrollViewer.Background>
-                                        <winui:ItemsRepeater x:Name="logBox"
-                                                             ItemsSource="{x:Bind logEntries,Mode=OneTime}"
-                                                             Margin="4,4,8,4"
-                                                             HorizontalAlignment="Stretch"
-                                                             VerticalAlignment="Stretch">
-                                            <winui:ItemsRepeater.ItemTemplate>
-                                                <DataTemplate x:DataType="x:String">
-                                                    <tk:MarkdownTextBlock Text="{x:Bind}"
-                                                                          Height="20"
-                                                                          Visibility="Visible"
-                                                                          HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Stretch"
-                                                                          FontSize="14"
-                                                                          LinkClicked="MarkdownTextBlock_LinkClicked"
-                                                                          Foreground="{StaticResource LogBufferForeground}"
-                                                                          Background="{x:Null}" />
-                                                </DataTemplate>
-                                            </winui:ItemsRepeater.ItemTemplate>
-                                        </winui:ItemsRepeater>
-                                    </ScrollViewer>
-                                    <tk:GridSplitter Canvas.ZIndex="70"
-                                                     ResizeDirection="Columns"
-                                                     Width="8"
-                                                     HorizontalAlignment="Right" />
-                                </Grid>
+                                <Frame x:Name="chatTabFrame" IsNavigationStackEnabled="False" />
                             </winui:TeachingTip.Content>
                         </winui:TeachingTip>
                     </AppBarButton.Resources>

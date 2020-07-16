@@ -24,23 +24,22 @@ namespace COTG.Views
         {
             this.InitializeComponent();
 
-            Tabs.TabItemsChanged += Tabs_TabItemsChanged;
         }
 
         private async void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
         {
             // If there are no more tabs, close the window.
-            if (sender.TabItems.Count == 0)
-            {
-                if (RootAppWindow != null)
-                {
-                    await RootAppWindow.CloseAsync();
-                }
-                else
-                {
-                    Window.Current.Close();
-                }
-            }
+            //if (sender.TabItems.Count == 0)
+            //{
+            //    if (RootAppWindow != null)
+            //    {
+            //        await RootAppWindow.CloseAsync();
+            //    }
+            //    else
+            //    {
+            //        Window.Current.Close();
+            //    }
+            //}
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -49,16 +48,41 @@ namespace COTG.Views
 
             SetupWindow(null);
         }
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            if (RootAppWindow == null)
+            {
+
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_LayoutMetricsChanged;
+
+            }
+            else
+            {
+                // Secondary
+                RootAppWindow.Frame.DragRegionVisuals.Remove(CustomDragRegion);
+            }
+            Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+            Tabs.TabItems.Clear();
+        }
 
         void SetupWindow(AppWindow window)
         {
             if (window == null)
             {
                 // Main Window -- add some default items
-                for (int i = 0; i < 3; i++)
+                foreach(var tab in ChatTab.all)
                 {
-                    Tabs.TabItems.Add(new TabViewItem() { IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
-                        Header = $"Item {i}", Content = new ChatTab() { DataContext = $"Page {i}" } });
+                    if (tab.isActive)
+                        continue;
+                    tab.isActive = true;
+                    Tabs.TabItems.Add(new TabViewItem()
+                    {
+                        IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                        Header = tab.DataContext as string,
+                        Content = tab
+                    } );
                 }
 
                 Tabs.SelectedIndex = 0;
@@ -91,6 +115,9 @@ namespace COTG.Views
 
                 window.Frame.DragRegionVisuals.Add(CustomDragRegion);
             }
+            Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+            Tabs.TabItemsChanged += Tabs_TabItemsChanged;
+
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -225,14 +252,27 @@ namespace COTG.Views
 
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
-            sender.TabItems.Add(new TabViewItem()
-            { IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
-                Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
+            //sender.TabItems.Add(new TabViewItem()
+            //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+            //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
         }
-
+        static void RemoveTab(TabView view, TabViewItem tab)
+        {
+            var chatTab = tab.Content as ChatTab;
+            chatTab.isActive = false;
+            tab.Content = null; // remove it
+            view.TabItems.Remove(tab);
+        }
+        void RemoveTab(TabViewItem tab)
+		{
+            var chatTab = tab.Content as ChatTab;
+            chatTab.isActive = false;
+            tab.Content = null; // remove it
+            Tabs.TabItems.Remove(tab);
+		}
         private void Tabs_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
         {
-            sender.TabItems.Remove(args.Tab);
+            RemoveTab(sender,args.Tab);
         }
     }
 }

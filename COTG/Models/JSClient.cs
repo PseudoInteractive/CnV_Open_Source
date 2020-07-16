@@ -825,7 +825,7 @@ namespace COTG
                                     ShellPage.cameraC.X = jso.GetAsFloat("x") / ShellPage.cameraZoom;
                                     ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
 
-                                    ShellPage.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
+                                    ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
                                     // if((viewMode & ViewMode.region)!=0)
                                  //   ShellPage.canvas?.Invalidate();
                                 }
