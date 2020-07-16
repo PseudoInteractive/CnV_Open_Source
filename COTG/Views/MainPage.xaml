@@ -43,7 +43,7 @@
                         AlternationStep="2"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode="Single"
+                        SelectionMode="Multiple"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="34"
@@ -51,11 +51,7 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
-                        
-                        SelectionUnit="Row"
-                        GroupPanelPosition="Bottom">
-            
-
+                        SelectionUnit="Row">
             <tg:RadDataGrid.Commands>
                 <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
@@ -69,7 +65,7 @@
                                        Width="100" />
                 <tg:DataGridTextColumn PropertyName="xy"
                                        Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="ts"
+                <tg:DataGridNumericalColumn PropertyName="tsTotal"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
@@ -113,6 +109,7 @@
                                             IsVisible="False"
                                             Width="40" />
             </tg:RadDataGrid.Columns>
+          
         </tg:RadDataGrid>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Grid.Row="2"

@@ -81,6 +81,28 @@ namespace COTG
         {
             return (float)f * (float)f;
         }
+        public static float Sqrt(this float f)
+        {
+            return MathF.Sqrt(f);
+        }
+        // like gamma
+        public static float LerpSquared(this float t,float c0, float c1)
+        {
+            var a0 = (c0).Squared();
+            var a1 = (c1).Squared();
+            return t.Lerp(a0, a1).Max(0.0f).Sqrt();
+        }
+        public static float LerpSqrt(this float t, float c0, float c1)
+        {
+            var a0 = (c0).Max(0.0f).Sqrt();
+            var a1 = (c1).Max(0.0f).Sqrt();
+            return t.Lerp(a0, a1).Squared();
+        }
+        public static float Squared(this byte f)
+        {
+            return (float)f * (float)f;
+        }
+        
 
         public static float Distance(this (int x,int y) a,(int x, int y) b)
         {

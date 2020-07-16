@@ -39,9 +39,9 @@ namespace COTG.Services
 
         // Displays a view as a standalone
         // You can use the resulting ViewLifeTileControl to interact with the new window.
-        public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync(string windowTitle, Type pageType)
+        public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync<PageType>(string windowTitle)
         {
-            ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle, pageType);
+            ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle, typeof(PageType) );
             SecondaryViews.Add(viewControl);
             viewControl.StartViewInUse();
             await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -8,6 +10,7 @@ using COTG.Models;
 
 using Windows.UI.Xaml.Controls;
 
+using static COTG.Debug;
 using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace COTG.Views
@@ -15,9 +18,10 @@ namespace COTG.Views
     // For more info about the TabView Control see
     // https://docs.microsoft.com/uwp/api/microsoft.ui.xaml.controls.tabview?view=winui-2.2
     // For other samples, get the XAML Controls Gallery app http://aka.ms/XamlControlsGallery
-    public sealed partial class ChatPage : Page, INotifyPropertyChanged
+    public sealed partial class TabPage : Page, INotifyPropertyChanged
     {
-        public static ChatPage instance;
+        public static ConcurrentQueue<TabPage> instances = new ConcurrentQueue<TabPage>(); // instance 0 is always inbedded in App, other instances are new windows
+
         public ObservableCollection<TabViewItemData> Tabs { get; } = new ObservableCollection<TabViewItemData>()
         {
             new TabViewItemData()
@@ -41,9 +45,11 @@ namespace COTG.Views
             }
         };
 
-        public ChatPage()
+        public TabPage()
         {
             InitializeComponent();
+            instances.Enqueue(this);
+
         }
 
         private void OnAddTabButtonClick(Microsoft.UI.Xaml.Controls.TabView sender, object args)

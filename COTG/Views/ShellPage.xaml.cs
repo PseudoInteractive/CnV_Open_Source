@@ -344,7 +344,7 @@ namespace COTG.Views
         }
         public static bool IsPageDefense()
         {
-            return instance.Selected == instance.defense;
+            return instance.Selected == instance.DefenseHistory;
         }
         public static bool IsPageDefender()
         {
@@ -636,14 +636,14 @@ namespace COTG.Views
 
         private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
         {
-          //  logTip.IsOpen = !logTip.IsOpen;
+            logTip.IsOpen = !logTip.IsOpen;
         }
 
 		private void ChatOpen(object sender, RoutedEventArgs e)
 		{
-            if(ChatPage.instance == null )
+            if(TabPage.instance == null )
 			{
-                WindowManagerService.Current.TryShowAsStandaloneAsync("Hello!", typeof(ChatPage));
+                WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
 
             }
         }

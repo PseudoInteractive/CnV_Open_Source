@@ -9,7 +9,6 @@
       xmlns:model="using:COTG.Models"
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
@@ -46,6 +45,9 @@
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
+            <tg:RadDataGrid.Commands>
+                <local:DataBindingComplete Id="DataBindingComplete" />
+            </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <tg:RadDataGrid x:Name="armyGrid"
@@ -208,6 +210,20 @@
                                                    CellContentStyle="{StaticResource CenterAlign}"
                                                    SizeMode="Fixed" />
                         </tg:RadDataGrid.Columns>
+                        <!--<tg:RadDataGrid.AggregateDescriptors>
+                            <tdd:PropertyAggregateDescriptor PropertyName="SE"
+                                                                     Function="Count" />
+                            <tdd:PropertyAggregateDescriptor PropertyName="Sen"
+                                                                     Function="Count" />
+                            <tdd:PropertyAggregateDescriptor PropertyName="atsKill"
+                                                                     Function="Sum" />
+                            <tdd:PropertyAggregateDescriptor PropertyName="dtsKill"
+                                                                     Function="Sum" />
+                            <tdd:PropertyAggregateDescriptor PropertyName="aTS"
+                                                                     Function="Sum" />
+                            <tdd:PropertyAggregateDescriptor PropertyName="dTS"
+                                                                     Function="Sum" />
+                        </tg:RadDataGrid.AggregateDescriptors>-->
                     </tg:RadDataGrid>
                 </DataTemplate>
             </tg:RadDataGrid.RowDetailsTemplate>

@@ -15,6 +15,8 @@
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
+      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       NavigationCacheMode="Required"
@@ -70,12 +72,24 @@
                             Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.scoutStyle>
+            <local:ReportTypeStyleSelector.plunderStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground"
+                            Value="#206996" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
+                </Style>
+            </local:ReportTypeStyleSelector.plunderStyle>
         </local:ReportTypeStyleSelector>
         <local:ReportKillStyleSelector x:Key="ReportKillStyleSelector">
             <local:ReportKillStyleSelector.attackerWinStyle>
                 <Style TargetType="TextBlock">
                     <Setter Property="Foreground"
-                            Value="#109E20" />
+                            Value="#08B00F" />
                     <Setter Property="VerticalAlignment"
                             Value="Center" />
                     <Setter Property="HorizontalAlignment"
@@ -131,7 +145,7 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <tg:RadDataGrid x:Name="historyGrid"
+        <telerikGrid:RadDataGrid x:Name="historyGrid"
                         GridLinesThickness="0.75"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
@@ -146,101 +160,115 @@
                         SelectionUnit="Row"
                         UserSortMode="Auto">
             
-            <tg:RadDataGrid.Commands  >
+            <telerikGrid:RadDataGrid.Commands  >
                 <model:DefenseTapCommand   />
-            </tg:RadDataGrid.Commands>
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridDateColumn Width="80"
+            </telerikGrid:RadDataGrid.Commands>
+            <telerikGrid:RadDataGrid.Columns>
+                <telerikGrid:DataGridDateColumn Width="80"
                                        PropertyName="time"
                                        Header="Time"
                                        CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <tg:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="60"
                                        PropertyName="Type"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <tg:DataGridTextColumn Width="80"
+                <telerikGrid:DataGridTextColumn Width="80"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="dPlyr" />
-                <tg:DataGridTextColumn Width="80"
+                <telerikGrid:DataGridTextColumn Width="80"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="aPlyr" />
-                <tg:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="60"
                                        PropertyName="defC"
                                        CellContentStyle="{StaticResource CenterAlign}"
                                        SizeMode="Fixed" />
-                <tg:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="60"
                                        PropertyName="atkC"
                                        CellContentStyle="{StaticResource CenterAlign}"
                                        SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="dTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="aTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="dTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="aTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridTextColumn Width="50"
+                <telerikGrid:DataGridTextColumn Width="50"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="defCN" />
-                <tg:DataGridTextColumn Width="50"
+                <telerikGrid:DataGridTextColumn Width="50"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="atkCN" />
-                <tg:DataGridNumericalColumn Width="32"
+                <telerikGrid:DataGridNumericalColumn Width="32"
                                             PropertyName="claim"
                                             CellContentFormat="{}{0,3:N0}"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="34"
+                <telerikGrid:DataGridNumericalColumn Width="34"
                                             PropertyName="Cont"
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             SizeMode="Fixed" />
-                <tg:DataGridBooleanColumn Width="30"
+                <telerikGrid:DataGridBooleanColumn Width="30"
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           PropertyName="Sen"
                                           SizeMode="Fixed" />
-                <tg:DataGridBooleanColumn Width="30"
+                <telerikGrid:DataGridBooleanColumn Width="30"
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           PropertyName="Nvl"
                                           SizeMode="Fixed" />
-                <tg:DataGridBooleanColumn Width="30"
+                <telerikGrid:DataGridBooleanColumn Width="30"
                                           PropertyName="SE"
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="dTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridNumericalColumn Width="50"
+                <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="aTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                             SizeMode="Fixed" />
-                <tg:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="60"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="atkAli" />
-                <tg:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="60"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        PropertyName="defAli"
                                        IsVisible="False" />
-            </tg:RadDataGrid.Columns>
-        </tg:RadDataGrid>
-        <tg:RadDataGrid x:Name="defenderGrid"
+            </telerikGrid:RadDataGrid.Columns>
+            <!--<telerikGrid:RadDataGrid.AggregateDescriptors>
+                <telerikCore:PropertyAggregateDescriptor PropertyName="SE"
+                                                         Function="Count" />
+                <telerikCore:PropertyAggregateDescriptor PropertyName="Sen"
+                                                         Function="Count" />
+                <telerikCore:PropertyAggregateDescriptor PropertyName="atsKill"
+                                                         Function="Sum" />
+                <telerikCore:PropertyAggregateDescriptor PropertyName="dtsKill"
+                                                         Function="Sum" />
+                <telerikCore:PropertyAggregateDescriptor PropertyName="aTS"
+                                                         Function="Sum" />
+                <telerikCore:PropertyAggregateDescriptor PropertyName="dTS"
+                                                         Function="Sum" />
+            </telerikGrid:RadDataGrid.AggregateDescriptors>-->
+        </telerikGrid:RadDataGrid>
+        <telerikGrid:RadDataGrid x:Name="defenderGrid"
                         Grid.Row="1"
                         Margin="0,14,0,0"
                         AutoGenerateColumns="False"
@@ -257,23 +285,24 @@
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
                         UserSortMode="Multiple">
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icon"
+            <telerikGrid:RadDataGrid.Columns>
+                <telerikGrid:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
                                         Width="40" />
-                <tg:DataGridTextColumn PropertyName="cityName"
+                <telerikGrid:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Auto"
                                        Width="100" />
-                <tg:DataGridTextColumn PropertyName="xy"
+                <telerikGrid:DataGridTextColumn PropertyName="xy"
                                        Width="80" />
-                <tg:DataGridTextColumn PropertyName="player"
+                <telerikGrid:DataGridTextColumn PropertyName="player"
                                        Width="80" />
-                <tg:DataGridTextColumn PropertyName="alliance"
+                <telerikGrid:DataGridTextColumn PropertyName="alliance"
                                        Width="80" />
-                <tg:DataGridNumericalColumn PropertyName="points"
+                <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                             Width="80" />
-            </tg:RadDataGrid.Columns>
-        </tg:RadDataGrid>
+            </telerikGrid:RadDataGrid.Columns>
+
+        </telerikGrid:RadDataGrid>
         <tk:GridSplitter Grid.Row="1"
                          Height="13"
                          VerticalAlignment="Top" />

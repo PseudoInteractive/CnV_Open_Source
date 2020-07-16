@@ -30,6 +30,8 @@ namespace COTG.Game
         public int pid;
         public string playerName => Player.IdToName(pid);
 
+        public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
+
         public static (Army spot, string column, Vector2 point) HitTest(object sender, TappedRoutedEventArgs e)
         {
             var grid = sender as RadDataGrid;
@@ -79,7 +81,9 @@ namespace COTG.Game
         public string sc3 => cN(sumDef, 3);
         public BitmapImage si3 => iN(sumDef, 3);
 
-
+        public bool Senny => troops.Any((a) => a.isSenator);
+        public bool hasNaval => troops.Any((a) => a.isNaval);
+        public bool hasArt => troops.Any((a) => a.isArt);
     }
     public class TroopTypeCount : IComparable<TroopTypeCount>
     {
@@ -94,6 +98,10 @@ namespace COTG.Game
             type = b.type;
             count = b.count;
         }
+        public bool isSenator => type == Enum.ttSenator;
+        public bool isArt  =>  Enum.ttArtillery[type];
+        public bool isNaval => Enum.ttNavy[type];
+
         public static string Format( IEnumerable<TroopTypeCount> l )
         {
             string rv = "";

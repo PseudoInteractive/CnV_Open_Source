@@ -30,21 +30,49 @@ namespace COTG.Views
         public static Vector2 cameraC;
         public static Vector2 clientC;
         public static Vector2 clientSpan;
-        public static Vector2 cameraMid;
+        //   public static Vector2 cameraMid;
         public static float cameraZoom;
         public float eventTimeOffset;
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
-        static CanvasLinearGradientBrush tipBackgroundBrush,tipTextBrush;
-        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize=14, WordWrapping = CanvasWordWrapping.NoWrap };
-        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment=CanvasHorizontalAlignment.Center,VerticalAlignment=CanvasVerticalAlignment.Center,WordWrapping=CanvasWordWrapping.NoWrap};
+        static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
+        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
+        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap };
+        static readonly Color attackColor = Colors.DarkRed;
+        static readonly Color defenseColor = Colors.DarkCyan;
+        static readonly Color artColor = Colors.DarkOrange;
+        static readonly Color senatorColor = Colors.MediumVioletRed;
+        static readonly Color incomingHistoryColor = Color.FromArgb(127, 20, 200, 200);// (0xFF8B008B);// Colors.DarkMagenta;
+        static readonly Color raidColor = Colors.Yellow;
+        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
+        static readonly Color selectColor = Colors.DarkMagenta;
+        static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 
+        const int bottomMargin = 36;
         const int cotgPopupWidth = 550;
         const int cotgPopupLeft = 438;
         const int cotgPopupRight = cotgPopupLeft+cotgPopupWidth;
         const int cotgPanelRight = 410;
+        public static int cachedXOffset = cotgPanelRight;
 
         static public CanvasAnimatedControl canvas;
+
+        public static void NotifyCotgPopup(int cotgPopupOpen)
+        {
+            var leftOffset = cotgPopupOpen>0 ? cotgPopupRight : cotgPanelRight;
+            var delta = leftOffset - cachedXOffset;
+            if (delta==0)
+                return;
+            
+            cachedXOffset = leftOffset;
+            var _grid = canvas;
+
+            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => _grid.Margin = new Thickness(cotgPopupOpen > 0 ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, 0, 0, bottomMargin));
+//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
+  //          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
+
+        }
 
         CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
             DashCap=CanvasCapStyle.Triangle,
@@ -65,7 +93,9 @@ namespace COTG.Views
             canvas.LayoutUpdated += Canvas_LayoutUpdated;
 			canvas.SizeChanged += Canvas_SizeChanged;
 			canvas.CreateResources += Canvas_CreateResources;
-			return canvas;
+            canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
+
+            return canvas;
 
 		}
 
@@ -146,7 +176,7 @@ namespace COTG.Views
             public int incoming;
         };
 
-        const float postAttackDisplayTime = 11 * 60; // 11 min
+        const float postAttackDisplayTime = 15 * 60; // 11 min
 
         const float circleRadMin = 3.0f;
         const float circleRadMax = 5.5f;
@@ -159,6 +189,20 @@ namespace COTG.Views
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale=1;
         const float dashLength = (1 + 3) * lineThickness;
+
+
+        public static bool IsCulled(Vector2 c0, Vector2 c1)
+        {
+            var x1 = c0.X.Max(c1.X);
+            var x0 = c0.X.Min(c1.X);
+
+            var y1 = c0.Y.Max(c1.Y);
+            var y0 = c0.Y.Min(c1.Y);
+            // todo: cull on diagonals
+            return  x1 <= 0 || x0 >= clientSpan.X ||
+                    y1 <= 0 || y0 >= clientSpan.Y;
+        }
+
         public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
@@ -178,6 +222,7 @@ namespace COTG.Views
             }
             if (!(IsWorldView() || IsRegionView()))
                 return;
+
 
             try
             {
@@ -271,8 +316,8 @@ namespace COTG.Views
                         foreach (var attack in reports)
                         {
                             var targetCid = attack.defCid;
-                            var c1 = targetCid.ToWorldC().WToC();
-                            var c0 = attack.atkCid.ToWorldC().WToC();
+                            var c1 = targetCid.CidToCC();
+                            var c0 = attack.atkCid.CidToCC();
                             // cull (should do this pre-transform as that would be more efficient
                             if (c0.X.Min(c1.X) >= clientSpan.X)
                                 continue;
@@ -304,7 +349,7 @@ namespace COTG.Views
                             if (Spot.AreAnySelected() && !Spot.IsSelectedOrHovered(targetCid))
                                 continue;
                            
-                            DrawAction(serverNow, ds, rectSpan, attack.time, attack.time-attack.spotted, c0, c1);
+                            DrawAction(serverNow, ds, rectSpan, attack.time, attack.time-attack.spotted, c0, c1,incomingHistoryColor);
                             //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                             //var mid = progress.Lerp(c0, c1);
                             //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
@@ -317,64 +362,98 @@ namespace COTG.Views
 						{
                             var cid = i.Key;
                             var count = i.Value;
-                            var c = cid.ToWorldC().WToC();
+                            var c = cid.CidToCC();
                             DrawTextBox(ds,$"{count.prior},{count.incoming}", c, tipTextFormatCentered);
 
 
                         }
                     }
                 }
-                if (IsPageRaid())
+                foreach (var city in City.all.Values)
                 {
-                    foreach (var city in City.all.Values)
+                    if (city.incoming.Count > 0 )
                     {
-                        var c = city.cid.ToWorldC().WToC();
-                       // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                        var c1 = city.cid.CidToCC();
+                        foreach(var i in city.incoming )
+                        {
+                            var c0 = i.sourceCid.CidToCC();
+                            if (IsCulled(c0, c1))
+                                continue;
+                            Color c;
+                            if (i.isDefense)
+                            {
+                                c = defenseColor;
+                            }
+                            else if( i.hasArt)
+                            {
+                                c = artColor;
+                            }
+                            else if (i.Senny)
+                            {
+                                c = senatorColor; ;
+                            }
+                            else
+                            {
+                                c = attackColor;
+                            }
+                            DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival-i.spotted) , c0, c1,c);
+                        }
+                    }
+                    // Todo: clip thi
+                    if (city.senatorInfo.Length != 0)
+                    {
+                        var c = city.cid.CidToCC();
+                        var idle = 0;
+                        var active = 0;
+                        var recruiting = 0;
+                        foreach (var sen in city.senatorInfo)
+                        {
+                            if (sen.type == SenatorInfo.Type.idle)
+                                idle += sen.count;
+                            else if (sen.type == SenatorInfo.Type.recruit)
+                                recruiting += sen.count;
+                            else
+                                active += sen.count;
+                            if (sen.target != 0)
+                            {
+                                var c1 = sen.target.CidToCC();
+                                DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
+                            }
+                        }
+                        DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
+
+                    }
+
+                    if (IsPageRaid())
+                    {
+                        var c = city.cid.CidToCC();
+
+                        // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
                         //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
                         //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
                         foreach (var raid in city.raids)
                         {
-                            var ct = raid.target.ToWorldC().WToC();
+                            var ct = raid.target.CidToCC();
                             (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                            DrawAction(serverNow, ds, rectSpan, raid.arrival,TimeSpan.FromHours(2), c0, c1);
-
-                        }
-                        if (city.senatorInfo.Length != 0)
-                        {
-                            var idle = 0;
-                            var active = 0;
-                            var recruiting=0;
-                            foreach (var sen in city.senatorInfo) 
-                            {
-                                if (sen.type == SenatorInfo.Type.idle)
-                                    idle += sen.count;
-                                else if (sen.type == SenatorInfo.Type.recruit)
-                                    recruiting += sen.count;
-                                else
-                                    active += sen.count;
-                                if(sen.target != 0)
-                                {
-                                    var c1 = sen.target.ToWorldC().WToC();
-                                    DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1);
-                                }
-                            }
-                            DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
+                            DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1,raidColor);
 
                         }
                     }
                 }
-                if(!IsCityView())
+                
+
+                if (!IsCityView())
                 {
                     foreach(var city in Spot.GetSelected())
                     {
-                        var c = city.ToWorldC().WToC();
+                        var c = city.CidToCC();
                         var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f))+0.25f;
                         var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                        ds.DrawRoundedSquareWithShadow(c, r, raidBrush);
+                        ds.DrawRoundedSquareWithShadow(c, r, selectColor);
 
                     }
-
                 }
+
                 // show selected
                 var _toolTip =toolTip;
                 if(_toolTip != null)
@@ -422,18 +501,33 @@ namespace COTG.Views
             ds.DrawTextLayout(textLayout, at.X,at.Y, Colors.White );
         }
 
-        private void DrawAction(DateTimeOffset serverNow, CanvasDrawingSession ds, float rectSpan, DateTimeOffset arrival,TimeSpan dt, Vector2 c0, Vector2 c1)
+        private void DrawAction(DateTimeOffset serverNow, CanvasDrawingSession ds, float rectSpan, DateTimeOffset arrival,TimeSpan dt, Vector2 c0, Vector2 c1,Color color)
 		{
+            if (IsCulled(c0, c1))
+                return;
             var dt1 = (float)(arrival - serverNow).TotalSeconds;
-            var progress = (1f-(float)(dt1 /dt.TotalSeconds )).Max(0.125f).Min(1.0f); // we don't know the duration so we approximate with 2 hours
+            float progress;
+            if (dt1 <= 0.0f)
+            {
+                progress = 1.0f;
+            }
+            else 
+            {
+                var dt1Sec = (float)dt.TotalSeconds;
+                if (dt1 >= dt1Sec)
+                    progress = 1.0f / 16.0f;
+                else
+                    progress = 1f - (float)(dt1 / dt1Sec); // we don't know the duration so we approximate with 2 hours
+            }
             if (dt1 < postAttackDisplayTime)
-                rectSpan *= 2.0f;
+                rectSpan *= 2.0f - dt1/postAttackDisplayTime;
             var mid = progress.Lerp(c0, c1);
-            ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-            ds.DrawRoundedSquare(mid, rectSpan, shadowBrush,2.0f);
+            var shadowC = color.GetShadowColor();
+            ds.DrawLine(c0, c1, 0.5f.Lerp(color,black0Alpha), lineThickness, defaultStrokeStyle);
+            ds.DrawRoundedSquare(mid, rectSpan, shadowC,2.0f);
             var midS = mid - shadowOffset;
-            ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-            ds.DrawRoundedSquare(midS, rectSpan, raidBrush, 2.0f) ;
+            ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
+            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
         }
 
         private static bool IsWorldView()
@@ -451,28 +545,33 @@ namespace COTG.Views
     }
     public static class CanvasHelpers
     {
-        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush,float thickness = 1.5f)
+        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color,float thickness = 1.5f)
         {
-            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2,circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, brush, thickness);
+            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2,circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
         }
-        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush, float thickness = 1.5f)
+        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
         {
-            DrawRoundedSquareShadow(ds, c, circleRadius, thickness);
+            DrawRoundedSquareShadow(ds, c, circleRadius,brush.GetShadowColor(), thickness);
             DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
         }
-        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius,  float thickness = 1.5f)
+        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color baseColor,  float thickness = 1.5f)
         {
-            DrawRoundedSquare(ds, c, circleRadius, ShellPage.shadowBrush, thickness);
+//            DrawRoundedSquare(ds, c, circleRadius, GetShadowColor(color), thickness);
         }
-        public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, ICanvasBrush brush, float thickness = 1.5f)
+        public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
         {
-            DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
+  //          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
         }
 
         public static Vector2 WToC(this Vector2 c)
         {
             return (c - ShellPage.cameraC) * ShellPage.pixelScale - ShellPage.clientC;
         }
+        public static Vector2 CidToCC(this int c)
+        {
+            return c.ToWorldC().WToC();
+        }
+
         public static float WToCx(this float c)
         {
             return 
@@ -499,7 +598,8 @@ namespace COTG.Views
 
 
         }
-      
+        public static Color GetShadowColor(this Color c) => 0.5f.Lerp(c, Color.FromArgb(0, 0, 0, 0));
+
     }
 }
 

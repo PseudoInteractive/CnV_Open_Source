@@ -148,7 +148,7 @@ namespace COTG.Game
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid);
                         break;
-                    case "ts":
+                    case "tsTotal":
                     case "tsHome":
                         {
                             if (City.IsMine(cid)  ) // Only valid for my own cities
@@ -159,6 +159,49 @@ namespace COTG.Game
         }
         // Incoming attacks
         public ConcurrentQueue<Army> incoming { get; set; } = new ConcurrentQueue<Army>();
+
+        public int attacks
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (a.isAttack)
+                        ++rv;
+                }
+                return rv;
+            }
+        }
+        public int defenders
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (a.isDefense)
+                        ++rv;
+                }
+                return rv;
+            }
+        }
+        public int activeSieges
+        {
+            get 
+                {
+                    var rv = 0;
+                    foreach (var a in incoming)
+                    {
+                        if (a.isSiege)
+                            ++rv;
+                    }
+                    return rv;
+                }
+            }
+        public bool iNav => incoming.Any((a) => a.hasNaval);
+        public bool iSenny => incoming.Any((a) => a.Senny);
+        public bool iArt => incoming.Any((a) => a.hasArt);
 
         public static List<int> GetSelected()
         {

@@ -25,6 +25,7 @@ using System.Collections;
 using Windows.UI.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
+using System.Linq;
 
 namespace COTG.Views
 {
@@ -172,7 +173,7 @@ namespace COTG.Views
                 var cities = instance.cities;
                 if (selectedCityList == null || selectedCityList.id==-1)
                 {
-                    cities.Reset(City.all.Values);
+                    cities.Reset(City.all.Values.OrderBy((a) => a.cityName));
                 }
                 else
                 {
@@ -187,7 +188,7 @@ namespace COTG.Views
                                 filtered.Add(c);
                             }
                         }
-                        cities.Reset(filtered);
+                        cities.Reset(filtered.OrderBy((a) => a.cityName));
 
                     }
 

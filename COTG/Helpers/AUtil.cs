@@ -1,9 +1,11 @@
-﻿using System;
+﻿using COTG.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI;
 
 namespace COTG
 {
@@ -15,8 +17,27 @@ namespace COTG
     }
     public static class AUtil
     {
+        public static void Nop<T0>(T0 t) { }
         public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);
         // Lists
+        public static Color Lerp(this float t, Color c0, Color c1)
+        {
+            return Color.FromArgb(
+                (byte)t.Lerp((float)c0.A, (float)c1.A).RoundToInt(),
+                (byte)t.Lerp((float)c0.R, (float)c1.R).RoundToInt(),
+                (byte)t.Lerp((float)c0.G, (float)c1.G).RoundToInt(),
+                (byte)t.Lerp((float)c0.B, (float)c1.B).RoundToInt());
+        }
+        public static Color LerpGamma(this float t, Color c0, Color c1)
+        {
+           
+            return Color.FromArgb(
+                (byte)t.LerpSqrt((float)c0.A, (float)c1.A).RoundToInt(),
+                (byte)t.LerpSqrt((float)c0.R, (float)c1.R).RoundToInt(),
+                (byte)t.LerpSqrt((float)c0.G, (float)c1.G).RoundToInt(),
+                (byte)t.LerpSqrt((float)c0.B, (float)c1.B).RoundToInt());
+        }
+        public static bool IsZero(this DateTimeOffset c) => c == dateTimeZero;
         public static void AddIfAbsent<T>(this List<T> l, T a) where T: IEquatable<T>
         {
             foreach(var i in l)

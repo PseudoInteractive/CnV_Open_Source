@@ -91,16 +91,7 @@ namespace COTG.Game
         public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
         public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 
-        public int ts
-        {
-            get
-            {
-                var tt = troopsTotal;
-                if (!tt.IsValid())
-                    return -1;
-                return tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
-            }
-        }
+        public int tsTotal { get; set; } // ts total including those on commands like raids, def etc.
         
         public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
         public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
@@ -112,11 +103,22 @@ namespace COTG.Game
             Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
 
+
+            // stores one count per troop type, mostly 0s
             {
                 var tt = troopsHome;
                 if (tt.IsValid())
                 {
-                    tsHome = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32());
+                    var tType = 0;
+                    tsHome = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32()*Enum.ttTs[tType++] );
+                }
+            }
+            {
+                var tt = troopsTotal;
+                if (tt.IsValid())
+                {
+                    var tType = 0;
+                    tsTotal = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32() * Enum.ttTs[tType++]);
                 }
             }
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
@@ -195,7 +197,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(remarks)}={remarks}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(ts)}={ts.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(pid)}={pid}, {nameof(alliance)}={alliance}, {nameof(remarks)}={remarks}, {nameof(lastAccessed)}={lastAccessed.ToString()}, {nameof(isCastle)}={isCastle.ToString()}, {nameof(isOnWater)}={isOnWater.ToString()}, {nameof(isTemple)}={isTemple.ToString()}, {nameof(points)}={points.ToString()}, {nameof(icon)}={icon}, {nameof(tsTotal)}={tsTotal.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
         public async static void UpdateSenatorInfo()
         {

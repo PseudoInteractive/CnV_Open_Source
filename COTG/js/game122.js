@@ -43820,8 +43820,17 @@ var cotgsubscribe = amplify;
       B0w.p = P0w;
       return B0w;
     }
+    
+    let isInUpdateMP=0;
+
 
     function B1F(h76) {
+        if (isInUpdateMP >0)
+        {
+            --isInUpdateMP;
+            return;
+        }
+        isInUpdateMP =4;
       let d76 = JSON.stringify(h76);
         console.log((new Date()).getTime() +" rMP 0 " + d76);
       E6k.y6();
@@ -43979,7 +43988,8 @@ var cotgsubscribe = amplify;
             }
           }
           console.log((new Date()).getTime() +" rMP done");
-
+          isInUpdateMP -= 2;
+    
       });
         console.log((new Date()).getTime() +" rMP exit");
     }
@@ -45335,6 +45345,11 @@ var cotgsubscribe = amplify;
     }
 
     function f0F(W76, i76) {
+        if ( isInUpdateMP > 0) {
+            --isInUpdateMP;
+            return;
+        }
+        
       const Y7m = "90000";
      
       let z76 = Math.floor(W76 / +64);
@@ -66587,17 +66602,22 @@ var cotgsubscribe = amplify;
                   }
 //              popUpBox atkpops ui - draggable
               _popupCount=0;
-              $(".popUpBox").each(
+              $(".popUpBox,.smallpopupstyle,.medpopupstyle,.longwindow").each(
               function ()
               {
                    if(  this.style.display == "block" )
-                   {
-           //         console.log(this.innerText);
                        _popupCount++;
-                   }
               }
               );
 
+              $(".popUpBox").each(
+                  function () {
+                      if (this.style.display == "block")
+                          _popupCount++;
+                  }
+              );
+
+              
                   if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
                       || _zoom != __zoom || _popupCountCache !=_popupCount) {
                       _viewModeCache = _viewMode;

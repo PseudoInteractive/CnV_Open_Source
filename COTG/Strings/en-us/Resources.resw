@@ -144,8 +144,8 @@
   </data>
 	<data name="Shell_Defense.Content"
 		  xml:space="preserve">
-    <value>Defense</value>
-    <comment>Navigation view item name for Defense</comment>
+    <value>Defense Report History</value>
+    <comment>Incoming Report History</comment>
   </data>
   <data name="MasterDetail_NoSelection.Text" xml:space="preserve">
     <value>Select an item from the list.</value>
@@ -157,7 +157,7 @@
   </data>
   <data name="Shell_Defender.Content" xml:space="preserve">
     <value>Defender</value>
-    <comment>Navigation view item name for Defender</comment>
+    <comment>Incoming attacks</comment>
   </data>
   <data name="WebView_FailedMessage.Text" xml:space="preserve">
     <value>Page failed to load. Check connection and retry.</value>

@@ -155,7 +155,7 @@ namespace COTG
         {
             args.Handled = true;
             WebViewPage.DefaultUrl = args.Uri;
-            await WindowManagerService.Current.TryShowAsStandaloneAsync("overview", typeof(WebViewPage));
+            await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
         }
 
         private static string GetJsString(string asm)
@@ -454,6 +454,8 @@ namespace COTG
                         city.remarks = city.cityName.Substring(i + 2);
                         city.cityName = city.cityName.Substring(0, i - 1);
                     }
+                    city.tsTotal = jsCity.GetAsInt("8");
+                    city.tsHome = jsCity.GetAsInt("17");
                     city.isCastle = jsCity.GetAsInt("12") != 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     
@@ -464,8 +466,8 @@ namespace COTG
 
                 }
 
-                Log(City.all.ToString());
-                Log(City.all.Count());
+            //    Log(City.all.ToString());
+             //   Log(City.all.Count());
                 Views.MainPage.CityListChange();
             }
 
@@ -789,7 +791,7 @@ namespace COTG
                             {
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
-                                var noPopup = jso.GetAsInt("p") <= 0;
+                                var popupCount = jso.GetAsInt("p");
                                 Note.L("cid=" + cid.CidToString());
                                 var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
@@ -812,7 +814,8 @@ namespace COTG
                                     // if((viewMode & ViewMode.region)!=0)
                                  //   ShellPage.canvas?.Invalidate();
                                 }
-                                ShellPage.SetCanvasVisibility(noPopup);
+                                ShellPage.NotifyCotgPopup(popupCount);
+//                                ShellPage.SetCanvasVisibility(noPopup);
                                 break;
                             }
 

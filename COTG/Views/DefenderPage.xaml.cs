@@ -27,6 +27,7 @@ using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
+using Telerik.UI.Xaml.Controls.Grid.Commands;
 
 namespace COTG.Views
 {
@@ -53,6 +54,7 @@ namespace COTG.Views
 
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
+            var data = defenderGrid.GetDataView();
         }
 
         public class ArmyTypeStyleSelector : StyleSelector
@@ -168,5 +170,35 @@ namespace COTG.Views
 
           
         }
+
     }
+
+    public class DataBindingComplete : DataGridCommand
+    {
+        public override bool CanExecute(object parameter)
+        {
+            return true;
+            //if ((parameter as DataBindingCompleteEventArgs).ChangeFlags.HasFlag(DataChangeFlags.Group))
+            //{
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+
+        }
+
+        public override void Execute(object parameter)
+        {
+            this.Owner.GetDataView().CollapseAll();
+
+            if (this.Owner.GroupDescriptors.Count > 0)
+            {
+                this.Owner.GetDataView().ExpandGroup((this.Owner.GetDataView().Items[0] as IDataGroup));
+            }
+
+            base.Execute(parameter);
+        }
+    }
+
 }

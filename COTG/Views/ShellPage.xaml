@@ -18,7 +18,8 @@
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       x:Name="shellPage"
       Loaded="OnLoaded"
-      mc:Ignorable="d">
+      mc:Ignorable="d"
+	  FontFamily="Segoe UI Emoji">
     <Page.Resources>
         <Style x:Key="DebugFlyoutStyle"
                TargetType="FlyoutPresenter">
@@ -121,33 +122,35 @@
                                       x:Name="raid"
                                       helpers:NavHelper.NavigateTo="views:MainPage">
                 <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Go" />
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_Defense"
-                                      x:Name="defense"
-                                      helpers:NavHelper.NavigateTo="views:DefensePage">
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Download" />
+                    <SymbolIcon Symbol="ReShare" />
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
             <winui:NavigationViewItem x:Uid="Shell_Defender"
                                       x:Name="defender"
                                       helpers:NavHelper.NavigateTo="views:DefenderPage">
                 <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document" />
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA18;" />
+                    <!--Shield-->
+                </winui:NavigationViewItem.Icon>
+            </winui:NavigationViewItem>
+            <winui:NavigationViewItem x:Uid="Shell_Defense"
+                                      x:Name="DefenseHistory"
+                                      helpers:NavHelper.NavigateTo="views:DefensePage">
+                <winui:NavigationViewItem.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"  Glyph="&#xF738;"/>
+                    <!--History-->
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
             <winui:NavigationViewItem x:Uid="Shell_TreeView"
                                       helpers:NavHelper.NavigateTo="views:TreeViewPage">
                 <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document" />
+                    <BitmapIcon UriSource="/images/defender.png" />
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
             <winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample"
                                       helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage">
                 <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Document" />
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"  Glyph="&#xEA0D;" />
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
         </winui:NavigationView.MenuItems>
@@ -172,14 +175,12 @@
                               Label="Refresh"
                               AccessKey="F5"
                               Click="Refresh"
-                              Content="Refresh"
                               Icon="RepeatAll" />
                 <AppBarButton x:Name="Chat"
-                              Label="Chat"
+                              Label="Hello!"
                               AccessKey="F1"
                               Click="ChatOpen"
-                              Content="Hello"
-                              Icon="RepeatAll" />
+                              Icon="Phone" />
                 <AppBarButton x:Name="logFlyoutButton"
                               Label="Dbg"
                               Icon="Keyboard"
@@ -194,7 +195,7 @@
                                         <ColumnDefinition Width="400" />
                                         <ColumnDefinition Width="20" />
                                     </Grid.ColumnDefinitions>
-                                    <ScrollViewer Canvas.ZIndex="11"
+                                    <ScrollViewer Canvas.ZIndex="21"
                                                   MaxWidth="2048"
                                                   Foreground="{StaticResource ThemeControlForegroundBaseHighBrush}"
                                                   HorizontalAlignment="Stretch"
@@ -237,7 +238,7 @@
                 <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
-                               Icon="Street">
+                               Icon="AllApps">
                     <Button.Flyout>
                         <Flyout Closing="FlyoutClosing"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"

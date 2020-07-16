@@ -5,11 +5,10 @@
 	<Application.Resources>
         <ResourceDictionary>
             <!-- Style definition -->
-            <!--<Style x:Key="BaseTextStyle"
-                   TargetType="TextBlock">
-                <Setter Property="FontWeight"
-                        Value="SemiBold" />
-            </Style>-->
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily"
+                        Value="Segoe UI Emoji" />
+            </Style>
             <Style  x:Key="RightAlign"
                     TargetType="TextBlock">
                 <Setter Property="VerticalAlignment"
