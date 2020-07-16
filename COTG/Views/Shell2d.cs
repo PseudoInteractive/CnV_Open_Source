@@ -346,9 +346,12 @@ namespace COTG.Views
 
                             if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
                                 continue;
-                            if (Spot.AreAnySelected() && !Spot.IsSelectedOrHovered(targetCid))
-                                continue;
-                           
+                            var c = incomingHistoryColor;
+
+                            if (!Spot.IsSelectedOrHovered(targetCid))
+                            {
+                                c.A = (byte)( (int)c.A*3/8); // reduce alpha if not selected
+                            }
                             DrawAction(serverNow, ds, rectSpan, attack.time, attack.time-attack.spotted, c0, c1,incomingHistoryColor);
                             //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                             //var mid = progress.Lerp(c0, c1);

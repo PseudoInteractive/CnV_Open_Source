@@ -641,8 +641,7 @@ namespace COTG.Views
 
 		private void ChatOpen(object sender, RoutedEventArgs e)
 		{
-            if(TabPage.instance == null )
-			{
+           {
                 WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
 
             }

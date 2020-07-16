@@ -154,6 +154,11 @@ namespace COTG
         async private static void View_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
         {
             args.Handled = true;
+            //if (WebViewPage.instance != null)
+            //{
+            //    WebViewPage.instance.Focus(FocusState.Programmatic);
+            //    return;
+            //}
             WebViewPage.DefaultUrl = args.Uri;
             await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
         }
@@ -169,18 +174,28 @@ namespace COTG
             try
             {
                 var req = args.Request;
-               
-    //            Log(req.RequestUri.ToString());
-                if(req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
-				{
+
+                //            Log(req.RequestUri.ToString());
+                if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
+                {
                     var js = GetJsString("jquery");
 
                     var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                   }
-                    if ( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
+                }
+                else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
+                {
+                    var js = GetJsString("phaser");
+
+                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+                }
+
+                else if ( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
                 {
                     try
                     {
@@ -456,11 +471,11 @@ namespace COTG
                     }
                     city.tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
-                    city.isCastle = jsCity.GetAsInt("12") != 0;
+                    city.isCastle = jsCity.GetAsInt("12") > 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     
-                    city.isOnWater = jsCity.GetAsInt("16") != 0;
-                    city.isTemple = jsCity.GetAsInt("15") != 0;
+                    city.isOnWater = jsCity.GetAsInt("16") > 0;
+                    city.isTemple = jsCity.GetAsInt("15") > 0;
                     city.pid = jsVars.pid;
                     
 

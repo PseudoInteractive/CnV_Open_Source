@@ -271,8 +271,10 @@ namespace COTG.Game
         }
         public static bool IsSelectedOrHovered(int cid)
         {
-            return (cid == viewHover || selected.Contains(cid));
+            // if nothing is selected we treat it as if everything is selected
+            return selected.Count == 0? true :  (cid == viewHover || selected.Contains(cid));
         }
+
 
         public static int viewHover; // in the view menu
 

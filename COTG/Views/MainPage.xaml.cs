@@ -71,7 +71,8 @@ namespace COTG.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-          //  Raiding.UpdateTS();
+            if (!(e.Parameter is ShellPage))
+                Raiding.UpdateTS();
         }
 
         private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)

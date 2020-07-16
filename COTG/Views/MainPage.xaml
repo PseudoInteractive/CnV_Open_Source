@@ -51,6 +51,7 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
+                        GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
             <tg:RadDataGrid.Commands>
                 <model:CityGridToggleColumnVisibilityCommand />

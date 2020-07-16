@@ -155,7 +155,7 @@ namespace COTG.Views
             Source = (DefaultUrl);
             InitializeComponent();
             IsLoading = true;
-          //  Assert(instance == null);
+            Assert(instance == null);
             instance = this;
 			webView.ContentLoading += WebView_ContentLoading;
 			webView.ScriptNotify += WebView_ScriptNotify;
@@ -169,32 +169,32 @@ namespace COTG.Views
 
 		private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
 		{
-			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
 		{
-			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
 		{
-			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_UnsafeContentWarningDisplaying(WebView sender, object args)
 		{
-			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
 		{
-//			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
 		{
-			throw new NotImplementedException();
+            Log("Todo");
 		}
 
 		private void WebView_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)

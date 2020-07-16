@@ -142,7 +142,7 @@
                 </winui:NavigationViewItem.Icon>
             </winui:NavigationViewItem>
             <winui:NavigationViewItem x:Uid="Shell_TreeView"
-                                      helpers:NavHelper.NavigateTo="views:TreeViewPage">
+                                      helpers:NavHelper.NavigateTo="views:TabPage">
                 <winui:NavigationViewItem.Icon>
                     <BitmapIcon UriSource="/images/defender.png" />
                 </winui:NavigationViewItem.Icon>
