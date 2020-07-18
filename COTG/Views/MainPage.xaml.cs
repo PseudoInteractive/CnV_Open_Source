@@ -35,7 +35,7 @@ namespace COTG.Views
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         public BoundCollection<City> cities { get; } = new BoundCollection<City>();
-        public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
+      //  public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage instance;
         //        public static City showingRowDetails;
 
@@ -201,15 +201,10 @@ namespace COTG.Views
         {
             if (instance == null)
                 return;
-
+            Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                var l = instance.dungeons;
-                if(clear)
-                    l.Clear();
-                if(dungeons!=null)
-                    l.AddRange(dungeons);
-                l.NotifyReset();
+                instance.dungeonGrid.ItemsSource = dungeons;
             });
         }
         public static void ClearDungeonList()

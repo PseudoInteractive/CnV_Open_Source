@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace COTG.Game
 {
-    public class Army
+    public sealed class Army
     {
         public TroopTypeCount[] troops { get; set; }
         public TroopTypeCount[] sumDef { get; set; }
@@ -85,7 +85,7 @@ namespace COTG.Game
         public bool hasNaval => troops.Any((a) => a.isNaval);
         public bool hasArt => troops.Any((a) => a.isArt);
     }
-    public class TroopTypeCount : IComparable<TroopTypeCount>
+    public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
         public int type;
         public int count;
@@ -97,6 +97,11 @@ namespace COTG.Game
         {
             type = b.type;
             count = b.count;
+        }
+        public TroopTypeCount(int _type,int _count)
+        {
+            type = _type;
+            count = _count;
         }
         public bool isSenator => type == Enum.ttSenator;
         public bool isArt  =>  Enum.ttArtillery[type];
@@ -111,13 +116,15 @@ namespace COTG.Game
                 if (wantComma)
                     rv += ",";
                 else wantComma = true;
-                rv += $"{ttc.count,4:N0} {Enum.ttNameWithCaps[ttc.type]}";
+                rv += $"{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
             }
             return rv;
         }
         public int ts => Enum.ttTs[type] * count;
         public static int TS(IEnumerable<TroopTypeCount> l)
         {
+            if (l.IsNullOrEmpty() )
+                return 0;
             var rv = 0;
             foreach (var ttc in l)
             {

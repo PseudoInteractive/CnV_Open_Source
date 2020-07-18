@@ -72,13 +72,17 @@ namespace COTG.Helpers
                 Log("Missing " + prop);
                 return -1;
             }
+            return GetAsInt64(e);
+        }
+        public static long GetAsInt64(this JsonElement js)
+        {
 
-            switch (e.ValueKind)
+            switch (js.ValueKind)
             {
                 case JsonValueKind.String:
-                    return long.TryParse(e.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                    return long.TryParse(js.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
                 case JsonValueKind.Number:
-                    return e.GetInt64();
+                    return js.GetInt64();
                 case JsonValueKind.True:
                     return 1;
                 case JsonValueKind.False:
@@ -90,6 +94,10 @@ namespace COTG.Helpers
                 default:
                     return -1;
             }
+        }
+        public static int GetAsInt(this JsonElement js)
+        {
+            return (int)GetAsInt64(js);
         }
         public static int GetInt(this JsonElement js, string prop)
         {

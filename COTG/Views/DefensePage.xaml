@@ -268,7 +268,7 @@
                                                          Function="Sum" />
             </telerikGrid:RadDataGrid.AggregateDescriptors>-->
         </telerikGrid:RadDataGrid>
-        <telerikGrid:RadDataGrid x:Name="defenderGrid"
+        <telerikGrid:RadDataGrid x:Name="selectedGrid"
                         Grid.Row="1"
                         Margin="0,14,0,0"
                         AutoGenerateColumns="False"
@@ -281,7 +281,7 @@
                         ItemsSource="{x:Bind defendersMRU, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
-                        SelectionMode="Multiple"
+                        SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
                         UserSortMode="Multiple">

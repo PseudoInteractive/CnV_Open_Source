@@ -40,11 +40,12 @@
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="1"
+                        UseSystemFocusVisuals="True"
                         GridLinesThickness="0.5"
                         AlternationStep="2"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode="Multiple"
+                        SelectionMode="Extended"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="34"
@@ -83,6 +84,11 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Width="60"
                                        IsVisible="False" />
+                <tg:DataGridNumericalColumn PropertyName="raidReturn"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,6:N0}"
+                                            IsVisible="False"
+                                            Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,5:N1}"
@@ -121,10 +127,9 @@ TextSubmitted="RaidCarrySubmitted"
             
         </ComboBox>
         <tg:RadDataGrid x:Name="dungeonGrid"
-                        
+                        UseSystemFocusVisuals="True"
                         AlternationStep="2"
                         UserGroupMode="Disabled"
-                        ItemsSource="{x:Bind dungeons, Mode=OneWay}"
                         AutoGenerateColumns="False"
                         SelectionMode="Single"
                         RowHeight="40"

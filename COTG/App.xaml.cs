@@ -170,7 +170,7 @@ namespace COTG
         }
     }
 
-    
+
 
     //public static class UserAgent
     //{
@@ -208,7 +208,58 @@ namespace COTG
     //        SetUserAgent(GetUserAgent() + suffix);
     //    }
     //}
-    public static class Note 
+    public static class AApp
+    {
+        public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
+        {
+            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
+                action();
+            else
+              d.RunAsync(CoreDispatcherPriority.Low, action);
+        }
+        public static void DispatchOnUIThreadLow( DispatchedHandler action)
+        {
+            DispatchOnUIThreadLow(CoreWindow.GetForCurrentThread().Dispatcher, action);
+        }
+
+        public static string CidToStringMD(this int cid)
+        {
+            var coord = cid.CidToString();
+            return $"[{coord}](/c/{coord})";
+
+        }
+
+        public static string CidToString(this int cid)
+        {
+            return $"{cid % 65536}.{cid / 65536}";
+        }
+        public static int FromCoordinate(this string s)
+        {
+            try
+            {
+                var links = s.Split('.');
+                return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
+
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return JSClient.cid; // return current city
+            }
+        }
+        // 20 bit mash
+
+
+        public static Vector2 ToWorldC(this int c)
+        {
+            var x = c % 65536;
+            var y = c >> 16;
+
+            return new Vector2(x + 0.5f, y + 0.5f);
+        }
+    }
+        public static class Note 
     {
         public static void L(string s)
         {
@@ -217,7 +268,7 @@ namespace COTG
         public static void Show(string s, int timeout = 8000)
         {
 
-             App.DispatchOnUIThreadLow(() =>
+            ChatTab.debug?.Dispatcher.DispatchOnUIThreadLow(() =>
             { 
             var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
             textBlock.LinkClicked += MarkDownLinkClicked;
@@ -245,42 +296,7 @@ namespace COTG
 				Log(ex);
 			}
 		}
-        public static string CidToStringMD(this int cid)
-		{
-            var coord = cid.CidToString();
-            return $"[{coord}](/c/{coord})";
-
-        }
-
-		public static string CidToString(this int cid)
-		{
-            return $"{cid%65536}.{cid/65536}";
-		}
-        public static int FromCoordinate(this string s)
-        {
-			try
-			{
-                var links = s.Split('.');
-                return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
-
-
-            }
-            catch (Exception e)
-			{
-                Log(e);
-                return JSClient.cid; // return current city
-			}
-        }
-        // 20 bit mash
-       
-
-        public static Vector2 ToWorldC(this int c)
-        {
-            var x = c % 65536;
-            var y = c >> 16;
-
-            return new Vector2(x +0.5f, y + 0.5f);
-        }
+     
     }
 
 

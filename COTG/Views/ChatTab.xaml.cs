@@ -26,6 +26,8 @@ namespace COTG.Views
 {
     public sealed class LogEntry
     {
+        public HorizontalAlignment MsgAlignment => HorizontalAlignment.Left;
+        public DateTimeOffset MsgDateTime => DateTimeOffset.UtcNow; 
         public string text { get; set; }= string.Empty;
         public LogEntry(string _a) { text = _a; }
         public LogEntry() { }
@@ -48,16 +50,16 @@ namespace COTG.Views
         {
             this.InitializeComponent();
         }
-        private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-        public static async void L(string s)
+   //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        public static void L(string s)
         {
 
             if (debug == null)
                 return;
-              await _logSemaphore.WaitAsync();
+//              await _logSemaphore.WaitAsync();
             // try
             ////  {
-          //  debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => { 
             
                 try
                 {
@@ -75,12 +77,12 @@ namespace COTG.Views
 
 
 
-//            });
+            });
              
-            finally
-            {
-                _logSemaphore.Release();
-            }
+            //finally
+            //{
+            //    _logSemaphore.Release();
+            //}
             //await Task.Delay(500);
 
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>

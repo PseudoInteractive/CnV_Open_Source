@@ -78,23 +78,30 @@ namespace COTG.Views
            Assert( Tabs.TabItems.Count==0);
         }
 
+        bool AddAnyTab()
+        {
+            foreach (var tab in ChatTab.all)
+            {
+                if (tab.isActive)
+                    continue;
+                tab.isActive = true;
+                Tabs.TabItems.Add(new TabViewItem()
+                {
+                    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    Header = tab.DataContext as string,
+                    Content = tab
+                });
+                return true;
+            }
+            return false; 
+        }
+
         void SetupWindow(AppWindow window)
         {
             if (window == null)
             {
                 // Main Window -- add some default items
-                foreach(var tab in ChatTab.all)
-                {
-                    if (tab.isActive)
-                        continue;
-                    tab.isActive = true;
-                    Tabs.TabItems.Add(new TabViewItem()
-                    {
-                        IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
-                        Header = tab.DataContext as string,
-                        Content = tab
-                    } );
-                }
+                while (AddAnyTab()) { }
 
                 Tabs.SelectedIndex = 0;
 
@@ -268,6 +275,7 @@ namespace COTG.Views
 
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
+            AddAnyTab();
             //sender.TabItems.Add(new TabViewItem()
             //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
             //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });

@@ -62,37 +62,42 @@ namespace COTG.Game
             get {
                 // Todo: water
                 var _carryCapacity = 0;
+                foreach(var tc in troopsHome)
                 {
-                    var jse = jsE;
-                    if (jse.IsValid())
-                    {
-                        var jst = troopsHome;
-                        if (jst.IsValid())
-                        {
-                            foreach (var troopType in ttLandRaiders)
+                    if(ttLandRaiders.Contains((byte)tc.type) )
                             {
-                                _carryCapacity += jst[troopType].GetInt32() * ttCarry[troopType];
+                                _carryCapacity += tc.count * ttCarry[tc.type];
                             }
-                        }
-                    }
+                        
+                    
                 }
                 return _carryCapacity;
             }
         }
 
-        internal void TroopsChanged()
+        public float raidReturn
         {
-            if (current == this)
-                ;// throw new NotImplementedException();
+            get
+            {
+                if (raids.IsNullOrEmpty())
+                    return 999; // no troops
+                var dt = (float)(raids[0].arrival- JSClient.ServerTime()).TotalMinutes; // should we check more than one
+                if (raids[0].isReturning)
+                    return dt;
+                else
+                    return dt-570f;
+            }
         }
 
 
         // Abusing invalid jsE by returning it when we want to return null
-        public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
-        public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
+        //  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
+        //  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 
         public int tsTotal { get; set; } // ts total including those on commands like raids, def etc.
-        
+
+        public TroopTypeCount[] troopsHome = Array.Empty<TroopTypeCount>();
+        public TroopTypeCount[] troopsTotal = Array.Empty<TroopTypeCount>();
         public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
         public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)
@@ -103,26 +108,42 @@ namespace COTG.Game
             Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
 
+            troopsHome = Array.Empty<TroopTypeCount>();
+            troopsTotal = Array.Empty<TroopTypeCount>();
 
-            // stores one count per troop type, mostly 0s
+            for (int hc =0;hc<2;++hc)
             {
-                var tt = troopsHome;
-                if (tt.IsValid())
+             
+
+                if (jse.TryGetProperty((hc == 0)?"th" : "tc", out var tt))
                 {
-                    var tType = 0;
-                    tsHome = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32()*Enum.ttTs[tType++] );
+                    var tc = new List<TroopTypeCount>();
+                    var tType = -1;
+                    // stores one count per troop type, mostly 0s
+                    foreach (var a in tt.EnumerateArray())
+                    {
+                        ++tType;
+                        var count = a.GetInt32();
+                        if (count > 0)
+                        {
+                            tc.Add(new TroopTypeCount(tType, count));
+                        }
+
+                    }
+                    if (tc.Count > 0)
+                    {
+                        if (hc == 0)
+                            troopsHome = tc.ToArray();
+                        else
+                            troopsTotal = tc.ToArray();
+                    }
+
                 }
             }
-            {
-                var tt = troopsTotal;
-                if (tt.IsValid())
-                {
-                    var tType = 0;
-                    tsTotal = tt.EnumerateArray().Sum<JsonElement>((a) => a.GetInt32() * Enum.ttTs[tType++]);
-                }
-            }
+            tsHome = TroopTypeCount.TS(troopsHome);
+            tsTotal = TroopTypeCount.TS(troopsTotal);
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
-            OnPropertyChanged(null);// COTG.Views.MainPage.CityChange(this);
+            OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
 //            COTG.Views.MainPage.CityListUpdateAll();
         }
 
@@ -194,6 +215,7 @@ namespace COTG.Game
         }
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
 
         public override string ToString()
         {
@@ -208,7 +230,7 @@ namespace COTG.Game
                 if (city.senatorInfo != empty)
                 {
                     city.senatorInfo = empty;
-                    city.OnPropertyChanged(nameof(City.senny));
+                    city.OnPropertyChangedUI(nameof(City.senny));
                 }
 
             }
@@ -249,10 +271,14 @@ namespace COTG.Game
                     });
                 }
                 city.senatorInfo = sens.ToArray();
-                city.OnPropertyChanged(nameof(City.senny));
+                city.OnPropertyChangedUI(nameof(City.senny));
 
             }
 
+        }
+        public void ValidateChangedEvent()
+        {
+            Assert(PropertyChanged?.GetInvocationList().Length == 1); 
         }
 
     }

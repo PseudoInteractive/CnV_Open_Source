@@ -205,6 +205,8 @@ namespace COTG.Views
             /// we pass this as an argument to let the page know that it is a programmatic navigation
             Services.NavigationService.Navigate<Views.DefensePage>(this);
 
+            chatTabFrame.Navigate(typeof(TabPage));
+
             navigationView.IsPaneOpen = false;
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
@@ -389,7 +391,7 @@ namespace COTG.Views
 
         public  void TestPost(object o, RoutedEventArgs e)
         {
-            Raiding.UpdateTS(true);
+            Raiding.UpdateTSHome(true);
 
         }
 

@@ -265,7 +265,7 @@ namespace COTG
             try
             {
                 view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
-                Raiding.UpdateTS();
+                Raiding.UpdateTSHome();
 
             }
             catch (Exception e)
@@ -352,7 +352,7 @@ namespace COTG
                 {
                     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
                     if( City.IsMine(cityId)  )
-                        Raiding.UpdateTS();
+                        Raiding.UpdateTSHome();
                 }
 			}
 			catch (Exception e)
@@ -800,6 +800,25 @@ namespace COTG
                         case "ppdt":
                             {
                                 UpdatePPDT(jsp.Value);
+                                break;
+                            }
+                        case "chat":
+                            {
+                                if (!jsp.Value.TryGetProperty("b", out var messages))
+                                    break;
+                                switch(jsp.Value.GetAsInt("a") )
+                                {
+                                    case 444:
+                            {
+                                foreach(var msg in messages.EnumerateArray())
+                                            {
+
+                                            }
+                            }
+                                        break;
+
+                                }
+
                                 break;
                             }
                         case "c":

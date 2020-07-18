@@ -226,7 +226,7 @@ namespace COTG.JSON
                                               var str = tt.GetString();
                                               int firstSpace = str.IndexOf(' ');
                                               
-                                              var type = Game.Enum.ttNameWithCaps.IndexOf(str.Substring(firstSpace+1));
+                                              var type = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace+1));
                                               Assert(type != -1);
                                               ttl.Add(new TroopTypeCount()
                                               {

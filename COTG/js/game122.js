@@ -19847,6 +19847,9 @@ var cotgsubscribe = amplify;
           .val(t3V);
         websocket.onmessage = function(G3V) {
           var M3V = JSON.parse(G3V.data);
+
+           const wrapper = { "chat": M3V };
+            window['external']['notify'](JSON.stringify(wrapper));
           l6F(M3V);
         };
         websocket.onclose = function() {
@@ -48073,7 +48076,7 @@ var cotgsubscribe = amplify;
                   type: _s(+"4311"),
                   info: { time: z16, active: "1" | 0, name: k36 }
                 };
-                a2("regional", Y46);
+                cotgPublish("regional", Y46);
                 $(_s('5196' ^ 0))
                   .html(_s(+"6507") + z16);
                 $(_s("4732" >> 2088708320))
@@ -48119,7 +48122,7 @@ var cotgsubscribe = amplify;
                     active: +'0'
                   }
                 };
-                a2("regional", Y46);
+                cotgPublish("regional", Y46);
               }
               $(_s(+"3203"))
                 .attr("data", r46 + _s(+A6y) + A46);
@@ -48161,7 +48164,7 @@ var cotgsubscribe = amplify;
                 type: _s(+'4599'),
                 info: { active: G36 }
               };
-              a2("regional", Y46);
+              cotgPublish("regional", Y46);
               if (G36 == '1' >> 752430464) {
                 var I36 = _s(+w9y) + r46 + E6k
                   .o55(+A6y) + A46 + _s(+"1200");
@@ -48245,7 +48248,7 @@ var cotgsubscribe = amplify;
                   water: E46
                 }
               };
-              a2("regional", Y46);
+              cotgPublish("regional", Y46);
               if (v16 == ("1" ^ 0))
                 if (p46 == +'0') {
                   D46 = _s(+'5419');
@@ -48544,7 +48547,7 @@ var cotgsubscribe = amplify;
                   water:e36
                 }
               };
-              a2("regional", Y46);
+              cotgPublish("regional", Y46);
               var p16 = Q36.substring(+'0', +"1");
               var Q36 = Q36.substring('1' & 2147483647,
                 B46.length);
@@ -48968,7 +48971,7 @@ var cotgsubscribe = amplify;
                   .S55('4410' << 83520960),
                 info: { lvl: f36, name: p36, active: t16 }
               };
-              a2("regional", Y46);
+              cotgPublish("regional", Y46);
 //              console.log(_s("6061" - 0) + f36 + _s('6409' ^ 0) + h16 + _s('2112' * 1) + c46 + E6k     .S55('4446' | 346) + p36 + _s(+"3196") + A16 + _s("6537" - 0) + O16);
               $(_s('6093' << 135849568))
                 .html(p36);
@@ -49154,7 +49157,7 @@ var cotgsubscribe = amplify;
                   .S55(+v9R),
                 info: { prog: G16, lvl: u16, type: z36 }
               };
-              a2("regional", Y46);
+              cotgPublish("regional", Y46);
               var R46 = I9(Number(cid), Number(n46));
               var j16 = +I2y;
               if (ppdt[_s(
@@ -50479,6 +50482,7 @@ var cotgsubscribe = amplify;
       else c4F();
     }
 
+    // Websocket recieve messag
     function l6F(r1V) {
       var h6m = '1475';
       var Y6m = '5214';
@@ -50500,9 +50504,9 @@ var cotgsubscribe = amplify;
         window.onbeforeunload = null;
         window.location.replace(_s(+'6029'));
       }
-      if (r1V.a == _s('6659' >> 2055250816)) H0F(_s("5796" -
+      if (r1V.a == "91") H0F(_s("5796" -
         0));
-      else if (r1V.a == _s('3278' | 70)) {
+      else if (r1V.a == "92") {
         var L1V = r1V.b;
         H0F(L1V.d);
         var O1V = _s(+q0p) + d1V + _s(+V5R) + L1V.d + _s(+B0p);
@@ -50536,8 +50540,7 @@ var cotgsubscribe = amplify;
           $(_s(L2R - 0))
             .animate({ scrollTop: $(_s(+L2R))[+'0'].scrollHeight }, +e2R);
         }
-      } else if (r1V.a == _s(+
-          '5380')) {
+      } else if (r1V.a == "93" ) {
         var L1V = formatT(r1V.b * ("1000" >> 524414272));
         var O1V = _s(q0p & 2147483647) + d1V + _s(
           '5489' ^ 0) + L1V + _s(+B0p);
@@ -50571,8 +50574,7 @@ var cotgsubscribe = amplify;
           $(_s(+L2R))
             .animate({ scrollTop: $(_s(L2R * 1))["0" ^ 0].scrollHeight }, +e2R);
         }
-      } else if (r1V.a == _s(
-          "5908" << 263270976)) {
+      } else if (r1V.a == "333") {
         var L1V = r1V.b;
         var O1V = '';
         for (var b1V in L1V)
@@ -50614,8 +50616,7 @@ var cotgsubscribe = amplify;
           .append(O1V);
         $(_s(+c2R))
           .animate({ scrollTop: $(_s(+c2R))[+'0'].scrollHeight }, e2R ^ 0);
-      } else if (r1V.a == _s(+
-          "599")) {
+      } else if (r1V.a == "444") {
         var L1V = r1V.b;
         var O1V = "";
         for (var b1V in L1V)
@@ -50657,8 +50658,7 @@ var cotgsubscribe = amplify;
           .append(O1V);
         $(_s(s2R - 0))
           .animate({ scrollTop: $(_s(s2R >> 1505778208))[+'0'].scrollHeight }, e2R | 200);
-      } else if (r1V.a ==
-        _s(+'3759')) {
+      } else if (r1V.a =="555") {
         var L1V = r1V.b;
         var O1V = '';
         for (var b1V in L1V)
@@ -50691,8 +50691,7 @@ var cotgsubscribe = amplify;
           .append(O1V);
         $(_s(+P8y))
           .animate({ scrollTop: $(_s(P8y | 32))["0" | 0].scrollHeight }, +e2R);
-      } else if (r1V.a == _s(+
-          C7R)) {
+      } else if (r1V.a == "3") {
         var L1V = r1V.b;
         if (L1V.a == +'1') {
           var X1V = L1V.d;
@@ -50731,10 +50730,8 @@ var cotgsubscribe = amplify;
             if (o1V == _s(+"512") || o1V == _s(+"2426") ||
               o1V == _s('5453' | 5452)) z1V = _s("6932" - 0);
             if (o1V == _s(+'512'));
-            var
-              V1V = { type: _s(+i0p), time: d1V, message: X1V, crown: M1V, color: z1V, player: o1V };
-            var J1V = a2(
-              _s(+r6m), V1V);
+            var  V1V = { type: "world", time: d1V, message: X1V, crown: M1V, color: z1V, player: o1V };
+            var J1V = cotgPublish("chat", V1V);
             if (J1V) {
               retobj = J1V['0' << 571946432];
               if (retobj)
@@ -50809,7 +50806,7 @@ var cotgsubscribe = amplify;
                 "4867"),
               crown: ''
             };
-            var J1V = a2(_s(+r6m), V1V);
+            var J1V = cotgPublish(_s(+r6m), V1V);
             if (J1V) {
               retobj = J1V[+
                 "0"];
@@ -50920,7 +50917,7 @@ var cotgsubscribe = amplify;
                 .S55(+'4867'),
               crown: ''
             };
-            var J1V = a2(_s(r6m | 4106), V1V);
+            var J1V = cotgPublish(_s(r6m | 4106), V1V);
             if (J1V) {
               retobj =
                 J1V[+"0"];
@@ -50973,7 +50970,7 @@ var cotgsubscribe = amplify;
               }
           }
         }
-        if (L1V.a == +
+        if (L1V.a == + // alliance
           "4") {
           var X1V = L1V.d;
           var o1V = L1V.b;
@@ -51010,7 +51007,7 @@ var cotgsubscribe = amplify;
               color: z1V,
               crown: ''
             };
-            var J1V = a2(_s(r6m *
+            var J1V = cotgPublish(_s(r6m *
               1), V1V);
             if (J1V) {
               retobj = J1V['0' | 0];
@@ -51054,7 +51051,7 @@ var cotgsubscribe = amplify;
               }
           }
         }
-        if (L1V.a == ("5" & 2147483647)) {
+        if (L1V.a == ("5" & 2147483647)) { // officer?
           var X1V = L1V.d;
           var o1V = L1V.b;
           var M1V = L1V
@@ -51087,8 +51084,7 @@ var cotgsubscribe = amplify;
                 2036901088);
             } else { var C1V = q9(M1V); var z1V = _s(+v6m); }
             var V1V = {
-              type: _s("5088" ^
-                0),
+            type: "officer",
               time: d1V,
               player: o1V,
               message: X1V,
@@ -51096,7 +51092,7 @@ var cotgsubscribe = amplify;
               crown: ""
             };
             var J1V =
-              a2(_s(r6m * 1), V1V);
+              cotgPublish(_s(r6m * 1), V1V);
             if (J1V) {
               retobj = J1V[+"0"];
               if (retobj)
@@ -57404,9 +57400,8 @@ var cotgsubscribe = amplify;
           g0V(r71);
         }
         if (j71.hasOwnProperty("cstr")) var f71 = j71["cstr"];
-        if (n9(j71[_s(
-            i0p & 2147483647)]) == "1" - 0) {
-          var T71 = W0V(j71[_s(i0p | 1301)]);
+          if (n9(j71["world"]) == "1" - 0) {
+          var T71 = W0V(j71["world"]);
           if (T71) {
             $.extend(worldd, T71);
             F1F();
@@ -59605,7 +59600,7 @@ var cotgsubscribe = amplify;
           .val('');
       });
 
-    function a2(H3V, j3V) {
+    function cotgPublish(H3V, j3V) {
       var Q3q = "258656942" << 1691283616;
       if (E6k.T3q(+p0y, +"142178") === Q3q) {
         E6k
@@ -68826,19 +68821,18 @@ var cotgsubscribe = amplify;
       },
       return: function(T6i) {
         E6k.y6();
-        if (T6i == _s(+i0p))
-          e7F = '0' << 409369408;
+        if (T6i == "world")  e7F = '0' << 409369408;
         else if (T6i == "alliance") Y0F = +'0';
         else if (T6i == _s('5088' * 1)) N0F = '0' >> 675883328;
-        else if (T6i == _s("6149" << 1531458880)) R0F = "0" << 2130137024;
+        else if (T6i == "whisper") R0F = "0" << 2130137024;
       },
       takeover: function(Q6i) {
         E6k
           .R6();
-        if (Q6i == _s(+i0p)) e7F = +'1';
+        if (Q6i == "world") e7F = +'1';
         else if (Q6i == "alliance") Y0F = +"1";
         else if (Q6i == _s('5088' | 4768)) N0F = '1' & 2147483647;
-        else if (Q6i == _s('6149' >> 428389792)) R0F = +'1';
+        else if (Q6i == "whisper") R0F = +'1';
       },
       push: function(x6i, O6i, t6i, o6i, L6i,
         X6i) { o9F(x6i, O6i, t6i, o6i, L6i, X6i); },

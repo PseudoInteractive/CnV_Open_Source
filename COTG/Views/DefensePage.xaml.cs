@@ -112,7 +112,7 @@ namespace COTG.Views
             InitializeComponent();
 
             //            historyGrid.ContextFlyout = cityMenuFlyout;
-            defenderGrid.SelectionChanged += DefenderGrid_SelectionChanged;
+            selectedGrid.SelectionChanged += DefenderGrid_SelectionChanged;
         
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -180,7 +180,7 @@ namespace COTG.Views
                         {
                             def.AddAndNotify(spot);
                         }
-                        instance.defenderGrid.SelectItem(spot);
+                        instance.selectedGrid.SelectItem(spot);
                     }
                     else
                     {
@@ -194,9 +194,9 @@ namespace COTG.Views
         {
             var isSelected = rv.ToggleSelected();
             if (isSelected)
-                instance.defenderGrid.SelectItem(rv);
+                instance.selectedGrid.SelectItem(rv);
             else
-                instance.defenderGrid.DeselectItem(rv);
+                instance.selectedGrid.DeselectItem(rv);
 
         }
 

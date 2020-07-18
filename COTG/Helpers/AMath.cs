@@ -135,6 +135,12 @@ namespace COTG
         {
             return a == null || a.Length == 0;
         }
+        static public bool IsNullOrEmpty<T>(this IEnumerable<T> a)
+        {
+            if (a == null)
+                return true;
+            return !a.Any();
+        }
         static public bool IsNullOrEmpty<Tkey,T>(this Dictionary<Tkey,T> a)
         {
             return a == null || a.Count == 0;

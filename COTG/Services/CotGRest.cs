@@ -115,7 +115,11 @@ namespace COTG.Services
         {
             try
             {
-
+                if(JSClient.jsVars.token == null)
+                {
+                    Log("Post before we have creds");
+                    return;
+                }
                 await Accept(await Send(GetPostContent()));
             }
             catch (Exception e)
@@ -254,9 +258,9 @@ namespace COTG.Services
             city.LoadFromJson(json.RootElement);
 
         }
-        public static async Task Post(int _cid)
+        public static  Task Post(int _cid)
         {
-            await (new GetCity(_cid)).Post();
+            return (new GetCity(_cid)).Post();
 
         }
 
@@ -296,13 +300,13 @@ namespace COTG.Services
         {
             cid = _cid;
         }
-        public static async Task Post(int _cid)
+        public static async void Post(int _cid)
         {
-            Log(_cid.CidToString());
+         //   Log(_cid.CidToString());
             await GetCity.Post(_cid);
          //   await Task.Delay(2000);
          //   COTG.Views.MainPage.CityListUpdateAll();
-            await new ScanDungeons(_cid).Post();
+           new ScanDungeons(_cid).Post();
             
         }
         public override string GetPostContent()
@@ -372,10 +376,60 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
             jsd = json;
-            dict = new Dictionary<int, JsonElement>();
+            var changed = new List<City>();
             foreach (var item in jsd.RootElement.EnumerateArray())
             {
-                dict.Add(item.GetAsInt("id"), item);
+                var cid = item.GetAsInt("id");
+                var v = City.all[cid];
+                List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
+                List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
+                var hasAny = false;
+                foreach (var tt in item.EnumerateObject())
+                {
+                    var type = tt.Name;
+                    // Some are lower case
+                    if (type[0] >= 'a' && type[0] <= 'z')
+                        continue;
+                    int count = tt.Value.GetInt32();
+                    if (count == 0)
+                        continue;
+
+                    var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
+                    Assert(split.Length == 2);
+                    var tE = Game.Enum.ttNameWithCaps.IndexOf(split[0]);
+                    var ttc = new TroopTypeCount(tE, count);
+
+                    if (split[1] == "home")
+                        tsHome.Add(ttc);
+                    else
+                        tsTotal.Add(ttc);
+                    hasAny = true;
+                }
+                if (hasAny)
+                {
+                    v.troopsHome = tsHome.ToArray();
+                    v.troopsTotal = tsTotal.ToArray();
+                }
+                else
+                {
+                    v.troopsTotal = v.troopsHome = Array.Empty<TroopTypeCount>();
+                }
+                v.ValidateChangedEvent();
+                var tsh = TroopTypeCount.TS(v.troopsHome);
+                var tst = TroopTypeCount.TS(v.troopsTotal);
+                if ((tsh - v.tsHome).Abs().Max((tst - v.tsTotal).Abs()) > 16)
+                {
+                    v.tsTotal = tst;
+                    v.tsHome = tsh;
+                    changed.Add(v);
+
+                    //v.OnPropertyChanged(nameof(v.tsTotal));
+                }
+
+            }
+            if (!changed.IsNullOrEmpty())
+            {
+               App.DispatchOnUIThreadLow( ()=> { foreach (var i in changed) i.OnPropertyChanged(string.Empty); } );
             }
             Log("Got JS for troop overview");
             Log(json.ToString());
@@ -475,7 +529,7 @@ namespace COTG.Services
     public class RaidOverview : OverviewApi
     {
         public static RaidOverview inst = new RaidOverview();
-        public static async Task Send() => await inst.Post();
+        public static Task Send() => inst.Post();
         public RaidOverview() : base("overview/graid.php") { }
         public override void ProcessJson(JsonDocument jsd)
         {

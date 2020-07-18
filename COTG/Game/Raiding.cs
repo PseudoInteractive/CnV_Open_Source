@@ -98,16 +98,12 @@ namespace COTG.Game
             var r = ComputeIdealReps(d,city);
             if (r.reps <= 0)
                 return;
-            var jst = city.troopsHome;
-            if (!jst.IsValid())
-                return;
             var tr = new List<sndRaidtr>();
-            foreach (var troopType in ttLandRaiders)
+            foreach (var ttc in city.troopsHome)
             {
-                int count = jst[troopType].GetInt32()/r.reps;
-                if (count <= 0)
+                if (!ttLandRaiders.Contains((byte)ttc.type))
                     continue;
-                tr.Add(new sndRaidtr() { tt = troopType.ToString(), tv = count.ToString() });
+                tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
 
             }
             var trs = JsonSerializer.Serialize(tr);
@@ -118,16 +114,17 @@ namespace COTG.Game
  //           await Task.Delay(500);
 //            UpdateTS(true);
             city.tsHome = 0;
-            city.OnPropertyChanged(nameof(city.tsHome));
+            city.OnPropertyChangedUI(nameof(city.tsHome));
 
         }
+        public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
-        public static async void UpdateTS(bool force = false)
+        public static async void UpdateTSHome(bool force = false)
         {
             var n = DateTimeOffset.UtcNow;
-            if (n > nextAllowedTsUpdate || force)
+            if (n > nextAllowedTsHomeUpdate || force)
             {
-                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
+                nextAllowedTsHomeUpdate = n + TimeSpan.FromSeconds(24);
                 var jso = await Post.SendForJson("includes/gIDl.php", "");
                 foreach (var ci in jso.RootElement.EnumerateArray())
                 {
@@ -138,10 +135,32 @@ namespace COTG.Game
                     {
                         v.tsHome = ts;
 
-                        v.OnPropertyChanged(nameof(v.tsHome));
+                        v.OnPropertyChangedUI(nameof(v.tsHome));
                     }
                 }
             }
         }
+        // should this be waitable?
+        public static void UpdateTS(bool force = false)
+        {
+            var n = DateTimeOffset.UtcNow;
+            if (n > nextAllowedTsUpdate || force)
+            {
+                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
+                nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
+                RestAPI.troopsOverview.Post();
+            }
+        }
+        public static async Task UpdateTSSync(bool force = false)
+        {
+            var n = DateTimeOffset.UtcNow;
+            if (n > nextAllowedTsUpdate || force)
+            {
+                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
+                nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
+                await RestAPI.troopsOverview.Post();
+            }
+        }
+
     }
 }
