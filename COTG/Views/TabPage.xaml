@@ -11,9 +11,12 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <muxc:TabView x:Name="Tabs" 
                              VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
+                        MinWidth="800"
+                                           MinHeight="300"  
                              CanDragTabs="True"
                              CanReorderTabs="True"
                              TabDroppedOutside="Tabs_TabDroppedOutside"

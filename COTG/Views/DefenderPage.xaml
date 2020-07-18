@@ -49,7 +49,7 @@
                 <local:DataBindingComplete Id="DataBindingComplete" />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.RowDetailsTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="game:Spot">
                     <tg:RadDataGrid x:Name="armyGrid"
                                     ItemsSource="{x:Bind incoming}"
                                     CanUserChooseColumns="True"
@@ -60,6 +60,7 @@
                                     ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                                     Tapped="ArmyTapped"
+                                    
                                     AlternationStep="2"
                                     AutoGenerateColumns="False">
                         <tg:RadDataGrid.Columns>
@@ -80,14 +81,13 @@
                                                    CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridBooleanColumn PropertyName="isDefense"
                                                       Width="30"
-                                                      
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridTemplateColumn Header="Troops"
                                                        Width="20"
                                                        SizeMode="Auto">
                                 <tg:DataGridTemplateColumn.CellContentTemplate  >
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="game:Army">
                                         <StackPanel Orientation="Vertical"
                                                     Width="Auto">
                                             <StackPanel Orientation="Horizontal"
@@ -267,7 +267,6 @@
                 <tg:DataGridNumericalColumn PropertyName="scoutRange"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             SizeMode="Fixed"
-                                            
                                             Width="40" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>

@@ -52,6 +52,11 @@ namespace COTG.Helpers
             //   OnPropertyChanged(item,null);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, IndexOf(item)));
         }
+        public void NotifyChange(T item, int index)
+        {
+            //   OnPropertyChanged(item,null);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index));
+        }
         public void Replace(T newItem, T oldItem, int index)
         {
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));

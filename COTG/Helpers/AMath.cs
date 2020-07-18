@@ -10,6 +10,11 @@ namespace COTG
 {
     public static class AMmath
     {
+        public static Random random = new Random();
+
+        public static int Random(this (int min, int max) range ) => random.Next(range.min, range.max);
+        public static float Random(this (float min, float max) range) => ((float)random.NextDouble()).Lerp(range.min,range.max);
+
         public static float Clamp(this float f, float min, float max)
         {
             Assert(max >= min);

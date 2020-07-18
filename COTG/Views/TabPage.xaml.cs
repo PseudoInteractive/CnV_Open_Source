@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Navigation;
 
+using static COTG.Debug;
 namespace COTG.Views
 {
     public sealed partial class TabPage : Page
@@ -48,6 +49,16 @@ namespace COTG.Views
 
             SetupWindow(null);
         }
+        void RemoveTabsOnClose()
+        {
+            Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+            var _tab = Tabs;
+            while (_tab.TabItems.Count > 0)
+            {
+                RemoveTab(_tab.TabItems[0] as TabViewItem);
+            }
+        }
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
@@ -63,8 +74,8 @@ namespace COTG.Views
                 // Secondary
                 RootAppWindow.Frame.DragRegionVisuals.Remove(CustomDragRegion);
             }
-            Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-            Tabs.TabItems.Clear();
+            RemoveTabsOnClose();
+           Assert( Tabs.TabItems.Count==0);
         }
 
         void SetupWindow(AppWindow window)
@@ -103,7 +114,7 @@ namespace COTG.Views
             {
                 // Secondary AppWindows --- keep track of the window
                 RootAppWindow = window;
-
+                window.Closed += Window_Closed;
                 // Extend into the titlebar
                 window.TitleBar.ExtendsContentIntoTitleBar = true;
                 window.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
@@ -118,6 +129,11 @@ namespace COTG.Views
             Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
             Tabs.TabItemsChanged += Tabs_TabItemsChanged;
 
+        }
+
+        private void Window_Closed(AppWindow sender, AppWindowClosedEventArgs args)
+        {
+            RemoveTabsOnClose();
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -259,6 +275,8 @@ namespace COTG.Views
         static void RemoveTab(TabView view, TabViewItem tab)
         {
             var chatTab = tab.Content as ChatTab;
+            Log("FreeTab1 " + chatTab.Name);
+            Assert(chatTab.isActive);
             chatTab.isActive = false;
             tab.Content = null; // remove it
             view.TabItems.Remove(tab);
@@ -266,6 +284,9 @@ namespace COTG.Views
         void RemoveTab(TabViewItem tab)
 		{
             var chatTab = tab.Content as ChatTab;
+            Log("Free tab " + chatTab.Name);
+
+            Assert(chatTab.isActive);
             chatTab.isActive = false;
             tab.Content = null; // remove it
             Tabs.TabItems.Remove(tab);

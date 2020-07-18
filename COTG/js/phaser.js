@@ -32426,7 +32426,7 @@
 		 * @property {boolean} disableVisibilityChange
 		 * @default
 		 */
-		this.disableVisibilityChange=false;
+		this.disableVisibilityChange=true;
 
 		/**
 		 * @property {boolean} exists - If exists is true the Stage and all children are updated, otherwise it is skipped.
@@ -65648,7 +65648,8 @@
 	 */
 	Phaser.RequestAnimationFrame=function(game,forceSetTimeOut)
 	{
-		if(forceSetTimeOut===undefined) {forceSetTimeOut=false;}
+		forceSetTimeOut = true;
+//		if(forceSetTimeOut===undefined) {forceSetTimeOut=true;}
 
 		/**
 		 * @property {Phaser.Game} game - The currently running game.
@@ -65718,8 +65719,9 @@
 				{
 					return _this.updateSetTimeout();
 				};
-
-				this._timeOutID=window.setTimeout(this._onLoop,0);
+				clearTimeout(this._timeOutID);
+			
+				this._timeOutID=window.setTimeout(this._onLoop,50);
 			}
 			else
 			{
@@ -65759,7 +65761,10 @@
 			{
 				this.game.update(Date.now());
 
-				this._timeOutID=window.setTimeout(this._onLoop,this.game.time.timeToCall);
+				
+				clearTimeout(this._timeOutID);
+
+				this._timeOutID=window.setTimeout(this._onLoop,100);
 			}
 		},
 
@@ -70491,7 +70496,7 @@
 		 *
 		 * @property {number} physicsElapsed
 		 */
-		this.physicsElapsed=1/60;
+		this.physicsElapsed=6/60;
 
 		/**
 		 * The physics update delta, in milliseconds - equivalent to `physicsElapsed * 1000`.
@@ -70516,7 +70521,7 @@
 		 * @private
 		 * @default
 		 */
-		this._desiredFps=60;
+		this._desiredFps=10;
 
 		/**
 		 * The suggested frame rate for your game, based on an averaged real frame rate.

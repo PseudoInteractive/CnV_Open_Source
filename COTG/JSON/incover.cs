@@ -263,7 +263,7 @@ namespace COTG.JSON
                                       Array.Sort(army.sumDef);
                                       army.troops = ttl.ToArray();
                                       Array.Sort(army.troops);
-                                      spot.incoming.Enqueue(army);
+                                      spot.incoming.Add(army);
                                   }
                                   spot.tsMax = TroopTypeCount.TS(sumDef);
                               }

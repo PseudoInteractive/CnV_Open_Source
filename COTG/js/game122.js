@@ -17296,7 +17296,7 @@ var cotgsubscribe = amplify;
       regrender = +'1';
         _viewMode = viewModeRegion;
       c6.raf.start();
-      c6.paused = ![];
+      c6.paused = 0;
       c6.lockRender = ![];
       E6k.y6();
       c6.time.desiredFps = '10' ^ 0;
@@ -47036,8 +47036,12 @@ var cotgsubscribe = amplify;
       }
     }
 
+    let preloadComplete=false;
     function A2F() {
       function S56() {
+          if (preloadComplete)
+            return;
+          preloadComplete=true;
         var h56 = new Date();
           c6.load.tilemap("regional", "/maps/newmap/rmap6.json?a=" + h56, null, Phaser.Tilemap.TILED_JSON);
           c6.load.image("lnd", "/maps/newmap/land.jpg");
@@ -47049,7 +47053,7 @@ var cotgsubscribe = amplify;
           c6.load.image("names", "/maps/newmap/names2.png?a=" + h56);
       }
         c6 = new Phaser.Game(M8.clientWidth, M8.clientHeight, Phaser.CANVAS, E6k
-        .o55(V04 - 0), { update: f2F,  create: J56, preload: S56 });
+        .o55(V04 - 0), { mspointer:false,update: f2F,  create: J56, preload: S56 });
       E6k.R6();
 
       function J56() {
@@ -47113,10 +47117,7 @@ var cotgsubscribe = amplify;
           }
           E6k.R6();
           c6.enableStep();
-          setTimeout(function() {
-            E6k.R6();
-            F1F();
-          }, z9p);
+          
           c6.paused = !0;
           c6.time.advancedTiming = !![];
           c6.time.desiredFps = '1' >> 1018505664;
@@ -47635,7 +47636,7 @@ var cotgsubscribe = amplify;
           _viewMode = viewModeWorld;
         citrender = "0" & 2147483647;
         c6.time.advancedTiming = !!1;
-        c6.time.desiredFps = 10;
+        c6.time.desiredFps = 1;
         c6.time.fpsMax = +"1";
         c6.raf.stop();
         var b0g = +'0';
@@ -56322,11 +56323,11 @@ var cotgsubscribe = amplify;
 
     function r0F() {
       regrender = +"0";
-      c6.raf.stop();
-      c6.paused = !!"1";
+//      c6.raf.stop();
+     c6.paused = 0;
       c6.lockRender = !"";
-      c6.time.desiredFps = +"1";
-      c6.time.fpsMax = '1' - 0;
+      c6.time.desiredFps = +10;
+      c6.time.fpsMax = 10;
     }
 
     function e0V() {

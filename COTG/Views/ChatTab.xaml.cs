@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -47,17 +48,17 @@ namespace COTG.Views
         {
             this.InitializeComponent();
         }
-        //private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-        public static void L(string s)
+        private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        public static async void L(string s)
         {
 
             if (debug == null)
                 return;
-            //  await _logSemaphore.WaitAsync();
-            //  try
-            //  {
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
+              await _logSemaphore.WaitAsync();
+            // try
+            ////  {
+          //  debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            
                 try
                 {
                     var str = $"{Tick.MSS()}:{s}";
@@ -74,12 +75,12 @@ namespace COTG.Views
 
 
 
-            });
-            // }
-            //finally
-            //{
-            //    _logSemaphore.Release();
-            //}
+//            });
+             
+            finally
+            {
+                _logSemaphore.Release();
+            }
             //await Task.Delay(500);
 
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>

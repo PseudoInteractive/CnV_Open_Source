@@ -158,7 +158,7 @@ namespace COTG.Game
             }
         }
         // Incoming attacks
-        public ConcurrentQueue<Army> incoming { get; set; } = new ConcurrentQueue<Army>();
+        public List<Army> incoming { get; set; } = new List<Army>();
 
         public int attacks
         {

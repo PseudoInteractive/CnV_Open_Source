@@ -57,7 +57,7 @@ namespace COTG.Game
 
     public static class Raiding
     {
-        public static float desiredCarry = 0.96f;
+        public static float desiredCarry = 1.03f;
         public static bool raidOnce;
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
         {
@@ -65,11 +65,10 @@ namespace COTG.Game
             var carry = city.carryCapacity; // this should be on demand
             if (carry <= 0)
                 return (0, 0);
+         //   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
             int ideal = (int)( carry/(loot * desiredCarry) + 0.5f);
-            ideal = Math.Min(ideal, city.freeCommandSlots );
-            if (ideal < 1)
-                ideal = 1;
-            return (ideal, 100.0f * carry /(ideal*loot) );
+            ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
+            return (ideal, carry /(ideal*loot) );
         }
 
 
@@ -116,7 +115,10 @@ namespace COTG.Game
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.CidToStringMD()} raid {d.cid.CidToStringMD()}");
             await snd.Post();
-            UpdateTS(true);
+ //           await Task.Delay(500);
+//            UpdateTS(true);
+            city.tsHome = 0;
+            city.OnPropertyChanged(nameof(city.tsHome));
 
         }
         public static DateTimeOffset nextAllowedTsUpdate;

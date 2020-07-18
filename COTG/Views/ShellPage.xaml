@@ -182,6 +182,8 @@
                               Click="logFlyoutButton_Click">
                     <AppBarButton.Resources>
                         <winui:TeachingTip x:Name="logTip"
+                                         MaxWidth="1000"                                         
+                                         MaxHeight="600"                                         
                                            Target="{x:Bind logFlyoutButton}"
                                            Background="{x:Null}">
                             <winui:TeachingTip.Content>
@@ -257,12 +259,46 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="410" />
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+            <tk:Expander x:Name="Expander2" VerticalAlignment="Bottom" Margin="0"
+                           Header="This is the header - expander 2"
+                           HorizontalContentAlignment="Stretch"
+                           IsExpanded="False"
+                         Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Canvas.ZIndex="20"
+                           ExpandDirection="Up">
+                <Grid >
+                    <Rectangle MinHeight="200" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    <TextBlock HorizontalAlignment="Stretch"
+
+                               TextWrapping="Wrap"
+                       Text="This is the expanded content without a content overlay"
+                       VerticalAlignment="Stretch" />
+                </Grid>
+            </tk:Expander>
+            <tk:GridSplitter
+        Grid.Row="3"
+        Grid.RowSpan="3"
+        Grid.Column="1"
+        VerticalAlignment="Top"
+                Canvas.ZIndex="22"
+        Height="11">
+                <tk:GridSplitter.Element>
+                    <TextBlock HorizontalAlignment="Center"
+                         IsHitTestVisible="False"
+                         VerticalAlignment="Center"
+                         Text="What is this?"
+                         Foreground="White"
+                         ></TextBlock>
+                </tk:GridSplitter.Element>
+            </tk:GridSplitter>
+            <TextBlock Text="Test 5,0" Grid.Column="0" Grid.Row="5" Canvas.ZIndex="20" />
+            <TextBlock Text="Test 5,2" Grid.Column="2" Grid.Row="5" Canvas.ZIndex="20"/>
             <tk:InAppNotification x:Name="InAppNote"
                                   Grid.Row="4"
                                   Grid.ColumnSpan="3"

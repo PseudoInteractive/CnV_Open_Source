@@ -122,7 +122,7 @@ namespace COTG.Game
                 }
             }
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
-            COTG.Views.MainPage.CityChange(this);
+            OnPropertyChanged(null);// COTG.Views.MainPage.CityChange(this);
 //            COTG.Views.MainPage.CityListUpdateAll();
         }
 

@@ -46,7 +46,7 @@ namespace COTG.Game
         public string plan { get
             {
                 var r = Raiding.ComputeIdealReps(this,city);
-                return $"{r.reps}x {(int)r.averageCarry}% carry";
+                return $"{r.reps}x {r.averageCarry:P1} carry";
             }
         }
 

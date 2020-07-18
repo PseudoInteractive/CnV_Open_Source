@@ -155,7 +155,7 @@ namespace COTG.Views
             Source = (DefaultUrl);
             InitializeComponent();
             IsLoading = true;
-            Assert(instance == null);
+     //       Assert(instance == null);
             instance = this;
 			webView.ContentLoading += WebView_ContentLoading;
 			webView.ScriptNotify += WebView_ScriptNotify;

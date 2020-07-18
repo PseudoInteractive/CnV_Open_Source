@@ -59,7 +59,7 @@ namespace COTG.Views
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
         {
-            var leftOffset = cotgPopupOpen>0 ? cotgPopupRight : cotgPanelRight;
+            var leftOffset = cotgPopupOpen>0&&IsWorldView() ? cotgPopupRight : cotgPanelRight;
             var delta = leftOffset - cachedXOffset;
             if (delta==0)
                 return;

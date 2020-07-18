@@ -144,14 +144,14 @@ namespace COTG.Views
             grid.Children.Add(shellFrame);
             Grid.SetColumn(shellFrame, 2);
             Grid.SetRow(shellFrame, 0);
-            Grid.SetRowSpan(shellFrame, 6);
+            Grid.SetRowSpan(shellFrame, 5);
             shellFrame.Margin = new Thickness(13, 0, 0, 0);
             Canvas.SetZIndex(shellFrame, 3);
 
 
             Grid.SetColumn(webView, 0);
             Grid.SetRow(webView, 0);
-            Grid.SetRowSpan(webView, 6);
+            Grid.SetRowSpan(webView, 5);
             Grid.SetColumnSpan(webView, 2);
             Canvas.SetZIndex(webView, 0);
 
@@ -599,7 +599,7 @@ namespace COTG.Views
             }
             else
             {
-                chatTabFrame.Navigate(null);
+                chatTabFrame.Navigate(typeof(Page));
                 logTip.IsOpen = false;
             }
         }

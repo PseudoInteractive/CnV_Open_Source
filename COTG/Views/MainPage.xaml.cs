@@ -47,6 +47,8 @@ namespace COTG.Views
         //    return rv;
         //}
         public static RadDataGrid CityGrid => instance.cityGrid;
+        const int raidStepCount = 9;
+        static DumbCollection<float> raidSteps = new DumbCollection<float>();
         static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
@@ -54,6 +56,15 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             InitializeComponent();
+            for(int i=0;i<raidStepCount;++i)
+			{
+                raidSteps.Add( ( (MathF.Exp((i - 4) * 1.0f / 16.0f) + (-0.032625f,0.032625f).Random())*100.0f).RoundToInt() );
+			}
+            raidSteps[4] = (Raiding.desiredCarry*100.0f).RoundToInt();
+            raidCarryBox.ItemsSource= raidSteps;
+            raidCarryBox.SelectedIndex = 4;
+            var rand = new Random();
+
             cityMenuFlyout = new MenuFlyout();
             var c = new MenuFlyoutItem() { Text = "Return Slow" };
             c.Click += ReturnSlowClick;
@@ -137,32 +148,7 @@ namespace COTG.Views
 
         //}
 
-        public async static void CityChange( City city,string memberName=null)
-        {
-            if (instance == null || instance.cities.Count == 0 )
-                return;
-            
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                var cities = instance.cities;
-                if (cities.Contains(city))
-                {
-                 //   Note.L($"Change: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
-                    //                    cache.cityGrid.BeginEdit(city);
-                 //   cache.cityGrid.BeginEdit(cache.cityGrid.SelectedItem ?? city);
-                 //   cache.cityGrid.CommitEdit();
-
-                    city.OnPropertyChanged(memberName);
-                }
-                else
-                {
-                 //   Note.L($"Add: {city.cid.ToCoordinate()} {cities.IndexOf(city) }");
-                    cities.Add(city);
-
-                }
-            });
-        }
-        float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value; }
+        
 
         public async static void CityListChange()
         {
@@ -211,7 +197,7 @@ namespace COTG.Views
             });
         }
 
-        public static void UpdateDungeonList(List<Dungeon> dungeons)
+        public static void UpdateDungeonList(List<Dungeon> dungeons, bool clear=true)
         {
             if (instance == null)
                 return;
@@ -219,7 +205,8 @@ namespace COTG.Views
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var l = instance.dungeons;
-                l.Clear();
+                if(clear)
+                    l.Clear();
                 if(dungeons!=null)
                     l.AddRange(dungeons);
                 l.NotifyReset();
@@ -280,24 +267,84 @@ namespace COTG.Views
 
         }
 
+		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		{
+            Log("Submit: " + args.Text);
+            if( float.TryParse(args.Text,System.Globalization.NumberStyles.Number,null, out float _raidCarry) )
+			{
+                
+                float bestError = float.MaxValue;
+                var bestId = 0;
+                for(int i=0;i<raidStepCount;++i)
+				{
+                    float d = (_raidCarry - raidSteps[i]).Abs();
+                    if(d < bestError)
+					{
+                        bestError = d;
+                        bestId = i;
+					}
+				}
+                raidSteps[bestId] = _raidCarry;
+                raidSteps.NotifyChange(_raidCarry, bestId);
+                raidCarryBox.SelectedValue = _raidCarry;
+                raidCarryBox.SelectedIndex = bestId;
+                //raidSteps;
+                if(SetCarry(_raidCarry))
+                {
+                    UpdateDungeonList(null, false);
+                }
+
+            }
+            else
+			{
+                args.Handled = true;
+                Assert(false);
+			}
 
 
-        //      static Dungeon lastTooltip;
-        //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        //{
-        //          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
-        //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-        //          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-        //          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
-        //          var hit = cell?.Item as Dungeon;
-        //          if(hit!=lastTooltip)
-        //	{
-        //              lastTooltip = hit;
-        //              if (hit != null)
-        //                  ToolTipService.SetToolTip(tip, hit.ToString());
-        //              else
-        //                  ToolTipService.SetToolTip(tip,"None");
-        //	}
-        //      }
-    }
+
+		}
+        private static bool SetCarry(float src)
+		{
+            var newVal = (src) * 0.01f;
+            if ((newVal - Raiding.desiredCarry).Abs() <= 1.0f / 128.0f)
+                return false;
+            Raiding.desiredCarry = newVal;
+            return true;
+        }
+
+		private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
+		{
+            Log("Sel update");
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                if (SetCarry( (float)e.AddedItems[0] ) )
+                {
+                    Log("Sel changed");
+                    UpdateDungeonList(null, false);
+                }
+            }
+        }
+
+
+
+
+		//      static Dungeon lastTooltip;
+		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+		//          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+		//          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+		//          var hit = cell?.Item as Dungeon;
+		//          if(hit!=lastTooltip)
+		//	{
+		//              lastTooltip = hit;
+		//              if (hit != null)
+		//                  ToolTipService.SetToolTip(tip, hit.ToString());
+		//              else
+		//                  ToolTipService.SetToolTip(tip,"None");
+		//	}
+		//      }
+	}
 }

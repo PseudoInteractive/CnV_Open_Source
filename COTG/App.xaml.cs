@@ -60,6 +60,7 @@ namespace COTG
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Debug.Log(e.Message);
+            e.Handled = true;
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
@@ -161,11 +162,11 @@ namespace COTG
         }
         public static IAsyncAction DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
         {
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(priority, action);
+            return CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(priority, action);
         }
         public static IAsyncAction DispatchOnUIThreadLow(DispatchedHandler action)
         {
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
+            return CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
         }
     }
 
@@ -216,7 +217,7 @@ namespace COTG
         public static void Show(string s, int timeout = 8000)
         {
 
-            App.DispatchOnUIThreadLow(() =>
+             App.DispatchOnUIThreadLow(() =>
             { 
             var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
             textBlock.LinkClicked += MarkDownLinkClicked;

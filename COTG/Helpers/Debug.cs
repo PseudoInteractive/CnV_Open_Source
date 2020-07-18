@@ -97,7 +97,7 @@ namespace COTG
         }
 
         [Conditional("DEBUG")]
-        public static void Assert(bool v,
+        public static async void Assert(bool v,
             [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
@@ -106,7 +106,7 @@ namespace COTG
                 return;
             var str = $"{Tick.MSS()}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}";
             System.Diagnostics.Debug.WriteLine(str);
-
+            await Task.Delay(0);
             Note.Show(str);
         }
     }
