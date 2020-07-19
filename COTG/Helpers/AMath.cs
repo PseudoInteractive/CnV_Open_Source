@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using static COTG.Debug;
 namespace COTG
 {
-    public static class AMmath
+    public static class AMath
     {
         public static Random random = new Random();
 

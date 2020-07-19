@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,15 +21,22 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
+using COTG.Helpers;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
     public sealed class LogEntry
     {
-        public HorizontalAlignment MsgAlignment => HorizontalAlignment.Left;
-        public DateTimeOffset MsgDateTime => DateTimeOffset.UtcNow; 
+        public string player { get; set; }
+        public byte crown { get; set; }
+        public byte whisper { get; internal set; }
+        public sbyte allignment;
+        public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
+        public DateTimeOffset arrived;
+        public string arrivedString => arrived.ToString("HH':'mm':'ss");
         public string text { get; set; }= string.Empty;
+
         public LogEntry(string _a) { text = _a; }
         public LogEntry() { }
     }
@@ -43,14 +51,15 @@ namespace COTG.Views
 
         public static ChatTab[] all = { world, alliance, officer, whisper, debug };
 
-        DumbCollection<LogEntry> logEntries = new DumbCollection<LogEntry>(new LogEntry[] {new LogEntry("Hello") });
+        public DumbCollection<LogEntry> logEntries = new DumbCollection<LogEntry>(new LogEntry[] {new LogEntry("Hello") });
 
         public bool isActive; // true if this is in a tab view somewhere
         public ChatTab()
         {
             this.InitializeComponent();
         }
-   //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
+        [Conditional("TRACE")]
         public static void L(string s)
         {
 

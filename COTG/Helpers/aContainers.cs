@@ -44,8 +44,7 @@ namespace COTG.Helpers
         {
             // catch for thread safety
             Clear();
-            AddRange(src);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            AddAndNotify(src);
         }
         public void NotifyChange(T item)
         {
@@ -66,6 +65,11 @@ namespace COTG.Helpers
             var id = Count;
             Add(item);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+        }
+        public void AddAndNotify(IEnumerable<T> src)
+        {
+            AddRange(src);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
     }

@@ -14845,7 +14845,23 @@
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
+var upcount = 0;
+var lasssec = 0;
+function censor(censor) {
+	var i = 0;
 
+	return function (key, value) {
+		if (i !== 0 && typeof (censor) === 'object' && typeof (value) == 'object' && censor == value)
+			return '[Circular]';
+
+		if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
+			return '[Unknown]';
+
+		++i; // so we know we aren't using the original object anymore
+
+		return value;
+	}
+}
 (function()
 {
 
@@ -32426,7 +32442,7 @@
 		 * @property {boolean} disableVisibilityChange
 		 * @default
 		 */
-		this.disableVisibilityChange=true;
+		this.disableVisibilityChange=false;
 
 		/**
 		 * @property {boolean} exists - If exists is true the Stage and all children are updated, otherwise it is skipped.
@@ -36878,7 +36894,7 @@
 		 * @property {boolean} dropFrames - When {@link #forceSingleUpdate} is off, skip {@link #updateRender rendering} if logic updates are spiraling upwards.
 		 * @default
 		 */
-		this.dropFrames=false;
+		this.dropFrames=true;
 
 		/**
 		 * @property {number} maxUpdates - When {@link #forceSingleUpdate} is off, the maximum number of logic updates to make per animation frame, if required to catch up.
@@ -36906,7 +36922,7 @@
 		}
 		else
 		{
-			this.config={enableDebug: true};
+			this.config={enableDebug: false};
 
 			if(typeof width!=='undefined')
 			{
@@ -37160,9 +37176,9 @@
 
 			this.isRunning=true;
 
-			if(this.config&&this.config.forceSetTimeOut)
+			if(true) // this.config&&this.config.forceSetTimeOut)
 			{
-				this.raf=new Phaser.RequestAnimationFrame(this,this.config.forceSetTimeOut);
+				this.raf=new Phaser.RequestAnimationFrame(this,true);//this.config.forceSetTimeOut);
 			}
 			else
 			{
@@ -37396,7 +37412,17 @@
 
 				return;
 			}
+			if (this.parent == "cvs" && $('#cvs').css('display') == 'none' && regionloaded == 1) {
 
+			} else if (this.parent == "city_map" && $('#city_map').css('display') == 'none' && regionloaded == 1) {
+
+			} else if (this.parent == "content" && $('#content').css('display') == 'none' && regionloaded == 1) {
+
+			} else if (this.parent == "city_map" && citrender == 0) {
+
+			} else if (this.parent == "content" && worldrender == 0) {
+
+			} else {
 			this.time.update(time);
 
 			if(this._kickstart)
@@ -37452,12 +37478,13 @@
 				 */
 				var count=0;
 
-				this.updatesThisFrame=Math.floor(this._deltaTime/slowStep);
+				//this.updatesThisFrame=Math.floor(this._deltaTime/slowStep);
 
 				if(this.forceSingleUpdate)
 				{
 					this.updatesThisFrame=Math.min(1,this.updatesThisFrame);
 				}
+				this.updatesThisFrame = 1;
 
 				if(this.forceSingleRender)
 				{
@@ -37511,6 +37538,7 @@
 				// flush gl to prevent flickering on some android devices
 				this.renderer.gl.flush();
 			}
+	}
 		},
 
 		/**
@@ -37534,17 +37562,17 @@
 				this.scale.preUpdate();
 				this.debug.preUpdate();
 				this.camera.preUpdate();
-				this.physics.preUpdate();
+	//			this.physics.preUpdate();
 				this.state.preUpdate(timeStep);
 				this.plugins.preUpdate(timeStep);
 				this.stage.preUpdate();
 
 				this.state.update();
 				this.stage.update();
-				this.tweens.update();
-				this.sound.update();
+	//			this.tweens.update();
+		//		this.sound.update();
 				this.input.update();
-				this.physics.update();
+		//		this.physics.update();
 				this.plugins.update();
 
 				this.stage.postUpdate();
@@ -37580,6 +37608,14 @@
 		 */
 		updateRender: function(elapsedTime)
 		{
+			let d = new Date();
+			let n = d.getSeconds();
+			if (lasssec != n) {
+				upcount = 0;
+				lasssec = n;
+			} else {
+				upcount++;
+			}
 			if(this.lockRender||this.renderType===Phaser.HEADLESS)
 			{
 				return;
@@ -65649,7 +65685,7 @@
 	Phaser.RequestAnimationFrame=function(game,forceSetTimeOut)
 	{
 		forceSetTimeOut = true;
-//		if(forceSetTimeOut===undefined) {forceSetTimeOut=true;}
+		if(forceSetTimeOut===undefined) {forceSetTimeOut=false;}
 
 		/**
 		 * @property {Phaser.Game} game - The currently running game.
@@ -65707,11 +65743,18 @@
 		 */
 		start: function()
 		{
+			if (this.parent == "cvs" && ($('#cvs').css('display') == 'none' || regrender == 0)) {
+
+			} else if (this.parent == "city_map" && ($('#city_map').css('display') == 'none' || citrender == 0)) {
+
+			} else if (this.parent == "content" && ($('#content').css('display') == 'none' || worldrender == 0)) {
+
+			} else {
 			this.isRunning=true;
 
 			var _this=this;
 
-			if(!window.requestAnimationFrame||this.forceSetTimeOut)
+			if(true) // !window.requestAnimationFrame||this.forceSetTimeOut)
 			{
 				this._isSetTimeOut=true;
 
@@ -65721,18 +65764,35 @@
 				};
 				clearTimeout(this._timeOutID);
 			
-				this._timeOutID=window.setTimeout(this._onLoop,50);
+				this._timeOutID=window.setTimeout(this._onLoop,100);
 			}
 			else
 			{
 				this._isSetTimeOut=false;
 
-				this._onLoop=function(time)
-				{
-					return _this.updateRAF(time);
-				};
+					if (this.parent == "cvs" && regrender == 0) {
 
-				this._timeOutID=window.requestAnimationFrame(this._onLoop);
+					} else if (this.parent == "city_map" && citrender == 0) {
+
+					} else if (this.parent == "content" && worldrender == 0) {
+
+					} else {
+
+						this._onLoop = function (time) {
+							if (this.parent == "cvs" && regrender == 0) {
+
+							} else if (this.parent == "city_map" && citrender == 0) {
+
+							} else if (this.parent == "content" && worldrender == 0) {
+
+							} else {
+								return _this.updateRAF(time);
+							}
+						};
+
+						this._timeOutID = window.requestAnimationFrame(this._onLoop);
+					}
+				}
 			}
 		},
 
@@ -65744,10 +65804,17 @@
 		{
 			if(this.isRunning)
 			{
-				// floor the rafTime to make it equivalent to the Date.now() provided by updateSetTimeout (just below)
-				this.game.update(Math.floor(rafTime));
+				if (this.parent == "cvs" && ($('#cvs').css('display') == 'none' || regrender == 0)) {
 
-				this._timeOutID=window.requestAnimationFrame(this._onLoop);
+				} else if (this.parent == "city_map" && ($('#city_map').css('display') == 'none' || citrender == 0)) {
+
+				} else if (this.parent == "content" && ($('#content').css('display') == 'none' || worldrender == 0)) {
+
+				} else {
+					this.game.update(Math.floor(rafTime));
+
+					this._timeOutID = window.requestAnimationFrame(this._onLoop);
+				}
 			}
 		},
 
@@ -65759,12 +65826,17 @@
 		{
 			if(this.isRunning)
 			{
-				this.game.update(Date.now());
+				if (this.parent == "cvs" && ($('#cvs').css('display') == 'none' || regrender == 0)) {
 
-				
-				clearTimeout(this._timeOutID);
+				} else if (this.parent == "city_map" && ($('#city_map').css('display') == 'none' || citrender == 0)) {
 
-				this._timeOutID=window.setTimeout(this._onLoop,100);
+				} else if (this.parent == "content" && ($('#content').css('display') == 'none' || worldrender == 0)) {
+
+				} else {
+					this.game.update(Date.now());
+
+					this._timeOutID = window.setTimeout(this._onLoop, 100);
+				}
 			}
 		},
 
@@ -70496,7 +70568,7 @@
 		 *
 		 * @property {number} physicsElapsed
 		 */
-		this.physicsElapsed=6/60;
+		this.physicsElapsed=1/60;
 
 		/**
 		 * The physics update delta, in milliseconds - equivalent to `physicsElapsed * 1000`.
@@ -70806,6 +70878,17 @@
 		 */
 		update: function(time)
 		{
+			if (this.parent == "cvs" && $('#cvs').css('display') == 'none') {
+
+			} else if (this.parent == "city_map" && $('#city_map').css('display') == 'none') {
+
+			} else if (this.parent == "content" && $('#content').css('display') == 'none') {
+
+			} else if (this.parent == "city_map" && citrender == 0) {
+
+			} else if (this.parent == "content" && worldrender == 0) {
+
+			} else {
 			//  Set to the old Date.now value
 			var previousDateNow=this.time;
 
@@ -70855,7 +70938,7 @@
 				{
 					this.updateTimers();
 				}
-			}
+			}}
 		},
 
 		/**
@@ -100384,7 +100467,7 @@
 		/**
 		 * @property {number} rotation - The rotation angle of this tile.
 		 */
-		this.rotation=0;
+	//	this.rotation=0;
 
 		/**
 		 * @property {boolean} flipped - Whether this tile is flipped (mirrored) or not.
@@ -100434,69 +100517,69 @@
 		/**
 		 * @property {boolean} scanned - Has this tile been walked / turned into a poly?
 		 */
-		this.scanned=false;
+//		this.scanned=false;
 
 		/**
 		 * @property {boolean} faceTop - Is the top of this tile an interesting edge?
 		 */
-		this.faceTop=false;
+	//	this.faceTop=false;
 
 		/**
 		 * @property {boolean} faceBottom - Is the bottom of this tile an interesting edge?
 		 */
-		this.faceBottom=false;
+	//	this.faceBottom=false;
 
 		/**
 		 * @property {boolean} faceLeft - Is the left of this tile an interesting edge?
 		 */
-		this.faceLeft=false;
+	//	this.faceLeft=false;
 
 		/**
 		 * @property {boolean} faceRight - Is the right of this tile an interesting edge?
 		 */
-		this.faceRight=false;
+	//	this.faceRight=false;
 
 		/**
 		 * @property {boolean} collideLeft - Indicating collide with any object on the left.
 		 * @default
 		 */
-		this.collideLeft=false;
+	//	this.collideLeft=false;
 
 		/**
 		 * @property {boolean} collideRight - Indicating collide with any object on the right.
 		 * @default
 		 */
-		this.collideRight=false;
+	//	this.collideRight=false;
 
 		/**
 		 * @property {boolean} collideUp - Indicating collide with any object on the top.
 		 * @default
 		 */
-		this.collideUp=false;
+//		this.collideUp=false;
 
 		/**
 		 * @property {boolean} collideDown - Indicating collide with any object on the bottom.
 		 * @default
 		 */
-		this.collideDown=false;
+//		this.collideDown=false;
 
 		/**
 		 * @property {function} collisionCallback - Tile collision callback.
 		 * @default
 		 */
-		this.collisionCallback=null;
+	///	this.collisionCallback=null;
 
 		/**
 		 * @property {object} collisionCallbackContext - The context in which the collision callback will be called.
 		 * @default
 		 */
-		this.collisionCallbackContext=this;
+	//	this.collisionCallbackContext=this;
 
 		/**
 		 * @property {boolean} debug
 		 * @default
 		 */
-		this.debug=false;
+		//this.debug=false;
 	};
 
 	Phaser.Tile.prototype={
@@ -100585,15 +100668,15 @@
 		 */
 		setCollision: function(left,right,up,down)
 		{
-			this.collideLeft=left;
-			this.collideRight=right;
-			this.collideUp=up;
-			this.collideDown=down;
+			//this.collideLeft=left;
+			//this.collideRight=right;
+			//this.collideUp=up;
+			//this.collideDown=down;
 
-			this.faceLeft=left;
-			this.faceRight=right;
-			this.faceTop=up;
-			this.faceBottom=down;
+			//this.faceLeft=left;
+			//this.faceRight=right;
+			//this.faceTop=up;
+			//this.faceBottom=down;
 		},
 
 		/**
@@ -100603,15 +100686,15 @@
 		 */
 		resetCollision: function()
 		{
-			this.collideLeft=false;
-			this.collideRight=false;
-			this.collideUp=false;
-			this.collideDown=false;
+			//this.collideLeft=false;
+			//this.collideRight=false;
+			//this.collideUp=false;
+			//this.collideDown=false;
 
-			this.faceTop=false;
-			this.faceBottom=false;
-			this.faceLeft=false;
-			this.faceRight=false;
+			//this.faceTop=false;
+			//this.faceBottom=false;
+			//this.faceLeft=false;
+			//this.faceRight=false;
 		},
 
 		/**
@@ -100624,21 +100707,21 @@
 		 */
 		isInteresting: function(collides,faces)
 		{
-			if(collides&&faces)
-			{
-				//  Does this tile have any collide flags OR interesting face?
-				return (this.collideLeft||this.collideRight||this.collideUp||this.collideDown||this.faceTop||this.faceBottom||this.faceLeft||this.faceRight||this.collisionCallback);
-			}
-			else if(collides)
-			{
-				//  Does this tile collide?
-				return (this.collideLeft||this.collideRight||this.collideUp||this.collideDown);
-			}
-			else if(faces)
-			{
-				//  Does this tile have an interesting face?
-				return (this.faceTop||this.faceBottom||this.faceLeft||this.faceRight);
-			}
+			//if(collides&&faces)
+			//{
+			//	//  Does this tile have any collide flags OR interesting face?
+			//	return (this.collideLeft||this.collideRight||this.collideUp||this.collideDown||this.faceTop||this.faceBottom||this.faceLeft||this.faceRight||this.collisionCallback);
+			//}
+			//else if(collides)
+			//{
+			//	//  Does this tile collide?
+			//	return (this.collideLeft||this.collideRight||this.collideUp||this.collideDown);
+			//}
+			//else if(faces)
+			//{
+			//	//  Does this tile have an interesting face?
+			//	return (this.faceTop||this.faceBottom||this.faceLeft||this.faceRight);
+			//}
 
 			return false;
 		},
@@ -104798,7 +104881,7 @@
 			}
 
 			map.objects=objects;
-			map.collision=collision;
+		//	map.collision=collision;
 
 			map.tiles=[];
 

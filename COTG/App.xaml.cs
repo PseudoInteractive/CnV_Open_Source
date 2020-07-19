@@ -160,13 +160,13 @@ namespace COTG
         {
             await ActivationService.ActivateFromShareTargetAsync(args);
         }
-        public static IAsyncAction DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+        public static void DispatchOnUIThread(DispatchedHandler action)
         {
-            return CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(priority, action);
+             CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
         }
-        public static IAsyncAction DispatchOnUIThreadLow(DispatchedHandler action)
+        public static void DispatchOnUIThreadLow(DispatchedHandler action)
         {
-            return CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
+             CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
         }
     }
 
@@ -217,9 +217,21 @@ namespace COTG
             else
               d.RunAsync(CoreDispatcherPriority.Low, action);
         }
+        public static void DispatchOnUIThread(this CoreDispatcher d, DispatchedHandler action)
+        {
+            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
+                action();
+            else
+                d.RunAsync(CoreDispatcherPriority.Normal, action);
+        }
+
         public static void DispatchOnUIThreadLow( DispatchedHandler action)
         {
             DispatchOnUIThreadLow(CoreWindow.GetForCurrentThread().Dispatcher, action);
+        }
+        public static void DispatchOnUIThread(DispatchedHandler action)
+        {
+            DispatchOnUIThread(CoreWindow.GetForCurrentThread().Dispatcher, action);
         }
 
         public static string CidToStringMD(this int cid)
@@ -268,7 +280,7 @@ namespace COTG
         public static void Show(string s, int timeout = 8000)
         {
 
-            ChatTab.debug?.Dispatcher.DispatchOnUIThreadLow(() =>
+            AApp.DispatchOnUIThreadLow(() =>
             { 
             var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
             textBlock.LinkClicked += MarkDownLinkClicked;

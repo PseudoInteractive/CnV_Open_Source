@@ -24,8 +24,13 @@
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:LogEntry">
                 <Grid Height="Auto" Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
-                    <StackPanel Padding="10, 0, 0, 10" Background="{x:Null}" CornerRadius="4">
-                        <TextBlock Text="{x:Bind MsgDateTime}" Padding="0, 0, 0, 0" FontSize="12"/>
+                    <StackPanel Padding="10, 0, 0, 0" Background="{x:Null}"  >
+                        <StackPanel Background="{x:Null}" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock Text="{x:Bind arrivedString}" Padding="0, 0, 0, 0" FontSize="12" HorizontalAlignment="Left" />
+                            <TextBlock Text="{x:Bind whisper}" FontSize="12" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind crown}" FontSize="12" HorizontalAlignment="Center" />
+                            <TextBlock Text="{x:Bind player}" FontSize="12" HorizontalAlignment="Right" />
+                        </StackPanel>
                         <tk:MarkdownTextBlock Text="{x:Bind text}" Padding="0, 0, 0, 0" FontSize="12" LinkForeground="BlueViolet" LinkClicked="MarkdownTextBlock_LinkClicked" />
                     </StackPanel>
                 </Grid>

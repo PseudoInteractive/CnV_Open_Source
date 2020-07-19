@@ -440,7 +440,7 @@ namespace COTG
                         CityList.selections.Add(lists[i]);
 
                     CityList.all = lists.ToArray();
-                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                    AApp.DispatchOnUIThreadLow( () =>
                     {
                         // is this valid?
                      //   Log("Reset");
@@ -804,19 +804,33 @@ namespace COTG
                             }
                         case "chat":
                             {
-                                if (!jsp.Value.TryGetProperty("b", out var messages))
-                                    break;
-                                switch(jsp.Value.GetAsInt("a") )
+                                var a = jsp.Value.GetAsInt("a");
+                                switch ( a )
                                 {
                                     case 444:
-                            {
-                                foreach(var msg in messages.EnumerateArray())
+                                    case 555:
+                                    case 333:
+                                    {
+                                            if (!jsp.Value.TryGetProperty("b", out var messages))
+                                                break;
+
+                                            var batch = new List<LogEntry>();
+                                            foreach (var msg in messages.EnumerateArray())
                                             {
-
+                                                batch.Add(GetChatMessage(msg));
                                             }
-                            }
-                                        break;
+                                            (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).logEntries.AddAndNotify(batch);
 
+                                        }
+                                        break;
+                                    case 4:
+                                    case 5:
+                                    case 3:
+                                        {
+                                            var ch = GetChatMessage(jsp.Value);
+                                            (ch.whisper switch { 4 => ChatTab.alliance, 3 => ChatTab.world, _ => ChatTab.officer}).logEntries.AddAndNotify(ch);
+                                            break;
+                                        }
                                 }
 
                                 break;
@@ -832,7 +846,7 @@ namespace COTG
                                 if(priorView!=viewMode )
                                 {
                                     var isWorld = IsWorldView();
-                                    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                                    AApp.DispatchOnUIThreadLow( () =>
                                     {
                                         ShellPage.canvas.IsHitTestVisible = isWorld;
 
@@ -901,6 +915,31 @@ namespace COTG
 
                 Log(ex);
             }
+        }
+
+        private static LogEntry GetChatMessage(JsonElement msg)
+        {
+            if (!msg.TryGetProperty("b", out var info))
+            {
+                return new LogEntry("Error");
+            }
+            var ch = new LogEntry()
+            {
+                player = info.GetAsString("b"),
+                crown = info.GetAsByte("c"),
+                text = info.GetAsString("d"),
+                whisper = info.GetAsByte("a")
+            };
+            if (msg.TryGetProperty("c", out var c))
+            {
+                ch.arrived = c.GetString().ParseDateTime();
+            }
+            else
+            {
+                ch.arrived = JSClient.ServerTime();
+            }
+
+            return ch;
         }
 
         static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

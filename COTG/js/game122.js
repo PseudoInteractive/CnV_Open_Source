@@ -17296,7 +17296,7 @@ var cotgsubscribe = amplify;
       regrender = +'1';
         _viewMode = viewModeRegion;
       c6.raf.start();
-      c6.paused = 0;
+      c6.paused = 1;
       c6.lockRender = ![];
       E6k.y6();
       c6.time.desiredFps = '10' ^ 0;
@@ -56318,12 +56318,11 @@ var cotgsubscribe = amplify;
     function o3F() {}
 
     function r0F() {
-      regrender = +"0";
-//      c6.raf.stop();
-     c6.paused = 0;
-      c6.lockRender = !"";
-      c6.time.desiredFps = +10;
-      c6.time.fpsMax = 10;
+        c6.raf.stop();
+        c6.paused = !!"1";
+        c6.lockRender = !"";
+        c6.time.desiredFps = +"1";
+        c6.time.fpsMax = '1' - 0;
     }
 
     function e0V() {

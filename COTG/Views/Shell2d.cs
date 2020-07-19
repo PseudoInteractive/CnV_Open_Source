@@ -67,7 +67,7 @@ namespace COTG.Views
             cachedXOffset = leftOffset;
             var _grid = canvas;
 
-            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => _grid.Margin = new Thickness(cotgPopupOpen > 0 ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, 0, 0, bottomMargin));
+            AApp.DispatchOnUIThreadLow( () => _grid.Margin = new Thickness(cotgPopupOpen > 0 ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, 0, 0, bottomMargin));
 //            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
 //            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
   //          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));

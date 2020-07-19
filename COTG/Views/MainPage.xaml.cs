@@ -150,12 +150,12 @@ namespace COTG.Views
 
         
 
-        public async static void CityListChange()
+        public static void CityListChange()
         {
             if (instance == null)
                 return;
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
              //   Note.L("ListChange: ");
 
@@ -185,24 +185,21 @@ namespace COTG.Views
                 }
             });
         }
-        public async static void CityListUpdateAll ()
+        public static void CityListUpdateAll ()
         {
             if (instance == null)
                 return;
-            Note.L("UpdateAll: ");
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-
-                instance.cities.NotifyReset();
-            });
+            // Note.L("UpdateAll: ");
+            AApp.DispatchOnUIThreadLow( instance.cities.NotifyReset);
+            
         }
 
         public static void UpdateDungeonList(List<Dungeon> dungeons, bool clear=true)
         {
             if (instance == null)
                 return;
-            Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+  //          Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+            AApp.DispatchOnUIThread( () =>
             {
                 instance.dungeonGrid.ItemsSource = dungeons;
             });
