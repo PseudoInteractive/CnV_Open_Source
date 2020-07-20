@@ -15,10 +15,10 @@
             <CollectionViewSource x:Name="cvsGroups" Source="{x:Bind Groups}" IsSourceGrouped="True" ItemsPath="Items"
                               />
             <DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="local:ChatEntryGroup">
-                <TextBlock Text="{x:Bind Title }" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind Title,Mode=OneTime}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </DataTemplate>
             <DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title }" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title,Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
             </DataTemplate>
             <!-- Data template used: -->
             <!-- The data template is bound to a custom DataType called Message. -->
@@ -27,11 +27,11 @@ sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
                 <Grid Height="Auto" >
                     <StackPanel Orientation="Horizontal" Padding="10, 0, 0, 0" Background="{x:Null}"  >
-                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}"  FontSize="12"  />
-                        <TextBlock Text="{x:Bind type,Mode=OneTime}" FontSize="12" />
-                        <TextBlock Text="{x:Bind crown,Mode=OneTime}" FontSize="12"  />
-                        <TextBlock Text="{x:Bind player,Mode=OneTime}" FontSize="12"  />
-                        <tk:MarkdownTextBlock Text="{x:Bind text,Mode=OneTime}"  FontSize="14"  TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
+                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" FontStretch="Condensed"  FontSize="14"  />
+                        <TextBlock Text="{x:Bind type,Mode=OneTime}" FontSize="14" FontStretch="ExtraCondensed" />
+                        <TextBlock Text="{x:Bind crown,Mode=OneTime}" FontSize="14"  FontStretch="UltraCondensed" />
+                        <TextBlock Text="{x:Bind player,Mode=OneTime}" FontSize="14" FontStretch="SemiCondensed" />
+                        <tk:MarkdownTextBlock Text="{x:Bind text,Mode=OneTime}"  FontSize="14" FontStretch="Condensed" TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
                     </StackPanel>
                 </Grid>
             </DataTemplate>

@@ -262,32 +262,29 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <!--<tk:Expander x:Name="Expander2" VerticalAlignment="Bottom" Margin="0"
-                           Header="This is the header - expander 2"
-                           HorizontalContentAlignment="Stretch"
-                           IsExpanded="False"
-                         Grid.Column="1" Grid.Row="3" Grid.RowSpan="3" Canvas.ZIndex="20"
-                           ExpandDirection="Up">-->
             <Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="24"/>
                 </Grid.RowDefinitions>
-                <Frame x:Name="chatTabFrame" Grid.Row="1" IsNavigationStackEnabled="False" Margin="0,12,0,4" />
+                <Grid Grid.Row="1" Background="{x:Null}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Frame x:Name="chatTabFrame" Grid.Column ="1" IsNavigationStackEnabled="False" Margin="0,12,0,4" />
+                    <tk:GridSplitter
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Canvas.ZIndex="22"
+                        />
+                </Grid>
                 <tk:GridSplitter        Grid.Row="1"
-        Grid.RowSpan="1"        Grid.Column="0"
-        VerticalAlignment="Top"             Canvas.ZIndex="22"
-        Height="11">
-                    <tk:GridSplitter.Element>
-                        <TextBlock HorizontalAlignment="Center"
-                         IsHitTestVisible="False"
-                         VerticalAlignment="Center"
-                         Text="Chat"
-                         ></TextBlock>
-                    </tk:GridSplitter.Element>
+                        Grid.RowSpan="1"        Grid.Column="0"
+                        VerticalAlignment="Top"             Canvas.ZIndex="22"
+                        Height="11">
                 </tk:GridSplitter>
             </Grid>
-            <!--</tk:Expander>-->
             <tk:InAppNotification x:Name="InAppNote"
                                   Grid.Row="4"
                                   Grid.RowSpan="2"

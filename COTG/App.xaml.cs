@@ -300,7 +300,7 @@ namespace COTG
             s = regexCoords.Replace(s, @"[$1](/c/$1)");
             s = regexPlayer.Replace(s, @"[$1](/p/$1)");
             s = regexAlliance.Replace(s, @"[$1](/a/$1)");
-            s = regexReport.Replace(s, @"[$1](/r/$1)");
+            s = regexReport.Replace(s, @"[Report:$1](/r/$1)");
             return s;
         }
         public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
