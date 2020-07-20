@@ -214,9 +214,13 @@ namespace COTG.Views
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
                     Services.NavigationService.Navigate<Views.MainPage>(this);
+                    ChatTab.debug.Post(new ChatEntry("<coords>331:331</coords>", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
+                    ChatTab.debug.Post(new ChatEntry("<player>KittyKat</player>", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
+                    ChatTab.debug.Post(new ChatEntry("@david", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
                 });
             });
-    
+
+
         }
 
        

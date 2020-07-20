@@ -25,16 +25,13 @@
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
-                <Grid Height="Auto" Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
-                    <StackPanel Padding="10, 0, 0, 0" Background="{x:Null}"  >
-                        <StackPanel Background="{x:Null}" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <TextBlock Text="{x:Bind arrivedString}" Padding="0, 0, 0, 0" FontSize="12" HorizontalAlignment="Left" />
-                            <TextBlock Text="{x:Bind type}" FontSize="12" HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind crown}" FontSize="12" HorizontalAlignment="Center" />
-                            <TextBlock Text="{x:Bind player}" FontSize="12" HorizontalAlignment="Right" />
-                        </StackPanel>
-                        <TextBlock Text="{x:Bind text}" Padding="0, 0, 0, 0" FontSize="14"  TextWrapping="WrapWholeWords"
-                                               />
+                <Grid Height="Auto" >
+                    <StackPanel Orientation="Horizontal" Padding="10, 0, 0, 0" Background="{x:Null}"  >
+                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}"  FontSize="12"  />
+                        <TextBlock Text="{x:Bind type,Mode=OneTime}" FontSize="12" />
+                        <TextBlock Text="{x:Bind crown,Mode=OneTime}" FontSize="12"  />
+                        <TextBlock Text="{x:Bind player,Mode=OneTime}" FontSize="12"  />
+                        <tk:MarkdownTextBlock Text="{x:Bind text,Mode=OneTime}"  FontSize="14"  TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
                     </StackPanel>
                 </Grid>
             </DataTemplate>

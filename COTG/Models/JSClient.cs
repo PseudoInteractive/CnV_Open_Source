@@ -296,22 +296,22 @@ namespace COTG
 
         }
 
-        public static void ShowPlayer(string pid)
+        public static void ShowPlayer(string playerName)
         {
             try
             {
-                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{pid}')" });
+                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
             }
             catch (Exception e)
             {
                 Log(e);
             }
         }
-        public  static void ShowAlliance(string id)
+        public  static void ShowAlliance(string allianceName)
         {
             try
             {
-                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{id}')" });
+                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
             }
             catch (Exception e)
             {
@@ -948,13 +948,12 @@ namespace COTG
         {
             if (!msg.TryGetProperty("b", out var info))
             {
-                return new ChatEntry("Error",AUtil.dateTimeZero);
+                return new ChatEntry("Error");
             }
-            var ch = new ChatEntry()
+            var ch = new ChatEntry(System.Net.WebUtility.HtmlDecode(info.GetAsString("d")))
             {
                 player = info.GetAsString("b"),
                 crown = info.GetAsByte("c"),
-                text = info.GetAsString("d"),
                 type = info.GetAsByte("a")
             };
             if (msg.TryGetProperty("c", out var c))

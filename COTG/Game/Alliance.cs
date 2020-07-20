@@ -106,6 +106,8 @@ namespace COTG.Game
                     alliances.Add(al);
                 }
             }
+            Note.Show("Got Alliance Init");
+
             foreach (var _al in alliances)
             {
                 var alName = _al.name;
@@ -149,6 +151,7 @@ namespace COTG.Game
             all = _all;
             Note.Show("Got Alliances");
             await RestAPI.getWorldInfo.Post();
+            Note.Show("Got World");
         }
     }
 }

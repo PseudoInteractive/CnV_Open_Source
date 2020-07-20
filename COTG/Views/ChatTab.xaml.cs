@@ -37,8 +37,8 @@ namespace COTG.Views
         public string arrivedString => time.ToString("HH':'mm':'ss");
         public string text { get; set; }= string.Empty;
 
-        public ChatEntry(string _a,DateTimeOffset _arrived) { text = _a;time = _arrived; }
-        public ChatEntry() { }
+        public ChatEntry(string _a,DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
+      //  public ChatEntry() { }
     }
     public  class ChatEntryGroup
     {
@@ -119,7 +119,7 @@ namespace COTG.Views
                     var str = $"{Tick.MSS()}:{s}";
                     //  instance.logEntries
    
-                    debug.Post(new ChatEntry(str,DateTimeOffset.UtcNow));
+                    debug.Post(new ChatEntry(str,JSClient.ServerTime()));
                 }
                 catch (Exception e)
                 {

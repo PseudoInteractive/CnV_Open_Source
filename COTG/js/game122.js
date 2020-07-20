@@ -23918,7 +23918,7 @@ var cotgsubscribe = amplify;
         });
     }
     var w4F = +'0';
-    $(document)
+    $(document)  // Copy to chat?
       .ready(function() {
         var N44 = '2075';
         var a44 = '1438';
@@ -23937,7 +23937,7 @@ var cotgsubscribe = amplify;
             E6k.y6();
             var a4U = $(_s(+"6660"))
               .attr("data");
-            a4U = _s(a44 << 300627104) + a4U + _s(N44 ^ 0);
+            a4U = "<coords>"+ a4U + "</coords>";
             if ($(_s(I7R | 137))
               .hasClass(_s(+n4p))) document.getElementById(_s(+d4p))
               .value = document.getElementById(_s(+d4p))
@@ -58539,7 +58539,7 @@ var cotgsubscribe = amplify;
       if (P0v == ('1' ^ 0)) var K0v = _s(+l4p) + g0v + _s(+k4p);
       else if (P0v == +"2") var K0v = _s(+'4834') + g0v + _s("3711" << 113996192);
       else if (P0v == '3' << 1940700288) var K0v = _s('3190' - 0) + g0v + _s('2290' | 146);
-      else if (P0v == +'4') var K0v = _s(+'4450') + g0v + _s(+"764");
+      else if (P0v == +'4') var K0v = "<coords>" + g0v + "</coords>";
       if (g0v != '') {
         if ($(
             _s(I7R >> 2117785184))

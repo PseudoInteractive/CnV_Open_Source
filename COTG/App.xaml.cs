@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace COTG
 {
@@ -249,7 +250,7 @@ namespace COTG
         {
             try
             {
-                var links = s.Split('.');
+                var links = s.Split('.',':');
                 return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
 
 
@@ -289,6 +290,19 @@ namespace COTG
 
             ChatTab.L(s);
         }
+
+        static Regex regexCoords = new Regex(@"\<coords\>(\d{3}:\d{3})\<\/coords\>");
+        static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>");
+        static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>");
+        static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>");
+        public static string TranslateCOTGChatToMarkdown(string s)
+        {
+            s = regexCoords.Replace(s, @"[$1](/c/$1)");
+            s = regexPlayer.Replace(s, @"[$1](/p/$1)");
+            s = regexAlliance.Replace(s, @"[$1](/a/$1)");
+            s = regexReport.Replace(s, @"[$1](/r/$1)");
+            return s;
+        }
         public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
 
@@ -301,8 +315,17 @@ namespace COTG
 					case "c":
                         JSClient.ShowCity(paths[2].FromCoordinate());
                         break;
-    			}
-			}
+                    case "p": // player
+                        JSClient.ShowPlayer(paths[2]);
+                        break;
+                    case "a": // Alliance
+                        JSClient.ShowAlliance(paths[2]);
+                        break;
+                    case "r": // Report
+                        JSClient.ShowReport(paths[2]);
+                        break;
+                }
+            }
 			catch (Exception ex)
 			{
 				Log(ex);
