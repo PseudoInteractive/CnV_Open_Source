@@ -15,25 +15,28 @@
             <CollectionViewSource x:Name="cvsGroups" Source="{x:Bind Groups}" IsSourceGrouped="True" ItemsPath="Items"
                               />
             <DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="local:ChatEntryGroup">
-                <TextBlock Text="{x:Bind Title,Mode=OneTime}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind Title,Mode=OneTime}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontStretch="ExtraExpanded" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </DataTemplate>
             <DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title,Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title,Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}" FontStretch="UltraExpanded" TextWrapping="Wrap"/>
             </DataTemplate>
             <!-- Data template used: -->
             <!-- The data template is bound to a custom DataType called Message. -->
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
-                <Grid Height="Auto" >
-                    <StackPanel Orientation="Horizontal" Padding="10, 0, 0, 0" Background="{x:Null}"  >
-                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" FontStretch="Condensed"  FontSize="14"  />
-                        <TextBlock Text="{x:Bind type,Mode=OneTime}" FontSize="14" FontStretch="ExtraCondensed" />
-                        <TextBlock Text="{x:Bind crown,Mode=OneTime}" FontSize="14"  FontStretch="UltraCondensed" />
-                        <TextBlock Text="{x:Bind player,Mode=OneTime}" FontSize="14" FontStretch="SemiCondensed" />
-                        <tk:MarkdownTextBlock Text="{x:Bind text,Mode=OneTime}"  FontSize="14" FontStretch="Condensed" TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
-                    </StackPanel>
-                </Grid>
+                    <Grid  Background="{x:Null}" Margin="16 0 0 0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width ="65"  />
+                        <ColumnDefinition Width ="90" />
+                        <ColumnDefinition Width ="*" />
+                    </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray"  FontSize="14"  />
+                        <HyperlinkButton Grid.Column="1" Foreground="Blue" VerticalAlignment="Center" Content="{x:Bind player}" Tapped="HyperlinkButton_Tapped"  FontSize="14" />
+                        <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="14"
+                                              TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
+                    </Grid>
+                
             </DataTemplate>
         </Grid.Resources>
         <SemanticZoom x:Name="Control1" >

@@ -17,12 +17,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <FileAlignment>2048</FileAlignment>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -37,16 +37,16 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-rc.1.20368.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-rc.1.20370.4" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.0-rc.1.20367.16" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-rc.1.20368.6" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.0" />
-    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-rc.1.20370.4" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-build.63" />
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="7.0.0-build.63" />
     <PackageReference Include="PlayFabAllSDK" Version="1.76.200713" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-rc.1.20368.6" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-rc.1.20368.6" />
-    <PackageReference Include="System.Security.AccessControl" Version="5.0.0-rc.1.20368.6" />
-    <PackageReference Include="System.Text.Json" Version="5.0.0-rc.1.20368.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-rc.1.20370.4" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-rc.1.20370.4" />
+    <PackageReference Include="System.Security.AccessControl" Version="5.0.0-rc.1.20370.4" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0-rc.1.20370.4" />
     <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.8.20352.3" />
     <PackageReference Include="ZString" Version="2.1.3" />
   </ItemGroup>

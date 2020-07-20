@@ -8988,7 +8988,8 @@ i011.d3q = function() {
 };
 i011.s6s = 2147483647;
 i011.R6 = function() { return typeof i011.B6.Y7 === 'function' ? i011.B6.Y7.apply(i011.B6, arguments) : i011.B6.Y7; };
-var gspotfunct = new Object();
+function gspotfunct () {
+    };
 
 var setcitybind;
 
@@ -16453,7 +16454,7 @@ var cotgsubscribe = amplify;
         .val(+"0");
     }
     gspotfunct["chcity"] = function(F9V) { R2(F9V); };
-    gspotfunct["infoPlay"] = function(q9V) {
+    gspotfunct.infoPlay = function(q9V) {
       E6k.y6();
       Z5F(q9V);
     };

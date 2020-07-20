@@ -267,7 +267,7 @@ namespace COTG
                 if(ShellPage.IsPageRaid() )
                     MainPage.SetRaidCity(cityId, false, true, false);
 
-                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+                view.InvokeScriptAsync("chcity", new string[] {(cityId).ToString() });
 
                 Raiding.UpdateTSHome();
 
@@ -300,7 +300,8 @@ namespace COTG
         {
             try
             {
-                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
+                //     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
+                     view.InvokeScriptAsync("infoPlay", new string[] {playerName});
             }
             catch (Exception e)
             {
@@ -311,7 +312,8 @@ namespace COTG
         {
             try
             {
-                view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
+                view.InvokeScriptAsync("alliancelink",new []{allianceName});
+           //     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
             }
             catch (Exception e)
             {
@@ -336,7 +338,7 @@ namespace COTG
         {
             try
             {
-                  view.InvokeScriptAsync("eval", new string[] { $"gStphp({cityId%65536},{cityId/65536})" });
+                  view.InvokeScriptAsync("gStphp", new string[] { (cityId%65536).ToString(),(cityId/65536).ToString() });
             }
             catch (Exception e)
             {
@@ -354,7 +356,7 @@ namespace COTG
                 }
                 else
                 {
-                    view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.shCit({cityId})" });
+                    view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
                     if( City.IsMine(cityId)  )
                         Raiding.UpdateTSHome();
                 }

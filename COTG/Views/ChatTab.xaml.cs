@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
 using COTG.Helpers;
+using Windows.UI.Xaml.Documents;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -116,10 +117,10 @@ namespace COTG.Views
             
                 try
                 {
-                    var str = $"{Tick.MSS()}:{s}";
+                  //  var str = $"{Tick.MSS()}:{s}";
                     //  instance.logEntries
    
-                    debug.Post(new ChatEntry(str,JSClient.ServerTime()));
+                    debug.Post(new ChatEntry(s,JSClient.ServerTime()));
                 }
                 catch (Exception e)
                 {
@@ -152,7 +153,14 @@ namespace COTG.Views
         {
             Note.MarkDownLinkClicked(sender, e);
         }
+
        
 
+        private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var chatEntry = sender as HyperlinkButton;
+            if(chatEntry!=null)
+               JSClient.ShowPlayer(chatEntry.Content.ToString());
+        }
     }
 }
