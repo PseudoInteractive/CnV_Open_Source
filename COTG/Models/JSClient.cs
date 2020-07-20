@@ -264,7 +264,11 @@ namespace COTG
         {
             try
             {
+                if(ShellPage.IsPageRaid() )
+                    MainPage.SetRaidCity(cityId, false, true, false);
+
                 view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.chcity({cityId})" });
+
                 Raiding.UpdateTSHome();
 
             }
@@ -549,14 +553,14 @@ namespace COTG
 //                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
  //                       httpFilter.AllowUI = true;
                         httpFilter.AutomaticDecompression = true;
-                        httpFilter.MaxVersion = HttpVersion.Http11;
+                        httpFilter.MaxVersion = HttpVersion.Http20;
 
                         //                        httpFilter.User.
 
                         clientPool = new BlockingCollection<HttpClient>(clientCount);
                         for (int i = 0; i < clientCount; ++i)
                         {
-                            var httpClient = new HttpClient(httpFilter); // reset
+                            var httpClient = new HttpClient( httpFilter); // reset
                                                                          //   httpClient = new HttpClient(); // reset
                                                                          //                        var headers = httpClient.DefaultRequestHeaders;
                                                                          //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
@@ -564,7 +568,7 @@ namespace COTG
                                                                          //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
                                                                          //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
                                                                          //   headers.Add("Accept", @"*/*");
-                            httpClient.DefaultRequestHeaders.Clear();
+//                            httpClient.DefaultRequestHeaders.Clear();
                             httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
                             //    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
                             //    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
@@ -576,7 +580,15 @@ namespace COTG
 
                             httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                             //   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
-                            clientPool.Add(httpClient);
+
+                            //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Pragma", "no-cache");
+
+                            //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
+                            //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Mode", "cors");
+                            //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "empty");
+
+                                clientPool.Add(httpClient);
+
                         }
                         view.WebResourceRequested -= View_WebResourceRequested1;
                         view.WebResourceRequested += View_WebResourceRequested1;
@@ -757,13 +769,18 @@ namespace COTG
                             }
                         case "citydata":
                             {
-                                MainPage.ClearDungeonList();
                                 var jse = jsp.Value;
+                                var priorCid = cid;
                                 cid = jse.GetInt("cid");
-                                Note.L("citydata=" + cid.CidToString());
-                                var city=City.all.GetOrAdd(cid,City.Factory);
+                                //Note.L("citydata=" + cid.CidToString());
+                                var city =City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
+
+                                if (ShellPage.IsPageRaid())
+                                    ScanDungeons.Post(cid, false);
+
                                 break;
+
                             }
                         case "OGA":
                             {
@@ -814,12 +831,12 @@ namespace COTG
                                             if (!jsp.Value.TryGetProperty("b", out var messages))
                                                 break;
 
-                                            var batch = new List<LogEntry>();
+                                            var batch = new List<ChatEntry>();
                                             foreach (var msg in messages.EnumerateArray())
                                             {
                                                 batch.Add(GetChatMessage(msg));
                                             }
-                                            (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).logEntries.AddAndNotify(batch);
+                                            (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).Post(batch);
 
                                         }
                                         break;
@@ -828,7 +845,17 @@ namespace COTG
                                     case 3:
                                         {
                                             var ch = GetChatMessage(jsp.Value);
-                                            (ch.whisper switch { 4 => ChatTab.alliance, 3 => ChatTab.world, _ => ChatTab.officer}).logEntries.AddAndNotify(ch);
+                                            if (ch.type == 2) // real whisper
+                                            {
+                                                // add to all tabs
+                                                ChatTab.whisper.Post(ch);
+                                                ChatTab.alliance.Post(ch);
+                                                ChatTab.officer.Post(ch);
+                                                ChatTab.world.Post(ch);
+                                            }
+
+                                            else
+                                                (ch.type switch { 4 => ChatTab.alliance, 3 => ChatTab.world, _ => ChatTab.officer }).Post(ch);
                                             break;
                                         }
                                 }
@@ -917,26 +944,26 @@ namespace COTG
             }
         }
 
-        private static LogEntry GetChatMessage(JsonElement msg)
+        private static ChatEntry GetChatMessage(JsonElement msg)
         {
             if (!msg.TryGetProperty("b", out var info))
             {
-                return new LogEntry("Error");
+                return new ChatEntry("Error",AUtil.dateTimeZero);
             }
-            var ch = new LogEntry()
+            var ch = new ChatEntry()
             {
                 player = info.GetAsString("b"),
                 crown = info.GetAsByte("c"),
                 text = info.GetAsString("d"),
-                whisper = info.GetAsByte("a")
+                type = info.GetAsByte("a")
             };
             if (msg.TryGetProperty("c", out var c))
             {
-                ch.arrived = c.GetString().ParseDateTime();
+                ch.time = c.GetString().ParseDateTime();
             }
             else
             {
-                ch.arrived = JSClient.ServerTime();
+                ch.time = JSClient.ServerTime();
             }
 
             return ch;

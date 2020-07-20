@@ -13,6 +13,8 @@ using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
+using COTG.Views;
+
 using static COTG.Debug;
 namespace COTG.Game
 {
@@ -148,12 +150,14 @@ namespace COTG.Game
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid);
                         break;
-                    case "tsTotal":
-                    case "tsHome":
+                    default://case "tsTotal":
+                    //case "tsHome":
+                        if ( ShellPage.IsPageRaid() &&  MainPage.raidCity==this)
                         {
-                            if (City.IsMine(cid)  ) // Only valid for my own cities
-                                ScanDungeons.Post(cid); break;
+            //                MainPage.SetRaidCity(cid,true);
+                            ScanDungeons.Post(cid,true);
                         }
+                        break;
                 }
             }
         }

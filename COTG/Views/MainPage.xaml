@@ -45,7 +45,7 @@
                         AlternationStep="2"
                         ItemsSource="{x:Bind cities, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode="Extended"
+                        SelectionMode="Single"
                         CanUserChooseColumns="True"
                         UserSortMode="Multiple"
                         RowHeight="34"
@@ -76,6 +76,11 @@
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="raidReturn"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,6:N0}"
+                                            IsVisible="False"
+                                            Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="points"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,6:N0}"
@@ -84,11 +89,6 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Width="60"
                                        IsVisible="False" />
-                <tg:DataGridNumericalColumn PropertyName="raidReturn"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,6:N0}"
-                                            IsVisible="False"
-                                            Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,5:N1}"
@@ -134,7 +134,7 @@ TextSubmitted="RaidCarrySubmitted"
                         SelectionMode="Single"
                         RowHeight="40"
                         CanUserChooseColumns="True"
-                        UserSortMode="Multiple"
+                        UserSortMode="Single"
                         SelectionUnit="Row"
                        >
             <tg:RadDataGrid.Commands>

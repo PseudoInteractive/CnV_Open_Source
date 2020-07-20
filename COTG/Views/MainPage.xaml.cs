@@ -37,6 +37,7 @@ namespace COTG.Views
         public BoundCollection<City> cities { get; } = new BoundCollection<City>();
       //  public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage instance;
+        public static City raidCity;
         //        public static City showingRowDetails;
 
         
@@ -75,9 +76,23 @@ namespace COTG.Views
 
             cityGrid.ContextFlyout = cityMenuFlyout;
 
-
+            cityGrid.SelectionChanged += CityGrid_SelectionChanged;
         }
 
+        private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        {
+            var it = e.AddedItems.GetEnumerator();
+            if(!it.MoveNext())
+            {
+                Assert(false);
+                return;
+            }
+            var newSel = it.Current as City;
+            Assert(newSel != null);
+            if (newSel == raidCity)
+                return;
+            SetRaidCity(newSel,true,false,true);
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -185,6 +200,28 @@ namespace COTG.Views
                 }
             });
         }
+
+        internal static void SetRaidCity(int cid, bool fromUI, bool noRaidScan, bool getCityData)
+        {
+            if (City.all.TryGetValue(cid, out var city))
+            {
+                SetRaidCity(city, fromUI, noRaidScan, getCityData);
+            }
+        }
+        internal static void SetRaidCity(City city, bool fromUI,bool noRaidScan, bool getCityData)
+        {
+             var changed = city != raidCity;
+             raidCity = city;
+            if(!fromUI && changed)
+                CityGrid.SelectItem(city);
+
+            if (!noRaidScan)
+            {
+                if (changed)
+                    ScanDungeons.Post(city.cid,getCityData);
+            }
+        }
+
         public static void CityListUpdateAll ()
         {
             if (instance == null)
@@ -194,20 +231,29 @@ namespace COTG.Views
             
         }
 
-        public static void UpdateDungeonList(List<Dungeon> dungeons, bool clear=true)
+        public static void UpdateDungeonList(List<Dungeon> dungeons)
         {
             if (instance == null)
                 return;
-  //          Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+          //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
             AApp.DispatchOnUIThread( () =>
             {
                 instance.dungeonGrid.ItemsSource = dungeons;
             });
         }
-        public static void ClearDungeonList()
+        public static void UpdateRaidPlans()
         {
-            UpdateDungeonList(null);
+            // tell UI that list data has changed
+            AApp.DispatchOnUIThread(() =>
+            {
+                instance.dungeonGrid.ItemsSource = instance.dungeonGrid.ItemsSource;
+            });
         }
+
+        //public static void ClearDungeonList()
+        //{
+        //    UpdateDungeonList(null);
+        //}
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -283,7 +329,9 @@ namespace COTG.Views
                 //raidSteps;
                 if(SetCarry(_raidCarry))
                 {
-                    UpdateDungeonList(null, false);
+                    //if(raidCity!=null)
+                    //    ScanDungeons.Post(raidCity.cid,false) ;
+                    UpdateRaidPlans();
                 }
 
             }
@@ -307,13 +355,14 @@ namespace COTG.Views
 
 		private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
 		{
-            Log("Sel update");
+         //   Log("Sel update");
             if (e.AddedItems != null && e.AddedItems.Count > 0)
             {
                 if (SetCarry( (float)e.AddedItems[0] ) )
                 {
-                    Log("Sel changed");
-                    UpdateDungeonList(null, false);
+                    UpdateRaidPlans(); //Log("Sel changed");
+                    //if (raidCity != null)
+                    //    ScanDungeons.Post(raidCity.cid,false);
                 }
             }
         }

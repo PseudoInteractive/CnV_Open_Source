@@ -212,16 +212,16 @@ namespace COTG
     {
         public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
         {
-            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
-                action();
-            else
+            //if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
+            //    action();
+            //else
               d.RunAsync(CoreDispatcherPriority.Low, action);
         }
         public static void DispatchOnUIThread(this CoreDispatcher d, DispatchedHandler action)
         {
-            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
-                action();
-            else
+            //if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
+            //    action();
+            //else
                 d.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 

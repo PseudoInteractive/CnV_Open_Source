@@ -186,7 +186,7 @@ namespace COTG.Models
             {
                 switch (context.Column.Header?.ToString() )
                 {
-                    case "raidRetyrn":
+                    case "raidReturn":
                     case "raidCarry": RaidOverview.Send();break;
                     case "senny": City.UpdateSenatorInfo(); break;
                 }

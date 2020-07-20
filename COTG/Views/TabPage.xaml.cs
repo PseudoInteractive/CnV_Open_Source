@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 
@@ -85,12 +85,14 @@ namespace COTG.Views
                 if (tab.isActive)
                     continue;
                 tab.isActive = true;
-                Tabs.TabItems.Add(new TabViewItem()
+                var vi =new TabViewItem()
                 {
                     IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
                     Header = tab.DataContext as string,
                     Content = tab
-                });
+                };
+                Tabs.TabItems.Add(vi);
+                Tabs.SelectedItem = vi;
                 return true;
             }
             return false; 
@@ -302,6 +304,20 @@ namespace COTG.Views
         private void Tabs_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
         {
             RemoveTab(sender,args.Tab);
+        }
+
+        private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.AddedItems.Count == 1)
+            {
+                var chat = (e.AddedItems[0] as TabViewItem).Content as ChatTab;
+                var count = chat.Groups.Count;
+                if (count > 0)
+                {
+                    chat.listView.ScrollIntoView(chat.Groups[count-1].Items.Last() );
+                }
+
+            }
         }
     }
 }

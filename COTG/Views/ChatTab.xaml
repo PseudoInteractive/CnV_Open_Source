@@ -5,57 +5,67 @@
     xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:telerik="using:Telerik.UI.Xaml.Controls.Data"
-    xmlns:telerikData="using:Telerik.Data.Core"
-    xmlns:listview="using:Telerik.UI.Xaml.Controls.Data.ListView"
-    xmlns:listViewPrimitives="using:Telerik.UI.Xaml.Controls.Data.ListView.Primitives"
-    xmlns:listviewCommands="using:Telerik.UI.Xaml.Controls.Data.ListView.Commands"
+    xmlns:wuxdata="using:Windows.UI.Xaml.Data"
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
-
     <Grid>
         <Grid.Resources>
+            <CollectionViewSource x:Name="cvsGroups" Source="{x:Bind Groups}" IsSourceGrouped="True" ItemsPath="Items"
+                              />
+            <DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="local:ChatEntryGroup">
+                <TextBlock Text="{x:Bind Title }" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
+                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title }" Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+            </DataTemplate>
             <!-- Data template used: -->
             <!-- The data template is bound to a custom DataType called Message. -->
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
-            <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:LogEntry">
+            <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
                 <Grid Height="Auto" Margin="4" HorizontalAlignment="{x:Bind MsgAlignment}">
                     <StackPanel Padding="10, 0, 0, 0" Background="{x:Null}"  >
                         <StackPanel Background="{x:Null}" Orientation="Horizontal" HorizontalAlignment="Stretch">
                             <TextBlock Text="{x:Bind arrivedString}" Padding="0, 0, 0, 0" FontSize="12" HorizontalAlignment="Left" />
-                            <TextBlock Text="{x:Bind whisper}" FontSize="12" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind type}" FontSize="12" HorizontalAlignment="Center"/>
                             <TextBlock Text="{x:Bind crown}" FontSize="12" HorizontalAlignment="Center" />
                             <TextBlock Text="{x:Bind player}" FontSize="12" HorizontalAlignment="Right" />
                         </StackPanel>
-                        <tk:MarkdownTextBlock Text="{x:Bind text}" Padding="0, 0, 0, 0" FontSize="12" LinkForeground="BlueViolet" LinkClicked="MarkdownTextBlock_LinkClicked" />
+                        <TextBlock Text="{x:Bind text}" Padding="0, 0, 0, 0" FontSize="14"  TextWrapping="WrapWholeWords"
+                                               />
                     </StackPanel>
                 </Grid>
             </DataTemplate>
         </Grid.Resources>
-
-        <ListView x:Name="LogBox"
+        <SemanticZoom x:Name="Control1" >
+            <SemanticZoom.ZoomedInView>
+                <ListView x:Name="listView" x:FieldModifier="public" 
              ItemTemplate="{StaticResource MessageViewTemplate}"
-                   ItemsSource="{x:Bind logEntries,Mode=OneTime}" >
-            <!-- The ItemsStackPanel must be edited to update the following two properties -->
-            <!-- These properties allow the list to grow from the bottom -->
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
+                   ItemsSource="{x:Bind cvsGroups.View}" >
+                    <ListView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}" />
+                    </ListView.GroupStyle>
+                    <!-- The ItemsStackPanel must be edited to update the following two properties -->
+                    <!-- These properties allow the list to grow from the bottom -->
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
                               VerticalAlignment="Bottom"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        
-       
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <!-- This setter property is created so ListViewItems correctly align to the left or right. -->
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </SemanticZoom.ZoomedInView>
+            <SemanticZoom.ZoomedOutView>
+                <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
+            </SemanticZoom.ZoomedOutView>
+        </SemanticZoom>
     </Grid>
 </UserControl>

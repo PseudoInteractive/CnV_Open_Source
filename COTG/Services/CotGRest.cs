@@ -140,16 +140,23 @@ namespace COTG.Services
                 req.Content = new HttpStringContent(postContent,
                             Windows.Storage.Streams.UnicodeEncoding.Utf8,
                             "application/x-www-form-urlencoded");
+                //req.TransportInformation.
 
                 req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
 
+
+//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
+            //    req.Headers.Append("Sec-Fetch-Mode", "cors");
+            //    req.Headers.Append("Sec-Fetch-Dest", "empty");
+
                 client = JSClient.clientPool.Take();
-                var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+                var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
                 //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
                 //     Log($"req: {resp.RequestMessage.ToString()}");
                 //   if (resp.ExtendedError != null)
                 //      Log(resp.ExtendedError);
                 JSClient.clientPool.Add(client);
+               // Log("HTTP:" + resp.Version);
                 client = null;
                 if (resp!=null)
                 {
@@ -300,9 +307,10 @@ namespace COTG.Services
         {
             cid = _cid;
         }
-        public static async void Post(int _cid)
+        public static async void Post(int _cid,bool getCityFirst)
         {
          //   Log(_cid.CidToString());
+         if(getCityFirst)
             await GetCity.Post(_cid);
          //   await Task.Delay(2000);
          //   COTG.Views.MainPage.CityListUpdateAll();

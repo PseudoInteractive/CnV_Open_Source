@@ -103,6 +103,8 @@ namespace COTG.Views
             {
                 isMouseDown = false;
                 canvas.ReleasePointerCapture(e.Pointer);
+                SetJSCamera();
+
             }
             Spot.viewHover = 0;
         }

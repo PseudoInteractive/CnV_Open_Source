@@ -26,19 +26,30 @@ using COTG.Helpers;
 
 namespace COTG.Views
 {
-    public sealed class LogEntry
+    public sealed class ChatEntry
     {
         public string player { get; set; }
         public byte crown { get; set; }
-        public byte whisper { get; internal set; }
+        public byte type { get; internal set; }
         public sbyte allignment;
         public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
-        public DateTimeOffset arrived;
-        public string arrivedString => arrived.ToString("HH':'mm':'ss");
+        public DateTimeOffset time;
+        public string arrivedString => time.ToString("HH':'mm':'ss");
         public string text { get; set; }= string.Empty;
 
-        public LogEntry(string _a) { text = _a; }
-        public LogEntry() { }
+        public ChatEntry(string _a,DateTimeOffset _arrived) { text = _a;time = _arrived; }
+        public ChatEntry() { }
+    }
+    public  class ChatEntryGroup
+    {
+        public DateTimeOffset time;
+        public string Title => time.ToString("HH:mm:ss");
+        public DumbCollection<ChatEntry> Items { get; set; } = new DumbCollection<ChatEntry>();
+
+        public override string ToString()
+        {
+            return this.Title;
+        }
     }
 
     public sealed partial class ChatTab : UserControl
@@ -51,12 +62,45 @@ namespace COTG.Views
 
         public static ChatTab[] all = { world, alliance, officer, whisper, debug };
 
-        public DumbCollection<LogEntry> logEntries = new DumbCollection<LogEntry>(new LogEntry[] {new LogEntry("Hello") });
-
+        //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
+        public  DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
         public bool isActive; // true if this is in a tab view somewhere
-        public ChatTab()
+
+        public void Post(ChatEntry entry)
+        {
+            var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
+            var lastHour = activeGroup ==null ? -99 : activeGroup.time.Hour;
+            var newHour = entry.time.Hour;
+            if(lastHour!=newHour)
+            {
+                activeGroup = new ChatEntryGroup() { time = entry.time };
+                Groups.AddAndNotify(activeGroup);
+            }
+            activeGroup.Items.AddAndNotify(entry);
+
+        }
+        public void Post(IEnumerable<ChatEntry> entries)
+        {
+            // Todo: batch these
+            foreach (var entry in entries)
+                Post(entry);
+        }
+
+            public ChatTab()
         {
             this.InitializeComponent();
+
+ //           Groups = new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow,Items=logEntries }, new ChatEntryGroup() {Items=logEntries2 } }; 
+//            Groups.First().Items = logEntries; // = new DumbCollection<ChatEntryGroup>(new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow } });// Items = logEntries } });
+//            Groups.First().Items = logEntries; // = new DumbCollection<ChatEntryGroup>(new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow } });// Items = logEntries } });
+                                               //   logEntries[0].group = Groups[0];
+
+            //            cvsGroups.Source =(from t in logEntries
+            //    group t by t.@group into g
+            //    orderby g.Key
+            //    select g);
+            ////            groupInfoCVS.Source = result;
+
         }
         //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
         [Conditional("TRACE")]
@@ -74,9 +118,8 @@ namespace COTG.Views
                 {
                     var str = $"{Tick.MSS()}:{s}";
                     //  instance.logEntries
-                    var entries = debug.logEntries;
-
-                    entries.AddAndNotify(new LogEntry(str));
+   
+                    debug.Post(new ChatEntry(str,DateTimeOffset.UtcNow));
                 }
                 catch (Exception e)
                 {

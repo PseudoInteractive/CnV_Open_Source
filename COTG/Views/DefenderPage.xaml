@@ -66,7 +66,7 @@
                         <tg:RadDataGrid.Columns>
                             <tg:DataGridTimeColumn Width="80"
                                                    PropertyName="arrival"
-                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
+                                                   CellContentFormat="{}{0:'/'dd'/' HH':'mm':'ss}"
                                                    SizeMode="Fixed"
                                                    
                                                    CellContentStyle="{StaticResource CenterAlign}" />
@@ -206,7 +206,7 @@
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridTimeColumn Width="80"
                                                    PropertyName="spotted"
-                                                   CellContentFormat="{}{0:dd'>' HH':'mm':'ss}"
+                                                   CellContentFormat="{}{0:'/'dd'/' HH':'mm':'ss}"
                                                    CellContentStyle="{StaticResource CenterAlign}"
                                                    SizeMode="Fixed" />
                         </tg:RadDataGrid.Columns>
