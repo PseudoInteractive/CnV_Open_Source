@@ -384,7 +384,7 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
             jsd = json;
-            var changed = new List<City>();
+            var changed = new HashSet<City>();
             foreach (var item in jsd.RootElement.EnumerateArray())
             {
                 var cid = item.GetAsInt("id");
@@ -422,7 +422,6 @@ namespace COTG.Services
                 {
                     v.troopsTotal = v.troopsHome = Array.Empty<TroopTypeCount>();
                 }
-                v.ValidateChangedEvent();
                 var tsh = TroopTypeCount.TS(v.troopsHome);
                 var tst = TroopTypeCount.TS(v.troopsTotal);
                 if ((tsh - v.tsHome).Abs().Max((tst - v.tsTotal).Abs()) > 16)
@@ -437,7 +436,7 @@ namespace COTG.Services
             }
             if (!changed.IsNullOrEmpty())
             {
-               App.DispatchOnUIThreadLow( ()=> { foreach (var i in changed) i.OnPropertyChanged(string.Empty); } );
+               changed.NotifyChange();
             }
             Log("Got JS for troop overview");
             Log(json.ToString());

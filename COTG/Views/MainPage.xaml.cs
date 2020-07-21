@@ -34,7 +34,7 @@ namespace COTG.Views
 
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        public BoundCollection<City> cities { get; } = new BoundCollection<City>();
+        public DumbCollection<City> gridCitySource { get; } = new DumbCollection<City>();
       //  public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage instance;
         public static City raidCity;
@@ -49,7 +49,7 @@ namespace COTG.Views
         //}
         public static RadDataGrid CityGrid => instance.cityGrid;
         const int raidStepCount = 9;
-        static DumbCollection<float> raidSteps = new DumbCollection<float>();
+        static float[] raidSteps = new float[raidStepCount];
         static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
@@ -59,11 +59,12 @@ namespace COTG.Views
             InitializeComponent();
             for(int i=0;i<raidStepCount;++i)
 			{
-                raidSteps.Add( ( (MathF.Exp((i - 4) * 1.0f / 16.0f) + (-0.032625f,0.032625f).Random())*100.0f).RoundToInt() );
+                raidSteps[i]=( ( (MathF.Exp((i - 4) * 1.0f / 16.0f) + (-0.032625f,0.032625f).Random())*100.0f).RoundToInt() );
 			}
             raidSteps[4] = (Raiding.desiredCarry*100.0f).RoundToInt();
             raidCarryBox.ItemsSource= raidSteps;
             raidCarryBox.SelectedIndex = 4;
+
             var rand = new Random();
 
             cityMenuFlyout = new MenuFlyout();
@@ -77,9 +78,27 @@ namespace COTG.Views
             cityGrid.ContextFlyout = cityMenuFlyout;
 
             cityGrid.SelectionChanged += CityGrid_SelectionChanged;
+
+            cityListBox.SelectedIndex = 0; // reset
+
+			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
         }
 
-        private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+            if (e.AddedItems.Any() && e.RemovedItems.Any())
+            {
+                var newSel = e.AddedItems[0];
+                var priorSel = e.RemovedItems[0];
+                if (newSel != priorSel)
+                {
+                    Log("City Sel changed");
+                    CityListChange();
+                }
+            }
+		}
+
+		private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
             var it = e.AddedItems.GetEnumerator();
             if(!it.MoveNext())
@@ -174,16 +193,15 @@ namespace COTG.Views
             {
              //   Note.L("ListChange: ");
 
-                var cities = instance.cities;
-                if (selectedCityList == null || selectedCityList.id==-1)
+                var citySource = instance.gridCitySource;
+                var selectedCityList = CityListBox.SelectedValue as CityList;
+                if (selectedCityList == null || selectedCityList.id==-1) // "all"
                 {
-                    cities.Reset(City.all.Values.OrderBy((a) => a.cityName));
+                    citySource.Set(City.all.Values.OrderBy((a) => a.cityName));
                 }
                 else
                 {
                     var cityList = selectedCityList;// CityList.Find(selectedCityList);
-                    if(cityList!=null)
-                    {
                         var filtered = new List<City>();
                         foreach(var cid in cityList.cities)
                         {
@@ -192,9 +210,9 @@ namespace COTG.Views
                                 filtered.Add(c);
                             }
                         }
-                        cities.Reset(filtered.OrderBy((a) => a.cityName));
+                        citySource.Set(filtered.OrderBy((a) => a.cityName));
 
-                    }
+                   
 
 
                 }
@@ -227,15 +245,16 @@ namespace COTG.Views
             if (instance == null)
                 return;
             // Note.L("UpdateAll: ");
-            AApp.DispatchOnUIThreadLow( instance.cities.NotifyReset);
+            AApp.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
             
         }
 
-        public static void UpdateDungeonList(List<Dungeon> dungeons)
+        public static void UpdateDungeonList(IEnumerable<Dungeon> dungeons)
         {
             if (instance == null)
                 return;
-          //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+            //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+
             AApp.DispatchOnUIThread( () =>
             {
                 instance.dungeonGrid.ItemsSource = dungeons;
@@ -243,11 +262,15 @@ namespace COTG.Views
         }
         public static void UpdateRaidPlans()
         {
-            // tell UI that list data has changed
             AApp.DispatchOnUIThread(() =>
             {
-                instance.dungeonGrid.ItemsSource = instance.dungeonGrid.ItemsSource;
+                // trick it
+                var temp = instance.dungeonGrid.ItemsSource;
+                instance.dungeonGrid.ItemsSource = null;
+                instance.dungeonGrid.ItemsSource = temp;
             });
+            // tell UI that list data has changed
+           
         }
 
         //public static void ClearDungeonList()
@@ -290,21 +313,8 @@ namespace COTG.Views
 
         public static ComboBox CityListBox => instance.cityListBox;
         private DumbCollection<CityList> cityListSelections =>  CityList.selections;
-        public static CityList selectedCityList = null;
-        private CityList selectedCityListBind {
-            get {
-                Log("Read!");
-                return selectedCityList;
-            }
-            set
-            {
-                selectedCityList = value;
-                Log("Write!");
-                CityListChange();
-            }
-
-        }
-
+        
+        
 		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
             Log("Submit: " + args.Text);
@@ -323,8 +333,8 @@ namespace COTG.Views
 					}
 				}
                 raidSteps[bestId] = _raidCarry;
-                raidSteps.NotifyChange(_raidCarry, bestId);
-                raidCarryBox.SelectedValue = _raidCarry;
+                raidCarryBox.ItemsSource = raidSteps;
+  //              raidCarryBox.SelectedValue = _raidCarry;
                 raidCarryBox.SelectedIndex = bestId;
                 //raidSteps;
                 if(SetCarry(_raidCarry))
@@ -347,7 +357,7 @@ namespace COTG.Views
         private static bool SetCarry(float src)
 		{
             var newVal = (src) * 0.01f;
-            if ((newVal - Raiding.desiredCarry).Abs() <= 1.0f / 128.0f)
+            if ((newVal - Raiding.desiredCarry).Abs() <= 1.0f / 256.0f)
                 return false;
             Raiding.desiredCarry = newVal;
             return true;

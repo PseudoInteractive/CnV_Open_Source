@@ -278,13 +278,13 @@
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="12"
-                        ItemsSource="{x:Bind defendersMRU, Mode=OneWay}"
+                        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-                        UserSortMode="Multiple">
+                        >
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"

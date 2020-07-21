@@ -28,6 +28,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\KernelTraceControl.dll" />

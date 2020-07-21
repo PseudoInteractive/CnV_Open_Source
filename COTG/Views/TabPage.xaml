@@ -15,9 +15,9 @@
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
-                        MinWidth="800"
+                      
                       SelectionChanged="Tabs_SelectionChanged"
-                                           MinHeight="300"  
+                               
                              CanDragTabs="True"
                              CanReorderTabs="True"
                              TabDroppedOutside="Tabs_TabDroppedOutside"

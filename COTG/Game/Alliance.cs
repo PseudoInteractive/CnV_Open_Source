@@ -86,7 +86,7 @@ namespace COTG.Game
             }
             for (; ; )
             {
-                await Task.Delay(5000);
+                await Task.Delay(1000);
                 if (!Player.all.IsNullOrEmpty())
                     break;
             }

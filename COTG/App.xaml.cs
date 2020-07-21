@@ -226,6 +226,15 @@ namespace COTG
                 d.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
+        public static void DispatchOnUIThreadSneaky( DispatchedHandler action)
+        {
+            var d = CoreWindow.GetForCurrentThread().Dispatcher;
+            // run it immediately if we can
+            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
+                action();
+            else
+                d.RunAsync(CoreDispatcherPriority.Normal, action);
+        }
         public static void DispatchOnUIThreadLow( DispatchedHandler action)
         {
             DispatchOnUIThreadLow(CoreWindow.GetForCurrentThread().Dispatcher, action);

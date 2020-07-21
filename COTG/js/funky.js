@@ -2020,17 +2020,17 @@ function SetupHeaders() {
 function Contains(a, b) {
     return a.indexOf(b) != -1;
 }
-let pendingCityUpdate = false;
+let updateTimeout = null;
 function sendCityData(delayInMs) {
-    if (pendingCityUpdate != true) {
-        pendingCityUpdate = true;
-        console.log("sendCity");
-        setTimeout(() => {
-            pendingCityUpdate = false;
-            const wrapper = { citydata: __c.D6 };
-            window['external']['notify'](JSON.stringify(wrapper));
-        }, delayInMs);
-    }
+    console.log("sendCity0");
+    clearTimeout(updateTimeout);
+    console.log("sendCity2");
+    setTimeout(() => {
+        console.log("sendCity3");
+        const wrapper = { citydata: __c.D6 };
+        window['external']['notify'](JSON.stringify(wrapper));
+        clearTimeout(updateTimeout);
+    }, delayInMs);
 }
 function gCPosted() {
     sendCityData(100);
@@ -2345,7 +2345,7 @@ function SendAllianceInfo() {
         }
         return;
     }
-    setTimeout(SendAllianceInfo, 4000);
+    setTimeout(SendAllianceInfo, 1000);
 }
 function avactor() {
     //	var E3y="5894";
@@ -2358,6 +2358,8 @@ function avactor() {
     var l9p = 0xffff;
     var k9p = 0x100000000;
     console.log("here");
+    setTimeout(SendAllianceInfo, 1000);
+    setTimeout(SendCreds, 600);
     //  function AjaxPrefilterOverview() {
     //            jQuery.ajaxPrefilter(function (options, V7U, J7U) {
     //              console.log(options);
@@ -2437,17 +2439,17 @@ function avactor() {
         window['shCit'] = gspotfunct.shCit;
         window['chcity'] = gspotfunct.chcity;
         String.prototype['utf8Encode'] = function () {
-            //	if (encryptStr.length > 8)
-            //		encryptStr.shift();
-            //	encryptStr.push(this);
-            //	console.log(this);
+            //		//	if (encryptStr.length > 8)
+            //		//		encryptStr.shift();
+            //		//	encryptStr.push(this);
+            //		//	console.log(this);
             return unescape(encodeURIComponent(this));
         };
         String.prototype['utf8Decode'] = function () {
-            //	if (decryptStr.length > 8)
-            //			decryptStr.shift();
-            //		decryptStr.push(this);
-            //			console.log(this);
+            //		//	if (decryptStr.length > 8)
+            //	//			decryptStr.shift();
+            //	//		decryptStr.push(this);
+            ////			console.log(this);
             return decodeURIComponent(escape(this));
         };
         // if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
@@ -2498,7 +2500,6 @@ function avactor() {
             //{
             //}
         }
-        SendAllianceInfo();
     }, 8000);
     //this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
     /** @type {number} */
@@ -2540,7 +2541,6 @@ function avactor() {
     //if (_mru != null)
     //	mru = JSON.parse(_mru);
     setTimeout(() => {
-        SendCreds();
         UpdateResearchAndFaith();
         /** @type {string} */
         var returnAllbut_ = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";

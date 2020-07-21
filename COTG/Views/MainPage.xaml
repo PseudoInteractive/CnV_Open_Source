@@ -31,10 +31,9 @@
         <ComboBox x:Name="cityListBox"
                   Width="200"
                   IsEditable="True"
-                  ItemsSource="{x:Bind cityListSelections, Mode=OneWay}"
                   SelectedValuePath="id"
                   DisplayMemberPath="name"
-                  SelectedItem="{x:Bind selectedCityListBind, Mode=TwoWay}"
+                  ItemsSource="{x:Bind cityListSelections, Mode=OneWay}"
                   VerticalAlignment="Center"
                   Margin="10,0,0,0" />
         <tg:RadDataGrid x:Name="cityGrid"
@@ -43,11 +42,10 @@
                         UseSystemFocusVisuals="True"
                         GridLinesThickness="0.5"
                         AlternationStep="2"
-                        ItemsSource="{x:Bind cities, Mode=OneWay}"
+                        ItemsSource="{x:Bind gridCitySource, Mode=OneWay}"
                         AutoGenerateColumns="False"
                         SelectionMode="Single"
                         CanUserChooseColumns="True"
-                        UserSortMode="Multiple"
                         RowHeight="34"
                         PointerMoved="CityGrid_PointerMoved"
                         PointerPressed="CityGrid_PointerPress"
@@ -134,7 +132,7 @@ TextSubmitted="RaidCarrySubmitted"
                         SelectionMode="Single"
                         RowHeight="40"
                         CanUserChooseColumns="True"
-                        UserSortMode="Single"
+                        UserSortMode="Auto"
                         SelectionUnit="Row"
                        >
             <tg:RadDataGrid.Commands>
@@ -154,8 +152,7 @@ TextSubmitted="RaidCarrySubmitted"
         <tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
                                                  Height="11"
-                        Width="128"
-                         HorizontalAlignment="Center"
+                         HorizontalAlignment="Stretch"
                          VerticalAlignment="Top" />
     </Grid>
 </Page>

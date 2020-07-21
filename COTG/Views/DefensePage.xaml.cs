@@ -89,12 +89,11 @@ namespace COTG.Views
     public sealed partial class DefensePage : Page, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public DumbCollection<Spot> defendersMRU { get; } = new DumbCollection<Spot>();
+        public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
 
-        public static DumbCollection<Spot> Defenders => instance.defendersMRU;
+        public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
 
-
-        public static DefensePage instance;
+                public static DefensePage instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;
         //        public static Report showingRowDetails;
 
@@ -164,22 +163,10 @@ namespace COTG.Views
                 CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
                 {
                     var cid = spot.cid;
-                    var def = Defenders;
+                    var def = SpotMRU;
                     if (!def.Contains(spot))
                     {
-                        if (def.Count == 0 && spot is City)
-                        {
-                            // workaround:  First add cannot be a derived type.  It seems to assume that all contained types are the same as the first added on
-                            var temp = new Spot();
-                            def.AddAndNotify(temp);
-                            def[0] = spot;
-                            def.Replace(spot, temp, 0);
-
-                        }
-                        else
-                        {
-                            def.AddAndNotify(spot);
-                        }
+                        def.Add(spot);
                         instance.selectedGrid.SelectItem(spot);
                     }
                     else

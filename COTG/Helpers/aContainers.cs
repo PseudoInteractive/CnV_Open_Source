@@ -1,76 +1,108 @@
-﻿using System;
+﻿using COTG.Game;
+using COTG.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static COTG.Debug;
 namespace COTG.Helpers
 {
+    // All updates should happen on the UI thread atomically and synchronously which will reduce the need for synchronization
+    // we do not track individual properties
     public class DumbCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        public DumbCollection(IEnumerable<T> collection) : base(collection)
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public DumbCollection(IList<T> collection) 
         {
+            Set(collection);
         }
 
         public DumbCollection()
         {
         }
 
-        public void OnPropertyChanged(T city, string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 
-        public override bool Equals(object obj)
+        public void NotifyChange(T changedItem)
         {
-            return base.Equals(obj);
+            var dummy = PropertyChanged;
+            PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
+
+            //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
 
         public void NotifyReset()
+            {
+                if (CollectionChanged != null)
+                    CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+
+        public void Set(IEnumerable<T> src)
+          {
+                // catch for thread safety
+                Clear();
+            base.AddRange(src);
+            NotifyReset();
+          }
+        
+
+        public void OnPropertyChanged(T city, string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+        public event PropertyChangedEventHandler PropertyChanged;
+
+ //       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
+        public new void Add(T item)
         {
-            if(CollectionChanged!=null)
-            CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-        public void Reset(IEnumerable<T> src)
-        {
-            // catch for thread safety
-            Clear();
-            AddAndNotify(src);
-        }
-        public void NotifyChange(T item)
-        {
-            //   OnPropertyChanged(item,null);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, IndexOf(item)));
-        }
-        public void NotifyChange(T item, int index)
-        {
-            //   OnPropertyChanged(item,null);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, item, index));
-        }
-        public void Replace(T newItem, T oldItem, int index)
-        {
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
-        }
-        public void AddAndNotify(T item)
-        {
-            var id = Count;
-            Add(item);
+            int id = Count;
+            base.Add(item);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
         }
-        public void AddAndNotify(IEnumerable<T> src)
+
+        // Use Reset if you are clearning first
+        public void AddRange(IList<T> src)
         {
-            AddRange(src);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            var id = Count;
+            base.AddRange(src);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,src ,id ));
         }
+
+    }
+    public static class DumbHelpers
+	{
+        public static void NotifyChange(this HashSet<City> items)
+        {
+            // defer the call, we don't need it right away
+            AApp.DispatchOnUIThreadLow( ()=>
+            {
+                try
+                {
+
+                    //       MainPage.instance.gridCitySource
+
+                    items.ToArray().NotifyChange( );
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                }
+            }    );
+        }
+        public static void NotifyChange(this IList<Spot> changedItems, string memberName = "")
+        {
+            foreach (var i in changedItems)
+            {
+                    i.OnPropertyChanged( (memberName));
+
+            }
+            //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItems, changedItems));
+        }
+
 
     }
 }

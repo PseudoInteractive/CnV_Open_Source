@@ -13,13 +13,12 @@ using static COTG.Game.Enum;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using COTG.Services;
+using COTG.Views;
 
 namespace COTG.Game
 {
-    public class City : Spot, INotifyPropertyChanged
+    public class City : Spot 
     {
-     
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string remarks { get; set; }
 
@@ -143,9 +142,32 @@ namespace COTG.Game
             tsHome = TroopTypeCount.TS(troopsHome);
             tsTotal = TroopTypeCount.TS(troopsTotal);
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
-            OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
+            // one off change
+            NotifyChange();
+
+         //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
 //            COTG.Views.MainPage.CityListUpdateAll();
         }
+
+        static List<City> dummies = new List<City>();
+
+
+        internal void NotifyChange()
+        {
+            AApp.DispatchOnUIThreadSneaky(() =>
+       {
+           dummies.Add(this);
+
+           if (MainPage.instance.gridCitySource.Contains(this))
+               MainPage.instance.gridCitySource.NotifyChange(this);
+           if (DefensePage.SpotMRU.Contains(this))
+               DefensePage.SpotMRU.NotifyChange(this);
+       });
+            //spots
+
+        }
+
+      
 
         const int bidCastle = 467;
         public (int commandSlotsInUse, int totalCommandSlots, int freeCommandSlots) GetCommandSlots()
@@ -204,18 +226,18 @@ namespace COTG.Game
             }
         }
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Equals(storage, value))
-            {
-                return;
-            }
-            storage = value;
-            OnPropertyChanged(propertyName);
-        }
+        //private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        //{
+        //    if (Equals(storage, value))
+        //    {
+        //        return;
+        //    }
+        //    storage = value;
+        //    OnPropertyChanged(propertyName);
+        //}
 
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+        //public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
 
         public override string ToString()
         {
@@ -225,15 +247,18 @@ namespace COTG.Game
         {
             var a = await Post.SendForJson("overview/senfind.php", "a=0");
             var empty = Array.Empty<SenatorInfo>();
+            var changed = new HashSet<City>();
             foreach (var city in City.all.Values)
             {
                 if (city.senatorInfo != empty)
                 {
                     city.senatorInfo = empty;
-                    city.OnPropertyChangedUI(nameof(City.senny));
+                    changed.Add(city);
                 }
 
             }
+
+
 
             foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
             {
@@ -271,17 +296,36 @@ namespace COTG.Game
                     });
                 }
                 city.senatorInfo = sens.ToArray();
-                city.OnPropertyChangedUI(nameof(City.senny));
+                changed.Add(city);
 
             }
+            
+            changed.NotifyChange();//.OnPropertyChangedUI(nameof(City.senny));
 
         }
-        public void ValidateChangedEvent()
-        {
-            Assert(PropertyChanged?.GetInvocationList().Length == 1); 
-        }
 
-    }
+		public override bool Equals(object obj)
+		{
+			return obj is City city &&
+				   base.Equals(obj) &&
+				   cid == city.cid;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(base.GetHashCode(), cid);
+		}
+
+		public static bool operator ==(City left, City right)
+		{
+			return EqualityComparer<City>.Default.Equals(left, right);
+		}
+
+		public static bool operator !=(City left, City right)
+		{
+			return !(left == right);
+		}
+	}
     public class SenatorInfo
     {
         public enum Type : byte

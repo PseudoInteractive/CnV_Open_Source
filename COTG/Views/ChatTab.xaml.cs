@@ -75,9 +75,9 @@ namespace COTG.Views
             if(lastHour!=newHour)
             {
                 activeGroup = new ChatEntryGroup() { time = entry.time };
-                Groups.AddAndNotify(activeGroup);
+                Groups.Add(activeGroup);
             }
-            activeGroup.Items.AddAndNotify(entry);
+            activeGroup.Items.Add(entry);
 
         }
         public void Post(IEnumerable<ChatEntry> entries)

@@ -272,27 +272,34 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Frame x:Name="chatTabFrame" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,0,4" />
-                    <tk:GridSplitter
+                <tk:GridSplitter
+                        Background="Transparent"
                     Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        ResizeDirection="Columns"
-                        Height="64"
-                        Width="13"
-                        Canvas.ZIndex="22"
-                        />
+                        VerticalAlignment="Stretch"
+                        Width="20"
+                        Canvas.ZIndex="22">
+                    <tk:GridSplitter.Element>
+                        <SymbolIcon Symbol="Switch"
+                    Foreground="Purple"  IsHitTestVisible="False"    />
+                    </tk:GridSplitter.Element>
+                </tk:GridSplitter>
+                        
                 <tk:GridSplitter
                     Grid.Row="1"
+                    Background="Transparent"
                     Grid.Column="1"
                         VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        ResizeDirection="Rows"
                     Canvas.ZIndex="22"
-                        Height="11"
-                        Width="128"
+                        Height="20"
+                        HorizontalAlignment="Stretch"
                     >
-                </tk:GridSplitter>
+					<tk:GridSplitter.Element>
+						<SymbolIcon Symbol="Sort"
+                    Foreground="Purple"  IsHitTestVisible="False"    />
+        			</tk:GridSplitter.Element>
+				</tk:GridSplitter>
             </Grid>
             <tk:InAppNotification x:Name="InAppNote"
                                   Grid.Row="4"

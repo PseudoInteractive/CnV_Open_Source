@@ -190,7 +190,7 @@ namespace COTG.Views
             splitter.Height = 200;
             Grid.SetRowSpan(splitter, 5);
             splitter.HorizontalAlignment = HorizontalAlignment.Left;
-            splitter.VerticalAlignment = VerticalAlignment.Center;
+            splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
             Canvas.SetZIndex(splitter, 5);
 

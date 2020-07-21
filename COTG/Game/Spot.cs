@@ -16,18 +16,21 @@ using Windows.UI.Xaml.Media.Imaging;
 using COTG.Views;
 
 using static COTG.Debug;
+using System.ComponentModel;
+
 namespace COTG.Game
 {
-    public interface IKeyedItem
+    //public interface IKeyedItem
+    //{
+    //  public  int GetKey();
+    //  public  void Ctor(int id);
+    //}
+    public class Spot : IEquatable<Spot>, INotifyPropertyChanged
     {
-      public  int GetKey();
-      public  void Ctor(int id);
-    }
-    public class Spot : IEquatable<Spot>, IKeyedItem
-    {
+        public virtual event PropertyChangedEventHandler PropertyChanged;
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
-
+        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public static Spot invalid = new Spot() { _cityName = "Null" };
         public static Spot GetOrAdd(int cid)
         {
@@ -314,13 +317,13 @@ namespace COTG.Game
             return cid;
         }
 
-        int IKeyedItem.GetKey()
-        {
-            return cid;
-        }
-        void IKeyedItem.Ctor(int i)
-        {
-            cid = i;
-        }
+        //int IKeyedItem.GetKey()
+        //{
+        //    return cid;
+        //}
+        //void IKeyedItem.Ctor(int i)
+        //{
+        //    cid = i;
+        //}
     }
 }

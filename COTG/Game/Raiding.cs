@@ -114,8 +114,9 @@ namespace COTG.Game
  //           await Task.Delay(500);
 //            UpdateTS(true);
             city.tsHome = 0;
-            city.OnPropertyChangedUI(nameof(city.tsHome));
 
+             city.NotifyChange();
+       
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
@@ -124,6 +125,7 @@ namespace COTG.Game
             var n = DateTimeOffset.UtcNow;
             if (n > nextAllowedTsHomeUpdate || force)
             {
+                var changed = new HashSet<City>();
                 nextAllowedTsHomeUpdate = n + TimeSpan.FromSeconds(24);
                 var jso = await Post.SendForJson("includes/gIDl.php", "");
                 foreach (var ci in jso.RootElement.EnumerateArray())
@@ -134,10 +136,10 @@ namespace COTG.Game
                     if ((v.tsHome - ts).Abs() > 8)
                     {
                         v.tsHome = ts;
-
-                        v.OnPropertyChangedUI(nameof(v.tsHome));
+                        changed.Add(v);
                     }
                 }
+                
             }
         }
         // should this be waitable?

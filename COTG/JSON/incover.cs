@@ -75,7 +75,7 @@ namespace COTG.JSON
             {
                 if (!Alliance.all.IsNullOrEmpty())
                     break;
-                await Task.Delay(2000);
+                await Task.Delay(1000);
             }
 
             var reportCache = new Dictionary<int, Report[]>();
@@ -470,7 +470,7 @@ namespace COTG.JSON
                         reportsIncoming.AddRange(reportParts[i]);
                     App.DispatchOnUIThread(() =>
                    // We should do this on the Render Thread
-                   defPage.history.Reset(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)));
+                   defPage.history.Set(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)));
             }
             {
                 var defenderPage = DefenderPage.instance;

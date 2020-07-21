@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace COTG.Game
 {
-    public class Dungeon : IKeyedItem
+    public class Dungeon 
     {
         public City city; // city to raid this, where distance is calculated from 
         public const int typeMountain = 2;
@@ -50,19 +50,6 @@ namespace COTG.Game
             }
         }
 
-        public override string ToString()
-        {
-            return $"{{{nameof(xy)}={xy}, {nameof(type)}={type.ToString()}, {nameof(level)}={level.ToString()}, {nameof(x)}={x.ToString()}, {nameof(y)}={y.ToString()}, {nameof(completion)}={completion.ToString()}, {nameof(dist)}={dist.ToString()}, {nameof(loot)}={loot.ToString()}, {nameof(plan)}={plan}}}";
-        }
-
-        int IKeyedItem.GetKey()
-        {
-            return cid;
-        }
-
-        void IKeyedItem.Ctor(int id)
-        {
-            cid = id;
-        }
+       
     }
 }

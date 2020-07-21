@@ -233,19 +233,22 @@ function Contains(a:string,b:string) {
 	return a.indexOf(b)!=-1;
 }
 
-let pendingCityUpdate = false;
+let updateTimeout = null;
 
 function sendCityData(delayInMs) {
-	if (pendingCityUpdate != true) {
-		pendingCityUpdate = true;
-		console.log("sendCity");
-		setTimeout(() => {
-			pendingCityUpdate = false;
-			const wrapper = { citydata: __c.D6 }
-			window['external']['notify'](JSON.stringify(wrapper));
-		}, delayInMs);
-	}
+
+	console.log("sendCity0");
+	clearTimeout(updateTimeout);
+	console.log("sendCity2");
+	setTimeout(() => {
+		console.log("sendCity3");
+
+		const wrapper = { citydata: __c.D6 }
+		window['external']['notify'](JSON.stringify(wrapper));
+		clearTimeout(updateTimeout);
+	}, delayInMs);
 }
+
 
 function gCPosted()
 {
@@ -614,7 +617,7 @@ function SendAllianceInfo() {
 		}
 		return;
 	}
-	setTimeout(SendAllianceInfo, 4000);
+	setTimeout(SendAllianceInfo, 1000);
 }
 
 
@@ -633,7 +636,9 @@ function avactor() {
 	
 
 
-
+	setTimeout(SendAllianceInfo, 1000);
+	setTimeout(SendCreds, 600);
+	
 
 
 
@@ -732,17 +737,17 @@ function avactor() {
 
 
 		String.prototype['utf8Encode'] = function () {
-		//	if (encryptStr.length > 8)
-		//		encryptStr.shift();
-		//	encryptStr.push(this);
-		//	console.log(this);
+//		//	if (encryptStr.length > 8)
+//		//		encryptStr.shift();
+//		//	encryptStr.push(this);
+//		//	console.log(this);
 			return unescape(encodeURIComponent(this));
 		};
 		String.prototype['utf8Decode'] = function () {
-		//	if (decryptStr.length > 8)
-	//			decryptStr.shift();
-	//		decryptStr.push(this);
-//			console.log(this);
+//		//	if (decryptStr.length > 8)
+//	//			decryptStr.shift();
+//	//		decryptStr.push(this);
+////			console.log(this);
 			return decodeURIComponent(escape(this));
 		};
 		// if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
@@ -795,7 +800,6 @@ function avactor() {
 
 			//}
 		}
-		SendAllianceInfo();
 
 	}, 8000);
 
@@ -844,7 +848,6 @@ function avactor() {
 
 
 	setTimeout(() => {
-		SendCreds();
 		UpdateResearchAndFaith();
 		/** @type {string} */
 		var returnAllbut_ = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
@@ -1668,6 +1671,7 @@ function avactor() {
 							$("#addcityPopup").remove();
 						});
 					});
+
 				}, 2000);
 			} else {
 				alert("Press World Button");

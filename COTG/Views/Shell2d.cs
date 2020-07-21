@@ -129,8 +129,8 @@ namespace COTG.Views
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
 		{
             worldBackground = await CanvasBitmap.LoadAsync(canvas, new Uri($"ms-appx:///Assets/world.png"));
-            while (JSClient.cid == 0)
-                await Task.Delay(5 * 1000);
+          //  while (JSClient.cid == 0)
+           //     await Task.Delay(1 * 1000);
          //   var ob = World.CreateBitmap();
          //   worldObjects = CanvasBitmap.CreateFromBytes(canvas, ob.pixels, ob.size, ob.size, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
         }

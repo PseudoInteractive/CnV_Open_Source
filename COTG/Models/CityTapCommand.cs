@@ -120,7 +120,7 @@ namespace COTG.Models
 
                 var i = context.Item as COTG.JSON.Report;
              
-                var isSelected = grid.SelectedItem == i;
+                var isSelected =  grid.SelectedItem as Report == i;
                 if (isSelected)
                     grid.DeselectItem(context);
                 else
