@@ -115,7 +115,7 @@ namespace COTG.Game
 //            UpdateTS(true);
             city.tsHome = 0;
 
-             city.NotifyChange();
+             city.NotifyChange(nameof(city.tsHome));
        
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;

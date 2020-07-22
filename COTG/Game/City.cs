@@ -152,16 +152,11 @@ namespace COTG.Game
         static List<City> dummies = new List<City>();
 
 
-        internal void NotifyChange()
+        internal void NotifyChange(string member ="")
         {
             AApp.DispatchOnUIThreadSneaky(() =>
        {
-           dummies.Add(this);
-
-           if (MainPage.instance.gridCitySource.Contains(this))
-               MainPage.instance.gridCitySource.NotifyChange(this);
-           if (DefensePage.SpotMRU.Contains(this))
-               DefensePage.SpotMRU.NotifyChange(this);
+           OnPropertyChanged(member);
        });
             //spots
 

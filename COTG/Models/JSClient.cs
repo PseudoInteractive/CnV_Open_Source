@@ -723,7 +723,7 @@ namespace COTG
                                 jsVars.pid = jso.GetAsInt("pid");
                                
                                 cid = jso.GetAsInt("cid");
-                                Note.L("cid=" + cid.CidToString());
+                                //Note.L("cid=" + cid.CidToString());
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTimeOffset.UtcNow;
                                 Log(jsVars.ToString());
@@ -732,7 +732,7 @@ namespace COTG
                                 ShellPage.clientTL.X = jso.GetAsFloat("left");
                                 ShellPage.clientTL.Y = jso.GetAsFloat("top");
 
-                                Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+                           //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
                                 gotCreds = true;
 //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
@@ -758,7 +758,7 @@ namespace COTG
                                     city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-                                    Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
+                                  //  Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
                                     if(IsWorldView())
                                     {
                                         // bring city into view

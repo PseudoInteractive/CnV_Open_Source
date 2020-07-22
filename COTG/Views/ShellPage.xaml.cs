@@ -181,18 +181,18 @@ namespace COTG.Views
             //   Canvas.SetZIndex(img, 12);
 
 
-            var splitter = new GridSplitter();
-            grid.Children.Add(splitter);
-            Grid.SetColumn(splitter, 2);
-            // Grid.SetRowSpan(splitter, 4);
-            //  splitter.Height = 200;
-            splitter.Width = 8;
-            splitter.Height = 200;
-            Grid.SetRowSpan(splitter, 5);
-            splitter.HorizontalAlignment = HorizontalAlignment.Left;
-            splitter.VerticalAlignment = VerticalAlignment.Stretch;
-            splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
-            Canvas.SetZIndex(splitter, 5);
+            //var splitter = new GridSplitter();
+            //grid.Children.Add(splitter);
+            //Grid.SetColumn(splitter, 2);
+            //// Grid.SetRowSpan(splitter, 4);
+            ////  splitter.Height = 200;
+            //splitter.Width = 8;
+            //splitter.Height = 200;
+            //Grid.SetRowSpan(splitter, 5);
+            //splitter.HorizontalAlignment = HorizontalAlignment.Left;
+            //splitter.VerticalAlignment = VerticalAlignment.Stretch;
+            //splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
+            //Canvas.SetZIndex(splitter, 5);
 
             NavigationService.Frame = shellFrame;
 

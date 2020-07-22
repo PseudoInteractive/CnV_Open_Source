@@ -153,6 +153,13 @@ TextSubmitted="RaidCarrySubmitted"
                          ResizeDirection="Rows"
                                                  Height="11"
                          HorizontalAlignment="Stretch"
-                         VerticalAlignment="Top" />
+                         VerticalAlignment="Top"
+                           Background="Transparent"
+                    >
+            <tk:GridSplitter.Element>
+                <SymbolIcon Symbol="Sort"
+                    Foreground="Purple"  IsHitTestVisible="False"    />
+            </tk:GridSplitter.Element>
+        </tk:GridSplitter>
     </Grid>
 </Page>

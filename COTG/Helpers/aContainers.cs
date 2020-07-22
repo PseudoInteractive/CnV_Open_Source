@@ -27,13 +27,13 @@ namespace COTG.Helpers
 
 
 
-        public void NotifyChange(T changedItem)
-        {
-            var dummy = PropertyChanged;
-            PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
+        //public void NotifyChange(T changedItem)
+        //{
+        //    var dummy = PropertyChanged;
+        //    PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
 
-            //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
-        }
+        //    //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
+        //}
 
 
         public void NotifyReset()

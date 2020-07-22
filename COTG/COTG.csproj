@@ -95,7 +95,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -111,12 +111,12 @@
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
-    <Optimize>false</Optimize>
+    <DefineConstants>NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -586,6 +586,7 @@
     <Content Include="images\troops9.png" />
     <Content Include="images\windmill.png" />
     <EmbeddedResource Include="JS\phaser.js" />
+    <EmbeddedResource Include="JS\game122.js" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -620,9 +621,6 @@
     <None Include="JS\p2.d.ts" />
     <None Include="JS\phaser.comments.d.ts" />
     <None Include="JS\pixi.comments.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\TS\ts\game122.ts" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
