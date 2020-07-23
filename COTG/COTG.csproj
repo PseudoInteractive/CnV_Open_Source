@@ -312,6 +312,7 @@
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ShellRegion.cs" />
     <Compile Include="Views\ShellWorld.cs" />
     <Compile Include="Views\SpotTab.xaml.cs">
       <DependentUpon>SpotTab.xaml</DependentUpon>

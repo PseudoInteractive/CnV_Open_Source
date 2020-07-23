@@ -23,6 +23,7 @@ namespace COTG.Views
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
+        public static SettingsPage instance;
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
@@ -31,6 +32,7 @@ namespace COTG.Views
         private bool _isLoggedIn;
         private bool _isBusy;
         private UserData _user;
+        public bool fetchFullHistory { get; set; }
 
         public ElementTheme ElementTheme
         {
@@ -69,6 +71,7 @@ namespace COTG.Views
         public SettingsPage()
         {
             InitializeComponent();
+            instance = this;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -177,7 +180,7 @@ namespace COTG.Views
             var temp = new List<string>();
             string sli = null;
             var cgs = new List<string>();
-            foreach(var city in City.all.Values)
+            foreach(var city in City.allCities.Values)
             {
                 var cl = CityList.FindForContinent(city.continent);
                 if (cl==null)

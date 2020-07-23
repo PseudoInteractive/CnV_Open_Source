@@ -116,7 +116,7 @@ namespace COTG.Views
         override public void VisibilityChanged(bool isVisible)
         {
             if(isVisible)
-                IncomingOverview.Process(true); // Todo: throttle
+                IncomingOverview.Process(SettingsPage.instance.fetchFullHistory); // Todo: throttle
 
         }
 

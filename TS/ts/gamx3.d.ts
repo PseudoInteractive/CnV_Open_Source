@@ -7119,7 +7119,7 @@ declare function X0rr(): typeof globalThis;
 declare function I0rr(...args: any[]): void;
 declare var gspotfunct: {
     alliancelink: any;
-    chcity: any;
+    chcity: (number)=>void;
     shCit: any;
     infoPlay: any;
 };

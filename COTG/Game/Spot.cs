@@ -36,7 +36,7 @@ namespace COTG.Game
         {
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
             {
-                if (City.all.TryGetValue(cid, out var city))
+                if (City.allCities.TryGetValue(cid, out var city))
                     rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
                 else
                 {
@@ -58,7 +58,7 @@ namespace COTG.Game
             if (Spot.allSpots.TryGetValue(cid, out var rv))
                 return rv;
             
-                if (City.all.TryGetValue(cid, out var city))
+                if (City.allCities.TryGetValue(cid, out var city))
                     return city;
              
             return invalid;
@@ -72,8 +72,6 @@ namespace COTG.Game
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
         public int tsHome { get; set; }
         public int tsMax { get; set; }
-        public string TS_Now => tsHome.ToString("N0");
-        public string TS_Max => tsMax.ToString("N0");
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -146,6 +144,11 @@ namespace COTG.Game
         {
             if (pt.Properties.IsLeftButtonPressed)
             {
+                if (MainPage.IsVisible() && MainPage.raidCity == this)
+                {
+                    //                MainPage.SetRaidCity(cid,true);
+                    ScanDungeons.Post(cid, true);
+                }
                 switch (column)
                 {
                     case "xy": JSClient.ShowCity(cid,false); break;
@@ -153,12 +156,11 @@ namespace COTG.Game
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid,false);
                         break;
-                    default://case "tsTotal":
-                    //case "tsHome":
-                        if ( MainPage.IsVisible() &&  MainPage.raidCity==this)
+                    case "tsTotal":
+                    case "tsHome":
+                        if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-            //                MainPage.SetRaidCity(cid,true);
-                            ScanDungeons.Post(cid,true);
+                            Raiding.UpdateTS(true);
                         }
                         break;
                 }
@@ -244,7 +246,7 @@ namespace COTG.Game
             return rv;
 
         }
-        public static bool ToggleSelected(int cid)
+        public bool ToggleSelected()
         {
             bool rv = false;
             try
@@ -261,7 +263,7 @@ namespace COTG.Game
                     selected._hashSet.Add(cid);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log(e);
             }
@@ -269,11 +271,9 @@ namespace COTG.Game
             {
                 selected.ExitWriteLock();
             }
+            SpotTab.SelectSilent(this, rv);
+            Log("select toggle: " + cid + rv);
             return rv;
-        }
-        public bool ToggleSelected()
-        {
-            return Spot.ToggleSelected(cid);
         }
         public static bool AreAnySelected()
         {
@@ -283,6 +283,11 @@ namespace COTG.Game
         {
             // if nothing is selected we treat it as if everything is selected
             return selected.Count == 0? true :  (cid == viewHover || selected.Contains(cid));
+        }
+        public static bool IsSelectedOrHovered(int cid0, int cid1)
+        {
+            // if nothing is selected we treat it as if everything is selected
+            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || cid1 == viewHover || selected.Contains(cid1) );
         }
 
 
@@ -320,6 +325,11 @@ namespace COTG.Game
             return cid;
         }
 
+        internal void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            JSClient.ChangeCity(cid);
+
+        }
         //int IKeyedItem.GetKey()
         //{
         //    return cid;

@@ -192,7 +192,7 @@ namespace COTG.Views
                 var selectedCityList = CityListBox.SelectedValue as CityList;
                 if (selectedCityList == null || selectedCityList.id==-1) // "all"
                 {
-                    citySource.Set(City.all.Values.OrderBy((a) => a.cityName));
+                    citySource.Set(City.allCities.Values.OrderBy((a) => a.cityName));
                 }
                 else
                 {
@@ -200,7 +200,7 @@ namespace COTG.Views
                         var filtered = new List<City>();
                         foreach(var cid in cityList.cities)
                         {
-                            if(City.all.TryGetValue(cid,out var c))
+                            if(City.allCities.TryGetValue(cid,out var c))
                             {
                                 filtered.Add(c);
                             }
@@ -216,7 +216,7 @@ namespace COTG.Views
 
         internal static void SetRaidCity(int cid, bool fromUI, bool noRaidScan, bool getCityData)
         {
-            if (City.all.TryGetValue(cid, out var city))
+            if (City.allCities.TryGetValue(cid, out var city))
             {
                 SetRaidCity(city, fromUI, noRaidScan, getCityData);
             }

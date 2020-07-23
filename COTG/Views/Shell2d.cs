@@ -200,8 +200,19 @@ namespace COTG.Views
             var y1 = c0.Y.Max(c1.Y);
             var y0 = c0.Y.Min(c1.Y);
             // todo: cull on diagonals
-            return  x1 <= 0 || x0 >= clientSpan.X ||
-                    y1 <= 0 || y0 >= clientSpan.Y;
+            return  x1 <= 0 | x0 >= clientSpan.X |
+                    y1 <= 0 | y0 >= clientSpan.Y;
+        }
+        public static bool IsCulled(Vector2 c0)
+        {
+            var x1 = c0.X;
+            var x0 = c0.X;
+
+            var y1 = c0.Y;
+            var y0 = c0.Y;
+            // todo: cull on diagonals
+            return x1 <= 0 | x0 >= clientSpan.X |
+                    y1 <= 0 | y0 >= clientSpan.Y;
         }
 
         public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
@@ -320,143 +331,172 @@ namespace COTG.Views
                 // if (IsPageDefense())
                 if (!IsCityView())
                 {
-                    var reports =  DefensePage.instance.history;
-                    if (reports.Count > 0)
+                    if (DefensePage.IsVisible())
                     {
-                       
-                        var counts = new Dictionary<int, IncomingCounts> ();
-                        foreach (var attack in reports)
+                        var reports = DefensePage.instance.history;
+                        if (reports.Count > 0)
                         {
-                            var targetCid = attack.defCid;
-                            var c1 = targetCid.CidToCC();
-                            var c0 = attack.atkCid.CidToCC();
-                            // cull (should do this pre-transform as that would be more efficient
-                            if (c0.X.Min(c1.X) >= clientSpan.X)
-                                continue;
-                            if (c0.X.Max(c1.X) <= 0.0f)
-                                continue;
-                            if (c0.Y.Min(c1.Y) >= clientSpan.Y)
-                                continue;
-                            if (c0.Y.Max(c1.Y) <= 0.0f)
-                                continue;
-                            var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
 
-                            // before attack
-                            var dt1 = (float)(attack.time - serverNow).TotalSeconds;
-							{
-                                // register attack
-                                if(!counts.TryGetValue(targetCid, out var count) )
-								{
-                                    count = new IncomingCounts();
-                                    counts.Add(targetCid, count);
-								}
-                                if (dt1 > 0)
-                                    ++count.incoming;
-                                else
-                                    ++count.prior;
-							}
-
-                            if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
-                                continue;
-                            var c = incomingHistoryColor;
-
-                            if (!Spot.IsSelectedOrHovered(targetCid))
+                            var counts = new Dictionary<int, IncomingCounts>();
+                            foreach (var attack in reports)
                             {
-                                c.A = (byte)( (int)c.A*3/8); // reduce alpha if not selected
+                                var targetCid = attack.defCid;
+                                var c1 = targetCid.CidToCC();
+                                var c0 = attack.atkCid.CidToCC();
+                                // cull (should do this pre-transform as that would be more efficient
+                                if (c0.X.Min(c1.X) >= clientSpan.X)
+                                    continue;
+                                if (c0.X.Max(c1.X) <= 0.0f)
+                                    continue;
+                                if (c0.Y.Min(c1.Y) >= clientSpan.Y)
+                                    continue;
+                                if (c0.Y.Max(c1.Y) <= 0.0f)
+                                    continue;
+                                var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
+
+                                // before attack
+                                var dt1 = (float)(attack.time - serverNow).TotalSeconds;
+                                {
+                                    // register attack
+                                    if (!counts.TryGetValue(targetCid, out var count))
+                                    {
+                                        count = new IncomingCounts();
+                                        counts.Add(targetCid, count);
+                                    }
+                                    if (dt1 > 0)
+                                        ++count.incoming;
+                                    else
+                                        ++count.prior;
+                                }
+
+                                if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
+                                    continue;
+                                var c = incomingHistoryColor;
+
+                                if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
+                                {
+                                    continue;
+                                    c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                }
+                                DrawAction(serverNow, ds, rectSpan, attack.time, attack.time - attack.spotted, c0, c1, c);
+                                //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
+                                //var mid = progress.Lerp(c0, c1);
+                                //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                                //ds.FillCircle(mid, span, shadowBrush);
+                                //var midS = mid - shadowOffset;
+                                //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                                //ds.FillCircle(midS, span, raidBrush);
                             }
-                            DrawAction(serverNow, ds, rectSpan, attack.time, attack.time-attack.spotted, c0, c1,incomingHistoryColor);
-                            //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
-                            //var mid = progress.Lerp(c0, c1);
-                            //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                            //ds.FillCircle(mid, span, shadowBrush);
-                            //var midS = mid - shadowOffset;
-                            //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                            //ds.FillCircle(midS, span, raidBrush);
+                            foreach (var i in counts)
+                            {
+                                var cid = i.Key;
+                                var count = i.Value;
+                                var c = cid.CidToCC();
+                                DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
+
+
+                            }
                         }
-                        foreach(var i in counts)
-						{
-                            var cid = i.Key;
-                            var count = i.Value;
-                            var c = cid.CidToCC();
-                            DrawTextBox(ds,$"{count.prior},{count.incoming}", c, tipTextFormatCentered);
+                    }
+                    if (DefenderPage.IsVisible())
+                    {
+                        foreach (var city in Spot.allSpots.Values)
+                        {
+                            if ( city.incoming.Count > 0)
+                            {
+                               
+                                var targetCid = city.cid;
+                                var c1 = targetCid.CidToCC();
+                                if (IsCulled(c1))
+                                    continue;
+                                var incAttacks = 0;
+                                foreach (var i in city.incoming)
+                                {
+                                    var c0 = i.sourceCid.CidToCC();
 
+                                    Color c;
+                                    if (i.isDefense)
+                                    {
 
+                                        if (i.sourceCid == targetCid)
+                                            continue;
+
+                                        c = defenseColor;
+                                    }
+                                    else
+                                    {
+                                        ++incAttacks;
+                                        if (i.hasArt)
+                                        {
+                                            c = artColor;
+                                        }
+                                        else if (i.Senny)
+                                        {
+                                            c = senatorColor; ;
+                                        }
+                                        else
+                                        {
+                                            c = attackColor;
+                                        }
+                                    }
+                                    if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
+                                    {
+                                        continue;
+                                        c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                    }
+                                    DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival - i.spotted), c0, c1, c);
+                                }
+                                DrawTextBox(ds, $"{incAttacks}`{city.tsMax/1000}k", c1, tipTextFormatCentered);
+                            }
                         }
                     }
                 }
                 if (!IsCityView())
                 {
-                    foreach (var city in City.all.Values)
-                    {
-                        if (city.incoming.Count > 0)
+                        foreach (var city in City.allCities.Values)
                         {
-                            var c1 = city.cid.CidToCC();
-                            foreach (var i in city.incoming)
+                            // Todo: clip thi
+                            if (city.senatorInfo.Length != 0)
                             {
-                                var c0 = i.sourceCid.CidToCC();
-                                if (IsCulled(c0, c1))
-                                    continue;
-                                Color c;
-                                if (i.isDefense)
+                                var c = city.cid.CidToCC();
+                                var idle = 0;
+                                var active = 0;
+                                var recruiting = 0;
+                                foreach (var sen in city.senatorInfo)
                                 {
-                                    c = defenseColor;
+                                    if (sen.type == SenatorInfo.Type.idle)
+                                        idle += sen.count;
+                                    else if (sen.type == SenatorInfo.Type.recruit)
+                                        recruiting += sen.count;
+                                    else
+                                        active += sen.count;
+                                    if (sen.target != 0)
+                                    {
+                                        var c1 = sen.target.CidToCC();
+                                        DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
+                                    }
                                 }
-                                else if (i.hasArt)
-                                {
-                                    c = artColor;
-                                }
-                                else if (i.Senny)
-                                {
-                                    c = senatorColor; ;
-                                }
-                                else
-                                {
-                                    c = attackColor;
-                                }
-                                DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival - i.spotted), c0, c1, c);
-                            }
-                        }
-                        // Todo: clip thi
-                        if (city.senatorInfo.Length != 0)
-                        {
-                            var c = city.cid.CidToCC();
-                            var idle = 0;
-                            var active = 0;
-                            var recruiting = 0;
-                            foreach (var sen in city.senatorInfo)
-                            {
-                                if (sen.type == SenatorInfo.Type.idle)
-                                    idle += sen.count;
-                                else if (sen.type == SenatorInfo.Type.recruit)
-                                    recruiting += sen.count;
-                                else
-                                    active += sen.count;
-                                if (sen.target != 0)
-                                {
-                                    var c1 = sen.target.CidToCC();
-                                    DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
-                                }
-                            }
-                            DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
-
-                        }
-
-                        if (MainPage.IsVisible())
-                        {
-                            var c = city.cid.CidToCC();
-
-                            // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-                            //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                            //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
-                            foreach (var raid in city.raids)
-                            {
-                                var ct = raid.target.CidToCC();
-                                (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                                DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1, raidColor);
+                                DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered);
 
                             }
+
+                            if (MainPage.IsVisible())
+                            {
+                                var c = city.cid.CidToCC();
+
+                                // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                                //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                                //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+                                foreach (var raid in city.raids)
+                                {
+                                    var ct = raid.target.CidToCC();
+                                    (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
+                                    DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1, raidColor);
+
+                                }
+                            }
                         }
-                    }
+                    
                 }                
 
                 if (!IsCityView())

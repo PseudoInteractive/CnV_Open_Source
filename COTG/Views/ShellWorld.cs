@@ -9,6 +9,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
@@ -18,7 +20,14 @@ namespace COTG.Views
     public partial class ShellPage
     {
         public static CoreIndependentInputSource coreInputSource;
-        static bool isMouseDown;
+        [Flags] enum  MouseButtons
+        {
+            left=1,
+            right=2,
+            middle=4,
+        };
+        static MouseButtons mouseButtons;
+        
         public static Vector2 mousePosition;
         public static Vector2 lastMousePressPosition;
         public static string toolTip;
@@ -44,10 +53,12 @@ namespace COTG.Views
 
         private void Canvas_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            var buttons = mouseButtons;
             canvas.ReleasePointerCapture(e.Pointer);
-           // ChatTab.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
-            isMouseDown = false;
-            mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
+            // ChatTab.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
+            mouseButtons = 0;
+            var point = e.GetCurrentPoint(canvas);
+            mousePosition = point.Position.ToVector2();
             if ((lastMousePressPosition - mousePosition).Length() < 8.0f)
             {
                 var worldC = MousePointToWorld(mousePosition);
@@ -68,8 +79,21 @@ namespace COTG.Views
                 //    JSClient.ChangeCity(cid);
                 //}
                 //else
+                if(buttons.HasFlag( MouseButtons.left ) )
                 {
                     JSClient.ShowCity(cid,true);
+                    e.Handled = true;
+                }
+                else if(buttons.HasFlag(MouseButtons.right) )
+                {
+                   
+                    var spot = Spot.GetOrAdd(cid);
+                    foreach(var i in CityFlyout.Items)
+                        i.DataContext = spot;
+
+//                    CityFlyout.ShowAt(canvas,point.Position);
+
+ //                   e.Handled = true;
                 }
                 //   JSClient.ShowCity(MousePointToCid(mousePosition));
 
@@ -79,6 +103,9 @@ namespace COTG.Views
                 SetJSCamera();
             }
         }
+
+       
+
         public static void EnsureOnScreen( int cid,bool lazy)
         {
             var worldC = cid.CidToWorldV();
@@ -106,17 +133,28 @@ namespace COTG.Views
 
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            isMouseDown = true;
+
             canvas.CapturePointer(e.Pointer);
-            mousePosition = e.GetCurrentPoint(canvas).Position.ToVector2();
+            var point = e.GetCurrentPoint(canvas);
+
+            mouseButtons = 0;
+            if (point.Properties.IsLeftButtonPressed)
+                mouseButtons |= MouseButtons.left;
+            if (point.Properties.IsRightButtonPressed)
+                mouseButtons |= MouseButtons.right;
+            if (point.Properties.IsMiddleButtonPressed)
+                mouseButtons |= MouseButtons.middle;
+
+            mousePosition = point.Position.ToVector2();
+
             lastMousePressPosition = mousePosition;
         //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
         }
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if(isMouseDown )
+            if(mouseButtons!=0)
             {
-                isMouseDown = false;
+                mouseButtons = 0;
                 canvas.ReleasePointerCapture(e.Pointer);
                 SetJSCamera();
 
@@ -125,7 +163,7 @@ namespace COTG.Views
         }
         private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
-            isMouseDown = false;
+            mouseButtons = 0;
             Spot.viewHover = 0;
         }
 
@@ -183,7 +221,7 @@ namespace COTG.Views
                             var player = Player.all.GetValueOrDefault(data.player, Player._default);
                             if (Player.IsMe(data.player))
                             {
-                                if (City.all.TryGetValue(c.WorldToCid(), out var city))
+                                if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
                                 {
                                     var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0,city.remarks.Length.Min(40) ) + "\n";
                                     toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
@@ -212,7 +250,7 @@ namespace COTG.Views
                     break;
             }
 
-             if (isMouseDown)
+             if (mouseButtons != 0)
             {
                 // If the mouse drags off the surface we will miss the mouse up
                 // TODO:  mouse should be hooked.
@@ -229,6 +267,33 @@ namespace COTG.Views
             var dt = TimeSpan.FromMinutes(e.NewValue);
             var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
             eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Hour}:{serverTime.Minute:D2}";
+        }
+
+        private static bool TryGetSpot(object sender, out Spot spot)
+        {
+            spot = null;
+            var from = sender as MenuFlyoutItem;
+            if (from == null)
+                return false;
+
+            spot = from.DataContext as Spot;
+            return (spot != null);
+        }
+        private void CityFlyoutView(object sender, RoutedEventArgs e)
+        {
+            if (TryGetSpot(sender, out var spot))
+            {
+                JSClient.ViewCity(spot.cid);
+            }
+        }
+
+        private void CityFlyoutInfo(object sender, RoutedEventArgs e)
+        {
+            if (TryGetSpot(sender, out var spot))
+            {
+                JSClient.ChangeCity(spot.cid);
+            }
+
         }
     }
 }

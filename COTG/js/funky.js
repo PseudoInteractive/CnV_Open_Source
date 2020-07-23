@@ -2347,6 +2347,10 @@ function SendAllianceInfo() {
     }
     setTimeout(SendAllianceInfo, 1000);
 }
+function viewcity(cid) {
+    gspotfunct.chcity(Number(cid));
+    $("#cityButton").click();
+}
 function avactor() {
     //	var E3y="5894";
     var q7y = 15;

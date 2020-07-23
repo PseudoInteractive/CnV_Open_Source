@@ -126,28 +126,24 @@ namespace COTG.Views
         {
             // Toggle Selected
 
-            instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
+  //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+   //         {
                 var cid = spot.cid;
                 var def = SpotMRU;
 
                     if (!def.Contains(spot))
                     {
-                        def.Add(spot);
-                        SelectSilent(spot, true);
+                        SpotMRU.Add(spot);
                     }
-                    else
-                    {
-                        ToggleSelected(spot);
 
-                    }
-            });
+                    spot.ToggleSelected();
+//            });
 
         }
         public static void ToggleSelected(Spot rv)
         {
             var isSelected = rv.ToggleSelected();
-            SelectSilent(rv, isSelected);
+  //          SelectSilent(rv, isSelected);
         }
 
 

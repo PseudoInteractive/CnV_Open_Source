@@ -27,7 +27,7 @@ namespace COTG.Game
         public Raid[] raids = Array.Empty<Raid>();
         public static bool IsMine(int cid)
         {
-            return all.ContainsKey(cid);
+            return allCities.ContainsKey(cid);
         }
         public int commandSlots
         {
@@ -97,8 +97,8 @@ namespace COTG.Game
 
         public TroopTypeCount[] troopsHome = Array.Empty<TroopTypeCount>();
         public TroopTypeCount[] troopsTotal = Array.Empty<TroopTypeCount>();
-        public static City current => all.TryGetValue(JSClient.cid, out var c) ? c : null;
-        public static ConcurrentDictionary<int, City> all = new ConcurrentDictionary<int, City>(); // keyed by cid
+        public static City current => allCities.TryGetValue(JSClient.cid, out var c) ? c : null;
+        public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)
         {
             jsE = jse;
@@ -243,7 +243,7 @@ namespace COTG.Game
             var a = await Post.SendForJson("overview/senfind.php", "a=0");
             var empty = Array.Empty<SenatorInfo>();
             var changed = new HashSet<City>();
-            foreach (var city in City.all.Values)
+            foreach (var city in City.allCities.Values)
             {
                 if (city.senatorInfo != empty)
                 {
@@ -259,7 +259,7 @@ namespace COTG.Game
             {
                 var cid = cit[0].GetInt32();
                 Log(cid.ToString());
-                var city = City.all[cid];
+                var city = City.allCities[cid];
                 List<SenatorInfo> sens = new List<SenatorInfo>();
                 foreach (var target in cit[7].EnumerateArray())
                 {

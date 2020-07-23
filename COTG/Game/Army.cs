@@ -81,6 +81,16 @@ namespace COTG.Game
         public string sc3 => cN(sumDef, 3);
         public BitmapImage si3 => iN(sumDef, 3);
 
+        public string sc4 => cN(sumDef, 4);
+        public BitmapImage si4 => iN(sumDef, 4);
+        public string sc5 => cN(sumDef, 5);
+        public BitmapImage si5 => iN(sumDef, 5);
+        public string sc6 => cN(sumDef, 6);
+        public BitmapImage si6 => iN(sumDef, 6);
+        public string sc7 => cN(sumDef, 7);
+        public BitmapImage si7 => iN(sumDef, 7);
+
+
         public bool Senny => troops.Any((a) => a.isSenator);
         public bool hasNaval => troops.Any((a) => a.isNaval);
         public bool hasArt => troops.Any((a) => a.isArt);

@@ -58,7 +58,7 @@
                                     ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                                     Tapped="ArmyTapped"
-                                    
+                                    UserGroupMode="Disabled"
                                     AlternationStep="2"
                                     AutoGenerateColumns="False">
                         <tg:RadDataGrid.Columns>
@@ -70,17 +70,27 @@
                                                    CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridTextColumn PropertyName="playerName"
                                                    Header="Player"
-                                                   Width="65"
+                                                   Width="70"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                             <tg:DataGridTextColumn PropertyName="xy"
-                                                   Width="44"
+                                                   Width="45"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
                             <tg:DataGridBooleanColumn PropertyName="isDefense"
                                                       Width="30"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />
+                            <tg:DataGridTextColumn PropertyName="sourceCN"
+                                                   Header="City"
+                                                   Width="70"
+                                                   SizeMode="Auto"
+                                                   CellContentStyle="{StaticResource LeftAlign}" />
+                            <tg:DataGridTimeColumn Width="80"
+                                                   PropertyName="spotted"
+                                                   CellContentFormat="{}{0:'/'dd'/' HH':'mm':'ss}"
+                                                   CellContentStyle="{StaticResource CenterAlign}"
+                                                   SizeMode="Fixed" />
                             <tg:DataGridTemplateColumn Header="Troops"
                                                        Width="20"
                                                        SizeMode="Auto">
@@ -188,6 +198,46 @@
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                                 </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+                                                    <Image Source="{Binding si4}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+                                                    <TextBlock Text="{Binding sc4}"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+                                                    <Image Source="{Binding si5}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+                                                    <TextBlock Text="{Binding sc5}"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+                                                    <Image Source="{Binding si6}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+                                                    <TextBlock Text="{Binding sc6}"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+                                                    <Image Source="{Binding si7}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+                                                    <TextBlock Text="{Binding sc7}"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+                                                </StackPanel>
                                             </StackPanel>
                                             <TextBlock Text="{Binding defTs}"
                                                        FontSize="12"
@@ -197,16 +247,6 @@
                                     </DataTemplate>
                                 </tg:DataGridTemplateColumn.CellContentTemplate>
                             </tg:DataGridTemplateColumn>
-                            <tg:DataGridTextColumn PropertyName="sourceCN"
-                                                   Header="City"
-                                                   Width="70"
-                                                   SizeMode="Auto"
-                                                   CellContentStyle="{StaticResource LeftAlign}" />
-                            <tg:DataGridTimeColumn Width="80"
-                                                   PropertyName="spotted"
-                                                   CellContentFormat="{}{0:'/'dd'/' HH':'mm':'ss}"
-                                                   CellContentStyle="{StaticResource CenterAlign}"
-                                                   SizeMode="Fixed" />
                         </tg:RadDataGrid.Columns>
                         <!--<tg:RadDataGrid.AggregateDescriptors>
                             <tdd:PropertyAggregateDescriptor PropertyName="SE"
@@ -240,15 +280,17 @@
                                        
                                        CellContentStyle="{StaticResource CenterAlign}"
                                        Width="44" />
-                <tg:DataGridTextColumn PropertyName="TS_Max"
+                <tg:DataGridNumericalColumn PropertyName="tsMax"
                                             SizeMode="Fixed"
                                        CellContentStyle="{StaticResource RightAlign}"
-                                            Width="50" />
-                <tg:DataGridTextColumn PropertyName="TS_Now"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="55" />
+                <tg:DataGridNumericalColumn PropertyName="tsHome"
+                                            Header="tsNow"
                                             SizeMode="Fixed"
-                                       
-                                       CellContentStyle="{StaticResource RightAlign}"
-                                            Width="50" />
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="55" />
                 <tg:DataGridTextColumn PropertyName="player"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"

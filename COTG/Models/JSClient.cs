@@ -275,6 +275,24 @@ namespace COTG
             }
 
         }
+
+        public static void ViewCity(int cityId)
+        {
+            try
+            {
+                if (MainPage.IsVisible())
+                    MainPage.SetRaidCity(cityId, false, true, false);
+
+                view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
+
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+        }
         public static void ChangeCity(int cityId)
         {
             try
@@ -284,7 +302,6 @@ namespace COTG
 
                 view.InvokeScriptAsync("chcity", new string[] {(cityId).ToString() });
 
-                Raiding.UpdateTSHome();
 
             }
             catch (Exception e)
@@ -480,7 +497,7 @@ namespace COTG
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
 
-                    var city=City.all.GetOrAdd(cid,City.Factory);
+                    var city=City.allCities.GetOrAdd(cid,City.Factory);
                     
                     city.cityName = jsCity.GetProperty("2").GetString();
                     int i = city.cityName.IndexOf('-');
@@ -789,7 +806,7 @@ namespace COTG
                                 var priorCid = cid;
                                 cid = jse.GetInt("cid");
                                 //Note.L("citydata=" + cid.CidToString());
-                                var city =City.all.GetOrAdd(cid,City.Factory);
+                                var city =City.allCities.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
 
                                 if (MainPage.IsVisible())

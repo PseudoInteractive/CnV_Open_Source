@@ -17584,7 +17584,7 @@ var cotgsubscribe = amplify;
         .css(_s(H2p - 0), _s(+A2p));
       W9();
       $(_s(+b2p))
-        .show();
+        .show();  
       $(_s(+h2p))
         .show();
       $("#quickBuildMenu")
@@ -18176,11 +18176,11 @@ var cotgsubscribe = amplify;
       E6k.R6();
       var b9l = arguments.callee.caller.name;
       if (U9 == +'0') {
+        U9 = "1" << 1769962528;
         Z3F();
         F0F(Number(d9l));
         cid = Number(d9l);
         X8();
-        U9 = "1" << 1769962528;
         c3F();
       }
     }

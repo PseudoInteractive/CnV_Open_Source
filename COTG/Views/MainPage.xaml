@@ -120,11 +120,11 @@
         <ComboBox x:Name="raidCarryBox" Grid.Row="2" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
                   Width="200" IsEditable="True"
 TextSubmitted="RaidCarrySubmitted"
-                  Margin="8,4,0,0" >
+                  Margin="8,2,0,0" >
             
         </ComboBox>
         <tg:RadDataGrid x:Name="dungeonGrid"
-                        Margin="0,42,0,0"
+                        Margin="0,54,0,0"
                         UseSystemFocusVisuals="True"
                         AlternationStep="2"
                         UserGroupMode="Disabled"

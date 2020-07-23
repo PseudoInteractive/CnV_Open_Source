@@ -261,7 +261,7 @@ namespace COTG.Services
         {
            // var cid = json.RootElement.GetAsInt("cid");
             Log("Got JS " + cid);
-             var city=City.all.GetOrAdd(cid,City.Factory);
+             var city=City.allCities.GetOrAdd(cid,City.Factory);
             city.LoadFromJson(json.RootElement);
 
         }
@@ -330,7 +330,7 @@ namespace COTG.Services
 
             try
             {
-                var city = City.all[cid];
+                var city = City.allCities[cid];
                 var buff = await resp.Content.ReadAsBufferAsync();
 
                 var temp = new byte[buff.Length - 1];
@@ -388,7 +388,7 @@ namespace COTG.Services
             foreach (var item in jsd.RootElement.EnumerateArray())
             {
                 var cid = item.GetAsInt("id");
-                var v = City.all[cid];
+                var v = City.allCities[cid];
                 List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
                 List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
                 var hasAny = false;
@@ -545,7 +545,7 @@ namespace COTG.Services
             foreach (var cr in a.EnumerateArray())
             {
                 int cid = cr[0].GetInt32();
-                var city=City.all.GetOrAdd(cid,City.Factory);
+                var city=City.allCities.GetOrAdd(cid,City.Factory);
                 List<Raid> raids = new List<Raid>();
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())

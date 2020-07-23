@@ -22,6 +22,7 @@
             <StackPanel Margin="{StaticResource SmallTopBottomMargin}"
                        >
                 <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
+                <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind fetchFullHistory}"/>
                 <TextBlock x:Uid="Settings_Theme" />
             <StackPanel Margin="{StaticResource XSmallTopMargin}">
                     <RadioButton x:Uid="Settings_Theme_Light"

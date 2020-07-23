@@ -140,6 +140,7 @@ namespace COTG.Views
             Canvas.SetZIndex(webView, 0);
 
             var canvas = CreateCanvasControl();
+            canvas.ContextFlyout = CityFlyout;
             canvas.PointerMoved += Canvas_PointerMoved;
             canvas.PointerExited += Canvas_PointerExited;
             canvas.PointerWheelChanged += Canvas_PointerWheelChanged;

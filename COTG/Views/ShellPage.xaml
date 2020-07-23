@@ -41,6 +41,12 @@
             <Setter Property="MaxWidth"
                     Value="1900" />
         </Style>
+        <MenuFlyout x:Name="CityFlyout" x:FieldModifier="Public">
+            <MenuFlyoutItem Click="CityFlyoutView"
+                                Text="City View..." />
+            <MenuFlyoutItem Click="CityFlyoutInfo"
+                                Text="Switch To" />
+        </MenuFlyout>
         <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
                                               FalseValue="Visible"

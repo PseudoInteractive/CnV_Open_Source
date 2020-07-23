@@ -132,7 +132,7 @@ namespace COTG.Game
                 {
                     var cid = ci.GetAsInt("i");
                     var ts = ci.GetAsInt("ts");
-                    var v = City.all[cid];
+                    var v = City.allCities[cid];
                     if ((v.tsHome - ts).Abs() > 8)
                     {
                         v.tsHome = ts;

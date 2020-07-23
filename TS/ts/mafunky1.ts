@@ -621,6 +621,11 @@ function SendAllianceInfo() {
 	setTimeout(SendAllianceInfo, 1000);
 }
 
+function viewcity(cid: string)
+{
+	gspotfunct.chcity(Number(cid))
+	$("#cityButton").click();
+}
 
 function avactor() {
 
