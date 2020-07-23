@@ -7094,8 +7094,7 @@ var __c =
 };
 var M8 = document.getElementById("mainMapDiv"); // region canvas
 
-/** @type {Phaser.Game} */
-let c6;// Phaser
+let c6: Phaser.Game;
 
 var gStphp; // gSt post call
 
@@ -23343,7 +23342,7 @@ var cotgsubscribe = amplify;
           .attr(_s(+Z9y), T1U);
         $(_s(+g24))
           .attr(_s(+Z9y), T1U);
-        $(_s(+W24))
+        $("#buildingMoveButton")
           .attr(_s(Z9y ^ 0), T1U);
         $(_s(+k04))
           .attr(_s(Z9y << 961753952), T1U);
@@ -27728,13 +27727,13 @@ var cotgsubscribe = amplify;
                 else if (R5Z()) p0V();
                 else if (y5Z()) p8(+'6', +k7y, +'1');
                 else if (H7Z == "d") k8F();
-                else if (H7Z == _s('1394' >> 1050439360)) {
+                else if (H7Z == "`") {
                   var I7Z = $("#citySpotMenu")
                     .css("display");
                   if (I7Z != _s(+X2R) && I7Z != "none") {
                     J9
                       ();
-                    var x7Z = $(_s(+W24))
+                    var x7Z = $("#buildingMoveButton")
                       .attr(_s(+Z9y));
                     var v7Z = D6.bd[x7Z].bid;
                     if (L2(v7Z) != +'0') v7Z = L2(v7Z);
@@ -41586,9 +41585,8 @@ var cotgsubscribe = amplify;
         .css("display") != "none" && $(_s(O74 & 2147483647))
         .css("display") != "none") setTimeout(function() { w0F(); }, +z9p);
     }
-    var
-      tileMap;
-    var landLayer;
+    var tileMap : Phaser.Tilemap;
+    var landLayer : Phaser.TilemapLayer;
 
     function M1F() {
       N6();
@@ -41740,7 +41738,7 @@ var cotgsubscribe = amplify;
         }
       });
     }
-    var j7F;
+    var j7F : Phaser.TilemapLayer;
 
     function O8(Z9V) {
         Z9V = Number(Z9V);
@@ -41797,7 +41795,7 @@ var cotgsubscribe = amplify;
       }
       p5F(g9V, U9V);
     }
-    var citiesLayer;
+    var citiesLayer : Phaser.TilemapLayer;
 
     function d6F(q6n, c6n) {
       setTimeout(function() {
@@ -41864,7 +41862,7 @@ var cotgsubscribe = amplify;
       });
     }
     var T4V;
-    var e8;
+    var labelsLayer:Phaser.TilemapLayer;
 
     function Z5V(F8w) {
       var M9w = F8w;
@@ -42016,7 +42014,7 @@ var cotgsubscribe = amplify;
         }
       } else Y6(_s("4568" & 2147483647));
     }
-    var numbersLayer;
+    var numbersLayer : Phaser.TilemapLayer;
     var l4V;
 
     function J2F(u4U, c7U, m7U, a7U, q7U, k4U, e4U, s4U, E7U) {
@@ -43849,21 +43847,21 @@ var cotgsubscribe = amplify;
                       var D76 = f76.indexOf("-" , 0); // "1416`-`635422-KittyKat-35 1013",
                       var  y76 = f76.indexOf("-" , D76 + "1" * 1); // "1416-635422`-`KittyKat-35 1013",
                       var c76 = f76.indexOf("-" , y76 + '1' * 1); // "1416-635422-KittyKat`-`35 1013",
-                        cnum = Number(f76.substring(+"0", D76)); // 1416
+                     let   cnum = Number(f76.substring(+"0", D76)); // 1416
                       p76 = f76.substring(D76 + +"1", y76); // "635422",
-                      n76 = Number(p76.substring(0, 3)) - ("100" >> 899709248); // 535
-                      A76 = Number(p76.substring(3, 6)) - ("100" >> 1855932576); // 322
+                      n76 = Number(p76.substring(0, 3)) - 100; // 535
+                      A76 = Number(p76.substring(3, 6)) - 100; // 322
                       var a76 = tileMap.getTile(n76,A76, numbersLayer);
                       if (cnum >= +"1411" && cnum <= +T3p || cnum >= ("1576" & 2147483647) && cnum <= +
                         n44) {
                         var q76 = tileMap.getTile(n76, A76, citiesLayer);
-                        var F76 = tileMap.getTile(n76, A76, e8);
+                        var F76 = tileMap.getTile(n76, A76, labelsLayer);
                         K76 = f76.substring(y76 + ("1" << 981944416), c76);
                         g76 = f76.substring(c76 + +"1", f76.length);
                         if (F76 != null && K76 == H2 && ppdt[_s(
                             +i2p)][_s('805' ^ 0)] == '2' - 0) {
-                          tileMap.removeTile(e8.getTileX(n76 * (64 * 1)),
-                            e8.getTileY(A76 * +64), e8);
+                          tileMap.removeTile(labelsLayer.getTileX(n76 * (64 * 1)),
+                            labelsLayer.getTileY(A76 * +64), labelsLayer);
                           if (g76.length >= '12' >> 1312093792) {
                             var V76 = E6k
                               .S55(r5m << 947418848);
@@ -43928,7 +43926,7 @@ var cotgsubscribe = amplify;
                             });
                             Z76.x = Math.floor(n76 * +64 + +h8y - Z76.width / +'2');
                             Z76.y = Math.floor(A76 * (64 | 64) + (s0R | 19));
-                            tileMap.putTile(+B6R, e8.getTileX(n76 * +64), e8.getTileY(A76 * +64), e8);
+                            tileMap.putTile(+B6R, labelsLayer.getTileX(n76 * +64), labelsLayer.getTileY(A76 * +64), labelsLayer);
                           }
                         } else tileMap
                           .putTile(cnum, citiesLayer.getTileX(n76 * +64), citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
@@ -44122,7 +44120,7 @@ var cotgsubscribe = amplify;
           .attr(_s(Z9y & 2147483647), L6U);
         $(_s(g24 * 1))
           .attr(_s(Z9y - 0), L6U);
-        $(_s(+W24))
+        $("#buildingMoveButton")
           .attr(_s(+Z9y), L6U);
         $(_s(k04 * 1))
           .attr(_s(Z9y - 0), L6U);
@@ -47059,7 +47057,7 @@ var cotgsubscribe = amplify;
           j7F = tileMap.createLayer("water");
           citiesLayer = tileMap.createLayer("cities");
           numbersLayer = tileMap.createLayer("numbers");
-          e8 = tileMap.createLayer("labels");
+          labelsLayer = tileMap.createLayer("labels");
           landLayer.resizeWorld();
           l2 = c6.add.graphics();
           l2.lineStyle("2" << 951749504, +'0xDAA520', '1' | 0);
@@ -47094,7 +47092,7 @@ var cotgsubscribe = amplify;
             r56.x = Math.floor(D6.x * +64 + (h8y | 0) - r56.width / +'2');
             r56.y = Math.floor(D6.y * +64 + s0R * 1);
             tileMap.putTile('1417' ^ 0, citiesLayer.getTileX(D6.x * +64), citiesLayer.getTileY(D6.y * (64 - 0)), citiesLayer);
-            tileMap.putTile(+B6R, e8.getTileX(D6.x * +64), e8.getTileY(D6.y * (64 - 0)), e8);
+            tileMap.putTile(+B6R, labelsLayer.getTileX(D6.x * +64), labelsLayer.getTileY(D6.y * (64 - 0)), labelsLayer);
             y4F(+v9y);
             var A56 = ppdt["rw"]['78' | 66][_s(+L9y)];
             if (A56 == +"0")
@@ -57821,10 +57819,10 @@ var cotgsubscribe = amplify;
           .panzoom("pan", B8D, R8D);
       }
     }
-    $(_s(+W24))
+    $("#buildingMoveButton")
       .click(function(A8g) {
         if (!(A8g.originalEvent === "bad")) {
-          var h8g = $(_s(+W24))
+          var h8g = $("#buildingMoveButton")
             .attr(_s(Z9y << 1237926048));
           var V8g = D6.bd[h8g].bid;
           if (L2(V8g) != '0' - 0) V8g = L2(V8g);
