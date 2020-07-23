@@ -13197,15 +13197,15 @@ var cotgsubscribe = amplify;
             E6k.y6();
             r8(+"1");
           });
-        $(_s(+'6141'))
+       $("#wsendChat")
           .click(function() {
             var p3V = document.getElementById(_s(+H2R))
               .value;
             if (p3V.substring("0" - 0, "3" | 1) == _s(A2R | 6672)) r8('2' >> 552543776);
           });
-        $(_s(+'5672'))
+        $("#asendChat")
           .click(function() { r8('3' | 2); });
-        $(_s(f9y << 1788548448))
+        $("#osendChat")
           .click(function() {
             E6k.y6();
             r8(+'4');
@@ -13483,8 +13483,7 @@ var cotgsubscribe = amplify;
         .val();
       var X79 = $(_s(+'529'))
         .val();
-      if (z79 == '' || M79 == "" || G79 == '' || C79 == E6k
-        .S55(+'4867') || X79 == ('0' | 0)) Y6(_s(F4R << 1339151168));
+        if (z79 == '' || M79 == "" || G79 == '' || C79 == "" || X79 == ('0' | 0)) Y6(_s(F4R << 1339151168));
       else {
         var W79 = '0' ^ 0;
         var i79 = "0" >> 416547264;
@@ -14816,8 +14815,7 @@ var cotgsubscribe = amplify;
         }
         var w8U = "";
         var e8U = '';
-        var l8U = _s(
-          '4867' - 0);
+          var l8U = "";
         if (D2U >= ('1' & 2147483647) && P2U == (N4y | 320)) {
           var h8U = U2U - +"1";
           var J8U = U2U + +
@@ -17388,8 +17386,7 @@ var cotgsubscribe = amplify;
       var o2B;
       var d2B;
       var z2B = '';
-      var C2B = _s(+
-        '4867');
+        var C2B = "";
       var W2B = '';
       var i2B = '';
       var M2B = "";
@@ -19086,8 +19083,7 @@ var cotgsubscribe = amplify;
       var q0v = _s(+'6799') + N0v.rid + _s('2463' & 2147483647) + J0F + _s(
           +"1155") + S0F + _s("5871" << 2059201888) + N0v.rid + _s(+"3787") + N0v.rid + _s(+'5455') +
         N0v.rid + _s(+"3868") + N0v.tn + _s(+"1537") + N0v.ftime + _s("3394" & 2147483647);
-      var u5v = E6k
-        .S55("4867" ^ 0);
+        var u5v = "";
       if (navigator.userAgent.indexOf(_s(+'3978')) > +'0') u5v = _s(+"6384");
       var j5v =
         _s("373" | 52) + u5v + _s(+"1090") + N0v.dhair + _s(+'6365') + N0v.dcloths + _s('4868' >>
@@ -29736,8 +29732,7 @@ var cotgsubscribe = amplify;
                 .css("display", "");
             }
             if (f7v[_s(w8R - 0)]) {
-              var d4v = E6k
-                .o55("4867" - 0);
+                var d4v = "";
               if (f7v[_s(+w8R)].length == ('0' | 0)) {
                 $(_s(+'206'))
                   .css("display", _s(+"5343"));
@@ -30883,8 +30878,7 @@ var cotgsubscribe = amplify;
           .css("display", "none");
       } else {
         var U4w = '';
-        var Z4w = _s(+
-          '4867');
+        var Z4w = "";
         var p4w = "";
         var Y4w = '';
         var F4w;
@@ -32320,8 +32314,7 @@ var cotgsubscribe = amplify;
                     var R02 = B02[_s(+Q14)];
                     U5F = B02[_s(+"4583")];
                     var r02 = "";
-                    var A02 = _s(
-                      '4867' & 2147483647);
+                    var A02 = "";
                     D0F++;
                     for (var S02 = +"0"; S02 < y02.length; S02++) {
                       var W02 = y02[S02];
@@ -35195,8 +35188,7 @@ var cotgsubscribe = amplify;
             E6k.y6();
             var k79 = $(_s(+O4R));
             var E59 = k79.val();
-            if (E59 == _s(+
-                '4867')) E59 = '0' << 994419328;
+            if (E59 == "") E59 = '0' << 994419328;
             var e79 = Number(E59) + +M9t;
             k79.val(e79);
           });
@@ -35214,8 +35206,7 @@ var cotgsubscribe = amplify;
           .click(function() {
             var w79 = $(_s(O4R >> 154296192));
             var j79 = w79.val();
-            if (j79 == _s(
-                '4867' - 0)) j79 = +"0";
+            if (j79 == "") j79 = +"0";
             var I79 = Number(j79) + +'10000000';
             w79.val(I79);
           });
@@ -37333,8 +37324,7 @@ var cotgsubscribe = amplify;
                 else var J3n = parseFloat(d3n.$tooltip.css(_s('3398' | 3334))),
                   K3n = d3n.$tooltip.css(_s('338' & 2147483647));
                 if (J3n > +'1') J3n++;
-                var l1n = _s(+
-                  '4867');
+                var l1n = "";
                 if (J3n !== "0" * 1) {
                   var N3n = "",
                     Q1n = _s("4923" * 1) + K3n + _s(+e8y);
@@ -62887,19 +62877,19 @@ var cotgsubscribe = amplify;
       var c3V = formatTimehrs(q3V);
       if (
         N3V == ("1" ^ 0)) {
-        var Y3V = document.getElementById(_s(+d4p))
+        var Y3V = document.getElementById("chatMsg") // alliance
           .value;
         if (Y3V.substring(+'0', '3' ^ 0) == "/a ") {
           N3V = +"3";
           Y3V = Y3V.substring("3" ^ 0, Y3V.length);
-        } else if (Y3V.substring(+'0', "3") == "/o ") {
+        } else if (Y3V.substring(+'0', 3) == "/o ") {
           N3V = "4" ^ 0;
-          Y3V = Y3V.substring(+'3', Y3V.length);
-        } else if (Y3V.substring('0' >> 1509061504, "3" | 1) == "/w ") {
+          Y3V = Y3V.substring(3, Y3V.length);
+        } else if (Y3V.substring(0 , 3) == "/w ") {
           N3V = N3V;
           W5F(Y3V);
         } else N3V = N3V;
-        document.getElementById(_s(d4p & 2147483647))
+        document.getElementById("chatMsg")
           .value = "";
         document.getElementById(_s(H2R & 2147483647))
           .value = '';
@@ -62912,18 +62902,18 @@ var cotgsubscribe = amplify;
         var Y3V =
           document.getElementById(_s(H2R << 423079072))
           .value;
-        if (Y3V.substring(+'0', +'3') == "/w ") {
+        if (Y3V.substring(0, +'3') == "/w ") {
           N3V = +'1';
           Y3V = Y3V;
           W5F(Y3V);
-        } else if (Y3V.substring("0" | 0, +'3') == "/a ") {
+        } else if (Y3V.substring(0, 3) == "/a ") {
           N3V = "3" ^ 0;
-          Y3V = Y3V.substring(+"3", Y3V.length);
-        } else if (Y3V.substring(+'0', "3" & 2147483647) == "/o ") {
+          Y3V = Y3V.substring(3, Y3V.length);
+        } else if (Y3V.substring(0, 3) == "/o ") {
           N3V = '4' | 0;
-          Y3V = Y3V.substring(+"3", Y3V.length);
+          Y3V = Y3V.substring(3, Y3V.length);
         } else N3V = N3V;
-        document.getElementById(_s(d4p >> 2133483040))
+        document.getElementById("chatMsg")
           .value = "";
         document.getElementById(_s(H2R | 256))
           .value = "";
@@ -62944,9 +62934,9 @@ var cotgsubscribe = amplify;
         } else if (Y3V.substring(+"0", +"3") == _s(O1k *
             1)) {
           N3V = +'4';
-          Y3V = Y3V.substring("3" * 1, Y3V.length);
+          Y3V = Y3V.substring(3, Y3V.length);
         } else N3V = N3V;
-        document.getElementById(_s(d4p ^ 0))
+        document.getElementById("chatMsg")
           .value = "";
         document.getElementById(_s(+H2R))
           .value = "";
@@ -62955,7 +62945,7 @@ var cotgsubscribe = amplify;
         document.getElementById(_s(J1p * 1))
           .value = '';
       } else if (N3V == "4" - 0) {
-        var Y3V = document.getElementById(_s(J1p ^ 0))
+          var Y3V = document.getElementById("wchatMsg")
           .value;
         if (Y3V.substring(+"0", "3" * 1) == "/w ") {
           N3V = '1' * 1;
@@ -62979,8 +62969,7 @@ var cotgsubscribe = amplify;
           .value = "";
       }
       Y3V = Y3V.substring('0' | 0, +l6y);
-      if (Y3V != _s(+
-          "4867")) {
+      if (Y3V != "") {
         var m3V = { b: Y3V, c: c3V, a: N3V };
         websocket.send(JSON.stringify(m3V));
       }
