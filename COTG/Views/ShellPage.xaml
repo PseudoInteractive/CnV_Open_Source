@@ -262,6 +262,25 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2" Grid.RowSpan="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" />
+                <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
+                <tk:GridSplitter
+                        Background="Transparent"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Stretch"
+                        Height="20"
+                        Canvas.ZIndex="22">
+                    <tk:GridSplitter.Element>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+                    Foreground="White"  IsHitTestVisible="False"    />
+                    </tk:GridSplitter.Element>
+                </tk:GridSplitter>
+            </Grid>
             <Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -272,6 +291,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Frame x:Name="chatTabFrame" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,0,4" />
+                
                 <tk:GridSplitter
                         Background="Transparent"
                     Grid.Row="1"
@@ -281,8 +301,8 @@
                         Width="20"
                         Canvas.ZIndex="22">
                     <tk:GridSplitter.Element>
-                        <SymbolIcon Symbol="Switch"
-                    Foreground="Purple"  IsHitTestVisible="False"    />
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+                    Foreground="White"  IsHitTestVisible="False"    />
                     </tk:GridSplitter.Element>
                 </tk:GridSplitter>
                         
@@ -296,8 +316,8 @@
                         HorizontalAlignment="Stretch"
                     >
 					<tk:GridSplitter.Element>
-						<SymbolIcon Symbol="Sort"
-                    Foreground="Purple"  IsHitTestVisible="False"    />
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+                    Foreground="White"  IsHitTestVisible="False"    />
         			</tk:GridSplitter.Element>
 				</tk:GridSplitter>
             </Grid>
@@ -311,14 +331,14 @@
             <tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"
-                        Grid.Column="2"
-                        HorizontalAlignment="Left"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
                         Width="20"
                         Canvas.ZIndex="22">
                 <tk:GridSplitter.Element>
-                    <SymbolIcon Symbol="Switch"
-                    Foreground="Purple"  IsHitTestVisible="False"    />
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+                    Foreground="White"  IsHitTestVisible="False"    />
                 </tk:GridSplitter.Element>
             </tk:GridSplitter>
         </Grid>

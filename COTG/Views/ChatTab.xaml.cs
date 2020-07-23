@@ -53,7 +53,7 @@ namespace COTG.Views
         }
     }
 
-    public sealed partial class ChatTab : UserControl
+    public sealed partial class ChatTab : UserTab
     {
         public static ChatTab alliance = new ChatTab() { DataContext = nameof(alliance) };
         public static ChatTab world = new ChatTab() { DataContext = nameof(world) };
@@ -65,9 +65,22 @@ namespace COTG.Views
 
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
         public  DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
-        public bool isActive; // true if this is in a tab view somewhere
 
-        public void Post(ChatEntry entry)
+        override public void VisibilityChanged(bool visible)
+        {
+            if (visible)
+            {
+                var count = Groups.Count;
+                if (count > 0 )
+                {
+                    listView.ScrollIntoView(Groups[count - 1].Items.Last());
+                }
+                input.Focus(FocusState.Keyboard);
+            }
+
+        }
+
+    public void Post(ChatEntry entry)
         {
             var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
             var lastHour = activeGroup ==null ? -99 : activeGroup.time.Hour;
@@ -161,6 +174,15 @@ namespace COTG.Views
             var chatEntry = sender as HyperlinkButton;
             if(chatEntry!=null)
                JSClient.ShowPlayer(chatEntry.Content.ToString());
+        }
+
+        private void input_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Log(input.Text);
+                input.Text = "";
+            }
         }
     }
 }

@@ -140,9 +140,9 @@ namespace COTG.Models
                     {
                         case nameof(Report.Type): JSClient.ShowReport(i.reportId); break;
                         case nameof(Report.atkC):
-                        case nameof(Report.atkCN): JSClient.ShowCity(i.atkCid); break;
+                        case nameof(Report.atkCN): JSClient.ShowCity(i.atkCid, false); break;
                         case nameof(Report.defC):
-                        case nameof(Report.defCN): JSClient.ShowCity(i.defCid); break;
+                        case nameof(Report.defCN): JSClient.ShowCity(i.defCid,false); break;
                         case nameof(Report.atkAli): JSClient.ShowAlliance(i.atkAli);break;
                         case nameof(Report.defAli): JSClient.ShowAlliance(i.defAli); break;
                         case nameof(Report.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
@@ -326,7 +326,7 @@ namespace COTG.Models
                 {
                     case "xy":
                         processed = true;
-                        JSClient.ShowCity(cid); break;
+                        JSClient.ShowCity(cid,false); break;
               
                 }
             }

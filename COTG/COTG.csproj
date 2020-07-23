@@ -313,6 +313,9 @@
       <DependentUpon>ShellPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellWorld.cs" />
+    <Compile Include="Views\SpotTab.xaml.cs">
+      <DependentUpon>SpotTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TabbedPivotPage.xaml.cs">
       <DependentUpon>TabbedPivotPage.xaml</DependentUpon>
     </Compile>
@@ -416,6 +419,10 @@
     <Page Include="Views\ShellPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SpotTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TabbedPivotPage.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -28,6 +28,7 @@ namespace COTG.Views
         public static CanvasBitmap worldObjects;
         public static Vector2 clientTL;
         public static Vector2 cameraC;
+        public static Vector2 cameraCLag; // for smoothing
         public static Vector2 clientC;
         public static Vector2 clientSpan;
         //   public static Vector2 cameraMid;
@@ -204,8 +205,11 @@ namespace COTG.Views
         }
 
         public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
+        public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
+        static DateTimeOffset lastDrawTime;
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
+
             if(World.bitmapPixels!=null)
             {
                 if (worldObjects != null)
@@ -226,7 +230,14 @@ namespace COTG.Views
 
             try
             {
-                var serverNow = JSClient.ServerTime() + TimeSpan.FromMinutes(eventTimeOffset);
+                var _serverNow = JSClient.ServerTime();
+                var dt = (float) (_serverNow - lastDrawTime).TotalSeconds;
+                lastDrawTime = _serverNow;
+
+                cameraCLag += (cameraC - cameraCLag) *(1- MathF.Exp( -4*dt ));
+
+                var serverNow = _serverNow  + TimeSpan.FromMinutes(eventTimeOffset);
+
                 float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
                 int tick = (Environment.TickCount>>3) & 0xfffff;
                 var animTLoop = animT.Wave();
@@ -256,7 +267,7 @@ namespace COTG.Views
                 
                 if (worldBackground != null && IsWorldView())
                 {
-                    var srcP0 = new Point(cameraC.X * bSizeGain2+ clientC.X * bSizeGain2 / pixelScale, cameraC.Y * bSizeGain2+ clientC.Y * bSizeGain2 / pixelScale);
+                    var srcP0 = new Point(cameraCLag.X * bSizeGain2+ clientC.X * bSizeGain2 / pixelScale, cameraCLag.Y * bSizeGain2+ clientC.Y * bSizeGain2 / pixelScale);
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
                                            srcP0.Y + clientSpan.Y * bSizeGain2 / pixelScale);
                     var destP0 = new Point();
@@ -306,7 +317,8 @@ namespace COTG.Views
 
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
-               // if (IsPageDefense())
+                // if (IsPageDefense())
+                if (!IsCityView())
                 {
                     var reports =  DefensePage.instance.history;
                     if (reports.Count > 0)
@@ -372,78 +384,80 @@ namespace COTG.Views
                         }
                     }
                 }
-                foreach (var city in City.all.Values)
+                if (!IsCityView())
                 {
-                    if (city.incoming.Count > 0 )
+                    foreach (var city in City.all.Values)
                     {
-                        var c1 = city.cid.CidToCC();
-                        foreach(var i in city.incoming )
+                        if (city.incoming.Count > 0)
                         {
-                            var c0 = i.sourceCid.CidToCC();
-                            if (IsCulled(c0, c1))
-                                continue;
-                            Color c;
-                            if (i.isDefense)
+                            var c1 = city.cid.CidToCC();
+                            foreach (var i in city.incoming)
                             {
-                                c = defenseColor;
-                            }
-                            else if( i.hasArt)
-                            {
-                                c = artColor;
-                            }
-                            else if (i.Senny)
-                            {
-                                c = senatorColor; ;
-                            }
-                            else
-                            {
-                                c = attackColor;
-                            }
-                            DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival-i.spotted) , c0, c1,c);
-                        }
-                    }
-                    // Todo: clip thi
-                    if (city.senatorInfo.Length != 0)
-                    {
-                        var c = city.cid.CidToCC();
-                        var idle = 0;
-                        var active = 0;
-                        var recruiting = 0;
-                        foreach (var sen in city.senatorInfo)
-                        {
-                            if (sen.type == SenatorInfo.Type.idle)
-                                idle += sen.count;
-                            else if (sen.type == SenatorInfo.Type.recruit)
-                                recruiting += sen.count;
-                            else
-                                active += sen.count;
-                            if (sen.target != 0)
-                            {
-                                var c1 = sen.target.CidToCC();
-                                DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
+                                var c0 = i.sourceCid.CidToCC();
+                                if (IsCulled(c0, c1))
+                                    continue;
+                                Color c;
+                                if (i.isDefense)
+                                {
+                                    c = defenseColor;
+                                }
+                                else if (i.hasArt)
+                                {
+                                    c = artColor;
+                                }
+                                else if (i.Senny)
+                                {
+                                    c = senatorColor; ;
+                                }
+                                else
+                                {
+                                    c = attackColor;
+                                }
+                                DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival - i.spotted), c0, c1, c);
                             }
                         }
-                        DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
-
-                    }
-
-                    if (IsPageRaid())
-                    {
-                        var c = city.cid.CidToCC();
-
-                        // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-                        //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                        //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
-                        foreach (var raid in city.raids)
+                        // Todo: clip thi
+                        if (city.senatorInfo.Length != 0)
                         {
-                            var ct = raid.target.CidToCC();
-                            (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                            DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1,raidColor);
+                            var c = city.cid.CidToCC();
+                            var idle = 0;
+                            var active = 0;
+                            var recruiting = 0;
+                            foreach (var sen in city.senatorInfo)
+                            {
+                                if (sen.type == SenatorInfo.Type.idle)
+                                    idle += sen.count;
+                                else if (sen.type == SenatorInfo.Type.recruit)
+                                    recruiting += sen.count;
+                                else
+                                    active += sen.count;
+                                if (sen.target != 0)
+                                {
+                                    var c1 = sen.target.CidToCC();
+                                    DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
+                                }
+                            }
+                            DrawTextBox(ds, $"{recruiting},{idle},{active}", c, tipTextFormatCentered);
 
                         }
+
+                        if (MainPage.IsVisible())
+                        {
+                            var c = city.cid.CidToCC();
+
+                            // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                            //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                            //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+                            foreach (var raid in city.raids)
+                            {
+                                var ct = raid.target.CidToCC();
+                                (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
+                                DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1, raidColor);
+
+                            }
+                        }
                     }
-                }
-                
+                }                
 
                 if (!IsCityView())
                 {
@@ -459,7 +473,7 @@ namespace COTG.Views
 
                 // show selected
                 var _toolTip =toolTip;
-                if(_toolTip != null)
+                if(_toolTip != null && IsWorldView() )
                 {
                     CanvasTextLayout textLayout = new CanvasTextLayout(ds, _toolTip, tipTextFormat, 0.0f, 0.0f);
                     var bounds = textLayout.DrawBounds;
@@ -557,13 +571,13 @@ namespace COTG.Views
             DrawRoundedSquareShadow(ds, c, circleRadius,brush.GetShadowColor(), thickness);
             DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
         }
-        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color baseColor,  float thickness = 1.5f)
+        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color,  float thickness = 1.5f)
         {
-//            DrawRoundedSquare(ds, c, circleRadius, GetShadowColor(color), thickness);
+            DrawRoundedSquare(ds, c, circleRadius, color, thickness);
         }
         public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
         {
-  //          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
+            DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
         }
 
         public static Vector2 WToC(this Vector2 c)
@@ -585,13 +599,14 @@ namespace COTG.Views
             return
                 (c - ShellPage.cameraC.Y) * ShellPage.pixelScale - ShellPage.clientC.Y;
         }
-        public static void BringCidIntoWorldView(this int cid)
+        public static void BringCidIntoWorldView(this int cid,bool lazy)
         {
             var v = cid.CidToWorldV();
             var newC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
             var dc = newC - ShellPage.cameraC;
             // only move if needed
-            if (dc.X.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.X * 0.5f ||
+            if (!lazy||
+                dc.X.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.X * 0.5f ||
                 dc.Y.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.Y * 0.5f)
             {
 

@@ -32,7 +32,7 @@ using Telerik.UI.Xaml.Controls.Grid.Commands;
 namespace COTG.Views
 {
 
-    public sealed partial class DefenderPage : Page, INotifyPropertyChanged
+    public sealed partial class DefenderPage : UserTab, INotifyPropertyChanged
     {
 
         public static DefenderPage instance;
@@ -130,7 +130,7 @@ namespace COTG.Views
 
         public void NotifyIncomingUpdated()
         {
-            if(ShellPage.IsPageDefender())
+            if(DefenderPage.IsVisible())
             {
                Refresh();
             }
@@ -153,14 +153,7 @@ namespace COTG.Views
             });
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            if (e.Parameter is ShellPage)
-                return;
-
-           IncomingOverview.Process(false);
-        }
+        
 
         private void ArmyTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -170,6 +163,14 @@ namespace COTG.Views
 
           
         }
+
+        public override void VisibilityChanged(bool visible)
+        {
+            Log("Vis change" + visible);
+            if(visible)
+                IncomingOverview.Process(false);
+        }
+        public static bool IsVisible() => instance.isVisible;
 
     }
 

@@ -50,7 +50,6 @@ namespace COTG.Views
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
         static public ShellPage instance;
-        public Frame shellFrame;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
         private bool _isBusy;
@@ -106,10 +105,10 @@ namespace COTG.Views
 
         private void Initialize()
         {
-            NavigationService.NavigationFailed += Frame_NavigationFailed;
-            NavigationService.Navigated += Frame_Navigated;
-            NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
-            navigationView.BackRequested += OnBackRequested;
+    //        NavigationService.NavigationFailed += Frame_NavigationFailed;
+    //        NavigationService.Navigated += Frame_Navigated;
+    //        NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
+     //       navigationView.BackRequested += OnBackRequested;
           //  IdentityService.LoggedIn += OnLoggedIn;
          //   IdentityService.LoggedOut += OnLoggedOut;
         }
@@ -121,32 +120,17 @@ namespace COTG.Views
 
             var webView = JSClient.Initialize(grid);
 
-            shellFrame = new Frame()
-            {
-                Background = null
-
-           //  HorizontalAlignment=HorizontalAlignment.Stretch,
-           //   VerticalAlignment=VerticalAlignment.Stretch
-           ,
-                CacheSize = 10
-            };
-            //   RelativePanel.SetAlignLeftWithPanel(shellFrame, true);
-            //      RelativePanel.SetAlignRightWithPanel(shellFrame, true);
-            //      RelativePanel.SetAlignTopWithPanel(shellFrame, true);
-            //      RelativePanel.SetAlignBottomWithPanel(shellFrame, true);
-
-
 
             grid.Background = null;
 
             grid.Children.Add(webView);
 
-            grid.Children.Add(shellFrame);
-            Grid.SetColumn(shellFrame, 2);
-            Grid.SetRow(shellFrame, 0);
-            Grid.SetRowSpan(shellFrame, 6);
-            shellFrame.Margin = new Thickness(13, 0, 0, 0);
-            Canvas.SetZIndex(shellFrame, 3);
+  //          grid.Children.Add(shellFrame);
+ //           Grid.SetColumn(shellFrame, 2);
+ //           Grid.SetRow(shellFrame, 0);
+ //           Grid.SetRowSpan(shellFrame, 6);
+  //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
+  //          Canvas.SetZIndex(shellFrame, 3);
 
 
             Grid.SetColumn(webView, 0);
@@ -204,27 +188,75 @@ namespace COTG.Views
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor
             /// we pass this as an argument to let the page know that it is a programmatic navigation
-            Services.NavigationService.Navigate<Views.DefensePage>(this);
+           // Services.NavigationService.Navigate<Views.DefensePage>(this);
 
-            chatTabFrame.Navigate(typeof(TabPage));
+            CreateTabPage(chatTabFrame).AddChatTabs();
 
-            navigationView.IsPaneOpen = false;
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                Services.NavigationService.Navigate<Views.DefenderPage>(this);
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+                var tabPage = CreateTabPage(shellFrame);
+                Log("HEre1");
+                MainPage.instance = new MainPage();
+                Log("HEre2");
+                tabPage.Add(
+                new WinUI.TabViewItem()
                 {
-                    Services.NavigationService.Navigate<Views.MainPage>(this);
-                    ChatTab.debug.Post(new ChatEntry("<coords>331:331</coords>", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
-                    ChatTab.debug.Post(new ChatEntry("<player>KittyKat</player>", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
-                    ChatTab.debug.Post(new ChatEntry("@david", new DateTimeOffset(1969, 1, 1, AMath.random.Next(24), 0, 0, new TimeSpan())));
+                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    Header = "Raid",//tab.DataContext as string,
+                    Content = MainPage.instance
                 });
-            });
+                Log("HEre3");
+                DefenderPage.instance = new DefenderPage();
+                tabPage.Add(
+                new WinUI.TabViewItem()
+                {
+                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    Header = "Defender",//tab.DataContext as string,
+                    Content = DefenderPage.instance
+                });
+                Log("HEre5");
+                DefensePage.instance = new DefensePage();
+                tabPage.Add(
+                new WinUI.TabViewItem()
+                {
+                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    Header = "Defense",//tab.DataContext as string,
+                    Content = DefensePage.instance
+                });
+                tabPage.Tabs.SelectedIndex = 0;
+
+            }
+            {
+                var tabPage = CreateTabPage(spotFrame);
+                SpotTab.instance = new SpotTab();
+                tabPage.Add(
+                new WinUI.TabViewItem()
+                {
+                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    Header = "Recent",//tab.DataContext as string,
+                    Content = SpotTab.instance
+                });
+                tabPage.Tabs.SelectedIndex = 0;
+
+            }
+            navigationView.IsPaneOpen = false;
+            //CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //{
+            //    Services.NavigationService.Navigate<Views.DefenderPage>(this);
+            //    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //    {
+            //        Services.NavigationService.Navigate<Views.MainPage>(this);
+            //    });
+            //});
 
 
         }
 
-       
+        private TabPage CreateTabPage(Frame frame)
+        {
+            frame.Navigate(typeof(TabPage));
+            return  frame.Content as TabPage;
+        }
+
 
 
 
@@ -301,21 +333,9 @@ namespace COTG.Views
             if (selectedItem != null)
             {
                 Selected = selectedItem;
-                ChatTab.L(IsPageDefense().ToString());
             }
         }
-        public static bool IsPageRaid()
-        {
-            return instance.Selected == instance.raid;
-        }
-        public static bool IsPageDefense()
-        {
-            return instance.Selected == instance.DefenseHistory;
-        }
-        public static bool IsPageDefender()
-        {
-            return instance.Selected == instance.defender;
-        }
+
 
         private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
         {
@@ -600,23 +620,23 @@ namespace COTG.Views
         {
             if (!logTip.IsOpen)
             {
-                chatTabFrame.Navigate(typeof(TabPage));
+          //      chatTabFrame.Navigate(typeof(TabPage));
 
                 logTip.IsOpen = true;
             }
             else
             {
-                chatTabFrame.Navigate(typeof(Page));
+            //    chatTabFrame.Navigate(typeof(Page));
                 logTip.IsOpen = false;
             }
         }
 
-		//private void ChatOpen(object sender, RoutedEventArgs e)
-		//{
-		//         {
-		//              WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
+        //private void ChatOpen(object sender, RoutedEventArgs e)
+        //{
+        //         {
+        //              WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
 
-		//          }
-		//      }
-	}
+        //          }
+        //      }
+    }
 }

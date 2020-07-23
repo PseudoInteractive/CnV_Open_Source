@@ -1,4 +1,4 @@
-﻿<Page x:Class="COTG.Views.DefensePage"
+﻿<local:UserTab x:Class="COTG.Views.DefensePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:behaviors="using:COTG.Behaviors"
@@ -19,10 +19,8 @@
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-      NavigationCacheMode="Required"
-      Style="{StaticResource PageStyle}"
       mc:Ignorable="d">
-    <Page.Resources>
+    <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
             <local:ReportTypeStyleSelector.assaultStyle>
                 <Style TargetType="TextBlock">
@@ -135,7 +133,7 @@
                 </Style>
             </local:ReportKillStyleSelector.tieStyle>
         </local:ReportKillStyleSelector>
-    </Page.Resources>
+    </UserControl.Resources>
     <Grid>
         
         <Grid.ColumnDefinitions>
@@ -268,45 +266,6 @@
                                                          Function="Sum" />
             </telerikGrid:RadDataGrid.AggregateDescriptors>-->
         </telerikGrid:RadDataGrid>
-        <telerikGrid:RadDataGrid x:Name="selectedGrid"
-                        Grid.Row="1"
-                        Margin="0,14,0,0"
-                        AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
-                        ColumnResizeHandleDisplayMode="Always"
-                        PointerMoved="gridPointerMoved"
-                        PointerPressed="gridPointerPress"
-                        PointerExited="gridPointerExited"
-                        FontSize="12"
-                        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
-                        RowHeight="34"
-                        AlternationStep="2"
-                        SelectionMode="Extended"
-                        SelectionUnit="Row"
-                        GroupPanelPosition="Bottom"
-                        >
-            <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridImageColumn PropertyName="icon"
-                                        SizeMode="Fixed"
-                                        Width="40" />
-                <telerikGrid:DataGridTextColumn PropertyName="cityName"
-                                       SizeMode="Auto"
-                                       Width="100" />
-                <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                       Width="80" />
-                <telerikGrid:DataGridTextColumn PropertyName="player"
-                                       Width="80" />
-                <telerikGrid:DataGridTextColumn PropertyName="alliance"
-                                       Width="80" />
-                <telerikGrid:DataGridNumericalColumn PropertyName="points"
-                                            Width="80" />
-            </telerikGrid:RadDataGrid.Columns>
-
-        </telerikGrid:RadDataGrid>
-        <tk:GridSplitter Grid.Row="1"
-                         Height="13"
-                         ResizeDirection="Rows"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Top" />
+      
     </Grid>
-</Page>
+</local:UserTab>

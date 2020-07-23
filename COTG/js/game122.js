@@ -10981,8 +10981,7 @@ var cotgsubscribe = amplify;
             "4499"),
           '-moz-transform': _s('4792' >> 325522240),
           'left': _s(n5y >> 1448469344),
-          'filter': E6k
-            .o55('4867' * 1)
+            'filter': ""
         });
     }
     worldd = new Object();
@@ -13193,7 +13192,7 @@ var cotgsubscribe = amplify;
               J5F("4" << 1343973568);
             }
           });
-        $(_s(+"1101"))
+        $("#sendChat")
           .click(function() {
             E6k.y6();
             r8(+"1");
@@ -14165,8 +14164,7 @@ var cotgsubscribe = amplify;
           D6[_s(N1R * 1)][U2U][_s(D1R - 0)] = g0l;
         }
         var w8U = "";
-        var e8U = _s(+
-          '4867');
+        var e8U = "";
         var l8U = '';
         if (D2U >= +"1" && P2U == +"479") {
           var h8U = U2U - +"1";
@@ -41754,6 +41752,11 @@ var cotgsubscribe = amplify;
     var j7F;
 
     function O8(Z9V) {
+        Z9V = Number(Z9V);
+        var g9V = Math.round(Z9V % +R5y);
+        var U9V = Math.round((Z9V - g9V) / +R5y);
+       if(_viewMode !==viewModeWorld) // in world mode we handle it differently
+       {
       c6.paused = !!0;
       c6.raf.start();
       var y9V = document.getElementById("cvs");
@@ -41785,9 +41788,6 @@ var cotgsubscribe = amplify;
       c6.time.advancedTiming = !![];
       c6.time.desiredFps = 10;
       c6.time.fpsMax = 10;
-      Z9V = Number(Z9V);
-      var g9V = Math.round(Z9V % +R5y);
-      var U9V = Math.round((Z9V - g9V) / +R5y);
       if (g9V == E6k
         .S55(+'4867')) g9V = +'0';
       if (U9V == '') U9V = '0' << 1601395744;
@@ -41803,6 +41803,7 @@ var cotgsubscribe = amplify;
       l2.x = P9V * +64;
       l2.y = R9V * (64 ^ 0);
       c6.step();
+      }
       p5F(g9V, U9V);
     }
     var s2;
@@ -62888,15 +62889,13 @@ var cotgsubscribe = amplify;
         N3V == ("1" ^ 0)) {
         var Y3V = document.getElementById(_s(+d4p))
           .value;
-        if (Y3V.substring(+'0', '3' ^ 0) == _s(+Z1y)) {
+        if (Y3V.substring(+'0', '3' ^ 0) == "/a ") {
           N3V = +"3";
           Y3V = Y3V.substring("3" ^ 0, Y3V.length);
-        } else if (Y3V.substring(+'0', "3" >> 1853598848) == _s(
-            O1k << 54769248)) {
+        } else if (Y3V.substring(+'0', "3") == "/o ") {
           N3V = "4" ^ 0;
           Y3V = Y3V.substring(+'3', Y3V.length);
-        } else if (Y3V.substring('0' >> 1509061504, "3" | 1) == _s(+
-            A2R)) {
+        } else if (Y3V.substring('0' >> 1509061504, "3" | 1) == "/w ") {
           N3V = N3V;
           W5F(Y3V);
         } else N3V = N3V;
@@ -62913,15 +62912,14 @@ var cotgsubscribe = amplify;
         var Y3V =
           document.getElementById(_s(H2R << 423079072))
           .value;
-        if (Y3V.substring(+'0', +'3') == _s(A2R & 2147483647)) {
+        if (Y3V.substring(+'0', +'3') == "/w ") {
           N3V = +'1';
           Y3V = Y3V;
           W5F(Y3V);
-        } else if (Y3V.substring("0" | 0, +'3') == _s(+Z1y)) {
+        } else if (Y3V.substring("0" | 0, +'3') == "/a ") {
           N3V = "3" ^ 0;
           Y3V = Y3V.substring(+"3", Y3V.length);
-        } else if (Y3V.substring(+'0', "3" & 2147483647) == _s(O1k ^
-            0)) {
+        } else if (Y3V.substring(+'0', "3" & 2147483647) == "/o ") {
           N3V = '4' | 0;
           Y3V = Y3V.substring(+"3", Y3V.length);
         } else N3V = N3V;
@@ -62936,7 +62934,7 @@ var cotgsubscribe = amplify;
       } else if (N3V == +"3") {
         var Y3V = document.getElementById(_s(+S4p))
           .value;
-        if (Y3V.substring(+'0', +'3') == _s(A2R - 0)) {
+        if (Y3V.substring(+'0', +'3') == "/w ") {
           N3V = "1" | 1;
           Y3V = Y3V;
           W5F(Y3V);
@@ -62959,7 +62957,7 @@ var cotgsubscribe = amplify;
       } else if (N3V == "4" - 0) {
         var Y3V = document.getElementById(_s(J1p ^ 0))
           .value;
-        if (Y3V.substring(+"0", "3" * 1) == _s(A2R * 1)) {
+        if (Y3V.substring(+"0", "3" * 1) == "/w ") {
           N3V = '1' * 1;
           W5F(Y3V);
           Y3V = Y3V;

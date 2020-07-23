@@ -322,7 +322,7 @@ namespace COTG
 				switch (paths[1])
 				{
 					case "c":
-                        JSClient.ShowCity(paths[2].FromCoordinate());
+                        JSClient.ShowCity(paths[2].FromCoordinate(),false);
                         break;
                     case "p": // player
                         JSClient.ShowPlayer(paths[2]);

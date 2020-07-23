@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,11 +12,18 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
 namespace COTG.Views
 {
+    public class UserTab : UserControl
+    {
+        public virtual void VisibilityChanged(bool visible) { }
+        public bool isVisible;
+        public bool isActive;
+    }
     public sealed partial class TabPage : Page
     {
         AppWindow RootAppWindow = null;
@@ -24,23 +32,27 @@ namespace COTG.Views
         public TabPage()
         {
             this.InitializeComponent();
+            tabPages.Add(this);
 
         }
+        static public List<TabPage> tabPages = new List<TabPage>();
 
-        private async void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
+        
+
+        private void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
         {
             // If there are no more tabs, close the window.
-            //if (sender.TabItems.Count == 0)
-            //{
-            //    if (RootAppWindow != null)
-            //    {
-            //        await RootAppWindow.CloseAsync();
-            //    }
+            if (sender.TabItems.Count == 0)
+            {
+                if (RootAppWindow != null)
+                {
+                    RootAppWindow.CloseAsync();
+                }
             //    else
             //    {
             //        Window.Current.Close();
             //    }
-            //}
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -84,14 +96,13 @@ namespace COTG.Views
             {
                 if (tab.isActive)
                     continue;
-                tab.isActive = true;
                 var vi =new TabViewItem()
                 {
                     IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
                     Header = tab.DataContext as string,
                     Content = tab
                 };
-                Tabs.TabItems.Add(vi);
+                Add(vi);
                 Tabs.SelectedItem = vi;
                 return true;
             }
@@ -103,7 +114,7 @@ namespace COTG.Views
             if (window == null)
             {
                 // Main Window -- add some default items
-                while (AddAnyTab()) { }
+              
 
                 Tabs.SelectedIndex = 0;
 
@@ -140,8 +151,14 @@ namespace COTG.Views
 
         }
 
+        internal void AddChatTabs()
+        {
+            while (AddAnyTab()) { }
+        }
+
         private void Window_Closed(AppWindow sender, AppWindowClosedEventArgs args)
         {
+            tabPages.Remove(this);
             RemoveTabsOnClose();
         }
 
@@ -170,8 +187,18 @@ namespace COTG.Views
             CustomDragRegion.Height = ShellTitlebarInset.Height = sender.Height;
         }
 
-        public void AddTabToTabs(TabViewItem tab)
+        public void Add(TabViewItem tab)
         {
+            var ut = tab.Content as UserTab;
+            if (ut != null)
+            {
+                Assert(!ut.isActive);
+                ut.isActive = true;
+            }
+            else
+            {
+                Assert(false);
+            }
             Tabs.TabItems.Add(tab);
         }
 
@@ -195,7 +222,7 @@ namespace COTG.Views
             ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
 
             Tabs.TabItems.Remove(args.Tab);
-            newPage.AddTabToTabs(args.Tab);
+            newPage.Add(args.Tab);
 
             await newWindow.TryShowAsync();
         }
@@ -284,22 +311,23 @@ namespace COTG.Views
         }
         static void RemoveTab(TabView view, TabViewItem tab)
         {
-            var chatTab = tab.Content as ChatTab;
-            Log("FreeTab1 " + chatTab.Name);
-            Assert(chatTab.isActive);
-            chatTab.isActive = false;
+            var itab = tab.Content as UserTab;
+            if (itab != null)
+            {
+                itab.isVisible = false;
+                itab.isActive = false;
+                itab.VisibilityChanged(false);
+            }
+            // var chatTab = tab.Content as ChatTab;
+            // Log("FreeTab1 " + chatTab.Name);
+            // Assert(chatTab.isActive);
+            // chatTab.isActive = false;
             tab.Content = null; // remove it
             view.TabItems.Remove(tab);
         }
         void RemoveTab(TabViewItem tab)
 		{
-            var chatTab = tab.Content as ChatTab;
-            Log("Free tab " + chatTab.Name);
-
-            Assert(chatTab.isActive);
-            chatTab.isActive = false;
-            tab.Content = null; // remove it
-            Tabs.TabItems.Remove(tab);
+            RemoveTab(Tabs, tab);
 		}
         private void Tabs_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
         {
@@ -308,16 +336,91 @@ namespace COTG.Views
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems.Count == 1)
+            foreach (var tab in e.RemovedItems)
             {
-                var chat = (e.AddedItems[0] as TabViewItem).Content as ChatTab;
-                var count = chat.Groups.Count;
-                if (count > 0)
-                {
-                    chat.listView.ScrollIntoView(chat.Groups[count-1].Items.Last() );
-                }
 
+                var userControl = (tab as TabViewItem).Content as UserTab;
+                if (userControl != null)
+                {
+                    userControl.isVisible = false;
+                    userControl.VisibilityChanged(false);
+                }
             }
+            foreach (var tab in e.AddedItems )
+            {
+                var userControl = (tab as TabViewItem).Content as UserTab;
+                if (userControl != null)
+                {
+                    userControl.isVisible = true;
+
+                    userControl.VisibilityChanged(true);
+                }
+            }
+        }
+
+        private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var senderTabView = args.Element as TabView;
+            AddAnyTab();
+            args.Handled = true;
+        }
+
+        private void CloseSelectedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var InvokedTabView = (args.Element as TabView);
+
+            // Only close the selected tab if it is closeable
+            if (((TabViewItem)InvokedTabView.SelectedItem).IsClosable)
+            {
+                InvokedTabView.TabItems.Remove(InvokedTabView.SelectedItem);
+            }
+            args.Handled = true;
+        }
+
+        private void NavigateToNumberedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var InvokedTabView = (args.Element as TabView);
+
+            int tabToSelect = 0;
+
+            switch (sender.Key)
+            {
+                case Windows.System.VirtualKey.Number1:
+                    tabToSelect = 0;
+                    break;
+                case Windows.System.VirtualKey.Number2:
+                    tabToSelect = 1;
+                    break;
+                case Windows.System.VirtualKey.Number3:
+                    tabToSelect = 2;
+                    break;
+                case Windows.System.VirtualKey.Number4:
+                    tabToSelect = 3;
+                    break;
+                case Windows.System.VirtualKey.Number5:
+                    tabToSelect = 4;
+                    break;
+                case Windows.System.VirtualKey.Number6:
+                    tabToSelect = 5;
+                    break;
+                case Windows.System.VirtualKey.Number7:
+                    tabToSelect = 6;
+                    break;
+                case Windows.System.VirtualKey.Number8:
+                    tabToSelect = 7;
+                    break;
+                case Windows.System.VirtualKey.Number9:
+                    // Select the last tab
+                    tabToSelect = InvokedTabView.TabItems.Count - 1;
+                    break;
+            }
+
+            // Only select the tab if it is in the list
+            if (tabToSelect < InvokedTabView.TabItems.Count)
+            {
+                InvokedTabView.SelectedIndex = tabToSelect;
+            }
+            args.Handled = true;
         }
     }
 }

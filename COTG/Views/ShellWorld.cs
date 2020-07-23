@@ -64,12 +64,12 @@ namespace COTG.Views
                 // for non cities we show info
                 if (info.type == World.typeCity && info.player == JSClient.jsVars.pid)
                 {
-                    var city = DefensePage.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
+                    var city = SpotTab.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
                     JSClient.ChangeCity(cid);
                 }
                 else
                 {
-                    JSClient.ShowCityWithoutViewChange(cid);
+                    JSClient.ShowCity(cid,true);
                 }
                 //   JSClient.ShowCity(MousePointToCid(mousePosition));
 
@@ -78,6 +78,21 @@ namespace COTG.Views
             {
                 SetJSCamera();
             }
+        }
+        public static void EnsureOnScreen( int cid,bool lazy)
+        {
+            var worldC = cid.CidToWorldV();
+            if( lazy )
+            {
+                var cc = worldC.WToC();
+                if (cc.X > 0 && cc.Y > 0 && cc.X < clientSpan.X && cc.Y < clientSpan.Y)
+                    return;
+            }
+
+            ShellPage.cameraC = (-clientSpan * 0.5f / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
+
+
+
         }
 
         public static void SetJSCamera()
@@ -123,9 +138,10 @@ namespace COTG.Views
             var cBase = pt.Position.ToVector2() + clientC;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
-            cameraC += c0 - c1;
+            SetCameraCNoLag( cameraC + c0 - c1);
 
             cameraZoom = newZoom;
+            e.Handled = true;
         //    ChatTab.L("CWheel " + wheel);
         }
         static (int x,int y) MousePointToWorld(Vector2 c1)
@@ -202,7 +218,7 @@ namespace COTG.Views
                 // TODO:  mouse should be hooked.
                 if (point.IsInContact)
                 {
-                    cameraC -= (c1 - mousePosition) / cameraZoom;
+                   SetCameraCNoLag( cameraC - (c1 - mousePosition) / cameraZoom);
                 }
             }
 

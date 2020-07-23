@@ -1,0 +1,62 @@
+﻿<local:UserTab
+    x:Class="COTG.Views.SpotTab"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:behaviors="using:COTG.Behaviors"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:game="using:COTG.Game"
+      xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:model="using:COTG.Models"
+      xmlns:cotg="using:COTG"
+      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+      xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
+      xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
+      xmlns:tdd="using:Telerik.Data.Core"
+      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tl="using:Telerik.UI.Xaml.Controls"
+      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:telerikCore="using:Telerik.Data.Core"
+      xmlns:local="using:COTG.Views"
+      Background="{x:Null}"
+      mc:Ignorable="d">
+
+    <Grid>
+        <telerikGrid:RadDataGrid x:Name="selectedGrid"
+                        Grid.Row="1"
+                        Margin="0,14,0,0"
+                        AutoGenerateColumns="False"
+                        CanUserChooseColumns="True"
+                        ColumnResizeHandleDisplayMode="Always"
+                        PointerMoved="gridPointerMoved"
+                        PointerPressed="gridPointerPress"
+                        PointerExited="gridPointerExited"
+                        FontSize="12"
+                        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
+                        RowHeight="34"
+                        AlternationStep="2"
+                        SelectionMode="Extended"
+                        SelectionUnit="Row"
+                        GroupPanelPosition="Bottom"
+                        >
+            <telerikGrid:RadDataGrid.Columns>
+                <telerikGrid:DataGridImageColumn PropertyName="icon"
+                                        SizeMode="Fixed"
+                                        Width="40" />
+                <telerikGrid:DataGridTextColumn PropertyName="cityName"
+                                       SizeMode="Auto"
+                                       Width="100" />
+                <telerikGrid:DataGridTextColumn PropertyName="xy"
+                                       Width="80" />
+                <telerikGrid:DataGridTextColumn PropertyName="player"
+                                       Width="80" />
+                <telerikGrid:DataGridTextColumn PropertyName="alliance"
+                                       Width="80" />
+                <telerikGrid:DataGridNumericalColumn PropertyName="points"
+                                            Width="80" />
+            </telerikGrid:RadDataGrid.Columns>
+        </telerikGrid:RadDataGrid>
+
+    </Grid>
+</local:UserTab>

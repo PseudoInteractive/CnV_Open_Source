@@ -148,14 +148,14 @@ namespace COTG.Game
             {
                 switch (column)
                 {
-                    case "xy": JSClient.ShowCity(cid); break;
+                    case "xy": JSClient.ShowCity(cid,false); break;
                     case "icon": if (City.IsMine(cid))
                                      JSClient.ChangeCity(cid);
-                                else JSClient.ShowCity(cid);
+                                else JSClient.ShowCity(cid,false);
                         break;
                     default://case "tsTotal":
                     //case "tsHome":
-                        if ( ShellPage.IsPageRaid() &&  MainPage.raidCity==this)
+                        if ( MainPage.IsVisible() &&  MainPage.raidCity==this)
                         {
             //                MainPage.SetRaidCity(cid,true);
                             ScanDungeons.Post(cid,true);

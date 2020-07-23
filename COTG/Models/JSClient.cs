@@ -264,7 +264,7 @@ namespace COTG
         {
             try
             {
-                if(ShellPage.IsPageRaid() )
+                if (MainPage.IsVisible())
                     MainPage.SetRaidCity(cityId, false, true, false);
 
                 view.InvokeScriptAsync("chcity", new string[] {(cityId).ToString() });
@@ -334,32 +334,31 @@ namespace COTG
             }
         }
 
-        internal static void ShowCityWithoutViewChange(int cityId)
-        {
-            try
-            {
-                  view.InvokeScriptAsync("gStphp", new string[] { (cityId%65536).ToString(),(cityId/65536).ToString() });
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-        }
+        //internal static void ShowCityWithoutViewChange(int cityId,bool lazy)
+        //{
+        //    try
+        //    {
 
-        public static void ShowCity(int cityId)
+        //        ShellPage.EnsureOnScreen(cityId,lazy);
+        //             view.InvokeScriptAsync("gStphp", new string[] { (cityId%65536).ToString(),(cityId/65536).ToString() });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log(e);
+        //    }
+        //}
+
+        public static void ShowCity(int cityId, bool lazyMove)
         {
 			try
 			{
                 if (JSClient.IsWorldView())
-                {
-                    ShowCityWithoutViewChange(cityId);
-                }
-                else
-                {
+                    cityId.BringCidIntoWorldView(lazyMove);
+
                     view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
-                    if( City.IsMine(cityId)  )
-                        Raiding.UpdateTSHome();
-                }
+       //             if( City.IsMine(cityId)  )
+       //                 Raiding.UpdateTSHome();
+                
 			}
 			catch (Exception e)
 			{
@@ -744,7 +743,7 @@ namespace COTG
                                 var jso = jsp.Value;
                                 var cid = jso.GetAsInt("cid");
                                 {
-                                    var city =COTG.Views.DefensePage.TouchSpot(cid);
+                                    var city =COTG.Views.SpotTab.TouchSpot(cid);
                                     
                                     city.cityName = jso.GetString("name");
                                     city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
@@ -762,7 +761,7 @@ namespace COTG
                                     if(IsWorldView())
                                     {
                                         // bring city into view
-                                        cid.BringCidIntoWorldView();
+                                        cid.BringCidIntoWorldView(true);
 
                                     }
                                 }
@@ -778,9 +777,15 @@ namespace COTG
                                 var city =City.all.GetOrAdd(cid,City.Factory);
                                 city.LoadFromJson(jse);
 
-                                if (ShellPage.IsPageRaid())
+                                if (MainPage.IsVisible())
                                     ScanDungeons.Post(cid, false);
 
+                                if (IsWorldView())
+                                {
+                                    // bring city into view
+                                    cid.BringCidIntoWorldView(true);
+
+                                }
                                 break;
 
                             }
@@ -857,7 +862,7 @@ namespace COTG
                                             }
 
                                             else
-                                                (ch.type switch { 4 => ChatTab.alliance, 3 => ChatTab.world, _ => ChatTab.officer }).Post(ch);
+                                                (ch.type switch { 4 => ChatTab.alliance, 1 or 3 => ChatTab.world, _ => ChatTab.officer }).Post(ch);
                                             break;
                                         }
                                 }

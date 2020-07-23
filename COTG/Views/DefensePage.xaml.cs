@@ -58,6 +58,9 @@ namespace COTG.Views
                 return attackerWinStyle;
             return tieStyle;
         }
+
+      
+
     }
     public class ReportTypeStyleSelector : StyleSelector
     {
@@ -86,14 +89,11 @@ namespace COTG.Views
 
         }
     }
-    public sealed partial class DefensePage : Page, INotifyPropertyChanged
+    public sealed partial class DefensePage : UserTab, INotifyPropertyChanged
     {
         public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
-        public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
 
-        public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
-
-                public static DefensePage instance;
+        public static DefensePage instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;
         //        public static Report showingRowDetails;
 
@@ -111,82 +111,14 @@ namespace COTG.Views
             InitializeComponent();
 
             //            historyGrid.ContextFlyout = cityMenuFlyout;
-            selectedGrid.SelectionChanged += DefenderGrid_SelectionChanged;
         
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        override public void VisibilityChanged(bool isVisible)
         {
-            base.OnNavigatedTo(e);
-            if(!(e.Parameter is ShellPage))
+            if(isVisible)
                 IncomingOverview.Process(true); // Todo: throttle
-        }
-
-        private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-        {
-            foreach (var __item in e.RemovedItems)
-            {
-                var item = __item as Spot;
-                 Spot.selected.Remove(item.cid);
-                
-            }
-            foreach (var __item in e.AddedItems)
-            {
-                var item = __item as Spot;
-                Spot.selected.Add(item.cid);
-            }
-        }
-
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerPress(sender, e);
-        }
-        private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerMoved(sender, e);
-        }
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-        }
-
-        public static Spot TouchSpot(int cid)
-        {
-            var spot = Spot.GetOrAdd(cid);
-            AddToGrid(spot);
-            return spot;
 
         }
-        public static void AddToGrid(Spot spot)
-        {
-            // Toggle Selected
-          
-                CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    var cid = spot.cid;
-                    var def = SpotMRU;
-                    if (!def.Contains(spot))
-                    {
-                        def.Add(spot);
-                        instance.selectedGrid.SelectItem(spot);
-                    }
-                    else
-                    {
-                        ToggleSelected(spot);
-
-                    }
-                });
-
-        }
-        public static void ToggleSelected(Spot rv)
-        {
-            var isSelected = rv.ToggleSelected();
-            if (isSelected)
-                instance.selectedGrid.SelectItem(rv);
-            else
-                instance.selectedGrid.DeselectItem(rv);
-
-        }
-
 
 
 
@@ -206,6 +138,7 @@ namespace COTG.Views
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-      
+        public static bool IsVisible() => instance.isVisible;
+
     }
 }
