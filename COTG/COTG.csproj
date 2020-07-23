@@ -594,7 +594,6 @@
     <Content Include="images\troops9.png" />
     <Content Include="images\windmill.png" />
     <EmbeddedResource Include="JS\phaser.js" />
-    <EmbeddedResource Include="JS\game122.js" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

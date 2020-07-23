@@ -209,7 +209,7 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        var js = GetJsString("J0EE") +  GetJsString("game122") + GetJsString("funky");
+                        var js = GetJsString("J0EE")  + GetJsString("funky");
 
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
