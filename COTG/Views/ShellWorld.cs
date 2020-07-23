@@ -62,12 +62,12 @@ namespace COTG.Views
 
                 // If clicking on our city, change city to that, otherwise show the city info
                 // for non cities we show info
-                if (info.type == World.typeCity && info.player == JSClient.jsVars.pid)
-                {
-                    var city = SpotTab.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
-                    JSClient.ChangeCity(cid);
-                }
-                else
+                //if (info.type == World.typeCity && info.player == JSClient.jsVars.pid)
+                //{
+                //    var city = SpotTab.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
+                //    JSClient.ChangeCity(cid);
+                //}
+                //else
                 {
                     JSClient.ShowCity(cid,true);
                 }

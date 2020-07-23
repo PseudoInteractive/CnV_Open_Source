@@ -260,6 +260,21 @@ namespace COTG
 //            Services.NavigationService.Navigate<Views.MainPage>();
         }
 
+        public static void SendChat(int channel,string message )
+        {
+            try
+            {
+
+                view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(),message });
+
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+        }
         public static void ChangeCity(int cityId)
         {
             try

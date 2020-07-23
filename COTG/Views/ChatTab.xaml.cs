@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Navigation;
 using static COTG.Debug;
 using COTG.Helpers;
 using Windows.UI.Xaml.Documents;
+using COTG.Game;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -63,6 +64,7 @@ namespace COTG.Views
 
         public static ChatTab[] all = { world, alliance, officer, whisper, debug };
 
+        public static string[] chatToId = { nameof(world), nameof(whisper), nameof(alliance), nameof(officer) };
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
         public  DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
 
@@ -100,20 +102,11 @@ namespace COTG.Views
                 Post(entry);
         }
 
+
             public ChatTab()
         {
             this.InitializeComponent();
 
- //           Groups = new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow,Items=logEntries }, new ChatEntryGroup() {Items=logEntries2 } }; 
-//            Groups.First().Items = logEntries; // = new DumbCollection<ChatEntryGroup>(new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow } });// Items = logEntries } });
-//            Groups.First().Items = logEntries; // = new DumbCollection<ChatEntryGroup>(new[] { new ChatEntryGroup() { time = DateTimeOffset.UtcNow } });// Items = logEntries } });
-                                               //   logEntries[0].group = Groups[0];
-
-            //            cvsGroups.Source =(from t in logEntries
-            //    group t by t.@group into g
-            //    orderby g.Key
-            //    select g);
-            ////            groupInfoCVS.Source = result;
 
         }
         //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
@@ -178,10 +171,22 @@ namespace COTG.Views
 
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if (DataContext is string s)
             {
-                Log(input.Text);
-                input.Text = "";
+                int id = chatToId.IndexOf(s);
+                if (id >= 0)
+                {
+                    if (e.Key == Windows.System.VirtualKey.Enter)
+                    {
+                        Log(input.Text);
+                        JSClient.SendChat(id + 1, input.Text);
+                        input.Text = "";
+                    }
+                }
+                else
+                {
+                    Log("Invalid Chat: " + s);
+                }
             }
         }
     }

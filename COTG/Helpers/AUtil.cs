@@ -86,6 +86,9 @@ namespace COTG
         public void EnterReadLock() => _lock.EnterReadLock();
         public void ExitReadlLock() => _lock.ExitReadLock();
 
+        public void EnterWriteLock() => _lock.EnterWriteLock();
+        public void ExitWriteLock() => _lock.ExitWriteLock();
+
         #region Implementation of ICollection<T> ...ish
         public bool Add(T item)
         {

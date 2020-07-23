@@ -7089,6 +7089,7 @@ var __c =
   D6 : {},
   j71 : {},
   F5F : {},
+  sendchat:function(n,m){},
   showreport : function(reportId){}
 };
 var M8 = document.getElementById("mainMapDiv"); // region canvas
@@ -62872,108 +62873,123 @@ var cotgsubscribe = amplify;
     }
 
     function r8(N3V) {
+        var message = "";
+        if (
+            N3V == ("1" ^ 0)) {
+            message = document.getElementById("chatMsg") // alliance
+                .value;
+            
+        } else if (N3V == '2' << 558686240) {
+            N3V = '1' << 952628224;
+            message =
+                document.getElementById(_s(H2R << 423079072))
+                    .value;
+            if (message.substring(0, +'3') == "/w ") {
+                N3V = +'1';
+                message = message;
+                W5F(message);
+            } else if (message.substring(0, 3) == "/a ") {
+                N3V = "3" ^ 0;
+                message = message.substring(3, message.length);
+            } else if (message.substring(0, 3) == "/o ") {
+                N3V = '4' | 0;
+                message = message.substring(3, message.length);
+            } else N3V = N3V;
+        } else if (N3V == +"3") {
+             message = document.getElementById(_s(+S4p))
+                .value;
+           } else if (N3V == "4" - 0) {
+             message = document.getElementById("wchatMsg")
+                .value;
+            if (message.substring(+"0", "3" * 1) == "/w ") {
+                N3V = '1' * 1;
+                W5F(message);
+                message = message;
+            } else if (message.substring(+"0", +"3") == _s(+Z1y)) {
+                N3V = "3" >> 73666560;
+                message = message.substring('3' ^ 0, message.length);
+            } else if (message.substring("0" & 2147483647, +'3') == _s(O1k -
+                0)) {
+                N3V = +'4';
+                message = message.substring('3' & 2147483647, message.length);
+            } else N3V = N3V;
+        }
+        document.getElementById(_s(d4p & 2147483647))
+            .value = '';
+        document.getElementById(_s(H2R * 1))
+            .value = "";
+        document.getElementById(_s(+S4p))
+            .value = '';
+        document.getElementById(_s(+J1p))
+            .value = "";
+
+        sendchat(N3V,message);
+    }
+
+    function sendchat(N3V,message) {
       var F3V = ServerDate.getTime();
       var q3V = new Date(F3V);
       var c3V = formatTimehrs(q3V);
       if (
         N3V == ("1" ^ 0)) {
-        var Y3V = document.getElementById("chatMsg") // alliance
-          .value;
-        if (Y3V.substring(+'0', '3' ^ 0) == "/a ") {
+        if (message.substring(+'0', '3' ^ 0) == "/a ") {
           N3V = +"3";
-          Y3V = Y3V.substring("3" ^ 0, Y3V.length);
-        } else if (Y3V.substring(+'0', 3) == "/o ") {
+          message = message.substring("3" ^ 0, message.length);
+        } else if (message.substring(+'0', 3) == "/o ") {
           N3V = "4" ^ 0;
-          Y3V = Y3V.substring(3, Y3V.length);
-        } else if (Y3V.substring(0 , 3) == "/w ") {
+          message = message.substring(3, message.length);
+        } else if (message.substring(0 , 3) == "/w ") {
           N3V = N3V;
-          W5F(Y3V);
+          W5F(message);
         } else N3V = N3V;
-        document.getElementById("chatMsg")
-          .value = "";
-        document.getElementById(_s(H2R & 2147483647))
-          .value = '';
-        document.getElementById(_s(S4p ^ 0))
-          .value = '';
-        document.getElementById(_s(+J1p))
-          .value = "";
       } else if (N3V == '2' << 558686240) {
         N3V = '1' << 952628224;
-        var Y3V =
-          document.getElementById(_s(H2R << 423079072))
-          .value;
-        if (Y3V.substring(0, +'3') == "/w ") {
+        if (message.substring(0, +'3') == "/w ") {
           N3V = +'1';
-          Y3V = Y3V;
-          W5F(Y3V);
-        } else if (Y3V.substring(0, 3) == "/a ") {
+          message = message;
+          W5F(message);
+        } else if (message.substring(0, 3) == "/a ") {
           N3V = "3" ^ 0;
-          Y3V = Y3V.substring(3, Y3V.length);
-        } else if (Y3V.substring(0, 3) == "/o ") {
+          message = message.substring(3, message.length);
+        } else if (message.substring(0, 3) == "/o ") {
           N3V = '4' | 0;
-          Y3V = Y3V.substring(3, Y3V.length);
+          message = message.substring(3, message.length);
         } else N3V = N3V;
-        document.getElementById("chatMsg")
-          .value = "";
-        document.getElementById(_s(H2R | 256))
-          .value = "";
-        document.getElementById(_s(S4p << 1218081184))
-          .value = '';
-        document.getElementById(_s(+J1p))
-          .value = '';
       } else if (N3V == +"3") {
-        var Y3V = document.getElementById(_s(+S4p))
-          .value;
-        if (Y3V.substring(+'0', +'3') == "/w ") {
+        if (message.substring(+'0', +'3') == "/w ") {
           N3V = "1" | 1;
-          Y3V = Y3V;
-          W5F(Y3V);
-        } else if (Y3V.substring('0' << 245378560, "3" | 1) == _s(Z1y | 530)) {
+          message = message;
+          W5F(message);
+        } else if (message.substring('0' << 245378560, "3" | 1) == _s(Z1y | 530)) {
           N3V = +"3";
-          Y3V = Y3V.substring("3" >> 1843133440, Y3V.length);
-        } else if (Y3V.substring(+"0", +"3") == _s(O1k *
+          message = message.substring("3" >> 1843133440, message.length);
+        } else if (message.substring(+"0", +"3") == _s(O1k *
             1)) {
           N3V = +'4';
-          Y3V = Y3V.substring(3, Y3V.length);
+          message = message.substring(3, message.length);
         } else N3V = N3V;
-        document.getElementById("chatMsg")
-          .value = "";
-        document.getElementById(_s(+H2R))
-          .value = "";
-        document.getElementById(_s(+S4p))
-          .value = "";
-        document.getElementById(_s(J1p * 1))
-          .value = '';
       } else if (N3V == "4" - 0) {
-          var Y3V = document.getElementById("wchatMsg")
-          .value;
-        if (Y3V.substring(+"0", "3" * 1) == "/w ") {
+        if (message.substring(+"0", "3" * 1) == "/w ") {
           N3V = '1' * 1;
-          W5F(Y3V);
-          Y3V = Y3V;
-        } else if (Y3V.substring(+"0", +"3") == _s(+Z1y)) {
+          W5F(message);
+          message = message;
+        } else if (message.substring(+"0", +"3") == _s(+Z1y)) {
           N3V = "3" >> 73666560;
-          Y3V = Y3V.substring('3' ^ 0, Y3V.length);
-        } else if (Y3V.substring("0" & 2147483647, +'3') == _s(O1k -
+          message = message.substring('3' ^ 0, message.length);
+        } else if (message.substring("0" & 2147483647, +'3') == _s(O1k -
             0)) {
           N3V = +'4';
-          Y3V = Y3V.substring('3' & 2147483647, Y3V.length);
+          message = message.substring('3' & 2147483647, message.length);
         } else N3V = N3V;
-        document.getElementById(_s(d4p & 2147483647))
-          .value = '';
-        document.getElementById(_s(H2R * 1))
-          .value = "";
-        document.getElementById(_s(+S4p))
-          .value = '';
-        document.getElementById(_s(+J1p))
-          .value = "";
       }
-      Y3V = Y3V.substring('0' | 0, +l6y);
-      if (Y3V != "") {
-        var m3V = { b: Y3V, c: c3V, a: N3V };
+      message = message.substring('0' | 0, +l6y);
+      if (message != "") {
+        var m3V = { b: message, c: c3V, a: N3V };
         websocket.send(JSON.stringify(m3V));
       }
     }
+
+    __c.sendchat = sendchat;
 
     function X5V() {
       $(_s(+"1212"))

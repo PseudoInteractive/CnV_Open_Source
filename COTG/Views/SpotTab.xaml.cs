@@ -45,19 +45,39 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
+        public static int silenceChanges;
 
         private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            foreach (var __item in e.RemovedItems)
+            if (silenceChanges == 0)
             {
-                var item = __item as Spot;
-                Spot.selected.Remove(item.cid);
+                try
+                {
 
-            }
-            foreach (var __item in e.AddedItems)
-            {
-                var item = __item as Spot;
-                Spot.selected.Add(item.cid);
+                    Spot.selected.EnterWriteLock();
+
+                    foreach (var __item in e.RemovedItems)
+                    {
+                        var item = __item as Spot;
+                        Spot.selected.Remove(item.cid);
+                        Log("removed " + item.cid);
+
+                    }
+                    foreach (var __item in e.AddedItems)
+                    {
+                        var item = __item as Spot;
+                        Spot.selected.Add(item.cid);
+                        Log("added " + item.cid);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Log(ex);
+                }
+                finally
+                {
+                    Spot.selected.ExitWriteLock();
+                }
             }
         }
 
@@ -81,35 +101,53 @@ namespace COTG.Views
             return spot;
 
         }
+        public static void SelectSilent(Spot spot, bool selected )
+        {
+            try
+            {
+                ++silenceChanges;
+                if( selected )
+                    instance.selectedGrid.SelectItem(spot);
+                else
+                    instance.selectedGrid.DeselectItem(spot);
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+            finally
+            {
+                --silenceChanges;
+            }
+        }
+
         public static void AddToGrid(Spot spot)
         {
             // Toggle Selected
 
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
                 var cid = spot.cid;
                 var def = SpotMRU;
-                if (!def.Contains(spot))
-                {
-                    def.Add(spot);
-                    instance.selectedGrid.SelectItem(spot);
-                }
-                else
-                {
-                    ToggleSelected(spot);
 
-                }
+                    if (!def.Contains(spot))
+                    {
+                        def.Add(spot);
+                        SelectSilent(spot, true);
+                    }
+                    else
+                    {
+                        ToggleSelected(spot);
+
+                    }
             });
 
         }
         public static void ToggleSelected(Spot rv)
         {
             var isSelected = rv.ToggleSelected();
-            if (isSelected)
-                instance.selectedGrid.SelectItem(rv);
-            else
-                instance.selectedGrid.DeselectItem(rv);
-
+            SelectSilent(rv, isSelected);
         }
 
 

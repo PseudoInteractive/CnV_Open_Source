@@ -249,8 +249,7 @@ namespace COTG.Game
             bool rv = false;
             try
             {
-                selected._lock.EnterWriteLock();
-
+                selected.EnterWriteLock();
                 if (selected._hashSet.Contains(cid))
                 {
                     rv = false;
@@ -262,9 +261,13 @@ namespace COTG.Game
                     selected._hashSet.Add(cid);
                 }
             }
+            catch(Exception e)
+            {
+                Log(e);
+            }
             finally
             {
-                selected._lock.ExitWriteLock();
+                selected.ExitWriteLock();
             }
             return rv;
         }

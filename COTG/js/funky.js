@@ -2022,15 +2022,15 @@ function Contains(a, b) {
 }
 let updateTimeout = null;
 function sendCityData(delayInMs) {
-    console.log("sendCity0");
     clearTimeout(updateTimeout);
-    console.log("sendCity2");
-    setTimeout(() => {
-        console.log("sendCity3");
+    updateTimeout = setTimeout(() => {
         const wrapper = { citydata: __c.D6 };
         window['external']['notify'](JSON.stringify(wrapper));
         clearTimeout(updateTimeout);
     }, delayInMs);
+}
+function sendchat(channel, message) {
+    __c.sendchat(+channel, message);
 }
 function gCPosted() {
     sendCityData(100);

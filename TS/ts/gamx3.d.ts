@@ -7186,5 +7186,6 @@ declare let __c:
             F5F: any;
             D6: jsonT.City;
             j71: any;
+            sendchat: (number, string)=> null;
         
 	}

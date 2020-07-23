@@ -117,24 +117,27 @@
             </tg:RadDataGrid.Columns>
           
         </tg:RadDataGrid>
-        <StackPanel Orientation="Vertical" Grid.Row="2"> 
-        <ComboBox x:Name="raidCarryBox" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
+        <ComboBox x:Name="raidCarryBox" Grid.Row="2" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
                   Width="200" IsEditable="True"
 TextSubmitted="RaidCarrySubmitted"
-                  Margin="8,14,0,0" >
+                  Margin="8,4,0,0" >
             
         </ComboBox>
         <tg:RadDataGrid x:Name="dungeonGrid"
+                        Margin="0,42,0,0"
                         UseSystemFocusVisuals="True"
                         AlternationStep="2"
                         UserGroupMode="Disabled"
                         AutoGenerateColumns="False"
                         SelectionMode="Single"
-                        RowHeight="40"
+                        RowHeight="34"
+                        FontSize="12"
+                        Grid.Row="2"
                         CanUserChooseColumns="True"
                         UserSortMode="Auto"
                         SelectionUnit="Row"
                        >
+            
             <tg:RadDataGrid.Commands>
                 <model:DungeonTapCommand />
             </tg:RadDataGrid.Commands>
@@ -148,7 +151,6 @@ TextSubmitted="RaidCarrySubmitted"
                 <tg:DataGridTextColumn PropertyName="xy" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
-        </StackPanel>
         <tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
                                                  Height="20"

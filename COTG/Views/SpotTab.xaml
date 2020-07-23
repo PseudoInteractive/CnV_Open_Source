@@ -36,7 +36,7 @@
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
-                        SelectionMode="Extended"
+                        SelectionMode="Multiple"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
                         >

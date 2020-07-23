@@ -184,7 +184,7 @@ namespace COTG.Views
             if (instance == null)
                 return;
 
-            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
              //   Note.L("ListChange: ");
 
