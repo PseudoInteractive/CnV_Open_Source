@@ -22,6 +22,11 @@ using Microsoft.Graphics.Canvas.Text;
 
 /*
  * 1001: shrine
+
+
+rmp block codes:
+  24* Math.floor(y / 25) + Math.floor(x / 25);
+
  */
 namespace COTG.Views
 {

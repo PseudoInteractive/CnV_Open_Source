@@ -10565,7 +10565,7 @@ var cotgsubscribe = amplify;
         }
       });
 
-    function j4V() { E6k.y6(); if (k2.getTile(+'234', "284" >> 920211488, s2) == null); }
+    function j4V() { E6k.y6(); if (tileMap.getTile(+'234', "284" >> 920211488, citiesLayer) == null); }
 
     function L0V() {
       $(_s(+'2251'))
@@ -13437,7 +13437,7 @@ var cotgsubscribe = amplify;
 
     function n2F() {
     //  console.log(_s(+'1615'));
-      s2.resetTilesetCache();
+      citiesLayer.resetTilesetCache();
     }
 
     function T0V(R3g) {
@@ -17646,11 +17646,11 @@ var cotgsubscribe = amplify;
     function f2F() {
       E6k.R6();
       if (c6)
-        if (k2)
-          if (G2) {
-            G8 = G2.getTileX(c6.input.activePointer.worldX);
-            l8 = G2.getTileY(c6.input.activePointer.worldY);
-            G1F = k2.getTile(G2.getTileX(l2.x), G2.getTileY(l2.y));
+        if (tileMap)
+          if (landLayer) {
+            G8 = landLayer.getTileX(c6.input.activePointer.worldX);
+            l8 = landLayer.getTileY(c6.input.activePointer.worldY);
+            G1F = tileMap.getTile(landLayer.getTileX(l2.x), landLayer.getTileY(l2.y));
           }
     }
     var a3F;
@@ -19336,7 +19336,7 @@ var cotgsubscribe = amplify;
         Z71 = Number(K71.substring('0' << 1000071200, +'3')) - ("100" & 2147483647);
         U71 = Number(K71.substring('3' >> 783073280, "6" << 1366204416)) - ("100" - 0);
         P71 = Number(K71.substring('6' ^ 0, '9' & 2147483647)) - ("100" - 0) + +'800';
-        k2.putTile(P71, s2.getTileX(Z71 * (64 * 1)), s2.getTileY(U71 * +64), s2);
+        tileMap.putTile(P71, citiesLayer.getTileX(Z71 * (64 * 1)), citiesLayer.getTileY(U71 * +64), citiesLayer);
       }
     }
 
@@ -22303,9 +22303,9 @@ var cotgsubscribe = amplify;
               C96 = M96[j][_s(+G6y)];
             var b96 = X8F(i96);
             var S96 = L8F(d96);
-            k2.removeTile(s2.getTileX(G96 * (64 & 2147483647)), s2.getTileY(C96 * (64 << 2053227168)), s2);
-            k2.putTile(b96, s2.getTileX(G96 * (64 >> 336257856)), s2.getTileY(C96 * +64), s2);
-            k2.putTile(S96, s2.getTileX(G96 * +64), s2.getTileY(C96 * +64), s2);
+            tileMap.removeTile(citiesLayer.getTileX(G96 * (64 & 2147483647)), citiesLayer.getTileY(C96 * (64 << 2053227168)), citiesLayer);
+            tileMap.putTile(b96, citiesLayer.getTileX(G96 * (64 >> 336257856)), citiesLayer.getTileY(C96 * +64), citiesLayer);
+            tileMap.putTile(S96, citiesLayer.getTileX(G96 * +64), citiesLayer.getTileY(C96 * +64), citiesLayer);
           }
         }
       });
@@ -35126,14 +35126,14 @@ var cotgsubscribe = amplify;
           O96 = t96[_s('1742' >> 173731072)][o96];
           x96 = Math.floor(O96 % (R5y | 0));
           L96 = Math.floor((O96 - x96) / +R5y);
-          k2.putTileWorldXY(+o7t, x96 * (64 - 0), L96 * (64 ^ 0), 64 * 1, +64, s2);
+          tileMap.putTileWorldXY(+o7t, x96 * (64 - 0), L96 * (64 ^ 0), 64 * 1, +64, citiesLayer);
         }
         for (var o96 in t96[E6k
             .o55('642' & 2147483647)]) {
           O96 = t96[_s("642" * 1)][o96];
           x96 = Math.floor(O96 % (R5y << 1511938400));
           L96 = Math.floor((O96 - x96) / (R5y ^ 0));
-          k2.putTileWorldXY("321" - 0, x96 * (64 - 0), L96 * (64 | 64), 64 & 2147483647, +64, s2);
+          tileMap.putTileWorldXY("321" - 0, x96 * (64 - 0), L96 * (64 | 64), 64 & 2147483647, +64, citiesLayer);
         }
       });
     }
@@ -38139,7 +38139,7 @@ var cotgsubscribe = amplify;
         .text(p6(J4Z));
       $(_s(+'3987'))
         .text(p6(n4Z));
-      $(_s(+'1001'))
+      $("#goldforCEnlistment")
         .text(p6(h4Z));
       $(_s(+"3727"))
         .text("-"  + p6(f4Z) + _s(+'6777'));
@@ -41587,8 +41587,8 @@ var cotgsubscribe = amplify;
         .css("display") != "none") setTimeout(function() { w0F(); }, +z9p);
     }
     var
-      k2;
-    var G2;
+      tileMap;
+    var landLayer;
 
     function M1F() {
       N6();
@@ -41797,7 +41797,7 @@ var cotgsubscribe = amplify;
       }
       p5F(g9V, U9V);
     }
-    var s2;
+    var citiesLayer;
 
     function d6F(q6n, c6n) {
       setTimeout(function() {
@@ -42016,7 +42016,7 @@ var cotgsubscribe = amplify;
         }
       } else Y6(_s("4568" & 2147483647));
     }
-    var u2;
+    var numbersLayer;
     var l4V;
 
     function J2F(u4U, c7U, m7U, a7U, q7U, k4U, e4U, s4U, E7U) {
@@ -42217,9 +42217,9 @@ var cotgsubscribe = amplify;
               u61 + _s(+K1m) + t61 + _s(u1m >> 1983280192) + w61 + _s(a1m >> 1010272448) + u61 + E6k
               .S55('1960' << 447020448) + T61 + _s(+c64) + H61 + _s(+E1m) + u61 + _s(i1m & E6k
                 .s6s);
-            if (k2) {
-              k2.removeTile(s2.getTileX('4160' ^ 0), s2.getTileY('1664' << 1266434816), s2);
-              k2.putTile(+"311", s2.getTileX(+"4160"), s2.getTileY(+'1664'), s2);
+            if (tileMap) {
+              tileMap.removeTile(citiesLayer.getTileX('4160' ^ 0), citiesLayer.getTileY('1664' << 1266434816), citiesLayer);
+              tileMap.putTile(+"311", citiesLayer.getTileX(+"4160"), citiesLayer.getTileY(+'1664'), citiesLayer);
             }
           }
           if (j61 == +r8y || j61 == +
@@ -43819,7 +43819,7 @@ var cotgsubscribe = amplify;
       J76.done(function(Y76) {
         let r5m = '3023';
         if (Y76)
-          if (k2 && Y76.length > +"1") {
+          if (tileMap && Y76.length > +"1") {
           console.log((new Date()).getTime() +" rMP start");
             let n76;
             let A76;
@@ -43839,33 +43839,30 @@ var cotgsubscribe = amplify;
             _viewMode = viewModeRegion;
             let U76 = JSON.parse(Y76);
             for (let P76 in U76) {
-              b = P76; // 306?
+              b = P76; // "block", regions is broken up into squares 
               if (U76[P76]) {
                 N76 = U76[P76];
                 if (N76 != !!0)
                   for (var m76 in N76) {  // for each tile in array
                     f76 = U76[P76][m76];
                     if (f76 && f76 != "") {
-                      var D76 = f76.indexOf("-" , '0' >> 1927231520); // "1415-560414-XXX-City5",
-                      var
-                        y76 = f76.indexOf("-" , D76 + "1" * 1);
-                      var c76 = f76.indexOf("-" ,
-                        y76 + '1' * 1);
-                      cnum = Number(f76.substring(+"0", D76));
-                      p76 = f76.substring(D76 + +"1", y76);
-                      n76 = Number(p76.substring(+'0', "3" | 3)) - ("100" >> 899709248);
-                      A76 = Number(p76.substring(+'3', +"6")) - ("100" >> 1855932576);
-                      var a76 = k2.getTile(n76,
-                        A76, u2);
+                      var D76 = f76.indexOf("-" , 0); // "1416`-`635422-KittyKat-35 1013",
+                      var  y76 = f76.indexOf("-" , D76 + "1" * 1); // "1416-635422`-`KittyKat-35 1013",
+                      var c76 = f76.indexOf("-" , y76 + '1' * 1); // "1416-635422-KittyKat`-`35 1013",
+                        cnum = Number(f76.substring(+"0", D76)); // 1416
+                      p76 = f76.substring(D76 + +"1", y76); // "635422",
+                      n76 = Number(p76.substring(0, 3)) - ("100" >> 899709248); // 535
+                      A76 = Number(p76.substring(3, 6)) - ("100" >> 1855932576); // 322
+                      var a76 = tileMap.getTile(n76,A76, numbersLayer);
                       if (cnum >= +"1411" && cnum <= +T3p || cnum >= ("1576" & 2147483647) && cnum <= +
                         n44) {
-                        var q76 = k2.getTile(n76, A76, s2);
-                        var F76 = k2.getTile(n76, A76, e8);
+                        var q76 = tileMap.getTile(n76, A76, citiesLayer);
+                        var F76 = tileMap.getTile(n76, A76, e8);
                         K76 = f76.substring(y76 + ("1" << 981944416), c76);
                         g76 = f76.substring(c76 + +"1", f76.length);
                         if (F76 != null && K76 == H2 && ppdt[_s(
                             +i2p)][_s('805' ^ 0)] == '2' - 0) {
-                          k2.removeTile(e8.getTileX(n76 * (64 * 1)),
+                          tileMap.removeTile(e8.getTileX(n76 * (64 * 1)),
                             e8.getTileY(A76 * +64), e8);
                           if (g76.length >= '12' >> 1312093792) {
                             var V76 = E6k
@@ -43901,8 +43898,8 @@ var cotgsubscribe = amplify;
                         } else if (q76 != null) {
                           var E76 = q76[
                             _s(X5m | 2048)];
-                          if (cnum != E76) k2.putTile(cnum, s2.getTileX(n76 * (64 - 0)),
-                            s2.getTileY(A76 * (64 * 1)), s2);
+                          if (cnum != E76) tileMap.putTile(cnum, citiesLayer.getTileX(n76 * (64 - 0)),
+                            citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
                           if (F76 == null && K76 != H2) {
                             if (K76.length >=
                               '12' << 585115104) {
@@ -43931,32 +43928,32 @@ var cotgsubscribe = amplify;
                             });
                             Z76.x = Math.floor(n76 * +64 + +h8y - Z76.width / +'2');
                             Z76.y = Math.floor(A76 * (64 | 64) + (s0R | 19));
-                            k2.putTile(+B6R, e8.getTileX(n76 * +64), e8.getTileY(A76 * +64), e8);
+                            tileMap.putTile(+B6R, e8.getTileX(n76 * +64), e8.getTileY(A76 * +64), e8);
                           }
-                        } else k2
-                          .putTile(cnum, s2.getTileX(n76 * +64), s2.getTileY(A76 * (64 * 1)), s2);
+                        } else tileMap
+                          .putTile(cnum, citiesLayer.getTileX(n76 * +64), citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
                       } else if (
-                        cnum >= P5m * 1 && cnum <= ('1576' | 552)) k2.putTile(cnum, u2.getTileX(n76 * (64 <<
-                        401965216)), u2.getTileY(A76 * +64), u2);
+                        cnum >= P5m * 1 && cnum <= ('1576' | 552)) tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64 <<
+                        401965216)), numbersLayer.getTileY(A76 * +64), numbersLayer);
                       else if (!(cnum >= +'1678' && cnum <= '1683' << 1673942848 && a76 != null)) {
-                        var R76 = k2
-                          .getTile(n76, A76, u2);
+                        var R76 = tileMap
+                          .getTile(n76, A76, numbersLayer);
                         if (R76 != null) {
                           var B76 = R76[_s(X5m | 2210)];
                           if (
-                            cnum == (p5m & 2147483647)) k2.removeTile(u2.getTileX(n76 * (64 * 1)), u2.getTileY(A76 *
-                            (64 * 1)), u2);
+                            cnum == (p5m & 2147483647)) tileMap.removeTile(numbersLayer.getTileX(n76 * (64 * 1)), numbersLayer.getTileY(A76 *
+                            (64 * 1)), numbersLayer);
                           else if (cnum != B76)
                             if (!(B76 >= +"1566" && B76 <= +'1574' && cnum >= ('1678' & 2147483647) && cnum >= +
                                 "1683")) {
-                              k2.removeTile(u2.getTileX(n76 * +64), u2.getTileY(A76 * (64 - 0)),
-                                u2);
-                              k2.putTile(cnum, u2.getTileX(n76 * (64 ^ 0)), u2.getTileY(A76 * +64),
-                                u2);
+                              tileMap.removeTile(numbersLayer.getTileX(n76 * +64), numbersLayer.getTileY(A76 * (64 - 0)),
+                                numbersLayer);
+                              tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64 ^ 0)), numbersLayer.getTileY(A76 * +64),
+                                numbersLayer);
                             }
-                        } else if (R76 == null && cnum != "0" - 0 && cnum != p5m - 0) k2.putTile(
-                          cnum, u2.getTileX(n76 * (64 >> 1820808576)), u2.getTileY(A76 * (64 << 1978962048)),
-                          u2);
+                        } else if (R76 == null && cnum != "0" - 0 && cnum != p5m - 0) tileMap.putTile(
+                          cnum, numbersLayer.getTileX(n76 * (64 >> 1820808576)), numbersLayer.getTileY(A76 * (64 << 1978962048)),
+                          numbersLayer);
                       }
                     }
                   }
@@ -44542,13 +44539,13 @@ var cotgsubscribe = amplify;
       else if (I2B == +"3") w2B = +"1682";
       else if (I2B == ('4' & 2147483647)) w2B = '1677' - 0;
       else w2B = "0" ^ 0;
-      var T2B = k2.getTile(l2B, Q2B, u2);
+      var T2B = tileMap.getTile(l2B, Q2B, numbersLayer);
       var v2B = '0' << 1245813312;
       if (T2B != null) v2B = T2B[
         _s(+X5m)];
       if (w2B != +"0" && l2B != +"0" && Q2B != +'0')
-        if (!(v2B >= +'1566' && v2B <= "1574" >> 1391376256)) k2.putTile(w2B, u2.getTileX(l2B * (64 | 0)), u2
-          .getTileY(Q2B * +64), u2);
+        if (!(v2B >= +'1566' && v2B <= "1574" >> 1391376256)) tileMap.putTile(w2B, numbersLayer.getTileX(l2B * (64 | 0)), numbersLayer
+          .getTileY(Q2B * +64), numbersLayer);
     }
  //   var K9 = M8.clientHeight;
     var h2F = "0" ^ 0;
@@ -44844,8 +44841,8 @@ var cotgsubscribe = amplify;
           .mousedown(function(n56) {
             E6k.y6();
             H7F();
-            G8 = G2.getTileX(c6.input.activePointer.worldX);
-            l8 = G2.getTileY(c6.input.activePointer.worldY);
+            G8 = landLayer.getTileX(c6.input.activePointer.worldX);
+            l8 = landLayer.getTileY(c6.input.activePointer.worldY);
             a9 = !!"1";
             prevX = n56.screenX;
             prevY = n56.screenY;
@@ -44855,8 +44852,8 @@ var cotgsubscribe = amplify;
         $("#cvs")
           .on(_s(+'4492'), function(f56) {
             H7F();
-            G8 = G2.getTileX(c6.input.activePointer.worldX);
-            l8 = G2.getTileY(c6.input.activePointer.worldY);
+            G8 = landLayer.getTileX(c6.input.activePointer.worldX);
+            l8 = landLayer.getTileY(c6.input.activePointer.worldY);
             prevX = f56.changedTouches[+"0"].screenX;
             E6k.y6();
             prevY = f56.changedTouches["0" & 2147483647].screenY;
@@ -45357,7 +45354,7 @@ var cotgsubscribe = amplify;
               }
             }
           } else x76 = "0" >> 1098339680;
-        if (x76 == '0' - 0) {
+        if (x76 == '0' - 0) { // prefetch right if appropriate
           C2.push({
             c: O76,
             t: currentTime()
@@ -45381,8 +45378,8 @@ var cotgsubscribe = amplify;
               }
             }
           } else x76 = '0' >> 174086240;
-        if (x76 == ("0" | 0)) {
-          C2.push({
+        if (x76 == ("0" | 0)) { // prefetch left if appropriate
+          C2.push({ 
             c: O76,
             t: currentTime()
           });
@@ -45411,7 +45408,7 @@ var cotgsubscribe = amplify;
               c: O76,
               t: currentTime()
             });
-            X76.push(Number(t76) + '24' * 1);
+            X76.push(Number(t76) + '24' * 1); // prefetch down
           }
         } if (G76 <= '5' >> 1204151808)
         if (t76 - ('24' >> 757973376) >= ('0' & 2147483647)) {
@@ -47051,19 +47048,19 @@ var cotgsubscribe = amplify;
         E6k.R6();
         setTimeout(function() {
           c6.stage.backgroundColor = _s(+"4421");
-          k2 = c6.add.tilemap("regional");
-          k2.addTilesetImage("water", "wter");
-            k2.addTilesetImage("terrainfeatures", "terrain");
-            k2.addTilesetImage("land", "lnd");
-            k2.addTilesetImage("city", "cties");
-            k2.addTilesetImage("toplevel", "nmbers");
-            k2.addTilesetImage("names2", "names");
-          G2 = k2.createLayer("land");
-          j7F = k2.createLayer("water");
-          s2 = k2.createLayer("cities");
-          u2 = k2.createLayer("numbers");
-          e8 = k2.createLayer("labels");
-          G2.resizeWorld();
+          tileMap = c6.add.tilemap("regional");
+          tileMap.addTilesetImage("water", "wter");
+            tileMap.addTilesetImage("terrainfeatures", "terrain");
+            tileMap.addTilesetImage("land", "lnd");
+            tileMap.addTilesetImage("city", "cties");
+            tileMap.addTilesetImage("toplevel", "nmbers");
+            tileMap.addTilesetImage("names2", "names");
+          landLayer = tileMap.createLayer("land");
+          j7F = tileMap.createLayer("water");
+          citiesLayer = tileMap.createLayer("cities");
+          numbersLayer = tileMap.createLayer("numbers");
+          e8 = tileMap.createLayer("labels");
+          landLayer.resizeWorld();
           l2 = c6.add.graphics();
           l2.lineStyle("2" << 951749504, +'0xDAA520', '1' | 0);
           l2.drawRect(+'0', '0' >> 931293760, 64 * 1, +64);
@@ -47096,8 +47093,8 @@ var cotgsubscribe = amplify;
               });
             r56.x = Math.floor(D6.x * +64 + (h8y | 0) - r56.width / +'2');
             r56.y = Math.floor(D6.y * +64 + s0R * 1);
-            k2.putTile('1417' ^ 0, s2.getTileX(D6.x * +64), s2.getTileY(D6.y * (64 - 0)), s2);
-            k2.putTile(+B6R, e8.getTileX(D6.x * +64), e8.getTileY(D6.y * (64 - 0)), e8);
+            tileMap.putTile('1417' ^ 0, citiesLayer.getTileX(D6.x * +64), citiesLayer.getTileY(D6.y * (64 - 0)), citiesLayer);
+            tileMap.putTile(+B6R, e8.getTileX(D6.x * +64), e8.getTileY(D6.y * (64 - 0)), e8);
             y4F(+v9y);
             var A56 = ppdt["rw"]['78' | 66][_s(+L9y)];
             if (A56 == +"0")
@@ -47956,12 +47953,12 @@ var cotgsubscribe = amplify;
       f46 = Number(f46);
       wtile = +'0';
       ttile = +"0";
-      if (k2.getTile(r46, A46, j7F)) {
-        wtile = k2.getTile(r46, A46, j7F);
+      if (tileMap.getTile(r46, A46, j7F)) {
+        wtile = tileMap.getTile(r46, A46, j7F);
         wtile = wtile[_s(+X5m)];
       }
-      if (k2.getTile(r46, A46, s2)) {
-        ttile = k2.getTile(r46, A46, s2);
+      if (tileMap.getTile(r46, A46, citiesLayer)) {
+        ttile = tileMap.getTile(r46, A46, citiesLayer);
         ttile = ttile[_s(X5m * 1)];
       }
       if (P0F == +"0") {
@@ -48136,8 +48133,8 @@ var cotgsubscribe = amplify;
               if ($(_s(+t3m))
                 .is(_s(+x5t))) $(_s(+J3m))
                 .text(_s(+T3m));
-              l2.x = G2.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
-              l2.y = G2.getTileY(c6.input.activePointer.worldY) * (64 >> 638966080);
+              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
+              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 >> 638966080);
             } else if (N46 == +"8") {
               w2
                 ();
@@ -48197,8 +48194,8 @@ var cotgsubscribe = amplify;
               if ($(_s(t3m ^ 0))
                 .is(_s(x5t - 0))) $(_s(J3m ^ 0))
                 .text(_s(T3m << 1755667424));
-              l2.x = G2.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
-              l2.y = G2.getTileY(c6.input.activePointer.worldY) * (64 - 0);
+              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
+              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 - 0);
             } else if (N46 == "3" >>
               1194476480) {
               n46 = Number(A46) * +R5y + Number(r46);
@@ -49051,8 +49048,8 @@ var cotgsubscribe = amplify;
               $(_s(c1m | 4))
                 .css("display", "none");
               if (B36 == _s(+e2y)) {
-                var o36 = k2
-                  .getTile(r46, A46, u2);
+                var o36 = tileMap
+                  .getTile(r46, A46, numbersLayer);
                 if (o36 != null) {
                   var H36 = o36[_s(X5m & 2147483647)];
                   if (+'1548' !=
@@ -49065,8 +49062,8 @@ var cotgsubscribe = amplify;
                     else if (c46 == '5' * 1) m46 = e1p * 1;
                     else if (c46 == ('6' & 2147483647)) m46 = "1554" >> 2085221760;
                     else if (c46 == "7" * 1) m46 = +W6m;
-                    k2.removeTile(u2.getTileX(r46 * +64), u2.getTileY(A46 * (64 ^ 0)), u2);
-                    k2.putTile(m46, u2.getTileX(r46 * (64 | 0)), u2.getTileY(A46 * +64), u2);
+                    tileMap.removeTile(numbersLayer.getTileX(r46 * +64), numbersLayer.getTileY(A46 * (64 ^ 0)), numbersLayer);
+                    tileMap.putTile(m46, numbersLayer.getTileX(r46 * (64 | 0)), numbersLayer.getTileY(A46 * +64), numbersLayer);
                   }
                 }
               }
@@ -49074,8 +49071,8 @@ var cotgsubscribe = amplify;
                   .S55(+t3m))
                 .is(_s(x5t - 0))) $(_s(J3m - 0))
                 .text(_s(T3m * 1));
-              l2.x = G2.getTileX(c6.input.activePointer.worldX) * +64;
-              l2.y = G2.getTileY(c6.input.activePointer.worldY) * +64;
+              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
+              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * +64;
             } else if (N46 == ("7" | 6)) {
               w2();
               $(_s(g5t ^ 0))
@@ -49278,7 +49275,7 @@ var cotgsubscribe = amplify;
                 $(_s('1026' - 0))
                   .css(_s(b9R | 116), _s(+"2511"));
               }
-              var o36 = k2.getTile(r46, A46, G2);
+              var o36 = tileMap.getTile(r46, A46, landLayer);
               if (o36 !=
                 null) {
                 var H36 = o36[_s(X5m - 0)];
@@ -49292,8 +49289,8 @@ var cotgsubscribe = amplify;
                   .is(_s(+x5t))) $(_s(+J3m))
                   .text(_s(+T3m));
               }
-              l2.x = G2.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
-              l2.y = G2.getTileY(c6.input.activePointer.worldY) * (64 | 64);
+              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
+              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 | 64);
               c6.step();
             }
           }
@@ -50010,7 +50007,7 @@ var cotgsubscribe = amplify;
     }
 
     function W0V(B41) {
-      if (k2) {
+      if (tileMap) {
         var t31;
         var v31;
         var U41;
@@ -50082,12 +50079,12 @@ var cotgsubscribe = amplify;
                     Number(U41.substring("11" * 1, '12' - 0));
                   var l31 = Number(U41.substring(+"7", +'8'));
                   if (
-                    k2) {
-                    var c41 = k2.getTile(Y41, N41, u2);
+                    tileMap) {
+                    var c41 = tileMap.getTile(Y41, N41, numbersLayer);
                     if (c41 != null) var E41 = c41[_s(+X5m)];
                     else var E41 = +"0";
-                    if (m41 == +"1" && c41 != null) k2.removeTile(u2.getTileX(Y41 * +64), u2
-                      .getTileY(N41 * (64 ^ 0)), u2);
+                    if (m41 == +"1" && c41 != null) tileMap.removeTile(numbersLayer.getTileX(Y41 * +64), numbersLayer
+                      .getTileY(N41 * (64 ^ 0)), numbersLayer);
                     else if (l31 == ("1" ^ 0) && m41 == "0" - 0) {
                       if (p41 == '1' >> 1614204224) R41 = '1548' ^ 0;
                       else if (p41 == +'2') R41 = '1553' >> 645691936;
@@ -50096,13 +50093,13 @@ var cotgsubscribe = amplify;
                       else if (p41 == ('5' ^ 0)) R41 = +e1p;
                       else if (p41 == ('6' & 2147483647)) R41 = '1554' - 0;
                       if (R41 != E41) {
-                        k2.removeTile(u2.getTileX(
-                          Y41 * +64), u2.getTileY(N41 * (64 * 1)), u2);
-                        k2.putTile(R41, u2.getTileX(Y41 * +64), u2.getTileY(N41 * +64), u2);
+                        tileMap.removeTile(numbersLayer.getTileX(
+                          Y41 * +64), numbersLayer.getTileY(N41 * (64 * 1)), numbersLayer);
+                        tileMap.putTile(R41, numbersLayer.getTileX(Y41 * +64), numbersLayer.getTileY(N41 * +64), numbersLayer);
                       }
                     } else if (c41 ==
-                      null && m41 == +'0') k2.putTile(R41, u2.getTileX(Y41 * +64), u2.getTileY(N41 * (64 - 0)),
-                      u2);
+                      null && m41 == +'0') tileMap.putTile(R41, numbersLayer.getTileX(Y41 * +64), numbersLayer.getTileY(N41 * (64 - 0)),
+                      numbersLayer);
                   }
                 }
                 if (y41 == +'2') H31 = Number(U41.substring(+"7", +'8'));
@@ -51754,8 +51751,8 @@ var cotgsubscribe = amplify;
         {
         if ($(_s(+o5y))
           .attr("display") != "none");
-        l2.x = G2.getTileX(P4B * +64);
-        l2.y = G2.getTileY(B4B * (64 ^ 0));
+        l2.x = landLayer.getTileX(P4B * +64);
+        l2.y = landLayer.getTileY(B4B * (64 ^ 0));
         }
       }
     }
@@ -52386,8 +52383,8 @@ var cotgsubscribe = amplify;
         e41 = E71[a71][_s(+w6y)];
         s41 = E71[a71][_s(H6y ^ 0)];
         u41 = E71[a71][_s(+G6y)];
-        if (k2) k2.putTile(e41, s2.getTileX(s41 * +64), s2.getTileY(u41 * (64 ^ 0)),
-          s2);
+        if (tileMap) tileMap.putTile(e41, citiesLayer.getTileX(s41 * +64), citiesLayer.getTileY(u41 * (64 ^ 0)),
+          citiesLayer);
       }
       if (k41 >= "1" << 611428832) o3F();
     }
@@ -60528,8 +60525,8 @@ var cotgsubscribe = amplify;
             var B96 = P96[j][_s(H6y << 1803495424)];
             var R96 = P96[j][_s(+
               G6y)];
-            k2.removeTile(s2.getTileX(B96 * (64 * 1)), s2.getTileY(R96 * (64 * 1)), s2);
-            k2.putTile(+"311", s2.getTileX(B96 * +64), s2.getTileY(R96 * +64), s2);
+            tileMap.removeTile(citiesLayer.getTileX(B96 * (64 * 1)), citiesLayer.getTileY(R96 * (64 * 1)), citiesLayer);
+            tileMap.putTile(+"311", citiesLayer.getTileX(B96 * +64), citiesLayer.getTileY(R96 * +64), citiesLayer);
           }
         }
       });
@@ -60780,9 +60777,9 @@ var cotgsubscribe = amplify;
             var
               D1l = bam[_s(m9y >> 2020927200)][p1l][_s(B9y * 1)][+'2'];
           } else {
-            var U1l = '79' * 1;
+            var U1l = 79;
             var
-              D1l = '1001' | 993;
+              D1l = 1001 | 993;
           }
           if (Z1l >= U1l && Z1l < D1l) {
             var K1l = new Object();
