@@ -186,12 +186,53 @@ namespace COTG.Models
             {
                 switch (context.Column.Header?.ToString() )
                 {
-                    case "raidReturn":
-                    case "raidCarry": RaidOverview.Send();break;
+                    case nameof(City.raidReturn):
+                    case nameof(City.raidCarry): RaidOverview.Send();break;
                     case "senny": City.UpdateSenatorInfo(); break;
                 }
             }
             context.Column.IsVisible = context.IsColumnVisible;
+        }
+    }
+    public class CityHeaderTapCommand : DataGridCommand
+    {
+        public CityHeaderTapCommand()
+        {
+            this.Id = CommandId.ColumnHeaderTap;
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            var context = parameter as ColumnHeaderTapContext;
+            // put your custom logic here
+            return true;
+        }
+
+        public override void Execute(object parameter)
+        {
+            base.Execute(parameter);
+            var context = parameter as ColumnHeaderTapContext;
+            // put your custom logic here
+            switch (context.Column.Header?.ToString())
+            {
+                case nameof(City.raidReturn):
+                case nameof(City.raidCarry): RaidOverview.Send(); break;
+                case "senny": City.UpdateSenatorInfo(); break;
+                case nameof(City.tsTotal):
+                    if ( MainPage.IsVisible())
+                    {
+                        Raiding.UpdateTS(true);
+                    }
+                    break;
+                case nameof(City.tsHome):
+                    if (  MainPage.IsVisible())
+                    {
+                        Raiding.UpdateTSHome(true);
+                    }
+                    break;
+
+            }
+
         }
     }
     public class CityKeyCommand : DataGridCommand

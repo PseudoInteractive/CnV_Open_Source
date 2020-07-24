@@ -5,6 +5,9 @@ declare var plDa : {
 	citstr: string;
 	currcit: string;
 }
+declare var ppdt: { any };
+declare var qam: { any };
+declare var bam: { any };
 declare var ppss;   
 declare var s;
 declare var cid: number;

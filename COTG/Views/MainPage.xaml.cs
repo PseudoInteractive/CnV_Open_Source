@@ -98,7 +98,12 @@ namespace COTG.Views
             }
 		}
 
-		private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        private void ColumnHeaderTap()
+        {
+
+        }
+
+        private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
             var it = e.AddedItems.GetEnumerator();
             if(!it.MoveNext())

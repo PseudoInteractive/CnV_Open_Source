@@ -30,6 +30,7 @@ using System.Web;
 using COTG.Views;
 using System.Numerics;
 using Windows.UI.Xaml.Media;
+using COTG.JSON;
 
 namespace COTG
 {
@@ -961,6 +962,7 @@ namespace COTG
                     await GetCitylistOverview();
                     City.UpdateSenatorInfo();  // no async
                     Raiding.UpdateTS(true);
+                    TileData.Ctor();
 
                     // await RaidOverview.Send();
                 }

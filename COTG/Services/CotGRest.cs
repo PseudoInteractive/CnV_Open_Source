@@ -15,6 +15,7 @@ using COTG.Helpers;
 using static COTG.Game.Enum;
 using COTG.Views;
 using System.Globalization;
+using COTG.JSON;
 
 namespace COTG.Services
 {
@@ -621,6 +622,59 @@ namespace COTG.Services
         }
     }
 
+    public static class TileMapFetch
+    {
+        async static public Task<TileData> Get()
+        {
+            HttpClient client = null;
+            try
+            {
+
+
+                //var req = new HttpRequestMessage(HttpMethod.Get, new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json"));
+                //req.Content = new HttpStringContent("a=0",
+                //            Windows.Storage.Streams.UnicodeEncoding.Utf8,
+                //            "application/x-www-form-urlencoded");
+                ////req.TransportInformation.
+
+                //req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
+
+
+                //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
+                //    req.Headers.Append("Sec-Fetch-Mode", "cors");
+                //    req.Headers.Append("Sec-Fetch-Dest", "empty");
+
+                client = JSClient.clientPool.Take();
+                var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json?a=0"));
+                JSClient.clientPool.Add(client);
+                client = null;
+                if (buff != null)
+                {
+                    var temp = new byte[buff.Length];
+
+                    using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+                    {
+                        dataReader.ReadBytes(temp);
+                    }
+                    return JsonSerializer.Deserialize<TileData>(temp);
+                }
+                else
+                {
+                    Log("Error!");
+                };
+            }
+            catch (Exception e)
+            {
+                if (client != null)
+                    JSClient.clientPool.Add(client);
+                client = null;
+                Log(e);
+            }
+            return null;
+
+
+        }
+    }
 }
 
 

@@ -156,11 +156,16 @@ namespace COTG.Game
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid,false);
                         break;
-                    case "tsTotal":
-                    case "tsHome":
+                    case nameof(City.tsTotal):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
                             Raiding.UpdateTS(true);
+                        }
+                        break;
+                    case nameof(tsHome):
+                        if (City.IsMine(cid) && MainPage.IsVisible())
+                        {
+                            Raiding.UpdateTSHome(true);
                         }
                         break;
                 }

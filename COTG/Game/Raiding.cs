@@ -139,6 +139,7 @@ namespace COTG.Game
                         changed.Add(v);
                     }
                 }
+                changed.NotifyChange();
                 
             }
         }

@@ -10661,18 +10661,17 @@ var cotgsubscribe = amplify;
       var W26 = '0' & 2147483647;
       var i26 = "0" >> 1692591328;
       var X26 = +"0";
-      var b26 = bam[_s(L2y >>
-        191111744)][_s(y2y * 1)];
-      var S26 = bam[_s(L2y & 2147483647)][_s(+Y2y)];
+      var b26 = bam["speeds"]["inf"];
+      var S26 = bam["speeds"]["cav"];
       var J26 = bam[_s(
         L2y << 119763968)][_s(O2y * 1)];
-      var h26 = bam[_s(L2y * 1)][_s('3682' * 1)];
+      var h26 = bam["speeds"][_s('3682' * 1)];
       var V26 = bam[E6k
         .o55(+L2y)][_s(+w2y)];
-      var r26 = bam[_s(L2y - 0)][_s(+"244")];
-      var A26 = bam[_s(+L2y)][E6k
+      var r26 = bam["speeds"][_s(+"244")];
+      var A26 = bam["speeds"][E6k
         .o55(H2y >> 514449792)];
-      var n26 = bam[_s(+L2y)][_s('6661' | 1)];
+      var n26 = bam["speeds"][_s('6661' | 1)];
       if (Z26 != "0" >> 124207648) d26 =
         qam[_s(+G2y)][Number(Z26)][_s(+r2y)]["0" - 0][_s(b2y >> 1654901120)];
       if (d26 + ppdt[_s(
@@ -17649,7 +17648,7 @@ var cotgsubscribe = amplify;
           if (landLayer) {
             G8 = landLayer.getTileX(c6.input.activePointer.worldX);
             l8 = landLayer.getTileY(c6.input.activePointer.worldY);
-            G1F = tileMap.getTile(landLayer.getTileX(l2.x), landLayer.getTileY(l2.y));
+            G1F = tileMap.getTile(landLayer.getTileX(phaserGraphics.x), landLayer.getTileY(phaserGraphics.y));
           }
     }
     var a3F;
@@ -33816,40 +33815,37 @@ var cotgsubscribe = amplify;
       var V86 = Math.floor((I86 - b86) / +R5y);
       var a26 = Math.sqrt(
         Math.pow(b86 - S86, +'2') + Math.pow(V86 - f86, +"2"));
-      var X86 = ppdt["rs"][+"8"][_s(
+      var X86 = ppdt["rs"][8][_s(
         "3315" | 2080)];
-      var z86 = ppdt["rs"]['9' * 1]["n"];
+      var z86 = ppdt["rs"][9]["n"];
       var M86 = ppdt[_s(
-        i2y & 2147483647)][+"11"]["n"];
-      var G86 = ppdt["rs"][+'12'][_s(+
+        i2y & 2147483647)][11]["n"];
+      var G86 = ppdt["rs"][12][_s(+
         "3315")];
-      var C86 = ppdt["rs"][+m2y]["n"];
-      var W86 = ppdt["rs"][B2y | 4]
-        ["n"];
-      var i86 = ppdt["rs"][+R2y]["n"];
-      var d86 = ppdt["rs"][+e2y]
-        ["n"];
-      var u86 = +'0';
-      var H86 = "0" ^ 0;
-      var j86 = +'0';
-      var w86 = '0' & 2147483647;
-      var s86 = +
-        "0";
-      var v86 = "0" ^ 0;
-      var l86 = '0' & 2147483647;
-      var Q86 = +'0';
-      var T86 = bam[_s(+L2y)][_s(+
+      var C86 = ppdt["rs"][13]["n"];
+      var W86 = ppdt["rs"][14]["n"];
+      var i86 = ppdt["rs"][28]["n"];
+      var d86 = ppdt["rs"][27]["n"];
+      var u86 = 0;
+      var H86 = 0;
+      var j86 = 0;
+      var w86 = 0;
+      var s86 = 0;
+      var v86 = 0;
+      var l86 = 0;
+      var Q86 = 0;
+      var T86 = bam["speeds"][_s(+
         y2y)];
-      var x86 = bam[_s(+L2y)][_s(+Y2y)];
-      var O86 = bam[_s(L2y | 4308)][_s(O2y | 1610)];
+      var x86 = bam["speeds"]["cav"];
+      var O86 = bam["speeds"][_s(O2y | 1610)];
       var
-        t86 = bam[_s(L2y * 1)][_s("3682" & 2147483647)];
-      var o86 = bam[_s(+L2y)][_s(w2y <<
+        t86 = bam["speeds"][_s("3682" & 2147483647)];
+      var o86 = bam["speeds"][_s(w2y <<
         619405696)];
-      var L86 = bam[_s(L2y >> 22387616)][_s("244" * 1)];
-      var e86 = bam[_s(+L2y)][E6k
+      var L86 = bam["speeds"][_s("244" * 1)];
+      var e86 = bam["speeds"][E6k
         .S55(+H2y)];
-      var k86 = bam[_s(+L2y)][_s('6661' - 0)];
+      var k86 = bam["speeds"][_s('6661' - 0)];
       if (X86 != +'0') u86 = qam[_s(+G2y)][
         Number(X86)][_s(r2y << 626298368)][+'0'][_s(+b2y)];
       if (u86 + ppdt[_s(+h2y)][+'7'] / ('2' & E6k
@@ -41738,7 +41734,7 @@ var cotgsubscribe = amplify;
         }
       });
     }
-    var j7F : Phaser.TilemapLayer;
+    var waterLayer : Phaser.TilemapLayer;
 
     function O8(Z9V) {
         Z9V = Number(Z9V);
@@ -41789,8 +41785,8 @@ var cotgsubscribe = amplify;
    //   console.log("Set camera O8");
       c6.camera.x = D9V;
       c6.camera.y = p9V;
-      l2.x = P9V * +64;
-      l2.y = R9V * (64 ^ 0);
+      phaserGraphics.x = P9V * +64;
+      phaserGraphics.y = R9V * (64 ^ 0);
       c6.step();
       }
       p5F(g9V, U9V);
@@ -42033,7 +42029,7 @@ var cotgsubscribe = amplify;
       F6();
       F7U.done(function(H4U) {});
     }
-    var l2;
+    var phaserGraphics : Phaser.Graphics;
     var v4V;
 
     function z6F(j7B) {
@@ -42071,8 +42067,8 @@ var cotgsubscribe = amplify;
       else if (l6T == '') Y6(_s(+F4R));
       else {
         if ($(_s(i1p - 0))
-          .css("display") != "none") var Q6T = Number(l2.y) / (64 ^ 0) * (R5y * 1) +
-          Number(l2.x) / (64 >> 498255392);
+          .css("display") != "none") var Q6T = Number(phaserGraphics.y) / (64 ^ 0) * (R5y * 1) +
+          Number(phaserGraphics.x) / (64 >> 498255392);
         else var Q6T = '0' & 2147483647;
         var O6T = { a: Number(l6T), b: Number(X6T), d: Q6T, c: cid };
         var x6T = _s(
@@ -42850,17 +42846,17 @@ var cotgsubscribe = amplify;
       var x8B = '0' - 0;
       var
         M8B = "0" * 1;
-      var G8B = bam[_s(+L2y)][_s(+y2y)];
-      var C8B = bam[_s(+L2y)][_s(+Y2y)];
+      var G8B = bam["speeds"]["inf"];
+      var C8B = bam["speeds"]["cav"];
       var
-        W8B = bam[_s(L2y ^ 0)][_s(O2y - 0)];
-      var i8B = bam[_s(L2y ^ 0)][_s("3682" ^ 0)];
+        W8B = bam["speeds"][_s(O2y - 0)];
+      var i8B = bam["speeds"][_s("3682" ^ 0)];
       var d8B =
-        bam[_s(+L2y)][_s(w2y & 2147483647)];
-      var b8B = bam[_s(+L2y)][_s(+"244")];
+        bam["speeds"][_s(w2y & 2147483647)];
+      var b8B = bam["speeds"][_s(+"244")];
       var g8B = bam[E6k
         .S55(L2y ^ 0)][_s(H2y ^ 0)];
-      var r8B = bam[_s(L2y & 2147483647)][_s(+"6661")];
+      var r8B = bam["speeds"][_s(+"6661")];
       if (A8B != "0" * 1)
         z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][+'0'][_s(b2y & 2147483647)];
       E6k.R6();
@@ -43798,172 +43794,166 @@ var cotgsubscribe = amplify;
     let isInUpdateMP=0;
 
 
-    function B1F(h76) {
-        if (isInUpdateMP >0)
-        {
-            --isInUpdateMP;
-            return;
-        }
-        isInUpdateMP =4;
-      let d76 = JSON.stringify(h76);
-        console.log((new Date()).getTime() +" rMP 0 " + d76);
-      E6k.y6();
-      let b76 = _s('1734' >> 1502077568);
-     
-      let S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
-      N6();
-        let J76 = $.post(q6 + "rMp.php", { a: S76 }); // "rMp.php"
-      F6();
-      J76.done(function(Y76) {
-        let r5m = '3023';
-        if (Y76)
-          if (tileMap && Y76.length > +"1") {
-          console.log((new Date()).getTime() +" rMP start");
-            let n76;
-            let A76;
-            let j46;
-            let K76;
-            let g76;
-            let p76;
-            let Z76;
-            let e46 =
-              new Object();
-            let H46;
-            let u46;
-            let s46;
-            let k46 = new Object();
-            let f76;
-            let N76;
-            _viewMode = viewModeRegion;
-            let U76 = JSON.parse(Y76);
-            for (let P76 in U76) {
-              b = P76; // "block", regions is broken up into squares 
-              if (U76[P76]) {
-                N76 = U76[P76];
-                if (N76 != !!0)
-                  for (var m76 in N76) {  // for each tile in array
-                    f76 = U76[P76][m76];
-                    if (f76 && f76 != "") {
-                      var D76 = f76.indexOf("-" , 0); // "1416`-`635422-KittyKat-35 1013",
-                      var  y76 = f76.indexOf("-" , D76 + "1" * 1); // "1416-635422`-`KittyKat-35 1013",
-                      var c76 = f76.indexOf("-" , y76 + '1' * 1); // "1416-635422-KittyKat`-`35 1013",
-                     let   cnum = Number(f76.substring(+"0", D76)); // 1416
-                      p76 = f76.substring(D76 + +"1", y76); // "635422",
-                      n76 = Number(p76.substring(0, 3)) - 100; // 535
-                      A76 = Number(p76.substring(3, 6)) - 100; // 322
-                      var a76 = tileMap.getTile(n76,A76, numbersLayer);
-                      if (cnum >= +"1411" && cnum <= +T3p || cnum >= ("1576" & 2147483647) && cnum <= +
-                        n44) {
-                        var q76 = tileMap.getTile(n76, A76, citiesLayer);
-                        var F76 = tileMap.getTile(n76, A76, labelsLayer);
-                        K76 = f76.substring(y76 + ("1" << 981944416), c76);
-                        g76 = f76.substring(c76 + +"1", f76.length);
-                        if (F76 != null && K76 == H2 && ppdt[_s(
-                            +i2p)][_s('805' ^ 0)] == '2' - 0) {
-                          tileMap.removeTile(labelsLayer.getTileX(n76 * (64 * 1)),
-                            labelsLayer.getTileY(A76 * +64), labelsLayer);
-                          if (g76.length >= '12' >> 1312093792) {
-                            var V76 = E6k
-                              .S55(r5m << 947418848);
-                            var r76 = "1" >> 1011090304;
-                            g76 = g76.substring(+'0', +'10') + _s(Z14 | 2381);
-                          } else if (g76.length >= '10' -
-                            0) { var V76 = _s(r5m ^ 0); var r76 = +'2'; } else if (g76.length > +"7") {
-                            var
-                              V76 = _s(r5m - 0);
-                            var r76 = '3' * 1;
-                          } else if (g76.length <= +"7") {
-                            var
-                              V76 = _s(r5m & 2147483647);
-                            var r76 = +'5';
-                          } else {
-                            var V76 = _s(r5m |
-                              2572);
-                            var r76 = "8" & 2147483647;
-                          }
-                          Z76 = c6.add.text("0" | 0, '0' & 2147483647,
-                            g76, {
-                              font: _s(+'1637') + V76 + _s('1804' * 1),
-                              fill: _s(h5m <<
-                                1773589280),
-                              wordWrap: !!{},
-                              wordWrapWidth: 64 >> 306171808,
-                              align: _s(+
-                                '66')
-                            });
-                          Z76.x = Math.floor(n76 * +64 + (h8y << 793999040) - Z76.width / +'2');
-                          Z76.y = Math.floor(A76 * (64 * 1) + s0R * 1);
-                        } else if (q76 != null) {
-                          var E76 = q76[
-                            _s(X5m | 2048)];
-                          if (cnum != E76) tileMap.putTile(cnum, citiesLayer.getTileX(n76 * (64 - 0)),
-                            citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
-                          if (F76 == null && K76 != H2) {
-                            if (K76.length >=
-                              '12' << 585115104) {
-                              var V76 = _s(r5m ^ 0);
-                              var r76 = '1' ^ 0;
-                              K76 = K76.substring(+"0", +'10') + _s(+Z14);
-                            } else if (K76.length >= +
-                              '10') { var V76 = _s(+r5m); var r76 = +"2"; } else if (K76.length > +'7') {
-                              var
-                                V76 = _s(r5m << 154551232);
-                              var r76 = +'3';
-                            } else if (K76.length <= '7' *
-                              1) { var V76 = _s(+r5m); var r76 = '5' * 1; } else {
-                              var V76 = _s(r5m *
-                                1);
-                              var r76 = "8" | 0;
-                            }
-                            Z76 = c6.add.text(+'0', '0' | 0, K76, {
-                              font: V76 + E6k
-                                .o55(+'1804'),
-                              fill: _s(g6p >> 124686688),
-                              wordWrap: !!{},
-                              wordWrapWidth:
-                                +64,
-                              align: _s(+'66')
-                            });
-                            Z76.x = Math.floor(n76 * +64 + +h8y - Z76.width / +'2');
-                            Z76.y = Math.floor(A76 * (64 | 64) + (s0R | 19));
-                            tileMap.putTile(+B6R, labelsLayer.getTileX(n76 * +64), labelsLayer.getTileY(A76 * +64), labelsLayer);
-                          }
-                        } else tileMap
-                          .putTile(cnum, citiesLayer.getTileX(n76 * +64), citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
-                      } else if (
-                        cnum >= P5m * 1 && cnum <= ('1576' | 552)) tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64 <<
-                        401965216)), numbersLayer.getTileY(A76 * +64), numbersLayer);
-                      else if (!(cnum >= +'1678' && cnum <= '1683' << 1673942848 && a76 != null)) {
-                        var R76 = tileMap
-                          .getTile(n76, A76, numbersLayer);
-                        if (R76 != null) {
-                          var B76 = R76[_s(X5m | 2210)];
-                          if (
-                            cnum == (p5m & 2147483647)) tileMap.removeTile(numbersLayer.getTileX(n76 * (64 * 1)), numbersLayer.getTileY(A76 *
-                            (64 * 1)), numbersLayer);
-                          else if (cnum != B76)
-                            if (!(B76 >= +"1566" && B76 <= +'1574' && cnum >= ('1678' & 2147483647) && cnum >= +
-                                "1683")) {
-                              tileMap.removeTile(numbersLayer.getTileX(n76 * +64), numbersLayer.getTileY(A76 * (64 - 0)),
-                                numbersLayer);
-                              tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64 ^ 0)), numbersLayer.getTileY(A76 * +64),
-                                numbersLayer);
-                            }
-                        } else if (R76 == null && cnum != "0" - 0 && cnum != p5m - 0) tileMap.putTile(
-                          cnum, numbersLayer.getTileX(n76 * (64 >> 1820808576)), numbersLayer.getTileY(A76 * (64 << 1978962048)),
-                          numbersLayer);
-                      }
-                    }
-                  }
-              }
-            }
-          }
-          console.log((new Date()).getTime() +" rMP done");
-          isInUpdateMP -= 2;
-    
-      });
-        console.log((new Date()).getTime() +" rMP exit");
-    }
+	  function B1F(h76) {
+		  if (isInUpdateMP > 0) {
+			  --isInUpdateMP;
+			  return;
+		  }
+		  isInUpdateMP = 4;
+		  let d76 = JSON.stringify(h76);
+		  console.log((new Date()).getTime() + " rMP 0 " + d76);
+		  E6k.y6();
+		  let b76 = _s('1734' >> 1502077568);
+
+		  let S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
+		  N6();
+		  let J76 = $.post(q6 + "rMp.php", { a: S76 }); // "rMp.php"
+		  F6();
+		  J76.done(function (Y76) {
+			  let r5m = '3023';
+			  if (Y76)
+				  if (tileMap && Y76.length > +"1") {
+					  console.log((new Date()).getTime() + " rMP start");
+					  let j46;
+					  let K76;
+					  let g76;
+					  let Z76;
+					  let e46 =
+						  new Object();
+					  let H46;
+					  let u46;
+					  let s46;
+					  let k46 = new Object();
+					  _viewMode = viewModeRegion;
+					  let U76 = JSON.parse(Y76);
+					  for (let P76 in U76) {
+						  b = P76; // "block", regions is broken up into squares 
+						  if (U76[P76]) {
+							  let N76 = U76[P76];
+							  if (N76 )
+								  for (var m76 in N76) {  // for each tile in array
+									  let f76: string = U76[P76][m76];
+									  if (f76 && f76 != "") {
+										  let D76 = f76.indexOf("-", 0); // "1416`-`635422-KittyKat-35 1013",
+										  let y76 = f76.indexOf("-", D76 + 1); // "1416-635422`-`KittyKat-35 1013",
+										  let c76 = f76.indexOf("-", y76 + 1); // "1416-635422-KittyKat`-`35 1013",
+										  let cnum = Number(f76.substring(0, D76)); // 1416
+										  let p76 = f76.substring(D76 + 1, y76); // "635422",
+										  let n76 = Number(p76.substring(0, 3)) - 100; // 535
+										  let A76 = Number(p76.substring(3, 6)) - 100; // 322
+										  var a76 = tileMap.getTile(n76, A76, numbersLayer);
+										  if (cnum >= 1411 && cnum <= 1426 ||
+											  cnum >= 1576 && cnum <= 1656) 
+                                           {
+											  var q76 = tileMap.getTile(n76, A76, citiesLayer);
+											  var F76 = tileMap.getTile(n76, A76, labelsLayer);
+											  K76 = f76.substring(y76 + (1), c76);
+											  g76 = f76.substring(c76 + +"1", f76.length);
+											  if (F76 != null && K76 == H2 && ppdt[_s(
+												  +i2p)][_s('805' ^ 0)] == 2) {
+												  tileMap.removeTile(labelsLayer.getTileX(n76 * (64 * 1)),
+													  labelsLayer.getTileY(A76 * +64), labelsLayer);
+												  if (g76.length >= '12' >> 1312093792) {
+													  var V76 = E6k
+														  .S55(r5m << 947418848);
+													  var r76 = "1" >> 1011090304;
+													  g76 = g76.substring(+'0', +'10') + _s(Z14 | 2381);
+												  } else if (g76.length >= '10' -
+													  0) { var V76 = _s(r5m ^ 0); var r76 = +'2'; } else if (g76.length > +"7") {
+														  var
+															  V76 = _s(r5m - 0);
+														  var r76 = '3' * 1;
+													  } else if (g76.length <= +"7") {
+														  var
+															  V76 = _s(r5m & 2147483647);
+														  var r76 = +'5';
+													  } else {
+													  var V76 = _s(r5m |
+														  2572);
+													  var r76 = "8" & 2147483647;
+												  }
+												  Z76 = c6.add.text("0" | 0, '0' & 2147483647,
+													  g76, {
+													  font: _s(+'1637') + V76 + _s('1804' * 1),
+													  fill: _s(h5m <<
+														  1773589280),
+													  wordWrap: !!{},
+													  wordWrapWidth: 64 >> 306171808,
+													  align: _s(+
+														  '66')
+												  });
+												  Z76.x = Math.floor(n76 * +64 + (h8y << 793999040) - Z76.width / +'2');
+												  Z76.y = Math.floor(A76 * (64 * 1) + s0R * 1);
+											  } else if (q76 != null) {
+												  var E76 = q76[
+													  _s(X5m | 2048)];
+												  if (cnum != E76) tileMap.putTile(cnum, citiesLayer.getTileX(n76 * (64 - 0)),
+													  citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
+												  if (F76 == null && K76 != H2) {
+													  if (K76.length >=
+														  '12' << 585115104) {
+														  var V76 = _s(r5m ^ 0);
+														  var r76 = '1' ^ 0;
+														  K76 = K76.substring(+"0", +'10') + _s(+Z14);
+													  } else if (K76.length >= +
+														  '10') { var V76 = _s(+r5m); var r76 = +"2"; } else if (K76.length > +'7') {
+															  var
+																  V76 = _s(r5m << 154551232);
+															  var r76 = +'3';
+														  } else if (K76.length <= '7' *
+															  1) { var V76 = _s(+r5m); var r76 = '5' * 1; } else {
+														  var V76 = _s(r5m *
+															  1);
+														  var r76 = "8" | 0;
+													  }
+													  Z76 = c6.add.text(+'0', '0' | 0, K76, {
+														  font: V76 + E6k
+															  .o55(+'1804'),
+														  fill: _s(g6p >> 124686688),
+														  wordWrap: !!{},
+														  wordWrapWidth:
+															  +64,
+														  align: _s(+'66')
+													  });
+													  Z76.x = Math.floor(n76 * +64 + +h8y - Z76.width / +'2');
+													  Z76.y = Math.floor(A76 * (64 | 64) + (s0R | 19));
+													  tileMap.putTile(+B6R, labelsLayer.getTileX(n76 * +64), labelsLayer.getTileY(A76 * +64), labelsLayer);
+												  }
+											  } else tileMap
+												  .putTile(cnum, citiesLayer.getTileX(n76 * +64), citiesLayer.getTileY(A76 * (64 * 1)), citiesLayer);
+										  } else if ( cnum >= 1567  && cnum <= 1576) 
+                                                    tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64)), numbersLayer.getTileY(A76 * 64), numbersLayer);
+										  else if (!(cnum >= 1678 && cnum <= 1683 && a76 != null)) {
+											  var R76 = tileMap
+												  .getTile(n76, A76, numbersLayer);
+											  if (R76 != null) {
+												  var B76 = R76[_s(X5m | 2210)];
+												  if (
+													  cnum == (p5m & 2147483647)) tileMap.removeTile(numbersLayer.getTileX(n76 * (64 * 1)), numbersLayer.getTileY(A76 *
+														  (64 * 1)), numbersLayer);
+												  else if (cnum != B76)
+													  if (!(B76 >= +"1566" && B76 <= +'1574' && cnum >= ('1678' & 2147483647) && cnum >= +
+														  "1683")) {
+														  tileMap.removeTile(numbersLayer.getTileX(n76 * +64), numbersLayer.getTileY(A76 * (64 - 0)),
+															  numbersLayer);
+														  tileMap.putTile(cnum, numbersLayer.getTileX(n76 * (64 ^ 0)), numbersLayer.getTileY(A76 * +64),
+															  numbersLayer);
+													  }
+											  } else if (R76 == null && cnum != "0" - 0 && cnum != p5m - 0) tileMap.putTile(
+												  cnum, numbersLayer.getTileX(n76 * (64 >> 1820808576)), numbersLayer.getTileY(A76 * (64 << 1978962048)),
+												  numbersLayer);
+										  }
+									  }
+								  }
+						  }
+					  }
+				  }
+			  console.log((new Date()).getTime() + " rMP done");
+			  isInUpdateMP -= 2;
+
+		  });
+		  console.log((new Date()).getTime() + " rMP exit");
+	  }
 
     function s1F(p3T, c3T) {
       $(_s(+z3R))
@@ -47054,14 +47044,14 @@ var cotgsubscribe = amplify;
             tileMap.addTilesetImage("toplevel", "nmbers");
             tileMap.addTilesetImage("names2", "names");
           landLayer = tileMap.createLayer("land");
-          j7F = tileMap.createLayer("water");
+          waterLayer = tileMap.createLayer("water");
           citiesLayer = tileMap.createLayer("cities");
           numbersLayer = tileMap.createLayer("numbers");
           labelsLayer = tileMap.createLayer("labels");
           landLayer.resizeWorld();
-          l2 = c6.add.graphics();
-          l2.lineStyle("2" << 951749504, +'0xDAA520', '1' | 0);
-          l2.drawRect(+'0', '0' >> 931293760, 64 * 1, +64);
+          phaserGraphics = c6.add.graphics();
+          phaserGraphics.lineStyle("2" << 951749504, +'0xDAA520', '1' | 0);
+          phaserGraphics.drawRect(+'0', '0' >> 931293760, 64 * 1, +64);
           var V56 = _s("2521" - 0);
           if (ppdt.opt)
             if (ppdt.opt[+B2y]) {
@@ -47951,8 +47941,8 @@ var cotgsubscribe = amplify;
       f46 = Number(f46);
       wtile = +'0';
       ttile = +"0";
-      if (tileMap.getTile(r46, A46, j7F)) {
-        wtile = tileMap.getTile(r46, A46, j7F);
+      if (tileMap.getTile(r46, A46, waterLayer)) {
+        wtile = tileMap.getTile(r46, A46, waterLayer);
         wtile = wtile[_s(+X5m)];
       }
       if (tileMap.getTile(r46, A46, citiesLayer)) {
@@ -48131,8 +48121,8 @@ var cotgsubscribe = amplify;
               if ($(_s(+t3m))
                 .is(_s(+x5t))) $(_s(+J3m))
                 .text(_s(+T3m));
-              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
-              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 >> 638966080);
+              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
+              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 >> 638966080);
             } else if (N46 == +"8") {
               w2
                 ();
@@ -48192,8 +48182,8 @@ var cotgsubscribe = amplify;
               if ($(_s(t3m ^ 0))
                 .is(_s(x5t - 0))) $(_s(J3m ^ 0))
                 .text(_s(T3m << 1755667424));
-              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
-              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 - 0);
+              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
+              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 - 0);
             } else if (N46 == "3" >>
               1194476480) {
               n46 = Number(A46) * +R5y + Number(r46);
@@ -48379,9 +48369,9 @@ var cotgsubscribe = amplify;
               $(_s('123' >> 509998912))
                 .text(M2(R46[_s(O2y & 2147483647)]));
               $(_s('2623' >> 1071066944))
-                .text(M2(R46[_s(+Y2y)]));
+                .text(M2(R46["cav"]));
               $(_s("241" >> 587542336))
-                .text(M2(R46[_s(+y2y)]));
+                .text(M2(R46["inf"]));
               $(_s('2486' << 246815520))
                 .text(M2(R46[_s(m8R - 0)]));
               $(_s('2487' >> 458813216))
@@ -48402,7 +48392,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
               $(_s(+R5R))
                 .css("display", "none");
-              c5F(R46[_s(y2y * 1)], R46[_s(+Y2y)], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(
+              c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(
                 w2y * 1)], R46[_s(+e3m)], R46[_s(+H2y)], R46[_s(Y5y | 131)], F46);
               $(_s(+o2y))
                 .off("click");
@@ -48421,8 +48411,8 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
               $(_s('4112' - 0))
                 .css("display", "none");
-              l2.x = r46 * +64;
-              l2.y = A46 * +64;
+              phaserGraphics.x = r46 * +64;
+              phaserGraphics.y = A46 * +64;
             } else if (N46 == +"2") {
               n46 = Number(A46) * (R5y >> 1600456736) + Number(r46);
               $(_s(+o2y))
@@ -48893,9 +48883,9 @@ var cotgsubscribe = amplify;
               $(_s(+"123"))
                 .text(M2(R46[_s(+O2y)]));
               $(_s(+'2623'))
-                .text(M2(R46[_s(+Y2y)]));
+                .text(M2(R46["cav"]));
               $(_s("241" ^ 0))
-                .text(M2(R46[_s(+y2y)]));
+                .text(M2(R46["inf"]));
               $(_s(+"2486"))
                 .text(M2(R46[_s(m8R - 0)]));
               $(_s('2487' << 109223232))
@@ -48908,7 +48898,7 @@ var cotgsubscribe = amplify;
                 .text(M2(R46[_s(+Y5y)]));
               $(_s(+A4y))
                 .show();
-              c5F(R46[_s(+y2y)], R46[_s(+Y2y)], R46[_s(+O2y)], R46[_s(m8R >> 2098004416)],
+              c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(m8R >> 2098004416)],
                 R46[_s(w2y * 1)], R46[_s(+e3m)], R46[_s(H2y - 0)], R46[_s(+Y5y)], F46);
               $(_s(o2y - 0))
                 .off("click");
@@ -48928,8 +48918,8 @@ var cotgsubscribe = amplify;
                   E6k.y6();
                   h8F(r46, A46);
                 });
-              l2.x = r46 * +64;
-              l2.y = A46 * +64;
+              phaserGraphics.x = r46 * +64;
+              phaserGraphics.y = A46 * +64;
             } else if (N46 == '1' * 1) {
               w2();
               $(_s(g5t ^ 0))
@@ -48988,12 +48978,12 @@ var cotgsubscribe = amplify;
               var R46 = I9(Number(cid), Number(
                 n46));
               $(_s("688" << 1510323936))
-                .text(M2(R46[_s(y2y << 1633729600)]));
+                .text(M2(R46["inf"]));
               $(_s('878' ^ 0))
-                .text(M2(R46[_s(+Y2y)]));
+                .text(M2(R46["cav"]));
               $(_s("1520" * 1))
                 .text(M2(R46[_s(w2y ^ 0)]));
-              c5F(R46[_s(y2y >> 468416896)], R46[_s(Y2y - 0)], R46[_s(+O2y)], R46[_s(m8R |
+              c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(m8R |
                   1056)], R46[_s(+w2y)], R46[_s(e3m - 0)], R46[_s(+H2y)], R46[_s(Y5y - 0)],
                 F46);
               $(_s(d3m * 1))
@@ -49069,8 +49059,8 @@ var cotgsubscribe = amplify;
                   .S55(+t3m))
                 .is(_s(x5t - 0))) $(_s(J3m - 0))
                 .text(_s(T3m * 1));
-              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
-              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * +64;
+              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
+              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * +64;
             } else if (N46 == ("7" | 6)) {
               w2();
               $(_s(g5t ^ 0))
@@ -49149,12 +49139,12 @@ var cotgsubscribe = amplify;
               $(_s("6919" - 0))
                 .attr("data", r46 + _s(A6y | 273) + A46);
               $(_s(+'688'))
-                .text(M2(R46[_s(y2y >> 352149408)] + j16));
+                .text(M2(R46["inf"] + j16));
               $(_s("878" << 186784928))
-                .text(M2(R46[_s(Y2y | 1440)] + j16));
+                .text(M2(R46["cav"] + j16));
               $(_s("1520" & 2147483647))
                 .text(M2(R46[_s(+w2y)]));
-              x8F(R46[_s(y2y ^ 0)], R46[_s(Y2y | 2)], R46[_s(O2y >> 1816902976)], R46[_s(m8R *
+              x8F(R46["inf"], R46["cav"], R46[_s(O2y >> 1816902976)], R46[_s(m8R *
                 1)], R46[_s(+w2y)], R46[_s(e3m * 1)], R46[_s(H2y | 548)], R46[_s(Y5y -
                 0)], F46);
               $(_s(N7m - 0))
@@ -49199,8 +49189,8 @@ var cotgsubscribe = amplify;
               $(_s(+G2t))
                 .addClass(_s(+n9y))
                 .removeClass(_s(z9y - 0));
-              l2.x = r46 * (64 * 1);
-              l2.y = A46 * (64 << 1102950528);
+              phaserGraphics.x = r46 * (64 * 1);
+              phaserGraphics.y = A46 * (64 << 1102950528);
               $(_s(+c1m))
                 .css("display", '');
             } else if (N46 == +"4") {
@@ -49236,7 +49226,7 @@ var cotgsubscribe = amplify;
               var R46 = I9(Number(cid), Number(n46));
               $(_s(+"5161"))
                 .text(M2(R46[_s(+H2y)]));
-              c5F(R46[_s(y2y - 0)], R46[_s(+Y2y)], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(
+              c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(
                 w2y | 4112)], R46[_s(e3m - 0)], R46[_s(H2y << 1192277792)], R46[_s(Y5y >>
                 747450208)], F46);
               var X36 = $(_s(+m5y))
@@ -49287,8 +49277,8 @@ var cotgsubscribe = amplify;
                   .is(_s(+x5t))) $(_s(+J3m))
                   .text(_s(+T3m));
               }
-              l2.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
-              l2.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 | 64);
+              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
+              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 | 64);
               c6.step();
             }
           }
@@ -49333,7 +49323,7 @@ var cotgsubscribe = amplify;
       $(_s(+"5002") + j1T)
         .html("");
       if ($(_s(i1p << 944731552))
-        .css("display") != "none") var j1T = Number(l2.y) / (64 & 2147483647) * (R5y * 1) + Number(l2
+        .css("display") != "none") var j1T = Number(phaserGraphics.y) / (64 & 2147483647) * (R5y * 1) + Number(phaserGraphics
         .x) / +64;
       else var j1T = +"0";
       var I1T = { a: Number(j1T), b: Number(w1T), c: cid };
@@ -49354,8 +49344,8 @@ var cotgsubscribe = amplify;
               .css("display") != "none") {
                   clearTimeout(a8);
                   a8 = setTimeout(function() {
-            Y5F(Number(l2.x) / (64 ^ 0),
-              Number(l2.y) / +64);
+            Y5F(Number(phaserGraphics.x) / (64 ^ 0),
+              Number(phaserGraphics.y) / +64);
           }, +"100");
           }
         } else if (T1T == +"5") Y6(_s(+E2y));
@@ -51749,8 +51739,8 @@ var cotgsubscribe = amplify;
         {
         if ($(_s(+o5y))
           .attr("display") != "none");
-        l2.x = landLayer.getTileX(P4B * +64);
-        l2.y = landLayer.getTileY(B4B * (64 ^ 0));
+        phaserGraphics.x = landLayer.getTileX(P4B * +64);
+        phaserGraphics.y = landLayer.getTileY(B4B * (64 ^ 0));
         }
       }
     }
@@ -61435,8 +61425,8 @@ var cotgsubscribe = amplify;
       else if (F1T == "") Y6(_s(+F4R));
       else {
         if ($(_s(i1p << 77998080))
-          .css("display") != "none") var q1T = Number(l2.y) / (64 ^ 0) * +
-          R5y + Number(l2.x) / (64 ^ 0);
+          .css("display") != "none") var q1T = Number(phaserGraphics.y) / (64 ^ 0) * +
+          R5y + Number(phaserGraphics.x) / (64 ^ 0);
         else var q1T = +"0";
         var a1T = { a: Number(F1T), b: Number(c1T), c: cid, d: q1T };
         var m1T = _s("5322" <<
@@ -61460,7 +61450,7 @@ var cotgsubscribe = amplify;
                     clearTimeout(a8);
                     a8 = setTimeout(function() {
              
-              Y5F(Number(l2.x) / (64), Number(l2.y) / 64);
+              Y5F(Number(phaserGraphics.x) / (64), Number(phaserGraphics.y) / 64);
             }, '500' << 1039164352);}
           }
         });

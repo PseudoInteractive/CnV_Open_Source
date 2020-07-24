@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using static COTG.Debug;
 using System.Globalization;
+using System.Numerics;
 
 namespace COTG.Helpers
 {
@@ -155,6 +156,11 @@ namespace COTG.Helpers
         {
             return f >= 0 ? (int)(f + 0.5f) : -( (int)(-f + 0.5f) );
         }
+        public static (int x,int y) RoundToInt(this Vector2 v)
+        {
+            return (RoundToInt(v.X), RoundToInt(v.Y));
+        }
+
         public static int RoundToInt(this double f)
         {
             return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));

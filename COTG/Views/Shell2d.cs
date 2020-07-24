@@ -19,6 +19,7 @@ using Windows.ApplicationModel.Core;
 using Microsoft.Graphics.Canvas.Svg;
 using COTG.Services;
 using Microsoft.Graphics.Canvas.Text;
+using COTG.JSON;
 
 namespace COTG.Views
 {
@@ -129,7 +130,7 @@ namespace COTG.Views
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
 		{
-            worldBackground = await CanvasBitmap.LoadAsync(canvas, new Uri($"ms-appx:///Assets/world.png"));
+            worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri($"ms-appx:///Assets/world.png"));
           //  while (JSClient.cid == 0)
            //     await Task.Delay(1 * 1000);
          //   var ob = World.CreateBitmap();
@@ -329,6 +330,16 @@ namespace COTG.Views
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 // if (IsPageDefense())
+                if (!IsCityView())
+                {
+                    var cc = (cameraC + clientSpan * 0.5f / pixelScale).RoundToInt();
+                    if(cc.x >= 0 && cc.x < 600 && cc.y >=0 && cc.y < 600)
+                    {
+                        var ccid = cc.x + cc.y * TileData.instance. 600;
+                    }
+
+                }
+
                 if (!IsCityView())
                 {
                     if (DefensePage.IsVisible())

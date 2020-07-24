@@ -216,10 +216,12 @@
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\JSONHelper.cs" />
     <Compile Include="Helpers\Ticks.cs" />
+    <Compile Include="Helpers\TileMap.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\incover.cs" />
     <Compile Include="JSON\Report.cs" />
+    <Compile Include="JSON\TileSet.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Services\CotGRest.cs" />
