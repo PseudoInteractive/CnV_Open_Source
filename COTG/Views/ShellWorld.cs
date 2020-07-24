@@ -106,29 +106,29 @@ namespace COTG.Views
 
        
 
-        public static void EnsureOnScreen( int cid,bool lazy)
-        {
-            var worldC = cid.CidToWorldV();
-            if( lazy )
-            {
-                var cc = worldC.WToC();
-                if (cc.X > 0 && cc.Y > 0 && cc.X < clientSpan.X && cc.Y < clientSpan.Y)
-                    return;
-            }
+        //public static void EnsureOnScreen( int cid,bool lazy)
+        //{
+        //    var worldC = cid.CidToWorldV();
+        //    if( lazy )
+        //    {
+        //        var cc = worldC.WToC();
+        //        if (cc.X > 0 && cc.Y > 0 && cc.X < clientSpan.X && cc.Y < clientSpan.Y)
+        //            return;
+        //    }
 
-            ShellPage.cameraC = (-halfSpan  / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
+        //    ShellPage.cameraC = (-halfSpan  / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
 
 
 
-        }
+        //}
 
         public static void SetJSCamera()
         {
-            var cBase = halfSpan + clientC;
-            var c0 = cBase / cameraZoom;
-            var c1 = cBase / 64.0f;
-            var regionC = (cameraC + c0 - c1) * 64.0f;
-            JSClient.SetJSCamera(regionC);
+            //var cBase = halfSpan + clientC+halfSpan;
+            //var c0 = cBase / cameraZoom;
+            //var c1 = cBase / 64.0f;
+            //var regionC = (cameraC + c0 - c1) * 64.0f;
+            //JSClient.SetJSCamera(regionC);
         }
 
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -173,10 +173,10 @@ namespace COTG.Views
             var wheel = pt.Properties.MouseWheelDelta;
             var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
             var newZoom = cameraZoom * MathF.Exp(dZoom);
-            var cBase = pt.Position.ToVector2() + clientC;
+            var cBase = pt.Position.ToVector2() - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
-            SetCameraCNoLag( cameraC + c0 - c1);
+            cameraC =  cameraC + c0 - c1;
 
             cameraZoom = newZoom;
             e.Handled = true;
@@ -184,7 +184,7 @@ namespace COTG.Views
         }
         static (int x,int y) MousePointToWorld(Vector2 c1)
         {
-            var wc = ShellPage.cameraC + (c1 + ShellPage.clientC) * (1.0f / ShellPage.pixelScale);
+            var wc = ShellPage.cameraC + (c1 - ShellPage.halfSpan) * (1.0f / ShellPage.pixelScale);
 
             int x = (int)(wc.X);
             int y = (int)(wc.Y);
@@ -256,7 +256,7 @@ namespace COTG.Views
                 // TODO:  mouse should be hooked.
                 if (point.IsInContact)
                 {
-                   SetCameraCNoLag( cameraC - (c1 - mousePosition) / cameraZoom);
+                   cameraC=( cameraC - (c1 - mousePosition) / cameraZoom);
                 }
             }
 

@@ -924,8 +924,8 @@ namespace COTG
                                 if (priorView != ViewMode.world || viewMode != ViewMode.world)
                                 {
                                     ShellPage.cameraZoom = jso.GetAsFloat("z");
-                                    ShellPage.cameraC.X = jso.GetAsFloat("x") / ShellPage.cameraZoom;
-                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
+                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
+//                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
 
                                     ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
                                     // if((viewMode & ViewMode.region)!=0)

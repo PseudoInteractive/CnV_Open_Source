@@ -35,6 +35,7 @@ namespace COTG.Views
         public static Vector2 halfSpan;
         //   public static Vector2 cameraMid;
         public static float cameraZoom;
+        public static float cameraZoomLag;
         public float eventTimeOffset;
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
@@ -138,17 +139,22 @@ namespace COTG.Views
 
         }
 
+        private static void SetClientSpan(Vector2 span)
+        {
+            clientSpan.X = span.X - (span.X % 8);
+            clientSpan.Y = span.Y - (span.Y % 8);
+            halfSpan = clientSpan * 0.5f;
+        }
+
         private void Canvas_LayoutUpdated(object sender, object e)
         {
             var c = canvas.ActualOffset;
-            clientC = new Vector2(c.X,c.Y); 
-            clientSpan = canvas.ActualSize;
-            halfSpan = clientSpan * 0.5f;
+            clientC = new Vector2(c.X,c.Y);
+            SetClientSpan(canvas.ActualSize);
         }
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            clientSpan = e.NewSize.ToVector2();
-            halfSpan = clientSpan * 0.5f;
+            SetClientSpan(  e.NewSize.ToVector2() );
         }
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -250,13 +256,23 @@ namespace COTG.Views
                 return;
 
 
+            if(mouseButtons.HasFlag(MouseButtons.left))
+            {
+                // immediate
+                cameraCLag = cameraC;
+                cameraZoomLag = cameraZoom;
+            }
+
             try
             {
                 var _serverNow = JSClient.ServerTime();
                 var dt = (float) (_serverNow - lastDrawTime).TotalSeconds;
                 lastDrawTime = _serverNow;
 
-                cameraCLag += (cameraC - cameraCLag) *(1- MathF.Exp( -4*dt ));
+                var gain = (1 - MathF.Exp(-4 * dt));
+                cameraCLag += (cameraC - cameraCLag) *gain;
+                cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
+//                cameraZoomLag += (cameraZoom
 
                 var serverNow = _serverNow  + TimeSpan.FromMinutes(eventTimeOffset);
 
@@ -285,11 +301,17 @@ namespace COTG.Views
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
                 
                 var ds = args.DrawingSession;
-//                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
-                
-                if (worldBackground != null && IsWorldView())
+                //                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
+
+                ds.Antialiasing = CanvasAntialiasing.Aliased;
+                var scale = ShellPage.canvas.ConvertPixelsToDips(1);
+                pixelScale = scale * (cameraZoomLag);
+
+                var wantDetails = pixelScale >= 62.0f;
+
+                if (worldBackground != null && IsWorldView() && !wantDetails)
                 {
-                    var srcP0 = new Point(cameraCLag.X * bSizeGain2+ clientC.X * bSizeGain2 / pixelScale, cameraCLag.Y * bSizeGain2+ clientC.Y * bSizeGain2 / pixelScale);
+                    var srcP0 = new Point(cameraCLag.X * bSizeGain2- halfSpan.X * bSizeGain2 / pixelScale, cameraCLag.Y * bSizeGain2- halfSpan.Y * bSizeGain2 / pixelScale);
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
                                            srcP0.Y + clientSpan.Y * bSizeGain2 / pixelScale);
                     var destP0 = new Point();
@@ -327,8 +349,6 @@ namespace COTG.Views
                             new Rect(srcP0, srcP1));
                 }
            //     ds.Antialiasing = CanvasAntialiasing.Antialiased;
-                var scale = ShellPage.canvas.ConvertPixelsToDips(1);
-                pixelScale = scale * (cameraZoom);
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
                 var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
@@ -342,14 +362,14 @@ namespace COTG.Views
                 // if (IsPageDefense())
                 if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
                 {
-                    if (cameraZoom >= 60.0f)
+                    if (wantDetails)
                     {
                         var td = TileData.instance;
-                        var tiles = (clientSpan *(1.0f/ cameraZoom)).RoundToInt();
-                        var ccBase = cameraC.RoundToInt();
-                        for (int ty = 0; ty < tiles.y; ++ty)
+                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).RoundToInt().Add((1,1));
+                        var ccBase = cameraCLag.RoundToInt();
+                        for (int ty = -halfTiles.y; ty < halfTiles.y; ++ty)
                         {
-                            for (int tx = 0; tx < tiles.x; ++tx)
+                            for (int tx = -halfTiles.x; tx < halfTiles.x; ++tx)
                             {
                                 var cc = ccBase.Add( (tx,ty) );
                                 if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
@@ -367,8 +387,8 @@ namespace COTG.Views
                                                 continue;
                                             var sy = off / tile.columns;
                                             var sx = off - sy * tile.columns;
-                                            ds.DrawImage(tile.bitmap, new Rect((new Vector2(cc.x,cc.y)).WToC().ToPoint(), new Size(pixelScale, pixelScale)),
-                                                new Rect(new Point(sx * tile.tilewidth, sy * tile.tileheight), new Size(tile.tilewidth, tile.tileheight)));
+                                            ds.DrawImage(tile.bitmap, new Rect(((new Vector2(cc.x,cc.y)).WToC()).ToPoint(), new Size(pixelScale, pixelScale)),
+                                                new Rect(new Point(sx * tile.tilewidth+0.5f, sy * tile.tileheight+0.5f), new Size(tile.tilewidth-1, tile.tileheight-1)));
                                             break;
 
                                         }
@@ -379,6 +399,7 @@ namespace COTG.Views
                     }
 
                 }
+                ds.Antialiasing = CanvasAntialiasing.Antialiased;
 
                 if (!IsCityView())
                 {
@@ -673,27 +694,18 @@ namespace COTG.Views
 
         public static Vector2 WToC(this Vector2 c)
         {
-            return (c - ShellPage.cameraC) * ShellPage.pixelScale - ShellPage.clientC;
+            return (c - ShellPage.cameraCLag) * ShellPage.pixelScale + ShellPage.halfSpan;
         }
         public static Vector2 CidToCC(this int c)
         {
             return c.ToWorldC().WToC();
         }
 
-        public static float WToCx(this float c)
-        {
-            return 
-                (c- ShellPage.cameraC.X) * ShellPage.pixelScale - ShellPage.clientC.X;
-        }
-        public static float WToCy(this float c)
-        {
-            return
-                (c - ShellPage.cameraC.Y) * ShellPage.pixelScale - ShellPage.clientC.Y;
-        }
+        
         public static void BringCidIntoWorldView(this int cid,bool lazy)
         {
             var v = cid.CidToWorldV();
-            var newC = v - (ShellPage.clientC+ShellPage.halfSpan) / ShellPage.pixelScale;
+            var newC = v;
             var dc = newC - ShellPage.cameraC;
             // only move if needed
             if (!lazy||
