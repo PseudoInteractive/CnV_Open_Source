@@ -16,6 +16,9 @@ using static COTG.Game.Enum;
 using COTG.Views;
 using System.Globalization;
 using COTG.JSON;
+using Microsoft.Graphics.Canvas;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.IO;
 
 namespace COTG.Services
 {
@@ -629,21 +632,6 @@ namespace COTG.Services
             HttpClient client = null;
             try
             {
-
-
-                //var req = new HttpRequestMessage(HttpMethod.Get, new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json"));
-                //req.Content = new HttpStringContent("a=0",
-                //            Windows.Storage.Streams.UnicodeEncoding.Utf8,
-                //            "application/x-www-form-urlencoded");
-                ////req.TransportInformation.
-
-                //req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
-
-
-                //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
-                //    req.Headers.Append("Sec-Fetch-Mode", "cors");
-                //    req.Headers.Append("Sec-Fetch-Dest", "empty");
-
                 client = JSClient.clientPool.Take();
                 var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json?a=0"));
                 JSClient.clientPool.Add(client);
@@ -674,8 +662,26 @@ namespace COTG.Services
 
 
         }
+
+        async static public Task<CanvasBitmap> Load(Uri uri)
+        {
+
+            try
+            {
+                var buff = await JSClient.downloadImageClient.GetBufferAsync(uri);
+                return await CanvasBitmap.LoadAsync(ShellPage.canvas, buff.AsStream().AsRandomAccessStream());
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+            return null;
+
+        }
+
+        }
     }
-}
 
 
 

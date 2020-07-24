@@ -32,6 +32,7 @@ namespace COTG.Views
         public static Vector2 cameraCLag; // for smoothing
         public static Vector2 clientC;
         public static Vector2 clientSpan;
+        public static Vector2 halfSpan;
         //   public static Vector2 cameraMid;
         public static float cameraZoom;
         public float eventTimeOffset;
@@ -91,6 +92,7 @@ namespace COTG.Views
 				IsFixedTimeStep = false
 			};
 			canvas.Draw += Canvas_Draw;
+            canvas.Update += Canvas_Update;
 			canvas.Unloaded += Canvas_Unloaded;
             canvas.LayoutUpdated += Canvas_LayoutUpdated;
 			canvas.SizeChanged += Canvas_SizeChanged;
@@ -100,6 +102,25 @@ namespace COTG.Views
             return canvas;
 
 		}
+
+        private void Canvas_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args)
+        {
+            if (World.bitmapPixels != null)
+            {
+                var pixels = World.bitmapPixels;
+                World.bitmapPixels = null;
+                if (worldObjects != null)
+                {
+                    var w = worldObjects;
+                    worldObjects = null;
+                    w.Dispose();
+                }
+                worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+
+
+            }
+
+        }
 
         public static void SetCanvasVisibility(bool visible)
 		{
@@ -122,10 +143,12 @@ namespace COTG.Views
             var c = canvas.ActualOffset;
             clientC = new Vector2(c.X,c.Y); 
             clientSpan = canvas.ActualSize;
+            halfSpan = clientSpan * 0.5f;
         }
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             clientSpan = e.NewSize.ToVector2();
+            halfSpan = clientSpan * 0.5f;
         }
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -219,23 +242,10 @@ namespace COTG.Views
         public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
         public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
         static DateTimeOffset lastDrawTime;
+        public static bool tileSetsPending;
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
 
-            if(World.bitmapPixels!=null)
-            {
-                if (worldObjects != null)
-                {
-                    var w = worldObjects;
-                    worldObjects = null;
-                    w.Dispose();
-                }
-                var pixels = World.bitmapPixels;
-                World.bitmapPixels = null;
-                worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
-
-
-            }
             if (!(IsWorldView() || IsRegionView()))
                 return;
 
@@ -330,12 +340,42 @@ namespace COTG.Views
                 //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                 //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                 // if (IsPageDefense())
-                if (!IsCityView())
+                if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
                 {
-                    var cc = (cameraC + clientSpan * 0.5f / pixelScale).RoundToInt();
-                    if(cc.x >= 0 && cc.x < 600 && cc.y >=0 && cc.y < 600)
+                    if (cameraZoom >= 60.0f)
                     {
-                        var ccid = cc.x + cc.y * TileData.instance. 600;
+                        var td = TileData.instance;
+                        var tiles = (clientSpan *(1.0f/ cameraZoom)).RoundToInt();
+                        var ccBase = cameraC.RoundToInt();
+                        for (int ty = 0; ty < tiles.y; ++ty)
+                        {
+                            for (int tx = 0; tx < tiles.x; ++tx)
+                            {
+                                var cc = ccBase.Add( (tx,ty) );
+                                if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
+                                {
+                                    var ccid = cc.x + cc.y * td.width;
+                                    foreach (var l in td.layers)
+                                    {
+                                        int imageId = l.data[ccid];
+                                        if (imageId == 0)
+                                            continue;
+                                        foreach (var tile in td.tilesets)
+                                        {
+                                            var off = imageId - tile.firstgid;
+                                            if (off < 0 || off >= tile.tilecount || tile.bitmap == null)
+                                                continue;
+                                            var sy = off / tile.columns;
+                                            var sx = off - sy * tile.columns;
+                                            ds.DrawImage(tile.bitmap, new Rect((new Vector2(cc.x,cc.y)).WToC().ToPoint(), new Size(pixelScale, pixelScale)),
+                                                new Rect(new Point(sx * tile.tilewidth, sy * tile.tileheight), new Size(tile.tilewidth, tile.tileheight)));
+                                            break;
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -653,12 +693,12 @@ namespace COTG.Views
         public static void BringCidIntoWorldView(this int cid,bool lazy)
         {
             var v = cid.CidToWorldV();
-            var newC = v - (ShellPage.clientC+ShellPage.clientSpan*0.5f) / ShellPage.pixelScale;
+            var newC = v - (ShellPage.clientC+ShellPage.halfSpan) / ShellPage.pixelScale;
             var dc = newC - ShellPage.cameraC;
             // only move if needed
             if (!lazy||
-                dc.X.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.X * 0.5f ||
-                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.clientSpan.Y * 0.5f)
+                dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X  ||
+                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y )
             {
 
                 ShellPage.cameraC = newC;

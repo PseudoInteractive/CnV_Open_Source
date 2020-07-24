@@ -47,15 +47,14 @@ namespace COTG.Views
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
         
-        private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
-        private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+      //  private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
+      //  private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
         static public ShellPage instance;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
         private bool _isBusy;
         private bool _isLoggedIn;
         private bool _isAuthorized;
-        
 
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
@@ -113,6 +112,11 @@ namespace COTG.Views
          //   IdentityService.LoggedOut += OnLoggedOut;
         }
 
+        public static void SetHeaderText(string text)
+        {
+            if(instance!=null && instance.navigationView!=null)
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
+        }
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
          
@@ -183,8 +187,8 @@ namespace COTG.Views
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-            KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
-            KeyboardAccelerators.Add(_backKeyboardAccelerator);
+           // KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
+           // KeyboardAccelerators.Add(_backKeyboardAccelerator);
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor

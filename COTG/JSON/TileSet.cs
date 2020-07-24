@@ -28,76 +28,104 @@ namespace COTG.JSON
 
         public sealed class TileData
         {
+            public enum State
+            {
+                preInit,
+                loadedData,
+                loadingImages,
+                loadedImages,
+                ready = loadedImages
+            }
+            public static State state = State.preInit;
+
             public static TileData instance;
             public static async Task Ctor()
             {
-                Note.Show("TilesFetch Start");
                 instance = await TileMapFetch.Get();
                 Note.Show("TilesFetched");
+                state = State.loadedData;
 
-                var canvas = ShellPage.canvas;
-                await canvas.RunOnGameLoopThreadAsync( async () =>
-                {
-                    foreach (var tileSet in instance.tilesets)
-                    {
-                        var resName = tileSet.name;
-                        if (resName == "land.png")
-                            resName = "land.jpg";
-                        tileSet.bitmap = await CanvasBitmap.LoadAsync(canvas.Device, new Uri(JSClient.httpsHost,$"maps/newmap/{resName}") );
-                        // etc.
-                    }
-                });
-
-                Note.Show("TilesDone");
+            //);
+            Assert(state == State.loadedData);
+            state = State.loadingImages;
+            //  await canvas.RunOnGameLoopThreadAsync( async () =>
+            foreach (var tileSet in instance.tilesets)
+            {
+                tileSet.Load();
             }
 
-            [J("compressionlevel")] public int compressionlevel { get; set; }
+        }
+        
+
+        public int compressionlevel { get; set; }
             public static int Height() => instance.height;
-            [J("height")] public int height { get; set; }
-            [J("infinite")] public bool infinite { get; set; }
-            [J("layers")] public Layer[] layers { get; set; }
-            [J("nextlayerid")] public int nextlayerid { get; set; }
-            [J("nextobjectid")] public int nextobjectid { get; set; }
-            [J("orientation")] public string orientation { get; set; }
-            [J("renderorder")] public string renderorder { get; set; }
-            [J("tiledversion")] public string tiledversion { get; set; }
-            [J("tileheight")] public int tileheight { get; set; }
-            [J("tilesets")] public Tileset[] tilesets { get; set; }
-            [J("tilewidth")] public int tilewidth { get; set; }
-            [J("type")] public string type { get; set; }
-            [J("version")] public float version { get; set; }
+            public int height { get; set; }
+            public bool infinite { get; set; }
+            public Layer[] layers { get; set; }
+            public int nextlayerid { get; set; }
+            public int nextobjectid { get; set; }
+            public string orientation { get; set; }
+            public string renderorder { get; set; }
+            public string tiledversion { get; set; }
+            public int tileheight { get; set; }
+            public Tileset[] tilesets { get; set; }
+            public int tilewidth { get; set; }
+            public string type { get; set; }
+            public float version { get; set; }
             public static int Width() => instance.width;
-            [J("width")] public int width { get; set; }
+            public int width { get; set; }
         }
 
         public sealed class Layer
         {
-            [J("data")] public ushort[] data { get; set; }
-            [J("height")] public int height { get; set; }
-            [J("id")] public int id { get; set; }
-            [J("name")] public string name { get; set; }
-            [J("opacity")] public int opacity { get; set; }
-            [J("type")] public string type { get; set; }
-            [J("visible")] public bool visible { get; set; }
-            [J("width")] public int width { get; set; }
-            [J("x")] public int X { get; set; }
-            [J("y")] public int Y { get; set; }
+            public ushort[] data { get; set; }
+            public int height { get; set; }
+            public int id { get; set; }
+            public string name { get; set; }
+            public int width { get; set; }
         }
 
         public sealed class Tileset
         {
             public CanvasBitmap bitmap;
-            [J("columns")] public int columns { get; set; }
-            [J("firstgid")] public int firstgid { get; set; }
-            [J("image")] public string image { get; set; }
-            [J("imageheight")] public int imageheight { get; set; }
-            [J("imagewidth")] public int imagewidth { get; set; }
-            [J("name")] public string name { get; set; }
-            [J("tilecount")] public int tilecount { get; set; }
-            [J("tileheight")] public int tileheight { get; set; }
-            [J("tilewidth")] public int tilewidth { get; set; }
+            public int columns { get; set; }
+            public int firstgid { get; set; }
+            public string image { get; set; }
+            public int imageheight { get; set; }
+            public int imagewidth { get; set; }
+            public string name { get; set; }
+            public int tilecount { get; set; }
+            public int tileheight { get; set; }
+            public int tilewidth { get; set; }
+        public async void Load()
+        {
+                try
+                {
+                    var resName = image;
+                    if (resName == "land.png")
+                        resName = "land.jpg";
+                    //  ShellPage.SetHeaderText(resName);
+                    var uri = new Uri($"{JSClient.httpsHostString}/maps/newmap/{resName}");
+                    var temp = this;
+                    temp.bitmap = await TileMapFetch.Load( uri);
+                    // etc.
+                    Assert(temp.bitmap != null);
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+
+                }
+            
+
+
+
         }
+
+    }
+}
+
 
       
 
-}
+

@@ -116,7 +116,7 @@ namespace COTG.Views
                     return;
             }
 
-            ShellPage.cameraC = (-clientSpan * 0.5f / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
+            ShellPage.cameraC = (-halfSpan  / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
 
 
 
@@ -124,7 +124,7 @@ namespace COTG.Views
 
         public static void SetJSCamera()
         {
-            var cBase = clientSpan * 0.5f + clientC;
+            var cBase = halfSpan + clientC;
             var c0 = cBase / cameraZoom;
             var c1 = cBase / 64.0f;
             var regionC = (cameraC + c0 - c1) * 64.0f;

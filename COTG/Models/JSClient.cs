@@ -65,6 +65,7 @@ namespace COTG
         public static int world = 19;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
+        public static string httpsHostString;
         static HttpRequestMessage anyPost;
         // IHttpContent content;
         public struct JSVars
@@ -558,7 +559,8 @@ namespace COTG
                     try
                     {
 
-                        httpsHost = new Uri($"https://{args.Uri.Host}");
+                        httpsHostString = $"https://{args.Uri.Host}";
+                        httpsHost = new Uri(httpsHostString);
                         downloadImageClient = new HttpClient();
                         downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
                         downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;

@@ -160,7 +160,14 @@ namespace COTG.Helpers
         {
             return (RoundToInt(v.X), RoundToInt(v.Y));
         }
-
+        public static (int x, int y)  Add (this (int x,int y) a, (int x,int y) b)
+        {
+            return (a.x+b.x,a.y+b.y);
+        }
+        public static (int x, int y) Sub(this (int x, int y) a, (int x, int y) b)
+        {
+            return (a.x - b.x, a.y - b.y);
+        }
         public static int RoundToInt(this double f)
         {
             return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));

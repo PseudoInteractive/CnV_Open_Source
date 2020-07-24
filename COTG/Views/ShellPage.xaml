@@ -47,6 +47,9 @@
             <MenuFlyoutItem Click="CityFlyoutInfo"
                                 Text="Switch To" />
         </MenuFlyout>
+        <DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
+            <TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
+        </DataTemplate>
         <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
                                               FalseValue="Visible"
@@ -87,7 +90,10 @@
         <SolidColorBrush x:Key="LogBufferForeground"
                          Color="#900238" />
     </Page.Resources>
-    <winui:NavigationView x:Name="navigationView"
+    <!--HeaderTemplate="{StaticResource headerTemplate}"-->
+    <winui:NavigationView x:Name="navigationView" 
+                          
+                          
                           Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
                           IsBackButtonVisible="Visible"
                           IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
@@ -231,6 +237,10 @@
                             </GridView>
                         </Flyout>
                     </Button.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Name="status" x:FieldModifier="public"
+                                Label="TBA"
+                              Icon="Shuffle">
                 </AppBarButton>
                 <AppBarButton Label="Time"
                               Icon="Shuffle">
