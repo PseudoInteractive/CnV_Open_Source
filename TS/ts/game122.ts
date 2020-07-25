@@ -15990,8 +15990,7 @@ var cotgsubscribe = amplify;
             F7T + _s(+"5724") + p6(a7T) + _s(+'1852') + y7T + _s(+g3y) + p6(m7T) + _s('4382' ^
               0) + y7T + _s(a3R << 1667529344) + N7T + _s(+"4438") + y7T + _s(+'1455') + q7T + _s(
               i3R & 2147483647) + N7T + " " + p7T + _s('1950' << 1287325728) + F7T + _s("5222" & E6k
-              .s6s) + y7T + _s(a3R >> 1580501792) + D7T + _s("673" << 75078784) + y7T + _s("2333" *
-              1) + y7T + _s(+'4541') + Y7T + _s(i3R | 70) + D7T + _s(+'410');
+              .s6s) + y7T + _s(a3R >> 1580501792) + D7T + _s("673" << 75078784) + y7T + _s("2333" *1) + y7T + _s(+'4541') + Y7T + _s(i3R | 70) + D7T + _s(+'410');
         }
         $(_s("7038" - 0))
           .html(e4T);
@@ -23647,7 +23646,7 @@ var cotgsubscribe = amplify;
         var O46 = "X22x5DdAxxerj3";
       var t46 = a6.ccazzx.encrypt(JSON.stringify(x46), O46, +U7y);
       N6();
-      var o46 = $.post(_s("4894" << 1493706848), { cid: t46 }); // gSt.php
+      var o46 = $.post("/includes/gSt.php", { cid: t46 }); // gSt.php
       F6();
       o46.done(function(d46) {
         if (d46 != '') {
@@ -47289,7 +47288,7 @@ var cotgsubscribe = amplify;
         } else {
 //          c6.paused = !1;
 //          c6.lockRender = !{};
-          regrender = +'1';
+       //   regrender = +'1';
             _viewMode = viewModeRegion;
           worldrender = +"0";
           citrender = "0" - 0;
@@ -47566,8 +47565,8 @@ var cotgsubscribe = amplify;
             t0g = M0g.getBoundingClientRect();
         }
         citrender=0;
-        G0g.style
-          .display = "block";
+//        G0g.style.display = "block";
+          G0g.style.display = "none";
         o0g.style.display = "none";
         i0g.style.display = "none";
         $("#quickBuildMenu")
@@ -47654,10 +47653,10 @@ var cotgsubscribe = amplify;
         h0g.style.display = "none";
 
         S0g.style.display = "none";
-        w2();
+   //     w2();
         d7F();
-        $(_s(+"2267"))
-          .show();
+       // $(_s(+"2267"))
+      //    .show();
         $(_s(+S6p))
           .show();
         $(_s(g04 << 1148008608))
@@ -51735,17 +51734,18 @@ var cotgsubscribe = amplify;
           else B2("3" - 0);
         }
         var K4B = document.getElementById("cvs");
-        var f4B = document.getElementById(E6k
-          .o55(+q6p));
+        var f4B = document.getElementById(E6k.o55(+q6p));
         var A4B = document.getElementById("city_map");
-          let isWorld = _viewMode === viewModeWorld;
-        K4B.style.display = !isWorld ?  "block" : "none";
+       
+       //   let isWorld = _viewMode === viewModeWorld;
+
+        K4B.style.display = "none"; //!isWorld ?  "block" : "none";
         f4B.style.display = "none";
         A4B.style.display = "none";
-        if (!isWorld)
+      //  if (!isWorld)
         {
-        if ($(_s(+o5y))
-          .attr("display") != "none");
+     //   if ($(_s(+o5y))
+     //     .attr("display") != "none");
 //        phaserGraphics.x = landLayer.getTileX(P4B * +64);
 //        phaserGraphics.y = landLayer.getTileY(B4B * (64 ^ 0));
         }
@@ -60529,48 +60529,48 @@ var cotgsubscribe = amplify;
         }
       });
     }
-    $("#content")
-      .dblclick(function(U1D) {
-        E6k.y6();
-        $(_s(+S6p))
-          .css("display", "none");
-        $(_s(+g04))
-          .css("display", "none");
-          var A1D = document.getElementById('worldcanv');
-        if (A1D) {
-          var n1D = A1D.getBoundingClientRect();
-          var f1D = m5F(U1D.clientX - n1D.left, U1D
-            .clientY - n1D.top);
-          var g1D = Math.floor(f1D.x / +m6p);
-          var Z1D = Math.floor(f1D.y / +m6p);
-        //  c6.paused = !{};
-            var r1D = document.getElementById("mainMapDiv");
-          var P1D = r1D.clientWidth;
-          var B1D =
-            r1D.clientHeight;
-          var R1D = g1D * (64 >> 969140608) - P1D / ("1.5" - 0);
-          var y1D = Z1D * +64 - B1D / (
-            "3" | 2);
-          _camera.x = R1D;
-          _camera.y = y1D;
-          P9();
-            _viewMode = viewModeRegion;
-          regrender = '1' & 2147483647;
-          citrender = +'0';
-          //c6.time.advancedTiming = !0;
-          //c6.time.desiredFps = +'5';
-          //c6.time.fpsMax = '5' ^ 0;
-          //c6.lockRender = ![];
-          //c6.raf.start();
-          var D1D = document.getElementById("cvs");
-          var p1D = document.getElementById(E6k
-            .o55(q6p * 1));
-          var K1D = document.getElementById("city_map");
-          D1D.style.display = "block";
-          p1D.style.display = "none";
-          K1D.style.display = "none";
-        }
-      });
+    //$("#content")
+    //  .dblclick(function(U1D) {
+    //    E6k.y6();
+    //    $(_s(+S6p))
+    //      .css("display", "none");
+    //    $(_s(+g04))
+    //      .css("display", "none");
+    //      var A1D = document.getElementById('worldcanv');
+    //    if (A1D) {
+    //      var n1D = A1D.getBoundingClientRect();
+    //      var f1D = m5F(U1D.clientX - n1D.left, U1D
+    //        .clientY - n1D.top);
+    //      var g1D = Math.floor(f1D.x / +m6p);
+    //      var Z1D = Math.floor(f1D.y / +m6p);
+    //    //  c6.paused = !{};
+    //        var r1D = document.getElementById("mainMapDiv");
+    //      var P1D = r1D.clientWidth;
+    //      var B1D =
+    //        r1D.clientHeight;
+    //      var R1D = g1D * (64 >> 969140608) - P1D / ("1.5" - 0);
+    //      var y1D = Z1D * +64 - B1D / (
+    //        "3" | 2);
+    //      _camera.x = R1D;
+    //      _camera.y = y1D;
+    //      P9();
+    //        _viewMode = viewModeRegion;
+    //      regrender = '1' & 2147483647;
+    //      citrender = +'0';
+    //      //c6.time.advancedTiming = !0;
+    //      //c6.time.desiredFps = +'5';
+    //      //c6.time.fpsMax = '5' ^ 0;
+    //      //c6.lockRender = ![];
+    //      //c6.raf.start();
+    //      var D1D = document.getElementById("cvs");
+    //      var p1D = document.getElementById(E6k
+    //        .o55(q6p * 1));
+    //      var K1D = document.getElementById("city_map");
+    //      D1D.style.display = "block";
+    //      p1D.style.display = "none";
+    //      K1D.style.display = "none";
+    //    }
+    //  });
 
     function n0F() {
       $(_s(+"3125"))

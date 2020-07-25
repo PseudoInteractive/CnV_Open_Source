@@ -491,7 +491,7 @@ function jqclick( s) {
 function getview() {
 	if (regrender == 1)
 		return "region";
-	if (citrender = 1)
+	if (citrender == 1)
 		return "city";
 	return "world";
 }
