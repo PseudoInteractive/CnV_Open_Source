@@ -277,7 +277,6 @@ namespace COTG.Game
                 selected.ExitWriteLock();
             }
             SpotTab.SelectSilent(this, rv);
-            Log("select toggle: " + cid + rv);
             return rv;
         }
         public static bool AreAnySelected()

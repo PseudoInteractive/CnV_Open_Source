@@ -264,7 +264,7 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
            // var cid = json.RootElement.GetAsInt("cid");
-            Log("Got JS " + cid);
+         //   Log("Got JS " + cid);
              var city=City.allCities.GetOrAdd(cid,City.Factory);
             city.LoadFromJson(json.RootElement);
 
@@ -442,8 +442,8 @@ namespace COTG.Services
             {
                changed.NotifyChange();
             }
-            Log("Got JS for troop overview");
-            Log(json.ToString());
+          //  Log("Got JS for troop overview");
+          //  Log(json.ToString());
         }
         public static JsonDocument jsd;
         public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
@@ -561,7 +561,7 @@ namespace COTG.Services
                     raid.arrival =  r[7].GetString().ParseDateTime(false);
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
-                    Log(raid.ToString());
+                //    Log(raid.ToString());
                    // raid.arrival.Year = DateTime.Now.Year;
                     var ss0 = desc.Split(',');
                     Assert(ss0.Length == 2);
@@ -577,18 +577,18 @@ namespace COTG.Services
                         var tt = ttr.GetAsInt("tt");
                         int tv = ttr.GetAsInt("tv");
                         cc += ttCarry[tt] * tv;
-                        Log($"{tt}:{tv}");
+                     //   Log($"{tt}:{tv}");
                     }
                     var carry = (cc * 100.0f / res).RoundToInt();
                     if (carry < minCarry)
                         minCarry = carry;
-                    Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
+                   // Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
                     raids.AddIfAbsent(raid);
                 }
                  city.raidCarry = (byte)minCarry;
                 city.raids = raids.ToArray();
-                Log($"cid:{cid} carry: {minCarry}");
+               // Log($"cid:{cid} carry: {minCarry}");
                 
             }
             MainPage.CityListUpdateAll();

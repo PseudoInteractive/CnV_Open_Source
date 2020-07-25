@@ -7,6 +7,7 @@ using static COTG.Debug;
 
 namespace COTG.JSON
 {
+    using COTG.Game;
     using COTG.Services;
     using COTG.Views;
 
@@ -39,22 +40,55 @@ namespace COTG.JSON
             public static State state = State.preInit;
 
             public static TileData instance;
-            public static async Task Ctor()
-            {
-                instance = await TileMapFetch.Get();
-                Note.Show("TilesFetched");
-                state = State.loadedData;
+        public static async Task Ctor()
+        {
+            instance = await TileMapFetch.Get();
+            Note.Show("TilesFetched");
+            state = State.loadedData;
 
             //);
             Assert(state == State.loadedData);
+            // remove numbered things
+
             state = State.loadingImages;
+            var tileCount = instance.tilesets.Length - 1;
+            // remove names layer
+            instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
             //  await canvas.RunOnGameLoopThreadAsync( async () =>
+
             foreach (var tileSet in instance.tilesets)
             {
                 tileSet.Load();
             }
 
+            
+                for (var i = 0; i < World.worldDim * World.worldDim; ++i)
+                {
+                    int put = 0;
+                    ulong packedLayer = 0;
+                    foreach (var layer in instance.layers)
+                    {
+                        var tile = layer.data[i];
+                    if (tile == 0)
+                        continue;
+                        for (int tileId = 0; tileId < tileCount; ++tileId)
+                        {
+                        var ts = instance.tilesets[tileId];
+                        var off = tile - ts.firstgid;
+                        if ((off >= 0) && off < ts.tilecount)
+                            {
+                            packedLayer |= (ulong)(off | (tileId<<13)  ) << (put++ * 16);
+                            break;
+                        }
+                        }
+                    }
+                    packedLayers[i] = packedLayer;
+    
+                }
+            
         }
+            public static ulong[] packedLayers = new ulong[World.worldDim * World.worldDim];
+        
         
 
         public int compressionlevel { get; set; }

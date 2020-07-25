@@ -92,7 +92,7 @@ namespace COTG.Views
                 var priorSel = e.RemovedItems[0];
                 if (newSel != priorSel)
                 {
-                    Log("City Sel changed");
+               //     Log("City Sel changed");
                     CityListChange();
                 }
             }
@@ -317,7 +317,7 @@ namespace COTG.Views
         
 		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
-            Log("Submit: " + args.Text);
+       //     Log("Submit: " + args.Text);
             if( float.TryParse(args.Text,System.Globalization.NumberStyles.Number,null, out float _raidCarry) )
 			{
                 
@@ -381,7 +381,7 @@ namespace COTG.Views
 
         override public void VisibilityChanged(bool visible)
         {
-            Log("Vis change" + visible);
+         //   Log("Vis change" + visible);
 
             if (visible)
                 Raiding.UpdateTS();

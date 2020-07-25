@@ -258,7 +258,7 @@ namespace COTG.Game
             foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
             {
                 var cid = cit[0].GetInt32();
-                Log(cid.ToString());
+              //  Log(cid.ToString());
                 var city = City.allCities[cid];
                 List<SenatorInfo> sens = new List<SenatorInfo>();
                 foreach (var target in cit[7].EnumerateArray())

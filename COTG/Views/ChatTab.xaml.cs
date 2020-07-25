@@ -178,7 +178,7 @@ namespace COTG.Views
                 {
                     if (e.Key == Windows.System.VirtualKey.Enter)
                     {
-                        Log(input.Text);
+                     //   Log(input.Text);
                         JSClient.SendChat(id + 1, input.Text);
                         input.Text = "";
                     }

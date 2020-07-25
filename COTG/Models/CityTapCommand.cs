@@ -102,7 +102,7 @@ namespace COTG.Models
         {
             var context = parameter as DataGridCellInfo;
             // put your custom logic here
-            Log("CanExecute");
+           // Log("CanExecute");
             return true;
         }
 
@@ -135,7 +135,7 @@ namespace COTG.Models
                 //   grid.BeginEdit(context);
                 if (context.Column.Header != null)
                 {
-                    Log(context.Column.Header);
+                //    Log(context.Column.Header);
                     switch (context.Column.Header.ToString())
                     {
                         case nameof(Report.Type): JSClient.ShowReport(i.reportId); break;
@@ -247,7 +247,7 @@ namespace COTG.Models
         {
             var context = parameter as DataGridCellInfo;
             // put your custom logic here
-            Log("CanExecute");
+        //    Log("CanExecute");
             return true;
         }
 
@@ -343,7 +343,7 @@ namespace COTG.Models
         {
             var context = parameter as DataGridCellInfo;
             // put your custom logic here
-            Log("CanExecute");
+        //    Log("CanExecute");
             return true;
         }
 
@@ -354,15 +354,15 @@ namespace COTG.Models
             var i = context.Item as COTG.Game.Dungeon;
             var cid = i.cid;
             var processed = false;
-            Log(context.Item.GetType());
-            Log(context.Item.ToString());
-            Log(context.Value);
+          //  Log(context.Item.GetType());
+         //   Log(context.Item.ToString());
+         //   Log(context.Value);
 
-            Log(context.Column.Name);
-            Log(base.CanExecute(parameter));
+          //  Log(context.Column.Name);
+          //  Log(base.CanExecute(parameter));
             if (context.Column.Header != null)
             {
-                Log(context.Column.Header);
+            //    Log(context.Column.Header);
                 switch (context.Column.Header.ToString())
                 {
                     case "xy":

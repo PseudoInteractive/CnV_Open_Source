@@ -266,7 +266,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Log(e);
+             //   Log(e);
                 return JSClient.cid; // return current city
             }
         }

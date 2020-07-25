@@ -25,23 +25,30 @@ namespace COTG.Views
 {
     public partial class ShellPage
     {
+        const float detailsZoomThreshold = 40;
+        const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
         public static CanvasBitmap worldObjects;
         public static Vector2 clientTL;
-        public static Vector2 cameraC;
-        public static Vector2 cameraCLag; // for smoothing
+        public static Vector2 cameraC = new Vector2(300,300);
+        public static Vector2 cameraCLag = cameraC; // for smoothing
         public static Vector2 clientC;
         public static Vector2 clientSpan;
         public static Vector2 halfSpan;
         //   public static Vector2 cameraMid;
-        public static float cameraZoom;
-        public static float cameraZoomLag;
+        public static float cameraZoom=64;
+        public static float cameraZoomLag=64;
         public float eventTimeOffset;
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
+        static public Color nameBrush, myNameBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap };
+        static CanvasTextFormat nameTextFormat = new CanvasTextFormat() { FontSize = 10,
+            HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center,
+            WordWrapping = CanvasWordWrapping.NoWrap,
+            Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap };
         static readonly Color attackColor = Colors.DarkRed;
         static readonly Color defenseColor = Colors.DarkCyan;
         static readonly Color artColor = Colors.DarkOrange;
@@ -52,6 +59,7 @@ namespace COTG.Views
         static readonly Color selectColor = Colors.DarkMagenta;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 
+        static Dictionary<string, CanvasTextLayout> nameLayoutCache = new Dictionary<string, CanvasTextLayout>();
         const int bottomMargin = 36;
         const int cotgPopupWidth = 550;
         const int cotgPopupLeft = 438;
@@ -283,6 +291,9 @@ namespace COTG.Views
                 //   ShellPage.T("Draw");
                 if (shadowBrush == null)
                 {
+                    nameBrush = Colors.White;
+                    myNameBrush = new Color() { A = 255, G = 255, B = 190, R = 210 };
+
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
                     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
@@ -304,12 +315,14 @@ namespace COTG.Views
                 //                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
 
                 ds.Antialiasing = CanvasAntialiasing.Aliased;
+  //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
                 var scale = ShellPage.canvas.ConvertPixelsToDips(1);
                 pixelScale = scale * (cameraZoomLag);
 
-                var wantDetails = pixelScale >= 62.0f;
-
-                if (worldBackground != null && IsWorldView() && !wantDetails)
+                var deltaZoom = cameraZoomLag - detailsZoomThreshold;
+                var wantDetails = deltaZoom > 0;
+                var wantImage = deltaZoom < detailsZoomFade;
+                if (worldBackground != null && IsWorldView() && wantImage )
                 {
                     var srcP0 = new Point(cameraCLag.X * bSizeGain2- halfSpan.X * bSizeGain2 / pixelScale, cameraCLag.Y * bSizeGain2- halfSpan.Y * bSizeGain2 / pixelScale);
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
@@ -364,6 +377,13 @@ namespace COTG.Views
                 {
                     if (wantDetails)
                     {
+                        var wantFade = wantImage;
+                        var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
+
+                        var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
+                        nameBrush = nameBrush.WithAlpha(intAlpha);
+                        myNameBrush = myNameBrush.WithAlpha(intAlpha);
+                    
                         var td = TileData.instance;
                         var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).RoundToInt().Add((1,1));
                         var ccBase = cameraCLag.RoundToInt();
@@ -375,22 +395,47 @@ namespace COTG.Views
                                 if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
                                 {
                                     var ccid = cc.x + cc.y * td.width;
-                                    foreach (var l in td.layers)
+                                    var rect = new Rect(((new Vector2(cc.x, cc.y)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
+                                    var layerData = TileData.packedLayers[ccid];
+                                    while(layerData != 0)
                                     {
-                                        int imageId = l.data[ccid];
-                                        if (imageId == 0)
-                                            continue;
-                                        foreach (var tile in td.tilesets)
-                                        {
-                                            var off = imageId - tile.firstgid;
-                                            if (off < 0 || off >= tile.tilecount || tile.bitmap == null)
+                                       var imageId = ((uint)layerData&0xffffu);
+                                        layerData >>= 16;
+                                        var tileId = imageId >> 13;
+                                        var off = imageId & ((1 << 13) - 1);
+                                        var tile = td.tilesets[tileId];
+
+                                            if ( tile.bitmap == null)
                                                 continue;
                                             var sy = off / tile.columns;
                                             var sx = off - sy * tile.columns;
-                                            ds.DrawImage(tile.bitmap, new Rect(((new Vector2(cc.x,cc.y)).WToC()).ToPoint(), new Size(pixelScale, pixelScale)),
+                                            if(wantFade)
+                                                ds.DrawImage(tile.bitmap, rect,
+                                                    new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)),alpha);
+                                            else
+                                                ds.DrawImage(tile.bitmap, rect,
                                                 new Rect(new Point(sx * tile.tilewidth+0.5f, sy * tile.tileheight+0.5f), new Size(tile.tilewidth-1, tile.tileheight-1)));
-                                            break;
+                                           
+                                            
 
+                                    }
+                                    (var name,var isMine) = World.GetLabel(cc);
+                                    if (name!=null)
+                                    {
+                                        if (!nameLayoutCache.TryGetValue(name, out var layout))
+                                        {
+                                            layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f) { Options = CanvasDrawTextOptions.NoPixelSnap | CanvasDrawTextOptions.EnableColorFont };
+                                            nameLayoutCache.Add(name, layout);
+                                        }
+                                       /* if (wantFade)
+                                        {
+
+                                        }
+                                        else*/
+                                        {
+                                            ds.DrawTextLayout(layout, new Vector2((float)(rect.Left + rect.Right) * 0.5f,
+                                                (float)rect.Top + (float)rect.Height * 7.25f / 8.0f),
+                                                isMine ? myNameBrush : nameBrush);
                                         }
                                     }
                                 }
@@ -400,6 +445,7 @@ namespace COTG.Views
 
                 }
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
+//                ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
 
                 if (!IsCityView())
                 {
@@ -601,10 +647,10 @@ namespace COTG.Views
                     tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
                     tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right,(float)bounds.Bottom);
                     ds.FillRoundedRectangle(bounds, 8, 8, tipBackgroundBrush);
-//                    target.X+= 12;
-  //                  target.Y += 8;
+                    //                    target.X+= 12;
+                    //                  target.Y += 8;
 
-                    ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
+                    ds.DrawTextLayout(textLayout, c,tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
                 }
             }
             catch (Exception ex)

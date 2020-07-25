@@ -85,7 +85,7 @@ namespace COTG.Game
         public const uint typeBoss = 0x40000000;
         public const uint typeDungeon = 0x50000000;
         public const uint typeNone = 0x00000000;
-        public const  int playerMask = 0x00ffffff;
+        public const int playerMask = 0x00ffffff;
         public const int typeCityFlagCastle = 0x1000000;
         public const int typeCityFlagTemple = 0x2000000;
         public const int typeCityFlagWater = 0x4000000;
@@ -98,19 +98,19 @@ namespace COTG.Game
         {
             return x.Clamp(0, worldDim);
         }
-        public static (uint type, int player,bool isCastle,bool isBig,bool isWater,bool isTemple) CityLookup( (int x, int y) c)
+        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple) CityLookup((int x, int y) c)
         {
             var x = c.x;
             var y = c.y;
             uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? cityLookup[x, y] : 0u;
             return (rv & typeMask, (int)(rv & playerMask),
-                (rv & typeCityFlagCastle)!=0,
+                (rv & typeCityFlagCastle) != 0,
                 (rv & typeCityFlagBig) != 0,
                 (rv & typeCityFlagWater) != 0,
                 (rv & typeCityFlagTemple) != 0);
 
         }
-        
+
         public struct Boss
         {
             public byte level;
@@ -138,24 +138,24 @@ namespace COTG.Game
         }
         public Portal[] portals;
 
-//        public struct City
-//        {
-//            public int playerId;
-//            public int allianceId;
-//            public ushort x;
-//            public ushort y;
-//            public byte type;
-//            public bool isCastle => type switch
-//            {
-//                3 => true,
-//                4 => true,
-//                7 => true,
-//                8 => true,
-//                _ => false
+        //        public struct City
+        //        {
+        //            public int playerId;
+        //            public int allianceId;
+        //            public ushort x;
+        //            public ushort y;
+        //            public byte type;
+        //            public bool isCastle => type switch
+        //            {
+        //                3 => true,
+        //                4 => true,
+        //                7 => true,
+        //                8 => true,
+        //                _ => false
 
-//            };
-//        }
-////        public City[] cities;
+        //            };
+        //        }
+        ////        public City[] cities;
 
         static ulong AsNumber(string s)
         {
@@ -167,7 +167,7 @@ namespace COTG.Game
         {
             current = Decode(jsd);
         }
-        
+
         //public static (int size, byte[] pixels) CreateBitmap()
         //{
         //    // fill with Alpha=clear
@@ -197,11 +197,11 @@ namespace COTG.Game
         //    return (outSize, pixels);
 
         //}
-        
+
         public static World Decode(JsonDocument jsd)
         {
-             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-            Array.Clear(cityLookup,0,cityLookup.Length); // Todo:  remove decaying cities?
+            var pixels = new byte[outSize / 4 * outSize / 4 * 8];
+            Array.Clear(cityLookup, 0, cityLookup.Length); // Todo:  remove decaying cities?
 
             // fill with Alpha=clear
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
@@ -217,7 +217,7 @@ namespace COTG.Game
             }
 
             var data = jsd.RootElement.GetProperty("a").GetString(); // we do at least one utf16 <-> utf8 round trip here
-  //          List<City> cities = new List<City>(1024);
+                                                                     //          List<City> cities = new List<City>(1024);
             List<Boss> bosses = new List<Boss>(32);
             List<Shrine> shrines = new List<Shrine>(128);
             List<Portal> portals = new List<Portal>(128);
@@ -240,25 +240,30 @@ namespace COTG.Game
             /** @type {string} */
             foreach (var id in bosses_1)
             {
-                    if (id == "")
-                        continue;
-                    /** @type {string} */
-                    var dat_ = AsNumber(id) + (bkey_);
-                    /** @type {string} */
-                    bkey_ = dat_;
-                    var _t = dat_.ToString();
-                    var b = new Boss() { x = (ushort)(_t.SubStrAsInt(6, 3)-100), y = (ushort)(_t.SubStrAsInt(3, 3)-100), level = (byte)(_t.SubStrAsByte(0, 2)-10),
-                        type = _t.SubStrAsByte(2, 1) };
-                    //  LogJS(b);
-                    bosses.Add(b);
-                    var index = (int)(b.x + b.y * worldDim);
-                    pixels.SetColor(index, 0xF0, 0xF0, 0x40);
-                    pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
-                    pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
-                    pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-                    pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                if (id == "")
+                    continue;
+                /** @type {string} */
+                var dat_ = AsNumber(id) + (bkey_);
+                /** @type {string} */
+                bkey_ = dat_;
+                var _t = dat_.ToString();
+                var b = new Boss()
+                {
+                    x = (ushort)(_t.SubStrAsInt(6, 3) - 100),
+                    y = (ushort)(_t.SubStrAsInt(3, 3) - 100),
+                    level = (byte)(_t.SubStrAsByte(0, 2) - 10),
+                    type = _t.SubStrAsByte(2, 1)
+                };
+                //  LogJS(b);
+                bosses.Add(b);
+                var index = (int)(b.x + b.y * worldDim);
+                pixels.SetColor(index, 0xF0, 0xF0, 0x40);
+                pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+                pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
+                pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
 
-                    cityLookup[b.x, b.y] = b.level | (uint)(b.type<<4) | typeBoss;
+                cityLookup[b.x, b.y] = b.level | (uint)(b.type << 4) | typeBoss;
 
             }
             foreach (var id in caverns_)
@@ -271,13 +276,13 @@ namespace COTG.Game
                 cavkey_ = dat_;
                 var _t = dat_.ToString();
                 var x = (ushort)(_t.SubStrAsInt(5, 3) - 100);
-                var    y = (ushort)(_t.SubStrAsInt(2, 3) - 100);
-                var level = _t.SubStrAsByte(0, 2)-10;
+                var y = (ushort)(_t.SubStrAsInt(2, 3) - 100);
+                var level = _t.SubStrAsByte(0, 2) - 10;
 
                 //  LogJS(b);
                 var index = (int)(x + y * worldDim);
-                pixels.SetColor(index, 0x90,(byte)( 0xD0-level*8),(byte)( 0x40+level*7));
-                float t = (level-1)/ 9.0f;
+                pixels.SetColor(index, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
+                float t = (level - 1) / 9.0f;
                 switch (level)
                 {
                     case 1:
@@ -287,7 +292,8 @@ namespace COTG.Game
                             pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
                             pixels[index * 8 + 6] = 3 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
                             pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                        } break;
+                        }
+                        break;
                     case 3:
                     case 4:
                         {
@@ -347,7 +353,7 @@ namespace COTG.Game
                         }
                         break;
                 }
-                        cityLookup[x, y] =(uint)( level | typeDungeon);
+                cityLookup[x, y] = (uint)(level | typeDungeon);
 
             }
             foreach (var id in shrines_)
@@ -359,8 +365,12 @@ namespace COTG.Game
                 /** @type {string} */
                 skey_ = dat_;
                 var _t = dat_.ToString();
-                var b = new Shrine() { x = (ushort)(_t.SubStrAsInt(5, 3) - 100), y = (ushort)(_t.SubStrAsInt(2, 3) - 100),
-                    type = (byte)(_t.SubStrAsInt(0,1)==1?255:_t.SubStrAsByte(1, 1)) };
+                var b = new Shrine()
+                {
+                    x = (ushort)(_t.SubStrAsInt(5, 3) - 100),
+                    y = (ushort)(_t.SubStrAsInt(2, 3) - 100),
+                    type = (byte)(_t.SubStrAsInt(0, 1) == 1 ? 255 : _t.SubStrAsByte(1, 1))
+                };
                 //  LogJS(b);
                 shrines.Add(b);
                 var index = (int)(b.x + b.y * worldDim);
@@ -370,7 +380,7 @@ namespace COTG.Game
                 }
                 else
                 {
-                    pixels.SetColor(index,WorldHelper.FaithColor16(b.type) );
+                    pixels.SetColor(index, WorldHelper.FaithColor16(b.type));
 
                 }
                 pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
@@ -397,7 +407,7 @@ namespace COTG.Game
                 };
                 portals.Add(b);
                 var index = (int)(b.x + b.y * worldDim);
-                if (b.active )
+                if (b.active)
                 {
                     pixels.SetColor(index, 0xFA, 0xFA, 0xA1);
                 }
@@ -409,7 +419,7 @@ namespace COTG.Game
                 pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-                cityLookup[b.x, b.y] = (b.active?1u:0) | typePortal;
+                cityLookup[b.x, b.y] = (b.active ? 1u : 0) | typePortal;
             }
 
             for (int isLL = 0; isLL < 2; ++isLL)
@@ -418,116 +428,116 @@ namespace COTG.Game
                 var key = ll ? lkey_ : ckey;
                 foreach (var id in ll ? lawless_ : cities_)
                 {
-                        if (id == "")
-                            continue;
-                        /** @type {string} */
-                        var dat_ = AsNumber(id) + (key);
-                        /** @type {string} */
-                        key = dat_;
-                        var _t = dat_.ToString();
-                        uint x, y, pid, alliance, type;
-                        var isTemple = false;
-                        if (ll)
+                    if (id == "")
+                        continue;
+                    /** @type {string} */
+                    var dat_ = AsNumber(id) + (key);
+                    /** @type {string} */
+                    key = dat_;
+                    var _t = dat_.ToString();
+                    uint x, y, pid, alliance, type;
+                    var isTemple = false;
+                    if (ll)
+                    {
+                        x = (_t.SubStrAsInt(4, 3) - 100);
+                        y = (_t.SubStrAsInt(1, 3) - 100);
+                        Assert(x < 600);
+                        Assert(y < 600);
+                        pid = 0;
+                        alliance = 0;
+                        // TODO:
+                        type = _t.SubStrAsInt(0, 1) == 1 ? 1u : 7u;
+                    }
+                    else
+                    {
+                        var digitCount = _t.SubStrAsInt(10, 1);
+                        pid = _t.SubStrAsInt(11, (int)digitCount);
+                        int aliStart = 11 + (int)digitCount;
+                        alliance = (_t.SubStrAsInt(aliStart, _t.Length - aliStart));
+                        x = (_t.SubStrAsInt(7, 3) - 100);
+                        y = (_t.SubStrAsInt(4, 3) - 100);
+                        type = _t.SubStrAsByte(3, 1);
+                        if ((int)_t.SubStrAsInt(0, 2) > 10)
                         {
-                            x = (_t.SubStrAsInt(4, 3) - 100);
-                            y = (_t.SubStrAsInt(1, 3) - 100);
-                            Assert(x < 600);
-                            Assert(y < 600);
-                            pid = 0;
-                            alliance = 0;
-                            // TODO:
-                            type = _t.SubStrAsInt(0, 1) == 1 ? 1u : 7u;
+                            isTemple = true;
                         }
-                        else
-                        {
-                            var digitCount = _t.SubStrAsInt(10, 1);
-                            pid = _t.SubStrAsInt(11, (int)digitCount);
-                            int aliStart = 11 + (int)digitCount;
-                            alliance = (_t.SubStrAsInt(aliStart, _t.Length - aliStart));
-                            x = (_t.SubStrAsInt(7, 3) - 100);
-                            y = (_t.SubStrAsInt(4, 3) - 100);
-                            type = _t.SubStrAsByte(3, 1);
-                            if( (int)_t.SubStrAsInt(0, 2) > 10 )
-						    {
-                                isTemple = true;
-						    }
-                        }
-                        //if (pid == JSClient.jsVars.pid)
-                        //{
-                        //    LogJS(c);
-                        //    Log(_t);
-                        //}
-                        // cities.Add(c);
-                        var index = (int)( x + y * worldDim);
-                        if(isTemple)
-                            pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
+                    }
+                    //if (pid == JSClient.jsVars.pid)
+                    //{
+                    //    LogJS(c);
+                    //    Log(_t);
+                    //}
+                    // cities.Add(c);
+                    var index = (int)(x + y * worldDim);
+                    if (isTemple)
+                        pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
 
-                       
-                           if (pid == 0)
+
+                    if (pid == 0)
+                    {
+                        pixels.SetColor(index, 0xA0, 0x00, 0xB0);
+                    }
+                    else if (pid == JSClient.jsVars.pid)
+                        pixels.SetColor(index, 0x60, 0xd0, 0x40);
+                    else if (alliance == Alliance.my.id)
+                        pixels.SetColor(index, 0x30, 0xa0, 0x30);
+                    else
+                    {
+                        switch (Alliance.GetDiplomacy((int)alliance))
                         {
-                            pixels.SetColor(index, 0xA0, 0x00, 0xB0);
+                            case Diplomacy.none:
+                                pixels.SetColor(index, 0x80, 0x80, 0x80);
+                                break;
+                            case Diplomacy.allied:
+                                pixels.SetColor(index, 0x20, 0xA0, 0x00);
+                                break;
+                            case Diplomacy.nap:
+                                pixels.SetColor(index, 0x40, 0x80, 0x40);
+                                break;
+                            case Diplomacy.enemy:
+                                pixels.SetColor(index, 0xB0, 0x30, 0x20);
+                                break;
+                            default:
+                                break;
                         }
-                        else if (pid == JSClient.jsVars.pid)
-                            pixels.SetColor(index, 0x60, 0xd0, 0x40);
-                        else if (alliance == Alliance.my.id)
-                            pixels.SetColor(index, 0x30, 0xa0, 0x30);
-                        else
-                        {
-                            switch (Alliance.GetDiplomacy((int)alliance))
-                            {
-                                case Diplomacy.none:
-                                    pixels.SetColor(index, 0x80, 0x80, 0x80);
-                                    break;
-                                case Diplomacy.allied:
-                                    pixels.SetColor(index, 0x20, 0xA0, 0x00);
-                                    break;
-                                case Diplomacy.nap:
-                                    pixels.SetColor(index, 0x40, 0x80, 0x40);
-                                    break;
-                                case Diplomacy.enemy:
-                                    pixels.SetColor(index, 0xB0, 0x30, 0x20);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        var isBig = type >= 5 ? 1:0;
+                    }
+                    var isBig = type >= 5 ? 1 : 0;
                     var isCastle = 0;
                     var isWater = (type & 1);
 
                     if (type == 3 || type == 4) // 3,4 is on/off water
-                        {
-                            isCastle =1;
-                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                            pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
-                            pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                            pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-                        }
-                        else if (type == 7 || type == 8) // 7 is on water
-                        {
-                            isCastle = 1;
-                            pixels[index * 8 + 4] =(byte)( 1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
-                            pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                            pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                            pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-                        }
-                        else if(type == 1 || type == 2)
-                        {
-                         // City
-                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                            pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
-                            pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-                            pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
-                        }
-                        else // if (type == 5 || type == 6)
-                        {
-                            // City
-                            pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-                            pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-                            pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-                            pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
-                        }
-                        cityLookup[x, y] = (uint)(pid | typeCity | isBig*typeCityFlagBig | isCastle*typeCityFlagCastle | (isTemple?typeCityFlagTemple:0) | isWater*typeCityFlagWater);
+                    {
+                        isCastle = 1;
+                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
+                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                    }
+                    else if (type == 7 || type == 8) // 7 is on water
+                    {
+                        isCastle = 1;
+                        pixels[index * 8 + 4] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
+                        pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+                    }
+                    else if (type == 1 || type == 2)
+                    {
+                        // City
+                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+                    }
+                    else // if (type == 5 || type == 6)
+                    {
+                        // City
+                        pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                        pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+                        pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                        pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+                    }
+                    cityLookup[x, y] = (uint)(pid | typeCity | isBig * typeCityFlagBig | isCastle * typeCityFlagCastle | (isTemple ? typeCityFlagTemple : 0) | isWater * typeCityFlagWater);
 
 
 
@@ -581,11 +591,42 @@ namespace COTG.Game
 
             //            rv.cities = cities.ToArray();
             rv.portals = portals.ToArray();
-            rv.shrines= shrines.ToArray();
+            rv.shrines = shrines.ToArray();
             rv.bosses = bosses.ToArray();
             bitmapPixels = pixels;
             return rv;
         }
+        public static (string label,bool isMine) GetLabel((int x, int y) c)
+        {
+            var data = CityLookup(c);
+            switch (data.type)
+            {
+                case World.typeCity:
+                    {
 
+                        if (data.player == 0)
+                        {
+                            return ("lawless",false);
+                        }
+                        else
+                        {
+                            var isMine = false;
+                            var player = Player.all.GetValueOrDefault(data.player, Player._default);
+                            if (Player.IsMe(data.player))
+                            {
+                                isMine = true;
+                                if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
+                                {
+                                    return (city.cityName,true);
+                                }
+
+                            }
+                            return (player.name,isMine);
+                        }
+                    }
+                default:
+                    return (null,false);
+            }
+        }
     }
 }

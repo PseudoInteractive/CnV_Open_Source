@@ -826,12 +826,12 @@ namespace COTG
                             }
                         case "OGA":
                             {
-                                Log(e.Value);
+                             //   Log(e.Value);
                                 break;
                             }
                         case "OGR":
                             {
-                                Log(e.Value);
+                              //  Log(e.Value);
                                 break;
                             }
                         case "snd":
@@ -841,7 +841,7 @@ namespace COTG
                             }
                         case "OGT":
                             {
-                                Log(e.Value);
+                               // Log(e.Value);
                                 break;
                             }
                         case "aldt":
@@ -890,14 +890,21 @@ namespace COTG
                                             if (ch.type == 2) // real whisper
                                             {
                                                 // add to all tabs
+                                                ch.text = $"`whispers` {ch.text}";
                                                 ChatTab.whisper.Post(ch);
                                                 ChatTab.alliance.Post(ch);
                                                 ChatTab.officer.Post(ch);
                                                 ChatTab.world.Post(ch);
                                             }
-
+                                            else if (ch.type == 3)
+                                            {
+                                                ch.text = $"`you whisper` {ch.text}";
+                                                ChatTab.whisper.Post(ch);
+                                            }
                                             else
-                                                (ch.type switch { 4 => ChatTab.alliance, 1 or 3 => ChatTab.world, _ => ChatTab.officer }).Post(ch);
+                                            {
+                                                (ch.type switch { 4 => ChatTab.alliance, 5 => ChatTab.officer, _ => ChatTab.world }).Post(ch);
+                                            }
                                             break;
                                         }
                                 }
@@ -909,7 +916,7 @@ namespace COTG
                                 var jso = jsp.Value;
                                 cid = jso.GetInt("c");
                                 var popupCount = jso.GetAsInt("p");
-                                Note.L("cid=" + cid.CidToString());
+                           //     Note.L("cid=" + cid.CidToString());
                                 var priorView = viewMode;
                                 viewMode = (ViewMode)jso.GetInt("v");
                                 if(priorView!=viewMode )
@@ -923,11 +930,11 @@ namespace COTG
                                 }
                                 if (priorView != ViewMode.world || viewMode != ViewMode.world)
                                 {
-                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
-                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
+//                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
+//                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
 //                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
 
-                                    ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
+                                 //   ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
                                     // if((viewMode & ViewMode.region)!=0)
                                  //   ShellPage.canvas?.Invalidate();
                                 }

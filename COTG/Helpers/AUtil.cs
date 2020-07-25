@@ -17,6 +17,11 @@ namespace COTG
     }
     public static class AUtil
     {
+        public static Color WithAlpha(this Color c, byte alpha)
+        {
+            return Color.FromArgb(alpha, c.R, c.G, c.B);
+        }
+
         public static void Nop<T0>(T0 t) { }
         public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);
         // Lists

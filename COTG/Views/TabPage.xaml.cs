@@ -16,6 +16,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
+
+using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
+
 namespace COTG.Views
 {
     public class UserTab : UserControl
@@ -98,8 +101,15 @@ namespace COTG.Views
                     continue;
                 var vi =new TabViewItem()
                 {
-                    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
                     Header = tab.DataContext as string,
+                    IconSource = (tab.DataContext as string switch
+                    {
+                        "world"=> new SymbolIconSource() { Symbol = Symbol.Microphone },
+                        "alliance" => new SymbolIconSource() { Symbol = Symbol.People },
+                        "whisper" => new SymbolIconSource() { Symbol = Symbol.Comment },
+                         "officer" => new SymbolIconSource() { Symbol = Symbol.Admin },
+                          _ => new SymbolIconSource() { Symbol = Symbol.OpenWith }
+                    }),
                     Content = tab
                 };
                 Add(vi);

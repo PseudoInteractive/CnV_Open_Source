@@ -30,6 +30,9 @@ namespace COTG.Views
         
         public static Vector2 mousePosition;
         public static Vector2 lastMousePressPosition;
+        public static DateTimeOffset lastMousePressTime;
+
+
         public static string toolTip;
         
 
@@ -146,8 +149,42 @@ namespace COTG.Views
                 mouseButtons |= MouseButtons.middle;
 
             mousePosition = point.Position.ToVector2();
-
+            var prior = lastMousePressTime;
+            lastMousePressTime = DateTimeOffset.UtcNow;
             lastMousePressPosition = mousePosition;
+            if ((lastMousePressTime - prior).TotalSeconds < 2.5f)
+            {
+                // double click
+
+                var c = MousePointToWorld(e.GetCurrentPoint(canvas).Position.ToVector2());
+                var data = World.CityLookup(c);
+                switch (data.type)
+                {
+                    case World.typeCity:
+                        {
+                            if (data.player == 0)
+                            {
+
+                                //                               toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                            }
+                            else
+                            {
+                                var player = Player.all.GetValueOrDefault(data.player, Player._default);
+                                if (Player.IsMe(data.player))
+                                {
+                                    JSClient.ViewCity(c.WorldToCid());
+                                }
+                                else
+                                {
+  //                                  toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                                }
+
+
+                            }
+                            break;
+                        }
+                }
+                }
         //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
         }
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -225,7 +262,7 @@ namespace COTG.Views
                                 {
                                     var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0,city.remarks.Length.Min(40) ) + "\n";
                                     toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-                                    Raiding.UpdateTS();
+                               //     Raiding.UpdateTS();
                                 }
 
                             }

@@ -130,41 +130,6 @@
 				Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/projectTypes/navigationpane.md
 				Edit String/en-US/Resources.resw: Add a menu item title for each page
 			-->
-            <winui:NavigationViewItem x:Uid="Shell_Main"
-                                      x:Name="raid"
-                                      helpers:NavHelper.NavigateTo="views:MainPage">
-                <winui:NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="ReShare" />
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_Defender"
-                                      x:Name="defender"
-                                      helpers:NavHelper.NavigateTo="views:DefenderPage">
-                <winui:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA18;" />
-                    <!--Shield-->
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_Defense"
-                                      x:Name="DefenseHistory"
-                                      helpers:NavHelper.NavigateTo="views:DefensePage">
-                <winui:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"  Glyph="&#xF738;"/>
-                    <!--History-->
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_TreeView"
-                                      helpers:NavHelper.NavigateTo="views:TabPage">
-                <winui:NavigationViewItem.Icon>
-                    <BitmapIcon UriSource="/images/defender.png" />
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
-            <winui:NavigationViewItem x:Uid="Shell_SchemeActivationSample"
-                                      helpers:NavHelper.NavigateTo="views:SchemeActivationSamplePage">
-                <winui:NavigationViewItem.Icon>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"  Glyph="&#xEA0D;" />
-                </winui:NavigationViewItem.Icon>
-            </winui:NavigationViewItem>
         </winui:NavigationView.MenuItems>
         <i:Interaction.Behaviors>
             <behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind Selected.Content, Mode=OneWay}">

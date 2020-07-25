@@ -199,31 +199,31 @@ namespace COTG.Views
 
             {
                 var tabPage = CreateTabPage(shellFrame);
-                Log("HEre1");
+              
                 MainPage.instance = new MainPage();
-                Log("HEre2");
+              
                 tabPage.Add(
                 new WinUI.TabViewItem()
                 {
-                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.ReShare },
                     Header = "Raid",//tab.DataContext as string,
                     Content = MainPage.instance
                 });
-                Log("HEre3");
+              
                 DefenderPage.instance = new DefenderPage();
                 tabPage.Add(
                 new WinUI.TabViewItem()
                 {
-                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA18" },
                     Header = "Defender",//tab.DataContext as string,
                     Content = DefenderPage.instance
-                });
-                Log("HEre5");
+                }); ;
+              
                 DefensePage.instance = new DefensePage();
                 tabPage.Add(
                 new WinUI.TabViewItem()
                 {
-                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA0D"  },
                     Header = "Defense",//tab.DataContext as string,
                     Content = DefensePage.instance
                 });
@@ -236,7 +236,7 @@ namespace COTG.Views
                 tabPage.Add(
                 new WinUI.TabViewItem()
                 {
-                    //    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uF738" },
                     Header = "Recent",//tab.DataContext as string,
                     Content = SpotTab.instance
                 });
@@ -303,7 +303,8 @@ namespace COTG.Views
         {
             if (IsLoggedIn)
             {
-                NavigationService.Navigate<SettingsPage>();
+                OpenSettingsPage(sender,e);
+//                NavigationService.Navigate<SettingsPage>();
             }
             //else
             //{
@@ -371,15 +372,16 @@ namespace COTG.Views
         {
             if (args.IsSettingsInvoked)
             {
-                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
+                OpenSettingsPage(sender, args);
+//                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
                 return;
             }
 
-            if (args.InvokedItemContainer is WinUI.NavigationViewItem selectedItem)
-            {
-                var pageType = selectedItem.GetValue(NavHelper.NavigateToProperty) as Type;
-                NavigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
-            }
+            //if (args.InvokedItemContainer is WinUI.NavigationViewItem selectedItem)
+            //{
+            //    var pageType = selectedItem.GetValue(NavHelper.NavigateToProperty) as Type;
+            //    NavigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
+            //}
         }
 
         private void OnBackRequested(WinUI.NavigationView sender, WinUI.NavigationViewBackRequestedEventArgs args)
@@ -566,7 +568,7 @@ namespace COTG.Views
 
         private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
         {
-            Log("Why is this closing?");
+           // Log("Why is this closing?");
         }
 
         private void GridLostMouse(object sender, PointerRoutedEventArgs e)
@@ -574,7 +576,7 @@ namespace COTG.Views
 
 			try
 			{
-                Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
+             //   Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
               //  var me = sender as GridView;
               //  var button = buildingsButton;
               //  var flyout = FlyoutBase.GetAttachedFlyout(button);
@@ -594,17 +596,17 @@ namespace COTG.Views
 
             return o is FrameworkElement e ? $"{ e.Name }{e.GetType() }"  : $"{ o.ToString()}{o.GetType() }";
 		}
-		private void ShellPointerEntered(object sender, PointerRoutedEventArgs e)
-		{
-            Log($"pointer enter: {GetName(sender)} {GetName(e.OriginalSource)}");
-        }
+		//private void ShellPointerEntered(object sender, PointerRoutedEventArgs e)
+		//{
+  //          Log($"pointer enter: {GetName(sender)} {GetName(e.OriginalSource)}");
+  //      }
 
-		private void ShellPointerExited(object sender, PointerRoutedEventArgs e)
-		{
-            Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
+		//private void ShellPointerExited(object sender, PointerRoutedEventArgs e)
+		//{
+  //          Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
 
 
-        }
+  //      }
         private void TroopOverview(object sender, RoutedEventArgs e)
         {
             RestAPI.troopsOverview.Post();
@@ -636,12 +638,12 @@ namespace COTG.Views
             }
         }
 
-        //private void ChatOpen(object sender, RoutedEventArgs e)
-        //{
-        //         {
-        //              WindowManagerService.Current.TryShowAsStandaloneAsync<TabPage>("Hello!");
+        private void OpenSettingsPage(object sender, object e)
+        {
+                 {
+                      WindowManagerService.Current.TryShowAsStandaloneAsync<SettingsPage>("Settings");
 
-        //          }
-        //      }
+                  }
+           }
     }
 }

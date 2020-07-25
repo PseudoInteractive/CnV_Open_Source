@@ -166,7 +166,7 @@ namespace COTG.Views
 
         public override void VisibilityChanged(bool visible)
         {
-            Log("Vis change" + visible);
+          //  Log("Vis change" + visible);
             if(visible)
                 IncomingOverview.Process(false);
         }
