@@ -9033,16 +9033,16 @@ function gaFrep(E7c) {
   $(_s("6145" & 2147483647))
     .text(_s(+'2978'));
   $(_s("2069" ^ 0))
-    .text(_s(+"2978"));
+    .text(_s(2978));
   $(_s('4802' * 1))
     .show();
   $(_s("4069" & 2147483647))
     .show();
-  $(_s(+"7010"))
+  $(_s(7010))
     .show();
   $(_s("6579" ^ 0))
     .css("display", "none");
-  $(_s(+"1940"))
+  $(_s(1940))
     .show();
   $(_s('6055' ^ 0))
     .show();
@@ -9054,7 +9054,7 @@ function gaFrep(E7c) {
     .show();
   $(_s('4010' * 1))
     .show();
-  $(_s(+"1183"))
+  $(_s(1183))
     .show();
   $(_s(+'6801'))
     .show();
@@ -42073,7 +42073,7 @@ var cotgsubscribe = amplify;
       else if (L6T > ppdt.m.t) Y6(_s(d3R - 0));
       else if (l6T == '') Y6(_s(+F4R));
       else {
-        if ($(_s(i1p - 0))
+        if ($("#cvs")
           .css("display") != "none") var Q6T = 0;
           //Number(phaserGraphics.y) / (64 ^ 0) * (R5y * 1) +
          // Number(phaserGraphics.x) / (64 >> 498255392);
@@ -44859,7 +44859,7 @@ var cotgsubscribe = amplify;
        //!     c6.step();
           });
         $("#cvs")
-          .on(_s(+"2697"), function(K56) {
+          .on("touchmove"), function(K56) {
             K56.preventDefault();
             E6k.R6();
             _camera.x += prevX - K56.changedTouches['0' - 0].screenX;
@@ -44894,12 +44894,12 @@ var cotgsubscribe = amplify;
                   prevY - g56.screenY;
                 prevY = g56.screenY;
               }
-              f0F(_camera.x, _camera.y);
+            //  f0F(_camera.x, _camera.y);
             //  c6.step();
             }
           });
         E6k.y6();
-        $(_s(i1p * 1))
+        $("#cvs")
           .on(_s(+"6866"), function(B56) {
             if (a9) {
               a9 = !!0;
@@ -44910,7 +44910,7 @@ var cotgsubscribe = amplify;
             E6k.R6();
             setTimeout(function() { r0F(); }, +M1R);
           });
-        $(_s(i1p >> 1772834656))
+        $("#cvs")
           .on(_s('4863' << 1502623168), function(R56) {
             a9 = ![];
             dragUpr = _camera.x + _camera.y;
@@ -47253,8 +47253,8 @@ var cotgsubscribe = amplify;
           .click(function(g96) {
             var Z96 = $(_s(a7m - 0));
             if (!Z96.is(g96.target) && Z96.has(g96.target)
-              .length === ("0" & 2147483647) && !$(_s(i1p ^ 0))
-              .is(g96.target) && $(_s(i1p | 2048))
+              .length === ("0" & 2147483647) && !$("#cvs")
+              .is(g96.target) && $("#cvs")
               .has(g96.target)
               .length === +"0") $(_s(a7m * 1))
               .css("display", "none");
@@ -47314,7 +47314,7 @@ var cotgsubscribe = amplify;
           _camera.x = q96;
           _camera.y = c96;
         //  c6.step();
-          f0F(q96, c96);
+       //   f0F(q96, c96);
           if (p96 == "") p96 = +'0';
           if (N96 == "") N96 = '0' & E6k
             .s6s;
@@ -47484,7 +47484,7 @@ var cotgsubscribe = amplify;
          // c6.step();
           var H0g = Number(E96) * (R5y ^ 0) + Number(a96);
           O8(H0g);
-          f0F(e0g, s0g);
+        //  f0F(e0g, s0g);
           var j0g = document.getElementById("cvs");
           var w0g = document.getElementById("content");
           j0g.style.display = "none";
@@ -47526,7 +47526,7 @@ var cotgsubscribe = amplify;
         var T0g = Number(v0g) * (R5y * 1) + Number(I0g);
         O8(T0g);
         E6k.R6();
-        f0F(l0g, Q0g);
+      //  f0F(l0g, Q0g);
         var x0g = document.getElementById("cvs");
         var O0g = document.getElementById(_s(+
           q6p));
@@ -49329,7 +49329,7 @@ var cotgsubscribe = amplify;
         .css("display", "none");
       $(_s(+"5002") + j1T)
         .html("");
-      if ($(_s(i1p << 944731552))
+      if ($("#cvs")
         .css("display") != "none") var j1T =0;// Number(phaserGraphics.y) / (64 & 2147483647) * (R5y * 1) + Number(phaserGraphics.x) / +64;
       else var j1T = +"0";
       var I1T = { a: Number(j1T), b: Number(w1T), c: cid };
@@ -49346,7 +49346,7 @@ var cotgsubscribe = amplify;
         else if (T1T == '4' - 0) {
           ppdt.itc[w1T] = ppdt.itc[w1T] - +"1";
           r9();
-          if ($(_s(i1p * 1))
+          if ($("#cvs")
               .css("display") != "none") {
                   clearTimeout(a8);
                   a8 = setTimeout(function() {
@@ -55595,14 +55595,14 @@ var cotgsubscribe = amplify;
     var y9F = function(l7g) {};
     var D9F = function(Q7g) {};
 
-    function V4V(o1T) {
-      H0V(o1T);
-      C1F(o1T);
-      var L1T = m6[o1T]["n"];
-      var X1T = L1T + _s(+"5882");
-      H0F(X1T);
-      r9();
-    }
+    //function V4V(o1T) {
+    //  H0V(o1T);
+    //  C1F(o1T);
+    //  var L1T = m6[o1T]["n"];
+    //  var X1T = L1T + _s(+"5882");
+    //  H0F(X1T);
+    //  r9();
+    //}
     var p9F = function(T7g) {};
 
     function I0F() {
@@ -61434,7 +61434,7 @@ var cotgsubscribe = amplify;
       else if (e6T > ppdt.m.t) Y6(_s(+d3R));
       else if (F1T == "") Y6(_s(+F4R));
       else {
-        if ($(_s(i1p << 77998080))
+        if ($("#cvs")
           .css("display") != "none") var q1T =0;
           //Number(phaserGraphics.y) / (64 ^ 0) * +
           //R5y + Number(phaserGraphics.x) / (64 ^ 0);
@@ -61456,13 +61456,13 @@ var cotgsubscribe = amplify;
             $(_s(R2p | 4661) + c1T)
               .val('');
             c7F();
-            if ($("#cvs")
-                .css("display") != "none") {
-                    clearTimeout(a8);
-                    a8 = setTimeout(function() {
+            //if ($("#cvs")
+            //    .css("display") != "none") {
+            //        clearTimeout(a8);
+            //        a8 = setTimeout(function() {
              
-            //  Y5F(Number(phaserGraphics.x) / (64), Number(phaserGraphics.y) / 64);
-            }, '500' << 1039164352);}
+            ////  Y5F(Number(phaserGraphics.x) / (64), Number(phaserGraphics.y) / 64);
+            //}, '500' << 1039164352);}
           }
         });
       }

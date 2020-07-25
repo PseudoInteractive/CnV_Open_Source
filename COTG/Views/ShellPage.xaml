@@ -95,12 +95,12 @@
                           
                           
                           Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
-                          IsBackButtonVisible="Visible"
-                          IsBackEnabled="{x:Bind Mode=OneWay, Path=IsBackEnabled}"
+                          IsBackButtonVisible="Collapsed"
+                          IsBackEnabled="False"
                           IsSettingsVisible="True"
                           ItemInvoked="OnItemInvoked"
                           SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
-        <winui:NavigationView.ContextFlyout>
+        <!--<winui:NavigationView.ContextFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem Click="GetIncomingOverview"
                                 Text="IncomingOverview" />
@@ -118,11 +118,8 @@
                                 Text="TestPost2" />
                 <MenuFlyoutItem Click="TestGoCity"
                                 Text="TestGoCity" />
-                <MenuFlyoutItem AccessKey="F5"
-                                Click="Refresh"
-                                Text="Refresh" />
             </MenuFlyout>
-        </winui:NavigationView.ContextFlyout>
+        </winui:NavigationView.ContextFlyout>-->
         <winui:NavigationView.MenuItems>
             <!--
 				TODO WTS: Change the symbols for each item as appropriate for your app
@@ -148,31 +145,21 @@
             <StackPanel x:Name="FooterStackPanel"
                         Orientation="Vertical"
                         Visibility="Visible">
-                <AppBarButton x:Name="RefreshAll"
-                              Label="Refresh"
+                <AppBarButton x:Name="Fresh"
+                              Label="Fresh"
                               AccessKey="F5"
                               Click="Refresh"
+                               ToolTipService.ToolTip="Refresh tool count displays"
                               Icon="RepeatAll">
                     <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator     Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
 
                 </AppBarButton>
-                <AppBarButton x:Name="logFlyoutButton"
-                              Label="Chat"
-                              Icon="Phone"
-                              Click="logFlyoutButton_Click">
-                    <AppBarButton.Resources>
-                        <winui:TeachingTip x:Name="logTip"
-                                         MaxWidth="1000"                                         
-                                         MaxHeight="600"                                         
-                                           Target="{x:Bind logFlyoutButton}"
-                                           Background="{x:Null}"></winui:TeachingTip>
-                    </AppBarButton.Resources>
-                </AppBarButton>
                 <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
+                               ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
                     <Button.Flyout>
                         <Flyout Closing="FlyoutClosing"
@@ -208,12 +195,9 @@
                         </Flyout>
                     </Button.Flyout>
                 </AppBarButton>
-                <AppBarButton x:Name="status" x:FieldModifier="public"
-                                Label="TBA"
-                              Icon="Shuffle">
-                </AppBarButton>
                 <AppBarButton Label="Time"
-                              Icon="Shuffle">
+                              Icon="Shuffle"
+                               ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
                     <Button.Flyout>
                         <Flyout Placement="Right"
                                 FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">

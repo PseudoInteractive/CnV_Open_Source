@@ -114,8 +114,8 @@ namespace COTG.Views
 
         public static void SetHeaderText(string text)
         {
-            if(instance!=null && instance.navigationView!=null)
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
+        //    if(instance!=null && instance.navigationView!=null)
+        //        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
         }
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -632,20 +632,20 @@ namespace COTG.Views
             IncomingOverview.Process(false);
         }
 
-        private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!logTip.IsOpen)
-            {
-          //      chatTabFrame.Navigate(typeof(TabPage));
+        //private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (!logTip.IsOpen)
+        //    {
+        //  //      chatTabFrame.Navigate(typeof(TabPage));
 
-                logTip.IsOpen = true;
-            }
-            else
-            {
-            //    chatTabFrame.Navigate(typeof(Page));
-                logTip.IsOpen = false;
-            }
-        }
+        //        logTip.IsOpen = true;
+        //    }
+        //    else
+        //    {
+        //    //    chatTabFrame.Navigate(typeof(Page));
+        //        logTip.IsOpen = false;
+        //    }
+        //}
 
         private void OpenSettingsPage(object sender, object e)
         {
