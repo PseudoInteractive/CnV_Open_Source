@@ -152,7 +152,12 @@
                               Label="Refresh"
                               AccessKey="F5"
                               Click="Refresh"
-                              Icon="RepeatAll" />
+                              Icon="RepeatAll">
+                    <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator     Key="F5" />
+                    </AppBarButton.KeyboardAccelerators>
+
+                </AppBarButton>
                 <AppBarButton x:Name="logFlyoutButton"
                               Label="Chat"
                               Icon="Phone"

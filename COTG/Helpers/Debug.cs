@@ -9,6 +9,7 @@ using System.Text.Json;
 //using Microsoft.Extensions.Options;
 using Windows.Foundation.Diagnostics;
 using COTG.Helpers;
+using Windows.UI.Xaml;
 
 namespace COTG
 {
@@ -108,6 +109,18 @@ namespace COTG
             System.Diagnostics.Debug.WriteLine(str);
             await Task.Delay(0);
             Note.Show(str);
+        }
+
+        public static async Task Fatal()
+        {
+            try
+            {
+                await new MessageDialog("Something is amiss.", "Please Restart").ShowAsync();
+            }
+            finally
+            {
+                Application.Current.Exit();
+            }
         }
     }
 }

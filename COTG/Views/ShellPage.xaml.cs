@@ -253,6 +253,9 @@ namespace COTG.Views
             //    });
             //});
 
+            var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
+            //			refreshAccelerator.Invoked += (_, __) => view?.Refresh();
+
 
         }
 
@@ -435,12 +438,15 @@ namespace COTG.Views
 
             var isShiftDown = shiftState != CoreVirtualKeyStates.None;
             var isCtrlDown = ctrlState != CoreVirtualKeyStates.None;
-            if (isShiftDown)
-                JSClient.Refresh(o, e);
-            else
+            //if (isShiftDown)
+            //{
+            //    JSClient.Refresh(o, e);
+            //}
+            //else
             {
                 // soft refresh
                 GetCity.Post(JSClient.cid);
+                Raiding.UpdateTS(true);
             }
 
         }

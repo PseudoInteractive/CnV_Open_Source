@@ -627,9 +627,6 @@
   <ItemGroup>
     <Compile Include="JSON\ofdf.cs" />
     <None Include="JSON\incoverJSON.json" />
-    <None Include="JS\p2.d.ts" />
-    <None Include="JS\phaser.comments.d.ts" />
-    <None Include="JS\pixi.comments.d.ts" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

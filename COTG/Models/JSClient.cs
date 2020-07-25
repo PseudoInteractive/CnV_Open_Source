@@ -56,7 +56,6 @@ namespace COTG
         public static int cid; // cityId
         public static JSClient instance = new JSClient();
         public static WebView view;
-        static KeyboardAccelerator refreshAccelerator;
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 8;
         public static BlockingCollection<HttpClient> clientPool;
@@ -139,11 +138,9 @@ namespace COTG
 				
 				view.Source = new Uri("https://www.crownofthegods.com");
 
-				refreshAccelerator = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
-				refreshAccelerator.Invoked += (_, __) => view?.Refresh();
 
-			}
-			catch (Exception e)
+            }
+            catch (Exception e)
 			{
 				Log(e);
 			}
@@ -189,9 +186,9 @@ namespace COTG
                 }
                 else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
                 {
-                    var js = GetJsString("phaser");
+                 //   var js = GetJsString("phaser");
 
-                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+                     var newContent = new Windows.Web.Http.HttpStringContent("", Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
@@ -258,7 +255,8 @@ namespace COTG
         {
             if (view == null)
                 return;
-            view.Refresh();
+            Debug.Fatal();  // Todo
+//            view.Refresh();
 //            Services.NavigationService.Navigate<Views.MainPage>();
         }
 
@@ -550,12 +548,14 @@ namespace COTG
 
             try
             {
-                Log($"Nav start {args.Uri} {args.Uri.Host}");
+                Log($"Nav start {args.Uri} {args.Uri}");
                 var match = urlMatch.Match(args.Uri.Host);
-                if (match.Groups.Count == 2)
-                {
-                    world = int.Parse(match.Groups[1].ToString());
 
+                if (match.Groups.Count == 2 && args.Uri.LocalPath == "/" )
+                {
+                    if (httpFilter != null)
+                        Debug.Fatal();  // Todo
+                    world = int.Parse(match.Groups[1].ToString());
                     try
                     {
 
@@ -737,19 +737,21 @@ namespace COTG
                                 jsVars.token = jso.GetString("token");
                                 var agent = jso.GetString("agent");
                                 jsVars.cookie = jso.GetString("cookie");
-                                var clients = clientPool.ToArray();
+                                {
+                                    var clients = clientPool.ToArray();
                                 foreach (var httpClient in clients)
                                 {
                                     httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
                                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
                                 }
+                            }
                                 var timeOffset = jso.GetAsInt64("timeoffset");
                                 var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)  )*30.0f; // round to nearest half hour
                                 jsVars.gameTOffset =TimeSpan.FromMinutes(timeOffsetRounded);
                                 var str = timeOffsetRounded >= 0 ? " +" : " ";
                                 str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
                                 JSONHelper.timeZoneString = str;
-                                Log(JSONHelper.timeZoneString);
+                             //   Log(JSONHelper.timeZoneString);
                                 Log($"TOffset {jsVars.gameTOffset}");
                                 Log(ServerTime().ToString());
                                 jsVars.ppss = jso.GetAsInt("ppss");
@@ -760,7 +762,7 @@ namespace COTG
                                 //Note.L("cid=" + cid.CidToString());
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTimeOffset.UtcNow;
-                                Log(jsVars.ToString());
+                            //    Log(jsVars.ToString());
                                 var clientSpanX = jso.GetAsFloat("spanX");
                                 var clientSpanY = jso.GetAsFloat("spanY");
                                 ShellPage.clientTL.X = jso.GetAsFloat("left");
