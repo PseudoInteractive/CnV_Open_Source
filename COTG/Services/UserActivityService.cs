@@ -35,15 +35,15 @@ namespace COTG.Services
 
         private static async Task SaveAsync(UserActivity activity)
         {
-            //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-            //    CoreDispatcherPriority.Normal, async () =>
-            //    {
-            //        await activity.SaveAsync();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal, async () =>
+                {
+                    await activity.SaveAsync();
 
             //        // Dispose of any current UserActivitySession, and create a new one.
-            //        _currentUserActivitySession?.Dispose();
-            //        _currentUserActivitySession = activity.CreateSession();
-            //    });
+                    _currentUserActivitySession?.Dispose();
+                    _currentUserActivitySession = activity.CreateSession();
+                });
         }
     }
 }

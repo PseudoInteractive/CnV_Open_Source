@@ -144,7 +144,8 @@ namespace COTG.Game
         {
             if (pt.Properties.IsLeftButtonPressed)
             {
-                if (MainPage.IsVisible() && MainPage.raidCity == this)
+                // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
+                if (MainPage.IsVisible() && City.focus == this)
                 {
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);

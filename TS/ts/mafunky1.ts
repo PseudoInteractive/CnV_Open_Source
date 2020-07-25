@@ -626,6 +626,12 @@ function viewcity(cid: string)
 	gspotfunct.chcity(Number(cid))
 	$("#cityButton").click();
 }
+function setviewmode(mode: string) {
+	if (mode == 'c')
+		$("#cityButton").click();
+	else
+		$("#worldButton").click();
+}
 
 function avactor() {
 

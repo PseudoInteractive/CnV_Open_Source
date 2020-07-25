@@ -445,7 +445,7 @@ namespace COTG.Views
             //else
             {
                 // soft refresh
-                GetCity.Post(JSClient.cid);
+                GetCity.Post(City.build.cid);
                 Raiding.UpdateTS(true);
             }
 
@@ -458,7 +458,7 @@ namespace COTG.Views
         }
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
-            await GetCity.Post(JSClient.cid);
+            await GetCity.Post(City.focus.cid);
 
         }
         private async void GetWorldInfo(object sender, RoutedEventArgs e)
@@ -477,15 +477,18 @@ namespace COTG.Views
         
 
         static DateTimeOffset flyoutCreatedTime;
+        internal static (int x,int y) webclientSpan;
 
         private async void ShowBuildings(object sender, RoutedEventArgs e)
         {
             try
             {
-                await GetCity.Post(JSClient.cid);
+                if (City.build == null)
+                    return;
+                await GetCity.Post(City.build.cid);
 
                 // This should not happen
-                var jse = City.current.jsE;
+                var jse = City.build.jsE;
                 if (!jse.IsValid())
                 {
                     return;

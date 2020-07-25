@@ -28161,7 +28161,7 @@ var cotgsubscribe = amplify;
                     .draggable({ handle: _s(+g1y), containment: _s(q5y << 716442368), scroll: !1 });
                 $(_s(D4y - 0))
                     .draggable({ handle: _s(+g1y), containment: _s(+q5y), scroll: !{} });
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .draggable({ handle: _s(+g1y), containment: _s(q5y >> 1021847808), scroll: !{} });
                 $(_s(+'144'))
                     .draggable({ handle: _s(+g1y), containment: _s(+q5y), scroll: !{} });
@@ -36220,8 +36220,8 @@ var cotgsubscribe = amplify;
                 .text();
             E6k.y6();
             if ($(_s(O0t ^ 0))
-                .is(_s(+x5t)) && D86 === Y86 || $(_s(+g5t))
-                .is(_s(x5t & 2147483647)) && y86 === Y86) {
+                .is(":visible") && D86 === Y86 || $(_s(+g5t))
+                .is(":visible") && y86 === Y86) {
                 var a86 = currentTime() + B86;
                 var P86 = I2y & 2147483647;
                 if (ppdt[_s(W5t & 2147483647)])
@@ -40614,7 +40614,7 @@ var cotgsubscribe = amplify;
                 minHeight: +N5y,
                 minWidth: +"690"
             });
-            $(_s(+w74))
+            $("#incoinfoPage")
                 .resizable({
                 alsoResize: _s(p6t ^ 0),
                 containment: _s(+"2672"),
@@ -40990,7 +40990,7 @@ var cotgsubscribe = amplify;
                     .css(_s(t7y >> 2008748064), _s(+I8t));
                 $(_s(O74 ^ 0))
                     .css(_s(+t7y), _s(+x7y));
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .css(_s(t7y - 0), _s(+p8t));
             });
             $(_s(T7y ^ 0))
@@ -41004,7 +41004,7 @@ var cotgsubscribe = amplify;
                 $(_s(O74 * 1))
                     .css(_s(+t7y), _s(x7y - 0));
                 E6k.y6();
-                $(_s(w74 >> 1497133440))
+                $("#incoinfoPage")
                     .css(_s(t7y - 0), _s(+p8t));
             });
             $(_s(O74 - 0))
@@ -41017,7 +41017,7 @@ var cotgsubscribe = amplify;
                     .css(_s(+t7y), _s(+I8t));
                 $(_s(+T7y))
                     .css(_s(+t7y), _s(x7y | 1426));
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .css(_s(t7y << 404314912), _s(p8t - 0));
             });
             $(_s(C5R >> 189622016))
@@ -41031,12 +41031,12 @@ var cotgsubscribe = amplify;
                 $(_s(+T7y))
                     .css(_s(t7y - 0), _s(x7y | 130));
                 E6k.y6();
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .css(_s(t7y - 0), _s(+p8t));
             });
-            $(_s(w74 << 1293099264))
+            $("#incoinfoPage")
                 .click(function () {
-                $(_s(w74 - 0))
+                $("#incoinfoPage")
                     .css(_s(+t7y), _s(+J7y));
                 $(_s(O74 | 2304))
                     .css(_s(t7y | 116), _s(p8t ^ 0));
@@ -41674,7 +41674,7 @@ var cotgsubscribe = amplify;
             });
             $(_s(+"1915"))
                 .click(function () {
-                $(_s(w74 ^ 0))
+                $("#incoinfoPage")
                     .toggle();
                 $(_s(+'1909'))
                     .empty();
@@ -41733,7 +41733,7 @@ var cotgsubscribe = amplify;
             $(_s(+'6827'))
                 .click(function (B2n) {
                 B2n.stopPropagation();
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .toggle();
                 E6k.R6();
                 $(_s(p6t | 4156))
@@ -41742,7 +41742,7 @@ var cotgsubscribe = amplify;
             $(_s("1815" >> 1299491840))
                 .click(function (R2n) {
                 R2n.stopPropagation();
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .toggle();
                 $(_s(+p6t))
                     .tabs(_s(Q7y - 0), _s(+C7y), '2' ^ 0);
@@ -41751,7 +41751,7 @@ var cotgsubscribe = amplify;
                 .click(function (y2n) {
                 E6k.R6();
                 y2n.stopPropagation();
-                $(_s(w74 ^ 0))
+                $("#incoinfoPage")
                     .toggle();
                 $(_s(p6t - 0))
                     .tabs(_s(Q7y - 0), _s(C7y & 2147483647), +"3");
@@ -41760,7 +41760,7 @@ var cotgsubscribe = amplify;
                 .click(function (D2n) {
                 E6k.y6();
                 D2n.stopPropagation();
-                $(_s(+w74))
+                $("#incoinfoPage")
                     .toggle();
                 $(_s(+p6t))
                     .tabs(_s(+Q7y), _s(C7y * 1), +"0");
@@ -46333,7 +46333,7 @@ var cotgsubscribe = amplify;
                 else if (m3T == "3" - 0)
                     Y6(_s(+k3R));
                 else if (m3T == ("4" | 4))
-                    if ($(_s(w74 ^ 0))
+                    if ($("#incoinfoPage")
                         .css("display") != "none")
                         E5F();
             });
@@ -47009,7 +47009,7 @@ var cotgsubscribe = amplify;
         function E5F() {
             $(_s(+'2277'))
                 .text(D6[_s(I5R >> 1512863904)]);
-            $(_s(w74 << 728278464))
+            $("#incoinfoPage")
                 .show();
             $(_s(p6t | 4358))
                 .tabs(_s(Q7y & 2147483647), _s(+C7y), +'3');
@@ -49724,7 +49724,7 @@ var cotgsubscribe = amplify;
                 if (N96 == "")
                     N96 = '0' & E6k
                         .s6s;
-                m96.style.display = "block";
+                m96.style.display = "none";
                 F96.style.display = "none";
             }
         });
@@ -49923,7 +49923,7 @@ var cotgsubscribe = amplify;
                 f0F(e0g, s0g);
                 var j0g = document.getElementById("cvs");
                 var w0g = document.getElementById("content");
-                j0g.style.display = "block";
+                j0g.style.display = "none";
                 w0g.style.display = "none";
             }
         });
@@ -49965,7 +49965,7 @@ var cotgsubscribe = amplify;
             f0F(l0g, Q0g);
             var x0g = document.getElementById("cvs");
             var O0g = document.getElementById(_s(+q6p));
-            x0g.style.display = "block";
+            x0g.style.display = "none";
             O0g.style.display = "none";
         });
         $("#regionButton")
@@ -50550,7 +50550,7 @@ var cotgsubscribe = amplify;
                                 .addClass(_s(+n9y))
                                 .removeClass(_s(+z9y));
                             if ($(_s(+t3m))
-                                .is(_s(+x5t)))
+                                .is(":visible"))
                                 $(_s(+J3m))
                                     .text(_s(+T3m));
                             //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
@@ -50612,7 +50612,7 @@ var cotgsubscribe = amplify;
                             $(_s(a7m * 1))
                                 .css("display", "none");
                             if ($(_s(t3m ^ 0))
-                                .is(_s(x5t - 0)))
+                                .is(":visible"))
                                 $(_s(J3m ^ 0))
                                     .text(_s(T3m << 1755667424));
                             //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
@@ -50799,7 +50799,7 @@ var cotgsubscribe = amplify;
                                 .html(Z36);
                             var R46 = I9(Number(cid), Number(n46));
                             if (!!$(_s(+o5y))
-                                .is(_s(x5t & 2147483647))) {
+                                .is(":visible")) {
                                 $(_s(+S74))
                                     .val(r46);
                                 $(_s(t94 | 2592))
@@ -50852,7 +50852,7 @@ var cotgsubscribe = amplify;
                             $(_s(+o2y))
                                 .click(function () { P7F(r46, A46); });
                             if ($(_s(+t3m))
-                                .is(_s(+x5t)))
+                                .is(":visible"))
                                 $(_s(J3m << 16239840))
                                     .text(_s(+T3m));
                             $(_s(+"4112"))
@@ -51312,7 +51312,7 @@ var cotgsubscribe = amplify;
                                 .html(Z36);
                             var R46 = Q8F(T16);
                             if (!!$(_s(+o5y))
-                                .is(_s(+x5t))) {
+                                .is(":visible")) {
                                 $(_s(+"5815"))
                                     .val(r46);
                                 $(_s(+"6627"))
@@ -51337,7 +51337,7 @@ var cotgsubscribe = amplify;
                                 G0F();
                             }
                             if (!!$(_s("694" * 1))
-                                .is(_s(x5t - 0))) {
+                                .is(":visible")) {
                                 $(_s(Z7y ^ 0))
                                     .val(r46);
                                 $(_s(K7y ^ 0))
@@ -51345,7 +51345,7 @@ var cotgsubscribe = amplify;
                                 S2(+'2');
                             }
                             if (!!$(_s(t3m >> 1662678592))
-                                .is(_s(+x5t))) {
+                                .is(":visible")) {
                                 $(_s(L4R >> 1179870912))
                                     .val(r46);
                                 $(_s(+y4R))
@@ -51530,7 +51530,7 @@ var cotgsubscribe = amplify;
                             }
                             if ($(E6k
                                 .S55(+t3m))
-                                .is(_s(x5t - 0)))
+                                .is(":visible"))
                                 $(_s(J3m - 0))
                                     .text(_s(T3m * 1));
                             //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
@@ -51749,7 +51749,7 @@ var cotgsubscribe = amplify;
                             //  $(_s(+'3379'))
                             //    .html(F46);
                             //  if ($(_s(+t3m))
-                            //    .is(_s(+x5t))) $(_s(+J3m))
+                            //    .is(":visible")) $(_s(+J3m))
                             //    .text(_s(+T3m));
                             //}
                             //  phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
@@ -53852,7 +53852,7 @@ var cotgsubscribe = amplify;
             var t0Z = $.post(q6 + _s(+"1415"), { oid: O0Z, cid: cid });
             F6();
             t0Z.done(function (o0Z) {
-                if ($(_s(+w74))
+                if ($("#incoinfoPage")
                     .css("display") != "none")
                     E5F();
             });
@@ -57295,7 +57295,7 @@ var cotgsubscribe = amplify;
                 else if (g3T == ("3" & 2147483647))
                     Y6(_s(k3R << 181910528));
                 else if (g3T == +"4") {
-                    if ($(_s(+w74))
+                    if ($("#incoinfoPage")
                         .css("display") != "none")
                         O3F();
                 }
@@ -57728,7 +57728,7 @@ var cotgsubscribe = amplify;
         //      D6 = JSON.parse(k1U); __c.D6 = D6;
         //      gCPosted();
         //    if ($("#citySpotMenu")
-        //      .is(_s(+x5t))) {
+        //      .is(":visible")) {
         //      var c3U = D6[_s(N1R << 395352640)][Number(d2)][_s(m1R * 1)];
         //      var m3U =
         //        D6[_s(N1R & 2147483647)][Number(d2)][_s(+i1R)];
@@ -57865,7 +57865,7 @@ var cotgsubscribe = amplify;
         function O3F() {
             $(_s(+"2277"))
                 .text(D6[_s(+I5R)]);
-            $(_s(w74 & 2147483647))
+            $("#incoinfoPage")
                 .show();
             E6k.R6();
             $(_s(p6t & 2147483647))
@@ -57948,7 +57948,7 @@ var cotgsubscribe = amplify;
                 else if (D3T == +'3')
                     Y6(_s(+k3R));
                 else if (D3T == +"4") {
-                    if ($(_s(+w74))
+                    if ($("#incoinfoPage")
                         .css("display") != "none")
                         E5F();
                 }
@@ -61907,7 +61907,7 @@ var cotgsubscribe = amplify;
         function T3F() {
             $(_s('2277' | 165))
                 .text(D6[_s(+I5R)]);
-            $(_s(+w74))
+            $("#incoinfoPage")
                 .show();
             E6k.R6();
             $(_s(p6t - 0))
@@ -65781,8 +65781,8 @@ var cotgsubscribe = amplify;
             var w96 = $(_s('6355' & 2147483647))
                 .text();
             if ($(_s(O0t - 0))
-                .is(_s(+x5t)) && j96 === H96 || $(_s(+g5t))
-                .is(_s(+x5t)) && w96 === H96) {
+                .is(":visible") && j96 === H96 || $(_s(+g5t))
+                .is(":visible") && w96 === H96) {
                 var Q96 = currentTime() + E86;
                 $(_s(+'2526'))
                     .text(formatT(currentTime() + v96));
@@ -69408,7 +69408,11 @@ var cotgsubscribe = amplify;
                 let __zoom = 64;
                 let _x = _camera.x;
                 let _y = _camera.y;
-                ;
+                if (_viewMode == viewModeRegion) {
+                    _viewMode = viewModeWorld;
+                    var x0g = document.getElementById("cvs");
+                    x0g.style.display = "none";
+                }
                 if (_viewMode === viewModeWorld) {
                     // let matrix = $("#content").panzoom("getMatrix");
                     //   _x = +matrix[4]+36000;
@@ -69434,13 +69438,13 @@ var cotgsubscribe = amplify;
                 }
                 //              popUpBox atkpops ui - draggable
                 _popupCount = 0;
-                $(".popUpBox,.smallpopupstyle,.medpopupstyle,.longwindow").each(function () {
+                $(".popUpBox,.smallpopupstyle,.medpopupstyle").each(function () {
                     if (this.style.display == "block")
                         _popupCount++;
                 });
-                $(".popUpBox").each(function () {
-                    if (this.style.display == "block")
-                        _popupCount++;
+                $(".longwindow").each(function () {
+                    if (this.style.display != "none")
+                        _popupCount += 128;
                 });
                 if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache
                     || _zoom != __zoom || _popupCountCache != _popupCount) {
@@ -74149,6 +74153,12 @@ function SendAllianceInfo() {
 function viewcity(cid) {
     gspotfunct.chcity(Number(cid));
     $("#cityButton").click();
+}
+function setviewmode(mode) {
+    if (mode == 'c')
+        $("#cityButton").click();
+    else
+        $("#worldButton").click();
 }
 function avactor() {
     //	var E3y="5894";

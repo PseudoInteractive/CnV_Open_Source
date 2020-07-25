@@ -37,7 +37,7 @@ namespace COTG.Views
         public DumbCollection<City> gridCitySource { get; } = new DumbCollection<City>();
       //  public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage instance;
-        public static City raidCity;
+
         //        public static City showingRowDetails;
 
         
@@ -113,9 +113,9 @@ namespace COTG.Views
             }
             var newSel = it.Current as City;
             Assert(newSel != null);
-            if (newSel == raidCity)
+            if (newSel == City.focus)
                 return;
-            SetRaidCity(newSel,true,false,true);
+            newSel.SetFocus(true,false,true);
         }
 
         
@@ -211,33 +211,8 @@ namespace COTG.Views
                             }
                         }
                         citySource.Set(filtered.OrderBy((a) => a.cityName));
-
-                   
-
-
                 }
             });
-        }
-
-        internal static void SetRaidCity(int cid, bool fromUI, bool noRaidScan, bool getCityData)
-        {
-            if (City.allCities.TryGetValue(cid, out var city))
-            {
-                SetRaidCity(city, fromUI, noRaidScan, getCityData);
-            }
-        }
-        internal static void SetRaidCity(City city, bool fromUI,bool noRaidScan, bool getCityData)
-        {
-             var changed = city != raidCity;
-             raidCity = city;
-            if(!fromUI && changed)
-                CityGrid.SelectItem(city);
-
-            if (!noRaidScan)
-            {
-                if (changed)
-                    ScanDungeons.Post(city.cid,getCityData);
-            }
         }
 
         public static void CityListUpdateAll ()

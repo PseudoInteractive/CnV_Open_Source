@@ -267,7 +267,7 @@ namespace COTG
             catch (Exception e)
             {
              //   Log(e);
-                return JSClient.cid; // return current city
+                return 300*600 + 300; // return current city
             }
         }
         // 20 bit mash

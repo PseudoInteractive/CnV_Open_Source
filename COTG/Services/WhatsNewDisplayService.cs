@@ -20,11 +20,11 @@ namespace COTG.Services
             //await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
             //    CoreDispatcherPriority.Normal, async () =>
             //    {
-            //        if (SystemInformation.Instance.IsAppUpdated && !shown)
+            //        if (SystemInformation.IsAppUpdated && !shown)
             //        {
-            //            //shown = true;
-            //            //var dialog = new WhatsNewDialog();
-            //            //await dialog.ShowAsync();
+            //            shown = true;
+            //            var dialog = new WhatsNewDialog();
+            //            await dialog.ShowAsync();
             //        }
             //    });
         }

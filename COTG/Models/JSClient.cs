@@ -53,7 +53,6 @@ namespace COTG
         public static bool IsRegionView() => viewMode == ViewMode.region;
 
         public static JsonDocument ppdt;
-        public static int cid; // cityId
         public static JSClient instance = new JSClient();
         public static WebView view;
         static HttpBaseProtocolFilter httpFilter;
@@ -280,11 +279,16 @@ namespace COTG
         {
             try
             {
-                if (MainPage.IsVisible())
-                    MainPage.SetRaidCity(cityId, false, true, false);
+                if (City.IsMine(cityId))
+                {
+                        City.SetFocus(cityId, false, true, false);
 
-                view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
-
+                    view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
+                }
+                else
+                {
+                    ShowCity(cityId, false);
+                }
 
             }
             catch (Exception e)
@@ -297,11 +301,17 @@ namespace COTG
         {
             try
             {
-                if (MainPage.IsVisible())
-                    MainPage.SetRaidCity(cityId, false, true, false);
+                if (City.IsMine(cityId))
+                {
+                    City.build = City.GetOrAddCity(cityId);
+                    City.SetFocus(cityId, false, true, false);
 
-                view.InvokeScriptAsync("chcity", new string[] {(cityId).ToString() });
-
+                    view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
+                }
+                else
+                {
+                    ShowCity(cityId, false);
+                }
 
             }
             catch (Exception e)
@@ -310,21 +320,35 @@ namespace COTG
             }
 
         }
-        public static void SetJSCamera(Vector2 cameraC)
+        public static void ChangeView(bool cityView)
         {
-            // Thiis is not working as it should
             try
-            { 
-                view.InvokeScriptAsync("setCameraC", new string[] {
-                    (cameraC.X).RoundToInt().ToString(),
-                    (cameraC.Y).RoundToInt().ToString()
-                });
-
+            {
+                view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" });
+             
             }
             catch (Exception e)
             {
                 Log(e);
             }
+
+        }
+
+        public static void SetJSCamera(Vector2 cameraC)
+        {
+            // Thiis is not working as it should
+            //try
+            //{ 
+            //    view.InvokeScriptAsync("setCameraC", new string[] {
+            //        (cameraC.X).RoundToInt().ToString(),
+            //        (cameraC.Y).RoundToInt().ToString()
+            //    });
+
+            //}
+            //catch (Exception e)
+            //{
+            //    Log(e);
+            //}
 
         }
 
@@ -384,6 +408,11 @@ namespace COTG
         {
 			try
 			{
+                if (City.IsMine(cityId))
+                {
+                    City.SetFocus(cityId, false, true, false);
+                }
+
                 if (JSClient.IsWorldView())
                     cityId.BringCidIntoWorldView(lazyMove);
 
@@ -497,8 +526,7 @@ namespace COTG
                 {
                     var cid = jsCity.GetProperty("1").GetInt32();
 
-                    var city=City.allCities.GetOrAdd(cid,City.Factory);
-                    
+                    var city = City.GetOrAddCity(cid);
                     city.cityName = jsCity.GetProperty("2").GetString();
                     int i = city.cityName.IndexOf('-');
                     if(i!= -1)
@@ -758,16 +786,19 @@ namespace COTG
                                 jsVars.player = jso.GetString("player");
                                 jsVars.pid = jso.GetAsInt("pid");
                                
-                                cid = jso.GetAsInt("cid");
+                                var cid = jso.GetAsInt("cid");
+                                City.build = City.focus = City.GetOrAddCity(cid);
+
+                                ShellPage.cameraC = cid.CidToWorldV();
                                 //Note.L("cid=" + cid.CidToString());
                                 jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                 jsVars.launchTime = DateTimeOffset.UtcNow;
-                            //    Log(jsVars.ToString());
-                                var clientSpanX = jso.GetAsFloat("spanX");
-                                var clientSpanY = jso.GetAsFloat("spanY");
+                                //    Log(jsVars.ToString());
+                                ShellPage.webclientSpan.x = jso.GetAsInt("spanX");
+                                ShellPage.webclientSpan.y = jso.GetAsInt("spanY");
                                 ShellPage.clientTL.X = jso.GetAsFloat("left");
                                 ShellPage.clientTL.Y = jso.GetAsFloat("top");
-
+                                Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
                            //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
                                 gotCreds = true;
 //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
@@ -808,10 +839,14 @@ namespace COTG
                         case "citydata":
                             {
                                 var jse = jsp.Value;
-                                var priorCid = cid;
-                                cid = jse.GetInt("cid");
+                               // var priorCid = cid;
+                                var cid = jse.GetInt("cid");
+                                if(!IsWorldView())
+                                    ShellPage.cameraC = cid.CidToWorldV();
+
                                 //Note.L("citydata=" + cid.CidToString());
-                                var city =City.allCities.GetOrAdd(cid,City.Factory);
+                                var city =City.GetOrAddCity(cid);
+                                City.build = city;
                                 city.LoadFromJson(jse);
 
                                 if (MainPage.IsVisible())
@@ -916,7 +951,8 @@ namespace COTG
                         case "c":
                             {
                                 var jso = jsp.Value;
-                                cid = jso.GetInt("c");
+                                var cid = jso.GetInt("c");
+                                City.build = City.GetOrAddCity(cid);
                                 var popupCount = jso.GetAsInt("p");
                            //     Note.L("cid=" + cid.CidToString());
                                 var priorView = viewMode;

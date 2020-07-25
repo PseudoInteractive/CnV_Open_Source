@@ -84,7 +84,20 @@ namespace COTG.Views
                 //else
                 if(buttons.HasFlag( MouseButtons.left ) )
                 {
-                    JSClient.ShowCity(cid,true);
+                    if (cid == City.build.cid && cid == City.focus.cid && JSClient.IsWorldView())
+                    {
+                        JSClient.ChangeView(true); // to city view
+
+                    }
+                    else if (cid == City.focus.cid && cid != City.build.cid)
+                    {
+                        JSClient.ChangeCity(cid);
+
+                    }
+                    else
+                    {
+                        JSClient.ShowCity(cid, true);
+                    }
                     e.Handled = true;
                 }
                 else if(buttons.HasFlag(MouseButtons.right) )
@@ -131,7 +144,7 @@ namespace COTG.Views
             //var c0 = cBase / cameraZoom;
             //var c1 = cBase / 64.0f;
             //var regionC = (cameraC + c0 - c1) * 64.0f;
-            //JSClient.SetJSCamera(regionC);
+        //    JSClient.SetJSCamera(regionC);
         }
 
         private void Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -172,7 +185,7 @@ namespace COTG.Views
                                 var player = Player.all.GetValueOrDefault(data.player, Player._default);
                                 if (Player.IsMe(data.player))
                                 {
-                                    JSClient.ViewCity(c.WorldToCid());
+                                //    JSClient.ViewCity(c.WorldToCid());
                                 }
                                 else
                                 {

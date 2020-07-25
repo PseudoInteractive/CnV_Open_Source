@@ -66,20 +66,26 @@ namespace COTG.Views
         const int cotgPopupRight = cotgPopupLeft+cotgPopupWidth;
         const int cotgPanelRight = 410;
         public static int cachedXOffset = cotgPanelRight;
+        public static int cachedTopOffset = 0;
+        const int cotgPopupTopDefault = 0;
+        const int cotgPopupTopLong = 300;
 
         static public CanvasAnimatedControl canvas;
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
         {
-            var leftOffset = cotgPopupOpen>0&&IsWorldView() ? cotgPopupRight : cotgPanelRight;
+            var hasPopup = (cotgPopupOpen&127) != 0;
+            var hasLongWindow = cotgPopupOpen >= 128;
+            var leftOffset = hasPopup ? cotgPopupRight : cotgPanelRight;
+            var topOffset = hasLongWindow ? webclientSpan.y*55/100 : cotgPopupTopDefault;
             var delta = leftOffset - cachedXOffset;
-            if (delta==0)
+            if (delta==0 && cachedTopOffset == topOffset)
                 return;
-            
+            cachedTopOffset = topOffset;
             cachedXOffset = leftOffset;
             var _grid = canvas;
 
-            AApp.DispatchOnUIThreadLow( () => _grid.Margin = new Thickness(cotgPopupOpen > 0 ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, 0, 0, bottomMargin));
+            AApp.DispatchOnUIThreadLow( () => _grid.Margin = new Thickness(hasPopup ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, topOffset, 0, bottomMargin));
 //            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
 //            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
   //          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));

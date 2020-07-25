@@ -25,6 +25,15 @@ namespace COTG.Game
         public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         public Raid[] raids = Array.Empty<Raid>();
+
+        public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
+        public static City build; // city that has Build selection.  I.e. in city view, the city you are in
+
+        public static City GetOrAddCity(int cid)
+        {
+            return allCities.GetOrAdd(cid, (cid) => new City() { cid = cid });
+        }
+
         public static bool IsMine(int cid)
         {
             return allCities.ContainsKey(cid);
@@ -97,7 +106,6 @@ namespace COTG.Game
 
         public TroopTypeCount[] troopsHome = Array.Empty<TroopTypeCount>();
         public TroopTypeCount[] troopsTotal = Array.Empty<TroopTypeCount>();
-        public static City current => allCities.TryGetValue(JSClient.cid, out var c) ? c : null;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
         public void LoadFromJson(JsonElement jse)
         {
@@ -320,7 +328,28 @@ namespace COTG.Game
 		{
 			return !(left == right);
 		}
-	}
+        internal static void SetFocus(int cid, bool fromUI, bool noRaidScan, bool getCityData)
+        {
+            if (City.allCities.TryGetValue(cid, out var city))
+            {
+                city.SetFocus( fromUI, noRaidScan, getCityData);
+            }
+        }
+
+        internal void SetFocus(bool fromUI, bool noRaidScan, bool getCityData)
+        {
+            var changed = this != City.focus;
+            City.focus = this;
+            if (!fromUI && changed && MainPage.IsVisible())
+                MainPage.CityGrid.SelectItem(this);
+
+            if (!noRaidScan)
+            {
+                if (changed)
+                    ScanDungeons.Post(cid, getCityData);
+            }
+        }
+    }
     public class SenatorInfo
     {
         public enum Type : byte
@@ -367,6 +396,8 @@ namespace COTG.Game
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();
         public static DumbCollection<CityList> selections = new DumbCollection<CityList>( new[] { allCities }); // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+
+     
     }
 
 }
