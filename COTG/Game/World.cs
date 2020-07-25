@@ -606,7 +606,7 @@ namespace COTG.Game
 
                         if (data.player == 0)
                         {
-                            return ("lawless",false);
+                            return (null,false); // lawless
                         }
                         else
                         {
