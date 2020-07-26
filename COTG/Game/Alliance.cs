@@ -64,7 +64,14 @@ namespace COTG.Game
             var element = _aldt.RootElement.GetProperty("aldt");
             my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
+
+            var _all = new Dictionary<int, Alliance>();
+            var _nameToId = new Dictionary<string, int>();
+
+            _all.Add(my.id, my);
+            _nameToId.Add(my.name,my.id);
             diplomacy = new SortedList<byte, byte>();
+
             // all.Add(my.id, my);
             //  nameToId.Add(my.name, my.id);
 
@@ -75,7 +82,18 @@ namespace COTG.Game
                     byte relationship = (byte)int.Parse(prop.Name);
                     foreach (var a in prop.Value.EnumerateArray())
                     {
+                        var alliance = new Alliance();
                         byte allianceId = (byte)a.GetAsInt("id");
+                        string aname = a.GetAsString("n");
+
+                        alliance.name = aname;
+                        alliance.id = allianceId;
+
+                        _all.Add(allianceId, alliance);
+                        _nameToId.Add(aname, allianceId);
+
+                        diplomacy = new SortedList<byte, byte>();
+
                         var good = diplomacy.TryAdd(allianceId, relationship);
                         Assert(good == true);
                     }
@@ -84,15 +102,15 @@ namespace COTG.Game
 
                 }
             }
+            nameToId = _nameToId;
+            all = _all;
             for (; ; )
             {
                 await Task.Delay(1000);
                 if (!Player.all.IsNullOrEmpty())
                     break;
             }
-            var alliances = new List<Alliance>();
-            var _all = new Dictionary<int, Alliance>();
-            var _nameToId = new Dictionary<string, int>();
+            var alliances = new List<string>();
 
             using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
             {
@@ -101,21 +119,30 @@ namespace COTG.Game
                 foreach (var alliance in prop2.EnumerateArray())
                 {
                     var alName = alliance.GetAsString("1");
-                    var al = alName == my.name ? my : new Alliance() { name = alName };
+                 //   var al = alName == my.name ? my : new Alliance() { name = alName };
                     // Log(alName);
-                    alliances.Add(al);
+                    alliances.Add(alName);
                 }
             }
 
             foreach (var _al in alliances)
             {
-                var alName = _al.name;
-                var al = _al;
+                var alName = _al;
+//                var al = _al;
                 using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
                 {
                     var id = jsa.RootElement.GetAsInt("id");
-                    _all.Add(id, al);
-                    _nameToId.Add(alName, id);
+                    if(all.TryGetValue(id,out var al)==false)
+                    {
+                        al = new Alliance() { id = id, name = alName };
+                        all.Add(id,al);
+                        nameToId.Add(alName, id);
+
+                    }
+
+                        
+                  //  _all.Add(id, al);
+                  //  _nameToId.Add(alName, id);
                     int counter = 0;
                     foreach (var me in jsa.RootElement.GetProperty("me").EnumerateArray())
                     {
@@ -146,10 +173,8 @@ namespace COTG.Game
                 }
             }
         
-            nameToId = _nameToId;
-            all = _all;
-            await RestAPI.getWorldInfo.Post();
-            Note.Show("Got World");
+//            nameToId = _nameToId;
+  //          all = _all;
         }
     }
 }

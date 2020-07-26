@@ -33801,6 +33801,9 @@ var cotgsubscribe = amplify;
       if ($("#achat")
         .css("display") == "none") $("#achat")
         .show();
+
+        const wrapper = { aldt: aldt }
+        window['external']['notify'](JSON.stringify(wrapper));
     }
 
     function e4V(O26) {

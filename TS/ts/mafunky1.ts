@@ -544,11 +544,10 @@ function postppdt()
 			top: M8.clientTop,
 			timeoffset: (ServerDate.getTime() - Date.now()),
 			agent: navigator.userAgent,
-			ppdt: ppdt
 		};
 
 		
-		let wrapper = { jsvars: creds }
+		let wrapper = { jsvars: creds, ppdt:ppdt }
 		if (__c.D6 != null)
 			wrapper['citydata'] = __c.D6;
 
@@ -558,7 +557,7 @@ function postppdt()
 		console.log("Notify failed");
 //		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
 	}
-	avactor();
+	setTimeout(avactor, 3000);
 
 }
 
@@ -611,17 +610,6 @@ function GetDate(jq: string) {
 //})();
 
 
-function SendAllianceInfo() {
-	//	$("#organiser").val("all").change();
-	if (aldt !== 0) {
-		if (aldt !== 1) {
-			const wrapper = { aldt: aldt }
-			window['external']['notify'](JSON.stringify(wrapper));
-		}
-		return;
-	}
-	setTimeout(SendAllianceInfo, 1000);
-}
 
 function viewcity(cid: string)
 {
@@ -648,9 +636,616 @@ function avactor() {
 	var k9p = 0x100000000;
 	console.log("here");
 	
+	window['alliancelink'] = gspotfunct.alliancelink;
+	window['infoPlay'] = gspotfunct.infoPlay;
+	window['shCit'] = gspotfunct.shCit;
+	window['chcity'] = gspotfunct.chcity;
 
 
-	setTimeout(SendAllianceInfo, 0);
+
+	String.prototype['utf8Encode'] = function () {
+		//		//	if (encryptStr.length > 8)
+		//		//		encryptStr.shift();
+		//		//	encryptStr.push(this);
+		//		//	console.log(this);
+		return unescape(encodeURIComponent(this));
+	};
+	String.prototype['utf8Decode'] = function () {
+		//		//	if (decryptStr.length > 8)
+		//	//			decryptStr.shift();
+		//	//		decryptStr.push(this);
+		////			console.log(this);
+		return decodeURIComponent(escape(this));
+	};
+
+	cotgsubscribe.subscribe("regional", clickInfo => {
+		var dtype_ = clickInfo.type;
+		var type_113 = clickInfo.info.type;
+		var lvl_ = clickInfo.info.lvl as number;
+		var prog_ = clickInfo.info.prog;
+		var bossname_ = clickInfo.info.name;
+		console.log(clickInfo);
+		UpdateResearchAndFaith();
+		let troops = cotg.city.troops();
+
+		if (dtype_ === "dungeon") {
+			if ($("#cityplayerInfo div table tbody tr").length >= 11) {
+				bossele_();
+			}
+			/** @type {number} */
+			let home_loot_2 = 0;
+
+			for (let i in troops) {
+				let d = troops[i];
+				/** @type {number} */
+				let home_1 = d.home;
+				/** @type {number} */
+				home_loot_2 = home_loot_2 + home_1 * ttloot_[TroopNameToId(i)];
+
+
+			}
+			if (type_113 === "Siren's Cove") {
+				/** @type {number} */
+				let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
+
+				/** @type {number} */
+				var galleyTS_ = Math.ceil(optimalTS_ / 100);
+				/** @type {number} */
+				var stingerTS_ = Math.ceil(optimalTS_ / 150);
+				/** @type {number} */
+				var warshipTS_ = Math.ceil(optimalTS_ / 300);
+				/**
+				 * @return {void}
+				 */
+				document.getElementById("raidDungGo").onclick = () => {
+					setTimeout(() => {
+						if (troops.warship.home > warshipTS_) {
+							$("#raidIP16").val(warshipTS_);
+						} else {
+							if (troops.stinger.home > stingerTS_) {
+								$("#raidIP15").val(stingerTS_);
+							} else {
+								if (troops.galley.home > galleyTS_) {
+									$("#raidIP14").val(galleyTS_);
+								} else {
+									errorgo_(message_23);
+								}
+							}
+
+						}
+
+					}, 1500);
+				};
+				$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(galleyTS_);
+				$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(stingerTS_);
+				$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(warshipTS_);
+			}
+			else {
+				let loot_: number[];
+				if (type_113 === "Mountain Cavern")
+					loot_ = mountain_loot_;
+				else
+					loot_ = other_loot_;
+				/**
+				 * @return {void}
+				 */
+				let total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
+				document.getElementById("raidDungGo").onclick = () => {
+					setTimeout(() => {
+						/** @type {number} */
+						if (home_loot_2 > total_lootm_) {
+							/** @type {number} */
+							const option_numbersm_ = Math.floor(home_loot_2 / total_lootm_);
+							/** @type {number} */
+							const templ1m_ = home_loot_2 / total_lootm_ * 100 / option_numbersm_;
+							/** @type {number} */
+							const templ2m_ = (templ1m_ - 100) / templ1m_ * 100;
+							/** @type {number} */
+							for (let i in troops) {
+								const id = TroopNameToId(i);
+								const th = troops[i].home;
+								/** @type {number} */
+								$(`#raidIP${id}`).val(th / option_numbersm_);
+							}
+						}
+					}, 1500);
+				};
+				/** @type {number} */
+				const optimalTSM_ = total_lootm_;
+				var infoptim_ = Math.ceil(optimalTSM_ / 10);
+				/** @type {number} */
+				var cavoptim_ = Math.ceil(optimalTSM_ / 15);
+				/** @type {number} */
+				var praoptim_ = Math.ceil(optimalTSM_ / 20);
+				/** @type {number} */
+				var sorcoptim_ = Math.ceil(optimalTSM_ / 5);
+				/** @type {number} */
+				var RToptim_ = cavoptim_;
+				$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(infoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text(RToptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(infoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(praoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(cavoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(cavoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(sorcoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(infoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(infoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(praoptim_);
+				$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+				$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			}
+
+		}
+		else if (dtype_ === "boss") {
+			/// @todo
+			//if($("#cityplayerInfo div table tbody tr").length===11) {
+			//	bossele_();
+			//}
+			//if(clickInfo.info.active) {
+			//	/** @type {string} */
+			//	message_23="Inactive Boss";
+			//	errorgo_(message_23);
+			//}
+			///** @type {string} */
+			//message_23="Not enough TS to kill this boss!";
+			///** @type {!Array} */
+			//var attackres_=[];
+			///** @type {!Array} */
+			//var attackwres_=[];
+			//for(i_42 in ttattack_) {
+			//	/** @type {number} */
+			//	var bossTS_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
+			//	attackres_.push(bossTS_);
+			//	/** @type {number} */
+			//	var bosswTS_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
+			//	attackwres_.push(bosswTS_);
+			//}
+			///** @type {number} */
+			//var home_strength_=0;
+			///** @type {number} */
+			//home_loot_2=0;
+			///** @type {!Array} */
+			//km_2=[];
+			///** @type {!Array} */
+			//var bm_=[];
+			///** @type {!Array} */
+			//var bmw_=[];
+			///** @type {!Array} */
+			//var kg_=[];
+			///** @type {number} */
+			//var home_TSw_=0;
+			///** @type {number} */
+			//var boss_strength_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4);
+			///** @type {number} */
+			//var boss_strengthw_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4);
+			///** @type {number} */
+			//i_42=0;
+			//for(var x_85 in __c.D6.th) {
+			//	/** @type {number} */
+			//	let home_1=AsNumber(__c.D6.th[x_85]);
+			//	if(i_42===0||i_42===1||i_42===7||i_42===12||i_42===13) {
+			//		/** @type {number} */
+			//		home_1=0;
+			//	}
+			//	kg_.push(home_1);
+			//	if(i_42===14||i_42===15||i_42===16) {
+			//		/** @type {number} */
+			//		home_1=0;
+			//	}
+			//	/** @type {number} */
+			//	home_strength_=home_strength_+AsNumber(ttattack_[i_42])*AsNumber(home_1)*AsNumber(Total_Combat_Research_[i_42]);
+			//	/** @type {number} */
+			//	home_TSw_=home_TSw_+home_1*TS_type_[i_42];
+			//	km_2.push(home_1);
+			//	/** @type {number} */
+			//	i_42=i_42+1;
+			//	if(i_42===17) {
+			//		break;
+			//	}
+			//}
+			//if(home_strength_>boss_strength_) {
+			//	/** @type {number} */
+			//	var proportion_=home_strength_/boss_strength_;
+			//	for(i_42 in km_2) {
+			//		/** @type {number} */
+			//		bm_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportion_);
+			//	}
+			//}
+			//if(home_strength_>boss_strengthw_) {
+			//	/** @type {number} */
+			//	var proportionw_=home_strength_/boss_strengthw_;
+			//	for(i_42 in km_2) {
+			//		/** @type {number} */
+			//		bmw_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionw_);
+			//	}
+			//}
+			//if(bossname_==="Triton") {
+			//	/** @type {!Array} */
+			//	var bmz_=[];
+			//	/** @type {number} */
+			//	var home_strengthw_=0;
+			//	/** @type {number} */
+			//	var galleytroops_=0;
+			//	/** @type {number} */
+			//	var tempgalley_=0;
+			//	/** @type {number} */
+			//	var galley_TSneeded_=Math.ceil(home_TSw_/500);
+			//	if(kg_[14]) {
+			//		/** @type {number} */
+			//		home_strengthw_=home_strength_+AsNumber(galley_TSneeded_)*3000*AsNumber(Total_Combat_Research_[14]);
+			//		if(home_strengthw_>boss_strength_) {
+			//			/** @type {number} */
+			//			var proportionz_=home_strengthw_/boss_strength_;
+			//			for(i_42 in km_2) {
+			//				/** @type {number} */
+			//				bmz_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionz_);
+			//				/** @type {number} */
+			//				tempgalley_=tempgalley_+bmz_[i_42]*TS_type_[i_42];
+			//			}
+			//		}
+			//		/** @type {number} */
+			//		galleytroops_=Math.ceil(tempgalley_/500);
+			//	}
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			if((kg_[14]||kg_[15]||kg_[16])&&!kg_[5]&&!kg_[6]&&!kg_[8]&&!kg_[9]&&!kg_[10]&&!kg_[11]&&!kg_[2]&&!kg_[3]&&!kg_[4]) {
+			//				if(kg_[16]>attackwres_[16]) {
+			//					$("#raidIP16").val(attackwres_[16]);
+			//				} else {
+			//					if(kg_[15]>attackwres_[15]) {
+			//						$("#raidIP15").val(attackwres_[15]);
+			//					} else {
+			//						if(kg_[14]>attackwres_[14]) {
+			//							$("#raidIP14").val(attackwres_[14]);
+			//						} else {
+			//							errorgo_(message_23);
+			//						}
+			//					}
+			//				}
+			//			} else {
+			//				if(kg_[14]&&(kg_[5]||kg_[6]||kg_[8]||kg_[9]||kg_[10]||kg_[11]||kg_[2]||kg_[3]||kg_[4])) {
+			//					if(kg_[14]>galleytroops_&&bmz_.length>0) {
+			//						var i_46;
+			//						for(i_46 in km_2) {
+			//							$(`#raidIP${[i_46]}`).val(bmz_[i_46]);
+			//						}
+			//						$("#raidIP14").val(galleytroops_);
+			//					} else {
+			//						if(kg_[14]>attackwres_[14]) {
+			//							$("#raidIP14").val(attackwres_[14]);
+			//						} else {
+			//							errorgo_(message_23);
+			//						}
+			//					}
+			//				} else {
+			//					errorgo_(message_23);
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(attackwres_[14]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(attackwres_[15]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(attackwres_[16]);
+			//}
+			//if(bossname_=="Cyclops") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_47;
+			//			for(i_47 in km_2) {
+			//				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
+			//					$(`#raidIP${[i_47]}`).val(bmw_[i_47]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_47]}`).val(bm_[i_47]);
+			//					if(bm_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+			//if(bossname_=="Andar's Colosseum Challenge") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_48;
+			//			for(i_48 in km_2) {
+			//				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
+			//					$(`#raidIP${[i_48]}`).val(bmw_[i_48]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_48]}`).val(bm_[i_48]);
+			//				}
+			//				if(bm_.length===0) {
+			//					errorgo_(message_23);
+			//					break;
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+			//if(bossname_=="Romulus and Remus") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_49;
+			//			for(i_49 in km_2) {
+			//				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
+			//					$(`#raidIP${[i_49]}`).val(bmw_[i_49]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_49]}`).val(bm_[i_49]);
+			//				}
+			//				if(bm_.length===0) {
+			//					errorgo_(message_23);
+			//					break;
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+			//if(bossname_=="Dragon") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_50;
+			//			for(i_50 in km_2) {
+			//				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
+			//					$(`#raidIP${[i_50]}`).val(bmw_[i_50]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_50]}`).val(bm_[i_50]);
+			//				}
+			//				if(bm_.length===0) {
+			//					errorgo_(message_23);
+			//					break;
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+			//if(bossname_=="Gorgon") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_51;
+			//			for(i_51 in km_2) {
+			//				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
+			//					$(`#raidIP${[i_51]}`).val(bmw_[i_51]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_51]}`).val(bm_[i_51]);
+			//				}
+			//				if(bm_.length===0) {
+			//					errorgo_(message_23);
+			//					break;
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+			//if(bossname_=="Gladiator") {
+			//	/**
+			//	 * @return {void}
+			//	 */
+			//	document.getElementById("raidDungGo").onclick=() => {
+			//		setTimeout(() => {
+			//			var i_52;
+			//			for(i_52 in km_2) {
+			//				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
+			//					$(`#raidIP${[i_52]}`).val(bmw_[i_52]);
+			//					if(bmw_.length===0) {
+			//						errorgo_(message_23);
+			//						break;
+			//					}
+			//				} else {
+			//					$(`#raidIP${[i_52]}`).val(bm_[i_52]);
+			//				}
+			//				if(bm_.length===0) {
+			//					errorgo_(message_23);
+			//					break;
+			//				}
+			//			}
+			//		},1500);
+			//	};
+			//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+			//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+			//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+			//}
+		}
+		else if (dtype_ === "city" || dtype_ === "lawless") {
+			$("#cityplayerInfo div table tbody tr:gt(6)").remove();
+			// var coords = $("#citycoords")[0].innerText.split(":");
+			let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
+			var toAdd = { ...defaultMru }; // clone defaults
+			let isCity = (dtype_ === "city");
+
+			//var maxCount = 32;
+
+			///** @type {AsNumber} */
+			//for (var i = 0; i < mru.length; ++i) {
+			//	var _i = mru[i];
+			//	if (_i.cid == _cid) {
+			//		toAdd = _i;
+			//		toAdd.last = new Date();
+			//		mru.splice(AsNumber(i), 1);
+			//		break;
+			//	}
+			//}
+			//if (mru.length > maxCount) {
+			//	/** @type {number} */
+			//	for (var i = mru.length; --i >= 0;) {
+			//		if (!mru[i].pin) {
+			//			mru.splice(i, 1);
+			//			break;
+			//		}
+			//	}
+			//}
+			if (isCity) {
+				toAdd.player = clickInfo.info.player;
+				toAdd.name = clickInfo.info.name;
+				toAdd.notes = clickInfo.info.remarks;
+				toAdd.plvl = clickInfo.info.plvl;
+			}
+			else {
+				toAdd.player = dtype_;
+				toAdd.name = dtype_;
+				toAdd.plvl = 0;
+				toAdd.notes = dtype_;
+			}
+			toAdd.last = new Date();
+			//	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
+			toAdd.cid = _cid;
+			toAdd.castle = clickInfo.info.castle;
+			toAdd.water = clickInfo.info.water;
+			toAdd.bless = clickInfo.info.blessed;
+			toAdd.score = clickInfo.info.score;
+			//mru.push(toAdd);
+			//mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
+			//console.log(mru);
+			//localStorage.setItem("mru", JSON.stringify(mru));
+			const wrapper = { cityclick: toAdd }
+			window['external']['notify'](JSON.stringify(wrapper));
+
+		}
+	});
+	//SendAllianceInfo();
 	//setTimeout(SendCreds, 600);
 	
 
@@ -743,27 +1338,6 @@ function avactor() {
 
 		//$("body").append(popwin_);
 
-		window['alliancelink'] = gspotfunct.alliancelink;
-		window['infoPlay'] = gspotfunct.infoPlay;
-		window['shCit'] = gspotfunct.shCit;
-		window['chcity'] = gspotfunct.chcity;
-
-
-
-		String.prototype['utf8Encode'] = function () {
-//		//	if (encryptStr.length > 8)
-//		//		encryptStr.shift();
-//		//	encryptStr.push(this);
-//		//	console.log(this);
-			return unescape(encodeURIComponent(this));
-		};
-		String.prototype['utf8Decode'] = function () {
-//		//	if (decryptStr.length > 8)
-//	//			decryptStr.shift();
-//	//		decryptStr.push(this);
-////			console.log(this);
-			return decodeURIComponent(escape(this));
-		};
 		// if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
 		//     String.prototype.base64Decode = function() {
 		//       if (typeof atob != _s(h2R ^ 0))
@@ -1711,593 +2285,7 @@ function avactor() {
 			}, 5000);
 		});
 
-		cotgsubscribe.subscribe("regional", clickInfo => {
-			var dtype_ = clickInfo.type;
-			var type_113 = clickInfo.info.type;
-			var lvl_ = clickInfo.info.lvl as number;
-			var prog_ = clickInfo.info.prog;
-			var bossname_ = clickInfo.info.name;
-			console.log(clickInfo);
-			UpdateResearchAndFaith();
-			let troops = cotg.city.troops();
 
-			if (dtype_ === "dungeon") {
-				if ($("#cityplayerInfo div table tbody tr").length >= 11) {
-					bossele_();
-				}
-				/** @type {number} */
-				let home_loot_2 = 0;
-
-				for (let i in troops) {
-					let d = troops[i];
-					/** @type {number} */
-					let home_1 = d.home;
-					/** @type {number} */
-					home_loot_2 = home_loot_2 + home_1 * ttloot_[TroopNameToId(i)];
-
-
-				}
-				if (type_113 === "Siren's Cove") {
-					/** @type {number} */
-					let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
-
-					/** @type {number} */
-					var galleyTS_ = Math.ceil(optimalTS_ / 100);
-					/** @type {number} */
-					var stingerTS_ = Math.ceil(optimalTS_ / 150);
-					/** @type {number} */
-					var warshipTS_ = Math.ceil(optimalTS_ / 300);
-					/**
-					 * @return {void}
-					 */
-					document.getElementById("raidDungGo").onclick = () => {
-						setTimeout(() => {
-							if (troops.warship.home > warshipTS_) {
-								$("#raidIP16").val(warshipTS_);
-							} else {
-								if (troops.stinger.home > stingerTS_) {
-									$("#raidIP15").val(stingerTS_);
-								} else {
-									if (troops.galley.home > galleyTS_) {
-										$("#raidIP14").val(galleyTS_);
-									} else {
-										errorgo_(message_23);
-									}
-								}
-
-							}
-
-						}, 1500);
-					};
-					$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(galleyTS_);
-					$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(stingerTS_);
-					$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(warshipTS_);
-				}
-				else {
-					let loot_: number[];
-					if (type_113 === "Mountain Cavern")
-						loot_ = mountain_loot_;
-					else
-						loot_ = other_loot_;
-					/**
-					 * @return {void}
-					 */
-					let total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
-					document.getElementById("raidDungGo").onclick = () => {
-						setTimeout(() => {
-							/** @type {number} */
-							if (home_loot_2 > total_lootm_) {
-								/** @type {number} */
-								const option_numbersm_ = Math.floor(home_loot_2 / total_lootm_);
-								/** @type {number} */
-								const templ1m_ = home_loot_2 / total_lootm_ * 100 / option_numbersm_;
-								/** @type {number} */
-								const templ2m_ = (templ1m_ - 100) / templ1m_ * 100;
-								/** @type {number} */
-								for (let i in troops) {
-									const id = TroopNameToId(i);
-									const th = troops[i].home;
-									/** @type {number} */
-									$(`#raidIP${id}`).val(th / option_numbersm_);
-								}
-							}
-						}, 1500);
-					};
-					/** @type {number} */
-					const optimalTSM_ = total_lootm_;
-					var infoptim_ = Math.ceil(optimalTSM_ / 10);
-					/** @type {number} */
-					var cavoptim_ = Math.ceil(optimalTSM_ / 15);
-					/** @type {number} */
-					var praoptim_ = Math.ceil(optimalTSM_ / 20);
-					/** @type {number} */
-					var sorcoptim_ = Math.ceil(optimalTSM_ / 5);
-					/** @type {number} */
-					var RToptim_ = cavoptim_;
-					$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(infoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text(RToptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(infoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(praoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(cavoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(cavoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(sorcoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(infoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(infoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(praoptim_);
-					$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-					$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				}
-
-			}
-			else if (dtype_ === "boss") {
-				/// @todo
-				//if($("#cityplayerInfo div table tbody tr").length===11) {
-				//	bossele_();
-				//}
-				//if(clickInfo.info.active) {
-				//	/** @type {string} */
-				//	message_23="Inactive Boss";
-				//	errorgo_(message_23);
-				//}
-				///** @type {string} */
-				//message_23="Not enough TS to kill this boss!";
-				///** @type {!Array} */
-				//var attackres_=[];
-				///** @type {!Array} */
-				//var attackwres_=[];
-				//for(i_42 in ttattack_) {
-				//	/** @type {number} */
-				//	var bossTS_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
-				//	attackres_.push(bossTS_);
-				//	/** @type {number} */
-				//	var bosswTS_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
-				//	attackwres_.push(bosswTS_);
-				//}
-				///** @type {number} */
-				//var home_strength_=0;
-				///** @type {number} */
-				//home_loot_2=0;
-				///** @type {!Array} */
-				//km_2=[];
-				///** @type {!Array} */
-				//var bm_=[];
-				///** @type {!Array} */
-				//var bmw_=[];
-				///** @type {!Array} */
-				//var kg_=[];
-				///** @type {number} */
-				//var home_TSw_=0;
-				///** @type {number} */
-				//var boss_strength_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4);
-				///** @type {number} */
-				//var boss_strengthw_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4);
-				///** @type {number} */
-				//i_42=0;
-				//for(var x_85 in __c.D6.th) {
-				//	/** @type {number} */
-				//	let home_1=AsNumber(__c.D6.th[x_85]);
-				//	if(i_42===0||i_42===1||i_42===7||i_42===12||i_42===13) {
-				//		/** @type {number} */
-				//		home_1=0;
-				//	}
-				//	kg_.push(home_1);
-				//	if(i_42===14||i_42===15||i_42===16) {
-				//		/** @type {number} */
-				//		home_1=0;
-				//	}
-				//	/** @type {number} */
-				//	home_strength_=home_strength_+AsNumber(ttattack_[i_42])*AsNumber(home_1)*AsNumber(Total_Combat_Research_[i_42]);
-				//	/** @type {number} */
-				//	home_TSw_=home_TSw_+home_1*TS_type_[i_42];
-				//	km_2.push(home_1);
-				//	/** @type {number} */
-				//	i_42=i_42+1;
-				//	if(i_42===17) {
-				//		break;
-				//	}
-				//}
-				//if(home_strength_>boss_strength_) {
-				//	/** @type {number} */
-				//	var proportion_=home_strength_/boss_strength_;
-				//	for(i_42 in km_2) {
-				//		/** @type {number} */
-				//		bm_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportion_);
-				//	}
-				//}
-				//if(home_strength_>boss_strengthw_) {
-				//	/** @type {number} */
-				//	var proportionw_=home_strength_/boss_strengthw_;
-				//	for(i_42 in km_2) {
-				//		/** @type {number} */
-				//		bmw_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionw_);
-				//	}
-				//}
-				//if(bossname_==="Triton") {
-				//	/** @type {!Array} */
-				//	var bmz_=[];
-				//	/** @type {number} */
-				//	var home_strengthw_=0;
-				//	/** @type {number} */
-				//	var galleytroops_=0;
-				//	/** @type {number} */
-				//	var tempgalley_=0;
-				//	/** @type {number} */
-				//	var galley_TSneeded_=Math.ceil(home_TSw_/500);
-				//	if(kg_[14]) {
-				//		/** @type {number} */
-				//		home_strengthw_=home_strength_+AsNumber(galley_TSneeded_)*3000*AsNumber(Total_Combat_Research_[14]);
-				//		if(home_strengthw_>boss_strength_) {
-				//			/** @type {number} */
-				//			var proportionz_=home_strengthw_/boss_strength_;
-				//			for(i_42 in km_2) {
-				//				/** @type {number} */
-				//				bmz_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionz_);
-				//				/** @type {number} */
-				//				tempgalley_=tempgalley_+bmz_[i_42]*TS_type_[i_42];
-				//			}
-				//		}
-				//		/** @type {number} */
-				//		galleytroops_=Math.ceil(tempgalley_/500);
-				//	}
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			if((kg_[14]||kg_[15]||kg_[16])&&!kg_[5]&&!kg_[6]&&!kg_[8]&&!kg_[9]&&!kg_[10]&&!kg_[11]&&!kg_[2]&&!kg_[3]&&!kg_[4]) {
-				//				if(kg_[16]>attackwres_[16]) {
-				//					$("#raidIP16").val(attackwres_[16]);
-				//				} else {
-				//					if(kg_[15]>attackwres_[15]) {
-				//						$("#raidIP15").val(attackwres_[15]);
-				//					} else {
-				//						if(kg_[14]>attackwres_[14]) {
-				//							$("#raidIP14").val(attackwres_[14]);
-				//						} else {
-				//							errorgo_(message_23);
-				//						}
-				//					}
-				//				}
-				//			} else {
-				//				if(kg_[14]&&(kg_[5]||kg_[6]||kg_[8]||kg_[9]||kg_[10]||kg_[11]||kg_[2]||kg_[3]||kg_[4])) {
-				//					if(kg_[14]>galleytroops_&&bmz_.length>0) {
-				//						var i_46;
-				//						for(i_46 in km_2) {
-				//							$(`#raidIP${[i_46]}`).val(bmz_[i_46]);
-				//						}
-				//						$("#raidIP14").val(galleytroops_);
-				//					} else {
-				//						if(kg_[14]>attackwres_[14]) {
-				//							$("#raidIP14").val(attackwres_[14]);
-				//						} else {
-				//							errorgo_(message_23);
-				//						}
-				//					}
-				//				} else {
-				//					errorgo_(message_23);
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(attackwres_[14]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(attackwres_[15]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(attackwres_[16]);
-				//}
-				//if(bossname_=="Cyclops") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_47;
-				//			for(i_47 in km_2) {
-				//				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
-				//					$(`#raidIP${[i_47]}`).val(bmw_[i_47]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_47]}`).val(bm_[i_47]);
-				//					if(bm_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-				//if(bossname_=="Andar's Colosseum Challenge") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_48;
-				//			for(i_48 in km_2) {
-				//				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
-				//					$(`#raidIP${[i_48]}`).val(bmw_[i_48]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_48]}`).val(bm_[i_48]);
-				//				}
-				//				if(bm_.length===0) {
-				//					errorgo_(message_23);
-				//					break;
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-				//if(bossname_=="Romulus and Remus") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_49;
-				//			for(i_49 in km_2) {
-				//				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
-				//					$(`#raidIP${[i_49]}`).val(bmw_[i_49]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_49]}`).val(bm_[i_49]);
-				//				}
-				//				if(bm_.length===0) {
-				//					errorgo_(message_23);
-				//					break;
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-				//if(bossname_=="Dragon") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_50;
-				//			for(i_50 in km_2) {
-				//				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
-				//					$(`#raidIP${[i_50]}`).val(bmw_[i_50]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_50]}`).val(bm_[i_50]);
-				//				}
-				//				if(bm_.length===0) {
-				//					errorgo_(message_23);
-				//					break;
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-				//if(bossname_=="Gorgon") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_51;
-				//			for(i_51 in km_2) {
-				//				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
-				//					$(`#raidIP${[i_51]}`).val(bmw_[i_51]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_51]}`).val(bm_[i_51]);
-				//				}
-				//				if(bm_.length===0) {
-				//					errorgo_(message_23);
-				//					break;
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-				//if(bossname_=="Gladiator") {
-				//	/**
-				//	 * @return {void}
-				//	 */
-				//	document.getElementById("raidDungGo").onclick=() => {
-				//		setTimeout(() => {
-				//			var i_52;
-				//			for(i_52 in km_2) {
-				//				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
-				//					$(`#raidIP${[i_52]}`).val(bmw_[i_52]);
-				//					if(bmw_.length===0) {
-				//						errorgo_(message_23);
-				//						break;
-				//					}
-				//				} else {
-				//					$(`#raidIP${[i_52]}`).val(bm_[i_52]);
-				//				}
-				//				if(bm_.length===0) {
-				//					errorgo_(message_23);
-				//					break;
-				//				}
-				//			}
-				//		},1500);
-				//	};
-				//	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-				//	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-				//	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-				//}
-			}
-			else if (dtype_ === "city" || dtype_ === "lawless") {
-				$("#cityplayerInfo div table tbody tr:gt(6)").remove();
-				// var coords = $("#citycoords")[0].innerText.split(":");
-				let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
-				var toAdd = { ...defaultMru }; // clone defaults
-				let isCity = (dtype_ === "city");
-
-				//var maxCount = 32;
-
-				///** @type {AsNumber} */
-				//for (var i = 0; i < mru.length; ++i) {
-				//	var _i = mru[i];
-				//	if (_i.cid == _cid) {
-				//		toAdd = _i;
-				//		toAdd.last = new Date();
-				//		mru.splice(AsNumber(i), 1);
-				//		break;
-				//	}
-				//}
-				//if (mru.length > maxCount) {
-				//	/** @type {number} */
-				//	for (var i = mru.length; --i >= 0;) {
-				//		if (!mru[i].pin) {
-				//			mru.splice(i, 1);
-				//			break;
-				//		}
-				//	}
-				//}
-				if (isCity) {
-					toAdd.player = clickInfo.info.player;
-					toAdd.name = clickInfo.info.name;
-					toAdd.notes = clickInfo.info.remarks;
-					toAdd.plvl = clickInfo.info.plvl;
-				}
-				else {
-					toAdd.player = dtype_;
-					toAdd.name = dtype_;
-					toAdd.plvl = 0;
-					toAdd.notes = dtype_;
-				}
-				toAdd.last = new Date();
-			//	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
-				toAdd.cid = _cid;
-				toAdd.castle = clickInfo.info.castle;
-				toAdd.water = clickInfo.info.water;
-				toAdd.bless = clickInfo.info.blessed;
-				toAdd.score = clickInfo.info.score;
-				//mru.push(toAdd);
-				//mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
-				//console.log(mru);
-				//localStorage.setItem("mru", JSON.stringify(mru));
-				const wrapper = { cityclick: toAdd }
-				window['external']['notify'](JSON.stringify(wrapper));
-
-			}
-		});
 		/** @type {string} */
 		var newbutz_ = "<div style='float: left; margin-left: 2%;'><button id='newbuttonu' style='font-size:8px; padding: 4px; border-radius: 8px;' class='greenb shRnTr'>Recall(<90%)</button></div>";
 		$("#totalTS").before(newbutz_);

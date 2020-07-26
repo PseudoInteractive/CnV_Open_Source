@@ -57,7 +57,7 @@ namespace COTG
         public static WebView view;
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 8;
-        public static BlockingCollection<HttpClient> clientPool;
+        public static ConcurrentBag<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
         public static int world = 0;
@@ -629,7 +629,7 @@ namespace COTG
 
                         //                        httpFilter.User.
 
-                        clientPool = new BlockingCollection<HttpClient>(clientCount);
+                        clientPool = new ConcurrentBag<HttpClient>();
                         for (int i = 0; i < clientCount; ++i)
                         {
                             var httpClient = new HttpClient( httpFilter); // reset
@@ -662,7 +662,7 @@ namespace COTG
                                 clientPool.Add(httpClient);
 
                         }
-                        clientPool.CompleteAdding();
+                      //  clientPool.CompleteAdding();
                         view.WebResourceRequested -= View_WebResourceRequested1;
                         view.WebResourceRequested += View_WebResourceRequested1;
 
@@ -775,8 +775,8 @@ namespace COTG
                                 var agent = jso.GetString("agent");
                                 jsVars.cookie = jso.GetString("cookie");
                                 {
-                                    var clients = clientPool.ToArray();
-                                foreach (var httpClient in clients)
+                                //    var clients = clientPool.ToArray();
+                                foreach (var httpClient in clientPool)
                                 {
                                     httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
                                     httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
@@ -812,7 +812,7 @@ namespace COTG
                                 gotCreds = true;
                                 //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-                                UpdatePPDT(jso.GetProperty("ppdt"));
+                             //   UpdatePPDT(jso.GetProperty("ppdt"));
                                 break;
                             }
                         case "cityclick":
@@ -900,6 +900,8 @@ namespace COTG
                         case "gPlA":
                         {
                                 Player.Ctor(jsp.Value);
+                                RestAPI.getWorldInfo.Post();
+                                
                                 break;
                             }
                         case "ppdt":
@@ -971,7 +973,7 @@ namespace COTG
 
                 if (gotCreds)
                 {
-                    await GetCitylistOverview();
+ ///                   await GetCitylistOverview();
                     City.UpdateSenatorInfo();  // no async
                     Raiding.UpdateTS(true);
                     TileData.Ctor();

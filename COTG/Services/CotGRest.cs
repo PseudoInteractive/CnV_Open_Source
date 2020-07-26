@@ -117,20 +117,26 @@ namespace COTG.Services
 
         async public Task Post()
         {
-            try
+            for (; ; )
             {
-                if(JSClient.jsVars.token == null)
+                try
                 {
-                    Log("Post before we have creds");
+                    if (JSClient.jsVars.token != null)
+                    {
+                        await Accept(await Send(GetPostContent()));
+                        return;
+                    }
+                        
+                    
+                }
+                catch (Exception e)
+                {
+                    Log(e);
                     return;
                 }
-                await Accept(await Send(GetPostContent()));
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
+                await Task.Delay(400);
 
+            }
 
         }
         async public Task<HttpResponseMessage> Send(string postContent)
@@ -149,11 +155,16 @@ namespace COTG.Services
                 req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
 
 
-//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
-            //    req.Headers.Append("Sec-Fetch-Mode", "cors");
-            //    req.Headers.Append("Sec-Fetch-Dest", "empty");
+                //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
+                //    req.Headers.Append("Sec-Fetch-Mode", "cors");
+                //    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
-                client = JSClient.clientPool.Take();
+                for (; ; )
+                {
+                    if (JSClient.clientPool.TryTake(out client))
+                        break;
+                    await Task.Delay(128);
+                }
                 var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
                 //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
                 //     Log($"req: {resp.RequestMessage.ToString()}");
@@ -632,7 +643,12 @@ namespace COTG.Services
             HttpClient client = null;
             try
             {
-                client = JSClient.clientPool.Take();
+                for (; ; )
+                {
+                    if (JSClient.clientPool.TryTake(out client))
+                        break;
+                    await Task.Delay(128);
+                }
                 var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json?a=0"));
                 JSClient.clientPool.Add(client);
                 client = null;
@@ -644,7 +660,9 @@ namespace COTG.Services
                     {
                         dataReader.ReadBytes(temp);
                     }
+                    Log("Hello!");
                     return JsonSerializer.Deserialize<TileData>(temp);
+                    Log("Helllo!");
                 }
                 else
                 {
