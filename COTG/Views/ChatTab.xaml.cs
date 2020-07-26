@@ -24,6 +24,7 @@ using static COTG.Debug;
 using COTG.Helpers;
 using Windows.UI.Xaml.Documents;
 using COTG.Game;
+using System.Text.Json;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -168,7 +169,7 @@ namespace COTG.Views
             if(chatEntry!=null)
                JSClient.ShowPlayer(chatEntry.Content.ToString());
         }
-
+        static List<string> messageCache = new List<string>();
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (DataContext is string s)
@@ -176,10 +177,59 @@ namespace COTG.Views
                 int id = chatToId.IndexOf(s);
                 if (id >= 0)
                 {
-                    if (e.Key == Windows.System.VirtualKey.Enter)
+                    var sel = input.Text;
+                    if ((e.Key == Windows.System.VirtualKey.Up)||(e.Key == Windows.System.VirtualKey.Down))
                     {
-                     //   Log(input.Text);
-                        JSClient.SendChat(id + 1, input.Text);
+                        if (messageCache.Count > 0)
+                        {
+                            var index = messageCache.IndexOf(sel);
+                            if (e.Key == Windows.System.VirtualKey.Up)
+                            {
+                                if (index <= 0)
+                                {
+                                    index = messageCache.Count - 1;
+                                    if(!sel.IsNullOrEmpty())
+                                        messageCache.Add(sel);
+                                    
+                                }
+                                else
+                                {
+                                    --index;
+                                }
+                            }
+                            else
+                            {
+                                if(index == -1)
+                                {
+                                    index = 0;
+                                    if(!sel.IsNullOrEmpty() )
+                                    {
+                                        messageCache.Insert(0, sel);
+                                        ++index;
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    ++index;
+                                    if (index >= messageCache.Count)
+                                        index = 0;
+                                }
+                            }
+                            input.SelectAll();
+                            input.SelectedText = messageCache[index];
+                        }
+                    }
+                    else if (e.Key == Windows.System.VirtualKey.Enter)
+                    {
+                        var str = input.Text;
+                        //   Log(input.Text);
+                        messageCache.Remove(str); // remove duplicates
+                        messageCache.Add(str);
+                        // remove duplicates
+
+                        JSClient.SendChat(id + 1, str);
                         input.Text = "";
                     }
                 }
@@ -187,6 +237,73 @@ namespace COTG.Views
                 {
                     Log("Invalid Chat: " + s);
                 }
+            }
+        }
+
+        private static ChatEntry GetChatMessage(JsonElement msg)
+        {
+            if (!msg.TryGetProperty("b", out var info))
+            {
+                return new ChatEntry("Error");
+            }
+            var ch = new ChatEntry(System.Net.WebUtility.HtmlDecode(info.GetAsString("d")))
+            {
+                player = info.GetAsString("b"),
+                crown = info.GetAsByte("c"),
+                type = info.GetAsByte("a")
+            };
+            if (msg.TryGetProperty("c", out var c))
+            {
+                ch.time = c.GetString().ParseDateTime();
+            }
+            else
+            {
+                ch.time = JSClient.ServerTime();
+            }
+
+            return ch;
+        }
+        internal static void ProcessIncomingChat(JsonProperty jsp)
+        {
+            var a = jsp.Value.GetAsInt("a");
+            switch (a)
+            {
+                case 444:
+                case 555:
+                case 333:
+                    {
+                        if (!jsp.Value.TryGetProperty("b", out var messages))
+                            break;
+
+                        var batch = new List<ChatEntry>();
+                        foreach (var msg in messages.EnumerateArray())
+                        {
+                            batch.Add(GetChatMessage(msg));
+                        }
+                        (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).Post(batch);
+
+                    }
+                    break;
+                case 4:
+                case 5:
+                case 3:
+                    {
+                        var ch = GetChatMessage(jsp.Value);
+                        if (ch.type == 2 || ch.type == 3) // whisper
+                        {
+                            // add to all tabs
+                            ch.text = $"`{(ch.type==2?"whispers":"you whisper")}` {ch.text}";
+                            ChatTab.whisper.Post(ch);
+                            ChatTab.alliance.Post(ch);
+                            ChatTab.officer.Post(ch);
+                            ChatTab.world.Post(ch);
+                        }
+                        else
+                        {
+                            (ch.type switch { 4 => ChatTab.alliance, 5 => ChatTab.officer, _ => ChatTab.world }).Post(ch);
+                        }
+                        break;
+                    }
             }
         }
     }

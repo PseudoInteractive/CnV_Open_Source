@@ -192,7 +192,7 @@ namespace COTG.Services
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
      //  public static GetCity getCity = new GetCity(0);
-        public static rMp regionView = new rMp();
+        //public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
         static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");

@@ -207,7 +207,7 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        var js = GetJsString("J0EE")  + GetJsString("funky");
+                        var js = GetJsString("funky") + GetJsString("J0EE");
 
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
@@ -801,9 +801,9 @@ namespace COTG
                                 Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
                            //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
                                 gotCreds = true;
-//                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+                                //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-                                
+                                UpdatePPDT(jso.GetProperty("ppdt"));
                                 break;
                             }
                         case "cityclick":
@@ -900,51 +900,7 @@ namespace COTG
                             }
                         case "chat":
                             {
-                                var a = jsp.Value.GetAsInt("a");
-                                switch ( a )
-                                {
-                                    case 444:
-                                    case 555:
-                                    case 333:
-                                    {
-                                            if (!jsp.Value.TryGetProperty("b", out var messages))
-                                                break;
-
-                                            var batch = new List<ChatEntry>();
-                                            foreach (var msg in messages.EnumerateArray())
-                                            {
-                                                batch.Add(GetChatMessage(msg));
-                                            }
-                                            (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).Post(batch);
-
-                                        }
-                                        break;
-                                    case 4:
-                                    case 5:
-                                    case 3:
-                                        {
-                                            var ch = GetChatMessage(jsp.Value);
-                                            if (ch.type == 2) // real whisper
-                                            {
-                                                // add to all tabs
-                                                ch.text = $"`whispers` {ch.text}";
-                                                ChatTab.whisper.Post(ch);
-                                                ChatTab.alliance.Post(ch);
-                                                ChatTab.officer.Post(ch);
-                                                ChatTab.world.Post(ch);
-                                            }
-                                            else if (ch.type == 3)
-                                            {
-                                                ch.text = $"`you whisper` {ch.text}";
-                                                ChatTab.whisper.Post(ch);
-                                            }
-                                            else
-                                            {
-                                                (ch.type switch { 4 => ChatTab.alliance, 5 => ChatTab.officer, _ => ChatTab.world }).Post(ch);
-                                            }
-                                            break;
-                                        }
-                                }
+                                ChatTab.ProcessIncomingChat(jsp);
 
                                 break;
                             }
@@ -1032,29 +988,9 @@ namespace COTG
             }
         }
 
-        private static ChatEntry GetChatMessage(JsonElement msg)
-        {
-            if (!msg.TryGetProperty("b", out var info))
-            {
-                return new ChatEntry("Error");
-            }
-            var ch = new ChatEntry(System.Net.WebUtility.HtmlDecode(info.GetAsString("d")))
-            {
-                player = info.GetAsString("b"),
-                crown = info.GetAsByte("c"),
-                type = info.GetAsByte("a")
-            };
-            if (msg.TryGetProperty("c", out var c))
-            {
-                ch.time = c.GetString().ParseDateTime();
-            }
-            else
-            {
-                ch.time = JSClient.ServerTime();
-            }
+       
 
-            return ch;
-        }
+       
 
         static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
         {

@@ -3,7 +3,7 @@ let __base64Encode: Function=null;
 let __base64Decode: Function = null;
 var encryptStr = [""];
 var decryptStr = [""];
-
+var cid: number = 0;
 // This gets replaced immediately
 //function MakeGlobalGetter(a) {
 //	return `window['get${a}'] = ()=> ${a};`;
@@ -523,7 +523,7 @@ async function avafetch(url: string, args: string) {
 	return txt;
 }
 
-function SendCreds()
+function postppdt()
 {
 
 	try {
@@ -532,18 +532,19 @@ function SendCreds()
 		let creds = {
 			token: SetupHeaders(),
 			ppss: ppss,
-			player: cotg.player.name(),
+			player: ppdt.pn,
 			pid: ppdt.pid,
 			s: s,
 			cookie: document.cookie,
-			cid: cid,
+			cid: ppdt.lc.lcit;
 			time: currentTime(),
 			spanX: M8.clientWidth,
 			spanY: M8.clientHeight,
 			left: M8.clientLeft,
 			top: M8.clientTop,
 			timeoffset: (ServerDate.getTime() - Date.now()),
-			agent: navigator.userAgent
+			agent: navigator.userAgent,
+			ppdt: ppdt
 		};
 
 		
@@ -555,8 +556,9 @@ function SendCreds()
 		//OptimizeAjax();
 	} catch (e) {
 		console.log("Notify failed");
-		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
+//		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
 	}
+	avactor();
 
 }
 
@@ -648,8 +650,8 @@ function avactor() {
 	
 
 
-	setTimeout(SendAllianceInfo, 1000);
-	setTimeout(SendCreds, 600);
+	//setTimeout(SendAllianceInfo, 1000);
+	//setTimeout(SendCreds, 600);
 	
 
 
@@ -3808,7 +3810,7 @@ function setAutoDemo(_autodemoon: boolean) {
 	}
 }
 
-(function ()
-{
-	setTimeout(avactor, 100);
-})();
+//(function ()
+//{
+//	setTimeout(avactor, 100);
+//})();

@@ -23,7 +23,7 @@ namespace COTG.Views
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
-        public static SettingsPage instance;
+        public static SettingsPage instance = new SettingsPage();
         private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
         private IdentityService IdentityService => Singleton<IdentityService>.Instance;
