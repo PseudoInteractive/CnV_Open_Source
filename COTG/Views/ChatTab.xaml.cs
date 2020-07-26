@@ -263,7 +263,7 @@ namespace COTG.Views
 
             return ch;
         }
-        internal static void ProcessIncomingChat(JsonProperty jsp)
+        public static void ProcessIncomingChat(JsonProperty jsp)
         {
             var a = jsp.Value.GetAsInt("a");
             switch (a)

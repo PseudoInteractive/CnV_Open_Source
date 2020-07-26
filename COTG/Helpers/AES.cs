@@ -141,7 +141,7 @@ namespace COTG
                 }
             }
 
-            internal void Set(byte v0, byte v1, byte v2, byte v3)
+            public void Set(byte v0, byte v1, byte v2, byte v3)
             {
                 v[0] = v0;
                 v[1] = v1;

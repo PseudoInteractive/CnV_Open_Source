@@ -73,7 +73,7 @@ namespace COTG.Game
 
 
         // for json
-        internal struct sndRaidtr
+        public struct sndRaidtr
         {
             public string tt { get; set; }
             public string tv { get; set; }
@@ -90,7 +90,7 @@ namespace COTG.Game
             public int rut { get; set; }
             public string ts { get; set; }
         }
-        internal static async Task SendRaids(Dungeon d)
+        public static async Task SendRaids(Dungeon d)
         {
             var city = d.city;
             if (city == null)

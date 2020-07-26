@@ -161,7 +161,7 @@ namespace COTG.Views
 
         }
 
-        internal void AddChatTabs()
+        public void AddChatTabs()
         {
             while (AddAnyTab()) { }
         }

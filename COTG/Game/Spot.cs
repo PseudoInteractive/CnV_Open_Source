@@ -330,7 +330,7 @@ namespace COTG.Game
             return cid;
         }
 
-        internal void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             JSClient.ChangeCity(cid);
 

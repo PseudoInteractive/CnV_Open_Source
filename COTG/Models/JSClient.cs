@@ -60,7 +60,7 @@ namespace COTG
         public static BlockingCollection<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
-        public static int world = 19;
+        public static int world = 0;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
         public static string httpsHostString;
@@ -466,12 +466,13 @@ namespace COTG
         {
             int clChanged = 0;
             // City lists
+            try
             {
                 List<CityList> lists = new List<CityList>();
                 if (jse.TryGetProperty("cl", out var cityListNames))
                 {
                     ++clChanged;
-                  //  var clList = new List<string>();
+                    //  var clList = new List<string>();
                     foreach (var cn in cityListNames.EnumerateObject())
                     {
                         var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
@@ -496,7 +497,7 @@ namespace COTG
                     }
 
                 }
-                if (clChanged>0)
+                if (clChanged > 0)
                 {
                     Log("Change2");
                     Assert(clChanged == 2);
@@ -506,15 +507,22 @@ namespace COTG
                         CityList.selections.Add(lists[i]);
 
                     CityList.all = lists.ToArray();
-                    AApp.DispatchOnUIThreadLow( () =>
-                    {
+                    AApp.DispatchOnUIThreadLow(() =>
+                   {
                         // is this valid?
-                     //   Log("Reset");
+                        //   Log("Reset");
 
                         CityList.selections.NotifyReset();
-                    });
+                   });
                 }
             }
+            
+        catch(Exception E)
+        {
+            Log(E);
+            Log("City lists invalid, maybe you have none");
+        }
+
             var cUpdated = false;
             // extract cities
             if (jse.TryGetProperty("c", out var cProp))
@@ -599,7 +607,7 @@ namespace COTG
                         httpFilter.AllowAutoRedirect = true;
 //                        httpFilter.ServerCredential =
                       //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-                        httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+                        httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.Default;
                         httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
                         httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
                         httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
@@ -654,6 +662,7 @@ namespace COTG
                                 clientPool.Add(httpClient);
 
                         }
+                        clientPool.CompleteAdding();
                         view.WebResourceRequested -= View_WebResourceRequested1;
                         view.WebResourceRequested += View_WebResourceRequested1;
 

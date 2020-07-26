@@ -536,7 +536,7 @@ function postppdt()
 			pid: ppdt.pid,
 			s: s,
 			cookie: document.cookie,
-			cid: ppdt.lc.lcit;
+			cid: ppdt.lc.lcit,
 			time: currentTime(),
 			spanX: M8.clientWidth,
 			spanY: M8.clientHeight,
@@ -650,7 +650,7 @@ function avactor() {
 	
 
 
-	//setTimeout(SendAllianceInfo, 1000);
+	setTimeout(SendAllianceInfo, 0);
 	//setTimeout(SendCreds, 600);
 	
 

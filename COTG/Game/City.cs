@@ -160,7 +160,7 @@ namespace COTG.Game
         static List<City> dummies = new List<City>();
 
 
-        internal void NotifyChange(string member ="")
+        public void NotifyChange(string member ="")
         {
             AApp.DispatchOnUIThreadSneaky(() =>
        {
@@ -328,7 +328,7 @@ namespace COTG.Game
 		{
 			return !(left == right);
 		}
-        internal static void SetFocus(int cid, bool fromUI, bool noRaidScan, bool getCityData)
+        public static void SetFocus(int cid, bool fromUI, bool noRaidScan, bool getCityData)
         {
             if (City.allCities.TryGetValue(cid, out var city))
             {
@@ -336,7 +336,7 @@ namespace COTG.Game
             }
         }
 
-        internal void SetFocus(bool fromUI, bool noRaidScan, bool getCityData)
+        public void SetFocus(bool fromUI, bool noRaidScan, bool getCityData)
         {
             var changed = this != City.focus;
             City.focus = this;

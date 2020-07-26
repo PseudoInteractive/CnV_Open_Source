@@ -477,7 +477,7 @@ namespace COTG.Views
         
 
         static DateTimeOffset flyoutCreatedTime;
-        internal static (int x,int y) webclientSpan;
+        public static (int x,int y) webclientSpan;
 
         private async void ShowBuildings(object sender, RoutedEventArgs e)
         {

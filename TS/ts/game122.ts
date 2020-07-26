@@ -21213,854 +21213,854 @@ var cotgsubscribe = amplify;
         $("#worldcanv")
             .remove();
 
-      if (Q8 == (0))
-        if (T0F) {
-          Q8 = 1;
-            $("#worldcanv")
-            .remove();
-          var G8D;
-          var Q2D;
-          var O2D;
-          var C2D;
-          var T2D = 0;
-          var n2D = 1;
-          var isCastle;
-          var
-            o2D;
-          var L2D;
-          var W2D;
-          var g2D;
-          var b2D;
-          var O8D = j9.replace(_s(+m7y), '');
-          var x8D =
-            S9.replace(_s(m7y | 1), "");
-          var T8D = d9.replace(_s(m7y - 0), "");
-          var Q8D = i9.replace(_s(+m7y), '');
-          var c2D = C9.replace(_s(+m7y), _s(
-            4867));
-          var q2D = M9.replace(_s(+m7y), '');
-          var z8D = z9.replace(_s(+m7y), E6k
-            .o55(4867));
-          var s8D = X9.replace(_s(+m7y), "");
-          var L8D = L9
-            .replace(_s(+m7y), "");
-          var y2D = o9.replace(_s(+m7y), _s(
-            4867));
-          var k8D = O9.replace(_s(+m7y), "");
-          var o8D = m8.replace(_s(+
-            m7y), '');
-          var t8D = T9.replace(_s(+m7y), "");
-          var l8D = { content:this};
-//          l8D["content"] = this;
-          this.borderSize = 0;
-          this.segments = 0;
-          this.renderTime = 0;
-          this.targetDivId = "content";
-          this.targetDiv = $("#content");
-          this.isSelecting = !!"";
-          $(window)
-            .resize(this.resize);
-          if (window.orientation != undefined) window.onorientationchange = this.resize;
-          this.horizontalAttribute = _s(+H6y);
-          this.horizontalMin = 0;
-          this.horizontalMax = +T6R;
-          this._horizontalMin = undefined;
-          this._horizontalMax = undefined;
-          this.verticalAttribute = _s(+G6y);
-          this.verticalMin = 0;
-          this.verticalMax = T6R ^ 0;
-          this._verticalMin = undefined;
-          this._verticalMax = undefined;
-          this.mouseDownX = 0;
-          this.mouseDownY = 0;
-          var J2D = this;
-          if (J2D.canvas) J2D.canvas.remove();
-          J2D.canvas = $("<canvas id='worldcanv' width='" + J2D.targetDiv.width() + _s(2221) + J2D.targetDiv
-            .height() + _s(6682));
-          J2D.targetDiv.append(J2D.canvas);
-          this.renderTime = new Date()
-            .getTime();
-          var M8D = 0;
-          var u8D = this.targetDiv.width();
-          var P2D = this.targetDiv
-            .height();
-          var U2D = P2D - 2 * this.borderSize;
-          var R2D = P2D - 2 * this.borderSize;
-          $("#worldcanv")
-            .addClass(_s("4164" | 4100));
-          var S2D = this.canvas[0].getContext("2d");
-          S2D.fillStyle = _s(7073);
-          S2D.mozImageSmoothingEnabled = !!0;
-          S2D.oImageSmoothingEnabled = !!"";
-          S2D.webkitImageSmoothingEnabled = ![];
-          S2D.imageSmoothingEnabled = !{};
-          var s2D = S2D.getImageData(0, 0, u8D, P2D);
-          var d8D = {};
-          var
-            b8D = {};
-          if (isNaN(this._horizontalMax)) {
-            this._horizontalMin = this.horizontalMin;
-            this._horizontalMax = this.horizontalMax;
-            this._verticalMin = this.verticalMin;
-            this._verticalMax = this.verticalMax;
-          }
-          var H8D = this._horizontalMax - this._horizontalMin;
-          var e8D =
-            this._verticalMax - this._verticalMin;
-          var I2D;
-          var w2D;
-          var V8D;
-          for (var m2D in T0F)
-            if (T0F[m2D]) {
-              var l2D = T0F[m2D];
-              O2D = l2D.substring(0,  1);
-              G8D = l8;
-              if (O2D == (1)) { // not city
-                var z2D = Number(l2D.substring(7, 10));
-                var M2D = Number(l2D.substring(4, 7));
-              } else if (O2D == 2) {
-                var z2D = Number(l2D.substring(8, "11" |
-                  2));
-                var M2D = Number(l2D.substring(5, 8));
-              } else if (O2D == (3)) {
-                var z2D = Number(
-                  l2D.substring(5, 8));
-                var M2D = Number(l2D.substring(2, '5' | 4));
-              } else if (O2D ==
-                7) {
-                var z2D = Number(l2D.substring(6, 9));
-                var M2D = Number(l2D.substring(3, +
-                  "6"));
-              } else if (O2D == (8)) {
-                var z2D = Number(l2D.substring(5, 8));
-                var
-                  M2D = Number(l2D.substring(2, 5));
-              } else if (O2D == 9) {
-                var z2D = Number(l2D
-                  .substring(6, 9));
-                var M2D = Number(l2D.substring(3, 6));
-              }
-              g2D =
-                (Number(z2D) - '99.5' * 1) * +m6p;
-              b2D = Number(M2D) - ("99.5" - 0);
-              b2D = (b2D + (l1y | 584) - b2D * 2) * (m6p * 1);
-              var E2D = z2D + '' + M2D;
-              P5F[E2D] = l2D;
-              I2D = g2D / H8D;
-              w2D = b2D / e8D;
-              I2D = parseInt((0) + I2D * U2D);
-              w2D = parseInt(0 + (R2D - w2D * R2D));
-              if (O2D == 9) Q2D = Number(l2D.substring(1, '2' >> // shrine
-                1286753472));
-              else if (O2D == 8) Q2D = Number(l2D.substring(1, 2)); // portal
-              else if (O2D == 7) Q2D = Number(l2D.substring(7, 8));
-              else if (O2D == 3) Q2D = Number(l2D.substring(7, 8));
-              if (O2D == 2) {
-                L2D =
-                  Number(l2D.substring(1, 3));
-                wpalt = Number(l2D.substring(3, 4));
-                var i2D = Number(l2D.substring(4, +
-                  "5"));
-                if (i2D == ("1" | 1)) {
-                  isCastle = 0;
-                  o2D = 0;
-                  W2D = 1;
-                } else if (i2D == 2) {
-                  isCastle = 0;
-                  o2D = 1;
-                  W2D = 1;
-                } else if (i2D == 3) {
-                  isCastle = 1;
-                  o2D = 1;
-                  W2D = 1;
-                } else if (i2D == 4) {
-                  isCastle = 1;
-                  o2D = 0;
-                  W2D = 1;
-                } else if (i2D == (5)) {
-                  isCastle = 0;
-                  o2D = 0;
-                  W2D = 8;
-                } else if (i2D == 6) {
-                  isCastle = 0;
-                  o2D = 1;
-                  W2D = 8;
-                } else if (i2D == 7) {
-                  isCastle = 1;
-                  o2D = 1;
-                  W2D = 8;
-                } else if (i2D == 8) {
-                  isCastle = 1;
-                  o2D = 0;
-                  W2D = 8;
-                }
-                T2D = 0;
-                L2D = L2D - (10);
-                var B2D = Number(l2D.substring(11, 12));
-                var f2D = Number(l2D
-                  .substring('12' | 8, ('12' | 8) + B2D));
-                var G2D = Number(l2D.substring(12 + B2D));
-                var j8D = aldt[
-                  "id"];
-                var v8D = ppdt["pid"];
-                var K2D = 0;
-                var J8D;
-                if (G2D != 0 && aldt[
-                    "d"]) {
-                  for (var r2D in aldt["d"][1])
-                    if (aldt["d"][1][r2D]["id"] == G2D) K2D = 1;
-                  for (var r2D in
-                      aldt["d"][2])
-                    if (aldt["d"]['2' | 2][r2D]["id"] == G2D) K2D = "2" >>
-                      1941136448;
-                  for (var r2D in aldt["d"][3])
-                    if (aldt["d"][3][r2D]["id"] == G2D) K2D = 3;
-                }
-                var
-                  a2D = 0;
-                var D2D = '';
-                var p2D = 1;
-                if (ppdt.wmo.p)
-                  if (ppdt.wmo.p[f2D]) {
-                    var X2D = ppdt.wmo.p;
-                    if (Object.keys(X2D)
-                      .length > 0) {
-                      mrkpid = X2D[f2D]['a'];
-                      mrkpname = X2D[f2D][_s(+B9y)];
-                      mrkcolor = X2D[f2D][_s(+x9y)];
-                      mrkonoff = X2D[f2D]["d"];
-                      a2D = 1;
-                      D2D = mrkcolor.replace(_s(+m7y), "");
-                      p2D = mrkonoff;
-                    }
-                  } var Y2D = 0;
-                var N2D = '';
-                var F2D = 1;
-                if (ppdt.wmo
-                  .a)
-                  if (ppdt.wmo.a[G2D]) {
-                    var X2D = ppdt.wmo.a;
-                    if (Object.keys(X2D)
-                      .length > (0)) {
-                      var W8D = X2D[G2D]['a'];
-                      var i8D = X2D[G2D][_s(B9y >>
-                        937503680)];
-                      var w8D = X2D[G2D][_s(+x9y)];
-                      var I8D = X2D[G2D]["d"];
-                      Y2D = 1;
-                      N2D = w8D.replace(_s(+m7y), "");
-                      F2D = I8D;
-                    }
-                  } if (v8D == f2D) Q2D = 1;
-                else if (a2D == 1 && p2D == (1)) Q2D = 8;
-                else if (Y2D == 1 && F2D == 1) Q2D = 9;
-                else if (G2D == j8D) Q2D = 2;
-                else if (G2D == (0)) Q2D = 4;
-                else if (K2D == 1) Q2D = 5;
-                else if (K2D == 2) Q2D = 6;
-                else if (K2D == 3) Q2D = 7;
-                else Q2D = 4;
-                if (Q2D == 1) {
-                  C2D = O8D;
-                    if ($("#worldswitch1")
-                    .prop("checked"))
-                        if ($("#worldswitch9").prop("checked") == !!"" && o2D == 0 || 
-                      $("#worldswitch8").prop("checked") == ![] && isCastle == 0 && 
-                        ($("worldswitch10").prop("checked") && L2D == 0)) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 2) {
-                  C2D = x8D;
-                    if ($("#worldswitch1")
-                        .prop("checked"))
-                    if ($(_s(+R6p))
-                      .prop(_s(286)) == !"1" && o2D == 0 || $("#worldswitch8")
-                      .prop(_s("286" | 270)) == !"1" && isCastle == 0 || $("worldswitch10")
-                      .prop(_s(286)) == !{} && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 3) {
-                  C2D = c2D;
-                  if ($(_s(766))
-                    .prop(_s(286)))
-                    if ($(_s(+R6p))
-                      .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
-                      .prop(_s(286)) == ![] && isCastle == (0) || $("worldswitch10")
-                      .prop(_s(286)) == ![] && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 5) {
-                  C2D = T8D;
-                  if ($(_s(O6p << 1262186080))
-                    .prop(_s(286)))
-                    if ($(_s(R6p | 128))
-                      .prop(_s(286)) == !!0 && o2D == 0 || $("#worldswitch8")
-                      .prop(_s(286)) == !"1" && isCastle == 0 || $(_s(+L6p))
-                      .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 6) {
-                  C2D = Q8D;
-                  if ($(_s(+v6p))
-                    .prop(_s(286)))
-                    if ($(_s(R6p - 0))
-                      .prop(_s(286)) == !1 && o2D == (0) || $("#worldswitch8")
-                      .prop(_s(286)) == ![] && isCastle == 0 || $(_s(L6p ^ 0))
-                      .prop(_s(286)) == !{} && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 7) {
-                  C2D = c2D;
-                  if ($(_s(766))
-                    .prop(_s(286)))
-                    if ($(_s(+R6p))
-                      .prop(_s(286)) == !!0 && o2D == 0 || $("#worldswitch8")
-                      .prop(_s(286)) == !!"" && isCastle == 0 || $(_s(+L6p))
-                      .prop(_s(286)) == ![] && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 4) {
-                  C2D = t8D;
-                  if ($(_s(+w6p))
-                    .prop(_s(286)))
-                    if ($(_s(R6p * 1))
-                      .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
-                      .prop(_s(286)) == !!0 && isCastle == 0 || $(_s(L6p ^ 0))
-                      .prop(_s(286)) == !!0 && L2D == 0) T2D = 0;
-                    else T2D = 1;
-                } else if (Q2D == 8) {
-                  C2D = D2D;
-                  if ($(_s(+R6p))
-                    .prop(_s(286)) == ![] && o2D == 0 || $("#worldswitch8")
-                    .prop(_s(286)) == !"1" && isCastle == 0 || $(_s(L6p ^ 0))
-                    .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
-                  else T2D = 1;
-                } else if (Q2D == (9)) {
-                  C2D = N2D;
-                  if ($(_s(R6p | 544))
-                    .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
-                    .prop(_s(286)) == !!0 && isCastle == (0) || $(_s(+L6p))
-                    .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
-                  else T2D = 1;
-                }
-                if (isCastle == 1 && T2D == 1 && L2D == 0) {
-                  var v2D =
-                    parseInt(C2D, 16);
-                  var H2D = v2D >> 16 & P4p >> 1585185024;
-                  var u2D = v2D >> 8 & +P4p;
-                  var
-                    j2D = v2D & +P4p;
-                  if (W2D > 6) {
-                    index = (I2D + w2D * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + (3)] = 1000;
-                    index = (I2D - (1) + w2D * s2D.width) * (4);
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + 1 + w2D * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + (2)] = j2D;
-                    s2D.data[index + ("3" | 2)] = 1000;
-                    index = (I2D + (w2D + (1)) * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + ('2' | 2)] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + (1) + (w2D - 1) * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + (3)] = 1000;
-                    index = (I2D + (1) + (w2D + 1) * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D - 1 + (w2D - 1) * s2D.width) * (4);
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + (3)] = 1000;
-                    index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                  } else {
-                    index = (I2D + (w2D + 1) * s2D.width) * ("4" & E6k
-                      .s6s);
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D - (1) + (w2D + (1)) * s2D.width) * (4);
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + (2)] = j2D;
-                    s2D.data[index + (3)] = 1000;
-                    index = (I2D + 1 + (w2D + 1) * s2D.width) * 4;
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D - (1) + w2D * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + (2)] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + (1) + w2D * s2D.width) * (4);
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                  }
-                } else if (L2D >= ('1' | 1) && T2D == (1)) {
-                  var x2D = E6k
-                    .o55(2816);
-                  if (wpalt == 0) x2D = _s(2816);
-                  else if (wpalt == 1) x2D = _s(1300);
-                  else if (wpalt == 2) x2D = _s(6674);
-                  else if (wpalt == 3) x2D = _s(3357);
-                  else if (wpalt == 4) x2D = _s(5569);
-                  else if (wpalt == 5) x2D = _s(5760);
-                  else if (wpalt == 6) x2D = _s(6991);
-                  else if (wpalt == 7) x2D = _s(2865);
-                  else if (wpalt == (8)) x2D = _s(3944);
-                  var v2D = parseInt(C2D, 16);
-                  var
-                    H2D = v2D >> 16 & P4p * 1;
-                  var u2D = v2D >> 8 & +P4p;
-                  var j2D = v2D & +P4p;
-                  var d2D =
-                    parseInt(x2D, 16);
-                  var A2D = d2D >> (16) & (P4p & 2147483647);
-                  var V2D = d2D >> (
-                    8) & (P4p & 2147483647);
-                  var h2D = d2D & +P4p;
-                  index = (I2D + w2D * s2D.width) * (4);
-                  s2D.data[index + (0)] = A2D;
-                  s2D.data[index + 1] = V2D;
-                  s2D.data[index + (2)] = h2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D - ('1' | 1) + w2D * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + (1)] = u2D;
-                  s2D.data[index + (2)] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + 1 + w2D * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + (1)] = u2D;
-                  s2D.data[index + (2)] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + (w2D + (1)) * s2D.width) * (4);
-                  s2D.data[index + (0)] = A2D;
-                  s2D.data[index + 1] = V2D;
-                  s2D.data[index + 2] = h2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + (w2D - 1) * s2D.width) * (4);
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = "1000" | 904;
-                  index = (I2D + 1 + (w2D - 1) * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + 1 + (w2D + (1)) * s2D.width) * (4);
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + ('1' | 1)] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D - 1 + (w2D - 1) * s2D.width) * 4;
-                  s2D.data[index + (0)] = H2D;
-                  s2D.data[index + (1)] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + (3)] = 1000;
-                  index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
-                  s2D.data[index + (0)] = H2D;
-                  s2D.data[index + ('1' | 1)] = u2D;
-                  s2D.data[index + (2)] = j2D;
-                  s2D.data[index + 3] = 1000;
-                } else if (T2D == ("1" | 1)) {
-                  var v2D = parseInt(C2D, "16" *
-                    1);
-                  var H2D = v2D >> (16) & +P4p;
-                  var u2D = v2D >> 8 & +P4p;
-                  var j2D = v2D &
-                    P4p << 721096224;
-                  if (W2D > 6) {
-                    index = (I2D + w2D * s2D.width) * (4);
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + (2)] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + (1) + w2D * s2D.width) * (4);
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + (2)] = j2D;
-                    s2D.data[index + (3)] = 1000;
-                    index = (I2D + 1 + (w2D + (1)) * s2D.width) * 4;
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + ('2' | 2)] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + (w2D + 1) * s2D.width) * (4);
-                    s2D.data[index + 0] = H2D;
-                    s2D.data[index + 1] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                  } else {
-                    index = (I2D + (w2D + 1) * s2D.width) * 4;
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + ('1' | 1)] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                    index = (I2D + 1 + (w2D + (1)) * s2D.width) * 4;
-                    s2D.data[index + (0)] = H2D;
-                    s2D.data[index + (1)] = u2D;
-                    s2D.data[index + 2] = j2D;
-                    s2D.data[index + 3] = 1000;
-                  }
-                }
-              } else if (O2D == 4) {
-                graphics.lineStyle(4, _s(+
-                  "6937"));
-                graphics.beginFill(_s(2119), 1);
-                graphics.moveTo(g2D * (I6p * 1) - +p6p, b2D * (I6p * 1) - p6p * 1);
-                graphics.lineTo(g2D * (I6p - 0) - +p6p, b2D * (I6p * 1) + (p6p - 0));
-                graphics.lineTo(g2D * (I6p * 1) + (p6p - 0), b2D * +I6p + +p6p);
-                graphics.lineTo(g2D * (I6p * 1) + +p6p, b2D * (I6p - 0) - +p6p);
-                graphics.endFill();
-              } else if (O2D == 8 && Q2D == 1 && $(_s(197)) // portal
-                .prop(_s(286))) {
-                var v2D = parseInt(k8D, 16);
-                var H2D = v2D >> 16 & +P4p;
-                var u2D =
-                  v2D >> 8 & P4p >> 1471419840;
-                var j2D = v2D & P4p >> 284440384;
-                index = (I2D - 1 + (w2D - ("1" | 1)) * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + ("1" | 1) + (w2D - (1)) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D + (w2D - 1) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + w2D * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + ("3" | 1)] = 1000;
-                index = (I2D - 1 + w2D * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D - (1) + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-              } else if (O2D == 8 && Q2D == 2 && $("worldswitch15").prop(_s(286))) { // active portal
-                var v2D = parseInt(o8D, 16);
-                var H2D = v2D >> 16 & +
-                  P4p;
-                var u2D = v2D >> 8 & (P4p | 14);
-                var j2D = v2D & P4p << 1788993344;
-                index = (I2D + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + (3)] = "1000" | 904;
-                index = (I2D - (1) + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (1) + (w2D + (1)) * s2D.width) * 4;
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + w2D * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D + (1) + w2D * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + 1 + (w2D - 1) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-              } else if (O2D == 3 && Q2D == (1) && $(_s(
-                  +d6p))
-                .prop(_s("286" | 2)) && $("#worldswitch8")
-                .prop(_s(286))) {
-                var v2D = parseInt(q2D, 16);
-                var H2D = v2D >> (16) & (P4p ^
-                  0);
-                var u2D = v2D >> (8) & P4p * 1;
-                var j2D = v2D & (P4p ^ 0);
-                index = (I2D + w2D * s2D.width) * ("4" | 4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D + (1) + w2D * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (1) + (w2D - 1) * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D + (w2D - (1)) * s2D.width) * 4;
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-              } else if (O2D == (3) && Q2D == 2 && $(E6k
-                  .S55(d6p ^ 0))
-                .prop(_s("286" | 12))) {
-                var v2D = parseInt(q2D, 16);
-                var H2D = v2D >> 16 & +P4p;
-                var u2D =
-                  v2D >> 8 & +P4p;
-                var j2D = v2D & +P4p;
-                index = (I2D + w2D * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D - 1 + w2D * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (1) + w2D * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (w2D + (1)) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (1) + (w2D - 1) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = "1000" | 992;
-                index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + ("1" | 1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = "1000" | 832;
-                index = (I2D - (1) + (w2D - 1) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D - 1 + (w2D + (1)) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-              } else if (O2D == 9 && Q2D == 1 && $("#worldswitch13") // shrine inactive
+//      if (Q8 == (0))
+//        if (T0F) {
+//          Q8 = 1;
+//            $("#worldcanv")
+//            .remove();
+//          var G8D;
+//          var Q2D;
+//          var O2D;
+//          var C2D;
+//          var T2D = 0;
+//          var n2D = 1;
+//          var isCastle;
+//          var
+//            o2D;
+//          var L2D;
+//          var W2D;
+//          var g2D;
+//          var b2D;
+//          var O8D = j9.replace(_s(+m7y), '');
+//          var x8D =
+//            S9.replace(_s(m7y | 1), "");
+//          var T8D = d9.replace(_s(m7y - 0), "");
+//          var Q8D = i9.replace(_s(+m7y), '');
+//          var c2D = C9.replace(_s(+m7y), _s(
+//            4867));
+//          var q2D = M9.replace(_s(+m7y), '');
+//          var z8D = z9.replace(_s(+m7y), E6k
+//            .o55(4867));
+//          var s8D = X9.replace(_s(+m7y), "");
+//          var L8D = L9
+//            .replace(_s(+m7y), "");
+//          var y2D = o9.replace(_s(+m7y), _s(
+//            4867));
+//          var k8D = O9.replace(_s(+m7y), "");
+//          var o8D = m8.replace(_s(+
+//            m7y), '');
+//          var t8D = T9.replace(_s(+m7y), "");
+//          var l8D = { content:this};
+////          l8D["content"] = this;
+//          this.borderSize = 0;
+//          this.segments = 0;
+//          this.renderTime = 0;
+//          this.targetDivId = "content";
+//          this.targetDiv = $("#content");
+//          this.isSelecting = !!"";
+//          $(window)
+//            .resize(this.resize);
+//          if (window.orientation != undefined) window.onorientationchange = this.resize;
+//          this.horizontalAttribute = _s(+H6y);
+//          this.horizontalMin = 0;
+//          this.horizontalMax = +T6R;
+//          this._horizontalMin = undefined;
+//          this._horizontalMax = undefined;
+//          this.verticalAttribute = _s(+G6y);
+//          this.verticalMin = 0;
+//          this.verticalMax = T6R ^ 0;
+//          this._verticalMin = undefined;
+//          this._verticalMax = undefined;
+//          this.mouseDownX = 0;
+//          this.mouseDownY = 0;
+//          var J2D = this;
+//          if (J2D.canvas) J2D.canvas.remove();
+//          J2D.canvas = $("<canvas id='worldcanv' width='" + J2D.targetDiv.width() + _s(2221) + J2D.targetDiv
+//            .height() + _s(6682));
+//          J2D.targetDiv.append(J2D.canvas);
+//          this.renderTime = new Date()
+//            .getTime();
+//          var M8D = 0;
+//          var u8D = this.targetDiv.width();
+//          var P2D = this.targetDiv
+//            .height();
+//          var U2D = P2D - 2 * this.borderSize;
+//          var R2D = P2D - 2 * this.borderSize;
+//          $("#worldcanv")
+//            .addClass(_s("4164" | 4100));
+//          var S2D = this.canvas[0].getContext("2d");
+//          S2D.fillStyle = _s(7073);
+//          S2D.mozImageSmoothingEnabled = !!0;
+//          S2D.oImageSmoothingEnabled = !!"";
+//          S2D.webkitImageSmoothingEnabled = ![];
+//          S2D.imageSmoothingEnabled = !{};
+//          var s2D = S2D.getImageData(0, 0, u8D, P2D);
+//          var d8D = {};
+//          var
+//            b8D = {};
+//          if (isNaN(this._horizontalMax)) {
+//            this._horizontalMin = this.horizontalMin;
+//            this._horizontalMax = this.horizontalMax;
+//            this._verticalMin = this.verticalMin;
+//            this._verticalMax = this.verticalMax;
+//          }
+//          var H8D = this._horizontalMax - this._horizontalMin;
+//          var e8D =
+//            this._verticalMax - this._verticalMin;
+//          var I2D;
+//          var w2D;
+//          var V8D;
+//          for (var m2D in T0F)
+//            if (T0F[m2D]) {
+//              var l2D = T0F[m2D];
+//              O2D = l2D.substring(0,  1);
+//              G8D = l8;
+//              if (O2D == (1)) { // not city
+//                var z2D = Number(l2D.substring(7, 10));
+//                var M2D = Number(l2D.substring(4, 7));
+//              } else if (O2D == 2) {
+//                var z2D = Number(l2D.substring(8, "11" |
+//                  2));
+//                var M2D = Number(l2D.substring(5, 8));
+//              } else if (O2D == (3)) {
+//                var z2D = Number(
+//                  l2D.substring(5, 8));
+//                var M2D = Number(l2D.substring(2, '5' | 4));
+//              } else if (O2D ==
+//                7) {
+//                var z2D = Number(l2D.substring(6, 9));
+//                var M2D = Number(l2D.substring(3, +
+//                  "6"));
+//              } else if (O2D == (8)) {
+//                var z2D = Number(l2D.substring(5, 8));
+//                var
+//                  M2D = Number(l2D.substring(2, 5));
+//              } else if (O2D == 9) {
+//                var z2D = Number(l2D
+//                  .substring(6, 9));
+//                var M2D = Number(l2D.substring(3, 6));
+//              }
+//              g2D =
+//                (Number(z2D) - '99.5' * 1) * +m6p;
+//              b2D = Number(M2D) - ("99.5" - 0);
+//              b2D = (b2D + (l1y | 584) - b2D * 2) * (m6p * 1);
+//              var E2D = z2D + '' + M2D;
+//              P5F[E2D] = l2D;
+//              I2D = g2D / H8D;
+//              w2D = b2D / e8D;
+//              I2D = parseInt((0) + I2D * U2D);
+//              w2D = parseInt(0 + (R2D - w2D * R2D));
+//              if (O2D == 9) Q2D = Number(l2D.substring(1, '2' >> // shrine
+//                1286753472));
+//              else if (O2D == 8) Q2D = Number(l2D.substring(1, 2)); // portal
+//              else if (O2D == 7) Q2D = Number(l2D.substring(7, 8));
+//              else if (O2D == 3) Q2D = Number(l2D.substring(7, 8));
+//              if (O2D == 2) {
+//                L2D =
+//                  Number(l2D.substring(1, 3));
+//                wpalt = Number(l2D.substring(3, 4));
+//                var i2D = Number(l2D.substring(4, +
+//                  "5"));
+//                if (i2D == ("1" | 1)) {
+//                  isCastle = 0;
+//                  o2D = 0;
+//                  W2D = 1;
+//                } else if (i2D == 2) {
+//                  isCastle = 0;
+//                  o2D = 1;
+//                  W2D = 1;
+//                } else if (i2D == 3) {
+//                  isCastle = 1;
+//                  o2D = 1;
+//                  W2D = 1;
+//                } else if (i2D == 4) {
+//                  isCastle = 1;
+//                  o2D = 0;
+//                  W2D = 1;
+//                } else if (i2D == (5)) {
+//                  isCastle = 0;
+//                  o2D = 0;
+//                  W2D = 8;
+//                } else if (i2D == 6) {
+//                  isCastle = 0;
+//                  o2D = 1;
+//                  W2D = 8;
+//                } else if (i2D == 7) {
+//                  isCastle = 1;
+//                  o2D = 1;
+//                  W2D = 8;
+//                } else if (i2D == 8) {
+//                  isCastle = 1;
+//                  o2D = 0;
+//                  W2D = 8;
+//                }
+//                T2D = 0;
+//                L2D = L2D - (10);
+//                var B2D = Number(l2D.substring(11, 12));
+//                var f2D = Number(l2D
+//                  .substring('12' | 8, ('12' | 8) + B2D));
+//                var G2D = Number(l2D.substring(12 + B2D));
+//                var j8D = aldt[
+//                  "id"];
+//                var v8D = ppdt["pid"];
+//                var K2D = 0;
+//                var J8D;
+//                if (G2D != 0 && aldt[
+//                    "d"]) {
+//                  for (var r2D in aldt["d"][1])
+//                    if (aldt["d"][1][r2D]["id"] == G2D) K2D = 1;
+//                  for (var r2D in
+//                      aldt["d"][2])
+//                    if (aldt["d"]['2' | 2][r2D]["id"] == G2D) K2D = "2" >>
+//                      1941136448;
+//                  for (var r2D in aldt["d"][3])
+//                    if (aldt["d"][3][r2D]["id"] == G2D) K2D = 3;
+//                }
+//                var
+//                  a2D = 0;
+//                var D2D = '';
+//                var p2D = 1;
+//                if (ppdt.wmo.p)
+//                  if (ppdt.wmo.p[f2D]) {
+//                    var X2D = ppdt.wmo.p;
+//                    if (Object.keys(X2D)
+//                      .length > 0) {
+//                      mrkpid = X2D[f2D]['a'];
+//                      mrkpname = X2D[f2D][_s(+B9y)];
+//                      mrkcolor = X2D[f2D][_s(+x9y)];
+//                      mrkonoff = X2D[f2D]["d"];
+//                      a2D = 1;
+//                      D2D = mrkcolor.replace(_s(+m7y), "");
+//                      p2D = mrkonoff;
+//                    }
+//                  } var Y2D = 0;
+//                var N2D = '';
+//                var F2D = 1;
+//                if (ppdt.wmo
+//                  .a)
+//                  if (ppdt.wmo.a[G2D]) {
+//                    var X2D = ppdt.wmo.a;
+//                    if (Object.keys(X2D)
+//                      .length > (0)) {
+//                      var W8D = X2D[G2D]['a'];
+//                      var i8D = X2D[G2D][_s(B9y >>
+//                        937503680)];
+//                      var w8D = X2D[G2D][_s(+x9y)];
+//                      var I8D = X2D[G2D]["d"];
+//                      Y2D = 1;
+//                      N2D = w8D.replace(_s(+m7y), "");
+//                      F2D = I8D;
+//                    }
+//                  } if (v8D == f2D) Q2D = 1;
+//                else if (a2D == 1 && p2D == (1)) Q2D = 8;
+//                else if (Y2D == 1 && F2D == 1) Q2D = 9;
+//                else if (G2D == j8D) Q2D = 2;
+//                else if (G2D == (0)) Q2D = 4;
+//                else if (K2D == 1) Q2D = 5;
+//                else if (K2D == 2) Q2D = 6;
+//                else if (K2D == 3) Q2D = 7;
+//                else Q2D = 4;
+//                if (Q2D == 1) {
+//                  C2D = O8D;
+//                    if ($("#worldswitch1")
+//                    .prop("checked"))
+//                        if ($("#worldswitch9").prop("checked") == !!"" && o2D == 0 || 
+//                      $("#worldswitch8").prop("checked") == ![] && isCastle == 0 && 
+//                        ($("worldswitch10").prop("checked") && L2D == 0)) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 2) {
+//                  C2D = x8D;
+//                    if ($("#worldswitch1")
+//                        .prop("checked"))
+//                    if ($(_s(+R6p))
+//                      .prop(_s(286)) == !"1" && o2D == 0 || $("#worldswitch8")
+//                      .prop(_s("286" | 270)) == !"1" && isCastle == 0 || $("worldswitch10")
+//                      .prop(_s(286)) == !{} && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 3) {
+//                  C2D = c2D;
+//                  if ($(_s(766))
+//                    .prop(_s(286)))
+//                    if ($(_s(+R6p))
+//                      .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
+//                      .prop(_s(286)) == ![] && isCastle == (0) || $("worldswitch10")
+//                      .prop(_s(286)) == ![] && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 5) {
+//                  C2D = T8D;
+//                  if ($(_s(O6p << 1262186080))
+//                    .prop(_s(286)))
+//                    if ($(_s(R6p | 128))
+//                      .prop(_s(286)) == !!0 && o2D == 0 || $("#worldswitch8")
+//                      .prop(_s(286)) == !"1" && isCastle == 0 || $(_s(+L6p))
+//                      .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 6) {
+//                  C2D = Q8D;
+//                  if ($(_s(+v6p))
+//                    .prop(_s(286)))
+//                    if ($(_s(R6p - 0))
+//                      .prop(_s(286)) == !1 && o2D == (0) || $("#worldswitch8")
+//                      .prop(_s(286)) == ![] && isCastle == 0 || $(_s(L6p ^ 0))
+//                      .prop(_s(286)) == !{} && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 7) {
+//                  C2D = c2D;
+//                  if ($(_s(766))
+//                    .prop(_s(286)))
+//                    if ($(_s(+R6p))
+//                      .prop(_s(286)) == !!0 && o2D == 0 || $("#worldswitch8")
+//                      .prop(_s(286)) == !!"" && isCastle == 0 || $(_s(+L6p))
+//                      .prop(_s(286)) == ![] && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 4) {
+//                  C2D = t8D;
+//                  if ($(_s(+w6p))
+//                    .prop(_s(286)))
+//                    if ($(_s(R6p * 1))
+//                      .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
+//                      .prop(_s(286)) == !!0 && isCastle == 0 || $(_s(L6p ^ 0))
+//                      .prop(_s(286)) == !!0 && L2D == 0) T2D = 0;
+//                    else T2D = 1;
+//                } else if (Q2D == 8) {
+//                  C2D = D2D;
+//                  if ($(_s(+R6p))
+//                    .prop(_s(286)) == ![] && o2D == 0 || $("#worldswitch8")
+//                    .prop(_s(286)) == !"1" && isCastle == 0 || $(_s(L6p ^ 0))
+//                    .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
+//                  else T2D = 1;
+//                } else if (Q2D == (9)) {
+//                  C2D = N2D;
+//                  if ($(_s(R6p | 544))
+//                    .prop(_s(286)) == !{} && o2D == 0 || $("#worldswitch8")
+//                    .prop(_s(286)) == !!0 && isCastle == (0) || $(_s(+L6p))
+//                    .prop(_s(286)) == !1 && L2D == 0) T2D = 0;
+//                  else T2D = 1;
+//                }
+//                if (isCastle == 1 && T2D == 1 && L2D == 0) {
+//                  var v2D =
+//                    parseInt(C2D, 16);
+//                  var H2D = v2D >> 16 & P4p >> 1585185024;
+//                  var u2D = v2D >> 8 & +P4p;
+//                  var
+//                    j2D = v2D & +P4p;
+//                  if (W2D > 6) {
+//                    index = (I2D + w2D * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + (3)] = 1000;
+//                    index = (I2D - (1) + w2D * s2D.width) * (4);
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + 1 + w2D * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + (2)] = j2D;
+//                    s2D.data[index + ("3" | 2)] = 1000;
+//                    index = (I2D + (w2D + (1)) * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + ('2' | 2)] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + (1) + (w2D - 1) * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + (3)] = 1000;
+//                    index = (I2D + (1) + (w2D + 1) * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D - 1 + (w2D - 1) * s2D.width) * (4);
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + (3)] = 1000;
+//                    index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                  } else {
+//                    index = (I2D + (w2D + 1) * s2D.width) * ("4" & E6k
+//                      .s6s);
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D - (1) + (w2D + (1)) * s2D.width) * (4);
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + (2)] = j2D;
+//                    s2D.data[index + (3)] = 1000;
+//                    index = (I2D + 1 + (w2D + 1) * s2D.width) * 4;
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D - (1) + w2D * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + (2)] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + (1) + w2D * s2D.width) * (4);
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                  }
+//                } else if (L2D >= ('1' | 1) && T2D == (1)) {
+//                  var x2D = E6k
+//                    .o55(2816);
+//                  if (wpalt == 0) x2D = _s(2816);
+//                  else if (wpalt == 1) x2D = _s(1300);
+//                  else if (wpalt == 2) x2D = _s(6674);
+//                  else if (wpalt == 3) x2D = _s(3357);
+//                  else if (wpalt == 4) x2D = _s(5569);
+//                  else if (wpalt == 5) x2D = _s(5760);
+//                  else if (wpalt == 6) x2D = _s(6991);
+//                  else if (wpalt == 7) x2D = _s(2865);
+//                  else if (wpalt == (8)) x2D = _s(3944);
+//                  var v2D = parseInt(C2D, 16);
+//                  var
+//                    H2D = v2D >> 16 & P4p * 1;
+//                  var u2D = v2D >> 8 & +P4p;
+//                  var j2D = v2D & +P4p;
+//                  var d2D =
+//                    parseInt(x2D, 16);
+//                  var A2D = d2D >> (16) & (P4p & 2147483647);
+//                  var V2D = d2D >> (
+//                    8) & (P4p & 2147483647);
+//                  var h2D = d2D & +P4p;
+//                  index = (I2D + w2D * s2D.width) * (4);
+//                  s2D.data[index + (0)] = A2D;
+//                  s2D.data[index + 1] = V2D;
+//                  s2D.data[index + (2)] = h2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D - ('1' | 1) + w2D * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + (1)] = u2D;
+//                  s2D.data[index + (2)] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + 1 + w2D * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + (1)] = u2D;
+//                  s2D.data[index + (2)] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + (w2D + (1)) * s2D.width) * (4);
+//                  s2D.data[index + (0)] = A2D;
+//                  s2D.data[index + 1] = V2D;
+//                  s2D.data[index + 2] = h2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + (w2D - 1) * s2D.width) * (4);
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = "1000" | 904;
+//                  index = (I2D + 1 + (w2D - 1) * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + 1 + (w2D + (1)) * s2D.width) * (4);
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + ('1' | 1)] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D - 1 + (w2D - 1) * s2D.width) * 4;
+//                  s2D.data[index + (0)] = H2D;
+//                  s2D.data[index + (1)] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + (3)] = 1000;
+//                  index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
+//                  s2D.data[index + (0)] = H2D;
+//                  s2D.data[index + ('1' | 1)] = u2D;
+//                  s2D.data[index + (2)] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                } else if (T2D == ("1" | 1)) {
+//                  var v2D = parseInt(C2D, "16" *
+//                    1);
+//                  var H2D = v2D >> (16) & +P4p;
+//                  var u2D = v2D >> 8 & +P4p;
+//                  var j2D = v2D &
+//                    P4p << 721096224;
+//                  if (W2D > 6) {
+//                    index = (I2D + w2D * s2D.width) * (4);
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + (2)] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + (1) + w2D * s2D.width) * (4);
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + (2)] = j2D;
+//                    s2D.data[index + (3)] = 1000;
+//                    index = (I2D + 1 + (w2D + (1)) * s2D.width) * 4;
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + ('2' | 2)] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + (w2D + 1) * s2D.width) * (4);
+//                    s2D.data[index + 0] = H2D;
+//                    s2D.data[index + 1] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                  } else {
+//                    index = (I2D + (w2D + 1) * s2D.width) * 4;
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + ('1' | 1)] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                    index = (I2D + 1 + (w2D + (1)) * s2D.width) * 4;
+//                    s2D.data[index + (0)] = H2D;
+//                    s2D.data[index + (1)] = u2D;
+//                    s2D.data[index + 2] = j2D;
+//                    s2D.data[index + 3] = 1000;
+//                  }
+//                }
+//              } else if (O2D == 4) {
+//                graphics.lineStyle(4, _s(+
+//                  "6937"));
+//                graphics.beginFill(_s(2119), 1);
+//                graphics.moveTo(g2D * (I6p * 1) - +p6p, b2D * (I6p * 1) - p6p * 1);
+//                graphics.lineTo(g2D * (I6p - 0) - +p6p, b2D * (I6p * 1) + (p6p - 0));
+//                graphics.lineTo(g2D * (I6p * 1) + (p6p - 0), b2D * +I6p + +p6p);
+//                graphics.lineTo(g2D * (I6p * 1) + +p6p, b2D * (I6p - 0) - +p6p);
+//                graphics.endFill();
+//              } else if (O2D == 8 && Q2D == 1 && $(_s(197)) // portal
+//                .prop(_s(286))) {
+//                var v2D = parseInt(k8D, 16);
+//                var H2D = v2D >> 16 & +P4p;
+//                var u2D =
+//                  v2D >> 8 & P4p >> 1471419840;
+//                var j2D = v2D & P4p >> 284440384;
+//                index = (I2D - 1 + (w2D - ("1" | 1)) * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + ("1" | 1) + (w2D - (1)) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D + (w2D - 1) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + w2D * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + ("3" | 1)] = 1000;
+//                index = (I2D - 1 + w2D * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D - (1) + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//              } else if (O2D == 8 && Q2D == 2 && $("worldswitch15").prop(_s(286))) { // active portal
+//                var v2D = parseInt(o8D, 16);
+//                var H2D = v2D >> 16 & +
+//                  P4p;
+//                var u2D = v2D >> 8 & (P4p | 14);
+//                var j2D = v2D & P4p << 1788993344;
+//                index = (I2D + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + (3)] = "1000" | 904;
+//                index = (I2D - (1) + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (1) + (w2D + (1)) * s2D.width) * 4;
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + w2D * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D + (1) + w2D * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + 1 + (w2D - 1) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//              } else if (O2D == 3 && Q2D == (1) && $(_s(
+//                  +d6p))
+//                .prop(_s("286" | 2)) && $("#worldswitch8")
+//                .prop(_s(286))) {
+//                var v2D = parseInt(q2D, 16);
+//                var H2D = v2D >> (16) & (P4p ^
+//                  0);
+//                var u2D = v2D >> (8) & P4p * 1;
+//                var j2D = v2D & (P4p ^ 0);
+//                index = (I2D + w2D * s2D.width) * ("4" | 4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D + (1) + w2D * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (1) + (w2D - 1) * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D + (w2D - (1)) * s2D.width) * 4;
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//              } else if (O2D == (3) && Q2D == 2 && $(E6k
+//                  .S55(d6p ^ 0))
+//                .prop(_s("286" | 12))) {
+//                var v2D = parseInt(q2D, 16);
+//                var H2D = v2D >> 16 & +P4p;
+//                var u2D =
+//                  v2D >> 8 & +P4p;
+//                var j2D = v2D & +P4p;
+//                index = (I2D + w2D * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D - 1 + w2D * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (1) + w2D * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (w2D + (1)) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (1) + (w2D - 1) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = "1000" | 992;
+//                index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + ("1" | 1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = "1000" | 832;
+//                index = (I2D - (1) + (w2D - 1) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D - 1 + (w2D + (1)) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//              } else if (O2D == 9 && Q2D == 1 && $("#worldswitch13") // shrine inactive
                  
-                .prop(_s(286))) {
-                var v2D = parseInt(y2D, 16);
-                var H2D = v2D >> 16 & (P4p ^ 0);
-                var
-                  u2D = v2D >> 8 & (P4p & 2147483647);
-                var j2D = v2D & +P4p;
-                index = (I2D + (1) + w2D * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + 1 + (w2D - (1)) * s2D.width) * 4;
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D - 1 + w2D * s2D.width) * 4;
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D - (1) + (w2D - 1) * s2D.width) * 4;
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + ('3' | 3)] = 1000;
-              } else if (O2D == (9) && Q2D == 2 && $("#worldswitch13") // shrine active
-                .prop(_s(286))) {
-                stype = Number(l2D.substring(2, 3));
-                var x2D = _s(+
-                  '2034');
-                if (stype == (0)) x2D = _s(3944);
-                else if (stype == 1) x2D = _s(1300);
-                else if (stype == 2) x2D = _s(6674);
-                else if (stype == 3) x2D = _s(3357);
-                else if (stype == 4) x2D = _s(5569);
-                else if (stype == (5)) x2D = _s(5760);
-                else if (stype == 6) x2D = _s(6991);
-                else if (stype == 7) x2D = _s(2865);
-                else if (stype == 8) x2D = _s(3944);
-                var v2D = parseInt(y2D, 16);
-                var H2D = v2D >> ("16" ^
-                  0) & P4p << 1009396224;
-                var u2D = v2D >> 8 & P4p - 0;
-                var j2D = v2D & +P4p;
-                var d2D = parseInt(
-                  x2D, 16);
-                var A2D = d2D >> 16 & (P4p | 61);
-                var V2D = d2D >> 8 & P4p << 622913344;
-                var
-                  h2D = d2D & +P4p;
-                index = (I2D + w2D * s2D.width) * (4);
-                s2D.data[index + 0] = A2D;
-                s2D.data[index + (1)] = V2D;
-                s2D.data[index + 2] = h2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (w2D - (1)) * s2D.width) * (4);
-                s2D.data[index + 0] = A2D;
-                s2D.data[index + 1] = V2D;
-                s2D.data[index + 2] = h2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + 0] = A2D;
-                s2D.data[index + (1)] = V2D;
-                s2D.data[index + (2)] = h2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + 1 + w2D * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D + 1 + (w2D - (1)) * s2D.width) * (4);
-                s2D.data[index + 0] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + ("2" | 2)] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D - 1 + w2D * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + (1)] = u2D;
-                s2D.data[index + 2] = j2D;
-                s2D.data[index + (3)] = 1000;
-                index = (I2D - 1 + (w2D - (1)) * s2D.width) * (4);
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + 3] = 1000;
-                index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
-                s2D.data[index + (0)] = H2D;
-                s2D.data[index + 1] = u2D;
-                s2D.data[index + (2)] = j2D;
-                s2D.data[index + (3)] = 1000;
-              } else if (O2D == 7 && $(_s(+k6p))
-                .prop(_s(286))) {
-                n2D = Number(l2D.substring(1, 3)) - ('10' | 10);
-                if (n2D >= ppdt
-                  .wmo[G8y * 1] && n2D <= ppdt.wmo[+r8y]) {
-                  var v2D = parseInt(s8D, 16);
-                  var H2D = v2D >> 16 & (
-                    P4p & 2147483647);
-                  var u2D = v2D >> ('8' | 8) & +P4p;
-                  var j2D = v2D & P4p >> 1988044000;
-                  index = (I2D + w2D * s2D.width) * (4);
-                  s2D.data[index + (0)] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                }
-              } else if (O2D == 1 && $(_s(+o6p))
-                .prop(_s(286))) {
-                var S8D = Number(l2D.substring(3, 4));
-                n2D = Number(l2D.substring(1, 3)) - (10);
-                if (n2D >= ppdt.wmo[+b8y] && n2D <=
-                  ppdt.wmo[+h8y]) {
-                  var v2D = parseInt(L8D, 16);
-                  var H2D = v2D >> (16) & (P4p | 28);
-                  var
-                    u2D = v2D >> 8 & (P4p | 208);
-                  var j2D = v2D & (P4p | 81);
-                  index = (I2D - 1 + w2D * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + (2)] = j2D;
-                  s2D.data[index + (3)] = 1000;
-                  index = (I2D + 1 + (w2D - 1) * s2D.width) * (4);
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + (1)] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + ("3" | 1)] = 1000;
-                  index = (I2D + (w2D - 1) * s2D.width) * 4;
-                  s2D.data[index + (0)] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + (w2D + (1)) * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
-                  s2D.data[index + (0)] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D - (1) + (w2D + (1)) * s2D.width) * 4;
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + (1)] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + 3] = 1000;
-                  index = (I2D - 1 + (w2D - ("1" | 1)) * s2D.width) * (4);
-                  s2D.data[index + 0] = H2D;
-                  s2D.data[index + 1] = u2D;
-                  s2D.data[index + 2] = j2D;
-                  s2D.data[index + (3)] = 1000;
-                }
-              }
-            } var Z2D = U2D;
-          Z2D = 0;
-          S2D.putImageData(s2D, 0, 0);
-          var h8D;
-          S2D.fillStyle = _s(E6p & 2147483647);
-          Z2D = U2D;
-          Z2D = 0;
-          var C8D = 0;
-          var X8D = 0;
-          this.renderTime = new Date()
-            .getTime() - this.renderTime;
-          $(_s(+S6p))
-            .show();
-          o7F(m0F, j5F);
-        } else {
-          X5F = 0;
-          d7F();
-        }
+//                .prop(_s(286))) {
+//                var v2D = parseInt(y2D, 16);
+//                var H2D = v2D >> 16 & (P4p ^ 0);
+//                var
+//                  u2D = v2D >> 8 & (P4p & 2147483647);
+//                var j2D = v2D & +P4p;
+//                index = (I2D + (1) + w2D * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + 1 + (w2D - (1)) * s2D.width) * 4;
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D - 1 + w2D * s2D.width) * 4;
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D - (1) + (w2D - 1) * s2D.width) * 4;
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + ('3' | 3)] = 1000;
+//              } else if (O2D == (9) && Q2D == 2 && $("#worldswitch13") // shrine active
+//                .prop(_s(286))) {
+//                stype = Number(l2D.substring(2, 3));
+//                var x2D = _s(+
+//                  '2034');
+//                if (stype == (0)) x2D = _s(3944);
+//                else if (stype == 1) x2D = _s(1300);
+//                else if (stype == 2) x2D = _s(6674);
+//                else if (stype == 3) x2D = _s(3357);
+//                else if (stype == 4) x2D = _s(5569);
+//                else if (stype == (5)) x2D = _s(5760);
+//                else if (stype == 6) x2D = _s(6991);
+//                else if (stype == 7) x2D = _s(2865);
+//                else if (stype == 8) x2D = _s(3944);
+//                var v2D = parseInt(y2D, 16);
+//                var H2D = v2D >> ("16" ^
+//                  0) & P4p << 1009396224;
+//                var u2D = v2D >> 8 & P4p - 0;
+//                var j2D = v2D & +P4p;
+//                var d2D = parseInt(
+//                  x2D, 16);
+//                var A2D = d2D >> 16 & (P4p | 61);
+//                var V2D = d2D >> 8 & P4p << 622913344;
+//                var
+//                  h2D = d2D & +P4p;
+//                index = (I2D + w2D * s2D.width) * (4);
+//                s2D.data[index + 0] = A2D;
+//                s2D.data[index + (1)] = V2D;
+//                s2D.data[index + 2] = h2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (w2D - (1)) * s2D.width) * (4);
+//                s2D.data[index + 0] = A2D;
+//                s2D.data[index + 1] = V2D;
+//                s2D.data[index + 2] = h2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + 0] = A2D;
+//                s2D.data[index + (1)] = V2D;
+//                s2D.data[index + (2)] = h2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + 1 + w2D * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D + 1 + (w2D - (1)) * s2D.width) * (4);
+//                s2D.data[index + 0] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + ("2" | 2)] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D - 1 + w2D * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + (1)] = u2D;
+//                s2D.data[index + 2] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//                index = (I2D - 1 + (w2D - (1)) * s2D.width) * (4);
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + 3] = 1000;
+//                index = (I2D - (1) + (w2D + 1) * s2D.width) * 4;
+//                s2D.data[index + (0)] = H2D;
+//                s2D.data[index + 1] = u2D;
+//                s2D.data[index + (2)] = j2D;
+//                s2D.data[index + (3)] = 1000;
+//              } else if (O2D == 7 && $(_s(+k6p))
+//                .prop(_s(286))) {
+//                n2D = Number(l2D.substring(1, 3)) - ('10' | 10);
+//                if (n2D >= ppdt
+//                  .wmo[G8y * 1] && n2D <= ppdt.wmo[+r8y]) {
+//                  var v2D = parseInt(s8D, 16);
+//                  var H2D = v2D >> 16 & (
+//                    P4p & 2147483647);
+//                  var u2D = v2D >> ('8' | 8) & +P4p;
+//                  var j2D = v2D & P4p >> 1988044000;
+//                  index = (I2D + w2D * s2D.width) * (4);
+//                  s2D.data[index + (0)] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                }
+//              } else if (O2D == 1 && $(_s(+o6p))
+//                .prop(_s(286))) {
+//                var S8D = Number(l2D.substring(3, 4));
+//                n2D = Number(l2D.substring(1, 3)) - (10);
+//                if (n2D >= ppdt.wmo[+b8y] && n2D <=
+//                  ppdt.wmo[+h8y]) {
+//                  var v2D = parseInt(L8D, 16);
+//                  var H2D = v2D >> (16) & (P4p | 28);
+//                  var
+//                    u2D = v2D >> 8 & (P4p | 208);
+//                  var j2D = v2D & (P4p | 81);
+//                  index = (I2D - 1 + w2D * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + (2)] = j2D;
+//                  s2D.data[index + (3)] = 1000;
+//                  index = (I2D + 1 + (w2D - 1) * s2D.width) * (4);
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + (1)] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + ("3" | 1)] = 1000;
+//                  index = (I2D + (w2D - 1) * s2D.width) * 4;
+//                  s2D.data[index + (0)] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + (w2D + (1)) * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D + 1 + (w2D + 1) * s2D.width) * (4);
+//                  s2D.data[index + (0)] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D - (1) + (w2D + (1)) * s2D.width) * 4;
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + (1)] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + 3] = 1000;
+//                  index = (I2D - 1 + (w2D - ("1" | 1)) * s2D.width) * (4);
+//                  s2D.data[index + 0] = H2D;
+//                  s2D.data[index + 1] = u2D;
+//                  s2D.data[index + 2] = j2D;
+//                  s2D.data[index + (3)] = 1000;
+//                }
+//              }
+//            } var Z2D = U2D;
+//          Z2D = 0;
+//          S2D.putImageData(s2D, 0, 0);
+//          var h8D;
+//          S2D.fillStyle = _s(E6p & 2147483647);
+//          Z2D = U2D;
+//          Z2D = 0;
+//          var C8D = 0;
+//          var X8D = 0;
+//          this.renderTime = new Date()
+//            .getTime() - this.renderTime;
+//          $(_s(+S6p))
+//            .show();
+//          o7F(m0F, j5F);
+//        } else {
+//          X5F = 0;
+//          d7F();
+//        }
     }
 
     function s9F(Y9Z) {
@@ -34512,8 +34512,8 @@ var cotgsubscribe = amplify;
     }
 
     function b7V() {
-      E6k.R6();
-      d7F();
+      //E6k.R6();
+      //d7F();
     }
 
     function i5V(g59, y59, D59) {
@@ -47656,7 +47656,7 @@ var cotgsubscribe = amplify;
 
         S0g.style.display = "none";
    //     w2();
-        d7F();
+      //  d7F();
        // $(_s(2267))
       //    .show();
         $(_s(+S6p))

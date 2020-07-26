@@ -27,11 +27,11 @@ namespace COTG.Game
             }
             return rv;
         }
-        static internal ushort SubStrAsShort(this string s, int start, int count)
+        static public ushort SubStrAsShort(this string s, int start, int count)
         {
             return (ushort)SubStrAsInt(s, start, count);
         }
-        static internal byte SubStrAsByte(this string s, int start, int count)
+        static public byte SubStrAsByte(this string s, int start, int count)
         {
             return (byte)SubStrAsInt(s, start, count);
         }
