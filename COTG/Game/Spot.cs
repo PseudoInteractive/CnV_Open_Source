@@ -145,15 +145,11 @@ namespace COTG.Game
             if (pt.Properties.IsLeftButtonPressed)
             {
                 // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-                if (MainPage.IsVisible() && City.focus == this)
-                {
-                    //                MainPage.SetRaidCity(cid,true);
-                    ScanDungeons.Post(cid, true);
-                }
+              
                 switch (column)
                 {
-                    case "xy": JSClient.ShowCity(cid,false); break;
-                    case "icon": if (City.IsMine(cid))
+                    case nameof(xy): JSClient.ShowCity(cid,false); break;
+                    case nameof(icon): if (City.IsMine(cid))
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid,false);
                         break;
@@ -169,6 +165,27 @@ namespace COTG.Game
                             Raiding.UpdateTSHome(true);
                         }
                         break;
+                    case nameof(City.raidReturn):
+                        if (City.IsMine(cid) && MainPage.IsVisible())
+                        {
+                            City.SetFocus(cid, false, true, false); // prevent dungeon scan on select
+                            Raiding.ReturnFast(cid,true);
+                            return; // prevent the traiing dungeon scan
+                        }
+                        break;
+                    case nameof(City.raidCarry):
+                        if (City.IsMine(cid) && MainPage.IsVisible())
+                        {
+                            City.SetFocus(cid,false,true,false);// prevent dungeon scan on select
+                            Raiding.ReturnSlow(cid,true);
+                            return;// prevent trailing dungeon scan
+                        }
+                        break;
+                }
+                if (MainPage.IsVisible() && City.focus == this)
+                {
+                    //                MainPage.SetRaidCity(cid,true);
+                    ScanDungeons.Post(cid, true);
                 }
             }
         }

@@ -536,7 +536,7 @@ function postppdt()
 			pid: ppdt.pid,
 			s: s,
 			cookie: document.cookie,
-			cid: ppdt.lc.lcit,
+			cid: ppdt.lcit,
 			time: currentTime(),
 			spanX: M8.clientWidth,
 			spanY: M8.clientHeight,
@@ -548,8 +548,8 @@ function postppdt()
 
 		
 		let wrapper = { jsvars: creds, ppdt:ppdt }
-		if (__c.D6 != null)
-			wrapper['citydata'] = __c.D6;
+//		if (__c.D6 != null)
+//			wrapper['citydata'] = __c.D6;
 
 		window['external']['notify'](JSON.stringify(wrapper));
 		//OptimizeAjax();

@@ -77,13 +77,13 @@
                 <tg:DataGridNumericalColumn PropertyName="raidReturn"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,6:N0}"
-                                            IsVisible="False"
+                                            
                                             Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,5:N1}"
                                             Width="80"
-                                            IsVisible="False" />
+                                             />
                 <tg:DataGridNumericalColumn PropertyName="points"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,6:N0}"

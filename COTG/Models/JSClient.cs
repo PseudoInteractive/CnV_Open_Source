@@ -462,6 +462,13 @@ namespace COTG
             UpdatePPDT(ppdt.RootElement);
         }
 
+        public static async Task PollCity(int cid)
+        {
+            await Task.Delay(200);
+            await view.InvokeScriptAsync("eval", new[]{ $"pollthis('{cid.ToString()}')" });
+            await Task.Delay(1000); // hack:  Todo, handle this property
+        }
+
         public static void UpdatePPDT(JsonElement jse)
         {
             int clChanged = 0;
@@ -787,7 +794,7 @@ namespace COTG
                                 jsVars.gameTOffset =TimeSpan.FromMinutes(timeOffsetRounded);
                                 var str = timeOffsetRounded >= 0 ? " +" : " ";
                                 str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
-                                JSONHelper.timeZoneString = str;
+                                Helpers.JSON.timeZoneString = str;
                              //   Log(JSONHelper.timeZoneString);
                                 Log($"TOffset {jsVars.gameTOffset}");
                                 Log(ServerTime().ToString());

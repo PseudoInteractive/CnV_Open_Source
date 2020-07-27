@@ -555,6 +555,12 @@ namespace COTG.Services
         public RaidOverview() : base("overview/graid.php") { }
         public override void ProcessJson(JsonDocument jsd)
         {
+            // reset all to start
+            foreach(var city in City.allCities.Values)
+            {
+                city.raids = Array.Empty<Raid>();
+                city.raidCarry = 0;
+            }
             //           string dateExtra = DateTime.Now.Year
             var a = jsd.RootElement.GetProperty("a");
             foreach (var cr in a.EnumerateArray())

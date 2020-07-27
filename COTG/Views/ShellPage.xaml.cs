@@ -302,24 +302,24 @@ namespace COTG.Views
             }
         }
 
-        private void OnUserProfile(object sender, RoutedEventArgs e)
-        {
-            if (IsLoggedIn)
-            {
-                OpenSettingsPage(sender,e);
-//                NavigationService.Navigate<SettingsPage>();
-            }
-            //else
-            //{
-            //    IsBusy = true;
-            //    var loginResult = await IdentityService.LoginAsync();
-            //    if (loginResult != LoginResultType.Success)
-            //    {
-            //        await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
-            //        IsBusy = false;
-            //    }
-            //}
-        }
+//        private void OnUserProfile(object sender, RoutedEventArgs e)
+//        {
+//            if (IsLoggedIn)
+//            {
+//                OpenSettingsPage(sender,e);
+////                NavigationService.Navigate<SettingsPage>();
+//            }
+//            //else
+//            //{
+//            //    IsBusy = true;
+//            //    var loginResult = await IdentityService.LoginAsync();
+//            //    if (loginResult != LoginResultType.Success)
+//            //    {
+//            //        await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
+//            //        IsBusy = false;
+//            //    }
+//            //}
+//        }
 
         private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
@@ -329,47 +329,47 @@ namespace COTG.Views
         private void OnCurrentPageCanGoBackChanged(object sender, bool currentPageCanGoBack)
             => IsBackEnabled = NavigationService.CanGoBack || currentPageCanGoBack;
 
-        private void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-            IsBackEnabled = NavigationService.CanGoBack;
-            if (e.SourcePageType == typeof(SettingsPage))
-            {
-                Selected = navigationView.SettingsItem as WinUI.NavigationViewItem;
-                return;
-            }
+        //private void Frame_Navigated(object sender, NavigationEventArgs e)
+        //{
+        //    IsBackEnabled = NavigationService.CanGoBack;
+        //    if (e.SourcePageType == typeof(SettingsPage))
+        //    {
+        //        Selected = navigationView.SettingsItem as WinUI.NavigationViewItem;
+        //        return;
+        //    }
 
-            var selectedItem = GetSelectedItem(navigationView.MenuItems, e.SourcePageType);
-            if (selectedItem != null)
-            {
-                Selected = selectedItem;
-            }
-        }
+        //    var selectedItem = GetSelectedItem(navigationView.MenuItems, e.SourcePageType);
+        //    if (selectedItem != null)
+        //    {
+        //        Selected = selectedItem;
+        //    }
+        //}
 
 
-        private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
-        {
-            foreach (var item in menuItems.OfType<WinUI.NavigationViewItem>())
-            {
-                if (IsMenuItemForPageType(item, pageType))
-                {
-                    return item;
-                }
+        //private WinUI.NavigationViewItem GetSelectedItem(IEnumerable<object> menuItems, Type pageType)
+        //{
+        //    foreach (var item in menuItems.OfType<WinUI.NavigationViewItem>())
+        //    {
+        //        if (IsMenuItemForPageType(item, pageType))
+        //        {
+        //            return item;
+        //        }
 
-                var selectedChild = GetSelectedItem(item.MenuItems, pageType);
-                if (selectedChild != null)
-                {
-                    return selectedChild;
-                }
-            }
+        //        var selectedChild = GetSelectedItem(item.MenuItems, pageType);
+        //        if (selectedChild != null)
+        //        {
+        //            return selectedChild;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        private bool IsMenuItemForPageType(WinUI.NavigationViewItem menuItem, Type sourcePageType)
-        {
-            var pageType = menuItem.GetValue(NavHelper.NavigateToProperty) as Type;
-            return pageType == sourcePageType;
-        }
+        //private bool IsMenuItemForPageType(WinUI.NavigationViewItem menuItem, Type sourcePageType)
+        //{
+        //    var pageType = menuItem.GetValue(NavHelper.NavigateToProperty) as Type;
+        //    return pageType == sourcePageType;
+        //}
 
         private void OnItemInvoked(WinUI.NavigationView sender, WinUI.NavigationViewItemInvokedEventArgs args)
         {
@@ -387,10 +387,10 @@ namespace COTG.Views
             //}
         }
 
-        private void OnBackRequested(WinUI.NavigationView sender, WinUI.NavigationViewBackRequestedEventArgs args)
-        {
-            NavigationService.GoBack();
-        }
+        //private void OnBackRequested(WinUI.NavigationView sender, WinUI.NavigationViewBackRequestedEventArgs args)
+        //{
+        //    NavigationService.GoBack();
+        //}
 
         private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
         {
@@ -443,11 +443,10 @@ namespace COTG.Views
             //    JSClient.Refresh(o, e);
             //}
             //else
-            {
-                // soft refresh
-                GetCity.Post(City.build.cid);
-                Raiding.UpdateTS(true);
-            }
+                MainPage.instance.Refresh();
+            DefensePage.instance.Refresh();
+            DefenderPage.instance.Refresh();
+            
 
         }
 

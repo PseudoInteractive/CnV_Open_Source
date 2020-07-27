@@ -7,7 +7,7 @@ using COTG.Activation;
 using COTG.Core.Helpers;
 using COTG.Core.Services;
 using COTG.Services;
-
+using COTG.Views;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,6 +79,7 @@ namespace COTG.Services
         {
             // TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
             // TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
+            SettingsPage.InitializeAsync();
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
             await WindowManagerService.Current.InitializeAsync();
         }

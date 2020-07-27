@@ -10,6 +10,7 @@ using System.Web;
 using static COTG.Debug;
 using static COTG.Game.Enum;
 using COTG.Services;
+using COTG.Views;
 
 namespace COTG.Game
 {
@@ -96,7 +97,7 @@ namespace COTG.Game
             if (city == null)
                 return;
             var r = ComputeIdealReps(d,city);
-            if (r.reps <= 0)
+            if (r.reps <= 0 || r.averageCarry < 0.5f)
                 return;
             var tr = new List<sndRaidtr>();
             foreach (var ttc in city.troopsHome)
@@ -116,7 +117,9 @@ namespace COTG.Game
             city.tsHome = 0;
 
              city.NotifyChange(nameof(city.tsHome));
-       
+            MainPage.ClearDungeonList();
+
+
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
@@ -164,6 +167,32 @@ namespace COTG.Game
                 await RestAPI.troopsOverview.Post();
             }
         }
-
+        public static async void ReturnSlow(int cid, bool updateUI )
+        {
+            Note.Show($"{cid.CidToStringMD()} recall slow");
+            var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+            if (cid != 0)
+            {
+                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
+                if (updateUI)
+                {
+                    await JSClient.PollCity(cid);
+                    ScanDungeons.Post(cid, true);
+                }
+            }
+        }
+        public static async void ReturnFast(int cid,bool updateUI)
+        {
+            Note.Show($"{cid.CidToStringMD()} recall fast");
+            if (cid != 0)
+            {
+                await Post.Send("overview/rcallall.php", "a=" + cid);
+                if(updateUI)
+                {
+                    await JSClient.PollCity(cid);
+                    ScanDungeons.Post(cid, true);
+                }    
+            }
+        }
     }
 }

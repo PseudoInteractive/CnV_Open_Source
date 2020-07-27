@@ -43,7 +43,7 @@ namespace COTG.JSON
         public static async Task Ctor()
         {
             instance = await TileMapFetch.Get();
-            Note.Show("TilesFetched");
+//            Note.Show("TilesFetched");
             state = State.loadedData;
 
             //);

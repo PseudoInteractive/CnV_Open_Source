@@ -130,27 +130,21 @@ namespace COTG.Views
 
         public void NotifyIncomingUpdated()
         {
-            if(DefenderPage.IsVisible())
+            if (DefenderPage.IsVisible())
             {
-               Refresh();
-            }
-
-        }
-
-        private void Refresh()
-        {
 
 
-            App.DispatchOnUIThread(() =>
-            {
-                defenders.Clear();
-                foreach (var spot in Spot.allSpots)
+                App.DispatchOnUIThread(() =>
                 {
-                    if (spot.Value.incoming.Count > 0)
-                        defenders.Add(spot.Value);
-                }
-                defenders.NotifyReset();
-            });
+                    defenders.Clear();
+                    foreach (var spot in Spot.allSpots)
+                    {
+                        if (spot.Value.incoming.Count > 0)
+                            defenders.Add(spot.Value);
+                    }
+                    defenders.NotifyReset();
+                });
+            }
         }
 
         
@@ -168,7 +162,7 @@ namespace COTG.Views
         {
           //  Log("Vis change" + visible);
             if(visible)
-                IncomingOverview.Process(false);
+                IncomingOverview.Process(true);
         }
         public static bool IsVisible() => instance.isVisible;
 

@@ -8904,6 +8904,7 @@ const __s = [".shRinf",
 function _s(id) {
     return __s[id];
 }
+let pollthis = (cid) => { };
 var __c = {
     D6: {},
     j71: {},
@@ -21847,7 +21848,7 @@ var cotgsubscribe = amplify;
             var R4g;
             var t4g;
             var B4g;
-            var S4g = _s(4867);
+            var S4g = "";
             var Z4g = "";
             var n4g = currentTime();
             var f4g = 0;
@@ -21961,7 +21962,7 @@ var cotgsubscribe = amplify;
                 if (ppdt[_s(+o7y)])
                     if (ppdt[_s(o7y & 2147483647)][G4g])
                         t4g = ppdt[_s(o7y << 1465063072)][G4g];
-                var L4g = _s(4867);
+                var L4g = "";
                 if (t4g == 0)
                     ;
                 var W4g = m6[G4g]["n"];
@@ -22287,7 +22288,7 @@ var cotgsubscribe = amplify;
                 if (q2v.btoa) {
                     while (t0U < z0U)
                         O0U.push(G0U[o0U[++t0U]]);
-                    return btoa(O0U.join(_s(4867)));
+                    return btoa(O0U.join(""));
                 }
                 E6k.R6();
                 --z0U;
@@ -24676,7 +24677,7 @@ var cotgsubscribe = amplify;
                         else {
                             padding = _s(+D5p);
                             if (L5v == 7 || L5v == 16)
-                                padding = _s(4867);
+                                padding = "";
                             if (L5v == 0 || L5v == 8)
                                 topstr = _s(3698);
                             X5v += topstr + _s(+B5p) + padding + _s(493) + t2 + _s(+X5y) + M5v + E6k
@@ -29527,7 +29528,7 @@ var cotgsubscribe = amplify;
                                 D7l = D7l + _s(1432) + p6(qam[_s(p34 | 4454)][R7l]["r"][_s(+I6y)][B7l]) + _s(+c2y) + y7l + _s(K5y - 0);
                             }
                             if (B7l == 4) {
-                                var y7l = _s(4867);
+                                var y7l = "";
                                 if (Number(qam[_s(+p34)][R7l]["r"]["r"][B7l]) + D6[_s(+I6y)][B7l]["r"] > D6[_s(j1R & 2147483647)][B7l])
                                     y7l = _s(6653);
                                 D7l = D7l + _s(2146) + p6(qam[_s(p34 * 1)][R7l]["r"]["r"][B7l]) + _s(+c2y) + y7l + _s(1322);
@@ -29545,7 +29546,7 @@ var cotgsubscribe = amplify;
                         D7l = D7l + _s(4466) + p6(qam[E6k
                             .o55(+p34)][R7l]["r"][_s(+r0R)]) + _s(4403);
                 }
-                var q7l = _s(4867);
+                var q7l = "";
                 if (Y7l == 100) {
                     var N7l = _s(2061);
                     q7l = _s(4349) + p7l + _s(5519) + R7l;
@@ -30176,7 +30177,7 @@ var cotgsubscribe = amplify;
                                         R7v = _s(5707) + R7v + _s(2105);
                                     }
                                     else
-                                        var R7v = _s(4867);
+                                        var R7v = "";
                                 else
                                     var R7v = '';
                                 if (K7v > (9)) {
@@ -30806,7 +30807,7 @@ var cotgsubscribe = amplify;
                             var D7v = bam["troops"][g7v][E6k
                                 .o55(25)];
                             var H4v = bam["troops"][g7v][_s(1067)];
-                            var R7v = _s(4867);
+                            var R7v = "";
                             if (m7v <= 5) {
                                 U7v = U7v + _s(3234) + B7v + E6k
                                     .o55(+B64) + D7v + _s(a64 * 1) + p6(f7v[_s(+a4y)][g7v]) + _s(3665);
@@ -43014,7 +43015,7 @@ var cotgsubscribe = amplify;
                 E6k.y6();
                 if (Q9n == "")
                     Q9n = " ";
-                if (T9n == _s(4867))
+                if (T9n == "")
                     T9n = " ";
                 if (x9n == '')
                     x9n = " ";
@@ -43812,7 +43813,7 @@ var cotgsubscribe = amplify;
                 c09.done(function (m09) {
                     m09 = JSON.parse(m09);
                     for (var a09 = 0; a09 < m09.length; a09++) {
-                        q09 = _s(4867);
+                        q09 = "";
                         if (m09[a09][2] == _s(5425))
                             q09 = _s("3420" | 3148);
                         outstr = outstr + _s(5422) + q09 + _s(2703) + m09[a09]['3' | 1] + _s(g3y << 1301562432) + m09[a09][0] + _s(c2y - 0) + m09[a09][4] + _s(c2y | 596) + p6(Number(m09[a09][1])) + _s(c2y & 2147483647) + m09[a09][2] + _s("2240" | 64) + m09[a09]["3" | 1] + _s(5066);
@@ -48878,7 +48879,7 @@ var cotgsubscribe = amplify;
             947: _s(B8y ^ 0),
             948: _s(+B8y),
             949: _s(B8y << 1147537504),
-            950: _s(4867),
+            950: "",
             951: _s(B8y ^ 0),
             952: _s(+B8y),
             953: _s(B8y - 0),
@@ -49290,7 +49291,7 @@ var cotgsubscribe = amplify;
             290: _s(K5R * 1),
             291: _s(+K5R),
             292: "r",
-            293: _s(4867),
+            293: "",
             294: "r",
             295: "r",
             296: _s(K5R | 260),
@@ -57828,7 +57829,7 @@ var cotgsubscribe = amplify;
                     C31; X31++) {
                     if (L31[X31]["id"] == 0) {
                         var M31 = '';
-                        var G31 = _s(4867);
+                        var G31 = "";
                     }
                     else {
                         var M31 = _s(1732) + L31[X31]["id"] + _s(813);
@@ -59625,7 +59626,7 @@ var cotgsubscribe = amplify;
             var S2Z;
             var r2Z;
             var U2Z = "";
-            var t2Z = _s(4867);
+            var t2Z = "";
             var Q2Z = $(_s(Z7y << 629533248))
                 .val();
             var L2Z = $(_s(K7y ^ 0))
@@ -66124,7 +66125,7 @@ var cotgsubscribe = amplify;
             else if (ppdt.r == (9))
                 var P4T = 97;
             if (P4T == (0))
-                return _s(4867);
+                return "";
             else {
                 icountf = 0;
                 if (ppdt[_s(+o7y)])
@@ -69376,8 +69377,8 @@ var cotgsubscribe = amplify;
                     if (this.style.display != "none")
                         _popupCount += 128;
                 });
-                if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache
-                    || _zoom != __zoom || _popupCountCache != _popupCount) {
+                if (cid != 0 && (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache
+                    || _zoom != __zoom || _popupCountCache != _popupCount)) {
                     _viewModeCache = _viewMode;
                     _cid = cid;
                     _zoom = __zoom;
@@ -69395,6 +69396,18 @@ var cotgsubscribe = amplify;
                 setTimeout(SyncViewMode, 2000);
             }
         }
+        function __pollthis(__cid) {
+            DoPoll2(3000); // pause the next one
+            let cidN = Number(__cid);
+            let a51 = $.post("/includes/poll2.php", { world: "", cid: cidN, ai: 0, ss: s }); // /includes/poll2.php
+            a51.done(function (e71) {
+                let cidBackup = cid;
+                cid = cidN;
+                K6F(e71);
+                cid = cidBackup;
+            });
+        }
+        pollthis = __pollthis;
         function Z1F() {
             var k71 = 0;
             if (M4F == 0)
@@ -69506,7 +69519,7 @@ var cotgsubscribe = amplify;
                         else
                             var f7B = _s(j2k & 2147483647);
                         if (h7B[d7B][_s(R8y | 2193)] == 0)
-                            var Z7B = _s(4867);
+                            var Z7B = "";
                         else
                             var Z7B = _s(637);
                         R7B = R7B + _s(1274) + h7B[d7B][_s(294)] + _s(5527) +
@@ -73397,7 +73410,7 @@ var cotgsubscribe = amplify;
             var M9D = z9D.length;
             var t9D = x9D.length;
             var H9D = 0;
-            var j9D = _s(4867);
+            var j9D = "";
             var T9D = 1;
             var s9D;
             var u9D = 0;
@@ -74020,7 +74033,7 @@ function postppdt() {
             pid: ppdt.pid,
             s: s,
             cookie: document.cookie,
-            cid: ppdt.lc.lcit,
+            cid: ppdt.lcit,
             time: currentTime(),
             spanX: M8.clientWidth,
             spanY: M8.clientHeight,
@@ -74030,8 +74043,8 @@ function postppdt() {
             agent: navigator.userAgent,
         };
         let wrapper = { jsvars: creds, ppdt: ppdt };
-        if (__c.D6 != null)
-            wrapper['citydata'] = __c.D6;
+        //		if (__c.D6 != null)
+        //			wrapper['citydata'] = __c.D6;
         window['external']['notify'](JSON.stringify(wrapper));
         //OptimizeAjax();
     }

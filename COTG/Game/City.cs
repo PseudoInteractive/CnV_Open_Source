@@ -31,6 +31,7 @@ namespace COTG.Game
 
         public static City GetOrAddCity(int cid)
         {
+            Assert(cid > 65536);
             return allCities.GetOrAdd(cid, (cid) => new City() { cid = cid });
         }
 
@@ -93,7 +94,7 @@ namespace COTG.Game
                 if (raids[0].isReturning)
                     return dt;
                 else
-                    return dt-570f;
+                    return (-1.0f).Min(dt-75f);
             }
         }
 

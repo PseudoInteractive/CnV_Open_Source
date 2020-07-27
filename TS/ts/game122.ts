@@ -7084,11 +7084,14 @@ const __s = [".shRinf",
 function _s(id) {
     return __s[id];
 }
+var pollthis;
+
 var __c = 
 { 
   D6 : {},
   j71 : {},
   F5F : {},
+
   sendchat:function(n,m){},
   showreport : function(reportId){}
 };
@@ -66606,8 +66609,8 @@ _viewMode = viewModeWorld;
               );
 
               
-                  if (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
-                      || _zoom != __zoom || _popupCountCache !=_popupCount) {
+                  if (cid != 0 &&( _cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
+                      || _zoom != __zoom || _popupCountCache !=_popupCount)) {
                       _viewModeCache = _viewMode;
                       _cid = cid;
                       _zoom = __zoom;
@@ -66630,20 +66633,42 @@ _viewMode = viewModeWorld;
 
 	  }
 
+   function __pollthis(__cid)
+	  {
+       let cidN = Number(__cid);
+        if(cidN === cid)
+		{
+            DoPoll2(20); // Do a normal one
+            return;
+		}
+        DoPoll2(4000); // pause the next one
+        let a51 = $.post("/includes/poll2.php", { world: "", cid: cidN, ai: 0, ss: s });  // /includes/poll2.php
+      
+        a51.done(function (e71) {
+            //let cidBackup = cid;
+            //cid = cidN;
+            //K6F(e71);
+            //cid = cidBackup;
+        });
+
+	  }
+      pollthis = __pollthis;
+
+
     function Z1F() {
       var k71 = 0;
       if (M4F == 0) try {
         if (l9 <= 5 && w8 == 0) {
-          var E51;
+          let E51 = "";
           w8 = 1;
           S6F();
           if (L8.length == 0) E51 = "";
           else{
           E51 = JSON.stringify(L8);
           L8 = [];
-       //   console.log(E51);
+          console.log("!!!!!" + E51);
           }
-          allyiance = 0;
+          let allyiance = 0;
           if ($("#withAlliance")
             .css("display") != "none" || $("#withoutAlliance")
             .css("display") != "none" || G4F == 0) allyiance = 1;

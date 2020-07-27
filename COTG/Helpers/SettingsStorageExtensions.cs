@@ -7,6 +7,7 @@ using COTG.Core.Helpers;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Text.Json;
+using Windows.Foundation;
 
 namespace COTG.Helpers
 {
@@ -42,26 +43,51 @@ namespace COTG.Helpers
             return JsonSerializer.Deserialize<T>(fileContent);
         }
 
-        public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
+
+
+
+        public static void Save<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            settings.SaveString(key, JsonSerializer.Serialize(value));
+
+            settings.Values[key] = value switch
+            {
+                int a => a,
+                byte a => a,
+                sbyte a => a,
+                uint a => a,
+                ulong a => a,
+                float a => a,
+                double a => a,
+                string a => a,
+                bool a => a,
+                DateTimeOffset a => a,
+                TimeSpan a => a,
+                Guid a => a,
+                Point a => a,
+                Size a => a,
+                Rect a => a,
+                ApplicationDataCompositeValue a => a,
+                _ => JsonSerializer.Serialize<T>(value)
+            };
         }
+
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
         {
             settings.Values[key] = value;
         }
 
-        public static async Task<T> ReadAsync<T>(this ApplicationDataContainer settings, string key)
+        public static T Read<T>(this ApplicationDataContainer settings, string key, T _default = default)
         {
-            object obj = null;
 
-            if (settings.Values.TryGetValue(key, out obj))
+            if (settings.Values.TryGetValue(key, out var obj))
             {
-                return JsonSerializer.Deserialize<T>((string)obj);
+                if (obj is string && typeof(T) != typeof(string))
+                    obj = JsonSerializer.Deserialize<T>((string)obj);
+                return (T)obj;
             }
 
-            return default(T);
+            return _default;
         }
 
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
@@ -117,6 +143,19 @@ namespace COTG.Helpers
         private static string GetFileName(string name)
         {
             return string.Concat(name, FileExtension);
+        }
+    }
+}
+namespace COTG { 
+    partial class App
+	{
+        public static ApplicationDataContainer Settings()
+        {
+            var appData = ApplicationData.Current;
+            if (appData.RoamingStorageQuota > 4)
+                return appData.RoamingSettings;
+            else
+                return appData.LocalSettings;
         }
     }
 }

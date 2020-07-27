@@ -86,10 +86,10 @@ namespace COTG.Views
 
 		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-            if (e.AddedItems.Any() && e.RemovedItems.Any())
+            if (e.AddedItems.Any())
             {
-                var newSel = e.AddedItems[0];
-                var priorSel = e.RemovedItems[0];
+                var newSel = e.AddedItems?.FirstOrDefault();
+                var priorSel = e.RemovedItems?.FirstOrDefault();
                 if (newSel != priorSel)
                 {
                //     Log("City Sel changed");
@@ -139,20 +139,23 @@ namespace COTG.Views
             var cid = Spot.uiPress;
             if (cid != 0)
             {
-                var json = "{\"a\":"+cid+",\"c\":0,\"b\":1}";
-                Note.Show($"{cid.CidToStringMD()} recall slow");
-                Post.SendEncrypted("includes/UrOA.php",json,"Rx3x5DdAxxerx3") ;
+                Raiding.ReturnSlow(cid,true);
             }
         }
+
+       
+
         private void ReturnFastClick(object sender, RoutedEventArgs e)
         {
             var cid = Spot.uiPress;
             if (cid != 0)
             {
-                Note.Show($"{cid.CidToStringMD()} recall fast");
-                Post.Send("overview/rcallall.php", "a="+cid);
+                Raiding.ReturnFast(cid,true);
             }
         }
+
+
+       
 
         //public string dungeonInfo { get
         //    {
@@ -182,7 +185,7 @@ namespace COTG.Views
 
         //}
 
-        
+
 
         public static void CityListChange()
         {
@@ -194,7 +197,7 @@ namespace COTG.Views
              //   Note.L("ListChange: ");
 
                 var citySource = instance.gridCitySource;
-                var selectedCityList = CityListBox.SelectedValue as CityList;
+                var selectedCityList = CityListBox.SelectedItem as CityList;
                 if (selectedCityList == null || selectedCityList.id==-1) // "all"
                 {
                     citySource.Set(City.allCities.Values.OrderBy((a) => a.cityName));
@@ -248,10 +251,10 @@ namespace COTG.Views
            
         }
 
-        //public static void ClearDungeonList()
-        //{
-        //    UpdateDungeonList(null);
-        //}
+        public static void ClearDungeonList()
+        {
+            UpdateDungeonList(null);
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -269,17 +272,16 @@ namespace COTG.Views
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
        
 
-        private void RecallSlow(object sender, RoutedEventArgs e)
-        {
-            Log("RecallSlow")
-                ;
-        }
+        //private void RecallSlow(object sender, RoutedEventArgs e)
+        //{
+        //    Log("RecallSlow")
+        //}
 
-        private void RecallFast(object sender, RoutedEventArgs e)
-        {
-            Log("RecallFast")
-                ;
-        }
+        //private void RecallFast(object sender, RoutedEventArgs e)
+        //{
+        //    Log("RecallFast")
+        //        ;
+        //}
 
         private void cityGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -335,6 +337,7 @@ namespace COTG.Views
             if ((newVal - Raiding.desiredCarry).Abs() <= 1.0f / 256.0f)
                 return false;
             Raiding.desiredCarry = newVal;
+            SettingsPage.SaveAll();
             return true;
         }
 
@@ -356,10 +359,15 @@ namespace COTG.Views
 
         override public void VisibilityChanged(bool visible)
         {
-         //   Log("Vis change" + visible);
+            //   Log("Vis change" + visible);
 
             if (visible)
+            {
                 Raiding.UpdateTS();
+                RaidOverview.Send();
+                if(City.build!=null)
+                    GetCity.Post(City.build.cid);
+            }
         }
 
         public static bool IsVisible() => instance.isVisible;

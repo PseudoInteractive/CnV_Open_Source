@@ -26,6 +26,13 @@ namespace COTG.Views
         public virtual void VisibilityChanged(bool visible) { }
         public bool isVisible;
         public bool isActive;
+        //User pressed F5 or refresh button
+        public virtual void Refresh()
+        {
+            if(isVisible && isActive)
+                VisibilityChanged(true);  // close enough default behaviour
+
+        }
     }
     public sealed partial class TabPage : Page
     {

@@ -10,8 +10,11 @@ using System.Numerics;
 
 namespace COTG.Helpers
 {
-    public static class JSONHelper
+    public static class JSON
     {
+        public static string ToJson<T>(T a) => JsonSerializer.Serialize(a);
+        public static T FromJson<T>(string a) => JsonSerializer.Deserialize<T>(a);
+
         public static bool IsValid(this JsonElement j)
         {
             return j.ValueKind != JsonValueKind.Undefined;

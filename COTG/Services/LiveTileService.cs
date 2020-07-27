@@ -18,11 +18,11 @@ namespace COTG.Services
 
         public async Task EnableQueueAsync()
         {
-            var queueEnabled = await ApplicationData.Current.LocalSettings.ReadAsync<bool>(QueueEnabledKey);
+            var queueEnabled = App.Settings().Read<bool>(QueueEnabledKey);
             if (!queueEnabled)
             {
                 TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
-                await ApplicationData.Current.LocalSettings.SaveAsync(QueueEnabledKey, true);
+                App.Settings().Save(QueueEnabledKey, true);
             }
         }
 

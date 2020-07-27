@@ -24,9 +24,9 @@ namespace COTG.Services
         public static async Task SetThemeAsync(ElementTheme theme)
         {
             Theme = theme;
+            App.Settings().Save(nameof(theme), theme);
 
             await SetRequestedThemeAsync();
-            await SaveThemeInSettingsAsync(Theme);
         }
 
         public static async Task SetRequestedThemeAsync()
@@ -46,8 +46,7 @@ namespace COTG.Services
         private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
             ElementTheme cacheTheme = ElementTheme.Default;
-            string themeName = await ApplicationData.Current.LocalSettings.ReadAsync<string>(SettingsKey);
-
+            string themeName = App.Settings().Read<string>(SettingsKey);
             if (!string.IsNullOrEmpty(themeName))
             {
                 Enum.TryParse(themeName, out cacheTheme);
@@ -56,9 +55,6 @@ namespace COTG.Services
             return cacheTheme;
         }
 
-        private static async Task SaveThemeInSettingsAsync(ElementTheme theme)
-        {
-            await ApplicationData.Current.LocalSettings.SaveAsync(SettingsKey, theme.ToString());
-        }
+       
     }
 }

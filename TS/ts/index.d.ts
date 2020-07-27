@@ -5,7 +5,7 @@ declare var plDa : {
 	citstr: string;
 	currcit: string;
 }
-declare var ppdt: { any };
+declare var ppdt: jsonT.Player;
 declare var qam: { any };
 declare var bam: { any };
 declare var ppss;   
