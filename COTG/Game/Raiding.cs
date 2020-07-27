@@ -176,7 +176,8 @@ namespace COTG.Game
                 await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
                 if (updateUI)
                 {
-                    await JSClient.PollCity(cid);
+                    // await JSClient.PollCity(cid);
+                    await Task.Delay(300); // this might not be useful.
                     ScanDungeons.Post(cid, true);
                 }
             }
@@ -189,7 +190,8 @@ namespace COTG.Game
                 await Post.Send("overview/rcallall.php", "a=" + cid);
                 if(updateUI)
                 {
-                    await JSClient.PollCity(cid);
+                    // await JSClient.PollCity(cid);
+                    await Task.Delay(300); // this might not be useful.
                     ScanDungeons.Post(cid, true);
                 }    
             }

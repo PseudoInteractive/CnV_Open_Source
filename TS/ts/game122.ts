@@ -66645,14 +66645,15 @@ _viewMode = viewModeWorld;
         let a51 = $.post("/includes/poll2.php", { world: "", cid: cidN, ai: 0, ss: s });  // /includes/poll2.php
       
         a51.done(function (e71) {
-            //let cidBackup = cid;
-            //cid = cidN;
-            //K6F(e71);
-            //cid = cidBackup;
+            let cidBackup = cid;
+            cid = cidN;
+            K6F(e71);
+            cid = cidBackup;
         });
 
 	  }
       pollthis = __pollthis;
+
 
 
     function Z1F() {

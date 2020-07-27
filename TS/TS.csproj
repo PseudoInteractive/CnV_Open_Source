@@ -7,13 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ts\game122.js" />
+    <Compile Remove="Properties\**" />
+    <Compile Remove="Ref\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <EmbeddedResource Remove="Ref\**" />
+    <None Remove="Properties\**" />
+    <None Remove="Ref\**" />
+    <TypeScriptCompile Remove="Properties\**" />
+    <TypeScriptCompile Remove="Ref\**" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <TypeScriptCompile Remove="Ref\game.d.ts" />
-    <TypeScriptCompile Remove="Ref\game.ts" />
+    <None Remove="ts\game122.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,11 +26,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="Ref\" />
   </ItemGroup>
 
 

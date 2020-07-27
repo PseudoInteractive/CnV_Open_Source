@@ -78,13 +78,18 @@ namespace COTG.Views
             cityGrid.ContextFlyout = cityMenuFlyout;
 
             cityGrid.SelectionChanged += CityGrid_SelectionChanged;
-
+            cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
             cityListBox.SelectedIndex = 0; // reset
 
 			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
         }
 
-		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
+        {
+            Log("Current item " + sender.ToString());
+        }
+
+        private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
             if (e.AddedItems.Any())
             {
@@ -105,14 +110,25 @@ namespace COTG.Views
 
         private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            var it = e.AddedItems.GetEnumerator();
-            if(!it.MoveNext())
+            foreach(var i in e.AddedItems  )
             {
-                Assert(false);
-                return;
+                Log("Added: " + (i)); 
             }
-            var newSel = it.Current as City;
-            Assert(newSel != null);
+            foreach (var i in e.RemovedItems)
+            {
+                Log("Removed: " + (i));
+            }
+
+            var it = e.AddedItems.FirstOrDefault();
+            
+            foreach( var i in cityGrid.SelectedItems)
+            {
+                Log("Selected: " + i.ToString());
+            }
+            var newSel = it as City;
+        //    Assert(newSel != null);
+            if (it is null)
+                return;
             if (newSel == City.focus)
                 return;
             newSel.SetFocus(true,false,true);
