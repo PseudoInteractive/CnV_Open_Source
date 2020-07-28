@@ -254,12 +254,6 @@ function sendchat(channel:string,message:string)
 function gCPosted()
 {
 	sendCityData(100);
-	setTimeout(function () {
-		/** @type {*} */
-		updateattack_();
-		updatedef_();
-
-	}, 1000);
 }
 
 function gWrdPosted(data) {
@@ -274,59 +268,59 @@ function gWrdPosted(data) {
 	}, 1000);
 }
 
-function __avatarAjaxDone(url: string,
-	data: string) {
-	//console.log("Change: " + this.readyState + " " + this.responseURL);
+//function __avatarAjaxDone(url: string,
+//	data: string) {
+//	//console.log("Change: " + this.readyState + " " + this.responseURL);
 
-	if (Contains(url, "gC.php")) {
+//	if (Contains(url, "gC.php")) {
 		
 
-	}
-	else if (Contains(url, "gaLoy.php")) {
-		UpdateResearchAndFaith();
-	}
-	else if (Contains(url, "nBuu.php") || Contains(url, "UBBit.php")) {
-		sendCityData(1000);
-	}
+//	}
+//	else if (Contains(url, "gaLoy.php")) {
+//		UpdateResearchAndFaith();
+//	}
+//	else if (Contains(url, "nBuu.php") || Contains(url, "UBBit.php")) {
+//		sendCityData(1000);
+//	}
 
-	else if (Contains(url, "gWrd.php")) {
-		setTimeout(function () {
-			/** @type {*} */
-			const wrapper = JSON.parse(data);
-			/** @type {boolean} */
-			beentoworld_ = true;
-			wdata_ = DecodeWorldData(wrapper.a);
-			UpdateResearchAndFaith();
-			getbossinfo_();
-		}, 1000);
-	}
-	//else if (Contains(url, "gPlA.php")) {
-	//	/** @type {*} */
-	//}
-	//// if(url.endsWith("pD.php")) {
-	//// 	pdata=JSON.parse(this.response);
-	//// }
-	//else if (Contains(url, "poll2.php")) {
-	//	setTimeout(function () {
-	//	/** @type {*} */
-	//		if (__c.hasOwnProperty('j71')) {
+//	else if (Contains(url, "gWrd.php")) {
+//		setTimeout(function () {
+//			/** @type {*} */
+//			const wrapper = JSON.parse(data);
+//			/** @type {boolean} */
+//			beentoworld_ = true;
+//			wdata_ = DecodeWorldData(wrapper.a);
+//			UpdateResearchAndFaith();
+//			getbossinfo_();
+//		}, 1000);
+//	}
+//	//else if (Contains(url, "gPlA.php")) {
+//	//	/** @type {*} */
+//	//}
+//	//// if(url.endsWith("pD.php")) {
+//	//// 	pdata=JSON.parse(this.response);
+//	//// }
+//	//else if (Contains(url, "poll2.php")) {
+//	//	setTimeout(function () {
+//	//	/** @type {*} */
+//	//		if (__c.hasOwnProperty('j71')) {
 
-	//			if (__c.j71.hasOwnProperty('OGA'))
-	//				OGA = __c.j71['OGA'];
+//	//			if (__c.j71.hasOwnProperty('OGA'))
+//	//				OGA = __c.j71['OGA'];
 
 
 
-	//			if (__c.j71.hasOwnProperty('city')) {
-	//				{
-	//					sendCityData(4000);
+//	//			if (__c.j71.hasOwnProperty('city')) {
+//	//				{
+//	//					sendCityData(4000);
 
-	//				}
-	//			}
-	//		}
+//	//				}
+//	//			}
+//	//		}
 
-	//	}, 100);
-	//}
-}
+//	//	}, 100);
+//	//}
+//}
 
 
 function _pleaseNoMorePrefilters() { }

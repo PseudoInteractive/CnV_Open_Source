@@ -35833,6 +35833,7 @@ var cotgsubscribe = amplify;
         }
         var v0F = 0;
         var h5F;
+        let hasSentAldt = false;
         function C3F() {
             var S1v;
             var J1v;
@@ -35908,8 +35909,12 @@ var cotgsubscribe = amplify;
                 .css("display") == "none")
                 $("#achat")
                     .show();
-            const wrapper = { aldt: aldt };
-            window['external']['notify'](JSON.stringify(wrapper));
+            console.log("Sent aldt");
+            if (hasSentAldt === false) {
+                hasSentAldt = true;
+                const wrapper = { aldt: aldt };
+                window['external']['notify'](JSON.stringify(wrapper));
+            }
         }
         function e4V(O26) {
             if (O26 >= 1 && O26 < +l1y)
@@ -60004,8 +60009,21 @@ var cotgsubscribe = amplify;
                 if (j71.hasOwnProperty("OGA")) {
                     var o71 = j71["OGA"];
                     m6F(o71);
-                    //if( o71.length > 0 )
-                    //{
+                    let ogaCount = o71.length;
+                    // only if raids have come home
+                    if (lastCid != cid) {
+                        lastOGACount = ogaCount;
+                        lastCid = cid;
+                    }
+                    if (ogaCount != lastOGACount) {
+                        if (ogaCount < lastOGACount) {
+                            setTimeout(() => {
+                                const wrapper = { OGA: o71, citydata: j71['city'] };
+                                window['external']['notify'](JSON.stringify(wrapper));
+                            }, 0);
+                        }
+                        lastOGACount = ogaCount;
+                    }
                     //  const wrapper = { OGA: o71 }
                     //  window['external']['notify'](JSON.stringify(wrapper));
                     // }
@@ -69377,7 +69395,7 @@ var cotgsubscribe = amplify;
                     if (this.style.display != "none")
                         _popupCount += 128;
                 });
-                if (cid != 0 && (_cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache
+                if (cid != 0 && (_cid !== cid || _viewMode !== _viewModeCache
                     || _zoom != __zoom || _popupCountCache != _popupCount)) {
                     _viewModeCache = _viewMode;
                     _cid = cid;
@@ -69412,11 +69430,13 @@ var cotgsubscribe = amplify;
             });
         }
         pollthis = __pollthis;
+        let lastOGACount = 0;
+        let lastCid = 0;
         function Z1F() {
             var k71 = 0;
             if (M4F == 0)
                 try {
-                    if (l9 <= 5 && w8 == 0) {
+                    if (l9 <= 30 && w8 == 0) {
                         let E51 = "";
                         w8 = 1;
                         S6F();
@@ -73794,11 +73814,6 @@ function sendchat(channel, message) {
 }
 function gCPosted() {
     sendCityData(100);
-    setTimeout(function () {
-        /** @type {*} */
-        updateattack_();
-        updatedef_();
-    }, 1000);
 }
 function gWrdPosted(data) {
     setTimeout(function () {
@@ -73811,48 +73826,49 @@ function gWrdPosted(data) {
         getbossinfo_();
     }, 1000);
 }
-function __avatarAjaxDone(url, data) {
-    //console.log("Change: " + this.readyState + " " + this.responseURL);
-    if (Contains(url, "gC.php")) {
-    }
-    else if (Contains(url, "gaLoy.php")) {
-        UpdateResearchAndFaith();
-    }
-    else if (Contains(url, "nBuu.php") || Contains(url, "UBBit.php")) {
-        sendCityData(1000);
-    }
-    else if (Contains(url, "gWrd.php")) {
-        setTimeout(function () {
-            /** @type {*} */
-            const wrapper = JSON.parse(data);
-            /** @type {boolean} */
-            beentoworld_ = true;
-            wdata_ = DecodeWorldData(wrapper.a);
-            UpdateResearchAndFaith();
-            getbossinfo_();
-        }, 1000);
-    }
-    //else if (Contains(url, "gPlA.php")) {
-    //	/** @type {*} */
-    //}
-    //// if(url.endsWith("pD.php")) {
-    //// 	pdata=JSON.parse(this.response);
-    //// }
-    //else if (Contains(url, "poll2.php")) {
-    //	setTimeout(function () {
-    //	/** @type {*} */
-    //		if (__c.hasOwnProperty('j71')) {
-    //			if (__c.j71.hasOwnProperty('OGA'))
-    //				OGA = __c.j71['OGA'];
-    //			if (__c.j71.hasOwnProperty('city')) {
-    //				{
-    //					sendCityData(4000);
-    //				}
-    //			}
-    //		}
-    //	}, 100);
-    //}
-}
+//function __avatarAjaxDone(url: string,
+//	data: string) {
+//	//console.log("Change: " + this.readyState + " " + this.responseURL);
+//	if (Contains(url, "gC.php")) {
+//	}
+//	else if (Contains(url, "gaLoy.php")) {
+//		UpdateResearchAndFaith();
+//	}
+//	else if (Contains(url, "nBuu.php") || Contains(url, "UBBit.php")) {
+//		sendCityData(1000);
+//	}
+//	else if (Contains(url, "gWrd.php")) {
+//		setTimeout(function () {
+//			/** @type {*} */
+//			const wrapper = JSON.parse(data);
+//			/** @type {boolean} */
+//			beentoworld_ = true;
+//			wdata_ = DecodeWorldData(wrapper.a);
+//			UpdateResearchAndFaith();
+//			getbossinfo_();
+//		}, 1000);
+//	}
+//	//else if (Contains(url, "gPlA.php")) {
+//	//	/** @type {*} */
+//	//}
+//	//// if(url.endsWith("pD.php")) {
+//	//// 	pdata=JSON.parse(this.response);
+//	//// }
+//	//else if (Contains(url, "poll2.php")) {
+//	//	setTimeout(function () {
+//	//	/** @type {*} */
+//	//		if (__c.hasOwnProperty('j71')) {
+//	//			if (__c.j71.hasOwnProperty('OGA'))
+//	//				OGA = __c.j71['OGA'];
+//	//			if (__c.j71.hasOwnProperty('city')) {
+//	//				{
+//	//					sendCityData(4000);
+//	//				}
+//	//			}
+//	//		}
+//	//	}, 100);
+//	//}
+//}
 function _pleaseNoMorePrefilters() { }
 function OptimizeAjax() {
     //	priorPrefilter

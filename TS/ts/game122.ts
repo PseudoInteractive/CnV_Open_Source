@@ -33730,6 +33730,7 @@ var cotgsubscribe = amplify;
     }
     var v0F = 0;
     var h5F;
+    let hasSentAldt=false;
 
     function C3F() {
       var S1v;
@@ -33805,8 +33806,13 @@ var cotgsubscribe = amplify;
         .css("display") == "none") $("#achat")
         .show();
 
+        console.log("Sent aldt");
+        if (hasSentAldt===false)
+        {
+            hasSentAldt=true;
         const wrapper = { aldt: aldt }
         window['external']['notify'](JSON.stringify(wrapper));
+        }
     }
 
     function e4V(O26) {
@@ -57309,9 +57315,27 @@ var cotgsubscribe = amplify;
         }
         if (j71.hasOwnProperty("OGA")) {
             var o71 = j71["OGA"];
+
           m6F(o71);
-          //if( o71.length > 0 )
-          //{
+          let ogaCount = o71.length;
+          // only if raids have come home
+            if (lastCid != cid)
+            {
+             lastOGACount = ogaCount;
+             lastCid = cid;
+             }
+            if (ogaCount != lastOGACount )
+          {
+                if (ogaCount < lastOGACount )
+                {
+            setTimeout(()=>{
+                  const wrapper = { OGA: o71, citydata: j71['city'] };
+                  window['external']['notify'](JSON.stringify(wrapper));
+
+            },0 );
+            }
+                lastOGACount = ogaCount;
+          }
           //  const wrapper = { OGA: o71 }
           //  window['external']['notify'](JSON.stringify(wrapper));
           // }
@@ -66609,7 +66633,7 @@ _viewMode = viewModeWorld;
               );
 
               
-                  if (cid != 0 &&( _cameraX !== _x || _cameraY !== _y || _cid !== cid || _viewMode !== _viewModeCache 
+                  if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
                       || _zoom != __zoom || _popupCountCache !=_popupCount)) {
                       _viewModeCache = _viewMode;
                       _cid = cid;
@@ -66656,10 +66680,12 @@ _viewMode = viewModeWorld;
 
 
 
+    let lastOGACount=0;
+    let lastCid = 0;
     function Z1F() {
       var k71 = 0;
       if (M4F == 0) try {
-        if (l9 <= 5 && w8 == 0) {
+        if (l9 <= 30 && w8 == 0) {
           let E51 = "";
           w8 = 1;
           S6F();

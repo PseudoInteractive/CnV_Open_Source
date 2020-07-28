@@ -17,6 +17,7 @@ using COTG.Views;
 
 namespace COTG.Game
 {
+    [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class City : Spot 
     {
 
@@ -341,14 +342,18 @@ namespace COTG.Game
         {
             var changed = this != City.focus;
             City.focus = this;
-            if (!fromUI && changed && MainPage.IsVisible())
-                MainPage.CityGrid.SelectItem(this);
-
+ //           if (!fromUI && changed && MainPage.IsVisible())
+ //               MainPage.CityGrid.SelectItem(this);
             if (!noRaidScan)
             {
                 if (changed)
                     ScanDungeons.Post(cid, getCityData);
             }
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
         }
     }
     public class SenatorInfo

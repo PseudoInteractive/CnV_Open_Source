@@ -131,7 +131,7 @@ namespace COTG.Views
                 return;
             if (newSel == City.focus)
                 return;
-            newSel.SetFocus(true,false,true);
+           // newSel.SetFocus(true,false,true);
         }
 
         

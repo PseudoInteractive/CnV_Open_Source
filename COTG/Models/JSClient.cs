@@ -879,7 +879,7 @@ namespace COTG
                             }
                         case "OGA":
                             {
-                             //   Log(e.Value);
+                                Log("OGA" + e.Value.ToString());
                                 break;
                             }
                         case "OGR":

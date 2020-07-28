@@ -17,6 +17,7 @@ using COTG.Views;
 
 using static COTG.Debug;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace COTG.Game
 {
@@ -25,6 +26,7 @@ namespace COTG.Game
     //  public  int GetKey();
     //  public  void Ctor(int id);
     //}
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Spot : IEquatable<Spot>, INotifyPropertyChanged
     {
         public virtual event PropertyChangedEventHandler PropertyChanged;
@@ -106,6 +108,13 @@ namespace COTG.Game
             var physicalPoint = e.GetCurrentPoint(grid);
             var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
             var cell = grid.HitTestService.CellInfoFromPoint(point);
+            var row = grid.HitTestService.RowItemFromPoint(point);
+            if(cell?.Item != row )
+            {
+                Note.Show($"{cell} {row} {cell?.Column}");
+
+            }
+
             var spot = (cell?.Item as Spot);
             viewHover = spot != null ? spot.cid : 0;
             uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
@@ -142,13 +151,19 @@ namespace COTG.Game
         
         public void ProcessClick(string column, PointerPoint pt)
         {
+            Note.Show($"{this} {column} {pt.Position}");
             if (pt.Properties.IsLeftButtonPressed)
             {
+
                 // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-              
-                switch (column)
+                var wantRaidingFocus =(City.IsMine(cid) && MainPage.IsVisible());
+                var wantRaidScan = false;
+//                var needCityData = 
+
+                    switch (column)
                 {
-                    case nameof(xy): JSClient.ShowCity(cid,false); break;
+                    case nameof(xy): JSClient.ShowCity(cid,false);
+                        break;
                     case nameof(icon): if (City.IsMine(cid))
                                      JSClient.ChangeCity(cid);
                                 else JSClient.ShowCity(cid,false);
@@ -181,7 +196,12 @@ namespace COTG.Game
                             return;// prevent trailing dungeon scan
                         }
                         break;
+                    default: wantRaidScan = true;
+                        break;
                 }
+
+                if ( wantRaidingFocus)
+                    City.SetFocus(cid, false, wantRaidScan, false);// prevent dungeon scan on select
                 if (MainPage.IsVisible() && City.focus == this)
                 {
                     //                MainPage.SetRaidCity(cid,true);
@@ -351,6 +371,16 @@ namespace COTG.Game
         {
             JSClient.ChangeCity(cid);
 
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(tsHome)}={tsHome.ToString()}, {nameof(tsMax)}={tsMax.ToString()}}}";
         }
         //int IKeyedItem.GetKey()
         //{
