@@ -13865,7 +13865,7 @@ var cotgsubscribe = amplify;
                         I72[v72][_s(+L9y)] + " " + bam[_s(4977)][Number(I72[v72][_s(+w6y)])];
                     l72 = l72 + _s(3469) + I72[v72][_s(x9y | 6459)] + _s(3516) + I72[v72][_s(x9y << 1626876384)] + _s(4389) + I72[v72][_s(+x9y)] + _s('3430' <<
                         1043888224) + I72[v72][_s(+x9y)] + _s(F6y ^ 0) + T72 + _s(+c2y) + Math.floor(Number(I72[v72][_s(+K2y)])) + _s('6205' | 1) + I72[v72][_s(x9y | 6696)] + _s(F6y ^ 0) +
-                        I72[v72][_s(H6y ^ 0)] + _s(+A6y) + I72[v72][_s(+G6y)] + _s(c2y - 0) + I72[v72][E6k
+                        I72[v72][_s(H6y ^ 0)] + ":" + I72[v72][_s(+G6y)] + _s(c2y - 0) + I72[v72][E6k
                         .S55(+T9y)] + _s(+r6y) + I72[v72][_s(x9y | 256)] + _s(6144) + I72[v72][_s(+x9y)] + _s(5434);
                 }
                 l72 = l72 + _s(+u3y);
@@ -14115,8 +14115,8 @@ var cotgsubscribe = amplify;
             websocket = "";
             if (r3F)
                 r3F.destroy();
-            cid = "";
-            D6 = "";
+            cid = 0;
+            D6 = {};
             $(_s(+q8y))
                 .html("");
             $(_s(2893))
@@ -14464,7 +14464,7 @@ var cotgsubscribe = amplify;
                     t7F(_s(6800));
                     if (D6)
                         if (D6.citn) {
-                            var O3V = D6.citn + _s(2397) + D6.x + _s(+A6y) + D6.y +
+                            var O3V = D6.citn + _s(2397) + D6.x + ":" + D6.y +
                                 ")";
                             $(_s(6599))
                                 .text(O3V);
@@ -17468,8 +17468,8 @@ var cotgsubscribe = amplify;
                 else {
                     var i8V = $(this)
                         .text();
-                    if (i8V.indexOf(_s(A6y >> 904910976)) != -(1)) {
-                        var d8V = i8V.split(_s(+A6y));
+                    if (i8V.indexOf(":") != -(1)) {
+                        var d8V = i8V.split(":");
                         var C8V = Number(d8V[0]);
                         var W8V = Number(d8V[1]);
                         if (C8V >= 0 && W8V >= +"0" && C8V <= +l1y && W8V <= +l1y) {
@@ -23907,7 +23907,7 @@ var cotgsubscribe = amplify;
                         D21 = n21[A21][5];
                         Y21 = n21[A21][6];
                         c21 = n21[A21][7];
-                        var Z21 = D21.split(_s(A6y & 2147483647));
+                        var Z21 = D21.split(":");
                         var F21 = Z21[0];
                         var N21 = Z21[1];
                         var U21 = Number(N21) * (R5y | 0) + Number(F21);
@@ -24014,7 +24014,7 @@ var cotgsubscribe = amplify;
                             var w81 = _s(4100) + E21 + _s(813);
                             var I81 = _s(303);
                         }
-                        var Z21 = D21.split(_s(+A6y));
+                        var Z21 = D21.split(":");
                         var F21 = Z21[0];
                         var N21 = Z21[1];
                         var U21 = Number(N21) * +R5y + Number(F21);
@@ -24079,7 +24079,7 @@ var cotgsubscribe = amplify;
                                 _s(3292);
                         else
                             P21 = "";
-                        var Z21 = D21.split(_s(+A6y));
+                        var Z21 = D21.split(":");
                         var F21 = Z21[0];
                         var N21 = Z21[1];
                         var U21 = Number(N21) * +R5y + Number(F21);
@@ -24491,7 +24491,7 @@ var cotgsubscribe = amplify;
                     b21 = _s(g8p - 0);
                     r21 = _s(+W8p);
                     o21 = o21 + _s("5158" | B9s) + b21 + _s(+Z8p) + V21 + _s(1966) + O21[t21][11] + _s(3805) + O21[t21][1] + _s(1208) + O21[t21][2] + _s(313) + p6(Number(O21[t21][3])) + _s(1836) + L21 + _s(2834) + M21 + _s(+F6y) + O21[t21][4] + E6k
-                        .o55(2663) + M21 + _s(F6y & 2147483647) + O21[t21][5] + _s(+A6y) + O21[t21][6] +
+                        .o55(2663) + M21 + _s(F6y & 2147483647) + O21[t21][5] + ":" + O21[t21][6] +
                         _s(2406) + O21[t21][7] + _s(1867) + O21[t21][8] + _s(+'3878') + X21 + _s(j5p << 1309679680) + d21 + _s(4051);
                 }
                 o21 = o21 + _s(+u3y);
@@ -25019,7 +25019,7 @@ var cotgsubscribe = amplify;
             $(_s(683))
                 .css("display", "none");
             $(_s(3142))
-                .html(_s(362) + G8 + _s(+A6y) + l8 + ")");
+                .html(_s(362) + G8 + ":" + l8 + ")");
         }
         var U9 = 0;
         function n8() {
@@ -27560,7 +27560,7 @@ var cotgsubscribe = amplify;
                             cid: cid,
                             ts: H2l
                         };
-                        var Q2l = _s(4865) + b2() + _s('3927' | 3346);
+                        var Q2l = _s(4865) + b2() + _s(3927);
                         var t2l = a6.ccazzx
                             .encrypt(JSON.stringify(O2l), Q2l, +U7y);
                         N6();
@@ -30548,7 +30548,7 @@ var cotgsubscribe = amplify;
                         $(_s(7028))
                             .html(Y7v);
                         i2(_s(5655));
-                        var Q4v = f7v.acx + _s(+A6y) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn['a']);
                         $(_s(808))
@@ -30655,7 +30655,7 @@ var cotgsubscribe = amplify;
                         $(_s(7028))
                             .html(Y7v);
                         i2(_s(3387));
-                        var Q4v = f7v.acx + _s(A6y - 0) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn['a']);
                         $(_s('808' | 520))
@@ -30764,7 +30764,7 @@ var cotgsubscribe = amplify;
                         $(_s(1491))
                             .html(Y7v);
                         i2(_s(7046));
-                        var Q4v = f7v.acx + _s(A6y << 1037942336) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .html(f7v.tn['a']);
                         $(_s(5769))
@@ -30881,7 +30881,7 @@ var cotgsubscribe = amplify;
                         var Z4v = Math.floor(f7v.tcy / 100) + '' + Math.floor(f7v.tcx / +"100");
                         var E4v = Math.floor(f7v.acy / 100) + "" + Math.floor(f7v.acx / ("100" -
                             0));
-                        var Q4v = f7v.acx + _s(A6y << 412978080) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn["a"]);
                         $(_s(5769))
@@ -30892,7 +30892,7 @@ var cotgsubscribe = amplify;
                             .text(Q4v);
                         $(_s(3366))
                             .text(f7v.apn);
-                        var D4v = f7v.tcx + _s(+A6y) + f7v.tcy;
+                        var D4v = f7v.tcx + ":" + f7v.tcy;
                         $(_s(808))
                             .text(f7v.tcn);
                         $(_s(1805))
@@ -31017,7 +31017,7 @@ var cotgsubscribe = amplify;
                         var Z4v = Math.floor(f7v.tcy / (100)) + '' + Math.floor(f7v
                             .tcx / 100);
                         var E4v = Math.floor(f7v.acy / (100)) + '' + Math.floor(f7v.acx / (100));
-                        var Q4v = f7v.acx + _s(+A6y) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn["a"]);
                         $(_s(5769))
@@ -31028,7 +31028,7 @@ var cotgsubscribe = amplify;
                             .text(Q4v);
                         $(_s(3366))
                             .text(f7v.apn);
-                        var D4v = f7v.tcx + _s(+A6y) + f7v.tcy;
+                        var D4v = f7v.tcx + ":" + f7v.tcy;
                         $(_s(808))
                             .text(f7v.tcn);
                         $(_s(1805))
@@ -31085,7 +31085,7 @@ var cotgsubscribe = amplify;
                                         .o55(6056)];
                                     var o3v = f7v[_s(+w8R)][j4v][_s(5674)];
                                     var X3v = f7v[_s(+w8R)][j4v][_s(6617)];
-                                    d4v = d4v + _s(811) + O3v + _s(5744) + x3v + _s(5033) + X3v + _s(778) + t3v + _s(+A6y) + o3v + _s(1);
+                                    d4v = d4v + _s(811) + O3v + _s(5744) + x3v + _s(5033) + X3v + _s(778) + t3v + ":" + o3v + _s(1);
                                     var h3v = b0F(f7v[_s(+w8R)][j4v][_s(r0p * 1)], f7v[_s(+w8R)][j4v][_s(+C64)], f7v[_s(w8R <<
                                         124342336)][j4v][_s(+Z64)], f7v[_s(+w8R)][j4v][_s(K64 * 1)], f7v[_s(w8R | 4164)][j4v][_s(O64 << 1610474848)], 2);
                                     d4v = d4v + h3v + _s(4277);
@@ -31471,8 +31471,8 @@ var cotgsubscribe = amplify;
                             "" + Math.floor(f7v.tcx / 100);
                         var E4v = Math.floor(f7v.acy / ("100" |
                             0)) + '' + Math.floor(f7v.acx / (100));
-                        var D4v = f7v.tcx + _s(+A6y) + f7v.tcy;
-                        var Q4v = f7v.acx + _s(+A6y) + f7v.acy;
+                        var D4v = f7v.tcx + ":" + f7v.tcy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(808))
                             .text(f7v.tcn);
                         $(_s("1805" | 512))
@@ -31788,7 +31788,7 @@ var cotgsubscribe = amplify;
                                     var X3v = f7v[E6k
                                         .S55(+w8R)][j4v][_s(6617)];
                                     d4v = d4v + _s(811) + O3v + _s(5744) + x3v + _s("5033" & E6k
-                                        .s6s) + X3v + _s(778) + t3v + _s(+A6y) + o3v + _s(+v1R);
+                                        .s6s) + X3v + _s(778) + t3v + ":" + o3v + _s(+v1R);
                                     for (var T4v in f7v[_s(w8R ^ 0)][j4v][_s(r0p - 0)]) {
                                         var a4v = f7v[_s(w8R - 0)][j4v][E6k
                                             .S55(+r0p)][T4v];
@@ -31844,7 +31844,7 @@ var cotgsubscribe = amplify;
                                 .css("display", '');
                             $(_s(5048))
                                 .html(_s(4681) + f7v[_s(+E84)][_s(4378)] + _s(3937) + f7v[_s(+E84)][_s(5778)] + _s(4906) + K3v + _s(F6y & 2147483647) + f7v[E6k
-                                .S55(E84 ^ 0)][_s(807)] + _s(A6y - 0) + f7v[_s(E84 | 652)][_s('4334' &
+                                .S55(E84 ^ 0)][_s(807)] + ":" + f7v[_s(E84 | 652)][_s('4334' &
                                 2147483647)] + _s(6591));
                             $(_s(2062))
                                 .css("display", '');
@@ -32364,8 +32364,8 @@ var cotgsubscribe = amplify;
                         var Z4v = Math.floor(f7v.tcy / (100)) + '' + Math
                             .floor(f7v.tcx / 100);
                         var E4v = Math.floor(f7v.acy / ("100" | 100)) + '' + Math.floor(f7v.acx / 100);
-                        var D4v = f7v.tcx + _s(+A6y) + f7v.tcy;
-                        var Q4v = f7v.acx + _s(+A6y) +
+                        var D4v = f7v.tcx + ":" + f7v.tcy;
+                        var Q4v = f7v.acx + ":" +
                             f7v.acy;
                         $(_s(808))
                             .text(f7v.tcn);
@@ -32626,7 +32626,7 @@ var cotgsubscribe = amplify;
                         $(_s(1491))
                             .html(Y7v);
                         i2(_s(1168));
-                        var Q4v = f7v.acx + _s(+A6y) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn["a"]);
                         $(_s(5769))
@@ -32749,7 +32749,7 @@ var cotgsubscribe = amplify;
                         $(_s(7028))
                             .html(Y7v);
                         i2(_s(68));
-                        var Q4v = f7v.acx + _s(A6y ^ 0) + f7v.acy;
+                        var Q4v = f7v.acx + ":" + f7v.acy;
                         $(_s(4819))
                             .text(f7v.tn["a"]);
                         $(_s(808))
@@ -36033,7 +36033,7 @@ var cotgsubscribe = amplify;
                 var u0v = c91[_s(D1t ^ 0)];
                 var w0v = c91[_s(+m1t)];
                 var k0v = c91[_s(+M8R)];
-                var e0v = c91[_s(+B1t)] + _s(A6y ^ 0) + c91[_s(+R1t)];
+                var e0v = c91[_s(+B1t)] + ":" + c91[_s(+R1t)];
                 var s0v = g9(c91[_s(A5y >> 1365881248)]);
                 $(_s(e1t << 1858415808))
                     .show();
@@ -37608,8 +37608,7 @@ var cotgsubscribe = amplify;
                 var f81 = i81[E6k
                     .S55(m1t * 1)];
                 var J81 = i81[_s(+M8R)];
-                var h81 = i81[_s(B1t >> 2030155680)] + _s(A6y *
-                    1) + i81[_s(R1t - 0)];
+                var h81 = i81[_s(B1t >> 2030155680)] + ":" + i81[_s(R1t - 0)];
                 var V81 = g9(i81[_s(+A5y)]);
                 $(_s(+e1t))
                     .show();
@@ -44083,7 +44082,7 @@ var cotgsubscribe = amplify;
                 var A31 = J31[_s(+D1t)];
                 var n31 = J31[_s(+m1t)];
                 var f31 = J31[_s(+M8R)];
-                var K31 = J31[_s(+B1t)] + _s(A6y >> 239323232) + J31[_s(R1t <<
+                var K31 = J31[_s(+B1t)] + ":" + J31[_s(R1t <<
                     449836672)];
                 var U31 = g9(J31[_s(A5y ^ 0)]);
                 $(_s(4409))
@@ -44483,7 +44482,7 @@ var cotgsubscribe = amplify;
                         var I61 = qam[_s(+Q1m)][j61]["d"];
                         var M61 = Math.floor(O61 % (R5y - 0));
                         var G61 = Math.floor((O61 - M61) / (R5y ^ 0));
-                        var o61 = _s(+m1m) + O61 + _s(F6y << 1669390752) + M61 + _s(A6y >> 88380768) +
+                        var o61 = _s(+m1m) + O61 + _s(F6y << 1669390752) + M61 + ":" +
                             G61 + _s(6021);
                         var H61 = I61.replace(_s(C1m >> 907269440), o61);
                         var u61 = O2();
@@ -44496,7 +44495,7 @@ var cotgsubscribe = amplify;
                         var M61 = Math.floor(O61 % (R5y >> 116651424));
                         var G61 = Math
                             .floor((O61 - M61) / (R5y - 0));
-                        var o61 = _s(m1m ^ 0) + O61 + _s(F6y - 0) + M61 + _s(+A6y) + G61 + _s(6021);
+                        var o61 = _s(m1m ^ 0) + O61 + _s(F6y - 0) + M61 + ":" + G61 + _s(6021);
                         var H61 = I61.replace(_s(+C1m), o61);
                         var u61 = O2();
                         var v61 = _s(+Z1m) + u61 + _s(+K1m) + t61 + _s(+u1m) + w61 + _s(a1m ^ 0) + u61 +
@@ -45750,7 +45749,7 @@ var cotgsubscribe = amplify;
                         else if (j01 == ("1" | 1) && l01 == 1)
                             w01 = _s(2099);
                         x01 += _s(3972) + citidd + _s(3189) + w01 + _s(6757) + citidd +
-                            _s(g3y << 1774710944) + t01 + _s(4284) + X01 + _s(A6y >> 2118467584) + L01 + E6k
+                            _s(g3y << 1774710944) + t01 + _s(4284) + X01 + ":" + L01 + E6k
                             .S55(948) + o01 + _s(6453) + z01 + _s(+K5y);
                     }
                     $(_s(5342))
@@ -47572,7 +47571,7 @@ var cotgsubscribe = amplify;
             var h4T = a6
                 .ccazzx.encrypt(JSON.stringify(S4T), J4T, U7y | 256);
             N6();
-            var V4T = $.post(q6 + _s(+p0y), { a: h4T });
+            var V4T = $.post(q6 + "UBBit.php", { a: h4T });
             E6k.R6();
             F6();
             V4T.done(function (n4T) {
@@ -47821,7 +47820,7 @@ var cotgsubscribe = amplify;
                 var B91 = n91[_s(m1t >>
                     715469920)];
                 var Z91 = n91[_s(+M8R)];
-                var U91 = n91[_s(B1t - 0)] + _s(A6y - 0) + n91[E6k
+                var U91 = n91[_s(B1t - 0)] + ":" + n91[E6k
                     .S55(R1t << 1933813920)];
                 var P91 = g9(n91[_s(A5y | 17)]);
                 $(_s(+e1t))
@@ -48327,7 +48326,7 @@ var cotgsubscribe = amplify;
                                 .S55(f9m ^ 0)][a5v][_s(5674)];
                             var C7v = N5v[F5v][_s(+t9m)][q5v][_s(f9m | 1028)][a5v][_s(6617)];
                             c5v += _s(2124) + W7v + _s(5744) + b7v + _s(5033) + C7v + _s('778' & E6k
-                                .s6s) + i7v + _s(+A6y) + d7v + _s(2748);
+                                .s6s) + i7v + ":" + d7v + _s(2748);
                             for (var m5v in N5v[F5v][_s(+t9m)][q5v][E6k
                                 .o55(f9m | 1044)][a5v][_s(+r0p)])
                                 if (N5v[F5v][_s(+t9m)][q5v][_s(f9m >> 847332224)][a5v][_s(+r0p)][m5v] > 0) {
@@ -50430,7 +50429,7 @@ var cotgsubscribe = amplify;
                                 $(_s(683))
                                     .css("display", "none");
                                 $(_s(3142))
-                                    .html(d36 + _s(2397) + r46 + _s(A6y - 0) + A46 + ")");
+                                    .html(d36 + _s(2397) + r46 + ":" + A46 + ")");
                                 $(_s(2515))
                                     .text(P16);
                                 $(_s(6954))
@@ -50454,7 +50453,7 @@ var cotgsubscribe = amplify;
                                 $(_s(683))
                                     .css("display", "block");
                                 $(_s(3142))
-                                    .html(_s(2817) + r46 + _s(A6y - 0) + A46 + ")");
+                                    .html(_s(2817) + r46 + ":" + A46 + ")");
                                 var Y46 = {
                                     x: r46,
                                     y: A46,
@@ -50468,7 +50467,7 @@ var cotgsubscribe = amplify;
                                 cotgPublish("regional", Y46);
                             }
                             $(_s(3203))
-                                .attr("data", r46 + _s(+A6y) + A46);
+                                .attr("data", r46 + ":" + A46);
                             var r36 = 'Shrine<br>Status:' + I36 + _s(+'3331') + N46;
                             $(_s(6717))
                                 .html(r36);
@@ -50508,8 +50507,7 @@ var cotgsubscribe = amplify;
                             };
                             cotgPublish("regional", Y46);
                             if (G36 == 1) {
-                                var I36 = _s(+w9y) + r46 + E6k
-                                    .o55(+A6y) + A46 + _s(1200);
+                                var I36 = _s(+w9y) + r46 + E6k.o55(+A6y) + A46 + _s(1200);
                                 var N46 = _s(318);
                                 $(_s(1084))
                                     .attr(_s(c7p | 176), _s(t9R >> 687750912));
@@ -50519,8 +50517,7 @@ var cotgsubscribe = amplify;
                                     .css("display", "none");
                             }
                             else {
-                                var I36 = _s(+w9y) + r46 + _s(A6y *
-                                    1) + A46 + _s(739);
+                                var I36 = _s(+w9y) + r46 + ":" + A46 + _s(739);
                                 var N46 = _s(3291);
                                 $(_s(1084))
                                     .attr(_s(c7p << 1265813728), _s(6592));
@@ -50530,7 +50527,7 @@ var cotgsubscribe = amplify;
                                     .css("display", "block");
                             }
                             $(_s(2430))
-                                .attr("data", r46 + _s(+A6y) + A46);
+                                .attr("data", r46 + ":" + A46);
                             $("#SRplayerswarningspara")
                                 .show();
                             $("#SRplayerswarningspara")
@@ -50717,8 +50714,7 @@ var cotgsubscribe = amplify;
                             }
                             var U36 = H16;
                             var Z36 = f46;
-                            var F46 = r46 + _s(A6y -
-                                0) + A46;
+                            var F46 = r46 + ":" + A46;
                             $(_s("4324" | 36))
                                 .html(q46);
                             $(_s(103))
@@ -50728,9 +50724,9 @@ var cotgsubscribe = amplify;
                             $(_s(4736))
                                 .html(q46);
                             $(_s(514))
-                                .text(r46 + _s(A6y >> 1139214560) + A46);
+                                .text(r46 + ":" + A46);
                             $(_s(6660))
-                                .attr("data", r46 + _s(A6y | 3072) + A46);
+                                .attr("data", r46 + ":" + A46);
                             $(_s(148))
                                 .html(U36);
                             $(_s(2440))
@@ -51229,7 +51225,7 @@ var cotgsubscribe = amplify;
                             var b16 = E36;
                             var U36 = y46;
                             var Z36 = f46;
-                            var F46 = r46 + _s(A6y & 2147483647) + A46;
+                            var F46 = r46 + ":" + A46;
                             $(_s(4324))
                                 .html(q46);
                             $(_s(103))
@@ -51241,9 +51237,9 @@ var cotgsubscribe = amplify;
                             $(_s(475))
                                 .html(b16);
                             $(_s('514' | 514))
-                                .text(r46 + _s(+A6y) + A46);
+                                .text(r46 + ":" + A46);
                             $(_s("6660" | 516))
-                                .attr("data", r46 + _s(+A6y) + A46);
+                                .attr("data", r46 + ":" + A46);
                             $(_s(148))
                                 .html(U36);
                             $(_s(2440))
@@ -51340,7 +51336,7 @@ var cotgsubscribe = amplify;
                             $(_s(g5t ^ 0))
                                 .css("display", "");
                             n46 = Number(A46) * +R5y + Number(r46);
-                            var F46 = r46 + _s(A6y >> 1076708544) + A46;
+                            var F46 = r46 + ":" + A46;
                             var f36 = Number(B46.substring(8, 10)) - 10;
                             var h16 = Number(B46.substring(10, "11" |
                                 11));
@@ -51375,13 +51371,13 @@ var cotgsubscribe = amplify;
                                     .attr(_s(4904), !!1);
                             }
                             $(_s(6919))
-                                .attr("data", r46 + _s(A6y & 2147483647) + A46);
+                                .attr("data", r46 + ":" + A46);
                             $(_s(4210))
                                 .html(B36);
                             $(_s(4495))
                                 .text(f46);
                             $(_s(6355))
-                                .text(r46 + _s(+A6y) + A46);
+                                .text(r46 + ":" + A46);
                             $(_s(+S3m))
                                 .text(O16);
                             $(_s(t6m | 4))
@@ -51481,7 +51477,7 @@ var cotgsubscribe = amplify;
                             n46 = Number(A46) * (R5y - 0) + Number(r46);
                             var p46 = Number(B46.substring(7, 8));
                             var U16 = B4F(p46);
-                            var F46 = r46 + _s(+A6y) + A46;
+                            var F46 = r46 + ":" + A46;
                             $(_s(+d3m))
                                 .attr(_s(4904), !{});
                             var z36 = U16;
@@ -51498,7 +51494,7 @@ var cotgsubscribe = amplify;
                             $(_s(4495))
                                 .text(f46);
                             $(_s(6355))
-                                .text(r46 + _s(A6y * 1) + A46);
+                                .text(r46 + ":" + A46);
                             $(_s(+d3m))
                                 .text(_s(6036));
                             $(_s(A4y | 449))
@@ -51551,7 +51547,7 @@ var cotgsubscribe = amplify;
                                 if (ppdt[_s(+W5t)] * 1000 > currentTime())
                                     j16 = 900000;
                             $(_s(6919))
-                                .attr("data", r46 + _s(A6y | 273) + A46);
+                                .attr("data", r46 + ":" + A46);
                             $(_s(688))
                                 .text(M2(R46["inf"] + j16));
                             $(_s(878))
@@ -51627,7 +51623,7 @@ var cotgsubscribe = amplify;
                             w2();
                             $(_s(2624))
                                 .show();
-                            var F46 = r46 + _s(A6y ^ 0) + A46;
+                            var F46 = r46 + ":" + A46;
                             $(_s(4102))
                                 .html(Math.floor(Y16));
                             $(_s("2749" | 2688))
@@ -51681,7 +51677,7 @@ var cotgsubscribe = amplify;
                             //  null) {
                             //  var H36 = o36[_s(X5m - 0)];
                             //  $(_s(486))
-                            //    .attr("data", r46 + _s(A6y | 3089) + A46);
+                            //    .attr("data", r46 + ":" + A46);
                             //  $(_s(2933))
                             //    .text(_s('6431' | 6154));
                             //  $(_s(3379))
@@ -54089,7 +54085,7 @@ var cotgsubscribe = amplify;
                 var b4B = m4B;
                 var J4B = b4B.substring(0, 1);
                 if (J4B == +'1') {
-                    var c4B = _s(+w9y) + G8 + _s(A6y - 0) + l8 + ")";
+                    var c4B = _s(+w9y) + G8 + ":" + l8 + ")";
                     var v3B = Number(b4B.substring(8, 10)) - (10);
                     var X3B = Number(b4B.substring(10, 11));
                     var Y4B = Number(b4B.substring(11, 12));
@@ -54109,7 +54105,7 @@ var cotgsubscribe = amplify;
                     var I3B = Number(b4B.substring(7, 8));
                     var e3B = B4F(I3B);
                     var c4B = E6k
-                        .o55(w9y - 0) + G8 + _s(A6y - 0) + l8 + ")";
+                        .o55(w9y - 0) + G8 + ":" + l8 + ")";
                     var t3B = e3B;
                     var T3B = Number(b4B
                         .substring(8, 10)) - (10);
@@ -60014,13 +60010,15 @@ var cotgsubscribe = amplify;
                     let ogaCount = o71.length;
                     // only if raids have come home
                     if (lastCid != cid) {
-                        lastOGACount = ogaCount;
+                        lastOGACount = 1; // only trigger on 0
                         lastCid = cid;
                     }
                     if (ogaCount != lastOGACount) {
                         if (ogaCount < lastOGACount) {
                             setTimeout(() => {
-                                const wrapper = { OGA: o71, citydata: j71['city'] };
+                                let wrapper = { OGA: o71 };
+                                if (j71.hasOwnProperty("city"))
+                                    wrapper['citydata'] = j71['city'];
                                 window['external']['notify'](JSON.stringify(wrapper));
                             }, 0);
                         }
@@ -60360,7 +60358,7 @@ var cotgsubscribe = amplify;
                 var a81 = P81[_s(+D1t)];
                 var E81 = P81[_s(+m1t)];
                 var N81 = P81[_s(M8R ^ 0)];
-                var q81 = P81[_s(+B1t)] + _s(+A6y) + P81[_s(+R1t)];
+                var q81 = P81[_s(+B1t)] + ":" + P81[_s(+R1t)];
                 var D81 = P81[_s(3748)];
                 var B81 = P81[_s(j1k - 0)];
                 var F81 = g9(P81[_s(+A5y)]);
@@ -64731,8 +64729,7 @@ var cotgsubscribe = amplify;
             //           var g0T = Math.floor(h0T.y / (m6p - 0));
             //           var
             //             c0T = E8(K0T, g0T);
-            //           var h0T = _s(74) + c0T + _s(2397) + K0T + _s(A6y >>
-            //             930857152) + g0T + ")";
+            //           var h0T = _s(74) + c0T + _s(2397) + K0T + ":" + g0T + ")";
             //           K0T = K0T + ("100" | 68);
             //           g0T = g0T + (100);
             //           var D0T = K0T + '' + g0T;
@@ -64995,15 +64992,15 @@ var cotgsubscribe = amplify;
                         k1V = E3V.substring(H1V + +B2y);
                         k1V = k1V.replace(_s(3785), _s(720));
                         k1V = k1V.replace(_s(3332), _s(3895));
-                        if (k1V.indexOf(_s(+A6y)) != -1) {
-                            var v1V = k1V.split(_s(A6y >> 745678624));
+                        if (k1V.indexOf(":") != -1) {
+                            var v1V = k1V.split(":");
                             var w1V = Number(v1V[0]);
                             var I1V = Number(v1V['1' |
                                 1]);
                             if (w1V >= 0 && I1V >= 0 && w1V <= +l1y && I1V <= l1y - 0) {
                                 var T1V = I1V * (R5y ^ 0) +
                                     w1V;
-                                E3V = j1V + _s(4754) + T1V + _s(+g3y) + w1V + _s(A6y - 0) + I1V + _s("6021" <<
+                                E3V = j1V + _s(4754) + T1V + _s(+g3y) + w1V + ":" + I1V + _s("6021" <<
                                     1352544192);
                                 e1V[s1V] = E3V;
                             }
@@ -65167,7 +65164,7 @@ var cotgsubscribe = amplify;
                                     var K4U = Math.floor(J4U % +R5y);
                                     var B4U = Math.floor((J4U - K4U) / (R5y - 0));
                                     var r4U = _s(m1m | 6290) + J4U + _s(F6y << 245552544) +
-                                        K4U + _s(+A6y) + B4U + _s(6021);
+                                        K4U + ":" + B4U + _s(6021);
                                     var z4U = G4U.replace(_s(C1m >>
                                         1238491040), r4U);
                                     z4U.replace(/<br>/g, '');
@@ -65180,7 +65177,7 @@ var cotgsubscribe = amplify;
                                         1)][M4U]["d"];
                                     var K4U = Math.floor(J4U % +R5y);
                                     var B4U = Math.floor((J4U - K4U) / (R5y * 1));
-                                    var r4U = _s(m1m ^ 0) + J4U + _s(+F6y) + K4U + _s(+A6y) + B4U + _s(6021);
+                                    var r4U = _s(m1m ^ 0) + J4U + _s(+F6y) + K4U + ":" + B4U + _s(6021);
                                     var z4U = G4U.replace(_s(+C1m), r4U);
                                     z4U.replace(/<br>/g, '');
                                     var C4U = W4U[2];
@@ -69433,7 +69430,6 @@ var cotgsubscribe = amplify;
         }
         pollthis = __pollthis;
         function Z1F() {
-            var k71 = 0;
             if (M4F == 0)
                 try {
                     if (l9 <= 30 && w8 == 0) {
@@ -69453,7 +69449,7 @@ var cotgsubscribe = amplify;
                             .css("display") != "none" || G4F == 0)
                             allyiance = 1;
                         N6();
-                        var a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s }); // /includes/poll2.php
+                        let a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s }); // /includes/poll2.php
                         a51.fail(function () {
                             E6k.R6();
                             $(_s(2194))
@@ -69462,7 +69458,6 @@ var cotgsubscribe = amplify;
                         });
                         F6();
                         a51.done(function (e71) {
-                            k71 = 1;
                             $(_s(2194))
                                 .css("display", "none");
                             E6k.y6();
@@ -73315,8 +73310,7 @@ var cotgsubscribe = amplify;
                 var L91 = u91[_s(m1t >>
                     993492672)];
                 var v91 = u91[_s(M8R >> 548742240)];
-                var l91 = u91[_s(B1t * 1)] + _s(A6y >>
-                    474433184) + u91[_s(+R1t)];
+                var l91 = u91[_s(B1t * 1)] + ":" + u91[_s(+R1t)];
                 var I91 = u91[_s(3748)];
                 var O91 = u91[_s(+j1k)];
                 var Q91 = g9(u91[_s(+A5y)]);

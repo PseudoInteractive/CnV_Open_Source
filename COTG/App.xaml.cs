@@ -29,6 +29,7 @@ using Windows.Foundation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Windows.System;
 
 namespace COTG
 {
@@ -40,10 +41,12 @@ namespace COTG
         {
             get { return _activationService.Value; }
         }
+        public static App instance;
 
         public App()
         {
             InitializeComponent();
+            instance = this;
             UnhandledException += OnAppUnhandledException;
             FocusVisualKind = FocusVisualKind.Reveal;
 
@@ -165,13 +168,36 @@ namespace COTG
         }
         public static void DispatchOnUIThread(DispatchedHandler action)
         {
-             CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
+            GlobalDispatcher().RunAsync(CoreDispatcherPriority.Normal, action);
         }
         public static void DispatchOnUIThreadLow(DispatchedHandler action)
         {
-             CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Low, action);
+            GlobalDispatcher().RunAsync(CoreDispatcherPriority.Low, action);
         }
+        public static void DispatchOnUIThreadSneaky(DispatchedHandler action)
+        {
+            var d = GlobalDispatcher();
+            // run it immediately if we can
+            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
+                action();
+            else
+                d.RunAsync(CoreDispatcherPriority.Normal, action);
+        }
+        // We only have 1 UI thread here
+        public static CoreDispatcher GlobalDispatcher() => ShellPage.instance.Dispatcher;
+
+
+        public static bool IsKeyPressedControl()
+        {
+            return Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+        }
+        public static bool IsKeyPressedShift()
+        {
+            return Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+        }
+
     }
+
 
 
 
@@ -228,23 +254,8 @@ namespace COTG
                 d.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
-        public static void DispatchOnUIThreadSneaky( DispatchedHandler action)
-        {
-            var d = CoreWindow.GetForCurrentThread().Dispatcher;
-            // run it immediately if we can
-            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
-                action();
-            else
-                d.RunAsync(CoreDispatcherPriority.Normal, action);
-        }
-        public static void DispatchOnUIThreadLow( DispatchedHandler action)
-        {
-            DispatchOnUIThreadLow(CoreWindow.GetForCurrentThread().Dispatcher, action);
-        }
-        public static void DispatchOnUIThread(DispatchedHandler action)
-        {
-            DispatchOnUIThread(CoreWindow.GetForCurrentThread().Dispatcher, action);
-        }
+        
+
 
         public static string CidToStringMD(this int cid)
         {
@@ -292,7 +303,7 @@ namespace COTG
         public static void Show(string s, int timeout = 8000)
         {
 
-            AApp.DispatchOnUIThreadLow(() =>
+            App.DispatchOnUIThreadLow(() =>
             { 
             var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
             textBlock.LinkClicked += MarkDownLinkClicked;

@@ -19,6 +19,7 @@ using static COTG.Debug;
 using System.ComponentModel;
 using System.Diagnostics;
 using Windows.UI.Xaml;
+using Windows.System;
 
 namespace COTG.Game
 {
@@ -153,21 +154,25 @@ namespace COTG.Game
         public void ProcessClick(string column, PointerPoint pt)
         {
             Note.Show($"{this} {column} {pt.Position}");
-            if (pt.Properties.IsLeftButtonPressed)
+
+            if (pt.Properties.IsLeftButtonPressed && !(App.IsKeyPressedControl()||App.IsKeyPressedShift()) ) // ignore selection style clicks
             {
 
-                // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-                var wantRaidingFocus =(City.IsMine(cid) && MainPage.IsVisible());
-                var wantRaidScan = false;
-//                var needCityData = 
 
-                    switch (column)
+                // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
+                var wantRaidingFocus = (City.IsMine(cid) && MainPage.IsVisible());
+                var wantRaidScan = false;
+                //                var needCityData = 
+
+                switch (column)
                 {
-                    case nameof(xy): JSClient.ShowCity(cid,false);
+                    case nameof(xy):
+                        JSClient.ShowCity(cid, false);
                         break;
-                    case nameof(icon): if (City.IsMine(cid))
-                                     JSClient.ChangeCity(cid);
-                                else JSClient.ShowCity(cid,false);
+                    case nameof(icon):
+                        if (City.IsMine(cid))
+                            JSClient.ChangeCity(cid);
+                        else JSClient.ShowCity(cid, false);
                         break;
                     case nameof(City.tsTotal):
                         if (City.IsMine(cid) && MainPage.IsVisible())
@@ -185,23 +190,24 @@ namespace COTG.Game
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
                             City.SetFocus(cid, false, true, false); // prevent dungeon scan on select
-                            Raiding.ReturnFast(cid,true);
+                            Raiding.ReturnFast(cid, true);
                             return; // prevent the traiing dungeon scan
                         }
                         break;
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            City.SetFocus(cid,false,true,false);// prevent dungeon scan on select
-                            Raiding.ReturnSlow(cid,true);
+                            City.SetFocus(cid, false, true, false);// prevent dungeon scan on select
+                            Raiding.ReturnSlow(cid, true);
                             return;// prevent trailing dungeon scan
                         }
                         break;
-                    default: wantRaidScan = true;
+                    default:
+                        wantRaidScan = true;
                         break;
                 }
 
-                if ( wantRaidingFocus)
+                if (wantRaidingFocus)
                     City.SetFocus(cid, false, wantRaidScan, false);// prevent dungeon scan on select
                 if (MainPage.IsVisible() && City.focus == this)
                 {
@@ -210,6 +216,8 @@ namespace COTG.Game
                 }
             }
         }
+
+
         // Incoming attacks
         public List<Army> incoming { get; set; } = new List<Army>();
 

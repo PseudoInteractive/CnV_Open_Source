@@ -68,10 +68,10 @@ namespace COTG.Views
             var rand = new Random();
 
             cityMenuFlyout = new MenuFlyout();
-            var c = new MenuFlyoutItem() { Text = "Return Slow" };
+            var c = new MenuFlyoutItem() { Text = "Home Whenever" };
             c.Click += ReturnSlowClick;
             cityMenuFlyout.Items.Add(c);
-            c = new MenuFlyoutItem() { Text = "Return Fast" };
+            c = new MenuFlyoutItem() { Text = "Home Please" };
             c.Click += ReturnFastClick;
             cityMenuFlyout.Items.Add(c);
 
@@ -256,7 +256,7 @@ namespace COTG.Views
             if (instance == null)
                 return;
             // Note.L("UpdateAll: ");
-            AApp.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
+            App.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
             
         }
 
@@ -266,14 +266,14 @@ namespace COTG.Views
                 return;
             //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
 
-            AApp.DispatchOnUIThread( () =>
+            App.DispatchOnUIThread( () =>
             {
                 instance.dungeonGrid.ItemsSource = dungeons;
             });
         }
         public static void UpdateRaidPlans()
         {
-            AApp.DispatchOnUIThread(() =>
+            App.DispatchOnUIThread(() =>
             {
                 // trick it
                 var temp = instance.dungeonGrid.ItemsSource;
@@ -305,16 +305,7 @@ namespace COTG.Views
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
        
 
-        //private void RecallSlow(object sender, RoutedEventArgs e)
-        //{
-        //    Log("RecallSlow")
-        //}
 
-        //private void RecallFast(object sender, RoutedEventArgs e)
-        //{
-        //    Log("RecallFast")
-        //        ;
-        //}
 
         private void cityGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -415,6 +406,33 @@ namespace COTG.Views
         private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             TipRaiding102.IsOpen = true;
+        }
+        static public void ShowTipRaiding2()
+        {
+            if (TipsSeen.instance.raiding2)
+                return;
+            TipsSeen.instance.raiding2 = true;
+            instance.TipRaiding201.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.TipRaiding201.IsOpen = true);
+        }
+
+
+        static public void ShowTipRaiding3()
+        {
+            if (TipsSeen.instance.raiding3)
+                return;
+            TipsSeen.instance.raiding3 = true;
+            instance.TipRaiding301.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.TipRaiding301.IsOpen = true);
+        }
+
+       
+        private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            TipRaiding203.IsOpen = true;
+        }
+
+        private void TipRaiding201_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            TipRaiding201.IsOpen = true;
         }
 
 

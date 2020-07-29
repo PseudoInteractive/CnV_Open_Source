@@ -2,17 +2,13 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:App="using:COTG"
-      xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarButtons"
       xmlns:Game="using:COTG.Game"
-      xmlns:Models="using:COTG.Models"
       xmlns:behaviors="using:COTG.Behaviors"
-      xmlns:canvasx="using:Microsoft.Graphics.Canvas.UI.Xaml"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:helpers="using:COTG.Helpers"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:views="using:COTG.Views"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
@@ -92,16 +88,13 @@
     </Page.Resources>
     <!--HeaderTemplate="{StaticResource headerTemplate}"-->
     <winui:NavigationView x:Name="navigationView" 
-                          
-                          
-                          Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
                           IsBackButtonVisible="Collapsed"
                           IsBackEnabled="False"
                           IsSettingsVisible="True"
                           ItemInvoked="OnItemInvoked"
                           SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
         <winui:NavigationView.ContextFlyout>
-            <MenuFlyout>
+            <MenuFlyout x:Name="testMenu" x:FieldModifier="public" >
                 <MenuFlyoutItem Click="TipTest"
                                 Text="TipTest" />
                 <MenuFlyoutItem Click="TroopOverview"
@@ -152,7 +145,7 @@
                                ToolTipService.ToolTip="Refresh tool count displays"
                               Icon="RepeatAll">
                     <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator     Key="F5" />
+                        <KeyboardAccelerator Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
                     <AppBarButton.Resources>
                         <winui:TeachingTip x:Name="RefreshTip"

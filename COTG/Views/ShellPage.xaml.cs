@@ -257,8 +257,17 @@ namespace COTG.Views
 
             var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
             //			refreshAccelerator.Invoked += (_, __) => view?.Refresh();
+            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
+            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
+            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
 
-
+        }
+        public static MenuFlyoutItem MenuAction( Action a, string text)
+        {
+            var rv = new MenuFlyoutItem() { Text = text };
+            rv.Click += (_, _) => a();
+            return rv;
+            
         }
 
         private TabPage CreateTabPage(Frame frame)

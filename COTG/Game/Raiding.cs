@@ -169,7 +169,7 @@ namespace COTG.Game
         }
         public static async void ReturnSlow(int cid, bool updateUI )
         {
-            Note.Show($"{cid.CidToStringMD()} recall slow");
+            Note.Show($"{cid.CidToStringMD()} Home Whenever");
             var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
             if (cid != 0)
             {
@@ -185,7 +185,7 @@ namespace COTG.Game
         }
         public static async void ReturnFast(int cid, bool updateUI)
         {
-            Note.Show($"{cid.CidToStringMD()} recall fast");
+            Note.Show($"{cid.CidToStringMD()} Home Please");
             if (cid != 0)
             {
                 await Post.Send("overview/rcallall.php", "a=" + cid);
@@ -211,7 +211,7 @@ namespace COTG.Game
                     ++counter;
                 }
             }
-            Note.Show($"Issued ReturnSlow on {counter} cities");
+            Note.Show($"Issued Home Whenever on {counter} cities");
             ShellPage.ShowTipRefresh();
 
         }
@@ -226,7 +226,7 @@ namespace COTG.Game
                     await Post.Send("overview/rcallall.php", "a=" + cid);
                 }
             }
-            Note.Show($"Issued ReturnFas on {counter} cities");
+            Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
         }
     }

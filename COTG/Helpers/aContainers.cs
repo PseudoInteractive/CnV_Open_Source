@@ -78,7 +78,7 @@ namespace COTG.Helpers
         public static void NotifyChange(this HashSet<City> items)
         {
             // defer the call, we don't need it right away
-            AApp.DispatchOnUIThreadLow( ()=>
+            App.DispatchOnUIThreadLow( ()=>
             {
                 try
                 {

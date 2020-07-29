@@ -508,18 +508,16 @@ namespace COTG
                 {
                     Log("Change2");
                     Assert(clChanged == 2);
-                    CityList.selections.Clear();
-                    CityList.selections.Add(CityList.allCities);
-                    for (int i = 0; i < lists.Count; ++i)
-                        CityList.selections.Add(lists[i]);
-
-                    CityList.all = lists.ToArray();
-                    AApp.DispatchOnUIThreadLow(() =>
+                    App.DispatchOnUIThreadLow(() =>
                    {
-                        // is this valid?
-                        //   Log("Reset");
+                       CityList.selections.Clear();
+                       CityList.selections.Add(CityList.allCities);
+                       for (int i = 0; i < lists.Count; ++i)
+                           CityList.selections.Add(lists[i]);
 
-                        CityList.selections.NotifyReset();
+                       CityList.all = lists.ToArray();
+
+                       CityList.selections.NotifyReset();
                    });
                 }
             }
@@ -763,248 +761,253 @@ namespace COTG
             //    await AddJSPluginAsync();
             //}
         }
-        async static private void View_ScriptNotify(object sender, NotifyEventArgs e)
+        static private void View_ScriptNotify(object sender, NotifyEventArgs __e)
         {
-            try
+            var eValue = __e.Value;
+            var eCallingUri = __e.CallingUri;
+            Task.Run(() =>
             {
-                bool gotCreds = false;
-                Log($"Notify: {e.Value.Length},{e.CallingUri},{sender}:{e.Value.Truncate(128) }");
-                var jsDoc = JsonDocument.Parse(e.Value);
-                var jsd = jsDoc.RootElement;
-                foreach (var jsp in jsd.EnumerateObject())
+                try
                 {
-                    switch (jsp.Name)
+                    bool gotCreds = false;
+                    Log($"Notify: {eValue.Length},{eCallingUri},{sender}:{eValue.Truncate(128) }");
+                    var jsDoc = JsonDocument.Parse(eValue);
+                    var jsd = jsDoc.RootElement;
+                    foreach (var jsp in jsd.EnumerateObject())
                     {
-                        case "jsvars":
-                            {
-                                var jso = jsp.Value;
-                                jsVars.s = jso.GetString("s");
-                                jsVars.token = jso.GetString("token");
-                                var agent = jso.GetString("agent");
-                                jsVars.cookie = jso.GetString("cookie");
+                        switch (jsp.Name)
+                        {
+                            case "jsvars":
                                 {
-                                //    var clients = clientPool.ToArray();
-                                foreach (var httpClient in clientPool)
-                                {
-                                    httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-                                    httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+                                    var jso = jsp.Value;
+                                    jsVars.s = jso.GetString("s");
+                                    jsVars.token = jso.GetString("token");
+                                    var agent = jso.GetString("agent");
+                                    jsVars.cookie = jso.GetString("cookie");
+                                    {
+                                        //    var clients = clientPool.ToArray();
+                                        foreach (var httpClient in clientPool)
+                                        {
+                                            httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
+                                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+                                        }
+                                    }
+                                    var timeOffset = jso.GetAsInt64("timeoffset");
+                                    var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
+                                    jsVars.gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
+                                    var str = timeOffsetRounded >= 0 ? " +" : " ";
+                                    str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
+                                    Helpers.JSON.timeZoneString = str;
+                                    //   Log(JSONHelper.timeZoneString);
+                                    Log($"TOffset {jsVars.gameTOffset}");
+                                    Log(ServerTime().ToString());
+                                    jsVars.ppss = jso.GetAsInt("ppss");
+                                    jsVars.player = jso.GetString("player");
+                                    jsVars.pid = jso.GetAsInt("pid");
+
+                                    var cid = jso.GetAsInt("cid");
+                                    City.build = City.focus = City.GetOrAddCity(cid);
+
+                                    ShellPage.cameraC = cid.CidToWorldV();
+                                    //Note.L("cid=" + cid.CidToString());
+                                    jsVars.gameMSAtStart = jso.GetAsInt64("time");
+                                    jsVars.launchTime = DateTimeOffset.UtcNow;
+                                    //    Log(jsVars.ToString());
+                                    ShellPage.webclientSpan.x = jso.GetAsInt("spanX");
+                                    ShellPage.webclientSpan.y = jso.GetAsInt("spanY");
+                                    ShellPage.clientTL.X = jso.GetAsFloat("left");
+                                    ShellPage.clientTL.Y = jso.GetAsFloat("top");
+                                    Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
+                                    //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+                                    gotCreds = true;
+                                    //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+                                    //   UpdatePPDT(jso.GetProperty("ppdt"));
+                                    break;
                                 }
-                            }
-                                var timeOffset = jso.GetAsInt64("timeoffset");
-                                var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)  )*30.0f; // round to nearest half hour
-                                jsVars.gameTOffset =TimeSpan.FromMinutes(timeOffsetRounded);
-                                var str = timeOffsetRounded >= 0 ? " +" : " ";
-                                str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
-                                Helpers.JSON.timeZoneString = str;
-                             //   Log(JSONHelper.timeZoneString);
-                                Log($"TOffset {jsVars.gameTOffset}");
-                                Log(ServerTime().ToString());
-                                jsVars.ppss = jso.GetAsInt("ppss");
-                                jsVars.player = jso.GetString("player");
-                                jsVars.pid = jso.GetAsInt("pid");
-                               
-                                var cid = jso.GetAsInt("cid");
-                                City.build = City.focus = City.GetOrAddCity(cid);
-
-                                ShellPage.cameraC = cid.CidToWorldV();
-                                //Note.L("cid=" + cid.CidToString());
-                                jsVars.gameMSAtStart = jso.GetAsInt64("time");
-                                jsVars.launchTime = DateTimeOffset.UtcNow;
-                                //    Log(jsVars.ToString());
-                                ShellPage.webclientSpan.x = jso.GetAsInt("spanX");
-                                ShellPage.webclientSpan.y = jso.GetAsInt("spanY");
-                                ShellPage.clientTL.X = jso.GetAsFloat("left");
-                                ShellPage.clientTL.Y = jso.GetAsFloat("top");
-                                Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
-                           //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
-                                gotCreds = true;
-                                //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
-
-                             //   UpdatePPDT(jso.GetProperty("ppdt"));
-                                break;
-                            }
-                        case "cityclick":
-                            {
-                                var jso = jsp.Value;
-                                var cid = jso.GetAsInt("cid");
+                            case "cityclick":
                                 {
-                                    var city =COTG.Views.SpotTab.TouchSpot(cid);
-                                    
-                                    city.cityName = jso.GetString("name");
-                                    city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
-                                    //Assert(city.pid > 0);
-                                    city.points = (ushort)jso.GetAsInt("score");
-                                 //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
-                                    city.lastAccessed = DateTimeOffset.UtcNow;
-                                    city.isCastle = jso.GetAsInt("castle")==1;
-                                    city.isBlessed = city.pid!=0 ? jso.GetAsInt("bless")!=0 : false;
-                                    city.isOnWater = jso.GetAsInt("water") != 0;
-                                    city.isTemple = jso.GetAsInt("plvl") != 0;
+                                    var jso = jsp.Value;
+                                    var cid = jso.GetAsInt("cid");
+                                    {
+                                        var city = COTG.Views.SpotTab.TouchSpot(cid);
+
+                                        city.cityName = jso.GetString("name");
+                                        city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
+                                                                                               //Assert(city.pid > 0);
+                                        city.points = (ushort)jso.GetAsInt("score");
+                                        //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
+                                        city.lastAccessed = DateTimeOffset.UtcNow;
+                                        city.isCastle = jso.GetAsInt("castle") == 1;
+                                        city.isBlessed = city.pid != 0 ? jso.GetAsInt("bless") != 0 : false;
+                                        city.isOnWater = jso.GetAsInt("water") != 0;
+                                        city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-                                  //  Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
-                                    if(IsWorldView())
+                                        //  Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
+                                        if (IsWorldView())
+                                        {
+                                            // bring city into view
+                                            cid.BringCidIntoWorldView(true);
+
+                                        }
+                                    }
+                                    break;
+
+                                }
+                            case "citydata":
+                                {
+                                    var jse = jsp.Value;
+                                    // var priorCid = cid;
+                                    var cid = jse.GetInt("cid");
+                                    if (!IsWorldView())
+                                        ShellPage.cameraC = cid.CidToWorldV();
+
+                                    //Note.L("citydata=" + cid.CidToString());
+                                    var city = City.GetOrAddCity(cid);
+                                    City.build = city;
+                                    city.LoadFromJson(jse);
+
+                                    if (MainPage.IsVisible())
+                                        ScanDungeons.Post(cid, false);
+
+                                    if (IsWorldView())
                                     {
                                         // bring city into view
                                         cid.BringCidIntoWorldView(true);
 
                                     }
-                                }
-                                break;
-
-                            }
-                        case "citydata":
-                            {
-                                var jse = jsp.Value;
-                               // var priorCid = cid;
-                                var cid = jse.GetInt("cid");
-                                if(!IsWorldView())
-                                    ShellPage.cameraC = cid.CidToWorldV();
-
-                                //Note.L("citydata=" + cid.CidToString());
-                                var city =City.GetOrAddCity(cid);
-                                City.build = city;
-                                city.LoadFromJson(jse);
-
-                                if (MainPage.IsVisible())
-                                    ScanDungeons.Post(cid, false);
-
-                                if (IsWorldView())
-                                {
-                                    // bring city into view
-                                    cid.BringCidIntoWorldView(true);
+                                    break;
 
                                 }
-                                break;
-
-                            }
-                        case "OGA":
-                            {
-                                Log("OGA" + e.Value.ToString());
-                                break;
-                            }
-                        case "OGR":
-                            {
-                              //  Log(e.Value);
-                                break;
-                            }
-                        case "snd":
-                            {
-                                City.UpdateSenatorInfo();
-                                break;
-                            }
-                        case "OGT":
-                            {
-                               // Log(e.Value);
-                                break;
-                            }
-                        case "aldt":
-                            {
-                                Alliance.Ctor(jsDoc);
-                                
-
-                                break;
-                            }
-                        case "gPlA":
-                        {
-                                Player.Ctor(jsp.Value);
-                                RestAPI.getWorldInfo.Post();
-                                
-                                break;
-                            }
-                        case "ppdt":
-                            {
-                                UpdatePPDT(jsp.Value);
-                                break;
-                            }
-                        case "chat":
-                            {
-                                ChatTab.ProcessIncomingChat(jsp);
-
-                                break;
-                            }
-                        case "c":
-                            {
-                                var jso = jsp.Value;
-                                var cid = jso.GetInt("c");
-                                City.build = City.GetOrAddCity(cid);
-                                var popupCount = jso.GetAsInt("p");
-                           //     Note.L("cid=" + cid.CidToString());
-                                var priorView = viewMode;
-                                viewMode = (ViewMode)jso.GetInt("v");
-                                if(priorView!=viewMode )
+                            case "OGA":
                                 {
-                                    var isWorld = IsWorldView();
-                                    AApp.DispatchOnUIThreadLow( () =>
+                                    Log("OGA" + eValue.ToString());
+                                    break;
+                                }
+                            case "OGR":
+                                {
+                                    //  Log(e.Value);
+                                    break;
+                                }
+                            case "snd":
+                                {
+                                    City.UpdateSenatorInfo();
+                                    break;
+                                }
+                            case "OGT":
+                                {
+                                    // Log(e.Value);
+                                    break;
+                                }
+                            case "aldt":
+                                {
+                                    Alliance.Ctor(jsDoc);
+
+
+                                    break;
+                                }
+                            case "gPlA":
+                                {
+                                    Player.Ctor(jsp.Value);
+                                    RestAPI.getWorldInfo.Post();
+
+                                    break;
+                                }
+                            case "ppdt":
+                                {
+                                    UpdatePPDT(jsp.Value);
+                                    break;
+                                }
+                            case "chat":
+                                {
+                                    ChatTab.ProcessIncomingChat(jsp);
+
+                                    break;
+                                }
+                            case "c":
+                                {
+                                    var jso = jsp.Value;
+                                    var cid = jso.GetInt("c");
+                                    City.build = City.GetOrAddCity(cid);
+                                    var popupCount = jso.GetAsInt("p");
+                                    //     Note.L("cid=" + cid.CidToString());
+                                    var priorView = viewMode;
+                                    viewMode = (ViewMode)jso.GetInt("v");
+                                    if (priorView != viewMode)
                                     {
-                                        ShellPage.canvas.IsHitTestVisible = isWorld;
+                                        var isWorld = IsWorldView();
+                                        App.DispatchOnUIThreadLow(() =>
+                                       {
+                                           ShellPage.canvas.IsHitTestVisible = isWorld;
 
-                                    });
+                                       });
+                                    }
+                                    if (priorView != ViewMode.world || viewMode != ViewMode.world)
+                                    {
+                                        //                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
+                                        //                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
+                                        //                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
+
+                                        //   ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
+                                        // if((viewMode & ViewMode.region)!=0)
+                                        //   ShellPage.canvas?.Invalidate();
+                                    }
+                                    ShellPage.NotifyCotgPopup(popupCount);
+                                    //                                ShellPage.SetCanvasVisibility(noPopup);
+                                    break;
                                 }
-                                if (priorView != ViewMode.world || viewMode != ViewMode.world)
-                                {
-//                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
-//                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
-//                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
 
-                                 //   ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
-                                    // if((viewMode & ViewMode.region)!=0)
-                                 //   ShellPage.canvas?.Invalidate();
-                                }
-                                ShellPage.NotifyCotgPopup(popupCount);
-//                                ShellPage.SetCanvasVisibility(noPopup);
-                                break;
-                            }
+                                //case "stable":
+                                //    {
+                                //        var jse = jsp.Value;
+                                //        int counter = 0;
+                                //        StringBuilder sb = new StringBuilder();
+                                //        foreach (var i in jse.EnumerateArray())
+                                //        {
+                                //            sb.Append('"');
 
-                            //case "stable":
-                            //    {
-                            //        var jse = jsp.Value;
-                            //        int counter = 0;
-                            //        StringBuilder sb = new StringBuilder();
-                            //        foreach (var i in jse.EnumerateArray())
-                            //        {
-                            //            sb.Append('"');
+                                //            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
+                                //            sb.Append("\" /* " + counter++ + " */,"); 
 
-                            //            sb.Append(HttpUtility.JavaScriptStringEncode(i.GetString()));
-                            //            sb.Append("\" /* " + counter++ + " */,"); 
+                                //        }
+                                //        var s = sb.ToString();
+                                //        Log(s);
+                                //        break;
 
-                            //        }
-                            //        var s = sb.ToString();
-                            //        Log(s);
-                            //        break;
+                                //    }
+                                //    break;
+                        }
 
-                            //    }
-                            //    break;
                     }
 
-                }
+                    if (gotCreds)
+                    {
+                        ///                   await GetCitylistOverview();
+                        City.UpdateSenatorInfo();  // no async
+                        Raiding.UpdateTS(true);
+                        TileData.Ctor();
 
-                if (gotCreds)
+                        // await RaidOverview.Send();
+                    }
+                    //var cookie = httpClient.DefaultRequestHeaders.Cookie;
+                    //cookie.Clear();
+                    //foreach (var c in jsVars.cookie.Split(";"))
+                    //{
+                    //    cookie.ParseAdd(c);
+                    //}
+
+
+
+
+
+                }
+                catch (Exception ex)
                 {
- ///                   await GetCitylistOverview();
-                    City.UpdateSenatorInfo();  // no async
-                    Raiding.UpdateTS(true);
-                    TileData.Ctor();
 
-                    // await RaidOverview.Send();
+                    Log(ex);
                 }
-                //var cookie = httpClient.DefaultRequestHeaders.Cookie;
-                //cookie.Clear();
-                //foreach (var c in jsVars.cookie.Split(";"))
-                //{
-                //    cookie.ParseAdd(c);
-                //}
-
-
-
-
-
-            }
-            catch (Exception ex)
-            {
-
-                Log(ex);
-            }
+            });
         }
 
        

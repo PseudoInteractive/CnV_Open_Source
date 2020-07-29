@@ -179,7 +179,7 @@ namespace COTG.Game
 
         public void NotifyChange(string member ="")
         {
-            AApp.DispatchOnUIThreadSneaky(() =>
+            App.DispatchOnUIThreadSneaky(() =>
        {
            OnPropertyChanged(member);
        });
