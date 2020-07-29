@@ -34,26 +34,29 @@ namespace COTG.Views
         //private static bool _isBusy;
 //        private static UserData _user;
         public static bool fetchFullHistory;
+        public TipsSeen tips => TipsSeen.instance;
         public static bool tipRefresh { get; set; } = true;
         public bool FetchFullHistory { get=>fetchFullHistory; set
             {
                 fetchFullHistory = value;
-                SaveAll();
                 DefensePage.instance.Refresh();
               }
 
         }
-        float raidCarry { get => Raiding.desiredCarry; set { Raiding.desiredCarry = value; SaveAll(); } }
+        float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value;  }
 
         public static void LoadAll()
         {
             fetchFullHistory = App.Settings().Read<bool>(nameof(fetchFullHistory),true ); // default is true
             Raiding.desiredCarry = App.Settings().Read<float>(nameof(raidCarry), 1.02f);
+            TipsSeen.instance = App.Settings().Read<TipsSeen>(nameof(TipsSeen), new TipsSeen());
+
         }
-        public static void SaveAll()
+        public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
         {
            App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
             App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
+            App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
 
         }
         public ElementTheme ElementTheme
@@ -100,7 +103,7 @@ namespace COTG.Views
         {
         }
 
-        public  static async Task InitializeAsync()
+        public  static void Initialize()
         {
             _versionDescription = GetVersionDescription();
       //      IdentityService.LoggedIn += OnLoggedIn;
@@ -108,12 +111,17 @@ namespace COTG.Views
      //       UserDataService.UserDataUpdated += OnUserDataUpdated;
             //_isLoggedIn = true;// IdentityService.IsLoggedIn();
             LoadAll();
- //           _user = await UserDataService.GetDefaultUserData();
+            Window.Current.Closed -= SaveAll;
+            Window.Current.Closed += SaveAll;
+
+            //           _user = await UserDataService.GetDefaultUserData();
             //if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())
             //{
             //    FeedbackLink.Visibility = Visibility.Visible;
             //}
         }
+
+      
 
         private static string GetVersionDescription()
         {
@@ -256,11 +264,24 @@ namespace COTG.Views
 			   });
 		}
 
-		//private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
-		//{
-		//    // This launcher is part of the Store Services SDK https://docs.microsoft.com/windows/uwp/monetize/microsoft-store-services-sdk
-		//    var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-		//    await launcher.LaunchAsync();
-		//}
-	}
+        private void TipsRestore(object sender, RoutedEventArgs e)
+        {
+            TipsSeen.instance = new TipsSeen();
+            Note.Show("Keener :)");
+        }
+
+        //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
+        //{
+        //    // This launcher is part of the Store Services SDK https://docs.microsoft.com/windows/uwp/monetize/microsoft-store-services-sdk
+        //    var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
+        //    await launcher.LaunchAsync();
+        //}
+    }
+    public class TipsSeen
+    {
+        public static TipsSeen instance;
+        public bool refresh { get; set; }
+        public bool raiding1 { get; set; }
+        public bool raiding2 { get; set; }
+    }
 }

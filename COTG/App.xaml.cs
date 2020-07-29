@@ -143,6 +143,7 @@ namespace COTG
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
+            SettingsPage.SaveAll();
             var deferral = e.GetDeferral();
             await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();

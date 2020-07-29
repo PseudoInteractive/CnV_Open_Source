@@ -25,7 +25,7 @@
                 <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
                 <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"/>
                 <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind percentFormatter,Mode=OneTime}" />
-                <CheckBox Content="Tip Refresh" IsChecked="{x:Bind views:SettingsPage.tipRefresh,Mode=TwoWay}"/>
+                <Button Content="Restore all Tips" Click="TipsRestore"/>
                 <TextBlock x:Uid="Settings_Theme" />
             <StackPanel Margin="{StaticResource XSmallTopMargin}">
                     <RadioButton x:Uid="Settings_Theme_Light"

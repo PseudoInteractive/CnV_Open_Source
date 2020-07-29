@@ -8932,6 +8932,8 @@ I0VV(u0VV());
 B0KK(A0KK());
 i011.J0EE = J0EE;
 w5SS(K5SS());
+let lastOGACount = 0;
+let lastCid = 0;
 i011.J55 = function () {
     var Q55 = 2;
     for (; Q55 !== 1;) {
@@ -69430,8 +69432,6 @@ var cotgsubscribe = amplify;
             });
         }
         pollthis = __pollthis;
-        let lastOGACount = 0;
-        let lastCid = 0;
         function Z1F() {
             var k71 = 0;
             if (M4F == 0)

@@ -122,11 +122,11 @@ namespace COTG.Game
             troopsHome = Array.Empty<TroopTypeCount>();
             troopsTotal = Array.Empty<TroopTypeCount>();
 
-            for (int hc =0;hc<2;++hc)
+            for (int hc = 0; hc < 2; ++hc)
             {
-             
 
-                if (jse.TryGetProperty((hc == 0)?"th" : "tc", out var tt))
+
+                if (jse.TryGetProperty((hc == 0) ? "th" : "tc", out var tt))
                 {
                     var tc = new List<TroopTypeCount>();
                     var tType = -1;
@@ -153,12 +153,25 @@ namespace COTG.Game
             }
             tsHome = TroopTypeCount.TS(troopsHome);
             tsTotal = TroopTypeCount.TS(troopsTotal);
+            CheckTipRaiding();
+
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
             // one off change
             NotifyChange();
 
-         //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
-//            COTG.Views.MainPage.CityListUpdateAll();
+            //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
+            //            COTG.Views.MainPage.CityListUpdateAll();
+        }
+
+        public void CheckTipRaiding()
+        {
+            if (TipsSeen.instance.raiding1 == false)
+            {
+                if (this.tsHome == this.tsTotal && this.tsHome > 4000)
+                {
+                    MainPage.ShowTipRaiding1();
+                }
+            }
         }
 
         static List<City> dummies = new List<City>();

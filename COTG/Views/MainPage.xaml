@@ -1,22 +1,15 @@
 ﻿<view:UserTab
-      xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+      x:Class="COTG.Views.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tl="using:Telerik.UI.Xaml.Controls"
-      xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
-      xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
-      xmlns:gridControls="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:model="using:COTG.Models"
       xmlns:game="using:COTG.Game"
       xmlns:view="using:COTG.Views"
-      x:Class="COTG.Views.MainPage"
-      xmlns:behaviors="using:COTG.Behaviors"
       mc:Ignorable="d"
       Background="{x:Null}">
     <Grid>
@@ -41,7 +34,7 @@
                         Grid.Row="1"
                         UseSystemFocusVisuals="True"
                         IsTabStop="True"
-                        GridLinesThickness="0.5"
+                        GridLinesThickness="1.0"
                         AlternationStep="2"
                         ItemsSource="{x:Bind gridCitySource, Mode=OneWay}"
                         AutoGenerateColumns="False"
@@ -161,8 +154,27 @@ TextSubmitted="RaidCarrySubmitted"
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                     IsHitTestVisible="False"    />
             </tk:GridSplitter.Element>
         </tk:GridSplitter>
+        <winui:TeachingTip x:Name="TipRaiding101"
+                                Title="Raiding 101"
+                                Target="{x:Bind cityGrid}"
+                                CloseButtonClick="TipRaiding101_ActionButtonClick"
+                               CloseButtonContent="Next"
+                           PreferredPlacement="LeftTop"
+                                Subtitle="To start with, see which cities are not raiding by clicking on the 'tsHome' column header which will sort the cities by troop count.\nIf appropropriate, select the city that you want to send raid..."></winui:TeachingTip>
+        <winui:TeachingTip x:Name="TipRaiding102"
+                                Title="Raiding 102"
+                               CloseButtonContent="Done"
+                            PreferredPlacement="LeftTop"
+                                Target="{x:Bind dungeonGrid}"
+                                Subtitle="Select a dungeon that you would like to send raids to and click on it.">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Tip: You usualy want to select a dungeon of the right type:  mountain for infantry, hills for magic, or forests for cavalry."/>
+                <TextBlock Text="Tip: Carry capacities below 100 result in more raiding losses and raiding capacities above 100 provide less income.  As time passes the carry capacity will go down, so if you are going to leave the raid running, you should pick a carry capacity above 100."/>
+                <TextBlock Text="Tip: Clicking on the coordinates will show you the dungeon, clicking anywhere else will send raids"/>
+            </StackPanel>
+        </winui:TeachingTip>
     </Grid>
 </view:UserTab>

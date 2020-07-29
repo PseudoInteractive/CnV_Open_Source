@@ -31,6 +31,8 @@ using System.Collections.ObjectModel;
 using COTG.JSON;
 using System.Threading;
 using Microsoft.UI.Xaml.Controls;
+using Windows.UI.WindowManagement;
+using Windows.UI.Xaml.Hosting;
 
 namespace COTG.Views
 {
@@ -656,13 +658,15 @@ namespace COTG.Views
         //    }
         //}
 
-        private void OpenSettingsPage(object sender, object e)
+        private async void OpenSettingsPage(object sender, object e)
         {
-                 {
-                      WindowManagerService.Current.TryShowAsStandaloneAsync<SettingsPage>("Settings");
-
-                  }
-           }
+            AppWindow newWindow = await AppWindow.TryCreateAsync();
+            newWindow.Title = "Settings";
+            var newPage = new SettingsPage();
+         
+            ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
+            await newWindow.TryShowAsync();
+        }
 
         private void TipTest(object sender, RoutedEventArgs e)
         {

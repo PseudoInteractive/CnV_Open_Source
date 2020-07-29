@@ -7121,6 +7121,8 @@ I0VV(u0VV());
 B0KK(A0KK());
 i011.J0EE = J0EE;
 w5SS(K5SS());
+let lastOGACount = 0;
+let lastCid = 0;
 
 i011.J55 = function() {
   var Q55 = 2;
@@ -12473,8 +12475,8 @@ var cotgsubscribe = amplify;
       document.body.innerHTML = document.body.innerHTML + y1V;
       websocket = "";
       if (r3F) r3F.destroy();
-      cid = "";
-      D6 = "";
+      cid = 0;
+      D6 = {};
       $(_s(+q8y))
         .html("");
       $(_s(2893))
@@ -25648,7 +25650,7 @@ var cotgsubscribe = amplify;
                   cid: cid,
                   ts: H2l
                 };
-                var Q2l = _s(4865) + b2() + _s('3927' | 3346);
+                var Q2l = _s(4865) + b2() + _s(3927);
                 var t2l = a6.ccazzx
                   .encrypt(JSON.stringify(O2l), Q2l, +U7y);
                 N6();
@@ -45258,7 +45260,7 @@ var cotgsubscribe = amplify;
       var h4T = a6
         .ccazzx.encrypt(JSON.stringify(S4T), J4T, U7y | 256);
       N6();
-      var V4T = $.post(q6 + _s(+p0y), { a: h4T });
+        var V4T = $.post(q6 + "UBBit.php", { a: h4T });
       E6k.R6();
       F6();
       V4T.done(function(n4T) {
@@ -66680,10 +66682,7 @@ _viewMode = viewModeWorld;
 
 
 
-    let lastOGACount=0;
-    let lastCid = 0;
-    function Z1F() {
-      var k71 = 0;
+       function Z1F() {
       if (M4F == 0) try {
         if (l9 <= 30 && w8 == 0) {
           let E51 = "";
@@ -66700,7 +66699,7 @@ _viewMode = viewModeWorld;
             .css("display") != "none" || $("#withoutAlliance")
             .css("display") != "none" || G4F == 0) allyiance = 1;
           N6();
-            var a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php
+            let a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php
           a51.fail(function() {
             E6k.R6();
             $(_s(2194))
@@ -66709,7 +66708,6 @@ _viewMode = viewModeWorld;
           });
           F6();
           a51.done(function(e71) {
-              k71 = 1;
               $(_s(2194))
                   .css("display", "none");
               E6k.y6();

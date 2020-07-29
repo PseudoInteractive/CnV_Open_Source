@@ -551,6 +551,7 @@ namespace COTG
                     }
                     city.tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
+                    city.CheckTipRaiding();
                     city.isCastle = jsCity.GetAsInt("12") > 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     

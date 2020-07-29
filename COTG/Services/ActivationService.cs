@@ -79,9 +79,10 @@ namespace COTG.Services
         {
             // TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
             // TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
-            SettingsPage.InitializeAsync();
-            await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
-            await WindowManagerService.Current.InitializeAsync();
+            SettingsPage.Initialize();
+            var t0= ThemeSelectorService.InitializeAsync();
+            var t1= WindowManagerService.Current.InitializeAsync();
+            await Task.WhenAll(t0, t1);
         }
 
         private async Task HandleActivationAsync(object activationArgs)

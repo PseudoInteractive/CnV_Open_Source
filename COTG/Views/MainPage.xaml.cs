@@ -405,6 +405,18 @@ namespace COTG.Views
 
         public static bool IsVisible() => instance.isVisible;
 
+        static public void ShowTipRaiding1()
+        {
+            if (TipsSeen.instance.raiding1)
+                return;
+            TipsSeen.instance.raiding1 = true;
+            instance.TipRaiding101.Dispatcher.RunAsync(CoreDispatcherPriority.Low,()=> instance.TipRaiding101.IsOpen = true);
+        }
+        private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            TipRaiding102.IsOpen = true;
+        }
+
 
         //      static Dungeon lastTooltip;
         //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
