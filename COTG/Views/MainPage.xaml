@@ -162,11 +162,11 @@ TextSubmitted="RaidCarrySubmitted"
                                 Target="{x:Bind cityGrid}"
                                 CloseButtonClick="TipRaiding101_ActionButtonClick"
                                CloseButtonContent="Got It"
-                           PreferredPlacement="LeftTop"
-                                Subtitle="See which cities have available troops by clicking on the 'tsHome' column header">
+                           PreferredPlacement="LeftTop".
+                                Subtitle="See which cities have available troops by clicking on the 'tsHome' column header.">
                 <TextBlock  TextWrapping="Wrap">
-                This will sort your cities by their TS at home<LineBreak/>
-                Select the city for which you want to set raids<LineBreak/>
+                This will sort your cities by TS at home.<LineBreak/>
+                Select the city for which you want to set raids.<LineBreak/>
                 Note: Click the column twice to sort in descending order<LineBreak/>
                 </TextBlock>
         </winui:TeachingTip>
@@ -176,9 +176,9 @@ TextSubmitted="RaidCarrySubmitted"
                                CloseButtonContent="Success"
                             PreferredPlacement="LeftTop"
                                 Target="{x:Bind dungeonGrid}"
-                                Subtitle="Click on a dungeon that you would like to send raids to">
+                                Subtitle="Click on a dungeon that you would like to send raids to.">
             <TextBlock  TextWrapping="Wrap">                    
-                    <LineBreak/>You often want to select a dungeon appropriate for your troop type:
+                    You typically want to select a dungeon appropriate for your troop type:
                     <LineBreak/>    -   Mountain for Infantry
                     <LineBreak/>    -   Hills for Magic
                     <LineBreak/>    -   Forests for Cavalry
@@ -236,10 +236,11 @@ TextSubmitted="RaidCarrySubmitted"
                                CloseButtonContent="Done with tips"
                            PreferredPlacement="LeftBottom" >
             <TextBlock TextWrapping="Wrap">
-                Carry capacities below ~70 result in more raiding losses and raiding capacities above 100 provide less income.<LineBreak/>
-                As dungeons progress, their availalbe loot per raid goes up, and so does the number of monsters encountered per raid.<LineBreak/>
-                An approach to balance raiding losses vs returns is to start raids at around 115% carry capactiy, and reset them when they drop below 70%.<LineBreak/>
-                Example:
+                Lower carry capacities result in more raiding losses, while carry capacities above 100 provide less income.<LineBreak/>
+                As dungeons progress, their availalbe loot per raid goes up, and so does the number of monsters encountered per raid
+                <LineBreak/>        -   The net effect is that carry capacity goes down over time
+                <LineBreak/>An approach to balance raiding losses vs returns is to start raids at around 115% carry capactiy, and reset them when they drop below 70%.
+                <LineBreak/>    Example:
                 <LineBreak/>    -   Set the target carry capacity to 115%                
                 <LineBreak/>    -   During a moment of enthusiasm
                 <LineBreak/>        -   Sort all raids by carry capacity
