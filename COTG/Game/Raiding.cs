@@ -183,20 +183,51 @@ namespace COTG.Game
                 }
             }
         }
-        public static async void ReturnFast(int cid,bool updateUI)
+        public static async void ReturnFast(int cid, bool updateUI)
         {
             Note.Show($"{cid.CidToStringMD()} recall fast");
             if (cid != 0)
             {
                 await Post.Send("overview/rcallall.php", "a=" + cid);
-                if(updateUI)
+                if (updateUI)
                 {
                     JSClient.ChangeCity(cid);
                     // await JSClient.PollCity(cid);
-                  //  await Task.Delay(300); // this might not be useful.
-                  //  ScanDungeons.Post(cid, true);
-                }    
+                    //  await Task.Delay(300); // this might not be useful.
+                    //  ScanDungeons.Post(cid, true);
+                }
             }
+        }
+        public static async void ReturnSlowBatch(IEnumerable<int>  cids)
+        {
+            int counter = 0;
+            foreach (var cid in cids)
+            {
+
+                if (cid != 0)
+                {
+                    var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+                    await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
+                    ++counter;
+                }
+            }
+            Note.Show($"Issued ReturnSlow on {counter} cities");
+            ShellPage.ShowTipRefresh();
+
+        }
+        public static async void ReturnFastBatch(IEnumerable<int> cids)
+        {
+            int counter = 0;
+            foreach (var cid in cids)
+            {
+                if (cid != 0)
+                {
+                    ++counter;
+                    await Post.Send("overview/rcallall.php", "a=" + cid);
+                }
+            }
+            Note.Show($"Issued ReturnFas on {counter} cities");
+            ShellPage.ShowTipRefresh();
         }
     }
 }

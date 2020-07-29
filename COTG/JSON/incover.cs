@@ -206,8 +206,7 @@ namespace COTG.JSON
                                           sourceSpot.pid = army.pid;
                                           
                                       }
-                                  var p6 = armyV.GetProperty("6");
-                                  if (p6.ValueKind == System.Text.Json.JsonValueKind.String)
+                                  if( armyV.TryGetProperty("6", out var p6)&&(p6.ValueKind == System.Text.Json.JsonValueKind.String))
                                   {
                                       army.spotted = p6.GetString().ParseDateTime();
                                   }
@@ -215,9 +214,8 @@ namespace COTG.JSON
                                   {
                                       army.spotted = AUtil.dateTimeZero;
                                   }
-                                      var ttp = armyV.GetProperty("3");
                                       var ttl = new List<TroopTypeCount>();
-                                      if (ttp.ValueKind==System.Text.Json.JsonValueKind.Array)
+                                      if (armyV.TryGetProperty("3", out var ttp) && ttp.ValueKind==System.Text.Json.JsonValueKind.Array)
                                       {
 
 

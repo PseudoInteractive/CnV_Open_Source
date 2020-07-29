@@ -45,8 +45,9 @@ namespace COTG
         {
             InitializeComponent();
             UnhandledException += OnAppUnhandledException;
-            
-         
+            FocusVisualKind = FocusVisualKind.Reveal;
+
+
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;
 

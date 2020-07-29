@@ -150,28 +150,45 @@ namespace COTG.Views
         }
 
 
-        private void ReturnSlowClick(object sender, RoutedEventArgs e)
+        private static List<int> GetContextCids()
         {
+            var cids = new List<int>();
             var cid = Spot.uiPress;
             if (cid != 0)
             {
-                Raiding.ReturnSlow(cid,true);
+                cids.Add(cid);
             }
+            foreach (var sel in instance.cityGrid.SelectedItems)
+            {
+                if (sel is City city)
+                {
+                    cids.AddIfAbsent(city.cid);
+                }
+            }
+            return cids;
+        }
+        private void ReturnSlowClick(object sender, RoutedEventArgs e)
+        {
+            var cids = GetContextCids();
+            if (cids.Count == 1)
+                Raiding.ReturnSlow(cids[0], true);
+            else
+                Raiding.ReturnSlowBatch(cids);
         }
 
-       
+
 
         private void ReturnFastClick(object sender, RoutedEventArgs e)
         {
-            var cid = Spot.uiPress;
-            if (cid != 0)
-            {
-                Raiding.ReturnFast(cid,true);
-            }
+            var cids = GetContextCids();
+            if (cids.Count == 1)
+                Raiding.ReturnFast(cids[0], true);
+            else
+                Raiding.ReturnFastBatch(cids);
         }
 
 
-       
+
 
         //public string dungeonInfo { get
         //    {

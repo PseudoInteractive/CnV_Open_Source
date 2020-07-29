@@ -496,24 +496,27 @@ namespace COTG.Views
                 List<BuildingCount> bd = new List<BuildingCount>();
                 int bCount = 0;
                 var bdd = new Dictionary<string, int>();
-
-                foreach (var bdi in jse.GetProperty("bd").EnumerateArray())
+                
+                if (jse.TryGetProperty("bd", out var eBd))
                 {
-                    var bid = bdi.GetAsInt("bid");
-                    if (bid == bidTownHall)
-                        continue;
-                    var bi= bidMap.IndexOf((short)bid);
-                    if (bi == -1)
-                        continue;
-                    
-                    var s = buildings[bi];
-                    if (!bdd.TryGetValue(s, out var counter))
-                    {
-                        bdd.Add(s, 0);
-                        counter = 0;
-                    }
-                    bdd[s] = counter + 1;
-                    ++bCount;
+                    foreach (var bdi in eBd.EnumerateArray())
+                        {
+                            var bid = bdi.GetAsInt("bid");
+                            if (bid == bidTownHall)
+                                continue;
+                            var bi = bidMap.IndexOf((short)bid);
+                            if (bi == -1)
+                                continue;
+
+                            var s = buildings[bi];
+                            if (!bdd.TryGetValue(s, out var counter))
+                            {
+                                bdd.Add(s, 0);
+                                counter = 0;
+                            }
+                            bdd[s] = counter + 1;
+                            ++bCount;
+                        }
                 }
                 foreach (var i in bdd)
                 {
@@ -568,7 +571,14 @@ namespace COTG.Views
 
 
         }
-
+        public static void ShowTipRefresh()
+        {
+            if(SettingsPage.tipRefresh)
+            {
+                SettingsPage.tipRefresh = false;
+                instance.RefreshTip.IsOpen = true;
+            }
+        }
 		private void DoNothing(object sender, RoutedEventArgs e)
 		{
 

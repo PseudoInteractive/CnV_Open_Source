@@ -34,6 +34,7 @@ namespace COTG.Views
         //private static bool _isBusy;
 //        private static UserData _user;
         public static bool fetchFullHistory;
+        public static bool tipRefresh { get; set; } = true;
         public bool FetchFullHistory { get=>fetchFullHistory; set
             {
                 fetchFullHistory = value;

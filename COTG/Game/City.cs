@@ -50,12 +50,14 @@ namespace COTG.Game
                 }
                 else
                 {
-                    var bd = jse.GetProperty("bd");
-                    foreach (var b in bd.EnumerateArray())
+                    if (jse.TryGetProperty("bd", out var bd))
                     {
-                        if (b.GetAsInt("bid") == bidCastle)
+                        foreach (var b in bd.EnumerateArray())
                         {
-                            return (b.GetInt("bl") + 5);
+                            if (b.GetAsInt("bid") == bidCastle)
+                            {
+                                return (b.GetInt("bl") + 5);
+                            }
                         }
                     }
                     return 5;
@@ -183,12 +185,14 @@ namespace COTG.Game
                 return (0, 5, 0);
             }
             int total = 5;
-            var bd = jsE.GetProperty("bd");
-            foreach (var b in bd.EnumerateArray())
+            if (jsE.TryGetProperty("bd", out var bd))
             {
-                if (b.GetInt("bid") == bidCastle)
+                foreach (var b in bd.EnumerateArray())
                 {
-                    total = b.GetInt("bl") + 5;
+                    if (b.GetInt("bid") == bidCastle)
+                    {
+                        total = b.GetInt("bl") + 5;
+                    }
                 }
             }
             var comm = jsE.GetInt("comm");

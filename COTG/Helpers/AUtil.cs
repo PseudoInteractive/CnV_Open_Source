@@ -43,14 +43,15 @@ namespace COTG
                 (byte)t.LerpSqrt((float)c0.B, (float)c1.B).RoundToInt());
         }
         public static bool IsZero(this DateTimeOffset c) => c == dateTimeZero;
-        public static void AddIfAbsent<T>(this List<T> l, T a) where T: IEquatable<T>
+        public static bool AddIfAbsent<T>(this List<T> l, T a) where T: IEquatable<T>
         {
             foreach(var i in l)
             {
                 if (i.Equals( a) )
-                    return;
+                    return false;
             }
             l.Add(a);
+            return true;
         }
         public static T[] ArrayAppend<T>(this T[] l, T a)
         {

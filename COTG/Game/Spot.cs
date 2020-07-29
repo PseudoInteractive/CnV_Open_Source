@@ -18,6 +18,7 @@ using COTG.Views;
 using static COTG.Debug;
 using System.ComponentModel;
 using System.Diagnostics;
+using Windows.UI.Xaml;
 
 namespace COTG.Game
 {
@@ -108,14 +109,14 @@ namespace COTG.Game
             var physicalPoint = e.GetCurrentPoint(grid);
             var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
             var cell = grid.HitTestService.CellInfoFromPoint(point);
-            var row = grid.HitTestService.RowItemFromPoint(point);
-            if(cell?.Item != row )
-            {
-                Note.Show($"{cell} {row} {cell?.Column}");
+            //var row = grid.HitTestService.RowItemFromPoint(point);
+            //if(cell?.Item != row )
+            //{
+            //    Note.Show($"{cell} {row} {cell?.Column}");
 
-            }
+            //}
 
-            var spot = (cell?.Item as Spot);
+            var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
             viewHover = spot != null ? spot.cid : 0;
             uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             

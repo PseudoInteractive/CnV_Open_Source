@@ -16451,7 +16451,7 @@ var cotgsubscribe = amplify;
         .val() < 0) $(_s(787) + m6Z)
         .val(0);
     }
-    gspotfunct["chcity"] = function(F9V) { R2(F9V); };
+      gspotfunct["chcity"] = function (F9V) { R2(F9V); DoPoll2(300); };
     gspotfunct.infoPlay = function(q9V) {
       E6k.y6();
       Z5F(q9V);

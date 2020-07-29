@@ -154,7 +154,12 @@
                     <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator     Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
-
+                    <winui:TeachingTip x:Name="RefreshTip" IsLightDismissEnabled="True" ShouldConstrainToRootBounds="False"
+            Title="Refresh"
+                                       
+            Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
+                        
+                    </winui:TeachingTip>
                 </AppBarButton>
                 <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"

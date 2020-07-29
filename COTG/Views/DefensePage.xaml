@@ -144,7 +144,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <telerikGrid:RadDataGrid x:Name="historyGrid"
-                        GridLinesThickness="0.75"
+
+                        GridLinesThickness="1.0"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

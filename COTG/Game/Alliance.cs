@@ -115,60 +115,65 @@ namespace COTG.Game
             using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
             {
                 var r = jso.RootElement;
-                var prop2 = r.GetProperty("1");
-                foreach (var alliance in prop2.EnumerateArray())
+                if (r.TryGetProperty("1", out var prop2))
                 {
-                    var alName = alliance.GetAsString("1");
-                 //   var al = alName == my.name ? my : new Alliance() { name = alName };
-                    // Log(alName);
-                    alliances.Add(alName);
+                    foreach (var alliance in prop2.EnumerateArray())
+                    {
+                        var alName = alliance.GetAsString("1");
+                        //   var al = alName == my.name ? my : new Alliance() { name = alName };
+                        // Log(alName);
+                        alliances.Add(alName);
+                    }
                 }
             }
 
             foreach (var _al in alliances)
             {
                 var alName = _al;
-//                var al = _al;
+                //                var al = _al;
                 using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
                 {
                     var id = jsa.RootElement.GetAsInt("id");
-                    if(all.TryGetValue(id,out var al)==false)
+                    if (all.TryGetValue(id, out var al) == false)
                     {
                         al = new Alliance() { id = id, name = alName };
-                        all.Add(id,al);
+                        all.Add(id, al);
                         nameToId.Add(alName, id);
 
                     }
 
-                        
-                  //  _all.Add(id, al);
-                  //  _nameToId.Add(alName, id);
+
+                    //  _all.Add(id, al);
+                    //  _nameToId.Add(alName, id);
                     int counter = 0;
-                    foreach (var me in jsa.RootElement.GetProperty("me").EnumerateArray())
+                    if (jsa.RootElement.TryGetProperty("me", out var meList))
                     {
-                        var meName = me.GetString("n");
-                        if (meName == null)
+                        foreach (var me in meList.EnumerateArray())
                         {
-                            //Log("Missing name? " + counter);
-                            //foreach (var member in me.EnumerateObject())
-                            //{
-                            //    Log($"{member.Name}:{member.Value.ToString()}");
-                            //}
-                        }
-                        else if (Player.nameToId.TryGetValue(meName, out var pId))
-                        {
-                            ++counter;
-                            var p = Player.all[pId];
-                            p.alliance = (ushort)id;
-                            p.cities = (byte)me.GetInt("c");
-                            p.pointsH = (ushort)(me.GetInt("s") / 100);
+                            var meName = me.GetString("n");
+                            if (meName == null)
+                            {
+                                //Log("Missing name? " + counter);
+                                //foreach (var member in me.EnumerateObject())
+                                //{
+                                //    Log($"{member.Name}:{member.Value.ToString()}");
+                                //}
+                            }
+                            else if (Player.nameToId.TryGetValue(meName, out var pId))
+                            {
+                                ++counter;
+                                var p = Player.all[pId];
+                                p.alliance = (ushort)id;
+                                p.cities = (byte)me.GetInt("c");
+                                p.pointsH = (ushort)(me.GetInt("s") / 100);
+
+                            }
+                            else
+                            {
+                                Log("Error: " + meName);
+                            }
 
                         }
-                        else
-                        {
-                            Log("Error: " + meName);
-                        }
-
                     }
                 }
             }
