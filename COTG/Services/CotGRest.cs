@@ -261,9 +261,11 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
-        public GetCity(int _cid) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
+        Action<JsonElement,City> action;
+        public GetCity(int _cid, Action<JsonElement, City> _action=null) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
         {
             cid = _cid;
+            action = _action;
         }
         public override string GetPostContent()
         {
@@ -277,12 +279,14 @@ namespace COTG.Services
            // var cid = json.RootElement.GetAsInt("cid");
          //   Log("Got JS " + cid);
              var city=City.allCities.GetOrAdd(cid,City.Factory);
-            city.LoadFromJson(json.RootElement);
-
+            var root = json.RootElement;
+            city.LoadFromJson(root);
+            if (action != null)
+                action(root, city);
         }
-        public static  Task Post(int _cid)
+        public static  Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
-            return (new GetCity(_cid)).Post();
+            return (new GetCity(_cid,_action)).Post();
 
         }
 

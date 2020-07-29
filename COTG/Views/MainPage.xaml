@@ -163,11 +163,12 @@ TextSubmitted="RaidCarrySubmitted"
                                 CloseButtonClick="TipRaiding101_ActionButtonClick"
                                CloseButtonContent="Got It"
                            PreferredPlacement="LeftTop"
-                                Subtitle="To start with, see which cities have available troops by clicking on the 'tsHome' column header which will order the cities by troop count">
+                                Subtitle="See which cities have available troops by clicking on the 'tsHome' column header">
                 <TextBlock  TextWrapping="Wrap">
-                Tip:Click the column twice to sort in descending order<LineBreak/>
-                Select the city for which you want to set raids..
-            </TextBlock>
+                This will sort your cities by their TS at home<LineBreak/>
+                Select the city for which you want to set raids<LineBreak/>
+                Note: Click the column twice to sort in descending order<LineBreak/>
+                </TextBlock>
         </winui:TeachingTip>
             
             <winui:TeachingTip x:Name="TipRaiding102"
@@ -175,10 +176,13 @@ TextSubmitted="RaidCarrySubmitted"
                                CloseButtonContent="Success"
                             PreferredPlacement="LeftTop"
                                 Target="{x:Bind dungeonGrid}"
-                                Subtitle="Select a dungeon that you would like to send raids to and click on it.">
+                                Subtitle="Click on a dungeon that you would like to send raids to">
             <TextBlock  TextWrapping="Wrap">                    
-                Tip: You usualy want to select a dungeon of the right type:  mountain for infantry, hills for magic, or forests for cavalry.<LineBreak/>
-                Tip: Clicking on the coordinates will show you the dungeon, clicking anywhere else will send raids<LineBreak/>
+                    <LineBreak/>You often want to select a dungeon appropriate for your troop type:
+                    <LineBreak/>    -   Mountain for Infantry
+                    <LineBreak/>    -   Hills for Magic
+                    <LineBreak/>    -   Forests for Cavalry
+                <LineBreak/>Clicking on the coordinates will show you the dungeon, clicking anywhere else will send raids
             </TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding201"
@@ -188,12 +192,14 @@ TextSubmitted="RaidCarrySubmitted"
                                CloseButtonContent="Thank You"
                            PreferredPlacement="Left" >
             <TextBlock TextWrapping="Wrap">
-                    The 'raidReturn' column tells you when (in minutes) the city raiders will reach their current destination.<LineBreak/>
-                    If the number is postive, they are returning, if negative, they are on their way to the dungeon<LineBreak/>
-                    If you right-click on a city, you can bring the raiders home using 'Home Please' or 'Home Whenever'
-                    If raiders are returning from a dungeon, 'Home Please' and 'Home Whenever' are the same.<LineBreak/>
-                    If the raiders are on their way to a dungeon, 'Home Please' will tell them to come home immediately, without loot.<LineBreak/>
-                    'Home Whenever' will tell them to complete the current raid, bring home the loot and then wait at home, watching TV and eating pizza until you order them out.</TextBlock>
+                    <LineBreak/>The 'raidReturn' column tells you when (in minutes) the city raiders will reach their current destination.
+                    <LineBreak/>    -   If the number is positive, they are returning
+                    <LineBreak/>    -   If negative, they are on their way to the dungeon
+                    <LineBreak/>    -   999 means that there are no raids 
+                    <LineBreak/>If you right-click on a city, you will see the commands 'Home Please' and 'Home Whenever'
+                    <LineBreak/>    -   If raiders are returning from a dungeon, 'Home Please' and 'Home Whenever' are the same.
+                    <LineBreak/>    -   If the raiders are on their way to a dungeon, 'Home Please' will tell them to come home immediately, without loot.
+                    <LineBreak/>    -   'Home Whenever' will tell them to complete the current raid, bring home the loot and then wait at home, watching TV and eating pizza until you order them out.</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding202"
                                 Title="Shortcuts Please, Whenever"
@@ -203,8 +209,9 @@ TextSubmitted="RaidCarrySubmitted"
                            PreferredPlacement="Left" >
             <TextBlock TextWrapping="Wrap">
                      Clicking on the "Raid Return" cell of city is a shortcut for issuing the 'Home Please' context action<LineBreak/>
-                     Clicking on the "Carry Capacity" cell of city is a shortcut for issuing the 'Home Whevener' context action<LineBreak/>
-                     If the "Raid Return" time is small and negative, it means that the raiders just left home, if you ask them to "Return Please" they might just teleport home instantly for you through various small temporary personal portals</TextBlock>
+                     Clicking on the "Carry Capacity" cell of city is a shortcut for issuing the 'Home Whenever' context action<LineBreak/>
+                     If the "Raid Return" is negative and close to 0, the raiders just left<LineBreak/>
+                    If you ask them to "Return Please" they might teleport home instantly for you through various small temporary personal portals</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding203"
                                 Title="Multiple Selection"
@@ -214,9 +221,14 @@ TextSubmitted="RaidCarrySubmitted"
             <TextBlock  TextWrapping="Wrap">
                      You can select multiple cities to issue commands to all selected<LineBreak/>
                      Use ctrl-click, shift-click, ctrl-a or arrows and the spacebar to select cities<LineBreak/>
-                     When not pressing shift or control, be careful where you click.  Some cells might issue commands.<LineBreak/>It is usually safest to click on the city name if you want to reduce unexpected actions<LineBreak/>Alternatively, over-zealous use of the control key can help as nothing <Italic>should</Italic> happen other than selection when shift or control are pressed<LineBreak/>
-                    Example:  Select a citylist in the box at the top of the cities grid, give the grid keyboard focus (tap on a city name) and press ctrl-a to select all.<LineBreak/>
-                      Right click on a city and issue "Return Whenever"</TextBlock>
+                     When not pressing shift or control, be careful where you click.
+                <LineBreak/>    -   Some cells might issue commands
+                <LineBreak/>    -   It is usually safest to click on the city name to minimize unexpected actions
+                <LineBreak/>    -   Enthusiastic use of the control key can help as nothing <Italic>should</Italic> happen other than selection when shift or control are pressed
+                <LineBreak/>    -   Example:  Select a citylist in the box at the top of the cities grid
+                <LineBreak/>        -   Give the city grid keyboard focus (tap on a city name)
+                <LineBreak/>        -   Press ctrl-a to select all
+                <LineBreak/>        -   Right click on a city and issue 'Return Whenever'</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding301"
                                 Title="Carry Capacity"
@@ -226,13 +238,18 @@ TextSubmitted="RaidCarrySubmitted"
             <TextBlock TextWrapping="Wrap">
                 Carry capacities below ~70 result in more raiding losses and raiding capacities above 100 provide less income.<LineBreak/>
                 As dungeons progress, their availalbe loot per raid goes up, and so does the number of monsters encountered per raid.<LineBreak/>
-                A common approach for minimizing raiding losses while maximizing returns is to start raids at around 115% carry capactiy, and reset them when they drop below 70%.<LineBreak/>
-                Here are some tips to help with this sort of raiding:<LineBreak/>
-                Set the target carry capacity to 115%<LineBreak/>                
-                When you are feeling enthusiastic, sort all raids by carry capacity, select all below 70 and bring them home.<LineBreak/>
-                If you don't have that much time to wait around, use "Home Please" to return them faster.<LineBreak/>
-                If you are doing other things anyway, use "Home Whenever" to encourage raiders to complete thier raids before returning<LineBreak/> 
-                
+                An approach to balance raiding losses vs returns is to start raids at around 115% carry capactiy, and reset them when they drop below 70%.<LineBreak/>
+                Example:
+                <LineBreak/>    -   Set the target carry capacity to 115%                
+                <LineBreak/>    -   During a moment of enthusiasm
+                <LineBreak/>        -   Sort all raids by carry capacity
+                <LineBreak/>        -   select all below 70 and bring them home
+                <LineBreak/>You have to got out in 30 minutes
+                <LineBreak/>    -   Return all cities with "Raid Return" in the range of -20 .. 30
+                <LineBreak/>    -   Use "Home Please" to return raids that:
+                <LineBreak/>        -  Have started within the last 20 minutes, or
+                <LineBreak/>        -  Will return within the next 30 minutes
+                <LineBreak/>Alternatively, use "Home Whenever" to encourage raiders to complete thier raids before returning
 </TextBlock>
         </winui:TeachingTip>
     </Grid>

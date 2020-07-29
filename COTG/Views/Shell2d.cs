@@ -266,7 +266,7 @@ namespace COTG.Views
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
 
-            if (!(IsWorldView() || IsRegionView()))
+            if (!(IsWorldView() ))
                 return;
 
 
@@ -715,10 +715,7 @@ namespace COTG.Views
 		{
 			return JSClient.IsWorldView();
 		}
-        private static bool IsRegionView()
-        {
-            return JSClient.IsRegionView();
-        }
+   
         private static bool IsCityView()
         {
             return JSClient.IsCityView();

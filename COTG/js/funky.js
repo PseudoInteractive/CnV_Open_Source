@@ -8934,6 +8934,7 @@ i011.J0EE = J0EE;
 w5SS(K5SS());
 let lastOGACount = 0;
 let lastCid = 0;
+var C0q = [];
 i011.J55 = function () {
     var Q55 = 2;
     for (; Q55 !== 1;) {
@@ -8950,7 +8951,7 @@ i011.J55 = function () {
                                         for (; q55 !== 13;) {
                                             switch (q55) {
                                                 case 2:
-                                                    var C0q = [];
+                                                    C0q = [];
                                                     q55 = 1;
                                                     break;
                                                 case 1:
@@ -14910,20 +14911,20 @@ var cotgsubscribe = amplify;
             e5F(a6g);
             H4F(E6g, k2g, 1);
         }
-        if (typeof document.hidden !== _s(h2R | 2176)) {
+        if (typeof document.hidden !== "undefined") {
             e0F = _s(+X2R);
             k7F = _s(6806);
         }
-        else if (typeof document.mozHidden !== _s(h2R >> 134269152)) {
+        else if (typeof document.mozHidden !== "undefined") {
             e0F = _s('5531' | 5384);
             k7F = _s(1285);
         }
-        else if (typeof document.msHidden !== _s(+h2R)) {
+        else if (typeof document.msHidden !== "undefined") {
             e0F = _s("2911" &
                 2147483647);
             k7F = _s(3198);
         }
-        else if (typeof document.webkitHidden !== _s(+h2R)) {
+        else if (typeof document.webkitHidden !== "undefined") {
             e0F = _s("3035" >>
                 1935916608);
             k7F = _s(2122);
@@ -18799,7 +18800,7 @@ var cotgsubscribe = amplify;
             }
         }
         function F0F(R0g) {
-            if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(g5R * 1) || R0g == null || R0g == _s(+h2R) || R0g == undefined)
+            if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(g5R * 1) || R0g == null || R0g == "undefined" || R0g == undefined)
                 R0g = ppdt[_s(+x9y)][0][1];
             if (isNaN(R0g))
                 R0g = Number(ppdt[_s(+x9y)][0][1]);
@@ -20517,7 +20518,7 @@ var cotgsubscribe = amplify;
             return y6v;
         };
         function z1F(Z9g, K9g) {
-            if (typeof K9g === _s(h2R - 0))
+            if (typeof K9g === "undefined")
                 K9g = D6[_s(N1R << 1758947296)][Number(Z9g)][_s(+i1R)];
             var g9g = Y8(K9g) - 443;
             var n9g = g9g % (4);
@@ -21587,8 +21588,7 @@ var cotgsubscribe = amplify;
             ], [+"0x40", +V9p, +V9p, V9p - 0], [+g1p, +V9p, V9p * 1, +V9p], [
                 "0x1b" * 1, +V9p, +V9p, V9p - 0
             ], [+'0x36', +V9p, +V9p, V9p >> 6381408]];
-        if (typeof module != _s(h2R *
-            1) && module.exports)
+        if (typeof module != "undefined" && module.exports)
             module.exports = a6;
         function X2F(T0Z) {
             $(_s(+m7y) + T0Z)
@@ -21808,9 +21808,9 @@ var cotgsubscribe = amplify;
             V2v = V2v.utf8Decode();
             return V2v;
         };
-        if (typeof String.prototype.utf8Encode == _s(h2R << 1513184672))
+        if (typeof String.prototype.utf8Encode == "undefined")
             String.prototype.utf8Encode = function () { E6k.R6(); return unescape(encodeURIComponent(this)); };
-        if (typeof String.prototype.utf8Decode == _s(h2R << 2061309088))
+        if (typeof String.prototype.utf8Decode == "undefined")
             String.prototype.utf8Decode = function () {
                 E6k
                     .R6();
@@ -21989,10 +21989,10 @@ var cotgsubscribe = amplify;
                 .html(S4g);
         }
         function l7V() { E6k.y6(); }
-        if (typeof String.prototype.base64Encode == _s(+h2R))
+        if (typeof String.prototype.base64Encode == "undefined")
             String.prototype
                 .base64Encode = function () {
-                if (typeof btoa != _s(+h2R))
+                if (typeof btoa != "undefined")
                     return btoa(this);
                 if (typeof Buffer != _s(+h2R))
                     return new Buffer(this, _s(5503))
@@ -22064,13 +22064,12 @@ var cotgsubscribe = amplify;
             return O4F(d0U)
                 .pop();
         }
-        if (typeof String.prototype.base64Decode == _s(h2R << 2140990016))
+        if (typeof String.prototype.base64Decode == "undefined")
             String.prototype
                 .base64Decode = function () {
-                if (typeof atob != _s(h2R ^ 0))
+                if (typeof atob != "undefined")
                     return atob(this);
-                if (typeof Buffer != E6k
-                    .o55(h2R >> 1492823776))
+                if (typeof Buffer != _s(h2R >> 1492823776))
                     return new Buffer(this, _s(1523))
                         .toString(_s(5503));
                 throw new Error(_s(2559));
@@ -22158,7 +22157,7 @@ var cotgsubscribe = amplify;
                     G0F();
                 }, '500' | 96);
         }
-        if (typeof module != _s(+h2R) && module.exports)
+        if (typeof module != "undefined" && module.exports)
             module.exports = a6.ccazzx;
         function I7F(i56) {
             E6k.R6();
@@ -34718,7 +34717,7 @@ var cotgsubscribe = amplify;
             });
         }
         function n9(H71) {
-            if (H71 != _s(+h2R) && H71 != undefined && H71 != _s(579) && H71 != null && H71 !=
+            if (H71 != "undefined" && H71 != undefined && H71 != _s(579) && H71 != null && H71 !=
                 _s(+g5R))
                 return 1;
             else
@@ -39538,7 +39537,7 @@ var cotgsubscribe = amplify;
                             r4n._content_set(A4n);
                         var n4n = r4n.options.functionInit.call(r4n.$el, r4n.$el, r4n
                             .Content);
-                        if (typeof n4n !== _s(+h2R))
+                        if (typeof n4n !== "undefined")
                             r4n._content_set(n4n);
                         r4n.$el.removeAttr(_s("5983" | 5385))
                             .addClass(_s(+W6t));
@@ -39768,7 +39767,7 @@ var cotgsubscribe = amplify;
                     return this;
                 },
                 content: function (W3n) {
-                    if (typeof W3n === _s(+h2R))
+                    if (typeof W3n === "undefined")
                         return this.Content;
                     else {
                         this._update(W3n);
@@ -39778,7 +39777,7 @@ var cotgsubscribe = amplify;
                 enable: function () { this.enabled = !![]; return this; },
                 option: function (S1n, J1n) {
                     E6k.y6();
-                    if (typeof J1n == _s(h2R & 2147483647))
+                    if (typeof J1n == "undefined")
                         return this.options[S1n];
                     else {
                         this.options[S1n] = J1n;
@@ -40047,7 +40046,7 @@ var cotgsubscribe = amplify;
                     return V1n !== _s(+'1802') ? V1n : this;
                 }
                 else {
-                    var A1n = [], n1n = h1n[0] && typeof h1n[0].multiple !== _s(+h2R), f1n = n1n && h1n[0].multiple || !n1n && H4n.multiple;
+                    var A1n = [], n1n = h1n[0] && typeof h1n[0].multiple !== "undefined", f1n = n1n && h1n[0].multiple || !n1n && H4n.multiple;
                     this.each(function () {
                         var y1n = !!0, B1n = k4n(this)
                             .data(_s(+Q6t)), R1n = null;
@@ -40081,7 +40080,7 @@ var cotgsubscribe = amplify;
                 var O4n = !!"1";
                 k4n.each(t4n, function (L4n, X4n) {
                     E6k.R6();
-                    if (typeof o4n[L4n] === _s(+h2R) || t4n[L4n] !== o4n[L4n]) {
+                    if (typeof o4n[L4n] === "undefined" || t4n[L4n] !== o4n[L4n]) {
                         O4n = !{};
                         return ![];
                     }
@@ -42889,7 +42888,7 @@ var cotgsubscribe = amplify;
                     .html(X2U);
             }
             E6k.R6();
-            if (J2U != undefined && J2U != _s(h2R ^ 0) && J2U != "") {
+            if (J2U != undefined && J2U != "undefined" && J2U != "") {
                 var A2U = "";
                 var n2U = '';
                 var f2U = "";
@@ -46328,10 +46327,10 @@ var cotgsubscribe = amplify;
                     .css("display");
                 $(_s(k04 ^ 0))
                     .show();
-                if (l6U == (0) || l6U == undefined || l6U == _s(h2R - 0))
+                if (l6U == (0) || l6U == undefined || l6U == "undefined")
                     l6U = D6.bd[Number(V6U)]
                         .bid;
-                if (l6U == 0 || l6U == undefined || l6U == _s(h2R >> 1675566912))
+                if (l6U == 0 || l6U == undefined || l6U == "undefined")
                     for (var Q6U = 0; Q6U < D6.bq.length; Q6U++) {
                         var j2U = D6.bq[Q6U][_s(+m54)];
                         if (j2U == L6U) {
@@ -47344,7 +47343,7 @@ var cotgsubscribe = amplify;
             }
         }
         function E5V(n19) {
-            if (n19 === null || typeof n19 === _s(h2R >> 1744790048))
+            if (n19 === null || typeof n19 === "undefined")
                 return '';
             var S19 = n19 + '';
             var V19 = '', J19, b19, r19 = 0;
@@ -59370,7 +59369,7 @@ var cotgsubscribe = amplify;
                 var m2g = 0;
                 if (m2g == 0 || m2g == undefined || m2g == _s(+h2R))
                     m2g = D6.bd[Number(E2g)].bid;
-                if (m2g == 0 || m2g == undefined || m2g == _s(+h2R))
+                if (m2g == 0 || m2g == undefined || m2g == "undefined")
                     for (var a2g = 0; a2g < D6.bq.length; a2g++) {
                         var k8g = D6.bq[a2g][_s(m54 & 2147483647)];
                         if (k8g == E2g)
@@ -59445,7 +59444,7 @@ var cotgsubscribe = amplify;
                     .S55(h2R >> 1320820960))
                     T8g = D6.bd[Number(O8g)].bid;
                 if (T8g == (0) || T8g == undefined ||
-                    T8g == _s(+h2R))
+                    T8g == "undefined")
                     for (var x8g = 0; x8g < D6.bq.length; x8g++) {
                         var t8g = D6.bq[x8g][_s(+m54)];
                         if (t8g == O8g)
@@ -59966,7 +59965,7 @@ var cotgsubscribe = amplify;
             }
         });
         function K6F(G71) {
-            if (G71 != "") {
+            if (G71.length > 1) {
                 var j71 = JSON.parse(G71);
                 __c.j71 = j71;
                 if (j71.hasOwnProperty("city")) {
@@ -59977,7 +59976,7 @@ var cotgsubscribe = amplify;
                     if (j71["resregion"] == 1)
                         n2F();
                 var w71 = j71["player"];
-                if (w71 != "" && w71 != _s(h2R & 2147483647) && w71 != undefined)
+                if (w71 != "" && w71 != "undefined" && w71 != undefined)
                     u7V(w71);
                 Q1F = j71[_s(6286)];
                 if (!(Q1F == 1)) {
@@ -61912,7 +61911,7 @@ var cotgsubscribe = amplify;
                     .css("display");
                 var v2g = D6.bd[d2].bid;
                 if (v2g == (0) || v2g == undefined || v2g ==
-                    _s(+h2R))
+                    "undefined")
                     for (var l2g = 0; l2g < D6.bq.length; l2g++)
                         if (D6.bq[l2g])
                             if (D6.bq[l2g][_s(+m54)]) {
@@ -71816,7 +71815,7 @@ var cotgsubscribe = amplify;
         $(document)
             .ready(function () {
             E6k.y6();
-            if (typeof godmode !== _s(h2R ^ 0))
+            if (typeof godmode !== "undefined")
                 $(_s(5354))
                     .click(function () {
                     if ($(_s(4206))
@@ -72056,7 +72055,7 @@ var cotgsubscribe = amplify;
                     E6k.R6();
                     if (b2i.state = b2i.ctx ? b2i.ctx.state || _s(p3k << 562886272) : _s(p3k <<
                         1788257056), b2i._autoSuspend(), !b2i.usingWebAudio)
-                        if (_s(+h2R) != typeof Audio)
+                        if ("undefined" != typeof Audio)
                             try {
                                 var S2i = new Audio();
                                 void (0) === S2i.oncanplaythrough && (b2i._canPlayEvent = _s("2307" |
@@ -72123,7 +72122,7 @@ var cotgsubscribe = amplify;
                 init: function () {
                     var l2i = this || E6i;
                     return l2i._counter = I3k * 1, l2i
-                        ._codecs = {}, l2i._howls = [], l2i._muted = !"1", l2i._volume = 1, l2i._canPlayEvent = _s(+'5825'), l2i._navigator = _s(+h2R) != typeof window && window.navigator ? window.navigator :
+                        ._codecs = {}, l2i._howls = [], l2i._muted = !"1", l2i._volume = 1, l2i._canPlayEvent = _s(+'5825'), l2i._navigator = "undefined" != typeof window && window.navigator ? window.navigator :
                         null, l2i.masterGain = null, l2i.noAudio = !1, l2i.usingWebAudio = !![], l2i.autoSuspend = !0, l2i
                         .ctx = null, l2i.mobileAutoEnable = !"", l2i._setup(), l2i;
                 },
@@ -72178,7 +72177,7 @@ var cotgsubscribe = amplify;
                     var z3k = /^no$/;
                     var r2i = this || E6i, V2i = null;
                     try {
-                        V2i = _s(+h2R) != typeof Audio ? new Audio() : null;
+                        V2i = "undefined" != typeof Audio ? new Audio() : null;
                     }
                     catch (K2i) {
                         return r2i;
@@ -72642,7 +72641,7 @@ var cotgsubscribe = amplify;
                             j8i.playbackRate = u8i._rate;
                             try {
                                 var G8i = j8i.play();
-                                if (G8i && _s(+h2R) !=
+                                if (G8i && "undefined" !=
                                     typeof Promise && (G8i instanceof Promise || _s(+n9p) == typeof G8i.then) ? (H8i
                                     ._playLock = !"", G8i.then(function () {
                                     H8i._playLock = !{};
@@ -72956,7 +72955,7 @@ var cotgsubscribe = amplify;
                     Z5c && n5c._sounds.length > 0 ? (k2i[n5c._src] = Z5c, w2i(n5c, Z5c)) : f5c();
                 };
                 E6k.R6();
-                _s(h2R | 3200) != typeof Promise && (1) === E6i.ctx.decodeAudioData.length ? E6i.ctx
+                "undefined" != typeof Promise && (1) === E6i.ctx.decodeAudioData.length ? E6i.ctx
                     .decodeAudioData(g5c)
                     .then(K5c)
                     .catch(f5c) : E6i.ctx.decodeAudioData(g5c, K5c, f5c);
@@ -72969,7 +72968,7 @@ var cotgsubscribe = amplify;
                     ._loadQueue());
             }, u2i = function () {
                 try {
-                    _s(h2R * 1) != typeof AudioContext ? E6i.ctx = new AudioContext() : _s(+h2R) != typeof webkitAudioContext ? E6i.ctx = new webkitAudioContext() : E6i
+                    "undefined" != typeof AudioContext ? E6i.ctx = new AudioContext() : _s(+h2R) != typeof webkitAudioContext ? E6i.ctx = new webkitAudioContext() : E6i
                         .usingWebAudio = ![];
                 }
                 catch (p5c) {
@@ -72994,9 +72993,9 @@ var cotgsubscribe = amplify;
                     Howler: E6i
                 };
             });
-            _s(h2R ^ 0) != typeof exports && (exports.Howler = E6i, exports.Howl = e2i);
-            _s(h2R | 132) != typeof window ? (window.HowlerGlobal = H2i, window.Howler = E6i, window.Howl = e2i, window
-                .Sound = s2i) : _s(+h2R) != typeof global && (global.HowlerGlobal = H2i, global.Howler = E6i, global
+            "undefined" != typeof exports && (exports.Howler = E6i, exports.Howl = e2i);
+            "undefined" != typeof window ? (window.HowlerGlobal = H2i, window.Howler = E6i, window.Howl = e2i, window
+                .Sound = s2i) : "undefined" != typeof global && (global.HowlerGlobal = H2i, global.Howler = E6i, global
                 .Howl = e2i, global.Sound = s2i);
         }();
         function Z8() {

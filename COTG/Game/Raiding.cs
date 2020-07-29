@@ -213,7 +213,7 @@ namespace COTG.Game
             }
             Note.Show($"Issued Home Whenever on {counter} cities");
             ShellPage.ShowTipRefresh();
-
+            UpdateTSHome();
         }
         public static async void ReturnFastBatch(IEnumerable<int> cids)
         {
@@ -228,6 +228,8 @@ namespace COTG.Game
             }
             Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
+            await Task.Delay(500);
+            UpdateTSHome();
         }
     }
 }

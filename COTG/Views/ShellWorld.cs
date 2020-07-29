@@ -84,20 +84,7 @@ namespace COTG.Views
                 //else
                 if(buttons.HasFlag( MouseButtons.left ) )
                 {
-                    if (cid == City.build.cid && cid == City.focus.cid && JSClient.IsWorldView())
-                    {
-                        JSClient.ChangeView(true); // to city view
-
-                    }
-                    else if (cid == City.focus.cid && cid != City.build.cid)
-                    {
-                        JSClient.ChangeCity(cid);
-
-                    }
-                    else
-                    {
-                        JSClient.ShowCity(cid, true);
-                    }
+                    Spot.ProcessCoordClick(cid, true);
                     e.Handled = true;
                 }
                 else if(buttons.HasFlag(MouseButtons.right) )

@@ -50,7 +50,6 @@ namespace COTG
         public static ViewMode viewMode;
         public static bool IsWorldView()	=> viewMode == ViewMode.world;
         public static bool IsCityView() => viewMode == ViewMode.city;
-        public static bool IsRegionView() => viewMode == ViewMode.region;
 
         public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
@@ -281,7 +280,8 @@ namespace COTG
             {
                 if (City.IsMine(cityId))
                 {
-                        City.SetFocus(cityId, false, true, false);
+                    SetViewModeCity();
+                    City.SetFocus(cityId, false, true, false);
 
                     view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
                 }
@@ -324,6 +324,10 @@ namespace COTG
         {
             try
             {
+                if (cityView)
+                    SetViewModeCity();
+                else
+                    SetViewModeWorld();
                 view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" });
              
             }
@@ -408,13 +412,14 @@ namespace COTG
         {
 			try
 			{
+                SetViewModeWorld();
                 if (City.IsMine(cityId))
                 {
                     City.SetFocus(cityId, false, true, false);
                 }
 
-                if (JSClient.IsWorldView())
-                    cityId.BringCidIntoWorldView(lazyMove);
+                // if (JSClient.IsWorldView())
+                cityId.BringCidIntoWorldView(lazyMove);
 
                     view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
        //             if( City.IsMine(cityId)  )
@@ -932,27 +937,8 @@ namespace COTG
                                     City.build = City.GetOrAddCity(cid);
                                     var popupCount = jso.GetAsInt("p");
                                     //     Note.L("cid=" + cid.CidToString());
-                                    var priorView = viewMode;
-                                    viewMode = (ViewMode)jso.GetInt("v");
-                                    if (priorView != viewMode)
-                                    {
-                                        var isWorld = IsWorldView();
-                                        App.DispatchOnUIThreadLow(() =>
-                                       {
-                                           ShellPage.canvas.IsHitTestVisible = isWorld;
+                                    SetViewMode((ViewMode)jso.GetInt("v"));
 
-                                       });
-                                    }
-                                    if (priorView != ViewMode.world || viewMode != ViewMode.world)
-                                    {
-                                        //                                    ShellPage.cameraZoom = jso.GetAsFloat("z");
-                                        //                                    ShellPage.cameraC = (new Vector2(jso.GetAsFloat("x"), jso.GetAsFloat("y")) - ShellPage.halfSpan - ShellPage.clientC) / ShellPage.cameraZoom;
-                                        //                                    ShellPage.cameraC.Y = jso.GetAsFloat("y") / ShellPage.cameraZoom;
-
-                                        //   ChatTab.L(ShellPage.cameraC.ToString() + " s:" + ShellPage.cameraZoom + " v:" + viewMode);
-                                        // if((viewMode & ViewMode.region)!=0)
-                                        //   ShellPage.canvas?.Invalidate();
-                                    }
                                     ShellPage.NotifyCotgPopup(popupCount);
                                     //                                ShellPage.SetCanvasVisibility(noPopup);
                                     break;
@@ -1010,9 +996,24 @@ namespace COTG
             });
         }
 
-       
+        public static void SetViewMode(ViewMode _viewMode)
+        {
+            var priorView = viewMode;
+            viewMode = _viewMode;
+            if (priorView != viewMode)
+            {
+                var isWorld = IsWorldView();
+                App.DispatchOnUIThreadLow(() =>
+                {
+                    ShellPage.canvas.IsHitTestVisible = isWorld;
 
-       
+                });
+            }
+        }
+
+        public static void SetViewModeCity() => SetViewMode(ViewMode.city);
+        public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
+
 
         static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
         {

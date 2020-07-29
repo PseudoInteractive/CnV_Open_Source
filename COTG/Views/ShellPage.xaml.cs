@@ -495,22 +495,17 @@ namespace COTG.Views
             {
                 if (City.build == null)
                     return;
-                await GetCity.Post(City.build.cid);
+                Assert(false);
+                await GetCity.Post(City.build.cid, (jse, city) =>
+                {
 
-                // This should not happen
-                var jse = City.build.jsE;
-                if (!jse.IsValid())
-                {
-                    return;
-                }
-                Log("Show Buildings");
-                List<BuildingCount> bd = new List<BuildingCount>();
-                int bCount = 0;
-                var bdd = new Dictionary<string, int>();
-                
-                if (jse.TryGetProperty("bd", out var eBd))
-                {
-                    foreach (var bdi in eBd.EnumerateArray())
+                    List<BuildingCount> bd = new List<BuildingCount>();
+                    int bCount = 0;
+                    var bdd = new Dictionary<string, int>();
+
+                    if (jse.TryGetProperty("bd", out var eBd))
+                    {
+                        foreach (var bdi in eBd.EnumerateArray())
                         {
                             var bid = bdi.GetAsInt("bid");
                             if (bid == bidTownHall)
@@ -528,51 +523,54 @@ namespace COTG.Views
                             bdd[s] = counter + 1;
                             ++bCount;
                         }
-                }
-                foreach (var i in bdd)
-                {
-                    bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
-                }
-                bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("townhall.png") });
+                    }
+                    foreach (var i in bdd)
+                    {
+                        bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
+                    }
+                    bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("townhall.png") });
 
-                //         
+                    //         
 
+                    flyoutCreatedTime = DateTimeOffset.Now;
 
-                var button = sender as Button;
-                // button.Focus(FocusState.Programmatic);
+                    //                    var button = sender as Button;
+                    // button.Focus(FocusState.Programmatic);
+                    App.DispatchOnUIThread(() =>
+                    {
+                        buildingList.Width = Double.NaN;
+                        buildingList.Height = Double.NaN;
+                        buildingList.ItemsSource = bd;
+                        buildingList.UpdateLayout();
+                    });
+                });
+                    //   var flyout = FlyoutBase.GetAttachedFlyout(button);
+                    //  flyout.OverlayInputPassThroughElement = shellPage;
+                    //    flyout.XamlRoot = shellFrame.XamlRoot;
+                    //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
+                    //  Log($"{button.Tr.ToString()}");
+                    //  var c = button.CenterPoint;
+                    //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
+                    //  flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
 
-                buildingList.Width = Double.NaN;
-                buildingList.Height = Double.NaN;
-                buildingList.ItemsSource = bd;
-                buildingList.UpdateLayout();
-                flyoutCreatedTime = DateTimeOffset.Now;
-             //   var flyout = FlyoutBase.GetAttachedFlyout(button);
-                //  flyout.OverlayInputPassThroughElement = shellPage;
-                //    flyout.XamlRoot = shellFrame.XamlRoot;
-                //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
-                //  Log($"{button.Tr.ToString()}");
-              //  var c = button.CenterPoint;
-                //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
-              //  flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
+                    //           buildingList.Focus(FocusState.Programmatic);
+                    //            buildingList.CapturePointer(e.Pointer);
+                    //   buildingList.Focus(FocusState.Programmatic);
+                    //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
+                    //  buildingList.DesiredSize
+                    //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
 
-                //           buildingList.Focus(FocusState.Programmatic);
-                //            buildingList.CapturePointer(e.Pointer);
-                //   buildingList.Focus(FocusState.Programmatic);
-                //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
-                //  buildingList.DesiredSize
-                //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
+                    //           buildingList.UpdateLayout();
+                    //     button.Flyout.with
+                    //var mouseC = e.GetCurrentPoint(null).Position;
+                    //const float spawn = 20.0f;
+                    //      button.Focus(FocusState.Programmatic);
 
-                //           buildingList.UpdateLayout();
-                //     button.Flyout.with
-                //var mouseC = e.GetCurrentPoint(null).Position;
-                //const float spawn = 20.0f;
-                //      button.Focus(FocusState.Programmatic);
+                    //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
 
-                //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-
-                //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-                //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
-
+                    //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+                    //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
+              
             }
             catch (Exception ex)
             {

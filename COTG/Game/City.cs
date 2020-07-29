@@ -23,13 +23,20 @@ namespace COTG.Game
 
         public string remarks { get; set; }
 
-        public JsonElement jsE; // only for my own cities, and only if gC or similar has been called
 
         public Raid[] raids = Array.Empty<Raid>();
 
         public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
         public static City build; // city that has Build selection.  I.e. in city view, the city you are in
 
+        public static bool IsBuild( int cid )
+        {
+            return build != null && build.cid == cid;
+        }
+        public static bool IsFocus(int cid)
+        {
+            return focus != null && focus.cid == cid;
+        }
         public static City GetOrAddCity(int cid)
         {
             Assert(cid > 65536);
@@ -40,32 +47,9 @@ namespace COTG.Game
         {
             return allCities.ContainsKey(cid);
         }
-        public int commandSlots
-        {
-            get {
-                var jse = jsE;
-                if (!jse.IsValid())
-                {
-                    return isCastle ? 15 : 5;
-                }
-                else
-                {
-                    if (jse.TryGetProperty("bd", out var bd))
-                    {
-                        foreach (var b in bd.EnumerateArray())
-                        {
-                            if (b.GetAsInt("bid") == bidCastle)
-                            {
-                                return (b.GetInt("bl") + 5);
-                            }
-                        }
-                    }
-                    return 5;
-                }
-            }
-        }
+        public byte commandSlots { get; set; }
 
-        public int activeCommands => jsE.IsValid() ? jsE.GetInt("comm") : 0;
+        public byte activeCommands { get; set; }
 
         public int freeCommandSlots => commandSlots - activeCommands;
 
@@ -111,15 +95,33 @@ namespace COTG.Game
         public TroopTypeCount[] troopsHome = Array.Empty<TroopTypeCount>();
         public TroopTypeCount[] troopsTotal = Array.Empty<TroopTypeCount>();
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
+
         public void LoadFromJson(JsonElement jse)
         {
-            jsE = jse;
             Debug.Assert(cid == jse.GetInt("cid"));
             cityName = jse.GetAsString("citn");
             Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
+            activeCommands = jse.GetAsByte("comm");
+            
+            {
+                const int bidCastle = 467;
+                if (jse.TryGetProperty("bd", out var bd))
+                    {
+                        foreach (var b in bd.EnumerateArray())
+                        {
+                            if (b.GetAsInt("bid") == bidCastle)
+                            {
+                                commandSlots= (byte)( (b.GetInt("bl") + 5));
+                            }
+                        }
+                    }
+                }
+            
+        
 
-            troopsHome = Array.Empty<TroopTypeCount>();
+
+        troopsHome = Array.Empty<TroopTypeCount>();
             troopsTotal = Array.Empty<TroopTypeCount>();
 
             for (int hc = 0; hc < 2; ++hc)
@@ -189,28 +191,8 @@ namespace COTG.Game
 
       
 
-        const int bidCastle = 467;
-        public (int commandSlotsInUse, int totalCommandSlots, int freeCommandSlots) GetCommandSlots()
-        {
-            if (!jsE.IsValid())
-            {
-                Log("Missing City data");
-                return (0, 5, 0);
-            }
-            int total = 5;
-            if (jsE.TryGetProperty("bd", out var bd))
-            {
-                foreach (var b in bd.EnumerateArray())
-                {
-                    if (b.GetInt("bid") == bidCastle)
-                    {
-                        total = b.GetInt("bl") + 5;
-                    }
-                }
-            }
-            var comm = jsE.GetInt("comm");
-            return (comm, total, total - comm);
-        }
+        
+       
    
         public byte raidCarry { get; set; }
         public static City Factory(int _id) => new City() { cid=_id };

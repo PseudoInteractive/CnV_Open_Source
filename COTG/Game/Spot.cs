@@ -153,7 +153,7 @@ namespace COTG.Game
         
         public void ProcessClick(string column, PointerPoint pt)
         {
-            Note.Show($"{this} {column} {pt.Position}");
+        //    Note.Show($"{this} {column} {pt.Position}");
 
             if (pt.Properties.IsLeftButtonPressed && !(App.IsKeyPressedControl()||App.IsKeyPressedShift()) ) // ignore selection style clicks
             {
@@ -167,11 +167,20 @@ namespace COTG.Game
                 switch (column)
                 {
                     case nameof(xy):
-                        JSClient.ShowCity(cid, false);
+                        ProcessCoordClick(cid,false);
                         break;
                     case nameof(icon):
                         if (City.IsMine(cid))
+                        {
+                            var wasBuild = City.IsBuild(cid);
                             JSClient.ChangeCity(cid);
+                            if( wasBuild )
+                            {
+                                    JSClient.ChangeView(!JSClient.IsCityView());
+
+                            }
+
+                        }
                         else JSClient.ShowCity(cid, false);
                         break;
                     case nameof(City.tsTotal):
@@ -214,6 +223,26 @@ namespace COTG.Game
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);
                 }
+            }
+        }
+
+        public static void ProcessCoordClick(int cid,bool lazyMove)
+        {
+            if (City.IsMine(cid) && City.IsFocus(cid))
+            {
+                if (City.IsBuild(cid))
+                {
+                    JSClient.ChangeView(!JSClient.IsCityView());// toggle between city/region view
+
+                }
+                else
+                {
+                    JSClient.ChangeCity(cid);
+                }
+            }
+            else
+            {
+                JSClient.ShowCity(cid, lazyMove);
             }
         }
 
@@ -275,7 +304,14 @@ namespace COTG.Game
                 {
                     rv.Add(viewHover);
                 }
-            
+                if (City.focus != null)
+                {
+                    var cid = City.focus.cid;
+                    if (cid != viewHover && !selected.Contains(cid))
+                    {
+                        rv.Add(cid);
+                    }
+                }
 
             }
             finally
@@ -333,12 +369,12 @@ namespace COTG.Game
         public static bool IsSelectedOrHovered(int cid)
         {
             // if nothing is selected we treat it as if everything is selected
-            return selected.Count == 0? true :  (cid == viewHover || selected.Contains(cid));
+            return selected.Count == 0? true :  (cid == viewHover || selected.Contains(cid) || City.IsFocus(cid));
         }
         public static bool IsSelectedOrHovered(int cid0, int cid1)
         {
             // if nothing is selected we treat it as if everything is selected
-            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || cid1 == viewHover || selected.Contains(cid1) );
+            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0) || City.IsFocus(cid1) || cid1 == viewHover || selected.Contains(cid1) );
         }
 
 

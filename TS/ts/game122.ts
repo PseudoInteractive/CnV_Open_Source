@@ -7165,7 +7165,6 @@ i011.J55 = function() {
                                 switch (r55) {
                                   case 2:
                                     return 0.5 - n5SS.j5SS();
-                                    break;
                                 }
                               }
                             })
@@ -7182,7 +7181,6 @@ i011.J55 = function() {
                           break;
                         case 14:
                           return H0q;
-                          break;
                       }
                     }
                   };
@@ -7230,7 +7228,6 @@ i011.J55 = function() {
                           break;
                         case 5:
                           return c0q++, n0q[Y0q];
-                          break;
                         case 13:
                           n0q.N5SS.V5SS(n0q, n0q.B5SS(-6, 6)
                             .B5SS(0, 4));
@@ -7275,12 +7272,10 @@ i011.J55 = function() {
                       switch (W55) {
                         case 2:
                           return n0q[R0q];
-                          break;
                       }
                     }
                   };
                   return B0q;
-                  break;
                 case 9:
                   h0q = 0;
                   L55 = 8;
@@ -7296,7 +7291,6 @@ i011.J55 = function() {
             }
           }('L4WX2G')
         };
-        break;
     }
   }
 }();
@@ -7356,10 +7350,8 @@ function K5SS() {
           }
         } catch (b05) { window.globalThis = window; }
         return globalThis;
-        break;
       case 1:
         return globalThis;
-        break;
       case 2:
         s55 = typeof globalThis === 'object' ? 1 : 5;
         break;
@@ -7402,10 +7394,8 @@ function A0KK() {
           }
         } catch (x0q) { window.globalThis = window; }
         return globalThis;
-        break;
       case 1:
         return globalThis;
-        break;
     }
   }
 }
@@ -7418,7 +7408,6 @@ function B0KK(...args) {
         case 2:
           var q3q = [arguments];
           return q3q[0][0].String;
-          break;
       }
     }
   }
@@ -7430,7 +7419,6 @@ function B0KK(...args) {
         case 2:
           var H3q = [arguments];
           return H3q[0][0];
-          break;
       }
     }
   }
@@ -7520,7 +7508,6 @@ function B0KK(...args) {
         case 2:
           var k3q = [arguments];
           return k3q[0][0].String;
-          break;
       }
     }
   }
@@ -7590,10 +7577,8 @@ function u0VV() {
           }
         } catch (Z1x) { window.globalThis = window; }
         return globalThis;
-        break;
       case 1:
         return globalThis;
-        break;
     }
   }
 }
@@ -7606,7 +7591,6 @@ function I0VV(...args) {
         case 2:
           var i5x = [arguments];
           return i5x[0][0].String;
-          break;
       }
     }
   }
@@ -7710,7 +7694,6 @@ i011.y3q = function() {
                             break;
                           case 9:
                             return N07;
-                            break;
                           case 1:
                             var D07 = 0;
                             l3q = 5;
@@ -7731,7 +7714,6 @@ i011.y3q = function() {
               }
             }(C07)
             .d(W07))();
-          break;
       }
     }
   }
@@ -7747,12 +7729,10 @@ i011.y3q = function() {
           R07 = M07.w0KK(0, M07.length);
           t07 = R07.length;
           return i011.n5x(R07, t07, m07);
-          break;
         case 9:
           R07 = M07.w0KK(U07, b07);
           t07 = R07.length;
           return i011.n5x(R07, t07, m07);
-          break;
         case 6:
           M3q = U07 === null || U07 <= 0 ? 14 : 11;
           break;
@@ -7772,7 +7752,6 @@ i011.y3q = function() {
           R07 = M07.w0KK(M07.length - U07, M07.length);
           t07 = R07.length;
           return i011.n5x(R07, t07, m07);
-          break;
       }
     }
   }
@@ -7789,7 +7768,6 @@ i011.y3q = function() {
               switch (K3q) {
                 case 2:
                   return l07(n07, h07, c07);
-                  break;
               }
             }
           }, H07: function(v07, u07, e07) {
@@ -7799,12 +7777,10 @@ i011.y3q = function() {
               switch (G3q) {
                 case 2:
                   return l07(v07, u07, e07, true);
-                  break;
               }
             }
           }
         };
-        break;
     }
   }
 }();
@@ -7823,7 +7799,6 @@ function w5SS(...args) {
         case 2:
           var E45 = [arguments];
           return E45[0][0].String;
-          break;
       }
     }
   }
@@ -8054,7 +8029,6 @@ function w5SS(...args) {
         case 2:
           var m45 = [arguments];
           return m45[0][0].Array;
-          break;
       }
     }
   }
@@ -8066,7 +8040,6 @@ function w5SS(...args) {
         case 2:
           var R45 = [arguments];
           return R45[0][0].Math;
-          break;
       }
     }
   }
@@ -8078,7 +8051,6 @@ function w5SS(...args) {
         case 2:
           var G45 = [arguments];
           return G45[0][0];
-          break;
       }
     }
   }
@@ -8090,7 +8062,6 @@ function w5SS(...args) {
         case 2:
           var C45 = [arguments];
           return C45[0][0].Function;
-          break;
       }
     }
   }
@@ -8102,7 +8073,6 @@ function w5SS(...args) {
         case 2:
           var h55 = [arguments];
           return h55[0][0].String;
-          break;
       }
     }
   }
@@ -8114,7 +8084,6 @@ i011.B6 = function() {
     switch (n6) {
       case 3:
         return h6[7];
-        break;
       case 2:
         var h6 = [arguments];
         h6[4] = undefined;
@@ -8265,7 +8234,7 @@ i011.B6 = function() {
               case 26:
                 V6[56].l0 = ['K0'];
                 V6[56].b0 = function() {
-                  var p3 = function() { if (false) { console.log(1); } };
+                  var p3 = function() { };
                   var Y3 = !/\x31/
                     .f0rr(p3 + []);
                   return Y3;
@@ -8293,13 +8262,11 @@ i011.B6 = function() {
                         break;
                       case 23:
                         return r6[5];
-                        break;
                       case 7:
                         K6 = r6[6] < r6[0][0].length ? 6 : 18;
                         break;
                       case 5:
                         return;
-                        break;
                       case 24:
                         r6[6]++;
                         K6 = 16;
@@ -8326,7 +8293,6 @@ i011.B6 = function() {
                                 A6[4].h = 0;
                                 A6[4].t = 0;
                                 return A6[4];
-                                break;
                             }
                           }
                         }.V0rr(this, arguments);
@@ -8423,7 +8389,6 @@ i011.B6 = function() {
                 break;
               case 5:
                 return 60;
-                break;
               case 99:
                 V6[64] = V6[62];
                 V6[8].N0rr(V6[75]);
@@ -8541,7 +8506,6 @@ i011.B6 = function() {
               case 147:
                 h6[4] = 45;
                 return 50;
-                break;
               case 1:
                 f6 = h6[4] ? 5 : 4;
                 break;
@@ -8673,7 +8637,6 @@ i011.s0s = function() {
             }
           }()
         };
-        break;
     }
   }
 }();
@@ -8687,7 +8650,6 @@ function X0rr() {
         break;
       case 1:
         return globalThis;
-        break;
       case 5:
         try {
           var M6 = 2;
@@ -8719,7 +8681,6 @@ function X0rr() {
             window;
         }
         return globalThis;
-        break;
     }
   }
 }
@@ -8778,7 +8739,6 @@ function I0rr(...args) {
         case 2:
           var o6 = [arguments];
           return o6[0][0].Function;
-          break;
       }
     }
   }
@@ -8953,7 +8913,6 @@ function I0rr(...args) {
         case 2:
           var O6 = [arguments];
           return O6[0][0].RegExp;
-          break;
       }
     }
   }
@@ -8965,7 +8924,6 @@ function I0rr(...args) {
         case 2:
           var X6 = [arguments];
           return X6[0][0].Array;
-          break;
       }
     }
   }
@@ -8977,7 +8935,6 @@ function I0rr(...args) {
         case 2:
           var L6 = [arguments];
           return L6[0][0];
-          break;
       }
     }
   }
@@ -13255,18 +13212,18 @@ var cotgsubscribe = amplify;
       e5F(a6g);
       H4F(E6g, k2g, 1);
     }
-    if (typeof document.hidden !== _s(h2R | 2176)) {
+    if (typeof document.hidden !== "undefined") {
       e0F = _s(+X2R);
       k7F = _s(6806);
-    } else if (typeof document.mozHidden !== _s(h2R >> 134269152)) {
+    } else if (typeof document.mozHidden !== "undefined") {
       e0F = _s(
         '5531' | 5384);
       k7F = _s(1285);
-    } else if (typeof document.msHidden !== _s(+h2R)) {
+    } else if (typeof document.msHidden !== "undefined") {
       e0F = _s("2911" &
         2147483647);
       k7F = _s(3198);
-    } else if (typeof document.webkitHidden !== _s(+h2R)) {
+    } else if (typeof document.webkitHidden !== "undefined") {
       e0F = _s("3035" >>
         1935916608);
       k7F = _s(2122);
@@ -17014,7 +16971,7 @@ var cotgsubscribe = amplify;
 
     function F0F(R0g) {
       if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(
-          g5R * 1) || R0g == null || R0g == _s(+h2R) || R0g == undefined) R0g = ppdt[_s(+x9y)][0][
+          g5R * 1) || R0g == null || R0g == "undefined" || R0g == undefined) R0g = ppdt[_s(+x9y)][0][
         1];
       if (isNaN(R0g)) R0g = Number(ppdt[_s(+x9y)][0][1]);
       var y0g = _s(
@@ -18697,7 +18654,7 @@ var cotgsubscribe = amplify;
     };
 
     function z1F(Z9g, K9g) {
-      if (typeof K9g === _s(h2R - 0)) K9g = D6[_s(N1R << 1758947296)][Number(Z9g)][
+      if (typeof K9g === "undefined") K9g = D6[_s(N1R << 1758947296)][Number(Z9g)][
         _s(+i1R)];
       var g9g = Y8(K9g) - 443;
       var n9g = g9g % (4);
@@ -19789,8 +19746,7 @@ var cotgsubscribe = amplify;
         V9p, +V9p, +V9p], [+'0x08', +V9p, V9p - 0, V9p ^ 0], ['0x10' << 314177728, V9p * 1, +V9p, V9p * 1], [
         "0x20" >> 846065632, +V9p, V9p * 1, +V9p], [+"0x40", +V9p, +V9p, V9p - 0], [+g1p, +V9p, V9p * 1, +V9p], [
         "0x1b" * 1, +V9p, +V9p, V9p - 0], [+'0x36', +V9p, +V9p, V9p >> 6381408]];
-    if (typeof module != _s(h2R *
-        1) && module.exports) module.exports = a6;
+    if (typeof module != "undefined" && module.exports) module.exports = a6;
 
     function X2F(T0Z) {
       $(_s(+m7y) + T0Z)
@@ -20019,10 +19975,10 @@ var cotgsubscribe = amplify;
       V2v = V2v.utf8Decode();
       return V2v;
     };
-    if (typeof String.prototype.utf8Encode == _s(h2R << 1513184672))
+    if (typeof String.prototype.utf8Encode == "undefined")
       String.prototype.utf8Encode = function() { E6k.R6(); return unescape(encodeURIComponent(this)); };
     if (
-      typeof String.prototype.utf8Decode == _s(h2R << 2061309088)) String.prototype.utf8Decode = function() {
+      typeof String.prototype.utf8Decode == "undefined") String.prototype.utf8Decode = function() {
       E6k
         .R6();
       try { return decodeURIComponent(escape(this)); } catch (g2v) { return this; }
@@ -20201,11 +20157,10 @@ var cotgsubscribe = amplify;
     }
 
     function l7V() { E6k.y6(); }
-    if (typeof String.prototype.base64Encode == _s(+h2R)) String.prototype
+    if (typeof String.prototype.base64Encode == "undefined") String.prototype
       .base64Encode = function() {
-        if (typeof btoa != _s(+h2R)) return btoa(this);
-        if (typeof Buffer != _s(+
-            h2R)) return new Buffer(this, _s(5503))
+        if (typeof btoa != "undefined") return btoa(this);
+        if (typeof Buffer != _s(+h2R)) return new Buffer(this, _s(5503))
           .toString(_s('1523' | 1120));
         throw new Error(_s(170));
       };
@@ -20270,11 +20225,10 @@ var cotgsubscribe = amplify;
       return O4F(d0U)
         .pop();
     }
-    if (typeof String.prototype.base64Decode == _s(h2R << 2140990016)) String.prototype
+    if (typeof String.prototype.base64Decode == "undefined") String.prototype
       .base64Decode = function() {
-        if (typeof atob != _s(h2R ^ 0)) return atob(this);
-        if (typeof Buffer != E6k
-          .o55(h2R >> 1492823776)) return new Buffer(this, _s(1523))
+        if (typeof atob != "undefined") return atob(this);
+        if (typeof Buffer != _s(h2R >> 1492823776)) return new Buffer(this, _s(1523))
           .toString(_s(5503));
         throw new Error(_s(2559));
       };
@@ -20350,7 +20304,7 @@ var cotgsubscribe = amplify;
         G0F();
       }, '500' | 96);
     }
-    if (typeof module != _s(+h2R) && module.exports) module.exports = a6.ccazzx;
+    if (typeof module != "undefined" && module.exports) module.exports = a6.ccazzx;
 
     function I7F(i56) {
       E6k.R6();
@@ -32641,7 +32595,7 @@ var cotgsubscribe = amplify;
     }
 
     function n9(H71) {
-      if (H71 != _s(+h2R) && H71 != undefined && H71 != _s(579) && H71 != null && H71 !=
+      if (H71 != "undefined" && H71 != undefined && H71 != _s(579) && H71 != null && H71 !=
         _s(+g5R)) return 1;
       else return 0;
     }
@@ -37382,7 +37336,7 @@ var cotgsubscribe = amplify;
               else r4n._content_set(A4n);
               var n4n = r4n.options.functionInit.call(r4n.$el, r4n.$el, r4n
                 .Content);
-              if (typeof n4n !== _s(+h2R)) r4n._content_set(n4n);
+              if (typeof n4n !== "undefined") r4n._content_set(n4n);
               r4n.$el.removeAttr(_s("5983" | 5385))
                 .addClass(_s(+W6t));
               if (!s4n && r4n.options.iconDesktop || s4n && r4n.options
@@ -37593,14 +37547,14 @@ var cotgsubscribe = amplify;
             return this;
           },
           content: function(W3n) {
-            if (typeof W3n === _s(+h2R))
+            if (typeof W3n === "undefined")
               return this.Content;
             else { this._update(W3n); return this; }
           },
           enable: function() { this.enabled = !![]; return this; },
           option: function(S1n, J1n) {
             E6k.y6();
-            if (typeof J1n == _s(h2R & 2147483647)) return this.options[S1n];
+            if (typeof J1n == "undefined") return this.options[S1n];
             else { this.options[S1n] = J1n; return this; }
           },
           _showNow: function(g4n) {
@@ -37852,7 +37806,7 @@ var cotgsubscribe = amplify;
             '1802') ? V1n : this;
         } else {
           var A1n = [],
-            n1n = h1n[0] && typeof h1n[0].multiple !== _s(+h2R),
+            n1n = h1n[0] && typeof h1n[0].multiple !== "undefined",
             f1n = n1n && h1n[0].multiple || !n1n && H4n.multiple;
           this.each(function() {
             var y1n = !!0,
@@ -37885,7 +37839,7 @@ var cotgsubscribe = amplify;
         var O4n = !!"1";
         k4n.each(t4n, function(L4n, X4n) {
           E6k.R6();
-          if (typeof o4n[L4n] === _s(+h2R) || t4n[L4n] !== o4n[
+          if (typeof o4n[L4n] === "undefined" || t4n[L4n] !== o4n[
               L4n]) { O4n = !{}; return ![]; }
         });
         return O4n;
@@ -40639,7 +40593,7 @@ var cotgsubscribe = amplify;
           .html(X2U);
       }
       E6k.R6();
-      if (J2U != undefined && J2U != _s(h2R ^ 0) && J2U != "") {
+      if (J2U != undefined && J2U != "undefined" && J2U != "") {
         var
           A2U = "";
         var n2U = '';
@@ -44040,9 +43994,9 @@ var cotgsubscribe = amplify;
           .css("display");
         $(_s(k04 ^ 0))
           .show();
-        if (l6U == (0) || l6U == undefined || l6U == _s(h2R - 0)) l6U = D6.bd[Number(V6U)]
+        if (l6U == (0) || l6U == undefined || l6U == "undefined") l6U = D6.bd[Number(V6U)]
           .bid;
-        if (l6U == 0 || l6U == undefined || l6U == _s(h2R >> 1675566912))
+        if (l6U == 0 || l6U == undefined || l6U == "undefined")
           for (var Q6U = 0; Q6U < D6.bq.length; Q6U++) {
             var j2U = D6.bq[Q6U][_s(+m54)];
             if (j2U == L6U) {
@@ -45034,7 +44988,7 @@ var cotgsubscribe = amplify;
     }
 
     function E5V(n19) {
-      if (n19 === null || typeof n19 === _s(h2R >> 1744790048)) return '';
+      if (n19 === null || typeof n19 === "undefined") return '';
       var
         S19 = n19 + '';
       var V19 = '',
@@ -56721,9 +56675,8 @@ var cotgsubscribe = amplify;
           var E2g = $(_s(+k04))
             .attr(_s(Z9y >> 786280544));
           var m2g = 0;
-          if (m2g == 0 || m2g == undefined || m2g == _s(
-              +h2R)) m2g = D6.bd[Number(E2g)].bid;
-          if (m2g == 0 || m2g == undefined || m2g == _s(+h2R))
+          if (m2g == 0 || m2g == undefined || m2g == _s(    +h2R)) m2g = D6.bd[Number(E2g)].bid;
+          if (m2g == 0 || m2g == undefined || m2g == "undefined")
             for (var a2g = 0; a2g < D6.bq.length; a2g++) {
               var k8g = D6.bq[a2g][_s(m54 & 2147483647)];
               if (
@@ -56789,15 +56742,14 @@ var cotgsubscribe = amplify;
           if (T8g == 0 || T8g == undefined || T8g == E6k
             .S55(h2R >> 1320820960)) T8g = D6.bd[Number(O8g)].bid;
           if (T8g == (0) || T8g == undefined ||
-            T8g == _s(+h2R))
+            T8g == "undefined")
             for (var x8g = 0; x8g < D6.bq.length; x8g++) {
               var t8g = D6.bq[x8g][_s(+m54)];
               if (
                 t8g == O8g) T8g = D6.bq[x8g][_s(T1m >> 1650336544)];
             }
           if (L2(T8g) != 0) T8g = L2(T8g);
-          var X8g = Number(bam[_s(Q5y << 1159927840)][Number(T8g)][_s(
-            G5m | 6144)]);
+          var X8g = Number(bam[_s(Q5y << 1159927840)][Number(T8g)][_s(            G5m | 6144)]);
           var z8g = {
             bt: Number(1),
             btype: Number(T8g),
@@ -57273,8 +57225,8 @@ var cotgsubscribe = amplify;
         }
       });
 
-    function K6F(G71) {
-      if (G71 != "") {
+    function K6F(G71:string) {
+      if (G71.length > 1) {
         var j71 = JSON.parse(G71);
         __c.j71=j71;
         if (j71.hasOwnProperty("city")) {
@@ -57284,7 +57236,7 @@ var cotgsubscribe = amplify;
           if (j71.hasOwnProperty("resregion"))
           if (j71["resregion"] == 1) n2F();
         var w71 = j71["player"];
-        if (w71 != "" && w71 != _s(h2R & 2147483647) && w71 != undefined) u7V(w71);
+        if (w71 != "" && w71 != "undefined" && w71 != undefined) u7V(w71);
         Q1F = j71[_s(6286)];
         if (!(Q1F == 1)) {
           Q0V();
@@ -59052,7 +59004,7 @@ var cotgsubscribe = amplify;
           .css("display");
         var v2g = D6.bd[d2].bid;
         if (v2g == (0) || v2g == undefined || v2g ==
-          _s(+h2R))
+          "undefined")
           for (var l2g = 0; l2g < D6.bq.length; l2g++)
             if (D6.bq[l2g])
               if (D6.bq[l2g][_s(+m54)]) {
@@ -69032,7 +68984,7 @@ _viewMode = viewModeWorld;
     $(document)
       .ready(function() {
         E6k.y6();
-        if (typeof godmode !== _s(h2R ^ 0)) $(_s(5354))
+        if (typeof godmode !== "undefined") $(_s(5354))
           .click(function() {
             if ($(_s(4206))
               .length == (0)) {
@@ -69260,7 +69212,7 @@ _viewMode = viewModeWorld;
           E6k.R6();
           if (b2i.state = b2i.ctx ? b2i.ctx.state || _s(p3k << 562886272) : _s(p3k <<
               1788257056), b2i._autoSuspend(), !b2i.usingWebAudio)
-            if (_s(+h2R) != typeof Audio) try {
+            if ("undefined" != typeof Audio) try {
               var S2i = new Audio();
               void(0) === S2i.oncanplaythrough && (b2i._canPlayEvent = _s("2307" |
                 3));
@@ -69322,7 +69274,7 @@ _viewMode = viewModeWorld;
           var l2i = this || E6i;
           return l2i._counter = I3k * 1, l2i
             ._codecs = {}, l2i._howls = [], l2i._muted = !"1", l2i._volume = 1, l2i._canPlayEvent = _s(+
-              '5825'), l2i._navigator = _s(+h2R) != typeof window && window.navigator ? window.navigator :
+              '5825'), l2i._navigator = "undefined" != typeof window && window.navigator ? window.navigator :
             null, l2i.masterGain = null, l2i.noAudio = !1, l2i.usingWebAudio = !![], l2i.autoSuspend = !0, l2i
             .ctx = null, l2i.mobileAutoEnable = !"", l2i._setup(), l2i;
         },
@@ -69383,7 +69335,7 @@ _viewMode = viewModeWorld;
           var z3k = /^no$/;
           var r2i = this || E6i,
             V2i = null;
-          try { V2i = _s(+h2R) != typeof Audio ? new Audio() : null; } catch (
+          try { V2i = "undefined" != typeof Audio ? new Audio() : null; } catch (
             K2i) { return r2i; }
           if (!V2i || _s(n9p ^ 0) != typeof V2i.canPlayType) return r2i;
           var A2i = V2i
@@ -69861,7 +69813,7 @@ _viewMode = viewModeWorld;
                 j8i.playbackRate = u8i._rate;
                 try {
                   var G8i = j8i.play();
-                  if (G8i && _s(+h2R) !=
+                  if (G8i && "undefined" !=
                     typeof Promise && (G8i instanceof Promise || _s(+n9p) == typeof G8i.then) ? (H8i
                       ._playLock = !"", G8i.then(function() {
                         H8i._playLock = !{};
@@ -70180,7 +70132,7 @@ _viewMode = viewModeWorld;
               Z5c && n5c._sounds.length > 0 ? (k2i[n5c._src] = Z5c, w2i(n5c, Z5c)) : f5c();
             };
           E6k.R6();
-          _s(h2R | 3200) != typeof Promise && (1) === E6i.ctx.decodeAudioData.length ? E6i.ctx
+          "undefined" != typeof Promise && (1) === E6i.ctx.decodeAudioData.length ? E6i.ctx
             .decodeAudioData(g5c)
             .then(K5c)
             .catch(f5c) : E6i.ctx.decodeAudioData(g5c, K5c, f5c);
@@ -70194,7 +70146,7 @@ _viewMode = viewModeWorld;
         },
         u2i = function() {
           try {
-            _s(h2R * 1) != typeof AudioContext ? E6i.ctx = new AudioContext() : _s(+
+            "undefined" != typeof AudioContext ? E6i.ctx = new AudioContext() : _s(+
                 h2R) != typeof webkitAudioContext ? E6i.ctx = new webkitAudioContext() : E6i
               .usingWebAudio = ![];
           } catch (p5c) { E6i.usingWebAudio = !{}; }
@@ -70221,9 +70173,9 @@ _viewMode = viewModeWorld;
           Howler: E6i
         };
       });
-      _s(h2R ^ 0) != typeof exports && (exports.Howler = E6i, exports.Howl = e2i);
-      _s(h2R | 132) != typeof window ? (window.HowlerGlobal = H2i, window.Howler = E6i, window.Howl = e2i, window
-        .Sound = s2i) : _s(+h2R) != typeof global && (global.HowlerGlobal = H2i, global.Howler = E6i, global
+      "undefined" != typeof exports && (exports.Howler = E6i, exports.Howl = e2i);
+      "undefined" != typeof window ? (window.HowlerGlobal = H2i, window.Howler = E6i, window.Howl = e2i, window
+        .Sound = s2i) : "undefined" != typeof global && (global.HowlerGlobal = H2i, global.Howler = E6i, global
         .Howl = e2i, global.Sound = s2i);
     }();
 
