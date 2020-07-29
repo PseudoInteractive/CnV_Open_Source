@@ -100,10 +100,10 @@
                           IsSettingsVisible="True"
                           ItemInvoked="OnItemInvoked"
                           SelectedItem="{x:Bind Mode=OneWay, Path=Selected}">
-        <!--<winui:NavigationView.ContextFlyout>
+        <winui:NavigationView.ContextFlyout>
             <MenuFlyout>
-                <MenuFlyoutItem Click="GetIncomingOverview"
-                                Text="IncomingOverview" />
+                <MenuFlyoutItem Click="TipTest"
+                                Text="TipTest" />
                 <MenuFlyoutItem Click="TroopOverview"
                                 Text="TroopOverview" />
                 <MenuFlyoutItem Click="TestRaid"
@@ -119,7 +119,7 @@
                 <MenuFlyoutItem Click="TestGoCity"
                                 Text="TestGoCity" />
             </MenuFlyout>
-        </winui:NavigationView.ContextFlyout>-->
+        </winui:NavigationView.ContextFlyout>
         <winui:NavigationView.MenuItems>
             <!--
 				TODO WTS: Change the symbols for each item as appropriate for your app
@@ -154,12 +154,15 @@
                     <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator     Key="F5" />
                     </AppBarButton.KeyboardAccelerators>
-                    <winui:TeachingTip x:Name="RefreshTip" IsLightDismissEnabled="True" ShouldConstrainToRootBounds="False"
+                    <AppBarButton.Resources>
+                    <winui:TeachingTip x:Name="RefreshTip" IsLightDismissEnabled="True" 
             Title="Refresh"
+                                       Target="{x:Bind Fresh}"
                                        
             Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
                         
                     </winui:TeachingTip>
+                    </AppBarButton.Resources>
                 </AppBarButton>
                 <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"

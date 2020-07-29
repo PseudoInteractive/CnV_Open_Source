@@ -576,7 +576,7 @@ namespace COTG.Views
             if(SettingsPage.tipRefresh)
             {
                 SettingsPage.tipRefresh = false;
-                instance.RefreshTip.IsOpen = true;
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low,()=>  instance.RefreshTip.IsOpen = true);
             }
         }
 		private void DoNothing(object sender, RoutedEventArgs e)
@@ -663,5 +663,10 @@ namespace COTG.Views
 
                   }
            }
+
+        private void TipTest(object sender, RoutedEventArgs e)
+        {
+            ShowTipRefresh();
+        }
     }
 }
