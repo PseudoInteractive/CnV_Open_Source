@@ -29,7 +29,7 @@ namespace COTG.Game
         public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
         public static City build; // city that has Build selection.  I.e. in city view, the city you are in
 
-        public new string cityName=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+        public new string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
         public static bool IsBuild( int cid )
         {

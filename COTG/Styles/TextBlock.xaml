@@ -57,7 +57,16 @@
 		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
 	</Style>
 
-	<Style
+    <Style
+		x:Key="ButtonTextStyle"
+		TargetType="TextBlock">
+        <Setter Property="FontFamily"
+                Value="Segoe UI Emoji" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="#FF8060FF" />
+    </Style>
+
+    <Style
 		x:Key="DetailBodyStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">

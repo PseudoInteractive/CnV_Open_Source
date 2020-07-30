@@ -837,7 +837,7 @@ namespace COTG
                                     {
                                         var city = COTG.Views.SpotTab.TouchSpot(cid);
 
-                                        city.cityName = jso.GetString("name");
+                                        city._cityName = jso.GetString("name");
                                         city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
                                                                                                //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");

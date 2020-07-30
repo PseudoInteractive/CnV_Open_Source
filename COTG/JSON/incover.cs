@@ -148,7 +148,7 @@ namespace COTG.JSON
 
                               var spot = Spot.GetOrAdd(cid);
                               // set info if needed
-                              spot.cityName = val.GetAsString("1");
+                              spot._cityName = val.GetAsString("1");
                               spot.tsHome = val.GetAsInt("8");
                               spot.pid = Player.NameToId(val.GetAsString("0"));
                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();

@@ -56,11 +56,13 @@
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
                                         Width="40" />
-                <tg:DataGridTextColumn PropertyName="cityName"
+                <tg:DataGridTextColumn PropertyName="nameAndRemarks"
+                                       Header="Name"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Auto"
                                        Width="100" />
                 <tg:DataGridTextColumn PropertyName="xy"
+                                       CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="tsTotal"
                                             CellContentStyle="{StaticResource RightAlign}"
@@ -71,12 +73,12 @@
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="raidReturn"
-                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,6:N0}"
                                             
                                             Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
-                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,5:N1}"
                                             Width="80"
                                              />
@@ -139,12 +141,12 @@ TextSubmitted="RaidCarrySubmitted"
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
                 <tg:DataGridNumericalColumn PropertyName="dist" />
-                <tg:DataGridTextColumn PropertyName="plan" />
+                <tg:DataGridTextColumn PropertyName="plan" CellContentStyle="{StaticResource RightAlignLink}" />
                 <tg:DataGridNumericalColumn PropertyName="level" />
                 <tg:DataGridNumericalColumn PropertyName="completion"
                                             CellContentFormat="{}{0,6:N1}" />
                 <tg:DataGridTextColumn PropertyName="kind" />
-                <tg:DataGridTextColumn PropertyName="xy" />
+                <tg:DataGridTextColumn PropertyName="xy" CellContentStyle="{StaticResource CenterAlignLink}" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tk:GridSplitter Grid.Row="2"
