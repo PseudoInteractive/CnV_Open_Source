@@ -55,7 +55,7 @@ namespace COTG.Views
         static readonly Color senatorColor = Colors.MediumVioletRed;
         static readonly Color incomingHistoryColor = Color.FromArgb(127, 20, 200, 200);// (0xFF8B008B);// Colors.DarkMagenta;
         static readonly Color raidColor = Colors.Yellow;
-        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
+//        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
         static readonly Color selectColor = Colors.DarkMagenta;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 
@@ -476,10 +476,10 @@ namespace COTG.Views
                                     continue;
                                 if (c0.Y.Max(c1.Y) <= 0.0f)
                                     continue;
-                                var dt0 = (float)(serverNow - attack.spotted).TotalSeconds;
-
+                                var dt1 = attack.TimeToArrival(serverNow);
+                                
                                 // before attack
-                                var dt1 = (float)(attack.time - serverNow).TotalSeconds;
+                                var journeyTime = attack.journeyTime;
                                 {
                                     // register attack
                                     if (!counts.TryGetValue(targetCid, out var count))
@@ -493,7 +493,7 @@ namespace COTG.Views
                                         ++count.prior;
                                 }
 
-                                if (dt0 <= 0 || dt1 < -postAttackDisplayTime)
+                                if (dt1 <= journeyTime || dt1 < -postAttackDisplayTime)
                                     continue;
                                 var c = incomingHistoryColor;
 
@@ -502,7 +502,7 @@ namespace COTG.Views
                                     continue;
                                     c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
                                 }
-                                DrawAction(serverNow, ds, rectSpan, attack.time, attack.time - attack.spotted, c0, c1, c);
+                                DrawAction( ds, dt1, journeyTime,  rectSpan,  c0, c1, c);
                                 //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                                 //var mid = progress.Lerp(c0, c1);
                                 //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
@@ -568,7 +568,7 @@ namespace COTG.Views
                                         continue;
                                         c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
                                     }
-                                    DrawAction(serverNow, ds, rectSpan, i.arrival, (i.arrival - i.spotted), c0, c1, c);
+                                    DrawAction(ds,i.TimeToArrival(serverNow),i.journeyTime, rectSpan, c0, c1, c);
                                 }
                                 DrawTextBox(ds, $"{incAttacks}`{city.tsMax/1000}k", c1, tipTextFormatCentered);
                             }
@@ -597,7 +597,8 @@ namespace COTG.Views
                                     if (sen.target != 0)
                                     {
                                         var c1 = sen.target.CidToCC();
-                                        DrawAction(serverNow, ds, rectSpan, sen.time, TimeSpan.FromHours(2), c, c1, senatorColor);
+                                    // Todo: more accurate senator travel times
+                                        DrawAction(ds, rectSpan,(float)(sen.time- serverNow).TotalSeconds, 2*60*60, c, c1, senatorColor);
                                     }
                                 }
                                 DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered);
@@ -615,7 +616,7 @@ namespace COTG.Views
                                 {
                                     var ct = raid.target.CidToCC();
                                     (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                                    DrawAction(serverNow, ds, rectSpan, raid.arrival, TimeSpan.FromHours(2), c0, c1, raidColor);
+                                    DrawAction( ds,(float)(raid.time-serverNow).TotalSeconds,60*60*2.0f, rectSpan, c0, c1, raidColor);
 
                                 }
                             }
@@ -682,31 +683,30 @@ namespace COTG.Views
             ds.DrawTextLayout(textLayout, at.X,at.Y, Colors.White );
         }
 
-        private void DrawAction(DateTimeOffset serverNow, CanvasDrawingSession ds, float rectSpan, DateTimeOffset arrival,TimeSpan dt, Vector2 c0, Vector2 c1,Color color)
+        private void DrawAction( CanvasDrawingSession ds, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1,Color color)
 		{
             if (IsCulled(c0, c1))
                 return;
-            var dt1 = (float)(arrival - serverNow).TotalSeconds;
             float progress;
-            if (dt1 <= 0.0f)
+            if (timeToArrival <= 0.0f)
             {
                 progress = 1.0f;
             }
             else 
             {
-                var dt1Sec = (float)dt.TotalSeconds;
-                if (dt1 >= dt1Sec)
-                    progress = 1.0f / 16.0f;
+                if (timeToArrival >= journeyTime)
+                    progress = 1.0f / 16.0f; // just starting
                 else
-                    progress = 1f - (float)(dt1 / dt1Sec); // we don't know the duration so we approximate with 2 hours
+                    progress = 1f - (timeToArrival / journeyTime); // we don't know the duration so we approximate with 2 hours
             }
-            if (dt1 < postAttackDisplayTime)
-                rectSpan *= 2.0f - dt1/postAttackDisplayTime;
+            if (timeToArrival < postAttackDisplayTime)
+                rectSpan *= 2.0f - timeToArrival / postAttackDisplayTime;
             var mid = progress.Lerp(c0, c1);
             var shadowC = color.GetShadowColor();
+            var midS = mid - shadowOffset;
+
             ds.DrawLine(c0, c1, 0.5f.Lerp(color,black0Alpha), lineThickness, defaultStrokeStyle);
             ds.DrawRoundedSquare(mid, rectSpan, shadowC,2.0f);
-            var midS = mid - shadowOffset;
             ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
             ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
         }
@@ -768,7 +768,7 @@ namespace COTG.Views
 
 
         }
-        public static Color GetShadowColor(this Color c) => 0.5f.Lerp(c, Color.FromArgb(0, 0, 0, 0));
+        public static Color GetShadowColor(this Color c) => (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
 
     }
 }

@@ -183,7 +183,7 @@ namespace COTG.JSON
                                       var name => Player.NameToId(name)
                                   };
                                       var arrival = armyV.GetAsString("7");
-                                  army.arrival = arrival switch
+                                  army.time = arrival switch
                                   {
                                       "home" => AUtil.dateTimeZero,
                                       "on support"=> AUtil.dateTimeZero,

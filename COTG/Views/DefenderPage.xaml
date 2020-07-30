@@ -63,7 +63,7 @@
                                     AutoGenerateColumns="False">
                         <tg:RadDataGrid.Columns>
                             <tg:DataGridTimeColumn Width="80"
-                                                   PropertyName="arrival"
+                                                   PropertyName="time"
                                                    CellContentFormat="{}{0:'/'dd'/' HH':'mm':'ss}"
                                                    SizeMode="Fixed"
                                                    

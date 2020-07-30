@@ -29,6 +29,8 @@ namespace COTG.Game
         public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
         public static City build; // city that has Build selection.  I.e. in city view, the city you are in
 
+        public new string cityName=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+
         public static bool IsBuild( int cid )
         {
             return build != null && build.cid == cid;
@@ -77,7 +79,7 @@ namespace COTG.Game
             {
                 if (raids.IsNullOrEmpty())
                     return 999; // no troops
-                var dt = (float)(raids[0].arrival- JSClient.ServerTime()).TotalMinutes; // should we check more than one
+                var dt = (float)(raids[0].time- JSClient.ServerTime()).TotalMinutes; // should we check more than one
                 if (raids[0].isReturning)
                     return dt;
                 else
@@ -99,7 +101,7 @@ namespace COTG.Game
         public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
-            cityName = jse.GetAsString("citn");
+           _cityName = jse.GetAsString("citn");
             Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
             activeCommands = jse.GetAsByte("comm");

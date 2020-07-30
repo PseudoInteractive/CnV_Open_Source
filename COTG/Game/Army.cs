@@ -22,8 +22,11 @@ namespace COTG.Game
         public int targetCid;
         public int sourceCid;
         public string sourceCN => Spot.Get(sourceCid).cityName;
-        public DateTimeOffset arrival { get; set; }
+        public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }
+        public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
+        public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
+
         public string ts => troops.Sum((t) => t.ts).ToString("N0");
         public string defTs => sumDef.Sum((t) => t.ts).ToString("N0");
         public string details => TroopTypeCount.Format(troops);

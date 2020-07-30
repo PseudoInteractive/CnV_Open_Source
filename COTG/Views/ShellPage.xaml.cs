@@ -256,12 +256,20 @@ namespace COTG.Views
             //});
 
             var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
+            refresh.Invoked += Refresh_Invoked;
+            refresh.IsEnabled = true;
             //			refreshAccelerator.Invoked += (_, __) => view?.Refresh();
             testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
             testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
             testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
 
         }
+
+        private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            Refresh();
+        }
+
         public static MenuFlyoutItem MenuAction( Action a, string text)
         {
             var rv = new MenuFlyoutItem() { Text = text };
@@ -403,23 +411,23 @@ namespace COTG.Views
         //    NavigationService.GoBack();
         //}
 
-        private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
-        {
-            var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
-            if (modifiers.HasValue)
-            {
-                keyboardAccelerator.Modifiers = modifiers.Value;
-            }
+        //private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
+        //{
+        //    var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
+        //    if (modifiers.HasValue)
+        //    {
+        //        keyboardAccelerator.Modifiers = modifiers.Value;
+        //    }
 
-            keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
-            return keyboardAccelerator;
-        }
+        //    keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
+        //    return keyboardAccelerator;
+        //}
 
-        private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            var result = NavigationService.GoBack();
-            args.Handled = result;
-        }
+        //private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        //{
+        //    var result = NavigationService.GoBack();
+        //    args.Handled = result;
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -443,6 +451,12 @@ namespace COTG.Views
 
         public void Refresh(object o, RoutedEventArgs e)
         {
+            Refresh();
+
+        }
+
+        private static void Refresh()
+        {
             var shiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
             var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
             Log($"Refresh {shiftState},{ctrlState}");
@@ -454,11 +468,9 @@ namespace COTG.Views
             //    JSClient.Refresh(o, e);
             //}
             //else
-                MainPage.instance.Refresh();
+            MainPage.instance.Refresh();
             DefensePage.instance.Refresh();
             DefenderPage.instance.Refresh();
-            
-
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

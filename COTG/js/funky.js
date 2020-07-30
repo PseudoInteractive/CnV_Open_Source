@@ -8932,9 +8932,8 @@ I0VV(u0VV());
 B0KK(A0KK());
 i011.J0EE = J0EE;
 w5SS(K5SS());
-let lastOGACount = 0;
+let lastTroopsHome = 0;
 let lastCid = 0;
-var C0q = [];
 i011.J55 = function () {
     var Q55 = 2;
     for (; Q55 !== 1;) {
@@ -8951,7 +8950,7 @@ i011.J55 = function () {
                                         for (; q55 !== 13;) {
                                             switch (q55) {
                                                 case 2:
-                                                    C0q = [];
+                                                    var C0q = [];
                                                     q55 = 1;
                                                     break;
                                                 case 1:
@@ -8976,7 +8975,6 @@ i011.J55 = function () {
                                                             switch (r55) {
                                                                 case 2:
                                                                     return 0.5 - n5SS.j5SS();
-                                                                    break;
                                                             }
                                                         }
                                                     })
@@ -8993,7 +8991,6 @@ i011.J55 = function () {
                                                     break;
                                                 case 14:
                                                     return H0q;
-                                                    break;
                                             }
                                         }
                                     };
@@ -9039,7 +9036,6 @@ i011.J55 = function () {
                                                     break;
                                                 case 5:
                                                     return c0q++, n0q[Y0q];
-                                                    break;
                                                 case 13:
                                                     n0q.N5SS.V5SS(n0q, n0q.B5SS(-6, 6)
                                                         .B5SS(0, 4));
@@ -9084,12 +9080,10 @@ i011.J55 = function () {
                                             switch (W55) {
                                                 case 2:
                                                     return n0q[R0q];
-                                                    break;
                                             }
                                         }
                                     };
                                     return B0q;
-                                    break;
                                 case 9:
                                     h0q = 0;
                                     L55 = 8;
@@ -9105,7 +9099,6 @@ i011.J55 = function () {
                         }
                     }('L4WX2G')
                 };
-                break;
         }
     }
 }();
@@ -9167,10 +9160,8 @@ function K5SS() {
                     window.globalThis = window;
                 }
                 return globalThis;
-                break;
             case 1:
                 return globalThis;
-                break;
             case 2:
                 s55 = typeof globalThis === 'object' ? 1 : 5;
                 break;
@@ -9215,10 +9206,8 @@ function A0KK() {
                     window.globalThis = window;
                 }
                 return globalThis;
-                break;
             case 1:
                 return globalThis;
-                break;
         }
     }
 }
@@ -9230,7 +9219,6 @@ function B0KK(...args) {
                 case 2:
                     var q3q = [arguments];
                     return q3q[0][0].String;
-                    break;
             }
         }
     }
@@ -9241,7 +9229,6 @@ function B0KK(...args) {
                 case 2:
                     var H3q = [arguments];
                     return H3q[0][0];
-                    break;
             }
         }
     }
@@ -9330,7 +9317,6 @@ function B0KK(...args) {
                 case 2:
                     var k3q = [arguments];
                     return k3q[0][0].String;
-                    break;
             }
         }
     }
@@ -9406,10 +9392,8 @@ function u0VV() {
                     window.globalThis = window;
                 }
                 return globalThis;
-                break;
             case 1:
                 return globalThis;
-                break;
         }
     }
 }
@@ -9421,7 +9405,6 @@ function I0VV(...args) {
                 case 2:
                     var i5x = [arguments];
                     return i5x[0][0].String;
-                    break;
             }
         }
     }
@@ -9527,7 +9510,6 @@ i011.y3q = function () {
                                                     break;
                                                 case 9:
                                                     return N07;
-                                                    break;
                                                 case 1:
                                                     var D07 = 0;
                                                     l3q = 5;
@@ -9548,7 +9530,6 @@ i011.y3q = function () {
                         }
                     }(C07)
                         .d(W07))();
-                    break;
             }
         }
     }
@@ -9563,12 +9544,10 @@ i011.y3q = function () {
                     R07 = M07.w0KK(0, M07.length);
                     t07 = R07.length;
                     return i011.n5x(R07, t07, m07);
-                    break;
                 case 9:
                     R07 = M07.w0KK(U07, b07);
                     t07 = R07.length;
                     return i011.n5x(R07, t07, m07);
-                    break;
                 case 6:
                     M3q = U07 === null || U07 <= 0 ? 14 : 11;
                     break;
@@ -9586,7 +9565,6 @@ i011.y3q = function () {
                     R07 = M07.w0KK(M07.length - U07, M07.length);
                     t07 = R07.length;
                     return i011.n5x(R07, t07, m07);
-                    break;
             }
         }
     }
@@ -9602,7 +9580,6 @@ i011.y3q = function () {
                             switch (K3q) {
                                 case 2:
                                     return l07(n07, h07, c07);
-                                    break;
                             }
                         }
                     }, H07: function (v07, u07, e07) {
@@ -9611,12 +9588,10 @@ i011.y3q = function () {
                             switch (G3q) {
                                 case 2:
                                     return l07(v07, u07, e07, true);
-                                    break;
                             }
                         }
                     }
                 };
-                break;
         }
     }
 }();
@@ -9633,7 +9608,6 @@ function w5SS(...args) {
                 case 2:
                     var E45 = [arguments];
                     return E45[0][0].String;
-                    break;
             }
         }
     }
@@ -9867,7 +9841,6 @@ function w5SS(...args) {
                 case 2:
                     var m45 = [arguments];
                     return m45[0][0].Array;
-                    break;
             }
         }
     }
@@ -9878,7 +9851,6 @@ function w5SS(...args) {
                 case 2:
                     var R45 = [arguments];
                     return R45[0][0].Math;
-                    break;
             }
         }
     }
@@ -9889,7 +9861,6 @@ function w5SS(...args) {
                 case 2:
                     var G45 = [arguments];
                     return G45[0][0];
-                    break;
             }
         }
     }
@@ -9900,7 +9871,6 @@ function w5SS(...args) {
                 case 2:
                     var C45 = [arguments];
                     return C45[0][0].Function;
-                    break;
             }
         }
     }
@@ -9911,7 +9881,6 @@ function w5SS(...args) {
                 case 2:
                     var h55 = [arguments];
                     return h55[0][0].String;
-                    break;
             }
         }
     }
@@ -9922,7 +9891,6 @@ i011.B6 = function () {
         switch (n6) {
             case 3:
                 return h6[7];
-                break;
             case 2:
                 var h6 = [arguments];
                 h6[4] = undefined;
@@ -10067,9 +10035,7 @@ i011.B6 = function () {
                             case 26:
                                 V6[56].l0 = ['K0'];
                                 V6[56].b0 = function () {
-                                    var p3 = function () { if (false) {
-                                        console.log(1);
-                                    } };
+                                    var p3 = function () { };
                                     var Y3 = !/\x31/
                                         .f0rr(p3 + []);
                                     return Y3;
@@ -10097,13 +10063,11 @@ i011.B6 = function () {
                                                 break;
                                             case 23:
                                                 return r6[5];
-                                                break;
                                             case 7:
                                                 K6 = r6[6] < r6[0][0].length ? 6 : 18;
                                                 break;
                                             case 5:
                                                 return;
-                                                break;
                                             case 24:
                                                 r6[6]++;
                                                 K6 = 16;
@@ -10130,7 +10094,6 @@ i011.B6 = function () {
                                                                 A6[4].h = 0;
                                                                 A6[4].t = 0;
                                                                 return A6[4];
-                                                                break;
                                                         }
                                                     }
                                                 }.V0rr(this, arguments);
@@ -10226,7 +10189,6 @@ i011.B6 = function () {
                                 break;
                             case 5:
                                 return 60;
-                                break;
                             case 99:
                                 V6[64] = V6[62];
                                 V6[8].N0rr(V6[75]);
@@ -10345,7 +10307,6 @@ i011.B6 = function () {
                             case 147:
                                 h6[4] = 45;
                                 return 50;
-                                break;
                             case 1:
                                 f6 = h6[4] ? 5 : 4;
                                 break;
@@ -10477,7 +10438,6 @@ i011.s0s = function () {
                         }
                     }()
                 };
-                break;
         }
     }
 }();
@@ -10490,7 +10450,6 @@ function X0rr() {
                 break;
             case 1:
                 return globalThis;
-                break;
             case 5:
                 try {
                     var M6 = 2;
@@ -10523,7 +10482,6 @@ function X0rr() {
                         window;
                 }
                 return globalThis;
-                break;
         }
     }
 }
@@ -10578,7 +10536,6 @@ function I0rr(...args) {
                 case 2:
                     var o6 = [arguments];
                     return o6[0][0].Function;
-                    break;
             }
         }
     }
@@ -10758,7 +10715,6 @@ function I0rr(...args) {
                 case 2:
                     var O6 = [arguments];
                     return O6[0][0].RegExp;
-                    break;
             }
         }
     }
@@ -10769,7 +10725,6 @@ function I0rr(...args) {
                 case 2:
                     var X6 = [arguments];
                     return X6[0][0].Array;
-                    break;
             }
         }
     }
@@ -10780,7 +10735,6 @@ function I0rr(...args) {
                 case 2:
                     var L6 = [arguments];
                     return L6[0][0];
-                    break;
             }
         }
     }
@@ -11695,7 +11649,6 @@ var cotgsubscribe = amplify;
     const V5R = "416";
     const F4t = "4347";
     const U9y = "5667";
-    const s6y = '17';
     var P4p = '255';
     const Z5R = "354";
     const n4y = "547";
@@ -13653,25 +13606,25 @@ var cotgsubscribe = amplify;
                         sorttable.makeSortable(H12);
                         i5F();
                     }
-                    if (e12[+s6y]) {
+                    if (e12[+17]) {
                         var s12 = _s(2777);
-                        for (var k12 = 0; k12 < e12[s6y * 1]
+                        for (var k12 = 0; k12 < e12[17 * 1]
                             .length; k12++) {
-                            if (e12[s6y & 2147483647][k12][1] == 0) {
+                            if (e12[17 & 2147483647][k12][1] == 0) {
                                 var v12 = _s(x6y & 2147483647);
                                 var Q12 = _s(x6y | 17);
                                 var T12 = '';
                                 var l12 = "";
                             }
                             else {
-                                var v12 = e12[s6y | 0][k12][1];
-                                var Q12 = e12[s6y << 735088704][k12][3];
+                                var v12 = e12[17 | 0][k12][1];
+                                var Q12 = e12[17 << 735088704][k12][3];
                                 var T12 = _s(786);
                                 var l12 = _s(3806);
                             }
                             var u12 = v12;
                             u12 = u12.toLowerCase();
-                            s12 = s12 + _s(+M3y) + u12 + _s(3114) + e12[+s6y][k12][0] + _s(+U6y) + T12 + _s(V6y * 1) + v12 + _s(909) + p6(Number(e12[s6y ^ 0][k12]['2' & E6k
+                            s12 = s12 + _s(+M3y) + u12 + _s(3114) + e12[+17][k12][0] + _s(+U6y) + T12 + _s(V6y * 1) + v12 + _s(909) + p6(Number(e12[17 ^ 0][k12]['2' & E6k
                                 .s6s])) + _s(+U6y) + l12 + _s(V6y | 645) + Q12 + _s(+K5y);
                         }
                         s12 = s12 + _s(+u3y);
@@ -14003,14 +13956,14 @@ var cotgsubscribe = amplify;
             }
             else {
                 if (H9B >= ('1' | 1)) {
-                    D6[_s(s8y & 2147483647)][s6y << 1348325472] = D6[E6k
-                        .S55(+s8y)][+s6y] - H9B;
-                    D6[_s(+Q8y)][s6y - 0] = D6[_s(+Q8y)][+s6y] - H9B;
+                    D6[_s(s8y & 2147483647)][17 << 1348325472] = D6[E6k
+                        .S55(+s8y)][+17] - H9B;
+                    D6["th"][17] = D6["th"][17] - H9B;
                 }
                 else {
-                    D6[_s(s8y * 1)][s6y ^ 0] = D6[E6k
-                        .o55(s8y >> 1819245536)][+s6y] - (1);
-                    D6[_s(Q8y - 0)][s6y << 188368000] = D6[_s(+Q8y)][s6y - 0] - (1);
+                    D6[_s(s8y * 1)][17 ^ 0] = D6[E6k
+                        .o55(s8y >> 1819245536)][+17] - (1);
+                    D6["th"][17 << 188368000] = D6["th"][17 - 0] - (1);
                 }
                 if (D6[_s(622)])
                     var l9B = D6[_s(622)].length;
@@ -14019,7 +13972,7 @@ var cotgsubscribe = amplify;
                     D6[_s(622)] = "";
                 }
                 var x9B = new Array();
-                x9B.push({ tt: +s6y, tv: H9B });
+                x9B.push({ tt: 17, tv: H9B });
                 if (w9B == 1) {
                     var Q9B = 0;
                     var T9B = +l6y;
@@ -14237,7 +14190,7 @@ var cotgsubscribe = amplify;
                 else if (V1v == 2) {
                     h1v.a = aldt["r"][+q7y];
                     h1v.b = aldt["r"][16];
-                    h1v.c = aldt["r"][+s6y];
+                    h1v.c = aldt["r"][+17];
                     h1v.d = aldt["r"][+u7y];
                     h1v.e = aldt["r"][p0y << 465449824];
                     h1v.f = aldt["r"][+u6y];
@@ -14437,7 +14390,7 @@ var cotgsubscribe = amplify;
                         strokeWidth: +q7y,
                         color: _s(961),
                         trailColor: _s("2628" | 576),
-                        trailWidth: s6y & 2147483647
+                        trailWidth: 17 & 2147483647
                     });
                     V2[L3g].set(X3g);
                 }
@@ -14933,7 +14886,7 @@ var cotgsubscribe = amplify;
             var p2R = '1482';
             if (D6)
                 if (D6.mo)
-                    for (var j6Z = 0; j6Z < s6y << 1165267136; j6Z++) {
+                    for (var j6Z = 0; j6Z < 17 << 1165267136; j6Z++) {
                         var H6Z = Number(j6Z) + ("9" <<
                             74169248);
                         if (D6.mo[H6Z])
@@ -14962,7 +14915,7 @@ var cotgsubscribe = amplify;
                             .attr(_s(+B9y), H6Z);
                     }
                 else
-                    for (var j6Z = 0; j6Z < +s6y; j6Z++) {
+                    for (var j6Z = 0; j6Z < +17; j6Z++) {
                         var H6Z = Number(j6Z) + 9;
                         var l6Z = bam["troops"][j6Z].ts * I6Z;
                         var v6Z = D6.tt - D6.tu;
@@ -15068,9 +15021,9 @@ var cotgsubscribe = amplify;
                 .val());
             if ($(_s(4475))
                 .prop(_s(286)) == !!{})
-                ppdt.opt[s6y - 0] = 1;
+                ppdt.opt[17 - 0] = 1;
             else
-                ppdt.opt[s6y * 1] = 0;
+                ppdt.opt[17 * 1] = 0;
             if ($(_s(5286))
                 .prop(_s(286)) == !![])
                 ppdt.opt[+u7y] = '1' | 1;
@@ -15720,7 +15673,7 @@ var cotgsubscribe = amplify;
                     D6[_s(N1R & 2147483647)][U2U][_s(P1R << 882964352)] = 0;
                 }
                 if ((P2U == (n4y | 547) || P2U == +l4y || P2U == o4y - 0 || P2U == +I1R || P2U == t1y >> 51875552 || P2U == T1y * 1 || P2U == +g1y || P2U ==
-                    f1y - 0 || P2U == +V1y || P2U == +M1y || P2U == Q1y << 225587520 || P2U == +Z1y || P2U == +u1y || P2U == +N1y || P2U == +i1y || P2U == (q1y ^ 0) || P2U == +D1y || P2U == B1y * 1 || P2U == (e1y ^ 0) || P2U == +y1y) && U2U != 3 && U2U != (7) && U2U != m2y - 0 && U2U != +s6y && U2U != D8y >> 126614880 &&
+                    f1y - 0 || P2U == +V1y || P2U == +M1y || P2U == Q1y << 225587520 || P2U == +Z1y || P2U == +u1y || P2U == +N1y || P2U == +i1y || P2U == (q1y ^ 0) || P2U == +D1y || P2U == B1y * 1 || P2U == (e1y ^ 0) || P2U == +y1y) && U2U != 3 && U2U != (7) && U2U != m2y - 0 && U2U != +17 && U2U != D8y >> 126614880 &&
                     U2U != (S1R & 2147483647) && U2U != +t5R && U2U != (J5R & 2147483647) && U2U != +T5R && U2U != 433 && U2U !=
                     x5R << 1896147136 && U2U != (g5R & 2147483647) && U2U != W5R * 1 && U2U != f5R >> 1551032608 && U2U != U5R <<
                     737845088 && U2U != N0R << 1837042752 && U2U != (p1R | 80) && U2U != (z1R & 2147483647) && U2U != +n1R &&
@@ -15738,7 +15691,7 @@ var cotgsubscribe = amplify;
                     P2U != +N1y && P2U != +i1y && P2U != +q1y && P2U != D1y >> 330094848 && P2U != +B1y && P2U != +e1y && P2U !=
                     y1y * 1 && P2U != +O1y && P2U != +w1y && P2U != H1y >> 611549632 && P2U != +G1y && P2U != (b1y & 2147483647) &&
                     P2U != +X1y && P2U != +I1y && P2U != +z1y && P2U != d1y * 1 && P2U != k1y << 496658432 && P2U != +S1y &&
-                    P2U != J5y >> 1172436896 && P2U != x5y >> 2039266656 && P2U != +W5y && P2U != +U5y && P2U != (c5y ^ 0) && (U2U == (p1R & 2147483647) || U2U == (z1R ^ 0) || U2U == n1R << 1135504608 || U2U == d1R * 1 || U2U == (323) || U2U == (l1R ^ 0) || U2U == +k1R || U2U == o1R << 503237888 || U2U == 3 || U2U == +'7' || U2U == +m2y || U2U == s6y * 1 || U2U == +D8y || U2U == S1R - 0 || U2U == t5R - 0 || U2U == +J5R ||
+                    P2U != J5y >> 1172436896 && P2U != x5y >> 2039266656 && P2U != +W5y && P2U != +U5y && P2U != (c5y ^ 0) && (U2U == (p1R & 2147483647) || U2U == (z1R ^ 0) || U2U == n1R << 1135504608 || U2U == d1R * 1 || U2U == (323) || U2U == (l1R ^ 0) || U2U == +k1R || U2U == o1R << 503237888 || U2U == 3 || U2U == +'7' || U2U == +m2y || U2U == 17 * 1 || U2U == +D8y || U2U == S1R - 0 || U2U == t5R - 0 || U2U == +J5R ||
                     U2U == T5R - 0 || U2U == 433 || U2U == +x5R || U2U == g5R - 0 || U2U == W5R * 1 || U2U == (f5R & E6k
                     .s6s) || U2U == +U5R || U2U == +N0R || U2U == +p1R || U2U == +z1R || U2U == +n1R || U2U == +d1R ||
                     U2U == 323 || U2U == l1R >> 1123097632 || U2U == (k1R | 33) || U2U == +o1R)) {
@@ -15752,7 +15705,7 @@ var cotgsubscribe = amplify;
                 if ((P2U == O1y * 1 || P2U == w1y >> 1332491136 || P2U ==
                     +H1y || P2U == G1y << 1922023968 || P2U == +b1y || P2U == X1y * 1 || P2U == (I1y ^ 0) || P2U == +z1y ||
                     P2U == +d1y || P2U == (k1y ^ 0) || P2U == +S1y || P2U == +J5y || P2U == +x5y || P2U == (W5y ^ 0) || P2U ==
-                    +U5y || P2U == +c5y) && U2U != 3 && U2U != (7) && U2U != +m2y && U2U != +s6y && U2U != +D8y &&
+                    +U5y || P2U == +c5y) && U2U != 3 && U2U != (7) && U2U != +m2y && U2U != +17 && U2U != +D8y &&
                     U2U != S1R >> 438385120 && U2U != +t5R && U2U != J5R - 0 && U2U != T5R << 945891840 && U2U != 433 &&
                     U2U != x5R << 2130842048 && U2U != g5R - 0 && U2U != W5R << 796786560 && U2U != +f5R && U2U != +U5R &&
                     U2U != N0R - 0 && U2U != (p1R | 32) && U2U != z1R - 0 && U2U != (n1R | 12) && U2U != +d1R && U2U != ('323' ^
@@ -15773,7 +15726,7 @@ var cotgsubscribe = amplify;
                                 850231456)][D2U];
                             V9U++;
                             if (P2U != (r6y & 2147483647) && U2U != 0 && U2U != +E1R && U2U != 3 && U2U !=
-                                7 && U2U != (m2y & 2147483647) && U2U != +s6y && U2U != (D8y | 16) && U2U != +S1R && U2U != +t5R &&
+                                7 && U2U != (m2y & 2147483647) && U2U != +17 && U2U != (D8y | 16) && U2U != +S1R && U2U != +t5R &&
                                 U2U != +J5R && U2U != +T5R && U2U != (433) && U2U != +x5R && U2U != g5R - 0 && U2U != W5R <<
                                 381473376 && U2U != +f5R && U2U != +U5R && U2U != N0R >> 344509536 && U2U != (p1R | 0) && U2U !=
                                 z1R << 2092871584 && U2U != n1R << 1900915552 && U2U != (d1R & 2147483647) && U2U != '323' >>
@@ -16463,7 +16416,7 @@ var cotgsubscribe = amplify;
                                 }
                                 if (j9U == 9) {
                                     var q8U = q8U + R2U;
-                                    var g8U = s6y ^ 0;
+                                    var g8U = 17 ^ 0;
                                 }
                                 if (j9U == (10)) {
                                     var N8U = N8U + R2U;
@@ -16689,7 +16642,7 @@ var cotgsubscribe = amplify;
                             if (y2U == 0 && B2U != 0 &&
                                 B2U != 1 && B2U != 2 && B2U != (3) && B2U != 4 && B2U != 5 && B2U !=
                                 6 && B2U != 7 && B2U != 8 && B2U != 9 && B2U != 10 && B2U != 11 && B2U !=
-                                12 && B2U != B2y << 1704664960 && B2U != (q7y & 2147483647) && B2U != (16) && B2U != s6y >>
+                                12 && B2U != B2y << 1704664960 && B2U != (q7y & 2147483647) && B2U != (16) && B2U != 17 >>
                                 1595429632 && B2U != +u7y && B2U != p0y << 1789523232 && B2U != u6y << 1875970880 && B2U != +A5y &&
                                 B2U != +j6y && B2U != F8y >> 945958272 && B2U != b8y * 1 && B2U != +l8y && B2U != +c8y && B2U !=
                                 k8y << 642430048 && B2U != +o8y && B2U != +S8y && B2U != (V0R | 20) && B2U != ('61' | 53) && B2U != +a0R && B2U != 73 && B2U != 84 && B2U != 94 && B2U != +L5R && B2U != (105) && B2U !=
@@ -17123,7 +17076,7 @@ var cotgsubscribe = amplify;
                             C6y << 904681344 && y8U != +r1R && y8U != (b1R | 130) && y8U != q1R << 124155232 && y8U <= +R1R && d4F(O8U))
                             if (D6.bq[O8U].sl == 0) {
                                 V9U = V9U + (1);
-                                if (y8U != +r6y && U2U != 0 && U2U != (E1R ^ 0) && U2U != 3 && U2U != 7 && U2U != (m2y | 12) && U2U != +s6y && U2U != (D8y ^ 0) &&
+                                if (y8U != +r6y && U2U != 0 && U2U != (E1R ^ 0) && U2U != 3 && U2U != 7 && U2U != (m2y | 12) && U2U != +17 && U2U != (D8y ^ 0) &&
                                     U2U != +S1R && U2U != +t5R && U2U != +J5R && U2U != +T5R && U2U != 433 && U2U != +x5R &&
                                     U2U != (g5R | 262) && U2U != +W5R && U2U != +f5R && U2U != +U5R && U2U != N0R >> 1881296832 &&
                                     U2U != +p1R && U2U != +z1R && U2U != n1R >> 854822336 && U2U != +d1R && U2U != 323 && U2U != +l1R && U2U != +k1R && U2U != +o1R)
@@ -18403,9 +18356,9 @@ var cotgsubscribe = amplify;
             O6w = Number(O6w);
             if (O6w == +p1R || O6w == z1R >> 401026432 || O6w == n1R * 1 || O6w ==
                 d1R << 1043538176 || O6w == 323 || O6w == (l1R | 322) || O6w == +k1R || O6w == +o1R || O6w ==
-                3 || O6w == ("7" | 3) || O6w == (m2y | 9) || O6w == +s6y || O6w == D8y * 1 || O6w == +S1R || O6w == +t5R || O6w == +J5R || O6w == T5R - 0 || O6w == ('433' | 417) || O6w == +x5R || O6w == +g5R || O6w == W5R *
+                3 || O6w == ("7" | 3) || O6w == (m2y | 9) || O6w == +17 || O6w == D8y * 1 || O6w == +S1R || O6w == +t5R || O6w == +J5R || O6w == T5R - 0 || O6w == ('433' | 417) || O6w == +x5R || O6w == +g5R || O6w == W5R *
                 1 || O6w == (f5R & 2147483647) || O6w == +U5R || O6w == +N0R || O6w == 3 || O6w == 7 || O6w == +m2y ||
-                O6w == +s6y || O6w == +D8y || O6w == (S1R & 2147483647) || O6w == +t5R || O6w == J5R - 0 || O6w == +T5R || O6w ==
+                O6w == +17 || O6w == +D8y || O6w == (S1R & 2147483647) || O6w == +t5R || O6w == J5R - 0 || O6w == +T5R || O6w ==
                 433 || O6w == x5R >> 1292595936 || O6w == (g5R & 2147483647) || O6w == +W5R || O6w == +f5R ||
                 O6w == U5R << 581518592 || O6w == +N0R || O6w == +p1R || O6w == +z1R || O6w == +n1R || O6w == +d1R || O6w == (323) || O6w == +l1R || O6w == k1R - 0 || O6w == (o1R & 2147483647))
                 return ![];
@@ -18680,7 +18633,7 @@ var cotgsubscribe = amplify;
                 var S1B = W1B
                     .substring(11, m2y | 0);
                 var b1B = W1B.substring(+B2y, 16);
-                var d1B = W1B.substring(+s6y, p0y >> 51480800);
+                var d1B = W1B.substring(+17, p0y >> 51480800);
                 var y1B = { 'date': G1B, 'second': d1B, 'hour': S1B, 'minute': b1B, 'month': M1B, 'year': i1B };
                 var L1B = moment.utc();
                 L1B.month(M1B);
@@ -18744,7 +18697,7 @@ var cotgsubscribe = amplify;
                 var D1B = M1B + "" + G1B;
                 var S1B = W1B.substring(11, m2y << 1632588032);
                 var b1B = W1B.substring(+B2y, 16);
-                var d1B = W1B.substring(+s6y, p0y >>
+                var d1B = W1B.substring(+17, p0y >>
                     445773120);
                 var y1B = { 'date': G1B, 'hour': S1B, 'minute': b1B, 'second': d1B, 'month': M1B, 'year': i1B };
                 var L1B = moment.utc();
@@ -19706,7 +19659,7 @@ var cotgsubscribe = amplify;
             else if (H2g == D8y * 1 || H2g == S1R >> 288982464 || H2g == +t5R || H2g == +J5R || H2g == (k1R & 2147483647) ||
                 H2g == +o1R)
                 return 577;
-            else if (H2g == 3 || H2g == 7 || H2g == m2y >> 1611463328 || H2g == +s6y || H2g == +p1R || H2g == +z1R)
+            else if (H2g == 3 || H2g == 7 || H2g == m2y >> 1611463328 || H2g == +17 || H2g == +p1R || H2g == +z1R)
                 return 578;
             else if (H2g == 323 || H2g == +l1R || H2g == g5R << 44740544 || H2g == x5R * 1 || H2g == +'433' || H2g == +T5R)
                 return "576" | 512;
@@ -20701,7 +20654,7 @@ var cotgsubscribe = amplify;
                                         A7Z = A7Z / ((100 - K7Z) / (100));
                                     }
                                 }
-                                if (S7Z == +s6y) {
+                                if (S7Z == +17) {
                                     var V7Z = ppdt[_s(+i2y)][F8y | 3]["n"];
                                     if (V7Z != 0) {
                                         var K7Z = qam[_s(+G2y)][V7Z][E6k
@@ -20734,7 +20687,7 @@ var cotgsubscribe = amplify;
                                 var Y7Z = ppdt[_s(r0R & 2147483647)][_s(w6y >>
                                     1284272544)];
                                 var l4Z = 0;
-                                if (S7Z == s6y >> 2013312832)
+                                if (S7Z == 17 >> 2013312832)
                                     l4Z = Z7Z;
                                 var z4Z = Number(ppdt[_s(+B9y)]);
                                 var X4Z = Number(ppdt[_s(h6R & 2147483647)]);
@@ -20971,7 +20924,7 @@ var cotgsubscribe = amplify;
                             q0v += topstr + _s(+B5p) + padding + _s(493) + t2 + _s(X5y ^ 0) + a0v + _s(+P5y) + k5v + _s(+R5p) + p6(N0v[_s(i5p * 1)][c0v][_s(Z9y - 0)]) + _s(e5p |
                                 2416) + p6(N0v[_s(+i5p)][c0v][_s(+K9y)]) + _s(+L5p);
                             F0v++;
-                            if (F0v == (8) || F0v == (s6y | 17))
+                            if (F0v == (8) || F0v == (17 | 17))
                                 q0v += _s(j5p & 2147483647);
                         }
                     }
@@ -20997,8 +20950,8 @@ var cotgsubscribe = amplify;
                                 F0v++;
                             }
                     }
-                    else if (F0v < (s6y | 0))
-                        while (F0v < s6y >> 1796691424) {
+                    else if (F0v < (17 | 0))
+                        while (F0v < 17 >> 1796691424) {
                             q0v += _s(Y5p << 127671296);
                             F0v++;
                         }
@@ -21042,7 +20995,7 @@ var cotgsubscribe = amplify;
                             q0v += topstr + _s(B5p ^ 0) + padding + _s(493) + t2 + _s(+X5y) + a0v + _s(+P5y) + k5v + _s(R5p << 1127525184) + p6(N0v[_s(G5p ^ 0)][c0v]) + _s(L5p >>
                                 1890125984);
                             F0v++;
-                            if (F0v == 8 || F0v == +s6y)
+                            if (F0v == 8 || F0v == +17)
                                 q0v += _s(+j5p);
                         }
                     }
@@ -21068,8 +21021,8 @@ var cotgsubscribe = amplify;
                                 F0v++;
                             }
                     }
-                    else if (F0v < (s6y | 17))
-                        while (F0v < +s6y) {
+                    else if (F0v < (17 | 17))
+                        while (F0v < +17) {
                             q0v += _s(Y5p >> 2038192320);
                             F0v++;
                         }
@@ -21882,7 +21835,7 @@ var cotgsubscribe = amplify;
                 var h4g = 0;
                 var i4g = 0;
                 var J4g = 57;
-                var M4g = +s6y;
+                var M4g = +17;
                 var z4g = 25;
                 var X4g = X8y >> 1089033280;
             }
@@ -24152,7 +24105,7 @@ var cotgsubscribe = amplify;
                     l42 + _s(4550) + x42 + _s(3849) + l42 + _s(3047);
                 for (var w42 = 0; w42 <
                     D6.tc.length; w42++)
-                    if (w42 != 0 && w42 != 1 && w42 != 7 && w42 != 12 && w42 != +m2y && w42 != +s6y) {
+                    if (w42 != 0 && w42 != 1 && w42 != 7 && w42 != 12 && w42 != +m2y && w42 != +17) {
                         var t42 = D6
                             .tc[w42];
                         var L42 = Math.floor(Number(D6.th[w42]) * I42);
@@ -24337,7 +24290,7 @@ var cotgsubscribe = amplify;
                 if (N9w != 0)
                     E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][_s(+b2y)] + ppdt[_s(+h2y)][5];
             }
-            if (a9w == +s6y) {
+            if (a9w == +17) {
                 var N9w = ppdt["rs"][F8y | 2]["n"];
                 if (N9w != 0)
                     E9w = qam[_s(+G2y)][N9w][_s(+r2y)][+'0'][_s(b2y | 448)] + ppdt[_s(h2y | 605)][1];
@@ -24610,7 +24563,7 @@ var cotgsubscribe = amplify;
                             X5v += topstr + _s(+B5p) + padding + _s(493) + t2 + _s(+X5y) + M5v + _s(+P5y) + C5v + _s(R5p & 2147483647) + p6(o5v[_s(i5p ^ 0)][z5v][_s(+Z9y)]) + _s(+e5p) +
                                 p6(o5v[_s(i5p ^ 0)][z5v][_s(K9y * 1)]) + _s(+L5p);
                             L5v++;
-                            if (L5v == 8 || L5v == (s6y | 17))
+                            if (L5v == 8 || L5v == (17 | 17))
                                 X5v += _s(+j5p);
                         }
                     }
@@ -24637,8 +24590,8 @@ var cotgsubscribe = amplify;
                                 L5v++;
                             }
                     }
-                    else if (L5v < +s6y)
-                        while (L5v < +s6y) {
+                    else if (L5v < +17)
+                        while (L5v < +17) {
                             X5v += _s(Y5p | 5314);
                             L5v++;
                         }
@@ -24684,7 +24637,7 @@ var cotgsubscribe = amplify;
                             X5v += topstr + _s(+B5p) + padding + _s(493) + t2 + _s(+X5y) + M5v + E6k
                                 .o55(+P5y) + C5v + _s(R5p ^ 0) + p6(o5v[_s(+G5p)][z5v]) + _s(+L5p);
                             L5v++;
-                            if (L5v == (8) || L5v == +s6y)
+                            if (L5v == (8) || L5v == +17)
                                 X5v += _s(+j5p);
                         }
                     }
@@ -24710,8 +24663,8 @@ var cotgsubscribe = amplify;
                                 L5v++;
                             }
                     }
-                    else if (L5v < (s6y | 1))
-                        while (L5v < s6y << 1805219904) {
+                    else if (L5v < (17 | 1))
+                        while (L5v < 17 << 1805219904) {
                             X5v += _s(+Y5p);
                             L5v++;
                         }
@@ -26069,7 +26022,7 @@ var cotgsubscribe = amplify;
                             1;
                     if ((H3U == n4y << 123779168 || H3U == +l4y || H3U == o4y >> 1618993664 || H3U == +I1R || H3U == +t1y || H3U == (T1y ^ 0) || H3U == g1y * 1 || H3U == (f1y & 2147483647) || H3U ==
                         V1y << 644383968 || H3U == +M1y || H3U == +Q1y || H3U == Z1y << 46183136 || H3U == +u1y ||
-                        H3U == +N1y || H3U == +i1y || H3U == +q1y || H3U == +D1y || H3U == (B1y & 2147483647) || H3U == +e1y || H3U == +y1y) && u3U != 3 && u3U != 7 && u3U != +m2y && u3U != s6y * 1 && u3U !=
+                        H3U == +N1y || H3U == +i1y || H3U == +q1y || H3U == +D1y || H3U == (B1y & 2147483647) || H3U == +e1y || H3U == +y1y) && u3U != 3 && u3U != 7 && u3U != +m2y && u3U != 17 * 1 && u3U !=
                         D8y >> 302441568 && u3U != S1R - 0 && u3U != +t5R && u3U != (J5R & 2147483647) && u3U != T5R >>
                         2491744 && u3U != 433 && u3U != (x5R & 2147483647) && u3U != +g5R && u3U != W5R - 0 && u3U != +f5R && u3U != (U5R ^ 0) && u3U != +N0R && u3U != +p1R && u3U != +z1R && u3U != (n1R | 4) && u3U !=
                         +d1R && u3U != 323 && u3U != (l1R & 2147483647) && u3U != +k1R && u3U != +o1R) {
@@ -26080,7 +26033,7 @@ var cotgsubscribe = amplify;
                     if ((H3U == +n4y || H3U == l4y >> 566421376 || H3U == +o4y || H3U == +I1R || H3U ==
                         t1y - 0 || H3U == T1y << 2667584 || H3U == +g1y || H3U == +f1y || H3U == (V1y | 538) || H3U ==
                         M1y - 0 || H3U == +Q1y || H3U == +Z1y || H3U == +u1y || H3U == +N1y || H3U == (i1y | 553) ||
-                        H3U == (q1y | 10) || H3U == (D1y ^ 0) || H3U == B1y - 0 || H3U == e1y << 388731744 || H3U == +y1y) && (u3U == ("3" | 2) || u3U == 7 || u3U == +m2y || u3U == +s6y || u3U == (D8y & 2147483647) || u3U == S1R * 1 || u3U == +t5R || u3U == (J5R & 2147483647) || u3U == +T5R ||
+                        H3U == (q1y | 10) || H3U == (D1y ^ 0) || H3U == B1y - 0 || H3U == e1y << 388731744 || H3U == +y1y) && (u3U == ("3" | 2) || u3U == 7 || u3U == +m2y || u3U == +17 || u3U == (D8y & 2147483647) || u3U == S1R * 1 || u3U == +t5R || u3U == (J5R & 2147483647) || u3U == +T5R ||
                         u3U == ('433' | 417) || u3U == (x5R & 2147483647) || u3U == (g5R ^ 0) || u3U == W5R >> 550973664 ||
                         u3U == (f5R & 2147483647) || u3U == +U5R || u3U == +N0R || u3U == +p1R || u3U == (z1R ^ 0) ||
                         u3U == +n1R || u3U == d1R - 0 || u3U == 323 || u3U == (l1R ^ 0) || u3U == (k1R ^ 0) || u3U ==
@@ -26094,13 +26047,13 @@ var cotgsubscribe = amplify;
                         H3U != +X1y && H3U != I1y >> 685067552 && H3U != z1y - 0 && H3U != d1y << 176347328 && H3U != +k1y && H3U != +S1y && H3U != (J5y ^ 0) && H3U != (x5y & 2147483647) && H3U != W5y >> 823540064 &&
                         H3U != (U5y ^ 0) && H3U != +c5y && (u3U == +p1R || u3U == (z1R | 85) || u3U == n1R << 555644384 ||
                         u3U == (d1R ^ 0) || u3U == 323 || u3U == l1R - 0 || u3U == (k1R ^ 0) || u3U == +o1R || u3U ==
-                        3 || u3U == (7) || u3U == +m2y || u3U == (s6y | 1) || u3U == +D8y || u3U == +S1R || u3U == (t5R & 2147483647) || u3U == (J5R ^ 0) || u3U == T5R >> 1374188896 || u3U == +"433" || u3U == +x5R || u3U == g5R >> 1339232384 || u3U == +W5R || u3U == +f5R || u3U == +U5R ||
+                        3 || u3U == (7) || u3U == +m2y || u3U == (17 | 1) || u3U == +D8y || u3U == +S1R || u3U == (t5R & 2147483647) || u3U == (J5R ^ 0) || u3U == T5R >> 1374188896 || u3U == +"433" || u3U == +x5R || u3U == g5R >> 1339232384 || u3U == +W5R || u3U == +f5R || u3U == +U5R ||
                         u3U == N0R - 0 || u3U == (p1R & 2147483647) || u3U == (z1R | 32) || u3U == +n1R || u3U == +d1R ||
                         u3U == (323) || u3U == (l1R & 2147483647) || u3U == +k1R || u3U == o1R - 0))
                         I3U = 1;
                     if ((H3U == (O1y & 2147483647) || H3U == +w1y || H3U == +H1y || H3U == +G1y || H3U == b1y - 0 || H3U ==
                         X1y * 1 || H3U == +I1y || H3U == z1y - 0 || H3U == d1y - 0 || H3U == (k1y | 560) || H3U ==
-                        S1y >> 2041466176 || H3U == J5y - 0 || H3U == +x5y || H3U == W5y - 0 || H3U == +U5y || H3U == +c5y) && u3U != ("3" | 3) && u3U != 7 && u3U != m2y - 0 && u3U != (s6y & 2147483647) && u3U !=
+                        S1y >> 2041466176 || H3U == J5y - 0 || H3U == +x5y || H3U == W5y - 0 || H3U == +U5y || H3U == +c5y) && u3U != ("3" | 3) && u3U != 7 && u3U != m2y - 0 && u3U != (17 & 2147483647) && u3U !=
                         +D8y && u3U != +S1R && u3U != +t5R && u3U != (J5R ^ 0) && u3U != T5R - 0 && u3U != ('433' & E6k
                         .s6s) && u3U != +x5R && u3U != +g5R && u3U != +W5R && u3U != +f5R && u3U != +U5R && u3U != N0R *
                         1 && u3U != +p1R && u3U != (z1R ^ 0) && u3U != n1R << 1797413920 && u3U != (d1R ^ 0) && u3U != +'323' && u3U != +l1R && u3U != +k1R && u3U != +o1R)
@@ -26108,7 +26061,7 @@ var cotgsubscribe = amplify;
                     if ((H3U == +O1y || H3U == +w1y ||
                         H3U == H1y - 0 || H3U == +G1y || H3U == +b1y || H3U == +X1y || H3U == +I1y || H3U == +z1y ||
                         H3U == +d1y || H3U == +k1y || H3U == (S1y & 2147483647) || H3U == +J5y || H3U == +x5y || H3U == (W5y & 2147483647) || H3U == U5y << 1454205248 || H3U == +c5y) && (u3U == 3 || u3U == 7 ||
-                        u3U == +m2y || u3U == +s6y || u3U == D8y * 1 || u3U == S1R * 1 || u3U == (t5R | 257) || u3U == (J5R | 72) || u3U == +T5R || u3U == 433 || u3U == +x5R || u3U == +g5R || u3U == +W5R ||
+                        u3U == +m2y || u3U == +17 || u3U == D8y * 1 || u3U == S1R * 1 || u3U == (t5R | 257) || u3U == (J5R | 72) || u3U == +T5R || u3U == 433 || u3U == +x5R || u3U == +g5R || u3U == +W5R ||
                         u3U == +f5R || u3U == +U5R || u3U == +N0R || u3U == p1R - 0 || u3U == z1R - 0 || u3U == +n1R ||
                         u3U == +d1R || u3U == 323 || u3U == +l1R || u3U == (k1R & 2147483647) || u3U == o1R * 1))
                         t3U = 1;
@@ -26627,7 +26580,7 @@ var cotgsubscribe = amplify;
                         else
                             var g01 = _s(2854);
                         if (K01.length > u6y << 1679478016)
-                            K01 = K01.substring(0, +s6y) + _s(Z14 | 2305);
+                            K01 = K01.substring(0, +17) + _s(Z14 | 2305);
                         if (D01 == _s(1672) && B01 == 0)
                             var f01 = _s(3261);
                         else if (D01 == _s(5539) && B01 == 0)
@@ -26673,9 +26626,9 @@ var cotgsubscribe = amplify;
                         var g01 = _s('2854' & E6k
                             .s6s);
                         if (K01.length > +u6y)
-                            K01 = K01.substring(0, s6y | 1) + _s(+Z14);
+                            K01 = K01.substring(0, 17 | 1) + _s(+Z14);
                         if (N01.length > +u6y)
-                            N01 = N01.substring(0, s6y ^ 0) + _s(+Z14);
+                            N01 = N01.substring(0, 17 ^ 0) + _s(+Z14);
                         var q01 = c01;
                         var s51 = _s(O14 ^
                             0) + g01 + _s(+g3y) + N01 + _s(6021);
@@ -27426,8 +27379,8 @@ var cotgsubscribe = amplify;
                 x6w != 428 && x6w != q5R << 1478708000 && x6w != +z7R && x6w != (431) && x6w != 432 && x6w !=
                 434 && x6w != (k7R | 179) && x6w != 436 && x6w != 438 && x6w != +'439' && x6w != (t9R ^ 0) && x6w != (p1R ^ 0) && x6w != (z1R & 2147483647) && x6w != +n1R && x6w != +d1R &&
                 x6w != 323 && x6w != +l1R && x6w != +k1R && x6w != (o1R ^ 0) && x6w != 3 && x6w != 7 && x6w != (m2y &
-                2147483647) && x6w != +s6y && x6w != +D8y && x6w != (S1R & 2147483647) && x6w != +t5R && x6w != +J5R && x6w != +T5R && x6w != 433 && x6w != +x5R && x6w != g5R - 0 && x6w != +W5R && x6w != (f5R ^ 0) && x6w != U5R <<
-                1695442080 && x6w != (N0R & 2147483647) && x6w != 3 && x6w != 7 && x6w != +m2y && x6w != s6y *
+                2147483647) && x6w != +17 && x6w != +D8y && x6w != (S1R & 2147483647) && x6w != +t5R && x6w != +J5R && x6w != +T5R && x6w != 433 && x6w != +x5R && x6w != g5R - 0 && x6w != +W5R && x6w != (f5R ^ 0) && x6w != U5R <<
+                1695442080 && x6w != (N0R & 2147483647) && x6w != 3 && x6w != 7 && x6w != +m2y && x6w != 17 *
                 1 && x6w != +D8y && x6w != (S1R ^ 0) && x6w != (t5R ^ 0) && x6w != (J5R & 2147483647) && x6w != +T5R && x6w !=
                 433 && x6w != x5R * 1 && x6w != g5R * 1 && x6w != +W5R && x6w != f5R - 0 && x6w != U5R << 1510401088 &&
                 x6w != +N0R && x6w != (p1R | 16) && x6w != z1R << 811224128 && x6w != +n1R && x6w != d1R * 1 && x6w != +'323' && x6w != +l1R && x6w != k1R * 1 && x6w != o1R * 1)
@@ -29118,7 +29071,7 @@ var cotgsubscribe = amplify;
                 return _s(q34 * 1);
             if (a3V == 16)
                 return _s(6862);
-            if (a3V == (s6y ^ 0))
+            if (a3V == (17 ^ 0))
                 return _s(187);
             if (a3V == u7y >> 1222117472)
                 return _s(2774);
@@ -29592,7 +29545,7 @@ var cotgsubscribe = amplify;
                         if (!(y2B <= 0))
                             if (!(y2B > thome))
                                 if (y2B > (0)) {
-                                    D6[_s(Q8y >> 1414547584)][R2B] = D6[_s(+Q8y)][R2B] - y2B;
+                                    D6["th"][R2B] = D6["th"][R2B] - y2B;
                                     D6[_s(+s8y)][R2B] = D6[_s(s8y & 2147483647)][R2B] - y2B;
                                     D2B[R2B] = y2B;
                                     var p2B = bam["troops"][R2B][_s(+t1R)] * y2B;
@@ -30671,7 +30624,7 @@ var cotgsubscribe = amplify;
                         $(_s(5836))
                             .text(f7v.t);
                     }
-                    if (f7v.type == (s6y & 2147483647)) {
+                    if (f7v.type == (17 & 2147483647)) {
                         o8();
                         $(_s(4764))
                             .css("display", '');
@@ -31616,7 +31569,7 @@ var cotgsubscribe = amplify;
                                 scoutsent = 1;
                             if (L3v == +m2y || L3v == ("16" | 16))
                                 A3v = "1" | 1;
-                            if (L3v == s6y * 1)
+                            if (L3v == 17 * 1)
                                 S3v = 1;
                             if (f7v[E6k
                                 .o55(2746)][g7v])
@@ -33210,7 +33163,7 @@ var cotgsubscribe = amplify;
             $(_s(3368))
                 .text(D6[_s(+Q0t)][16]);
             $(_s(O1y ^ 0))
-                .text(D6[_s(Q0t | 4160)][+s6y]);
+                .text(D6[_s(Q0t | 4160)][+17]);
             $(_s(1795))
                 .text(D6[_s(Q0t ^ 0)][+u7y]);
             $(_s(2275))
@@ -34008,7 +33961,7 @@ var cotgsubscribe = amplify;
                     if (D6.mo.length == 0)
                         D6.mo =
                             new Object();
-                    for (var O6Z = 0; O6Z < (s6y ^ 0); O6Z++) {
+                    for (var O6Z = 0; O6Z < (17 ^ 0); O6Z++) {
                         var t6Z = Number(O6Z) + +'9';
                         var o6Z = $(_s(877) + t6Z)
                             .val();
@@ -34405,7 +34358,7 @@ var cotgsubscribe = amplify;
                                     else
                                         var b02 = _s(2854);
                                     if (d02.length > +u6y)
-                                        d02 = d02.substring(0, +s6y) + _s(+Z14);
+                                        d02 = d02.substring(0, +17) + _s(+Z14);
                                     if (n02 == _s(1672) && V02 == (0))
                                         var i02 = _s(3261);
                                     else if (n02 == _s(5539) && V02 == (0))
@@ -34450,9 +34403,9 @@ var cotgsubscribe = amplify;
                                     var b02 = _s(2854);
                                     if (d02
                                         .length > u6y << 2084904320)
-                                        d02 = d02.substring(0, s6y & 2147483647) + _s(+Z14);
+                                        d02 = d02.substring(0, 17 & 2147483647) + _s(+Z14);
                                     if (g02.length > +u6y)
-                                        g02 = g02.substring(0, +s6y) + _s(+Z14);
+                                        g02 = g02.substring(0, +17) + _s(+Z14);
                                     var U02 = P02;
                                     var Y02 = _s(+O14) + b02 + _s(+g3y) + g02 + _s(6021);
                                     var Z02 = _s(O14 ^ 0) + b02 + _s(+g3y) + d02 + _s(6021);
@@ -35309,7 +35262,7 @@ var cotgsubscribe = amplify;
                 .click(function () {
                 var g42 = $(_s(4567))
                     .val();
-                j2(+s6y, g42);
+                j2(+17, g42);
             });
             $(_s(360))
                 .click(function () {
@@ -35708,7 +35661,7 @@ var cotgsubscribe = amplify;
                 .change(function () {
                 var B32 = $(this)
                     .val();
-                j2(s6y << 1054091648, B32);
+                j2(17 << 1054091648, B32);
             });
             $(_s(1769))
                 .change(function () {
@@ -38262,7 +38215,7 @@ var cotgsubscribe = amplify;
             if (Y2v == 3 && N2v != m2y - 0)
                 return p2v + _s(1785);
             E6k.R6();
-            return p2v + _s(Q8y & 2147483647);
+            return p2v + "th";
         }
         (function (P29, B29) {
             E6k.R6();
@@ -40311,7 +40264,7 @@ var cotgsubscribe = amplify;
             var b4Z = 0;
             var r4Z = 0;
             var Z4Z = 0;
-            for (var S4Z = 0; S4Z < +s6y; S4Z++) {
+            for (var S4Z = 0; S4Z < +17; S4Z++) {
                 var g4Z = Number(S4Z) + 9;
                 var A4Z = $(_s(877) + g4Z)
                     .val();
@@ -43269,7 +43222,7 @@ var cotgsubscribe = amplify;
                 .html("");
             var K72 = _s(5238);
             for (var f72 = 0; f72 < D6.tc.length; f72++)
-                if (f72 != 0 && f72 != 1 && f72 != 7 && f72 != 12 && f72 != +m2y && f72 != s6y <<
+                if (f72 != 0 && f72 != 1 && f72 != 7 && f72 != 12 && f72 != +m2y && f72 != 17 <<
                     784336672) {
                     var g72 = D6.tc[f72];
                     var y72 = D6.th[f72];
@@ -43701,7 +43654,7 @@ var cotgsubscribe = amplify;
             "70": { "d": _s(2622), "r": null },
             "2": {
                 "d": _s(4528),
-                "shd": _s(s6y ^
+                "shd": _s(17 ^
                     0),
                 "r": null,
                 "h": 1
@@ -44196,7 +44149,7 @@ var cotgsubscribe = amplify;
                 var q8w = Math.min(x9w, T9w, j9w, e9w);
             else
                 var q8w = Math.min(x9w, T9w, j9w, e9w, G9w);
-            if (o9w == s6y >> 488312480 & q8w >= ppdt.b)
+            if (o9w == 17 >> 488312480 & q8w >= ppdt.b)
                 q8w = ppdt
                     .b;
             return q8w;
@@ -44218,7 +44171,7 @@ var cotgsubscribe = amplify;
                 var p6g = Number(y6g) * ('10' >>
                     1146069344);
                 if (r6g == 1 && (S6g == 3 || S6g == 7 || S6g == +m2y ||
-                    S6g == s6y - 0 || S6g == +D8y || S6g == S1R - 0 || S6g == (t5R & 2147483647) || S6g == +J5R || S6g == (T5R &
+                    S6g == 17 - 0 || S6g == +D8y || S6g == S1R - 0 || S6g == (t5R & 2147483647) || S6g == +J5R || S6g == (T5R &
                     2147483647) || S6g == 433 || S6g == (x5R | 427) || S6g == (g5R & 2147483647) || S6g == (W5R & 2147483647) ||
                     S6g == +f5R || S6g == (U5R | 0) || S6g == +N0R || S6g == +p1R || S6g == z1R >> 1929019488 || S6g == +n1R || S6g == (d1R | 0) || S6g == 323 || S6g == (l1R ^ 0) || S6g == +k1R || S6g == o1R <<
                     1537867712) && (J6g == n4y - 0 || J6g == +t1y || J6g == +V1y || J6g == (u1y & 2147483647) || J6g == (D1y &
@@ -44385,7 +44338,7 @@ var cotgsubscribe = amplify;
                 W8l = D6.th[C8l];
                 b8l = bam["troops"][C8l]["simg"];
                 if (C8l != (0) && C8l != 1 && C8l != '7' >>
-                    594275040 && C8l != (12) && C8l != +m2y && C8l != +s6y)
+                    594275040 && C8l != (12) && C8l != +m2y && C8l != +17)
                     $(_s(1226) + C8l)
                         .html(_s(t2p * 1) + C8l + _s(+J2p) + b8l + _s(3011) + bam["troops"][C8l][_s(1067)] + _s(g2p ^ 0) + p6(W8l) + _s(+f5R) + p6(d8l) + _s(5864) + C8l +
                         _s(1792) + C8l + _s(+f2p) + W8l + _s(2117) + C8l + _s(+f2p) + W8l + _s(+U2p) + p6(W8l) + _s(+V2p));
@@ -45125,7 +45078,7 @@ var cotgsubscribe = amplify;
             if (T8B == +B2y || T8B == +q7y || T8B == "16" >>
                 2129821440)
                 return d8B;
-            if (T8B == s6y * 1)
+            if (T8B == 17 * 1)
                 return b8B;
         }
         function Y2F() {
@@ -45229,7 +45182,7 @@ var cotgsubscribe = amplify;
                     Y6(_s(2186));
                 else if (n72 == 16)
                     Y6(_s(6659));
-                else if (n72 == +s6y)
+                else if (n72 == +17)
                     Y6(_s(E8y * 1));
                 else if (n72 == +u7y)
                     Y6(_s(+N8y));
@@ -46036,7 +45989,7 @@ var cotgsubscribe = amplify;
                             Y6(_s(2186));
                         else if (u0Z == 16)
                             Y6(_s(6659));
-                        else if (u0Z == +s6y)
+                        else if (u0Z == +17)
                             Y6(_s(2997));
                         else if (u0Z == (j6y | 6))
                             Y6(_s(6288));
@@ -46052,7 +46005,7 @@ var cotgsubscribe = amplify;
                             Y6(_s(E8y & 2147483647));
                         else {
                             for (var H0Z = 0; H0Z < h9B.length; H0Z++)
-                                D6[_s(+Q8y)][Number(h9B[H0Z][_s(+"6626")])] = D6[_s(+Q8y)][Number(h9B[H0Z][_s(6626)])] - Number(h9B[H0Z][_s(+r1t)]) * Number(r9B);
+                                D6["th"][Number(h9B[H0Z][_s(+"6626")])] = D6["th"][Number(h9B[H0Z][_s(6626)])] - Number(h9B[H0Z][_s(+r1t)]) * Number(r9B);
                             D6[_s(6066)] = D6[_s(6066)] + Number(r9B);
                             o0F(Z9B, K9B);
                             z5F();
@@ -46071,7 +46024,7 @@ var cotgsubscribe = amplify;
             var P0w;
             console.log(U0w + _s(5703) + g0w);
             if (g0w == p1R * 1 || g0w == +z1R || g0w == 3 ||
-                g0w == 7 || g0w == (m2y | 5) || g0w == s6y - 0) {
+                g0w == 7 || g0w == (m2y | 5) || g0w == 17 - 0) {
                 Z0w = U0w + (1);
                 P0w = Number(bam[_s(+Q5y)][Number(Z0w)][_s(+G5m)]);
             }
@@ -46840,7 +46793,7 @@ var cotgsubscribe = amplify;
             var J91 = z91.substring(11, +m2y);
             var b91 = z91.substring(+B2y, 16);
             var S91 = z91
-                .substring(+s6y, p0y & 2147483647);
+                .substring(+17, p0y & 2147483647);
             var X91 = moment.utc();
             X91.month(W91);
             X91.year(d91);
@@ -47072,7 +47025,7 @@ var cotgsubscribe = amplify;
                 }
                 return z19;
             };
-            var J49 = [], h49, Q39, T39, e39, s39, i49, S49, b49, d49, U49 = 7, E49 = 12, B49 = s6y >> 1494707520, R49 = +j6y, y49 = 5, D49 = 9, p49 = +B2y, Y49 = +u6y, N49 = 4, F49 = 11, q49 = 16, c49 = F8y << 1592320672, m49 = 6, a49 = 10, Z49 = +q7y, K49 = +A5y;
+            var J49 = [], h49, Q39, T39, e39, s39, i49, S49, b49, d49, U49 = 7, E49 = 12, B49 = 17 >> 1494707520, R49 = +j6y, y49 = 5, D49 = 9, p49 = +B2y, Y49 = +u6y, N49 = 4, F49 = 11, q49 = 16, c49 = F8y << 1592320672, m49 = 6, a49 = 10, Z49 = +q7y, K49 = +A5y;
             k39 = E5V(k39);
             J49 = w39(k39);
             i49 = +'0x67452301';
@@ -48014,7 +47967,7 @@ var cotgsubscribe = amplify;
                         strokeWidth: +q7y,
                         color: _s(4462),
                         trailColor: _s(2628),
-                        trailWidth: +s6y
+                        trailWidth: +17
                     });
                     V2[l3g].set(Q3g);
                 }
@@ -48362,7 +48315,7 @@ var cotgsubscribe = amplify;
                                         H7v = _s(+D5p);
                                         if (Y5v == (7) || Y5v == 16 || Y5v == u7y >> 817816800)
                                             H7v = "";
-                                        if (Y5v == 0 || Y5v == 8 || Y5v == (s6y ^ 0))
+                                        if (Y5v == 0 || Y5v == 8 || Y5v == (17 ^ 0))
                                             E5v = _s(3846);
                                         c5v += E5v + _s(B5p >> 207428576) + H7v + _s(2060) + t7v + _s('6890' & E6k
                                             .s6s) + X7v + _s(2168) + v7v + _s(1816) + p6(Math.floor(N5v[F5v][_s(+t9m)][q5v][_s(+f9m)][a5v][_s(+r0p)][m5v])) + _s(e5p ^ 0) + Q7v + E6k
@@ -48370,7 +48323,7 @@ var cotgsubscribe = amplify;
                                             .o55(+Z64)][m5v])) + _s(+e5p) + p6(Math.floor(N5v[F5v][_s(t9m & 2147483647)][q5v][E6k
                                             .o55(+f9m)][a5v][_s(K64 ^ 0)][m5v])) + _s(+L5p);
                                         Y5v++;
-                                        if (Y5v == 8 || Y5v == s6y - 0 || Y5v == +p0y)
+                                        if (Y5v == 8 || Y5v == 17 - 0 || Y5v == +p0y)
                                             c5v += _s(+j5p);
                                     }
                                 }
@@ -48398,8 +48351,8 @@ var cotgsubscribe = amplify;
                                         Y5v++;
                                     }
                             }
-                            else if (Y5v < (s6y & 2147483647))
-                                while (Y5v < +s6y) {
+                            else if (Y5v < (17 & 2147483647))
+                                while (Y5v < +17) {
                                     c5v += _s(+Y5p);
                                     Y5v++;
                                 }
@@ -48450,7 +48403,7 @@ var cotgsubscribe = amplify;
                                 c5v += E5v + _s(B5p << 713829184) + H7v + _s(4646) + t2 + _s(+X5y) + k7v + _s(P5y ^ 0) + e7v + _s(+R5p) + p6(N5v[F5v][_s(+t9m)][q5v][_s(O8R | 4626)][m5v]) + E6k
                                     .S55(2389);
                                 Y5v++;
-                                if (Y5v == (8) || Y5v == +s6y)
+                                if (Y5v == (8) || Y5v == +17)
                                     c5v += _s(j5p - 0);
                             }
                         }
@@ -48477,8 +48430,8 @@ var cotgsubscribe = amplify;
                                     Y5v++;
                                 }
                         }
-                        else if (Y5v < (s6y ^ 0))
-                            while (Y5v < (s6y ^ 0)) {
+                        else if (Y5v < (17 ^ 0))
+                            while (Y5v < (17 ^ 0)) {
                                 c5v += _s(Y5p * 1);
                                 Y5v++;
                             }
@@ -48523,7 +48476,7 @@ var cotgsubscribe = amplify;
                                 c5v += E5v + _s(B5p * 1) + H7v + _s('4646' | 34) + t2 + _s(+X5y) + k7v + _s(+P5y) + e7v + _s(349) + p6(N5v[F5v][_s(+t9m)][q5v][_s(i5p * 1)][m5v][_s(+Z9y)]) + _s(4664) + p6(N5v[F5v][_s(t9m | 513)][q5v][_s(i5p ^ 0)][m5v][E6k
                                     .S55(+K9y)]) + _s(L5p | 2);
                                 Y5v++;
-                                if (Y5v == ('8' | 8) || Y5v == (s6y | 1))
+                                if (Y5v == ('8' | 8) || Y5v == (17 | 1))
                                     c5v += _s(+j5p);
                             }
                         }
@@ -48550,8 +48503,8 @@ var cotgsubscribe = amplify;
                                     Y5v++;
                                 }
                         }
-                        else if (Y5v < s6y - 0)
-                            while (Y5v < +s6y) {
+                        else if (Y5v < 17 - 0)
+                            while (Y5v < +17) {
                                 c5v += _s(+Y5p);
                                 Y5v++;
                             }
@@ -49770,7 +49723,7 @@ var cotgsubscribe = amplify;
                         return !1;
                     else
                         return !!{};
-                case +s6y:
+                case +17:
                     var i9w = D6.tps[4].t;
                     if (i9w <= 9)
                         return !"1";
@@ -50148,7 +50101,7 @@ var cotgsubscribe = amplify;
                 var Y7g = 0;
                 var p7g = 0;
                 var c7g = 57;
-                var D7g = +s6y;
+                var D7g = +17;
                 var F7g = +X8y;
                 var R7g = "25" | 8;
             }
@@ -51891,7 +51844,7 @@ var cotgsubscribe = amplify;
             else if ((H7g == n4y << 463493984 || H7g == +l4y || H7g == +o4y || H7g == I1R - 0 || H7g == +t1y || H7g == (T1y & 2147483647) || H7g == (g1y & 2147483647) || H7g == (f1y | 514) || H7g == +V1y || H7g == +M1y || H7g ==
                 Q1y >> 1935258432 || H7g == +Z1y || H7g == +u1y || H7g == N1y - 0 || H7g == +i1y || H7g == (q1y ^ 0) ||
                 H7g == (D1y & 2147483647) || H7g == B1y - 0 || H7g == e1y * 1 || H7g == y1y >> 353205440) && j7g != 3 &&
-                j7g != 7 && j7g != m2y << 1243757664 && j7g != s6y >> 87422272 && j7g != D8y >> 94524096 && j7g != +S1R &&
+                j7g != 7 && j7g != m2y << 1243757664 && j7g != 17 >> 87422272 && j7g != D8y >> 94524096 && j7g != +S1R &&
                 j7g != (t5R ^ 0) && j7g != +J5R && j7g != +T5R && j7g != 433 && j7g != x5R >> 1764355584 && j7g != (g5R ^
                 0) && j7g != +W5R && j7g != f5R << 674873344 && j7g != (U5R & 2147483647) && j7g != (N0R ^ 0) && j7g != +p1R &&
                 j7g != z1R * 1 && j7g != (n1R ^ 0) && j7g != (d1R | 257) && j7g != 323 && j7g != l1R << 2010256832 &&
@@ -51905,7 +51858,7 @@ var cotgsubscribe = amplify;
                 0) && H7g != +d1y && H7g != (k1y | 20) && H7g != +S1y && H7g != +J5y && H7g != x5y * 1 && H7g != W5y - 0 &&
                 H7g != (U5y ^ 0) && H7g != (c5y | 8) && (j7g == +p1R || j7g == +z1R || j7g == (n1R | 133) || j7g == (d1R & E6k
                 .s6s) || j7g == (323) || j7g == +l1R || j7g == +k1R || j7g == o1R << 1976427808 || j7g == 3 ||
-                j7g == 7 || j7g == +m2y || j7g == +s6y || j7g == (D8y | 64) || j7g == S1R * 1 || j7g == t5R >>
+                j7g == 7 || j7g == +m2y || j7g == +17 || j7g == (D8y | 64) || j7g == S1R * 1 || j7g == t5R >>
                 393624064 || j7g == J5R * 1 || j7g == +T5R || j7g == 433 || j7g == +x5R || j7g == +g5R || j7g == (W5R &
                 2147483647) || j7g == +f5R || j7g == U5R * 1 || j7g == (N0R | 62) || j7g == +p1R || j7g == (z1R & 2147483647) ||
                 j7g == n1R << 1018180864 || j7g == d1R * 1 || j7g == 323 || j7g == (l1R ^ 0) || j7g == (k1R | 39) ||
@@ -51913,7 +51866,7 @@ var cotgsubscribe = amplify;
                 return !1;
             else if ((H7g == +O1y || H7g == (w1y ^ 0) || H7g == H1y - 0 || H7g == G1y - 0 || H7g == +b1y || H7g == +X1y ||
                 H7g == (I1y & 2147483647) || H7g == +z1y || H7g == d1y << 114609184 || H7g == k1y << 1979742144 || H7g == +S1y || H7g == +J5y || H7g == +x5y || H7g == W5y * 1 || H7g == U5y * 1 || H7g == +c5y) && j7g != 3 &&
-                j7g != (7) && j7g != m2y << 541170048 && j7g != (s6y & 2147483647) && j7g != D8y - 0 && j7g != +S1R && j7g != t5R - 0 && j7g != +J5R && j7g != +T5R && j7g != 433 && j7g != (x5R ^ 0) && j7g != +g5R &&
+                j7g != (7) && j7g != m2y << 541170048 && j7g != (17 & 2147483647) && j7g != D8y - 0 && j7g != +S1R && j7g != t5R - 0 && j7g != +J5R && j7g != +T5R && j7g != 433 && j7g != (x5R ^ 0) && j7g != +g5R &&
                 j7g != +W5R && j7g != +f5R && j7g != +U5R && j7g != N0R * 1 && j7g != +p1R && j7g != z1R >> 802819264 &&
                 j7g != (n1R | 0) && j7g != +d1R && j7g != (323) && j7g != l1R - 0 && j7g != +k1R && j7g != +o1R)
                 return !{};
@@ -53102,8 +53055,8 @@ var cotgsubscribe = amplify;
                         .clientHeight;
                     var G1V = -("1" | 1);
                     if (ppdt.hasOwnProperty(_s(i2p | 6672)))
-                        if (ppdt[_s(i2p << 2103951552)].hasOwnProperty(s6y ^ 0))
-                            if (ppdt[_s(+i2p)][+s6y] == 1) {
+                        if (ppdt[_s(i2p << 2103951552)].hasOwnProperty(17 ^ 0))
+                            if (ppdt[_s(+i2p)][+17] == 1) {
                                 var n1V = X1V.toLowerCase();
                                 var f1V = H2.toLowerCase();
                                 if (n1V.indexOf(f1V) != -(1))
@@ -54353,8 +54306,8 @@ var cotgsubscribe = amplify;
                     var T8l = $(this)
                         .attr("id");
                     var l8l = T8l.substring(6);
-                    if (D6[_s(Q8y - 0)][l8l])
-                        if (Q8l > D6[_s(Q8y & 2147483647)][l8l])
+                    if (D6["th"][l8l])
+                        if (Q8l > D6["th"][l8l])
                             j8l = 1;
                 });
             }
@@ -54372,8 +54325,8 @@ var cotgsubscribe = amplify;
                         .attr("id");
                     E6k.y6();
                     var x8l = t8l.substring(6);
-                    if (D6[_s(+Q8y)][x8l])
-                        if (O8l > D6[_s(+Q8y)][x8l])
+                    if (D6["th"][x8l])
+                        if (O8l > D6["th"][x8l])
                             j8l = 1;
                 });
             }
@@ -54390,8 +54343,8 @@ var cotgsubscribe = amplify;
                     var X8l = $(this)
                         .attr("id");
                     var o8l = X8l.substring(6);
-                    if (D6[_s(Q8y << 2040589632)][o8l])
-                        if (L8l > D6[_s(+Q8y)][o8l])
+                    if (D6["th"][o8l])
+                        if (L8l > D6["th"][o8l])
                             j8l = 1;
                 });
             }
@@ -54409,8 +54362,8 @@ var cotgsubscribe = amplify;
                     var G8l = $(this)
                         .attr("id");
                     var z8l = G8l.substring(6);
-                    if (D6[_s(+Q8y)][z8l])
-                        if (M8l > D6[_s(Q8y ^ 0)][z8l])
+                    if (D6["th"][z8l])
+                        if (M8l > D6["th"][z8l])
                             j8l = 1;
                 });
             }
@@ -54660,7 +54613,7 @@ var cotgsubscribe = amplify;
                     g9w += parseInt(b9w.g) || 0;
                     if (J9w > 0)
                         f9w++;
-                    if (S9w == s6y >> 1289249504 && J9w >= ('1' & E6k
+                    if (S9w == 17 >> 1289249504 && J9w >= ('1' & E6k
                         .s6s)) {
                         var B9w = Number(ppdt[_s(B9y & 2147483647)]);
                         var Y9w = Number(ppdt[_s(+h6R)]);
@@ -55198,7 +55151,7 @@ var cotgsubscribe = amplify;
                         Y6(_s(1405));
                     }
                     if (j5w == (0) && (s5w == (3) || s5w == 7 ||
-                        s5w == +m2y || s5w == s6y << 746309152 || s5w == +D8y || s5w == S1R >> 2104228704 || s5w == +t5R ||
+                        s5w == +m2y || s5w == 17 << 746309152 || s5w == +D8y || s5w == S1R >> 2104228704 || s5w == +t5R ||
                         s5w == J5R - 0 || s5w == T5R >> 1329248288 || s5w == (433) || s5w == +x5R || s5w == g5R -
                         0 || s5w == +W5R || s5w == f5R << 1700226848 || s5w == (U5R ^ 0) || s5w == +N0R || s5w == (p1R ^ 0) ||
                         s5w == +z1R || s5w == n1R >> 799060256 || s5w == +d1R || s5w == 323 || s5w == (l1R & 2147483647) ||
@@ -55220,7 +55173,7 @@ var cotgsubscribe = amplify;
                     if ((u5w == n4y * 1 || u5w == l4y << 1300259168 || u5w == o4y * 1 || u5w == I1R -
                         0 || u5w == (t1y & 2147483647) || u5w == +T1y || u5w == +g1y || u5w == +f1y || u5w == +V1y || u5w == (M1y |
                         516) || u5w == Q1y >> 2014405312 || u5w == +Z1y || u5w == u1y * 1 || u5w == (N1y ^ 0) || u5w == i1y >>
-                        186129248 || u5w == +q1y || u5w == +D1y || u5w == (B1y | 44) || u5w == (e1y & 2147483647) || u5w == +y1y) && s5w != (3) && s5w != 7 && s5w != +m2y && s5w != (s6y | 17) && s5w != (D8y | 1) && s5w != (S1R | 130) && s5w != +t5R && s5w != +J5R && s5w != (T5R & 2147483647) && s5w != ('433' | 176) && s5w !=
+                        186129248 || u5w == +q1y || u5w == +D1y || u5w == (B1y | 44) || u5w == (e1y & 2147483647) || u5w == +y1y) && s5w != (3) && s5w != 7 && s5w != +m2y && s5w != (17 | 17) && s5w != (D8y | 1) && s5w != (S1R | 130) && s5w != +t5R && s5w != +J5R && s5w != (T5R & 2147483647) && s5w != ('433' | 176) && s5w !=
                         x5R - 0 && s5w != +g5R && s5w != W5R << 920500128 && s5w != f5R << 752539296 && s5w != U5R - 0 && s5w != +N0R && s5w != (p1R ^ 0) && s5w != +z1R && s5w != +n1R && s5w != d1R * 1 && s5w != 323 && s5w != +l1R &&
                         s5w != +k1R && s5w != o1R << 1600765280 && H2 != _s(x2R - 0)) {
                         O5w = 1;
@@ -55234,7 +55187,7 @@ var cotgsubscribe = amplify;
                         560) && u5w != +x5y && u5w != +W5y && u5w != +U5y && u5w != +c5y && (s5w == +p1R || s5w == z1R <<
                         456030304 || s5w == +n1R || s5w == d1R >> 1182571200 || s5w == 323 || s5w == l1R * 1 || s5w == k1R <<
                         454428768 || s5w == +o1R || s5w == 3 || s5w == 7 || s5w == +m2y ||
-                        s5w == s6y >> 1868092384 || s5w == (D8y & 2147483647) || s5w == +S1R || s5w == +t5R || s5w == (J5R & E6k
+                        s5w == 17 >> 1868092384 || s5w == (D8y & 2147483647) || s5w == +S1R || s5w == +t5R || s5w == (J5R & E6k
                         .s6s) || s5w == +T5R || s5w == ('433' | 177) || s5w == x5R << 679735904 || s5w == +g5R || s5w == (W5R & 2147483647) || s5w == f5R >> 1279393504 || s5w == +U5R || s5w == +N0R || s5w == +p1R || s5w ==
                         z1R * 1 || s5w == +n1R || s5w == (d1R | 256) || s5w == (323) || s5w == +l1R || s5w == +k1R ||
                         s5w == o1R >> 119232160 && H2 != _s(+x2R))) {
@@ -55243,7 +55196,7 @@ var cotgsubscribe = amplify;
                     }
                     if ((u5w == O1y << 826264544 || u5w == (w1y & 2147483647) || u5w == H1y - 0 || u5w ==
                         G1y * 1 || u5w == +b1y || u5w == +X1y || u5w == +I1y || u5w == +z1y || u5w == +d1y || u5w == +k1y ||
-                        u5w == +S1y || u5w == +J5y || u5w == x5y << 1520084640 || u5w == +W5y || u5w == (U5y | 61) || u5w == (c5y & 2147483647)) && s5w != 3 && s5w != 7 && s5w != +m2y && s5w != +s6y && s5w != (D8y | 19) &&
+                        u5w == +S1y || u5w == +J5y || u5w == x5y << 1520084640 || u5w == +W5y || u5w == (U5y | 61) || u5w == (c5y & 2147483647)) && s5w != 3 && s5w != 7 && s5w != +m2y && s5w != +17 && s5w != (D8y | 19) &&
                         s5w != (S1R | 2) && s5w != +t5R && s5w != (J5R ^ 0) && s5w != T5R * 1 && s5w != 433 && s5w != +x5R &&
                         s5w != +g5R && s5w != +W5R && s5w != +f5R && s5w != +U5R && s5w != N0R - 0 && s5w != p1R * 1 && s5w !=
                         z1R - 0 && s5w != +n1R && s5w != (d1R & 2147483647) && s5w != 323 && s5w != l1R <<
@@ -56709,7 +56662,7 @@ var cotgsubscribe = amplify;
                     if (O5D != 0)
                         var o5D = qam[_s(G2y >> 1109937856)][O5D][_s(+r2y)][0][_s(+b2y)];
                 }
-                if (x5D == +s6y) {
+                if (x5D == +17) {
                     var O5D = ppdt["rs"][F8y * 1]["n"];
                     if (O5D != 0)
                         var o5D = qam[_s(G2y << 2048493920)][O5D][_s(+r2y)][0][_s(b2y * 1)];
@@ -56751,7 +56704,7 @@ var cotgsubscribe = amplify;
                 var N5D = ppdt[_s(r0R & 2147483647)][E6k
                     .o55(+w6y)];
                 var i5D = 0;
-                if (x5D == (s6y | 17))
+                if (x5D == (17 | 17))
                     i5D = L5D;
                 var R5D = Number(ppdt[_s(+B9y)]);
                 var Y5D = Number(ppdt[_s(h6R - 0)]);
@@ -56796,7 +56749,7 @@ var cotgsubscribe = amplify;
                         tbt: Number(K5D),
                         pa: 1
                     };
-                    if (x5D == +s6y)
+                    if (x5D == +17)
                         ppdt[_s(+h6R)] = ppdt[_s(+h6R)] + i5D;
                     var Z5D = _s(5491);
                     var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +U7y);
@@ -57121,7 +57074,7 @@ var cotgsubscribe = amplify;
                             .first()
                             .html(_s(5726));
                         W7D = D6[_s(+s8y)][Number(H7D)];
-                        i7D = D6[_s(Q8y ^ 0)][Number(H7D)];
+                        i7D = D6["th"][Number(H7D)];
                         l7D = G7D;
                         k7D = o7D;
                         Q7D = Math.floor(k7D / 100);
@@ -58364,7 +58317,7 @@ var cotgsubscribe = amplify;
             E6k.R6();
             var c72 = "";
             for (var N72 = 0; N72 < D6.tc.length; N72++)
-                if (N72 != 0 && N72 != 1 && N72 != 7 && N72 != 12 && N72 != (m2y & 2147483647) && N72 != (s6y & E6k
+                if (N72 != 0 && N72 != 1 && N72 != 7 && N72 != 12 && N72 != (m2y & 2147483647) && N72 != (17 & E6k
                     .s6s)) {
                     var m72 = D6.tc[N72];
                     var e42 = Math.floor(Number(D6.th[N72]) * F72 / k42);
@@ -58439,7 +58392,7 @@ var cotgsubscribe = amplify;
                 return _s(+q34);
             else if (x12 == 16)
                 return _s(6862);
-            else if (x12 == +s6y)
+            else if (x12 == +17)
                 return _s('187' | 128);
             else if (x12 == +u7y)
                 return _s(2774);
@@ -59971,6 +59924,27 @@ var cotgsubscribe = amplify;
                 if (j71.hasOwnProperty("city")) {
                     var t71 = j71["city"];
                     d3F(t71);
+                    let troopsHome = 0;
+                    for (let it = 0; it < 17; ++it) {
+                        troopsHome += D6['th'][it];
+                    }
+                    // only if raids have come home
+                    if (lastCid != cid) {
+                        lastTroopsHome = troopsHome; // only trigger on 0
+                        lastCid = cid;
+                    }
+                    if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
+                        if (troopsHome > lastTroopsHome) {
+                            setTimeout(() => {
+                                let wrapper = { citydata: D6 };
+                                window['external']['notify'](JSON.stringify(wrapper));
+                            }, 0);
+                        }
+                        lastTroopsHome = troopsHome;
+                    }
+                    //  const wrapper = { OGA: o71 }
+                    //  window['external']['notify'](JSON.stringify(wrapper));
+                    // }
                 }
                 if (j71.hasOwnProperty("resregion"))
                     if (j71["resregion"] == 1)
@@ -60006,26 +59980,6 @@ var cotgsubscribe = amplify;
                 if (j71.hasOwnProperty("OGA")) {
                     var o71 = j71["OGA"];
                     m6F(o71);
-                    let ogaCount = o71.length;
-                    // only if raids have come home
-                    if (lastCid != cid) {
-                        lastOGACount = 1; // only trigger on 0
-                        lastCid = cid;
-                    }
-                    if (ogaCount != lastOGACount) {
-                        if (ogaCount < lastOGACount) {
-                            setTimeout(() => {
-                                let wrapper = { OGA: o71 };
-                                if (j71.hasOwnProperty("city"))
-                                    wrapper['citydata'] = j71['city'];
-                                window['external']['notify'](JSON.stringify(wrapper));
-                            }, 0);
-                        }
-                        lastOGACount = ogaCount;
-                    }
-                    //  const wrapper = { OGA: o71 }
-                    //  window['external']['notify'](JSON.stringify(wrapper));
-                    // }
                 }
                 if (j71.hasOwnProperty("OGT")) {
                     var L71 = j71["OGT"];
@@ -60266,7 +60220,7 @@ var cotgsubscribe = amplify;
                         Y6(_s(2186));
                     else if (H2B == 16)
                         Y6(_s(2997));
-                    else if (H2B == +s6y)
+                    else if (H2B == +17)
                         Y6(_s(2326));
                     else if (H2B == (u7y & 2147483647))
                         Y6(_s(+N8y));
@@ -60500,7 +60454,7 @@ var cotgsubscribe = amplify;
             else if (c32 == 16)
                 $(_s(3782))
                     .html(q32);
-            else if (c32 == s6y >> 1685060608)
+            else if (c32 == 17 >> 1685060608)
                 $(_s(6449))
                     .html(q32);
             else if (c32 == +u7y)
@@ -61239,7 +61193,7 @@ var cotgsubscribe = amplify;
             else
                 ppdt.wmo[q7y - 0] = 0;
             ppdt.wmo[16] = j9.replace(_s(m7y | 1048), '');
-            ppdt.wmo[s6y ^ 0] = S9.replace(_s(+m7y), "");
+            ppdt.wmo[17 ^ 0] = S9.replace(_s(+m7y), "");
             ppdt.wmo[+u7y] = d9.replace(_s(+m7y), '');
             ppdt.wmo[p0y - 0] = i9.replace(_s(+m7y), '');
             E6k.y6();
@@ -61439,15 +61393,15 @@ var cotgsubscribe = amplify;
         var q2 = new Array();
         function U7F() {
             $(_s(5436))
-                .text(p6(D6.tc[+s6y]));
+                .text(p6(D6.tc[+17]));
             var j8B;
             var w8B;
             var I8B;
-            j8B = D6.tc[+s6y];
-            w8B = D6.th[s6y & 2147483647];
-            I8B = bam["troops"][s6y >> 316193216]["simg"];
+            j8B = D6.tc[+17];
+            w8B = D6.th[17 & 2147483647];
+            I8B = bam["troops"][17 >> 316193216]["simg"];
             $(_s('1081' | 25))
-                .html(_s(1595) + I8B + _s(3011) + bam["troops"][+s6y][_s('1067' >>
+                .html(_s(1595) + I8B + _s(3011) + bam["troops"][+17][_s('1067' >>
                 1438497504)] + _s(g2p ^ 0) + p6(w8B) + _s(+f5R) + p6(j8B) + _s(3339) + j8B + _s(+"1215") + j8B + _s(+U2p) + p6(j8B) + _s(+V2p));
             $(_s(4154))
                 .off("click");
@@ -61795,7 +61749,7 @@ var cotgsubscribe = amplify;
                         Y6(_s(4196));
                     else if (G8Z == 16)
                         Y6(_s(5159));
-                    else if (G8Z == +s6y)
+                    else if (G8Z == +17)
                         Y6(_s(+E8y));
                     else if (G8Z == u7y >> 622080800)
                         Y6(_s(6261));
@@ -62262,7 +62216,7 @@ var cotgsubscribe = amplify;
                         .text(p6(g8w));
                     var h8w = Z5V(J8w);
                     h8w = parseInt(h8w) || 0;
-                    if (J8w == +s6y) {
+                    if (J8w == +17) {
                         var A8w = Number(ppdt[_s(+B9y)]);
                         var P8w = Number(ppdt[_s(h6R - 0)]);
                         var B8w = Number(ppdt[_s(h6R - 0)]);
@@ -62518,7 +62472,7 @@ var cotgsubscribe = amplify;
             var Y8g = 0;
             E6k.R6();
             var R8g = 0;
-            if (f8g == 3 || f8g == 7 || f8g == m2y - 0 || f8g == (s6y & 2147483647) ||
+            if (f8g == 3 || f8g == 7 || f8g == m2y - 0 || f8g == (17 & 2147483647) ||
                 f8g == +D8y || f8g == +S1R || f8g == t5R << 1824253056 || f8g == +J5R || f8g == +T5R || f8g == 433 ||
                 f8g == +x5R || f8g == +g5R || f8g == (W5R & 2147483647) || f8g == (f5R ^ 0) || f8g == (U5R | 145) || f8g == (N0R | 59) || f8g == (p1R & 2147483647) || f8g == +z1R || f8g == (n1R ^ 0) || f8g == d1R >> 1071050592 || f8g ==
                 323 || f8g == l1R - 0 || f8g == k1R << 1296108032 || f8g == +o1R)
@@ -62760,9 +62714,9 @@ var cotgsubscribe = amplify;
                 .val());
             if ($(_s(4475))
                 .prop(_s(286)) == !0)
-                ppdt.opt[+s6y] = 1;
+                ppdt.opt[+17] = 1;
             else
-                ppdt.opt[s6y - 0] = 0;
+                ppdt.opt[17 - 0] = 0;
             if ($(_s(5286))
                 .prop(_s(286)) == !0)
                 ppdt.opt[+u7y] = 1;
@@ -62980,9 +62934,9 @@ var cotgsubscribe = amplify;
             R2(M2V);
         }
         var K0F = [p1R >> 559832000, +z1R, +n1R, +d1R, 323, l1R >> 1486036800, +k1R, +o1R];
-        var e9 = [3, 7, 13, s6y - 0, +D8y, S1R & 2147483647, t5R << 1955771840, +J5R, T5R * 1, 433, x5R ^ 0,
+        var e9 = [3, 7, 13, 17 - 0, +D8y, S1R & 2147483647, t5R << 1955771840, +J5R, T5R * 1, 433, x5R ^ 0,
             g5R * 1, +W5R, f5R * 1, U5R * 1, +N0R];
-        var C8 = [3, 7, 13, s6y * 1, +D8y, +S1R, t5R >> 1859653696, +J5R, T5R * 1, 433, x5R | 387, +g5R, +W5R, +f5R, +U5R, N0R ^ 0, p1R >> 65976256, +z1R, +n1R, d1R * 1,
+        var C8 = [3, 7, 13, 17 * 1, +D8y, +S1R, t5R >> 1859653696, +J5R, T5R * 1, 433, x5R | 387, +g5R, +W5R, +f5R, +U5R, N0R ^ 0, p1R >> 65976256, +z1R, +n1R, d1R * 1,
             323, l1R >> 1462928256, +k1R, +o1R];
         $(document)
             .ready(function () {
@@ -63149,7 +63103,7 @@ var cotgsubscribe = amplify;
                     $(_s(+w6p))
                         .prop(_s(286), ![]);
                 j9 = _s(+m7y) + ppdt.wmo[16];
-                S9 = _s(m7y | 5129) + ppdt.wmo[+s6y];
+                S9 = _s(m7y | 5129) + ppdt.wmo[+17];
                 d9 = _s(m7y & 2147483647) + ppdt.wmo[u7y * 1];
                 i9 = _s(m7y - 0) + ppdt.wmo[+p0y];
                 C9 = _s(+m7y) + ppdt.wmo[+u6y];
@@ -63274,7 +63228,7 @@ var cotgsubscribe = amplify;
                 ppdt.wmo[+B2y] = 1;
                 ppdt.wmo[+q7y] = 1;
                 ppdt.wmo[16] = _s(4165);
-                ppdt.wmo[+s6y] = _s(284);
+                ppdt.wmo[+17] = _s(284);
                 ppdt.wmo[u7y >> 1553933152] = _s(6783);
                 ppdt.wmo[p0y * 1] = _s("6163" | 6147);
                 ppdt.wmo[u6y & 2147483647] = _s(+Q6R);
@@ -63344,7 +63298,7 @@ var cotgsubscribe = amplify;
                 var y0D = c0D[N0D][_s(+g4p)];
                 var E0D = c0D[N0D][E6k
                     .o55(x9y >> 1067992224)];
-                if (y0D == (s6y | 1)) {
+                if (y0D == (17 | 1)) {
                     k5D = 1;
                     Y6(_s(6012));
                 }
@@ -63372,7 +63326,7 @@ var cotgsubscribe = amplify;
                     if (R0D != 0)
                         var D0D = qam[_s(+G2y)][R0D][_s(+r2y)][0][_s(+b2y)];
                 }
-                if (y0D == +s6y) {
+                if (y0D == +17) {
                     var R0D = ppdt[E6k
                         .S55(i2y ^ 0)][F8y - 0]["n"];
                     if (R0D != 0)
@@ -64288,7 +64242,7 @@ var cotgsubscribe = amplify;
                             .removeClass(_s(+B5k));
                     }
                     break;
-                case s6y ^ 0:
+                case 17 ^ 0:
                     var W9w = D6.tps[4].t;
                     if (W9w <= 9) {
                         $(_s(+m5k) + C9w)
@@ -70662,8 +70616,8 @@ var cotgsubscribe = amplify;
             });
             $(_s(4006))
                 .tooltipster({
-                content: $(_s(4397) + bam["troops"][s6y ^ 0][_s(t8R << 567048512)] +
-                    _s(+V3k) + bam["troops"][+s6y][_s(+x9y)] + _s(5839)),
+                content: $(_s(4397) + bam["troops"][17 ^ 0][_s(t8R << 567048512)] +
+                    _s(+V3k) + bam["troops"][+17][_s(+x9y)] + _s(5839)),
                 position: E6k
                     .S55(M64 * 1)
             });
@@ -70766,7 +70720,7 @@ var cotgsubscribe = amplify;
                 if (ppdt.opt[16])
                     $(_s(3183) + ppdt.opt[16] + _s(M3p << 320069664))
                         .prop(_s(286), !!{});
-                if (ppdt.opt[+s6y])
+                if (ppdt.opt[+17])
                     $(_s(4475))
                         .prop(_s(286), !![]);
                 else
@@ -71219,7 +71173,7 @@ var cotgsubscribe = amplify;
                     return 6;
                 case 16:
                     return 6;
-                case +s6y:
+                case +17:
                     return 4;
             }
         }
@@ -71244,7 +71198,7 @@ var cotgsubscribe = amplify;
                         total: D6.tc[6],
                         home: D6.th[6]
                     },
-                    senator: { total: D6.tc[s6y >> 1557643776], home: D6.th[+s6y] },
+                    senator: { total: D6.tc[17 >> 1557643776], home: D6.th[+17] },
                     ballista: { total: D6.tc[1], home: D6.th[1] },
                     stinger: {
                         total: D6.tc[+q7y],
@@ -71732,7 +71686,7 @@ var cotgsubscribe = amplify;
             var E8B = Q2(Z8B[_s(H2y - 0)]);
             E6k.y6();
             var k9B = Q2(Z8B[_s(Y5y << 1683684384)]);
-            var e9B = bam["troops"][Number(+s6y)][_s(t1R & 2147483647)];
+            var e9B = bam["troops"][Number(+17)][_s(t1R & 2147483647)];
             var P8B = $(_s(463))
                 .val();
             P8B = P8B * e9B;
@@ -73528,7 +73482,7 @@ var cotgsubscribe = amplify;
             else if (s7g == (x5y & 2147483647) || s7g == +W5y || s7g == U5y >> 2004047456 || s7g == c5y - 0)
                 s7g = +x5y;
             if (u7g == (p1R & 2147483647) || u7g == +z1R || u7g == (3) || u7g == 7 || u7g == +m2y || u7g ==
-                s6y >> 1064082880)
+                17 >> 1064082880)
                 s7g = s7g + 1;
             else if (u7g == k1R * 1 || u7g == +o1R || u7g == +D8y || u7g == +S1R || u7g == t5R * 1 || u7g == +J5R)
                 s7g =

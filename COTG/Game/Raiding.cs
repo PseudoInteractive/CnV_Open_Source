@@ -18,7 +18,7 @@ namespace COTG.Game
     public struct Raid : IEquatable<Raid>
     {
         public int target;// cid
-        public DateTimeOffset arrival;
+        public DateTimeOffset time;
         public bool isReturning;
         public bool isRepeating; // neighter timed return nor raid once
 
@@ -30,14 +30,14 @@ namespace COTG.Game
         public bool Equals(Raid other)
         {
             return target == other.target &&
-                   arrival == other.arrival &&
+                   time == other.time &&
                    isReturning == other.isReturning &&
                    isRepeating == other.isRepeating;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(target, arrival, isReturning, isRepeating);
+            return HashCode.Combine(target, time, isReturning, isRepeating);
         }
 
         public static bool operator ==(Raid left, Raid right)
@@ -52,7 +52,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{target:{target},arrival:{arrival},isRepeating:{isRepeating},isReturning:{isReturning}}}";
+            return $"{{target:{target},arrival:{time},isRepeating:{isRepeating},isReturning:{isReturning}}}";
         }
     }
 

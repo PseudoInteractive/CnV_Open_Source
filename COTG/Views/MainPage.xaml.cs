@@ -50,7 +50,7 @@ namespace COTG.Views
         public static RadDataGrid CityGrid => instance.cityGrid;
         const int raidStepCount = 9;
         static float[] raidSteps = new float[raidStepCount];
-        static MenuFlyout cityMenuFlyout;
+      //  static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
 //            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
@@ -67,15 +67,15 @@ namespace COTG.Views
 
             var rand = new Random();
 
-            cityMenuFlyout = new MenuFlyout();
-            var c = new MenuFlyoutItem() { Text = "Home Whenever" };
-            c.Click += ReturnSlowClick;
-            cityMenuFlyout.Items.Add(c);
-            c = new MenuFlyoutItem() { Text = "Home Please" };
-            c.Click += ReturnFastClick;
-            cityMenuFlyout.Items.Add(c);
+            //cityMenuFlyout = new MenuFlyout();
+            //var c = new MenuFlyoutItem() { Text = "Home Whenever" };
+            //c.Click += ReturnSlowClick;
+            //cityMenuFlyout.Items.Add(c);
+            //c = new MenuFlyoutItem() { Text = "Home Please" };
+            //c.Click += ReturnFastClick;
+            //cityMenuFlyout.Items.Add(c);
 
-            cityGrid.ContextFlyout = cityMenuFlyout;
+            //cityGrid.ContextFlyout = cityMenuFlyout;
 
             cityGrid.SelectionChanged += CityGrid_SelectionChanged;
             cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
@@ -86,7 +86,7 @@ namespace COTG.Views
 
         private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
-            Log("Current item " + sender.ToString());
+        //    Log("Current item " + sender.ToString());
         }
 
         private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -167,7 +167,7 @@ namespace COTG.Views
             }
             return cids;
         }
-        private void ReturnSlowClick(object sender, RoutedEventArgs e)
+        private void ReturnSlowClick()
         {
             var cids = GetContextCids();
             if (cids.Count == 1)
@@ -178,7 +178,7 @@ namespace COTG.Views
 
 
 
-        private void ReturnFastClick(object sender, RoutedEventArgs e)
+        private void ReturnFastClick()
         {
             var cids = GetContextCids();
             if (cids.Count == 1)
@@ -256,7 +256,7 @@ namespace COTG.Views
             if (instance == null)
                 return;
             // Note.L("UpdateAll: ");
-            App.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
+            instance.Dispatcher.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
             
         }
 
@@ -266,14 +266,14 @@ namespace COTG.Views
                 return;
             //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
 
-            App.DispatchOnUIThread( () =>
+            instance.Dispatcher.DispatchOnUIThread( () =>
             {
                 instance.dungeonGrid.ItemsSource = dungeons;
             });
         }
         public static void UpdateRaidPlans()
         {
-            App.DispatchOnUIThread(() =>
+            instance.Dispatcher.DispatchOnUIThread(() =>
             {
                 // trick it
                 var temp = instance.dungeonGrid.ItemsSource;
@@ -364,8 +364,14 @@ namespace COTG.Views
             SettingsPage.SaveAll();
             return true;
         }
-
-		private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
+        MenuFlyout cityContextFlyout;
+        private static MenuFlyoutItem CreateMenuItem(string text, Action command)
+        {
+            var rv = new MenuFlyoutItem() { Text = text };
+            rv.Click += (_, _) => command();
+            return rv;
+        }
+        private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
 		{
          //   Log("Sel update");
             if (e.AddedItems != null && e.AddedItems.Count > 0)
@@ -393,6 +399,27 @@ namespace COTG.Views
                     GetCity.Post(City.build.cid);
             }
         }
+        public override void XamlTreeChanged(TabPage newPage) {
+            //       cityGrid.ContextFlyout = null;
+            if (newPage == null)
+            {
+                cityGrid.ContextFlyout = null;
+                cityGrid.DataContext = null;
+             //   cityContextFlyout.XamlRoot = null;
+            }
+            else
+            {
+                //   cityContextFlyout.XamlRoot = null;
+                cityGrid.DataContext = newPage;
+                cityContextFlyout = new MenuFlyout();
+                cityContextFlyout.Items.Add(CreateMenuItem("Home Whenever", ReturnSlowClick));
+                cityContextFlyout.Items.Add(CreateMenuItem("Home Please", ReturnFastClick));
+                cityContextFlyout.XamlRoot = newPage.XamlRoot;
+                cityGrid.ContextFlyout = cityContextFlyout;
+
+            }
+        } // The tab was dragged somewhere else
+
 
         public static bool IsVisible() => instance.isVisible;
 

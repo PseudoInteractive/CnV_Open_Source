@@ -545,12 +545,12 @@ namespace COTG
                     var cid = jsCity.GetProperty("1").GetInt32();
 
                     var city = City.GetOrAddCity(cid);
-                    city.cityName = jsCity.GetProperty("2").GetString();
+                    city._cityName = jsCity.GetProperty("2").GetString();
                     int i = city.cityName.IndexOf('-');
                     if(i!= -1)
                     {
                         city.remarks = city.cityName.Substring(i + 2);
-                        city.cityName = city.cityName.Substring(0, i - 1);
+                        city._cityName = city.cityName.Substring(0, i - 1);
                     }
                     city.tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
@@ -926,7 +926,7 @@ namespace COTG
                                 }
                             case "chat":
                                 {
-                                    ChatTab.ProcessIncomingChat(jsp);
+                                    App.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsp) );
 
                                     break;
                                 }

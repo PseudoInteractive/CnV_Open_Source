@@ -144,9 +144,7 @@
                               Click="Refresh"
                                ToolTipService.ToolTip="Refresh tool count displays"
                               Icon="RepeatAll">
-                    <AppBarButton.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F5" />
-                    </AppBarButton.KeyboardAccelerators>
+                    
                     <AppBarButton.Resources>
                         <winui:TeachingTip x:Name="RefreshTip"
                                        IsLightDismissEnabled="True" 

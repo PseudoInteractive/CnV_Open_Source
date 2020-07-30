@@ -12,7 +12,7 @@
       xmlns:view="using:COTG.Views"
       mc:Ignorable="d"
       Background="{x:Null}">
-    <Grid>
+    <Grid x:Name="cityBaseGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -34,6 +34,7 @@
                         Grid.Row="1"
                         UseSystemFocusVisuals="True"
                         IsTabStop="True"
+                        AllowFocusOnInteraction="True"
                         GridLinesThickness="1.0"
                         AlternationStep="2"
                         ItemsSource="{x:Bind gridCitySource, Mode=OneWay}"
@@ -45,6 +46,7 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
+                        ContextFlyout="{x:Bind cityContextFlyout}"
                         GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
             <tg:RadDataGrid.Commands>
@@ -162,7 +164,7 @@ TextSubmitted="RaidCarrySubmitted"
                                 Target="{x:Bind cityGrid}"
                                 CloseButtonClick="TipRaiding101_ActionButtonClick"
                                CloseButtonContent="Got It"
-                           PreferredPlacement="LeftTop".
+                           PreferredPlacement="LeftTop"
                                 Subtitle="See which cities have available troops by clicking on the 'tsHome' column header.">
                 <TextBlock  TextWrapping="Wrap">
                 This will sort your cities by TS at home.<LineBreak/>

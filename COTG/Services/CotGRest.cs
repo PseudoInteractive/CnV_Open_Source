@@ -579,7 +579,7 @@ namespace COTG.Services
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
                     raid.target = r[8].GetInt32();
-                    raid.arrival =  r[7].GetString().ParseDateTime(false);
+                    raid.time =  r[7].GetString().ParseDateTime(false);
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
                 //    Log(raid.ToString());

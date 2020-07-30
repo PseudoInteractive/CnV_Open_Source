@@ -51,6 +51,7 @@ namespace COTG
             FocusVisualKind = FocusVisualKind.Reveal;
 
 
+
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;
 

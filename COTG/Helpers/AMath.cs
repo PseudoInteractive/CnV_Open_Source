@@ -60,7 +60,8 @@ namespace COTG
         }
         public static Vector2 Lerp(this float t, Vector2 c0,Vector2 c1)
         {
-            return c0 + (c1 - c0) * t;
+            var t0 = 1.0f - t;
+            return new Vector2(t0*c0.X+t*c1.X, t0 * c0.Y + t * c1.Y);
         }
         public static float Lerp(this float t, float c0, float c1)
         {

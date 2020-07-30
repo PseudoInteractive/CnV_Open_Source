@@ -69,8 +69,7 @@ namespace COTG.Game
         }
 
         public string _cityName;
-        public string cityName
-        { get { return _cityName ?? xy; } set {_cityName = value; } }
+        public string cityName=>  _cityName ?? xy;
 
         public int cid; // x,y combined into 1 number
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";

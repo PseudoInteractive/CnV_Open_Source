@@ -24,6 +24,8 @@ namespace COTG.Views
     public class UserTab : UserControl
     {
         public virtual void VisibilityChanged(bool visible) { }
+        // If this is not an xaml island, the newXamlRoot will be null
+        public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;
         public bool isActive;
         //User pressed F5 or refresh button
@@ -100,12 +102,13 @@ namespace COTG.Views
            Assert( Tabs.TabItems.Count==0);
         }
 
-        bool AddAnyTab()
+        bool AddChatTab(bool selectIt)
         {
             foreach (var tab in ChatTab.all)
             {
                 if (tab.isActive)
                     continue;
+                
                 var vi =new TabViewItem()
                 {
                     Header = tab.DataContext as string,
@@ -120,7 +123,8 @@ namespace COTG.Views
                     Content = tab
                 };
                 Add(vi);
-                Tabs.SelectedItem = vi;
+                if(selectIt)
+                    Tabs.SelectedItem = vi;
                 return true;
             }
             return false; 
@@ -170,7 +174,11 @@ namespace COTG.Views
 
         public void AddChatTabs()
         {
-            while (AddAnyTab()) { }
+            var selectIt = true;
+            while (AddChatTab(selectIt))
+            {
+                selectIt = false;
+            }
         }
 
         private void Window_Closed(AppWindow sender, AppWindowClosedEventArgs args)
@@ -206,17 +214,19 @@ namespace COTG.Views
 
         public void Add(TabViewItem tab)
         {
+            Tabs.TabItems.Add(tab);
             var ut = tab.Content as UserTab;
             if (ut != null)
             {
-                Assert(!ut.isActive);
+          //      Assert(!ut.isActive);
                 ut.isActive = true;
+             //   ut.XamlTreeChanged( (RootAppWindow != null) ? XamlRoot : null);
             }
             else
             {
                 Assert(false);
             }
-            Tabs.TabItems.Add(tab);
+
         }
 
         // Create a new Window once the Tab is dragged outside.
@@ -235,13 +245,18 @@ namespace COTG.Views
 
             var newPage = new TabPage();
             newPage.SetupWindow(newWindow);
+            Tabs.TabItems.Remove(args.Tab);
+            var ut = args.Tab.Content as UserTab;
+            ut.XamlTreeChanged(null);
 
             ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
 
-            Tabs.TabItems.Remove(args.Tab);
             newPage.Add(args.Tab);
 
+            ut.XamlTreeChanged(newPage);
+
             await newWindow.TryShowAsync();
+
         }
 
         private void Tabs_TabDragStarting(TabView sender, TabViewTabDragStartingEventArgs args)
@@ -321,7 +336,7 @@ namespace COTG.Views
 
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
-            AddAnyTab();
+            AddChatTab(true);
             //sender.TabItems.Add(new TabViewItem()
             //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
             //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
@@ -378,7 +393,7 @@ namespace COTG.Views
         private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             var senderTabView = args.Element as TabView;
-            AddAnyTab();
+            AddChatTab(true);
             args.Handled = true;
         }
 
