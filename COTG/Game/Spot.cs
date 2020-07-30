@@ -51,7 +51,7 @@ namespace COTG.Game
                     rv.isTemple = info.isTemple;
                     rv.isOnWater = info.isWater;
                     rv.isCastle = info.isCastle;
-                    rv.points = (ushort)(info.isBig ? 8000 : 1);
+                    rv.points = (ushort)(info.isBig ? 8000 : 1500);
                 }
                 Spot.allSpots.TryAdd(cid, rv);
             }
@@ -88,7 +88,8 @@ namespace COTG.Game
             public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
         public ushort points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" : isTemple? "templeIcon.png" : ($"{(isCastle ? "castle" : "city")}{GetSize()}.png") );
+        public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" :
+             ($"{(isTemple ? "temple" : isCastle ? "castle" : "city")}{GetSize()}{(isOnWater?"w":"")}.png") );
         public int continent => cid.CidToContinent();
 
         public static bool operator ==(Spot left, Spot right)
@@ -383,9 +384,9 @@ namespace COTG.Game
         public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
         public static string uiPressColumn = string.Empty;
 
-        readonly static int[] pointSizes = { 500, 1000, 2500, 4000, 5500, 7000, 8000 };
+        readonly static int[] pointSizes = { 1000,  6000 };
 
-        const int pointSizeCount = 7;
+        const int pointSizeCount = 2;
 
         int GetSize()
         {
