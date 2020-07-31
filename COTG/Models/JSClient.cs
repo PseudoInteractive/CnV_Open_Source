@@ -850,7 +850,7 @@ namespace COTG
 
 
                                         //  Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
-                                        if (IsWorldView())
+                                        //if (IsWorldView())
                                         {
                                             // bring city into view
                                             cid.BringCidIntoWorldView(true);
@@ -876,7 +876,7 @@ namespace COTG
                                     if (MainPage.IsVisible())
                                         ScanDungeons.Post(cid, false);
 
-                                    if (IsWorldView())
+                                   // if (IsWorldView())
                                     {
                                         // bring city into view
                                         cid.BringCidIntoWorldView(true);

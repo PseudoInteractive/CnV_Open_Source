@@ -353,26 +353,20 @@ namespace COTG.Models
             // put your custom logic here
             var i = context.Item as COTG.Game.Dungeon;
             var cid = i.cid;
-            var processed = false;
-          //  Log(context.Item.GetType());
-         //   Log(context.Item.ToString());
-         //   Log(context.Value);
-
-          //  Log(context.Column.Name);
-          //  Log(base.CanExecute(parameter));
             if (context.Column.Header != null)
             {
             //    Log(context.Column.Header);
                 switch (context.Column.Header.ToString())
                 {
-                    case "xy":
-                        processed = true;
-                        JSClient.ShowCity(cid,false); break;
-              
+                    case nameof(Dungeon.xy):
+                        JSClient.ShowCity(cid,false);
+                        break;
+                    case nameof(Dungeon.plan):
+                        Raiding.SendRaids(i);
+                        break;
+
                 }
             }
-            if (!processed)
-                Raiding.SendRaids(i);
 
             if (base.CanExecute(parameter))
                 base.Execute(parameter);

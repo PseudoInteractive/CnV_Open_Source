@@ -30,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 
 namespace COTG
 {
@@ -195,6 +196,13 @@ namespace COTG
         public static bool IsKeyPressedShift()
         {
             return Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+        }
+
+        public static MenuFlyoutItem CreateMenuItem(string text, Action command)
+        {
+            var rv = new MenuFlyoutItem() { Text = text };
+            rv.Click += (_, _) => command();
+            return rv;
         }
 
     }

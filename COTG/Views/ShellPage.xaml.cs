@@ -203,14 +203,8 @@ namespace COTG.Views
                 var tabPage = CreateTabPage(shellFrame);
               
                 MainPage.instance = new MainPage();
-              
-                tabPage.Add(
-                new WinUI.TabViewItem()
-                {
-                    IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.ReShare },
-                    Header = "Raid",//tab.DataContext as string,
-                    Content = MainPage.instance
-                });
+
+                tabPage.AddTab(MainPage.instance);
               
                 DefenderPage.instance = new DefenderPage();
                 tabPage.Add(
@@ -235,14 +229,7 @@ namespace COTG.Views
             {
                 var tabPage = CreateTabPage(spotFrame);
                 SpotTab.instance = new SpotTab();
-                tabPage.Add(
-                new WinUI.TabViewItem()
-                {
-                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uF738" },
-                    Header = "Recent",//tab.DataContext as string,
-                    Content = SpotTab.instance
-                });
-                tabPage.Tabs.SelectedIndex = 0;
+                tabPage.AddTab(SpotTab.instance,true);
 
             }
             navigationView.IsPaneOpen = false;

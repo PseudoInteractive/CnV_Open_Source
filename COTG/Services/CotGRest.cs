@@ -366,23 +366,7 @@ namespace COTG.Services
 
                 var jse = json.RootElement;
                 jse = jse[0];
-                var rv = new List<Dungeon>();
-                foreach (var dung in jse.EnumerateArray())
-                {
-                    rv.Add(new Dungeon()
-                    {
-                        city = city,
-                        cid = dung.GetAsInt("c"),
-                        type = dung.GetAsByte("t"),
-                        level = dung.GetAsByte("l"),
-                        completion = dung.GetAsFloat("p"),
-                        dist = dung.GetAsFloat("d")
-
-                    });
-                }
-                rv.Sort((a, b) => a.dist.CompareTo(b.dist));
-                // dont wait on this 
-                COTG.Views.MainPage.UpdateDungeonList(rv);
+                Dungeon.ShowDungeonList(city, jse);
             }
             catch (Exception e)
             {
@@ -390,6 +374,8 @@ namespace COTG.Services
             }
 
         }
+
+        
     }
 
     public class OverviewApi : RestAPI

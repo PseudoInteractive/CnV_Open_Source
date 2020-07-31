@@ -758,8 +758,8 @@ namespace COTG.Views
             var dc = newC - ShellPage.cameraC;
             // only move if needed
             if (!lazy||
-                dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X  ||
-                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y )
+                dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X*0.675f  ||
+                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y*0.675f )
             {
 
                 ShellPage.cameraC = newC;

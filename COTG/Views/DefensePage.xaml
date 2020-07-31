@@ -19,6 +19,7 @@
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
+      DataContext="Defense"
       mc:Ignorable="d">
     <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">

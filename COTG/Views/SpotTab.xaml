@@ -20,7 +20,8 @@
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-      mc:Ignorable="d">
+        DataContext="Recent"
+    mc:Ignorable="d">
 
     <Grid>
         <telerikGrid:RadDataGrid x:Name="selectedGrid"

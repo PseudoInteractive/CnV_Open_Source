@@ -62,7 +62,7 @@ namespace COTG.Game
                 var _carryCapacity = 0;
                 foreach(var tc in troopsHome)
                 {
-                    if(ttLandRaiders.Contains((byte)tc.type) )
+                    if(IsLandRaider((byte)tc.type) )
                             {
                                 _carryCapacity += tc.count * ttCarry[tc.type];
                             }
@@ -355,6 +355,26 @@ namespace COTG.Game
         private string GetDebuggerDisplay()
         {
             return ToString();
+        }
+        public byte GetIdealDungeonType()
+        {
+            // todo:  handle water
+            byte best = 0;
+            var bestTS = 0;
+            foreach (var ttc in troopsHome)
+            {
+                var type = ttBestDungeonType[ttc.type];
+                if (type >= (byte)DungeonType.water )
+                    continue;// todo: handle water
+                var ts = ttc.ts;
+                if (ts > bestTS)
+                {
+                    bestTS = ts;
+                    best = type;
+                }
+
+            }
+            return best;
         }
     }
     public class SenatorInfo

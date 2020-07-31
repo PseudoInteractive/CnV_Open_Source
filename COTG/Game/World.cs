@@ -1,4 +1,5 @@
-﻿using System;
+﻿using COTG.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -79,6 +80,7 @@ namespace COTG.Game
         public const int worldDim = 600;
         public const int outSize = 2400;
         public const uint typeMask = 0xf0000000;
+        public const uint dataMask = 0x0fffffff;
         public const uint typeCity = 0x10000000;
         public const uint typeShrine = 0x20000000;
         public const uint typePortal = 0x30000000;
@@ -93,7 +95,7 @@ namespace COTG.Game
 
         public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
-        public static uint[,] cityLookup = new uint[worldDim, worldDim]; // reference with CID, stores playerID
+        public static uint[] raw = new uint[worldDim*worldDim]; // reference with CID, stores playerID
         public static int ClampCoord(int x)
         {
             return x.Clamp(0, worldDim);
@@ -102,12 +104,20 @@ namespace COTG.Game
         {
             var x = c.x;
             var y = c.y;
-            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? cityLookup[x, y] : 0u;
+            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? raw[x+y*worldDim] : 0u;
             return (rv & typeMask, (int)(rv & playerMask),
                 (rv & typeCityFlagCastle) != 0,
                 (rv & typeCityFlagBig) != 0,
                 (rv & typeCityFlagWater) != 0,
                 (rv & typeCityFlagTemple) != 0);
+
+        }
+        public static (uint type, uint data) RawLookup((int x, int y) c)
+        {
+            var x = c.x;
+            var y = c.y;
+            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? raw[x + y * worldDim] : 0u;
+            return (rv & typeMask, (rv & dataMask));
 
         }
 
@@ -201,7 +211,7 @@ namespace COTG.Game
         public static World Decode(JsonDocument jsd)
         {
             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-            Array.Clear(cityLookup, 0, cityLookup.Length); // Todo:  remove decaying cities?
+            Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
 
             // fill with Alpha=clear
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
@@ -263,7 +273,7 @@ namespace COTG.Game
                 pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
 
-                cityLookup[b.x, b.y] = b.level | (uint)(b.type << 4) | typeBoss;
+                raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
             }
             foreach (var id in caverns_)
@@ -353,7 +363,7 @@ namespace COTG.Game
                         }
                         break;
                 }
-                cityLookup[x, y] = (uint)(level | typeDungeon);
+                raw[index] = (uint)(level | typeDungeon);
 
             }
             foreach (var id in shrines_)
@@ -387,7 +397,7 @@ namespace COTG.Game
                 pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-                cityLookup[b.x, b.y] = b.type | typeShrine;
+                raw[index] = b.type | typeShrine;
             }
 
             foreach (var id in portals_)
@@ -419,7 +429,7 @@ namespace COTG.Game
                 pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-                cityLookup[b.x, b.y] = (b.active ? 1u : 0) | typePortal;
+                raw[index] = (b.active ? 1u : 0) | typePortal;
             }
 
             for (int isLL = 0; isLL < 2; ++isLL)
@@ -537,7 +547,7 @@ namespace COTG.Game
                         pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                         pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
                     }
-                    cityLookup[x, y] = (uint)(pid | typeCity | isBig * typeCityFlagBig | isCastle * typeCityFlagCastle | (isTemple ? typeCityFlagTemple : 0) | isWater * typeCityFlagWater);
+                    raw[index] = (uint)(pid | typeCity | isBig * typeCityFlagBig | isCastle * typeCityFlagCastle | (isTemple ? typeCityFlagTemple : 0) | isWater * typeCityFlagWater);
 
 
 
@@ -594,6 +604,7 @@ namespace COTG.Game
             rv.shrines = shrines.ToArray();
             rv.bosses = bosses.ToArray();
             bitmapPixels = pixels;
+            Task.Run(() => WorldStorage.SaveWorldData(raw) );
             return rv;
         }
         public static (string label,bool isMine) GetLabel((int x, int y) c)

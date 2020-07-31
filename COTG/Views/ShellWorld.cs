@@ -66,7 +66,7 @@ namespace COTG.Views
             {
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
-                var info = World.CityLookup(worldC);
+                //var info = World.CityLookup(worldC);
                 //if (info.type == World.typeCity)
                 //{
                 //    var spot = DefensePage.GetDefender(cid); // cache it
@@ -152,39 +152,39 @@ namespace COTG.Views
             var prior = lastMousePressTime;
             lastMousePressTime = DateTimeOffset.UtcNow;
             lastMousePressPosition = mousePosition;
-            if ((lastMousePressTime - prior).TotalSeconds < 2.5f)
-            {
-                // double click
+  //          if ((lastMousePressTime - prior).TotalSeconds < 2.5f)
+  //          {
+  //              // double click
 
-                var c = MousePointToWorld(e.GetCurrentPoint(canvas).Position.ToVector2());
-                var data = World.CityLookup(c);
-                switch (data.type)
-                {
-                    case World.typeCity:
-                        {
-                            if (data.player == 0)
-                            {
+  //              var c = MousePointToWorld(e.GetCurrentPoint(canvas).Position.ToVector2());
+  //              var data = World.CityLookup(c);
+  //              switch (data.type)
+  //              {
+  //                  case World.typeCity:
+  //                      {
+  //                          if (data.player == 0)
+  //                          {
 
-                                //                               toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-                            }
-                            else
-                            {
-                                var player = Player.all.GetValueOrDefault(data.player, Player._default);
-                                if (Player.IsMe(data.player))
-                                {
-                                //    JSClient.ViewCity(c.WorldToCid());
-                                }
-                                else
-                                {
-  //                                  toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-                                }
+  //                              //                               toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+  //                          }
+  //                          else
+  //                          {
+  //                              var player = Player.all.GetValueOrDefault(data.player, Player._default);
+  //                              if (Player.IsMe(data.player))
+  //                              {
+  //                              //    JSClient.ViewCity(c.WorldToCid());
+  //                              }
+  //                              else
+  //                              {
+  ////                                  toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+  //                              }
 
 
-                            }
-                            break;
-                        }
-                }
-                }
+  //                          }
+  //                          break;
+  //                      }
+  //              }
+  //              }
         //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
         }
         private void Canvas_PointerExited(object sender, PointerRoutedEventArgs e)

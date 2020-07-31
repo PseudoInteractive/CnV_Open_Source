@@ -365,12 +365,6 @@ namespace COTG.Views
             return true;
         }
         MenuFlyout cityContextFlyout;
-        private static MenuFlyoutItem CreateMenuItem(string text, Action command)
-        {
-            var rv = new MenuFlyoutItem() { Text = text };
-            rv.Click += (_, _) => command();
-            return rv;
-        }
         private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
 		{
          //   Log("Sel update");
@@ -412,8 +406,8 @@ namespace COTG.Views
                 //   cityContextFlyout.XamlRoot = null;
                 cityGrid.DataContext = newPage;
                 cityContextFlyout = new MenuFlyout();
-                cityContextFlyout.Items.Add(CreateMenuItem("Home Whenever", ReturnSlowClick));
-                cityContextFlyout.Items.Add(CreateMenuItem("Home Please", ReturnFastClick));
+                cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+                cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
                 cityContextFlyout.XamlRoot = newPage.XamlRoot;
                 cityGrid.ContextFlyout = cityContextFlyout;
 

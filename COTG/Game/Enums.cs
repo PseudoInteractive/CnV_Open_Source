@@ -10,7 +10,12 @@ namespace COTG.Game
     {
 
         public const int ttCount = 18;
-        public static byte[] ttLandRaiders = { 2, 3, 4, 5, 6, 8, 9, 10, 11 };
+        public static bool IsLandRaider(int type) => ttBestDungeonType[type] <= 2;
+
+        
+        // 255 means none,
+        public static string[] dungeonTypes = { "forest", "hill", "mountain", "water" };
+        public static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
         public static ushort[] ttTs = { 1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1 };
         public static string[] ttName = { "guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator" };
         public static string[] ttNameWithCaps = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
@@ -29,7 +34,14 @@ namespace COTG.Game
         //
         // Templates not working for me
         //
-
+        public enum DungeonType : byte
+        {
+            forest=0,
+            hill=1,
+            mountain=2,
+            water=3,
+            invalid=255
+        }
 
         public static int IndexOf(this short[] a, short b)
         {

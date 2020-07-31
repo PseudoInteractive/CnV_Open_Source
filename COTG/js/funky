@@ -8932,6 +8932,10 @@ function setCameraC(a, b) {
     _cameraY = _camera.y = +b;
     //    console.log("Set camera");
 }
+function PostCoords(c) {
+    const wrapper = { coords: c };
+    window['external']['notify'](JSON.stringify(wrapper));
+}
 I0rr(X0rr());
 I0VV(u0VV());
 B0KK(A0KK());
@@ -25792,14 +25796,13 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R | 587))
                         .value = document.getElementById(_s(H2R | 4864))
                         .value + " " + a4U + " ";
-                const wrapper = { coords: a4U };
-                window['external']['notify'](JSON.stringify(wrapper));
+                PostCoords(a4U);
             });
             $(_s(486))
                 .click(function () {
                 var E4U = $(_s(486))
                     .attr("data");
-                E4U = _s(a44 | 1054) + E4U + _s(+N44);
+                E4U = "<coords>" + E4U + "</coords>";
                 if ($(_s(I7R << 1328136192))
                     .hasClass(_s(n4p >> 1800304480)))
                     document.getElementById(_s(d4p * 1))
@@ -25820,12 +25823,13 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(+H2R))
                         .value = document.getElementById(_s(H2R >> 351536864))
                         .value + " " + E4U + " ";
+                PostCoords(E4U);
             });
             $(_s(3203))
                 .click(function () {
                 var k3U = $(_s(3203))
                     .attr("data");
-                k3U = _s(a44 << 661390592) + k3U + _s(+N44);
+                k3U = "<coords>" + k3U + "</coords>";
                 if ($(_s(I7R >> 2053428128))
                     .hasClass(_s(n4p | 17)))
                     document.getElementById(_s(d4p - 0))
@@ -25846,12 +25850,13 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R << 2005856544))
                         .value = document.getElementById(_s(+H2R))
                         .value + " " + k3U + " ";
+                PostCoords(E4U);
             });
             $(_s(2430))
                 .click(function () {
                 var e3U = $(_s('2430' | 100))
                     .attr("data");
-                e3U = _s(+a44) + e3U + _s(N44 * 1);
+                e3U = "<coords>" + e3U + "</coords>";
                 if ($(_s(I7R - 0))
                     .hasClass(_s(n4p * 1)))
                     document.getElementById(_s(d4p | 64))
@@ -25872,12 +25877,13 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(+H2R))
                         .value = document.getElementById(_s(H2R << 1513710880))
                         .value + " " + e3U + " ";
+                PostCoords(E4U);
             });
             $(_s(6919))
                 .click(function () {
                 var s3U = $(_s("6919" | 6407))
                     .attr("data");
-                s3U = _s(a44 | 262) + s3U + _s(+N44);
+                s3U = "<coords>" + s3U + "</coords>";
                 if ($(_s(I7R * 1))
                     .hasClass(_s(n4p * 1)))
                     document.getElementById(_s(d4p | 840))
@@ -25898,6 +25904,7 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R ^ 0))
                         .value = document.getElementById(_s(H2R >> 1393086016))
                         .value + " " + s3U + " ";
+                PostCoords(E4U);
             });
             $(_s(5985))
                 .click(function () { p2F(); });
@@ -61330,6 +61337,7 @@ var cotgsubscribe = amplify;
                 var K0v = _s(3190) + g0v + _s('2290' | 146);
             else if (P0v == 4)
                 var K0v = "<coords>" + g0v + "</coords>";
+            console.log("Whats this?");
             if (g0v != '') {
                 if ($(_s(I7R >> 2117785184))
                     .hasClass(_s(n4p >> 1026196864)))

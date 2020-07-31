@@ -102,32 +102,46 @@ namespace COTG.Views
            Assert( Tabs.TabItems.Count==0);
         }
 
-        bool AddChatTab(bool selectIt)
+        bool AddAnyChatTab(bool selectIt)
         {
             foreach (var tab in ChatTab.all)
             {
                 if (tab.isActive)
                     continue;
-                
-                var vi =new TabViewItem()
-                {
-                    Header = tab.DataContext as string,
-                    IconSource = (tab.DataContext as string switch
-                    {
-                        "world"=> new SymbolIconSource() { Symbol = Symbol.Microphone },
-                        "alliance" => new SymbolIconSource() { Symbol = Symbol.People },
-                        "whisper" => new SymbolIconSource() { Symbol = Symbol.Comment },
-                         "officer" => new SymbolIconSource() { Symbol = Symbol.Admin },
-                          _ => new SymbolIconSource() { Symbol = Symbol.OpenWith }
-                    }),
-                    Content = tab
-                };
-                Add(vi);
-                if(selectIt)
-                    Tabs.SelectedItem = vi;
+
+                AddTab(tab, selectIt);
                 return true;
             }
             return false; 
+        }
+
+        public void AddTab(UserTab tab, bool selectIt)
+        {
+            var vi = new TabViewItem()
+            {
+                Header = tab.DataContext as string,
+                IconSource = GetIconForTab(tab),
+                Content = tab
+            };
+            Add(vi);
+            if (selectIt)
+                Tabs.SelectedItem = vi;
+        }
+
+        private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
+        {
+            return (tab.DataContext as string switch
+            {
+                "Raid" => new SymbolIconSource() { Symbol = Symbol.ReShare },
+                "Defender" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA18" },//tab.DataContext as string,
+                "Defense" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA0D" },
+                "Recent" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uF738" },
+                "world" => new SymbolIconSource() { Symbol = Symbol.Microphone },
+                "alliance" => new SymbolIconSource() { Symbol = Symbol.People },
+                "whisper" => new SymbolIconSource() { Symbol = Symbol.Comment },
+                "officer" => new SymbolIconSource() { Symbol = Symbol.Admin },
+                _ => new SymbolIconSource() { Symbol = Symbol.OpenWith }
+            });
         }
 
         void SetupWindow(AppWindow window)
@@ -175,7 +189,7 @@ namespace COTG.Views
         public void AddChatTabs()
         {
             var selectIt = true;
-            while (AddChatTab(selectIt))
+            while (AddAnyChatTab(selectIt))
             {
                 selectIt = false;
             }
@@ -336,12 +350,24 @@ namespace COTG.Views
 
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
-            AddChatTab(true);
-            //sender.TabItems.Add(new TabViewItem()
-            //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
-            //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
-        }
-        static void RemoveTab(TabView view, TabViewItem tab)
+            var menu = new MenuFlyout();
+            foreach (var tab in ChatTab.all)
+            {
+                if (tab.isActive)
+                    continue;
+                menu.Items.Add(App.CreateMenuItem(tab.DataContext as string,()=>AddTab(tab,true)));
+            }
+            if (menu.Items.Count == 0)
+                menu.Items.Add(new MenuFlyoutItem() { Text = "All Tabs are Open" });
+            menu.XamlRoot = sender.XamlRoot;
+            menu.ShowAt(sender);
+
+                //AddChatTab(true);
+                //sender.TabItems.Add(new TabViewItem()
+                //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
+                //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
+            }
+            static void RemoveTab(TabView view, TabViewItem tab)
         {
             var itab = tab.Content as UserTab;
             if (itab != null)
@@ -393,7 +419,7 @@ namespace COTG.Views
         private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             var senderTabView = args.Element as TabView;
-            AddChatTab(true);
+            Tabs_AddTabButtonClick(senderTabView,args);
             args.Handled = true;
         }
 

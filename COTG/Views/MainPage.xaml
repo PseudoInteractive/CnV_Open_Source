@@ -11,6 +11,7 @@
       xmlns:game="using:COTG.Game"
       xmlns:view="using:COTG.Views"
       mc:Ignorable="d"
+      DataContext="Raid"
       Background="{x:Null}">
     <Grid x:Name="cityBaseGrid">
         <Grid.ColumnDefinitions>

@@ -102,7 +102,7 @@ namespace COTG.Game
             var tr = new List<sndRaidtr>();
             foreach (var ttc in city.troopsHome)
             {
-                if (!ttLandRaiders.Contains((byte)ttc.type))
+                if (!IsLandRaider((byte)ttc.type))
                     continue;
                 tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
 
