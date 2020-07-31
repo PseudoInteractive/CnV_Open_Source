@@ -293,6 +293,9 @@
     <Compile Include="Views\DefensePage.xaml.cs">
       <DependentUpon>DefensePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DonationTab.xaml.cs">
+      <DependentUpon>DonationTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
     </Compile>
@@ -391,6 +394,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DefensePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DonationTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

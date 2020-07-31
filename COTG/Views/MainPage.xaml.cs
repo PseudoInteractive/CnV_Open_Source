@@ -35,7 +35,6 @@ namespace COTG.Views
     public sealed partial class MainPage : UserTab, INotifyPropertyChanged
     {
         public DumbCollection<City> gridCitySource { get; } = new DumbCollection<City>();
-      //  public DumbCollection<Dungeon> dungeons { get; } = new DumbCollection<Dungeon>();
         public static MainPage instance;
 
         //        public static City showingRowDetails;
@@ -291,6 +290,7 @@ namespace COTG.Views
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
@@ -302,7 +302,6 @@ namespace COTG.Views
             OnPropertyChanged(propertyName);
         }
 
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
        
 
 

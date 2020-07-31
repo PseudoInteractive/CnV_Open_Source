@@ -348,20 +348,41 @@ namespace COTG.Views
             }
         }
 
+        public MenuFlyoutItem AddTabMenuItem(UserTab tab)
+        {
+            var title = tab.DataContext as string;
+            var rv = new MenuFlyoutItem() { Text = title };
+            rv.Click += (_, _) => AddTab(tab,true);
+            return rv;
+        }
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
+            var _args = args as RoutedEventArgs;
+            var _sender = _args?.OriginalSource as FrameworkElement;
+            if (_sender == null)
+                _sender = sender;
             var menu = new MenuFlyout();
+            if (!MainPage.instance.isActive)
+                menu.Items.Add(AddTabMenuItem(MainPage.instance));
+            if (!DefenderPage.instance.isActive)
+                menu.Items.Add(AddTabMenuItem(DefenderPage.instance));
+            if (!DefensePage.instance.isActive)
+                menu.Items.Add(AddTabMenuItem(DefensePage.instance));
+            if (!SpotTab.instance.isActive)
+                menu.Items.Add(AddTabMenuItem(SpotTab.instance));
+
             foreach (var tab in ChatTab.all)
             {
                 if (tab.isActive)
                     continue;
-                menu.Items.Add(App.CreateMenuItem(tab.DataContext as string,()=>AddTab(tab,true)));
+                menu.Items.Add(AddTabMenuItem(tab));
             }
             if (menu.Items.Count == 0)
-                menu.Items.Add(new MenuFlyoutItem() { Text = "All Tabs are Open" });
+                menu.Items.Add(new MenuFlyoutItem() { Text = "All the tabs are open" });
             menu.XamlRoot = sender.XamlRoot;
-            menu.ShowAt(sender);
 
+            menu.ShowAt(_sender);
+            
                 //AddChatTab(true);
                 //sender.TabItems.Add(new TabViewItem()
                 //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },

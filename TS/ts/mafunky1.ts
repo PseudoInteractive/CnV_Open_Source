@@ -16,6 +16,10 @@ function encryptJs(req,k2v) {
 	console.log(k2v);
 	return a6.ccazzx.encrypt(JSON.stringify(k2v),ekeys[req],256);
 };
+interface stringCType {
+
+}
+var shrinec_= [[]];//string,string,number,number,number,number,string, number,number,number]] = [[[]]];// = [[["castle", "", 0, 0,0,0,1, "0", 0, 0, 0]]];
 
 //function betterBase64Decode() {
 //	try {
@@ -663,7 +667,7 @@ function avactor() {
 		let troops = cotg.city.troops();
 
 		if (dtype_ === "dungeon") {
-			if ($("#cityplayerInfo div table tbody tr").length >= 11) {
+			if ($("#cityplayerInfo div table tbody tr").length === 11) {
 				bossele_();
 			}
 			/** @type {number} */
@@ -1427,7 +1431,6 @@ function avactor() {
 	// 	return a_7;
 	// };
 	/** @type {!Array} */
-	var shrinec_ = [[]];
 
 
 	//var _mru = localStorage.getItem("mru");

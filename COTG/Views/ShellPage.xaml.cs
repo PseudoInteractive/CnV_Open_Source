@@ -203,27 +203,13 @@ namespace COTG.Views
                 var tabPage = CreateTabPage(shellFrame);
               
                 MainPage.instance = new MainPage();
-
-                tabPage.AddTab(MainPage.instance);
+                tabPage.AddTab(MainPage.instance,true);
               
                 DefenderPage.instance = new DefenderPage();
-                tabPage.Add(
-                new WinUI.TabViewItem()
-                {
-                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA18" },
-                    Header = "Defender",//tab.DataContext as string,
-                    Content = DefenderPage.instance
-                }); ;
+                tabPage.AddTab(DefenderPage.instance,false);
               
                 DefensePage.instance = new DefensePage();
-                tabPage.Add(
-                new WinUI.TabViewItem()
-                {
-                    IconSource = new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA0D"  },
-                    Header = "Defense",//tab.DataContext as string,
-                    Content = DefensePage.instance
-                });
-                tabPage.Tabs.SelectedIndex = 0;
+               // tabPage.AddTab(DefensePage.instance, false);
 
             }
             {
