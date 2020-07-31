@@ -55,7 +55,7 @@
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
-                                        Width="40" />
+                                        Width="34" />
                 <tg:DataGridTextColumn PropertyName="nameAndRemarks"
                                        Header="Name"
                                        CellContentStyle="{StaticResource LeftAlign}"

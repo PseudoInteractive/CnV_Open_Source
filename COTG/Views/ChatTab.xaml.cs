@@ -67,14 +67,14 @@ namespace COTG.Views
 
         public static string[] chatToId = { nameof(world), nameof(whisper), nameof(alliance), nameof(officer) };
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
-        public  DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
+        public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
 
         override public void VisibilityChanged(bool visible)
         {
             if (visible)
             {
                 var count = Groups.Count;
-                if (count > 0 )
+                if (count > 0)
                 {
                     listView.ScrollIntoView(Groups[count - 1].Items.Last());
                 }
@@ -83,12 +83,12 @@ namespace COTG.Views
 
         }
 
-    public void Post(ChatEntry entry)
+        public void Post(ChatEntry entry)
         {
             var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
-            var lastHour = activeGroup ==null ? -99 : activeGroup.time.Hour;
+            var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
             var newHour = entry.time.Hour;
-            if(lastHour!=newHour)
+            if (lastHour != newHour)
             {
                 activeGroup = new ChatEntryGroup() { time = entry.time };
                 Groups.Add(activeGroup);
@@ -104,7 +104,7 @@ namespace COTG.Views
         }
 
 
-            public ChatTab()
+        public ChatTab()
         {
             this.InitializeComponent();
 
@@ -117,17 +117,17 @@ namespace COTG.Views
 
             if (debug == null)
                 return;
-//              await _logSemaphore.WaitAsync();
+            //              await _logSemaphore.WaitAsync();
             // try
             ////  {
-            debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => { 
-            
+            debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => {
+
                 try
                 {
-                  //  var str = $"{Tick.MSS()}:{s}";
+                    //  var str = $"{Tick.MSS()}:{s}";
                     //  instance.logEntries
-   
-                    debug.Post(new ChatEntry(s,JSClient.ServerTime()));
+
+                    debug.Post(new ChatEntry(s, JSClient.ServerTime()));
                 }
                 catch (Exception e)
                 {
@@ -138,7 +138,7 @@ namespace COTG.Views
 
 
             });
-             
+
             //finally
             //{
             //    _logSemaphore.Release();
@@ -161,15 +161,19 @@ namespace COTG.Views
             Note.MarkDownLinkClicked(sender, e);
         }
 
-       
+
 
         private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var chatEntry = sender as HyperlinkButton;
-            if(chatEntry!=null)
-               JSClient.ShowPlayer(chatEntry.Content.ToString());
+            if (chatEntry != null)
+                JSClient.ShowPlayer(chatEntry.Content.ToString());
         }
         static List<string> messageCache = new List<string>();
+        private void Paste(string s)
+        {
+            input.Text = input.Text + s;
+        }
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (DataContext is string s)
@@ -263,6 +267,21 @@ namespace COTG.Views
 
             return ch;
         }
+        public static void PasteCoords(string coords)
+        {
+            foreach (var tab in all)
+                tab.Paste(coords);
+
+            
+            var lg = coords.Length;  //  <coords>000:000</coords>
+            if (lg == 24)
+            {
+                var c = coords.Substring(8, 7);
+                Note.Show($"[{c}](/c/{c}) posted to chat");
+            }
+            
+        }
+
         public static void ProcessIncomingChat(JsonProperty jsp)
         {
             var a = jsp.Value.GetAsInt("a");

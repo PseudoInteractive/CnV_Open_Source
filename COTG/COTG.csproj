@@ -181,9 +181,9 @@
     <PRIResource Include="Strings\en-us\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="JS\funky.js" />
-    <EmbeddedResource Include="JS\J0EE.js" />
-    <EmbeddedResource Include="JS\jquery.js" />
+    <EmbeddedResource Include="JS\funky" />
+    <EmbeddedResource Include="JS\J0EE" />
+    <EmbeddedResource Include="JS\jquery" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />

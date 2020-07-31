@@ -7085,16 +7085,22 @@ function _s(id) {
     return __s[id];
 }
 var pollthis;
-
-var __c = 
+let D6: jsonT.City;
+var F5F;
+var a6 =
+{
+    ccazzx: {
+        encrypt: (a: string, b: string, c: number) => {return "" },
+        decrypt: (a: string, b: string, c: number)=> {return "" }
+    }
+};
+let __c = 
 { 
-  D6 : {},
-  j71 : {},
-  F5F : {},
 
   sendchat:function(n,m){},
   showreport : function(reportId){}
 };
+
 var M8 = document.getElementById("mainMapDiv"); // region canvas
 
 //let c6: Phaser.Game;
@@ -7116,6 +7122,11 @@ function setCameraC( a, b)
 //    console.log("Set camera");
 }
 
+function PostCoords(c)
+{
+const wrapper = { coords: c }
+window['external']['notify'](JSON.stringify(wrapper));
+}
 I0rr(X0rr());
 I0VV(u0VV());
 B0KK(A0KK());
@@ -8954,7 +8965,11 @@ i011.d3q = function() {
 };
 i011.s6s = 2147483647;
 i011.R6 = function() { return typeof i011.B6.Y7 === 'function' ? i011.B6.Y7.apply(i011.B6, arguments) : i011.B6.Y7; };
-function gspotfunct () {
+var gspotfunct = {
+    shCit : (a)=>{},
+    infoPlay: (a)=>{},
+    chcity: (a)=>{},
+    alliancelink: (a) =>{}
     };
 
 var setcitybind;
@@ -9365,7 +9380,6 @@ function gaFrep(E7c) {
   });
 }
 
-var __a6 = {};
 var cotgsubscribe = amplify;
 (function outer() {
   var E6k = i011;
@@ -12411,7 +12425,7 @@ var cotgsubscribe = amplify;
           else {
             $(_s(+z6y))
               .html(_s(800));
-            D6 = JSON.parse(J9B);        __c.D6 = D6;
+            D6 = JSON.parse(J9B);        
             L0F(3, I9B, j9B);
             J2();
             m9();
@@ -16386,7 +16400,7 @@ var cotgsubscribe = amplify;
           .prop(_s(286), !![]);
       }
     }
-    gspotfunct["shCit"] = function(N9V) {
+    gspotfunct.shCit = function(N9V) {
       E6k.y6();
       O8(N9V);
     };
@@ -16407,15 +16421,18 @@ var cotgsubscribe = amplify;
         .val() < 0) $(_s(787) + m6Z)
         .val(0);
     }
-      gspotfunct["chcity"] = function (F9V) { R2(F9V); DoPoll2(300); };
+      gspotfunct.chcity = function (F9V) { R2(F9V); DoPoll2(300); };
+      window['chcity'] = gspotfunct.chcity;
     gspotfunct.infoPlay = function(q9V) {
       E6k.y6();
       Z5F(q9V);
     };
-      gspotfunct["alliancelink"] = function(c9V) {
+      window['infoPlay'] = gspotfunct.infoPlay;
+      gspotfunct.alliancelink = function(c9V) {
       E6k.y6();
       W4F(c9V);
     };
+      window['alliancelink'] = gspotfunct.alliancelink;
 
     function K0V() {
       var L82 = $(_s("6198" | 4112));
@@ -16985,7 +17002,7 @@ var cotgsubscribe = amplify;
         }, 2000);
         else if (!(Y0g == 0)) {
           D6 = JSON.parse(Y0g);
-          __c.D6=D6;
+          D6=D6;
            gCPosted();
           Y0g = "";
           cit_type = D6.w;
@@ -17603,16 +17620,16 @@ var cotgsubscribe = amplify;
     var z8 = 0;
     var w9 = new Audio(_s(69));
 
-    function f2F() {
+  //  function f2F() {
       //E6k.R6();
       //if (c6)
       //  if (tileMap)
       //    if (landLayer) {
-      //      G8 = landLayer.getTileX(c6.input.activePointer.worldX);
-      //      l8 = landLayer.getTileY(c6.input.activePointer.worldY);
-      //      G1F = tileMap.getTile(landLayer.getTileX(phaserGraphics.x), landLayer.getTileY(phaserGraphics.y));
+     //       G8 = landLayer.getTileX(c6.input.activePointer.worldX);
+     //       l8 = landLayer.getTileY(c6.input.activePointer.worldY);
+     //       G1F = tileMap.getTile(landLayer.getTileX(phaserGraphics.x), landLayer.getTileY(phaserGraphics.y));
       //    }
-    }
+   // }
     var a3F;
     var T6F;
     var V9;
@@ -18130,7 +18147,7 @@ var cotgsubscribe = amplify;
         }
       };
     }(window.String.fromCharCode, parseInt);
-    var a6 = {};
+
 
     function R2(d9l) {
       E6k.R6();
@@ -18257,10 +18274,9 @@ var cotgsubscribe = amplify;
                     Y9T));
                   var F9T = 10;
                   var m9T = (E1R - 0 - F9T) / +A5y;
-                  W2.putTile(a9T, z2.getTileX(F9T * +64), z2.getTileY(m9T * (64 << 696037408)), r2);
+                 // W2.putTile(a9T, z2.getTileX(F9T * +64), z2.getTileY(m9T * (64 << 696037408)), r2);
                 }
-                J2
-                  ();
+                J2();
               }
             }
           }
@@ -18862,8 +18878,7 @@ var cotgsubscribe = amplify;
                   }
                 }
                 if (S7Z == +17) {
-                  var V7Z = ppdt[_s(
-                    +i2y)][F8y | 3]["n"];
+                    var V7Z = ppdt["rs"][F8y | 3]["n"];
                   if (V7Z != 0) {
                     var K7Z = qam[_s(+G2y)][V7Z][E6k
                       .o55(+r2y)][0][_s(b2y - 0)];
@@ -19815,7 +19830,6 @@ var cotgsubscribe = amplify;
     }
     if (typeof define == _s(n9p - 0) && define.amd) define([],
       function() { return a6; });
-    a6.ccazzx = {};
 
     function x2F(I0Z) {
       $(_s(+m7y) + I0Z)
@@ -19982,7 +19996,6 @@ var cotgsubscribe = amplify;
       try { return decodeURIComponent(escape(this)); } catch (g2v) { return this; }
     };
 
-     __a6.ccazzx = a6.ccazzx; 
 
 
     function n8F() {
@@ -23702,6 +23715,7 @@ var cotgsubscribe = amplify;
           .html('');
       });
     }
+
     var p9;
     $(document)
       .ready(function() {
@@ -23737,6 +23751,8 @@ var cotgsubscribe = amplify;
       var K2l;
       var P2l;
       var R2l = gnewd();
+
+
       $(_s(6748))
         .hide();
       for (var f2l in D6.tc) {
@@ -23906,12 +23922,14 @@ var cotgsubscribe = amplify;
               .hasClass(_s(+n4p))) document.getElementById(_s(H2R | 587))
               .value = document.getElementById(_s(H2R | 4864))
               .value + " " + a4U + " ";
+            
+              PostCoords(a4U);
           });
         $(_s(486))
           .click(function() {
             var E4U = $(_s(486))
               .attr("data");
-            E4U = _s(a44 | 1054) + E4U + _s(+N44);
+            E4U = "<coords>" + E4U + "</coords>";
             if ($(_s(I7R << 1328136192))
               .hasClass(_s(n4p >> 1800304480))) document.getElementById(_s(d4p * 1))
               .value = document.getElementById(_s(d4p | 1536))
@@ -23928,12 +23946,13 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p - 0))) document.getElementById(_s(+H2R))
               .value = document.getElementById(_s(H2R >> 351536864))
               .value + " " + E4U + " ";
+              PostCoords(E4U);
           });
         $(_s(3203))
           .click(function() {
             var k3U = $(_s(3203))
               .attr("data");
-            k3U = _s(a44 << 661390592) + k3U + _s(+N44);
+            k3U = "<coords>" + k3U + "</coords>";
             if ($(_s(I7R >> 2053428128))
               .hasClass(_s(n4p | 17))) document.getElementById(_s(d4p - 0))
               .value = document.getElementById(_s(+d4p))
@@ -23950,12 +23969,13 @@ var cotgsubscribe = amplify;
               .hasClass(_s(+n4p))) document.getElementById(_s(H2R << 2005856544))
               .value = document.getElementById(_s(+H2R))
               .value + " " + k3U + " ";
+              PostCoords(E4U);
           });
         $(_s(2430))
           .click(function() {
             var e3U = $(_s('2430' | 100))
               .attr("data");
-            e3U = _s(+a44) + e3U + _s(N44 * 1);
+            e3U = "<coords>" + e3U + "</coords>";
             if ($(_s(I7R - 0))
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 64))
               .value = document.getElementById(_s(d4p | 1872))
@@ -23972,12 +23992,13 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p >> 1474913920))) document.getElementById(_s(+H2R))
               .value = document.getElementById(_s(H2R << 1513710880))
               .value + " " + e3U + " ";
+              PostCoords(E4U);
           });
         $(_s(6919))
           .click(function() {
             var s3U = $(_s("6919" | 6407))
               .attr("data");
-            s3U = _s(a44 | 262) + s3U + _s(+N44);
+            s3U = "<coords>" + s3U + "</coords>";
             if ($(_s(I7R * 1))
               .hasClass(_s(n4p * 1))) document.getElementById(_s(d4p | 840))
               .value = document.getElementById(_s(+d4p))
@@ -23994,6 +24015,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p & 2147483647))) document.getElementById(_s(H2R ^ 0))
               .value = document.getElementById(_s(H2R >> 1393086016))
               .value + " " + s3U + " ";
+              PostCoords(E4U);
           });
         $(_s(5985))
           .click(function() { p2F(); });
@@ -25172,7 +25194,7 @@ var cotgsubscribe = amplify;
       if (T4T == (0) || T4T == b1R >> 1640662688 || T4T == +C6y ||
         T4T == +G1R) {
         N6();
-        var O4T = $.post(q6 + _s(2719), { b: x4T, cid: cid, a: d2 });
+        var O4T = $.post(q6 + _s(2719), { b: x4T, cid: cid, a: d2 }); // "uSpeci.php"
         F6();
         O4T.done(function(X4T) {
           E6k.y6();
@@ -25181,8 +25203,9 @@ var cotgsubscribe = amplify;
           D6.bd[d2].bid = +r1R;
           var t4T = d2 % (A5y * 1);
           var o4T = (d2 - t4T) / (A5y & 2147483647);
-          W2.removeTile(z2.getTileX(t4T * (64 >> 640707424)), z2.getTileX(o4T * (64 & 2147483647)), z2);
-          W2.putTile(L4T, z2.getTileX(t4T * +64), z2.getTileY(o4T * +64), z2);
+console.log("Bad");
+//          W2.removeTile(z2.getTileX(t4T * (64 >> 640707424)), z2.getTileX(o4T * (64 & 2147483647)), z2);
+//          W2.putTile(L4T, z2.getTileX(t4T * +64), z2.getTileY(o4T * +64), z2);
           ppdt.itc[x4T] = ppdt.itc[x4T] - (1);
         });
       } else Y6(_s(4585));
@@ -25678,7 +25701,7 @@ var cotgsubscribe = amplify;
                     B8();
                   } else {
                     D6 = JSON.parse(M2l);
-                      __c.D6 = D6;
+                      
                     J2();
                     $(_s(4817))
                       .find(_s(E7y >> 1314291328))
@@ -34464,7 +34487,7 @@ var cotgsubscribe = amplify;
         if (r2w == 11) Y6(_s(E8y - 0));
         else if (r2w != (0)) {
           D6 = JSON.parse(r2w);
-            __c.D6 = D6;
+            
           J2();
           X2(7);
           u8();
@@ -49235,15 +49258,15 @@ var cotgsubscribe = amplify;
               //if (o36 !=
               //  null) {
               //  var H36 = o36[_s(X5m - 0)];
-              //  $(_s(486))
-              //    .attr("data", r46 + ":" + A46);
-              //  $(_s(2933))
-              //    .text(_s('6431' | 6154));
-              //  $(_s(3379))
-              //    .html(F46);
-              //  if ($(_s(+t3m))
-              //    .is(":visible")) $(_s(+J3m))
-              //    .text(_s(+T3m));
+                $(_s(486))
+                  .attr("data", r46 + ":" + A46);
+                $(_s(2933))
+                  .text(_s('6431' | 6154));
+                $(_s(3379))
+                  .html(F46);
+                if ($(_s(+t3m))
+                  .is(":visible")) $(_s(+J3m))
+                  .text(_s(+T3m));
               //}
             //  phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
             //  phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 | 64);
@@ -49615,7 +49638,7 @@ var cotgsubscribe = amplify;
               if (!(i0w >= 0)) {
                 i0w = JSON.parse(i0w);
                 s8(c9g, m9g, 0, 0, 0);
-                  D6 = i0w; __c.D6 = D6;
+                  D6 = i0w; 
                 V8();
                 k8();
                 g3F();
@@ -49704,7 +49727,7 @@ var cotgsubscribe = amplify;
               if (!(S0w >= 0)) {
                 S0w = JSON.parse(S0w);
                 s8(c9g, m9g, 0, 0, 0);
-                  D6 = S0w; __c.D6 = D6;
+                  D6 = S0w; 
                 V8();
                 k8();
                 J2();
@@ -49790,7 +49813,7 @@ var cotgsubscribe = amplify;
               if (!(V0w >= 0)) {
                 V0w = JSON.parse(V0w);
                 s8(c9g, m9g, 0, 0, 0);
-                  D6 = V0w; __c.D6 = D6;
+                  D6 = V0w; 
                 V8();
                 k8();
                 N2();
@@ -49874,7 +49897,7 @@ var cotgsubscribe = amplify;
                 if (!(n0w >= (0))) {
                   n0w = JSON.parse(n0w);
                   s8(c9g, m9g, 0, 0, 0);
-                    D6 = n0w; __c.D6 = D6;
+                    D6 = n0w; 
                   V8();
                   k8();
                   N2();
@@ -51311,7 +51334,6 @@ var cotgsubscribe = amplify;
         .val(j9l);
       z0F(H9l, j9l);
     }
-    var D6;
     var a9 = ![];
 
     function Y1F(w5T) {
@@ -51712,7 +51734,7 @@ var cotgsubscribe = amplify;
         }
       }
     }
-    var W2;
+//    var W2;
     var N7V;
 
     function c0V(q8T) {
@@ -52344,7 +52366,7 @@ var cotgsubscribe = amplify;
       }
       if (k41 >= 1) o3F();
     }
-    var z2;
+//    var z2;
 
     function O5V() {
       var E09 = $(_s(534))
@@ -52607,7 +52629,7 @@ var cotgsubscribe = amplify;
         M0V();
       return M49 + G49 + z49 + C49 + W49;
     }
-    var r2;
+//    var r2;
     var y7V;
     var B7V;
 
@@ -52902,7 +52924,7 @@ var cotgsubscribe = amplify;
                       if (!(s7w >= 0)) {
                         s7w = JSON.parse(s7w);
                         s8(z5w, M5w, 0, 0, 0);
-                          D6 = s7w; __c.D6 = D6;
+                          D6 = s7w; 
                         if (C8.indexOf(s5w) >= 0) {
                           var u7w = T1F(K5w, U5w);
                           V5F(s5w);
@@ -52981,7 +53003,7 @@ var cotgsubscribe = amplify;
                       if (!(w7w >= 0)) {
                         w7w = JSON.parse(w7w);
                         s8(z5w, M5w, 0, 0, 0);
-                          D6 = w7w; __c.D6 = D6;
+                          D6 = w7w; 
                         u8();
                         k8();
                         N2();
@@ -53038,7 +53060,7 @@ var cotgsubscribe = amplify;
                           E6k.R6();
                           if (!(l7w >= 0)) {
                             l7w = JSON.parse(l7w);
-                              D6 = l7w; __c.D6 = D6;
+                              D6 = l7w; 
                             if (o5w == 0) s8(z5w, M5w, 0, 0, 0);
                             u8();
                             k8();
@@ -53088,7 +53110,7 @@ var cotgsubscribe = amplify;
                       E6k.y6();
                       if (!(x7w >= 0)) {
                         x7w = JSON.parse(x7w);
-                          D6 = x7w; __c.D6 = D6;
+                          D6 = x7w; 
                         X2(7);
                         u8();
                         k8();
@@ -53124,7 +53146,7 @@ var cotgsubscribe = amplify;
                   x5w.done(function(o7w) {
                     if (!(o7w >= 0)) {
                       o7w = JSON.parse(o7w);
-                        D6 = o7w; __c.D6 = D6;
+                        D6 = o7w; 
                       X2(7);
                       u8();
                       k8();
@@ -53150,7 +53172,7 @@ var cotgsubscribe = amplify;
         .val(I9l);
       V1F(w9l, I9l);
     }
-    var D2;
+    //var D2;
 
     function c5V(s11) {
       $(_s(2388))
@@ -53228,39 +53250,39 @@ var cotgsubscribe = amplify;
       }
     }
 
-    function L7V(V7w, n7w) {
-      V7w = Number(V7w);
-      n7w = Number(n7w);
-      var J7w = Number(V7w) % (A5y ^ 0);
-      var h7w = (Number(V7w) - J7w) / +A5y;
-      J9();
-      if (C8.indexOf(V7w) >= 0) {
-        W2.removeTile(E2.getTileX(J7w * (64 * 1)), E2.getTileY(h7w * (64 - 0)),
-          E2);
-        W2.removeTile(z2.getTileX(J7w * (64 * 1)), z2.getTileY(h7w * (64 * 1)), z2);
-        W2.removeTile(r2.getTileX(J7w * +64), r2.getTileY(h7w * (64 & 2147483647)), r2);
-        W2.removeTile(D2.getTileX(J7w * (64 * 1)), D2.getTileY(h7w * +64), D2);
-        var r7w = D6.bd[V7w].bl;
-        var A7w =
-          Y8(r7w);
-        W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), r2);
-        W2.putTile(n7w, E2.getTileX(J7w * +64), E2.getTileY(h7w * +64), E2);
-        E2.postUpdate();
-        z2.postUpdate();
-      } else {
-        W2.removeTile(z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), z2);
-        W2.removeTile(r2.getTileX(J7w * (64 - 0)), r2.getTileY(h7w * +64), r2);
-        W2.removeTile(D2.getTileX(J7w * +64), D2.getTileY(h7w * +64), D2);
-        var r7w = D6.bd[V7w].bl;
-        var A7w = Y8(
-          r7w);
-        W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * (64 >> 20093536)), r2);
-        W2.putTile(n7w, z2.getTileX(J7w * (64 | 0)), z2.getTileY(h7w * +64), z2);
-        z2.postUpdate();
-        r5F();
-      }
+    //function L7V(V7w, n7w) {
+    //  V7w = Number(V7w);
+    //  n7w = Number(n7w);
+    //  var J7w = Number(V7w) % (A5y ^ 0);
+    //  var h7w = (Number(V7w) - J7w) / +A5y;
+    //  J9();
+    //  if (C8.indexOf(V7w) >= 0) {
+    //    W2.removeTile(E2.getTileX(J7w * (64 * 1)), E2.getTileY(h7w * (64 - 0)),
+    //      E2);
+    //    W2.removeTile(z2.getTileX(J7w * (64 * 1)), z2.getTileY(h7w * (64 * 1)), z2);
+    //    W2.removeTile(r2.getTileX(J7w * +64), r2.getTileY(h7w * (64 & 2147483647)), r2);
+    //    W2.removeTile(D2.getTileX(J7w * (64 * 1)), D2.getTileY(h7w * +64), D2);
+    //    var r7w = D6.bd[V7w].bl;
+    //    var A7w =
+    //      Y8(r7w);
+    //    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), r2);
+    //    W2.putTile(n7w, E2.getTileX(J7w * +64), E2.getTileY(h7w * +64), E2);
+    //    E2.postUpdate();
+    //    z2.postUpdate();
+    //  } else {
+    //    W2.removeTile(z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), z2);
+    //    W2.removeTile(r2.getTileX(J7w * (64 - 0)), r2.getTileY(h7w * +64), r2);
+    //    W2.removeTile(D2.getTileX(J7w * +64), D2.getTileY(h7w * +64), D2);
+    //    var r7w = D6.bd[V7w].bl;
+    //    var A7w = Y8(
+    //      r7w);
+    //    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * (64 >> 20093536)), r2);
+    //    W2.putTile(n7w, z2.getTileX(J7w * (64 | 0)), z2.getTileY(h7w * +64), z2);
+    //    z2.postUpdate();
+    //    r5F();
+    //  }
      
-    }
+    //}
 
     function Y6(u2n) {
       var s2n;
@@ -55057,7 +55079,7 @@ var cotgsubscribe = amplify;
     //  var F3U = $.post(q6 +"gC.php", { a: N3U });
     //  F6();
     //  F3U.done(function(k1U) {
-    //      D6 = JSON.parse(k1U); __c.D6 = D6;
+    //      D6 = JSON.parse(k1U); 
     //      gCPosted();
     //    if ($("#citySpotMenu")
     //      .is(":visible")) {
@@ -55309,7 +55331,7 @@ var cotgsubscribe = amplify;
         for (var p31 in D6) N31[p31] = D6[p31];
         for (var p31 in D31) N31[
           p31] = D31[p31];
-          D6 = N31; __c.D6 = D6;
+          D6 = N31; 
         if (D6.pid != ppdt.pid)
           if (ppdt.pid != 2 && ppdt.pn != _s(2473)) a7F();
         if (D6.bq.length > 0) {
@@ -56722,15 +56744,15 @@ var cotgsubscribe = amplify;
         }
       });
 
-    function T7V() {
-      w3F.destroy(!!1);
-      E2.destroy(!![]);
-      if (D6.w == 0) W2.addTilesetImage(_s(176), _s(+
-        '5813'));
-      else W2.addTilesetImage(_s(176), _s(5630));
-      w3F = W2.createLayer(_s(4193));
-      K1F = 0;
-    }
+    //function T7V() {
+    //  w3F.destroy(!!1);
+    //  E2.destroy(!![]);
+    //  if (D6.w == 0) W2.addTilesetImage(_s(176), _s(+
+    //    '5813'));
+    //  else W2.addTilesetImage(_s(176), _s(5630));
+    //  w3F = W2.createLayer(_s(4193));
+    //  K1F = 0;
+    //}
     $(_s(b04 ^ 0))
       .click(function(G8g) {
         if (!(G8g.originalEvent === "bad")) {
@@ -57225,8 +57247,7 @@ var cotgsubscribe = amplify;
 
     function K6F(G71:string) {
       if (G71.length > 1) {
-        var j71 = JSON.parse(G71);
-        __c.j71=j71;
+        var j71 : jsonT.Poll = JSON.parse(G71);
         if (j71.hasOwnProperty("city")) {
           var t71 = j71["city"];
           d3F(t71);
@@ -57542,7 +57563,7 @@ var cotgsubscribe = amplify;
             }
           } else {
             L0F(1, g6B, Z6B);
-              D6 = JSON.parse(H2B); __c.D6 = D6;
+              D6 = JSON.parse(H2B); 
             J2();
             for (var j2B = 1; j2B < (u7y & 2147483647); j2B++) {
               $(_s(6034) + j2B)
@@ -58502,6 +58523,7 @@ var cotgsubscribe = amplify;
       else if (P0v == 2) var K0v = _s(4834) + g0v + _s(3711);
       else if (P0v == 3) var K0v = _s(3190) + g0v + _s('2290' | 146);
       else if (P0v == 4) var K0v = "<coords>" + g0v + "</coords>";
+      console.log("Whats this?");
       if (g0v != '') {
         if ($(
             _s(I7R >> 2117785184))
@@ -61810,7 +61832,6 @@ var cotgsubscribe = amplify;
  //         }
  //       }
       });
-    var F5F;
 
     function z7V() {}
 
@@ -68855,7 +68876,7 @@ _viewMode = viewModeWorld;
       e5T.done(function(s5T) {
         var s5T = JSON.parse(s5T);
         F5F = s5T;
-        __c.F5F = F5F;
+      
           {
               const wrapper = { gPlA: F5F }
               window['external']['notify'](JSON.stringify(wrapper));
@@ -68961,24 +68982,24 @@ _viewMode = viewModeWorld;
       else return ![];
     }
 
-    function X7V(S7w) {
-      var d7w = Number(S7w) % +A5y;
-      var b7w = (Number(S7w) - d7w) / (A5y - 0);
-      J9();
-      if (C8.indexOf(S7w) >= 0) {
-        W2.removeTile(E2.getTileX(d7w * (64 * 1)), E2.getTileY(b7w * +64), E2);
-        W2.removeTile(z2.getTileX(d7w * (64 ^ 0)), z2.getTileY(b7w * (64 << 910962752)), z2);
-        W2.removeTile(r2.getTileX(d7w * +64), r2.getTileY(b7w * (64 * 1)), r2);
-        W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * +64), D2);
-        E2.postUpdate();
-      } else {
-        W2.removeTile(z2.getTileX(d7w * +64), z2.getTileY(b7w * +64), z2);
-        W2.removeTile(r2.getTileX(d7w * (64 ^ 0)), r2.getTileY(b7w * +64), r2);
-        W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * (64 << 30053536)), D2);
-        z2.postUpdate();
-        r5F();
-      }
-    }
+    //function X7V(S7w) {
+    //  var d7w = Number(S7w) % +A5y;
+    //  var b7w = (Number(S7w) - d7w) / (A5y - 0);
+    //  J9();
+    //  if (C8.indexOf(S7w) >= 0) {
+    //    W2.removeTile(E2.getTileX(d7w * (64 * 1)), E2.getTileY(b7w * +64), E2);
+    //    W2.removeTile(z2.getTileX(d7w * (64 ^ 0)), z2.getTileY(b7w * (64 << 910962752)), z2);
+    //    W2.removeTile(r2.getTileX(d7w * +64), r2.getTileY(b7w * (64 * 1)), r2);
+    //    W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * +64), D2);
+    //    E2.postUpdate();
+    //  } else {
+    //    W2.removeTile(z2.getTileX(d7w * +64), z2.getTileY(b7w * +64), z2);
+    //    W2.removeTile(r2.getTileX(d7w * (64 ^ 0)), r2.getTileY(b7w * +64), r2);
+    //    W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * (64 << 30053536)), D2);
+    //    z2.postUpdate();
+    //    r5F();
+    //  }
+    //}
     $(document)
       .ready(function() {
         E6k.y6();

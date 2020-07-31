@@ -43,7 +43,7 @@
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
-                                        Width="40" />
+                                        Width="34" />
                 <telerikGrid:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Auto"
                                        Width="100" />

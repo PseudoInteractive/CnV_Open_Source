@@ -268,8 +268,7 @@
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
-                                        
-                                        Width="30" />
+                                        Width="32" />
                 <tg:DataGridTextColumn PropertyName="Claim"
                                             SizeMode="Fixed"
                                        

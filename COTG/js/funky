@@ -372,9 +372,9 @@ function updatedef_() {
     };
     /// @todo
     // var i_12;
-    // for(i_12 in __c.D6.tc) {
-    // 	if(__c.D6.tc[i_12]) {
-    // 		t_4.home.push(__c.D6.tc[i_12]);
+    // for(i_12 in D6.tc) {
+    // 	if(D6.tc[i_12]) {
+    // 		t_4.home.push(D6.tc[i_12]);
     // 		t_4.type.push(i_12);
     // 	}
     // }
@@ -588,7 +588,7 @@ function SendAttack_() {
     // 				/** @type {number} */
     // 				fakenumb_=fakenumb_+1;
     // 			}
-    // 			commandInfo.dist.push(Math.sqrt((tempx_2-__c.D6.x)*(tempx_2-__c.D6.x)+(tempy_2-__c.D6.y)*(tempy_2-__c.D6.y)));
+    // 			commandInfo.dist.push(Math.sqrt((tempx_2-D6.x)*(tempx_2-D6.x)+(tempy_2-D6.y)*(tempy_2-D6.y)));
     // 		}
     // 	}
     // 	EnumerateTroops((id) => ($(`#usereal${id}`).prop("checked")));
@@ -597,7 +597,7 @@ function SendAttack_() {
     // 	var time_2;
     // 	var faketss_;
     // 	var fakeg_;
-    // 	var tscbr_=__c.D6.tt;
+    // 	var tscbr_=D6.tt;
     // 	if(tscbr_<20000) {
     // 		/** @type {number} */
     // 		faketss_=1;
@@ -1013,11 +1013,11 @@ function SendAttack_() {
 //		/** @type {number} */
 //		let bdNumber_ = -1;
 //		let i_16;
-//		for (i_16 in __c.D6.bd) {
-//			if (buildings_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
-//				if (currentbd_.bid.indexOf(__c.D6.bd[i_16].bid) > -1) {
+//		for (i_16 in D6.bd) {
+//			if (buildings_.bid.indexOf(D6.bd[i_16].bid) > -1) {
+//				if (currentbd_.bid.indexOf(D6.bd[i_16].bid) > -1) {
 //					/** @type {number} */
-//					j_4 = currentbd_.bid.indexOf(__c.D6.bd[i_16].bid);
+//					j_4 = currentbd_.bid.indexOf(D6.bd[i_16].bid);
 //					currentbd_.count[j_4] += 1;
 //					/** @type {number} */
 //					bdNumber_ = bdNumber_ + 1;
@@ -1025,7 +1025,7 @@ function SendAttack_() {
 //					/** @type {number} */
 //					bdtypecount_ = bdtypecount_ + 1;
 //					/** @type {number} */
-//					j_4 = buildings_.bid.indexOf(__c.D6.bd[i_16].bid);
+//					j_4 = buildings_.bid.indexOf(D6.bd[i_16].bid);
 //					currentbd_.name[bdtypecount_] = buildings_.name[j_4];
 //					currentbd_.bid[bdtypecount_] = buildings_.bid[j_4];
 //					currentbd_.count[bdtypecount_] += 1;
@@ -8905,10 +8905,15 @@ function _s(id) {
     return __s[id];
 }
 var pollthis;
-var __c = {
-    D6: {},
-    j71: {},
-    F5F: {},
+let D6;
+var F5F;
+var a6 = {
+    ccazzx: {
+        encrypt: (a, b, c) => { return ""; },
+        decrypt: (a, b, c) => { return ""; }
+    }
+};
+let __c = {
     sendchat: function (n, m) { },
     showreport: function (reportId) { }
 };
@@ -10754,9 +10759,12 @@ i011.d3q = function () {
 };
 i011.s6s = 2147483647;
 i011.R6 = function () { return typeof i011.B6.Y7 === 'function' ? i011.B6.Y7.apply(i011.B6, arguments) : i011.B6.Y7; };
-function gspotfunct() {
-}
-;
+var gspotfunct = {
+    shCit: (a) => { },
+    infoPlay: (a) => { },
+    chcity: (a) => { },
+    alliancelink: (a) => { }
+};
 var setcitybind;
 function ppdtChanged(__ppdt) {
     let wrapper = { ppdt: {} };
@@ -11162,7 +11170,6 @@ function gaFrep(E7c) {
         }
     });
 }
-var __a6 = {};
 var cotgsubscribe = amplify;
 (function outer() {
     var E6k = i011;
@@ -14051,7 +14058,6 @@ var cotgsubscribe = amplify;
                                 $(_s(+z6y))
                                     .html(_s(800));
                                 D6 = JSON.parse(J9B);
-                                __c.D6 = D6;
                                 L0F(3, I9B, j9B);
                                 J2();
                                 m9();
@@ -18171,7 +18177,7 @@ var cotgsubscribe = amplify;
                         .prop(_s(286), !![]);
             }
         }
-        gspotfunct["shCit"] = function (N9V) {
+        gspotfunct.shCit = function (N9V) {
             E6k.y6();
             O8(N9V);
         };
@@ -18192,15 +18198,18 @@ var cotgsubscribe = amplify;
                 $(_s(787) + m6Z)
                     .val(0);
         }
-        gspotfunct["chcity"] = function (F9V) { R2(F9V); DoPoll2(300); };
+        gspotfunct.chcity = function (F9V) { R2(F9V); DoPoll2(300); };
+        window['chcity'] = gspotfunct.chcity;
         gspotfunct.infoPlay = function (q9V) {
             E6k.y6();
             Z5F(q9V);
         };
-        gspotfunct["alliancelink"] = function (c9V) {
+        window['infoPlay'] = gspotfunct.infoPlay;
+        gspotfunct.alliancelink = function (c9V) {
             E6k.y6();
             W4F(c9V);
         };
+        window['alliancelink'] = gspotfunct.alliancelink;
         function K0V() {
             var L82 = $(_s("6198" | 4112));
             var o82 = $(_s(+y6R))
@@ -18770,7 +18779,7 @@ var cotgsubscribe = amplify;
                     }, 2000);
                 else if (!(Y0g == 0)) {
                     D6 = JSON.parse(Y0g);
-                    __c.D6 = D6;
+                    D6 = D6;
                     gCPosted();
                     Y0g = "";
                     cit_type = D6.w;
@@ -19407,16 +19416,16 @@ var cotgsubscribe = amplify;
         }
         var z8 = 0;
         var w9 = new Audio(_s(69));
-        function f2F() {
-            //E6k.R6();
-            //if (c6)
-            //  if (tileMap)
-            //    if (landLayer) {
-            //      G8 = landLayer.getTileX(c6.input.activePointer.worldX);
-            //      l8 = landLayer.getTileY(c6.input.activePointer.worldY);
-            //      G1F = tileMap.getTile(landLayer.getTileX(phaserGraphics.x), landLayer.getTileY(phaserGraphics.y));
-            //    }
-        }
+        //  function f2F() {
+        //E6k.R6();
+        //if (c6)
+        //  if (tileMap)
+        //    if (landLayer) {
+        //       G8 = landLayer.getTileX(c6.input.activePointer.worldX);
+        //       l8 = landLayer.getTileY(c6.input.activePointer.worldY);
+        //       G1F = tileMap.getTile(landLayer.getTileX(phaserGraphics.x), landLayer.getTileY(phaserGraphics.y));
+        //    }
+        // }
         var a3F;
         var T6F;
         var V9;
@@ -19940,7 +19949,6 @@ var cotgsubscribe = amplify;
                 }
             };
         }(window.String.fromCharCode, parseInt);
-        var a6 = {};
         function R2(d9l) {
             E6k.R6();
             var b9l = arguments.callee.caller.name;
@@ -20075,7 +20083,7 @@ var cotgsubscribe = amplify;
                                         var a9T = Y8(Number(Y9T));
                                         var F9T = 10;
                                         var m9T = (E1R - 0 - F9T) / +A5y;
-                                        W2.putTile(a9T, z2.getTileX(F9T * +64), z2.getTileY(m9T * (64 << 696037408)), r2);
+                                        // W2.putTile(a9T, z2.getTileX(F9T * +64), z2.getTileY(m9T * (64 << 696037408)), r2);
                                     }
                                     J2();
                                 }
@@ -20655,7 +20663,7 @@ var cotgsubscribe = amplify;
                                     }
                                 }
                                 if (S7Z == +17) {
-                                    var V7Z = ppdt[_s(+i2y)][F8y | 3]["n"];
+                                    var V7Z = ppdt["rs"][F8y | 3]["n"];
                                     if (V7Z != 0) {
                                         var K7Z = qam[_s(+G2y)][V7Z][E6k
                                             .o55(+r2y)][0][_s(b2y - 0)];
@@ -21609,7 +21617,6 @@ var cotgsubscribe = amplify;
         }
         if (typeof define == _s(n9p - 0) && define.amd)
             define([], function () { return a6; });
-        a6.ccazzx = {};
         function x2F(I0Z) {
             $(_s(+m7y) + I0Z)
                 .css("display", "none");
@@ -21774,7 +21781,6 @@ var cotgsubscribe = amplify;
                     return this;
                 }
             };
-        __a6.ccazzx = a6.ccazzx;
         function n8F() {
             var z0v = 0;
             var M0v = $(_s(+l2R))
@@ -25786,6 +25792,8 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R | 587))
                         .value = document.getElementById(_s(H2R | 4864))
                         .value + " " + a4U + " ";
+                const wrapper = { coords: a4U };
+                window['external']['notify'](JSON.stringify(wrapper));
             });
             $(_s(486))
                 .click(function () {
@@ -27084,7 +27092,7 @@ var cotgsubscribe = amplify;
             if (T4T == (0) || T4T == b1R >> 1640662688 || T4T == +C6y ||
                 T4T == +G1R) {
                 N6();
-                var O4T = $.post(q6 + _s(2719), { b: x4T, cid: cid, a: d2 });
+                var O4T = $.post(q6 + _s(2719), { b: x4T, cid: cid, a: d2 }); // "uSpeci.php"
                 F6();
                 O4T.done(function (X4T) {
                     E6k.y6();
@@ -27093,8 +27101,9 @@ var cotgsubscribe = amplify;
                     D6.bd[d2].bid = +r1R;
                     var t4T = d2 % (A5y * 1);
                     var o4T = (d2 - t4T) / (A5y & 2147483647);
-                    W2.removeTile(z2.getTileX(t4T * (64 >> 640707424)), z2.getTileX(o4T * (64 & 2147483647)), z2);
-                    W2.putTile(L4T, z2.getTileX(t4T * +64), z2.getTileY(o4T * +64), z2);
+                    console.log("Bad");
+                    //          W2.removeTile(z2.getTileX(t4T * (64 >> 640707424)), z2.getTileX(o4T * (64 & 2147483647)), z2);
+                    //          W2.putTile(L4T, z2.getTileX(t4T * +64), z2.getTileY(o4T * +64), z2);
                     ppdt.itc[x4T] = ppdt.itc[x4T] - (1);
                 });
             }
@@ -27603,7 +27612,6 @@ var cotgsubscribe = amplify;
                             }
                             else {
                                 D6 = JSON.parse(M2l);
-                                __c.D6 = D6;
                                 J2();
                                 $(_s(4817))
                                     .find(_s(E7y >> 1314291328))
@@ -36572,7 +36580,6 @@ var cotgsubscribe = amplify;
                     Y6(_s(E8y - 0));
                 else if (r2w != (0)) {
                     D6 = JSON.parse(r2w);
-                    __c.D6 = D6;
                     J2();
                     X2(7);
                     u8();
@@ -51628,15 +51635,16 @@ var cotgsubscribe = amplify;
                             //if (o36 !=
                             //  null) {
                             //  var H36 = o36[_s(X5m - 0)];
-                            //  $(_s(486))
-                            //    .attr("data", r46 + ":" + A46);
-                            //  $(_s(2933))
-                            //    .text(_s('6431' | 6154));
-                            //  $(_s(3379))
-                            //    .html(F46);
-                            //  if ($(_s(+t3m))
-                            //    .is(":visible")) $(_s(+J3m))
-                            //    .text(_s(+T3m));
+                            $(_s(486))
+                                .attr("data", r46 + ":" + A46);
+                            $(_s(2933))
+                                .text(_s('6431' | 6154));
+                            $(_s(3379))
+                                .html(F46);
+                            if ($(_s(+t3m))
+                                .is(":visible"))
+                                $(_s(+J3m))
+                                    .text(_s(+T3m));
                             //}
                             //  phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 & 2147483647);
                             //  phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 | 64);
@@ -52015,7 +52023,6 @@ var cotgsubscribe = amplify;
                                 i0w = JSON.parse(i0w);
                                 s8(c9g, m9g, 0, 0, 0);
                                 D6 = i0w;
-                                __c.D6 = D6;
                                 V8();
                                 k8();
                                 g3F();
@@ -52102,7 +52109,6 @@ var cotgsubscribe = amplify;
                                 S0w = JSON.parse(S0w);
                                 s8(c9g, m9g, 0, 0, 0);
                                 D6 = S0w;
-                                __c.D6 = D6;
                                 V8();
                                 k8();
                                 J2();
@@ -52186,7 +52192,6 @@ var cotgsubscribe = amplify;
                                 V0w = JSON.parse(V0w);
                                 s8(c9g, m9g, 0, 0, 0);
                                 D6 = V0w;
-                                __c.D6 = D6;
                                 V8();
                                 k8();
                                 N2();
@@ -52273,7 +52278,6 @@ var cotgsubscribe = amplify;
                                     n0w = JSON.parse(n0w);
                                     s8(c9g, m9g, 0, 0, 0);
                                     D6 = n0w;
-                                    __c.D6 = D6;
                                     V8();
                                     k8();
                                     N2();
@@ -53748,7 +53752,6 @@ var cotgsubscribe = amplify;
                 .val(j9l);
             z0F(H9l, j9l);
         }
-        var D6;
         var a9 = ![];
         function Y1F(w5T) {
             $(_s(4940))
@@ -54182,7 +54185,7 @@ var cotgsubscribe = amplify;
                 }
             }
         }
-        var W2;
+        //    var W2;
         var N7V;
         function c0V(q8T) {
             var Z8T = $(_s(U8m | 4256))
@@ -54836,7 +54839,7 @@ var cotgsubscribe = amplify;
             if (k41 >= 1)
                 o3F();
         }
-        var z2;
+        //    var z2;
         function O5V() {
             var E09 = $(_s(534))
                 .val();
@@ -55113,7 +55116,7 @@ var cotgsubscribe = amplify;
             var W49 = M0V();
             return M49 + G49 + z49 + C49 + W49;
         }
-        var r2;
+        //    var r2;
         var y7V;
         var B7V;
         function Y2(u5w, s5w, j5w) {
@@ -55418,7 +55421,6 @@ var cotgsubscribe = amplify;
                                                     s7w = JSON.parse(s7w);
                                                     s8(z5w, M5w, 0, 0, 0);
                                                     D6 = s7w;
-                                                    __c.D6 = D6;
                                                     if (C8.indexOf(s5w) >= 0) {
                                                         var u7w = T1F(K5w, U5w);
                                                         V5F(s5w);
@@ -55498,7 +55500,6 @@ var cotgsubscribe = amplify;
                                                     w7w = JSON.parse(w7w);
                                                     s8(z5w, M5w, 0, 0, 0);
                                                     D6 = w7w;
-                                                    __c.D6 = D6;
                                                     u8();
                                                     k8();
                                                     N2();
@@ -55554,7 +55555,6 @@ var cotgsubscribe = amplify;
                                                     if (!(l7w >= 0)) {
                                                         l7w = JSON.parse(l7w);
                                                         D6 = l7w;
-                                                        __c.D6 = D6;
                                                         if (o5w == 0)
                                                             s8(z5w, M5w, 0, 0, 0);
                                                         u8();
@@ -55605,7 +55605,6 @@ var cotgsubscribe = amplify;
                                             if (!(x7w >= 0)) {
                                                 x7w = JSON.parse(x7w);
                                                 D6 = x7w;
-                                                __c.D6 = D6;
                                                 X2(7);
                                                 u8();
                                                 k8();
@@ -55640,7 +55639,6 @@ var cotgsubscribe = amplify;
                                         if (!(o7w >= 0)) {
                                             o7w = JSON.parse(o7w);
                                             D6 = o7w;
-                                            __c.D6 = D6;
                                             X2(7);
                                             u8();
                                             k8();
@@ -55663,7 +55661,7 @@ var cotgsubscribe = amplify;
                 .val(I9l);
             V1F(w9l, I9l);
         }
-        var D2;
+        //var D2;
         function c5V(s11) {
             $(_s(2388))
                 .css("display", "none");
@@ -55749,36 +55747,38 @@ var cotgsubscribe = amplify;
                 return t3T;
             }
         }
-        function L7V(V7w, n7w) {
-            V7w = Number(V7w);
-            n7w = Number(n7w);
-            var J7w = Number(V7w) % (A5y ^ 0);
-            var h7w = (Number(V7w) - J7w) / +A5y;
-            J9();
-            if (C8.indexOf(V7w) >= 0) {
-                W2.removeTile(E2.getTileX(J7w * (64 * 1)), E2.getTileY(h7w * (64 - 0)), E2);
-                W2.removeTile(z2.getTileX(J7w * (64 * 1)), z2.getTileY(h7w * (64 * 1)), z2);
-                W2.removeTile(r2.getTileX(J7w * +64), r2.getTileY(h7w * (64 & 2147483647)), r2);
-                W2.removeTile(D2.getTileX(J7w * (64 * 1)), D2.getTileY(h7w * +64), D2);
-                var r7w = D6.bd[V7w].bl;
-                var A7w = Y8(r7w);
-                W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), r2);
-                W2.putTile(n7w, E2.getTileX(J7w * +64), E2.getTileY(h7w * +64), E2);
-                E2.postUpdate();
-                z2.postUpdate();
-            }
-            else {
-                W2.removeTile(z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), z2);
-                W2.removeTile(r2.getTileX(J7w * (64 - 0)), r2.getTileY(h7w * +64), r2);
-                W2.removeTile(D2.getTileX(J7w * +64), D2.getTileY(h7w * +64), D2);
-                var r7w = D6.bd[V7w].bl;
-                var A7w = Y8(r7w);
-                W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * (64 >> 20093536)), r2);
-                W2.putTile(n7w, z2.getTileX(J7w * (64 | 0)), z2.getTileY(h7w * +64), z2);
-                z2.postUpdate();
-                r5F();
-            }
-        }
+        //function L7V(V7w, n7w) {
+        //  V7w = Number(V7w);
+        //  n7w = Number(n7w);
+        //  var J7w = Number(V7w) % (A5y ^ 0);
+        //  var h7w = (Number(V7w) - J7w) / +A5y;
+        //  J9();
+        //  if (C8.indexOf(V7w) >= 0) {
+        //    W2.removeTile(E2.getTileX(J7w * (64 * 1)), E2.getTileY(h7w * (64 - 0)),
+        //      E2);
+        //    W2.removeTile(z2.getTileX(J7w * (64 * 1)), z2.getTileY(h7w * (64 * 1)), z2);
+        //    W2.removeTile(r2.getTileX(J7w * +64), r2.getTileY(h7w * (64 & 2147483647)), r2);
+        //    W2.removeTile(D2.getTileX(J7w * (64 * 1)), D2.getTileY(h7w * +64), D2);
+        //    var r7w = D6.bd[V7w].bl;
+        //    var A7w =
+        //      Y8(r7w);
+        //    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), r2);
+        //    W2.putTile(n7w, E2.getTileX(J7w * +64), E2.getTileY(h7w * +64), E2);
+        //    E2.postUpdate();
+        //    z2.postUpdate();
+        //  } else {
+        //    W2.removeTile(z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), z2);
+        //    W2.removeTile(r2.getTileX(J7w * (64 - 0)), r2.getTileY(h7w * +64), r2);
+        //    W2.removeTile(D2.getTileX(J7w * +64), D2.getTileY(h7w * +64), D2);
+        //    var r7w = D6.bd[V7w].bl;
+        //    var A7w = Y8(
+        //      r7w);
+        //    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * (64 >> 20093536)), r2);
+        //    W2.putTile(n7w, z2.getTileX(J7w * (64 | 0)), z2.getTileY(h7w * +64), z2);
+        //    z2.postUpdate();
+        //    r5F();
+        //  }
+        //}
         function Y6(u2n) {
             var s2n;
             s2n = errorsarr[_s(2534)][u2n];
@@ -57610,7 +57610,7 @@ var cotgsubscribe = amplify;
         //  var F3U = $.post(q6 +"gC.php", { a: N3U });
         //  F6();
         //  F3U.done(function(k1U) {
-        //      D6 = JSON.parse(k1U); __c.D6 = D6;
+        //      D6 = JSON.parse(k1U); 
         //      gCPosted();
         //    if ($("#citySpotMenu")
         //      .is(":visible")) {
@@ -57866,7 +57866,6 @@ var cotgsubscribe = amplify;
                 for (var p31 in D31)
                     N31[p31] = D31[p31];
                 D6 = N31;
-                __c.D6 = D6;
                 if (D6.pid != ppdt.pid)
                     if (ppdt.pid != 2 && ppdt.pn != _s(2473))
                         a7F();
@@ -59377,16 +59376,15 @@ var cotgsubscribe = amplify;
                 });
             }
         });
-        function T7V() {
-            w3F.destroy(!!1);
-            E2.destroy(!![]);
-            if (D6.w == 0)
-                W2.addTilesetImage(_s(176), _s(+'5813'));
-            else
-                W2.addTilesetImage(_s(176), _s(5630));
-            w3F = W2.createLayer(_s(4193));
-            K1F = 0;
-        }
+        //function T7V() {
+        //  w3F.destroy(!!1);
+        //  E2.destroy(!![]);
+        //  if (D6.w == 0) W2.addTilesetImage(_s(176), _s(+
+        //    '5813'));
+        //  else W2.addTilesetImage(_s(176), _s(5630));
+        //  w3F = W2.createLayer(_s(4193));
+        //  K1F = 0;
+        //}
         $(_s(b04 ^ 0))
             .click(function (G8g) {
             if (!(G8g.originalEvent === "bad")) {
@@ -59920,7 +59918,6 @@ var cotgsubscribe = amplify;
         function K6F(G71) {
             if (G71.length > 1) {
                 var j71 = JSON.parse(G71);
-                __c.j71 = j71;
                 if (j71.hasOwnProperty("city")) {
                     var t71 = j71["city"];
                     d3F(t71);
@@ -60263,7 +60260,6 @@ var cotgsubscribe = amplify;
                     else {
                         L0F(1, g6B, Z6B);
                         D6 = JSON.parse(H2B);
-                        __c.D6 = D6;
                         J2();
                         for (var j2B = 1; j2B < (u7y & 2147483647); j2B++) {
                             $(_s(6034) + j2B)
@@ -64788,7 +64784,6 @@ var cotgsubscribe = amplify;
             //         }
             //       }
         });
-        var F5F;
         function z7V() { }
         function Y5V(e11) {
             $(_s(2225))
@@ -71644,7 +71639,6 @@ var cotgsubscribe = amplify;
             e5T.done(function (s5T) {
                 var s5T = JSON.parse(s5T);
                 F5F = s5T;
-                __c.F5F = F5F;
                 {
                     const wrapper = { gPlA: F5F };
                     window['external']['notify'](JSON.stringify(wrapper));
@@ -71747,25 +71741,24 @@ var cotgsubscribe = amplify;
             else
                 return ![];
         }
-        function X7V(S7w) {
-            var d7w = Number(S7w) % +A5y;
-            var b7w = (Number(S7w) - d7w) / (A5y - 0);
-            J9();
-            if (C8.indexOf(S7w) >= 0) {
-                W2.removeTile(E2.getTileX(d7w * (64 * 1)), E2.getTileY(b7w * +64), E2);
-                W2.removeTile(z2.getTileX(d7w * (64 ^ 0)), z2.getTileY(b7w * (64 << 910962752)), z2);
-                W2.removeTile(r2.getTileX(d7w * +64), r2.getTileY(b7w * (64 * 1)), r2);
-                W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * +64), D2);
-                E2.postUpdate();
-            }
-            else {
-                W2.removeTile(z2.getTileX(d7w * +64), z2.getTileY(b7w * +64), z2);
-                W2.removeTile(r2.getTileX(d7w * (64 ^ 0)), r2.getTileY(b7w * +64), r2);
-                W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * (64 << 30053536)), D2);
-                z2.postUpdate();
-                r5F();
-            }
-        }
+        //function X7V(S7w) {
+        //  var d7w = Number(S7w) % +A5y;
+        //  var b7w = (Number(S7w) - d7w) / (A5y - 0);
+        //  J9();
+        //  if (C8.indexOf(S7w) >= 0) {
+        //    W2.removeTile(E2.getTileX(d7w * (64 * 1)), E2.getTileY(b7w * +64), E2);
+        //    W2.removeTile(z2.getTileX(d7w * (64 ^ 0)), z2.getTileY(b7w * (64 << 910962752)), z2);
+        //    W2.removeTile(r2.getTileX(d7w * +64), r2.getTileY(b7w * (64 * 1)), r2);
+        //    W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * +64), D2);
+        //    E2.postUpdate();
+        //  } else {
+        //    W2.removeTile(z2.getTileX(d7w * +64), z2.getTileY(b7w * +64), z2);
+        //    W2.removeTile(r2.getTileX(d7w * (64 ^ 0)), r2.getTileY(b7w * +64), r2);
+        //    W2.removeTile(D2.getTileX(d7w * +64), D2.getTileY(b7w * (64 << 30053536)), D2);
+        //    z2.postUpdate();
+        //    r5F();
+        //  }
+        //}
         $(document)
             .ready(function () {
             E6k.y6();
@@ -73568,7 +73561,7 @@ var cid = 0;
 function encryptJs(req, k2v) {
     console.log(req);
     console.log(k2v);
-    return __a6.ccazzx.encrypt(JSON.stringify(k2v), ekeys[req], 256);
+    return a6.ccazzx.encrypt(JSON.stringify(k2v), ekeys[req], 256);
 }
 ;
 //function betterBase64Decode() {
@@ -73608,7 +73601,7 @@ function encryptJs(req, k2v) {
 //}
 function GetCity() {
     //	return window['getD6']();
-    return __c.D6; //
+    return D6; //
 }
 /*function DummyPromise(data:string) {
     return new Promise<Response>();
@@ -73751,7 +73744,7 @@ let updateTimeout = null;
 function sendCityData(delayInMs) {
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(() => {
-        const wrapper = { citydata: __c.D6 };
+        const wrapper = { citydata: D6 };
         window['external']['notify'](JSON.stringify(wrapper));
         clearTimeout(updateTimeout);
     }, delayInMs);
@@ -73972,7 +73965,7 @@ function avapost(url, args) {
 }
 // returns for current city
 function avagetts() {
-    var rv = { tc: __c.D6.tc, th: __c.D6.th };
+    var rv = { tc: D6.tc, th: D6.th };
     return JSON.stringify(rv);
 }
 function avafetch(url, args) {
@@ -74010,8 +74003,8 @@ function postppdt() {
             agent: navigator.userAgent,
         };
         let wrapper = { jsvars: creds, ppdt: ppdt };
-        //		if (__c.D6 != null)
-        //			wrapper['citydata'] = __c.D6;
+        //		if (D6 != null)
+        //			wrapper['citydata'] = D6;
         window['external']['notify'](JSON.stringify(wrapper));
         //OptimizeAjax();
     }
@@ -74226,406 +74219,419 @@ function avactor() {
             }
         }
         else if (dtype_ === "boss") {
-            /// @todo
-            //if($("#cityplayerInfo div table tbody tr").length===11) {
-            //	bossele_();
-            //}
-            //if(clickInfo.info.active) {
-            //	/** @type {string} */
-            //	message_23="Inactive Boss";
-            //	errorgo_(message_23);
-            //}
-            ///** @type {string} */
-            //message_23="Not enough TS to kill this boss!";
-            ///** @type {!Array} */
-            //var attackres_=[];
-            ///** @type {!Array} */
-            //var attackwres_=[];
-            //for(i_42 in ttattack_) {
-            //	/** @type {number} */
-            //	var bossTS_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
-            //	attackres_.push(bossTS_);
-            //	/** @type {number} */
-            //	var bosswTS_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
-            //	attackwres_.push(bosswTS_);
-            //}
-            ///** @type {number} */
-            //var home_strength_=0;
-            ///** @type {number} */
-            //home_loot_2=0;
-            ///** @type {!Array} */
-            //km_2=[];
-            ///** @type {!Array} */
-            //var bm_=[];
-            ///** @type {!Array} */
-            //var bmw_=[];
-            ///** @type {!Array} */
-            //var kg_=[];
-            ///** @type {number} */
-            //var home_TSw_=0;
-            ///** @type {number} */
-            //var boss_strength_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4);
-            ///** @type {number} */
-            //var boss_strengthw_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4);
-            ///** @type {number} */
-            //i_42=0;
-            //for(var x_85 in __c.D6.th) {
-            //	/** @type {number} */
-            //	let home_1=AsNumber(__c.D6.th[x_85]);
-            //	if(i_42===0||i_42===1||i_42===7||i_42===12||i_42===13) {
-            //		/** @type {number} */
-            //		home_1=0;
-            //	}
-            //	kg_.push(home_1);
-            //	if(i_42===14||i_42===15||i_42===16) {
-            //		/** @type {number} */
-            //		home_1=0;
-            //	}
-            //	/** @type {number} */
-            //	home_strength_=home_strength_+AsNumber(ttattack_[i_42])*AsNumber(home_1)*AsNumber(Total_Combat_Research_[i_42]);
-            //	/** @type {number} */
-            //	home_TSw_=home_TSw_+home_1*TS_type_[i_42];
-            //	km_2.push(home_1);
-            //	/** @type {number} */
-            //	i_42=i_42+1;
-            //	if(i_42===17) {
-            //		break;
-            //	}
-            //}
-            //if(home_strength_>boss_strength_) {
-            //	/** @type {number} */
-            //	var proportion_=home_strength_/boss_strength_;
-            //	for(i_42 in km_2) {
-            //		/** @type {number} */
-            //		bm_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportion_);
-            //	}
-            //}
-            //if(home_strength_>boss_strengthw_) {
-            //	/** @type {number} */
-            //	var proportionw_=home_strength_/boss_strengthw_;
-            //	for(i_42 in km_2) {
-            //		/** @type {number} */
-            //		bmw_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionw_);
-            //	}
-            //}
-            //if(bossname_==="Triton") {
-            //	/** @type {!Array} */
-            //	var bmz_=[];
-            //	/** @type {number} */
-            //	var home_strengthw_=0;
-            //	/** @type {number} */
-            //	var galleytroops_=0;
-            //	/** @type {number} */
-            //	var tempgalley_=0;
-            //	/** @type {number} */
-            //	var galley_TSneeded_=Math.ceil(home_TSw_/500);
-            //	if(kg_[14]) {
-            //		/** @type {number} */
-            //		home_strengthw_=home_strength_+AsNumber(galley_TSneeded_)*3000*AsNumber(Total_Combat_Research_[14]);
-            //		if(home_strengthw_>boss_strength_) {
-            //			/** @type {number} */
-            //			var proportionz_=home_strengthw_/boss_strength_;
-            //			for(i_42 in km_2) {
-            //				/** @type {number} */
-            //				bmz_[i_42]=Math.ceil(AsNumber(km_2[i_42])/proportionz_);
-            //				/** @type {number} */
-            //				tempgalley_=tempgalley_+bmz_[i_42]*TS_type_[i_42];
-            //			}
-            //		}
-            //		/** @type {number} */
-            //		galleytroops_=Math.ceil(tempgalley_/500);
-            //	}
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			if((kg_[14]||kg_[15]||kg_[16])&&!kg_[5]&&!kg_[6]&&!kg_[8]&&!kg_[9]&&!kg_[10]&&!kg_[11]&&!kg_[2]&&!kg_[3]&&!kg_[4]) {
-            //				if(kg_[16]>attackwres_[16]) {
-            //					$("#raidIP16").val(attackwres_[16]);
-            //				} else {
-            //					if(kg_[15]>attackwres_[15]) {
-            //						$("#raidIP15").val(attackwres_[15]);
-            //					} else {
-            //						if(kg_[14]>attackwres_[14]) {
-            //							$("#raidIP14").val(attackwres_[14]);
-            //						} else {
-            //							errorgo_(message_23);
-            //						}
-            //					}
-            //				}
-            //			} else {
-            //				if(kg_[14]&&(kg_[5]||kg_[6]||kg_[8]||kg_[9]||kg_[10]||kg_[11]||kg_[2]||kg_[3]||kg_[4])) {
-            //					if(kg_[14]>galleytroops_&&bmz_.length>0) {
-            //						var i_46;
-            //						for(i_46 in km_2) {
-            //							$(`#raidIP${[i_46]}`).val(bmz_[i_46]);
-            //						}
-            //						$("#raidIP14").val(galleytroops_);
-            //					} else {
-            //						if(kg_[14]>attackwres_[14]) {
-            //							$("#raidIP14").val(attackwres_[14]);
-            //						} else {
-            //							errorgo_(message_23);
-            //						}
-            //					}
-            //				} else {
-            //					errorgo_(message_23);
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(attackwres_[14]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(attackwres_[15]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(attackwres_[16]);
-            //}
-            //if(bossname_=="Cyclops") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_47;
-            //			for(i_47 in km_2) {
-            //				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
-            //					$(`#raidIP${[i_47]}`).val(bmw_[i_47]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_47]}`).val(bm_[i_47]);
-            //					if(bm_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
-            //if(bossname_=="Andar's Colosseum Challenge") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_48;
-            //			for(i_48 in km_2) {
-            //				if((km_2[8]||km_2[9]||km_2[10])&&!km_2[5]&&!km_2[6]&&!km_2[2]&&!km_2[3]&&!km_2[4]&&!km_2[11]) {
-            //					$(`#raidIP${[i_48]}`).val(bmw_[i_48]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_48]}`).val(bm_[i_48]);
-            //				}
-            //				if(bm_.length===0) {
-            //					errorgo_(message_23);
-            //					break;
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
-            //if(bossname_=="Romulus and Remus") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_49;
-            //			for(i_49 in km_2) {
-            //				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
-            //					$(`#raidIP${[i_49]}`).val(bmw_[i_49]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_49]}`).val(bm_[i_49]);
-            //				}
-            //				if(bm_.length===0) {
-            //					errorgo_(message_23);
-            //					break;
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
-            //if(bossname_=="Dragon") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_50;
-            //			for(i_50 in km_2) {
-            //				if((km_2[2]||km_2[3]||km_2[4]||km_2[5])&&!km_2[6]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[11]) {
-            //					$(`#raidIP${[i_50]}`).val(bmw_[i_50]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_50]}`).val(bm_[i_50]);
-            //				}
-            //				if(bm_.length===0) {
-            //					errorgo_(message_23);
-            //					break;
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
-            //if(bossname_=="Gorgon") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_51;
-            //			for(i_51 in km_2) {
-            //				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
-            //					$(`#raidIP${[i_51]}`).val(bmw_[i_51]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_51]}`).val(bm_[i_51]);
-            //				}
-            //				if(bm_.length===0) {
-            //					errorgo_(message_23);
-            //					break;
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
-            //if(bossname_=="Gladiator") {
-            //	/**
-            //	 * @return {void}
-            //	 */
-            //	document.getElementById("raidDungGo").onclick=() => {
-            //		setTimeout(() => {
-            //			var i_52;
-            //			for(i_52 in km_2) {
-            //				if((km_2[6]||km_2[11])&&!km_2[4]&&!km_2[5]&&!km_2[3]&&!km_2[8]&&!km_2[9]&&!km_2[10]&&!km_2[2]) {
-            //					$(`#raidIP${[i_52]}`).val(bmw_[i_52]);
-            //					if(bmw_.length===0) {
-            //						errorgo_(message_23);
-            //						break;
-            //					}
-            //				} else {
-            //					$(`#raidIP${[i_52]}`).val(bm_[i_52]);
-            //				}
-            //				if(bm_.length===0) {
-            //					errorgo_(message_23);
-            //					break;
-            //				}
-            //			}
-            //		},1500);
-            //	};
-            //	$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
-            //	$("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
-            //	$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
-            //}
+            // @todo
+            if ($("#cityplayerInfo div table tbody tr").length === 11) {
+                bossele_();
+            }
+            if (clickInfo.info.active) {
+                /** @type {string} */
+                message_23 = "Inactive Boss";
+                errorgo_(message_23);
+            }
+            /** @type {string} */
+            message_23 = "Not enough TS to kill this boss!";
+            /** @type {!Array} */
+            var attackres_ = [];
+            /** @type {!Array} */
+            var attackwres_ = [];
+            for (let i_42 in ttattack_) {
+                /** @type {number} */
+                var bossTS_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(Total_Combat_Research_[i_42])));
+                attackres_.push(bossTS_);
+                /** @type {number} */
+                var bosswTS_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(Total_Combat_Research_[i_42])));
+                attackwres_.push(bosswTS_);
+            }
+            /** @type {number} */
+            var home_strength_ = 0;
+            /** @type {number} */
+            let home_loot_2 = 0;
+            /** @type {!Array} */
+            let km_2 = [];
+            /** @type {!Array} */
+            var bm_ = [];
+            /** @type {!Array} */
+            var bmw_ = [];
+            /** @type {!Array} */
+            var kg_ = [];
+            /** @type {number} */
+            var home_TSw_ = 0;
+            /** @type {number} */
+            var boss_strength_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4);
+            /** @type {number} */
+            var boss_strengthw_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4);
+            /** @type {number} */
+            let i_4X = 0;
+            for (var x_85 in D6.th) {
+                /** @type {number} */
+                let home_1 = AsNumber(D6.th[x_85]);
+                if (i_4X === 0 || i_4X === 1 || i_4X === 7 || i_4X === 12 || i_4X === 13) {
+                    /** @type {number} */
+                    home_1 = 0;
+                }
+                kg_.push(home_1);
+                if (i_4X === 14 || i_4X === 15 || i_4X === 16) {
+                    /** @type {number} */
+                    home_1 = 0;
+                }
+                /** @type {number} */
+                home_strength_ = home_strength_ + AsNumber(ttattack_[i_4X]) * AsNumber(home_1) * AsNumber(Total_Combat_Research_[i_4X]);
+                /** @type {number} */
+                home_TSw_ = home_TSw_ + home_1 * TS_type_[i_4X];
+                km_2.push(home_1);
+                /** @type {number} */
+                i_4X = i_4X + 1;
+                if (i_4X === 17) {
+                    break;
+                }
+            }
+            if (home_strength_ > boss_strength_) {
+                /** @type {number} */
+                var proportion_ = home_strength_ / boss_strength_;
+                for (let i_42 in km_2) {
+                    /** @type {number} */
+                    bm_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportion_);
+                }
+            }
+            if (home_strength_ > boss_strengthw_) {
+                /** @type {number} */
+                var proportionw_ = home_strength_ / boss_strengthw_;
+                for (let i_42 in km_2) {
+                    /** @type {number} */
+                    bmw_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportionw_);
+                }
+            }
+            if (bossname_ === "Triton") {
+                /** @type {!Array} */
+                var bmz_ = [];
+                /** @type {number} */
+                var home_strengthw_ = 0;
+                /** @type {number} */
+                var galleytroops_ = 0;
+                /** @type {number} */
+                var tempgalley_ = 0;
+                /** @type {number} */
+                var galley_TSneeded_ = Math.ceil(home_TSw_ / 500);
+                if (kg_[14]) {
+                    /** @type {number} */
+                    home_strengthw_ = home_strength_ + AsNumber(galley_TSneeded_) * 3000 * AsNumber(Total_Combat_Research_[14]);
+                    if (home_strengthw_ > boss_strength_) {
+                        /** @type {number} */
+                        var proportionz_ = home_strengthw_ / boss_strength_;
+                        for (let i_42 in km_2) {
+                            /** @type {number} */
+                            bmz_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportionz_);
+                            /** @type {number} */
+                            tempgalley_ = tempgalley_ + bmz_[i_42] * TS_type_[i_42];
+                        }
+                    }
+                    /** @type {number} */
+                    galleytroops_ = Math.ceil(tempgalley_ / 500);
+                }
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        if ((kg_[14] || kg_[15] || kg_[16]) && !kg_[5] && !kg_[6] && !kg_[8] && !kg_[9] && !kg_[10] && !kg_[11] && !kg_[2] && !kg_[3] && !kg_[4]) {
+                            if (kg_[16] > attackwres_[16]) {
+                                $("#raidIP16").val(attackwres_[16]);
+                            }
+                            else {
+                                if (kg_[15] > attackwres_[15]) {
+                                    $("#raidIP15").val(attackwres_[15]);
+                                }
+                                else {
+                                    if (kg_[14] > attackwres_[14]) {
+                                        $("#raidIP14").val(attackwres_[14]);
+                                    }
+                                    else {
+                                        errorgo_(message_23);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            if (kg_[14] && (kg_[5] || kg_[6] || kg_[8] || kg_[9] || kg_[10] || kg_[11] || kg_[2] || kg_[3] || kg_[4])) {
+                                if (kg_[14] > galleytroops_ && bmz_.length > 0) {
+                                    var i_46;
+                                    for (i_46 in km_2) {
+                                        $(`#raidIP${[i_46]}`).val(bmz_[i_46]);
+                                    }
+                                    $("#raidIP14").val(galleytroops_);
+                                }
+                                else {
+                                    if (kg_[14] > attackwres_[14]) {
+                                        $("#raidIP14").val(attackwres_[14]);
+                                    }
+                                    else {
+                                        errorgo_(message_23);
+                                    }
+                                }
+                            }
+                            else {
+                                errorgo_(message_23);
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text(attackwres_[14]);
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text(attackwres_[15]);
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text(attackwres_[16]);
+            }
+            if (bossname_ == "Cyclops") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_47;
+                        for (i_47 in km_2) {
+                            if ((km_2[8] || km_2[9] || km_2[10]) && !km_2[5] && !km_2[6] && !km_2[2] && !km_2[3] && !km_2[4] && !km_2[11]) {
+                                $(`#raidIP${[i_47]}`).val(bmw_[i_47]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_47]}`).val(bm_[i_47]);
+                                if (bm_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
+            if (bossname_ == "Andar's Colosseum Challenge") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_48;
+                        for (i_48 in km_2) {
+                            if ((km_2[8] || km_2[9] || km_2[10]) && !km_2[5] && !km_2[6] && !km_2[2] && !km_2[3] && !km_2[4] && !km_2[11]) {
+                                $(`#raidIP${[i_48]}`).val(bmw_[i_48]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_48]}`).val(bm_[i_48]);
+                            }
+                            if (bm_.length === 0) {
+                                errorgo_(message_23);
+                                break;
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackwres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackwres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackwres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackwres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
+            if (bossname_ == "Romulus and Remus") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_49;
+                        for (i_49 in km_2) {
+                            if ((km_2[2] || km_2[3] || km_2[4] || km_2[5]) && !km_2[6] && !km_2[8] && !km_2[9] && !km_2[10] && !km_2[11]) {
+                                $(`#raidIP${[i_49]}`).val(bmw_[i_49]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_49]}`).val(bm_[i_49]);
+                            }
+                            if (bm_.length === 0) {
+                                errorgo_(message_23);
+                                break;
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
+            if (bossname_ == "Dragon") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_50;
+                        for (i_50 in km_2) {
+                            if ((km_2[2] || km_2[3] || km_2[4] || km_2[5]) && !km_2[6] && !km_2[8] && !km_2[9] && !km_2[10] && !km_2[11]) {
+                                $(`#raidIP${[i_50]}`).val(bmw_[i_50]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_50]}`).val(bm_[i_50]);
+                            }
+                            if (bm_.length === 0) {
+                                errorgo_(message_23);
+                                break;
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackwres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackwres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackwres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackwres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
+            if (bossname_ == "Gorgon") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_51;
+                        for (i_51 in km_2) {
+                            if ((km_2[6] || km_2[11]) && !km_2[4] && !km_2[5] && !km_2[3] && !km_2[8] && !km_2[9] && !km_2[10] && !km_2[2]) {
+                                $(`#raidIP${[i_51]}`).val(bmw_[i_51]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_51]}`).val(bm_[i_51]);
+                            }
+                            if (bm_.length === 0) {
+                                errorgo_(message_23);
+                                break;
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
+            if (bossname_ == "Gladiator") {
+                /**
+                 * @return {void}
+                 */
+                document.getElementById("raidDungGo").onclick = () => {
+                    setTimeout(() => {
+                        var i_52;
+                        for (i_52 in km_2) {
+                            if ((km_2[6] || km_2[11]) && !km_2[4] && !km_2[5] && !km_2[3] && !km_2[8] && !km_2[9] && !km_2[10] && !km_2[2]) {
+                                $(`#raidIP${[i_52]}`).val(bmw_[i_52]);
+                                if (bmw_.length === 0) {
+                                    errorgo_(message_23);
+                                    break;
+                                }
+                            }
+                            else {
+                                $(`#raidIP${[i_52]}`).val(bm_[i_52]);
+                            }
+                            if (bm_.length === 0) {
+                                errorgo_(message_23);
+                                break;
+                            }
+                        }
+                    }, 1500);
+                };
+                $("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(attackres_[5]);
+                $("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(7) td:nth-child(2)").text(attackres_[2]);
+                $("#cityplayerInfo div table tbody tr:nth-child(8) td:nth-child(2)").text(attackres_[3]);
+                $("#cityplayerInfo div table tbody tr:nth-child(9) td:nth-child(2)").text(attackres_[8]);
+                $("#cityplayerInfo div table tbody tr:nth-child(10) td:nth-child(2)").text(attackres_[10]);
+                $("#cityplayerInfo div table tbody tr:nth-child(11) td:nth-child(2)").text(attackwres_[6]);
+                $("#cityplayerInfo div table tbody tr:nth-child(12) td:nth-child(2)").text(attackwres_[11]);
+                $("#cityplayerInfo div table tbody tr:nth-child(13) td:nth-child(2)").text(attackres_[4]);
+                $("#cityplayerInfo div table tbody tr:nth-child(14) td:nth-child(2)").text(attackres_[9]);
+                $("#cityplayerInfo div table tbody tr:nth-child(15) td:nth-child(2)").text(attackres_[7]);
+                $("#cityplayerInfo div table tbody tr:nth-child(16) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
+                $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
+            }
         }
-        else if (dtype_ === "city" || dtype_ === "lawless") {
+        else if (dtype_ === "city" || dtype_ === "lawless" || dtype_ === "spot") {
             $("#cityplayerInfo div table tbody tr:gt(6)").remove();
             // var coords = $("#citycoords")[0].innerText.split(":");
             let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
@@ -74651,25 +74657,29 @@ function avactor() {
             //		}
             //	}
             //}
-            if (isCity) {
-                toAdd.player = clickInfo.info.player;
-                toAdd.name = clickInfo.info.name;
-                toAdd.notes = clickInfo.info.remarks;
-                toAdd.plvl = clickInfo.info.plvl;
+            toAdd.cid = _cid;
+            toAdd.water = clickInfo.info.water;
+            toAdd.last = new Date();
+            if (dtype_ === "spot") {
             }
             else {
-                toAdd.player = dtype_;
-                toAdd.name = dtype_;
-                toAdd.plvl = 0;
-                toAdd.notes = dtype_;
+                if (isCity) {
+                    toAdd.player = clickInfo.info.player;
+                    toAdd.name = clickInfo.info.name;
+                    toAdd.notes = clickInfo.info.remarks;
+                    toAdd.plvl = clickInfo.info.plvl;
+                }
+                else {
+                    toAdd.player = dtype_;
+                    toAdd.name = dtype_;
+                    toAdd.plvl = 0;
+                    toAdd.notes = dtype_;
+                }
+                //	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
+                toAdd.castle = clickInfo.info.castle;
+                toAdd.bless = clickInfo.info.blessed;
+                toAdd.score = clickInfo.info.score;
             }
-            toAdd.last = new Date();
-            //	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
-            toAdd.cid = _cid;
-            toAdd.castle = clickInfo.info.castle;
-            toAdd.water = clickInfo.info.water;
-            toAdd.bless = clickInfo.info.blessed;
-            toAdd.score = clickInfo.info.score;
             //mru.push(toAdd);
             //mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
             //console.log(mru);
@@ -74787,7 +74797,7 @@ function avactor() {
             //  ppdt.clc[temp_3] = [];
             //  var tempcl_ = $("#cityDropdownMenu > option");
             //  var ll_ = tempcl_.length;
-            //  if (__c.D6.cg,temp_3) > -1) {
+            //  if (D6.cg,temp_3) > -1) {
             //    ppdt.clc[temp_3].push($(tempcl_[0]).attr("value"));
             //  }
             //  if (ll_ > 1) {
@@ -75103,14 +75113,14 @@ function avactor() {
         //			commandInfo.x.push(tempx_6);
         //			commandInfo.y.push(tempy_6);
         //			commandInfo.cstr.push(`${tempx_6}:${tempy_6}`);
-        //			commandInfo.dist.push(Math.sqrt((tempx_6-__c.D6.x)*(tempx_6-__c.D6.x)+(tempy_6-__c.D6.y)*(tempy_6-__c.D6.y)));
+        //			commandInfo.dist.push(Math.sqrt((tempx_6-D6.x)*(tempx_6-D6.x)+(tempy_6-D6.y)*(tempy_6-D6.y)));
         //			commandInfo.numb++;
         //		}
         //	}
-        //	for(var i_36 in __c.D6.tc) {
-        //		if(__c.D6.tc[i_36]) {
-        //			commandInfo.tot.push(Math.ceil(__c.D6.tc[i_36]*AsNumber($("#defperc").val())/100));
-        //			commandInfo.home.push(Math.ceil(__c.D6.th[i_36]*AsNumber($("#defperc").val())/100));
+        //	for(var i_36 in D6.tc) {
+        //		if(D6.tc[i_36]) {
+        //			commandInfo.tot.push(Math.ceil(D6.tc[i_36]*AsNumber($("#defperc").val())/100));
+        //			commandInfo.home.push(Math.ceil(D6.th[i_36]*AsNumber($("#defperc").val())/100));
         //			commandInfo.type.push(AsNumber(i_36));
         //			if($(`#usedef${i_36}`).prop("checked")==true) {
         //				commandInfo.speed.push(ttspeed_[i_36]/ttspeedres_[i_36]);
@@ -75205,11 +75215,11 @@ function avactor() {
             //tempx_9=AsNumber(tid_6%65536);
             ///** @type {number} */
             //tempy_9=AsNumber((tid_6-tempx_9)/65536);
-            //commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-__c.D6.x)*(tempx_9-__c.D6.x)+(tempy_9-__c.D6.y)*(tempy_9-__c.D6.y)));
+            //commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-D6.x)*(tempx_9-D6.x)+(tempy_9-D6.y)*(tempy_9-D6.y)));
             //var i_39;
-            //for(i_39 in __c.D6.th) {
-            //	if(__c.D6.th[i_39]) {
-            //		defobj_2.t.home.push(Math.ceil(__c.D6.th[i_39]*AsNumber($("#defperc").val())/100));
+            //for(i_39 in D6.th) {
+            //	if(D6.th[i_39]) {
+            //		defobj_2.t.home.push(Math.ceil(D6.th[i_39]*AsNumber($("#defperc").val())/100));
             //		defobj_2.t.type.push(AsNumber(i_39));
             //		defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
             //		defobj_2.t.use.push(1);
@@ -75542,7 +75552,7 @@ function avactor() {
                             var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
                             /** @type {number} */
                             var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
-                            var pname_12 = __c.F5F[pid_];
+                            var pname_12 = F5F[pid_];
                             /** @type {!Array} */
                             var csn_ = [3, 4, 7, 8];
                             if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
@@ -76427,7 +76437,7 @@ function avactor() {
                                     jQuery("#citnotesaveb")[0].click();
                                 }, 100);
                             }
-                            var aa_8 = __c.D6.mo;
+                            var aa_8 = D6.mo;
                             if ($("#addtroops").prop("checked") == true) {
                                 var k_4;
                                 for (k_4 in troopcounw_[j_13]) {
@@ -76458,7 +76468,7 @@ function avactor() {
                                     var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
                                     /** @type {number} */
                                     var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
-                                    hubs_3.distance.push(Math.sqrt((tempx_12 - __c.D6.x) * (tempx_12 - __c.D6.x) + (tempy_12 - __c.D6.y) * (tempy_12 - __c.D6.y)));
+                                    hubs_3.distance.push(Math.sqrt((tempx_12 - D6.x) * (tempx_12 - D6.x) + (tempy_12 - D6.y) * (tempy_12 - D6.y)));
                                 }
                                 /** @type {number} */
                                 var mindist_3 = Math.min(...hubs_3.distance);
@@ -76530,7 +76540,7 @@ function avactor() {
                                     jQuery("#citnotesaveb")[0].click();
                                 }, 100);
                             }
-                            var aa_9 = __c.D6.mo;
+                            var aa_9 = D6.mo;
                             if ($("#addtroops").prop("checked") == true) {
                                 var k_5;
                                 for (k_5 in troopcound_[j_14]) {
@@ -76561,7 +76571,7 @@ function avactor() {
                                     var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
                                     /** @type {number} */
                                     var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
-                                    hubs_4.distance.push(Math.sqrt((tempx_13 - __c.D6.x) * (tempx_13 - __c.D6.x) + (tempy_13 - __c.D6.y) * (tempy_13 - __c.D6.y)));
+                                    hubs_4.distance.push(Math.sqrt((tempx_13 - D6.x) * (tempx_13 - D6.x) + (tempy_13 - D6.y) * (tempy_13 - D6.y)));
                                 }
                                 /** @type {number} */
                                 var mindist_4 = Math.min(...hubs_4.distance);

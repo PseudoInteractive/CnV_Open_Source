@@ -150,6 +150,7 @@
         cob?: { [key: string]: number };
         cobm?: { [key: string]: number };
         npp?: number;
+        clc?: { [key: string]: number[] };
         ft?: number[];
         opt?: { [key: string]: Lc };
         hlp?: number[];

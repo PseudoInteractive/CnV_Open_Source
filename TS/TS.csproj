@@ -37,7 +37,7 @@
     <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
-    <TypeScriptOutFile>../COTG/JS/funky.js</TypeScriptOutFile>
+    <TypeScriptOutFile>../COTG/JS/funky</TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>

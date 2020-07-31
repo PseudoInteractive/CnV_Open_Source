@@ -162,7 +162,7 @@ namespace COTG
 
         private static string GetJsString(string asm)
         {
-            return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}.js") ).ReadToEnd();
+            return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}") ).ReadToEnd();
 
         }
        
@@ -206,8 +206,8 @@ namespace COTG
 
                         var asm = typeof(JSClient).Assembly;
 
-                        var js = GetJsString("funky") + GetJsString("J0EE");
-
+                        var js = GetJsString("funky")
+                               + GetJsString("J0EE");
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
                         args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
@@ -930,6 +930,10 @@ namespace COTG
 
                                     break;
                                 }
+                            case "coords":
+                                App.DispatchOnUIThreadLow(() => ChatTab.PasteCoords(jsp.Value.GetString()));
+                                break;
+
                             case "c":
                                 {
                                     var jso = jsp.Value;
