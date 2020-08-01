@@ -228,8 +228,8 @@ TextSubmitted="RaidCarrySubmitted"
                      Use ctrl-click, shift-click, ctrl-a or arrows and the spacebar to select cities<LineBreak/>
                      When not pressing shift or control, be careful where you click.
                 <LineBreak/>    -   Some cells might issue commands
-                <LineBreak/>    -   It is usually safest to click on the city name to minimize unexpected actions
-                <LineBreak/>    -   Enthusiastic use of the control key can help as nothing <Italic>should</Italic> happen other than selection when shift or control are pressed
+                <LineBreak/>    -   It is safest to click on cells that are not colored to minimize unexpected actions
+                <LineBreak/>    -   Adept use of the control key can help as nothing <Italic>should</Italic> happen other than selection when shift or control are pressed
                 <LineBreak/>    -   Example:  Select a citylist in the box at the top of the cities grid
                 <LineBreak/>        -   Give the city grid keyboard focus (tap on a city name)
                 <LineBreak/>        -   Press ctrl-a to select all

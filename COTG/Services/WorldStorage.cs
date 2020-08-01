@@ -40,7 +40,7 @@ namespace COTG.Services
 
             }
             var outCount = rv.Count;
-            if (outCount == 0)
+            if (outCount <= 64)
                 return null;
             var bytes = new byte[outCount*4];
             for (int i = 0; i < outCount; ++i)

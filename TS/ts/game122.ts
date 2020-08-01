@@ -43763,7 +43763,7 @@ console.log("Bad");
       var B0w = new Object();
       var Z0w;
       var P0w;
-      console.log(U0w + _s(5703) + g0w);
+      //console.log(U0w + _s(5703) + g0w);
       if (g0w == p1R * 1 || g0w == +z1R || g0w == 3 ||
         g0w == 7 || g0w == (m2y | 5) || g0w == 17 - 0) {
         Z0w = U0w + (1);
@@ -54604,9 +54604,10 @@ console.log("Bad");
             .first()
             .text(Z7D);
           var A7D = Math.floor(L7D * (K7D / (100)));
-          var f7D = D6.tq[0].tm;
+          
           if (o7D > +
             "1000")
+            var f7D = D6.tq.length > 0 ? D6.tq[0].tm : 0;
             if (A7D > f7D) {
               var n7D = Math.floor(Number(A7D) - Number(f7D));
               var U7D = Number(D6.tc[Number(H7D)]) +

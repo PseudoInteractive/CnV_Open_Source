@@ -10,9 +10,11 @@ namespace COTG.Game
     {
 
         public const int ttCount = 18;
-        public static bool IsLandRaider(int type) => ttBestDungeonType[type] <= 2;
+        public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
+        public static bool IsLandRaider(int type) => ttBestDungeonType[type] < (byte)DungeonType.water;
+        public static bool IsWaterRaider(int type) => ttBestDungeonType[type] == (byte)DungeonType.water;
 
-        
+
         // 255 means none,
         public static string[] dungeonTypes = { "forest", "hill", "mountain", "water" };
         public static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };

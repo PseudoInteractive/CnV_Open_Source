@@ -319,6 +319,14 @@ namespace COTG.Game
                         rv.Add(cid);
                     }
                 }
+                if (City.build != null && City.build != City.focus)
+                {
+                    var cid = City.build.cid;
+                    if (cid != viewHover && !selected.Contains(cid))
+                    {
+                        rv.Add(cid);
+                    }
+                }
 
             }
             finally

@@ -46043,7 +46043,7 @@ var cotgsubscribe = amplify;
             var B0w = new Object();
             var Z0w;
             var P0w;
-            console.log(U0w + _s(5703) + g0w);
+            //console.log(U0w + _s(5703) + g0w);
             if (g0w == p1R * 1 || g0w == +z1R || g0w == 3 ||
                 g0w == 7 || g0w == (m2y | 5) || g0w == 17 - 0) {
                 Z0w = U0w + (1);
@@ -57123,22 +57123,22 @@ var cotgsubscribe = amplify;
                         .first()
                         .text(Z7D);
                     var A7D = Math.floor(L7D * (K7D / (100)));
-                    var f7D = D6.tq[0].tm;
                     if (o7D > +"1000")
-                        if (A7D > f7D) {
-                            var n7D = Math.floor(Number(A7D) - Number(f7D));
-                            var U7D = Number(D6.tc[Number(H7D)]) +
-                                n7D;
-                            var P7D = Number(D6.th[Number(H7D)]) + n7D;
-                            D6.tq[0].tm = Number(D6.tq[0].tm) + Number(n7D);
-                            var g7D = Number(D6.tq[0].tc) -
-                                Number(D6.tq[0].tm);
-                            if (D6.tq[0].tm <= D6.tq[0].tc) {
-                                D6.tq[0].tl = g7D;
-                                m9();
-                                B0F();
-                            }
+                        var f7D = D6.tq.length > 0 ? D6.tq[0].tm : 0;
+                    if (A7D > f7D) {
+                        var n7D = Math.floor(Number(A7D) - Number(f7D));
+                        var U7D = Number(D6.tc[Number(H7D)]) +
+                            n7D;
+                        var P7D = Number(D6.th[Number(H7D)]) + n7D;
+                        D6.tq[0].tm = Number(D6.tq[0].tm) + Number(n7D);
+                        var g7D = Number(D6.tq[0].tc) -
+                            Number(D6.tq[0].tm);
+                        if (D6.tq[0].tm <= D6.tq[0].tc) {
+                            D6.tq[0].tl = g7D;
+                            m9();
+                            B0F();
                         }
+                    }
                     $(_s(5149))
                         .first()
                         .text(A7D);

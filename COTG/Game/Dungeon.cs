@@ -26,6 +26,7 @@ namespace COTG.Game
             _ => "water"
         };
 
+        public bool isWater => type == (int)DungeonType.water;
         
 
         //        [JsonProperty("l")]

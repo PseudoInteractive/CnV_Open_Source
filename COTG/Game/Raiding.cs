@@ -63,7 +63,7 @@ namespace COTG.Game
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
-            var carry = city.carryCapacity; // this should be on demand
+            var carry = city.CarryCapacity(d.isWater); // this should be on demand
             if (carry <= 0)
                 return (0, 0);
          //   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
@@ -102,9 +102,10 @@ namespace COTG.Game
             var tr = new List<sndRaidtr>();
             foreach (var ttc in city.troopsHome)
             {
-                if (!IsLandRaider((byte)ttc.type))
+                if (!IsRaider(ttc.type))
                     continue;
-                tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
+                if(IsWaterRaider(ttc.type) == d.isWater)
+                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
 
             }
             var trs = JsonSerializer.Serialize(tr);

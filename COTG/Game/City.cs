@@ -62,15 +62,27 @@ namespace COTG.Game
                 var _carryCapacity = 0;
                 foreach(var tc in troopsHome)
                 {
-                    if(IsLandRaider((byte)tc.type) )
-                            {
-                                _carryCapacity += tc.count * ttCarry[tc.type];
-                            }
-                        
-                    
+                  _carryCapacity += tc.count * ttCarry[tc.type];
                 }
                 return _carryCapacity;
             }
+        }
+        public int CarryCapacity(bool forWater)
+        {
+                // Todo: water
+                var _carryCapacity = 0;
+                foreach (var tc in troopsHome)
+                {
+                if (!IsRaider(tc.type))
+                    continue;
+                    if(IsWaterRaider(tc.type) == forWater)
+                    {
+                        _carryCapacity += tc.count * ttCarry[tc.type];
+                    }
+
+
+                }
+                return _carryCapacity;
         }
 
         public float raidReturn
