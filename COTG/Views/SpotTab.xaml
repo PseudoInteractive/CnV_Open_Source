@@ -30,7 +30,7 @@
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
-                        PointerMoved="gridPointerMoved"
+                        
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="12"

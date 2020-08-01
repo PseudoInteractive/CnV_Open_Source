@@ -13,7 +13,7 @@ namespace COTG.Game
         public string name;
         public ushort alliance;
         public ushort pointsH;// divided by 100
-        public byte cities;
+        public ushort cities;
         public byte title;
 
         public string allianceName => Alliance.IdToName(alliance);

@@ -209,7 +209,10 @@ namespace COTG.Views
                 tabPage.AddTab(DefenderPage.instance,false);
               
                 DefensePage.instance = new DefensePage();
-               // tabPage.AddTab(DefensePage.instance, false);
+                // tabPage.AddTab(DefensePage.instance, false);
+
+                DonationTab.instance = new DonationTab();
+                tabPage.AddTab(DonationTab.instance, false);
 
             }
             {

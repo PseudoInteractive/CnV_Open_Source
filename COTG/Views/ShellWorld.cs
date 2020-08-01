@@ -233,58 +233,64 @@ namespace COTG.Views
             return MousePointToWorld(c1).WorldToCid();
         }
 
-
+        int lastCanvaseC;
         private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            Spot.viewHover = 0;
-            toolTip = null;
-
+           
             var point = e.GetCurrentPoint(canvas);
             var c1 = point.Position.ToVector2();
             var c = MousePointToWorld(c1);
-            var data =  World.CityLookup(c);
-            switch (data.type)
+            var cid = c.WorldToCid();
+            if (lastCanvaseC != cid)
             {
-                case World.typeCity:
-                    {
-                        Spot.viewHover = c.WorldToCid();
+                Spot.viewHover = 0;
+                toolTip = null;
 
-                        if (data.player == 0)
+                lastCanvaseC = cid;
+                var data = World.CityLookup(c);
+                switch (data.type)
+                {
+                    case World.typeCity:
                         {
-                            toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-                        }
-                        else
-                        {
-                            var player = Player.all.GetValueOrDefault(data.player, Player._default);
-                            if (Player.IsMe(data.player))
+                            Spot.viewHover = cid;
+
+                            if (data.player == 0)
                             {
-                                if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
-                                {
-                                    var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0,city.remarks.Length.Min(40) ) + "\n";
-                                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-                               //     Raiding.UpdateTS();
-                                }
-
+                                toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
                             }
                             else
                             {
-                                toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                                var player = Player.all.GetValueOrDefault(data.player, Player._default);
+                                if (Player.IsMe(data.player))
+                                {
+                                    if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
+                                    {
+                                        var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
+                                        toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                                        //     Raiding.UpdateTS();
+                                    }
+
+                                }
+                                else
+                                {
+                                    toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                                }
                             }
+                            break;
                         }
+                    case World.typeShrine:
+                        toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
                         break;
-                    }
-                case World.typeShrine:
-                    toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
-                    break;
-                case World.typeBoss:
-                    toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-                    break;
-                case World.typeDungeon:
-                    toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-                    break;
-                case World.typePortal:
-                    toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
-                    break;
+                    case World.typeBoss:
+                        toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+                        break;
+                    case World.typeDungeon:
+                        toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+                        break;
+                    case World.typePortal:
+                        toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
+                        break;
+                }
             }
 
              if (mouseButtons != 0)

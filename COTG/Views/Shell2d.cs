@@ -57,6 +57,9 @@ namespace COTG.Views
         static readonly Color raidColor = Colors.Yellow;
 //        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
         static readonly Color selectColor = Colors.DarkMagenta;
+        static readonly Color buildColor = Colors.DarkRed;
+        static readonly Color hoverColor = Colors.Purple;
+        static readonly Color focusColor = Colors.Magenta;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 
         static Dictionary<string, CanvasTextLayout> nameLayoutCache = new Dictionary<string, CanvasTextLayout>();
@@ -631,7 +634,10 @@ namespace COTG.Views
                         var c = city.CidToCC();
                         var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f))+0.25f;
                         var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                        ds.DrawRoundedSquareWithShadow(c, r, selectColor);
+                        ds.DrawRoundedSquareWithShadow(c, r,City.IsBuild(city) ? buildColor:
+                                                            City.IsFocus(city) ? focusColor :
+                                                            City.IsHover(city)?hoverColor :
+                                                            selectColor);
 
                     }
                 }

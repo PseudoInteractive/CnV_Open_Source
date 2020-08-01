@@ -15,10 +15,8 @@ namespace COTG.Services
     {
         const string fileName = "gwrd.zip";
         public static StorageFolder folder => ApplicationData.Current.LocalFolder;
-        public static string ArchiveName(this DateTimeOffset offset, bool isDelta)
-                => (isDelta ? "1" : "6") + offset.ToString("yyyyMMddHHmmss");
-
-        const int deltasPerBatch = 8;
+     
+        const int deltasPerBatch = 16;
         // Todo:  Delta encode
         public static byte[] ComputeDelta(uint[] d0, uint[] d1)
         {

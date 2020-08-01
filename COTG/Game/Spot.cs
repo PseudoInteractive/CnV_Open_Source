@@ -119,17 +119,17 @@ namespace COTG.Game
 
             var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
             viewHover = spot != null ? spot.cid : 0;
-            uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
+            var uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             
             return (spot, uiHoverColumn, physicalPoint);
         }
 
 
         
-        public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            HitTest(sender, e);
-        }
+        //public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
+        //{
+        //    HitTest(sender, e);
+        //}
         public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
         {
             var hit= Spot.HitTest(sender, e);
@@ -147,7 +147,7 @@ namespace COTG.Game
         public static void ClearHover()
         {
             viewHover = 0;
-            uiHoverColumn = string.Empty;
+        //    uiHoverColumn = string.Empty;
         }
 
         
@@ -293,6 +293,13 @@ namespace COTG.Game
         public bool iSenny => incoming.Any((a) => a.Senny);
         public bool iArt => incoming.Any((a) => a.hasArt);
 
+        public bool isFocus => City.focus == this;
+        public bool isHover => viewHover == cid;
+        public static bool IsHover(int cid)
+        {
+            return viewHover == cid;
+        }
+
         public static List<int> GetSelected()
         {
             var rv = new List<int>();
@@ -374,13 +381,14 @@ namespace COTG.Game
         public static bool IsSelectedOrHovered(int cid0, int cid1)
         {
             // if nothing is selected we treat it as if everything is selected
-            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0) || City.IsFocus(cid1) || cid1 == viewHover || selected.Contains(cid1) );
+            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0)
+                                                || cid1 == viewHover || selected.Contains(cid1) || City.IsFocus(cid1));
         }
 
 
         public static int viewHover; // in the view menu
 
-        public static string uiHoverColumn = string.Empty;
+//        public static string uiHoverColumn = string.Empty;
         public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
         public static string uiPressColumn = string.Empty;
 

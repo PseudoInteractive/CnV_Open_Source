@@ -31,6 +31,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
+using COTG.Helpers;
+using COTG.Game;
 
 namespace COTG
 {
@@ -204,7 +206,7 @@ namespace COTG
             rv.Click += (_, _) => command();
             return rv;
         }
-
+        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
     }
 
 

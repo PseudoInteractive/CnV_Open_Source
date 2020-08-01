@@ -33,7 +33,7 @@
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="12"
                         RowHeight="32"
-                        PointerMoved="gridPointerMoved"
+                       
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
@@ -42,11 +42,12 @@
                         AlternationStep="2"
                         SelectionMode="Single"
                         ColumnDataOperationsMode="Flyout"
+                        UserGroupMode="Enabled"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
-            <tg:RadDataGrid.Commands>
+            <!--<tg:RadDataGrid.Commands>
                 <local:DataBindingComplete Id="DataBindingComplete" />
-            </tg:RadDataGrid.Commands>
+            </tg:RadDataGrid.Commands>-->
             <tg:RadDataGrid.RowDetailsTemplate>
                 <DataTemplate x:DataType="game:Spot">
                     <tg:RadDataGrid x:Name="armyGrid"

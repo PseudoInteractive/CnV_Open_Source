@@ -19,7 +19,6 @@
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
-      Background="{x:Null}"
         DataContext="Donation"
     mc:Ignorable="d">
     <Grid>
@@ -29,11 +28,12 @@
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
-                        PointerMoved="gridPointerMoved"
+                        UserGroupMode="Enabled"
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="12"
-                        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
+                        
+                        ItemsSource="{x:Bind cotg:App.emptyCityList, Mode=OneWay}"
                         RowHeight="34"
                         AlternationStep="2"
                         SelectionMode="Multiple"
@@ -44,15 +44,34 @@
                 <telerikGrid:DataGridImageColumn PropertyName="icon"
                                         SizeMode="Fixed"
                                         Width="34" />
-                <telerikGrid:DataGridTextColumn PropertyName="cityName"
+                <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
                                        SizeMode="Auto"
-                                       Width="100" />
+                                       Width="60" />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                       Width="80" />
-                <telerikGrid:DataGridTextColumn PropertyName="player"
-                                       Width="80" />
-                <telerikGrid:DataGridTextColumn PropertyName="alliance"
-                                       Width="80" />
+                                       Width="60" />
+                <telerikGrid:DataGridNumericalColumn PropertyName="wood"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="60" />
+                <telerikGrid:DataGridNumericalColumn PropertyName="woodStorage"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="60" IsVisible="False" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="stone"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="60" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="cartsHome"
+                                            CellContentFormat="{}{0,5:N0}"
+                                            Width="60" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="carts"
+                                            CellContentFormat="{}{0,5:N0}"
+                                                      IsVisible="False"
+                                            Width="60" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="shipsHome"
+                                            CellContentFormat="{}{0,5:N0}"
+                                            Width="60" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="shipsHome"
+                                            CellContentFormat="{}{0,5:N0}"
+                                                      IsVisible="False"
+                                            Width="60" />
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                             Width="80" />
             </telerikGrid:RadDataGrid.Columns>

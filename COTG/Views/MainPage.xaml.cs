@@ -135,10 +135,10 @@ namespace COTG.Views
 
         
 
-        private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerMoved(sender, e);
-        }
+        //private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        //{
+        //    Spot.ProcessPointerMoved(sender, e);
+        //}
         private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerPress(sender,e);
@@ -390,6 +390,11 @@ namespace COTG.Views
                 RaidOverview.Send();
                 if(City.build!=null)
                     GetCity.Post(City.build.cid);
+                cityGrid.ItemsSource = gridCitySource;
+            }
+            else
+            {
+                cityGrid.ItemsSource = null;
             }
         }
         public override void XamlTreeChanged(TabPage newPage) {

@@ -376,6 +376,24 @@ namespace COTG.Game
             }
             return best;
         }
+        /*
+         * Resource and other details
+        */
+        public ushort carts { get; set; }
+        public ushort cartsHome { get; set; }
+        public int wood { get; set; }
+        public int woodStorage { get; set; }
+        public int stone { get; set; }
+        public int stoneStorage { get; set; }
+        public int iron { get; set; }
+        public int ironStorage { get; set; }
+        public int food { get; set; }
+        public int foodStorage { get; set; }
+        public ushort ships { get; set; }
+        public ushort shipsHome { get; set; }
+        public bool academy { get; set; }
+        public bool sorcTower { get; set; }
+
     }
     public class SenatorInfo
     {

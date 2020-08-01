@@ -34,7 +34,7 @@ namespace COTG.Services
             localPath = _localPath;
             secret = _secret;
             emptyJson = JsonDocument.Parse("{}");
-          //  all.Add(this);
+            //  all.Add(this);
         }
 
 
@@ -51,7 +51,7 @@ namespace COTG.Services
                 {
                     dataReader.ReadBytes(temp);
                 }
-             //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+                //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
                 ProcessJsonRaw(temp);
             }
             catch (Exception e)
@@ -87,6 +87,12 @@ namespace COTG.Services
         {
             var data = await AcceptAndReturn(resp);
             return JsonDocument.Parse(data);
+
+        }
+        public virtual async Task<T> AcceptJSONT<T>(HttpResponseMessage resp)
+        {
+            var data = await AcceptAndReturn(resp);
+            return JsonSerializer.Deserialize<T>(data);
 
         }
 
@@ -126,8 +132,8 @@ namespace COTG.Services
                         await Accept(await Send(GetPostContent()));
                         return;
                     }
-                        
-                    
+
+
                 }
                 catch (Exception e)
                 {
@@ -171,9 +177,9 @@ namespace COTG.Services
                 //   if (resp.ExtendedError != null)
                 //      Log(resp.ExtendedError);
                 JSClient.clientPool.Add(client);
-               // Log("HTTP:" + resp.Version);
+                // Log("HTTP:" + resp.Version);
                 client = null;
-                if (resp!=null)
+                if (resp != null)
                 {
                     return resp;
                     //var b = await resp.Content.ReadAsInputStreamAsync();
@@ -189,8 +195,8 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                if(client!=null)
-                JSClient.clientPool.Add(client);
+                if (client != null)
+                    JSClient.clientPool.Add(client);
                 client = null;
                 Log(e);
             }
@@ -202,7 +208,7 @@ namespace COTG.Services
         static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
         static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
         static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
-     //  public static GetCity getCity = new GetCity(0);
+        //  public static GetCity getCity = new GetCity(0);
         //public static rMp regionView = new rMp();
         static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
@@ -261,8 +267,8 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
-        Action<JsonElement,City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action=null) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
+        Action<JsonElement, City> action;
+        public GetCity(int _cid, Action<JsonElement, City> _action = null) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
         {
             cid = _cid;
             action = _action;
@@ -276,17 +282,17 @@ namespace COTG.Services
 
         public override void ProcessJson(JsonDocument json)
         {
-           // var cid = json.RootElement.GetAsInt("cid");
-         //   Log("Got JS " + cid);
-             var city=City.allCities.GetOrAdd(cid,City.Factory);
+            // var cid = json.RootElement.GetAsInt("cid");
+            //   Log("Got JS " + cid);
+            var city = City.allCities.GetOrAdd(cid, City.Factory);
             var root = json.RootElement;
             city.LoadFromJson(root);
             if (action != null)
                 action(root, city);
         }
-        public static  Task Post(int _cid, Action<JsonElement, City> _action = null)
+        public static Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
-            return (new GetCity(_cid,_action)).Post();
+            return (new GetCity(_cid, _action)).Post();
 
         }
 
@@ -326,15 +332,15 @@ namespace COTG.Services
         {
             cid = _cid;
         }
-        public static async void Post(int _cid,bool getCityFirst)
+        public static async void Post(int _cid, bool getCityFirst)
         {
-         //   Log(_cid.CidToString());
-         if(getCityFirst)
-            await GetCity.Post(_cid);
-         //   await Task.Delay(2000);
-         //   COTG.Views.MainPage.CityListUpdateAll();
-           new ScanDungeons(_cid).Post();
-            
+            //   Log(_cid.CidToString());
+            if (getCityFirst)
+                await GetCity.Post(_cid);
+            //   await Task.Delay(2000);
+            //   COTG.Views.MainPage.CityListUpdateAll();
+            new ScanDungeons(_cid).Post();
+
         }
         public override string GetPostContent()
         {
@@ -375,7 +381,7 @@ namespace COTG.Services
 
         }
 
-        
+
     }
 
     public class OverviewApi : RestAPI
@@ -441,10 +447,10 @@ namespace COTG.Services
             }
             if (!changed.IsNullOrEmpty())
             {
-               changed.NotifyChange();
+                changed.NotifyChange();
             }
-          //  Log("Got JS for troop overview");
-          //  Log(json.ToString());
+            //  Log("Got JS for troop overview");
+            //  Log(json.ToString());
         }
         public static JsonDocument jsd;
         public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
@@ -546,7 +552,7 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument jsd)
         {
             // reset all to start
-            foreach(var city in City.allCities.Values)
+            foreach (var city in City.allCities.Values)
             {
                 city.raids = Array.Empty<Raid>();
                 city.raidCarry = 0;
@@ -556,7 +562,7 @@ namespace COTG.Services
             foreach (var cr in a.EnumerateArray())
             {
                 int cid = cr[0].GetInt32();
-                var city=City.allCities.GetOrAdd(cid,City.Factory);
+                var city = City.allCities.GetOrAdd(cid, City.Factory);
                 List<Raid> raids = new List<Raid>();
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())
@@ -565,15 +571,15 @@ namespace COTG.Services
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
                     raid.target = r[8].GetInt32();
-                    raid.time =  r[7].GetString().ParseDateTime(false);
+                    raid.time = r[7].GetString().ParseDateTime(false);
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
-                //    Log(raid.ToString());
-                   // raid.arrival.Year = DateTime.Now.Year;
+                    //    Log(raid.ToString());
+                    // raid.arrival.Year = DateTime.Now.Year;
                     var ss0 = desc.Split(',');
                     Assert(ss0.Length == 2);
                     var isMountain = ss0[0].Trim()[0] == 'M';
-                    var ss = ss0[1].Split(new char[] { ' ', '(',  ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
+                    var ss = ss0[1].Split(new char[] { ' ', '(', ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
                     Assert(ss.Length == 4);
                     var level = int.Parse(ss[1]);
                     var completion = int.Parse(ss[2]);
@@ -584,19 +590,19 @@ namespace COTG.Services
                         var tt = ttr.GetAsInt("tt");
                         int tv = ttr.GetAsInt("tv");
                         cc += ttCarry[tt] * tv;
-                     //   Log($"{tt}:{tv}");
+                        //   Log($"{tt}:{tv}");
                     }
                     var carry = (cc * 100.0f / res).RoundToInt();
                     if (carry < minCarry)
                         minCarry = carry;
-                   // Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
+                    // Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
                     raids.AddIfAbsent(raid);
                 }
-                 city.raidCarry = (byte)minCarry;
+                city.raidCarry = (byte)minCarry;
                 city.raids = raids.ToArray();
-               // Log($"cid:{cid} carry: {minCarry}");
-                
+                // Log($"cid:{cid} carry: {minCarry}");
+
             }
             MainPage.CityListUpdateAll();
         }
@@ -605,7 +611,7 @@ namespace COTG.Services
     public class Post : RestAPI
     {
         public Post(string url, string secret = null) : base(url, secret) { }
-       
+
 
         // Does not wait for full response and does not parse json
         // postContent is xml uri encoded
@@ -618,20 +624,26 @@ namespace COTG.Services
         async public static Task<JsonDocument> SendForJson(string url, string postContent, string secret = null)
         {
             var p = new Post(url, secret);
-            return await p.AcceptJSON( await p.Send(postContent) );
+            return await p.AcceptJSON(await p.Send(postContent));
+
+
+        }
+        async public static Task<T> SendForJsonT<T>(string url, string postContent, string secret = null)
+        {
+            var p = new Post(url, secret);
+            return await p.AcceptJSONT<T>(await p.Send(postContent));
 
 
         }
 
-        async public static Task SendEncrypted(string url, string postContentJson, string secret )
+        async public static Task SendEncrypted(string url, string postContentJson, string secret)
         {
             var p = new Post(url, secret);
-            await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8) );
+            await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
 
 
         }
     }
-
     public static class TileMapFetch
     {
         async static public Task<TileData> Get()
@@ -694,8 +706,72 @@ namespace COTG.Services
 
         }
 
+    }
+
+    public class CityOverview{
+//        public string city { get; set; }
+ //       public string location { get; set; }
+        public int score { get; set; }
+        public ushort carts_total { get; set; }
+        [JsonConverter(typeof(UShortConverter))]
+        public ushort carts_home { get; set; }
+   //     public int wood_per_hour { get; set; }
+        public int wood { get; set; }
+        public int wood_storage { get; set; }
+     //   public int stone_per_hour { get; set; }
+        public int stone { get; set; }
+        public int stone_storage { get; set; }
+      //  public int iron_per_hour { get; set; }
+        public int iron { get; set; }
+        public int iron_storage { get; set; }
+       // public int food_per_hour { get; set; }
+        public int food { get; set; }
+        public int food_storage { get; set; }
+        public ushort ships_total { get; set; }
+
+        [JsonConverter(typeof(UShortConverter))]
+        public ushort ships_home { get; set; }
+        public string Academy { get; set; }
+        public string Sorc_tower { get; set; }
+       // public string reference { get; set; }
+        public int id { get; set; }
+
+        public static Task<CityOverview[]> Send()
+        {
+            return Post.SendForJsonT<CityOverview[]>("overview/citover.php","a=0");
         }
     }
+    public class UShortConverter : JsonConverter<ushort>
+    {
+        public override ushort Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                var stringValue = reader.GetString();
+                if (stringValue.IsNullOrEmpty())
+                    return 0;
+                if (ushort.TryParse(stringValue, out var value))
+                {
+                    return value;
+                }
+            }
+            else if (reader.TokenType == JsonTokenType.Number)
+            {
+                if (reader.TryGetUInt16(out var rv))
+                    return rv;
+
+                return (ushort)reader.GetSingle();
+            }
+
+            throw new JsonException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, ushort value, JsonSerializerOptions options)
+        {
+            writer.WriteNumberValue(value);
+        }
+    }
+}
 
 
 

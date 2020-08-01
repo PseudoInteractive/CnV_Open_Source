@@ -94,10 +94,10 @@ namespace COTG.Views
 
             Spot.ProcessPointerPress(sender, e);
         }
-        private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerMoved(sender, e);
-        }
+        //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
+        //{
+        //    Spot.ProcessPointerMoved(sender, e);
+        //}
         private void gridPointerExited(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerExited();
