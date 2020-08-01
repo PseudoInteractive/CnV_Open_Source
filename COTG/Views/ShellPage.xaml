@@ -240,7 +240,7 @@
                         Background="Transparent"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Stretch"
-                        Height="20"
+                        Height="11"
                         Canvas.ZIndex="22">
                     <tk:GridSplitter.Element>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
@@ -265,7 +265,7 @@
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
-                        Width="20"
+                        Width="11"
                         Canvas.ZIndex="22">
                     <tk:GridSplitter.Element>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
@@ -279,7 +279,7 @@
                     Grid.Column="1"
                         VerticalAlignment="Top"
                     Canvas.ZIndex="22"
-                        Height="20"
+                        Height="11"
                         HorizontalAlignment="Stretch"
                     >
 					<tk:GridSplitter.Element>
@@ -301,7 +301,7 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
-                        Width="20"
+                        Width="11"
                         Canvas.ZIndex="44">
                 <tk:GridSplitter.Element>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"

@@ -101,11 +101,20 @@ namespace COTG.Views
             StartCap=CanvasCapStyle.Triangle};
         public CanvasAnimatedControl CreateCanvasControl()
 		{
-			canvas = new CanvasAnimatedControl()
+            //Assert((0.5f).CeilToInt() == 1);
+            //Assert((-1.0f).CeilToInt() == -1);
+            //Assert((0.0f).CeilToInt() == 0);
+            //Assert((-0.5f).CeilToInt() == 0);
+            //Assert((0.5f).FloorToInt() == 0);
+            //Assert((-1.0f).FloorToInt() == -1);
+            //Assert((0.0f).FloorToInt() == 0);
+            //Assert((-0.5f).FloorToInt() == -1);
+
+            canvas = new CanvasAnimatedControl()
 			{
 				IsHitTestVisible = false,
                 
-				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/1.0f),
+				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/5.0f),
 				
 				IsFixedTimeStep = false
 			};
@@ -125,6 +134,7 @@ namespace COTG.Views
         {
             if (World.bitmapPixels != null)
             {
+               // canvas.Paused = true;
                 var pixels = World.bitmapPixels;
                 World.bitmapPixels = null;
                 if (worldObjects != null)
@@ -134,7 +144,7 @@ namespace COTG.Views
                     w.Dispose();
                 }
                 worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
-
+                //canvas.Paused = false;
 
             }
 
@@ -333,7 +343,8 @@ namespace COTG.Views
                 var wantImage = deltaZoom < detailsZoomFade;
                 if (worldBackground != null && IsWorldView() && wantImage )
                 {
-                    var srcP0 = new Point(cameraCLag.X * bSizeGain2- halfSpan.X * bSizeGain2 / pixelScale, cameraCLag.Y * bSizeGain2- halfSpan.Y * bSizeGain2 / pixelScale);
+                    var srcP0 = new Point(  (cameraCLag.X + 0.5f) * bSizeGain2- halfSpan.X * bSizeGain2 / pixelScale ,
+                                            (cameraCLag.Y+0.5f) * bSizeGain2- halfSpan.Y * bSizeGain2 / pixelScale );
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
                                            srcP0.Y + clientSpan.Y * bSizeGain2 / pixelScale);
                     var destP0 = new Point();
@@ -370,7 +381,7 @@ namespace COTG.Views
                             new Rect(destP0, destP1),
                             new Rect(srcP0, srcP1));
                 }
-           //     ds.Antialiasing = CanvasAntialiasing.Antialiased;
+             //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
                 var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
@@ -394,17 +405,17 @@ namespace COTG.Views
                         myNameBrush = myNameBrush.WithAlpha(intAlpha);
                     
                         var td = TileData.instance;
-                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).RoundToInt().Add((1,1));
+                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).RoundToInt();
                         var ccBase = cameraCLag.RoundToInt();
-                        for (int ty = -halfTiles.y; ty < halfTiles.y; ++ty)
+                        for (int ty = -halfTiles.y; ty <= halfTiles.y; ++ty)
                         {
-                            for (int tx = -halfTiles.x; tx < halfTiles.x; ++tx)
+                            for (int tx = -halfTiles.x; tx <= halfTiles.x; ++tx)
                             {
                                 var cc = ccBase.Add( (tx,ty) );
                                 if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
                                 {
                                     var ccid = cc.x + cc.y * td.width;
-                                    var rect = new Rect(((new Vector2(cc.x, cc.y)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
+                                    var rect = new Rect(((new Vector2(cc.x- .5f, cc.y - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
                                     var layerData = TileData.packedLayers[ccid];
                                     while(layerData != 0)
                                     {

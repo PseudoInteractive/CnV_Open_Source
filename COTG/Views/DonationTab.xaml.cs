@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-
+using Telerik.UI.Xaml.Controls.Grid;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -33,11 +33,12 @@ namespace COTG.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        List<BlessedCity> blessedGridSource = new List<BlessedCity>();
         public async override void VisibilityChanged(bool visible)
         {
             if(visible)
             {
-
+                BlessedCity.Refresh();
                 var details = await  CityOverview.Send();
                 foreach(var detail in details)
                 {
@@ -88,6 +89,17 @@ namespace COTG.Views
         {
             Spot.ProcessPointerExited();
 
+        }
+
+        private void donationGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        {
+            
+            var it = e.AddedItems.FirstOrDefault();
+
+            var newSel = it as City;
+            if (newSel is null)
+                return;
+            blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }
     }
 }

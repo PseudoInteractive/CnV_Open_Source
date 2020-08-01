@@ -130,20 +130,35 @@ namespace COTG.Views
                 Tabs.SelectedItem = vi;
         }
 
+        static Dictionary<string, Symbol> tabSymbolIcons = new Dictionary<string, Symbol> {
+            { "Raid", Symbol.ReShare },
+            { "Donation", Symbol.Share },
+            { "world", Symbol.Microphone },
+            { "alliance" ,  Symbol.People },
+            { "whisper" , Symbol.Comment },
+            { "officer" ,Symbol.Admin },
+        };
+
+        static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {
+            { "Defender" , "\uEA18" },//tab.DataContext as string,
+            {    "Defense", "\uEA0D" },
+            {    "Recent" ,  "\uF738" },
+        };
         private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {
-            return (tab.DataContext as string switch
-            {
-                "Raid" => new SymbolIconSource() { Symbol = Symbol.ReShare },
-                "Defender" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA18" },//tab.DataContext as string,
-                "Defense" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uEA0D" },
-                "Recent" => new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = "\uF738" },
-                "world" => new SymbolIconSource() { Symbol = Symbol.Microphone },
-                "alliance" => new SymbolIconSource() { Symbol = Symbol.People },
-                "whisper" => new SymbolIconSource() { Symbol = Symbol.Comment },
-                "officer" => new SymbolIconSource() { Symbol = Symbol.Admin },
-                _ => new SymbolIconSource() { Symbol = Symbol.OpenWith }
-            });
+            if (tabSymbolIcons.TryGetValue(tab.DataContext as string, out var symbol))
+                return new SymbolIconSource() { Symbol = symbol };
+            if (tabFontIcons.TryGetValue(tab.DataContext as string, out var glyph))
+                return new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = glyph };
+            return null;
+        }
+        private static IconElement GetOldIconForTab(UserTab tab)
+        {
+            if (tabSymbolIcons.TryGetValue(tab.DataContext as string, out var symbol))
+                return new SymbolIcon() { Symbol = symbol };
+            if (tabFontIcons.TryGetValue(tab.DataContext as string, out var glyph))
+                return new FontIcon() { Glyph = glyph };
+            return null;
         }
 
         void SetupWindow(AppWindow window)
@@ -353,7 +368,7 @@ namespace COTG.Views
         public MenuFlyoutItem AddTabMenuItem(UserTab tab)
         {
             var title = tab.DataContext as string;
-            var rv = new MenuFlyoutItem() { Text = title };
+            var rv = new MenuFlyoutItem() { Text = title, Icon= GetOldIconForTab(tab)  };
             rv.Click += (_, _) => AddTab(tab,true);
             return rv;
         }

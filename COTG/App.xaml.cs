@@ -33,6 +33,7 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using COTG.Helpers;
 using COTG.Game;
+using System.Diagnostics;
 
 namespace COTG
 {
@@ -56,6 +57,7 @@ namespace COTG
 
 
             EnteredBackground += App_EnteredBackground;
+            LeavingBackground += App_LeavingBackground;
             Resuming += App_Resuming;
 
             // TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
@@ -64,6 +66,13 @@ namespace COTG
             _activationService = new Lazy<ActivationService>(CreateActivationService);
             //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
 
+        }
+
+        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+ //           Trace("LeavingBackground");
+  //          if (ShellPage.canvas != null)
+  //              ShellPage.canvas.Paused = false;
         }
 
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -79,9 +88,12 @@ namespace COTG
 
                 await ActivationService.ActivateAsync(args);
             }
+#if TRACE || DEBUG
+            this.DebugSettings.FailFastOnErrors = true;
+#endif
 #if DEBUG
  //           this.DebugSettings.EnableFrameRateCounter = true;
- //           this.DebugSettings.FailFastOnErrors = false;
+            this.DebugSettings.FailFastOnErrors = false;
  //           this.DebugSettings.IsBindingTracingEnabled = true;
  //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
 #endif
@@ -150,6 +162,9 @@ namespace COTG
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
+     //       Trace("Enter Background");
+     //       if (ShellPage.canvas != null)
+     //           ShellPage.canvas.Paused = true;
             SettingsPage.SaveAll();
             var deferral = e.GetDeferral();
             await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
@@ -158,6 +173,8 @@ namespace COTG
 
         private void App_Resuming(object sender, object e)
         {
+            Trace("Resume");
+            
             Singleton<SuspendAndResumeService>.Instance.ResumeApp();
         }
 
@@ -193,11 +210,11 @@ namespace COTG
 
         public static bool IsKeyPressedControl()
         {
-            return Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+            return CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
         }
         public static bool IsKeyPressedShift()
         {
-            return Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+            return CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
         }
 
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
@@ -302,11 +319,12 @@ namespace COTG
             var x = c % 65536;
             var y = c >> 16;
 
-            return new Vector2(x + 0.5f, y + 0.5f);
+            return new Vector2(x, y);
         }
     }
         public static class Note 
     {
+        [Conditional("TRACE")]
         public static void L(string s)
         {
             ChatTab.L(s);

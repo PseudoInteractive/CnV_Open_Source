@@ -59,8 +59,19 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            System.Diagnostics.Trace.WriteLine( $"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Debug.WriteLine( $"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
         //    System.Diagnostics.Debug.WriteLine(new StackTrace());
+
+
+        }
+        [Conditional("TRACE")]
+        public static void Trace(string s,
+        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+        {
+            System.Diagnostics.Trace.WriteLine($"{Tick.MSS()}:{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            //    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
         }
@@ -81,7 +92,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
         {
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception: {e.Message} {e.StackTrace} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Trace.WriteLine($"{Tick.MSS()}:Exception: {e.Message} {e.StackTrace} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
             Note.Show(e.Message);
 
         }
@@ -92,13 +103,13 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             //
-            System.Diagnostics.Debug.WriteLine($"{Tick.MSS()}:Exception: {s} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+            System.Diagnostics.Trace.WriteLine($"{Tick.MSS()}:Exception: {s} Caller {memberName}, {sourceFilePath}:{sourceLineNumber}");
             //            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
             Note.Show(s);
         }
 
-        [Conditional("DEBUG")]
-        public static async void Assert(bool v,
+        [Conditional("TRACE")]
+        public static void Assert(bool v,
             [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
@@ -106,9 +117,8 @@ namespace COTG
             if (v)
                 return;
             var str = $"{Tick.MSS()}:Assert: Caller {memberName}, {sourceFilePath}:{sourceLineNumber}";
-            System.Diagnostics.Debug.WriteLine(str);
-            await Task.Delay(0);
-            Note.Show(str);
+            System.Diagnostics.Trace.WriteLine(str);
+            System.Diagnostics.Trace.Assert(v);
         }
 
         public static async Task Fatal()

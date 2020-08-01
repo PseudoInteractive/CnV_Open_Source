@@ -201,6 +201,7 @@
     <Compile Include="EventHandlers\Ink\RemoveEventArgs.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
+    <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />

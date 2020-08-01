@@ -10,9 +10,6 @@ declare var regionloaded :number;
 declare var tpnslu: string;
 declare var worldd;
 
-//var user='KittyKat';
-//var uid=56996;
-//var email='david.wu.343@gmail.com';
 declare var t: number;// = new Date().getTime();
 
 declare var cityxx;

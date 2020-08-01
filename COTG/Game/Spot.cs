@@ -90,7 +90,7 @@ namespace COTG.Game
         public ushort points { get; set; }
         public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" :
              ($"{(isTemple ? "temple" : isCastle ? "castle" : "city")}{GetSize()}{(isOnWater?"w":"")}.png") );
-        public int continent => cid.CidToContinent();
+        public int cont => cid.CidToContinent();
 
         public static bool operator ==(Spot left, Spot right)
         {

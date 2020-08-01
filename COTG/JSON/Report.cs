@@ -33,7 +33,7 @@ namespace COTG.JSON
         public float claim { get; set; }
         public DateTimeOffset time { get; set; }
         // No longer used
-        public string TT => time.ToString("'/'dd'/' HH':'mm':'ss");
+        public string TT => time.ToString("dd',' HH':'mm':'ss");
         public DateTimeOffset spotted { get; set; }
         public byte type;
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;

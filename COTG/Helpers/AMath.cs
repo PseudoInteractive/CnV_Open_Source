@@ -1,4 +1,5 @@
-﻿using System;
+﻿using COTG.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -112,10 +113,13 @@ namespace COTG
 
         public static float Distance(this (int x,int y) a,(int x, int y) b)
         {
-            var dx = a.x - b.x;
-            var dy = a.y - b.y;
-            return MathF.Sqrt((a.x - b.x).Squared() + (a.y - b.y).Squared());
+            var dx = (a.x - b.x);
+            var dy = (a.y - b.y);
+            Assert(dx.Abs() < 32767 );
+            Assert(dy.Abs() < 32767);
+            return MathF.Sqrt( (float)(dx*dx+dy*dy));
         }
+        public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
         public static uint ToCompactCid(this int c)
         {
             var x = c % 65536;

@@ -85,7 +85,7 @@ namespace COTG.Views
 
         private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
-        //    Log("Current item " + sender.ToString());
+            Log("Current item " + sender.ToString());
         }
 
         private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -109,21 +109,21 @@ namespace COTG.Views
 
         private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            foreach(var i in e.AddedItems  )
-            {
-                Log("Added: " + (i)); 
-            }
-            foreach (var i in e.RemovedItems)
-            {
-                Log("Removed: " + (i));
-            }
+            //foreach(var i in e.AddedItems  )
+            //{
+            //    Log("Added: " + (i)); 
+            //}
+            //foreach (var i in e.RemovedItems)
+            //{
+            //    Log("Removed: " + (i));
+            //}
 
             var it = e.AddedItems.FirstOrDefault();
             
-            foreach( var i in cityGrid.SelectedItems)
-            {
-                Log("Selected: " + i.ToString());
-            }
+            //foreach( var i in cityGrid.SelectedItems)
+            //{
+            //    Log("Selected: " + i.ToString());
+            //}
             var newSel = it as City;
         //    Assert(newSel != null);
             if (it is null)

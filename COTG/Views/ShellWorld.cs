@@ -223,8 +223,8 @@ namespace COTG.Views
         {
             var wc = ShellPage.cameraC + (c1 - ShellPage.halfSpan) * (1.0f / ShellPage.pixelScale);
 
-            int x = (int)(wc.X);
-            int y = (int)(wc.Y);
+            int x = (wc.X).RoundToInt();
+            int y = (wc.Y).RoundToInt();
             return (x, y);
         }
 

@@ -167,7 +167,7 @@
                 <telerikGrid:DataGridDateColumn Width="80"
                                        PropertyName="time"
                                        Header="Time"
-                                       CellContentFormat="{}{0:'/'dd HH':'mm':'ss}"
+                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn Width="60"

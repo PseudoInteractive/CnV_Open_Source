@@ -213,11 +213,11 @@ namespace COTG.Views
 				   var cgs = new List<string>();
 				   foreach (var city in City.allCities.Values)
 				   {
-					   var cl = CityList.FindForContinent(city.continent);
+					   var cl = CityList.FindForContinent(city.cont);
 					   if (cl == null)
 					   {
 						   var id = r.Next(65536) + 10000;
-						   cl = new CityList() { id = id, name = city.continent.ToString() };
+						   cl = new CityList() { id = id, name = city.cont.ToString() };
 						   CityList.all = CityList.all.ArrayAppend(cl);
 						   ++addedContinents;
 					   }

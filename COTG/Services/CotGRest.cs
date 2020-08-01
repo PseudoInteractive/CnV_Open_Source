@@ -26,13 +26,11 @@ namespace COTG.Services
     {
         //   public static List<RestAPI> all = new List<RestAPI>();
         public string localPath;
-        public string secret;
         public static JsonDocument emptyJson;
 
-        public RestAPI(string _localPath, string _secret)
+        public RestAPI(string _localPath)
         {
             localPath = _localPath;
-            secret = _secret;
             emptyJson = JsonDocument.Parse("{}");
             //  all.Add(this);
         }
@@ -83,13 +81,13 @@ namespace COTG.Services
             return Array.Empty<byte>();
 
         }
-        public virtual async Task<JsonDocument> AcceptJSON(HttpResponseMessage resp)
+        public virtual async Task<JsonDocument> AcceptJson(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
             return JsonDocument.Parse(data);
 
         }
-        public virtual async Task<T> AcceptJSONT<T>(HttpResponseMessage resp)
+        public virtual async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
             return JsonSerializer.Deserialize<T>(data);
@@ -118,7 +116,7 @@ namespace COTG.Services
         }
         public virtual string GetPostContent()
         {
-            return "a=error";
+            return nullPost;
         }
 
         async public Task Post()
@@ -145,7 +143,8 @@ namespace COTG.Services
             }
 
         }
-        async public Task<HttpResponseMessage> Send(string postContent)
+        public const string nullPost = "a=0";
+        async public Task<HttpResponseMessage> Send(string postContent= nullPost)
         {
             HttpClient client = null;
             try
@@ -205,38 +204,38 @@ namespace COTG.Services
 
         }
 
-        static RestAPI __0 = new RestAPI("includes/sndRad.php", "Sx23WW99212375Daa2dT123ol");
-        static RestAPI __2 = new RestAPI("includes/gRepH2.php", "g3542RR23qP49sHH");
-        static RestAPI __3 = new RestAPI("includes/bTrp.php", "X2UsK3KSJJEse2");
+        static RestAPI __0 = new RestAPI("includes/sndRad.php");//, "Sx23WW99212375Daa2dT123ol");
+        static RestAPI __2 = new RestAPI("includes/gRepH2.php");//, "g3542RR23qP49sHH");
+        static RestAPI __3 = new RestAPI("includes/bTrp.php");//, "X2UsK3KSJJEse2");
         //  public static GetCity getCity = new GetCity(0);
         //public static rMp regionView = new rMp();
-        static RestAPI __6 = new RestAPI("includes/gSt.php", "X22x5DdAxxerj3");
+        static RestAPI __6 = new RestAPI("includes/gSt.php");//, "X22x5DdAxxerj3");
         public static gWrd getWorldInfo = new gWrd();
-        static RestAPI __8 = new RestAPI("includes/UrOA.php", "Rx3x5DdAxxerx3");
-        static RestAPI __9 = new RestAPI("includes/sndTtr.php", "JJx452Tdd2375sRAssa");
+        static RestAPI __8 = new RestAPI("includes/UrOA.php");//, "Rx3x5DdAxxerx3");
+        static RestAPI __9 = new RestAPI("includes/sndTtr.php");//, "JJx452Tdd2375sRAssa");
         // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
         // public static ScanRaids ScanDungeons = new ScanRaids();
         public static TroopsOverview troopsOverview = new TroopsOverview();
     }
 
-    public class rMp : RestAPI
-    {
-        public rMp() : base("includes/rMp.php", "X22ssa41aA1522")
-        {
+    //public class rMp : RestAPI
+    //{
+    //    public rMp() : base("includes/rMp.php", "X22ssa41aA1522")
+    //    {
 
-        }
-        public override string GetPostContent()
-        {
-            var args = "a=" + HttpUtility.UrlEncode(Aes.Encode("[249]", secret), Encoding.UTF8);
-            return args;
+    //    }
+    //    public override string GetPostContent()
+    //    {
+    //        var args = "a=" + HttpUtility.UrlEncode(Aes.Encode("[249]", secret), Encoding.UTF8);
+    //        return args;
 
 
-        }
-    }
+    //    }
+    //}
 
     public class gWrd : RestAPI
     {
-        public gWrd() : base("includes/gWrd.php", "Addxddx5DdAxxer569962wz")
+        public gWrd() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
         {
         }
 
@@ -245,7 +244,7 @@ namespace COTG.Services
             // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
             //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
             var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTimeMs()},\"e\":\"World\"}}";
-            var encoded = Aes.Encode(json, secret);
+            var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{JSClient.jsVars.pid}2wz" );
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
             return args;
@@ -268,14 +267,14 @@ namespace COTG.Services
     {
         public int cid;
         Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action = null) : base("includes/gC.php", "X2U11s33S56996ccJx1e2")
+        public GetCity(int _cid, Action<JsonElement, City> _action = null) : base("includes/gC.php")
         {
             cid = _cid;
             action = _action;
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(cid.ToString(), secret);
+            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{JSClient.jsVars.pid}ccJx1e2");
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -303,7 +302,7 @@ namespace COTG.Services
     {
         public string json;
         public int cid;
-        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php", "XTR977sW56996sss2x2")
+        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php" )
         {
             Log($"sndRaid:{_json}");
             cid = _cid;
@@ -312,7 +311,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(json, secret);
+            var encoded = Aes.Encode(json, $"XTR977sW{JSClient.jsVars.pid}sss2x2");
             var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -327,8 +326,8 @@ namespace COTG.Services
     public class ScanDungeons : RestAPI
     {
         int cid;
-
-        public ScanDungeons(int _cid) : base("includes/fCv.php", "Xs4b2261f55dlme55s")
+        const string secret = "Xs4b2261f55dlme55s";
+        public ScanDungeons(int _cid) : base("includes/fCv.php")
         {
             cid = _cid;
         }
@@ -386,7 +385,7 @@ namespace COTG.Services
 
     public class OverviewApi : RestAPI
     {
-        public OverviewApi(string addr) : base(addr, null) { }
+        public OverviewApi(string addr) : base(addr) { }
 
     }
     public class TroopsOverview : OverviewApi
@@ -610,35 +609,35 @@ namespace COTG.Services
 
     public class Post : RestAPI
     {
-        public Post(string url, string secret = null) : base(url, secret) { }
+        public Post(string url) : base(url) { }
 
 
         // Does not wait for full response and does not parse json
         // postContent is xml uri encoded
-        async public static Task Send(string url, string postContent, string secret = null)
+        async public static Task Send(string url, string postContent)
         {
-            var p = new Post(url, secret);
+            var p = new Post(url);
             await p.Send(postContent);
 
         }
-        async public static Task<JsonDocument> SendForJson(string url, string postContent, string secret = null)
+        async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost)
         {
-            var p = new Post(url, secret);
-            return await p.AcceptJSON(await p.Send(postContent));
+            var p = new Post(url);
+            return await p.AcceptJson(await p.Send(postContent));
 
 
         }
-        async public static Task<T> SendForJsonT<T>(string url, string postContent, string secret = null)
+        async public static Task<T> SendForJsonT<T>(string url, string postContent=nullPost)
         {
-            var p = new Post(url, secret);
-            return await p.AcceptJSONT<T>(await p.Send(postContent));
+            var p = new Post(url);
+            return await p.AcceptJsonT<T>(await p.Send(postContent));
 
 
         }
 
         async public static Task SendEncrypted(string url, string postContentJson, string secret)
         {
-            var p = new Post(url, secret);
+            var p = new Post(url);
             await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
 
 
@@ -668,9 +667,9 @@ namespace COTG.Services
                     {
                         dataReader.ReadBytes(temp);
                     }
-                    Log("Hello!");
+                   // Log("Hello!");
                     return JsonSerializer.Deserialize<TileData>(temp);
-                    Log("Helllo!");
+                   // Log("Helllo!");
                 }
                 else
                 {
@@ -738,7 +737,7 @@ namespace COTG.Services
 
         public static Task<CityOverview[]> Send()
         {
-            return Post.SendForJsonT<CityOverview[]>("overview/citover.php","a=0");
+            return Post.SendForJsonT<CityOverview[]>("overview/citover.php",RestAPI.nullPost);
         }
     }
     public class UShortConverter : JsonConverter<ushort>

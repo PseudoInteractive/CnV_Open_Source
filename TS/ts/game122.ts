@@ -19264,7 +19264,7 @@ var cotgsubscribe = amplify;
           else if (v5v == 4) var w5v = _s(+m8R);
           var l5v = $(_s(m7y * 1) + w5v + _s(
               V7p & 2147483647) + I5v)
-            .attr(_s(c7p - 0));
+            .attr("class");
           if (l5v == _s(+M7p)) {
             $(_s(m7y * 1) + w5v + _s(V7p ^ 0) + I5v)
               .removeClass(_s(M7p * 1))
@@ -22876,7 +22876,7 @@ var cotgsubscribe = amplify;
           else if (n5v == (3)) var r5v = _s(+E8R);
           else if (n5v == 4) var r5v = _s(m8R ^ 0);
           var f5v = $(_s(+m7y) + r5v + _s(+V7p) + A5v)
-            .attr(_s(+c7p));
+            .attr("class");
           if (f5v == _s(+M7p)) {
             $(_s(m7y | 1033) + r5v + _s(+V7p) + A5v)
               .removeClass(_s(+M7p))
@@ -23125,7 +23125,7 @@ var cotgsubscribe = amplify;
       var w46 = _s(4351);
       var I46 = _s(318);
       $(_s(4732))
-        .attr(_s(+c7p), _s(2410));
+        .attr("class", _s(2410));
       $(_s(7004))
         .css("display", "block");
       $(_s(4184))
@@ -30903,7 +30903,7 @@ console.log("Bad");
         u3w = 1;
         var c4w = shrinesarr[Number(D6.ble[2])][_s(193)];
         var z3w =
-          shrinesarr[Number(D6.ble[2])][_s(+c7p)];
+          shrinesarr[Number(D6.ble[2])]["class"];
         var l3w = D6.ble["3" | 1] * 1000;
         var C3w = new Date(
           l3w);
@@ -31421,7 +31421,7 @@ console.log("Bad");
                   Number(G66) >= 1) {
                   var A66 = _s(+G0t) + Y66 + _s(4592) + G66;
                   $(_s("3217" | 3072))
-                    .attr(_s(+c7p), _s(6498) + A66);
+                    .attr("class", _s(6498) + A66);
                 }
                 console.log(_s(+y1y) + p66 +
                   _s(5475) + Z66 + _s(6183) + y66 + _s(5335) +
@@ -48047,7 +48047,7 @@ console.log("Bad");
                 $(_s(5196))
                   .html(_s(6507) + z16);
                 $(_s(4732))
-                  .attr(_s(c7p & 2147483647), S36);
+                  .attr("class", S36);
                 $(_s(7004))
                   .css("display", "block");
                 $(_s(4184))
@@ -48070,7 +48070,7 @@ console.log("Bad");
                 var I36 = _s(+e2y);
                 var N46 = _s(3291);
                 $(_s(4732))
-                  .attr(_s(c7p ^ 0), _s(1743));
+                  .attr("class", _s(1743));
                 $(_s(7004))
                   .css("display", "none");
                 $(_s(4184))
@@ -48136,7 +48136,7 @@ console.log("Bad");
                 var I36 = _s(+w9y) + r46 + E6k.o55(+A6y) + A46 + _s(1200);
                 var N46 = _s(318);
                 $(_s(1084))
-                  .attr(_s(c7p | 176), _s(t9R >> 687750912));
+                  .attr("class", _s(t9R >> 687750912));
                 $(_s(601))
                   .css("display", "block");
                 $(_s(4098))
@@ -48145,7 +48145,7 @@ console.log("Bad");
                 var I36 = _s(+w9y) + r46 + ":" + A46 + _s(739);
                 var N46 = _s(3291);
                 $(_s(1084))
-                  .attr(_s(c7p << 1265813728), _s(6592));
+                  .attr("class", _s(6592));
                 $(_s(601))
                   .css("display", "none");
                 $(_s(4098))
@@ -48218,11 +48218,11 @@ console.log("Bad");
                 if (p46 == 0) {
                   D46 = _s(5419);
                   $(_s(+W3m))
-                    .attr(_s(c7p - 0), D46);
+                    .attr("class", D46);
                   if (E46 == 1) $(_s(f3m & 2147483647))
-                    .attr(_s(c7p - 0), _s(U3m | 2194));
+                    .attr("class", _s(U3m | 2194));
                   else $(_s(f3m * 1))
-                    .attr(_s(+c7p), _s(+V3m));
+                    .attr("class", _s(+V3m));
                   var a46 = _s(3454);
                   var q46 = _s(+
                     '3454');
@@ -48233,11 +48233,11 @@ console.log("Bad");
                 } else {
                   D46 = _s("4013" | 137);
                   $(_s(+W3m))
-                    .attr(_s(c7p << 1094032608), D46);
+                    .attr("class", D46);
                   if (E46 == (1)) $(_s(+f3m))
-                    .attr(_s(+c7p), _s(+U3m));
+                    .attr("class", _s(+U3m));
                   else $(_s(+f3m))
-                    .attr(_s(c7p | 336), _s(+V3m));
+                    .attr("class", _s(+V3m));
                   var a46 = _s(2206);
                   var q46 = _s(+
                     "2206");
@@ -48259,11 +48259,11 @@ console.log("Bad");
                   else if (y46 >= Q3m - 0 && y46 < +C3m) D46 = _s(328);
                   else if (y46 >= C3m * 1) D46 = _s(6708);
                   $(_s(W3m ^ 0))
-                    .attr(_s(c7p ^ 0), D46);
+                    .attr("class", D46);
                   if (E46 == ('1' | 1)) $(_s(f3m * 1))
-                    .attr(_s(+c7p), _s(+U3m));
+                    .attr("class", _s(+U3m));
                   else $(_s(f3m << 807040992))
-                    .attr(_s(+c7p), _s(V3m >> 1904830144));
+                    .attr("class", _s(V3m >> 1904830144));
                   $(_s(+F0t))
                     .show();
                   $(_s(F0t & 2147483647))
@@ -48290,11 +48290,11 @@ console.log("Bad");
                   else if (y46 >= +Q3m && y46 < +C3m) D46 = _s(6435);
                   else if (y46 >= C3m - 0) D46 = _s(754);
                   $(_s(+W3m))
-                    .attr(_s(+c7p), D46);
+                    .attr("class", D46);
                   if (E46 == 1) $(_s(+f3m))
-                    .attr(_s(+c7p), _s(U3m | 515));
+                    .attr("class", _s(U3m | 515));
                   else $(_s(+f3m))
-                    .attr(_s(c7p << 290339552), _s(V3m - 0));
+                    .attr("class", _s(V3m - 0));
                   var a46 = _s(316);
                   var q46 = E6k
                     .o55(316);
@@ -48451,7 +48451,7 @@ console.log("Bad");
               var p46 = Number(B46.substring(7, 8)); // is castle?
               var E46 = Number(B46.substring(+
                 '8', 9));
-              var e36 = Number(B46.substring(9, 11)); // water?
+              var e36 = Number(B46.substring(9, 11)); // temple level
               var s36 = Number(B46.substring("11" |
                 1, 12));
               var u36 = Number(B46.substring(12, +m2y));
@@ -48508,7 +48508,7 @@ console.log("Bad");
                   alliance: i36,
                   blessed: i16,
                   castle: p46,
-                  water:e36
+                  water:E46
                 }
               };
               cotgPublish("regional", Y46);
@@ -48581,11 +48581,11 @@ console.log("Bad");
                 else if (y46 >= (Q3m & 2147483647) && y46 < +C3m) D46 = _s(1882);
                 else if (y46 >= +C3m) D46 = _s(396);
                 $(_s(+W3m))
-                  .attr(_s(c7p - 0), D46);
+                  .attr("class", D46);
                 if (E46 == 1) $(_s(+f3m))
-                  .attr(_s(+c7p), _s(+U3m));
+                  .attr("class", _s(+U3m));
                 else $(_s(f3m >> 1385632960))
-                  .attr(_s(+c7p), _s(V3m >> 1443584608));
+                  .attr("class", _s(V3m >> 1443584608));
               }
               if (p46 == 1) {
                 var D46 = _s(
@@ -48599,11 +48599,11 @@ console.log("Bad");
                 else if (y46 >= (Q3m | 4872) && y46 < C3m - 0) D46 = _s('5550' | 5538);
                 else if (y46 >= +C3m) D46 = _s(5988);
                 $(_s(+W3m))
-                  .attr(_s(+c7p), D46);
+                  .attr("class", D46);
                 if (E46 == 1) $(_s(f3m << 332602624))
-                  .attr(_s(c7p | 4432), _s(+U3m));
+                  .attr("class", _s(+U3m));
                 else $(_s(f3m ^ 0))
-                  .attr(_s(+c7p), _s(V3m >> 19251360));
+                  .attr("class", _s(V3m >> 19251360));
               }
               var N16 = W36;
               if (i36 != 0) var E36 = i36;
@@ -48628,11 +48628,11 @@ console.log("Bad");
                 var t36 = _s(+G0t) + s36 + _s(4592) +
                   e36;
                 $(_s(W3m ^ 0))
-                  .attr(_s(+c7p), t36);
+                  .attr("class", t36);
                 if (E46 == 1) $(_s(f3m | 544))
-                  .attr(_s(+c7p), _s(+U3m));
+                  .attr("class", _s(+U3m));
                 else $(_s(+f3m))
-                  .attr(_s(+c7p), _s(+V3m));
+                  .attr("class", _s(+V3m));
                 var f16 = shrinesarr[Number(s36)][_s('5454' | 1350)][
                   Number(e36)];
                 var L16 = shrinesarr[Number(s36)][_s(1067)][Number(e36)];
@@ -48711,11 +48711,11 @@ console.log("Bad");
                 if (Number(e36) >= 1) {
                   var t36 = _s(+G0t) + s36 + _s(4592) + e36;
                   $(_s(+W3m))
-                    .attr(_s(c7p & 2147483647), t36);
+                    .attr("class", t36);
                   if (E46 == 1) $(_s(+f3m))
-                    .attr(_s(c7p & 2147483647), _s(+U3m));
+                    .attr("class", _s(+U3m));
                   else $(_s(+f3m))
-                    .attr(_s(c7p | 352), _s(+V3m));
+                    .attr("class", _s(+V3m));
                 }
                 $(_s(783))
                   .text(k36);
@@ -48963,9 +48963,9 @@ console.log("Bad");
               $(_s(+S3m))
                 .text(O16);
               $(_s(t6m | 4))
-                .attr(_s(+c7p), "");
+                .attr("class", "");
               $(_s(+t6m))
-                .attr(_s(c7p >> 1100764352), _s("4410" | 34) + c46);
+                .attr("class", _s("4410" | 34) + c46);
               var R46 = I9(Number(cid), Number(
                 n46));
               $(_s(688))
@@ -49086,30 +49086,30 @@ console.log("Bad");
               var C16 = 1;
               if (z36 == _s(3915)) {
                 $(_s(t6m & 2147483647))
-                  .attr(_s(+c7p), "");
+                  .attr("class", "");
                 $(_s(+t6m))
-                  .attr(_s(+c7p), _s(5898));
+                  .attr("class", _s(5898));
                 $(_s(+S3m))
                   .text(_s(4609));
               } else if (z36 == _s(873)) {
                 $(_s(+t6m))
-                  .attr(_s(+c7p), '');
+                  .attr("class", '');
                 $(_s(t6m - 0))
-                  .attr(_s(+c7p), _s(k1y << 1146498400));
+                  .attr("class", _s(k1y << 1146498400));
                 $(_s(S3m >> 296885632))
                   .text(_s(6098));
               } else if (z36 == _s(4572)) {
                 $(_s(+t6m))
-                  .attr(_s(+c7p), '');
+                  .attr("class", '');
                 $(_s(t6m - 0))
-                  .attr(_s(c7p ^ 0), _s(2010));
+                  .attr("class", _s(2010));
                 $(_s(+S3m))
                   .text(_s(7047));
               } else if (z36 == _s(4727)) {
                 $(_s(+t6m))
-                  .attr(_s(+c7p), '');
+                  .attr("class", '');
                 $(_s(t6m * 1))
-                  .attr(_s(+c7p), _s("2795" | 643));
+                  .attr("class", _s("2795" | 643));
                 $(_s(S3m * 1))
                   .text(_s(4587));
                 var C16 = 0;
@@ -50761,7 +50761,7 @@ console.log("Bad");
             if (t1V >= 100) $(_s(+p6m))
               .remove();
             var V1V = {
-              type: _s(1164),
+              type: "whisper from",
               message: X1V,
               time: d1V,
               player: o1V,
@@ -50769,7 +50769,7 @@ console.log("Bad");
                 "4867"),
               crown: ''
             };
-            var J1V = cotgPublish(_s(+r6m), V1V);
+            var J1V = cotgPublish("chat", V1V);
             if (J1V) {
               retobj = J1V[+
                 "0"];
@@ -50872,7 +50872,7 @@ console.log("Bad");
             if (t1V >= 100) $(_s(+p6m))
               .remove();
             var V1V = {
-              type: _s("3763" | 1587),
+                type: "whisper to",
               time: d1V,
               player: o1V,
               message: X1V,
@@ -50880,7 +50880,7 @@ console.log("Bad");
                 .S55(4867),
               crown: ''
             };
-            var J1V = cotgPublish(_s(r6m | 4106), V1V);
+            var J1V = cotgPublish("chat", V1V);
             if (J1V) {
               retobj =
                 J1V[0];
@@ -50970,8 +50970,7 @@ console.log("Bad");
               color: z1V,
               crown: ''
             };
-            var J1V = cotgPublish(_s(r6m *
-              1), V1V);
+            var J1V = cotgPublish("chat", V1V);
             if (J1V) {
               retobj = J1V[0];
               if (retobj)
@@ -51055,7 +51054,7 @@ console.log("Bad");
               crown: ""
             };
             var J1V =
-              cotgPublish(_s(r6m * 1), V1V);
+              cotgPublish("chat", V1V);
             if (J1V) {
               retobj = J1V[0];
               if (retobj)
@@ -58779,20 +58778,18 @@ console.log("Bad");
             t: F2Z,
             c: c2Z
           };
-          var a2Z = _s(658) + b2() + _s("5761" | 1152);
-          var
-            m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, +U7y);
+            var a2Z = "JJx452Tdd" + b2() + "sRAssa";
+          var  m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, +U7y);
           N6();
             var s8Z = $.post(q6 + _s(2966), { cid: cid, f: m2Z }); /// "sndTr.php",
         } else if (j8Z == 2) {
           var
             E2Z = { b: Y2Z, d: 0, cid: cid, rcid: e8Z, a: N2Z, t: F2Z, c: 0 };
-          var a2Z = _s(
-            658) + b2() + _s(5761);
+            var a2Z = "JJx452Tdd" + b2() + "sRAssa";
           var m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, U7y &
             2147483647);
           N6();
-          var s8Z = $.post(q6 + _s(762), { cid: cid, f: m2Z });
+          var s8Z = $.post(q6 + _s(762), { cid: cid, f: m2Z }); // sndTtr, temple send?  it sets food and iron to 0.
         }
         F6();
         s8Z.done(function(G8Z) {

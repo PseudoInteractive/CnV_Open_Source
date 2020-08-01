@@ -1236,7 +1236,7 @@ function avactor() {
 					toAdd.notes = dtype_;
 				}
 				//	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
-				toAdd.castle = clickInfo.info.castle;
+				//toAdd.castle = clickInfo.info.castle;
 				toAdd.bless = clickInfo.info.blessed;
 				toAdd.score = clickInfo.info.score;
 			}

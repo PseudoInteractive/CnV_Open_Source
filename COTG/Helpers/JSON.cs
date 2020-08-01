@@ -161,11 +161,19 @@ namespace COTG.Helpers
         }
         public static int FloorToInt(this float f)
         {
-            return f >= 0 ? (int)(f) : -((int)(1-f))-1;
+            return (int)MathF.Floor(f);
+        }
+        public static int CeilToInt(this float f)
+        {
+            return (int)MathF.Ceiling(f);
         }
         public static (int x,int y) RoundToInt(this Vector2 v)
         {
             return (RoundToInt(v.X), RoundToInt(v.Y));
+        }
+        public static (int x, int y) CeildToInt(this Vector2 v)
+        {
+            return (CeilToInt(v.X), CeilToInt(v.Y));
         }
         public static (int x, int y) FloorToInt(this Vector2 v)
         {

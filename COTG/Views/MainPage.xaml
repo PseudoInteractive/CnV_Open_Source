@@ -152,7 +152,7 @@ TextSubmitted="RaidCarrySubmitted"
         </tg:RadDataGrid>
         <tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
-                                                 Height="20"
+                                                 Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
                            Background="Transparent"

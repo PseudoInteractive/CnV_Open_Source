@@ -52,7 +52,6 @@ namespace COTG.Services
                 var onBackgroundEnteringArgs = new SuspendAndResumeArgs(suspensionState, target);
 
                 OnBackgroundEntering?.Invoke(this, onBackgroundEnteringArgs);
-
                 await ApplicationData.Current.LocalFolder.SaveAsync(StateFilename, onBackgroundEnteringArgs);
                 return true;
             }

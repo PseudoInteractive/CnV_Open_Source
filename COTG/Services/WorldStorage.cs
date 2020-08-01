@@ -76,7 +76,7 @@ namespace COTG.Services
                             var lastData = byteBuffer.ConvertToUints();
                             var delta = ComputeDelta(lastData,data);
                             if (delta == null)
-                                return; // no changes
+                                goto end; // no changes
 
                             prior.Delete(); // we want to replace it
                             prior = zip.CreateEntry(priorName);
@@ -99,7 +99,10 @@ namespace COTG.Services
                     }
                 }
             }
-            Task.Delay(1000).ContinueWith((_) => LoadWorldData() );
+        end:
+#if(TRACE)
+            Task.Delay(1000).ContinueWith((_) => LoadWorldData());
+#endif
 
         }
         public static async void LoadWorldData()

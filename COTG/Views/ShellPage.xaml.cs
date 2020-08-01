@@ -483,7 +483,7 @@ namespace COTG.Views
             {
                 if (City.build == null)
                     return;
-                Assert(false);
+               // Assert(false);
                 await GetCity.Post(City.build.cid, (jse, city) =>
                 {
 

@@ -70,7 +70,8 @@ namespace COTG.Game
             return new Vector2((float)c2.x, (float)c2.y);
         }
         public static int WorldToContinent(this (int x, int y) c) =>   (c.y/100)* 10 + (c.x/100);
-        public static int CidToContinent(this int cid) => WorldToContinent( CidToWorld(cid) );
+//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
+        public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
 
     }
 

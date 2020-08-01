@@ -558,7 +558,7 @@ namespace COTG
                     city.isCastle = jsCity.GetAsInt("12") > 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     
-                    city.isOnWater = jsCity.GetAsInt("16") > 0;
+                    city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                     city.isTemple = jsCity.GetAsInt("15") > 0;
                     city.pid = jsVars.pid;
                     
@@ -843,9 +843,9 @@ namespace COTG
                                         city.points = (ushort)jso.GetAsInt("score");
                                         //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                         city.lastAccessed = DateTimeOffset.UtcNow;
-                                        city.isCastle = jso.GetAsInt("castle") == 1;
+                                       // city.isCastle = jso.GetAsInt("castle") == 1;
                                         city.isBlessed = city.pid != 0 ? jso.GetAsInt("bless") != 0 : false;
-                                        city.isOnWater = jso.GetAsInt("water") != 0;
+                                        city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
