@@ -26,6 +26,7 @@ using Windows.UI.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace COTG.Views
 {
@@ -247,15 +248,33 @@ namespace COTG.Views
                         }
                         citySource.Set(filtered.OrderBy((a) => a.cityName));
                 }
+                SelectItem(City.build);
             });
         }
+        public static void SelectItem(City city)
+        {
+            if (city == null)
+                return;
+   //         await Task.Delay(2000);
+  //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+ //           {
+                CityGrid.ScrollItemIntoView(city);
+                CityGrid.SelectItem(city);
+//            });
+            Log($"Select {city}");
 
-        public static void CityListUpdateAll ()
+        }
+
+        public static void CityListUpdateAll()
         {
             if (instance == null)
                 return;
             // Note.L("UpdateAll: ");
-            instance.Dispatcher.DispatchOnUIThreadLow( instance.gridCitySource.NotifyReset);
+            instance.Dispatcher.DispatchOnUIThreadLow(() =>
+            {
+                instance.gridCitySource.NotifyReset();
+                SelectItem(City.build);
+            });
             
         }
 
@@ -390,11 +409,11 @@ namespace COTG.Views
                 RaidOverview.Send();
                 if(City.build!=null)
                     GetCity.Post(City.build.cid);
-                cityGrid.ItemsSource = gridCitySource;
+      //          cityGrid.ItemsSource = gridCitySource;
             }
             else
             {
-                cityGrid.ItemsSource = null;
+        //        cityGrid.ItemsSource = null;
             }
         }
         public override void XamlTreeChanged(TabPage newPage) {

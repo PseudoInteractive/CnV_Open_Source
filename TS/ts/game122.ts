@@ -16984,7 +16984,7 @@ var cotgsubscribe = amplify;
       }
     }
 
-    function F0F(R0g) {
+    function getCity(R0g) {
       if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(
           g5R * 1) || R0g == null || R0g == "undefined" || R0g == undefined) R0g = ppdt[_s(+x9y)][0][
         1];
@@ -16998,7 +16998,7 @@ var cotgsubscribe = amplify;
       p0g.done(function(Y0g) {
         if (!Y0g) setTimeout(function() {
           E6k.R6();
-          F0F(R0g);
+          getCity(R0g);
         }, 2000);
         else if (!(Y0g == 0)) {
           D6 = JSON.parse(Y0g);
@@ -17468,7 +17468,7 @@ var cotgsubscribe = amplify;
         P8 = ppdt["pid"];
         var z5U = Number(ppdt[_s(Y9y | 727)]);
         n9F();
-        F0F(z5U);
+        getCity(z5U);
         if (ppdt[_s(5060)])
           if (Object.keys(ppdt[_s(5060)])
             .length > 0) H2F(ppdt[_s(5060)]);
@@ -17522,7 +17522,7 @@ var cotgsubscribe = amplify;
 
     function C9F() { E6k.R6(); return !!{}; }
 
-    function Z3F() {
+    function ClearCity() {
       i0F();
       $(_s(4883))
         .css({ 'background': "", 'filter': "" });
@@ -18150,12 +18150,12 @@ var cotgsubscribe = amplify;
 
 
     function R2(d9l) {
-      E6k.R6();
-      var b9l = arguments.callee.caller.name;
+     // E6k.R6();
+     // var b9l = arguments.callee.caller.name;
       if (U9 == 0) {
         U9 = 1;
-        Z3F();
-        F0F(Number(d9l));
+        ClearCity();
+        getCity(Number(d9l));
         cid = Number(d9l);
         X8();
         c3F();
@@ -45666,7 +45666,8 @@ console.log("Bad");
       });
 
     function X8() {
-      var q6V = arguments.callee.caller.name;
+    return;
+      //var q6V = arguments.callee.caller.name;
       if (ppdt != "") {
         var N6V = 0;
         var
@@ -55183,7 +55184,7 @@ console.log("Bad");
     }
 
     function s0F() {
-      var P3g = arguments.callee.caller.name;
+     // var P3g = arguments.callee.caller.name;
       $(_s(+q8y))
         .html('');
       k1F();
@@ -56627,11 +56628,11 @@ console.log("Bad");
     }
 
     function w7V(S9l) {
-      var J9l = arguments.callee.caller.name;
+   //   var J9l = arguments.callee.caller.name;
       E6k.R6();
       if (U9 == 0) {
-        Z3F();
-        F0F(Number(S9l));
+        ClearCity();
+        getCity(Number(S9l));
         cid = Number(S9l);
         setTimeout(function() {
           E6k.R6();

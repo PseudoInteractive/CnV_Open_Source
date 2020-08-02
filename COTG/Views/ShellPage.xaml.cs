@@ -447,6 +447,8 @@ namespace COTG.Views
             MainPage.instance.Refresh();
             DefensePage.instance.Refresh();
             DefenderPage.instance.Refresh();
+            SpotTab.instance.Refresh();
+            DonationTab.instance.Refresh();
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

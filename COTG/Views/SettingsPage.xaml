@@ -4,7 +4,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:helper="using:COTG.Helpers"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:views="using:COTG.Views"
+      xmlns:cotg="using:COTG"
+      
       Style="{StaticResource PageStyle}"
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
@@ -24,7 +25,7 @@
                        >
                 <Button Content="Set Continent Citylists" Click="SetContinentCityLists" />
                 <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"/>
-                <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind percentFormatter,Mode=OneTime}" />
+                <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
                 <Button Content="Restore all Tips" Click="TipsRestore"/>
                 <TextBlock x:Uid="Settings_Theme" />
             <StackPanel Margin="{StaticResource XSmallTopMargin}">

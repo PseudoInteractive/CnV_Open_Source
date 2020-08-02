@@ -49,12 +49,21 @@
                                        SizeMode="Auto"
                                        Width="100" />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
+                                       SizeMode="Fixed"
+                                                CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="80" />
+                <telerikGrid:DataGridNumericalColumn PropertyName="cont"
+                                       SizeMode="Fixed"
+                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       Width="38" />
                 <telerikGrid:DataGridTextColumn PropertyName="player"
+                                       SizeMode="Auto"
                                        Width="80" />
                 <telerikGrid:DataGridTextColumn PropertyName="alliance"
+                                       SizeMode="Auto"
                                        Width="80" />
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
+                                       SizeMode="Auto"
                                             Width="80" />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>

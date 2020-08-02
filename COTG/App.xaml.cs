@@ -34,6 +34,7 @@ using Windows.UI.Xaml.Controls;
 using COTG.Helpers;
 using COTG.Game;
 using System.Diagnostics;
+using Windows.Globalization.NumberFormatting;
 
 namespace COTG
 {
@@ -70,9 +71,9 @@ namespace COTG
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
- //           Trace("LeavingBackground");
-  //          if (ShellPage.canvas != null)
-  //              ShellPage.canvas.Paused = false;
+            Trace("LeavingBackground");
+            if (ShellPage.canvas != null)
+                ShellPage.canvas.Paused = false;
         }
 
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -162,9 +163,9 @@ namespace COTG
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
-     //       Trace("Enter Background");
-     //       if (ShellPage.canvas != null)
-     //           ShellPage.canvas.Paused = true;
+            Trace("Enter Background");
+            if (ShellPage.canvas != null)
+                ShellPage.canvas.Paused = true;
             SettingsPage.SaveAll();
             var deferral = e.GetDeferral();
             await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
@@ -224,6 +225,8 @@ namespace COTG
             return rv;
         }
         public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
+        public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1 };
+
     }
 
 

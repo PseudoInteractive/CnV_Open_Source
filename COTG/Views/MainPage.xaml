@@ -41,7 +41,7 @@
                         AlternationStep="2"
                         ItemsSource="{x:Bind gridCitySource, Mode=OneWay}"
                         AutoGenerateColumns="False"
-                        SelectionMode="Extended"
+                        SelectionMode="Single"
                         CanUserChooseColumns="True"
                         RowHeight="34"
                         PointerPressed="CityGrid_PointerPress"
@@ -65,6 +65,10 @@
                 <tg:DataGridTextColumn PropertyName="xy"
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="cont"
+                                       SizeMode="Fixed"
+                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       Width="42" />
                 <tg:DataGridNumericalColumn PropertyName="tsTotal"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"

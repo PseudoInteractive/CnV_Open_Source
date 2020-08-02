@@ -28,7 +28,6 @@ namespace COTG.Views
 
  //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
-        PercentFormatter percentFormatter { get; } = new PercentFormatter() { FractionDigits = 1 };
         private static ElementTheme _elementTheme = ThemeSelectorService.Theme;
         //private static bool _isLoggedIn;
         //private static bool _isBusy;

@@ -117,7 +117,7 @@ namespace COTG.Game
             Note.L($"{cityName} {jse.GetInt("cid")}");
             pid = jse.GetAsInt("pid");
             activeCommands = jse.GetAsByte("comm");
-            
+            commandSlots = 5;
             {
                 const int bidCastle = 467;
                 if (jse.TryGetProperty("bd", out var bd))
@@ -362,6 +362,30 @@ namespace COTG.Game
                 if (changed)
                     ScanDungeons.Post(cid, getCityData);
             }
+        }
+        public static City StBuild(int cid,bool fromUI)
+        {
+            var city = City.GetOrAddCity(cid);
+            city.SetBuild(fromUI);
+            return city;
+        }
+        public void SetBuild(bool fromUI)
+        {
+            var changed = this != City.build;
+            City.build = this;
+            if (!fromUI && changed && MainPage.IsVisible())
+            {
+                App.DispatchOnUIThreadLow(() =>
+                {
+                    MainPage.SelectItem(this);
+
+                });
+            }
+            //if (!noRaidScan)
+           // {
+          //      if (changed)
+          //          ScanDungeons.Post(cid, getCityData);
+          //  }
         }
 
         private string GetDebuggerDisplay()

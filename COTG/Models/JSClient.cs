@@ -281,7 +281,8 @@ namespace COTG
                 if (City.IsMine(cityId))
                 {
                     SetViewModeCity();
-                    City.SetFocus(cityId, false, true, false);
+                    var city = City.StBuild(cityId, false);
+                    city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
                 }
@@ -303,8 +304,8 @@ namespace COTG
             {
                 if (City.IsMine(cityId))
                 {
-                    City.build = City.GetOrAddCity(cityId);
-                    City.SetFocus(cityId, false, true, false);
+                    var city = City.StBuild(cityId,false);
+                    city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
                 }
@@ -869,8 +870,7 @@ namespace COTG
                                         ShellPage.cameraC = cid.CidToWorldV();
 
                                     //Note.L("citydata=" + cid.CidToString());
-                                    var city = City.GetOrAddCity(cid);
-                                    City.build = city;
+                                    var city = City.StBuild(cid,false);
                                     city.LoadFromJson(jse);
 
                                     if (MainPage.IsVisible())
@@ -938,7 +938,7 @@ namespace COTG
                                 {
                                     var jso = jsp.Value;
                                     var cid = jso.GetInt("c");
-                                    City.build = City.GetOrAddCity(cid);
+                                    City.StBuild(cid,false);
                                     var popupCount = jso.GetAsInt("p");
                                     //     Note.L("cid=" + cid.CidToString());
                                     SetViewMode((ViewMode)jso.GetInt("v"));
