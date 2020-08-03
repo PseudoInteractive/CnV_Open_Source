@@ -31,6 +31,7 @@ using COTG.Views;
 using System.Numerics;
 using Windows.UI.Xaml.Media;
 using COTG.JSON;
+using static COTG.Game.Enum;
 
 namespace COTG
 {
@@ -59,6 +60,21 @@ namespace COTG
         public static ConcurrentBag<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
+        public struct Faith
+        {
+            public byte evara;   // 1
+            public byte vexemis; // 2
+            public byte domdis; // 3
+            public byte cyndros; // 4
+            public byte merius; // 5
+            public byte ylanna; // 6
+            public byte ibria; // 7
+            public byte naera; // 8
+        };
+        public static Faith faith;
+
+        const int researchCount = 64; // I think this is really 49
+        public static byte[] research = new byte[researchCount];
         public static int world = 0;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
@@ -460,27 +476,100 @@ namespace COTG
         //}
 
         // Gets an overview of all cities
-        public static async Task GetCitylistOverview()
+        //public static async Task GetCitylistOverview()
+        //{
+
+        //    var str = await view.InvokeScriptAsync("getppdt", null);
+        //    ppdt = JsonDocument.Parse(str);
+        //    UpdatePPDT(ppdt.RootElement);
+        //}
+
+        //public static async Task PollCity(int cid)
+        //{
+        //    await Task.Delay(200);
+        //    await view.InvokeScriptAsync("eval", new[]{ $"pollthis('{cid.ToString()}')" });
+        //    await Task.Delay(1000); // hack:  Todo, handle this property
+        //}
+        static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
+
+        private static void BonusesUpdated()
         {
+            ttSpeedBonus[0] = 1; // no speed reserach for guard
+            ttSpeedBonus[1] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
+            ttSpeedBonus[2] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
+            ttSpeedBonus[3] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
+            ttSpeedBonus[4] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
+            ttSpeedBonus[5] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
+            ttSpeedBonus[6] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
+            ttSpeedBonus[7] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[11]]) / 100;
+            ttSpeedBonus[8] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
+            ttSpeedBonus[9] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
+            ttSpeedBonus[10] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
+            ttSpeedBonus[11] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
+            ttSpeedBonus[12] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
+            ttSpeedBonus[13] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
+            ttSpeedBonus[14] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
+            ttSpeedBonus[15] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
+            ttSpeedBonus[16] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
+            ttSpeedBonus[17] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[14]]) / 100;
 
-            var str = await view.InvokeScriptAsync("getppdt", null);
-            ppdt = JsonDocument.Parse(str);
-            UpdatePPDT(ppdt.RootElement);
+
+            ttCombatBonus[0] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[29]]) / 100;
+            ttCombatBonus[1] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[42]]) / 100;
+            ttCombatBonus[2] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[30]]) / 100;
+            ttCombatBonus[3] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[31]]) / 100;
+            ttCombatBonus[4] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[32]]) / 100;
+            ttCombatBonus[5] = 1 + (faith.vexemis) * 0.5f / 100 + (researchRamp[research[33]]) / 100;
+            ttCombatBonus[6] = 1 + (faith.vexemis) * 0.5f / 100 + (researchRamp[research[34]]) / 100;
+            ttCombatBonus[7] = 1 + (faith.vexemis) * 0.5f / 100 + (researchRamp[research[46]]) / 100;
+            ttCombatBonus[8] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[35]]) / 100;
+            ttCombatBonus[9] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[36]]) / 100;
+            ttCombatBonus[10] = 1 + (faith.vexemis) * 0.5f / 100 + (researchRamp[research[37]]) / 100;
+            ttCombatBonus[11] = 1 + (faith.vexemis) * 0.5f / 100 + (researchRamp[research[38]]) / 100;
+            ttCombatBonus[14] = 1 + (faith.ylanna) * 0.5f / 100 + (researchRamp[research[44]]) / 100;
+            ttCombatBonus[15] = 1 + (faith.ylanna) * 0.5f / 100 + (researchRamp[research[43]]) / 100;
+            ttCombatBonus[16] = 1 + (faith.cyndros) * 0.5f / 100 + (researchRamp[research[45]]) / 100;
+            ttCombatBonus[17] = 1; // no combat research for senator
         }
-
-        public static async Task PollCity(int cid)
-        {
-            await Task.Delay(200);
-            await view.InvokeScriptAsync("eval", new[]{ $"pollthis('{cid.ToString()}')" });
-            await Task.Delay(1000); // hack:  Todo, handle this property
-        }
-
         public static void UpdatePPDT(JsonElement jse)
         {
             int clChanged = 0;
             // City lists
             try
             {
+                bool bonusesUpdated = false;
+                // research?
+                if(jse.TryGetProperty("rs", out var rss))
+                {
+                    foreach (var rs in rss.EnumerateObject())
+                    {
+                        var id = int.Parse(rs.Name);
+                        if (id < researchCount)
+                        {
+                            research[id]= (byte)rs.Value.GetInt("l"); // this will wrap for senator level (research not supported here)
+                                                                       // the rest are 0..12
+                        }
+                    }
+                    bonusesUpdated=true;
+
+                }
+                if (jse.TryGetProperty("fa", out var fa))
+                {
+                    faith.evara = fa.GetAsByte("1");
+                    faith.vexemis = fa.GetAsByte("2"); // 2
+                    faith.domdis = fa.GetAsByte("3");
+                    faith.cyndros = fa.GetAsByte("4");
+                    faith.merius = fa.GetAsByte("5");
+                    faith.ylanna = fa.GetAsByte("6");
+                    faith.ibria = fa.GetAsByte("7");
+                    faith.naera = fa.GetAsByte("8");
+
+                    bonusesUpdated = true;
+
+                }
+                if (bonusesUpdated)
+                    BonusesUpdated();
+
                 List<CityList> lists = new List<CityList>();
                 if (jse.TryGetProperty("cl", out var cityListNames))
                 {
@@ -541,7 +630,7 @@ namespace COTG
             if (jse.TryGetProperty("c", out var cProp))
             {
                 cUpdated = true;
-                Note.Show("Pre PPDT");
+ //               Note.Show("Pre PPDT");
 
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in cProp.EnumerateArray())

@@ -19,14 +19,13 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="34" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
-                        Grid.Row="1"
+                        Grid.Row="0"
                         UseSystemFocusVisuals="True"
                         IsTabStop="True"
                         AllowFocusOnInteraction="True"
@@ -114,7 +113,7 @@
             </tg:RadDataGrid.Columns>
           
         </tg:RadDataGrid>
-        <ComboBox x:Name="raidCarryBox" Grid.Row="2" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
+        <ComboBox x:Name="raidCarryBox" Grid.Row="1" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
                   Width="200" IsEditable="True"
 TextSubmitted="RaidCarrySubmitted"
                   Margin="8,2,0,0" >
@@ -129,7 +128,7 @@ TextSubmitted="RaidCarrySubmitted"
                         SelectionMode="Single"
                         RowHeight="34"
                         FontSize="12"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         CanUserChooseColumns="True"
                         UserSortMode="Auto"
                         SelectionUnit="Row"
@@ -148,7 +147,7 @@ TextSubmitted="RaidCarrySubmitted"
                 <tg:DataGridTextColumn PropertyName="xy" CellContentStyle="{StaticResource CenterAlignLink}" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
-        <tk:GridSplitter Grid.Row="2"
+        <tk:GridSplitter Grid.Row="1"
                          ResizeDirection="Rows"
                                                  Height="11"
                          HorizontalAlignment="Stretch"

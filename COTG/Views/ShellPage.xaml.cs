@@ -457,15 +457,15 @@ namespace COTG.Views
             await GetCity.Post(City.focus.cid);
 
         }
-        private async void GetWorldInfo(object sender, RoutedEventArgs e)
-        {
-            await RestAPI.getWorldInfo.Post();
+        //private async void GetWorldInfo(object sender, RoutedEventArgs e)
+        //{
+        //    await RestAPI.getWorldInfo.Post();
 
-        }
-        private async void GetPPDT(object sender, RoutedEventArgs e)
-        {
-            await JSClient.GetCitylistOverview();
-        }
+        //}
+        //private async void GetPPDT(object sender, RoutedEventArgs e)
+        //{
+        //    await JSClient.GetCitylistOverview();
+        //}
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
         const short bidTownHall = 455;

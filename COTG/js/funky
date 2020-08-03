@@ -1741,13 +1741,13 @@ let tpicdiv20_ = ["guard20 trooptdcm", "bally20 trooptdcm", "ranger20 trooptdcm"
 /** @type {!Array} */
 let ttspeed_ = [0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40];
 /** @type {!Array} */
-let ttres_ = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+//let ttres_ = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 /** @type {number} */
-let ttspeedres_ = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+let ttSpeedBonus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 /** @type {!Array} */
 let TS_type_ = [0, 0, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 0, 0, 0, 100, 400];
 /** @type {!Array} */
-let Total_Combat_Research_ = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+let ttCombatBonus = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 let buildings_ = {
     name: ["forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle"],
     bid: [448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, "467", 488, 489, 490, 491, 496, 498, 455, 467],
@@ -10789,6 +10789,14 @@ function ppdtChanged(__ppdt) {
         wrapper.ppdt['c'] = __ppdt['c'];
         wantUpdate = true;
     }
+    if (__ppdt.hasOwnProperty("fa")) {
+        wrapper.ppdt['fa'] = __ppdt['fa'];
+        wantUpdate = true;
+    }
+    if (__ppdt.hasOwnProperty("rs")) {
+        wrapper.ppdt['rs'] = __ppdt['rs'];
+        wantUpdate = true;
+    }
     if (!wantUpdate)
         return;
     console.log("Update ppdt");
@@ -12299,46 +12307,46 @@ var cotgsubscribe = amplify;
                 d26 =
                     qam[_s(+G2y)][Number(Z26)][_s(+r2y)][0][_s(b2y >> 1654901120)];
             if (d26 + ppdt[_s(h2y | 2640)][7] / 2 > 0)
-                b26 = b26 / (1 + (d26 + ppdt[_s(+h2y)][7] / (2)) / (100));
+                b26 = b26 / (1 + (d26 + ppdt["fa"][7] / (2)) / (100));
             if (U26 != 0)
                 z26 = qam[_s(+G2y)][Number(U26)][_s(r2y ^ 0)][0][_s(+b2y)];
-            if (z26 + ppdt[_s(+h2y)][7] / (2) > 0)
-                S26 = S26 / ((1) + (z26 + ppdt[_s(+h2y)][7] / 2) / (100));
+            if (z26 + ppdt["fa"][7] / (2) > 0)
+                S26 = S26 / ((1) + (z26 + ppdt["fa"][7] / 2) / (100));
             if (P26 != 0)
                 M26 = qam[_s(G2y * 1)][Number(P26)][E6k
                     .o55(r2y | 3472)][0][_s(+b2y)];
-            if (M26 + ppdt[_s(+h2y)][7] / ('2' | 2) > 0)
+            if (M26 + ppdt["fa"][7] / ('2' | 2) > 0)
                 J26 = J26 /
-                    (1 + (M26 + ppdt[_s(h2y | 2588)][7] / 2) / 100);
+                    (1 + (M26 + ppdt["fa"][7] / 2) / 100);
             if (B26 != 0)
                 G26 = qam[_s(G2y -
                     0)][Number(B26)][_s(r2y & 2147483647)][0][_s(b2y << 524001664)];
             if (G26 + ppdt[_s(+h2y)][3] / (2) > 0)
-                h26 = h26 / (1 + (G26 + ppdt[_s(h2y >> 1979471840)]['3' >>
+                h26 = h26 / (1 + (G26 + ppdt["fa"]['3' >>
                     740186528] / 2) / 100);
             if (R26 != 0)
                 C26 = qam[_s(G2y ^ 0)][Number(R26)][_s(+r2y)]['0' *
                     1][_s(b2y - 0)];
-            if (C26 + ppdt[_s(+h2y)][3] / 2 > 0)
+            if (C26 + ppdt["fa"][3] / 2 > 0)
                 V26 = V26 / (1 + (C26 + ppdt[E6k
                     .S55(h2y >> 1508422400)][3] / 2) / (100));
             if (y26 != 0)
                 W26 = qam[E6k
                     .o55(+G2y)][Number(y26)][_s(r2y >> 952026272)][0][_s(+b2y)];
             if (W26 + ppdt[_s(h2y | 2584)][1] / 2 > 0)
-                r26 = r26 / ((1) + (W26 + ppdt[_s(+h2y)][1] / (2)) / 100);
+                r26 = r26 / ((1) + (W26 + ppdt["fa"][1] / (2)) / 100);
             if (f26 != 0)
                 i26 = qam[_s(+G2y)][Number(f26)][_s(r2y * 1)][0][_s(+b2y)];
-            if (i26 + ppdt[_s(h2y - 0)][5] / ('2' | 2) > 0)
+            if (i26 + ppdt["fa"][5] / ('2' | 2) > 0)
                 A26 = A26 / (("1" <<
-                    1488239776) + (i26 + ppdt[_s(+h2y)][5] / (2)) / 100);
+                    1488239776) + (i26 + ppdt["fa"][5] / (2)) / 100);
             E6k.y6();
             if (K26 != 0)
                 X26 = qam[_s(+G2y)][Number(K26)][_s(+r2y)][0][_s(b2y <<
                     1657705344)];
-            if (X26 + ppdt[_s(+h2y)]["5" | 4] / (2) > 0)
+            if (X26 + ppdt["fa"]["5" | 4] / (2) > 0)
                 n26 = n26 / (1 + (X26 +
-                    ppdt[_s(h2y * 1)][5] / (2)) / 100);
+                    ppdt["fa"][5] / (2)) / 100);
             var D26 = Math.floor(b26 * 1000 * L26);
             var p26 = Math.floor(S26 * (1000) * L26);
             var Y26 = Math.floor(J26 * 1000 * L26);
@@ -24295,23 +24303,23 @@ var cotgsubscribe = amplify;
             if (a9w == (B2y | 14)) {
                 var N9w = ppdt[_s(+i2y)][A5y << 1253187072]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(G2y | 5144)][N9w][_s(+r2y)][0][_s(+b2y)] + ppdt[_s(h2y ^ 0)][5];
+                    E9w = qam[_s(G2y | 5144)][N9w][_s(+r2y)][0][_s(+b2y)] + ppdt["fa"][5];
             }
             if (a9w == +q7y) {
                 var N9w = ppdt["rs"][+u6y]["n"];
                 if (N9w != 0)
                     E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][E6k
-                        .o55(b2y | 2136)] + ppdt[_s(+h2y)][5];
+                        .o55(b2y | 2136)] + ppdt["fa"][5];
             }
             if (a9w == 16) {
                 var N9w = ppdt[_s(i2y >> 7357312)][j6y * 1]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][_s(+b2y)] + ppdt[_s(+h2y)][5];
+                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][_s(+b2y)] + ppdt["fa"][5];
             }
             if (a9w == +17) {
                 var N9w = ppdt["rs"][F8y | 2]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][+'0'][_s(b2y | 448)] + ppdt[_s(h2y | 605)][1];
+                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][+'0'][_s(b2y | 448)] + ppdt["fa"][1];
             }
             q9w = q9w / ((D6[_s(O1p - 0)][e0D][E6k
                 .o55(Z9y ^ 0)] + E9w + (100)) / 100);
@@ -35937,45 +35945,45 @@ var cotgsubscribe = amplify;
             var k86 = bam["speeds"][_s(6661)];
             if (X86 != 0)
                 u86 = qam[_s(+G2y)][Number(X86)][_s(r2y << 626298368)][0][_s(+b2y)];
-            if (u86 + ppdt[_s(+h2y)][7] / ('2' & E6k
+            if (u86 + ppdt["fa"][7] / ('2' & E6k
                 .s6s) > 0)
-                T86 = T86 / (1 + (u86 + ppdt[_s(h2y >> 681023328)][7] / 2) / (100));
+                T86 = T86 / (1 + (u86 + ppdt["fa"][7] / 2) / (100));
             if (z86 != (0))
                 H86 = qam[_s(G2y ^ 0)][Number(z86)][_s(+r2y)][0][_s(+b2y)];
-            if (H86 + ppdt[_s(+h2y)][7] / (2) > (0))
-                x86 = x86 / ((1) + (H86 + ppdt[_s(h2y << 1702822560)][7] / 2) / 100);
+            if (H86 + ppdt["fa"][7] / (2) > (0))
+                x86 = x86 / ((1) + (H86 + ppdt["fa"][7] / 2) / 100);
             if (M86 != 0)
                 j86 = qam[_s(G2y & E6k
                     .s6s)][Number(M86)][_s(r2y | 1156)][0][_s(b2y * 1)];
-            if (j86 + ppdt[_s(h2y * 1)][7] /
+            if (j86 + ppdt["fa"][7] /
                 2 > (0))
-                O86 = O86 / (1 + (j86 + ppdt[_s(+h2y)][7] / 2) / 100);
+                O86 = O86 / (1 + (j86 + ppdt["fa"][7] / 2) / 100);
             if (G86 != +"0")
                 w86 = qam[_s(+G2y)][Number(G86)][_s(+r2y)][0][_s(b2y * 1)];
             if (w86 + ppdt[_s(h2y << 916392960)][3] / 2 > 0)
-                t86 = t86 / (1 + (w86 + ppdt[_s(h2y * 1)][3] / +'2') / (100));
+                t86 = t86 / (1 + (w86 + ppdt["fa"][3] / +'2') / (100));
             if (C86 != 0)
                 s86 = qam[_s(G2y << 1129725216)][Number(C86)][_s(r2y & E6k
                     .s6s)][0][_s(b2y - 0)];
-            if (s86 + ppdt[_s(+h2y)][3] / (2) > 0)
+            if (s86 + ppdt["fa"][3] / (2) > 0)
                 o86 =
-                    o86 / (1 + (s86 + ppdt[_s(+h2y)][3] / (2)) / 100);
+                    o86 / (1 + (s86 + ppdt["fa"][3] / (2)) / 100);
             if (W86 != 0)
                 v86 = qam[_s(G2y -
                     0)][Number(W86)][_s(+r2y)][0][_s(+b2y)];
-            if (v86 + ppdt[_s(h2y & 2147483647)][1] / (2) > (0))
-                L86 = L86 / (1 + (v86 + ppdt[_s(h2y * 1)][1] / (2)) / 100);
+            if (v86 + ppdt["fa"][1] / (2) > (0))
+                L86 = L86 / (1 + (v86 + ppdt["fa"][1] / (2)) / 100);
             if (i86 != 0)
                 l86 = qam[_s(+G2y)][Number(i86)][_s(r2y - 0)]["0" >>
                     1221339360][_s(b2y << 670884096)];
-            if (l86 + ppdt[_s(h2y - 0)][5] / (2) > 0)
+            if (l86 + ppdt["fa"][5] / (2) > 0)
                 e86 =
-                    e86 / (('1' | 1) + (l86 + ppdt[_s(+h2y)][5] / 2) / ("100" | 100));
+                    e86 / (('1' | 1) + (l86 + ppdt["fa"][5] / 2) / ("100" | 100));
             if (d86 != 0)
                 Q86 = qam[_s(+G2y)][Number(d86)][_s(+r2y)][0][_s(b2y & 2147483647)];
             if (Q86 +
-                ppdt[_s(+h2y)][5] / (2) > 0)
-                k86 = k86 / (1 + (Q86 + ppdt[_s(+h2y)][5] / ("2" -
+                ppdt["fa"][5] / (2) > 0)
+                k86 = k86 / (1 + (Q86 + ppdt["fa"][5] / ("2" -
                     0)) / (100));
             var r86 = Math.floor(T86 * (1000) * a26);
             var A86 = Math.floor(x86 * (1000) *
@@ -45048,46 +45056,46 @@ var cotgsubscribe = amplify;
             if (A8B != 0)
                 z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][0][_s(b2y & 2147483647)];
             E6k.R6();
-            if (z8B + ppdt[_s(h2y & 2147483647)][7] / 2 > 0)
+            if (z8B + ppdt["fa"][7] / 2 > 0)
                 G8B = G8B / (1 + (z8B + ppdt[_s(+h2y)][7] / 2) / 100);
             if (n8B != 0)
                 O8B = qam[_s(+G2y)][Number(n8B)][_s(+r2y)]['0' <<
                     906862304][_s(+b2y)];
-            if (O8B + ppdt[_s(+h2y)][7] / 2 > 0)
+            if (O8B + ppdt["fa"][7] / 2 > 0)
                 C8B = C8B / (1 + (O8B +
-                    ppdt[_s(h2y - 0)][7] / (2)) / (100));
+                    ppdt["fa"][7] / (2)) / (100));
             if (f8B != (0))
                 t8B = qam[E6k
                     .o55(G2y * 1)][Number(f8B)][_s(+r2y)][0][_s(b2y ^ 0)];
-            if (t8B + ppdt[_s(+h2y)][+'7'] / (2) > 0)
-                W8B = W8B / (1 + (t8B + ppdt[_s(+h2y)][7] / (2)) / (100));
+            if (t8B + ppdt["fa"][+'7'] / (2) > 0)
+                W8B = W8B / (1 + (t8B + ppdt["fa"][7] / (2)) / (100));
             if (K8B != 0)
                 o8B = qam[_s(G2y | 1032)][Number(K8B)][_s(r2y & 2147483647)][0][_s(b2y | 464)];
-            if (o8B + ppdt[_s(h2y << 447657280)][3] / 2 > 0)
+            if (o8B + ppdt["fa"][3] / 2 > 0)
                 i8B = i8B / (('1' |
-                    0) + (o8B + ppdt[_s(+h2y)][3] / 2) / (100));
+                    0) + (o8B + ppdt["fa"][3] / 2) / (100));
             if (S8B != 0)
                 L8B = qam[_s(G2y >>
                     1005535552)][Number(S8B)][_s(r2y - 0)][0][_s(+b2y)];
-            if (L8B + ppdt[_s(+h2y)][3] / 2 >
+            if (L8B + ppdt["fa"][3] / 2 >
                 0)
-                d8B = d8B / (1 + (L8B + ppdt[_s(+h2y)][3] / 2) / 100);
+                d8B = d8B / (1 + (L8B + ppdt["fa"][3] / 2) / 100);
             if (J8B != 0)
                 X8B = qam[E6k
                     .S55(+G2y)][Number(J8B)][_s(r2y & 2147483647)][0][_s(+b2y)];
-            if (X8B + ppdt[_s(h2y ^ 0)][+"1"] / 2 > 0)
-                b8B = b8B / (1 + (X8B + ppdt[_s(+h2y)][1] / 2) / 100);
+            if (X8B + ppdt["fa"][+"1"] / 2 > 0)
+                b8B = b8B / (1 + (X8B + ppdt["fa"][1] / 2) / 100);
             if (h8B != (0))
                 x8B = qam[_s(+G2y)][Number(h8B)][_s(+r2y)][0][_s(b2y >> 45822592)];
             if (x8B +
-                ppdt[_s(h2y | 2096)][5] / (2) > 0)
+                ppdt["fa"][5] / (2) > 0)
                 g8B = g8B / ((1) + (x8B + ppdt[E6k
                     .o55(h2y >> 1158687712)][5] / 2) / 100);
             if (V8B != 0)
                 M8B = qam[_s(+G2y)][Number(V8B)][E6k
                     .S55(r2y * 1)][0][_s(b2y >> 1943261088)];
-            if (M8B + ppdt[_s(+h2y)][5] / 2 > 0)
-                r8B = r8B / ((1) + (M8B + ppdt[_s(+h2y)]["5" | 1] / (2)) / 100);
+            if (M8B + ppdt["fa"][5] / 2 > 0)
+                r8B = r8B / ((1) + (M8B + ppdt["fa"]["5" | 1] / (2)) / 100);
             if (T8B == "2" >>
                 694582624 || T8B == (3) || T8B == 4 || T8B == 5 || T8B == 6)
                 return G8B;
@@ -70937,8 +70945,7 @@ var cotgsubscribe = amplify;
             research: function () {
                 var c1i = {};
                 for (var m1i in ppdt.rs)
-                    c1i[m1i] = ppdt.rs[m1i][E6k
-                        .S55(L9y << 2129244896)];
+                    c1i[m1i] = ppdt.rs[m1i]["l"];
                 return c1i;
             },
             alliance: function () { return ppdt.planame; },
@@ -71298,14 +71305,14 @@ var cotgsubscribe = amplify;
             faith: function () {
                 E6k.R6();
                 var k6i = {
-                    evara: aldt[_s(+h2y)]['1' | 1],
-                    vexemis: aldt[_s(+h2y)][1],
-                    domdis: aldt[_s(+h2y)][1],
-                    cyndros: aldt[_s(h2y - 0)][1],
-                    merius: aldt[_s(h2y | 616)][1],
-                    ylanna: aldt[_s(+h2y)][1],
-                    ibria: aldt[_s(+h2y)][1],
-                    naera: aldt[_s(h2y ^ 0)][1]
+                    evara: aldt["fa"][1],
+                    vexemis: aldt["fa"][1],
+                    domdis: aldt["fa"][1],
+                    cyndros: aldt["fa"][1],
+                    merius: aldt["fa"][1],
+                    ylanna: aldt["fa"][1],
+                    ibria: aldt["fa"][1],
+                    naera: aldt["fa"][1]
                 };
                 return k6i;
             },
@@ -73905,65 +73912,76 @@ function UpdateResearchAndFaith() {
      * @return {void}
       */
     try {
-        // need to wait
+        // may need to to wait, if this fails, we retry
         let faith = cotg.alliance.faith();
         let research = cotg.player.research();
-        ttres_[0] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[29]]) / 100;
-        ttres_[1] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[42]]) / 100;
-        ttres_[2] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[30]]) / 100;
-        ttres_[3] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[31]]) / 100;
-        ttres_[4] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[32]]) / 100;
-        ttres_[5] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[33]]) / 100;
-        ttres_[6] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[34]]) / 100;
-        ttres_[7] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[46]]) / 100;
-        ttres_[8] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[35]]) / 100;
-        ttres_[9] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[36]]) / 100;
-        ttres_[10] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[37]]) / 100;
-        ttres_[11] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[38]]) / 100;
-        ttres_[12] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[39]]) / 100;
-        ttres_[13] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[41]]) / 100;
-        ttres_[14] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[44]]) / 100;
-        ttres_[15] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[43]]) / 100;
-        ttres_[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
-        ttspeedres_[1] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
-        ttspeedres_[2] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
-        ttspeedres_[3] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
-        ttspeedres_[4] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
-        ttspeedres_[5] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
-        ttspeedres_[6] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
-        ttspeedres_[7] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[11]]) / 100;
-        ttspeedres_[8] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
-        ttspeedres_[9] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
-        ttspeedres_[10] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
-        ttspeedres_[11] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
-        ttspeedres_[12] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
-        ttspeedres_[13] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
-        ttspeedres_[14] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
-        ttspeedres_[15] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
-        ttspeedres_[16] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
-        ttspeedres_[17] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[14]]) / 100;
-        Total_Combat_Research_[2] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[30]]) / 100;
-        Total_Combat_Research_[3] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[31]]) / 100;
-        Total_Combat_Research_[4] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[32]]) / 100;
-        Total_Combat_Research_[5] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[33]]) / 100;
-        Total_Combat_Research_[6] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[34]]) / 100;
-        Total_Combat_Research_[7] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[46]]) / 100;
-        Total_Combat_Research_[8] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[35]]) / 100;
-        Total_Combat_Research_[9] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[36]]) / 100;
-        Total_Combat_Research_[10] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[37]]) / 100;
-        Total_Combat_Research_[11] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[38]]) / 100;
-        Total_Combat_Research_[14] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[44]]) / 100;
-        Total_Combat_Research_[15] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[43]]) / 100;
-        Total_Combat_Research_[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
+        //ttres_[0]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[29]])/100;
+        //ttres_[1]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[42]])/100;
+        //ttres_[2]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[30]])/100;
+        //ttres_[3]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[31]])/100;
+        //ttres_[4]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[32]])/100;
+        //ttres_[5]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[33]])/100;
+        //ttres_[6]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[34]])/100;
+        //ttres_[7]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[46]])/100;
+        //ttres_[8]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[35]])/100;
+        //ttres_[9]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[36]])/100;
+        //ttres_[10]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[37]])/100;
+        //ttres_[11]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[38]])/100;
+        //ttres_[12]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[39]])/100;
+        //ttres_[13]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[41]])/100;
+        //ttres_[14]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[44]])/100;
+        //ttres_[15]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[43]])/100;
+        //ttres_[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
+        //	0 "guard",1 "ballista",2 "ranger",3 "triari", 
+        //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+        /// 8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+        //   12 "ram",13 "scorpion",14 "galley",15 "stinger",
+        ///  16 "warship",17 "senator"
+        ttSpeedBonus[0] = 1; // no speed reserach for guard
+        ttSpeedBonus[1] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
+        ttSpeedBonus[2] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
+        ttSpeedBonus[3] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
+        ttSpeedBonus[4] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
+        ttSpeedBonus[5] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
+        ttSpeedBonus[6] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[8]]) / 100;
+        ttSpeedBonus[7] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[11]]) / 100;
+        ttSpeedBonus[8] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
+        ttSpeedBonus[9] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
+        ttSpeedBonus[10] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
+        ttSpeedBonus[11] = 1 + AsNumber(faith.ibria) * 0.5 / 100 + AsNumber(Res_[research[9]]) / 100;
+        ttSpeedBonus[12] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
+        ttSpeedBonus[13] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;
+        ttSpeedBonus[14] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
+        ttSpeedBonus[15] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
+        ttSpeedBonus[16] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[13]]) / 100;
+        ttSpeedBonus[17] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[14]]) / 100;
+        ttCombatBonus[0] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[29]]) / 100;
+        ttCombatBonus[1] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[42]]) / 100;
+        ttCombatBonus[2] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[30]]) / 100;
+        ttCombatBonus[3] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[31]]) / 100;
+        ttCombatBonus[4] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[32]]) / 100;
+        ttCombatBonus[5] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[33]]) / 100;
+        ttCombatBonus[6] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[34]]) / 100;
+        ttCombatBonus[7] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[46]]) / 100;
+        ttCombatBonus[8] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[35]]) / 100;
+        ttCombatBonus[9] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[36]]) / 100;
+        ttCombatBonus[10] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[37]]) / 100;
+        ttCombatBonus[11] = 1 + AsNumber(faith.vexemis) * 0.5 / 100 + AsNumber(Res_[research[38]]) / 100;
+        ttCombatBonus[14] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[44]]) / 100;
+        ttCombatBonus[15] = 1 + AsNumber(faith.ylanna) * 0.5 / 100 + AsNumber(Res_[research[43]]) / 100;
+        ttCombatBonus[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
+        ttCombatBonus[17] = 1; // no combat research for senator
+        //	let wrapper = { speedBonus: ttSpeedBonus, combatBonus: ttCombatBonus }
+        //	window['external']['notify'](JSON.stringify(wrapper));
     }
     catch (e) {
         setTimeout(UpdateResearchAndFaith, 1000);
         return;
     }
 }
-function getppdt() {
-    return JSON.stringify(ppdt);
-}
+//function getppdt() {
+//	return JSON.stringify(ppdt);
+//}
 function jqclick(s) {
     $(s).click();
 }
@@ -74253,10 +74271,10 @@ function avactor() {
             var attackwres_ = [];
             for (let i_42 in ttattack_) {
                 /** @type {number} */
-                var bossTS_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(Total_Combat_Research_[i_42])));
+                var bossTS_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(ttCombatBonus[i_42])));
                 attackres_.push(bossTS_);
                 /** @type {number} */
-                var bosswTS_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(Total_Combat_Research_[i_42])));
+                var bosswTS_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(ttCombatBonus[i_42])));
                 attackwres_.push(bosswTS_);
             }
             /** @type {number} */
@@ -74292,7 +74310,7 @@ function avactor() {
                     home_1 = 0;
                 }
                 /** @type {number} */
-                home_strength_ = home_strength_ + AsNumber(ttattack_[i_4X]) * AsNumber(home_1) * AsNumber(Total_Combat_Research_[i_4X]);
+                home_strength_ = home_strength_ + AsNumber(ttattack_[i_4X]) * AsNumber(home_1) * AsNumber(ttCombatBonus[i_4X]);
                 /** @type {number} */
                 home_TSw_ = home_TSw_ + home_1 * TS_type_[i_4X];
                 km_2.push(home_1);
@@ -74331,7 +74349,7 @@ function avactor() {
                 var galley_TSneeded_ = Math.ceil(home_TSw_ / 500);
                 if (kg_[14]) {
                     /** @type {number} */
-                    home_strengthw_ = home_strength_ + AsNumber(galley_TSneeded_) * 3000 * AsNumber(Total_Combat_Research_[14]);
+                    home_strengthw_ = home_strength_ + AsNumber(galley_TSneeded_) * 3000 * AsNumber(ttCombatBonus[14]);
                     if (home_strengthw_ > boss_strength_) {
                         /** @type {number} */
                         var proportionz_ = home_strengthw_ / boss_strength_;
@@ -76926,9 +76944,9 @@ function avactor() {
                     var tspeed_ = 0;
                     for (j_1 in tempt_) {
                         if (tempt_[j_1] > 0) {
-                            if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
+                            if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
                                 /** @type {number} */
-                                tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
+                                tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
                             }
                         }
                     }
@@ -76974,9 +76992,9 @@ function avactor() {
                     tspeed_ = 0;
                     for (j_1 in tempt_) {
                         if (tempt_[j_1] > 0) {
-                            if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
+                            if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
                                 /** @type {number} */
-                                tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
+                                tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
                             }
                         }
                     }
@@ -77409,12 +77427,12 @@ function openbosswin_() {
             if (boss.cid.cont == cont) {
                 if (_city.th[2] || _city.th[3] || _city.th[4] || _city.th[5] || _city.th[6]) {
                     /** @type {number} */
-                    boss.minutes = distance_ * ttspeed_[2] / ttspeedres_[2];
+                    boss.minutes = distance_ * ttspeed_[2] / ttSpeedBonus[2];
                     /** @type {string} */
                 }
                 if (_city.th[8] || _city.th[9] || _city.th[10] || _city.th[11]) {
                     /** @type {number} */
-                    boss.minutes = distance_ * ttspeed_[8] / ttspeedres_[8];
+                    boss.minutes = distance_ * ttspeed_[8] / ttSpeedBonus[8];
                     /** @type {string} */
                 }
                 boss.distance = (RoundTo2Digits(distance_));
@@ -77424,7 +77442,7 @@ function openbosswin_() {
         if (distance_ < 220) {
             if (_city.th[14] || _city.th[15] || _city.th[16]) {
                 /** @type {number} */
-                boss.minutes = distance_ * ttspeed_[14] / ttspeedres_[14];
+                boss.minutes = distance_ * ttspeed_[14] / ttSpeedBonus[14];
                 /** @type {string} */
                 boss.distance = (RoundTo2Digits(distance_));
                 bosslist_.push(boss);

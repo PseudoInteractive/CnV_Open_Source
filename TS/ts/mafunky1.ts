@@ -416,60 +416,76 @@ function UpdateResearchAndFaith(): void {
 	 * @return {void}
 	  */
 	try {
-		// need to wait
+		// may need to to wait, if this fails, we retry
 
 		let faith=cotg.alliance.faith();
 		let research=cotg.player.research();
 
-		ttres_[0]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[29]])/100;
-		ttres_[1]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[42]])/100;
-		ttres_[2]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[30]])/100;
-		ttres_[3]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[31]])/100;
-		ttres_[4]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[32]])/100;
-		ttres_[5]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[33]])/100;
-		ttres_[6]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[34]])/100;
-		ttres_[7]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[46]])/100;
-		ttres_[8]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[35]])/100;
-		ttres_[9]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[36]])/100;
-		ttres_[10]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[37]])/100;
-		ttres_[11]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[38]])/100;
-		ttres_[12]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[39]])/100;
-		ttres_[13]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[41]])/100;
-		ttres_[14]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[44]])/100;
-		ttres_[15]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[43]])/100;
-		ttres_[16]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[45]])/100;
-		ttspeedres_[1]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
-		ttspeedres_[2]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
-		ttspeedres_[3]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
-		ttspeedres_[4]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
-		ttspeedres_[5]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
-		ttspeedres_[6]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
-		ttspeedres_[7]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[11]])/100;
-		ttspeedres_[8]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
-		ttspeedres_[9]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
-		ttspeedres_[10]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
-		ttspeedres_[11]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
-		ttspeedres_[12]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
-		ttspeedres_[13]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
-		ttspeedres_[14]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
-		ttspeedres_[15]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
-		ttspeedres_[16]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
-		ttspeedres_[17]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[14]])/100;
+		//ttres_[0]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[29]])/100;
+		//ttres_[1]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[42]])/100;
+		//ttres_[2]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[30]])/100;
+		//ttres_[3]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[31]])/100;
+		//ttres_[4]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[32]])/100;
+		//ttres_[5]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[33]])/100;
+		//ttres_[6]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[34]])/100;
+		//ttres_[7]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[46]])/100;
+		//ttres_[8]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[35]])/100;
+		//ttres_[9]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[36]])/100;
+		//ttres_[10]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[37]])/100;
+		//ttres_[11]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[38]])/100;
+		//ttres_[12]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[39]])/100;
+		//ttres_[13]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[41]])/100;
+		//ttres_[14]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[44]])/100;
+		//ttres_[15]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[43]])/100;
+		//ttres_[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
+
+		//	0 "guard",1 "ballista",2 "ranger",3 "triari", 
+		//  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+		/// 8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+		//   12 "ram",13 "scorpion",14 "galley",15 "stinger",
+		///  16 "warship",17 "senator"
 
 
-		Total_Combat_Research_[2]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[30]])/100;
-		Total_Combat_Research_[3]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[31]])/100;
-		Total_Combat_Research_[4]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[32]])/100;
-		Total_Combat_Research_[5]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[33]])/100;
-		Total_Combat_Research_[6]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[34]])/100;
-		Total_Combat_Research_[7]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[46]])/100;
-		Total_Combat_Research_[8]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[35]])/100;
-		Total_Combat_Research_[9]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[36]])/100;
-		Total_Combat_Research_[10]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[37]])/100;
-		Total_Combat_Research_[11]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[38]])/100;
-		Total_Combat_Research_[14]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[44]])/100;
-		Total_Combat_Research_[15]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[43]])/100;
-		Total_Combat_Research_[16]=1+AsNumber(faith.cyndros)*0.5/100+AsNumber(Res_[research[45]])/100;
+		ttSpeedBonus[0] = 1; // no speed reserach for guard
+		ttSpeedBonus[1]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
+		ttSpeedBonus[2]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
+		ttSpeedBonus[3]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
+		ttSpeedBonus[4]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
+		ttSpeedBonus[5]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
+		ttSpeedBonus[6]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[8]])/100;
+		ttSpeedBonus[7]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[11]])/100;
+		ttSpeedBonus[8]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
+		ttSpeedBonus[9]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
+		ttSpeedBonus[10]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
+		ttSpeedBonus[11]=1+AsNumber(faith.ibria)*0.5/100+AsNumber(Res_[research[9]])/100;
+		ttSpeedBonus[12]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
+		ttSpeedBonus[13]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[12]])/100;
+		ttSpeedBonus[14]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
+		ttSpeedBonus[15]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
+		ttSpeedBonus[16]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[13]])/100;
+		ttSpeedBonus[17]=1+AsNumber(faith.domdis)*0.5/100+AsNumber(Res_[research[14]])/100;
+
+
+		ttCombatBonus[0] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[29]]) / 100;
+		ttCombatBonus[1] = 1 + AsNumber(faith.naera) * 0.5 / 100 + AsNumber(Res_[research[42]]) / 100;
+		ttCombatBonus[2]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[30]])/100;
+		ttCombatBonus[3]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[31]])/100;
+		ttCombatBonus[4]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[32]])/100;
+		ttCombatBonus[5]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[33]])/100;
+		ttCombatBonus[6]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[34]])/100;
+		ttCombatBonus[7]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[46]])/100;
+		ttCombatBonus[8]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[35]])/100;
+		ttCombatBonus[9]=1+AsNumber(faith.naera)*0.5/100+AsNumber(Res_[research[36]])/100;
+		ttCombatBonus[10]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[37]])/100;
+		ttCombatBonus[11]=1+AsNumber(faith.vexemis)*0.5/100+AsNumber(Res_[research[38]])/100;
+		ttCombatBonus[14]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[44]])/100;
+		ttCombatBonus[15]=1+AsNumber(faith.ylanna)*0.5/100+AsNumber(Res_[research[43]])/100;
+		ttCombatBonus[16] = 1 + AsNumber(faith.cyndros) * 0.5 / 100 + AsNumber(Res_[research[45]]) / 100;
+		ttCombatBonus[17] = 1; // no combat research for senator
+
+	//	let wrapper = { speedBonus: ttSpeedBonus, combatBonus: ttCombatBonus }
+	//	window['external']['notify'](JSON.stringify(wrapper));
+
 	}
 	catch(e) {
 		setTimeout(UpdateResearchAndFaith,1000);
@@ -479,9 +495,9 @@ function UpdateResearchAndFaith(): void {
 
 }
 
-function getppdt() {
-	return JSON.stringify(ppdt);
-}
+//function getppdt() {
+//	return JSON.stringify(ppdt);
+//}
 function jqclick( s) {
 	$(s).click();
 }
@@ -805,10 +821,10 @@ function avactor() {
 			var attackwres_=[];
 			for(let i_42 in ttattack_) {
 				/** @type {number} */
-				var bossTS_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
+				var bossTS_=Math.ceil(AsNumber(bossdef_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(ttCombatBonus[i_42])));
 				attackres_.push(bossTS_);
 				/** @type {number} */
-				var bosswTS_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(Total_Combat_Research_[i_42])));
+				var bosswTS_=Math.ceil(AsNumber(bossdefw_[lvl_-1])*4/(AsNumber(ttattack_[i_42])*AsNumber(ttCombatBonus[i_42])));
 				attackwres_.push(bosswTS_);
 			}
 			/** @type {number} */
@@ -844,7 +860,7 @@ function avactor() {
 					home_1=0;
 				}
 				/** @type {number} */
-				home_strength_=home_strength_+AsNumber(ttattack_[i_4X])*AsNumber(home_1)*AsNumber(Total_Combat_Research_[i_4X]);
+				home_strength_=home_strength_+AsNumber(ttattack_[i_4X])*AsNumber(home_1)*AsNumber(ttCombatBonus[i_4X]);
 				/** @type {number} */
 				home_TSw_=home_TSw_+home_1*TS_type_[i_4X];
 				km_2.push(home_1);
@@ -883,7 +899,7 @@ function avactor() {
 				var galley_TSneeded_=Math.ceil(home_TSw_/500);
 				if(kg_[14]) {
 					/** @type {number} */
-					home_strengthw_=home_strength_+AsNumber(galley_TSneeded_)*3000*AsNumber(Total_Combat_Research_[14]);
+					home_strengthw_=home_strength_+AsNumber(galley_TSneeded_)*3000*AsNumber(ttCombatBonus[14]);
 					if(home_strengthw_>boss_strength_) {
 						/** @type {number} */
 						var proportionz_=home_strengthw_/boss_strength_;
@@ -3532,9 +3548,9 @@ function avactor() {
 					var tspeed_ = 0;
 					for (j_1 in tempt_) {
 						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
+							if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
 							}
 						}
 					}
@@ -3580,9 +3596,9 @@ function avactor() {
 					tspeed_ = 0;
 					for (j_1 in tempt_) {
 						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2)) > tspeed_) {
+							if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed_[j_1] / ttspeedres_[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
 							}
 						}
 					}

@@ -158,8 +158,8 @@ namespace COTG.Views
                                     Note.Show("Not enough carts");
                                     return;
                                 }
-                                var wood = 0.Max(sender.wood - inst.reserveWood);
-                                var stone = 0.Max(sender.stone - inst.reserveStone);
+                                var wood = (sender.wood - inst.reserveWood).Max0();
+                                var stone = (sender.stone - inst.reserveStone).Max0();
                                 if (wood + stone > carts * 1000)
                                 {
                                     var desiredC = (wood + stone) / 1000 + 1;
@@ -173,10 +173,17 @@ namespace COTG.Views
                                     return;
 
                                 }
-
+                                sender.wood -= wood;
+                                sender.stone -= stone;
+                                sender.cartsHome -= (ushort)( (wood + stone + 999) / 1000);
                                 i.SendDonation(wood, stone);
                                 DonationTab.instance.blessedGrid.ItemsSource = null;
                                 BlessedCity.senderCity = null;
+                                var tempSource = DonationTab.instance.donationGrid.ItemsSource;
+                             //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
+                                DonationTab.instance.donationGrid.ItemsSource = null;
+                                DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
+
                             }
                         }
                         break;

@@ -80,7 +80,7 @@ namespace COTG.Views
             var hasPopup = (cotgPopupOpen&127) != 0;
             var hasLongWindow = cotgPopupOpen >= 128;
             var leftOffset = hasPopup ? cotgPopupRight : cotgPanelRight;
-            var topOffset = hasLongWindow ? webclientSpan.y*55/100 : cotgPopupTopDefault;
+            var topOffset = hasLongWindow ? webclientSpan.y*65/100 : cotgPopupTopDefault;
             var delta = leftOffset - cachedXOffset;
             if (delta==0 && cachedTopOffset == topOffset)
                 return;

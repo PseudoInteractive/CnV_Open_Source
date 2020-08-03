@@ -16,22 +16,33 @@ namespace COTG.Game
 
 
         // 255 means none,
-        public static string[] dungeonTypes = { "forest", "hill", "mountain", "water" };
-        public static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
-        public static ushort[] ttTs = { 1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1 };
-        public static string[] ttName = { "guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator" };
-        public static string[] ttNameWithCaps = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
+        public readonly static string[] dungeonTypes = { "forest", "hill", "mountain", "water" };
 
-        public static string[] ttNameWithCapsAndBatteringRam = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Battering Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
+        //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
+        //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+        //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+        //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
+        //  16 "warship",17 "senator"
+
+        // gets filled in 
+        public static float[] ttSpeedBonus = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1 };
+        public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+        public readonly static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
+        public readonly static ushort[] ttTs = { 1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1 };
+        public readonly static string[] ttName = { "guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator" };
+        public readonly static string[] ttNameWithCaps = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
+
+        public readonly static string[] ttNameWithCapsAndBatteringRam = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Battering Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
         public const int ttSenator = 17;
-        public static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };
-        public static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
-        public static int[] otherLoot = { 350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600 };
-        public static int[] mountainLoot = { 350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500 };
+        public readonly static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };
+        public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
+        public readonly static int[] otherLoot = { 350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600 };
+        public readonly static int[] mountainLoot = { 350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500 };
 
-        public static byte[] ttspeed = { 0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40 };
-        public static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
-        public static short[] ttattack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
+        public readonly static byte[] ttspeed = { 0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40 };
+        public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
+        public readonly static short[] ttattack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 
         //
         // Templates not working for me

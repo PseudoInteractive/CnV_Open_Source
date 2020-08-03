@@ -214,12 +214,12 @@ function openbosswin_() {
 			if(boss.cid.cont==cont) {
 				if(_city.th[2]||_city.th[3]||_city.th[4]||_city.th[5]||_city.th[6]) {
 			/** @type {number} */
-boss.minutes=distance_*ttspeed_[2]/ttspeedres_[2];
+boss.minutes=distance_*ttspeed_[2]/ttSpeedBonus[2];
 /** @type {string} */
 				}
 				if(_city.th[8]||_city.th[9]||_city.th[10]||_city.th[11]) {
 /** @type {number} */
-						boss.minutes=distance_*ttspeed_[8]/ttspeedres_[8];
+						boss.minutes=distance_*ttspeed_[8]/ttSpeedBonus[8];
 /** @type {string} */
 				}
 				boss.distance =(RoundTo2Digits(distance_));
@@ -230,7 +230,7 @@ boss.minutes=distance_*ttspeed_[2]/ttspeedres_[2];
 		if(distance_<220) {
 			if(_city.th[14]||_city.th[15]||_city.th[16]) {
 /** @type {number} */
-					boss.minutes=distance_*ttspeed_[14]/ttspeedres_[14];
+					boss.minutes=distance_*ttspeed_[14]/ttSpeedBonus[14];
 /** @type {string} */
 				
 				boss.distance=(RoundTo2Digits(distance_));

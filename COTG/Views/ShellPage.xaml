@@ -57,7 +57,7 @@
     <!--HeaderTemplate="{StaticResource headerTemplate}"-->
     <Grid x:Name="grid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="66" />
+            <RowDefinition Height="44" />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
