@@ -23,7 +23,10 @@ namespace COTG.Views
 {
     public class UserTab : UserControl
     {
-        public virtual void VisibilityChanged(bool visible) { }
+        public virtual void VisibilityChanged(bool visible)
+        {
+            Log($"VisibilityChanged: {visible} {this}");
+        }
         // If this is not an xaml island, the newXamlRoot will be null
         public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;

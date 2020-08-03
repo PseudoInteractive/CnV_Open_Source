@@ -200,10 +200,10 @@ namespace COTG
         {
             var d = GlobalDispatcher();
             // run it immediately if we can
-            if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
+            if (d.HasThreadAccess )
                 action();
             else
-                d.RunAsync(CoreDispatcherPriority.Normal, action);
+                d.RunAsync(CoreDispatcherPriority.Low, action);
         }
         // We only have 1 UI thread here
         public static CoreDispatcher GlobalDispatcher() => ShellPage.instance.Dispatcher;
@@ -224,7 +224,7 @@ namespace COTG
             rv.Click += (_, _) => command();
             return rv;
         }
-        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
+///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
         public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1 };
 
     }
@@ -332,7 +332,7 @@ namespace COTG
         {
             ChatTab.L(s);
         }
-        public static void Show(string s, int timeout = 8000)
+        public static void Show(string s, int timeout = 5000)
         {
 
             App.DispatchOnUIThreadLow(() =>

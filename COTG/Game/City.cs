@@ -29,7 +29,7 @@ namespace COTG.Game
         public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
         public static City build; // city that has Build selection.  I.e. in city view, the city you are in
 
-        public new string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+        public string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
         public static bool IsBuild( int cid )
         {
@@ -190,7 +190,7 @@ namespace COTG.Game
             }
         }
 
-        static List<City> dummies = new List<City>();
+      //  static List<City> dummies = new List<City>();
 
 
         public void NotifyChange(string member ="")
@@ -318,7 +318,7 @@ namespace COTG.Game
 
             }
             
-            changed.NotifyChange();//.OnPropertyChangedUI(nameof(City.senny));
+            changed.NotifyChange(nameof(City.senny));
 
         }
 
@@ -363,23 +363,19 @@ namespace COTG.Game
                     ScanDungeons.Post(cid, getCityData);
             }
         }
-        public static City StBuild(int cid,bool fromUI)
+        public static City StBuild(int cid)
         {
             var city = City.GetOrAddCity(cid);
-            city.SetBuild(fromUI);
+            city.SetBuild();
             return city;
         }
-        public void SetBuild(bool fromUI)
+        public void SetBuild()
         {
             var changed = this != City.build;
             City.build = this;
-            if (!fromUI && changed && MainPage.IsVisible())
+            if ( changed )
             {
-                App.DispatchOnUIThreadLow(() =>
-                {
-                    MainPage.SelectItem(this);
-
-                });
+                App.DispatchOnUIThreadLow( SelectInUI );
             }
             //if (!noRaidScan)
            // {
@@ -430,6 +426,22 @@ namespace COTG.Game
         public bool academy { get; set; }
         public bool sorcTower { get; set; }
 
+        public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
+        public static City[] emptyCitySource = Array.Empty<City>();
+
+        public void SelectInUI()
+        {
+            //         await Task.Delay(2000);
+            //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //           {
+            //      CityGrid.ScrollItemIntoView(city);
+            if (MainPage.IsVisible())
+                MainPage.CityGrid.SelectItem(this);
+            // todo: donations page and boss hunting
+            ShellPage.instance.cityBox.SelectedItem = this;
+            //            });
+
+        }
     }
     public class SenatorInfo
     {
@@ -476,9 +488,45 @@ namespace COTG.Game
 
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();
-        public static DumbCollection<CityList> selections = new DumbCollection<CityList>( new[] { allCities }); // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+        public static CityList [] selections = new [] { allCities }; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
 
-     
+        public static ComboBox box => ShellPage.instance.cityListBox;
+        public static void SelectedChange()
+        {
+ 
+            App.DispatchOnUIThreadLow( () =>
+            {
+                Log("CityListChange");
+
+                var selectedCityList = CityList.box.SelectedItem as CityList;
+                City[] l;
+                if (selectedCityList == null || selectedCityList.id == -1) // "all"
+                {
+                    l = City.allCities.Values.OrderBy((a) => a.cityName).ToArray();
+                }
+                else
+                {
+                    var cityList = selectedCityList;// CityList.Find(selectedCityList);
+                    var filtered = new List<City>();
+                    foreach (var cid in cityList.cities)
+                    {
+                        if (City.allCities.TryGetValue(cid, out var c))
+                        {
+                            filtered.Add(c);
+                        }
+                    }
+                    l = filtered.OrderBy((a) => a.cityName).ToArray();
+                }
+                ShellPage.instance.cityBox.ItemsSource = l;
+                var reserveCartsFilter = DonationTab.instance.reserveCarts;
+                if (DonationTab.IsVisible())
+                    DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter);
+                if (MainPage.IsVisible())
+                    City.gridCitySource.Set(l);
+                City.build?.SelectInUI();
+            });
+        }
+        
     }
 
 }

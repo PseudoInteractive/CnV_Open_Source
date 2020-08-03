@@ -81,6 +81,7 @@ namespace COTG.Views
                 input.Focus(FocusState.Keyboard);
             }
 
+            base.VisibilityChanged(visible);
         }
 
         public void Post(ChatEntry entry)

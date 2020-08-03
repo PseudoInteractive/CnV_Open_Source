@@ -51,9 +51,13 @@ namespace COTG.Game
             all = cities.ToArray();
         }
 
-        public static List<BlessedCity> GetForCity(City city)
+        public static IList<BlessedCity> GetForCity(City city)
         {
             senderCity = city;
+            if(city==null)
+            {
+                return all;
+            }
             var rv = new List<BlessedCity>();
             var cid = city.cid;
             var worldC = cid.CidToWorld();

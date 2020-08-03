@@ -9,6 +9,7 @@
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:model="using:COTG.Models"
       xmlns:game="using:COTG.Game"
+      xmlns:cotg="using:COTG"
       xmlns:view="using:COTG.Views"
       mc:Ignorable="d"
       DataContext="Raid"
@@ -22,14 +23,7 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ComboBox x:Name="cityListBox"
-                  Width="200"
-                  IsEditable="True"
-                  SelectedValuePath="id"
-                  DisplayMemberPath="name"
-                  ItemsSource="{x:Bind cityListSelections, Mode=OneWay}"
-                  VerticalAlignment="Center"
-                  Margin="10,0,0,0" />
+        
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="1"
@@ -39,7 +33,7 @@
                         UserGroupMode="Enabled"
                         GridLinesThickness="1.0"
                         AlternationStep="2"
-                        ItemsSource="{x:Bind gridCitySource, Mode=OneWay}"
+                        ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
                         AutoGenerateColumns="False"
                         SelectionMode="Single"
                         CanUserChooseColumns="True"
@@ -191,7 +185,7 @@ TextSubmitted="RaidCarrySubmitted"
                     <LineBreak/>    -   Mountain for Infantry
                     <LineBreak/>    -   Hills for Magic
                     <LineBreak/>    -   Forests for Cavalry
-                <LineBreak/>Clicking on the coordinates will show you the dungeon, clicking anywhere else will send raids
+                <LineBreak/>Clicking on the plan cell will dispatch raids, clicking on the coordinates will show you the dungeon
             </TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding201"

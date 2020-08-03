@@ -163,6 +163,8 @@ namespace COTG.Views
           //  Log("Vis change" + visible);
             if(visible)
                 IncomingOverview.Process(false);
+            base.VisibilityChanged(visible);
+
         }
         public static bool IsVisible() => instance.isVisible;
 

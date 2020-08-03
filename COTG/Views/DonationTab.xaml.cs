@@ -26,7 +26,7 @@ namespace COTG.Views
     public sealed partial class DonationTab : UserTab, INotifyPropertyChanged
     {
         public static DonationTab instance;
-        public int reserveCarts=100;
+        public int reserveCarts=800;
         public float reserveCartsPCT=0.0625f;
         public int reserveShips = 10;
         public float reserveShipsPCT = 0.0f;
@@ -37,6 +37,7 @@ namespace COTG.Views
             this.InitializeComponent();
         }
 
+        public static bool IsVisible() => instance.isVisible;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -67,13 +68,22 @@ namespace COTG.Views
                     city.sorcTower = detail.Sorc_tower == "Y";
                 }
 
-
-               donationGrid.ItemsSource = MainPage.instance.gridCitySource;
+                App.DispatchOnUIThread(()=>
+                {
+                    CityList.SelectedChange();
+                    blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
+                }
+                ); // many items changed
+          //     donationGrid.ItemsSource = City.gridCitySource;
             }
             else
             {
+                // Not listening
                 donationGrid.ItemsSource = null;
+                BlessedCity.senderCity = null;
             }
+            base.VisibilityChanged(visible);
+
         }
 
         public override void XamlTreeChanged(TabPage newPage)
@@ -102,10 +112,7 @@ namespace COTG.Views
         {
             
             var it = e.AddedItems.FirstOrDefault();
-
             var newSel = it as City;
-            if (newSel is null)
-                return;
             blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }
     }
@@ -137,35 +144,40 @@ namespace COTG.Views
                 switch (c)
                 {
                     case nameof(i.virtue):
-
                         {
-                            var inst = DonationTab.instance;
                             var sender = BlessedCity.senderCity;
-                            var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
-                                    .Max(inst.reserveCarts);
-                            var carts = sender.cartsHome - cartReserve;
-                            if (carts <= 0)
-                            {
-                                Note.Show("Not enough carts");
-                                return;
-                            }
-                            var wood = 0.Max(sender.wood - inst.reserveWood);
-                            var stone = 0.Max(sender.stone - inst.reserveStone);
-                            if (wood + stone > carts * 1000)
-                            {
-                                var desiredC = (wood + stone) / 1000 + 1;
-                                var ratio = (float)carts / desiredC;
-                                wood = (int)(wood * ratio);
-                                stone = (int)(stone * ratio);
-                            }
-                            else if (wood + stone <= 0)
-                            {
-                                Note.Show("Not enough res");
-                                return;
 
-                            }
+                            if (sender != null)
+                            {
+                                var inst = DonationTab.instance;
+                                var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
+                                        .Max(inst.reserveCarts);
+                                var carts = sender.cartsHome - cartReserve;
+                                if (carts <= 0)
+                                {
+                                    Note.Show("Not enough carts");
+                                    return;
+                                }
+                                var wood = 0.Max(sender.wood - inst.reserveWood);
+                                var stone = 0.Max(sender.stone - inst.reserveStone);
+                                if (wood + stone > carts * 1000)
+                                {
+                                    var desiredC = (wood + stone) / 1000 + 1;
+                                    var ratio = (float)carts / desiredC;
+                                    wood = (int)(wood * ratio);
+                                    stone = (int)(stone * ratio);
+                                }
+                                else if (wood + stone <= 0)
+                                {
+                                    Note.Show("Not enough res");
+                                    return;
 
-                            i.SendDonation(wood, stone);
+                                }
+
+                                i.SendDonation(wood, stone);
+                                DonationTab.instance.blessedGrid.ItemsSource = null;
+                                BlessedCity.senderCity = null;
+                            }
                         }
                         break;
                       case nameof(i.xy):

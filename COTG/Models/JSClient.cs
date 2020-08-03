@@ -281,7 +281,7 @@ namespace COTG
                 if (City.IsMine(cityId))
                 {
                     SetViewModeCity();
-                    var city = City.StBuild(cityId, false);
+                    var city = City.StBuild(cityId);
                     city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
@@ -304,7 +304,7 @@ namespace COTG
             {
                 if (City.IsMine(cityId))
                 {
-                    var city = City.StBuild(cityId,false);
+                    var city = City.StBuild(cityId);
                     city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
@@ -516,14 +516,16 @@ namespace COTG
                     Assert(clChanged == 2);
                     App.DispatchOnUIThreadLow(() =>
                    {
-                       CityList.selections.Clear();
-                       CityList.selections.Add(CityList.allCities);
+                       var priorIndex = CityList.box.SelectedIndex;
+                       CityList.selections = new CityList[lists.Count+1];
+                       CityList.selections[0]=(CityList.allCities);
                        for (int i = 0; i < lists.Count; ++i)
-                           CityList.selections.Add(lists[i]);
+                           CityList.selections[i+1]=(lists[i]);
 
                        CityList.all = lists.ToArray();
 
-                       CityList.selections.NotifyReset();
+                       CityList.box.ItemsSource =  CityList.selections;
+                       CityList.box.SelectedIndex = priorIndex; // Hopefully this is close enough
                    });
                 }
             }
@@ -539,6 +541,7 @@ namespace COTG
             if (jse.TryGetProperty("c", out var cProp))
             {
                 cUpdated = true;
+                Note.Show("Pre PPDT");
 
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in cProp.EnumerateArray())
@@ -566,12 +569,13 @@ namespace COTG
 
                 }
 
-            //    Log(City.all.ToString());
-             //   Log(City.all.Count());
-                Views.MainPage.CityListChange();
+                //    Log(City.all.ToString());
+                //   Log(City.all.Count());
+                CityList.SelectedChange();
+
             }
 
-            Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
+            // Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
             // Log(ppdt.ToString());
         }
@@ -870,7 +874,7 @@ namespace COTG
                                         ShellPage.cameraC = cid.CidToWorldV();
 
                                     //Note.L("citydata=" + cid.CidToString());
-                                    var city = City.StBuild(cid,false);
+                                    var city = City.StBuild(cid);
                                     city.LoadFromJson(jse);
 
                                     if (MainPage.IsVisible())
@@ -938,7 +942,7 @@ namespace COTG
                                 {
                                     var jso = jsp.Value;
                                     var cid = jso.GetInt("c");
-                                    City.StBuild(cid,false);
+                                    City.StBuild(cid);
                                     var popupCount = jso.GetAsInt("p");
                                     //     Note.L("cid=" + cid.CidToString());
                                     SetViewMode((ViewMode)jso.GetInt("v"));

@@ -113,10 +113,12 @@ namespace COTG.Views
             //            historyGrid.ContextFlyout = cityMenuFlyout;
         
         }
-        override public void VisibilityChanged(bool isVisible)
+        override public void VisibilityChanged(bool visible)
         {
-            if(isVisible)
+            if(visible)
                 IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+            base.VisibilityChanged(visible);
+
 
         }
 

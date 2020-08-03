@@ -35,7 +35,6 @@ namespace COTG.Views
 
     public sealed partial class MainPage : UserTab, INotifyPropertyChanged
     {
-        public DumbCollection<City> gridCitySource { get; } = new DumbCollection<City>();
         public static MainPage instance;
 
         //        public static City showingRowDetails;
@@ -79,30 +78,14 @@ namespace COTG.Views
 
             cityGrid.SelectionChanged += CityGrid_SelectionChanged;
             cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-            cityListBox.SelectedIndex = 0; // reset
-
-			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
         }
 
         private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
-            Log("Current item " + sender.ToString());
+//            Log("Current item " + sender.ToString());
         }
 
-        private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-            if (e.AddedItems.Any())
-            {
-                var newSel = e.AddedItems?.FirstOrDefault();
-                var priorSel = e.RemovedItems?.FirstOrDefault();
-                if (newSel != priorSel)
-                {
-               //     Log("City Sel changed");
-                    CityListChange();
-                }
-            }
-		}
-
+  
         private void ColumnHeaderTap()
         {
 
@@ -220,51 +203,7 @@ namespace COTG.Views
 
 
 
-        public static void CityListChange()
-        {
-            if (instance == null)
-                return;
-
-            instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-             //   Note.L("ListChange: ");
-
-                var citySource = instance.gridCitySource;
-                var selectedCityList = CityListBox.SelectedItem as CityList;
-                if (selectedCityList == null || selectedCityList.id==-1) // "all"
-                {
-                    citySource.Set(City.allCities.Values.OrderBy((a) => a.cityName));
-                }
-                else
-                {
-                    var cityList = selectedCityList;// CityList.Find(selectedCityList);
-                        var filtered = new List<City>();
-                        foreach(var cid in cityList.cities)
-                        {
-                            if(City.allCities.TryGetValue(cid,out var c))
-                            {
-                                filtered.Add(c);
-                            }
-                        }
-                        citySource.Set(filtered.OrderBy((a) => a.cityName));
-                }
-                SelectItem(City.build);
-            });
-        }
-        public static void SelectItem(City city)
-        {
-            if (city == null)
-                return;
-   //         await Task.Delay(2000);
-  //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
- //           {
-                CityGrid.ScrollItemIntoView(city);
-                CityGrid.SelectItem(city);
-//            });
-            Log($"Select {city}");
-
-        }
-
+        
         public static void CityListUpdateAll()
         {
             if (instance == null)
@@ -272,8 +211,8 @@ namespace COTG.Views
             // Note.L("UpdateAll: ");
             instance.Dispatcher.DispatchOnUIThreadLow(() =>
             {
-                instance.gridCitySource.NotifyReset();
-                SelectItem(City.build);
+                City.gridCitySource.NotifyReset();
+                City.build?.SelectInUI();
             });
             
         }
@@ -325,14 +264,6 @@ namespace COTG.Views
 
 
 
-        private void cityGrid_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Log("Tapped");
-        }
-
-        public static ComboBox CityListBox => instance.cityListBox;
-        private DumbCollection<CityList> cityListSelections =>  CityList.selections;
-        
         
 		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
@@ -409,12 +340,15 @@ namespace COTG.Views
                 RaidOverview.Send();
                 if(City.build!=null)
                     GetCity.Post(City.build.cid);
-      //          cityGrid.ItemsSource = gridCitySource;
+             //  if (cityGrid.ItemsSource == App.emptyCityList )
+             //     cityGrid.ItemsSource = City.gridCitySource;
             }
             else
             {
         //        cityGrid.ItemsSource = null;
             }
+            base.VisibilityChanged(visible);
+
         }
         public override void XamlTreeChanged(TabPage newPage) {
             //       cityGrid.ContextFlyout = null;

@@ -143,7 +143,7 @@ namespace COTG.Game
                         changed.Add(v);
                     }
                 }
-                changed.NotifyChange();
+                changed.NotifyChange(nameof(City.tsHome));
                 
             }
         }

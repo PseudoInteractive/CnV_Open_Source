@@ -48,9 +48,9 @@ namespace COTG.Views
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
-        
-      //  private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
-      //  private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+
+        //  private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
+        //  private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
         static public ShellPage instance;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
@@ -106,22 +106,22 @@ namespace COTG.Views
 
         private void Initialize()
         {
-    //        NavigationService.NavigationFailed += Frame_NavigationFailed;
-    //        NavigationService.Navigated += Frame_Navigated;
-    //        NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
-     //       navigationView.BackRequested += OnBackRequested;
-          //  IdentityService.LoggedIn += OnLoggedIn;
-         //   IdentityService.LoggedOut += OnLoggedOut;
+            //        NavigationService.NavigationFailed += Frame_NavigationFailed;
+            //        NavigationService.Navigated += Frame_Navigated;
+            //        NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
+            //       navigationView.BackRequested += OnBackRequested;
+            //  IdentityService.LoggedIn += OnLoggedIn;
+            //   IdentityService.LoggedOut += OnLoggedOut;
         }
 
         public static void SetHeaderText(string text)
         {
-        //    if(instance!=null && instance.navigationView!=null)
-        //        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
+            //    if(instance!=null && instance.navigationView!=null)
+            //        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
         }
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-         
+
 
 
             var webView = JSClient.Initialize(grid);
@@ -131,17 +131,17 @@ namespace COTG.Views
 
             grid.Children.Add(webView);
 
-  //          grid.Children.Add(shellFrame);
- //           Grid.SetColumn(shellFrame, 2);
- //           Grid.SetRow(shellFrame, 0);
- //           Grid.SetRowSpan(shellFrame, 6);
-  //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
-  //          Canvas.SetZIndex(shellFrame, 3);
+            //          grid.Children.Add(shellFrame);
+            //           Grid.SetColumn(shellFrame, 2);
+            //           Grid.SetRow(shellFrame, 0);
+            //           Grid.SetRowSpan(shellFrame, 6);
+            //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
+            //          Canvas.SetZIndex(shellFrame, 3);
 
 
             Grid.SetColumn(webView, 0);
-            Grid.SetRow(webView, 0);
-            Grid.SetRowSpan(webView, 6);
+            Grid.SetRow(webView, 1);
+            Grid.SetRowSpan(webView, 5);
             Grid.SetColumnSpan(webView, 2);
             Canvas.SetZIndex(webView, 0);
 
@@ -189,8 +189,8 @@ namespace COTG.Views
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-           // KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
-           // KeyboardAccelerators.Add(_backKeyboardAccelerator);
+            // KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
+            // KeyboardAccelerators.Add(_backKeyboardAccelerator);
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
             // grid.hor
@@ -201,13 +201,13 @@ namespace COTG.Views
 
             {
                 var tabPage = CreateTabPage(shellFrame);
-              
+
                 MainPage.instance = new MainPage();
-                tabPage.AddTab(MainPage.instance,true);
-              
+                tabPage.AddTab(MainPage.instance, true);
+
                 DefenderPage.instance = new DefenderPage();
-                tabPage.AddTab(DefenderPage.instance,false);
-              
+                tabPage.AddTab(DefenderPage.instance, false);
+
                 DefensePage.instance = new DefensePage();
                 // tabPage.AddTab(DefensePage.instance, false);
 
@@ -218,26 +218,22 @@ namespace COTG.Views
             {
                 var tabPage = CreateTabPage(spotFrame);
                 SpotTab.instance = new SpotTab();
-                tabPage.AddTab(SpotTab.instance,true);
+                tabPage.AddTab(SpotTab.instance, true);
 
             }
-            navigationView.IsPaneOpen = false;
-            //CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            //{
-            //    Services.NavigationService.Navigate<Views.DefenderPage>(this);
-            //    CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            //    {
-            //        Services.NavigationService.Navigate<Views.MainPage>(this);
-            //    });
-            //});
 
             var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
             refresh.Invoked += Refresh_Invoked;
             refresh.IsEnabled = true;
             //			refreshAccelerator.Invoked += (_, __) => view?.Refresh();
-            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
-            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
-            testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
+            //  testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
+            //   testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
+            //   testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
+            cityListBox.SelectedIndex = 0; // reset
+            cityListBox.SelectionChanged += CityListBox_SelectionChanged;
+            cityBox.SelectionChanged += CityBox_SelectionChanged;
+
+
 
         }
 
@@ -246,83 +242,83 @@ namespace COTG.Views
             Refresh();
         }
 
-        public static MenuFlyoutItem MenuAction( Action a, string text)
-        {
-            var rv = new MenuFlyoutItem() { Text = text };
-            rv.Click += (_, _) => a();
-            return rv;
-            
-        }
+        //public static MenuFlyoutItem MenuAction( Action a, string text)
+        //{
+        //    var rv = new MenuFlyoutItem() { Text = text };
+        //    rv.Click += (_, _) => a();
+        //    return rv;
+
+        //}
 
         private TabPage CreateTabPage(Frame frame)
         {
             frame.Navigate(typeof(TabPage));
-            return  frame.Content as TabPage;
+            return frame.Content as TabPage;
         }
 
 
 
 
 
-        private void OnLoggedIn(object sender, EventArgs e)
-        {
-            IsLoggedIn = true;
-            IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
-            IsBusy = false;
-        }
+        //        private void OnLoggedIn(object sender, EventArgs e)
+        //        {
+        //            IsLoggedIn = true;
+        //            IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
+        //            IsBusy = false;
+        //        }
 
-        private void OnLoggedOut(object sender, EventArgs e)
-        {
-            IsLoggedIn = false;
-            IsAuthorized = false;
-            CleanRestrictedPagesFromNavigationHistory();
-            GoBackToLastUnrestrictedPage();
-        }
+        //        private void OnLoggedOut(object sender, EventArgs e)
+        //        {
+        //            IsLoggedIn = false;
+        //            IsAuthorized = false;
+        //            CleanRestrictedPagesFromNavigationHistory();
+        //            GoBackToLastUnrestrictedPage();
+        //        }
 
-        private void CleanRestrictedPagesFromNavigationHistory()
-        {
-            NavigationService.Frame.BackStack
-.Where(b => Attribute.IsDefined(b.SourcePageType, typeof(Restricted)))
-.ToList()
-.ForEach(page => NavigationService.Frame.BackStack.Remove(page));
-        }
+        //        private void CleanRestrictedPagesFromNavigationHistory()
+        //        {
+        //            NavigationService.Frame.BackStack
+        //.Where(b => Attribute.IsDefined(b.SourcePageType, typeof(Restricted)))
+        //.ToList()
+        //.ForEach(page => NavigationService.Frame.BackStack.Remove(page));
+        //        }
 
-        private void GoBackToLastUnrestrictedPage()
-        {
-            var currentPage = NavigationService.Frame.Content as Page;
-            var isCurrentPageRestricted = Attribute.IsDefined(currentPage.GetType(), typeof(Restricted));
-            if (isCurrentPageRestricted)
-            {
-                NavigationService.GoBack();
-            }
-        }
+        //        private void GoBackToLastUnrestrictedPage()
+        //        {
+        //            var currentPage = NavigationService.Frame.Content as Page;
+        //            var isCurrentPageRestricted = Attribute.IsDefined(currentPage.GetType(), typeof(Restricted));
+        //            if (isCurrentPageRestricted)
+        //            {
+        //                NavigationService.GoBack();
+        //            }
+        //        }
 
-//        private void OnUserProfile(object sender, RoutedEventArgs e)
-//        {
-//            if (IsLoggedIn)
-//            {
-//                OpenSettingsPage(sender,e);
-////                NavigationService.Navigate<SettingsPage>();
-//            }
-//            //else
-//            //{
-//            //    IsBusy = true;
-//            //    var loginResult = await IdentityService.LoginAsync();
-//            //    if (loginResult != LoginResultType.Success)
-//            //    {
-//            //        await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
-//            //        IsBusy = false;
-//            //    }
-//            //}
-//        }
+        //        private void OnUserProfile(object sender, RoutedEventArgs e)
+        //        {
+        //            if (IsLoggedIn)
+        //            {
+        //                OpenSettingsPage(sender,e);
+        ////                NavigationService.Navigate<SettingsPage>();
+        //            }
+        //            //else
+        //            //{
+        //            //    IsBusy = true;
+        //            //    var loginResult = await IdentityService.LoginAsync();
+        //            //    if (loginResult != LoginResultType.Success)
+        //            //    {
+        //            //        await AuthenticationHelper.ShowLoginErrorAsync(loginResult);
+        //            //        IsBusy = false;
+        //            //    }
+        //            //}
+        //        }
 
-        private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw e.Exception;
-        }
+        //private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        //{
+        //    throw e.Exception;
+        //}
 
-        private void OnCurrentPageCanGoBackChanged(object sender, bool currentPageCanGoBack)
-            => IsBackEnabled = NavigationService.CanGoBack || currentPageCanGoBack;
+        //private void OnCurrentPageCanGoBackChanged(object sender, bool currentPageCanGoBack)
+        //    => IsBackEnabled = NavigationService.CanGoBack || currentPageCanGoBack;
 
         //private void Frame_Navigated(object sender, NavigationEventArgs e)
         //{
@@ -366,21 +362,21 @@ namespace COTG.Views
         //    return pageType == sourcePageType;
         //}
 
-        private void OnItemInvoked(WinUI.NavigationView sender, WinUI.NavigationViewItemInvokedEventArgs args)
-        {
-            if (args.IsSettingsInvoked)
-            {
-                OpenSettingsPage(sender, args);
-//                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
-                return;
-            }
+        //        private void OnItemInvoked(WinUI.NavigationView sender, WinUI.NavigationViewItemInvokedEventArgs args)
+        //        {
+        //            if (args.IsSettingsInvoked)
+        //            {
+        //                OpenSettingsPage(sender, args);
+        ////                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
+        //                return;
+        //            }
 
-            //if (args.InvokedItemContainer is WinUI.NavigationViewItem selectedItem)
-            //{
-            //    var pageType = selectedItem.GetValue(NavHelper.NavigateToProperty) as Type;
-            //    NavigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
-            //}
-        }
+        //            //if (args.InvokedItemContainer is WinUI.NavigationViewItem selectedItem)
+        //            //{
+        //            //    var pageType = selectedItem.GetValue(NavHelper.NavigateToProperty) as Type;
+        //            //    NavigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
+        //            //}
+        //        }
 
         //private void OnBackRequested(WinUI.NavigationView sender, WinUI.NavigationViewBackRequestedEventArgs args)
         //{
@@ -419,7 +415,7 @@ namespace COTG.Views
         }
 
 
-        public  void TestPost(object o, RoutedEventArgs e)
+        public void TestPost(object o, RoutedEventArgs e)
         {
             Raiding.UpdateTSHome(true);
 
@@ -473,11 +469,11 @@ namespace COTG.Views
 
         static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
         const short bidTownHall = 455;
-        static short [] bidMap = new short[]{ 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
-        
+        static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
+
 
         static DateTimeOffset flyoutCreatedTime;
-        public static (int x,int y) webclientSpan;
+        public static (int x, int y) webclientSpan;
 
         private async void ShowBuildings(object sender, RoutedEventArgs e)
         {
@@ -485,7 +481,7 @@ namespace COTG.Views
             {
                 if (City.build == null)
                     return;
-               // Assert(false);
+                // Assert(false);
                 await GetCity.Post(City.build.cid, (jse, city) =>
                 {
 
@@ -534,33 +530,33 @@ namespace COTG.Views
                         buildingList.UpdateLayout();
                     });
                 });
-                    //   var flyout = FlyoutBase.GetAttachedFlyout(button);
-                    //  flyout.OverlayInputPassThroughElement = shellPage;
-                    //    flyout.XamlRoot = shellFrame.XamlRoot;
-                    //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
-                    //  Log($"{button.Tr.ToString()}");
-                    //  var c = button.CenterPoint;
-                    //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
-                    //  flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
+                //   var flyout = FlyoutBase.GetAttachedFlyout(button);
+                //  flyout.OverlayInputPassThroughElement = shellPage;
+                //    flyout.XamlRoot = shellFrame.XamlRoot;
+                //    flyout.ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway;
+                //  Log($"{button.Tr.ToString()}");
+                //  var c = button.CenterPoint;
+                //      flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Full, ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
+                //  flyout.ShowAt(button, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode = FlyoutShowMode.Auto });
 
-                    //           buildingList.Focus(FocusState.Programmatic);
-                    //            buildingList.CapturePointer(e.Pointer);
-                    //   buildingList.Focus(FocusState.Programmatic);
-                    //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
-                    //  buildingList.DesiredSize
-                    //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
+                //           buildingList.Focus(FocusState.Programmatic);
+                //            buildingList.CapturePointer(e.Pointer);
+                //   buildingList.Focus(FocusState.Programmatic);
+                //  buildingList.Height = ((bd.Count + 5) / 6) * 60+10;
+                //  buildingList.DesiredSize
+                //  FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
 
-                    //           buildingList.UpdateLayout();
-                    //     button.Flyout.with
-                    //var mouseC = e.GetCurrentPoint(null).Position;
-                    //const float spawn = 20.0f;
-                    //      button.Focus(FocusState.Programmatic);
+                //           buildingList.UpdateLayout();
+                //     button.Flyout.with
+                //var mouseC = e.GetCurrentPoint(null).Position;
+                //const float spawn = 20.0f;
+                //      button.Focus(FocusState.Programmatic);
 
-                    //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+                //            var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
 
-                    //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
-                    //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
-              
+                //  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
+                //  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
+
             }
             catch (Exception ex)
             {
@@ -572,73 +568,73 @@ namespace COTG.Views
         }
         public static void ShowTipRefresh()
         {
-            if(SettingsPage.tipRefresh)
+            if (SettingsPage.tipRefresh)
             {
                 SettingsPage.tipRefresh = false;
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low,()=>  instance.RefreshTip.IsOpen = true);
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
             }
         }
-		private void DoNothing(object sender, RoutedEventArgs e)
-		{
+        //private void DoNothing(object sender, RoutedEventArgs e)
+        //{
 
-		}
+        //}
 
         private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
         {
-           // Log("Why is this closing?");
+            // Log("Why is this closing?");
         }
 
         private void GridLostMouse(object sender, PointerRoutedEventArgs e)
         {
 
-			try
-			{
-             //   Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
-              //  var me = sender as GridView;
-              //  var button = buildingsButton;
-              //  var flyout = FlyoutBase.GetAttachedFlyout(button);
-              //  if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
-               //     flyout.Hide();
+            try
+            {
+                //   Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
+                //  var me = sender as GridView;
+                //  var button = buildingsButton;
+                //  var flyout = FlyoutBase.GetAttachedFlyout(button);
+                //  if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
+                //     flyout.Hide();
 
 
             }
-			catch (Exception)
-			{
+            catch (Exception)
+            {
 
-			}
+            }
         }
 
-        public static string GetName(object o )
-		{
+        //      public static string GetName(object o )
+        //{
 
-            return o is FrameworkElement e ? $"{ e.Name }{e.GetType() }"  : $"{ o.ToString()}{o.GetType() }";
-		}
-		//private void ShellPointerEntered(object sender, PointerRoutedEventArgs e)
-		//{
-  //          Log($"pointer enter: {GetName(sender)} {GetName(e.OriginalSource)}");
-  //      }
+        //          return o is FrameworkElement e ? $"{ e.Name }{e.GetType() }"  : $"{ o.ToString()}{o.GetType() }";
+        //}
+        //private void ShellPointerEntered(object sender, PointerRoutedEventArgs e)
+        //{
+        //          Log($"pointer enter: {GetName(sender)} {GetName(e.OriginalSource)}");
+        //      }
 
-		//private void ShellPointerExited(object sender, PointerRoutedEventArgs e)
-		//{
-  //          Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
+        //private void ShellPointerExited(object sender, PointerRoutedEventArgs e)
+        //{
+        //          Log($"pointer exit: {GetName(sender)} {GetName(e.OriginalSource)}");
 
 
-  //      }
-        private void TroopOverview(object sender, RoutedEventArgs e)
-        {
-            RestAPI.troopsOverview.Post();
-        }
+        //      }
+        //       private void TroopOverview(object sender, RoutedEventArgs e)
+        //       {
+        //           RestAPI.troopsOverview.Post();
+        //       }
 
-        private void TestRaid(object sender, RoutedEventArgs e)
-        {
- //          ScanDungeons.Post();
-        }
+        //       private void TestRaid(object sender, RoutedEventArgs e)
+        //       {
+        ////          ScanDungeons.Post();
+        //       }
 
-        
-        private void GetIncomingOverview(object sender, RoutedEventArgs e)
-        {
-            IncomingOverview.Process(false);
-        }
+
+        //       private void GetIncomingOverview(object sender, RoutedEventArgs e)
+        //       {
+        //           IncomingOverview.Process(false);
+        //       }
 
         //private void logFlyoutButton_Click(object sender, RoutedEventArgs e)
         //{
@@ -655,19 +651,84 @@ namespace COTG.Views
         //    }
         //}
 
-        private async void OpenSettingsPage(object sender, object e)
-        {
-            AppWindow newWindow = await AppWindow.TryCreateAsync();
-            newWindow.Title = "Settings";
-            var newPage = new SettingsPage();
-         
-            ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
-            await newWindow.TryShowAsync();
-        }
 
         private void TipTest(object sender, RoutedEventArgs e)
         {
             ShowTipRefresh();
+        }
+
+        private async void ShowSettings(object sender, RoutedEventArgs e)
+        {
+            AppWindow newWindow = await AppWindow.TryCreateAsync();
+            newWindow.Title = "Settings";
+            var newPage = new SettingsPage();
+
+            ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
+            await newWindow.TryShowAsync();
+
+        }
+
+
+        public static ComboBox CityListBox => instance.cityListBox;
+        //  private DumbCollection<CityList> cityListSelections => CityList.selections;
+        private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Any())
+            {
+                var newSel = e.AddedItems?.FirstOrDefault();
+                var priorSel = e.RemovedItems?.FirstOrDefault();
+                if (newSel != priorSel && priorSel != null)
+                {
+                    //     Log("City Sel changed");
+                    CityList.SelectedChange();
+                }
+            }
+        }
+        private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Any())
+            {
+                var newSel = e.AddedItems?.FirstOrDefault() as City;
+                if (newSel != City.build)
+                {
+                    newSel.SetBuild();
+                    JSClient.ChangeCity(newSel.cid);
+
+                }
+            }
+        }
+
+        private void ChangeCityClick(int delta)
+        {
+            City newSel;
+            if (City.gridCitySource.Count <= 1)
+            {
+                if (City.gridCitySource.Count == 0)
+                    return;
+                newSel = City.gridCitySource.First();
+            }
+            else
+            {
+                int id = City.gridCitySource.IndexOf(City.build) + delta;
+                if (id < 0)
+                    id += City.gridCitySource.Count;
+                if (id >= City.gridCitySource.Count)
+                    id -= City.gridCitySource.Count;
+
+                newSel = City.gridCitySource[id];
+            }
+            newSel.SetBuild();
+            JSClient.ChangeCity(newSel.cid);
+        }
+
+        private void PriorCityClick(object sender, RoutedEventArgs e)
+        {
+            ChangeCityClick(-1);
+        }
+
+        private void NextCityClick(object sender, RoutedEventArgs e)
+        {
+            ChangeCityClick(+1);
         }
     }
 }

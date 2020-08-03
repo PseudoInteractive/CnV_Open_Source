@@ -75,8 +75,11 @@ namespace COTG.Helpers
     }
     public static class DumbHelpers
 	{
-        public static void NotifyChange(this HashSet<City> items)
+        public static void NotifyChange(this HashSet<City> items,string memberName="")
         {
+            if (items.Count == 0)
+                return;
+
             // defer the call, we don't need it right away
             App.DispatchOnUIThreadLow( ()=>
             {
@@ -85,7 +88,11 @@ namespace COTG.Helpers
 
                     //       MainPage.instance.gridCitySource
 
-                    items.ToArray().NotifyChange( );
+                    foreach (var i in items)
+                    {
+                        i.OnPropertyChanged((memberName));
+
+                    }
                 }
                 catch (Exception e)
                 {
@@ -93,16 +100,7 @@ namespace COTG.Helpers
                 }
             }    );
         }
-        public static void NotifyChange(this IList<Spot> changedItems, string memberName = "")
-        {
-            foreach (var i in changedItems)
-            {
-                    i.OnPropertyChanged( (memberName));
-
-            }
-            //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItems, changedItems));
-        }
-
+        
 
     }
 }

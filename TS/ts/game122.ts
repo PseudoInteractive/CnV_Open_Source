@@ -17002,7 +17002,7 @@ var cotgsubscribe = amplify;
         }, 2000);
         else if (!(Y0g == 0)) {
           D6 = JSON.parse(Y0g);
-          D6=D6;
+          
            gCPosted();
           Y0g = "";
           cit_type = D6.w;
@@ -18158,7 +18158,7 @@ var cotgsubscribe = amplify;
         getCity(Number(d9l));
         cid = Number(d9l);
         X8();
-        c3F();
+          { setTimeout(function () { U9 = 0; }, 1000); }
       }
     }
 
@@ -56631,6 +56631,7 @@ console.log("Bad");
    //   var J9l = arguments.callee.caller.name;
       E6k.R6();
       if (U9 == 0) {
+          U9 = 1;
         ClearCity();
         getCity(Number(S9l));
         cid = Number(S9l);
@@ -56638,7 +56639,6 @@ console.log("Bad");
           E6k.R6();
           r7F();
         }, 500);
-        U9 = 1;
         c3F();
       }
     }

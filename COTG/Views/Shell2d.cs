@@ -63,15 +63,15 @@ namespace COTG.Views
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 
         static Dictionary<string, CanvasTextLayout> nameLayoutCache = new Dictionary<string, CanvasTextLayout>();
-        const int bottomMargin = 36;
+        const int bottomMargin = 0;
         const int cotgPopupWidth = 550;
         const int cotgPopupLeft = 438;
         const int cotgPopupRight = cotgPopupLeft+cotgPopupWidth;
         const int cotgPanelRight = 410;
         public static int cachedXOffset = cotgPanelRight;
         public static int cachedTopOffset = 0;
-        const int cotgPopupTopDefault = 0;
-        const int cotgPopupTopLong = 300;
+        const int cotgPopupTopDefault = 95;
+        const int cotgPopupTopLong = 300+95;
 
         static public CanvasAnimatedControl canvas;
 
@@ -405,7 +405,7 @@ namespace COTG.Views
                         myNameBrush = myNameBrush.WithAlpha(intAlpha);
                     
                         var td = TileData.instance;
-                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).RoundToInt();
+                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).CeildToInt();
                         var ccBase = cameraCLag.RoundToInt();
                         for (int ty = -halfTiles.y; ty <= halfTiles.y; ++ty)
                         {
