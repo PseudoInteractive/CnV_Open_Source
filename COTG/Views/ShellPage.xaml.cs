@@ -185,7 +185,7 @@ namespace COTG.Views
             //splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
             //Canvas.SetZIndex(splitter, 5);
 
-            NavigationService.Frame = shellFrame;
+      //      NavigationService.Frame = shellFrame;
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
@@ -193,34 +193,35 @@ namespace COTG.Views
             // KeyboardAccelerators.Add(_backKeyboardAccelerator);
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
-            // grid.hor
+                                // grid.hor
             /// we pass this as an argument to let the page know that it is a programmatic navigation
-           // Services.NavigationService.Navigate<Views.DefensePage>(this);
-
-            CreateTabPage(chatTabFrame).AddChatTabs();
-
+            // Services.NavigationService.Navigate<Views.DefensePage>(this);
+         //   ChatTab.Ctor();
             {
-                var tabPage = CreateTabPage(shellFrame);
+                ChatTab.Ctor();
+                CreateTabPage(chatTabFrame).AddChatTabs();
 
-                MainPage.instance = new MainPage();
-                tabPage.AddTab(MainPage.instance, true);
+                UserTab.InitUserTabs();
+                {
+                    var tabPage = CreateTabPage(shellFrame);
 
-                DefenderPage.instance = new DefenderPage();
-                tabPage.AddTab(DefenderPage.instance, false);
+                    tabPage.AddTab(MainPage.instance, true);
 
-                DefensePage.instance = new DefensePage();
-                // tabPage.AddTab(DefensePage.instance, false);
+                    tabPage.AddTab(DefenderPage.instance, false);
 
-                DonationTab.instance = new DonationTab();
-                tabPage.AddTab(DonationTab.instance, false);
+                  //   tabPage.AddTab(DefensePage.instance, false);
 
-            }
-            {
-                var tabPage = CreateTabPage(spotFrame);
-                SpotTab.instance = new SpotTab();
-                tabPage.AddTab(SpotTab.instance, true);
+                    tabPage.AddTab(DonationTab.instance, false);
+                    tabPage.AddTab(BossTab.instance, false);
 
-            }
+                }
+                {
+                    var tabPage = CreateTabPage(spotFrame);
+                    //   SpotTab.instance = new SpotTab();
+                    tabPage.AddTab(SpotTab.instance, true);
+
+                }
+            };
 
             var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
             refresh.Invoked += Refresh_Invoked;

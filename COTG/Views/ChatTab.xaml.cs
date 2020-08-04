@@ -63,8 +63,12 @@ namespace COTG.Views
         public static ChatTab whisper = new ChatTab() { DataContext = nameof(whisper) };
         public static ChatTab debug = new ChatTab() { DataContext = nameof(debug) };
 
-        public static ChatTab[] all = { world, alliance, officer, whisper, debug };
-
+        public static ChatTab[] all = Array.Empty<ChatTab>();
+        public static ChatTab[] Ctor()
+        {
+           all = new ChatTab[]{ world, alliance, officer, whisper, debug };
+            return all;
+        }
         public static string[] chatToId = { nameof(world), nameof(whisper), nameof(alliance), nameof(officer) };
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
         public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });

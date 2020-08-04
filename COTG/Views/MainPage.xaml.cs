@@ -35,6 +35,7 @@ namespace COTG.Views
 
     public sealed partial class MainPage : UserTab, INotifyPropertyChanged
     {
+        static float[] raidSteps;
         public static MainPage instance;
 
         //        public static City showingRowDetails;
@@ -48,7 +49,6 @@ namespace COTG.Views
         //}
         public static RadDataGrid CityGrid => instance.cityGrid;
         const int raidStepCount = 9;
-        static float[] raidSteps = new float[raidStepCount];
       //  static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
@@ -56,7 +56,8 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             InitializeComponent();
-            for(int i=0;i<raidStepCount;++i)
+            raidSteps =  new float[raidStepCount];
+            for (int i=0;i<raidStepCount;++i)
 			{
                 raidSteps[i]=( ( (MathF.Exp((i - 4) * 1.0f / 16.0f) + (-0.032625f,0.032625f).Random())*100.0f).RoundToInt() );
 			}
@@ -64,7 +65,7 @@ namespace COTG.Views
             raidCarryBox.ItemsSource= raidSteps;
             raidCarryBox.SelectedIndex = 4;
 
-            var rand = new Random();
+    //        var rand = new Random();
 
             //cityMenuFlyout = new MenuFlyout();
             //var c = new MenuFlyoutItem() { Text = "Home Whenever" };

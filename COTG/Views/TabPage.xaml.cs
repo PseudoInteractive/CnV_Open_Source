@@ -23,6 +23,20 @@ namespace COTG.Views
 {
     public class UserTab : UserControl
     {
+        public static UserTab[] userTabs;
+        public static void InitUserTabs()
+        {
+
+            userTabs = new UserTab[] {
+                new MainPage(),
+                new DefenderPage(),
+                new DonationTab(),
+                new DefensePage(),
+                new BossTab(),
+                new SpotTab()
+        };
+            }
+
         public virtual void VisibilityChanged(bool visible)
         {
             Log($"VisibilityChanged: {visible} {this}");
@@ -136,6 +150,7 @@ namespace COTG.Views
         static Dictionary<string, Symbol> tabSymbolIcons = new Dictionary<string, Symbol> {
             { "Raid", Symbol.ReShare },
             { "Donation", Symbol.Share },
+            { "Boss", Symbol.View },
             { "world", Symbol.Microphone },
             { "alliance" ,  Symbol.People },
             { "whisper" , Symbol.Comment },
@@ -382,14 +397,11 @@ namespace COTG.Views
             if (_sender == null)
                 _sender = sender;
             var menu = new MenuFlyout();
-            if (!MainPage.instance.isActive)
-                menu.Items.Add(AddTabMenuItem(MainPage.instance));
-            if (!DefenderPage.instance.isActive)
-                menu.Items.Add(AddTabMenuItem(DefenderPage.instance));
-            if (!DefensePage.instance.isActive)
-                menu.Items.Add(AddTabMenuItem(DefensePage.instance));
-            if (!SpotTab.instance.isActive)
-                menu.Items.Add(AddTabMenuItem(SpotTab.instance));
+            foreach(var tab in UserTab.userTabs)
+            {
+                if(!tab.isActive)
+                    menu.Items.Add(AddTabMenuItem(tab));
+            }
 
             foreach (var tab in ChatTab.all)
             {

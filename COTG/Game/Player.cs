@@ -47,7 +47,7 @@ namespace COTG.Game
             }
             all = _all;
             nameToId = _nameToId;
-            Note.Show("Got Players");
+      //      Note.Show("Got Players");
 
 
         }

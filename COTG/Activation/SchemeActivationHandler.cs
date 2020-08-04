@@ -6,6 +6,8 @@ using COTG.Views;
 
 using Windows.ApplicationModel.Activation;
 
+using static COTG.Debug;
+
 namespace COTG.Activation
 {
     internal class SchemeActivationHandler : ActivationHandler<ProtocolActivatedEventArgs>
@@ -17,7 +19,9 @@ namespace COTG.Activation
             var data = new SchemeActivationData(args.Uri);
             if (data.IsValid)
             {
-                NavigationService.Navigate(data.PageType, data.Parameters);
+                // TODO
+                Assert(false);
+ //               NavigationService.Navigate(data.PageType, data.Parameters);
             }
 
             await Task.CompletedTask;

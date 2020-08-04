@@ -54,7 +54,7 @@ namespace COTG.Views
 
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
-            var data = defenderGrid.GetDataView();
+      //      var data = defenderGrid.GetDataView();
         }
 
         public class ArmyTypeStyleSelector : StyleSelector

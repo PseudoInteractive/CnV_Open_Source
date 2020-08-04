@@ -26,7 +26,7 @@ namespace COTG.Services
 
 //        private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
-        private UserDataService UserDataService => Singleton<UserDataService>.Instance;
+       // private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
         public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
         {
@@ -64,7 +64,7 @@ namespace COTG.Services
                 var activation = activationArgs as IActivatedEventArgs;
                 if (activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
+            //        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
                 }
 
                 // Ensure the current window is active
@@ -97,11 +97,11 @@ namespace COTG.Services
 
             if (IsInteractive(activationArgs) && _defaultNavItem!=null)
             {
-                var defaultHandler = new DefaultActivationHandler(_defaultNavItem);
-                if (defaultHandler.CanHandle(activationArgs))
-                {
-                    await defaultHandler.HandleAsync(activationArgs);
-                }
+                //var defaultHandler = new DefaultActivationHandler(_defaultNavItem);
+                //if (defaultHandler.CanHandle(activationArgs))
+                //{
+                //    await defaultHandler.HandleAsync(activationArgs);
+                //}
             }
         }
 
@@ -127,7 +127,7 @@ namespace COTG.Services
             yield return Singleton<ToastNotificationsService>.Instance;
             yield return Singleton<ShareTargetActivationHandler>.Instance;
             // TODO restore    yield return Singleton<BackgroundTaskService>.Instance;
-            yield return Singleton<SuspendAndResumeService>.Instance;
+//            yield return Singleton<SuspendAndResumeService>.Instance;
             yield return Singleton<WebToAppLinkActivationHandler>.Instance;
             yield return Singleton<SchemeActivationHandler>.Instance;
             yield return Singleton<CommandLineActivationHandler>.Instance;

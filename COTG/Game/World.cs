@@ -75,6 +75,23 @@ namespace COTG.Game
 
     }
 
+    public class Boss
+    {
+        public byte level { get; set; }
+        public byte type { get; set; }
+        public int cid;
+        public string xy => cid.CidToString();
+        public int cont => cid.CidToContinent();
+        public float dist => distanceReference != null ? cid.CidToWorld().DistanceToCid(distanceReference.cid) : 0f;
+
+        public override string ToString()
+        {
+            return $"Boss {xy} {cont} {level} {type}";
+        }
+        public static Boss[] all = Array.Empty<Boss>();
+        public static City distanceReference; // Set temporarily for boss hunting.  Null usually
+    }
+
     public class World
     {
         public static World current;
@@ -122,14 +139,6 @@ namespace COTG.Game
 
         }
 
-        public struct Boss
-        {
-            public byte level;
-            public byte type;
-            public ushort x;
-            public ushort y;
-        }
-        public Boss[] bosses;
 
         public struct Shrine
         {
@@ -258,22 +267,24 @@ namespace COTG.Game
                 /** @type {string} */
                 bkey_ = dat_;
                 var _t = dat_.ToString();
+                var x = (int)(_t.SubStrAsInt(6, 3) - 100);
+                var y = (int)(_t.SubStrAsInt(3, 3) - 100);
+
                 var b = new Boss()
                 {
-                    x = (ushort)(_t.SubStrAsInt(6, 3) - 100),
-                    y = (ushort)(_t.SubStrAsInt(3, 3) - 100),
+                    cid = (x,y).WorldToCid(),
                     level = (byte)(_t.SubStrAsByte(0, 2) - 10),
                     type = _t.SubStrAsByte(2, 1)
                 };
                 //  LogJS(b);
                 bosses.Add(b);
-                var index = (int)(b.x + b.y * worldDim);
+                var index = (x + y * worldDim);
                 pixels.SetColor(index, 0xF0, 0xF0, 0x40);
                 pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
                 pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-
+                Trace($"Boss: {b}");
                 raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
             }
@@ -603,7 +614,7 @@ namespace COTG.Game
             //            rv.cities = cities.ToArray();
             rv.portals = portals.ToArray();
             rv.shrines = shrines.ToArray();
-            rv.bosses = bosses.ToArray();
+            Boss.all = bosses.ToArray();
             bitmapPixels = pixels;
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             return rv;

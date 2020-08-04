@@ -9,7 +9,6 @@
     xmlns:model="using:COTG.Core.Models"
     xmlns:views="using:COTG.Views"
     xmlns:behaviors="using:COTG.Behaviors"
-    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d" Background="{x:Null}">
 	<Page.Transitions>
 		<TransitionCollection>

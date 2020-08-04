@@ -144,7 +144,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.0-build.80</Version>
+      <Version>7.0.0-build.152</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0-prerelease.200708003</Version>
@@ -192,8 +192,6 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="BackgroundTasks\BackgroundTask.cs" />
     <Compile Include="BackgroundTasks\BackgroundTask1.cs" />
-    <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
-    <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="EventHandlers\Ink\AddStrokeEventArgs.cs" />
     <Compile Include="EventHandlers\Ink\CopyPasteStrokesEventArgs.cs" />
@@ -666,6 +664,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>S:\source\UI-For-UWP2\Controls\Grid\Grid.UWP\bin\x64\Release\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

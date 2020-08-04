@@ -35,7 +35,7 @@
                         SelectionMode="Single"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-                        SelectionChanged="donationGrid_SelectionChanged"
+                        SelectionChanged="CityGrid_SelectionChanged"
                         >
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridImageColumn PropertyName="icon"
@@ -53,45 +53,13 @@
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             Width="42" />
-                <telerikGrid:DataGridNumericalColumn PropertyName="wood"
-                                            CellContentFormat="{}{0,7:N0}"
-                                                     CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Auto"
-                                             Width="50" />
-                <telerikGrid:DataGridNumericalColumn PropertyName="woodStorage"
-                                            CellContentFormat="{}{0,7:N0}"
-                                                     CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Auto"
-                                            Width="50" IsVisible="False" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="stone"
-                                            CellContentFormat="{}{0,7:N0}"
-                                           SizeMode="Auto"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            Width="50" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="cartsHome"
-                                            CellContentFormat="{}{0,5:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Auto"
-                                            Width="40" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="carts"
-                                            SizeMode="Auto"
-                                           CellContentFormat="{}{0,5:N0}"
-                                                      IsVisible="False"
-                                            Width="40" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="shipsHome"
-                                            CellContentFormat="{}{0,5:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"          
-                                            Width="34" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="ships"
-                                            CellContentFormat="{}{0,5:N0}"
-                                                      IsVisible="False"
-                                            Width="60" />
+                
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                                      IsVisible="False"
                                             Width="80" />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
-        <telerikGrid:RadDataGrid x:Name="blessedGrid" x:FieldModifier="public"
+        <telerikGrid:RadDataGrid x:Name="bossGrid" x:FieldModifier="public"
                         Grid.Row="2"
                         Margin="0,14,0,0"
                         AutoGenerateColumns="False"
@@ -100,7 +68,7 @@
                         ColumnDataOperationsMode="Flyout"
                         UserGroupMode="Disabled"
                         FontSize="12"
-                        ItemsSource="{x:Bind blessedGridSource, Mode=OneTime}"
+                        ItemsSource="{x:Bind game:Boss.all, Mode=OneTime}"
                         RowHeight="34"
                         AlternationStep="2"
                         SelectionMode="Single"
@@ -108,13 +76,17 @@
                         GroupPanelPosition="Left"
                         >
             <tg:RadDataGrid.Commands>
-                <local:BlessedTapCommand />
+                <local:BossTapCommand />
             </tg:RadDataGrid.Commands>
             <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridTextColumn PropertyName="virtue"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
-                                                SizeMode="Fixed"
-                                       Width="48" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="type"
+                                                      SizeMode="Fixed"
+                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                            Width="40" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="level"
+                                                      SizeMode="Fixed"
+                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                            Width="40" />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
@@ -128,39 +100,6 @@
                                                 SizeMode="Fixed"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="48" />
-                <telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
-                                                    SizeMode="Auto"
-                                                
-                                                                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                       Width="45" />
-                <telerikGrid:DataGridTextColumn PropertyName="player"
-                                                SizeMode="Auto"
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                                
-                                       Width="60" />
-                <telerikGrid:DataGridTextColumn PropertyName="city"
-                                       SizeMode="Auto"
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                       Width="60" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="wood"
-                                                      CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,9:N0}"
-                                                      SizeMode="Fixed"
-                                            Width="70" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="stone"
-                                                      CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,9:N0}"
-                                                      SizeMode="Fixed"
-                                            Width="70" />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="pri"
-                                                      SizeMode="Fixed"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,2:N0}"
-                                            Width="35" />
-                <telerikGrid:DataGridTextColumn PropertyName="notes"
-                                       Width="45" />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
         <tk:GridSplitter Grid.Row="2"

@@ -10660,8 +10660,7 @@ var cotgsubscribe = amplify;
       var n26 = bam["speeds"][_s('6661' | 1)];
       if (Z26 != 0) d26 =
         qam[_s(+G2y)][Number(Z26)][_s(+r2y)][0][_s(b2y >> 1654901120)];
-      if (d26 + ppdt[_s(
-          h2y | 2640)][7] / 2 > 0) b26 = b26 / (1 + (d26 + ppdt["fa"][7] / (2)) / (
+      if (d26 + ppdt["fa"][7] / 2 > 0) b26 = b26 / (1 + (d26 + ppdt["fa"][7] / (2)) / (
         100));
       if (U26 != 0) z26 = qam[_s(+G2y)][Number(U26)][_s(r2y ^ 0)][0][_s(+b2y)];
       if (
@@ -10673,13 +10672,11 @@ var cotgsubscribe = amplify;
         (1 + (M26 + ppdt["fa"][7] / 2) / 100);
       if (B26 != 0) G26 = qam[_s(G2y -
         0)][Number(B26)][_s(r2y & 2147483647)][0][_s(b2y << 524001664)];
-      if (G26 + ppdt[_s(+
-          h2y)][3] / (2) > 0) h26 = h26 / (1 + (G26 + ppdt["fa"]['3' >>
+        if (G26 + ppdt["fa"][3] / (2) > 0) h26 = h26 / (1 + (G26 + ppdt["fa"]['3' >>
         740186528] / 2) / 100);
       if (R26 != 0) C26 = qam[_s(G2y ^ 0)][Number(R26)][_s(+r2y)]['0' *
         1][_s(b2y - 0)];
-      if (C26 + ppdt["fa"][3] / 2 > 0) V26 = V26 / (1 + (C26 + ppdt[E6k
-        .S55(h2y >> 1508422400)][3] / 2) / (100));
+        if (C26 + ppdt["fa"][3] / 2 > 0) V26 = V26 / (1 + (C26 + ppdt["fa"][3] / 2) / (100));
       if (y26 != 0) W26 = qam[E6k
         .o55(+G2y)][Number(y26)][_s(r2y >> 952026272)][0][_s(+b2y)];
       if (W26 + ppdt[_s(
@@ -42863,8 +42860,7 @@ console.log("Bad");
       if (A8B != 0)
         z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][0][_s(b2y & 2147483647)];
       E6k.R6();
-      if (z8B + ppdt["fa"][7] / 2 > 0) G8B = G8B / (1 + (z8B + ppdt[_s(+
-        h2y)][7] / 2) / 100);
+      if (z8B + ppdt["fa"][7] / 2 > 0) G8B = G8B / (1 + (z8B + ppdt["fa"][7] / 2) / 100);
       if (n8B != 0) O8B = qam[_s(+G2y)][Number(n8B)][_s(+r2y)]['0' <<
         906862304][_s(+b2y)];
       if (O8B + ppdt["fa"][7] / 2 > 0) C8B = C8B / (1 + (O8B +
@@ -42876,7 +42872,7 @@ console.log("Bad");
         100));
       if (K8B != 0) o8B = qam[_s(G2y | 1032)][Number(K8B)][_s(r2y & 2147483647)][0]
         [_s(b2y | 464)];
-      if (o8B + ppdt["fa"][3] / 2 > 0) i8B = i8B / (('1' |
+      if (o8B + ppdt.fa[3] / 2 > 0) i8B = i8B / (('1' |
         0) + (o8B + ppdt["fa"][3] / 2) / (100));
       if (S8B != 0) L8B = qam[_s(G2y >>
         1005535552)][Number(S8B)][_s(r2y - 0)][0][_s(+b2y)];
@@ -42889,8 +42885,7 @@ console.log("Bad");
       if (h8B != (
           0)) x8B = qam[_s(+G2y)][Number(h8B)][_s(+r2y)][0][_s(b2y >> 45822592)];
       if (x8B +
-        ppdt["fa"][5] / (2) > 0) g8B = g8B / ((1) + (x8B + ppdt[E6k
-        .o55(h2y >> 1158687712)][5] / 2) / 100);
+        ppdt["fa"][5] / (2) > 0) g8B = g8B / ((1) + (x8B + ppdt["fa"][5] / 2) / 100);
       if (V8B != 0) M8B = qam[_s(+G2y)][Number(V8B)][E6k
         .S55(r2y * 1)][0][_s(b2y >> 1943261088)];
       if (M8B + ppdt["fa"][5] / 2 > 0)
@@ -68532,14 +68527,14 @@ _viewMode = viewModeWorld;
       faith: function() {
         E6k.R6();
         var k6i = { // This is wrong
-          evara: aldt["fa"][1],
-          vexemis: aldt["fa"][1],
-          domdis: aldt["fa"][1],
-          cyndros: aldt["fa"][1],
-          merius: aldt["fa"][1],
-          ylanna: aldt["fa"][1],
-          ibria: aldt["fa"][1],
-          naera: aldt["fa"][1]
+          evara: ppdt["fa"][1],
+            vexemis: ppdt["fa"][2],
+            domdis: ppdt["fa"][3],
+            cyndros: ppdt["fa"][4],
+            merius: ppdt["fa"][5],
+            ylanna: ppdt["fa"][6],
+            ibria: ppdt["fa"][7],
+            naera: ppdt["fa"][8]
         };
         return k6i;
       },

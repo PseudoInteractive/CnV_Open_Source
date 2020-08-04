@@ -39,6 +39,11 @@ namespace COTG.Game
         public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
         public readonly static int[] otherLoot = { 350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600 };
         public readonly static int[] mountainLoot = { 350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500 };
+        public readonly static bool[] ttBossKiller =  { false, false, false, false,
+                                                        false, true, true, false,
+                                                        false, true,true,true,
+                                                        false,false,true,false,
+                                                        true,false }; 
 
         public readonly static byte[] ttspeed = { 0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40 };
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };

@@ -39,6 +39,8 @@ namespace COTG.Views
         public static SpotTab instance;
         public SpotTab()
         {
+            Assert(instance == null);
+            instance = this;
             this.InitializeComponent();
             selectedGrid.SelectionChanged += DefenderGrid_SelectionChanged;
 

@@ -79,7 +79,7 @@ namespace COTG
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Debug.Log(e.Message);
-            e.Handled = true;
+        //    e.Handled = true;
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
@@ -167,16 +167,16 @@ namespace COTG
             if (ShellPage.canvas != null)
                 ShellPage.canvas.Paused = true;
             SettingsPage.SaveAll();
-            var deferral = e.GetDeferral();
-            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
-            deferral.Complete();
+//            var deferral = e.GetDeferral();
+//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+ //           deferral.Complete();
         }
 
         private void App_Resuming(object sender, object e)
         {
             Trace("Resume");
             
-            Singleton<SuspendAndResumeService>.Instance.ResumeApp();
+   //         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
         }
 
         protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)

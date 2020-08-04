@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+using static COTG.Debug;
 
 namespace COTG.Views
 {
@@ -34,6 +35,8 @@ namespace COTG.Views
         public int reserveStone = 0;
         public DonationTab()
         {
+            Assert(instance == null);
+            instance = this;
             this.InitializeComponent();
         }
 
@@ -117,91 +120,90 @@ namespace COTG.Views
         }
     }
 
-    public class BlessedTapCommand : DataGridCommand
+public class BlessedTapCommand : DataGridCommand
+{
+    public BlessedTapCommand()
     {
-        public BlessedTapCommand()
-        {
-            this.Id = CommandId.CellTap;
+        this.Id = CommandId.CellTap;
 
-        }
-
-        public override bool CanExecute(object parameter)
-        {
-            var context = parameter as DataGridCellInfo;
-            // put your custom logic here
-            //    Log("CanExecute");
-            return true;
-        }
-
-        public override void Execute(object parameter)
-        {
-            var context = parameter as DataGridCellInfo;
-            var i = context.Item as BlessedCity;
-            Debug.Assert(i != null);
-            var c = context.Column.Header?.ToString() ?? string.Empty;
-            if (i != null)
-            {
-                switch (c)
-                {
-                    case nameof(i.virtue):
-                        {
-                            var sender = BlessedCity.senderCity;
-
-                            if (sender != null)
-                            {
-                                var inst = DonationTab.instance;
-                                var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
-                                        .Max(inst.reserveCarts);
-                                var carts = sender.cartsHome - cartReserve;
-                                if (carts <= 0)
-                                {
-                                    Note.Show("Not enough carts");
-                                    return;
-                                }
-                                var wood = (sender.wood - inst.reserveWood).Max0();
-                                var stone = (sender.stone - inst.reserveStone).Max0();
-                                if (wood + stone > carts * 1000)
-                                {
-                                    var desiredC = (wood + stone) / 1000 + 1;
-                                    var ratio = (float)carts / desiredC;
-                                    wood = (int)(wood * ratio);
-                                    stone = (int)(stone * ratio);
-                                }
-                                else if (wood + stone <= 0)
-                                {
-                                    Note.Show("Not enough res");
-                                    return;
-
-                                }
-                                sender.wood -= wood;
-                                sender.stone -= stone;
-                                sender.cartsHome -= (ushort)( (wood + stone + 999) / 1000);
-                                i.SendDonation(wood, stone);
-                                DonationTab.instance.blessedGrid.ItemsSource = null;
-                                BlessedCity.senderCity = null;
-                                var tempSource = DonationTab.instance.donationGrid.ItemsSource;
-                             //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
-                                DonationTab.instance.donationGrid.ItemsSource = null;
-                                DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
-
-                            }
-                        }
-                        break;
-                      case nameof(i.xy):
-                            JSClient.ShowCity(i.cid, false);
-                            break;
-            //            case nameof(Dungeon.plan):
-            //                Raiding.SendRaids(i);
-            //                break;
-
-            //        }
-                }
-            }
-
-            if (base.CanExecute(parameter))
-                base.Execute(parameter);
-
-        }
     }
 
+    public override bool CanExecute(object parameter)
+    {
+        var context = parameter as DataGridCellInfo;
+        // put your custom logic here
+        //    Log("CanExecute");
+        return true;
+    }
+
+    public override void Execute(object parameter)
+    {
+        var context = parameter as DataGridCellInfo;
+        var i = context.Item as BlessedCity;
+        Debug.Assert(i != null);
+        var c = context.Column.Header?.ToString() ?? string.Empty;
+        if (i != null)
+        {
+            switch (c)
+            {
+                case nameof(i.virtue):
+                    {
+                        var sender = BlessedCity.senderCity;
+
+                        if (sender != null)
+                        {
+                            var inst = DonationTab.instance;
+                            var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
+                                    .Max(inst.reserveCarts);
+                            var carts = sender.cartsHome - cartReserve;
+                            if (carts <= 0)
+                            {
+                                Note.Show("Not enough carts");
+                                return;
+                            }
+                            var wood = (sender.wood - inst.reserveWood).Max0();
+                            var stone = (sender.stone - inst.reserveStone).Max0();
+                            if (wood + stone > carts * 1000)
+                            {
+                                var desiredC = (wood + stone) / 1000 + 1;
+                                var ratio = (float)carts / desiredC;
+                                wood = (int)(wood * ratio);
+                                stone = (int)(stone * ratio);
+                            }
+                            else if (wood + stone <= 0)
+                            {
+                                Note.Show("Not enough res");
+                                return;
+
+                            }
+                            sender.wood -= wood;
+                            sender.stone -= stone;
+                            sender.cartsHome -= (ushort)((wood + stone + 999) / 1000);
+                            i.SendDonation(wood, stone);
+                            DonationTab.instance.blessedGrid.ItemsSource = null;
+                            BlessedCity.senderCity = null;
+                            var tempSource = DonationTab.instance.donationGrid.ItemsSource;
+                            //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
+                            DonationTab.instance.donationGrid.ItemsSource = null;
+                            DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
+
+                        }
+                    }
+                    break;
+                case nameof(i.xy):
+                    JSClient.ShowCity(i.cid, false);
+                    break;
+                    //            case nameof(Dungeon.plan):
+                    //                Raiding.SendRaids(i);
+                    //                break;
+
+                    //        }
+            }
+        }
+
+        if (base.CanExecute(parameter))
+            base.Execute(parameter);
+
+    }
+}
 }
