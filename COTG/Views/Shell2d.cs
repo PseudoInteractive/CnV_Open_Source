@@ -335,8 +335,8 @@ namespace COTG.Views
 
                 ds.Antialiasing = CanvasAntialiasing.Aliased;
   //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
-                var scale = ShellPage.canvas.ConvertPixelsToDips(1);
-                pixelScale = scale * (cameraZoomLag);
+               // var scale = ShellPage.canvas.ConvertPixelsToDips(1);
+                pixelScale = (cameraZoomLag);
 
                 var deltaZoom = cameraZoomLag - detailsZoomThreshold;
                 var wantDetails = deltaZoom > 0;

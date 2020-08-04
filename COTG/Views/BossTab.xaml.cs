@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using static COTG.Game.Enum;
 using static COTG.Debug;
 
 namespace COTG.Views
@@ -33,7 +33,8 @@ namespace COTG.Views
             {
                 bossGrid.ItemsSource = null;
                 bossGrid.ItemsSource = Boss.all;
-
+                cityGrid.ItemsSource = City.allCities.Values.Where(c => c.homeTroopsAttack > 50 * 10000.0f).
+                    OrderBy((c) => -c.homeTroopsAttack). ToArray();
             }
         }
 
@@ -61,7 +62,28 @@ namespace COTG.Views
             var it = e.AddedItems.FirstOrDefault();
             var newSel = it as City;
             Boss.distanceReference = newSel;
-            bossGrid.ItemsSource = Boss.all; // todo
+            var bosses = new List<Boss>();
+            if (newSel != null)
+            {
+                var waterValid = false;
+
+                foreach (var i in newSel.troopsHome)
+                    waterValid |= i.count > 0 && IsWaterRaider(i.type);
+                if (waterValid)
+                    bosses.AddRange(Boss.all);
+                else
+                {
+                    var cont = newSel.cont;
+                    foreach (var b in Boss.all)
+                    {
+                        if (b.cont == cont)
+                            bosses.Add(b);
+                    }
+                }
+                bosses.Sort((a, b) => a.dist.CompareTo(b.dist));
+            }
+            bossGrid.ItemsSource = bosses; // todo
+
         }
     }
         public class BossTapCommand : DataGridCommand

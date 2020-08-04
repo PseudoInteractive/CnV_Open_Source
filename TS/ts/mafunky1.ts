@@ -488,8 +488,8 @@ function UpdateResearchAndFaith(): void {
 
 	}
 	catch(e) {
-		setTimeout(UpdateResearchAndFaith,1000);
-		return;
+		//setTimeout(UpdateResearchAndFaith,1000);
+	//	return;
 
 	}
 

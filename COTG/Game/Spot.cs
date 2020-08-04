@@ -228,7 +228,7 @@ namespace COTG.Game
 
         public static void ProcessCoordClick(int cid,bool lazyMove)
         {
-            if (City.IsMine(cid) && City.IsFocus(cid))
+            if (City.IsMine(cid))
             {
                 if (City.IsBuild(cid))
                 {

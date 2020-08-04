@@ -47,13 +47,18 @@
                                        Width="45" />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
-                                       SizeMode="Auto"
+                                       SizeMode="Fixed"
                                        Width="45" />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             Width="42" />
-                
+                <telerikGrid:DataGridNumericalColumn PropertyName="homeTroopsAttack"
+                                                     Header="Attack"
+                                                      SizeMode="Auto"
+                                                CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,8:N1}"
+                                            Width="60" />
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                                      IsVisible="False"
                                             Width="80" />

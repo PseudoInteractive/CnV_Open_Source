@@ -67,6 +67,20 @@ namespace COTG.Game
                 return _carryCapacity;
             }
         }
+        public float homeTroopsAttack
+        {
+            get
+            {
+                // Todo: water
+                var atk = 0.0f;
+                foreach (var tc in troopsHome)
+                {
+                    // todo: research?
+                    atk += tc.count * ttAttack[tc.type] *ttCombatBonus[tc.type];
+                }
+                return atk;
+            }
+        }
         public int CarryCapacity(bool forWater)
         {
                 // Todo: water

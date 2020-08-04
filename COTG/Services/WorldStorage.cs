@@ -99,7 +99,7 @@ namespace COTG.Services
                     }
                 }
             }
-        end:
+        end:;
 #if(TRACE)
             Task.Delay(1000).ContinueWith((_) => LoadWorldData());
 #endif

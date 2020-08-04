@@ -8973,7 +8973,8 @@ var gspotfunct = {
     };
 
 var setcitybind;
-
+let wantFa=true;
+let wantRs=true;
 
 function ppdtChanged(__ppdt)
 {
@@ -8991,11 +8992,13 @@ function ppdtChanged(__ppdt)
     }
     if (__ppdt.hasOwnProperty("fa")) {
         wrapper.ppdt['fa'] = __ppdt['fa'];
-        wantUpdate = true;
+        wantUpdate ||= wantFa;
+        wantFa=false;
     }
     if (__ppdt.hasOwnProperty("rs")) {
         wrapper.ppdt['rs'] = __ppdt['rs'];
-        wantUpdate = true;
+        wantUpdate ||= wantRs;
+        wantRs=false;
     }
   if(!wantUpdate)
     return;
@@ -10659,38 +10662,37 @@ var cotgsubscribe = amplify;
         .o55(H2y >> 514449792)];
       var n26 = bam["speeds"][_s('6661' | 1)];
       if (Z26 != 0) d26 =
-        qam[_s(+G2y)][Number(Z26)][_s(+r2y)][0][_s(b2y >> 1654901120)];
-      if (d26 + ppdt["fa"][7] / 2 > 0) b26 = b26 / (1 + (d26 + ppdt["fa"][7] / (2)) / (
+        qam[_s(+G2y)][Number(Z26)][_s(+r2y)][0]["v"];
+      if (d26 + ppdt.fa[7] / 2 > 0) b26 = b26 / (1 + (d26 + ppdt.fa[7] / (2)) / (
         100));
-      if (U26 != 0) z26 = qam[_s(+G2y)][Number(U26)][_s(r2y ^ 0)][0][_s(+b2y)];
+      if (U26 != 0) z26 = qam[_s(+G2y)][Number(U26)][_s(r2y ^ 0)][0]["v"];
       if (
-        z26 + ppdt["fa"][7] / (2) > 0) S26 = S26 / ((1) + (z26 + ppdt[
+        z26 + ppdt.fa[7] / (2) > 0) S26 = S26 / ((1) + (z26 + ppdt[
         "fa"][7] / 2) / (100));
       if (P26 != 0) M26 = qam[_s(G2y * 1)][Number(P26)][E6k
-        .o55(r2y | 3472)][0][_s(+b2y)];
-      if (M26 + ppdt["fa"][7] / ('2' | 2) > 0) J26 = J26 /
-        (1 + (M26 + ppdt["fa"][7] / 2) / 100);
+        .o55(r2y | 3472)][0]["v"];
+      if (M26 + ppdt.fa[7] / ('2' | 2) > 0) J26 = J26 /
+        (1 + (M26 + ppdt.fa[7] / 2) / 100);
       if (B26 != 0) G26 = qam[_s(G2y -
-        0)][Number(B26)][_s(r2y & 2147483647)][0][_s(b2y << 524001664)];
-        if (G26 + ppdt["fa"][3] / (2) > 0) h26 = h26 / (1 + (G26 + ppdt["fa"]['3' >>
+        0)][Number(B26)][_s(r2y & 2147483647)][0]["v"];
+        if (G26 + ppdt.fa[3] / (2) > 0) h26 = h26 / (1 + (G26 + ppdt.fa['3' >>
         740186528] / 2) / 100);
       if (R26 != 0) C26 = qam[_s(G2y ^ 0)][Number(R26)][_s(+r2y)]['0' *
-        1][_s(b2y - 0)];
-        if (C26 + ppdt["fa"][3] / 2 > 0) V26 = V26 / (1 + (C26 + ppdt["fa"][3] / 2) / (100));
+        1]["v"];
+        if (C26 + ppdt.fa[3] / 2 > 0) V26 = V26 / (1 + (C26 + ppdt.fa[3] / 2) / (100));
       if (y26 != 0) W26 = qam[E6k
-        .o55(+G2y)][Number(y26)][_s(r2y >> 952026272)][0][_s(+b2y)];
+        .o55(+G2y)][Number(y26)][_s(r2y >> 952026272)][0]["v"];
       if (W26 + ppdt[_s(
-          h2y | 2584)][1] / 2 > 0) r26 = r26 / ((1) + (W26 + ppdt["fa"][1] / (
+          h2y | 2584)][1] / 2 > 0) r26 = r26 / ((1) + (W26 + ppdt.fa[1] / (
         2)) / 100);
       if (f26 != 0) i26 = qam[_s(+G2y)][Number(f26)][_s(r2y * 1)][0][_s(+
         b2y)];
-      if (i26 + ppdt["fa"][5] / ('2' | 2) > 0) A26 = A26 / (("1" <<
-        1488239776) + (i26 + ppdt["fa"][5] / (2)) / 100);
+      if (i26 + ppdt.fa[5] / ('2' | 2) > 0) A26 = A26 / (("1" <<
+        1488239776) + (i26 + ppdt.fa[5] / (2)) / 100);
       E6k.y6();
-      if (K26 != 0) X26 = qam[_s(+G2y)][Number(K26)][_s(+r2y)][0][_s(b2y <<
-        1657705344)];
-      if (X26 + ppdt["fa"]["5" | 4] / (2) > 0) n26 = n26 / (1 + (X26 +
-        ppdt["fa"][5] / (2)) / 100);
+      if (K26 != 0) X26 = qam[_s(+G2y)][Number(K26)][_s(+r2y)][0]["v"];
+      if (X26 + ppdt.fa["5" | 4] / (2) > 0) n26 = n26 / (1 + (X26 +
+        ppdt.fa[5] / (2)) / 100);
       var D26 = Math.floor(b26 * 1000 * L26);
       var p26 =
         Math.floor(S26 * (1000) * L26);
@@ -13027,7 +13029,7 @@ var cotgsubscribe = amplify;
             if ($(_s(926))
               .text() == _s(2367)) {
               $(_s(926))
-                .text(_s(b2y - 0));
+                .text("v");
               localStorage.setItem(_s(B2R | 4228), _s(5551));
               $(_s(+T7y))
                 .css({ 'height': _s(5551) });
@@ -17324,7 +17326,7 @@ var cotgsubscribe = amplify;
           .S55(y0R & 2147483647)];
         var e3l = qam[_s(d0p | 2054)][Number(m4l)][_s(K2y | 1092)];
         var T3l = qam[
-          _s(G2y * 1)][Number(u3l)][_s(r2y * 1)][0][_s(b2y >> 457045568)];
+          _s(G2y * 1)][Number(u3l)][_s(r2y * 1)][0]["v"];
         var s3l = u3l;
         if (e3l ==
           !0) var q4l = _s(l0p * 1) + T3l + _s(+o9y);
@@ -17341,9 +17343,9 @@ var cotgsubscribe = amplify;
           0)];
         var e3l = qam[_s(d0p ^ 0)][Number(m4l)][_s(+K2y)];
         var Q3l = qam[_s(G2y * 1)][Number(
-          a4l)][_s(r2y * 1)][0][_s(+b2y)];
+          a4l)][_s(r2y * 1)][0]["v"];
         if (s3l == 0) var k3l = 0;
-        else var k3l = qam[_s(+G2y)][Number(s3l)][_s(r2y | 3348)][0][_s(b2y & 2147483647)];
+        else var k3l = qam[_s(+G2y)][Number(s3l)][_s(r2y | 3348)][0]["v"];
         if (e3l ==
           !!"1") {
           var q4l = _s(l0p & 2147483647) + k3l + _s(o9y & 2147483647);
@@ -17353,7 +17355,7 @@ var cotgsubscribe = amplify;
         var t3l = H3l;
         var o3l = q4l;
         var O3l = qam[E6k
-          .S55(+G2y)][Number(a4l)][_s(r2y - 0)][0][_s(+b2y)];
+          .S55(+G2y)][Number(a4l)][_s(r2y - 0)][0]["v"];
       }
       if (c4l != c8y * 1) j3l = j3l + _s(
         b0p * 1) + X3l;
@@ -17550,8 +17552,8 @@ var cotgsubscribe = amplify;
       Q6F();
       clearTimeout(i8);
       clearTimeout(n5F);
-      D6.bq = {};
-      D6.tq = {};
+      D6.bq = [];
+      D6.tq = [];
       b9 = 0;
       b5F = 0;
       g2 = 0;
@@ -17710,7 +17712,7 @@ var cotgsubscribe = amplify;
         var R3l = qam[_s(
           +d0p)][Number(K3l)][_s(+K2y)];
         var w1l = qam[_s(+G2y)][Number(D3l)][_s(r2y | 288)][0][
-          _s(+b2y)];
+          "v"];
         var h3l = D3l;
         if (R3l == !!"1") var n3l = _s(+l0p) + w1l + _s(o9y & 2147483647);
         else var n3l = w1l;
@@ -17726,9 +17728,9 @@ var cotgsubscribe = amplify;
           .S55(y0R ^ 0)];
         var R3l = qam[_s(d0p * 1)][Number(K3l)][_s(+K2y)];
         var E3l = qam[_s(G2y |
-          779)][Number(Z3l)][_s(r2y & 2147483647)][0][_s(+b2y)];
+          779)][Number(Z3l)][_s(r2y & 2147483647)][0]["v"];
         if (h3l == 0) var P3l = 0;
-        else var P3l = qam[_s(+G2y)][Number(h3l)][_s(+r2y)][0][_s(b2y - 0)];
+        else var P3l = qam[_s(+G2y)][Number(h3l)][_s(+r2y)][0]["v"];
         if (R3l == !!"1") {
           var
             n3l = _s(+l0p) + P3l + _s(+o9y);
@@ -18861,7 +18863,7 @@ var cotgsubscribe = amplify;
                   var V7Z = ppdt["rs"][A5y ^ 0]["n"];
                   if (V7Z != +
                     '0') {
-                    var K7Z = qam[_s(+G2y)][V7Z][_s(r2y | 432)][0][_s(+b2y)];
+                    var K7Z = qam[_s(+G2y)][V7Z][_s(r2y | 432)][0]["v"];
                     A7Z = A7Z / ((100 - K7Z) / (100));
                   }
                 }
@@ -18869,7 +18871,7 @@ var cotgsubscribe = amplify;
                   var V7Z = ppdt["rs"][u6y * 1]["n"];
                   if (V7Z != 0) {
                     var K7Z = qam[_s(+G2y)][V7Z][E6k
-                      .S55(+r2y)][0][_s(b2y * 1)];
+                      .S55(+r2y)][0]["v"];
                     A7Z = A7Z / ((100 - K7Z) / 100);
                   }
                 }
@@ -18878,7 +18880,7 @@ var cotgsubscribe = amplify;
                     ["n"];
                   if (V7Z != (0)) {
                     var K7Z = qam[_s(G2y << 929674880)][V7Z][_s(
-                      +r2y)][0][_s(b2y << 1770694432)];
+                      +r2y)][0]["v"];
                     A7Z = A7Z / ((100 - K7Z) / (100));
                   }
                 }
@@ -18886,7 +18888,7 @@ var cotgsubscribe = amplify;
                     var V7Z = ppdt["rs"][F8y | 3]["n"];
                   if (V7Z != 0) {
                     var K7Z = qam[_s(+G2y)][V7Z][E6k
-                      .o55(+r2y)][0][_s(b2y - 0)];
+                      .o55(+r2y)][0]["v"];
                     A7Z = A7Z / ((100 - K7Z) / 100);
                   }
                 }
@@ -22489,23 +22491,23 @@ var cotgsubscribe = amplify;
         var N9w = ppdt[_s(+
           i2y)][A5y << 1253187072]["n"];
         if (N9w != 0) E9w = qam[_s(G2y | 5144)][N9w][_s(+
-          r2y)][0][_s(+b2y)] + ppdt["fa"][5];
+          r2y)][0]["v"] + ppdt.fa[5];
       }
       if (a9w == +q7y) {
         var N9w = ppdt["rs"][+u6y]["n"];
         if (N9w != 0) E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][E6k
-          .o55(b2y | 2136)] + ppdt["fa"][5];
+          .o55(b2y | 2136)] + ppdt.fa[5];
       }
       if (a9w == 16) {
         var N9w = ppdt[_s(
           i2y >> 7357312)][j6y * 1]["n"];
         if (N9w != 0) E9w = qam[_s(+G2y)][N9w][_s(+
-          r2y)][0][_s(+b2y)] + ppdt["fa"][5];
+          r2y)][0]["v"] + ppdt.fa[5];
       }
       if (a9w == +17) {
         var N9w = ppdt["rs"][F8y | 2]["n"];
         if (N9w != 0) E9w = qam[_s(+G2y)][N9w][_s(+r2y)][+
-          '0'][_s(b2y | 448)] + ppdt["fa"][1];
+          '0']["v"] + ppdt.fa[1];
       }
       q9w = q9w / ((D6[_s(O1p - 0)][e0D][E6k
         .o55(Z9y ^ 0)] + E9w + (100)) / 100);
@@ -25841,8 +25843,7 @@ console.log("Bad");
           });
         $(_s(5236))
           .click(function() {
-            var p9l = $(_s(+E9R))
-              .val();
+            var p9l= $(_s(+E9R)).val() as string;
             if (p9l == _s(+Q3p)) {
               var R9l = ppdt[_s(+x9y)].length;
               var q9l;
@@ -33843,40 +33844,40 @@ console.log("Bad");
         .S55(+H2y)];
       var k86 = bam["speeds"][_s(6661)];
       if (X86 != 0) u86 = qam[_s(+G2y)][
-        Number(X86)][_s(r2y << 626298368)][0][_s(+b2y)];
-      if (u86 + ppdt["fa"][7] / ('2' & E6k
-          .s6s) > 0) T86 = T86 / (1 + (u86 + ppdt["fa"][7] / 2) / (100));
+        Number(X86)][_s(r2y << 626298368)][0]["v"];
+      if (u86 + ppdt.fa[7] / ('2' & E6k
+          .s6s) > 0) T86 = T86 / (1 + (u86 + ppdt.fa[7] / 2) / (100));
       if (
         z86 != (0)) H86 = qam[_s(G2y ^ 0)][Number(z86)][_s(+r2y)][0][_s(+
         b2y)];
-      if (H86 + ppdt["fa"][7] / (2) > (0)) x86 = x86 / ((1) + (
-        H86 + ppdt["fa"][7] / 2) / 100);
+      if (H86 + ppdt.fa[7] / (2) > (0)) x86 = x86 / ((1) + (
+        H86 + ppdt.fa[7] / 2) / 100);
       if (M86 != 0) j86 = qam[_s(G2y & E6k
-        .s6s)][Number(M86)][_s(r2y | 1156)][0][_s(b2y * 1)];
-      if (j86 + ppdt["fa"][7] /
-        2 > (0)) O86 = O86 / (1 + (j86 + ppdt["fa"][7] / 2) / 100);
+        .s6s)][Number(M86)][_s(r2y | 1156)][0]["v"];
+      if (j86 + ppdt.fa[7] /
+        2 > (0)) O86 = O86 / (1 + (j86 + ppdt.fa[7] / 2) / 100);
       if (G86 != +
-        "0") w86 = qam[_s(+G2y)][Number(G86)][_s(+r2y)][0][_s(b2y * 1)];
+        "0") w86 = qam[_s(+G2y)][Number(G86)][_s(+r2y)][0]["v"];
       if (w86 + ppdt[_s(
-          h2y << 916392960)][3] / 2 > 0) t86 = t86 / (1 + (w86 + ppdt["fa"][3] / +
+          h2y << 916392960)][3] / 2 > 0) t86 = t86 / (1 + (w86 + ppdt.fa[3] / +
         '2') / (100));
       if (C86 != 0) s86 = qam[_s(G2y << 1129725216)][Number(C86)][_s(r2y & E6k
-        .s6s)][0][_s(b2y - 0)];
-      if (s86 + ppdt["fa"][3] / (2) > 0) o86 =
-        o86 / (1 + (s86 + ppdt["fa"][3] / (2)) / 100);
+        .s6s)][0]["v"];
+      if (s86 + ppdt.fa[3] / (2) > 0) o86 =
+        o86 / (1 + (s86 + ppdt.fa[3] / (2)) / 100);
       if (W86 != 0) v86 = qam[_s(G2y -
-        0)][Number(W86)][_s(+r2y)][0][_s(+b2y)];
-      if (v86 + ppdt["fa"][1] / (
-          2) > (0)) L86 = L86 / (1 + (v86 + ppdt["fa"][1] / (
+        0)][Number(W86)][_s(+r2y)][0]["v"];
+      if (v86 + ppdt.fa[1] / (
+          2) > (0)) L86 = L86 / (1 + (v86 + ppdt.fa[1] / (
         2)) / 100);
       if (i86 != 0) l86 = qam[_s(+G2y)][Number(i86)][_s(r2y - 0)]["0" >>
-        1221339360][_s(b2y << 670884096)];
-      if (l86 + ppdt["fa"][5] / (2) > 0) e86 =
-        e86 / (('1' | 1) + (l86 + ppdt["fa"][5] / 2) / ("100" | 100));
+        1221339360]["v"];
+      if (l86 + ppdt.fa[5] / (2) > 0) e86 =
+        e86 / (('1' | 1) + (l86 + ppdt.fa[5] / 2) / ("100" | 100));
       if (d86 != 0)
-        Q86 = qam[_s(+G2y)][Number(d86)][_s(+r2y)][0][_s(b2y & 2147483647)];
+        Q86 = qam[_s(+G2y)][Number(d86)][_s(+r2y)][0]["v"];
       if (Q86 +
-        ppdt["fa"][5] / (2) > 0) k86 = k86 / (1 + (Q86 + ppdt["fa"][5] / ("2" -
+        ppdt.fa[5] / (2) > 0) k86 = k86 / (1 + (Q86 + ppdt.fa[5] / ("2" -
         0)) / (100));
       var r86 = Math.floor(T86 * (1000) * a26);
       var A86 = Math.floor(x86 * (1000) *
@@ -42858,38 +42859,38 @@ console.log("Bad");
         .S55(L2y ^ 0)][_s(H2y ^ 0)];
       var r8B = bam["speeds"][_s(6661)];
       if (A8B != 0)
-        z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][0][_s(b2y & 2147483647)];
+        z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][0]["v"];
       E6k.R6();
-      if (z8B + ppdt["fa"][7] / 2 > 0) G8B = G8B / (1 + (z8B + ppdt["fa"][7] / 2) / 100);
+      if (z8B + ppdt.fa[7] / 2 > 0) G8B = G8B / (1 + (z8B + ppdt.fa[7] / 2) / 100);
       if (n8B != 0) O8B = qam[_s(+G2y)][Number(n8B)][_s(+r2y)]['0' <<
-        906862304][_s(+b2y)];
-      if (O8B + ppdt["fa"][7] / 2 > 0) C8B = C8B / (1 + (O8B +
-        ppdt["fa"][7] / (2)) / (100));
+        906862304]["v"];
+      if (O8B + ppdt.fa[7] / 2 > 0) C8B = C8B / (1 + (O8B +
+        ppdt.fa[7] / (2)) / (100));
       if (f8B != (0)) t8B = qam[E6k
-        .o55(G2y * 1)][Number(f8B)][_s(+r2y)][0][_s(b2y ^ 0)];
-      if (t8B + ppdt["fa"][+
-          '7'] / (2) > 0) W8B = W8B / (1 + (t8B + ppdt["fa"][7] / (2)) / (
+        .o55(G2y * 1)][Number(f8B)][_s(+r2y)][0]["v"];
+      if (t8B + ppdt.fa[+
+          '7'] / (2) > 0) W8B = W8B / (1 + (t8B + ppdt.fa[7] / (2)) / (
         100));
       if (K8B != 0) o8B = qam[_s(G2y | 1032)][Number(K8B)][_s(r2y & 2147483647)][0]
-        [_s(b2y | 464)];
+        ["v"];
       if (o8B + ppdt.fa[3] / 2 > 0) i8B = i8B / (('1' |
-        0) + (o8B + ppdt["fa"][3] / 2) / (100));
+        0) + (o8B + ppdt.fa[3] / 2) / (100));
       if (S8B != 0) L8B = qam[_s(G2y >>
-        1005535552)][Number(S8B)][_s(r2y - 0)][0][_s(+b2y)];
-      if (L8B + ppdt["fa"][3] / 2 >
-        0) d8B = d8B / (1 + (L8B + ppdt["fa"][3] / 2) / 100);
+        1005535552)][Number(S8B)][_s(r2y - 0)][0]["v"];
+      if (L8B + ppdt.fa[3] / 2 >
+        0) d8B = d8B / (1 + (L8B + ppdt.fa[3] / 2) / 100);
       if (J8B != 0) X8B = qam[E6k
-        .S55(+G2y)][Number(J8B)][_s(r2y & 2147483647)][0][_s(+b2y)];
-      if (X8B + ppdt["fa"][+
-        "1"] / 2 > 0) b8B = b8B / (1 + (X8B + ppdt["fa"][1] / 2) / 100);
+        .S55(+G2y)][Number(J8B)][_s(r2y & 2147483647)][0]["v"];
+      if (X8B + ppdt.fa[+
+        "1"] / 2 > 0) b8B = b8B / (1 + (X8B + ppdt.fa[1] / 2) / 100);
       if (h8B != (
-          0)) x8B = qam[_s(+G2y)][Number(h8B)][_s(+r2y)][0][_s(b2y >> 45822592)];
+          0)) x8B = qam[_s(+G2y)][Number(h8B)][_s(+r2y)][0]["v"];
       if (x8B +
-        ppdt["fa"][5] / (2) > 0) g8B = g8B / ((1) + (x8B + ppdt["fa"][5] / 2) / 100);
+        ppdt.fa[5] / (2) > 0) g8B = g8B / ((1) + (x8B + ppdt.fa[5] / 2) / 100);
       if (V8B != 0) M8B = qam[_s(+G2y)][Number(V8B)][E6k
-        .S55(r2y * 1)][0][_s(b2y >> 1943261088)];
-      if (M8B + ppdt["fa"][5] / 2 > 0)
-        r8B = r8B / ((1) + (M8B + ppdt["fa"]["5" | 1] / (2)) / 100);
+        .S55(r2y * 1)][0]["v"];
+      if (M8B + ppdt.fa[5] / 2 > 0)
+        r8B = r8B / ((1) + (M8B + ppdt.fa["5" | 1] / (2)) / 100);
       if (T8B == "2" >>
         694582624 || T8B == (3) || T8B == 4 || T8B == 5 || T8B == 6) return G8B;
       if (T8B == 7)
@@ -54141,8 +54142,7 @@ console.log("Bad");
         var o5D = 0;
         if (x5D == +B2y) {
           var O5D = ppdt["rs"][A5y ^ 0]["n"];
-          if (O5D != 0) var o5D = qam[_s(G2y * 1)][O5D][_s(+r2y)][0][_s(b2y |
-            2128)];
+          if (O5D != 0) var o5D = qam[_s(G2y * 1)][O5D][_s(+r2y)][0]["v"];
         }
         if (x5D == +q7y) {
           var O5D = ppdt["rs"][u6y - 0]["n"];
@@ -54153,7 +54153,7 @@ console.log("Bad");
         if (x5D == (16)) {
           var O5D = ppdt["rs"][+j6y]["n"];
           if (O5D != 0) var o5D = qam[_s(G2y >> 1109937856)][O5D][_s(+r2y)][0]
-            [_s(+b2y)];
+            ["v"];
         }
         if (x5D == +17) {
           var O5D = ppdt["rs"][F8y * 1]["n"];
@@ -56346,7 +56346,7 @@ console.log("Bad");
         var b4l = qam[E6k
           .S55(d0p << 642497600)][Number(G4l)][_s(+K2y)];
         var g4l = qam[_s(G2y ^ 0)][Number(A4l)][_s(+
-          r2y)][0][_s(+b2y)];
+          r2y)][0]["v"];
         var d4l = A4l;
         if (b4l == !!"1") var X4l = _s(l0p >> 2140846368) + g4l +
           _s(o9y >> 659531072);
@@ -56363,9 +56363,9 @@ console.log("Bad");
           Number(G4l)][_s(+y0R)];
         var b4l = qam[_s(+d0p)][Number(G4l)][_s(+K2y)];
         var Z4l = qam[E6k
-          .S55(+G2y)][Number(C4l)][_s(+r2y)][0][_s(+b2y)];
+          .S55(+G2y)][Number(C4l)][_s(+r2y)][0]["v"];
         if (d4l == 0) var W4l = 0;
-        else var W4l = qam[_s(+G2y)][Number(d4l)][_s(r2y * 1)][0][_s(b2y & 2147483647)];
+        else var W4l = qam[_s(+G2y)][Number(d4l)][_s(r2y * 1)][0]["v"];
         if (b4l == !!
           "1") {
           var X4l = _s(l0p * 1) + W4l + _s(+o9y);
@@ -56375,7 +56375,7 @@ console.log("Bad");
         var V4l = S4l;
         var B4l = X4l;
         var P4l = qam[_s(+G2y)][
-          Number(C4l)][_s(+r2y)][0][_s(b2y - 0)];
+          Number(C4l)][_s(+r2y)][0]["v"];
       }
       E6k.R6();
       if (M4l != c8y << 1613126368)
@@ -60380,19 +60380,19 @@ console.log("Bad");
         if (y0D == q7y * 1) {
           var R0D = ppdt["rs"][+u6y]["n"];
           if (R0D != 0) var
-            D0D = qam[_s(G2y | 1809)][R0D][_s(+r2y)][0][_s(b2y & 2147483647)];
+            D0D = qam[_s(G2y | 1809)][R0D][_s(+r2y)][0]["v"];
         }
         if (y0D == "16" <<
           681425920) {
           var R0D = ppdt["rs"][j6y - 0]["n"];
           if (R0D != 0) var
-            D0D = qam[_s(+G2y)][R0D][_s(+r2y)][0][_s(+b2y)];
+            D0D = qam[_s(+G2y)][R0D][_s(+r2y)][0]["v"];
         }
         if (y0D == +17) {
           var R0D = ppdt[E6k
             .S55(i2y ^ 0)][F8y - 0]["n"];
           if (R0D != 0) var D0D = qam[_s(+G2y)][R0D][_s(+
-            r2y)][0][_s(+b2y)];
+            r2y)][0]["v"];
         }
         Y0D = Y0D / ((D6[_s(+O1p)][E0D][_s(Z9y ^ 0)] + D0D + +
           "100") / 100);
@@ -67055,10 +67055,10 @@ _viewMode = viewModeWorld;
                 [Number(k5i)][_s(+y0R)];
               var w5i = qam[_s(+d0p)][Number(k5i)][_s(+K2y)];
               var j5i =
-                qam[_s(G2y | 1562)][Number(e5i)][_s(r2y - 0)][0][_s(b2y << 1030493920)];
+                qam[_s(G2y | 1562)][Number(e5i)][_s(r2y - 0)][0]["v"];
               if (
                 q0i == 0) var E0i = 0;
-              else var E0i = qam[_s(+G2y)][Number(q0i)][_s(+r2y)][0][_s(b2y >> 986515360)];
+              else var E0i = qam[_s(+G2y)][Number(q0i)][_s(+r2y)][0]["v"];
               if (
                 w5i == !!1) {
                 var a0i = _s(+l0p) + E0i + _s(+o9y);
@@ -67068,8 +67068,7 @@ _viewMode = viewModeWorld;
               var v5i = T5i;
               var I5i =
                 a0i;
-              var M5i = qam[_s(G2y << 13888160)][Number(e5i)][_s(r2y - 0)][0][_s(b2y -
-                0)];
+              var M5i = qam[_s(G2y << 13888160)][Number(e5i)][_s(r2y - 0)][0]["v"];
             }
             if (m0i != +c8y) u5i = u5i + _s(b0p >> 1616388512) + U5i;
             $(_s(5559))
@@ -67672,7 +67671,7 @@ _viewMode = viewModeWorld;
             var o3i = ppdt.rs[p0y & 2147483647]["n"];
             if (o3i != 0)
               if (qam[_s(G2y * 1)][o3i]) var O3i = Math.floor(Number(qam[_s(+G2y)][o3i][_s(r2y ^
-                0)][0][_s(+b2y)]));
+                0)][0]["v"]));
               else var O3i = 0;
             else var O3i = 0;
             E6k.R6();
@@ -68526,15 +68525,15 @@ _viewMode = viewModeWorld;
       name: function() { E6k.y6(); return aldt["n"]; },
       faith: function() {
         E6k.R6();
-        var k6i = { // This is wrong
-          evara: ppdt["fa"][1],
-            vexemis: ppdt["fa"][2],
-            domdis: ppdt["fa"][3],
-            cyndros: ppdt["fa"][4],
-            merius: ppdt["fa"][5],
-            ylanna: ppdt["fa"][6],
-            ibria: ppdt["fa"][7],
-            naera: ppdt["fa"][8]
+        var k6i = { // is this right?
+          evara: ppdt.fa[1],
+            vexemis: ppdt.fa[2],
+            domdis: ppdt.fa[3],
+            cyndros: ppdt.fa[4],
+            merius: ppdt.fa[5],
+            ylanna: ppdt.fa[6],
+            ibria: ppdt.fa[7],
+            naera: ppdt.fa[8]
         };
         return k6i;
       },

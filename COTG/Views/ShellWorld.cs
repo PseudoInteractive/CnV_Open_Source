@@ -221,7 +221,9 @@ namespace COTG.Views
         }
         static (int x,int y) MousePointToWorld(Vector2 c1)
         {
-            var wc = ShellPage.cameraC + (c1 - ShellPage.halfSpan) * (1.0f / ShellPage.pixelScale);
+            var dc1 = (c1 - ShellPage.halfSpan);
+            dc1 *= (1.0f / cameraZoomLag);
+            var wc = ShellPage.cameraC +  dc1;
 
             int x = (wc.X).RoundToInt();
             int y = (wc.Y).RoundToInt();
@@ -238,7 +240,8 @@ namespace COTG.Views
         {
            
             var point = e.GetCurrentPoint(canvas);
-            var c1 = point.Position.ToVector2();
+            var position = point.Position;
+            var c1 = new Vector2((float)position.X, (float)position.Y);
             var c = MousePointToWorld(c1);
             var cid = c.WorldToCid();
             if (lastCanvaseC != cid)
@@ -299,7 +302,9 @@ namespace COTG.Views
                 // TODO:  mouse should be hooked.
                 if (point.IsInContact)
                 {
-                   cameraC=( cameraC - (c1 - mousePosition) / cameraZoom);
+                    var dr = c1 - mousePosition;
+                    dr *= 1.0f/cameraZoom;
+                    cameraC -= dr;
                 }
             }
 

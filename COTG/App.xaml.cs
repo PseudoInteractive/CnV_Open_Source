@@ -79,7 +79,7 @@ namespace COTG
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Debug.Log(e.Message);
-        //    e.Handled = true;
+            e.Handled = true;
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)

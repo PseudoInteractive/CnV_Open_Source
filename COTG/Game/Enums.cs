@@ -47,7 +47,7 @@ namespace COTG.Game
 
         public readonly static byte[] ttspeed = { 0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40 };
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
-        public readonly static short[] ttattack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
+        public readonly static short[] ttAttack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 
         //
         // Templates not working for me
