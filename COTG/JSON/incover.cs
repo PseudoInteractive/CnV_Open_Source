@@ -466,10 +466,10 @@ namespace COTG.JSON
                 var defPage = DefensePage.instance;
                     for (int i = 0; i < reportParts.Length; ++i)
                         reportsIncoming.AddRange(reportParts[i]);
-                    App.DispatchOnUIThread(() =>
+                   // App.DispatchOnUIThread(() =>
                    // We should do this on the Render Thread
-                   defPage.history.Set(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)));
-            }
+                   defPage.history.Set(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks));
+           // }
             {
                 var defenderPage = DefenderPage.instance;
                 if (defenderPage != null)

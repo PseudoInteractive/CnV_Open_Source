@@ -69322,15 +69322,17 @@ var cotgsubscribe = amplify;
         const viewModeCity = 0;
         const viewModeRegion = 1;
         const viewModeWorld = 2;
+        let syncViewTimeout = null;
         function SyncViewMode() {
+            clearTimeout(syncViewTimeout);
             try {
                 let __zoom = 64;
                 let _x = _camera.x;
                 let _y = _camera.y;
                 if (_viewMode == viewModeRegion) {
                     _viewMode = viewModeWorld;
-                    var x0g = document.getElementById("cvs");
-                    x0g.style.display = "none";
+                    //   var x0g = document.getElementById("cvs");
+                    //                      x0g.style.display = "none";
                 }
                 if (_viewMode === viewModeWorld) {
                     // let matrix = $("#content").panzoom("getMatrix");
@@ -69381,7 +69383,7 @@ var cotgsubscribe = amplify;
                 console.log(exc);
             }
             finally {
-                setTimeout(SyncViewMode, 2000);
+                syncViewTimeout = setTimeout(SyncViewMode, 500);
             }
         }
         function __pollthis(__cid) {

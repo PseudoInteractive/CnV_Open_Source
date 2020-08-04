@@ -132,7 +132,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
   </PropertyGroup>
@@ -217,6 +217,7 @@
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\JSON.cs" />
+    <Compile Include="Helpers\NavStack.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Helpers\TileMap.cs" />
     <Compile Include="JSON\GetIO.cs" />

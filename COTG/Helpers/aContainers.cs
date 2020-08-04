@@ -38,16 +38,20 @@ namespace COTG.Helpers
 
         public void NotifyReset()
             {
+                Assert(App.IsOnUIThread());
                 if (CollectionChanged != null)
                     CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
         public void Set(IEnumerable<T> src)
           {
+            App.DispatchOnUIThreadSneaky(() =>
+            {
                 // catch for thread safety
                 Clear();
-            base.AddRange(src);
-            NotifyReset();
+                base.AddRange(src);
+                NotifyReset();
+            });
           }
         
 
@@ -81,7 +85,7 @@ namespace COTG.Helpers
                 return;
 
             // defer the call, we don't need it right away
-            App.DispatchOnUIThreadLow( ()=>
+            App.DispatchOnUIThreadSneaky( ()=>
             {
                 try
                 {

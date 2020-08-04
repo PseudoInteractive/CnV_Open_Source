@@ -66542,9 +66542,11 @@ console.log("Bad");
       const viewModeCity = 0;
       const viewModeRegion = 1;
       const viewModeWorld = 2;
+      let syncViewTimeout=null;
 
       function SyncViewMode()
 	  {
+          clearTimeout(syncViewTimeout);
 		  try {
               
 
@@ -66554,8 +66556,8 @@ console.log("Bad");
                   if(_viewMode == viewModeRegion)
 {
 _viewMode = viewModeWorld;
-    var x0g = document.getElementById("cvs");
-                      x0g.style.display = "none";
+ //   var x0g = document.getElementById("cvs");
+//                      x0g.style.display = "none";
 }                  
 
                   if (_viewMode === viewModeWorld) {
@@ -66619,8 +66621,7 @@ _viewMode = viewModeWorld;
               }
         finally
 		  {
-            setTimeout(SyncViewMode,2000);
-
+            syncViewTimeout = setTimeout(SyncViewMode,500);
 		  }
 
 	  }

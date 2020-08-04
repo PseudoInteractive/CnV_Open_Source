@@ -35,6 +35,8 @@ using COTG.Helpers;
 using COTG.Game;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
 
 namespace COTG
 {
@@ -50,6 +52,21 @@ namespace COTG
 
         public App()
         {
+
+            try
+            {
+                {
+           
+                    ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+
+
             InitializeComponent();
             instance = this;
             UnhandledException += OnAppUnhandledException;
@@ -208,7 +225,7 @@ namespace COTG
         // We only have 1 UI thread here
         public static CoreDispatcher GlobalDispatcher() => ShellPage.instance.Dispatcher;
 
-
+        public static bool IsOnUIThread() => GlobalDispatcher().HasThreadAccess;
         public static bool IsKeyPressedControl()
         {
             return CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);

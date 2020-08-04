@@ -128,8 +128,8 @@ namespace COTG.Game
         {
             Debug.Assert(cid == jse.GetInt("cid"));
            _cityName = jse.GetAsString("citn");
-            Note.L($"{cityName} {jse.GetInt("cid")}");
-            pid = jse.GetAsInt("pid");
+ //           Note.L($"{cityName} {jse.GetInt("cid")}");
+          //  pid = jse.GetAsInt("pid");
             activeCommands = jse.GetAsByte("comm");
             commandSlots = 5;
             {
