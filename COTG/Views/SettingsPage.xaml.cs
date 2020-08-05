@@ -34,7 +34,6 @@ namespace COTG.Views
 //        private static UserData _user;
         public static bool fetchFullHistory;
         public TipsSeen tips => TipsSeen.instance;
-        public static bool tipRefresh { get; set; } = true;
         public bool FetchFullHistory { get=>fetchFullHistory; set
             {
                 fetchFullHistory = value;

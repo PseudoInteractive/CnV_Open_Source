@@ -121,11 +121,11 @@ namespace COTG.Services
 
         async public Task Post()
         {
-            for (; ; )
+            for (int counter=0;;++counter )
             {
                 try
                 {
-                    if (JSClient.jsVars.token != null)
+                    if (JSClient.jsVars.token != null && (counter>16||Alliance.diplomacyFetched) )
                     {
                         await Accept(await Send(GetPostContent()));
                         return;
@@ -210,7 +210,7 @@ namespace COTG.Services
         //  public static GetCity getCity = new GetCity(0);
         //public static rMp regionView = new rMp();
   //      static RestAPI __6 = new RestAPI("includes/gSt.php");//, "X22x5DdAxxerj3");
-        public static gWrd getWorldInfo = new gWrd();
+   //     public static gWrd getWorldInfo = new gWrd();
   //      static RestAPI __8 = new RestAPI("includes/UrOA.php");//, "Rx3x5DdAxxerx3");
   //      static RestAPI __9 = new RestAPI("includes/sndTtr.php");//, "JJx452Tdd2375sRAssa");JJx452Tdd2375sRAssa "JJx452Tdd" + b2() + "sRAssa"
         // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
@@ -233,9 +233,9 @@ namespace COTG.Services
     //    }
     //}
 
-    public class gWrd : RestAPI
+    public class GetWorldInfo : RestAPI
     {
-        public gWrd() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
+        public GetWorldInfo() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
         {
         }
 
@@ -253,6 +253,18 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
             World.UpdateCurrent(json);
+        }
+        public static async void Send()
+        {
+            if (Alliance.diplomacyFetched)
+            {
+                (new GetWorldInfo()).Post();
+            }
+            else
+            {
+                await Task.Delay(200);
+                Send();
+            }
         }
 
         //async public void Post2()

@@ -155,14 +155,14 @@ public class BlessedTapCommand : DataGridCommand
                             var inst = DonationTab.instance;
                             var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
                                     .Max(inst.reserveCarts);
-                            var carts = sender.cartsHome - cartReserve;
+                            var carts = sender.cartsHome - cartReserve-1;
                             if (carts <= 0)
                             {
                                 Note.Show("Not enough carts");
                                 return;
                             }
-                            var wood = (sender.wood - inst.reserveWood).Max0();
-                            var stone = (sender.stone - inst.reserveStone).Max0();
+                            var wood = (sender.wood - inst.reserveWood.Max(1000) ).Max0();
+                            var stone = (sender.stone - inst.reserveStone.Max(1000)).Max0();
                             if (wood + stone > carts * 1000)
                             {
                                 var desiredC = (wood + stone) / 1000 + 1;
@@ -191,7 +191,7 @@ public class BlessedTapCommand : DataGridCommand
                     }
                     break;
                 case nameof(i.xy):
-                    JSClient.ShowCity(i.cid, false);
+                    Spot.ProcessCoordClick(i.cid, false);
                     break;
                     //            case nameof(Dungeon.plan):
                     //                Raiding.SendRaids(i);

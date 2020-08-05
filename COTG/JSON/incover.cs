@@ -469,7 +469,7 @@ namespace COTG.JSON
                    // App.DispatchOnUIThread(() =>
                    // We should do this on the Render Thread
                    defPage.history.Set(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks));
-           // }
+            }
             {
                 var defenderPage = DefenderPage.instance;
                 if (defenderPage != null)

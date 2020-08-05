@@ -79,7 +79,7 @@ namespace COTG.Game
             var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"1\"}}"; // t==1 is land, t==2 is water
 
             Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f="+HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8)) ;
-            Note.Show($"Sent {woodToSend:N} wood and {stoneToSend:N} stone in {((wood + stone + 999) / 1000):N} carts");
+            Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / 1000):N0} carts");
         }
 
 

@@ -173,12 +173,13 @@ namespace COTG.Game
                         if (City.IsMine(cid))
                         {
                             var wasBuild = City.IsBuild(cid);
-                            JSClient.ChangeCity(cid);
+                            JSClient.ChangeCity(cid,false);
                             if( wasBuild )
                             {
                                     JSClient.ChangeView(!JSClient.IsCityView());
 
                             }
+                            NavStack.Push(cid);
 
                         }
                         else JSClient.ShowCity(cid, false);
@@ -237,12 +238,15 @@ namespace COTG.Game
                 }
                 else
                 {
-                    JSClient.ChangeCity(cid);
+                    JSClient.ChangeCity(cid,lazyMove); // keep current view, switch to city
                 }
+                NavStack.Push(cid);
+
             }
             else
             {
                 JSClient.ShowCity(cid, lazyMove);
+                NavStack.Push(cid);
             }
         }
 
@@ -430,7 +434,7 @@ namespace COTG.Game
 
         public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            JSClient.ChangeCity(cid);
+            JSClient.ChangeCity(cid,false);
 
         }
 

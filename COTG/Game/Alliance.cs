@@ -34,7 +34,7 @@ namespace COTG.Game
         public static Alliance my = new Alliance();
         public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
-
+        public static bool diplomacyFetched;
         public static string IdToName(int id)
         {
             if (all.TryGetValue(id, out var a))
@@ -59,17 +59,17 @@ namespace COTG.Game
         {
             if (aldt != null)
                 return;
-           // Log(_aldt);
+            // Log(_aldt);
             aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
             my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
-
+            { 
             var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();
 
             _all.Add(my.id, my);
-            _nameToId.Add(my.name,my.id);
+            _nameToId.Add(my.name, my.id);
             diplomacy = new SortedList<byte, byte>();
 
             // all.Add(my.id, my);
@@ -104,6 +104,8 @@ namespace COTG.Game
             }
             nameToId = _nameToId;
             all = _all;
+            diplomacyFetched = true;
+        }
             for (; ; )
             {
                 await Task.Delay(1000);

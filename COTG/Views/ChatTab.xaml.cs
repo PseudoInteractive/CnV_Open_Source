@@ -21,7 +21,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
-using COTG.Helpers;
 using Windows.UI.Xaml.Documents;
 using COTG.Game;
 using System.Text.Json;

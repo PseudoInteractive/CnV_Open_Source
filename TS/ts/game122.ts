@@ -47646,7 +47646,7 @@ console.log("Bad");
 
         S0g.style.display = "none";
    //     w2();
-      //  d7F();
+       //  d7F();
        // $(_s(2267))
       //    .show();
         $(_s(+S6p))
@@ -62810,18 +62810,19 @@ console.log("Bad");
         .html(z4w + _s(g9R | 2562) + M4w);
       return X4w;
     }
-    $(document)
-      .ready(function() {
-        $("#cvs")
-          .mousedown(function(L7T) {
-            L7T.stopImmediatePropagation();
-            if (L7T.which == 3) {
-              var X7T = L7T;
-              S1F(X7T);
-            }
-          });
-        E6k.y6();
-      });
+    //$(document)
+    //  .ready(function() {
+       
+    //   $("#cvs")
+    //      .mousedown(function(L7T) {
+    //        L7T.stopImmediatePropagation();
+    //        if (L7T.which == 3) {
+    //          var X7T = L7T;
+    //          S1F(X7T);
+    //        }
+    //      });
+    //    E6k.y6();
+    //  });
 
     function W0F(Y7U) {
       var p7U = 0;
@@ -66556,8 +66557,8 @@ console.log("Bad");
                   if(_viewMode == viewModeRegion)
 {
 _viewMode = viewModeWorld;
- //   var x0g = document.getElementById("cvs");
-//                      x0g.style.display = "none";
+    var x0g = document.getElementById("cvs");
+                      x0g.style.display = "none";
 }                  
 
                   if (_viewMode === viewModeWorld) {

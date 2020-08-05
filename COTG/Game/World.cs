@@ -74,6 +74,23 @@ namespace COTG.Game
         public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
 
     }
+    public struct Continent
+    {
+        public byte id;
+        public ushort bosses;   // [6]
+        public int unsettled; // [0]
+        public int settled; // [1]
+        public int cities; // [2]
+        public int castles; // [3]
+        public ushort dungeons; // [4]
+        public ushort temples; // [5]
+        public const int spanX = 6;
+        public const int spanY = 6;
+        public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x/100,c.y/100) );
+        public static int GetPackedIdFromCont( (int x, int y) c) => c.x + c.y* spanX;
+        public static int GetPackedIdFromCont(int cont) => GetPackedIdFromCont( (cont%10,cont/10) );
+        public static Continent[] all = new Continent[spanX * spanY+1]; // 56 is a summary for world
+    };
 
     public class Boss
     {
@@ -238,7 +255,7 @@ namespace COTG.Game
 
             var data = jsd.RootElement.GetProperty("a").GetString(); // we do at least one utf16 <-> utf8 round trip here
                                                                      //          List<City> cities = new List<City>(1024);
-            List<Boss> bosses = new List<Boss>(32);
+            List <Boss> bosses = new List<Boss>(32);
             List<Shrine> shrines = new List<Shrine>(128);
             List<Portal> portals = new List<Portal>(128);
 
@@ -565,57 +582,31 @@ namespace COTG.Game
 
                 }
             }
-            //foreach (var id in lawless_) {
-            //              /** @type {string} */
-            //              var dat_ = AsNumber(lawless_[i_3]) + (lkey_);
-            //	/** @type {string} */
-            //	lkey_ = dat_;
-            //	WorldData.ll.push(`3${dat_);
-            //}
-            //foreach (var id in caverns_) {
-            //              /** @type {string} */
-            //              var dat_ = AsNumber(caverns_[i_3]) + (cavkey_);
-            //	/** @type {string} */
-            //	cavkey_ = dat_;
-            //	WorldData.cavern.push(`7${dat_);
-            //}
-            //foreach (var id in portals_) {
-            //              /** @type {string} */
-            //              var dat_ = AsNumber(portals_[i_3]) + (pkey_);
-            //	/** @type {string} */
-            //	pkey_ = dat_;
-            //	WorldData.portals.push(`8${dat_);
-            //}
-            //foreach (var id in shrines_) {
-            //              /** @type {string} */
-            //              var dat_ = AsNumber(shrines_[i_3]) + (skey_);
-            //	/** @type {string} */
-            //	skey_ = dat_;
-            //	WorldData.shrines.push(`9${dat_);
-            //}
-            // var ckey = __a6.ccazzx.encrypt(currentTime(), '1QA64sa23511sJx1e2', 256);
-            // console.log(ckey);
-            // var cdat = {
-            // 	a: ckey
-            // };
-            //  console.log(JSON.stringify(cdat));
-            //  console.log(cdat);
-            // jQuery.ajax({
-            // 	url: 'includes/pD.php',
-            // 	type: 'POST',
-            // 	async: true,
-            // 	data: cdat,
-            // 	success: function (data) {
-            //     console.log(data);
-            // 		pdata = (data);
-            // 	}
-            // });
-
             //            rv.cities = cities.ToArray();
             rv.portals = portals.ToArray();
             rv.shrines = shrines.ToArray();
             Boss.all = bosses.ToArray();
             bitmapPixels = pixels;
+
+            {
+                var contData = jsd.RootElement.GetProperty("b");//.ToString();
+                foreach (var cnt in contData.EnumerateObject())
+                {
+                    var cntV = cnt.Value;
+                    var key = int.Parse(cnt.Name);
+                    var contId = Continent.GetPackedIdFromCont(key);
+                    ref var c = ref Continent.all[contId];
+                    c.id = (byte)key;
+                    c.unsettled = cntV[0].GetInt32();
+                    c.settled = cntV[1].GetInt32();
+                    c.cities = cntV[2].GetInt32();
+                    c.castles = cntV[3].GetInt32();
+                    c.dungeons = cntV[4].GetUInt16();
+                    c.temples = cntV[5].GetUInt16();
+                    c.bosses = cntV[6].GetUInt16();
+                }
+            }
+
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             return rv;
         }

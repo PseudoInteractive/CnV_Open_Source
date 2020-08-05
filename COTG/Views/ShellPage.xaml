@@ -3,10 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:App="using:COTG"
       xmlns:game="using:COTG.Game"
+      xmlns:helpers="using:COTG.Helpers"
       xmlns:behaviors="using:COTG.Behaviors"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:helpers="using:COTG.Helpers"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -89,13 +89,15 @@
                     
                 </StackPanel>
             </CommandBar.Content>
+            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" />
             <AppBarButton Click="PriorCityClick" Icon="Previous" Label="Prior City" />
             <AppBarButton Click="NextCityClick" Icon="Next" Label="Next City" />
             <AppBarButton x:Name="Fresh"
                               Label="Fresh"
-                              AccessKey="F5"
+                              AccessKey="F5"                         
                               Click="Refresh"
-                               ToolTipService.ToolTip="Refresh tool count displays"
+                               ToolTipService.ToolTip="When in doubt, refresh :)"
                               Icon="RepeatAll">
                 <AppBarButton.Resources>
                     <winui:TeachingTip x:Name="RefreshTip"
@@ -156,8 +158,10 @@
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
                                         StepFrequency="10"
+                                    SmallChange="10" LargeChange="60"
                                         HorizontalAlignment="Stretch"
-                                        Maximum="1430.0"
+                                TickPlacement="Outside"
+                                    Maximum="1430.0"
                                         Minimum="-1430.0"
                                         Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
                         </StackPanel>
@@ -229,7 +233,7 @@
                                   Grid.ColumnSpan="3"
                                   AnimationDuration="00:00:00.3000"
                                   Canvas.ZIndex="55"
-                                  StackMode="StackInFront" />
+                                  StackMode="Replace" />
         <tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"

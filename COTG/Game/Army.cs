@@ -51,7 +51,7 @@ namespace COTG.Game
             switch (column)
             {
                 case "city":
-                case nameof(xy): JSClient.ShowCity(sourceCid,false); break;
+                case nameof(xy): Spot.ProcessCoordClick(sourceCid,false); break;
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;

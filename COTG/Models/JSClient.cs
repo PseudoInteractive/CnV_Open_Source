@@ -314,7 +314,7 @@ namespace COTG
             }
 
         }
-        public static void ChangeCity(int cityId)
+        public static void ChangeCity(int cityId, bool lazyMove)
         {
             try
             {
@@ -322,12 +322,13 @@ namespace COTG
                 {
                     var city = City.StBuild(cityId);
                     city.SetFocus( false, true, false);
-
-                    view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
+                    cityId.BringCidIntoWorldView(lazyMove);
+                    App.DispatchOnUIThreadSneaky(() =>
+                        view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
                 }
                 else
                 {
-                    ShowCity(cityId, false);
+                    ShowCity(cityId, lazyMove);
                 }
 
             }
@@ -345,7 +346,7 @@ namespace COTG
                     SetViewModeCity();
                 else
                     SetViewModeWorld();
-                view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" });
+                App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" }));
              
             }
             catch (Exception e)
@@ -438,7 +439,8 @@ namespace COTG
                 // if (JSClient.IsWorldView())
                 cityId.BringCidIntoWorldView(lazyMove);
 
-                    view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
+                App.DispatchOnUIThreadSneaky(() =>  
+                    view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() }));
        //             if( City.IsMine(cityId)  )
        //                 Raiding.UpdateTSHome();
                 
@@ -1008,8 +1010,8 @@ namespace COTG
                             case "gPlA":
                                 {
                                     Player.Ctor(jsp.Value);
-                                    RestAPI.getWorldInfo.Post();
-
+                                    
+                                    GetWorldInfo.Send();
                                     break;
                                 }
                             case "ppdt":

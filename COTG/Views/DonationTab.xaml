@@ -35,11 +35,11 @@
                           SmallChange="0.02"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Wood" Value="{x:Bind reserveWood,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="10000"
-                          LargeChange="100000" SpinButtonPlacementMode="Compact"  />
+                          SmallChange="100000"
+                          LargeChange="1000000" SpinButtonPlacementMode="Compact"  />
             <my:NumberBox Margin="4" Header="Reserve Stone" Value="{x:Bind reserveStone,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="10000"
-                          LargeChange="100000" SpinButtonPlacementMode="Compact"  />
+                          SmallChange="100000"
+                          LargeChange="1000000" SpinButtonPlacementMode="Compact"  />
         </StackPanel>
         <telerikGrid:RadDataGrid x:Name="donationGrid"
                                  x:FieldModifier="public"

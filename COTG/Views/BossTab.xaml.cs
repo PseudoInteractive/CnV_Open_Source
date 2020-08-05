@@ -111,7 +111,7 @@ namespace COTG.Views
                     {
 
                         case nameof(i.xy):
-                            JSClient.ShowCity(i.cid, false);
+                            Spot.ProcessCoordClick(i.cid, false);
                             break;
                     }
                 }

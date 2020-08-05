@@ -49,8 +49,9 @@ namespace COTG.Views
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
 
-        //  private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
-        //  private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+        //private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
+        //private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+        //private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
         static public ShellPage instance;
         private bool _isBackEnabled;
         private WinUI.NavigationViewItem _selected;
@@ -125,7 +126,9 @@ namespace COTG.Views
 
 
             var webView = JSClient.Initialize(grid);
-
+            foreach (var i in webView.KeyboardAccelerators)
+                i.IsEnabled = false;
+            webView.AllowFocusOnInteraction = false;
 
             grid.Background = null;
 
@@ -147,12 +150,6 @@ namespace COTG.Views
 
             var canvas = CreateCanvasControl();
             canvas.ContextFlyout = CityFlyout;
-            canvas.PointerMoved += Canvas_PointerMoved;
-            canvas.PointerExited += Canvas_PointerExited;
-            canvas.PointerWheelChanged += Canvas_PointerWheelChanged;
-            canvas.PointerPressed += Canvas_PointerPressed;
-            canvas.PointerReleased += Canvas_PointerReleased;
-            canvas.PointerCaptureLost += Canvas_PointerCaptureLost;
             grid.Children.Add(canvas);
             Grid.SetColumn(canvas, 1);
             Grid.SetRow(canvas, 1);
@@ -185,12 +182,19 @@ namespace COTG.Views
             //splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
             //Canvas.SetZIndex(splitter, 5);
 
-      //      NavigationService.Frame = shellFrame;
+            //      NavigationService.Frame = shellFrame;
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-            // KeyboardAccelerators.Add(_altLeftKeyboardAccelerator);
-            // KeyboardAccelerators.Add(_backKeyboardAccelerator);
+
+            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked, VirtualKeyModifiers.Menu));
+            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
+
+            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked, VirtualKeyModifiers.Menu));
+            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
+
+            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked));
+
             IsLoggedIn = true;// IdentityService.IsLoggedIn();
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
                                 // grid.hor
@@ -223,9 +227,6 @@ namespace COTG.Views
                 }
             };
 
-            var refresh = new KeyboardAccelerator() { Key = Windows.System.VirtualKey.F5 };
-            refresh.Invoked += Refresh_Invoked;
-            refresh.IsEnabled = true;
             //			refreshAccelerator.Invoked += (_, __) => view?.Refresh();
             //  testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
             //   testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
@@ -234,13 +235,22 @@ namespace COTG.Views
             cityListBox.SelectionChanged += CityListBox_SelectionChanged;
             cityBox.SelectionChanged += CityBox_SelectionChanged;
 
+            SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
+        }
 
-
+        private void ShellPage_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Log("Back!!");
+            NavStack.Back();
+            e.Handled = true;
         }
 
         private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             Refresh();
+
+            Note.Show("Refresh");
+           args.Handled = true;
         }
 
         //public static MenuFlyoutItem MenuAction( Action a, string text)
@@ -384,17 +394,13 @@ namespace COTG.Views
         //    NavigationService.GoBack();
         //}
 
-        //private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
-        //{
-        //    var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
-        //    if (modifiers.HasValue)
-        //    {
-        //        keyboardAccelerator.Modifiers = modifiers.Value;
-        //    }
-
-        //    keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
-        //    return keyboardAccelerator;
-        //}
+        private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, TypedEventHandler<KeyboardAccelerator, KeyboardAcceleratorInvokedEventArgs> OnKeyboardAcceleratorInvoked, VirtualKeyModifiers modifiers = VirtualKeyModifiers.None)
+        {
+            var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
+            keyboardAccelerator.Modifiers = modifiers;
+            keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
+            return keyboardAccelerator;
+        }
 
         //private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         //{
@@ -569,9 +575,9 @@ namespace COTG.Views
         }
         public static void ShowTipRefresh()
         {
-            if (SettingsPage.tipRefresh)
+            if (TipsSeen.instance.refresh==false)
             {
-                SettingsPage.tipRefresh = false;
+                TipsSeen.instance.refresh = true;
                 instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
             }
         }
@@ -693,7 +699,7 @@ namespace COTG.Views
                 if (newSel != City.build)
                 {
                     newSel.SetBuild();
-                    JSClient.ChangeCity(newSel.cid);
+                    JSClient.ChangeCity(newSel.cid,false);
 
                 }
             }
@@ -719,7 +725,8 @@ namespace COTG.Views
                 newSel = City.gridCitySource[id];
             }
             newSel.SetBuild();
-            JSClient.ChangeCity(newSel.cid);
+            JSClient.ChangeCity(newSel.cid,false);
+            NavStack.Push(newSel.cid);
         }
 
         private void PriorCityClick(object sender, RoutedEventArgs e)

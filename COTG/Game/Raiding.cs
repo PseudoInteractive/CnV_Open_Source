@@ -178,7 +178,7 @@ namespace COTG.Game
                 if (updateUI)
                 {
                     // await JSClient.PollCity(cid);
-                    JSClient.ChangeCity(cid);
+                    JSClient.ChangeCity(cid,false);
 //                    await Task.Delay(300); // this might not be useful.
  //                   ScanDungeons.Post(cid, true);
                 }
@@ -192,7 +192,7 @@ namespace COTG.Game
                 await Post.Send("overview/rcallall.php", "a=" + cid);
                 if (updateUI)
                 {
-                    JSClient.ChangeCity(cid);
+                    JSClient.ChangeCity(cid,false);
                     // await JSClient.PollCity(cid);
                     //  await Task.Delay(300); // this might not be useful.
                     //  ScanDungeons.Post(cid, true);

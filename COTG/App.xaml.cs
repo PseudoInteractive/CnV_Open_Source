@@ -53,17 +53,17 @@ namespace COTG
         public App()
         {
 
-            try
-            {
-                {
+            //try
+            //{
+            //    {
            
-                    ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
+            //        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Log(e);
+            //}
 
 
 
@@ -349,7 +349,7 @@ namespace COTG
         {
             ChatTab.L(s);
         }
-        public static void Show(string s, int timeout = 5000)
+        public static void Show(string s, int timeout = 8000)
         {
 
             App.DispatchOnUIThreadLow(() =>
@@ -384,7 +384,7 @@ namespace COTG
 				switch (paths[1])
 				{
 					case "c":
-                        JSClient.ShowCity(paths[2].FromCoordinate(),false);
+                        Spot.ProcessCoordClick(paths[2].FromCoordinate(),false);
                         break;
                     case "p": // player
                         JSClient.ShowPlayer(paths[2]);

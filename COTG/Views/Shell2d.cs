@@ -33,6 +33,7 @@ namespace COTG.Views
         public static Vector2 cameraC = new Vector2(300,300);
         public static Vector2 cameraCLag = cameraC; // for smoothing
         public static Vector2 clientC;
+        public static Vector2 clientCScreen;
         public static Vector2 clientSpan;
         public static Vector2 halfSpan;
         //   public static Vector2 cameraMid;
@@ -88,6 +89,7 @@ namespace COTG.Views
             cachedXOffset = leftOffset;
             var _grid = canvas;
 
+
             App.DispatchOnUIThreadLow( () => _grid.Margin = new Thickness(hasPopup ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight): 0, topOffset, 0, bottomMargin));
 //            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
 //            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
@@ -114,7 +116,7 @@ namespace COTG.Views
 			{
 				IsHitTestVisible = false,
                 
-				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/5.0f),
+				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/60.0f),
 				
 				IsFixedTimeStep = false
 			};
@@ -125,13 +127,20 @@ namespace COTG.Views
 			canvas.SizeChanged += Canvas_SizeChanged;
 			canvas.CreateResources += Canvas_CreateResources;
             canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
-
+          //  SetupCoreInput();
             return canvas;
 
 		}
 
+        bool inputSetup;
         private void Canvas_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args)
         {
+            if (!inputSetup)
+            {
+                inputSetup = true;
+                SetupCoreInput();
+            }
+
             if (World.bitmapPixels != null)
             {
                // canvas.Paused = true;
@@ -176,12 +185,18 @@ namespace COTG.Views
         private void Canvas_LayoutUpdated(object sender, object e)
         {
             var c = canvas.ActualOffset;
+            
             clientC = new Vector2(c.X,c.Y);
             SetClientSpan(canvas.ActualSize);
+
+            clientCScreen = canvas.TransformToVisual(Window.Current.Content)
+                .TransformPoint(new Point(0, 0)).ToVector2();
         }
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             SetClientSpan(  e.NewSize.ToVector2() );
+            clientCScreen = canvas.TransformToVisual(Window.Current.Content)
+                .TransformPoint(new Point(0, 0)).ToVector2();
         }
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -317,9 +332,8 @@ namespace COTG.Views
                     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
-                        new CanvasGradientStop() { Position = 0.0f, Color = Colors.Gray },
-                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } })
-                    { Opacity = 0.5f };
+                        new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
+                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } }) { Opacity = 0.675f };
                     tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = Colors.White },
@@ -675,6 +689,28 @@ namespace COTG.Views
                     //                  target.Y += 8;
 
                     ds.DrawTextLayout(textLayout, c,tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
+                }
+                var _contTip = contToolTip;
+                if (_contTip != null && IsWorldView())
+                {
+                    CanvasTextLayout textLayout = new CanvasTextLayout(ds, _contTip, tipTextFormat, 0.0f, 0.0f);
+                    var bounds = textLayout.DrawBounds;
+                    Vector2 c = new Vector2(16, 16);
+                    const float expand = 7;
+                    bounds.X += c.X - expand;
+                    bounds.Y += c.Y - expand;
+                    bounds.Width += expand * 2;
+                    bounds.Height += expand * 2;
+
+                    //  var rectD = new Vector2(32*4, 24*5);
+                    // var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
+                    tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
+                    tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right, (float)bounds.Bottom);
+                    ds.FillRoundedRectangle(bounds, 8, 8, tipBackgroundBrush);
+                    //                    target.X+= 12;
+                    //                  target.Y += 8;
+
+                    ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
                 }
             }
             catch (Exception ex)

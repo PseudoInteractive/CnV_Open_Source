@@ -140,9 +140,9 @@ namespace COTG.Models
                     {
                         case nameof(Report.Type): JSClient.ShowReport(i.reportId); break;
                         case nameof(Report.atkC):
-                        case nameof(Report.atkCN): JSClient.ShowCity(i.atkCid, false); break;
+                        case nameof(Report.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
                         case nameof(Report.defC):
-                        case nameof(Report.defCN): JSClient.ShowCity(i.defCid,false); break;
+                        case nameof(Report.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
                         case nameof(Report.atkAli): JSClient.ShowAlliance(i.atkAli);break;
                         case nameof(Report.defAli): JSClient.ShowAlliance(i.defAli); break;
                         case nameof(Report.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
@@ -359,7 +359,7 @@ namespace COTG.Models
                 switch (context.Column.Header.ToString())
                 {
                     case nameof(Dungeon.xy):
-                        JSClient.ShowCity(cid,false);
+                        Spot.ProcessCoordClick(cid,false);
                         break;
                     case nameof(Dungeon.plan):
                         Raiding.SendRaids(i);
