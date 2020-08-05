@@ -183,8 +183,7 @@ namespace COTG.Game
             }
             tsHome = TroopTypeCount.TS(troopsHome);
             tsTotal = TroopTypeCount.TS(troopsTotal);
-            CheckTipRaiding();
-
+          
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
             // one off change
             NotifyChange();
@@ -193,18 +192,43 @@ namespace COTG.Game
             //            COTG.Views.MainPage.CityListUpdateAll();
         }
 
-        public void CheckTipRaiding()
+        public static void CheckTipRaiding()
         {
-            if (TipsSeen.instance.raiding1 == false)
+            if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3 )
+                return;
+            int homeCount = 0;
+            foreach (var city in City.allCities)
             {
-                if (this.tsHome == this.tsTotal && this.tsHome > 4000)
+                if (city.Value.tsHome >= city.Value.tsTotal && city.Value.tsHome > 4000)
                 {
-                    MainPage.ShowTipRaiding1();
+                    ++homeCount;
                 }
             }
+            if (homeCount == 0)
+                return;
+            if (!TipsSeen.instance.raiding1)
+            {
+                MainPage.ShowTipRaiding1();
+                return;
+            }
+            if (homeCount < 2)
+                return;
+            if (!TipsSeen.instance.raiding2)
+            {
+                MainPage.ShowTipRaiding2();
+                return;
+            }
+            if (homeCount < 4)
+                return;
+            if (!TipsSeen.instance.raiding3)
+            {
+                MainPage.ShowTipRaiding3();
+                return;
+            }
+
         }
 
-      //  static List<City> dummies = new List<City>();
+        //  static List<City> dummies = new List<City>();
 
 
         public void NotifyChange(string member ="")

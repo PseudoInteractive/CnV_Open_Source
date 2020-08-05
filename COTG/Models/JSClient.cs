@@ -649,7 +649,6 @@ namespace COTG
                     }
                     city.tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
-                    city.CheckTipRaiding();
                     city.isCastle = jsCity.GetAsInt("12") > 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     
@@ -665,6 +664,7 @@ namespace COTG
                 CityList.SelectedChange();
 
             }
+            City.CheckTipRaiding();
 
             // Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
@@ -1072,7 +1072,8 @@ namespace COTG
                         City.UpdateSenatorInfo();  // no async
                         Raiding.UpdateTS(true);
                         TileData.Ctor();
-
+                        if (TipsSeen.instance.refresh == false)
+                            App.QueueIdleTask(ShellPage.ShowTipRefresh);
                         // await RaidOverview.Send();
                     }
                     //var cookie = httpClient.DefaultRequestHeaders.Cookie;

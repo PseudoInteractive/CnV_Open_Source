@@ -105,6 +105,7 @@ namespace COTG.Services
 #endif
 
         }
+
         public static async void LoadWorldData()
         {
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
@@ -118,9 +119,21 @@ namespace COTG.Services
                         Note.L($"{entry.Name} size: {entry.CompressedLength} Write: {entry.LastWriteTime}");
                         
                     }
+                    int entries = zip.Entries.Count;
+                    var priorName = ArchiveName(entries - 1);
+                    var prior = zip.GetEntry(priorName);
+                    Assert(prior.Length == 600 * 600 * 4);
+                    var byteBuffer = new byte[prior.Length];
+                    using (var instream = prior.Open())
+                    {
+                        instream.Read(byteBuffer, 0, byteBuffer.Length);
+                    }
+                    var lastData = byteBuffer.ConvertToUints();
+                    World.CreateChangePixels(lastData);
                 }
             }
         }
+
         public static void CopyBytes(uint src, byte[]  rv, int i  )
         {
             rv[i * 4 + 0] = (byte)(src & 0xff);
@@ -128,6 +141,7 @@ namespace COTG.Services
             rv[i * 4 + 2] = (byte)((src >> 16) & 0xff);
             rv[i * 4 + 3] = (byte)((src >> 24) & 0xff);
         }
+
         public static uint CopyBytes(byte[] src, int i)
         {
             return ((uint)src[i * 4 + 0] << 0)

@@ -218,6 +218,7 @@
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
+    <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Helpers\TileMap.cs" />
     <Compile Include="JSON\GetIO.cs" />

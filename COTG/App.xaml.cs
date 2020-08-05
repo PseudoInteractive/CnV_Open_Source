@@ -37,6 +37,7 @@ using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
+using System.Collections.Concurrent;
 
 namespace COTG
 {
@@ -99,6 +100,10 @@ namespace COTG
             e.Handled = true;
         }
 
+        static DispatcherTimer idleTimer;
+        static bool timerActive;
+        private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
+
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             if (!args.PrelaunchActivated)
@@ -112,10 +117,48 @@ namespace COTG
 #if DEBUG
  //           this.DebugSettings.EnableFrameRateCounter = true;
             this.DebugSettings.FailFastOnErrors = false;
- //           this.DebugSettings.IsBindingTracingEnabled = true;
- //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
+            //           this.DebugSettings.IsBindingTracingEnabled = true;
+            //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
 #endif
+            idleTimer = new DispatcherTimer();
+            idleTimer.Interval = TimeSpan.FromSeconds(10);  // 10s idle delay
+            idleTimer.Tick += IdleTimer_Tick;
+            Assert(idleTimer.IsEnabled == false);
+            Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
 
+        }
+
+        private static void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+            // reset timer if active
+            if(timerActive)
+            {
+                idleTimer.Stop();
+                idleTimer.Start();
+            }
+        }
+
+        private static void IdleTimer_Tick(object sender, object e)
+        {
+            Assert(idleTasks.Count >= 1);
+            if (idleTasks.Count <= 1)
+            {
+                timerActive = false;
+                idleTimer.Stop();
+            }
+            if (idleTasks.TryDequeue(out Action a))
+            {
+                a();
+            }
+        }
+        public static void QueueIdleTask(Action a)
+        {
+            idleTasks.Enqueue(a);
+            if(!timerActive)
+            {
+                timerActive = true;
+                DispatchOnUIThreadSneaky( idleTimer.Start );
+            }
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
@@ -243,7 +286,6 @@ namespace COTG
         }
 ///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
         public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1 };
-
     }
 
 

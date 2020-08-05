@@ -129,6 +129,7 @@ namespace COTG.Game
         public const int typeCityFlagBig = 0x8000000;
 
         public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
+        public static byte[] changePixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
         public static uint[] raw = new uint[worldDim*worldDim]; // reference with CID, stores playerID
         public static int ClampCoord(int x)
@@ -205,35 +206,40 @@ namespace COTG.Game
             current = Decode(jsd);
         }
 
-        //public static (int size, byte[] pixels) CreateBitmap()
-        //{
-        //    // fill with Alpha=clear
-        //    //for (int i = 0; i < outSize / 4 * outSize / 4 ; i ++)
-        //    //{
-        //    //    pixels[i * 8 + 0] = 0;
-        //    //    pixels[i * 8 + 1] = 0;
-        //    //    pixels[i * 8 + 2] = 0;
-        //    //    pixels[i * 8 + 3] = 0;
-        //    //    pixels[i * 8 + 4] = 0xff;
-        //    //    pixels[i * 8 + 5] = 0xff;
-        //    //    pixels[i * 8 + 6] = 0xff;
-        //    //    pixels[i * 8 + 7] = 0xff;
-        //    //}
-        //    //for (int i = 0; i < outSize / 4 * outSize / 4 - 8; i += 9)
-        //    //{
-        //    //    pixels[i * 8 + 0] = 0;
-        //    //    pixels[i * 8 + 1] = 0;
-        //    //    pixels[i * 8 + 2] = 0;
-        //    //    pixels[i * 8 + 3] = 0;
-        //    //    pixels[i * 8 + 4] = 0xf;
-        //    //    pixels[i * 8 + 5] = 0xff;
-        //    //    pixels[i * 8 + 6] = 0x0;
-        //    //    pixels[i * 8 + 7] = 0xf0;
-        //    //}
 
-        //    return (outSize, pixels);
+        public static void CreateChangePixels(uint[] prior)
+        {
+            var pixels = new byte[outSize / 4 * outSize / 4 * 8];
+            for (int i = 0; i < outSize / 4 * outSize / 4; i++)
+            {
+                pixels[i * 8 + 0] = 0x1f;
+                pixels[i * 8 + 1] = 0xff;
+                pixels[i * 8 + 2] = 0;
+                pixels[i * 8 + 3] = 0;
+                pixels[i * 8 + 4] = 0xff;
+                pixels[i * 8 + 5] = 0xff;
+                pixels[i * 8 + 6] = 0xff;
+                pixels[i * 8 + 7] = 0xff;
+            }
+            for(int y=0;y< worldDim ; ++y)
+            {
+                for (int x = 0; x < worldDim; ++x)
+                {
+                    var i = y * worldDim + x;
+                    if (prior[i] == raw[i])
+                        continue;
 
-        //}
+                    pixels.SetColor(i, 0x2F, 0x2F, 0x2F);
+                    // change:  Todo, analysis
+                    pixels[i * 8 + 4] = 1 | (2 << 2) | (1 << 4) | (3 << 6);
+                    pixels[i * 8 + 5] = 2 | (0 << 2) | (2 << 4) | (3 << 6); // color index 0
+                    pixels[i * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
+                    pixels[i * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+
+                }
+            }
+            changePixels = pixels;
+        }
 
         public static World Decode(JsonDocument jsd)
         {
@@ -244,8 +250,8 @@ namespace COTG.Game
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
             {
                 pixels[i * 8 + 0] = 0;
-                pixels[i * 8 + 1] = 0;
-                pixels[i * 8 + 2] = 0;
+                pixels[i * 8 + 1] = 0; // w
+                pixels[i * 8 + 2] = 0; // black, identity for alpha
                 pixels[i * 8 + 3] = 0;
                 pixels[i * 8 + 4] = 0xff;
                 pixels[i * 8 + 5] = 0xff;

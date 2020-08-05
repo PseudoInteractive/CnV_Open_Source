@@ -29,6 +29,7 @@ namespace COTG.Views
         const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
         public static CanvasBitmap worldObjects;
+        public static CanvasBitmap worldChanges;
         public static Vector2 clientTL;
         public static Vector2 cameraC = new Vector2(300,300);
         public static Vector2 cameraCLag = cameraC; // for smoothing
@@ -153,6 +154,21 @@ namespace COTG.Views
                     w.Dispose();
                 }
                 worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+                //canvas.Paused = false;
+
+            }
+            if (World.changePixels != null)
+            {
+                // canvas.Paused = true;
+                var pixels = World.changePixels;
+                World.changePixels = null;
+                if (worldChanges != null)
+                {
+                    var w = worldChanges;
+                    worldChanges = null;
+                    w.Dispose();
+                }
+                worldChanges = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
                 //canvas.Paused = false;
 
             }
@@ -389,13 +405,17 @@ namespace COTG.Views
 
                     ds.DrawImage(worldBackground,
                         new Rect(destP0, destP1),
-                        new Rect(srcP0, srcP1));
+                        new Rect(srcP0, srcP1),1.0f, CanvasImageInterpolation.Cubic);
                     if(worldObjects != null)
                         ds.DrawImage(worldObjects,
                             new Rect(destP0, destP1),
-                            new Rect(srcP0, srcP1));
+                            new Rect(srcP0, srcP1), 1.0f);
+                    if (worldChanges != null)
+                        ds.DrawImage(worldChanges,
+                            new Rect(destP0, destP1),
+                            new Rect(srcP0, srcP1), 1.0f,CanvasImageInterpolation.Linear, CanvasComposite.Add);
                 }
-             //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
+                //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
                 var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);

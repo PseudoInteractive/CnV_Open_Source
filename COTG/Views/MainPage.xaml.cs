@@ -375,12 +375,14 @@ namespace COTG.Views
 
         public static bool IsVisible() => instance.isVisible;
 
+       
+        static TipInfo raidingTip1,raidingTip2,raidingTip3;
+
         static public void ShowTipRaiding1()
         {
-            if (TipsSeen.instance.raiding1)
+            if (TipsSeen.instance.raiding1 || raidingTip1.queued )
                 return;
-            TipsSeen.instance.raiding1 = true;
-            instance.TipRaiding101.Dispatcher.RunAsync(CoreDispatcherPriority.Low,()=> instance.TipRaiding101.IsOpen = true);
+            raidingTip1.Dispatch(instance.TipRaiding101, () => TipsSeen.instance.raiding1 = true);
         }
         private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
@@ -388,22 +390,20 @@ namespace COTG.Views
         }
         static public void ShowTipRaiding2()
         {
-            if (TipsSeen.instance.raiding2)
+            if (!TipsSeen.instance.raiding1 || TipsSeen.instance.raiding2 || raidingTip2.queued)
                 return;
-            TipsSeen.instance.raiding2 = true;
-            instance.TipRaiding201.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.TipRaiding201.IsOpen = true);
+            raidingTip2.Dispatch(instance.TipRaiding201, () => TipsSeen.instance.raiding2 = true);
         }
 
 
         static public void ShowTipRaiding3()
         {
-            if (TipsSeen.instance.raiding3)
+            if (TipsSeen.instance.raiding2|| TipsSeen.instance.raiding3 || raidingTip3.queued)
                 return;
-            TipsSeen.instance.raiding3 = true;
-            instance.TipRaiding301.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.TipRaiding301.IsOpen = true);
+            raidingTip3.Dispatch(instance.TipRaiding301, () => TipsSeen.instance.raiding3 = true);
         }
 
-       
+
         private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             TipRaiding203.IsOpen = true;

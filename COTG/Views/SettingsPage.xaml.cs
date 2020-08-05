@@ -275,12 +275,4 @@ namespace COTG.Views
         //    await launcher.LaunchAsync();
         //}
     }
-    public class TipsSeen
-    {
-        public static TipsSeen instance;
-        public bool refresh { get; set; }
-        public bool raiding1 { get; set; }
-        public bool raiding2 { get; set; }
-        public bool raiding3 { get; set; }
-    }
 }
