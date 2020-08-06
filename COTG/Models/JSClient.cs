@@ -110,6 +110,10 @@ namespace COTG
         {
             return (DateTimeOffset.UtcNow + jsVars.gameTOffset);
         }
+        public static DateTimeOffset ToServerTime(DateTime time)
+        {
+            return (time.ToUniversalTime() + jsVars.gameTOffset);
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="JSClient"/> class.
         /// </summary>
@@ -921,7 +925,7 @@ namespace COTG
                                     Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
                                     //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
                                     gotCreds = true;
-                                    //                                 Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+                                    //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
                                     //   UpdatePPDT(jso.GetProperty("ppdt"));
                                     break;
@@ -931,10 +935,11 @@ namespace COTG
                                     var jso = jsp.Value;
                                     var cid = jso.GetAsInt("cid");
                                     {
-                                        var city = COTG.Views.SpotTab.TouchSpot(cid);
+                                        var pid = Player.NameToId(jso.GetAsString("player"));
+                                        var city =  COTG.Views.SpotTab.TouchSpot(cid,pid);
 
                                         city._cityName = jso.GetString("name");
-                                        city.pid = Player.NameToId(jso.GetAsString("player")); // todo: this shoule be an int playerId
+                                        city.pid = pid; // todo: this shoule be an int playerId
                                                                                                //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");
                                         //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id

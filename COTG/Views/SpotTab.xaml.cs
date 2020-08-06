@@ -96,9 +96,9 @@ namespace COTG.Views
             Spot.ProcessPointerExited();
         }
 
-        public static Spot TouchSpot(int cid)
+        public static Spot TouchSpot(int cid, int pid)
         {
-            var spot = Spot.GetOrAdd(cid);
+            var spot = !Player.IsMe(pid) ? Spot.GetOrAdd(cid) : City.GetOrAddCity(cid);
             AddToGrid(spot);
             return spot;
 

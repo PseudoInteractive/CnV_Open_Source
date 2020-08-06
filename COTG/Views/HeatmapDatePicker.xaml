@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="COTG.Views.HeatmapDatePicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="420"
+    d:DesignWidth="350">
+	<Grid >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="36"/>
+			<RowDefinition />
+			<RowDefinition Height="38"/>
+		</Grid.RowDefinitions>
+		<TextBlock Text="Highlight world changes since:" VerticalAlignment="Center" HorizontalAlignment="Center" IsColorFontEnabled="False" AllowFocusOnInteraction="False" FocusVisualPrimaryThickness="3,2,2,2" IsHitTestVisible="False"  />
+		<CalendarView  x:Name="date" Grid.Row="1" SelectedDatesChanged="date_SelectedDatesChanged"  SelectionMode="Single" IsTabStop="True" TabNavigation="Cycle" HorizontalAlignment="Center" VerticalAlignment="Center" IsTodayHighlighted="False" />
+		<Button Click="Now_Click" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" >
+			<TextBlock Text="Clear" HorizontalAlignment="Center" FontSize="14" />
+		</Button>
+	</Grid>
+</UserControl>

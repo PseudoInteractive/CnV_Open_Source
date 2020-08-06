@@ -159,19 +159,23 @@ namespace COTG.Views
             }
             if (World.changePixels != null)
             {
-                // canvas.Paused = true;
                 var pixels = World.changePixels;
-                World.changePixels = null;
-                if (worldChanges != null)
-                {
-                    var w = worldChanges;
-                    worldChanges = null;
-                    w.Dispose();
-                }
+                ClearHeatmap();
                 worldChanges = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
-                //canvas.Paused = false;
-
+                
             }
+
+        }
+        public static void ClearHeatmap()
+        {
+            World.changePixels = null;
+            if (worldChanges != null)
+            {
+                var w = worldChanges;
+                worldChanges = null;
+                w.Dispose();
+            }
+            World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
 
         }
 

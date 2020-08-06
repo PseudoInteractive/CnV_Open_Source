@@ -78,7 +78,7 @@ namespace COTG.Services
                         int entries = zip.Entries.Count;
                         var name = ArchiveName(entries);
                         var deltaIsSmall = false;
-                       // if ( (entries % deltasPerBatch)!= 0)
+                        if ( entries != 0)
                         {
                             // convert the last entry to a delta record
                             var priorEntry = entries - 1;
@@ -102,6 +102,8 @@ namespace COTG.Services
                             {
                                 prior.Delete(); // we want to replace it
                                 prior = zip.CreateEntry(priorName);
+                                prior.LastWriteTime = JSClient.ServerTime();
+
                                 using (var outStream = prior.Open())
                                 {
                                     var bytes = new byte[outCount * 4];
@@ -121,47 +123,55 @@ namespace COTG.Services
                         if (!deltaIsSmall)
                         {
                             var entry = zip.CreateEntry(name);
+                            entry.LastWriteTime = JSClient.ServerTime();
                             using (var outStream = entry.Open())
                             {
                                 var byteData = data.ConvertToBytesWithoutDungeons();
                                 outStream.Write(byteData, 0, byteData.Length);
                             }
                         }
-                        
+                        // report first time offset
+                        COTG.Views.HeatmapDatePicker.SetFirstRecordedHeatmapDate(zip.GetEntry(ArchiveName(0)).LastWriteTime);
+
+
                     }
                 }
             }
-        end:;
-#if(TRACE)
-            Task.Delay(1000).ContinueWith((_) => LoadWorldData(data));
-#endif
 
         }
 
-        public static async void LoadWorldData(uint[]_data)
+        
+        
+        public static async void SetHeatmapStartDate(DateTimeOffset date)
         {
+            if (World.changeMapInProgress)
+                return;
+            COTG.Views.ShellPage.ClearHeatmap();
+            if (date >= JSClient.ServerTime() )
+            {
+                return;
+            }
+            World.changeMapInProgress = true;
             if (historyBuffer == null)
                 return;
-            var data = _data.ToArray();
+            var data = World.raw.ToArray(); // clone it
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
             using (var streamForZip = await file.OpenStreamForReadAsync())
             {
                 using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
                 {
-                    foreach (var entry in zip.Entries)
-                    {
-                        Note.L($"{entry.Name} size: {entry.CompressedLength} Write: {entry.LastWriteTime}");
-                        
-                    }
                     int entries = historyBuffer.Length;
                     while(--entries> 0 )
                     {
-                        if(historyBuffer[entries] == null)
+                        var dName = ArchiveName(entries);
+                        var prior = zip.GetEntry(dName);
+                        if (prior.LastWriteTime < date)
+                            break;
+
+                        Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
+                        if (historyBuffer[entries] == null)
                         {
-                            var dName = ArchiveName(entries);
-                            var prior = zip.GetEntry(dName);
-                            Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
                             var byteBuffer = new byte[prior.Length];
                             using (var instream = prior.Open())
                             {

@@ -234,7 +234,7 @@ namespace COTG.Views
             cityListBox.SelectedIndex = 0; // reset
             cityListBox.SelectionChanged += CityListBox_SelectionChanged;
             cityBox.SelectionChanged += CityBox_SelectionChanged;
-
+            heatMapFlyout.Content = new HeatmapDatePicker();
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
         }
 

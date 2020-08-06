@@ -146,6 +146,16 @@
                     </Flyout>
                 </Button.Flyout>
             </AppBarButton>
+            <AppBarButton Label="Heatmap"
+                               ToolTipService.ToolTip="View city changes on the world map">
+				<AppBarButton.Icon>
+					<FontIcon Glyph="&#xF738;"/>
+				</AppBarButton.Icon>
+				<Button.Flyout>
+                    <Flyout x:Name="heatMapFlyout">
+                    </Flyout>
+                </Button.Flyout>
+            </AppBarButton>
             <AppBarButton Label="Time"
                               Icon="Shuffle"
                                ToolTipService.ToolTip="Survey battle reports from the last 24 hours">

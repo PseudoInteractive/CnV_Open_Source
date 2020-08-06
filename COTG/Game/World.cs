@@ -179,6 +179,7 @@ namespace COTG.Game
 
         }
         public Portal[] portals;
+        internal static bool changeMapInProgress;
 
         //        public struct City
         //        {
