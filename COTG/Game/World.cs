@@ -41,12 +41,16 @@ namespace COTG.Game
         public static byte RGB16B1(uint r, uint g, uint b) => (byte)(RGB16(r, g, b) >> 8);
         public static void SetColor(this byte[] pixels, int index, uint r, uint g, uint b)
         {
-            SetColor(pixels, index, RGB16(r, g, b));
+            SetColor(pixels, index, RGB16(r, g, b),2);
         }
-        public static void SetColor(this byte[] pixels, int index, uint color16)
+        public static void SetColor0(this byte[] pixels, int index, uint r, uint g, uint b)
         {
-            pixels[index * 8 + 2] = (byte)(color16);
-            pixels[index * 8 + 3] = (byte)(color16 >> 8);
+            SetColor(pixels, index, RGB16(r, g, b),0);
+        }
+        public static void SetColor(this byte[] pixels, int index, uint color16,int offset)
+        {
+            pixels[index * 8 + offset] = (byte)(color16);
+            pixels[index * 8 + offset+1] = (byte)(color16 >> 8);
         }
         static public uint FaithColor16(int type)
         {
@@ -87,7 +91,7 @@ namespace COTG.Game
         public const int spanX = 6;
         public const int spanY = 6;
         public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x/100,c.y/100) );
-        public static int GetPackedIdFromCont( (int x, int y) c) => c.x + c.y* spanX;
+        public static int GetPackedIdFromCont( (int x, int y) c) => c.x.Clamp(0,5) + c.y.Clamp(0,5)* spanX;
         public static int GetPackedIdFromCont(int cont) => GetPackedIdFromCont( (cont%10,cont/10) );
         public static Continent[] all = new Continent[spanX * spanY+1]; // 56 is a summary for world
     };
@@ -212,29 +216,58 @@ namespace COTG.Game
             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
             {
-                pixels[i * 8 + 0] = 0x1f;
-                pixels[i * 8 + 1] = 0xff;
+                pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60,0,0);
+                pixels[i * 8 + 1] = WorldHelper.RGB16B1(0x60,0,0);
                 pixels[i * 8 + 2] = 0;
                 pixels[i * 8 + 3] = 0;
-                pixels[i * 8 + 4] = 0xff;
-                pixels[i * 8 + 5] = 0xff;
-                pixels[i * 8 + 6] = 0xff;
-                pixels[i * 8 + 7] = 0xff;
+                pixels[i * 8 + 4] = 0x55;
+                pixels[i * 8 + 5] = 0x55;
+                pixels[i * 8 + 6] = 0x55;
+                pixels[i * 8 + 7] = 0x55;
             }
             for(int y=0;y< worldDim ; ++y)
             {
                 for (int x = 0; x < worldDim; ++x)
                 {
                     var i = y * worldDim + x;
-                    if (prior[i] == raw[i])
+                    var d0 = prior[i];
+                    var d1 = raw[i];
+                    var dtype0 = d0 & typeMask;
+                    var dtype1 = d1 & typeMask;
+                    if (d0 == d1 || dtype0== typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
                         continue;
+                    uint color = WorldHelper.RGB16(0x40, 0x40, 0x40);
+                    if(dtype0 == typeCity || dtype1==typeCity)
+                    {
+                        var owner0 = d0 & playerMask;
+                        var owner1 = d1 & playerMask;
+                        var alliance0 = owner0 == 0 ? -1 : Player.Get((int)owner0).alliance;
+                        var alliance1 = owner1 == 0 ? -1 : Player.Get((int)owner1).alliance;
 
-                    pixels.SetColor(i, 0x2F, 0x2F, 0x2F);
+                        if(alliance0 == alliance1)
+                        {
+                            // castle change or size change or handover  Dodo:  differentiate this two
+                            color = WorldHelper.RGB16(0x0, 0x0, 0x60);
+                        }
+                        else if( alliance0 == Alliance.myId)
+                        {
+                            // lost one
+                            color = WorldHelper.RGB16(0xA0, 0, 0);
+                        }
+                        else if( alliance1 == Alliance.myId)
+                        {
+                            // gained one
+                            color = WorldHelper.RGB16(0, 0xA0, 0);
+                        }
+                        // Todo: handle more cases
+                    }
+
+                    pixels.SetColor(i, color,0);
                     // change:  Todo, analysis
-                    pixels[i * 8 + 4] = 1 | (2 << 2) | (1 << 4) | (3 << 6);
-                    pixels[i * 8 + 5] = 2 | (0 << 2) | (2 << 4) | (3 << 6); // color index 0
-                    pixels[i * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
-                    pixels[i * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+                    pixels[i * 8 + 4] = 3 | (2 << 2) | (2 << 4) | (3 << 6);
+                    pixels[i * 8 + 5] = 2 | (0 << 2) | (0 << 4) | (2 << 6); // color index 0
+                    pixels[i * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (3 << 6); // color index 0
+                    pixels[i * 8 + 7] = 1 | (3 << 2) | (3 << 4) | (1 << 6);
 
                 }
             }
@@ -425,7 +458,7 @@ namespace COTG.Game
                 }
                 else
                 {
-                    pixels.SetColor(index, WorldHelper.FaithColor16(b.type));
+                    pixels.SetColor(index, WorldHelper.FaithColor16(b.type),2);
 
                 }
                 pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);

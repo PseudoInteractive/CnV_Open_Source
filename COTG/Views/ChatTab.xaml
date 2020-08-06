@@ -29,17 +29,17 @@
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
-                    <Grid  Background="{x:Null}" Margin="16 0 0 0" >
+                    <Grid  Background="{x:Null}" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width ="65"  />
+                        <ColumnDefinition Width ="60"  />
                         <ColumnDefinition Width ="90" />
                         <ColumnDefinition Width ="*" />
                     </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray"  FontSize="14"  />
-                        <HyperlinkButton Grid.Column="1" Foreground="Green" VerticalAlignment="Center" Content="{x:Bind player, Mode=OneTime}" FontStretch="SemiCondensed" Tapped="HyperlinkButton_Tapped"  FontSize="14" />
-                        <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="14"
+                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray"  FontSize="13" Margin="0,0,0,0" Padding="0,0,0,0" />
+                    <HyperlinkButton Grid.Column="1" Foreground="Green" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="13" Margin="0,0,0,0" />
+                    <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="13" Margin="0,0,0,0"  Padding="0,0,0,0"
                                               InlineCodeForeground="Firebrick" InlineCodeBackground="Black"
-                                              TextWrapping="WrapWholeWords" LinkClicked="MarkdownTextBlock_LinkClicked"/>
+                                              TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked"/>
                     </Grid>
                 
             </DataTemplate>

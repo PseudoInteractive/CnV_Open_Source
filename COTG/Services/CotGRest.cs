@@ -121,11 +121,11 @@ namespace COTG.Services
 
         async public Task Post()
         {
-            for (int counter=0;;++counter )
+            for (; ;)
             {
                 try
                 {
-                    if (JSClient.jsVars.token != null && (counter>16||Alliance.diplomacyFetched) )
+                    if (JSClient.jsVars.token != null  )
                     {
                         await Accept(await Send(GetPostContent()));
                         return;
@@ -143,6 +143,7 @@ namespace COTG.Services
             }
 
         }
+
         public const string nullPost = "a=0";
         async public Task<HttpResponseMessage> Send(string postContent= nullPost)
         {

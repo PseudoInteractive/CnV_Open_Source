@@ -32,6 +32,7 @@ namespace COTG.Game
         public static JsonDocument aldt;
 
         public static Alliance my = new Alliance();
+        public static int myId;
         public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static bool diplomacyFetched;
@@ -57,61 +58,71 @@ namespace COTG.Game
         public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
         public static async void Ctor(JsonDocument _aldt)
         {
+            Log("Fetch Aldt");
             if (aldt != null)
                 return;
             // Log(_aldt);
             aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
-            my.id = element.GetAsInt("id");
+            myId = my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
-            { 
+            
             var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();
+            var _diplomacy = new SortedList<byte, byte>();
 
-            _all.Add(my.id, my);
-            _nameToId.Add(my.name, my.id);
-            diplomacy = new SortedList<byte, byte>();
-
-            // all.Add(my.id, my);
-            //  nameToId.Add(my.name, my.id);
-
-            if (element.TryGetProperty("d", out var dRoot))
-            {
-                foreach (var prop in dRoot.EnumerateObject())
-                {
-                    byte relationship = (byte)int.Parse(prop.Name);
-                    foreach (var a in prop.Value.EnumerateArray())
+                    try
                     {
-                        var alliance = new Alliance();
-                        byte allianceId = (byte)a.GetAsInt("id");
-                        string aname = a.GetAsString("n");
+                        _all.Add(my.id, my);
+                        _nameToId.Add(my.name, my.id);
 
-                        alliance.name = aname;
-                        alliance.id = allianceId;
+                        // all.Add(my.id, my);
+                        //  nameToId.Add(my.name, my.id);
 
-                        _all.Add(allianceId, alliance);
-                        _nameToId.Add(aname, allianceId);
+                        if (element.TryGetProperty("d", out var dRoot))
+                        {
+                            foreach (var prop in dRoot.EnumerateObject())
+                            {
+                                byte relationship = (byte)int.Parse(prop.Name);
+                                foreach (var a in prop.Value.EnumerateArray())
+                                {
+                                    var alliance = new Alliance();
+                                    byte allianceId = (byte)a.GetAsInt("id");
+                                    string aname = a.GetAsString("n");
 
-                        diplomacy = new SortedList<byte, byte>();
+                                    alliance.name = aname;
+                                    alliance.id = allianceId;
 
-                        var good = diplomacy.TryAdd(allianceId, relationship);
-                        Assert(good == true);
+                                    _all.Add(allianceId, alliance);
+                                    _nameToId.Add(aname, allianceId);
+
+                                   
+                                    var good = _diplomacy.TryAdd(allianceId, relationship);
+                                    Assert(good == true);
+                                }
+
+                                //           { "1":[{ "id":"7","n":"España"}],"2":[{ "id":"80","n":"Blood & Thunder"}],"3":[{ "id":"1","n":"Horizon"},{ "id":"2","n":"The Lunatic Asylum"},{ "id":"49","n":"Unidos-"},{ "id":"62","n":"OvernightObservation"}]}
+
+                            }
+                        }
+                    }catch(Exception _e)
+                    {
+                        Log(_e);
+
                     }
-
-                    //           { "1":[{ "id":"7","n":"España"}],"2":[{ "id":"80","n":"Blood & Thunder"}],"3":[{ "id":"1","n":"Horizon"},{ "id":"2","n":"The Lunatic Asylum"},{ "id":"49","n":"Unidos-"},{ "id":"62","n":"OvernightObservation"}]}
-
-                }
-            }
-            nameToId = _nameToId;
-            all = _all;
+                    diplomacy = _diplomacy;
+            nameToId = new Dictionary<string, int>(_nameToId);
+            all = new Dictionary<int, Alliance>(_all);
             diplomacyFetched = true;
-        }
+        
             for (; ; )
             {
-                await Task.Delay(1000);
+               
                 if (!Player.all.IsNullOrEmpty())
                     break;
+                await Task.Delay(1000);
             }
+            Assert(!Player.all.IsNullOrEmpty());
             var alliances = new List<string>();
 
             using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
@@ -139,8 +150,8 @@ namespace COTG.Game
                     if (all.TryGetValue(id, out var al) == false)
                     {
                         al = new Alliance() { id = id, name = alName };
-                        all.Add(id, al);
-                        nameToId.Add(alName, id);
+                        _all.Add(id, al);
+                        _nameToId.Add(alName, id);
 
                     }
 
@@ -180,8 +191,8 @@ namespace COTG.Game
                 }
             }
         
-//            nameToId = _nameToId;
-  //          all = _all;
+            nameToId = _nameToId;
+            all = _all;
         }
     }
 }

@@ -35819,7 +35819,7 @@ var cotgsubscribe = amplify;
         }
         var v0F = 0;
         var h5F;
-        let hasSentAldt = false;
+        var hasSentAldt = false;
         function C3F() {
             var S1v;
             var J1v;
@@ -35895,9 +35895,10 @@ var cotgsubscribe = amplify;
                 .css("display") == "none")
                 $("#achat")
                     .show();
-            console.log("Sent aldt");
+            //  console.log("Sent aldt");
             if (hasSentAldt === false) {
                 hasSentAldt = true;
+                console.log("Aldt!!!");
                 const wrapper = { aldt: aldt };
                 window['external']['notify'](JSON.stringify(wrapper));
             }
@@ -69416,10 +69417,11 @@ var cotgsubscribe = amplify;
                             L8 = [];
                             console.log("!!!!!" + E51);
                         }
-                        let allyiance = 0;
-                        if ($("#withAlliance")
-                            .css("display") != "none" || $("#withoutAlliance")
-                            .css("display") != "none" || G4F == 0)
+                        var allyiance = 0;
+                        if ($("#withAlliance").css("display") != "none" ||
+                            $("#withoutAlliance").css("display") != "none" ||
+                            G4F == 0 ||
+                            hasSentAldt === false)
                             allyiance = 1;
                         N6();
                         let a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s }); // /includes/poll2.php

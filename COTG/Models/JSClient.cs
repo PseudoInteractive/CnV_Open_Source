@@ -1002,6 +1002,7 @@ namespace COTG
                                 }
                             case "aldt":
                                 {
+                                    Log("Aldt");
                                     Alliance.Ctor(jsDoc);
 
 

@@ -65,6 +65,7 @@ namespace COTG.Views
             var bosses = new List<Boss>();
             if (newSel != null)
             {
+                newSel.SelectInWorldView(false);
                 var waterValid = false;
 
                 foreach (var i in newSel.troopsHome)

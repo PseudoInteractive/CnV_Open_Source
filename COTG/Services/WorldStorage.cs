@@ -18,7 +18,7 @@ namespace COTG.Services
      
         const int deltasPerBatch = 16;
         // Todo:  Delta encode
-        public static byte[] ComputeDelta(uint[] d0, uint[] d1)
+        public static uint[] ComputeDelta(uint[] d0, uint[] d1)
         {
             var rv = new List<uint>();
             int count = d0.Length;
@@ -39,6 +39,8 @@ namespace COTG.Services
                 rv.Add(c0 ^ c1);
 
             }
+            return rv.ToArray();
+            /*
             var outCount = rv.Count;
             if (outCount <= 64)
                 return null;
@@ -47,10 +49,22 @@ namespace COTG.Services
             {
                 CopyBytes(rv[i], bytes, i);
             }
-            return bytes;
+            return bytes;*/
+
+        }
+        public static void ApplyDelta(uint[] d, uint[] delta)
+        {
+            int count = delta.Length/2;
+            for (int i = 0; i < count; ++i)
+            {
+                var off = delta[i*2];
+                var x = delta[i*2+1];
+                d[off] ^= x;
+
+            }
         }
 
-
+        static uint[][] historyBuffer;
         public static string ArchiveName(int entryId) => entryId.ToString("D6");
         public static async void SaveWorldData(uint[] data)
         {
@@ -63,9 +77,11 @@ namespace COTG.Services
                     {
                         int entries = zip.Entries.Count;
                         var name = ArchiveName(entries);
-                        if ( (entries % deltasPerBatch)!= 0)
+                        var deltaIsSmall = false;
+                       // if ( (entries % deltasPerBatch)!= 0)
                         {
                             // convert the last entry to a delta record
+                            var priorEntry = entries - 1;
                             var priorName = ArchiveName(entries - 1);
                             var prior = zip.GetEntry(priorName);
                             var byteBuffer = new byte[data.Length*4];
@@ -75,39 +91,58 @@ namespace COTG.Services
                             }
                             var lastData = byteBuffer.ConvertToUints();
                             var delta = ComputeDelta(lastData,data);
-                            if (delta == null)
-                                goto end; // no changes
-
-                            prior.Delete(); // we want to replace it
-                            prior = zip.CreateEntry(priorName);
-                            using (var outStream = prior.Open())
+                            historyBuffer = new uint[entries][];
+                            historyBuffer[priorEntry] = delta;
+                            var outCount = delta.Length;
+                            if (outCount < 32)
                             {
-                                // overwrite with delta values
-                                outStream.Write(delta, 0, delta.Length);
+                                deltaIsSmall = true;
                             }
-                            //then fall through and add the full entry
+                            else
+                            {
+                                prior.Delete(); // we want to replace it
+                                prior = zip.CreateEntry(priorName);
+                                using (var outStream = prior.Open())
+                                {
+                                    var bytes = new byte[outCount * 4];
+                                    for (int i = 0; i < outCount; ++i)
+                                    {
+                                        CopyBytes(delta[i], bytes, i);
+                                    }
+
+                                    // overwrite with delta values
+                                    outStream.Write(bytes, 0, bytes.Length);
+                                }
+                            }
+                                                        //then fall through and add the full entry
 
                         }
                         // write a whole record.
-                        var entry = zip.CreateEntry(name);
+                        if (!deltaIsSmall)
+                        {
+                            var entry = zip.CreateEntry(name);
                             using (var outStream = entry.Open())
                             {
                                 var byteData = data.ConvertToBytesWithoutDungeons();
                                 outStream.Write(byteData, 0, byteData.Length);
                             }
+                        }
                         
                     }
                 }
             }
         end:;
 #if(TRACE)
-            Task.Delay(1000).ContinueWith((_) => LoadWorldData());
+            Task.Delay(1000).ContinueWith((_) => LoadWorldData(data));
 #endif
 
         }
 
-        public static async void LoadWorldData()
+        public static async void LoadWorldData(uint[]_data)
         {
+            if (historyBuffer == null)
+                return;
+            var data = _data.ToArray();
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
             using (var streamForZip = await file.OpenStreamForReadAsync())
@@ -119,17 +154,26 @@ namespace COTG.Services
                         Note.L($"{entry.Name} size: {entry.CompressedLength} Write: {entry.LastWriteTime}");
                         
                     }
-                    int entries = zip.Entries.Count;
-                    var priorName = ArchiveName(entries - 1);
-                    var prior = zip.GetEntry(priorName);
-                    Assert(prior.Length == 600 * 600 * 4);
-                    var byteBuffer = new byte[prior.Length];
-                    using (var instream = prior.Open())
+                    int entries = historyBuffer.Length;
+                    while(--entries> 0 )
                     {
-                        instream.Read(byteBuffer, 0, byteBuffer.Length);
+                        if(historyBuffer[entries] == null)
+                        {
+                            var dName = ArchiveName(entries);
+                            var prior = zip.GetEntry(dName);
+                            Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
+                            var byteBuffer = new byte[prior.Length];
+                            using (var instream = prior.Open())
+                            {
+                                instream.Read(byteBuffer, 0, byteBuffer.Length);
+                            }
+                            historyBuffer[entries] = byteBuffer.ConvertToUints();
+
+                        }
+                        ApplyDelta(data, historyBuffer[entries]);
                     }
-                    var lastData = byteBuffer.ConvertToUints();
-                    World.CreateChangePixels(lastData);
+
+                    World.CreateChangePixels(data);
                 }
             }
         }

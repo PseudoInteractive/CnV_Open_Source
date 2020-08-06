@@ -31,6 +31,7 @@ namespace COTG.Game
 
         public string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
+        public bool isBuild => this == build;
         public static bool IsBuild( int cid )
         {
             return build != null && build.cid == cid;
@@ -113,6 +114,19 @@ namespace COTG.Game
             }
         }
 
+        public void SelectInWorldView( bool lazyMove)
+        {
+                if (!isBuild)
+                {
+                    JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
+    
+                }
+                if(!JSClient.IsWorldView())
+                    JSClient.ChangeView(false);// toggle between city/region view
+
+                NavStack.Push(cid);
+
+        }
 
         // Abusing invalid jsE by returning it when we want to return null
         //  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");

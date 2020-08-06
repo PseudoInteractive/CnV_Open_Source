@@ -324,18 +324,18 @@ namespace COTG.Views
             try
             {
                 var _serverNow = JSClient.ServerTime();
-                var dt = (float) (_serverNow - lastDrawTime).TotalSeconds;
+                var dt = (float)(_serverNow - lastDrawTime).TotalSeconds;
                 lastDrawTime = _serverNow;
 
                 var gain = (1 - MathF.Exp(-4 * dt));
-                cameraCLag += (cameraC - cameraCLag) *gain;
+                cameraCLag += (cameraC - cameraCLag) * gain;
                 cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
-//                cameraZoomLag += (cameraZoom
+                //                cameraZoomLag += (cameraZoom
 
-                var serverNow = _serverNow  + TimeSpan.FromMinutes(eventTimeOffset);
+                var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffset);
 
                 float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
-                int tick = (Environment.TickCount>>3) & 0xfffff;
+                int tick = (Environment.TickCount >> 3) & 0xfffff;
                 var animTLoop = animT.Wave();
                 var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
                 //   ShellPage.T("Draw");
@@ -345,80 +345,79 @@ namespace COTG.Views
                     myNameBrush = new Color() { A = 255, G = 255, B = 190, R = 210 };
 
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) {Opacity = 0.675f };
+                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
-                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } }) { Opacity = 0.675f };
+                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } })
+                    { Opacity = 0.675f };
                     tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = Colors.White },
                         new CanvasGradientStop() { Position = 1.0f, Color = Colors.Blue }
                     });
-                   ;
+                    ;
 
                 }
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
-                
+
                 var ds = args.DrawingSession;
                 //                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
 
                 ds.Antialiasing = CanvasAntialiasing.Aliased;
-  //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
-               // var scale = ShellPage.canvas.ConvertPixelsToDips(1);
+                //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
+                // var scale = ShellPage.canvas.ConvertPixelsToDips(1);
                 pixelScale = (cameraZoomLag);
-
+                { 
                 var deltaZoom = cameraZoomLag - detailsZoomThreshold;
                 var wantDetails = deltaZoom > 0;
                 var wantImage = deltaZoom < detailsZoomFade;
-                if (worldBackground != null && IsWorldView() && wantImage )
+                var srcP0 = new Point((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 / pixelScale,
+                                          (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 / pixelScale);
+                var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
+                                       srcP0.Y + clientSpan.Y * bSizeGain2 / pixelScale);
+                var destP0 = new Point();
+                var destP1 = clientSpan.ToPoint();
+
+                if (srcP0.X < 0)
                 {
-                    var srcP0 = new Point(  (cameraCLag.X + 0.5f) * bSizeGain2- halfSpan.X * bSizeGain2 / pixelScale ,
-                                            (cameraCLag.Y+0.5f) * bSizeGain2- halfSpan.Y * bSizeGain2 / pixelScale );
-                    var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 / pixelScale,
-                                           srcP0.Y + clientSpan.Y * bSizeGain2 / pixelScale);
-                    var destP0 = new Point();
-                    var destP1 = clientSpan.ToPoint();
+                    destP0.X -= srcP0.X * pixelScale / bSizeGain2;
+                    srcP0.X = 0;
+                }
+                if (srcP0.Y < 0)
+                {
+                    destP0.Y -= srcP0.Y * pixelScale / bSizeGain2;
+                    srcP0.Y = 0;
+                }
+                if (srcP1.X > srcImageSpan)
+                {
+                    destP1.X += (srcImageSpan - srcP1.X) * pixelScale / bSizeGain2;
+                    srcP1.X = srcImageSpan;
 
-                    if (srcP0.X < 0)
-                    {
-                        destP0.X -= srcP0.X * pixelScale / bSizeGain2;
-                        srcP0.X = 0;
-                    }
-                    if (srcP0.Y < 0)
-                    {
-                        destP0.Y -= srcP0.Y * pixelScale / bSizeGain2;
-                        srcP0.Y = 0;
-                    }
-                    if (srcP1.X > srcImageSpan)
-                    {
-                        destP1.X += (srcImageSpan - srcP1.X) * pixelScale / bSizeGain2;
-                        srcP1.X = srcImageSpan;
+                }
+                if (srcP1.Y > srcImageSpan)
+                {
+                    destP1.Y += (srcImageSpan - srcP1.Y) * pixelScale / bSizeGain2;
+                    srcP1.Y = srcImageSpan;
 
-                    }
-                    if (srcP1.Y > srcImageSpan)
+                }
+
+                if (worldBackground != null && IsWorldView() && wantImage)
+                {
+
+                    if (wantImage)
                     {
-                        destP1.Y += (srcImageSpan - srcP1.Y) * pixelScale / bSizeGain2;
-                        srcP1.Y = srcImageSpan;
-
+                            ds.DrawImage(worldBackground,
+                                new Rect(destP0, destP1),
+                                new Rect(srcP0, srcP1)); //, 1.0f, CanvasImageInterpolation.Cubic);
+                        if (worldObjects != null)
+                            ds.DrawImage(worldObjects,
+                                new Rect(destP0, destP1),
+                                new Rect(srcP0, srcP1));
                     }
 
-                    ds.DrawImage(worldBackground,
-                        new Rect(destP0, destP1),
-                        new Rect(srcP0, srcP1),1.0f, CanvasImageInterpolation.Cubic);
-                    if(worldObjects != null)
-                        ds.DrawImage(worldObjects,
-                            new Rect(destP0, destP1),
-                            new Rect(srcP0, srcP1), 1.0f);
-                    if (worldChanges != null)
-                        ds.DrawImage(worldChanges,
-                            new Rect(destP0, destP1),
-                            new Rect(srcP0, srcP1), 1.0f,CanvasImageInterpolation.Linear, CanvasComposite.Add);
                 }
                 //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
-                var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
-                var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
-                var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 // ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
 
                 //           dxy.X = (float)sender.Width;
@@ -437,55 +436,55 @@ namespace COTG.Views
                         var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
                         nameBrush = nameBrush.WithAlpha(intAlpha);
                         myNameBrush = myNameBrush.WithAlpha(intAlpha);
-                    
+
                         var td = TileData.instance;
-                        var halfTiles = (clientSpan *(0.5f/ cameraZoomLag)).CeildToInt();
+                        var halfTiles = (clientSpan * (0.5f / cameraZoomLag)).CeildToInt();
                         var ccBase = cameraCLag.RoundToInt();
                         for (int ty = -halfTiles.y; ty <= halfTiles.y; ++ty)
                         {
                             for (int tx = -halfTiles.x; tx <= halfTiles.x; ++tx)
                             {
-                                var cc = ccBase.Add( (tx,ty) );
+                                var cc = ccBase.Add((tx, ty));
                                 if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
                                 {
                                     var ccid = cc.x + cc.y * td.width;
-                                    var rect = new Rect(((new Vector2(cc.x- .5f, cc.y - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
+                                    var rect = new Rect(((new Vector2(cc.x - .5f, cc.y - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
                                     var layerData = TileData.packedLayers[ccid];
-                                    while(layerData != 0)
+                                    while (layerData != 0)
                                     {
-                                       var imageId = ((uint)layerData&0xffffu);
+                                        var imageId = ((uint)layerData & 0xffffu);
                                         layerData >>= 16;
                                         var tileId = imageId >> 13;
                                         var off = imageId & ((1 << 13) - 1);
                                         var tile = td.tilesets[tileId];
 
-                                            if ( tile.bitmap == null)
-                                                continue;
-                                            var sy = off / tile.columns;
-                                            var sx = off - sy * tile.columns;
-                                            if(wantFade)
-                                                ds.DrawImage(tile.bitmap, rect,
-                                                    new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)),alpha);
-                                            else
-                                                ds.DrawImage(tile.bitmap, rect,
-                                                new Rect(new Point(sx * tile.tilewidth+0.5f, sy * tile.tileheight+0.5f), new Size(tile.tilewidth-1, tile.tileheight-1)));
-                                           
-                                            
+                                        if (tile.bitmap == null)
+                                            continue;
+                                        var sy = off / tile.columns;
+                                        var sx = off - sy * tile.columns;
+                                        if (wantFade)
+                                            ds.DrawImage(tile.bitmap, rect,
+                                                new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)), alpha);
+                                        else
+                                            ds.DrawImage(tile.bitmap, rect,
+                                            new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)));
+
+
 
                                     }
-                                    (var name,var isMine) = World.GetLabel(cc);
-                                    if (name!=null)
+                                    (var name, var isMine) = World.GetLabel(cc);
+                                    if (name != null)
                                     {
                                         if (!nameLayoutCache.TryGetValue(name, out var layout))
                                         {
                                             layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f) { Options = CanvasDrawTextOptions.NoPixelSnap | CanvasDrawTextOptions.EnableColorFont };
                                             nameLayoutCache.Add(name, layout);
                                         }
-                                       /* if (wantFade)
-                                        {
+                                        /* if (wantFade)
+                                         {
 
-                                        }
-                                        else*/
+                                         }
+                                         else*/
                                         {
                                             ds.DrawTextLayout(layout, new Vector2((float)(rect.Left + rect.Right) * 0.5f,
                                                 (float)rect.Top + (float)rect.Height * 7.25f / 8.0f),
@@ -498,6 +497,16 @@ namespace COTG.Views
                     }
 
                 }
+                // overlay
+                if (worldChanges != null)
+                    ds.DrawImage(worldChanges,
+                        new Rect(destP0, destP1),
+                        new Rect(srcP0,srcP1), 1.0f,
+                        CanvasImageInterpolation.Linear, CanvasComposite.Add);
+            }
+                var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
+                var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
+                var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
 //                ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
 
