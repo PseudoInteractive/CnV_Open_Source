@@ -48140,7 +48140,7 @@ console.log("Bad");
                 y: A46,
                 x: r46,
                 type: "portal",
-                info: { active: G36, name:"portal:" + G36,player:"TTC" }
+                info: { active: G36, name:"portal",player:"TTC" }
               };
               cotgPublish("regional", Y46);
                 let __N46 = _s(318);              

@@ -50491,7 +50491,7 @@ var cotgsubscribe = amplify;
                                 y: A46,
                                 x: r46,
                                 type: "portal",
-                                info: { active: G36, name: "portal:" + G36, player: "TTC" }
+                                info: { active: G36, name: "portal", player: "TTC" }
                             };
                             cotgPublish("regional", Y46);
                             let __N46 = _s(318);
@@ -74179,6 +74179,7 @@ function avactor() {
             let troops = cotg.city.troops();
             let type_113 = clickInfo.info.type;
             let lvl_ = clickInfo.info.lvl;
+            it.score = lvl_;
             it.name = type_113 + " " + lvl_;
             if ($("#cityplayerInfo div table tbody tr").length === 11) {
                 bossele_();
@@ -74300,6 +74301,7 @@ function avactor() {
             //	let type_113 = clickInfo.info.type;
             let lvl_ = clickInfo.info.lvl;
             let bossname_ = clickInfo.info.name;
+            it.score = lvl_;
             // @todo
             if ($("#cityplayerInfo div table tbody tr").length === 11) {
                 bossele_();
@@ -74711,6 +74713,9 @@ function avactor() {
                 $("#cityplayerInfo div table tbody tr:nth-child(17) td:nth-child(2)").text("0");
                 $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
             }
+        }
+        else if (dtype_ === "portal" || dtype_ === "shrine") {
+            it.score = clickInfo.info.active;
         }
         else {
             $("#cityplayerInfo div table tbody tr:gt(6)").remove();

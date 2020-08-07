@@ -43,7 +43,7 @@ namespace COTG.Game
         public static City GetOrAddCity(int cid)
         {
             Assert(cid > 65536);
-            return allCities.GetOrAdd(cid, (cid) => new City() { cid = cid });
+            return allCities.GetOrAdd(cid, City.Factory );
         }
 
         public static bool IsMine(int cid)
@@ -258,7 +258,12 @@ namespace COTG.Game
        
    
         public byte raidCarry { get; set; }
-        public static City Factory(int _id) => new City() { cid=_id };
+        public static City Factory(int cid)
+        {
+            var rv = new City() { cid = cid, pid=Player.myId };
+            allSpots.TryAdd(cid, rv);
+            return rv;
+        }
 
         public SenatorInfo[] senatorInfo = Array.Empty<SenatorInfo>();
         public string senny
@@ -572,7 +577,7 @@ namespace COTG.Game
                 var reserveCartsFilter = DonationTab.instance.reserveCarts;
                 if (DonationTab.IsVisible())
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter);
-                if (MainPage.IsVisible())
+             //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
                 City.build?.SelectInUI();
             });

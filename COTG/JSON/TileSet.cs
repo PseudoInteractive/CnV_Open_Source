@@ -40,8 +40,10 @@ namespace COTG.JSON
             public static State state = State.preInit;
 
             public static TileData instance;
-        public static async Task Ctor()
+        public static async void Ctor()
         {
+            state = State.preInit; // reset if necessary
+            var prior = instance?.tilesets;  // if called previously save the images to reuse
             instance = await TileMapFetch.Get();
 //            Note.Show("TilesFetched");
             state = State.loadedData;
@@ -55,10 +57,22 @@ namespace COTG.JSON
             // remove names layer
             instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
             //  await canvas.RunOnGameLoopThreadAsync( async () =>
-
-            foreach (var tileSet in instance.tilesets)
+            if (prior != null)
             {
-                tileSet.Load();
+                var count = prior.Length;
+                for(int i=0;i<count;++i)
+                {
+                    instance.tilesets[i].bitmap = prior[i].bitmap;
+                }
+                prior = null;
+
+            }
+            else
+            {
+                foreach (var tileSet in instance.tilesets)
+                {
+                    tileSet.Load();
+                }
             }
 
             

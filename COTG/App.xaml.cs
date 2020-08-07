@@ -80,11 +80,51 @@ namespace COTG
             Resuming += App_Resuming;
 
             // TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
-        
+
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
             //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
 
+        }
+        static public byte shiftPressed, controlPressed;
+
+        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
+        {
+            switch(args.VirtualKey)
+            {
+                case VirtualKey.Shift:
+                    shiftPressed &= 254;
+                    break;
+                case VirtualKey.RightShift:
+                    shiftPressed &= 253;
+                    break;
+                case VirtualKey.Control:
+                    controlPressed &= 254;
+                    break;
+                case VirtualKey.RightControl:
+                    controlPressed &= 253;
+                    break;
+
+            }
+        }
+
+        private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case VirtualKey.Shift:
+                    shiftPressed |= 1;
+                    break;
+                case VirtualKey.RightShift:
+                    shiftPressed |= 2;
+                    break;
+                case VirtualKey.Control:
+                    controlPressed |= 1;
+                    break;
+                case VirtualKey.RightControl:
+                    controlPressed |= 2;
+                    break;
+            }
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -125,6 +165,8 @@ namespace COTG
             idleTimer.Tick += IdleTimer_Tick;
             Assert(idleTimer.IsEnabled == false);
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
 
         }
 
@@ -271,11 +313,11 @@ namespace COTG
         public static bool IsOnUIThread() => GlobalDispatcher().HasThreadAccess;
         public static bool IsKeyPressedControl()
         {
-            return CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+            return controlPressed != 0;
         }
         public static bool IsKeyPressedShift()
         {
-            return CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+            return shiftPressed != 0;
         }
 
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
@@ -421,22 +463,29 @@ namespace COTG
 
 			try
 			{
-				var paths = e.Link.Split('/');
-				Assert(paths[0].Length == 0);
-				switch (paths[1])
-				{
-					case "c":
-                        Spot.ProcessCoordClick(paths[2].FromCoordinate(),false);
-                        break;
-                    case "p": // player
-                        JSClient.ShowPlayer(paths[2]);
-                        break;
-                    case "a": // Alliance
-                        JSClient.ShowAlliance(paths[2]);
-                        break;
-                    case "r": // Report
-                        JSClient.ShowReport(paths[2]);
-                        break;
+                if (e.Link.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                {
+                    Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
+                }
+                else
+                {
+                    var paths = e.Link.Split('/');
+                    Assert(paths[0].Length == 0);
+                    switch (paths[1])
+                    {
+                        case "c":
+                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false);
+                            break;
+                        case "p": // player
+                            JSClient.ShowPlayer(paths[2]);
+                            break;
+                        case "a": // Alliance
+                            JSClient.ShowAlliance(paths[2]);
+                            break;
+                        case "r": // Report
+                            JSClient.ShowReport(paths[2]);
+                            break;
+                    }
                 }
             }
 			catch (Exception ex)

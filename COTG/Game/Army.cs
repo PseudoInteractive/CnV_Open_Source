@@ -21,7 +21,7 @@ namespace COTG.Game
         public string xy => sourceCid.CidToString();
         public int targetCid;
         public int sourceCid;
-        public string sourceCN => Spot.Get(sourceCid).cityName;
+        public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
         public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;

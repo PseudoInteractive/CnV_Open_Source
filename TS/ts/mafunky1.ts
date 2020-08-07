@@ -699,6 +699,7 @@ function avactor() {
 			let troops = cotg.city.troops();
 			let type_113 = clickInfo.info.type;
 			let lvl_ = clickInfo.info.lvl as number;
+			it.score = lvl_;
 			it.name = type_113 + " " + lvl_;
 			if ($("#cityplayerInfo div table tbody tr").length === 11) {
 				bossele_();
@@ -821,10 +822,10 @@ function avactor() {
 
 		}
 		else if (dtype_ === "boss") {
-		//	let type_113 = clickInfo.info.type;
+			//	let type_113 = clickInfo.info.type;
 			let lvl_ = clickInfo.info.lvl as number;
 			let bossname_ = clickInfo.info.name;
-
+			it.score = lvl_;
 			// @todo
 			if ($("#cityplayerInfo div table tbody tr").length === 11) {
 				bossele_();
@@ -1224,7 +1225,11 @@ function avactor() {
 				$("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
 			}
 		}
-		else {
+		else if (dtype_ === "portal" || dtype_ === "shrine")
+		{
+			it.score = clickInfo.info.active;
+		}
+		else{
 			$("#cityplayerInfo div table tbody tr:gt(6)").remove();
 			// var coords = $("#citycoords")[0].innerText.split(":");
 		}

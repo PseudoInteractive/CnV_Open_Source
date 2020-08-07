@@ -40,33 +40,21 @@ namespace COTG.Game
         {
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
             {
-                if (City.allCities.TryGetValue(cid, out var city))
-                    rv = city; // re-use existing one if it is exists (this occurs for the players own cities)
-                else
-                {
-                    rv = new Spot() { cid = cid };
+                Assert(City.allCities.ContainsKey(cid) == false);
                     var worldC = cid.CidToWorld();
                     var info = World.CityLookup(worldC);
+                    rv = new Spot() { cid = cid };
                     rv.pid = info.player;
                     rv.isTemple = info.isTemple;
                     rv.isOnWater = info.isWater;
                     rv.isCastle = info.isCastle;
                     rv.points = (ushort)(info.isBig ? 8000 : 1500);
-                }
+                
                 Spot.allSpots.TryAdd(cid, rv);
             }
             return (rv);
         }
-        public static Spot Get(int cid)
-        {
-            if (Spot.allSpots.TryGetValue(cid, out var rv))
-                return rv;
-            
-                if (City.allCities.TryGetValue(cid, out var city))
-                    return city;
-             
-            return invalid;
-        }
+        public bool isMine => pid == Player.myId;
 
         public string _cityName;
         public string cityName=>  _cityName ?? xy;
@@ -229,7 +217,7 @@ namespace COTG.Game
 
         public static void ProcessCoordClick(int cid,bool lazyMove)
         {
-            if (City.IsMine(cid))
+            if (City.IsMine(cid) && !(App.IsKeyPressedShift()||App.IsKeyPressedControl()) )
             {
                 if (City.IsBuild(cid))
                 {
@@ -340,19 +328,7 @@ namespace COTG.Game
             return rv;
 
         }
-        public static List<Spot> GetSelectedSpots()
-        {
-            var rv = new List<Spot>();
-            var selected = GetSelected();
-            foreach (var sel in selected)
-            {
-                if (allSpots.TryGetValue(sel, out var v))
-                    rv.Add(v);
-
-            }
-            return rv;
-
-        }
+     
         public bool ToggleSelected()
         {
             bool rv = false;

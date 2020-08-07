@@ -341,6 +341,8 @@ namespace COTG.Views
                 RaidOverview.Send();
                 if(City.build!=null)
                     GetCity.Post(City.build.cid);
+                if (cityGrid.ContextFlyout == null)
+                    BuildCityContextFlyout(null);
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;
             }
@@ -349,6 +351,18 @@ namespace COTG.Views
         //        cityGrid.ItemsSource = null;
             }
             base.VisibilityChanged(visible);
+
+        }
+        private void BuildCityContextFlyout(TabPage newPage)
+        {
+            if(newPage!=null)
+                cityGrid.DataContext = newPage;
+            cityContextFlyout = new MenuFlyout();
+            cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+            cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
+            if (newPage != null)
+                cityContextFlyout.XamlRoot = newPage.XamlRoot;
+            cityGrid.ContextFlyout = cityContextFlyout;
 
         }
         public override void XamlTreeChanged(TabPage newPage) {

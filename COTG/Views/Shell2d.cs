@@ -116,9 +116,9 @@ namespace COTG.Views
             canvas = new CanvasAnimatedControl()
 			{
 				IsHitTestVisible = false,
-                
+                IsTabStop=true,
 				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/60.0f),
-				
+				AllowFocusOnInteraction=true,
 				IsFixedTimeStep = false
 			};
 			canvas.Draw += Canvas_Draw;
@@ -176,7 +176,7 @@ namespace COTG.Views
                 w.Dispose();
             }
             World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
-
+            World.changePixels = null;
         }
 
         public static void SetCanvasVisibility(bool visible)
@@ -318,12 +318,6 @@ namespace COTG.Views
                 return;
 
 
-            if(mouseButtons.HasFlag(MouseButtons.left))
-            {
-                // immediate
-                cameraCLag = cameraC;
-                cameraZoomLag = cameraZoom;
-            }
 
             try
             {

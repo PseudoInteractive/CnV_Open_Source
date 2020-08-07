@@ -52,11 +52,11 @@ namespace COTG
         public static bool IsWorldView()	=> viewMode == ViewMode.world;
         public static bool IsCityView() => viewMode == ViewMode.city;
 
-        public static JsonDocument ppdt;
+//        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static HttpBaseProtocolFilter httpFilter;
-        const int clientCount = 8;
+        const int clientCount = 6;
         public static ConcurrentBag<HttpClient> clientPool;
         public static HttpClient downloadImageClient;
 
@@ -85,8 +85,6 @@ namespace COTG
         {
             public string token { get; set; }
             public int ppss { get; set; }
-            public string player { get; set; }
-            public int pid { get; set; }
             public string s { get; set; }
             public string cookie { get; set; }
             public DateTimeOffset launchTime;
@@ -95,7 +93,7 @@ namespace COTG
 
             public override string ToString()
             {
-                return $"{{{nameof(token)}={token}, {nameof(ppss)}={ppss.ToString()}, {nameof(player)}={player}, {nameof(pid)}={pid.ToString()},  {nameof(s)}={s}, {nameof(cookie)}={cookie}}}";
+                return $"{{{nameof(token)}={token}, {nameof(ppss)}={ppss.ToString()},   {nameof(s)}={s}, {nameof(cookie)}={cookie}}}";
             }
         };
 
@@ -658,7 +656,7 @@ namespace COTG
                     
                     city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                     city.isTemple = jsCity.GetAsInt("15") > 0;
-                    city.pid = jsVars.pid;
+                    city.pid = Player.myId;
                     
 
                 }
@@ -715,10 +713,10 @@ namespace COTG
                         downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 
                         httpFilter = new HttpBaseProtocolFilter();// HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
-                        httpFilter.AllowAutoRedirect = true;
+                     //   httpFilter.AllowAutoRedirect = true;
 //                        httpFilter.ServerCredential =
                       //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-                        httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.Default;
+                        httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
                         httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
                         httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
                         httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
@@ -735,7 +733,7 @@ namespace COTG
 
 //                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
  //                       httpFilter.AllowUI = true;
-                        httpFilter.AutomaticDecompression = true;
+                       // httpFilter.AutomaticDecompression = true;
                         httpFilter.MaxVersion = HttpVersion.Http20;
 
                         //                        httpFilter.User.
@@ -889,6 +887,7 @@ namespace COTG
                                     jsVars.token = jso.GetString("token");
                                     var agent = jso.GetString("agent");
                                     jsVars.cookie = jso.GetString("cookie");
+
                                     {
                                         //    var clients = clientPool.ToArray();
                                         foreach (var httpClient in clientPool)
@@ -907,8 +906,8 @@ namespace COTG
                                     Log($"TOffset {jsVars.gameTOffset}");
                                     Log(ServerTime().ToString());
                                     jsVars.ppss = jso.GetAsInt("ppss");
-                                    jsVars.player = jso.GetString("player");
-                                    jsVars.pid = jso.GetAsInt("pid");
+                                    Player.myName = jso.GetString("player");
+                                    Player.myId = jso.GetAsInt("pid");
 
                                     var cid = jso.GetAsInt("cid");
                                     City.build = City.focus = City.GetOrAddCity(cid);

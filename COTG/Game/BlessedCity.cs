@@ -75,7 +75,7 @@ namespace COTG.Game
         }
         public void SendDonation(int woodToSend,int stoneToSend)
         {
-            var secret = $"JJx452Tdd{JSClient.jsVars.pid}sRAssa";
+            var secret = $"JJx452Tdd{Player.myId}sRAssa";
             var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"1\"}}"; // t==1 is land, t==2 is water
 
             Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f="+HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8)) ;

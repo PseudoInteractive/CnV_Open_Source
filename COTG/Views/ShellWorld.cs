@@ -20,15 +20,6 @@ namespace COTG.Views
     public partial class ShellPage
     {
         public static CoreIndependentInputSource coreInputSource;
-        [Flags] enum MouseButtons
-        {
-            left = 1,
-            right = 2,
-            middle = 4,
-            x1 = 8,
-            x2 = 16,
-        };
-        static MouseButtons mouseButtons;
 
         public static Vector2 mousePosition;
         public static Vector2 lastMousePressPosition;
@@ -55,10 +46,10 @@ namespace COTG.Views
 
         }
 
-        static Vector2 GetCanvasPosition(Windows.Foundation.Point screenC)
-            {
-//            return new Vector2((float)screenC.X - clientCScreen.X, (float)screenC.Y - clientCScreen.Y);
-            return new Vector2((float)screenC.X , (float)screenC.Y );
+        static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
+        {
+            var point = screenC.Position;
+            return new Vector2((float)point.X , (float)point.Y );
         }
         private void Canvas_PointerReleased(object sender, PointerEventArgs e)
         {
@@ -67,14 +58,12 @@ namespace COTG.Views
                 e.Handled = false;
                 return;
             }
-            var buttons = mouseButtons;
-         //   canvas.ReleasePointerCapture(e.Pointer);
-            // ChatTab.L("CRelease " + e.GetCurrentPoint(canvas).Position.ToString());
-            mouseButtons = 0;
-            mousePosition = GetCanvasPosition(e.CurrentPoint.Position);
-            
-//            mousePosition = point.Position.ToVector2();
-            if ((lastMousePressPosition - mousePosition).Length() < 8.0f)
+            var pointerPoint = e.CurrentPoint;
+            mousePosition = GetCanvasPosition(pointerPoint);
+            e.Handled = false;
+
+            //            mousePosition = point.Position.ToVector2();
+            if ((lastMousePressPosition - mousePosition).Length() < 12.0f)
             {
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
@@ -88,42 +77,49 @@ namespace COTG.Views
 
                 // If clicking on our city, change city to that, otherwise show the city info
                 // for non cities we show info
-                //if (info.type == World.typeCity && info.player == JSClient.jsVars.pid)
+                //if (info.type == World.typeCity && info.player == Player.myId)
                 //{
                 //    var city = SpotTab.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
                 //    JSClient.ChangeCity(cid);
                 //}
                 //else
-                if(buttons.HasFlag( MouseButtons.left ) )
+                switch (pointerPoint.Properties.PointerUpdateKind)
                 {
-                    Spot.ProcessCoordClick(cid, true);
-                    e.Handled = true;
-                }
-                else if(buttons.HasFlag(MouseButtons.right) )
-                {
-                   
-                    var spot = Spot.GetOrAdd(cid);
-                    foreach(var i in CityFlyout.Items)
-                        i.DataContext = spot;
+                    case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
+                        {
+                            Spot.ProcessCoordClick(cid, true);
+                            e.Handled = true;
+                            break;
+                        }
 
-//                    CityFlyout.ShowAt(canvas,point.Position);
 
- //                   e.Handled = true;
+                    case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
+                        {
+                            var position = pointerPoint.Position;
+                            App.DispatchOnUIThread(() =>
+                            {
+                                canvasFlyout.ShowAt(canvas, position);
+                            });
+                            break;
+                        }
+                    case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+                        {
+                            NavStack.Back();
+                        }
+                        break;
+                    case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+                        {
+                            NavStack.Forward();
+
+                            break;
+                        }
+                    default:
+                        break;
                 }
-                else if(buttons.HasFlag(MouseButtons.x1))
-                {
-                    NavStack.Back();
-                }
-                else if (buttons.HasFlag(MouseButtons.x2))
-                {
-                    NavStack.Forward();
-                }
-                //   JSClient.ShowCity(MousePointToCid(mousePosition));
 
             }
             else
             {
-                SetJSCamera();
             }
         }
 
@@ -159,23 +155,8 @@ namespace COTG.Views
 
 //            canvas.CapturePointer(e.Pointer);
             var point = e.CurrentPoint;
-
-            mouseButtons = 0;
+            App.DispatchOnUIThreadLow(() => canvas.Focus(FocusState.Programmatic));
             var properties = point.Properties;
-            if (properties.IsLeftButtonPressed)
-                mouseButtons |= MouseButtons.left;
-            if (properties.IsRightButtonPressed)
-                mouseButtons |= MouseButtons.right;
-            if (properties.IsMiddleButtonPressed)
-                mouseButtons |= MouseButtons.middle;
-            if (properties.IsXButton1Pressed)
-            {
-                mouseButtons |= MouseButtons.x1;
-            }
-            if (properties.IsXButton2Pressed)
-            {
-                mouseButtons |= MouseButtons.x2;
-            }
             //if (JSClient.IsCityView())
             //{
             //    switch (properties.PointerUpdateKind)
@@ -196,7 +177,7 @@ namespace COTG.Views
             //}
 
 
-            mousePosition = GetCanvasPosition(point.Position);
+            mousePosition = GetCanvasPosition(point);
             var prior = lastMousePressTime;
             lastMousePressTime = DateTimeOffset.UtcNow;
             lastMousePressPosition = mousePosition;
@@ -235,6 +216,7 @@ namespace COTG.Views
             //              }
             //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
             ClearHover();
+            e.Handled = false;
 
         }
         static void ClearHover()
@@ -253,13 +235,7 @@ namespace COTG.Views
             //    return;
             //}
 
-            if (mouseButtons!=0)
-            {
-                mouseButtons = 0;
-//                canvas.ReleasePointerCapture(e.Pointer);
-                SetJSCamera();
-
-            }
+           
             ClearHover();
         }
         //private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
@@ -280,7 +256,7 @@ namespace COTG.Views
             var wheel = pt.Properties.MouseWheelDelta;
             var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
             var newZoom = cameraZoom * MathF.Exp(dZoom);
-            var cBase = GetCanvasPosition(pt.Position) - halfSpan;
+            var cBase = GetCanvasPosition(pt) - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
             cameraC =  cameraC + c0 - c1;
@@ -301,10 +277,7 @@ namespace COTG.Views
             return (x, y);
         }
 
-        static int MousePointToCid(Vector2 c1)
-        {
-            return MousePointToWorld(c1).WorldToCid();
-        }
+     
 
         int lastCanvasC;
         private void Canvas_PointerMoved(object sender, PointerEventArgs e)
@@ -315,10 +288,11 @@ namespace COTG.Views
            //     return;
            // }
             var point = e.CurrentPoint;
-            var c1 = GetCanvasPosition(point.Position);
+            var c1 = GetCanvasPosition(point);
             
             var c = MousePointToWorld(c1);
-            if (mouseButtons == 0)
+            var props = point.Properties;
+            if ((props.IsLeftButtonPressed|props.IsRightButtonPressed) ==false)
             {
                 var cont = Continent.GetPackedIdFromC(c);
                 if (cont != lastCont)
@@ -331,11 +305,13 @@ namespace COTG.Views
                 var cid = c.WorldToCid();
                 if (lastCanvasC != cid)
                 {
+                    Spot.uiPress = cid;
                     Spot.viewHover = 0;
                     toolTip = null;
 
                     lastCanvasC = cid;
-                    var data = World.CityLookup(c);
+                    var packedId = World.GetPackedId(c);
+                    var data = World.CityLookup(packedId);
                     switch (data.type)
                     {
                         case World.typeCity:
@@ -379,17 +355,63 @@ namespace COTG.Views
                             toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
                             break;
                     }
+                    if(World.rawPrior!=null)
+                    {
+                        var pData = World.CityLookupPrior(packedId);
+                        if(pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
+                        {
+                            // no change
+
+                        }
+                        else
+                        {
+                            switch(data.type)
+                            {
+                                case World.typeCity:
+                                    if (pData.player != data.player)
+                                    {
+                                        var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+
+                                        toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+                                    }
+                                    else 
+                                    {
+                                        toolTip += "\nWas rennovated";
+                                    }
+                                    break;
+                                case World.typeShrine:
+                                    toolTip += "\nWas unlit";
+                                    break;
+                                case World.typePortal:
+                                    if( data.player == 0)
+                                        toolTip += "\nWas active";
+                                    else
+                                        toolTip += "\nWas inactive";
+                                    break;
+                                default:
+                                    toolTip += "\nWas founded";
+                                    break;
+
+                            }
+                        }
+                    }
                 }
+                e.Handled = false;
+
             }
-             if (mouseButtons != 0)
+            else
             {
                 // If the mouse drags off the surface we will miss the mouse up
                 // TODO:  mouse should be hooked.
-                if (point.IsInContact)
+               // if (point.IsInContact)
                 {
                     var dr = c1 - mousePosition;
-                    dr *= 1.0f/cameraZoom;
+                    dr *= 1.0f/cameraZoomLag;
                     cameraC -= dr;
+                    // instant
+                    cameraCLag = cameraC;
+                    e.Handled = true;
+
                 }
             }
 
@@ -402,19 +424,17 @@ namespace COTG.Views
             eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Hour}:{serverTime.Minute:D2}";
         }
 
-        private static bool TryGetSpot(object sender, out Spot spot)
+        private static bool TryGetSpot(out Spot spot)
         {
             spot = null;
-            var from = sender as MenuFlyoutItem;
-            if (from == null)
+            if (Spot.uiPress == 0)
                 return false;
-
-            spot = from.DataContext as Spot;
-            return (spot != null);
+            spot = Spot.GetOrAdd(Spot.uiPress);
+            return true;
         }
         private void CityFlyoutView(object sender, RoutedEventArgs e)
         {
-            if (TryGetSpot(sender, out var spot))
+            if (TryGetSpot(out var spot))
             {
                 JSClient.ViewCity(spot.cid);
             }
@@ -422,7 +442,7 @@ namespace COTG.Views
 
         private void CityFlyoutInfo(object sender, RoutedEventArgs e)
         {
-            if (TryGetSpot(sender, out var spot))
+            if (TryGetSpot(out var spot))
             {
                 JSClient.ChangeCity(spot.cid,true);
             }

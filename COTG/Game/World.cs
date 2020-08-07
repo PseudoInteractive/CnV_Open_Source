@@ -136,27 +136,46 @@ namespace COTG.Game
         public static byte[] changePixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
         public static uint[] raw = new uint[worldDim*worldDim]; // reference with CID, stores playerID
+        public static uint[] rawPrior; // set if heatmaps are enabled
         public static int ClampCoord(int x)
         {
             return x.Clamp(0, worldDim);
         }
-        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple) CityLookup((int x, int y) c)
+        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) CityLookup(int packedId )
         {
-            var x = c.x;
-            var y = c.y;
-            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? raw[x+y*worldDim] : 0u;
+            return CityLookup(raw, packedId);
+        }
+        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) CityLookup((int x, int y) c)
+        {
+            return CityLookup(raw, packedId: GetPackedId(c));
+        }
+        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) CityLookupPrior(int packedId)
+        {
+            return CityLookup(rawPrior, packedId);
+        }
+        public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) CityLookup(uint[] _raw,int packedId)
+        {
+            uint rv = _raw[packedId];
             return (rv & typeMask, (int)(rv & playerMask),
                 (rv & typeCityFlagCastle) != 0,
                 (rv & typeCityFlagBig) != 0,
                 (rv & typeCityFlagWater) != 0,
-                (rv & typeCityFlagTemple) != 0);
+                (rv & typeCityFlagTemple) != 0,
+                rv);
 
         }
+        public static int GetPackedId((int x, int y) c)
+        {
+            var x = c.x;
+            var y = c.y;
+            return (x >= 0 & x < worldDim & y >= 0 & y < worldDim) ? x + y * worldDim : 0;
+        }
+
         public static (uint type, uint data) RawLookup((int x, int y) c)
         {
             var x = c.x;
             var y = c.y;
-            uint rv = (x >= 0 && x < worldDim && y >= 0 && y < worldDim) ? raw[x + y * worldDim] : 0u;
+            uint rv = (x >= 0 &x < worldDim & y >= 0 & y < worldDim) ? raw[x + y * worldDim] : 0u;
             return (rv & typeMask, (rv & dataMask));
 
         }
@@ -273,12 +292,13 @@ namespace COTG.Game
                 }
             }
             changePixels = pixels;
+            rawPrior = prior;
         }
 
         public static World Decode(JsonDocument jsd)
         {
             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-            Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
+            
 
             // fill with Alpha=clear
             for (int i = 0; i < outSize / 4 * outSize / 4; i++)
@@ -313,6 +333,9 @@ namespace COTG.Game
             var lawless_ = temp[4].Split("l");
             var caverns_ = temp[5].Split("l");
             var portals_ = temp[6].Split("l");
+
+            Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
+
             var rv = new World();
             /** @type {string} */
             foreach (var id in bosses_1)
@@ -541,7 +564,7 @@ namespace COTG.Game
                             isTemple = true;
                         }
                     }
-                    //if (pid == JSClient.jsVars.pid)
+                    //if (pid == Player.myId)
                     //{
                     //    LogJS(c);
                     //    Log(_t);
@@ -556,7 +579,7 @@ namespace COTG.Game
                     {
                         pixels.SetColor(index, 0xA0, 0x00, 0xB0);
                     }
-                    else if (pid == JSClient.jsVars.pid)
+                    else if (pid == Player.myId)
                         pixels.SetColor(index, 0x60, 0xd0, 0x40);
                     else if (alliance == Alliance.my.id)
                         pixels.SetColor(index, 0x30, 0xa0, 0x30);

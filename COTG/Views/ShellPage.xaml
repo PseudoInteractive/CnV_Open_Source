@@ -37,7 +37,7 @@
             <Setter Property="MaxWidth"
                     Value="1900" />
         </Style>
-        <MenuFlyout x:Name="CityFlyout" x:FieldModifier="Public">
+        <MenuFlyout x:Name="canvasFlyout" x:FieldModifier="Public">
             <MenuFlyoutItem Click="CityFlyoutView"
                                 Text="City View..." />
             <MenuFlyoutItem Click="CityFlyoutInfo"
@@ -73,7 +73,7 @@
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
-                      IsEditable="True"
+                     
                       Width="120"
                       SelectedValuePath="id"
                       DisplayMemberPath="name"
@@ -97,14 +97,16 @@
                               Label="Fresh"
                               AccessKey="F5"                         
                               Click="Refresh"
-                               ToolTipService.ToolTip="When in doubt, refresh :)"
+                               ToolTipService.ToolTip="When in doubt, refresh - Shift click to refresh world data"
                               Icon="RepeatAll">
                 <AppBarButton.Resources>
                     <winui:TeachingTip x:Name="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
                                 Target="{x:Bind Fresh}"
-                                Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually"></winui:TeachingTip>
+                                Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
+                        <TextBlock Text="Holding Shift will refresh all World data (castles, cities, bosses etc)" />
+                    </winui:TeachingTip>
                 </AppBarButton.Resources>
             </AppBarButton>
             <AppBarButton  x:Name="buildingsButton"

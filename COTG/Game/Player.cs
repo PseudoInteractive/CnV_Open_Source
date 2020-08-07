@@ -15,6 +15,8 @@ namespace COTG.Game
         public ushort pointsH;// divided by 100
         public ushort cities;
         public byte title;
+        public static int myId;
+        public static string myName;
 
         public string allianceName => Alliance.IdToName(alliance);
 
@@ -30,7 +32,7 @@ namespace COTG.Game
         }
         public static bool IsMe(int playerId)
         {
-            return JSClient.jsVars.pid == playerId;
+            return Player.myId == playerId;
         }
         public static Player _default = new Player() { name = "!Zut!" };
         public static Player Get(int id) => all.GetValueOrDefault(id, _default);

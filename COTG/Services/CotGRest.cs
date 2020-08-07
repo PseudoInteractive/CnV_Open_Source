@@ -245,7 +245,7 @@ namespace COTG.Services
             // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
             //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
             var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTimeMs()},\"e\":\"World\"}}";
-            var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{JSClient.jsVars.pid}2wz" );
+            var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{Player.myId}2wz" );
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
             return args;
@@ -287,7 +287,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{JSClient.jsVars.pid}ccJx1e2");
+            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{Player.myId}ccJx1e2");
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -296,7 +296,7 @@ namespace COTG.Services
         {
             // var cid = json.RootElement.GetAsInt("cid");
             //   Log("Got JS " + cid);
-            var city = City.allCities.GetOrAdd(cid, City.Factory);
+            var city = City.GetOrAddCity(cid);
             var root = json.RootElement;
             city.LoadFromJson(root);
             if (action != null)
@@ -324,7 +324,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(json, $"XTR977sW{JSClient.jsVars.pid}sss2x2");
+            var encoded = Aes.Encode(json, $"XTR977sW{Player.myId}sss2x2");
             var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -574,7 +574,7 @@ namespace COTG.Services
             foreach (var cr in a.EnumerateArray())
             {
                 int cid = cr[0].GetInt32();
-                var city = City.allCities.GetOrAdd(cid, City.Factory);
+                var city = City.GetOrAddCity(cid);
                 List<Raid> raids = new List<Raid>();
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())

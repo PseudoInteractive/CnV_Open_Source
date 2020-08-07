@@ -149,7 +149,7 @@ namespace COTG.Views
             Canvas.SetZIndex(webView, 0);
 
             var canvas = CreateCanvasControl();
-            canvas.ContextFlyout = CityFlyout;
+          //  canvas.ContextFlyout = CityFlyout;
             grid.Children.Add(canvas);
             Grid.SetColumn(canvas, 1);
             Grid.SetRow(canvas, 1);
@@ -436,22 +436,24 @@ namespace COTG.Views
 
         private static void Refresh()
         {
-            var shiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
-            var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
-            Log($"Refresh {shiftState},{ctrlState}");
 
-            var isShiftDown = shiftState != CoreVirtualKeyStates.None;
-            var isCtrlDown = ctrlState != CoreVirtualKeyStates.None;
-            //if (isShiftDown)
-            //{
-            //    JSClient.Refresh(o, e);
-            //}
-            //else
-            MainPage.instance.Refresh();
-            DefensePage.instance.Refresh();
-            DefenderPage.instance.Refresh();
-            SpotTab.instance.Refresh();
-            DonationTab.instance.Refresh();
+            if (App.IsKeyPressedShift())
+            {
+                Note.Show("Refresh world data");
+                GetWorldInfo.Send();
+                TileData.Ctor();
+            }
+            else
+            {
+                Note.Show("Refresh UI");
+            }
+            // fall through from shift-refresh.  Shift refresh does both
+
+                foreach (var tab in UserTab.userTabs)
+                {
+                    tab.Refresh();
+                }
+            
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
