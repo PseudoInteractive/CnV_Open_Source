@@ -1444,6 +1444,7 @@ function hidecities_() {
 
 	*/
 let defaultMru = {
+		
 		cid: 0,
 		name: "",
 		pin: 0,
@@ -1456,8 +1457,7 @@ let defaultMru = {
 		score:0,
 		castle:0,
 		water:0,
-		bless:0,
-		last: new Date(),
+		bless:0
 	};
 let mru = [];
 	/**

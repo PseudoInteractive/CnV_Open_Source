@@ -9002,7 +9002,7 @@ function ppdtChanged(__ppdt)
     }
   if(!wantUpdate)
     return;
-   console.log("Update ppdt");
+  // console.log("Update ppdt");
   setTimeout( ()=>
     {
       
@@ -13759,8 +13759,9 @@ var cotgsubscribe = amplify;
           }
           else
 		  {
+    // This happens when items are queued but we are out of resources or something
             //  console.log("pa?");
-              DoPoll2(500);
+            //  DoPoll2(500);
 
 
 		  }
@@ -17492,7 +17493,7 @@ var cotgsubscribe = amplify;
           if (
             i5U == (0))
             if (i5U < (y9y ^ 0)) {
-              console.log(_s(741) + i5U);
+              //console.log(_s(741) + i5U);
               o5F(i5U);
               Q0F = 1;
             }
@@ -18181,7 +18182,7 @@ var cotgsubscribe = amplify;
       var b9T = Math.ceil(Number($(_s(R2p ^ 0) + d9T)
         .val()));
       var n9T = J9T * b9T;
-      console.log(_s(3433) + d9T + _s(710) + b9T);
+      //console.log(_s(3433) + d9T + _s(710) + b9T);
       E6k.R6();
       if (ppdt.r < S9T) Y6(_s(+E4p));
       else if (n9T > ppdt.m.t) Y6(_s(+d3R));
@@ -25255,15 +25256,20 @@ console.log("Bad");
             if (cid == ctyid) ppdt[_s(+x9y)][X9l][2] = t9l;
           }
           D6[_s(+I5R)] = t9l;
-          var
-            L9l = D6[_s(M8R ^ 0)][0];
-          var z9l = $(_s(O54 >> 437751616) + cid + _s(G2R * 1))
-            .html();
-          var C9l = z9l.indexOf(_s(6614));
-          var M9l = z9l.substring(C9l, z9l.length);
-          var G9l =
-            D6.citn + _s(+w54) + L9l;
+          let L9l = D6[_s(M8R ^ 0)][0];
+          let G9l = D6.citn;
+          let M9l = G9l;
+          let z9l = $(_s(O54 >> 437751616) + cid + _s(G2R * 1)).html();
+          if (z9l) {
+          var C9l =  z9l.indexOf(_s(6614)) ;
+          M9l = z9l.substring(C9l, z9l.length);
+          G9l = D6.citn + _s(+w54) + L9l;
           M9l = G9l + " " + M9l;
+          }
+          else
+		  {
+
+		  }
           $(_s(+O54) + cid + _s(G2R - 0))
             .html(M9l);
           $(_s(5450))
@@ -31429,9 +31435,7 @@ console.log("Bad");
                   $(_s("3217" | 3072))
                     .attr("class", _s(6498) + A66);
                 }
-                console.log(_s(+y1y) + p66 +
-                  _s(5475) + Z66 + _s(6183) + y66 + _s(5335) +
-                  D66 + _s(r1R >> 1033960224) + B66 + _s(5712) + R66);
+              //  console.log(_s(+y1y) + p66 +      _s(5475) + Z66 + _s(6183) + y66 + _s(5335) + D66 + _s(r1R >> 1033960224) + B66 + _s(5712) + R66);
                 $(_s(414))
                   .text(p6(p66));
                 $(_s(644))
@@ -32278,8 +32282,7 @@ console.log("Bad");
           .scroll(function() {
             var L02 = $(_s('3661' | 3588));
             var X02 = $(_s("3654" | 2114));
-            console.log(_s(1453) + L02.scrollTop() + _s(2852) + X02.height() + E6k
-              .S55(2801) + L02.height());
+//            console.log(_s(1453) + L02.scrollTop() + _s(2852) + X02.height() + E6k   .S55(2801) + L02.height());
             if (L02.scrollTop() >= X02.height() - L02.height())
               if (D0F <= U5F && d5F == !1) {
                 d5F = !!"1";
@@ -35880,7 +35883,7 @@ console.log("Bad");
         Y6(_s(+F4R));
       } else {
         var g0U = { a: f0U, c: Z0U, b: K0U };
-        console.log(g0U);
+       // console.log(g0U);
         var U0U = _s(3507);
         var P0U = a6.ccazzx.encrypt(JSON.stringify(g0U), U0U, U7y <<
           852351520);
@@ -38294,7 +38297,7 @@ console.log("Bad");
             }
           })
           .dblclick(function(L2n) {
-            console.log(_s(3769));
+           // console.log(_s(3769));
             L2n.stopPropagation();
             L2n.preventDefault();
             return !"1";
@@ -43638,7 +43641,7 @@ console.log("Bad");
             ProcessBuuPoll()
         });
       }
-      Z9 = '1' | 1;
+      Z9 = 1;
       b3F();
     }
 
@@ -44507,7 +44510,7 @@ console.log("Bad");
       } else {
         var G91 = $(_s(o2R | 1327))
           .attr('a');
-        console.log(C91);
+        //console.log(C91);
         var M91 = Number(C91) + Number(G91);
         $(_s(o2R >> 178040448))
           .datetimepicker(_s(+i4m), gcurrd(M91));
@@ -46262,7 +46265,7 @@ console.log("Bad");
         if (s6g == -(1)) {
           m3F(q1g, "0" >>
             1123900064, e6g, a1g);
-          console.log(_s(5638) + q1g);
+         // console.log(_s(5638) + q1g);
         }
       }
     }
@@ -47987,10 +47990,10 @@ console.log("Bad");
             $(_s(5019))
               .remove();
             var B46 = c9.d(E0F(r16));
-            N46 = B46.substring(0, 1);
+            let N46 = +B46.substring(0, 1);
             var h36 = 0;
             h36 = B46.substring(1, 2);
-            if (N46 == ('9' | 9)) {
+            if (N46 == (9)) {
               var G36 = Number(B46.substring(7, +
                 '8'));
               var p46 = Number(B46.substring(8, 9));// is castle?
@@ -47999,9 +48002,10 @@ console.log("Bad");
               w2();
               $(_s(5059))
                 .show();
+              let __N46 ="Type";
               if (G36 == 1) {
                 var I36 = _s("4351" | 4288);
-                var N46 = _s(318);
+                __N46 = _s(318);
                 var m36 =
                   Number(B46.substring(p0y << 1905469920, +G8y)) * ("1000" | 840);
                 var F16 = Number(B46.substring(
@@ -48043,11 +48047,11 @@ console.log("Bad");
                   m36);
                 var z16 = K16.utc()
                   .format(_s(1783));
-                var Y46 = {
+                let Y46 = {
                   y: A46,
                   x: r46,
-                  type: _s(4311),
-                  info: { time: z16, active: 1, name: k36 }
+                  type: "shrine",
+                  info: { time: z16, active: 1, name: k36,player:"tlgger" }
                 };
                 cotgPublish("regional", Y46);
                 $(_s(5196))
@@ -48072,9 +48076,10 @@ console.log("Bad");
                   .text(k36);
                 $(_s(1582))
                   .text(k36);
-              } else {
+              } else
+              {
                 var I36 = _s(+e2y);
-                var N46 = _s(3291);
+                __N46 = _s(3291);
                 $(_s(4732))
                   .attr("class", _s(1743));
                 $(_s(7004))
@@ -48085,13 +48090,14 @@ console.log("Bad");
                   .css("display", "block");
                 $(_s(3142))
                   .html(_s(2817) + r46 + ":" + A46 + ")");
-                var Y46 = {
+                let Y46 = {
                   x: r46,
                   y: A46,
-                  type: _s(4311),
+                  type: "shrine",
                   info: {
-                    name: "",
+                    name: "Maybe Someday",
                     time: "",
+                    player:"Vacant",
                     active: 0
                   }
                 };
@@ -48100,7 +48106,7 @@ console.log("Bad");
               $(_s(3203))
                 .attr("data", r46 + ":" + A46);
               var r36 = 'Shrine<br>Status:' + I36 + _s(+
-                '3331') + N46;
+                '3331') + __N46;
               $(_s(6717))
                 .html(r36);
               $(_s(+a7m))
@@ -48124,23 +48130,23 @@ console.log("Bad");
 //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 >> 178886784);
 //              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 >> 638966080);
             } else if (N46 == 8) {
-              w2
-                ();
+              w2();
               $(_s(+q1R))
                 .show();
               var G36 = Number(B46.substring(7, 8));
               var W16 = Number(B46.substring(
                 8, B46.length));
-              var Y46 = {
+              let Y46 = {
                 y: A46,
                 x: r46,
-                type: _s(4599),
-                info: { active: G36 }
+                type: "portal",
+                info: { active: G36, name:"portal:" + G36,player:"TTC" }
               };
               cotgPublish("regional", Y46);
-              if (G36 == 1) {
+                let __N46 = _s(318);              
+                if (G36 == 1) {
                 var I36 = _s(+w9y) + r46 + E6k.o55(+A6y) + A46 + _s(1200);
-                var N46 = _s(318);
+                
                 $(_s(1084))
                   .attr("class", _s(t9R >> 687750912));
                 $(_s(601))
@@ -48149,7 +48155,7 @@ console.log("Bad");
                   .css("display", "none");
               } else {
                 var I36 = _s(+w9y) + r46 + ":" + A46 + _s(739);
-                var N46 = _s(3291);
+                __N46 = _s(3291);
                 $(_s(1084))
                   .attr("class", _s(6592));
                 $(_s(601))
@@ -48182,8 +48188,8 @@ console.log("Bad");
                 .text(_s(T3m << 1755667424));
 //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
 //              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 - 0);
-            } else if (N46 == "3" >>
-              1194476480) {
+            } else 
+            if (N46 == 3) {
               n46 = Number(A46) * +R5y + Number(r46);
               $(_s(o2y << 1125038560))
                 .show();
@@ -48207,11 +48213,13 @@ console.log("Bad");
                 .val(r46);
               var T36 = $(_s(B5y | 1041))
                 .val(A46);
-              var Y46 = {
+              let Y46 = {
                 y: A46,
                 x: r46,
                 type: "lawless",
                 info: {
+                  name:"Tower",
+                  player:"Trump",
                   type: p46,
                   available: X16,
                   score: H16,
@@ -48410,7 +48418,8 @@ console.log("Bad");
                 .css("display", "none");
 //              phaserGraphics.x = r46 * +64;
 //              phaserGraphics.y = A46 * +64;
-            } else if (N46 == 2) {
+            } else
+            if (N46 == 2) {
               n46 = Number(A46) * (R5y >> 1600456736) + Number(r46);
               $(_s(+o2y))
                 .show();
@@ -48499,7 +48508,7 @@ console.log("Bad");
               var V36 = B46.substring(e16 + (1), o16);
               var A36 = B46.substring(o16 + +
                 '1', B46.length);
-              var Y46 = {
+              let Y46 = {
                 x: r46,
                 y: A46,
                 type: "city",
@@ -48917,7 +48926,8 @@ console.log("Bad");
                 });
             //  phaserGraphics.x = r46 * +64;
             //  phaserGraphics.y = A46 * +64;
-            } else if (N46 == 1) {
+            } else
+            if (N46 == 1) {
               w2();
               $(_s(g5t ^ 0))
                 .css("display", "");
@@ -48934,12 +48944,11 @@ console.log("Bad");
               var O16 = bam[_s(+V64)][c46][
                 _s(+y0R)];
               var t16 = Number(B46.substring(7, 8));
-              var Y46 = {
+              let Y46 = {
                 x: r46,
                 y: A46,
-                type: E6k
-                  .S55(4410),
-                info: { lvl: f36, name: p36, active: t16 }
+                type: "boss",
+                info: { lvl: f36, name: p36, active: t16,player:"Gordy" }
               };
               cotgPublish("regional", Y46);
 //              console.log(_s(6061) + f36 + _s(6409) + h16 + _s(2112) + c46 + E6k     .S55('4446' | 346) + p36 + _s(3196) + A16 + _s(6537) + O16);
@@ -49058,7 +49067,8 @@ console.log("Bad");
                 .text(_s(T3m * 1));
 //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
  //             phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * +64;
-            } else if (N46 == ("7" | 6)) {
+            } else 
+            if (N46 == (7)) {
               w2();
               $(_s(g5t ^ 0))
                 .show();
@@ -49120,12 +49130,11 @@ console.log("Bad");
                   .text(_s(4587));
                 var C16 = 0;
               }
-              var Y46 = {
+              let Y46 = {
                 y: A46,
                 x: r46,
-                type: E6k
-                  .S55(+v9R),
-                info: { prog: G16, lvl: u16, type: z36 }
+                  type: "dungeon",
+                  info: { prog: G16, lvl: u16, type: z36, name: z36 + " " + u16, player:"adi" }
               };
               cotgPublish("regional", Y46);
               var R46 = I9(Number(cid), Number(n46));
@@ -49190,7 +49199,16 @@ console.log("Bad");
   //            phaserGraphics.y = A46 * (64 << 1102950528);
               $(_s(+c1m))
                 .css("display", '');
-            } else if (N46 == 4) {
+            } else
+            if (N46 == 4) {
+                let Y46 = {
+                    y: A46,
+                    x: r46,
+                    type: "spot",
+                    info: { name : "Vacation Spot",player:"Cersei" }
+                };
+                cotgPublish("regional", Y46);
+
               $(_s(
                   '4272' | 128))
                 .css("display", "none");
@@ -49551,7 +49569,7 @@ console.log("Bad");
 
     function ProcessBuuPoll()
 	{
-        if (D6.bq.length==1)
+        if (D6.bq.length<=1)
             DoPoll2(200);
         else
             DoPoll2(1000);
@@ -54510,7 +54528,7 @@ console.log("Bad");
           catch(e)
 		  {
                 console.log("Error!!");
-                console.log(e);
+            //    console.log(e);
 		  }
           let R7D = currentTime();
           let B7D =
@@ -57270,7 +57288,13 @@ console.log("Bad");
             if ( (troopsHome>>7) != (lastTroopsHome>>7) ) {
                 if (troopsHome > lastTroopsHome) {
                     setTimeout(() => {
-                        let wrapper = { citydata: D6 };
+                        let wrapper = { citydata: 
+                        { cid: D6.cid, 
+                            comm:D6.comm,
+                            th:D6.th,
+                            tc:D6.tc,
+                            ts:1
+                        } };
                         window['external']['notify'](JSON.stringify(wrapper));
                     }, 0);
                 }
@@ -62086,7 +62110,7 @@ console.log("Bad");
           else {
            
            localStorage.setItem("gann", g4U );
-           console.log(g4U);
+  //         console.log(g4U);
 
             g4U = JSON.parse(g4U);
             $(_s(3564))
@@ -66527,11 +66551,25 @@ console.log("Bad");
 
     var gainx = 2;
     var gainy = 2;
-    var Z1FTimeout;
+    let Z1FTimeout=1;
+    let nextPoll=0;
     function DoPoll2(delay)
 	{
-        clearTimeout(Z1FTimeout);
-        Z1FTimeout = setTimeout(Z1F, delay);
+        let desiredTime = Date.now() + delay;
+        if (Z1FTimeout != 0)
+        {
+            if(desiredTime < nextPoll)
+            {
+                nextPoll = desiredTime;
+                clearTimeout(Z1FTimeout);
+                Z1FTimeout = setTimeout(Z1F, delay);
+            }
+         }
+         else
+		{
+            nextPoll = desiredTime;
+            Z1FTimeout = setTimeout(Z1F, delay);
+		}
 	}
 
     
@@ -66717,6 +66755,7 @@ _viewMode = viewModeWorld;
         w8 = 0;
           
       } finally {
+          Z1FTimeout = 0;
           DoPoll2(3000);
       }
     }

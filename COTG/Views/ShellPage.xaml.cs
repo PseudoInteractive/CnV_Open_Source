@@ -700,6 +700,7 @@ namespace COTG.Views
                 {
                     newSel.SetBuild();
                     JSClient.ChangeCity(newSel.cid,false);
+                    NavStack.Push(newSel.cid);
 
                 }
             }

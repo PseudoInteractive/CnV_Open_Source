@@ -302,7 +302,7 @@ namespace COTG
                 {
                     SetViewModeCity();
                     var city = City.StBuild(cityId);
-                    city.SetFocus( false, true, false);
+                  //  city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
                 }
@@ -325,8 +325,8 @@ namespace COTG
                 if (City.IsMine(cityId))
                 {
                     var city = City.StBuild(cityId);
-                    city.SetFocus( false, true, false);
-                    cityId.BringCidIntoWorldView(lazyMove);
+                    if(!lazyMove)
+                        cityId.BringCidIntoWorldView(lazyMove);
                     App.DispatchOnUIThreadSneaky(() =>
                         view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
                 }
@@ -936,16 +936,16 @@ namespace COTG
                                     var cid = jso.GetAsInt("cid");
                                     {
                                         var pid = Player.NameToId(jso.GetAsString("player"));
-                                        var city =  COTG.Views.SpotTab.TouchSpot(cid,pid);
+                                        var city = COTG.Views.SpotTab.TouchSpot(cid, pid);
 
                                         city._cityName = jso.GetString("name");
                                         city.pid = pid; // todo: this shoule be an int playerId
-                                                                                               //Assert(city.pid > 0);
+                                                        //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");
                                         //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                         city.lastAccessed = DateTimeOffset.UtcNow;
-                                       // city.isCastle = jso.GetAsInt("castle") == 1;
-                                        city.isBlessed = city.pid != 0 ? jso.GetAsInt("bless") != 0 : false;
+                                        // city.isCastle = jso.GetAsInt("castle") == 1;
+                                        city.isBlessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
                                         city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
 
@@ -961,6 +961,10 @@ namespace COTG
                                     break;
 
                                 }
+                            
+
+
+
                             case "citydata":
                                 {
                                     var jse = jsp.Value;
@@ -968,19 +972,18 @@ namespace COTG
                                     var cid = jse.GetInt("cid");
                                     if (!IsWorldView())
                                         ShellPage.cameraC = cid.CidToWorldV();
-
+                                    var isFromTs = jse.TryGetProperty("ts", out _);
                                     //Note.L("citydata=" + cid.CidToString());
-                                    var city = City.StBuild(cid);
+                                    var city = isFromTs ? City.GetOrAddCity(cid) : City.StBuild(cid);
                                     city.LoadFromJson(jse);
 
-                                    if (MainPage.IsVisible())
-                                        ScanDungeons.Post(cid, false);
 
-                                   // if (IsWorldView())
+                                    if (isFromTs && MainPage.IsVisible() && City.focus == City.build)
                                     {
-                                        // bring city into view
-                                        cid.BringCidIntoWorldView(true);
-
+                                        if (jse.TryGetProperty("ts", out _))
+                                        {
+                                            ScanDungeons.Post(cid, false);
+                                        }
                                     }
                                     break;
 
@@ -1039,7 +1042,7 @@ namespace COTG
                                 {
                                     var jso = jsp.Value;
                                     var cid = jso.GetInt("c");
-                                    City.StBuild(cid);
+                                    //City.StBuild(cid);
                                     var popupCount = jso.GetAsInt("p");
                                     //     Note.L("cid=" + cid.CidToString());
                                     SetViewMode((ViewMode)jso.GetInt("v"));

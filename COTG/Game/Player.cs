@@ -42,8 +42,20 @@ namespace COTG.Game
             {
                 var id = int.Parse(entry.Name);
                 var str = entry.Value.GetString();
-                _all.Add(id, new Player() {id=id,name=str } );
+                _all.Add(id, new Player() { id = id, name = str });
                 _nameToId.Add(str, id);
+            }
+            // bonus!
+            var bonus = new string[] { "Cersei", "tlgger","Vacant", "Trump", "TTC","Gordy", "adi" };
+            {
+                int counter = -1;
+                foreach (var i in bonus)
+                {
+                    _all.Add(counter, new Player() { id = counter, name = i });
+                    _nameToId.Add(i, counter);
+                    --counter;
+
+                }
             }
             all = _all;
             nameToId = _nameToId;

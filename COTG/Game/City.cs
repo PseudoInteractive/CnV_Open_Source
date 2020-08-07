@@ -141,15 +141,15 @@ namespace COTG.Game
         public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
-           _cityName = jse.GetAsString("citn");
- //           Note.L($"{cityName} {jse.GetInt("cid")}");
-          //  pid = jse.GetAsInt("pid");
+            if (jse.TryGetProperty("citn", out var citn))
+                _cityName = citn.GetString();
+
             activeCommands = jse.GetAsByte("comm");
-            commandSlots = 5;
             {
                 const int bidCastle = 467;
                 if (jse.TryGetProperty("bd", out var bd))
                     {
+                        commandSlots = 5;
                         foreach (var b in bd.EnumerateArray())
                         {
                             if (b.GetAsInt("bid") == bidCastle)
@@ -160,10 +160,7 @@ namespace COTG.Game
                     }
                 }
             
-        
-
-
-        troopsHome = Array.Empty<TroopTypeCount>();
+            troopsHome = Array.Empty<TroopTypeCount>();
             troopsTotal = Array.Empty<TroopTypeCount>();
 
             for (int hc = 0; hc < 2; ++hc)
@@ -407,11 +404,12 @@ namespace COTG.Game
         {
             var changed = this != City.focus;
             City.focus = this;
+            cid.BringCidIntoWorldView(true);
  //           if (!fromUI && changed && MainPage.IsVisible())
  //               MainPage.CityGrid.SelectItem(this);
             if (!noRaidScan)
             {
-                if (changed)
+                if (changed && MainPage.IsVisible() )
                     ScanDungeons.Post(cid, getCityData);
             }
         }
@@ -427,6 +425,7 @@ namespace COTG.Game
             City.build = this;
             if ( changed )
             {
+                SetFocus(false, true, false);
                 App.DispatchOnUIThreadLow( SelectInUI );
             }
             //if (!noRaidScan)

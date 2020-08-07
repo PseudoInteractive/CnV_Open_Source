@@ -1416,8 +1416,7 @@ let defaultMru = {
     score: 0,
     castle: 0,
     water: 0,
-    bless: 0,
-    last: new Date(),
+    bless: 0
 };
 let mru = [];
 /**
@@ -10803,7 +10802,7 @@ function ppdtChanged(__ppdt) {
     }
     if (!wantUpdate)
         return;
-    console.log("Update ppdt");
+    // console.log("Update ppdt");
     setTimeout(() => {
         window['external']['notify'](JSON.stringify(wrapper));
     }, 300);
@@ -15432,8 +15431,9 @@ var cotgsubscribe = amplify;
                         }
                     }
                     else {
+                        // This happens when items are queued but we are out of resources or something
                         //  console.log("pa?");
-                        DoPoll2(500);
+                        //  DoPoll2(500);
                     }
                     if (callDelay != 0) {
                         clearTimeout(i8);
@@ -19300,7 +19300,7 @@ var cotgsubscribe = amplify;
                     var i5U = ppdt["rw"]['78' | 8][_s(L9y >> 516942048)];
                     if (i5U == (0))
                         if (i5U < (y9y ^ 0)) {
-                            console.log(_s(741) + i5U);
+                            //console.log(_s(741) + i5U);
                             o5F(i5U);
                             Q0F = 1;
                         }
@@ -19994,7 +19994,7 @@ var cotgsubscribe = amplify;
             var b9T = Math.ceil(Number($(_s(R2p ^ 0) + d9T)
                 .val()));
             var n9T = J9T * b9T;
-            console.log(_s(3433) + d9T + _s(710) + b9T);
+            //console.log(_s(3433) + d9T + _s(710) + b9T);
             E6k.R6();
             if (ppdt.r < S9T)
                 Y6(_s(+E4p));
@@ -27172,13 +27172,18 @@ var cotgsubscribe = amplify;
                             ppdt[_s(+x9y)][X9l][2] = t9l;
                     }
                     D6[_s(+I5R)] = t9l;
-                    var L9l = D6[_s(M8R ^ 0)][0];
-                    var z9l = $(_s(O54 >> 437751616) + cid + _s(G2R * 1))
-                        .html();
-                    var C9l = z9l.indexOf(_s(6614));
-                    var M9l = z9l.substring(C9l, z9l.length);
-                    var G9l = D6.citn + _s(+w54) + L9l;
-                    M9l = G9l + " " + M9l;
+                    let L9l = D6[_s(M8R ^ 0)][0];
+                    let G9l = D6.citn;
+                    let M9l = G9l;
+                    let z9l = $(_s(O54 >> 437751616) + cid + _s(G2R * 1)).html();
+                    if (z9l) {
+                        var C9l = z9l.indexOf(_s(6614));
+                        M9l = z9l.substring(C9l, z9l.length);
+                        G9l = D6.citn + _s(+w54) + L9l;
+                        M9l = G9l + " " + M9l;
+                    }
+                    else {
+                    }
                     $(_s(+O54) + cid + _s(G2R - 0))
                         .html(M9l);
                     $(_s(5450))
@@ -33499,9 +33504,7 @@ var cotgsubscribe = amplify;
                                     $(_s("3217" | 3072))
                                         .attr("class", _s(6498) + A66);
                                 }
-                                console.log(_s(+y1y) + p66 +
-                                    _s(5475) + Z66 + _s(6183) + y66 + _s(5335) +
-                                    D66 + _s(r1R >> 1033960224) + B66 + _s(5712) + R66);
+                                //  console.log(_s(+y1y) + p66 +      _s(5475) + Z66 + _s(6183) + y66 + _s(5335) + D66 + _s(r1R >> 1033960224) + B66 + _s(5712) + R66);
                                 $(_s(414))
                                     .text(p6(p66));
                                 $(_s(644))
@@ -34352,8 +34355,7 @@ var cotgsubscribe = amplify;
                 .scroll(function () {
                 var L02 = $(_s('3661' | 3588));
                 var X02 = $(_s("3654" | 2114));
-                console.log(_s(1453) + L02.scrollTop() + _s(2852) + X02.height() + E6k
-                    .S55(2801) + L02.height());
+                //            console.log(_s(1453) + L02.scrollTop() + _s(2852) + X02.height() + E6k   .S55(2801) + L02.height());
                 if (L02.scrollTop() >= X02.height() - L02.height())
                     if (D0F <= U5F && d5F == !1) {
                         d5F = !!"1";
@@ -38077,7 +38079,7 @@ var cotgsubscribe = amplify;
             }
             else {
                 var g0U = { a: f0U, c: Z0U, b: K0U };
-                console.log(g0U);
+                // console.log(g0U);
                 var U0U = _s(3507);
                 var P0U = a6.ccazzx.encrypt(JSON.stringify(g0U), U0U, U7y <<
                     852351520);
@@ -40488,7 +40490,7 @@ var cotgsubscribe = amplify;
                 }
             })
                 .dblclick(function (L2n) {
-                console.log(_s(3769));
+                // console.log(_s(3769));
                 L2n.stopPropagation();
                 L2n.preventDefault();
                 return !"1";
@@ -45909,7 +45911,7 @@ var cotgsubscribe = amplify;
                     ProcessBuuPoll();
                 });
             }
-            Z9 = '1' | 1;
+            Z9 = 1;
             b3F();
         }
         function l2F() {
@@ -46849,7 +46851,7 @@ var cotgsubscribe = amplify;
             else {
                 var G91 = $(_s(o2R | 1327))
                     .attr('a');
-                console.log(C91);
+                //console.log(C91);
                 var M91 = Number(C91) + Number(G91);
                 $(_s(o2R >> 178040448))
                     .datetimepicker(_s(+i4m), gcurrd(M91));
@@ -48632,7 +48634,7 @@ var cotgsubscribe = amplify;
                 if (s6g == -(1)) {
                     m3F(q1g, "0" >>
                         1123900064, e6g, a1g);
-                    console.log(_s(5638) + q1g);
+                    // console.log(_s(5638) + q1g);
                 }
             }
         }
@@ -50350,19 +50352,20 @@ var cotgsubscribe = amplify;
                         $(_s(5019))
                             .remove();
                         var B46 = c9.d(E0F(r16));
-                        N46 = B46.substring(0, 1);
+                        let N46 = +B46.substring(0, 1);
                         var h36 = 0;
                         h36 = B46.substring(1, 2);
-                        if (N46 == ('9' | 9)) {
+                        if (N46 == (9)) {
                             var G36 = Number(B46.substring(7, +'8'));
                             var p46 = Number(B46.substring(8, 9)); // is castle?
                             var W16 = Number(B46.substring(9, p0y & 2147483647));
                             w2();
                             $(_s(5059))
                                 .show();
+                            let __N46 = "Type";
                             if (G36 == 1) {
                                 var I36 = _s("4351" | 4288);
-                                var N46 = _s(318);
+                                __N46 = _s(318);
                                 var m36 = Number(B46.substring(p0y << 1905469920, +G8y)) * ("1000" | 840);
                                 var F16 = Number(B46.substring(p0y * 1, +G8y));
                                 var P36 = new Date(m36);
@@ -50395,11 +50398,11 @@ var cotgsubscribe = amplify;
                                 var K16 = moment.utc(m36);
                                 var z16 = K16.utc()
                                     .format(_s(1783));
-                                var Y46 = {
+                                let Y46 = {
                                     y: A46,
                                     x: r46,
-                                    type: _s(4311),
-                                    info: { time: z16, active: 1, name: k36 }
+                                    type: "shrine",
+                                    info: { time: z16, active: 1, name: k36, player: "tlgger" }
                                 };
                                 cotgPublish("regional", Y46);
                                 $(_s(5196))
@@ -50427,7 +50430,7 @@ var cotgsubscribe = amplify;
                             }
                             else {
                                 var I36 = _s(+e2y);
-                                var N46 = _s(3291);
+                                __N46 = _s(3291);
                                 $(_s(4732))
                                     .attr("class", _s(1743));
                                 $(_s(7004))
@@ -50438,13 +50441,14 @@ var cotgsubscribe = amplify;
                                     .css("display", "block");
                                 $(_s(3142))
                                     .html(_s(2817) + r46 + ":" + A46 + ")");
-                                var Y46 = {
+                                let Y46 = {
                                     x: r46,
                                     y: A46,
-                                    type: _s(4311),
+                                    type: "shrine",
                                     info: {
-                                        name: "",
+                                        name: "Maybe Someday",
                                         time: "",
+                                        player: "Vacant",
                                         active: 0
                                     }
                                 };
@@ -50452,7 +50456,7 @@ var cotgsubscribe = amplify;
                             }
                             $(_s(3203))
                                 .attr("data", r46 + ":" + A46);
-                            var r36 = 'Shrine<br>Status:' + I36 + _s(+'3331') + N46;
+                            var r36 = 'Shrine<br>Status:' + I36 + _s(+'3331') + __N46;
                             $(_s(6717))
                                 .html(r36);
                             $(_s(+a7m))
@@ -50483,16 +50487,16 @@ var cotgsubscribe = amplify;
                                 .show();
                             var G36 = Number(B46.substring(7, 8));
                             var W16 = Number(B46.substring(8, B46.length));
-                            var Y46 = {
+                            let Y46 = {
                                 y: A46,
                                 x: r46,
-                                type: _s(4599),
-                                info: { active: G36 }
+                                type: "portal",
+                                info: { active: G36, name: "portal:" + G36, player: "TTC" }
                             };
                             cotgPublish("regional", Y46);
+                            let __N46 = _s(318);
                             if (G36 == 1) {
                                 var I36 = _s(+w9y) + r46 + E6k.o55(+A6y) + A46 + _s(1200);
-                                var N46 = _s(318);
                                 $(_s(1084))
                                     .attr("class", _s(t9R >> 687750912));
                                 $(_s(601))
@@ -50502,7 +50506,7 @@ var cotgsubscribe = amplify;
                             }
                             else {
                                 var I36 = _s(+w9y) + r46 + ":" + A46 + _s(739);
-                                var N46 = _s(3291);
+                                __N46 = _s(3291);
                                 $(_s(1084))
                                     .attr("class", _s(6592));
                                 $(_s(601))
@@ -50537,8 +50541,7 @@ var cotgsubscribe = amplify;
                             //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * (64 << 744509312);
                             //              phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * (64 - 0);
                         }
-                        else if (N46 == "3" >>
-                            1194476480) {
+                        else if (N46 == 3) {
                             n46 = Number(A46) * +R5y + Number(r46);
                             $(_s(o2y << 1125038560))
                                 .show();
@@ -50560,11 +50563,13 @@ var cotgsubscribe = amplify;
                                 .val(r46);
                             var T36 = $(_s(B5y | 1041))
                                 .val(A46);
-                            var Y46 = {
+                            let Y46 = {
                                 y: A46,
                                 x: r46,
                                 type: "lawless",
                                 info: {
+                                    name: "Tower",
+                                    player: "Trump",
                                     type: p46,
                                     available: X16,
                                     score: H16,
@@ -50864,7 +50869,7 @@ var cotgsubscribe = amplify;
                                 208368384), e16);
                             var V36 = B46.substring(e16 + (1), o16);
                             var A36 = B46.substring(o16 + +'1', B46.length);
-                            var Y46 = {
+                            let Y46 = {
                                 x: r46,
                                 y: A46,
                                 type: "city",
@@ -51329,12 +51334,11 @@ var cotgsubscribe = amplify;
                             var A16 = bam[_s(+V64)][c46][_s(+c1R)];
                             var O16 = bam[_s(+V64)][c46][_s(+y0R)];
                             var t16 = Number(B46.substring(7, 8));
-                            var Y46 = {
+                            let Y46 = {
                                 x: r46,
                                 y: A46,
-                                type: E6k
-                                    .S55(4410),
-                                info: { lvl: f36, name: p36, active: t16 }
+                                type: "boss",
+                                info: { lvl: f36, name: p36, active: t16, player: "Gordy" }
                             };
                             cotgPublish("regional", Y46);
                             //              console.log(_s(6061) + f36 + _s(6409) + h16 + _s(2112) + c46 + E6k     .S55('4446' | 346) + p36 + _s(3196) + A16 + _s(6537) + O16);
@@ -51454,7 +51458,7 @@ var cotgsubscribe = amplify;
                             //              phaserGraphics.x = landLayer.getTileX(c6.input.activePointer.worldX) * +64;
                             //             phaserGraphics.y = landLayer.getTileY(c6.input.activePointer.worldY) * +64;
                         }
-                        else if (N46 == ("7" | 6)) {
+                        else if (N46 == (7)) {
                             w2();
                             $(_s(g5t ^ 0))
                                 .show();
@@ -51517,12 +51521,11 @@ var cotgsubscribe = amplify;
                                     .text(_s(4587));
                                 var C16 = 0;
                             }
-                            var Y46 = {
+                            let Y46 = {
                                 y: A46,
                                 x: r46,
-                                type: E6k
-                                    .S55(+v9R),
-                                info: { prog: G16, lvl: u16, type: z36 }
+                                type: "dungeon",
+                                info: { prog: G16, lvl: u16, type: z36, name: z36 + " " + u16, player: "adi" }
                             };
                             cotgPublish("regional", Y46);
                             var R46 = I9(Number(cid), Number(n46));
@@ -51589,6 +51592,13 @@ var cotgsubscribe = amplify;
                                 .css("display", '');
                         }
                         else if (N46 == 4) {
+                            let Y46 = {
+                                y: A46,
+                                x: r46,
+                                type: "spot",
+                                info: { name: "Vacation Spot", player: "Cersei" }
+                            };
+                            cotgPublish("regional", Y46);
                             $(_s('4272' | 128))
                                 .css("display", "none");
                             $(_s(F0t * 1))
@@ -51957,7 +51967,7 @@ var cotgsubscribe = amplify;
             });
         }
         function ProcessBuuPoll() {
-            if (D6.bq.length == 1)
+            if (D6.bq.length <= 1)
                 DoPoll2(200);
             else
                 DoPoll2(1000);
@@ -57032,7 +57042,7 @@ var cotgsubscribe = amplify;
                     }
                     catch (e) {
                         console.log("Error!!");
-                        console.log(e);
+                        //    console.log(e);
                     }
                     let R7D = currentTime();
                     let B7D = Y7D - R7D;
@@ -59956,7 +59966,12 @@ var cotgsubscribe = amplify;
                     if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
                         if (troopsHome > lastTroopsHome) {
                             setTimeout(() => {
-                                let wrapper = { citydata: D6 };
+                                let wrapper = { citydata: { cid: D6.cid,
+                                        comm: D6.comm,
+                                        th: D6.th,
+                                        tc: D6.tc,
+                                        ts: 1
+                                    } };
                                 window['external']['notify'](JSON.stringify(wrapper));
                             }, 0);
                         }
@@ -65077,7 +65092,7 @@ var cotgsubscribe = amplify;
                         w4F = 1;
                     else {
                         localStorage.setItem("gann", g4U);
-                        console.log(g4U);
+                        //         console.log(g4U);
                         g4U = JSON.parse(g4U);
                         $(_s(3564))
                             .html(atob(g4U[0]));
@@ -69309,10 +69324,21 @@ var cotgsubscribe = amplify;
         }
         var gainx = 2;
         var gainy = 2;
-        var Z1FTimeout;
+        let Z1FTimeout = 1;
+        let nextPoll = 0;
         function DoPoll2(delay) {
-            clearTimeout(Z1FTimeout);
-            Z1FTimeout = setTimeout(Z1F, delay);
+            let desiredTime = Date.now() + delay;
+            if (Z1FTimeout != 0) {
+                if (desiredTime < nextPoll) {
+                    nextPoll = desiredTime;
+                    clearTimeout(Z1FTimeout);
+                    Z1FTimeout = setTimeout(Z1F, delay);
+                }
+            }
+            else {
+                nextPoll = desiredTime;
+                Z1FTimeout = setTimeout(Z1F, delay);
+            }
         }
         var _zoom = 1;
         var _cid = 0;
@@ -69472,6 +69498,7 @@ var cotgsubscribe = amplify;
                     w8 = 0;
                 }
                 finally {
+                    Z1FTimeout = 0;
                     DoPoll2(3000);
                 }
         }
@@ -73584,8 +73611,8 @@ var cid = 0;
 //	return `window['__${a}'] = ${a};`;
 //}
 function encryptJs(req, k2v) {
-    console.log(req);
-    console.log(k2v);
+    //	console.log(req);
+    //	console.log(k2v);
     return a6.ccazzx.encrypt(JSON.stringify(k2v), ekeys[req], 256);
 }
 ;
@@ -73770,7 +73797,16 @@ let updateTimeout = null;
 function sendCityData(delayInMs) {
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(() => {
-        const wrapper = { citydata: D6 };
+        const wrapper = {
+            citydata: {
+                cid: D6.cid,
+                citn: D6.citn,
+                comm: D6.comm,
+                th: D6.th,
+                tc: D6.tc,
+                bd: D6.bd
+            }
+        };
         window['external']['notify'](JSON.stringify(wrapper));
         clearTimeout(updateTimeout);
     }, delayInMs);
@@ -74130,15 +74166,20 @@ function avactor() {
         return decodeURIComponent(escape(this));
     };
     cotgsubscribe.subscribe("regional", clickInfo => {
+        let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
+        var it = Object.assign({}, defaultMru); // clone defaults
         var dtype_ = clickInfo.type;
-        var type_113 = clickInfo.info.type;
-        var lvl_ = clickInfo.info.lvl;
-        var prog_ = clickInfo.info.prog;
-        var bossname_ = clickInfo.info.name;
-        console.log(clickInfo);
+        it.cid = _cid;
+        it.name = clickInfo.info.name;
+        it.player = clickInfo.info.player;
+        //	console.log(clickInfo);
         UpdateResearchAndFaith();
-        let troops = cotg.city.troops();
         if (dtype_ === "dungeon") {
+            let prog_ = clickInfo.info.prog;
+            let troops = cotg.city.troops();
+            let type_113 = clickInfo.info.type;
+            let lvl_ = clickInfo.info.lvl;
+            it.name = type_113 + " " + lvl_;
             if ($("#cityplayerInfo div table tbody tr").length === 11) {
                 bossele_();
             }
@@ -74256,6 +74297,9 @@ function avactor() {
             }
         }
         else if (dtype_ === "boss") {
+            //	let type_113 = clickInfo.info.type;
+            let lvl_ = clickInfo.info.lvl;
+            let bossname_ = clickInfo.info.name;
             // @todo
             if ($("#cityplayerInfo div table tbody tr").length === 11) {
                 bossele_();
@@ -74668,62 +74712,54 @@ function avactor() {
                 $("#cityplayerInfo div table tbody tr:nth-child(18) td:nth-child(2)").text("0");
             }
         }
-        else if (dtype_ === "city" || dtype_ === "lawless" || dtype_ === "spot") {
+        else {
             $("#cityplayerInfo div table tbody tr:gt(6)").remove();
             // var coords = $("#citycoords")[0].innerText.split(":");
-            let _cid = AsNumber(clickInfo.x) + 65536 * AsNumber(clickInfo.y);
-            var toAdd = Object.assign({}, defaultMru); // clone defaults
-            let isCity = (dtype_ === "city");
-            //var maxCount = 32;
-            ///** @type {AsNumber} */
-            //for (var i = 0; i < mru.length; ++i) {
-            //	var _i = mru[i];
-            //	if (_i.cid == _cid) {
-            //		toAdd = _i;
-            //		toAdd.last = new Date();
-            //		mru.splice(AsNumber(i), 1);
-            //		break;
-            //	}
-            //}
-            //if (mru.length > maxCount) {
-            //	/** @type {number} */
-            //	for (var i = mru.length; --i >= 0;) {
-            //		if (!mru[i].pin) {
-            //			mru.splice(i, 1);
-            //			break;
-            //		}
-            //	}
-            //}
-            toAdd.cid = _cid;
-            toAdd.water = clickInfo.info.water;
-            toAdd.last = new Date();
-            if (dtype_ === "spot") {
+        }
+        let isCity = (dtype_ === "city");
+        let isLawless = dtype_ === "lawless";
+        //var maxCount = 32;
+        ///** @type {AsNumber} */
+        //for (var i = 0; i < mru.length; ++i) {
+        //	var _i = mru[i];
+        //	if (_i.cid == _cid) {
+        //		toAdd = _i;
+        //		toAdd.last = new Date();
+        //		mru.splice(AsNumber(i), 1);
+        //		break;
+        //	}
+        //}
+        //if (mru.length > maxCount) {
+        //	/** @type {number} */
+        //	for (var i = mru.length; --i >= 0;) {
+        //		if (!mru[i].pin) {
+        //			mru.splice(i, 1);
+        //			break;
+        //		}
+        //	}
+        //}
+        if (isCity || isLawless) {
+            it.water = clickInfo.info.water;
+            if (isCity) {
+                it.notes = clickInfo.info.remarks;
+                it.plvl = clickInfo.info.plvl;
             }
             else {
-                if (isCity) {
-                    toAdd.player = clickInfo.info.player;
-                    toAdd.name = clickInfo.info.name;
-                    toAdd.notes = clickInfo.info.remarks;
-                    toAdd.plvl = clickInfo.info.plvl;
-                }
-                else {
-                    toAdd.player = dtype_;
-                    toAdd.name = dtype_;
-                    toAdd.plvl = 0;
-                    toAdd.notes = dtype_;
-                }
-                //	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
-                //toAdd.castle = clickInfo.info.castle;
-                toAdd.bless = clickInfo.info.blessed;
-                toAdd.score = clickInfo.info.score;
+                it.plvl = 0;
             }
-            //mru.push(toAdd);
-            //mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
-            //console.log(mru);
-            //localStorage.setItem("mru", JSON.stringify(mru));
-            const wrapper = { cityclick: toAdd };
-            window['external']['notify'](JSON.stringify(wrapper));
+            //	toAdd.alliance = isCity ? clickInfo.info.alliance : 0;
+            //toAdd.castle = clickInfo.info.castle;
+            it.bless = clickInfo.info.blessed;
+            it.score = clickInfo.info.score;
         }
+        else {
+        }
+        //mru.push(toAdd);
+        //mru.sort((a, b) => { return b.last.valueOf() - a.last.valueOf() });
+        //console.log(mru);
+        //localStorage.setItem("mru", JSON.stringify(mru));
+        const wrapper = { cityclick: it };
+        window['external']['notify'](JSON.stringify(wrapper));
     });
     //SendAllianceInfo();
     //setTimeout(SendCreds, 600);
