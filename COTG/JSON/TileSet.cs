@@ -91,12 +91,12 @@ namespace COTG.JSON
                         var off = tile - ts.firstgid;
                         if ((off >= 0) && off < ts.tilecount)
                             {
-                            packedLayer |= (ulong)(off | (tileId<<13)  ) << (put++ * 16);
+                            layer.data[i] = (ushort)(off | (tileId << 13));// << (put++ * 16);
                             break;
                         }
                         }
                     }
-                    packedLayers[i] = packedLayer;
+                  //  packedLayers[i] = packedLayer;
     
                 }
             

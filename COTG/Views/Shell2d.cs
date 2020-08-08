@@ -431,6 +431,7 @@ namespace COTG.Views
                         var wantFade = wantImage;
                         var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
 
+                        Vector4 tint = new Vector4(1,1,1,alpha);
                         var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
                         nameBrush = nameBrush.WithAlpha(intAlpha);
                         myNameBrush = myNameBrush.WithAlpha(intAlpha);
@@ -438,61 +439,81 @@ namespace COTG.Views
                         var td = TileData.instance;
                         var halfTiles = (clientSpan * (0.5f / cameraZoomLag)).CeildToInt();
                         var ccBase = cameraCLag.RoundToInt();
-                        for (int ty = -halfTiles.y; ty <= halfTiles.y; ++ty)
-                        {
-                            for (int tx = -halfTiles.x; tx <= halfTiles.x; ++tx)
+                        var cx0 = (-halfTiles.x + ccBase.x).Max(0);
+                        var cy0 = (-halfTiles.y + ccBase.y).Max(0);
+                            var cx1 = (halfTiles.x+1 + ccBase.x).Min(World.worldDim);
+                            var cy1 = (halfTiles.y+1 + ccBase.y).Min(World.worldDim);
+                            using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None,CanvasImageInterpolation.Linear,CanvasSpriteOptions.ClampToSourceRect))
                             {
-                                var cc = ccBase.Add((tx, ty));
-                                if (cc.x >= 0 && cc.x < 600 && cc.y >= 0 && cc.y < 600)
+                                foreach (var layer in td.layers)
                                 {
-                                    var ccid = cc.x + cc.y * td.width;
-                                    var rect = new Rect(((new Vector2(cc.x - .5f, cc.y - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
-                                    var layerData = TileData.packedLayers[ccid];
-                                    while (layerData != 0)
+                                    var layerDat = layer.data;
+                                    for (var cy = cy0; cy < cy1; ++cy)
                                     {
-                                        var imageId = ((uint)layerData & 0xffffu);
-                                        layerData >>= 16;
-                                        var tileId = imageId >> 13;
-                                        var off = imageId & ((1 << 13) - 1);
-                                        var tile = td.tilesets[tileId];
-
-                                        if (tile.bitmap == null)
-                                            continue;
-                                        var sy = off / tile.columns;
-                                        var sx = off - sy * tile.columns;
-                                        if (wantFade)
-                                            ds.DrawImage(tile.bitmap, rect,
-                                                new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)), alpha);
-                                        else
-                                            ds.DrawImage(tile.bitmap, rect,
-                                            new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)));
-
-
-
-                                    }
-                                    (var name, var isMine) = World.GetLabel(cc);
-                                    if (name != null)
-                                    {
-                                        if (!nameLayoutCache.TryGetValue(name, out var layout))
+                                        for (var cx = cx0; cx < cx1; ++cx)
                                         {
-                                            layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f) { Options = CanvasDrawTextOptions.NoPixelSnap | CanvasDrawTextOptions.EnableColorFont };
-                                            nameLayoutCache.Add(name, layout);
+                                            var ccid = cx + cy * World.worldDim;
+                                            var imageId = layerDat[ccid];
+                                            if (imageId == 0)
+                                                continue;
+                                            {
+                                                var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
+                                             //   var layerData = TileData.packedLayers[ccid];
+                                              //  while (layerData != 0)
+                                                {
+                                                //    var imageId = ((uint)layerData & 0xffffu);
+                                               //     layerData >>= 16;
+                                                    var tileId = imageId >> 13;
+                                                    var off = imageId & ((1 << 13) - 1);
+                                                    var tile = td.tilesets[tileId];
+
+                                                    if (tile.bitmap == null)
+                                                        continue;
+                                                    var sy = off / tile.columns;
+                                                    var sx = off - sy * tile.columns;
+                                                    if (wantFade)
+                                                        batch.DrawFromSpriteSheet(tile.bitmap, rect,
+                                                            new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)), tint);
+                                                    else
+                                                        batch.DrawFromSpriteSheet(tile.bitmap, rect,
+                                                        new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)));
+
+
+
+                                                }
+
+                                                
+                                            }
                                         }
-                                        /* if (wantFade)
-                                         {
-
-                                         }
-                                         else*/
+                                    }
+                                }
+                            }// sprite batch
+                            //
+                            {
+                                // Labels last
+                                for (var cy = cy0; cy < cy1; ++cy)
+                                {
+                                    for (var cx = cx0; cx < cx1; ++cx)
+                                    {
+                                        (var name, var isMine) = World.GetLabel((cx, cy));
+                                        if (name != null)
                                         {
+                                            if (!nameLayoutCache.TryGetValue(name, out var layout))
+                                            {
+                                                layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f) { Options = CanvasDrawTextOptions.NoPixelSnap | CanvasDrawTextOptions.EnableColorFont };
+                                                nameLayoutCache.Add(name, layout);
+                                            }
+
+                                            var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
+
                                             ds.DrawTextLayout(layout, new Vector2((float)(rect.Left + rect.Right) * 0.5f,
                                                 (float)rect.Top + (float)rect.Height * 7.25f / 8.0f),
                                                 isMine ? myNameBrush : nameBrush);
+
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
 
                 }
                 // overlay

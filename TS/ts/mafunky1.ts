@@ -639,12 +639,20 @@ function viewcity(cid: string)
 {
 	gspotfunct.chcity(Number(cid))
 	$("#cityButton").click();
+	_viewModeCache =_viewMode = viewModeCity; // 
+
 }
 function setviewmode(mode: string) {
-	if (mode == 'c')
+	if (mode == 'c') {
 		$("#cityButton").click();
-	else
+		_viewModeCache = _viewMode = viewModeCity; // 
+
+	}
+	else {
 		$("#worldButton").click();
+		_viewModeCache = _viewMode = viewModeWorld; // 
+
+	}
 }
 
 function avactor() {

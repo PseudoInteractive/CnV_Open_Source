@@ -36,7 +36,7 @@ namespace COTG.Views
             coreInputSource.PointerMoved += Canvas_PointerMoved;
             coreInputSource.PointerPressed += Canvas_PointerPressed;
             coreInputSource.PointerReleased += Canvas_PointerReleased;
-//            coreInputSource.PointerEntered += Canvas_PointerEntered;
+            coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
             coreInputSource.PointerExited += Canvas_PointerExited;
 
             coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
@@ -44,6 +44,11 @@ namespace COTG.Views
             coreInputSource.IsInputEnabled = true;
 
 
+        }
+
+        private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
+        {
+            App.DispatchOnUIThreadLow(() => canvas.Focus(FocusState.Programmatic));
         }
 
         static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
@@ -155,7 +160,7 @@ namespace COTG.Views
 
 //            canvas.CapturePointer(e.Pointer);
             var point = e.CurrentPoint;
-            App.DispatchOnUIThreadLow(() => canvas.Focus(FocusState.Programmatic));
+           
             var properties = point.Properties;
             //if (JSClient.IsCityView())
             //{
@@ -268,12 +273,13 @@ namespace COTG.Views
         }
         static (int x,int y) MousePointToWorld(Vector2 c1)
         {
-            var dc1 = (c1 - ShellPage.halfSpan);
+            var dc1 = (c1 );
+            dc1 -= ShellPage.halfSpan;
             dc1 *= (1.0f / cameraZoomLag);
-            var wc = ShellPage.cameraC +  dc1;
+            dc1 += ShellPage.cameraC;
 
-            int x = (wc.X).RoundToInt();
-            int y = (wc.Y).RoundToInt();
+            int x = (dc1.X).RoundToInt();
+            int y = (dc1.Y).RoundToInt();
             return (x, y);
         }
 
@@ -368,15 +374,32 @@ namespace COTG.Views
                             switch(data.type)
                             {
                                 case World.typeCity:
-                                    if (pData.player != data.player)
+                                    if(pData.type == World.typeCity)
                                     {
-                                        var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-
-                                        toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+                                        if (pData.player != data.player)
+                                        {
+                                            if (pData.player == 0)
+                                            {
+                                                toolTip += "\nWas settled";
+                                            }
+                                            else if (data.player == 0)
+                                            {
+                                                toolTip += "\nWas abandoned";
+                                            }
+                                            else
+                                            {
+                                                var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+                                                toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            toolTip += "\nWas rennovated";
+                                        }
                                     }
-                                    else 
+                                    else
                                     {
-                                        toolTip += "\nWas rennovated";
+                                        toolTip += "\nWas founded";
                                     }
                                     break;
                                 case World.typeShrine:
@@ -389,7 +412,7 @@ namespace COTG.Views
                                         toolTip += "\nWas inactive";
                                     break;
                                 default:
-                                    toolTip += "\nWas founded";
+                                    toolTip += "\nDecayed";
                                     break;
 
                             }
@@ -405,7 +428,8 @@ namespace COTG.Views
                 // TODO:  mouse should be hooked.
                // if (point.IsInContact)
                 {
-                    var dr = c1 - mousePosition;
+                    var dr = c1;
+                    dr -= mousePosition;
                     dr *= 1.0f/cameraZoomLag;
                     cameraC -= dr;
                     // instant

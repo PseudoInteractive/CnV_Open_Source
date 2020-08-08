@@ -7084,6 +7084,13 @@ const __s = [".shRinf",
 function _s(id) {
     return __s[id];
 }
+
+var _cid = 0;
+var _viewMode = 0; // 
+var _viewModeCache = 0;
+const viewModeCity = 0;
+const viewModeRegion = 1;
+const viewModeWorld = 2;
 var pollthis;
 let D6: jsonT.City;
 var F5F;
@@ -16429,7 +16436,12 @@ var cotgsubscribe = amplify;
         .val() < 0) $(_s(787) + m6Z)
         .val(0);
     }
-      gspotfunct.chcity = function (F9V) { R2(F9V); DoPoll2(300); };
+      gspotfunct.chcity = function (__cid) 
+      {
+          _cid = cid = Number(__cid);
+          R2(__cid); 
+          DoPoll2(300); 
+      };
       window['chcity'] = gspotfunct.chcity;
     gspotfunct.infoPlay = function(q9V) {
       E6k.y6();
@@ -18163,8 +18175,8 @@ var cotgsubscribe = amplify;
       if (U9 == 0) {
         U9 = 1;
         ClearCity();
-        getCity(Number(d9l));
         cid = Number(d9l);
+        getCity(Number(d9l));
         X8();
           { setTimeout(function () { U9 = 0; }, 1000); }
       }
@@ -22398,6 +22410,9 @@ var cotgsubscribe = amplify;
       $(_s(333))
         .append(a6n);
       i6F(E6n, k2n);
+        const wrapper = { error: e2n }
+        window['external']['notify'](JSON.stringify(wrapper));
+
     }
     var i9 = _s('6163' | 3);
 
@@ -66574,15 +66589,10 @@ console.log("Bad");
 
     
       var _zoom = 1;
-      var _cid = 0;
-      var _viewMode = 0; // 
-      var _viewModeCache=0; 
-      var _popupCountCache =0;
-      var _popupCount=0;
-      const viewModeCity = 0;
-      const viewModeRegion = 1;
-      const viewModeWorld = 2;
-      let syncViewTimeout=null;
+      var _popupCountCache = 0;
+      var _popupCount = 0;
+    
+      let syncViewTimeout=0;
 
       function SyncViewMode()
 	  {

@@ -174,8 +174,18 @@ namespace COTG
             //    WebViewPage.instance.Focus(FocusState.Programmatic);
             //    return;
             //}
-            WebViewPage.DefaultUrl = args.Uri;
-            await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+            Trace(args.Uri.ToString());
+            Trace(args.Uri.Host);
+            Trace(httpsHost.Host);
+            if (args.Uri.Host == httpsHost.Host)
+            {
+                WebViewPage.DefaultUrl = args.Uri;
+                await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+            }
+            else
+            {
+                Windows.System.Launcher.LaunchUriAsync(args.Uri);
+            }
         }
 
         private static string GetJsString(string asm)
@@ -927,6 +937,12 @@ namespace COTG
                                     //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
                                     //   UpdatePPDT(jso.GetProperty("ppdt"));
+                                    break;
+                                }
+                            case "error":
+                                {
+                                    var msg = jsp.Value.GetString();
+                                    Note.Show(msg);
                                     break;
                                 }
                             case "cityclick":
