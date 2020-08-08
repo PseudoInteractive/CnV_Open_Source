@@ -37,7 +37,7 @@
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
-                        ItemsSource="{x:Bind defenders, Mode=OneWay}"
+                        ItemsSource="{x:Bind defenders, Mode=OneTime}"
                         RowDetailsDisplayMode="Single"
                         AlternationStep="2"
                         SelectionMode="Single"
@@ -45,9 +45,9 @@
                         UserGroupMode="Enabled"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
-            <!--<tg:RadDataGrid.Commands>
+            <tg:RadDataGrid.Commands>
                 <local:DataBindingComplete Id="DataBindingComplete" />
-            </tg:RadDataGrid.Commands>-->
+            </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.RowDetailsTemplate>
                 <DataTemplate x:DataType="game:Spot">
                     <tg:RadDataGrid x:Name="armyGrid"

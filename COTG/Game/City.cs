@@ -444,6 +444,26 @@ namespace COTG.Game
         {
             return ToString();
         }
+        public byte GetRaidTroopType()
+        {
+            byte best = 0; // if no raiding troops we return guards 
+            var bestTS = 0;
+            foreach (var ttc in troopsHome)
+            {
+                var type = ttc.type;
+                if (!IsRaider(type))
+                    continue;
+                var ts = ttc.ts;
+                if (ts > bestTS)
+                {
+                    bestTS = ts;
+                    best = (byte)type;
+                }
+
+            }
+            return best;
+        }
+
         public byte GetIdealDungeonType()
         {
             // todo:  handle water

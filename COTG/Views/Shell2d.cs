@@ -176,7 +176,7 @@ namespace COTG.Views
                 w.Dispose();
             }
             World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
-            World.changePixels = null;
+            World.rawPrior = null;
         }
 
         public static void SetCanvasVisibility(bool visible)
@@ -444,7 +444,7 @@ namespace COTG.Views
                             var cx1 = (halfTiles.x + 1 + ccBase.x).Min(World.worldDim);
                             var cy1 = (halfTiles.y + 1 + ccBase.y).Min(World.worldDim);
                             const bool isShift = false;// App.IsKeyPressedShift();
-                            const  float tcOff = isShift ? 0.0f : 0.5f;
+                            const float tcOff = isShift ? 0.0f : 0.5f;
                             const float tzOff = isShift ? 0.0f : 1.0f;
 
                             using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None, CanvasImageInterpolation.Linear, isShift ? CanvasSpriteOptions.ClampToSourceRect : CanvasSpriteOptions.None))
@@ -477,10 +477,10 @@ namespace COTG.Views
                                                     var sx = off - sy * tile.columns;
                                                     if (wantFade)
                                                         batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                            new Rect(new Point(sx * tile.tilewidth+tcOff, sy * tile.tileheight+tcOff), new Size(tile.tilewidth-tzOff, tile.tileheight - tzOff)), tint);
+                                                            new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)), tint);
                                                     else
                                                         batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                        new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight+tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)));
+                                                        new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)));
 
 
 
@@ -519,7 +519,7 @@ namespace COTG.Views
                                     }
                                 }
                             }
-
+                        }
 
                             // overlay
                             if (worldChanges != null)
@@ -527,7 +527,7 @@ namespace COTG.Views
                                     new Rect(destP0, destP1),
                                     new Rect(srcP0, srcP1), 1.0f,
                                     CanvasImageInterpolation.Linear, CanvasComposite.Add);
-                        }
+                        
                     }
             }
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);

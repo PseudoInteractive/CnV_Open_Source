@@ -280,8 +280,8 @@ namespace COTG.Views
             var lg = coords.Length;  //  <coords>000:000</coords>
             if (lg == 24)
             {
-                var c = coords.Substring(8, 7);
-                Note.Show($"[{c}](/c/{c}) posted to chat");
+            //    var c = coords.Substring(8, 7);
+           //     Note.Show($"[{c}](/c/{c}) posted to chat");
             }
             
         }

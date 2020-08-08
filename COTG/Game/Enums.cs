@@ -27,6 +27,8 @@ namespace COTG.Game
         // gets filled in 
         public static float[] ttSpeedBonus = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1 };
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        public static float cartTravel=10.0f;
+        public static float shipTravel =5.0f;
 
         public readonly static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
         public readonly static ushort[] ttTs = { 1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1 };
@@ -45,7 +47,11 @@ namespace COTG.Game
                                                         false,false,true,false,
                                                         true,false }; 
 
-        public readonly static byte[] ttspeed = { 0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40 };
+        public readonly static byte[] ttTravel = {   0, 30, 20, 20,
+                                                    20, 20, 20, 8,
+                                                    10, 10, 10, 10,
+                                                    30, 30, 5, 5,
+                                                    5, 40 };
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
         public readonly static short[] ttAttack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 

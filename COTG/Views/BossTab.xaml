@@ -92,9 +92,10 @@
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             Width="40" />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
+                                                      Header="Hours"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,4:N1}"
+                                            CellContentFormat="{}{0,4:N2}"
                                             Width="40" />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                                       SizeMode="Fixed"

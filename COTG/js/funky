@@ -12288,10 +12288,10 @@ var cotgsubscribe = amplify;
             var U26 = ppdt["rs"][9]["n"];
             var P26 = ppdt["rs"][11][_s('3315' | 195)];
             var B26 = ppdt["rs"][12]["n"];
-            var R26 = ppdt["rs"][+m2y]["n"];
+            var R26 = ppdt["rs"][13]["n"];
             var y26 = ppdt["rs"][B2y ^ 0]["n"];
-            var f26 = ppdt["rs"][+R2y]["n"];
-            var K26 = ppdt["rs"][e2y * 1][E6k
+            var f26 = ppdt["rs"][28]["n"];
+            var K26 = ppdt["rs"][27][E6k
                 .S55(3315)];
             var d26 = 0;
             var z26 = 0;
@@ -12304,37 +12304,34 @@ var cotgsubscribe = amplify;
             var X26 = 0;
             var b26 = bam["speeds"]["inf"];
             var S26 = bam["speeds"]["cav"];
-            var J26 = bam[_s(L2y << 119763968)][_s(O2y * 1)];
-            var h26 = bam["speeds"][_s(3682)];
-            var V26 = bam[E6k
-                .o55(+L2y)][_s(+w2y)];
-            var r26 = bam["speeds"][_s(244)];
-            var A26 = bam["speeds"][E6k
-                .o55(H2y >> 514449792)];
-            var n26 = bam["speeds"][_s('6661' | 1)];
+            var J26 = bam["speeds"]["sco"];
+            var h26 = bam["speeds"]["sei"];
+            var V26 = bam["speeds"]["shi"];
+            var r26 = bam["speeds"]["sen"];
+            var A26 = bam["speeds"]["crt"];
+            var n26 = bam["speeds"]["mer"];
             if (Z26 != 0)
                 d26 =
-                    qam[_s(+G2y)][Number(Z26)][_s(+r2y)][0]["v"];
+                    qam["techTreeSteps"][Number(Z26)][_s(+r2y)][0]["v"];
             if (d26 + ppdt.fa[7] / 2 > 0)
                 b26 = b26 / (1 + (d26 + ppdt.fa[7] / (2)) / (100));
             if (U26 != 0)
-                z26 = qam[_s(+G2y)][Number(U26)][_s(r2y ^ 0)][0]["v"];
+                z26 = qam["techTreeSteps"][Number(U26)][_s(r2y ^ 0)][0]["v"];
             if (z26 + ppdt.fa[7] / (2) > 0)
                 S26 = S26 / ((1) + (z26 + ppdt["fa"][7] / 2) / (100));
             if (P26 != 0)
-                M26 = qam[_s(G2y * 1)][Number(P26)][E6k
+                M26 = qam["techTreeSteps"][Number(P26)][E6k
                     .o55(r2y | 3472)][0]["v"];
             if (M26 + ppdt.fa[7] / ('2' | 2) > 0)
                 J26 = J26 /
                     (1 + (M26 + ppdt.fa[7] / 2) / 100);
             if (B26 != 0)
-                G26 = qam[_s(G2y -
-                    0)][Number(B26)][_s(r2y & 2147483647)][0]["v"];
+                G26 = qam["techTreeSteps"][Number(B26)][_s(r2y & 2147483647)][0]["v"];
             if (G26 + ppdt.fa[3] / (2) > 0)
                 h26 = h26 / (1 + (G26 + ppdt.fa['3' >>
                     740186528] / 2) / 100);
             if (R26 != 0)
-                C26 = qam[_s(G2y ^ 0)][Number(R26)][_s(+r2y)]['0' *
+                C26 = qam["techTreeSteps"][Number(R26)][_s(+r2y)]['0' *
                     1]["v"];
             if (C26 + ppdt.fa[3] / 2 > 0)
                 V26 = V26 / (1 + (C26 + ppdt.fa[3] / 2) / (100));
@@ -12344,23 +12341,22 @@ var cotgsubscribe = amplify;
             if (W26 + ppdt[_s(h2y | 2584)][1] / 2 > 0)
                 r26 = r26 / ((1) + (W26 + ppdt.fa[1] / (2)) / 100);
             if (f26 != 0)
-                i26 = qam[_s(+G2y)][Number(f26)][_s(r2y * 1)][0][_s(+b2y)];
+                i26 = qam["techTreeSteps"][Number(f26)][_s(r2y * 1)][0][_s(+b2y)];
             if (i26 + ppdt.fa[5] / ('2' | 2) > 0)
                 A26 = A26 / (("1" <<
                     1488239776) + (i26 + ppdt.fa[5] / (2)) / 100);
             E6k.y6();
             if (K26 != 0)
-                X26 = qam[_s(+G2y)][Number(K26)][_s(+r2y)][0]["v"];
+                X26 = qam["techTreeSteps"][Number(K26)][_s(+r2y)][0]["v"];
             if (X26 + ppdt.fa["5" | 4] / (2) > 0)
                 n26 = n26 / (1 + (X26 +
                     ppdt.fa[5] / (2)) / 100);
             var D26 = Math.floor(b26 * 1000 * L26);
             var p26 = Math.floor(S26 * (1000) * L26);
             var Y26 = Math.floor(J26 * 1000 * L26);
-            var N26 = Math.floor(h26 * ("1000" <<
-                1276170208) * L26);
+            var N26 = Math.floor(h26 * 1000 * L26);
             var F26 = Math.floor(V26 * (1000) * L26) + +I2y;
-            var q26 = Math.floor(r26 * +"1000" * L26);
+            var q26 = Math.floor(r26 * 1000 * L26);
             var c26 = Math.floor(A26 * 1000 * L26);
             var m26 = Math.floor(n26 * 1000 * L26) + +I2y;
             var g26 = new Object();
@@ -12549,10 +12545,10 @@ var cotgsubscribe = amplify;
                 var C8Z = currentTime();
                 var d8Z = new Date(C8Z);
                 var S8Z = formatTimehrs(d8Z);
-                var b8Z = new Date(C8Z + i8Z[_s(+H2y)]);
+                var b8Z = new Date(C8Z + i8Z["crt"]);
                 var W8Z = formatTimehrs(b8Z);
                 $(_s(5751))
-                    .text(M2(i8Z[_s(+H2y)]));
+                    .text(M2(i8Z["crt"]));
                 $(_s(4971))
                     .text(W8Z);
             }
@@ -18628,9 +18624,8 @@ var cotgsubscribe = amplify;
                 var J1B = _s(Y8R >> 1917959360);
                 var z1B = _s(O8R ^ 0);
                 var o1B = _s(O8R & 2147483647);
-                var r1B = _s(+O2y);
-                var A1B = _s(O2y ^
-                    0);
+                var r1B = "sco";
+                var A1B = "sco";
                 var C1B = _s(2566);
                 var X1B = $(_s(+m7y) + z1B + _s(q8R ^ 0))
                     .attr(_s(Z9y >> 1416872672));
@@ -19125,12 +19120,12 @@ var cotgsubscribe = amplify;
                 }
             }
             if (a4l == 0) {
-                var m4l = qam[_s(+G2y)][Number(u3l)][E6k
+                var m4l = qam["techTreeSteps"][Number(u3l)][E6k
                     .S55(+r2y)][0][_s(r2y ^ 0)];
                 var l3l = qam[_s(d0p >> 1032064736)][Number(m4l)][E6k
                     .S55(y0R & 2147483647)];
                 var e3l = qam[_s(d0p | 2054)][Number(m4l)][_s(K2y | 1092)];
-                var T3l = qam[_s(G2y * 1)][Number(u3l)][_s(r2y * 1)][0]["v"];
+                var T3l = qam["techTreeSteps"][Number(u3l)][_s(r2y * 1)][0]["v"];
                 var s3l = u3l;
                 if (e3l ==
                     !0)
@@ -19148,11 +19143,11 @@ var cotgsubscribe = amplify;
                 var l3l = qam[_s(d0p >> 720362144)][Number(m4l)][_s(y0R -
                     0)];
                 var e3l = qam[_s(d0p ^ 0)][Number(m4l)][_s(+K2y)];
-                var Q3l = qam[_s(G2y * 1)][Number(a4l)][_s(r2y * 1)][0]["v"];
+                var Q3l = qam["techTreeSteps"][Number(a4l)][_s(r2y * 1)][0]["v"];
                 if (s3l == 0)
                     var k3l = 0;
                 else
-                    var k3l = qam[_s(+G2y)][Number(s3l)][_s(r2y | 3348)][0]["v"];
+                    var k3l = qam["techTreeSteps"][Number(s3l)][_s(r2y | 3348)][0]["v"];
                 if (e3l ==
                     !!"1") {
                     var q4l = _s(l0p & 2147483647) + k3l + _s(o9y & 2147483647);
@@ -19521,10 +19516,10 @@ var cotgsubscribe = amplify;
             }
             E6k.y6();
             if (Z3l == 0) {
-                var K3l = qam[_s(+G2y)][Number(D3l)][_s(r2y * 1)][0][_s(+r2y)];
+                var K3l = qam["techTreeSteps"][Number(D3l)][_s(r2y * 1)][0][_s(+r2y)];
                 var U3l = qam[_s(+d0p)][Number(K3l)][_s(y0R ^ 0)];
                 var R3l = qam[_s(+d0p)][Number(K3l)][_s(+K2y)];
-                var w1l = qam[_s(+G2y)][Number(D3l)][_s(r2y | 288)][0]["v"];
+                var w1l = qam["techTreeSteps"][Number(D3l)][_s(r2y | 288)][0]["v"];
                 var h3l = D3l;
                 if (R3l == !!"1")
                     var n3l = _s(+l0p) + w1l + _s(o9y & 2147483647);
@@ -19536,17 +19531,16 @@ var cotgsubscribe = amplify;
                     0;
             }
             else {
-                var K3l = qam[_s(+G2y)][Number(Z3l)][_s(r2y << 1400124448)][0][_s(+r2y)];
-                var h3l = qam[_s(G2y | 275)][Number(Z3l)][_s(+x9y)];
+                var K3l = qam["techTreeSteps"][Number(Z3l)][_s(r2y << 1400124448)][0][_s(+r2y)];
+                var h3l = qam["techTreeSteps"][Number(Z3l)][_s(+x9y)];
                 var U3l = qam[_s(d0p * 1)][Number(K3l)][E6k
                     .S55(y0R ^ 0)];
                 var R3l = qam[_s(d0p * 1)][Number(K3l)][_s(+K2y)];
-                var E3l = qam[_s(G2y |
-                    779)][Number(Z3l)][_s(r2y & 2147483647)][0]["v"];
+                var E3l = qam["techTreeSteps"][Number(Z3l)][_s(r2y & 2147483647)][0]["v"];
                 if (h3l == 0)
                     var P3l = 0;
                 else
-                    var P3l = qam[_s(+G2y)][Number(h3l)][_s(+r2y)][0]["v"];
+                    var P3l = qam["techTreeSteps"][Number(h3l)][_s(+r2y)][0]["v"];
                 if (R3l == !!"1") {
                     var n3l = _s(+l0p) + P3l + _s(+o9y);
                     var F3l = _s(+l0p) + E3l + _s(o9y |
@@ -19559,7 +19553,7 @@ var cotgsubscribe = amplify;
                 var p3l = U3l + _s(+Q4p) + F3l;
                 var Y3l = U3l + E6k
                     .S55(Q4p - 0) + n3l;
-                var v1l = qam[_s(+G2y)][Number(Z3l)][_s(+r2y)][0][_s(+b2y)];
+                var v1l = qam["techTreeSteps"][Number(Z3l)][_s(+r2y)][0][_s(+b2y)];
             }
             if (V3l != +c8y && h3l != 0)
                 y3l = y3l + _s(+b0p) + e1l;
@@ -19576,7 +19570,7 @@ var cotgsubscribe = amplify;
             if (h3l == (0))
                 J3l = J3l + _s(6816);
             else {
-                var r3l = qam[_s(G2y & 2147483647)][Number(h3l)][_s(r0R ^ 0)];
+                var r3l = qam["techTreeSteps"][Number(h3l)][_s(r0R ^ 0)];
                 if (r3l >= 1) {
                     var j1l = ppdt[_s(+r0R)][_s(+w6y)];
                     if (j1l >= r3l) {
@@ -19591,8 +19585,8 @@ var cotgsubscribe = amplify;
                     }
                     J3l = J3l + _s(3130) + S3l + _s(F6y | 514) + r3l + _s(+K5y);
                 }
-                for (var I1l in qam[_s(+G2y)][Number(h3l)]["r"]) {
-                    var b3l = qam[_s(G2y - 0)][Number(h3l)]["r"][I1l];
+                for (var I1l in qam["techTreeSteps"][Number(h3l)]["r"]) {
+                    var b3l = qam["techTreeSteps"][Number(h3l)]["r"][I1l];
                     switch (I1l) {
                         case _s(+a4p):
                             var l1l = ppdt["pr"][1];
@@ -19989,7 +19983,7 @@ var cotgsubscribe = amplify;
                 getCity(Number(d9l));
                 X8();
                 {
-                    setTimeout(function () { U9 = 0; }, 1000);
+                    setTimeout(function () { U9 = 0; }, 100);
                 }
             }
         }
@@ -20229,6 +20223,7 @@ var cotgsubscribe = amplify;
                 document.getElementById(_s(H2R << 695995168))
                     .value = document.getElementById(_s(H2R * 1))
                     .value + _s(l4p * 1) + Y0v + _s(k4p | 35);
+            PostCoords("<report>" + Y0v + "</report>");
         }
         a6.subBytes = function (C6v, W6v) {
             E6k.R6();
@@ -20675,14 +20670,14 @@ var cotgsubscribe = amplify;
                                 if (S7Z == (B2y ^ 0)) {
                                     var V7Z = ppdt["rs"][A5y ^ 0]["n"];
                                     if (V7Z != +'0') {
-                                        var K7Z = qam[_s(+G2y)][V7Z][_s(r2y | 432)][0]["v"];
+                                        var K7Z = qam["techTreeSteps"][V7Z][_s(r2y | 432)][0]["v"];
                                         A7Z = A7Z / ((100 - K7Z) / (100));
                                     }
                                 }
                                 if (S7Z == q7y * 1) {
                                     var V7Z = ppdt["rs"][u6y * 1]["n"];
                                     if (V7Z != 0) {
-                                        var K7Z = qam[_s(+G2y)][V7Z][E6k
+                                        var K7Z = qam["techTreeSteps"][V7Z][E6k
                                             .S55(+r2y)][0]["v"];
                                         A7Z = A7Z / ((100 - K7Z) / 100);
                                     }
@@ -20690,14 +20685,14 @@ var cotgsubscribe = amplify;
                                 if (S7Z == (16)) {
                                     var V7Z = ppdt["rs"][+j6y]["n"];
                                     if (V7Z != (0)) {
-                                        var K7Z = qam[_s(G2y << 929674880)][V7Z][_s(+r2y)][0]["v"];
+                                        var K7Z = qam["techTreeSteps"][V7Z][_s(+r2y)][0]["v"];
                                         A7Z = A7Z / ((100 - K7Z) / (100));
                                     }
                                 }
                                 if (S7Z == +17) {
                                     var V7Z = ppdt["rs"][F8y | 3]["n"];
                                     if (V7Z != 0) {
-                                        var K7Z = qam[_s(+G2y)][V7Z][E6k
+                                        var K7Z = qam["techTreeSteps"][V7Z][E6k
                                             .o55(+r2y)][0]["v"];
                                         A7Z = A7Z / ((100 - K7Z) / 100);
                                     }
@@ -21091,7 +21086,7 @@ var cotgsubscribe = amplify;
                 if (v5v == (1))
                     var w5v = _s(L8R & 2147483647);
                 else if (v5v == 2)
-                    var w5v = _s(+O2y);
+                    var w5v = "sco";
                 else if (v5v == 3)
                     var w5v = _s(+E8R);
                 else if (v5v == 4)
@@ -24317,23 +24312,23 @@ var cotgsubscribe = amplify;
             if (a9w == (B2y | 14)) {
                 var N9w = ppdt[_s(+i2y)][A5y << 1253187072]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(G2y | 5144)][N9w][_s(+r2y)][0]["v"] + ppdt.fa[5];
+                    E9w = qam["techTreeSteps"][N9w][_s(+r2y)][0]["v"] + ppdt.fa[5];
             }
             if (a9w == +q7y) {
                 var N9w = ppdt["rs"][+u6y]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0][E6k
+                    E9w = qam["techTreeSteps"][N9w][_s(+r2y)][0][E6k
                         .o55(b2y | 2136)] + ppdt.fa[5];
             }
             if (a9w == 16) {
                 var N9w = ppdt[_s(i2y >> 7357312)][j6y * 1]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][0]["v"] + ppdt.fa[5];
+                    E9w = qam["techTreeSteps"][N9w][_s(+r2y)][0]["v"] + ppdt.fa[5];
             }
             if (a9w == +17) {
                 var N9w = ppdt["rs"][F8y | 2]["n"];
                 if (N9w != 0)
-                    E9w = qam[_s(+G2y)][N9w][_s(+r2y)][+'0']["v"] + ppdt.fa[1];
+                    E9w = qam["techTreeSteps"][N9w][_s(+r2y)][+'0']["v"] + ppdt.fa[1];
             }
             q9w = q9w / ((D6[_s(O1p - 0)][e0D][E6k
                 .o55(Z9y ^ 0)] + E9w + (100)) / 100);
@@ -24740,7 +24735,7 @@ var cotgsubscribe = amplify;
                 if (n5v == 1)
                     var r5v = _s(L8R * 1);
                 else if (n5v == 2)
-                    var r5v = _s(O2y | 1030);
+                    var r5v = "sco";
                 else if (n5v == (3))
                     var r5v = _s(+E8R);
                 else if (n5v == 4)
@@ -35951,52 +35946,49 @@ var cotgsubscribe = amplify;
             var Q86 = 0;
             var T86 = bam["speeds"][_s(+y2y)];
             var x86 = bam["speeds"]["cav"];
-            var O86 = bam["speeds"][_s(O2y | 1610)];
-            var t86 = bam["speeds"][_s(3682)];
-            var o86 = bam["speeds"][_s(w2y <<
-                619405696)];
-            var L86 = bam["speeds"][_s(244)];
+            var O86 = bam["speeds"]["sco"];
+            var t86 = bam["speeds"]["sei"];
+            var o86 = bam["speeds"]["shi"];
+            var L86 = bam["speeds"]["sen"];
             var e86 = bam["speeds"][E6k
                 .S55(+H2y)];
-            var k86 = bam["speeds"][_s(6661)];
+            var k86 = bam["speeds"]["mer"];
             if (X86 != 0)
-                u86 = qam[_s(+G2y)][Number(X86)][_s(r2y << 626298368)][0]["v"];
+                u86 = qam["techTreeSteps"][Number(X86)][_s(r2y << 626298368)][0]["v"];
             if (u86 + ppdt.fa[7] / ('2' & E6k
                 .s6s) > 0)
                 T86 = T86 / (1 + (u86 + ppdt.fa[7] / 2) / (100));
             if (z86 != (0))
-                H86 = qam[_s(G2y ^ 0)][Number(z86)][_s(+r2y)][0][_s(+b2y)];
+                H86 = qam["techTreeSteps"][Number(z86)][_s(+r2y)][0][_s(+b2y)];
             if (H86 + ppdt.fa[7] / (2) > (0))
                 x86 = x86 / ((1) + (H86 + ppdt.fa[7] / 2) / 100);
             if (M86 != 0)
-                j86 = qam[_s(G2y & E6k
-                    .s6s)][Number(M86)][_s(r2y | 1156)][0]["v"];
+                j86 = qam["techTreeSteps"][Number(M86)][_s(r2y | 1156)][0]["v"];
             if (j86 + ppdt.fa[7] /
                 2 > (0))
                 O86 = O86 / (1 + (j86 + ppdt.fa[7] / 2) / 100);
             if (G86 != +"0")
-                w86 = qam[_s(+G2y)][Number(G86)][_s(+r2y)][0]["v"];
+                w86 = qam["techTreeSteps"][Number(G86)][_s(+r2y)][0]["v"];
             if (w86 + ppdt[_s(h2y << 916392960)][3] / 2 > 0)
                 t86 = t86 / (1 + (w86 + ppdt.fa[3] / +'2') / (100));
             if (C86 != 0)
-                s86 = qam[_s(G2y << 1129725216)][Number(C86)][_s(r2y & E6k
+                s86 = qam["techTreeSteps"][Number(C86)][_s(r2y & E6k
                     .s6s)][0]["v"];
             if (s86 + ppdt.fa[3] / (2) > 0)
                 o86 =
                     o86 / (1 + (s86 + ppdt.fa[3] / (2)) / 100);
             if (W86 != 0)
-                v86 = qam[_s(G2y -
-                    0)][Number(W86)][_s(+r2y)][0]["v"];
+                v86 = qam["techTreeSteps"][Number(W86)][_s(+r2y)][0]["v"];
             if (v86 + ppdt.fa[1] / (2) > (0))
                 L86 = L86 / (1 + (v86 + ppdt.fa[1] / (2)) / 100);
             if (i86 != 0)
-                l86 = qam[_s(+G2y)][Number(i86)][_s(r2y - 0)]["0" >>
+                l86 = qam["techTreeSteps"][Number(i86)][_s(r2y - 0)]["0" >>
                     1221339360]["v"];
             if (l86 + ppdt.fa[5] / (2) > 0)
                 e86 =
                     e86 / (('1' | 1) + (l86 + ppdt.fa[5] / 2) / ("100" | 100));
             if (d86 != 0)
-                Q86 = qam[_s(+G2y)][Number(d86)][_s(+r2y)][0]["v"];
+                Q86 = qam["techTreeSteps"][Number(d86)][_s(+r2y)][0]["v"];
             if (Q86 +
                 ppdt.fa[5] / (2) > 0)
                 k86 = k86 / (1 + (Q86 + ppdt.fa[5] / ("2" -
@@ -45062,20 +45054,19 @@ var cotgsubscribe = amplify;
             var M8B = 0;
             var G8B = bam["speeds"]["inf"];
             var C8B = bam["speeds"]["cav"];
-            var W8B = bam["speeds"][_s(O2y - 0)];
-            var i8B = bam["speeds"][_s(3682)];
-            var d8B = bam["speeds"][_s(w2y & 2147483647)];
-            var b8B = bam["speeds"][_s(244)];
-            var g8B = bam[E6k
-                .S55(L2y ^ 0)][_s(H2y ^ 0)];
-            var r8B = bam["speeds"][_s(6661)];
+            var W8B = bam["speeds"]["sco"];
+            var i8B = bam["speeds"]["sei"];
+            var d8B = bam["speeds"]["shi"];
+            var b8B = bam["speeds"]["sen"];
+            var g8B = bam["speeds"]["crt"];
+            var r8B = bam["speeds"]["mer"];
             if (A8B != 0)
-                z8B = qam[_s(G2y - 0)][Number(A8B)][_s(+r2y)][0]["v"];
+                z8B = qam["techTreeSteps"][Number(A8B)][_s(+r2y)][0]["v"];
             E6k.R6();
             if (z8B + ppdt.fa[7] / 2 > 0)
                 G8B = G8B / (1 + (z8B + ppdt.fa[7] / 2) / 100);
             if (n8B != 0)
-                O8B = qam[_s(+G2y)][Number(n8B)][_s(+r2y)]['0' <<
+                O8B = qam["techTreeSteps"][Number(n8B)][_s(+r2y)]['0' <<
                     906862304]["v"];
             if (O8B + ppdt.fa[7] / 2 > 0)
                 C8B = C8B / (1 + (O8B +
@@ -45086,13 +45077,12 @@ var cotgsubscribe = amplify;
             if (t8B + ppdt.fa[+'7'] / (2) > 0)
                 W8B = W8B / (1 + (t8B + ppdt.fa[7] / (2)) / (100));
             if (K8B != 0)
-                o8B = qam[_s(G2y | 1032)][Number(K8B)][_s(r2y & 2147483647)][0]["v"];
+                o8B = qam["techTreeSteps"][Number(K8B)][_s(r2y & 2147483647)][0]["v"];
             if (o8B + ppdt.fa[3] / 2 > 0)
                 i8B = i8B / (('1' |
                     0) + (o8B + ppdt.fa[3] / 2) / (100));
             if (S8B != 0)
-                L8B = qam[_s(G2y >>
-                    1005535552)][Number(S8B)][_s(r2y - 0)][0]["v"];
+                L8B = qam["techTreeSteps"][Number(S8B)][_s(r2y - 0)][0]["v"];
             if (L8B + ppdt.fa[3] / 2 >
                 0)
                 d8B = d8B / (1 + (L8B + ppdt.fa[3] / 2) / 100);
@@ -45102,12 +45092,12 @@ var cotgsubscribe = amplify;
             if (X8B + ppdt.fa[+"1"] / 2 > 0)
                 b8B = b8B / (1 + (X8B + ppdt.fa[1] / 2) / 100);
             if (h8B != (0))
-                x8B = qam[_s(+G2y)][Number(h8B)][_s(+r2y)][0]["v"];
+                x8B = qam["techTreeSteps"][Number(h8B)][_s(+r2y)][0]["v"];
             if (x8B +
                 ppdt.fa[5] / (2) > 0)
                 g8B = g8B / ((1) + (x8B + ppdt.fa[5] / 2) / 100);
             if (V8B != 0)
-                M8B = qam[_s(+G2y)][Number(V8B)][E6k
+                M8B = qam["techTreeSteps"][Number(V8B)][E6k
                     .S55(r2y * 1)][0]["v"];
             if (M8B + ppdt.fa[5] / 2 > 0)
                 r8B = r8B / ((1) + (M8B + ppdt.fa["5" | 1] / (2)) / 100);
@@ -45489,8 +45479,8 @@ var cotgsubscribe = amplify;
             else {
                 var l6B = _s(+Y8R);
                 var I6B = _s(O8R - 0);
-                var T6B = _s(+O2y);
-                var x6B = _s(O2y ^ 0);
+                var T6B = "sco";
+                var x6B = "sco";
                 var Q6B = _s(2566);
             }
             var O6B = 0;
@@ -48246,7 +48236,7 @@ var cotgsubscribe = amplify;
             }
             else if (F5v == _s(+O8R)) {
                 var j7v = _s(1758);
-                var u7v = _s(O2y - 0);
+                var u7v = "sco";
                 var w7v = 2;
             }
             else if (F5v == _s(+D8R)) {
@@ -50756,7 +50746,7 @@ var cotgsubscribe = amplify;
                             $(_s(+a7m))
                                 .css("display", "none");
                             $(_s(123))
-                                .text(M2(R46[_s(O2y & 2147483647)]));
+                                .text(M2(R46["sco"]));
                             $(_s(2623))
                                 .text(M2(R46["cav"]));
                             $(_s(241))
@@ -50766,9 +50756,9 @@ var cotgsubscribe = amplify;
                             $(_s(2487))
                                 .text(M2(R46[_s(+e3m)]));
                             $(_s(1192))
-                                .text(M2(R46[_s(+w2y)]));
+                                .text(M2(R46["shi"]));
                             $(_s(1166))
-                                .text(M2(R46[_s(H2y & 2147483647)]));
+                                .text(M2(R46["crt"]));
                             $(_s(4149))
                                 .text(M2(R46[_s(Y5y * 1)]));
                             $(_s(+A4y))
@@ -50781,7 +50771,7 @@ var cotgsubscribe = amplify;
                                 .css("display", "none");
                             $(_s(+R5R))
                                 .css("display", "none");
-                            c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(w2y * 1)], R46[_s(+e3m)], R46[_s(+H2y)], R46[_s(Y5y | 131)], F46);
+                            c5F(R46["inf"], R46["cav"], R46["sco"], R46[_s(+m8R)], R46[_s(w2y * 1)], R46[_s(+e3m)], R46["crt"], R46[_s(Y5y | 131)], F46);
                             $(_s(+o2y))
                                 .off("click");
                             $(_s(+o2y))
@@ -51293,7 +51283,7 @@ var cotgsubscribe = amplify;
                             $(_s(a7m & 2147483647))
                                 .css("display", "none");
                             $(_s(123))
-                                .text(M2(R46[_s(+O2y)]));
+                                .text(M2(R46["sco"]));
                             $(_s(2623))
                                 .text(M2(R46["cav"]));
                             $(_s(241))
@@ -51303,14 +51293,14 @@ var cotgsubscribe = amplify;
                             $(_s(2487))
                                 .text(M2(R46[_s(+e3m)]));
                             $(_s(1192))
-                                .text(M2(R46[_s(+w2y)]));
+                                .text(M2(R46["shi"]));
                             $(_s(1166))
-                                .text(M2(R46[_s(H2y * 1)]));
+                                .text(M2(R46["crt"]));
                             $(_s(4149))
                                 .text(M2(R46[_s(+Y5y)]));
                             $(_s(+A4y))
                                 .show();
-                            c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(m8R >> 2098004416)], R46[_s(w2y * 1)], R46[_s(+e3m)], R46[_s(H2y - 0)], R46[_s(+Y5y)], F46);
+                            c5F(R46["inf"], R46["cav"], R46["sco"], R46[_s(m8R >> 2098004416)], R46["shi"], R46[_s(+e3m)], R46["crt"], R46[_s(+Y5y)], F46);
                             $(_s(o2y - 0))
                                 .off("click");
                             $(_s(o2y * 1))
@@ -51390,9 +51380,9 @@ var cotgsubscribe = amplify;
                             $(_s(878))
                                 .text(M2(R46["cav"]));
                             $(_s(1520))
-                                .text(M2(R46[_s(w2y ^ 0)]));
-                            c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(m8R |
-                                1056)], R46[_s(+w2y)], R46[_s(e3m - 0)], R46[_s(+H2y)], R46[_s(Y5y - 0)], F46);
+                                .text(M2(R46["shi"]));
+                            c5F(R46["inf"], R46["cav"], R46["sco"], R46[_s(m8R |
+                                1056)], R46["shi"], R46[_s(e3m - 0)], R46["crt"], R46[_s(Y5y - 0)], F46);
                             $(_s(d3m * 1))
                                 .text(_s(225));
                             $(_s(+N7m))
@@ -51552,9 +51542,9 @@ var cotgsubscribe = amplify;
                             $(_s(878))
                                 .text(M2(R46["cav"] + j16));
                             $(_s(1520))
-                                .text(M2(R46[_s(+w2y)]));
-                            x8F(R46["inf"], R46["cav"], R46[_s(O2y >> 1816902976)], R46[_s(m8R *
-                                1)], R46[_s(+w2y)], R46[_s(e3m * 1)], R46[_s(H2y | 548)], R46[_s(Y5y -
+                                .text(M2(R46["shi"]));
+                            x8F(R46["inf"], R46["cav"], R46["sco"], R46[_s(m8R *
+                                1)], R46["shi"], R46[_s(e3m * 1)], R46["crt"], R46[_s(Y5y -
                                 0)], F46);
                             $(_s(N7m - 0))
                                 .attr("data", B46);
@@ -51640,8 +51630,8 @@ var cotgsubscribe = amplify;
                                 .html(Math.floor(g16));
                             var R46 = I9(Number(cid), Number(n46));
                             $(_s(5161))
-                                .text(M2(R46[_s(+H2y)]));
-                            c5F(R46["inf"], R46["cav"], R46[_s(+O2y)], R46[_s(+m8R)], R46[_s(w2y | 4112)], R46[_s(e3m - 0)], R46[_s(H2y << 1192277792)], R46[_s(Y5y >>
+                                .text(M2(R46["crt"]));
+                            c5F(R46["inf"], R46["cav"], R46["sco"], R46[_s(+m8R)], R46[_s(w2y | 4112)], R46[_s(e3m - 0)], R46["crt"], R46[_s(Y5y >>
                                 747450208)], F46);
                             var X36 = $(_s(+m5y))
                                 .val(r46);
@@ -51824,7 +51814,7 @@ var cotgsubscribe = amplify;
             else {
                 var R8l = _s(1976);
                 var P8l = _s(2926);
-                var B8l = _s(O2y ^ 0);
+                var B8l = "sco";
                 var y8l = E6k
                     .S55(+O8R);
             }
@@ -54401,7 +54391,7 @@ var cotgsubscribe = amplify;
                 var u8l = _s(1976);
                 var e8l = E6k
                     .S55(2926);
-                var H8l = _s(+O2y);
+                var H8l = "sco";
                 var s8l = _s(O8R | 4305);
                 $(_s(2302))
                     .find(_s(+E7y))
@@ -56695,22 +56685,22 @@ var cotgsubscribe = amplify;
                 if (x5D == +B2y) {
                     var O5D = ppdt["rs"][A5y ^ 0]["n"];
                     if (O5D != 0)
-                        var o5D = qam[_s(G2y * 1)][O5D][_s(+r2y)][0]["v"];
+                        var o5D = qam["techTreeSteps"][O5D][_s(+r2y)][0]["v"];
                 }
                 if (x5D == +q7y) {
                     var O5D = ppdt["rs"][u6y - 0]["n"];
                     if (O5D != (0))
-                        var o5D = qam[_s(+G2y)][O5D][_s(r2y >> 881939776)][0][_s(+b2y)];
+                        var o5D = qam["techTreeSteps"][O5D][_s(r2y >> 881939776)][0][_s(+b2y)];
                 }
                 if (x5D == (16)) {
                     var O5D = ppdt["rs"][+j6y]["n"];
                     if (O5D != 0)
-                        var o5D = qam[_s(G2y >> 1109937856)][O5D][_s(+r2y)][0]["v"];
+                        var o5D = qam["techTreeSteps"][O5D][_s(+r2y)][0]["v"];
                 }
                 if (x5D == +17) {
                     var O5D = ppdt["rs"][F8y * 1]["n"];
                     if (O5D != 0)
-                        var o5D = qam[_s(G2y << 2048493920)][O5D][_s(+r2y)][0][_s(b2y * 1)];
+                        var o5D = qam["techTreeSteps"][O5D][_s(+r2y)][0][_s(b2y * 1)];
                 }
                 X5D = X5D / ((D6[_s(+O1p)][K5D][_s(+Z9y)] + o5D + (100)) / +"100");
                 if (X5D <= ("1000" | 960))
@@ -58974,12 +58964,12 @@ var cotgsubscribe = amplify;
                 }
             }
             if (C4l == 0) {
-                var G4l = qam[_s(G2y - 0)][Number(A4l)][_s(+r2y)]['0' <<
+                var G4l = qam["techTreeSteps"][Number(A4l)][_s(+r2y)]['0' <<
                     658416096][_s(r2y * 1)];
                 var h4l = qam[_s(+d0p)][Number(G4l)][_s(+y0R)];
                 var b4l = qam[E6k
                     .S55(d0p << 642497600)][Number(G4l)][_s(+K2y)];
-                var g4l = qam[_s(G2y ^ 0)][Number(A4l)][_s(+r2y)][0]["v"];
+                var g4l = qam["techTreeSteps"][Number(A4l)][_s(+r2y)][0]["v"];
                 var d4l = A4l;
                 if (b4l == !!"1")
                     var X4l = _s(l0p >> 2140846368) + g4l +
@@ -58991,9 +58981,9 @@ var cotgsubscribe = amplify;
                 var P4l = 1;
             }
             else {
-                var G4l = qam[_s(G2y >> 1103052032)][Number(C4l)][_s(+r2y)][0][E6k
+                var G4l = qam["techTreeSteps"][Number(C4l)][_s(+r2y)][0][E6k
                     .S55(r2y ^ 0)];
-                var d4l = qam[_s(+G2y)][Number(C4l)][_s(x9y - 0)];
+                var d4l = qam["techTreeSteps"][Number(C4l)][_s(x9y - 0)];
                 var h4l = qam[_s(+d0p)][Number(G4l)][_s(+y0R)];
                 var b4l = qam[_s(+d0p)][Number(G4l)][_s(+K2y)];
                 var Z4l = qam[E6k
@@ -59001,7 +58991,7 @@ var cotgsubscribe = amplify;
                 if (d4l == 0)
                     var W4l = 0;
                 else
-                    var W4l = qam[_s(+G2y)][Number(d4l)][_s(r2y * 1)][0]["v"];
+                    var W4l = qam["techTreeSteps"][Number(d4l)][_s(r2y * 1)][0]["v"];
                 if (b4l == !!"1") {
                     var X4l = _s(l0p * 1) + W4l + _s(+o9y);
                     var S4l = _s(l0p * 1) + Z4l + _s(+o9y);
@@ -59012,7 +59002,7 @@ var cotgsubscribe = amplify;
                 }
                 var V4l = S4l;
                 var B4l = X4l;
-                var P4l = qam[_s(+G2y)][Number(C4l)][_s(+r2y)][0]["v"];
+                var P4l = qam["techTreeSteps"][Number(C4l)][_s(+r2y)][0]["v"];
             }
             E6k.R6();
             if (M4l != c8y << 1613126368)
@@ -60164,8 +60154,8 @@ var cotgsubscribe = amplify;
                 var V6B = _s(Y8R << 314575872);
                 var J6B = _s(O8R <<
                     464515392);
-                var S6B = _s(+O2y);
-                var h6B = _s(O2y >> 1812890784);
+                var S6B = "sco";
+                var h6B = "sco";
                 var b6B = _s(2566);
             }
             var r6B = 0;
@@ -63360,24 +63350,24 @@ var cotgsubscribe = amplify;
                 if (y0D == B2y * 1) {
                     var R0D = ppdt["rs"][A5y | 5]["n"];
                     if (R0D != 0)
-                        var D0D = qam[_s(G2y << 1356417600)][R0D][_s(r2y * 1)][0][_s(+b2y)];
+                        var D0D = qam["techTreeSteps"][R0D][_s(r2y * 1)][0][_s(+b2y)];
                 }
                 if (y0D == q7y * 1) {
                     var R0D = ppdt["rs"][+u6y]["n"];
                     if (R0D != 0)
-                        var D0D = qam[_s(G2y | 1809)][R0D][_s(+r2y)][0]["v"];
+                        var D0D = qam["techTreeSteps"][R0D][_s(+r2y)][0]["v"];
                 }
                 if (y0D == "16" <<
                     681425920) {
                     var R0D = ppdt["rs"][j6y - 0]["n"];
                     if (R0D != 0)
-                        var D0D = qam[_s(+G2y)][R0D][_s(+r2y)][0]["v"];
+                        var D0D = qam["techTreeSteps"][R0D][_s(+r2y)][0]["v"];
                 }
                 if (y0D == +17) {
                     var R0D = ppdt[E6k
                         .S55(i2y ^ 0)][F8y - 0]["n"];
                     if (R0D != 0)
-                        var D0D = qam[_s(+G2y)][R0D][_s(+r2y)][0]["v"];
+                        var D0D = qam["techTreeSteps"][R0D][_s(+r2y)][0]["v"];
                 }
                 Y0D = Y0D / ((D6[_s(+O1p)][E0D][_s(Z9y ^ 0)] + D0D + +"100") / 100);
                 if (Y0D <= 1000)
@@ -64501,9 +64491,9 @@ var cotgsubscribe = amplify;
                             var s09 = N92[Y92][_s(+j1k)]["d"];
                             var u09 = Number(e09) + Number(k09) + Number(a92) + Number(s09);
                             var E92 = C7F(N92[Y92][_s(+j1k)]);
-                            if (N92[Y92][_s(+j1k)][_s(H2y | 548)] > 0)
+                            if (N92[Y92][_s(+j1k)]["crt"] > 0)
                                 var c92 = _s(+P2k) + p6(Math
-                                    .floor(N92[Y92][_s(j1k * 1)][_s(H2y >> 1566129536)])) + _s(320);
+                                    .floor(N92[Y92][_s(j1k * 1)]["crt"])) + _s(320);
                             else
                                 var c92 = _s(P2k - 0) + p6(Math.floor(N92[Y92][_s(j1k | 1160)][_s('4470' -
                                     0)])) + _s(1303);
@@ -64534,8 +64524,8 @@ var cotgsubscribe = amplify;
                             var u09 = Number(e09) + Number(k09) + Number(a92) + Number(s09);
                             var j09 = 0;
                             var E92 = C7F(N92[Y92][_s(j1k << 114468064)]);
-                            if (N92[Y92][_s(j1k | 256)][_s(+H2y)] > (0))
-                                var c92 = _s(+P2k) + p6(Math.floor(N92[Y92][_s(j1k >> 1950288128)][_s(+H2y)])) + _s(320);
+                            if (N92[Y92][_s(j1k | 256)]["crt"] > (0))
+                                var c92 = _s(+P2k) + p6(Math.floor(N92[Y92][_s(j1k >> 1950288128)]["crt"])) + _s(320);
                             else
                                 var c92 = _s(P2k & 2147483647) + p6(Math.floor(N92[Y92][_s(j1k - 0)][_s(+'4470')])) + _s(1303);
                             var F92 = "";
@@ -64622,8 +64612,7 @@ var cotgsubscribe = amplify;
                             var s09 = N92[Y92][_s(+j1k)]["d"];
                             var u09 = Number(e09) + Number(k09) + Number(a92) + Number(s09);
                             var E92 = C7F(N92[Y92][_s(+j1k)]);
-                            if (N92[Y92][_s(+j1k)][_s(H2y >>
-                                1439275680)] > 0)
+                            if (N92[Y92][_s(+j1k)]["crt"] > 0)
                                 var c92 = _s(+P2k) + p6(Math.floor(N92[Y92][_s(+j1k)][_s(H2y >> 1713378912)])) + _s(320);
                             else
                                 var c92 = _s(P2k << 372142048) + p6(Math.floor(N92[Y92][_s(j1k * 1)][_s('4470' &
@@ -66047,8 +66036,8 @@ var cotgsubscribe = amplify;
             F6();
             V1l.done(function (f1l) {
                 if (f1l == 1) {
-                    W1l = qam[_s(G2y & 2147483647)][Number(M1l)][_s(+r0R)];
-                    for (var n1l in qam[_s(G2y | 4611)][Number(M1l)]["r"]) {
+                    W1l = qam["techTreeSteps"][Number(M1l)][_s(+r0R)];
+                    for (var n1l in qam["techTreeSteps"][Number(M1l)]["r"]) {
                         var A1l = qam[_s(+G2y)][Number(M1l)]["r"][n1l];
                         switch (n1l) {
                             case _s(a4p & 2147483647):
@@ -69814,11 +69803,11 @@ var cotgsubscribe = amplify;
                     }
                 }
                 if (e5i == (0)) {
-                    var k5i = qam[_s(+G2y)][Number(l5i)][_s(r2y << 1428894112)][0][_s(+r2y)];
+                    var k5i = qam["techTreeSteps"][Number(l5i)][_s(r2y << 1428894112)][0][_s(+r2y)];
                     var t5i = qam[_s(+d0p)][Number(k5i)][_s(+y0R)];
                     var w5i = qam[_s(+d0p)][Number(k5i)][_s(K2y >>
                         886067392)];
-                    var h5i = qam[_s(G2y - 0)][Number(l5i)][_s(r2y ^ 0)][0][_s(+b2y)];
+                    var h5i = qam["techTreeSteps"][Number(l5i)][_s(r2y ^ 0)][0][_s(+b2y)];
                     var q0i = l5i;
                     if (w5i == !![])
                         var a0i = _s(+l0p) + h5i + _s(+o9y);
@@ -69830,15 +69819,15 @@ var cotgsubscribe = amplify;
                         0;
                 }
                 else {
-                    var k5i = qam[_s(G2y * 1)][Number(e5i)][_s(+r2y)][0][_s(+r2y)];
-                    var q0i = qam[_s(G2y ^ 0)][Number(e5i)][_s(+x9y)];
+                    var k5i = qam["techTreeSteps"][Number(e5i)][_s(+r2y)][0][_s(+r2y)];
+                    var q0i = qam["techTreeSteps"][Number(e5i)][_s(+x9y)];
                     var t5i = qam[_s(d0p >> 1958012608)][Number(k5i)][_s(+y0R)];
                     var w5i = qam[_s(+d0p)][Number(k5i)][_s(+K2y)];
-                    var j5i = qam[_s(G2y | 1562)][Number(e5i)][_s(r2y - 0)][0]["v"];
+                    var j5i = qam["techTreeSteps"][Number(e5i)][_s(r2y - 0)][0]["v"];
                     if (q0i == 0)
                         var E0i = 0;
                     else
-                        var E0i = qam[_s(+G2y)][Number(q0i)][_s(+r2y)][0]["v"];
+                        var E0i = qam["techTreeSteps"][Number(q0i)][_s(+r2y)][0]["v"];
                     if (w5i == !!1) {
                         var a0i = _s(+l0p) + E0i + _s(+o9y);
                         var T5i = _s(l0p * 1) + j5i +
@@ -69850,7 +69839,7 @@ var cotgsubscribe = amplify;
                     }
                     var v5i = T5i;
                     var I5i = a0i;
-                    var M5i = qam[_s(G2y << 13888160)][Number(e5i)][_s(r2y - 0)][0]["v"];
+                    var M5i = qam["techTreeSteps"][Number(e5i)][_s(r2y - 0)][0]["v"];
                 }
                 if (m0i != +c8y)
                     u5i = u5i + _s(b0p >> 1616388512) + U5i;
@@ -69862,7 +69851,7 @@ var cotgsubscribe = amplify;
                 var D5i = 0;
                 if (q0i == (0))
                     q0i = e5i;
-                var s5i = qam[_s(+G2y)][Number(q0i)][_s(+r0R)];
+                var s5i = qam["techTreeSteps"][Number(q0i)][_s(+r0R)];
                 if (s5i >= 1) {
                     var S5i = ppdt[_s(+r0R)][_s(+w6y)];
                     if (S5i >= s5i)
@@ -69870,9 +69859,9 @@ var cotgsubscribe = amplify;
                     else
                         var J5i = _s(C1R & 2147483647) + p6(s5i) + _s(24) + p6(Math.floor(Number(s5i) - Number(S5i))) + _s(+K4p);
                 }
-                for (var O5i in qam[_s(G2y * 1)][Number(q0i)][E6k
+                for (var O5i in qam["techTreeSteps"][Number(q0i)][E6k
                     .o55(+I6y)]) {
-                    var N0i = qam[_s(G2y << 531316896)][Number(q0i)]["r"][O5i];
+                    var N0i = qam["techTreeSteps"][Number(q0i)]["r"][O5i];
                     switch (O5i) {
                         case _s(a4p << 1994355456):
                             var r5i = ppdt["pr"][1];
@@ -69926,8 +69915,7 @@ var cotgsubscribe = amplify;
                     X5i = "-";
                 }
                 var Q5i = aldt["n"];
-                var g5i = p6(Number(ppdt[_s(O2y &
-                    2147483647)]));
+                var g5i = p6(Number(ppdt["sco"]));
                 var x5i = ppdt.gr;
                 if (!x5i)
                     x5i = "-";
@@ -70491,8 +70479,8 @@ var cotgsubscribe = amplify;
                 .hover(function () {
                 var o3i = ppdt.rs[p0y & 2147483647]["n"];
                 if (o3i != 0)
-                    if (qam[_s(G2y * 1)][o3i])
-                        var O3i = Math.floor(Number(qam[_s(+G2y)][o3i][_s(r2y ^
+                    if (qam["techTreeSteps"][o3i])
+                        var O3i = Math.floor(Number(qam["techTreeSteps"][o3i][_s(r2y ^
                             0)][0]["v"]));
                     else
                         var O3i = 0;
@@ -70592,7 +70580,7 @@ var cotgsubscribe = amplify;
                 .tooltipster({ content: $(_s(4910)), position: _s(M64 - 0) });
             $(_s('1659' | 1144))
                 .hover(function () {
-                var D3i = p6(D6[_s(H2y ^ 0)]);
+                var D3i = p6(D6["crt"]);
                 var p3i = p6(D6[_s("2956" | 648)]);
                 var Y3i = p6(D6[_s(650)]);
                 $(_s(1659))
@@ -71723,23 +71711,23 @@ var cotgsubscribe = amplify;
             var u9B = g5F(cid, U8B);
             var Z8B = I9(Number(cid), Number(U8B));
             $(_s(5161))
-                .text(M2(Z8B[_s(H2y ^ 0)]));
+                .text(M2(Z8B["crt"]));
             $(_s(+U6m))
                 .text(M2(Z8B[_s(+Y5y)]));
             var U8B = currentTime();
             var q8B = new Date(U8B);
             var B8B = formatTimehrs(q8B);
-            var Y8B = new Date(U8B + Z8B[_s(H2y * 1)]);
+            var Y8B = new Date(U8B + Z8B["crt"]);
             var R8B = formatTimehrs(Y8B);
             var N8B = new Date(U8B +
-                Z8B[_s(H2y - 0)] * 2);
+                Z8B["crt"] * 2);
             var F8B = formatTimehrs(N8B);
             var p8B = new Date(U8B + Z8B[_s(Y5y |
                 82)]);
             var y8B = formatTimehrs(p8B);
             var m8B = new Date(U8B + Z8B[_s(Y5y | 210)] * (2));
             var a8B = formatTimehrs(m8B);
-            var E8B = Q2(Z8B[_s(H2y - 0)]);
+            var E8B = Q2(Z8B["crt"]);
             E6k.y6();
             var k9B = Q2(Z8B[_s(Y5y << 1683684384)]);
             var e9B = bam["troops"][Number(+17)][_s(t1R & 2147483647)];
@@ -71757,7 +71745,7 @@ var cotgsubscribe = amplify;
                 $(_s(1648))
                     .text(E8B);
                 $(_s(1648))
-                    .attr(_s(Z9y & 2147483647), Z8B[_s(+H2y)]);
+                    .attr(_s(Z9y & 2147483647), Z8B["crt"]);
                 $(_s(2049))
                     .text(R8B);
                 $(_s(D7k | 228))

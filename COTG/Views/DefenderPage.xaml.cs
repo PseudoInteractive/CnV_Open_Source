@@ -36,7 +36,7 @@ namespace COTG.Views
     {
 
         public static DefenderPage instance;
-        public DumbCollection<Spot> defenders = new DumbCollection<Spot>();
+        public List<Spot> defenders = new List<Spot>();
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -132,18 +132,22 @@ namespace COTG.Views
         {
             if (DefenderPage.IsVisible())
             {
-
-
-                App.DispatchOnUIThread(() =>
+                try
                 {
-                    defenders.Clear();
-                    foreach (var spot in Spot.allSpots)
+                    App.DispatchOnUIThread(() =>
                     {
-                        if (spot.Value.incoming.Count > 0)
-                            defenders.Add(spot.Value);
-                    }
-                    defenders.NotifyReset();
-                });
+                        defenders = new List<Spot>();
+                        foreach (var spot in Spot.allSpots)
+                        {
+                            if (spot.Value.incoming.Count > 0)
+                                defenders.Add(spot.Value);
+                        }
+                        defenderGrid.ItemsSource = defenders;
+                    });
+                }catch( Exception e)
+                {
+                    Log(e);
+                }
             }
         }
 

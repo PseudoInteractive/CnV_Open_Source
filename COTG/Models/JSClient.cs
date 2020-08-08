@@ -508,6 +508,9 @@ namespace COTG
 
         private static void BonusesUpdated()
         {
+            cartTravel = 10.0f / ( 1+ faith.merius*0.5f/100f + (researchRamp[research[28]]) / 100f );
+            shipTravel = 5.0f / (1 + faith.merius * 0.5f / 100f + (researchRamp[research[27]]) / 100f);
+
             ttSpeedBonus[0] = 1; // no speed reserach for guard
             ttSpeedBonus[1] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
             ttSpeedBonus[2] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;

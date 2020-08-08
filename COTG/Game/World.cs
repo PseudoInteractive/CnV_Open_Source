@@ -103,7 +103,16 @@ namespace COTG.Game
         public int cid;
         public string xy => cid.CidToString();
         public int cont => cid.CidToContinent();
-        public float dist => distanceReference != null ? cid.CidToWorld().DistanceToCid(distanceReference.cid) : 0f;
+        public float dist  {
+         get {
+
+                if (distanceReference == null)
+                    return 0;
+                var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
+                var tt = distanceReference.GetRaidTroopType();
+                return d * Enum.ttTravel[tt] / Enum.ttSpeedBonus[tt];
+            }
+            }
 
         public override string ToString()
         {
