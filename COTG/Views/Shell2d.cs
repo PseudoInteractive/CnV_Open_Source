@@ -415,35 +415,39 @@ namespace COTG.Views
                     }
 
                 }
-                //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
-                // ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
+                    //   ds.Antialiasing = CanvasAntialiasing.Antialiased;
+                    // ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
 
-                //           dxy.X = (float)sender.Width;
-                //            dxy.Y = (float)sender.ActualHeight;
+                    //           dxy.X = (float)sender.Width;
+                    //            dxy.Y = (float)sender.ActualHeight;
 
-                //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
-                //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
-                // if (IsPageDefense())
-                if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
-                {
-                    if (wantDetails)
+                    //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
+                    //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
+                    // if (IsPageDefense())
+                    if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
                     {
-                        var wantFade = wantImage;
-                        var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
+                        if (wantDetails)
+                        {
+                            var wantFade = wantImage;
+                            var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
 
-                        Vector4 tint = new Vector4(1,1,1,alpha);
-                        var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
-                        nameBrush = nameBrush.WithAlpha(intAlpha);
-                        myNameBrush = myNameBrush.WithAlpha(intAlpha);
+                            Vector4 tint = new Vector4(1, 1, 1, alpha);
+                            var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
+                            nameBrush = nameBrush.WithAlpha(intAlpha);
+                            myNameBrush = myNameBrush.WithAlpha(intAlpha);
 
-                        var td = TileData.instance;
-                        var halfTiles = (clientSpan * (0.5f / cameraZoomLag)).CeildToInt();
-                        var ccBase = cameraCLag.RoundToInt();
-                        var cx0 = (-halfTiles.x + ccBase.x).Max(0);
-                        var cy0 = (-halfTiles.y + ccBase.y).Max(0);
-                            var cx1 = (halfTiles.x+1 + ccBase.x).Min(World.worldDim);
-                            var cy1 = (halfTiles.y+1 + ccBase.y).Min(World.worldDim);
-                            using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None,CanvasImageInterpolation.Linear,CanvasSpriteOptions.ClampToSourceRect))
+                            var td = TileData.instance;
+                            var halfTiles = (clientSpan * (0.5f / cameraZoomLag)).CeildToInt();
+                            var ccBase = cameraCLag.RoundToInt();
+                            var cx0 = (-halfTiles.x + ccBase.x).Max(0);
+                            var cy0 = (-halfTiles.y + ccBase.y).Max(0);
+                            var cx1 = (halfTiles.x + 1 + ccBase.x).Min(World.worldDim);
+                            var cy1 = (halfTiles.y + 1 + ccBase.y).Min(World.worldDim);
+                            const bool isShift = false;// App.IsKeyPressedShift();
+                            const  float tcOff = isShift ? 0.0f : 0.5f;
+                            const float tzOff = isShift ? 0.0f : 1.0f;
+
+                            using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None, CanvasImageInterpolation.Linear, isShift ? CanvasSpriteOptions.ClampToSourceRect : CanvasSpriteOptions.None))
                             {
                                 foreach (var layer in td.layers)
                                 {
@@ -458,11 +462,11 @@ namespace COTG.Views
                                                 continue;
                                             {
                                                 var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
-                                             //   var layerData = TileData.packedLayers[ccid];
-                                              //  while (layerData != 0)
+                                                //   var layerData = TileData.packedLayers[ccid];
+                                                //  while (layerData != 0)
                                                 {
-                                                //    var imageId = ((uint)layerData & 0xffffu);
-                                               //     layerData >>= 16;
+                                                    //    var imageId = ((uint)layerData & 0xffffu);
+                                                    //     layerData >>= 16;
                                                     var tileId = imageId >> 13;
                                                     var off = imageId & ((1 << 13) - 1);
                                                     var tile = td.tilesets[tileId];
@@ -473,16 +477,16 @@ namespace COTG.Views
                                                     var sx = off - sy * tile.columns;
                                                     if (wantFade)
                                                         batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                            new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)), tint);
+                                                            new Rect(new Point(sx * tile.tilewidth+tcOff, sy * tile.tileheight+tcOff), new Size(tile.tilewidth-tzOff, tile.tileheight - tzOff)), tint);
                                                     else
                                                         batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                        new Rect(new Point(sx * tile.tilewidth + 0.5f, sy * tile.tileheight + 0.5f), new Size(tile.tilewidth - 1, tile.tileheight - 1)));
+                                                        new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight+tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)));
 
 
 
                                                 }
 
-                                                
+
                                             }
                                         }
                                     }
@@ -490,6 +494,7 @@ namespace COTG.Views
                             }// sprite batch
                             //
                             {
+                                ds.Antialiasing = CanvasAntialiasing.Antialiased;
                                 // Labels last
                                 for (var cy = cy0; cy < cy1; ++cy)
                                 {
@@ -500,7 +505,7 @@ namespace COTG.Views
                                         {
                                             if (!nameLayoutCache.TryGetValue(name, out var layout))
                                             {
-                                                layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f) { Options = CanvasDrawTextOptions.NoPixelSnap | CanvasDrawTextOptions.EnableColorFont };
+                                                layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
                                                 nameLayoutCache.Add(name, layout);
                                             }
 
@@ -515,13 +520,15 @@ namespace COTG.Views
                                 }
                             }
 
-                }
-                // overlay
-                if (worldChanges != null)
-                    ds.DrawImage(worldChanges,
-                        new Rect(destP0, destP1),
-                        new Rect(srcP0,srcP1), 1.0f,
-                        CanvasImageInterpolation.Linear, CanvasComposite.Add);
+
+                            // overlay
+                            if (worldChanges != null)
+                                ds.DrawImage(worldChanges,
+                                    new Rect(destP0, destP1),
+                                    new Rect(srcP0, srcP1), 1.0f,
+                                    CanvasImageInterpolation.Linear, CanvasComposite.Add);
+                        }
+                    }
             }
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
@@ -806,7 +813,7 @@ namespace COTG.Views
             var shadowC = color.GetShadowColor();
             var midS = mid - shadowOffset;
 
-            ds.DrawLine(c0, c1, 0.5f.Lerp(color,black0Alpha), lineThickness, defaultStrokeStyle);
+            ds.DrawLine(c0, c1, shadowC, lineThickness, defaultStrokeStyle);
             ds.DrawRoundedSquare(mid, rectSpan, shadowC,2.0f);
             ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
             ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
@@ -869,8 +876,14 @@ namespace COTG.Views
 
 
         }
-        public static Color GetShadowColor(this Color c) => (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
-
+        public static Color GetShadowColor(this Color c)
+        {
+            const float t1 = 0.625f;
+            const float t0 = 1.0f - t1;
+            return Color.FromArgb(128, (byte)(c.R * t0).RoundToInt(), (byte)(c.G * t0).RoundToInt(), (byte) (c.B * t0).RoundToInt() );
+//            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
+//            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
+        }
     }
 }
 

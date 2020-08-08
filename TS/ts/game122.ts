@@ -66637,17 +66637,23 @@ _viewMode = viewModeWorld;
                   }
 //              popUpBox atkpops ui - draggable
               _popupCount=0;
-              $(".popUpBox,.smallpopupstyle,.medpopupstyle").each(
+              $(".atkpops").each(
               function ()
               {
-                   if(  this.style.display == "block" )
+                      if (this.style.display != "none" && this.style.display != "hidden" )
                        _popupCount++;
               }
+              );
+              $(".medpopupstyle,.popUpBox,.smallpopupstyle").each(
+                  function () {
+                      if (this.style.display == "block")
+                          _popupCount++;
+                  }
               );
 
               $(".longwindow").each(
                   function () {
-                      if (this.style.display != "none")
+                      if (this.style.display != "none" && this.style.display != "hidden")
                           _popupCount+=128;
                   }
               );
