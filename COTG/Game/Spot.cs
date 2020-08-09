@@ -43,9 +43,9 @@ namespace COTG.Game
                 Assert(City.allCities.ContainsKey(cid) == false);
                     var worldC = cid.CidToWorld();
                     var info = World.CityLookup(worldC);
-                Assert(info.type == World.typeCity);
+            //    Assert(info.type == World.typeCity);
                     rv = new Spot() { cid = cid,pid=info.player };
-                    Assert( info.player != 0);
+             //       Assert( info.player != 0);
                     rv.isTemple = info.isTemple;
                     rv.isOnWater = info.isWater;
                     rv.isCastle = info.isCastle;

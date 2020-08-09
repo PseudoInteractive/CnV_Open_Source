@@ -127,6 +127,7 @@ namespace COTG
             Assert(dy.Abs() < 32767);
             return MathF.Sqrt( (float)(dx*dx+dy*dy));
         }
+        public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
         public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
         public static uint ToCompactCid(this int c)
         {

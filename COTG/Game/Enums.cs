@@ -10,6 +10,25 @@ namespace COTG.Game
     {
 
         public const int ttCount = 18;
+        public const byte ttGuard = 0;
+        public const byte ttBallista = 1;
+        public const byte ttRanger = 2;
+        public const byte ttTriari = 3;
+        public const byte ttPriestess = 4;
+        public const byte ttVanquisher = 5;
+        public const byte ttSorcerer = 6;
+        public const byte ttScout = 7;
+        public const byte ttArbalist = 8;
+        public const byte ttPraetor = 9;
+        public const byte ttHorseman = 10;
+        public const byte ttDruid = 11;
+        public const byte ttRam = 12;
+        public const byte ttScorpion = 13;
+        public const byte ttGalley = 14;
+        public const byte ttStinger = 15;
+        public const byte ttWarship = 16;
+        public const byte ttSenator = 17;
+
         public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
         public static bool IsLandRaider(int type) => ttBestDungeonType[type] < (byte)DungeonType.water;
         public static bool IsWaterRaider(int type) => ttBestDungeonType[type] == (byte)DungeonType.water;
@@ -36,7 +55,10 @@ namespace COTG.Game
         public readonly static string[] ttNameWithCaps = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
 
         public readonly static string[] ttNameWithCapsAndBatteringRam = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Battering Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
-        public const int ttSenator = 17;
+
+        
+
+
         public readonly static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };
         public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
         public readonly static int[] otherLoot = { 350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600 };

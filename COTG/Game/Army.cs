@@ -97,6 +97,8 @@ namespace COTG.Game
         public bool Senny => troops.Any((a) => a.isSenator);
         public bool hasNaval => troops.Any((a) => a.isNaval);
         public bool hasArt => troops.Any((a) => a.isArt);
+
+        public float dist => targetCid.DistanceToCid(sourceCid);
     }
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {

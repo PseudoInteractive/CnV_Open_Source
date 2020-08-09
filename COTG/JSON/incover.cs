@@ -257,9 +257,16 @@ namespace COTG.JSON
                                                   sumDef.Add( tti ); // reference in, this is safe as it is unmodified
                                           }
                                       }
+                                      else
+                                      {
+                                          if (ttl.IsNullOrEmpty())
+                                              COTG.Game.IncommingEstimate.Get(army);
+                                      }
                                       army.sumDef = sumDef.ToArray();
                                       Array.Sort(army.sumDef);
-                                      army.troops = ttl.ToArray();
+
+                                      if (!ttl.IsNullOrEmpty())
+                                          army.troops = ttl.ToArray();
                                       Array.Sort(army.troops);
                                       spot.incoming.Add(army);
                                   }

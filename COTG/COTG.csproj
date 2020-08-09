@@ -223,6 +223,7 @@
     <Compile Include="Helpers\TileMap.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
+    <Compile Include="JSON\IncommingEstimate.cs" />
     <Compile Include="JSON\incover.cs" />
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\TileSet.cs" />
@@ -642,7 +643,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JSON\ofdf.cs" />
-    <None Include="JSON\incoverJSON.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.UI.Xaml.Markup, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -687,9 +687,7 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>JSON\incoverJSON.json</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

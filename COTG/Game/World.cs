@@ -110,7 +110,7 @@ namespace COTG.Game
                     return 0;
                 var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
                 var tt = distanceReference.GetRaidTroopType();
-                return d * Enum.ttTravel[tt] / Enum.ttSpeedBonus[tt];
+                return d * Enum.ttTravel[tt] /(60f* Enum.ttSpeedBonus[tt]);
             }
             }
 

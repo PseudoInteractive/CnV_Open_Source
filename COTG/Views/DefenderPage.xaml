@@ -70,15 +70,20 @@
                                                    SizeMode="Fixed"
                                                    
                                                    CellContentStyle="{StaticResource CenterAlign}" />
+                            <tg:DataGridTextColumn PropertyName="xy"
+                                                   Width="45"
+                                                   SizeMode="Fixed"
+                                                   CellContentStyle="{StaticResource CenterAlignLink}" />
                             <tg:DataGridTextColumn PropertyName="playerName"
                                                    Header="Player"
                                                    Width="70"
                                                    SizeMode="Auto"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
-                            <tg:DataGridTextColumn PropertyName="xy"
-                                                   Width="45"
-                                                   SizeMode="Auto"
-                                                   CellContentStyle="{StaticResource CenterAlign}" />
+                            <tg:DataGridNumericalColumn PropertyName="dist"
+                                            SizeMode="Fixed"
+                                       CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,3:N0}"
+                                            Width="32" />
                             <tg:DataGridBooleanColumn PropertyName="isDefense"
                                                       Width="30"
                                                       SizeMode="Fixed"
@@ -279,7 +284,7 @@
                 <tg:DataGridTextColumn PropertyName="xy"
                                        SizeMode="Fixed"
                                        
-                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="44" />
                 <tg:DataGridNumericalColumn PropertyName="tsMax"
                                             SizeMode="Fixed"
