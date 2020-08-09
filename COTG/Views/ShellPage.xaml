@@ -4,7 +4,6 @@
       xmlns:App="using:COTG"
       xmlns:game="using:COTG.Game"
       xmlns:helpers="using:COTG.Helpers"
-      xmlns:behaviors="using:COTG.Behaviors"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="using:Microsoft.Xaml.Interactivity"

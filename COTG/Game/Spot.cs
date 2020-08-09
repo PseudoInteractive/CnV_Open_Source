@@ -36,6 +36,9 @@ namespace COTG.Game
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public static Spot invalid = new Spot() { _cityName = "Null" };
+
+        public static Spot[] emptySpotSource = Array.Empty<Spot>();
+
         public static Spot GetOrAdd(int cid)
         {
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
@@ -241,7 +244,7 @@ namespace COTG.Game
 
 
         // Incoming attacks
-        public List<Army> incoming { get; set; } = new List<Army>();
+        public Army[] incoming { get; set; } = Army.empty;
 
         public int incomingAttacks
         {
@@ -437,7 +440,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(tsHome)}={tsHome.ToString()}, {nameof(tsMax)}={tsMax.ToString()}}}";
+            return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
         }
         //int IKeyedItem.GetKey()
         //{

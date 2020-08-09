@@ -23,9 +23,6 @@ namespace COTG.JSON
 
 
 
-        const float averageSpeed = 10f;
-        const float averageScoutSpeed = 5f;
-        static string[] attackTypes = { "assault", "siege", "plunder" };
 
 
         public async static Task Process(bool fetchReports)
@@ -90,7 +87,7 @@ namespace COTG.JSON
                     foreach (var spot in Spot.allSpots)
                     {
                         // is this a safe time to do this?
-                        spot.Value.incoming.Clear(); // Todo:  this wipes incoming as well, we may want to preserve it at some point
+                        spot.Value.incoming = Army.empty; // Todo:  this wipes incoming as well, we may want to preserve it at some point
                         spot.Value.claim = 0;
                     }
 
@@ -109,18 +106,27 @@ namespace COTG.JSON
 
                             var army = new Army() { isAttack = true, sourceCid = atkCid, targetCid = defCid, pid = atkP, time = time, spotted = AUtil.dateTimeZero };
 
-                            var claim = b[11].GetAsFloat();
+                            army.type = Report.GetAttackType(b[1].GetAsString());
+                            var claim = b[11].GetAsFloat().RoundToInt();
                             spot.claim = (byte)claim.Max(spot.claim);
-                            if (!spot.isMine)
-                                spot.tsHome = b[10].GetAsInt();
-                            var ttl = new List<TroopTypeCount>();
                             var atkTS = b[9].GetAsInt();
-                            ttl.Add(new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
-
-                            army.troops = ttl.ToArray();
-                            army.sumDef = Array.Empty<TroopTypeCount>();
-                            spot.incoming.Add(army);
+                            var defTS = b[10].GetAsInt();
+                            
+                            army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
+                            if (defTS > 0)
+                            {
+                                army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttRanger, defTS) };
+                                if (!spot.isMine)
+                                {
+                                    spot.tsHome = defTS;
+                                }
+                            }
+                            //                            army.sumDef = Array.Empty<TroopTypeCount>();
+                            spot.incoming=spot.incoming.ArrayAppend(army);
                         }
+
+
+
                     }
                     //    {
 

@@ -136,7 +136,7 @@ namespace COTG.JSON
                       foreach (var spot in Spot.allSpots)
                       {
                           // is this a safe time to do this?
-                          spot.Value.incoming.Clear();
+                          spot.Value.incoming = Army.empty;
                       }
                       var jse = jsd.RootElement.GetProperty("a");
                       foreach (var prop in jse.EnumerateObject())
@@ -268,7 +268,7 @@ namespace COTG.JSON
                                       if (!ttl.IsNullOrEmpty() || army.troops==null)
                                           army.troops = ttl.ToArray();
                                       Array.Sort(army.troops);
-                                      spot.incoming.Add(army);
+                                      spot.incoming = spot.incoming.ArrayAppend(army);
                                   }
                                   spot.tsMax = TroopTypeCount.TS(sumDef);
                               }

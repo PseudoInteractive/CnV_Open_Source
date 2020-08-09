@@ -1,4 +1,5 @@
 ﻿using COTG.Helpers;
+using COTG.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +15,13 @@ namespace COTG.Game
 {
     public sealed class Army
     {
-        public const byte typeAssault = 0;
-        public const byte typeSiege = 1; // siege in history
-        public const byte typePlunder= 2;
-        public const byte typeScout = 3;
-        public const byte typeSieging = 4; // siege in progress
-        public const byte typeDefense = 5;
+
+        public static Army[] empty = Array.Empty<Army>(); 
 
         // todo
-       // byte type;
+        public byte type; // see Report types
+        public string Type => type < Report.typeAttackCount ? Report.typeStrings[type] : "Def";
+
         public TroopTypeCount[] troops { get; set; }
         public TroopTypeCount[] sumDef { get; set; }
         // todo
@@ -40,6 +39,7 @@ namespace COTG.Game
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
 
         public int ts => troops.Sum((t) => t.ts);
+        public int tsDef => sumDef.Any() ? sumDef.Last().ts : 0;
         public string details => TroopTypeCount.Format(troops);
         public int pid; // The owner of the army, 
         public string playerName => Player.IdToName(pid);

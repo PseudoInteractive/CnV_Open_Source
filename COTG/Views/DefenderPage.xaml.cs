@@ -139,7 +139,7 @@ namespace COTG.Views
                         defenders = new List<Spot>();
                         foreach (var spot in Spot.allSpots)
                         {
-                            if (spot.Value.incoming.Count > 0)
+                            if (spot.Value.incoming.Length > 0)
                                 defenders.Add(spot.Value);
                         }
                         defenderGrid.ItemsSource = defenders;
@@ -172,34 +172,20 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
-    }
-
-    public class DataBindingComplete : DataGridCommand
-    {
-        public override bool CanExecute(object parameter)
+        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            return true;
-            //if ((parameter as DataBindingCompleteEventArgs).ChangeFlags.HasFlag(DataChangeFlags.Group))
-            //{
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-
-        }
-
-        public override void Execute(object parameter)
-        {
-            this.Owner.GetDataView().CollapseAll();
-
-            if (this.Owner.GroupDescriptors.Count > 0)
+            var sel = defenderGrid.SelectedItem as Spot;
+            if (sel == null)
             {
-                this.Owner.GetDataView().ExpandGroup((this.Owner.GetDataView().Items[0] as IDataGroup));
+                armyGrid.ItemsSource = Army.empty;
             }
-
-            base.Execute(parameter);
+            else
+            {
+                armyGrid.ItemsSource = sel.incoming;
+            }
         }
     }
+
+   
 
 }

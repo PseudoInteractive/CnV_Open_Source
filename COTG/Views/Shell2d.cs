@@ -605,11 +605,11 @@ namespace COTG.Views
                             }
                         }
                     }
-                    if (DefenderPage.IsVisible())
+                    if (DefenderPage.IsVisible() || OutgoingTab.IsVisible())
                     {
                         foreach (var city in Spot.allSpots.Values)
                         {
-                            if ( city.incoming.Count > 0)
+                            if ( city.incoming.Length > 0)
                             {
                                
                                 var targetCid = city.cid;

@@ -14,8 +14,21 @@ namespace COTG.JSON
         public const byte typePlunder= 2;
         public const byte typeScout = 3;
         public const byte typeSieging = 4; // siege in progress
-        public const byte typePending = 5;
-        
+        public const byte typePending = 5; // siege in progress
+        public const byte typeAttackCount = 6;
+        public static readonly string[] typeStrings =
+        {
+             "Assault",
+             "Siege",
+             "Plunder",
+             "Scout",
+             "Sieging",
+             "Pending", // is this right?
+
+        };
+
+        public static byte GetAttackType(string s) => (byte)typeStrings.IndexOf(s);
+
         public string reportId;
         public int defP;
         public string dPlyr => Player.IdToName(defP);
@@ -39,16 +52,8 @@ namespace COTG.JSON
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
 
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
-        public string Type => type switch
-        {
-            0 => "assault",
-            1 => "siege",
-            2 => "plunder",
-            3 => "scout",
-            4 => "sieging",
-            _ => "incom"
+        public string Type => type < typeAttackCount ? typeStrings[type] : "incom";
 
-        };
         public bool Sen { get; set; }
         public bool SE { get; set; }
         public bool Nvl { get; set; }

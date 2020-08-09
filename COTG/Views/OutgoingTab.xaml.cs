@@ -93,7 +93,7 @@ namespace COTG.Views
                         var defenders = new List<Spot>();
                         foreach (var spot in Spot.allSpots)
                         {
-                            if (spot.Value.incoming.Count > 0)
+                            if (spot.Value.incoming.Length > 0)
                                 defenders.Add(spot.Value);
                         }
                         instance.defenderGrid.ItemsSource = defenders;
@@ -127,6 +127,18 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
+        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        {
+            var sel = defenderGrid.SelectedItem as Spot;
+            if(sel==null)
+            {
+                armyGrid.ItemsSource = Army.empty;
+            }
+            else
+            {
+                armyGrid.ItemsSource = sel.incoming;
+            }
+        }
     }
        
 
