@@ -39,21 +39,21 @@ namespace COTG.Helpers
         {
             return (sbyte)(GetAsInt64(js, prop));
         }
-        public static float GetAsFloat(this JsonElement js, string prop)
+        public static float GetAsFloat(this JsonElement js)
         {
-            if (!js.IsValid())
-                return -1;
-            if (!js.TryGetProperty(prop, out var e))
-            {
-                Log("Missing " + prop);
-                return -1;
-            }
-            switch (e.ValueKind)
+            switch (js.ValueKind)
             {
                 case JsonValueKind.String:
-                    return float.TryParse(e.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo , out var v) ? v : -1;
+                    {
+                        // special case: "-"
+                        var str = js.GetString();
+                        if (str.Length == 1 && str[0] == '-')
+                            return 0;
+
+                        return float.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                    }
                 case JsonValueKind.Number:
-                    return e.GetSingle();
+                    return js.GetSingle();
                 case JsonValueKind.True:
                     return 1;
                 case JsonValueKind.False:
@@ -63,9 +63,20 @@ namespace COTG.Helpers
                 case JsonValueKind.Undefined:
                 case JsonValueKind.Object:
                 default:
-                    Log("Invalid Json Type " + e.ValueKind);
+                    Log("Invalid Json Type " + js.ValueKind);
                     return -1;
             }
+        }
+        public static float GetAsFloat(this JsonElement js, string prop)
+        {
+            if (!js.IsValid())
+                return -1;
+            if (!js.TryGetProperty(prop, out var e))
+            {
+                Log("Missing " + prop);
+                return -1;
+            }
+            return GetAsFloat(e);
         }
         public static long GetAsInt64(this JsonElement js, string prop)
         {
@@ -84,7 +95,13 @@ namespace COTG.Helpers
             switch (js.ValueKind)
             {
                 case JsonValueKind.String:
-                    return long.TryParse(js.GetString(), NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                    {
+                        // special case: "-"
+                        var str = js.GetString();
+                        if (str.Length == 1 && str[0] == '-')
+                            return 0;
+                        return long.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                    }
                 case JsonValueKind.Number:
                     return js.GetInt64();
                 case JsonValueKind.True:

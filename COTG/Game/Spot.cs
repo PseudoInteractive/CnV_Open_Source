@@ -243,7 +243,7 @@ namespace COTG.Game
         // Incoming attacks
         public List<Army> incoming { get; set; } = new List<Army>();
 
-        public int attacks
+        public int incomingAttacks
         {
             get
             {
@@ -256,7 +256,7 @@ namespace COTG.Game
                 return rv;
             }
         }
-        public int defenders
+        public int incomingDefenders
         {
             get
             {
@@ -269,6 +269,21 @@ namespace COTG.Game
                 return rv;
             }
         }
+
+        public int incomingAttackTS
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (!a.isDefense)
+                        rv += a.ts;
+                }
+                return rv;
+            }
+        }
+
         public int activeSieges
         {
             get 

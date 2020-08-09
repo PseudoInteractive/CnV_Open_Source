@@ -14,23 +14,34 @@ namespace COTG.Game
 {
     public sealed class Army
     {
+        public const byte typeAssault = 0;
+        public const byte typeSiege = 1; // siege in history
+        public const byte typePlunder= 2;
+        public const byte typeScout = 3;
+        public const byte typeSieging = 4; // siege in progress
+        public const byte typeDefense = 5;
+
+        // todo
+       // byte type;
         public TroopTypeCount[] troops { get; set; }
         public TroopTypeCount[] sumDef { get; set; }
-        public bool isAttack;
+        // todo
+        public bool isPending { get; set; }
+        public bool isAttack { get; set; }
         public bool isDefense => !isAttack;
         public string xy => sourceCid.CidToString();
         public int targetCid;
         public int sourceCid;
+
         public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
         public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
 
-        public string ts => troops.Sum((t) => t.ts).ToString("N0");
-        public string defTs => sumDef.Sum((t) => t.ts).ToString("N0");
+        public int ts => troops.Sum((t) => t.ts);
         public string details => TroopTypeCount.Format(troops);
-        public int pid;
+        public int pid; // The owner of the army, 
         public string playerName => Player.IdToName(pid);
 
         public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type

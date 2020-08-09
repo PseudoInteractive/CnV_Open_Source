@@ -15,7 +15,7 @@ namespace COTG.JSON
         public const byte typeScout = 3;
         public const byte typeSieging = 4; // siege in progress
         public const byte typePending = 5;
-
+        
         public string reportId;
         public int defP;
         public string dPlyr => Player.IdToName(defP);

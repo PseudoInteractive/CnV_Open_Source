@@ -33,7 +33,8 @@ namespace COTG.Views
                 new DonationTab(),
                 new DefensePage(),
                 new BossTab(),
-                new SpotTab()
+                new SpotTab(),
+                new OutgoingTab(),
         };
             }
 

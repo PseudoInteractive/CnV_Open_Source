@@ -225,6 +225,7 @@
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\IncommingEstimate.cs" />
     <Compile Include="JSON\incover.cs" />
+    <Compile Include="JSON\OutOver.cs" />
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\TileSet.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
@@ -315,6 +316,9 @@
     </Compile>
     <Compile Include="Views\DefenderPage.xaml.cs">
       <DependentUpon>DefenderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OutgoingTab.xaml.cs">
+      <DependentUpon>OutgoingTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SchemeActivationSamplePage.xaml.cs">
       <DependentUpon>SchemeActivationSamplePage.xaml</DependentUpon>
@@ -431,6 +435,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DefenderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OutgoingTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

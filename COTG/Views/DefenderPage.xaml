@@ -22,10 +22,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <tg:RadDataGrid x:Name="defenderGrid"
                         GridLinesThickness="1"
                         AutoGenerateColumns="False"
@@ -301,6 +297,18 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />
+                <tg:DataGridNumericalColumn PropertyName="IncomingAttacks"
+                                            Header="inA"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource CenterAlign}"
+                                            CellContentFormat="{}{0,N0}"
+                                            Width="30" />
+                <tg:DataGridNumericalColumn PropertyName="IncomingDefenders"
+                                            Header="inD"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource CenterAlign}"
+                                            CellContentFormat="{}{0,N0}"
+                                            Width="30" />
                 <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
