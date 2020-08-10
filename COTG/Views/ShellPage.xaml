@@ -78,18 +78,18 @@
                       DisplayMemberPath="name"
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center"
-                      Margin="10,0,0,0" />
+                      Margin="10,2,0,0" />
                     <ComboBox x:Name="cityBox" x:FieldModifier="public"
                       Width="200"
                       DisplayMemberPath="nameAndRemarks"
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center"
-                      Margin="10,0,0,0" />
-                    
+                      Margin="10,2,0,0" />
+                    <TextBox x:Name="coords" Margin="10,2,0,0" Width="95" Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
                 </StackPanel>
             </CommandBar.Content>
-            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" />
-            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" />
             <AppBarButton Click="PriorCityClick" Icon="Previous" Label="Prior City" />
             <AppBarButton Click="NextCityClick" Icon="Next" Label="Next City" />
             <AppBarButton x:Name="Fresh"

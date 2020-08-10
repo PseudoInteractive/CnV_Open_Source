@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using static COTG.Debug;
 
 namespace COTG.Helpers
 {
-    public static class NavStack
+    public class NavStack : ICommand
     {
+
         public static void Push(int cid)
         {
             var cityView = JSClient.IsCityView();
@@ -32,7 +34,7 @@ namespace COTG.Helpers
             // filter duplicates
 
         }
-        public static bool Back()
+        public static bool Back(bool scanOnly =false)
         {
             if (position == -1)
             {
@@ -49,11 +51,19 @@ namespace COTG.Helpers
                 return false;
             }
             --position;
-             backStack[position].Go();
+            if(!scanOnly )
+                 backStack[position].Go();
             return true;
         }
 
-        public static bool Forward()
+        public static string GetSpotName(int delta)
+        {
+            var p = (position == -1 ? backStack.Count - 1 : position) + delta;
+            if (p >= 0 && p < backStack.Count)
+                return Spot.GetOrAdd(backStack[p].cid).nameAndRemarks;
+            return null;
+        }
+        public static bool Forward(bool scanOnly=false)
         {
             if (position == -1 || position >= backStack.Count - 1)
             {
@@ -61,6 +71,7 @@ namespace COTG.Helpers
                 return false;
             }
             ++position;
+            if(!scanOnly)
             backStack[position].Go();
             return true;
         }
@@ -112,6 +123,36 @@ namespace COTG.Helpers
         public static void ForwardClick(object sender, RoutedEventArgs e)
         {
             Forward();
+        }
+
+        public static NavStack instance = new NavStack();
+
+        bool ICommand.CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        void ICommand.Execute(object parameter)
+        {
+            var delta = (int)parameter;
+            while (delta < 0)
+            {
+                Back(++delta != 0);
+            }
+            while (delta > 0)
+            {
+                Forward(--delta != 0);
+            }
+        }
+        event EventHandler ICommand.CanExecuteChanged
+        {
+            add
+            {
+            }
+
+            remove
+            {
+            }
         }
     }
 }

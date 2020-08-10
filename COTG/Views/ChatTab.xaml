@@ -73,6 +73,6 @@ sent or received, and those values are bound in the DataTemplate.-->
                 <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Message" IsTabStop="True" />
+        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Message" IsTabStop="True" MaxLength="244"/>
     </Grid>
 </local:UserTab>

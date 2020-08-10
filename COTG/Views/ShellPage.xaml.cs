@@ -741,5 +741,67 @@ namespace COTG.Views
         {
             ChangeCityClick(+1);
         }
+
+
+        private void BackRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var menu = new MenuFlyout();
+            bool any = false;
+            for(int i=1;i<8;++i)
+            {
+                var str = NavStack.GetSpotName(-i);
+                if (str == null)
+                    break;
+                any = true;
+                menu.Items.Add(App.CreateMenuItem(str, NavStack.instance,-i));
+            }
+            if(!any)
+                menu.Items.Add(App.CreateMenuItem("at initial", ()=>{ }));
+
+            menu.ShowAt(sender as FrameworkElement);
+
+        }
+
+        private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var menu = new MenuFlyout();
+            bool any = false;
+            for (int i = 1; i < 8; ++i)
+            {
+                var str = NavStack.GetSpotName(i);
+                if (str == null)
+                    break;
+                any = true;
+                menu.Items.Add(App.CreateMenuItem(str, NavStack.instance, i));
+            }
+            if (!any)
+                menu.Items.Add(App.CreateMenuItem("at most recent", () => { }));
+
+            menu.ShowAt(sender as FrameworkElement);
+        }
+
+
+
+        private void coords_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+                var str = sender as TextBox;
+            Assert(str != null);
+            if (str != null)
+            {
+                if (e.Key == Windows.System.VirtualKey.Enter)
+                {
+                        var cid = str.Text.FromCoordinate();
+                        if (cid != 0)
+                        {
+                            JSClient.ChangeCity(cid, false);
+                            NavStack.Push(cid);
+
+                        }
+
+                    
+                }
+
+            }
+        }
     }
 }

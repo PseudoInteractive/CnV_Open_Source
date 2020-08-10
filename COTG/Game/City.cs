@@ -29,7 +29,7 @@ namespace COTG.Game
         public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
         public static City build; // city that has Build selection.  I.e. in city view, the city you are in
 
-        public string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+        public override string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
         public bool isBuild => this == build;
         public static bool IsBuild( int cid )
@@ -428,10 +428,14 @@ namespace COTG.Game
         {
             var changed = this != City.build;
             City.build = this;
+
             if ( changed )
             {
                 SetFocus(false, true, false);
-                App.DispatchOnUIThreadLow( SelectInUI );
+                App.DispatchOnUIThreadLow(()=>{
+                    SelectInUI();
+                    ShellPage.instance.coords.Text = cid.CidToString();
+                });
             }
             //if (!noRaidScan)
            // {
@@ -510,9 +514,12 @@ namespace COTG.Game
             //         await Task.Delay(2000);
             //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             //           {
-            //      CityGrid.ScrollItemIntoView(city);
+            //   CityGrid.ScrollItemIntoView(city);
             if (MainPage.IsVisible())
+            {
                 MainPage.CityGrid.SelectItem(this);
+                MainPage.CityGrid.ScrollItemIntoView(this);
+            }
             // todo: donations page and boss hunting
             ShellPage.instance.cityBox.SelectedItem = this;
             //            });

@@ -38,6 +38,7 @@ namespace COTG.Game
         public static Spot invalid = new Spot() { _cityName = "Null" };
 
         public static Spot[] emptySpotSource = Array.Empty<Spot>();
+        public  virtual string nameAndRemarks => cityName;
 
         public static Spot GetOrAdd(int cid)
         {

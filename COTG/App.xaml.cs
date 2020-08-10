@@ -38,6 +38,7 @@ using Windows.Globalization.NumberFormatting;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using System.Collections.Concurrent;
+using System.Windows.Input;
 
 namespace COTG
 {
@@ -326,7 +327,11 @@ namespace COTG
             rv.Click += (_, _) => command();
             return rv;
         }
-///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
+        public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter)
+        {
+            return new MenuFlyoutItem() { Text = text,Command=command,CommandParameter=parameter };
+        }
+        ///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
         public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1 };
     }
 
@@ -398,7 +403,7 @@ namespace COTG
 
         public static string CidToString(this int cid)
         {
-            return $"{cid % 65536}.{cid / 65536}";
+            return $"{cid % 65536}:{cid / 65536}";
         }
         public static int FromCoordinate(this string s)
         {
@@ -412,7 +417,7 @@ namespace COTG
             catch (Exception e)
             {
              //   Log(e);
-                return 300*600 + 300; // return current city
+                return 0; // invalid
             }
         }
         // 20 bit mash
