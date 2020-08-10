@@ -305,6 +305,9 @@
     <Compile Include="Views\HeatmapDatePicker.xaml.cs">
       <DependentUpon>HeatmapDatePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\HitTab.xaml.cs">
+      <DependentUpon>HitTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -419,6 +422,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HeatmapDatePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HitTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

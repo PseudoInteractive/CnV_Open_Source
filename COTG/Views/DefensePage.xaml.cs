@@ -91,7 +91,12 @@ namespace COTG.Views
     }
     public sealed partial class DefensePage : UserTab, INotifyPropertyChanged
     {
-        public DumbCollection<Report> history { get; } = new DumbCollection<Report>();
+        public Report[] history { get; set; } = Array.Empty<Report>();
+        public void SetHistory( Report[] _history)
+        {
+            history = _history;
+            historyGrid.ItemsSource = history;
+        }
 
         public static DefensePage instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;
@@ -115,7 +120,8 @@ namespace COTG.Views
         }
         override public void VisibilityChanged(bool visible)
         {
-            if(visible)
+            historyGrid.ItemsSource = Array.Empty<Report>();
+            if (visible)
                 IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
             base.VisibilityChanged(visible);
 

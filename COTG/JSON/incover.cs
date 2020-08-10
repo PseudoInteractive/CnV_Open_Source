@@ -14,7 +14,7 @@ using static COTG.Debug;
 
 namespace COTG.JSON
 {
-    public static class IncomingOverview 
+    public static class IncomingOverview  
     {
         public static bool updateInProgress;
         public static bool hasFetchedReports; // sticky bit.  Once reports have been fetched at least once, all calls to update will process all report history
@@ -23,9 +23,6 @@ namespace COTG.JSON
 
 
 
-        const float averageSpeed = 10f;
-        const float averageScoutSpeed = 5f;
-        static string[] attackTypes = { "assault", "siege","plunder" };
         //        public IncomingOverview() : base("overview/incover.php") { }
         public static int DecodeCid(int offset,string s)
         {
@@ -120,8 +117,8 @@ namespace COTG.JSON
                           rep.defCid = defCid;
                           rep.time = time;
                           rep.spotted = spotted;
-                          rep.atkCN = b.GetAsString("attacker_city");
-                          rep.defCN = b.GetAsString("defender_city");
+                          Spot.GetOrAdd(atkCid, b.GetAsString("attacker_city"));
+                          Spot.GetOrAdd(defCid, b.GetAsString("defender_city"));
                           rep.aTS = b.GetAsInt("attack_ts");
                           rep.dTS = b.GetAsInt("defender_ts");
                           rep.dTsLeft = rep.dTS;
@@ -146,9 +143,8 @@ namespace COTG.JSON
                           if (cid >= 0)
                           {
 
-                              var spot = Spot.GetOrAdd(cid);
+                              var spot = Spot.GetOrAdd(cid, val.GetAsString("1"));
                               // set info if needed
-                              spot._cityName = val.GetAsString("1");
                               spot.tsHome = val.GetAsInt("8");
                               spot.pid = Player.NameToId(val.GetAsString("0"));
                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
@@ -337,6 +333,7 @@ namespace COTG.JSON
                         var defP = Player.NameToId(inc[1].GetString());
                         var atkPNS = inc[6].GetString();
                         var defCN = inc[3].ToString();
+                        Spot.GetOrAdd(target, defCN);
                         var time = inc[5].GetString().ParseDateTime(false);
                         var source = TryDecodeCid(0, inc[7].GetString());
                         var recId = inc[11].GetAsString();
@@ -355,17 +352,18 @@ namespace COTG.JSON
                                 // Scout
                                 // this is a scout
 
+                                Spot.GetOrAdd(source, inc[14].GetString());
+
                                 var report = new Report()
                                 {
                                     atkCid = source,
                                     defCid = target,
-                                    defCN = defCN,
-                                    atkCN = inc[14].GetString(),
+                                  
                                     defP = defP,
                                     atkP = Player.NameToId(atkPNS),
                                     time = time,
                                     reportId = recId,
-                                    spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageScoutSpeed),
+                                    spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * Report.averageScoutSpeed),
                                     type = Report.typeScout
                                     // todo TS info
 
@@ -382,7 +380,7 @@ namespace COTG.JSON
                                 {
                                     var root = jsdr.RootElement;
                                     int reportType = -1;
-                                    foreach (var attackType in attackTypes)
+                                    foreach (var attackType in Report.attackTypes)
                                     {
                                         ++reportType;
                                         if (root.TryGetProperty(attackType, out var reportsByType))
@@ -415,17 +413,28 @@ namespace COTG.JSON
                                                     }
                                                 }
 
+
                                                 source = report.GetAsInt("acid");
                                                 if (source > 0)
                                                 {
                                                     var atkTS = report.GetAsInt("ts_sent");
                                                     var atkTSLeft = report.GetAsInt("ts_left");
                                                     var atkPN = report.GetAsString("apn");
+                                                    var atkCN = report.GetAsString("acn");
+                                                    {
+                                                        var lg = atkCN.Length;
+                                                        if (lg > 9)  // trim off '(000:000)'
+                                                            atkCN = atkCN.Substring(0, lg - 9);
+
+                                                    }
+                                                    Spot.GetOrAdd(source, atkCN);
+
                                                     var rep = new Report()
                                                     {
                                                         reportId = recId,
                                                         dTS = defTS,
                                                         dTsLeft = defTSLeft,
+                                                        dTsKill = defTS - defTSLeft,
                                                         aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
                                                         aTS = atkTS,
                                                         aTsLeft = atkTSLeft,
@@ -435,22 +444,14 @@ namespace COTG.JSON
                                                         Nvl = hasNavy,
                                                         Sen = hasSen,
                                                         claim = hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1,
-                                                        defCN = defCN,
-                                                        atkCN = report.GetAsString("acn"),
                                                         defP = defP,
                                                         atkP = Player.NameToId(atkPN),
                                                         time = time,
-                                                        spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * averageSpeed),
+                                                        spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * Report.averageSpeed),
                                                         type = (byte)reportType
                                                         // todo TS info
 
                                                     };
-                                                    {
-                                                        var lg = rep.atkCN.Length;
-                                                        if (lg > 9)  // trim off '(000:000)'
-                                                            rep.atkCN = rep.atkCN.Substring(0, lg - 9);
-
-                                                    }
                                                     parts[part].Add(rep);
                                                 }
                                             }
@@ -469,22 +470,25 @@ namespace COTG.JSON
             await task0;
 
             //if(ShellPage.IsPageDefense())
-            {
-                var defPage = DefensePage.instance;
-                    for (int i = 0; i < reportParts.Length; ++i)
-                        reportsIncoming.AddRange(reportParts[i]);
-                   // App.DispatchOnUIThread(() =>
-                   // We should do this on the Render Thread
-                   defPage.history.Set(reportsIncoming.OrderByDescending((atk) => atk.time.Ticks));
-            }
-            {
-                var defenderPage = DefenderPage.instance;
-                if (defenderPage != null)
-                    defenderPage.NotifyIncomingUpdated();
-            }
+            App.DispatchOnUIThreadLow(()=>{
+                
+                    {
+                        var defPage = DefensePage.instance;
+                        for (int i = 0; i < reportParts.Length; ++i)
+                            reportsIncoming.AddRange(reportParts[i]);
+                        // App.DispatchOnUIThread(() =>
+                        // We should do this on the Render Thread
+                        defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
+                    }
+                    {
+                        var defenderPage = DefenderPage.instance;
+                        if (defenderPage != null)
+                            defenderPage.NotifyIncomingUpdated();
+                    }
 
-            updateInProgress = false;
-            Note.Show($"Complete: {reportsIncoming.Count} attacks");
+                    updateInProgress = false;
+                    Note.Show($"Complete: {reportsIncoming.Count} attacks");
+                });
         }
     }
 

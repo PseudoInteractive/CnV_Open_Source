@@ -26,6 +26,9 @@ namespace COTG.JSON
              "Pending", // is this right?
 
         };
+        public const float averageSpeed = 10f;
+        public const float averageScoutSpeed = 5f;
+        public static string[] attackTypes = { "assault", "siege", "plunder" };
 
         public static byte GetAttackType(string s) => (byte)typeStrings.IndexOf(s);
 
@@ -33,12 +36,12 @@ namespace COTG.JSON
         public int defP;
         public string dPlyr => Player.IdToName(defP);
         public int defCid;
-        public string defCN { get; set; }
+        public string defCN => Spot.GetOrAdd(defCid).cityName;
         public string defC => defCid.CidToString();
         public int atkP;
         public string aPlyr => Player.IdToName(atkP);
         public int atkCid;
-        public string atkCN { get; set; }
+        public string atkCN => Spot.GetOrAdd(atkCid).cityName;
         public string atkC => atkCid.CidToString();
 
         public int Cont => defCid.CidToContinent();
@@ -58,7 +61,7 @@ namespace COTG.JSON
         public bool SE { get; set; }
         public bool Nvl { get; set; }
         public int dTS { get; set; }
-        public int dTsKill => dTS - dTsLeft;
+        public int dTsKill { get; set; }
         public int dTsLeft { get; set; }
         public int aTsKill { get; set; }
         public int aTS { get; set; }

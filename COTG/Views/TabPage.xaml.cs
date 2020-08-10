@@ -35,6 +35,7 @@ namespace COTG.Views
                 new BossTab(),
                 new SpotTab(),
                 new OutgoingTab(),
+                new HitTab(),
         };
             }
 

@@ -88,7 +88,7 @@ namespace COTG.Views
             {
                 try
                 {
-                    App.DispatchOnUIThread(() =>
+                    App.DispatchOnUIThreadSneaky(() =>
                     {
                         var defenders = new List<Spot>();
                         foreach (var spot in Spot.allSpots)

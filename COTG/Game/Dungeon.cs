@@ -15,7 +15,7 @@ namespace COTG.Game
     {
         public City city; // city to raid this, where distance is calculated from 
         public int cid; // dungeon id
-        public string xy => $"{cid % 65536}:{cid / 65536}";
+        public string xy => cid.CidToString();
         //          [JsonProperty("t")]
         public int type { get; set; }
         public string kind => type switch

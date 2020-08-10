@@ -1,4 +1,4 @@
-﻿<local:UserTab x:Class="COTG.Views.DefensePage"
+﻿<local:UserTab x:Class="COTG.Views.HitTab"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-      DataContext="Defense"
+      DataContext="Hits"
       mc:Ignorable="d">
     <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
@@ -142,7 +142,6 @@
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
-            
             <telerikGrid:RadDataGrid.Commands  >
                 <model:DefenseTapCommand   />
             </telerikGrid:RadDataGrid.Commands>
@@ -251,6 +250,5 @@
                                                          Function="Sum" />
             </telerikGrid:RadDataGrid.AggregateDescriptors>-->
         </telerikGrid:RadDataGrid>
-      
     </Grid>
 </local:UserTab>

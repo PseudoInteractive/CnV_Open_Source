@@ -403,7 +403,7 @@ namespace COTG
 
         public static string CidToString(this int cid)
         {
-            return $"{cid % 65536}:{cid / 65536}";
+            return $"{cid % 65536,3:D}:{cid / 65536,3:D}";
         }
         public static int FromCoordinate(this string s)
         {

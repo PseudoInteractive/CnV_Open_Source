@@ -41,6 +41,7 @@ namespace COTG.Views
         public static float cameraZoom=64;
         public static float cameraZoomLag=64;
         public float eventTimeOffset;
+        public float eventTimeOffsetLag;
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush;
         static public Color nameBrush, myNameBrush;
@@ -328,9 +329,10 @@ namespace COTG.Views
                 var gain = (1 - MathF.Exp(-4 * dt));
                 cameraCLag += (cameraC - cameraCLag) * gain;
                 cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
+                eventTimeOffsetLag += (eventTimeOffset - eventTimeOffsetLag) * gain;
                 //                cameraZoomLag += (cameraZoom
 
-                var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffset);
+                var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
 
                 float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
                 int tick = (Environment.TickCount >> 3) & 0xfffff;
@@ -541,7 +543,7 @@ namespace COTG.Views
                     if (DefensePage.IsVisible())
                     {
                         var reports = DefensePage.instance.history;
-                        if (reports.Count > 0)
+                        if (reports.Length > 0)
                         {
 
                             var counts = new Dictionary<int, IncomingCounts>();
@@ -576,7 +578,7 @@ namespace COTG.Views
                                         ++count.prior;
                                 }
 
-                                if (dt1 <= journeyTime || dt1 < -postAttackDisplayTime)
+                                if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
                                     continue;
                                 var c = incomingHistoryColor;
 

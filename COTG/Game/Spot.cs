@@ -35,13 +35,17 @@ namespace COTG.Game
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        public static Spot invalid = new Spot() { _cityName = "Null" };
+        public static Spot invalid = new Spot() { _cityName = "?" };
 
         public static Spot[] emptySpotSource = Array.Empty<Spot>();
         public  virtual string nameAndRemarks => cityName;
 
-        public static Spot GetOrAdd(int cid)
+        public static Spot GetOrAdd(int cid, string cityName = null)
         {
+            if( cid <= 0)
+            {
+                return invalid;
+            }
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
             {
                 Assert(City.allCities.ContainsKey(cid) == false);
@@ -57,8 +61,11 @@ namespace COTG.Game
                 
                 Spot.allSpots.TryAdd(cid, rv);
             }
+            if (cityName != null)
+                rv._cityName = cityName;
             return (rv);
         }
+        public static void UpdateName(int cid, string name) => GetOrAdd(cid, name);
         public bool isMine => pid == Player.myId;
 
         public string _cityName;
