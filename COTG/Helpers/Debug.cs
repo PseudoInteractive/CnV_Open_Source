@@ -121,16 +121,19 @@ namespace COTG
             System.Diagnostics.Trace.Assert(v);
         }
 
-        public static async Task Fatal()
+        public static void Fatal()
         {
-            try
-            {
-                await new MessageDialog("Something is amiss.", "Please Restart").ShowAsync();
-            }
-            finally
-            {
-                Application.Current.Exit();
-            }
+            App.DispatchOnUIThread(async () =>
+           {
+               try
+               {
+                   await new MessageDialog("Something is amiss.", "Please Restart").ShowAsync();
+               }
+               finally
+               {
+                   Application.Current.Exit();
+               }
+           });
         }
     }
 }

@@ -261,7 +261,7 @@ namespace COTG.JSON
                                       army.sumDef = sumDef.ToArray();
                                       Array.Sort(army.sumDef);
 
-                                      if (!ttl.IsNullOrEmpty() || army.troops==null)
+                                      if (!ttl.IsNullOrEmpty() )
                                           army.troops = ttl.ToArray();
                                       Array.Sort(army.troops);
                                       spot.incoming = spot.incoming.ArrayAppend(army);

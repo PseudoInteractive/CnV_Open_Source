@@ -22,8 +22,8 @@ namespace COTG.Game
         public byte type; // see Report types
         public string Type => type < Report.typeAttackCount ? Report.typeStrings[type] : "Def";
 
-        public TroopTypeCount[] troops { get; set; }
-        public TroopTypeCount[] sumDef { get; set; }
+        public TroopTypeCount[] troops { get; set; } = Array.Empty<TroopTypeCount>();
+        public TroopTypeCount[] sumDef { get; set; } = Array.Empty<TroopTypeCount>();
         // todo
         public bool isPending { get; set; }
         public bool isAttack { get; set; }

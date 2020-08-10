@@ -54,8 +54,13 @@ namespace COTG.Game
         }
         static public uint FaithColor16(int type)
         {
-            if (type == 7)
+            if (type == 7)// ibria is orange not white
                 return RGB16(0xff,0xB0,0x00);
+            if (type == 2)//vex is red, not green
+                return RGB16(0xff, 0x3F, 0x3F);
+            if( type == 1)//evara is green not ref
+                return RGB16(0x3f, 0xFF, 0x3F);
+
             return RGB16((type & 1) != 0 ? 0xFFu : 0x3Fu, (type & 2) != 0 ? 0xFFu : 0x3Fu, (type & 4) != 0 ? 0xFFu : 0x3Fu);
 
         }

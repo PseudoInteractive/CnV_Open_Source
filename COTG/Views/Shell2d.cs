@@ -55,8 +55,8 @@ namespace COTG.Views
         static readonly Color attackColor = Colors.DarkRed;
         static readonly Color defenseColor = Colors.DarkCyan;
         static readonly Color artColor = Colors.DarkOrange;
-        static readonly Color senatorColor = Colors.MediumVioletRed;
-        static readonly Color incomingHistoryColor = Color.FromArgb(127, 20, 200, 200);// (0xFF8B008B);// Colors.DarkMagenta;
+        static readonly Color senatorColor = Colors.OrangeRed;
+        static readonly Color incomingHistoryColor = Color.FromArgb(255, 20, 200, 200);// (0xFF8B008B);// Colors.DarkMagenta;
         static readonly Color raidColor = Colors.Yellow;
 //        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
         static readonly Color selectColor = Colors.DarkMagenta;
@@ -222,6 +222,11 @@ namespace COTG.Views
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
 		{
+            if(args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
+            {
+                Fatal();
+                return;
+            }
             worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri($"ms-appx:///Assets/world.png"));
           //  while (JSClient.cid == 0)
            //     await Task.Delay(1 * 1000);
@@ -540,70 +545,91 @@ namespace COTG.Views
 
                 if (!IsCityView())
                 {
-                    if (DefensePage.IsVisible())
+                    if (DefensePage.IsVisible()||HitTab.IsVisible())
                     {
-                        var reports = DefensePage.instance.history;
-                        if (reports.Length > 0)
+                        for (var dfof = 0; dfof < 2; ++dfof)
                         {
-
-                            var counts = new Dictionary<int, IncomingCounts>();
-                            foreach (var attack in reports)
+                            if( dfof == 0)
                             {
-                                var targetCid = attack.defCid;
-                                var c1 = targetCid.CidToCC();
-                                var c0 = attack.atkCid.CidToCC();
-                                // cull (should do this pre-transform as that would be more efficient
-                                if (c0.X.Min(c1.X) >= clientSpan.X)
+                                if (!DefensePage.IsVisible())
                                     continue;
-                                if (c0.X.Max(c1.X) <= 0.0f)
-                                    continue;
-                                if (c0.Y.Min(c1.Y) >= clientSpan.Y)
-                                    continue;
-                                if (c0.Y.Max(c1.Y) <= 0.0f)
-                                    continue;
-                                var dt1 = attack.TimeToArrival(serverNow);
-                                
-                                // before attack
-                                var journeyTime = attack.journeyTime;
-                                {
-                                    // register attack
-                                    if (!counts.TryGetValue(targetCid, out var count))
-                                    {
-                                        count = new IncomingCounts();
-                                        counts.Add(targetCid, count);
-                                    }
-                                    if (dt1 > 0)
-                                        ++count.incoming;
-                                    else
-                                        ++count.prior;
-                                }
-
-                                if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
-                                    continue;
-                                var c = incomingHistoryColor;
-
-                                if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
-                                {
-                                    continue;
-                                    c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
-                                }
-                                DrawAction( ds, dt1, journeyTime,  rectSpan,  c0, c1, c);
-                                //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
-                                //var mid = progress.Lerp(c0, c1);
-                                //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                                //ds.FillCircle(mid, span, shadowBrush);
-                                //var midS = mid - shadowOffset;
-                                //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                                //ds.FillCircle(midS, span, raidBrush);
                             }
-                            foreach (var i in counts)
+                            else
                             {
-                                var cid = i.Key;
-                                var count = i.Value;
-                                var c = cid.CidToCC();
-                                DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
+                                if (!HitTab.IsVisible())
+                                    continue;
+
+                            }
+                            var reports = dfof == 0 ? DefensePage.instance.history: HitTab.instance.history;
+                            if (reports.Length > 0)
+                            {
+
+                                var counts = new Dictionary<int, IncomingCounts>();
+                                foreach (var attack in reports)
+                                {
+                                    var targetCid = attack.defCid;
+                                    var c1 = targetCid.CidToCC();
+                                    var c0 = attack.atkCid.CidToCC();
+                                    // cull (should do this pre-transform as that would be more efficient
+                                    if (c0.X.Min(c1.X) >= clientSpan.X)
+                                        continue;
+                                    if (c0.X.Max(c1.X) <= 0.0f)
+                                        continue;
+                                    if (c0.Y.Min(c1.Y) >= clientSpan.Y)
+                                        continue;
+                                    if (c0.Y.Max(c1.Y) <= 0.0f)
+                                        continue;
+                                    var dt1 = attack.TimeToArrival(serverNow);
+
+                                    // before attack
+                                    var journeyTime = attack.journeyTime;
+                                    {
+                                        // register attack
+                                        if (!counts.TryGetValue(targetCid, out var count))
+                                        {
+                                            count = new IncomingCounts();
+                                            counts.Add(targetCid, count);
+                                        }
+                                        if (dt1 > 0)
+                                            ++count.incoming;
+                                        else
+                                            ++count.prior;
+                                    }
+
+                                    if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
+                                        continue;
+                                    var c = attack.type switch {
+                                        Report.typeAssault => Color.FromArgb(255,0x7e,0x3e,0xd4),
+                                        Report.typeSiege=> Color.FromArgb(255,0xcf,0x50,0x07),
+                                        Report.typeSieging => Color.FromArgb(255,0xc5,0x7f,0x4a),
+                                        Report.typePlunder => Color.FromArgb(255,0x28,0x86,0xc0),
+                                        Report.typeScout => Color.FromArgb(255,0xc8,0x2d,0xbf),
+
+                                        _ => incomingHistoryColor };
+
+                                    if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
+                                    {
+                                        continue;
+                                        c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                    }
+                                    DrawAction(ds, dt1, journeyTime, rectSpan, c0, c1, c);
+                                    //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
+                                    //var mid = progress.Lerp(c0, c1);
+                                    //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                                    //ds.FillCircle(mid, span, shadowBrush);
+                                    //var midS = mid - shadowOffset;
+                                    //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                                    //ds.FillCircle(midS, span, raidBrush);
+                                }
+                                foreach (var i in counts)
+                                {
+                                    var cid = i.Key;
+                                    var count = i.Value;
+                                    var c = cid.CidToCC();
+                                    DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
 
 
+                                }
                             }
                         }
                     }
@@ -880,9 +906,7 @@ namespace COTG.Views
         }
         public static Color GetShadowColor(this Color c)
         {
-            const float t1 = 0.625f;
-            const float t0 = 1.0f - t1;
-            return Color.FromArgb(128, (byte)(c.R * t0).RoundToInt(), (byte)(c.G * t0).RoundToInt(), (byte) (c.B * t0).RoundToInt() );
+            return Color.FromArgb(128,(byte)(c.R>>1),(byte)(c.G>>1),(byte)(c.B >>1) );
 //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
 //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
         }

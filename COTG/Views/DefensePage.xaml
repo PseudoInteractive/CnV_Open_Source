@@ -165,11 +165,11 @@
                                        PropertyName="aPlyr" />
                 <telerikGrid:DataGridTextColumn Width="60"
                                        PropertyName="defC"
-                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       CellContentStyle="{StaticResource CenterAlignLink}"
                                        SizeMode="Fixed" />
                 <telerikGrid:DataGridTextColumn Width="60"
                                        PropertyName="atkC"
-                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       CellContentStyle="{StaticResource CenterAlignLink}"
                                        SizeMode="Fixed" />
                 <telerikGrid:DataGridNumericalColumn Width="50"
                                             PropertyName="dTS"

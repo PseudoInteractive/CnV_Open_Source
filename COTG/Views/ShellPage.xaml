@@ -168,6 +168,7 @@
                             <Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
+                                    IsTabStop="True"
                                         StepFrequency="10"
                                     SmallChange="10" LargeChange="60"
                                         HorizontalAlignment="Stretch"
