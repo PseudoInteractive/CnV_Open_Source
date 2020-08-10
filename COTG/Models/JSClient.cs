@@ -925,6 +925,7 @@ namespace COTG
                                     var cid = jso.GetAsInt("cid");
                                     City.build = City.focus = City.GetOrAddCity(cid);
                                     NavStack.Push(cid);
+                                    App.DispatchOnUIThreadLow(() => ShellPage.instance.coords.Text = cid.CidToString() );
                                     ShellPage.cameraC = cid.CidToWorldV();
                                     //Note.L("cid=" + cid.CidToString());
                                     jsVars.gameMSAtStart = jso.GetAsInt64("time");

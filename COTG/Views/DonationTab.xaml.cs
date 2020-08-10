@@ -82,8 +82,12 @@ namespace COTG.Views
             else
             {
                 // Not listening
-                donationGrid.ItemsSource = null;
-                BlessedCity.senderCity = null;
+                App.DispatchOnUIThreadSneaky(() =>
+                {
+                    blessedGrid.ItemsSource = null;
+                    donationGrid.ItemsSource = null;
+                });
+                   BlessedCity.senderCity = null;
             }
             base.VisibilityChanged(visible);
 

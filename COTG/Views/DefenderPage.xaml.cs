@@ -89,8 +89,8 @@ namespace COTG.Views
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             (var hit,var column,var pointerPoint) = Spot.HitTest(sender, e);
-            if (hit != null)
-                defenderGrid.ShowRowDetailsForItem(hit);
+            //if (hit != null)
+            //    defenderGrid.ShowRowDetailsForItem(hit);
 
             Spot.ProcessPointerPress(sender, e);
         }
@@ -164,8 +164,13 @@ namespace COTG.Views
 
         public override void VisibilityChanged(bool visible)
         {
-          //  Log("Vis change" + visible);
-            if(visible)
+            //  Log("Vis change" + visible);
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                defenderGrid.ItemsSource = Spot.emptySpotSource;
+                armyGrid.ItemsSource = Army.empty;
+            });
+            if (visible)
                 IncomingOverview.Process(false);
             base.VisibilityChanged(visible);
 

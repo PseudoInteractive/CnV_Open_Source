@@ -162,6 +162,9 @@ namespace COTG.Views
             { "Defender" , "\uEA18" },//tab.DataContext as string,
             {    "Defense", "\uEA0D" },
             {    "Recent" ,  "\uF738" },
+            { "alliance", "\uE902" },
+            { "Outgoing","\uE189" },
+            { "Hits","\uEA69" }
         };
         private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {

@@ -517,8 +517,9 @@ namespace COTG.Game
             //   CityGrid.ScrollItemIntoView(city);
             if (MainPage.IsVisible())
             {
+                MainPage.CityGrid.SetCurrentItem(this);
                 MainPage.CityGrid.SelectItem(this);
-                MainPage.CityGrid.ScrollItemIntoView(this);
+ //               MainPage.CityGrid.ScrollItemIntoView(this);
             }
             // todo: donations page and boss hunting
             ShellPage.instance.cityBox.SelectedItem = this;

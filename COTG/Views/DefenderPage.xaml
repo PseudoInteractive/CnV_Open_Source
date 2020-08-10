@@ -36,7 +36,6 @@
                         PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
-                        RowDetailsDisplayMode="Single"
                         AlternationStep="2"
                         SelectionMode="Single"
                         ColumnDataOperationsMode="Flyout"

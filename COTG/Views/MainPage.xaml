@@ -26,6 +26,7 @@
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="0"
+                       EnsureCurrentItemIntoView="True"
                        
                         IsTabStop="True"
                         AllowFocusOnInteraction="True"
