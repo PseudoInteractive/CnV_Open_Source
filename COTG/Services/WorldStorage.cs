@@ -94,7 +94,7 @@ namespace COTG.Services
                             historyBuffer = new uint[entries][];
                             historyBuffer[priorEntry] = delta;
                             var outCount = delta.Length;
-                            if (outCount < 32)
+                            if (outCount < 32 || JSClient.subId!=0) // don't save file if playing a sub as there might be race conditions
                             {
                                 deltaIsSmall = true;
                             }

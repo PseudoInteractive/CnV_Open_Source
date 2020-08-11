@@ -211,11 +211,11 @@ namespace COTG
                 ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
                 var s = eventArgs.Uri.Fragment;
                 Debug.Log(s);
-                // format is ?s=1&w=20
-                if(s.Length >= 3)
+                // format is sub?s=1&w=
+              //  if (s.Length >= 3)
                 {
-                    JSClient.subId = int.Parse(s.Substring(3,1));
-                    JSClient.world = int.Parse(s.Substring(6));
+                    JSClient.subId = 1;// int.Parse(s.Substring(3,1));
+                    JSClient.world = 20;// int.Parse(s.Substring(7));
 
                 }
             }

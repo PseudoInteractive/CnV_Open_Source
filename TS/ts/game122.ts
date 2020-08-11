@@ -17485,7 +17485,7 @@ var cotgsubscribe = amplify;
 
           var X5U = ppdt["r"];
           ppdt[_s(301)] = 0;
-        console.log(P8);
+        //console.log(P8);
         var z5U = Number(ppdt[_s(Y9y | 727)]);
         n9F();
         getCity(z5U);
@@ -50455,8 +50455,13 @@ console.log("Bad");
       X92.done(function(M92) {
         if (M92 == 1) Y6(_s(3735));
         if (M92 == 0) {
-          console.log(window
-            .location.href + _s(1093));
+ //         console.log(window.location.href + _s(1093));
+
+            let wrapper = {
+                sub:1
+            };
+            window['external']['notify'](JSON.stringify(wrapper));
+
         //  newWin.location = window.location.href + _s(1093);
         //  newWin.focus();
         }

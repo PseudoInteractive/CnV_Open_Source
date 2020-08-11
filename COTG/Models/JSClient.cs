@@ -76,7 +76,7 @@ namespace COTG
         const int researchCount = 64; // I think this is really 49
         public static byte[] research = new byte[researchCount];
         public static int world = 20;
-        public static int subId = 1;
+        public static int subId = 0;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
         public static string httpsHostString;
@@ -196,7 +196,7 @@ namespace COTG
             }
             else
             {
-                Windows.System.Launcher.LaunchUriAsync(args.Uri);
+                Launcher.LaunchUriAsync(args.Uri);
             }
         }
 
@@ -971,6 +971,11 @@ namespace COTG
                                 {
                                     var msg = jsp.Value.GetString();
                                     Note.Show(msg);
+                                    break;
+                                }
+                            case "sub":
+                                {
+                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:sub{world}")));
                                     break;
                                 }
                             case "cityclick":

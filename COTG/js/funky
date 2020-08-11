@@ -52836,6 +52836,10 @@ var cotgsubscribe = amplify;
                 if (M92 == 0) {
                     console.log(window
                         .location.href + _s(1093));
+                    let wrapper = {
+                        sub: 1
+                    };
+                    window['external']['notify'](JSON.stringify(wrapper));
                     //  newWin.location = window.location.href + _s(1093);
                     //  newWin.focus();
                 }
