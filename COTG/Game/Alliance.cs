@@ -84,27 +84,34 @@ namespace COTG.Game
                             foreach (var prop in dRoot.EnumerateObject())
                             {
                                 byte relationship = (byte)int.Parse(prop.Name);
-                                foreach (var a in prop.Value.EnumerateArray())
-                                {
-                                    var alliance = new Alliance();
-                                    byte allianceId = (byte)a.GetAsInt("id");
-                                    string aname = a.GetAsString("n");
+                        if (prop.Value.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var a in prop.Value.EnumerateArray())
+                            {
+                                var alliance = new Alliance();
+                                byte allianceId = (byte)a.GetAsInt("id");
+                                string aname = a.GetAsString("n");
 
-                                    alliance.name = aname;
-                                    alliance.id = allianceId;
+                                alliance.name = aname;
+                                alliance.id = allianceId;
 
-                                    _all.Add(allianceId, alliance);
-                                    _nameToId.Add(aname, allianceId);
+                                _all.Add(allianceId, alliance);
+                                _nameToId.Add(aname, allianceId);
 
-                                   
-                                    var good = _diplomacy.TryAdd(allianceId, relationship);
-                                    Assert(good == true);
-                                }
 
-                                //           { "1":[{ "id":"7","n":"España"}],"2":[{ "id":"80","n":"Blood & Thunder"}],"3":[{ "id":"1","n":"Horizon"},{ "id":"2","n":"The Lunatic Asylum"},{ "id":"49","n":"Unidos-"},{ "id":"62","n":"OvernightObservation"}]}
+                                var good = _diplomacy.TryAdd(allianceId, relationship);
+                                Assert(good == true);
+                            }
+
+                            //           { "1":[{ "id":"7","n":"España"}],"2":[{ "id":"80","n":"Blood & Thunder"}],"3":[{ "id":"1","n":"Horizon"},{ "id":"2","n":"The Lunatic Asylum"},{ "id":"49","n":"Unidos-"},{ "id":"62","n":"OvernightObservation"}]}
 
                             }
                         }
+                    }
+else
+                {
+                    Log("Alliance Error!");
+                }
                     }catch(Exception _e)
                     {
                         Log(_e);
@@ -124,73 +131,82 @@ namespace COTG.Game
             }
             Assert(!Player.all.IsNullOrEmpty());
             var alliances = new List<string>();
-
-            using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
+            try
             {
-                var r = jso.RootElement;
-                if (r.TryGetProperty("1", out var prop2))
+
+                using (var jso = await Post.SendForJson("includes/gR.php", "a=1"))
                 {
-                    foreach (var alliance in prop2.EnumerateArray())
+                    var r = jso.RootElement;
+                    if (r.TryGetProperty("1", out var prop2))
                     {
-                        var alName = alliance.GetAsString("1");
-                        //   var al = alName == my.name ? my : new Alliance() { name = alName };
-                        // Log(alName);
-                        alliances.Add(alName);
+                        foreach (var alliance in prop2.EnumerateArray())
+                        {
+                            var alName = alliance.GetAsString("1");
+                            //   var al = alName == my.name ? my : new Alliance() { name = alName };
+                            // Log(alName);
+                            alliances.Add(alName);
+                        }
                     }
                 }
-            }
 
-            foreach (var _al in alliances)
-            {
-                var alName = _al;
-                //                var al = _al;
-                using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
+                foreach (var _al in alliances)
                 {
-                    var id = jsa.RootElement.GetAsInt("id");
-                    if (all.TryGetValue(id, out var al) == false)
+                    var alName = _al;
+                    //                var al = _al;
+                    using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
                     {
-                        al = new Alliance() { id = id, name = alName };
-                        _all.Add(id, al);
-                        _nameToId.Add(alName, id);
-
-                    }
-
-
-                    //  _all.Add(id, al);
-                    //  _nameToId.Add(alName, id);
-                    int counter = 0;
-                    if (jsa.RootElement.TryGetProperty("me", out var meList))
-                    {
-                        foreach (var me in meList.EnumerateArray())
+                        var id = jsa.RootElement.GetAsInt("id");
+                        if (all.TryGetValue(id, out var al) == false)
                         {
-                            var meName = me.GetString("n");
-                            if (meName == null)
+                            al = new Alliance() { id = id, name = alName };
+                            _all.Add(id, al);
+                            _nameToId.Add(alName, id);
+
+                        }
+
+
+                        //  _all.Add(id, al);
+                        //  _nameToId.Add(alName, id);
+                        int counter = 0;
+                        if (jsa.RootElement.TryGetProperty("me", out var meList))
+                        {
+                            foreach (var me in meList.EnumerateArray())
                             {
-                                //Log("Missing name? " + counter);
-                                //foreach (var member in me.EnumerateObject())
-                                //{
-                                //    Log($"{member.Name}:{member.Value.ToString()}");
-                                //}
-                            }
-                            else if (Player.nameToId.TryGetValue(meName, out var pId))
-                            {
-                                ++counter;
-                                var p = Player.all[pId];
-                                p.alliance = (ushort)id;
-                                p.cities = (byte)me.GetInt("c");
-                                p.pointsH = (ushort)(me.GetInt("s") / 100);
+                                var meName = me.GetString("n");
+                                if (meName == null)
+                                {
+                                    //Log("Missing name? " + counter);
+                                    //foreach (var member in me.EnumerateObject())
+                                    //{
+                                    //    Log($"{member.Name}:{member.Value.ToString()}");
+                                    //}
+                                }
+                                else if (Player.nameToId.TryGetValue(meName, out var pId))
+                                {
+                                    ++counter;
+                                    var p = Player.all[pId];
+                                    p.alliance = (ushort)id;
+                                    p.cities = (byte)me.GetInt("c");
+                                    p.pointsH = (ushort)(me.GetInt("s") / 100);
+
+                                }
+                                else
+                                {
+                                    Log("Error: " + meName);
+                                }
 
                             }
-                            else
-                            {
-                                Log("Error: " + meName);
-                            }
-
                         }
                     }
                 }
             }
-        
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+
+
             nameToId = _nameToId;
             all = _all;
         }

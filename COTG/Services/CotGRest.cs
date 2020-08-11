@@ -339,7 +339,8 @@ namespace COTG.Services
     public class ScanDungeons : RestAPI
     {
         int cid;
-        const string secret = "Xs4b2261f55dlme55s";
+        //                       Xs4b22320360lme55s
+        public static string secret;// = "Xs4b2261f55dlme55s";
         public ScanDungeons(int _cid) : base("includes/fCv.php")
         {
             cid = _cid;
@@ -351,7 +352,8 @@ namespace COTG.Services
                 await GetCity.Post(_cid);
             //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();
-            new ScanDungeons(_cid).Post();
+            if(secret != null)
+                new ScanDungeons(_cid).Post();
 
         }
         public override string GetPostContent()
@@ -378,13 +380,16 @@ namespace COTG.Services
                     dataReader.ReadBytes(temp);
                 }
                 var dec2 = Encoding.UTF8.GetString(temp);
-                var temps = Aes.Decode(dec2, secret);
-                var json = JsonDocument.Parse(temps);
+                if (!dec2.IsNullOrEmpty())
+                {
+                    var temps = Aes.Decode(dec2, secret);
+                    var json = JsonDocument.Parse(temps);
 
 
-                var jse = json.RootElement;
-                jse = jse[0];
-                Dungeon.ShowDungeonList(city, jse);
+                    var jse = json.RootElement;
+                    jse = jse[0];
+                    Dungeon.ShowDungeonList(city, jse);
+                }
             }
             catch (Exception e)
             {

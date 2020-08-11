@@ -5,9 +5,11 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4" 
+  xmlns:iot2="http://schemas.microsoft.com/appx/manifest/iot/windows10/2" 
   xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
   xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/windowsTemplateStudio"
-  IgnorableNamespaces="uap mp genTemplate uap5 uap3">
+  IgnorableNamespaces="uap mp genTemplate uap5 uap3 desktop4 iot2">
 
   <Identity
     Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
@@ -32,6 +34,8 @@
 
   <Applications>
     <Application Id="App"
+      desktop4:SupportsMultipleInstances="true"
+      iot2:SupportsMultipleInstances="true"
       Executable="$targetnametoken$.exe"
       EntryPoint="COTG.App">
       <uap:VisualElements
@@ -72,7 +76,7 @@
           </uap5:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="cotg" DesiredView="useMore">
-            <uap:Logo>images\castle0.png</uap:Logo>
+            <uap:Logo>Assets\protocolImage.png</uap:Logo>
             <uap:DisplayName>COTG</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>

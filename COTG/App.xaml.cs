@@ -206,6 +206,19 @@ namespace COTG
 
         protected override async void OnActivated(IActivatedEventArgs args)
         {
+            if(args.Kind==ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
+                var s = eventArgs.Uri.Fragment;
+                Debug.Log(s);
+                // format is ?s=1&w=20
+                if(s.Length >= 3)
+                {
+                    JSClient.subId = int.Parse(s.Substring(3,1));
+                    JSClient.world = int.Parse(s.Substring(6));
+
+                }
+            }
             await ActivationService.ActivateAsync(args);
             //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
             //   typeof(Analytics), typeof(Crashes));

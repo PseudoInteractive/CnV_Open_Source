@@ -318,61 +318,71 @@ namespace COTG.Game
         public async static void UpdateSenatorInfo()
         {
             var a = await Post.SendForJson("overview/senfind.php", "a=0");
-            var empty = Array.Empty<SenatorInfo>();
-            var changed = new HashSet<City>();
-            foreach (var city in City.allCities.Values)
+
+            try
             {
-                if (city.senatorInfo != empty)
+                var empty = Array.Empty<SenatorInfo>();
+                var changed = new HashSet<City>();
+                foreach (var city in City.allCities.Values)
                 {
-                    city.senatorInfo = empty;
+                    if (city.senatorInfo != empty)
+                    {
+                        city.senatorInfo = empty;
+                        changed.Add(city);
+                    }
+
+                }
+
+
+
+                foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
+                {
+                    var cid = cit[0].GetInt32();
+                    //  Log(cid.ToString());
+                    var city = City.allCities[cid];
+                    List<SenatorInfo> sens = new List<SenatorInfo>();
+                    foreach (var target in cit[7].EnumerateArray())
+                    {
+                        sens.Add(new SenatorInfo()
+                        {
+                            type = SenatorInfo.Type.recruit,
+                            count = (byte)target[0].GetInt32(),
+                            time = target[1].GetString().ParseDateTime(false)
+                        });
+                    }
+                    var idle = cit[4].GetByte();
+                    if (idle != 0)
+                    {
+                        sens.Add(new SenatorInfo()
+                        {
+                            type = SenatorInfo.Type.idle,
+                            count = idle
+                        });
+                    }
+
+                    foreach (var target in cit[8].EnumerateArray())
+                    {
+                        sens.Add(new SenatorInfo()
+                        {
+                            type = SenatorInfo.Type.settle,
+                            count = 1,
+                            target = target[0].GetInt32(),
+                            time = target[1].GetString().ParseDateTime(false)
+                        });
+                    }
+                    city.senatorInfo = sens.ToArray();
                     changed.Add(city);
+
                 }
 
+                changed.NotifyChange(nameof(City.senny));
             }
-
-
-
-            foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
+            catch (Exception ex)
             {
-                var cid = cit[0].GetInt32();
-              //  Log(cid.ToString());
-                var city = City.allCities[cid];
-                List<SenatorInfo> sens = new List<SenatorInfo>();
-                foreach (var target in cit[7].EnumerateArray())
-                {
-                    sens.Add(new SenatorInfo()
-                    {
-                        type = SenatorInfo.Type.recruit,
-                        count = (byte)target[0].GetInt32(),
-                        time = target[1].GetString().ParseDateTime(false)
-                    });
-                }
-                var idle = cit[4].GetByte();
-                if(idle != 0)
-                {
-                    sens.Add(new SenatorInfo()
-                    {
-                        type = SenatorInfo.Type.idle,
-                        count = idle
-                    });
-                }
-
-                foreach (var target in cit[8].EnumerateArray())
-                {
-                    sens.Add(new SenatorInfo()
-                    {
-                        type = SenatorInfo.Type.settle,
-                        count = 1,
-                        target=target[0].GetInt32(),
-                        time=target[1].GetString().ParseDateTime(false)
-                    });
-                }
-                city.senatorInfo = sens.ToArray();
-                changed.Add(city);
-
+                Log(ex);
             }
-            
-            changed.NotifyChange(nameof(City.senny));
+
+
 
         }
 

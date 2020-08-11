@@ -546,6 +546,7 @@ async function avafetch(url: string, args: string) {
 	console.log(txt);
 	return txt;
 }
+var raidSecret: string;
 
 function postppdt()
 {
@@ -553,8 +554,10 @@ function postppdt()
 	try {
 
 		console.log("Notify here");
+	
 		let creds = {
 			token: SetupHeaders(),
+			raid:raidSecret,
 			ppss: ppss,
 			player: ppdt.pn,
 			pid: ppdt.pid,

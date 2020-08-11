@@ -7094,6 +7094,8 @@ const viewModeWorld = 2;
 var pollthis;
 let D6: jsonT.City;
 var F5F;
+var P8 = 0;
+
 var a6 =
 {
     ccazzx: {
@@ -17474,11 +17476,16 @@ var cotgsubscribe = amplify;
         });
         N6();
         ppdt = o5U;
-        postppdt();
-        var X5U = ppdt["r"];
-        ppdt[_s(301)] = 0;
+
         H2 = ppdt[_s(+E3y)];
-        P8 = ppdt["pid"];
+        P8 = ppdt.pid;
+
+        raidSecret = Q3F();
+        postppdt();
+
+          var X5U = ppdt["r"];
+          ppdt[_s(301)] = 0;
+        console.log(P8);
         var z5U = Number(ppdt[_s(Y9y | 727)]);
         n9F();
         getCity(z5U);
@@ -23681,7 +23688,6 @@ var cotgsubscribe = amplify;
         }
       });
     }
-    var P8 = 0;
     var D6F = "";
 
     function k6F() {
@@ -50444,15 +50450,15 @@ console.log("Bad");
     function D0V(z92) {
       E6k.R6();
       N6();
-      var X92 = $.post(q6 + _s(7079), { a: z92 });
+      var X92 = $.post(q6 + "eSBr.php", { a: z92 });
       F6();
       X92.done(function(M92) {
         if (M92 == 1) Y6(_s(3735));
         if (M92 == 0) {
           console.log(window
             .location.href + _s(1093));
-          newWin.location = window.location.href + _s(1093);
-          newWin.focus();
+        //  newWin.location = window.location.href + _s(1093);
+        //  newWin.focus();
         }
       });
     }
@@ -55738,11 +55744,11 @@ console.log("Bad");
             .off("click");
           $(_s("5861" | 1))
             .click(function() {
-              newWin = window.open("", _s(266));
+       //      newWin = window.open("", _s(266));
               E6k.y6();
               var s92 = $(this)
                 .attr("a");
-              D0V(s92);
+              D0V(s92); // cid
             });
         }
         if ($(_s(2576))

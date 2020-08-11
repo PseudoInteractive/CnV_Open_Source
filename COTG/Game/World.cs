@@ -57,7 +57,7 @@ namespace COTG.Game
             if (type == 7)// ibria is orange not white
                 return RGB16(0xff,0xB0,0x00);
             if (type == 2)//vex is red, not green
-                return RGB16(0xff, 0x3F, 0x3F);
+                return RGB16(0xff, 0x3F, 0x6F);
             if( type == 1)//evara is green not ref
                 return RGB16(0x3f, 0xFF, 0x3F);
 

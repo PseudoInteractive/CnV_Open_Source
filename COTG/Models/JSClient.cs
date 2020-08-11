@@ -75,11 +75,12 @@ namespace COTG
 
         const int researchCount = 64; // I think this is really 49
         public static byte[] research = new byte[researchCount];
-        public static int world = 0;
+        public static int world = 20;
+        public static int subId = 1;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
         public static string httpsHostString;
-        static HttpRequestMessage anyPost;
+
         // IHttpContent content;
         public struct JSVars
         {
@@ -125,35 +126,46 @@ namespace COTG
         internal static WebView Initialize(Grid panel)
         {
 
-			try
-			{
+            try
+            {
                 view = new WebView(WebViewExecutionMode.SeparateThread)
                 {
                     //HorizontalAlignment = HorizontalAlignment.Stretch,
                     //VerticalAlignment = VerticalAlignment.Stretch,
                     //CacheMode=new BitmapCache()
                 };
-				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
-				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
+                view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
+                view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
-				view.UnviewableContentIdentified += View_UnviewableContentIdentified;
-				view.ScriptNotify += View_ScriptNotify;
-				view.DOMContentLoaded += View_DOMContentLoaded;
-				view.NavigationFailed += View_NavigationFailed;
-				view.NavigationStarting += View_NavigationStarting;
-				view.NavigationCompleted += View_NavigationCompletedAsync;
-				view.PermissionRequested += View_PermissionRequested;
+                view.UnviewableContentIdentified += View_UnviewableContentIdentified;
+                view.ScriptNotify += View_ScriptNotify;
+                view.DOMContentLoaded += View_DOMContentLoaded;
+                view.NavigationFailed += View_NavigationFailed;
+                view.NavigationStarting += View_NavigationStarting;
+                view.NavigationCompleted += View_NavigationCompletedAsync;
+                view.PermissionRequested += View_PermissionRequested;
                 view.NewWindowRequested += View_NewWindowRequested;
-              //  view.WebResourceRequested += View_WebResourceRequested1;
+                //  view.WebResourceRequested += View_WebResourceRequested1;
 
-				//   view.CacheMode = CacheMode.
-				//Grid.Se SetAlignLeftWithPanel(view, true);
-				//RelativePanel.SetAlignRightWithPanel(view, true);
-			///	RelativePanel.SetAlignTopWithPanel(view, true);
-		//		RelativePanel.SetAlignBottomWithPanel(view, true);
-				
-				view.Source = new Uri("https://www.crownofthegods.com");
-
+                //   view.CacheMode = CacheMode.
+                //Grid.Se SetAlignLeftWithPanel(view, true);
+                //RelativePanel.SetAlignRightWithPanel(view, true);
+                ///	RelativePanel.SetAlignTopWithPanel(view, true);
+                //		RelativePanel.SetAlignBottomWithPanel(view, true);
+                if (subId != 0)
+                {
+                    httpsHost = new Uri($"https://w{world}.crownofthegods.com");
+             //       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
+                }
+               // else
+                    view.Source = new Uri("https://www.crownofthegods.com");
+                if (subId != 0)
+                {
+                    Task.Delay(1000).ContinueWith(_ =>
+                    {
+                        App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}"));
+                    });
+                }
 
             }
             catch (Exception e)
@@ -592,26 +604,33 @@ namespace COTG
                 {
                     ++clChanged;
                     //  var clList = new List<string>();
-                    foreach (var cn in cityListNames.EnumerateObject())
+                    if (cityListNames.ValueKind == JsonValueKind.Object)
                     {
-                        var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
-                        lists.Add(l);
+                        foreach (var cn in cityListNames.EnumerateObject())
+                        {
+                            var l = new CityList() { name = cn.Value.GetString(), id = int.Parse(cn.Name) };
+                            lists.Add(l);
+                        }
                     }
 
                 }
+
                 if (jse.TryGetProperty("clc", out var cityListCities))
                 {
                     ++clChanged;
-                    foreach (var clc in cityListCities.EnumerateObject())
+                    if (cityListCities.ValueKind == JsonValueKind.Object)
                     {
-                        if (clc.Value.ValueKind == JsonValueKind.Null)
-                            continue;
-                        var id = int.Parse(clc.Name);
-                        var cityList = lists.Find((a) => a.id == id);
-                        foreach (var cityId in clc.Value.EnumerateArray())
+                        foreach (var clc in cityListCities.EnumerateObject())
                         {
-                            cityList.cities.Add(cityId.GetInt32());
+                            if (clc.Value.ValueKind == JsonValueKind.Null)
+                                continue;
+                            var id = int.Parse(clc.Name);
+                            var cityList = lists.Find((a) => a.id == id);
+                            foreach (var cityId in clc.Value.EnumerateArray())
+                            {
+                                cityList.cities.Add(cityId.GetInt32());
 
+                            }
                         }
                     }
 
@@ -709,7 +728,7 @@ namespace COTG
                 Log($"Nav start {args.Uri} {args.Uri}");
                 var match = urlMatch.Match(args.Uri.Host);
 
-                if (match.Groups.Count == 2 && args.Uri.LocalPath == "/" )
+                if (match.Groups.Count == 2 && (args.Uri.LocalPath == "/" || args.Uri.Fragment.Contains('&')))
                 {
                     if (httpFilter != null)
                         Debug.Fatal();  // Todo
@@ -731,7 +750,8 @@ namespace COTG
                       //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
                         httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
                         httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
-                        httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
+                        if (subId == 0)
+                            httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
                         httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
     //                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
   //                      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
@@ -769,8 +789,8 @@ namespace COTG
                             httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
                             // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
                             //    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-                            httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
+                            httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", subId.ToString());
 
                             httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                             //   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
@@ -898,6 +918,7 @@ namespace COTG
                                     var jso = jsp.Value;
                                     jsVars.s = jso.GetString("s");
                                     jsVars.token = jso.GetString("token");
+                                    ScanDungeons.secret = jso.GetString("raid");
                                     var agent = jso.GetString("agent");
                                     jsVars.cookie = jso.GetString("cookie");
 
@@ -906,7 +927,8 @@ namespace COTG
                                         foreach (var httpClient in clientPool)
                                         {
                                             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-                                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+                                            if(subId == 0)
+                                                httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
                                         }
                                     }
                                     var timeOffset = jso.GetAsInt64("timeoffset");
@@ -941,6 +963,8 @@ namespace COTG
                                     //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
                                     //   UpdatePPDT(jso.GetProperty("ppdt"));
+                                 
+
                                     break;
                                 }
                             case "error":

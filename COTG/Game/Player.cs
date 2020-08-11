@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using static COTG.Debug;
+
 namespace COTG.Game
 {
     public class Player
@@ -64,6 +66,6 @@ namespace COTG.Game
       //      Note.Show("Got Players");
 
 
-        }
+        }        
     }
 }
