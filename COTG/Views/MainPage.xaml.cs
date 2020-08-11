@@ -103,18 +103,18 @@ namespace COTG.Views
             //    Log("Removed: " + (i));
             //}
 
-            var it = e.AddedItems.FirstOrDefault();
+        //    var it = e.AddedItems.FirstOrDefault();
             
-            //foreach( var i in cityGrid.SelectedItems)
-            //{
-            //    Log("Selected: " + i.ToString());
-            //}
-            var newSel = it as City;
-        //    Assert(newSel != null);
-            if (it is null)
-                return;
-            if (newSel == City.focus)
-                return;
+        //    //foreach( var i in cityGrid.SelectedItems)
+        //    //{
+        //    //    Log("Selected: " + i.ToString());
+        //    //}
+        //    var newSel = it as Spot;
+        ////    Assert(newSel != null);
+        //    if (newSel is null)
+        //        return;
+        //    if (newSel == City.focus)
+        //        return;
            // newSel.SetFocus(true,false,true);
         }
 
@@ -213,7 +213,7 @@ namespace COTG.Views
             instance.Dispatcher.DispatchOnUIThreadLow(() =>
             {
                 City.gridCitySource.NotifyReset();
-                City.build?.SelectInUI();
+                City.GetBuild()?.SelectInUI();
             });
             
         }
@@ -339,8 +339,8 @@ namespace COTG.Views
             {
                 Raiding.UpdateTS();
                 RaidOverview.Send();
-                if(City.build!=null)
-                    GetCity.Post(City.build.cid);
+                if(City.build!=0)
+                    GetCity.Post(City.build);
                 if (cityGrid.ContextFlyout == null)
                     BuildCityContextFlyout(null);
              //  if (cityGrid.ItemsSource == App.emptyCityList )

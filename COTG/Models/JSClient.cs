@@ -455,9 +455,9 @@ namespace COTG
 			try
 			{
                 SetViewModeWorld();
-                if (City.IsMine(cityId))
+               // if (City.IsMine(cityId))
                 {
-                    City.SetFocus(cityId, false, true, false);
+                    City.SetFocus(cityId);
                 }
 
                 // if (JSClient.IsWorldView())
@@ -945,7 +945,7 @@ namespace COTG
                                     Player.myId = jso.GetAsInt("pid");
 
                                     var cid = jso.GetAsInt("cid");
-                                    City.build = City.focus = City.GetOrAddCity(cid);
+                                    City.build = City.focus = cid;
                                     NavStack.Push(cid);
                                     App.DispatchOnUIThreadLow(() => ShellPage.instance.coords.Text = cid.CidToString() );
                                     ShellPage.cameraC = cid.CidToWorldV();
@@ -985,8 +985,7 @@ namespace COTG
                                     {
                                         var pid = Player.NameToId(jso.GetAsString("player"));
                                         var city = COTG.Views.SpotTab.TouchSpot(cid, pid);
-
-                                        city._cityName = jso.GetString("name");
+                                        var name = jso.GetString("name");
                                         city.pid = pid; // todo: this shoule be an int playerId
                                                         //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");
@@ -998,12 +997,12 @@ namespace COTG
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-                                        //  Note.Show($"CityClick {city.cityName} {city.cid.CidToStringMD()}");
-                                        //if (IsWorldView())
+                                        cid.BringCidIntoWorldView(true);
+                                        if (city._cityName != name)
                                         {
-                                            // bring city into view
-                                            cid.BringCidIntoWorldView(true);
-
+                                            city._cityName = name;
+                                            if (cid == Spot.focus)
+                                                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Text = city.nameAndRemarks);
                                         }
                                     }
                                     break;

@@ -34,11 +34,18 @@ namespace COTG.Game
         public virtual event PropertyChangedEventHandler PropertyChanged;
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
+        public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
+
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public static Spot invalid = new Spot() { _cityName = "?" };
 
         public static Spot[] emptySpotSource = Array.Empty<Spot>();
         public  virtual string nameAndRemarks => cityName;
+
+        public static bool IsFocus(int cid)
+        {
+            return  focus==cid;
+        }
 
         public static Spot GetOrAdd(int cid, string cityName = null)
         {
@@ -199,7 +206,7 @@ namespace COTG.Game
                     case nameof(City.raidReturn):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            City.SetFocus(cid, false, true, false); // prevent dungeon scan on select
+                            SetFocus(); // prevent dungeon scan on select
                             Raiding.ReturnFast(cid, true);
                             return; // prevent the traiing dungeon scan
                         }
@@ -207,7 +214,7 @@ namespace COTG.Game
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            City.SetFocus(cid, false, true, false);// prevent dungeon scan on select
+                            SetFocus();// prevent dungeon scan on select
                             Raiding.ReturnSlow(cid, true);
                             return;// prevent trailing dungeon scan
                         }
@@ -217,13 +224,13 @@ namespace COTG.Game
                         break;
                 }
 
-                if (wantRaidingFocus)
-                    City.SetFocus(cid, false, wantRaidScan, false);// prevent dungeon scan on select
-                if (MainPage.IsVisible() && City.focus == this)
+                
+                if (MainPage.IsVisible() && isFocus)
                 {
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);
                 }
+                SetFocus();
             }
         }
 
@@ -312,7 +319,7 @@ namespace COTG.Game
         public bool iSenny => incoming.Any((a) => a.Senny);
         public bool iArt => incoming.Any((a) => a.hasArt);
 
-        public bool isFocus => City.focus == this;
+        public bool isFocus => focus == cid;
         public bool isHover => viewHover == cid;
         public static bool IsHover(int cid)
         {
@@ -330,17 +337,17 @@ namespace COTG.Game
                 {
                     rv.Add(viewHover);
                 }
-                if (City.focus != null)
+                if (focus !=0)
                 {
-                    var cid = City.focus.cid;
+                    var cid = City.focus;
                     if (cid != viewHover && !selected.Contains(cid))
                     {
                         rv.Add(cid);
                     }
                 }
-                if (City.build != null && City.build != City.focus)
+                if (City.build != 0 && City.build != focus)
                 {
-                    var cid = City.build.cid;
+                    var cid = City.build;
                     if (cid != viewHover && !selected.Contains(cid))
                     {
                         rv.Add(cid);
@@ -450,6 +457,22 @@ namespace COTG.Game
         {
             return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
         }
+        public void SetFocus( )
+        {
+            SetFocus(cid);
+        }
+        public static void SetFocus(int cid)
+        {
+            var changed = cid != focus;
+            focus = cid;
+            if(changed)
+            {
+                var spot = Spot.GetOrAdd(cid);
+                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Text = spot.nameAndRemarks);
+            }
+            cid.BringCidIntoWorldView(true);
+        }
+
         //int IKeyedItem.GetKey()
         //{
         //    return cid;

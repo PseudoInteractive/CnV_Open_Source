@@ -304,6 +304,7 @@ namespace COTG.Services
         }
         public static Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
+            Assert(_cid > 65536);
             return (new GetCity(_cid, _action)).Post();
 
         }

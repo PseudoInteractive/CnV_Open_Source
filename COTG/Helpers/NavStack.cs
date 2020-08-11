@@ -135,13 +135,19 @@ namespace COTG.Helpers
         void ICommand.Execute(object parameter)
         {
             var delta = (int)parameter;
-            while (delta < 0)
+            if (delta < 0)
             {
-                Back(++delta != 0);
+                do
+                {
+                    Back(++delta != 0);
+                } while (delta < 0);
             }
-            while (delta > 0)
+            else if (delta > 0)
             {
-                Forward(--delta != 0);
+                do
+                {
+                    Forward(--delta != 0);
+                } while (delta > 0);
             }
         }
         event EventHandler ICommand.CanExecuteChanged

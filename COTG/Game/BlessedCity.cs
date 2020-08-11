@@ -41,7 +41,7 @@ namespace COTG.Game
                 bc.spot._cityName = city[0].GetString();
                 bc.spot.pid = Player.NameToId(city[2].GetString());
                 bc.virtue = city[3].GetString();
-                bc.blessedUntil = city[5].GetString().ParseDateTime(false);
+                bc.blessedUntil = city[5].GetString().ParseDateTime(true);
                 bc.wood = city[6].GetInt32();
                 bc.stone = city[7].GetInt32();
                 bc.pri = city[8].GetInt32();

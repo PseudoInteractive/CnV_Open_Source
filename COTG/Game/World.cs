@@ -115,7 +115,10 @@ namespace COTG.Game
                     return 0;
                 var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
                 var tt = distanceReference.GetRaidTroopType();
-                return d * Enum.ttTravel[tt] /(60f* Enum.ttSpeedBonus[tt]);
+                var rv = d * Enum.ttTravel[tt] /(60f* Enum.ttSpeedBonus[tt]);
+                if (Enum.IsWaterRaider(tt))
+                    rv += 1.0f;
+                return rv;
             }
             }
 

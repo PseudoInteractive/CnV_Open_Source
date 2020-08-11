@@ -77,15 +77,16 @@
                       SelectedValuePath="id"
                       DisplayMemberPath="name"
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
-                      VerticalAlignment="Center"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
                       Margin="10,2,0,0" />
                     <ComboBox x:Name="cityBox" x:FieldModifier="public"
                       Width="200"
                       DisplayMemberPath="nameAndRemarks"
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
-                      VerticalAlignment="Center"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
                       Margin="10,2,0,0" />
                     <TextBox x:Name="coords" Margin="10,2,0,0" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+                    <TextBlock x:Name="focus" Margin="10,2,0,0" Width="200" TextAlignment="Center" VerticalAlignment="Center" x:FieldModifier="public" ToolTipService.ToolTip="Spot with Focus"/>
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" />
@@ -168,6 +169,7 @@
                             <Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
+                                    AllowFocusOnInteraction="True"
                                     IsTabStop="True"
                                         StepFrequency="10"
                                     SmallChange="10" LargeChange="60"

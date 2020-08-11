@@ -463,7 +463,7 @@ namespace COTG.Views
         }
         private async void TestGoCity(object sender, RoutedEventArgs e)
         {
-            await GetCity.Post(City.focus.cid);
+            await GetCity.Post(City.focus);
 
         }
         //private async void GetWorldInfo(object sender, RoutedEventArgs e)
@@ -488,10 +488,10 @@ namespace COTG.Views
         {
             try
             {
-                if (City.build == null)
+                if (City.build == 0)
                     return;
                 // Assert(false);
-                await GetCity.Post(City.build.cid, (jse, city) =>
+                await GetCity.Post(City.build, (jse, city) =>
                 {
 
                     List<BuildingCount> bd = new List<BuildingCount>();
@@ -698,7 +698,7 @@ namespace COTG.Views
             if (e.AddedItems.Any())
             {
                 var newSel = e.AddedItems?.FirstOrDefault() as City;
-                if (newSel != City.build)
+                if (newSel.cid != City.build)
                 {
                     newSel.SetBuild();
                     JSClient.ChangeCity(newSel.cid,false);
@@ -719,7 +719,7 @@ namespace COTG.Views
             }
             else
             {
-                int id = City.gridCitySource.IndexOf(City.build) + delta;
+                int id = City.gridCitySource.IndexOf(City.GetBuild()) + delta;
                 if (id < 0)
                     id += City.gridCitySource.Count;
                 if (id >= City.gridCitySource.Count)

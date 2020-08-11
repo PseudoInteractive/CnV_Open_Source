@@ -26,19 +26,14 @@ namespace COTG.Game
 
         public Raid[] raids = Array.Empty<Raid>();
 
-        public static City focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
-        public static City build; // city that has Build selection.  I.e. in city view, the city you are in
+        public static int build; // city that has Build selection.  I.e. in city view, the city you are in
 
         public override string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
-        public bool isBuild => this == build;
+        public bool isBuild => cid == build;
         public static bool IsBuild( int cid )
         {
-            return build != null && build.cid == cid;
-        }
-        public static bool IsFocus(int cid)
-        {
-            return focus != null && focus.cid == cid;
+            return build == cid;
         }
         public static City GetOrAddCity(int cid)
         {
@@ -201,6 +196,13 @@ namespace COTG.Game
 
             //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
             //            COTG.Views.MainPage.CityListUpdateAll();
+        }
+
+        internal static City GetBuild()
+        {
+            if (build!=0 && allCities.TryGetValue(build, out var city))
+                return city;
+            return null;
         }
 
         public static void CheckTipRaiding()
@@ -407,27 +409,8 @@ namespace COTG.Game
 		{
 			return !(left == right);
 		}
-        public static void SetFocus(int cid, bool fromUI, bool noRaidScan, bool getCityData)
-        {
-            if (City.allCities.TryGetValue(cid, out var city))
-            {
-                city.SetFocus( fromUI, noRaidScan, getCityData);
-            }
-        }
-
-        public void SetFocus(bool fromUI, bool noRaidScan, bool getCityData)
-        {
-            var changed = this != City.focus;
-            City.focus = this;
-            cid.BringCidIntoWorldView(true);
- //           if (!fromUI && changed && MainPage.IsVisible())
- //               MainPage.CityGrid.SelectItem(this);
-            if (!noRaidScan)
-            {
-                if (changed && MainPage.IsVisible() )
-                    ScanDungeons.Post(cid, getCityData);
-            }
-        }
+       
+       
         public static City StBuild(int cid)
         {
             var city = City.GetOrAddCity(cid);
@@ -436,12 +419,12 @@ namespace COTG.Game
         }
         public void SetBuild()
         {
-            var changed = this != City.build;
-            City.build = this;
+            var changed = cid != build;
+            City.build = cid;
 
             if ( changed )
             {
-                SetFocus(false, true, false);
+                SetFocus();
                 App.DispatchOnUIThreadLow(()=>{
                     SelectInUI();
                     ShellPage.instance.coords.Text = cid.CidToString();
@@ -617,7 +600,7 @@ namespace COTG.Game
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter);
              //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
-                City.build?.SelectInUI();
+                   City.GetBuild().SelectInUI();
             });
         }
         
