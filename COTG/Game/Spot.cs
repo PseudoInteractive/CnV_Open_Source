@@ -167,7 +167,7 @@ namespace COTG.Game
 
 
                 // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-                var wantRaidingFocus = (City.IsMine(cid) && MainPage.IsVisible());
+                var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
                 var wantRaidScan = false;
                 //                var needCityData = 
 
@@ -225,7 +225,7 @@ namespace COTG.Game
                 }
 
                 
-                if (MainPage.IsVisible() && isFocus)
+                if (MainPage.IsVisible() && (isFocus ||wantRaidScan ) )
                 {
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);

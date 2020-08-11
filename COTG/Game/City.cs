@@ -545,7 +545,9 @@ namespace COTG.Game
         public string name { get; set; }
         public int id { get; set; } // 0 is unassigned, others are pids
         public HashSet<int> cities = new HashSet<int>(); // list of cities
-
+        public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
+        public CityList( string _name ) { name = _name;id = AMath.random.Next(65536) + 10000; }
+        public CityList() { }
         public static CityList Find(int id)
         {
             foreach (var c in all)
@@ -561,11 +563,12 @@ namespace COTG.Game
             return null;
         }
         public static CityList FindForContinent(int id) => Find(id.ToString());
-
+        public static CityList FindNewCities() => Find(sNewCities); 
 
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();
         public static CityList [] selections = new [] { allCities }; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+        internal const string sNewCities = "NewCities";
 
         public static ComboBox box => ShellPage.instance.cityListBox;
         public static void SelectedChange()

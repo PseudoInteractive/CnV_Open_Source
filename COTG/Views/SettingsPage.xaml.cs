@@ -203,27 +203,53 @@ namespace COTG.Views
 		{
 			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
 			   {
-				   var r = new Random();
-				   var addedContinents = 0;
-				   List<int> changed = new List<int>();
+				   var addedCityLists = 0;
+				   var changed = new HashSet<int>();
 				   var temp = new List<string>();
 				   string sli = null;
 				   var cgs = new List<string>();
-				   foreach (var city in City.allCities.Values)
+                   var newCities = CityList.FindNewCities();
+                   if(newCities == null)
+                   {
+                       newCities = new CityList(CityList.sNewCities);
+                       CityList.all = CityList.all.ArrayAppend(newCities);
+                       ++addedCityLists;
+                   }
+                   {
+                       var priorNewCities = newCities.cities;
+                       newCities.cities= new HashSet<int>();
+                       foreach (var city in priorNewCities)
+                       {
+                           if (!CityList.IsNew(City.GetOrAddCity(city) ))
+                           {
+                               changed.Add(city);
+                           }
+                           else
+                           {
+                               newCities.cities.Add(city);
+                           }
+                       }
+                   }
+                   foreach (var city in City.allCities.Values)
 				   {
 					   var cl = CityList.FindForContinent(city.cont);
 					   if (cl == null)
 					   {
-						   var id = r.Next(65536) + 10000;
-						   cl = new CityList() { id = id, name = city.cont.ToString() };
+						   var id = AMath.random.Next(65536) + 10000;
+						   cl = new CityList( city.cont.ToString());
 						   CityList.all = CityList.all.ArrayAppend(cl);
-						   ++addedContinents;
+						   ++addedCityLists;
 					   }
 
 					   if (cl.cities.Add(city.cid))
 						   changed.Add(city.cid);
-				   }
-				   if (addedContinents > 0)
+                       if(CityList.IsNew(city))
+                       {
+                           if(newCities.cities.Add(city.cid))
+                               changed.Add(city.cid);
+                       }
+                   }
+				   if (addedCityLists > 0)
 				   {
 					   var cityList = new List<string>();
 					   foreach (var l in CityList.all)
@@ -254,11 +280,11 @@ namespace COTG.Views
 				   }
 				   if (sli != null)
 					   await Post.Send("includes/sLi.php", sli);
-				   Note.Show($"Added {addedContinents} continent citylists, updating {cgs.Count} cities");
+				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
 				   foreach (var it in cgs)
 					   await Post.Send("includes/cgS.php", it);
 				   //   JSClient.GetCitylistOverview();
-				   Note.Show($"Successfully added continent citylists :)");
+	//			   Note.Show($"Successfully added continent citylists :)");
 			   });
 		}
 

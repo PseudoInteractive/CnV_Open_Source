@@ -612,6 +612,7 @@ namespace COTG
                             lists.Add(l);
                         }
                     }
+                    lists.Sort((a, b) => a.name.CompareTo(b.name));
 
                 }
 
@@ -635,10 +636,8 @@ namespace COTG
                     }
 
                 }
-                if (clChanged > 0)
+                if (clChanged == 2 )
                 {
-                    Log("Change2");
-                    Assert(clChanged == 2);
                     App.DispatchOnUIThreadLow(() =>
                    {
                        var priorIndex = CityList.box.SelectedIndex;

@@ -153,6 +153,12 @@
                 <tg:DataGridTemplateColumn Header="Troops"
                                                        Width="20"
                                                        SizeMode="Auto">
+
+                 <tg:DataGridTemplateColumn.CellDecorationStyle>
+                <Style TargetType="Rectangle">
+                    <Setter Property="Fill" Value="Gray"/>
+                </Style>
+            </tg:DataGridTemplateColumn.CellDecorationStyle>
                     <tg:DataGridTemplateColumn.CellContentTemplate  >
                         <DataTemplate x:DataType="game:Army">
                             <StackPanel Orientation="Vertical"
@@ -211,6 +217,11 @@
                 <tg:DataGridTemplateColumn Header="Total Def"
                                                        Width="20"
                                                        SizeMode="Auto">
+                    <tg:DataGridTemplateColumn.CellDecorationStyle>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Fill" Value="Gray"/>
+                        </Style>
+                    </tg:DataGridTemplateColumn.CellDecorationStyle>
                     <tg:DataGridTemplateColumn.CellContentTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical"
