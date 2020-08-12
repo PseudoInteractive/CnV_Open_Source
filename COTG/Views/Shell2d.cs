@@ -227,7 +227,7 @@ namespace COTG.Views
                 Fatal();
                 return;
             }
-            worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri($"ms-appx:///Assets/world.png"));
+            worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri($"ms-appx:///Assets/world.dds"));
           //  while (JSClient.cid == 0)
            //     await Task.Delay(1 * 1000);
          //   var ob = World.CreateBitmap();

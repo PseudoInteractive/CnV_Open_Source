@@ -21006,6 +21006,26 @@ var cotgsubscribe = amplify;
       $(_s(+g7y))
         .hide();
     }
+
+    window['spotAttack'] = function(__x,__y)
+	{
+         P7F( Number(__x),Number(__y));
+	}
+
+      window['spotDefend'] = function (__x, __y) {
+          R7F(Number(__x), Number(__y));
+      }
+      
+      window['spotSendRes'] = function (__x, __y) {
+          h8F(Number(__x), Number(__y));
+      }
+      
+      window['spotRaid'] = function (__x, __y) {
+          o0F(Number(__x), Number(__y));
+      }
+
+      
+
     $.ajaxSetup({ global: !"1" });
     $(document)
       .ready(function() {

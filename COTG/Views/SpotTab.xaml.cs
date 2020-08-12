@@ -42,14 +42,14 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-            selectedGrid.SelectionChanged += DefenderGrid_SelectionChanged;
+            selectedGrid.SelectionChanged += SpotTabSelectionChanged;
 
         }
         public static bool IsVisible() => instance.isVisible;
 
         public static int silenceChanges;
 
-        private void DefenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        private void SpotTabSelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
             if (silenceChanges == 0)
             {

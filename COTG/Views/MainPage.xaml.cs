@@ -134,26 +134,30 @@ namespace COTG.Views
         }
 
 
-        private static List<int> GetContextCids()
+        public static List<int> GetContextCids(object sender)
         {
             var cids = new List<int>();
-            var cid = Spot.uiPress;
+            
+            var cid = (int)((sender as MenuFlyoutItem).DataContext);
             if (cid != 0)
             {
                 cids.Add(cid);
             }
-            foreach (var sel in instance.cityGrid.SelectedItems)
+            if (MainPage.IsVisible())
             {
-                if (sel is City city)
+                foreach (var sel in instance.cityGrid.SelectedItems)
                 {
-                    cids.AddIfAbsent(city.cid);
+                    if (sel is City city)
+                    {
+                        cids.AddIfAbsent(city.cid);
+                    }
                 }
             }
             return cids;
         }
-        private void ReturnSlowClick()
+        public static void ReturnSlowClick(object sender, RoutedEventArgs e)
         {
-            var cids = GetContextCids();
+            var cids = GetContextCids(sender);
             if (cids.Count == 1)
                 Raiding.ReturnSlow(cids[0], true);
             else
@@ -162,9 +166,9 @@ namespace COTG.Views
 
 
 
-        private void ReturnFastClick()
+        public static void ReturnFastClick(object sender, RoutedEventArgs e)
         {
-            var cids = GetContextCids();
+            var cids = GetContextCids(sender);
             if (cids.Count == 1)
                 Raiding.ReturnFast(cids[0], true);
             else
@@ -314,7 +318,6 @@ namespace COTG.Views
             SettingsPage.SaveAll();
             return true;
         }
-        MenuFlyout cityContextFlyout;
         private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
 		{
          //   Log("Sel update");
@@ -341,8 +344,7 @@ namespace COTG.Views
                 RaidOverview.Send();
                 if(City.build!=0)
                     GetCity.Post(City.build);
-                if (cityGrid.ContextFlyout == null)
-                    BuildCityContextFlyout(null);
+         
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;
             }
@@ -353,38 +355,38 @@ namespace COTG.Views
             base.VisibilityChanged(visible);
 
         }
-        private void BuildCityContextFlyout(TabPage newPage)
-        {
-            if(newPage!=null)
-                cityGrid.DataContext = newPage;
-            cityContextFlyout = new MenuFlyout();
-            cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
-            cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
-            if (newPage != null)
-                cityContextFlyout.XamlRoot = newPage.XamlRoot;
-            cityGrid.ContextFlyout = cityContextFlyout;
+        //private void BuildCityContextFlyout(TabPage newPage)
+        //{
+        //    if(newPage!=null)
+        //        cityGrid.DataContext = newPage;
+        //    cityContextFlyout = new MenuFlyout();
+        //    cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+        //    cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
+        //    if (newPage != null)
+        //        cityContextFlyout.XamlRoot = newPage.XamlRoot;
+        //    cityGrid.ContextFlyout = cityContextFlyout;
 
-        }
-        public override void XamlTreeChanged(TabPage newPage) {
-            //       cityGrid.ContextFlyout = null;
-            if (newPage == null)
-            {
-                cityGrid.ContextFlyout = null;
-                cityGrid.DataContext = null;
-             //   cityContextFlyout.XamlRoot = null;
-            }
-            else
-            {
-                //   cityContextFlyout.XamlRoot = null;
-                cityGrid.DataContext = newPage;
-                cityContextFlyout = new MenuFlyout();
-                cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
-                cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
-                cityContextFlyout.XamlRoot = newPage.XamlRoot;
-                cityGrid.ContextFlyout = cityContextFlyout;
+        //}
+        //public override void XamlTreeChanged(TabPage newPage) {
+        //    //       cityGrid.ContextFlyout = null;
+        //    if (newPage == null)
+        //    {
+        //        cityGrid.ContextFlyout = null;
+        //        cityGrid.DataContext = null;
+        //     //   cityContextFlyout.XamlRoot = null;
+        //    }
+        //    else
+        //    {
+        //        //   cityContextFlyout.XamlRoot = null;
+        //        cityGrid.DataContext = newPage;
+        //        cityContextFlyout = new MenuFlyout();
+        //        cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+        //        cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
+        //        cityContextFlyout.XamlRoot = newPage.XamlRoot;
+        //        cityGrid.ContextFlyout = cityContextFlyout;
 
-            }
-        } // The tab was dragged somewhere else
+        //    }
+        //} // The tab was dragged somewhere else
 
 
         public static bool IsVisible() => instance.isVisible;

@@ -362,6 +362,9 @@ namespace COTG
             }
 
         }
+
+
+
         public static void ChangeView(bool cityView)
         {
             try
@@ -1125,7 +1128,7 @@ namespace COTG
                     {
                         ///                   await GetCitylistOverview();
                         City.UpdateSenatorInfo();  // no async
-                        Raiding.UpdateTS(true);
+                        Raiding.UpdateTS(true,true);
                         TileData.Ctor();
                         if (TipsSeen.instance.refresh == false)
                             App.QueueIdleTask(ShellPage.ShowTipRefresh);

@@ -21,6 +21,7 @@ namespace COTG.Game
     public class City : Spot 
     {
 
+        public City() { type = typeCity; }
         public string remarks { get; set; }
 
 

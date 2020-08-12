@@ -144,7 +144,7 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.0-build.160</Version>
+      <Version>7.0.0-build.163</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0-prerelease.200708003</Version>
@@ -557,7 +557,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\world.png" />
+    <Content Include="Assets\world.dds" />
     <Content Include="images\barracks.png" />
     <Content Include="images\blacksmith.png" />
     <Content Include="images\blessed.png" />

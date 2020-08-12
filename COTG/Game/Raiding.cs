@@ -124,7 +124,7 @@ namespace COTG.Game
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
-        public static async void UpdateTSHome(bool force = false)
+        public static async void UpdateTSHome(bool force = false, bool updateRaids=false)
         {
             var n = DateTimeOffset.UtcNow;
             if (n > nextAllowedTsHomeUpdate || force)
@@ -144,18 +144,23 @@ namespace COTG.Game
                     }
                 }
                 changed.NotifyChange(nameof(City.tsHome));
-                
+                if (updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
+                    ScanDungeons.Post(Spot.focus, true);
             }
         }
         // should this be waitable?
-        public static void UpdateTS(bool force = false)
+        public static async void UpdateTS(bool force = false, bool updateRaids=false)
         {
             var n = DateTimeOffset.UtcNow;
             if (n > nextAllowedTsUpdate || force)
             {
                 nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
                 nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
-                RestAPI.troopsOverview.Post();
+                await RestAPI.troopsOverview.Post();
+
+                if(updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
+                    ScanDungeons.Post(Spot.focus, true);
+
             }
         }
         public static async Task UpdateTSSync(bool force = false)
@@ -216,7 +221,7 @@ namespace COTG.Game
             }
             Note.Show($"Issued Home Whenever on {counter} cities");
             ShellPage.ShowTipRefresh();
-            UpdateTSHome();
+            UpdateTSHome(true, true);
         }
         public static async void ReturnFastBatch(IEnumerable<int> cids)
         {
@@ -232,7 +237,7 @@ namespace COTG.Game
             Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
             await Task.Delay(500);
-            UpdateTSHome();
+            UpdateTSHome(true,true);
         }
     }
 }

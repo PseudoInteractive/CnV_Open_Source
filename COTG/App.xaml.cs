@@ -337,7 +337,25 @@ namespace COTG
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
         {
             var rv = new MenuFlyoutItem() { Text = text };
-            rv.Click += (_, _) => command();
+            if(command != null)
+                rv.Click += (_, _) => command();
+            return rv;
+        }
+        public static MenuFlyoutItem AddItem (MenuFlyout menu,string text, RoutedEventHandler command, object context=null)
+        {
+            var rv = new MenuFlyoutItem() { Text = text };
+            rv.DataContext = context;
+            if (command != null)
+                rv.Click += command;
+            menu.Items.Add(rv);
+            return rv;
+        }
+        public static MenuFlyoutItem AddItem(MenuFlyout menu, string text, Action command)
+        {
+            var rv = new MenuFlyoutItem() { Text = text };
+            if (command != null)
+                rv.Click += (_,_) => command();
+            menu.Items.Add(rv);
             return rv;
         }
         public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter)

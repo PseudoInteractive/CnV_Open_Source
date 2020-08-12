@@ -63,6 +63,7 @@ namespace COTG.Views
                 e.Handled = false;
                 return;
             }
+
             var pointerPoint = e.CurrentPoint;
             mousePosition = GetCanvasPosition(pointerPoint);
             e.Handled = false;
@@ -72,22 +73,7 @@ namespace COTG.Views
             {
                 var worldC = MousePointToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
-                //var info = World.CityLookup(worldC);
-                //if (info.type == World.typeCity)
-                //{
-                //    var spot = DefensePage.GetDefender(cid); // cache it
-                //    spot.pid = info.data; // Set player id from world data.
-                //                          // If this has already been selected it will have no effect
-                //}
 
-                // If clicking on our city, change city to that, otherwise show the city info
-                // for non cities we show info
-                //if (info.type == World.typeCity && info.player == Player.myId)
-                //{
-                //    var city = SpotTab.TouchSpot(cid); // this will add it to the list if it isn't present and then toggle selection
-                //    JSClient.ChangeCity(cid);
-                //}
-                //else
                 switch (pointerPoint.Properties.PointerUpdateKind)
                 {
                     case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
@@ -97,13 +83,40 @@ namespace COTG.Views
                             break;
                         }
 
-
                     case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
                         {
                             var position = pointerPoint.Position;
                             App.DispatchOnUIThread(() =>
                             {
-                                canvasFlyout.ShowAt(canvas, position);
+                                var flyout = new MenuFlyout();
+
+                                var spot = Spot.GetOrAdd(cid);
+
+                                
+                                if (spot.isCity)
+                                {
+                                    // Look - its my city!
+                                    if (spot.isMine)
+                                    {
+                                        App.AddItem(flyout, "Raiders home whenever", spot.ReturnSlowClick);
+                                        App.AddItem(flyout, "Raiders home please", spot.ReturnFastClick);
+                                    }
+                                    App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
+                                    App.AddItem(flyout, "Defend", (_, _) => Spot.JSDefend(cid));
+                                    App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+                                }
+                                else if(spot.isDungeon || spot.isBoss)
+                                {
+                                    App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+
+                                }
+                                App.AddItem(flyout, "Select", () => JSClient.ShowCity(cid, true));
+                                App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteCoords($"<coords>{cid.CidToString()}</coords>"));
+
+
+                                flyout.XamlRoot = canvas.XamlRoot;
+                                flyout.ShowAt(canvas, position);
+
                             });
                             break;
                         }

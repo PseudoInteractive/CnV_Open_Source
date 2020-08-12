@@ -41,7 +41,6 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
-                        ContextFlyout="{x:Bind cityContextFlyout}"
                         GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
             <tg:RadDataGrid.Commands>

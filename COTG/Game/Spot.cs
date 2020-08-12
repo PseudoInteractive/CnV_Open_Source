@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 
 namespace COTG.Game
 {
@@ -61,6 +62,7 @@ namespace COTG.Game
             //    Assert(info.type == World.typeCity);
                     rv = new Spot() { cid = cid,pid=info.player };
              //       Assert( info.player != 0);
+                    rv.type = (byte)(info.type >> 28);
                     rv.isTemple = info.isTemple;
                     rv.isOnWater = info.isWater;
                     rv.isCastle = info.isCastle;
@@ -80,12 +82,28 @@ namespace COTG.Game
 
         public int cid; // x,y combined into 1 number
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
+        public int x => cid % 65536;
+        public int y => cid >> 16;
+
         public int tsHome { get; set; }
         public int tsMax { get; set; }
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
-       // public DateTimeOffset lastUpdated { get; set; }
+
+        public byte type;
+        public const byte typeCity = 0x1;
+        public const byte typeShrine = 0x2;
+        public const byte typePortal = 0x3;
+        public const byte typeBoss = 0x4;
+        public const byte typeDungeon = 0x5;
+        public const byte typeNone = 0x0;
+        // Water and obscurred terriain are not defined :(
+        public bool isCity => type == typeCity;
+        public bool isBoss => type == typeBoss;
+        public bool isDungeon => type == typeDungeon;
+
+
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
@@ -111,7 +129,7 @@ namespace COTG.Game
 
         
 
-        public static (Spot spot, string column, PointerPoint pt) HitTest(object sender, PointerRoutedEventArgs e)
+        public static (Spot spot, string column, PointerPoint pt,UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
         {
             var grid = sender as RadDataGrid;
             var physicalPoint = e.GetCurrentPoint(grid);
@@ -128,7 +146,7 @@ namespace COTG.Game
             viewHover = spot != null ? spot.cid : 0;
             var uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             
-            return (spot, uiHoverColumn, physicalPoint);
+            return (spot, uiHoverColumn, physicalPoint,grid);
         }
 
 
@@ -144,7 +162,7 @@ namespace COTG.Game
             uiPress = spot != null ? spot.cid : 0;
             uiPressColumn = hit.column;
             if (spot != null)
-                spot.ProcessClick(hit.column, hit.pt);
+                spot.ProcessClick(hit.column, hit.pt,hit.uie);
         }
         public static void ProcessPointerExited()
         {
@@ -157,82 +175,99 @@ namespace COTG.Game
         //    uiHoverColumn = string.Empty;
         }
 
-        
-        public void ProcessClick(string column, PointerPoint pt)
-        {
-        //    Note.Show($"{this} {column} {pt.Position}");
 
-            if (pt.Properties.IsLeftButtonPressed && !(App.IsKeyPressedControl()||App.IsKeyPressedShift()) ) // ignore selection style clicks
+        public void ProcessClick(string column, PointerPoint pt, UIElement uie)
+        {
+            //    Note.Show($"{this} {column} {pt.Position}");
+
+            if (pt.Properties.IsLeftButtonPressed && !(App.IsKeyPressedControl() || App.IsKeyPressedShift())) // ignore selection style clicks
             {
 
 
                 // If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
                 var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
-                var wantRaidScan = false;
+                var wantRaidScan = isFocus;
                 //                var needCityData = 
 
                 switch (column)
                 {
                     case nameof(xy):
-                        ProcessCoordClick(cid,false);
+                        ProcessCoordClick(cid, false);
+                        wantRaidScan = false;
                         break;
                     case nameof(icon):
                         if (City.IsMine(cid))
                         {
                             var wasBuild = City.IsBuild(cid);
-                            JSClient.ChangeCity(cid,false);
-                            if( wasBuild )
+                            JSClient.ChangeCity(cid, false);
+                            if (wasBuild)
                             {
-                                    JSClient.ChangeView(!JSClient.IsCityView());
+                                JSClient.ChangeView(!JSClient.IsCityView());
 
                             }
-                            NavStack.Push(cid);
 
                         }
-                        else JSClient.ShowCity(cid, false);
+                        else
+                        {
+                            JSClient.ShowCity(cid, false);
+                        }
+                        wantRaidScan = false;
                         break;
                     case nameof(City.tsTotal):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            Raiding.UpdateTS(true);
+                            Raiding.UpdateTS(true, true);
                         }
+                        wantRaidScan = false;
                         break;
                     case nameof(tsHome):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            Raiding.UpdateTSHome(true);
+                            Raiding.UpdateTSHome(true, true);
                         }
+                        wantRaidScan = false;
                         break;
                     case nameof(City.raidReturn):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            SetFocus(); // prevent dungeon scan on select
                             Raiding.ReturnFast(cid, true);
-                            return; // prevent the traiing dungeon scan
                         }
+                        wantRaidScan = false;
                         break;
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            SetFocus();// prevent dungeon scan on select
                             Raiding.ReturnSlow(cid, true);
-                            return;// prevent trailing dungeon scan
                         }
+                        wantRaidScan = false;
                         break;
                     default:
                         wantRaidScan = true;
                         break;
                 }
 
-                
-                if (MainPage.IsVisible() && (isFocus ||wantRaidScan ) )
+
+                if (MainPage.IsVisible() && isMine && wantRaidScan)
                 {
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);
                 }
                 SetFocus();
+                NavStack.Push(cid);
+
+            }
+            else if (pt.Properties.IsRightButtonPressed)
+            {
+
+                var flyout = new MenuFlyout();
+                App.AddItem(flyout,"Home Whenever", MainPage.ReturnSlowClick,cid);
+                App.AddItem(flyout, "Home Please", MainPage.ReturnFastClick,cid);
+                flyout.XamlRoot = uie.XamlRoot;
+                flyout.ShowAt(uie, pt.Position);
             }
         }
+
+        
 
         public static void ProcessCoordClick(int cid,bool lazyMove)
         {
@@ -472,6 +507,17 @@ namespace COTG.Game
             }
             cid.BringCidIntoWorldView(true);
         }
+        public void ReturnSlowClick()
+        {
+                Raiding.ReturnSlow(cid, false);
+        }
+
+
+
+        public void ReturnFastClick()
+        {
+             Raiding.ReturnFast(cid, false);
+        }
 
         //int IKeyedItem.GetKey()
         //{
@@ -481,5 +527,26 @@ namespace COTG.Game
         //{
         //    cid = i;
         //}
+        public static void JSCommand(string func, int cid)
+        {
+            JSClient.view.InvokeScriptAsync(func, new string[] { (cid % 65536).ToString(), (cid >> 16).ToString() });
+        }
+        public static void JSAttack(int cid)
+        {
+              JSCommand("spotAttack", cid);
+        }
+        public static void JSDefend(int cid)
+        {
+            JSCommand("spotDefend", cid);
+        }
+        public static void JSSendRes(int cid)
+        {
+            JSCommand("spotSendRes", cid);
+        }
+        public static void JSRaid(int cid)
+        {
+            JSCommand("spotRaid", cid);
+        }
+
     }
 }

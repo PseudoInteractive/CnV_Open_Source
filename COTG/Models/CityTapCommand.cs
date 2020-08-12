@@ -221,13 +221,13 @@ namespace COTG.Models
                 case nameof(City.tsTotal):
                     if ( MainPage.IsVisible())
                     {
-                        Raiding.UpdateTS(true);
+                        Raiding.UpdateTS(true,true);
                     }
                     break;
                 case nameof(City.tsHome):
                     if (  MainPage.IsVisible())
                     {
-                        Raiding.UpdateTSHome(true);
+                        Raiding.UpdateTSHome(true,true);
                     }
                     break;
 

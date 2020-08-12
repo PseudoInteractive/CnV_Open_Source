@@ -62,7 +62,7 @@ namespace COTG.Views
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            (var hit, var column, var pointerPoint) = Spot.HitTest(sender, e);
+            (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
             //if (hit != null)
             //    defenderGrid.ShowRowDetailsForItem(hit);
 

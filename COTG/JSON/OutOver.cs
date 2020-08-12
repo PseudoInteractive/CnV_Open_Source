@@ -308,7 +308,7 @@ namespace COTG.JSON
                                                             SE = hasSE,
                                                             Nvl = hasNavy,
                                                             Sen = hasSen,
-                                                            claim = hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1,
+                                                            claim =  report.GetAsFloat("senator"),
                                                             defP = defP,
                                                             atkP = Player.NameToId(atkPN),
                                                             time = time,
