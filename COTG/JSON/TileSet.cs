@@ -21,12 +21,7 @@ namespace COTG.JSON
     //    var root = Root.FromJson(jsonString);
 
     using System;
-        using System.Collections.Generic;
-
-        using System.Globalization;
-        using System.Text.Json;
-        using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-
+    
         public sealed class TileData
         {
             public enum State
@@ -150,12 +145,13 @@ namespace COTG.JSON
                 try
                 {
                     var resName = image;
-                    if (resName == "land.png")
-                        resName = "land.jpg";
+                  //  if (resName == "land.png")
+                  //      resName = "land.jpg";
                     //  ShellPage.SetHeaderText(resName);
-                    var uri = new Uri($"{JSClient.httpsHostString}/maps/newmap/{resName}");
+                    var uri = new Uri($"ms-appx:///Assets/{ resName.Substring(0,resName.Length-3)}dds");
                     var temp = this;
-                    temp.bitmap = await TileMapFetch.Load( uri);
+                Debug.Log(uri.ToString());
+                    temp.bitmap = await CanvasBitmap.LoadAsync(ShellPage.canvas.Device,  uri);
                     // etc.
                     Assert(temp.bitmap != null);
                 }

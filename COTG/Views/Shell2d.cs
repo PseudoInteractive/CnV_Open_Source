@@ -450,9 +450,9 @@ namespace COTG.Views
                             var cy0 = (-halfTiles.y + ccBase.y).Max(0);
                             var cx1 = (halfTiles.x + 1 + ccBase.x).Min(World.worldDim);
                             var cy1 = (halfTiles.y + 1 + ccBase.y).Min(World.worldDim);
-                            const bool isShift = false;// App.IsKeyPressedShift();
+                            const bool isShift = true;// App.IsKeyPressedShift();
                             const float tcOff = isShift ? 0.0f : 0.5f;
-                            const float tzOff = isShift ? 0.0f : 1.0f;
+                            const  float tzOff = isShift ? 0.0f : 1.0f;
 
                             using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None, CanvasImageInterpolation.Linear, isShift ? CanvasSpriteOptions.ClampToSourceRect : CanvasSpriteOptions.None))
                             {
