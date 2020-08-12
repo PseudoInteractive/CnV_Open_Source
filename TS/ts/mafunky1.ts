@@ -1364,6 +1364,8 @@ function avactor() {
 		setTimeout(() => {
 			$(c_).remove();
 		}, 6000);
+		const wrapper = { error: j_ }
+		window['external']['notify'](JSON.stringify(wrapper));
 	}
 
 	setTimeout(() => {
@@ -1838,28 +1840,28 @@ function avactor() {
 			}
 		});
 		$("#quickdefCityGo").click(() => {
-			///@todo
-			///** @type {number} */
-			//var tid_6=AsNumber($("#showReportsGo").attr("data"));
-			//var tempx_9;
-			//var tempy_9;
-			///** @type {number} */
-			//tempx_9=AsNumber(tid_6%65536);
-			///** @type {number} */
-			//tempy_9=AsNumber((tid_6-tempx_9)/65536);
+			/@todo
+			/** @type {number} */
+			var tid_6=AsNumber($("#showReportsGo").attr("data"));
+			var tempx_9;
+			var tempy_9;
+			/** @type {number} */
+			tempx_9=AsNumber(tid_6%65536);
+			/** @type {number} */
+			tempy_9=AsNumber((tid_6-tempx_9)/65536);
 
-			//commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-D6.x)*(tempx_9-D6.x)+(tempy_9-D6.y)*(tempy_9-D6.y)));
-			//var i_39;
-			//for(i_39 in D6.th) {
-			//	if(D6.th[i_39]) {
-			//		defobj_2.t.home.push(Math.ceil(D6.th[i_39]*AsNumber($("#defperc").val())/100));
-			//		defobj_2.t.type.push(AsNumber(i_39));
-			//		defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
-			//		defobj_2.t.use.push(1);
-			//		defobj_2.t.amount.push(0);
-			//	}
-			//}
-			//SendDef_(defobj_2);
+			commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-D6.x)*(tempx_9-D6.x)+(tempy_9-D6.y)*(tempy_9-D6.y)));
+			var i_39;
+			for(i_39 in D6.th) {
+				if(D6.th[i_39]) {
+					defobj_2.t.home.push(Math.ceil(D6.th[i_39]*AsNumber($("#defperc").val())/100));
+					defobj_2.t.type.push(AsNumber(i_39));
+					defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
+					defobj_2.t.use.push(1);
+					defobj_2.t.amount.push(0);
+				}
+			}
+			SendDef_(defobj_2);
 		});
 		$("#ndefup").click(() => {
 			/** @type {number} */
@@ -1872,30 +1874,30 @@ function avactor() {
 			$("#asdfgh").text(`${tempxs_}:${tempys_}`);
 			///@todo
 
-			//jQuery.ajax({
-			//	url: "overview/trpover.php",
-			//	type: "POST",
-			//	async: true,
-			//	success: function success_11(data_53) {
-			//		/** @type {*} */
-			//		var t_6=JSON.parse(data_53);
-			//		neardeftable_(t_6);
-			//	}
-			//});
+			jQuery.ajax({
+				url: "overview/trpover.php",
+				type: "POST",
+				async: true,
+				success: function success_11(data_53) {
+					/** @type {*} */
+					var t_6=JSON.parse(data_53);
+					neardeftable_(t_6);
+				}
+			});
 		});
 		$("#noffup").click(() => {
 			///@todo
 
-			//jQuery.ajax({
-			//	url: "overview/trpover.php",
-			//	type: "POST",
-			//	async: true,
-			//	success: function success_12(data_54) {
-			//		/** @type {*} */
-			//		var t_7=JSON.parse(data_54);
-			//		nearofftable_(t_7);
-			//	}
-			//});
+			jQuery.ajax({
+				url: "overview/trpover.php",
+				type: "POST",
+				async: true,
+				success: function success_12(data_54) {
+					/** @type {*} */
+					var t_7=JSON.parse(data_54);
+					nearofftable_(t_7);
+				}
+			});
 		});
 		$("#Aexport").click(() => {
 			var Aexp_1 = {

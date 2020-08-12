@@ -168,7 +168,7 @@ function GetAttackTime(source) {
 	 * @return {void}
 	 */
 
-function IssueCommandsAndReturnTroops() { }
+//function IssueCommandsAndReturnTroops() { }
 	// function IssueCommandsAndReturnTroops() {
 	// 	$("#commandsPopUpBox").hide();
 	// 	if(commandInfo.ret==1) {
