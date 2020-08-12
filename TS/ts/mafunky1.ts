@@ -237,7 +237,7 @@ function Contains(a:string,b:string) {
 	return a.indexOf(b)!=-1;
 }
 
-let updateTimeout = null;
+let updateTimeout=0;
 
 function sendCityData(delayInMs) {
 
@@ -257,6 +257,8 @@ function sendCityData(delayInMs) {
 		};
 		window['external']['notify'](JSON.stringify(wrapper));
 		clearTimeout(updateTimeout);
+		updateattack();
+
 	}, delayInMs);
 }
 
@@ -267,6 +269,7 @@ function sendchat(channel:string,message:string)
 }
 function gCPosted()
 {
+	setAutoDemo(false); // clear auto demo flag
 	sendCityData(100);
 }
 
@@ -842,11 +845,11 @@ function avactor() {
 				bossele_();
 			}
 			if (clickInfo.info.active) {
-				/** @type {string} */
+				
 				message_23 = "Inactive Boss";
 				errorgo_(message_23);
 			}
-			/** @type {string} */
+			
 			message_23 = "Not enough TS to kill this boss!";
 			/** @type {!Array} */
 			var attackres_ = [];
@@ -1323,30 +1326,15 @@ function avactor() {
 	 * @param {!Date} date_2
 	 * @return {?}
 	 */
-	function getFormattedTime(date_2) {
-		var year_1 = date_2.getFullYear();
-		var month_1 = (1 + date_2.getMonth()).toString();
-		month_1 = month_1.length > 1 ? month_1 : `0${month_1}`;
-		var day_ = date_2.getDate().toString();
-		day_ = day_.length > 1 ? day_ : `0${day_}`;
-		/** @type {string} */
-		var hour_ = TwoDigitNum(date_2.getHours());
-
-		/** @type {string} */
-		var min_ = TwoDigitNum(date_2.getMinutes());
-		/** @type {string} */
-		var sec_ = TwoDigitNum(date_2.getSeconds());
-		return `${month_1}/${day_}/${year_1} ${hour_}:${min_}:${sec_}`;
-	}
 	function errorgo_(j_) {
 		errz_ = errz_ + 1;
-		/** @type {string} */
+		
 		let b_ = `errBR${errz_}`;
-		/** @type {string} */
+		
 		let c_ = `#${b_}`;
-		/** @type {string} */
+		
 		let d_ = `#${b_} div`;
-		/** @type {string} */
+		
 		let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
 		$("#errorBRpopup").append(errormsgs_);
 		$(c_).show();
@@ -1385,7 +1373,7 @@ function avactor() {
 		$("<style type='text/css'> .ava table{table-layout: auto; } </style>").appendTo("head");
 
 		//Decode();
-		/** @type {string} */
+		
 		//  var popwin_ = `<div id='HelloWorld' style='width:400px;height:400px;background-color: #E2CBAC;-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;border: 4px ridge #DAA520;position:absolute;right:40%;top:100px; z-index:1000000;'><div class=\"popUpBar\"> <span class=\"ppspan\">Welcome!</span><button id=\"cfunkyX\" onclick=\"$('#HelloWorld').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div id='hellobody' class=\"popUpWindow\"><span style='margin-left: 5%;'> <h3 style='text-align:center;'>Welcome to Crown Of The Gods!</h3></span><br><br><span style='margin-left: 5%;'> <h4 style='text-align:center;'> MFunky(Cfunky + Dfunky + Mohnki's Additional Layouts + Avatar's nonsense)</h4></span><br><span style='margin-left: 5%;'> <h4 style='text-align:center;'>Updated Mar 1 2020</h4></span><br><br><span style='margin-left: 5%;'><h4>changes:</h4> <ul style='margin-left: 6%;'><li>Added 4 raiding carry percentages(100..125)</li><li>When you click on one, it will ensure that carry is at least that value and it will set it as the initial value for the next city that you go to</li></ul></span></div></div>`;
 
 		//$("body").append(popwin_);
@@ -1413,7 +1401,7 @@ function avactor() {
 		/** @type {number} */
 		var i_32 = 0;
 		for (; i_32 < l_3; i_32++) {
-			/** @type {string} */
+			
 			var temp_3 = String($(a_5[i_32]).attr("value"));
 			//	$("#organiser").val(temp_3).change();
 			/** @type {!Array} */
@@ -1456,7 +1444,7 @@ function avactor() {
 	function ReplaceAt(me: string, index_54: number, char_: string) {
 		/** @type {!Array<string>} */
 		var a_6 = me.split("");
-		/** @type {string} */
+		
 		a_6[index_54] = char_;
 		return a_6.join("");
 	}
@@ -1485,199 +1473,198 @@ function avactor() {
 	//if (_mru != null)
 	//	mru = JSON.parse(_mru);
 
-
 	setTimeout(() => {
 		UpdateResearchAndFaith();
-		/** @type {string} */
-		var returnAllbut_ = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
-		/** @type {string} */
-		var raidbossbut_ = "<button id='raidbossGo' style='left: 65%;margin-left: 10px;margin-top: 15px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Locate Bosses</button>";
-		/** @type {string} */
-		var attackbut_ = "<button id='attackGo' style='margin-left: 25px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Attack Sender</button>";
-		/** @type {string} */
-		var defbut_ = "<button id='defGo' style='left: 65%;margin-left: 10px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Defense Sender</button>";
-		/** @type {string} */
-		var quickdefbut_ = "<button id='quickdefCityGo' style='width:96%; margin-top:2%; margin-left:2%;' class='regButton greenbuttonGo greenb'>@ Quick Reinforcements @</button>";
-		/** @type {string} */
-		var neardefbut_ = "<button id='ndefGo' style='left: 4%;margin-left: 3px;margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Nearest Defense</button>";
-		/** @type {string} */
-		var nearoffbut_ = "<button id='noffGo' style='right: 35.6%; margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Offensive list</button>";
-		/** @type {string} */
-		var addtoatt_ = "<button id='addtoAtt' style='margin-left: 7%;margin-top: -5%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Attack Sender</button>";
-		/** @type {string} */
-		var addtodef_ = "<button id='addtoDef' style='margin-left: 7%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Defense Sender</button>";
-		/** @type {string} */
-		var bosstab_ = "<li id='bosshuntab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warBossmanager'";
-		/** @type {string} */
-		bosstab_ = `${bosstab_}aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>`;
-		/** @type {string} */
-		bosstab_ = `${bosstab_}<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>`;
-		/** @type {string} */
-		var bosstabbody_ = "<div id='warBossmanager' aria-labeledby='ui-id-20' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
-		bosstabbody_ = `${bosstabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>`;
-		/** @type {string} */
-		bosstabbody_ = `${bosstabbody_}<div id='bossbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
-		/** @type {string} */
-		bosstabbody_ = `${bosstabbody_}<div id='idletroops'></div></div>`;
-		/** @type {string} */
-		var attacktab_ = "<li id='attacktab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warAttackmanager'";
-		/** @type {string} */
-		attacktab_ = `${attacktab_}aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>`;
-		/** @type {string} */
-		attacktab_ = `${attacktab_}<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>`;
-		/** @type {string} */
-		var attacktabbody_ = "<div id='warAttackmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<div id='attackbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>`;
+		
+		var returnAllbut = "<button id='returnAllb' style='right: 35.6%; margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Return All</button>";
+		
+		var raidbossbut = "<button id='raidbossGo' style='left: 65%;margin-left: 10px;margin-top: 15px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Locate Bosses</button>";
+		
+		var attackbut = "<button id='attackGo' style='margin-left: 25px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Attack Sender</button>";
+		
+		var defbut = "<button id='defGo' style='left: 65%;margin-left: 10px;margin-top: 55px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'>Defense Sender</button>";
+		
+		var quickdefbut = "<button id='quickdefCityGo' style='width:96%; margin-top:2%; margin-left:2%;' class='regButton greenbuttonGo greenb'>@ Quick Reinforcements @</button>";
+		
+		var neardefbut = "<button id='ndefGo' style='left: 4%;margin-left: 3px;margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Nearest Defense</button>";
+		
+		var nearoffbut = "<button id='noffGo' style='right: 35.6%; margin-top: 95px;width: 150px;height: 30px !important; font-size: 12px !important; position: absolute;' class='regButton greenb'> Offensive list</button>";
+		
+		var addtoatt = "<button id='addtoAtt' style='margin-left: 7%;margin-top: -5%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Attack Sender</button>";
+		
+		var addtodef = "<button id='addtoDef' style='margin-left: 7%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Defense Sender</button>";
+		
+		var bosstab = "<li id='bosshuntab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warBossmanager'";
+		
+		bosstab = `${bosstab}aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>`;
+		
+		bosstab = `${bosstab}<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>`;
+		
+		var bosstabbody = "<div id='warBossmanager' aria-labeledby='ui-id-20' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		
+		bosstabbody = `${bosstabbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>`;
+		
+		bosstabbody = `${bosstabbody}<div id='bossbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		
+		bosstabbody = `${bosstabbody}<div id='idletroops'></div></div>`;
+		
+		var attacktab = "<li id='attacktab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warAttackmanager'";
+		
+		attacktab = `${attacktab}aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>`;
+		
+		attacktab = `${attacktab}<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>`;
+		
+		var attacktabbody = "<div id='warAttackmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		
+		attacktabbody = `${attacktabbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>`;
+		
+		attacktabbody = `${attacktabbody}<div id='attackbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+		
+		attacktabbody = `${attacktabbody}<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>`;
 		/** @type {number} */
 		var i_35 = 1;
 		for (; i_35 < 16; i_35++) {
-			/** @type {string} */
-			attacktabbody_ = `${attacktabbody_}<tr><td>Target ${i_35} </td><td><input id='t${i_35}x' type='number' style='width: 85%'></td><td><input id='t${i_35}y' type='number' style='width: 85%'></td>`;
-			/** @type {string} */
-			attacktabbody_ = `${attacktabbody_}<td><select id='type${i_35}' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>`;
+			
+			attacktabbody = `${attacktabbody}<tr><td>Target ${i_35} </td><td><input id='t${i_35}x' type='number' style='width: 85%'></td><td><input id='t${i_35}y' type='number' style='width: 85%'></td>`;
+			
+			attacktabbody = `${attacktabbody}<td><select id='type${i_35}' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>`;
 		}
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}</tbody></table></div>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<div id='picktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th colspan='5'>Date</th></tr>`;
-		/** @type {string} */
+		
+		attacktabbody = `${attacktabbody}</tbody></table></div>`;
+		
+		attacktabbody = `${attacktabbody}<div id='picktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
+		
+		attacktabbody = `${attacktabbody}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>`;
+		
+		attacktabbody = `${attacktabbody}<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		
+		attacktabbody = `${attacktabbody}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+		
+		attacktabbody = `${attacktabbody}<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		
+		attacktabbody = `${attacktabbody}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+		
+		attacktabbody = `${attacktabbody}<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>`;
+		
+		attacktabbody = `${attacktabbody}<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>`;
+		
+		attacktabbody = `${attacktabbody}<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th colspan='5'>Date</th></tr>`;
+		
 		//    attacktabbody_ = attacktabbody_ + "<tr><td>Set Time: </td><td><input id='attackHr' type='number style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='attackMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<tr><td colspan='5'><input style='width:96%;' id='attackDat' type='datetime-local' step='1'></td></tr></tbody></table>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>`;
-		/** @type {string} */
-		attacktabbody_ = `${attacktabbody_}<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>`;
-		/** @type {string} */
-		var deftab_ = "<li id='deftab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warDefmanager'";
-		/** @type {string} */
-		deftab_ = `${deftab_}aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>`;
-		/** @type {string} */
-		deftab_ = `${deftab_}<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>`;
-		/** @type {string} */
-		var deftabbbody_ = "<div id='warDefmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<div id='defbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>`;
+		
+		attacktabbody = `${attacktabbody}<tr><td colspan='5'><input style='width:96%;' id='attackDat' type='datetime-local' step='1'></td></tr></tbody></table>`;
+		
+		attacktabbody = `${attacktabbody}<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>`;
+		
+		attacktabbody = `${attacktabbody}<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>`;
+		
+		attacktabbody = `${attacktabbody}<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>`;
+		
+		var deftab = "<li id='deftab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warDefmanager'";
+		
+		deftab = `${deftab}aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>`;
+		
+		deftab = `${deftab}<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>`;
+		
+		var deftabbbody = "<div id='warDefmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		
+		deftabbbody = `${deftabbbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>`;
+		
+		deftabbbody = `${deftabbbody}<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>`;
+		
+		deftabbbody = `${deftabbbody}<div id='defbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+		
+		deftabbbody = `${deftabbbody}<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>`;
 		/** @type {number} */
 		i_35 = 1;
 		for (; i_35 <= 15; i_35++) {
-			/** @type {string} */
-			deftabbbody_ = `${deftabbbody_}<tr><td>Target ${i_35} </td><td><input id='d${i_35}x' type='number' style='width: 85%'></td><td><input id='d${i_35}y' type='number' style='width: 85%'></td></tr>`;
+			
+			deftabbbody = `${deftabbbody}<tr><td>Target ${i_35} </td><td><input id='d${i_35}x' type='number' style='width: 85%'></td><td><input id='d${i_35}y' type='number' style='width: 85%'></td></tr>`;
 		}
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}</tbody></table></div>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<div id='dpicktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='date' type='text' value='00/00/0000'></td></tr></tbody></table>`;
-		/** @type {string} */
-		deftabbbody_ = `${deftabbbody_}<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>`;
-		/** @type {string} */
-		var ndeftab_ = "<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
-		/** @type {string} */
-		ndeftab_ = `${ndeftab_}<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>`;
-		/** @type {string} */
-		var ndeftabbody_ = "<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
-		ndeftabbody_ = `${ndeftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>`;
-		/** @type {string} */
-		ndeftabbody_ = ndeftabbody_ + '<table><td>Choose city:</td><td><input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefx\' type=\'number\'> : <input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefy\' type=\'number\'></td>';
-		/** @type {string} */
-		ndeftabbody_ = `${ndeftabbody_}<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>`;
-		/** @type {string} */
-		ndeftabbody_ = `${ndeftabbody_}<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>`;
-		/** @type {string} */
-		ndeftabbody_ = `${ndeftabbody_}<div id='Ndefbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
-		/** @type {string} */
-		var nofftab_ = "<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
-		/** @type {string} */
-		nofftab_ = `${nofftab_}<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>`;
-		/** @type {string} */
-		var nofftabbody_ = "<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
-		nofftabbody_ = `${nofftabbody_} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>`;
-		/** @type {string} */
-		nofftabbody_ = `${nofftabbody_}<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>`;
-		/** @type {string} */
-		nofftabbody_ = `${nofftabbody_}<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>`;
-		/** @type {string} */
-		nofftabbody_ = `${nofftabbody_}<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>`;
-		/** @type {string} */
-		nofftabbody_ = `${nofftabbody_}<div id='Noffbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
-		/** @type {string} */
+		
+		deftabbbody = `${deftabbbody}</tbody></table></div>`;
+		
+		deftabbbody = `${deftabbbody}<div id='dpicktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
+		
+		deftabbbody = `${deftabbbody}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>`;
+		
+		deftabbbody = `${deftabbbody}<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+		
+		deftabbbody = `${deftabbbody}<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>`;
+		
+		deftabbbody = `${deftabbbody}<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>`;
+		
+		deftabbbody = `${deftabbbody}<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>`;
+		
+		deftabbbody = `${deftabbbody}<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>`;
+		
+		deftabbbody = `${deftabbbody}<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='date' type='text' value='00/00/0000'></td></tr></tbody></table>`;
+		
+		deftabbbody = `${deftabbbody}<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>`;
+		
+		var ndeftab = "<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
+		
+		ndeftab = `${ndeftab}<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>`;
+		
+		var ndeftabbody = "<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		
+		ndeftabbody = `${ndeftabbody} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>`;
+		
+		ndeftabbody = ndeftabbody + '<table><td>Choose city:</td><td><input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefx\' type=\'number\'> : <input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefy\' type=\'number\'></td>';
+		
+		ndeftabbody = `${ndeftabbody}<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>`;
+		
+		ndeftabbody = `${ndeftabbody}<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>`;
+		
+		ndeftabbody = `${ndeftabbody}<div id='Ndefbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		
+		var nofftab = "<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
+		
+		nofftab = `${nofftab}<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>`;
+		
+		var nofftabbody = "<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+		
+		nofftabbody = `${nofftabbody} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>`;
+		
+		nofftabbody = `${nofftabbody}<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>`;
+		
+		nofftabbody = `${nofftabbody}<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>`;
+		
+		nofftabbody = `${nofftabbody}<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>`;
+		
+		nofftabbody = `${nofftabbody}<div id='Noffbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+		
 		var expwin_ = "<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
-		/** @type {string} */
+		
 		expwin_ = `${expwin_}<button id="cfunkyX" onclick="$('#ExpImp').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div id='expbody' class="popUpWindow">`;
-		/** @type {string} */
+		
 		expwin_ = `${expwin_}<textarea style='font-size:11px;width:300px;height:200px;' id='expstring'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>`;
-		var tabs_ = $("#warcouncTabs").tabs();
-		var ul_ = tabs_.find("ul");
-		$(bosstab_).appendTo(ul_);
-		$(attacktab_).appendTo(ul_);
-		$(deftab_).appendTo(ul_);
-		$(ndeftab_).appendTo(ul_);
-		$(nofftab_).appendTo(ul_);
-		tabs_.tabs("refresh");
-		$("#warCidlemanager").after(bosstabbody_);
-		$("#warCidlemanager").after(attacktabbody_);
-		$("#warAttackmanager").after(deftabbbody_);
-		$("#warDefmanager").after(ndeftabbody_);
-		$("#warNdefmanager").after(nofftabbody_);
-		$("#senddefCityGo").after(quickdefbut_);
+		var tabs = $("#warcouncTabs").tabs();
+		var ul = tabs.find("ul");
+		$(bosstab).appendTo(ul);
+		$(attacktab).appendTo(ul);
+		$(deftab).appendTo(ul);
+		$(ndeftab).appendTo(ul);
+		$(nofftab).appendTo(ul);
+		tabs.tabs("refresh");
+		$("#warCidlemanager").after(bosstabbody);
+		$("#warCidlemanager").after(attacktabbody);
+		$("#warAttackmanager").after(deftabbbody);
+		$("#warDefmanager").after(ndeftabbody);
+		$("#warNdefmanager").after(nofftabbody);
+		$("#senddefCityGo").after(quickdefbut);
 		$("#deftime").hide();
 		$("#dret").hide();
-		$("#warCounc").append(returnAllbut_);
-		$("#warCounc").append(attackbut_);
-		$("#warCounc").append(defbut_);
-		$("#warCounc").append(neardefbut_);
-		$("#warCounc").append(nearoffbut_);
-		$("#coordstochatGo1").after(addtoatt_);
-		$("#addtoAtt").after(addtodef_);
+		$("#warCounc").append(returnAllbut);
+		$("#warCounc").append(attackbut);
+		$("#warCounc").append(defbut);
+		$("#warCounc").append(neardefbut);
+		$("#warCounc").append(nearoffbut);
+		$("#coordstochatGo1").after(addtoatt);
+		$("#addtoAtt").after(addtodef);
 		$("#loccavwarconGo").css("right", "65%");
 		$("#idluniwarconGo").css("left", "34%");
-		$("#idluniwarconGo").after(raidbossbut_);
+		$("#idluniwarconGo").after(raidbossbut);
 		$("#defdeparture").change(() => {
 			if ($("#defdeparture").val() == 0) {
 				$("#deftime").hide();
@@ -1716,72 +1703,79 @@ function avactor() {
 		$("#raidbossGo").click(() => {
 			if (beentoworld_) {
 				$("#warcouncbox").show();
-				tabs_.tabs("option", "active", 2);
+				tabs.tabs("option", "active", 2);
 				$("#bosshuntab").click();
 			} else {
 				alert("Press World Button");
 			}
 		});
-		$("#Attack").click(() => {
-			localStorage.setItem("troopperc", $("#troopperc").val().toString());
-			localStorage.setItem("retHr", $("#retHr").toString());
-			LocalStoreSet("retcheck", $("#retcheck").prop("checked") ? 1 : 0);
-			SendAttack_();
-		});
-		//$("#Defend").click(() => {
-		//	localStorage.setItem("troopperc",$("#troopperc").val().toString());
-		//	localStorage.setItem("retHr",$("#retHr").val().toString());
-		//	ResetCommandInfo();
-		//	commandInfo.perc=$("#troopperc").val() as number;
-		//	commandInfo.date=new Date($("#defdeparture").val() as string);
-		//	commandInfo.ret=$("#dretcheck").prop("checked")==true? 1:0;
-		//	LocalStoreSet("dretcheck",commandInfo.ret);
-
-		//	commandInfo.date=$("#defDate").val();
-
-		//	/** @type {number} */
-		//	for(var i_36=1; i_36<=15; i_36++) {
-		//		if($(`#d${i_36}x`).val()) {
-		//			let tempx_6=$(`#d${i_36}x`).val();
-		//			let tempy_6=$(`#d${i_36}y`).val();
-		//			commandInfo.x.push(tempx_6);
-		//			commandInfo.y.push(tempy_6);
-		//			commandInfo.cstr.push(`${tempx_6}:${tempy_6}`);
-		//			commandInfo.dist.push(Math.sqrt((tempx_6-D6.x)*(tempx_6-D6.x)+(tempy_6-D6.y)*(tempy_6-D6.y)));
-		//			commandInfo.numb++;
-		//		}
-		//	}
-		//	for(var i_36 in D6.tc) {
-		//		if(D6.tc[i_36]) {
-		//			commandInfo.tot.push(Math.ceil(D6.tc[i_36]*AsNumber($("#defperc").val())/100));
-		//			commandInfo.home.push(Math.ceil(D6.th[i_36]*AsNumber($("#defperc").val())/100));
-		//			commandInfo.type.push(AsNumber(i_36));
-		//			if($(`#usedef${i_36}`).prop("checked")==true) {
-		//				commandInfo.speed.push(ttspeed_[i_36]/ttspeedres_[i_36]);
-		//				commandInfo.use.push(1);
-		//			} else {
-		//				commandInfo.speed.push(0);
-		//				commandInfo.use.push(0);
-		//			}
-		//			commandInfo.amount.push(0);
-		//		}
-		//	}
-		//	SendDef_();
-		//});
+		$("#Attack").click(function () {
+			localStorage.setItem('attperc', $("#perc").val().toString());
+			localStorage.setItem('retHr', $("#retHr").val().toString());
+            if ($("#retcheck").prop( "checked")==true) {
+                localStorage.setItem('retcheck',"1");
+            }
+            if ($("#retcheck").prop( "checked")==false) {
+                localStorage.setItem('retcheck',"0");
+            }
+            SendAttack();
+        });
+		$("#Defend").click(function () {
+			localStorage.setItem('defperc', $("#defperc").val().toString());
+			localStorage.setItem('dretHr', $("#dretHr").val().toString());
+            var defobj={targets:{x:[],y:[],dist:[],numb:0,cstr:[]},t:{tot:[],home:[],type:[],use:[],speed:[],amount:[]},perc:$("#defperc").val(),dep:$("#defdeparture").val(),ret:1,rettime:$("#dretHr").val(),hr:$("#defHr").val(),min:$("#defMin").val(),sec:$("#defSec").val(),date:$("#defDat").val(),dat:$("#defDat").datepicker('getDate')};
+            if ($("#dretcheck").prop( "checked")==true) {
+                localStorage.setItem('dretcheck',"1");
+                defobj.ret=1;
+            }
+            if ($("#dretcheck").prop( "checked")==false) {
+                localStorage.setItem('dretcheck',"0");
+                defobj.ret=0;
+            }
+            var tempx;
+            var tempy;
+            for (let i=1;i<15;i++) {
+                if ($("#d"+i+"x").val()) {
+                    tempx=$("#d"+i+"x").val();
+                    tempy=$("#d"+i+"y").val();
+                    defobj.targets.x.push(tempx);
+                    defobj.targets.y.push(tempy);
+                    defobj.targets.cstr.push(tempx+":"+tempy);
+                    defobj.targets.dist.push(Math.sqrt((tempx-D6.x)*(tempx-D6.x)+(tempy-D6.y)*(tempy-D6.y)));
+                    defobj.targets.numb++;
+                }
+            }
+            for (let i in D6.tc) {
+                if (D6.tc[i]) {
+                    defobj.t.tot.push(Math.ceil(D6.tc[i]*Number($("#defperc").val())/100));
+                    defobj.t.home.push(Math.ceil(D6.th[i]*Number($("#defperc").val())/100));
+                    defobj.t.type.push(Number(i));
+                    if ($("#usedef"+i).prop( "checked")==true) {
+                        defobj.t.speed.push(ttspeed[i]/ttSpeedBonus[i]);
+                        defobj.t.use.push(1);
+                    } else {
+                        defobj.t.speed.push(0)
+                        defobj.t.use.push(0);
+                    }
+                    defobj.t.amount.push(0);
+                }
+            }
+            SendDef(defobj);
+        });
 		$("#attackGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option", "active", 3);
+			tabs.tabs("option", "active", 3);
 			jQuery("#attacktab")[0].click();
 		});
 		$("#defGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option", "active", 4);
+			tabs.tabs("option", "active", 4);
 			$("#deftab").click();
 		});
 		$("#ndefGo").click(() => {
 			NearDefSubscribe();
 			$("#warcouncbox").show();
-			tabs_.tabs("option", "active", 5);
+			tabs.tabs("option", "active", 5);
 			//$("#neardeftab").trigger({
 			//	type: "click",
 			//	originalEvent: "1"
@@ -1795,7 +1789,7 @@ function avactor() {
 		});
 		$("#noffGo").click(() => {
 			$("#warcouncbox").show();
-			tabs_.tabs("option", "active", 6);
+			tabs.tabs("option", "active", 6);
 			//$("#nearofftab").trigger({
 			//	type: "click",
 			//	originalEvent: "1"
@@ -1839,29 +1833,24 @@ function avactor() {
 				}
 			}
 		});
-		$("#quickdefCityGo").click(() => {
-			/@todo
-			/** @type {number} */
-			var tid_6=AsNumber($("#showReportsGo").attr("data"));
-			var tempx_9;
-			var tempy_9;
-			/** @type {number} */
-			tempx_9=AsNumber(tid_6%65536);
-			/** @type {number} */
-			tempy_9=AsNumber((tid_6-tempx_9)/65536);
-
-			commandInfo.t.targets.dist.push(Math.sqrt((tempx_9-D6.x)*(tempx_9-D6.x)+(tempy_9-D6.y)*(tempy_9-D6.y)));
-			var i_39;
-			for(i_39 in D6.th) {
-				if(D6.th[i_39]) {
-					defobj_2.t.home.push(Math.ceil(D6.th[i_39]*AsNumber($("#defperc").val())/100));
-					defobj_2.t.type.push(AsNumber(i_39));
-					defobj_2.t.speed.push(ttspeed_[i_39]/ttspeedres_[i_39]);
-					defobj_2.t.use.push(1);
-					defobj_2.t.amount.push(0);
+		$("#quickdefCityGo").click(function () {
+			var tid = Number($("#showReportsGo").attr("data"));
+			var tempx;
+			var tempy;
+			tempx = Number(tid % 65536);
+			tempy = Number((tid - tempx) / 65536);
+			var defobj = { targets: { x: [tempx], y: [tempy], dist: [], numb: 1 }, t: { home: [], type: [], use: [], speed: [], amount: [] }, perc: 100, dep: 0, ret: 0, rettime: 0, hr: 0, min: 0, sec: 0, dat: 0 };
+			defobj.targets.dist.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
+			for (var i in D6.th) {
+				if (D6.th[i]) {
+					defobj.t.home.push(Math.ceil(D6.th[i] * Number($("#defperc").val()) / 100));
+					defobj.t.type.push(Number(i));
+					defobj.t.speed.push(ttspeed[i] / ttSpeedBonus[i]);
+					defobj.t.use.push(1);
+					defobj.t.amount.push(0);
 				}
 			}
-			SendDef_(defobj_2);
+			SendDef(defobj);
 		});
 		$("#ndefup").click(() => {
 			/** @type {number} */
@@ -1939,17 +1928,17 @@ function avactor() {
 				$("#ExpImp").remove();
 			});
 		});
-		/** @type {string} */
+		
 		var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>flip q</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
 
-	///** @type {string} */
+	//
 	//	var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
-	//	/** @type {string} */
+	//	
 	//	bdcountbox_ = `${bdcountbox_}<div id='bdcountbut' class='tradeqarr2'><div></div></div><span class='qbspan'>Current Buildings</span>`;
-	///** @type {string} */
+	//
 	//	bdcountbox_ = `${bdcountbox_}<div id='numbdleft' class='barRightFloat tooltipstered'>0</div>`;
 
-	///** @type {string} */
+	//
 	//	bdcountbox_ = `${bdcountbox_}</div><div id='bdcountwin' class='queueWindow' style='display: block;'></div></div>`;
 		//$("#recruitmentQueue").before(bdcountbox_);
 		//$("#bdcountbut").click(() => {
@@ -1968,14 +1957,14 @@ function avactor() {
 
 
 		$("#buildQueue").before(fourbutton_);
-		/** @type {string} */
+		
 		var fillbut_ = '<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
 		$("#sortbut").after(fillbut_);
 		$("#fillque").click(() => {
 			OverviewPost('overview/fillq.php', { a: cotg.city.id() });
 			event.stopPropagation();
 		});
-		/** @type {string} */
+		
 		var convbut_ = '<button id="convque" class="greenb tooltipstered" style="height:18px; width:60px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Convert</button>';
 		$("#sortbut").after(convbut_);
 		$("#convque").click(() => {
@@ -2067,7 +2056,7 @@ function avactor() {
 			setAutoDemo(false);
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
-		/** @type {string} */
+		
 		var sumbut_ = "<button class='tabButton' id='Sum'>Summary</button>";
 		$("#items").after(sumbut_);
 		$("#Sum").click(() => {
@@ -2080,7 +2069,7 @@ function avactor() {
 		$("#sumWin").click(() => {
 			console.log("popsum");
 		});
-		/** @type {string} */
+		
 		var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";
 		$("#woodmaxbutton").parent().after(wood50_);
 		$("#wood50").click(() => {
@@ -2099,7 +2088,7 @@ function avactor() {
 			}
 			$("#woodsendamt").val(res_3);
 		});
-		/** @type {string} */
+		
 		var stone50_ = "<td><button class='brownb' id='stone50'>Add 50%</button></td>";
 		$("#stonemaxbutton").parent().after(stone50_);
 		$("#stone50").click(() => {
@@ -2118,7 +2107,7 @@ function avactor() {
 			}
 			$("#stonesendamt").val(res_4);
 		});
-		/** @type {string} */
+		
 		var iron50_ = "<td><button class='brownb' id='iron50'>Add 50%</button></td>";
 		$("#ironmaxbutton").parent().after(iron50_);
 		$("#iron50").click(() => {
@@ -2137,7 +2126,7 @@ function avactor() {
 			}
 			$("#ironsendamt").val(res_5);
 		});
-		/** @type {string} */
+		
 		var food50_ = "<td><button class='brownb' id='food50'>Add 50%</button></td>";
 		$("#foodmaxbutton").parent().after(food50_);
 		$("#food50").click(() => {
@@ -2156,7 +2145,7 @@ function avactor() {
 			}
 			$("#foodsendamt").val(res_6);
 		});
-		/** @type {string} */
+		
 		var shrinebut_ = "<button class='regButton greenb' id='shrineP' style='width: 98%;margins: 1%;'>Shrine Planner</button>";
 		$("#inactiveshrineInfo").before(shrinebut_);
 		$("#shrineP").click(() => {
@@ -2207,11 +2196,11 @@ function avactor() {
 				shrinec_.sort((a, b) => {
 					return a[5] - b[5];
 				});
-				/** @type {string} */
+				
 				var planwin_ = "<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
-				/** @type {string} */
+				
 				planwin_ = `${planwin_}<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id="sumX" onclick="$('#shrinePopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
-				/** @type {string} */
+				
 				planwin_ = `${planwin_}<div id='shrinediv' class='beigemenutable scroll-pane ava' style='background:none;border: none;padding: 0px;height:90%;'></div></div>`;
 				for (i_41 in shrinec_) {
 					if (i_41 < 101) {
@@ -2278,15 +2267,15 @@ function avactor() {
 						}
 					});
 					updateshrine_();
-					/** @type {string} */
+					
 					var addcitypop_ = "<div id='addcityPopup' style='width:500px;height:100px;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Add City</span>";
-					/** @type {string} */
+					
 					addcitypop_ = `${addcitypop_}<button id="sumX" onclick="$('#addcityPopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
-					/** @type {string} */
+					
 					addcitypop_ = `${addcitypop_}<div><table><td>X: <input id='addx' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td><td>y: <input id='addy' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td>`;
-					/** @type {string} */
+					
 					addcitypop_ = `${addcitypop_}<td>score: <input id='addscore' type='number' style='width: 45px;height: 22px;font-size: 10px;'></td><td>Type: <select id='addtype' class='greensel' style='font-size: 15px !important;width:55%;height:30px;'>`;
-					/** @type {string} */
+					
 					addcitypop_ = `${addcitypop_}<option value='city'>City</option><option value='castle'>Castle</option></select></td><td><button id='addadd' class='greenb'>Add</button></td></table></div></div>`;
 					$("#addcity").click(() => {
 						$("body").append(addcitypop_);
@@ -2319,10 +2308,10 @@ function avactor() {
 
 		var incomingtabledata_ = $("#incomingsAttacksTable").children().children().children();
 		$("#incomingsAttacksTable table thead tr th:nth-child(2)").width(140);
-		/** @type {string} */
+		
 		var Addth_ = "<th>Lock time</th>";
 		incomingtabledata_.append(Addth_);
-		/** @type {string} */
+		
 		var Addth1_ = "<th>Travel time</th>";
 		incomingtabledata_.append(Addth1_);
 		$("#allianceIncomings").parent().click(() => {
@@ -2337,7 +2326,7 @@ function avactor() {
 		});
 
 
-		/** @type {string} */
+		
 		var newbutz_ = "<div style='float: left; margin-left: 2%;'><button id='newbuttonu' style='font-size:8px; padding: 4px; border-radius: 8px;' class='greenb shRnTr'>Recall(<90%)</button></div>";
 		$("#totalTS").before(newbutz_);
 		$("#newbuttonu").click(() => {
@@ -2372,7 +2361,7 @@ function avactor() {
 		});
 
 		if (localStorage.getItem("raidbox") != null) {
-			/** @type {string} */
+			
 			var raidboxback_ = "<button class='regButton greenb' id='raidboxb' style='width:120px; margin-left: 2%;'>Return Raiding Box</button>";
 			$("#squaredung td").find(".squarePlayerInfo").before(raidboxback_);
 			$("#raidboxb").click(() => {
@@ -2380,13 +2369,13 @@ function avactor() {
 				$("#raidboxb").remove();
 			});
 		}
-		/** @type {string} */
+		
 		var cancelallya_ = "<input id='cancelAllya' type='checkbox' checked='checked'> Cancel attack if same alliance";
-		/** @type {string} */
+		
 		var cancelallys_ = "<input id='cancelAllys' type='checkbox' checked='checked'> Cancel attack if same alliance";
-		/** @type {string} */
+		
 		var cancelallyp_ = "<input id='cancelAllyp' type='checkbox' checked='checked'> Cancel attack if same alliance";
-		/** @type {string} */
+		
 		var cancelallyc_ = "<input id='cancelAllyc' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		$("#assaulttraveltime").parent().next().html(cancelallya_);
 		$("#siegetraveltime").parent().next().html(cancelallys_);
@@ -2585,31 +2574,31 @@ function avactor() {
 		});
 		$("#citynotes").height("310px");
 		$("#citynotes").width("495px");
-		/** @type {string} */
+		
 		var layoutopttab_ = "<li id='layoutopt' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='layoutoptBody'";
-		/** @type {string} */
+		
 		layoutopttab_ = `${layoutopttab_}aria-labeledby='ui-id-60' aria-selected='false' aria-expanded='false'>`;
-		/** @type {string} */
+		
 		layoutopttab_ = `${layoutopttab_}<a href='#layoutoptBody' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-60'>Layout Options</a></li>`;
-		/** @type {string} */
+		
 		var layoutoptbody_ = "<div id='layoutoptBody' aria-labeledby='ui-id-60' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_} role='tabpanel' aria-hidden='true' style='display: none;'><table><tbody><tr><td><input id='addnotes' class='clsubopti' type='checkbox'> Add Notes</td>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<td><input id='addtroops' class='clsubopti' type='checkbox'> Add Troops</td></tr><tr><td><input id='addtowers' class='clsubopti' type='checkbox'> Add Towers</td><td><input id='addbuildings' class='clsubopti' type='checkbox'> Upgrade Cabins</td>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<td> Cabin Lvl: <input id='cablev' type='number' style='width:22px;' value='7'></td></tr><tr><td><input id='addwalls' class='clsubopti' type='checkbox'> Add Walls</td>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<td><input id='addhub' class='clsubopti' type='checkbox'> Set Nearest Hub With layout</td></tr><tr><td>Select Hubs list: </td><td id='selhublist'></td><td>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<button id='nearhubAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Set Nearest Hub</button><button id='infantryAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Infantry setup</button></td></tr></tbody></table>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<table><tbody><tr><td colspan='2'><input id='addres' class='clsubopti' type='checkbox'> Add Resources:</td><td id='buttd' colspan='2'></td></tr><tr><td>wood<input id='woodin' type='number' style='width:100px;' value='200000'></td><td>stone<input id='stonein' type='number' style='width:100px;' value='220000'></td>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}<td>iron<input id='ironin' type='number' style='width:100px;' value='200000'></td><td>food<input id='foodin' type='number' style='width:100px;' value='350000'></td></tr>`;
-		/** @type {string} */
+		
 		layoutoptbody_ = `${layoutoptbody_}</tbody></table></div>`;
-		/** @type {string} */
+		
 		var layoptbut_ = "<button id='layoptBut' class='regButton greenb' style='width:150px;'>Save Res Settings</button>";
 		var tabs_1 = $("#CNtabs").tabs();
 		var ul_1 = tabs_1.find("ul");
@@ -2762,14 +2751,14 @@ function avactor() {
 					troop_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					res_count: [0, 0, 0, 0, 1, 575000, 575000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 575000, 575000, 575000, 575000]
 				}];
-				/** @type {string} */
+				
 				var selectbuttsdf_ = '<select id="dfunkylayout" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:30%;" class="regButton greenb"><option value="0">Prefered build layout</option>';
 				/** @type {number} */
 				var ww_ = 1;
 				var prefered_;
 				for (prefered_ in prefered_data_) {
 				//	console.log(prefered_data_[prefered_]);
-					/** @type {string} */
+					
 					selectbuttsdf_ = `${selectbuttsdf_}<option value="${ww_}">${prefered_data_[prefered_].name}</option>`;
 					layoutdf_.push(prefered_data_[prefered_].string);
 					remarkdf_.push(prefered_data_[prefered_].remarks);
@@ -2778,13 +2767,13 @@ function avactor() {
 					resd_.push(prefered_data_[prefered_].res_count);
 					ww_++;
 				}
-				/** @type {string} */
+				
 				selectbuttsdf_ = `${selectbuttsdf_}</select>`;
-				/** @type {string} */
+				
 				var selectbuttsw_ = '<select id="funkylayoutw" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select water layout</option>';
 				/** @type {number} */
 				var cww_ = 1;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">2 sec rang/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BGBGB##-----##----##GBGBGBG##----##----#BGBGBGBGB#----##----#BGBGBGBGB#---H#######BGBGTGBGB#######----#BGBGBGBGB#JSPX##----#BGBGBGBGB#----##----##GBGBGBG##G---##-----##BGGGB##BBBBG##------#######BBVVBB##---------#--GBV##VB##---------#--GBV###V###--------#---BBV#######-------#----BBV########################");
 				remarksw_.push("rangers/triari/galley");
@@ -2792,7 +2781,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 83300, 83300, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 334, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">6 sec arbs/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#SPJX##----#BEBEBEBEB#MH--##----##EBEBEBE##----##-----##BEBEB##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#--BBBVTT#####-------#--BEBBV########################");
 				remarksw_.push("arbs/galley");
@@ -2800,7 +2789,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 88300, 0, 0, 0, 0, 0, 354, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">3 sec priestess/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#---H#######BZBZTZBZB#######----#BZBZBZBZB#JSPX##----#BZBZBZBZB#----##----##ZBZBZBZ##-Z--##-----##BZZZB##BBBBZ##------#######BBVVBB##---------#---BV##VB##---------#--ZBV###V###--------#---BBV#######-------#---ZBBV########################");
 				remarksw_.push("priestess/galley");
@@ -2808,7 +2797,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 166600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 334, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">7 sec praetor/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#----#######BZBZTZBZB#######----#BZBZBZBZB#SPJX##----#BZBZBZBZB#MH--##----##ZBZBZBZ##----##-----##BZBZB##BBBBZ##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#--BZBBV########################");
 				remarksw_.push("praetors/galley");
@@ -2816,7 +2805,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 86650, 0, 0, 0, 0, 347, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">2 sec vanq/galley+senator</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BGBGB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBGBGBGB#---H#######BGBGTGBGB#######----#BGBGBGBGB#JSPX##----#BGBGBGBGB#----##----##BBGBGBB##---B##-----##BGBGB##BBBBZ##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#---BBV#######-------#--BBBBV########################");
 				remarksw_.push("vanq/galley+senator");
@@ -2824,7 +2813,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 193300, 0, 0, 0, 0, 0, 0, 0, 0, 387, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">5 sec horses/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#---H#######BEBETEBEB#######----#BEBEBEBEB#JSPX##----#BEBEBEBEB#-M--##----##EBEBEBB##----##-----##BEBEB##BBBB-##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#--BBBV#######-------#--BEBBV########################");
 				remarksw_.push("horses/galley");
@@ -2832,7 +2821,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90000, 0, 0, 0, 360, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">5 sec sorc/galley</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##JBJBJ##-----##----##BJBJBJB##----##----#JBJBJBJBJ#----##----#JBJBJBJBJ#---H#######JBJBTBJBJ#######----#JBJBJBJBJ#-S-X##----#JBJBJBJBJ#----##----##BJBJBJB##JJ--##-----##JBJBJ##BBBBJ##------#######BBVVBB##---------#--JBV##VB##---------#--JBV###V###--------#---BBV#######-------#---JBBV########################");
 				remarksw_.push("sorc/galley");
@@ -2840,7 +2829,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 156600, 0, 0, 0, 0, 0, 0, 0, 314, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">vanqs+ports+senator</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BBBBB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBBBBBGB#----#######BBBGTGBBB#######----#BGBBBBBGB#PPJX##----#BGBGBGBGB#BBBB##----##BBGBGBB##BBBB##-----##BBBBB##BBBBB##------#######-BRRBB##---------#----R##RZ##---------#----R###R###--------#----SR#######-------#----MSR########################");
 				remarksw_.push("vanqs+senator+ports");
@@ -2848,7 +2837,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 100000, 0, 164000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">main hub</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#---PPPPP###---------#---PPPPPP##---------#---PPPPPP##------#######PPPPPP##-----##-----##PPPPP##----##SLSDSAS##PPPP##----#-SDSMSDS-#PPPP##----#-SLSMSAS-#PPPP#######-SDSTSDS-#######----#-SLSMSAS-#----##----#-SDSMSDS-#----##----##SLSDSAS##----##-----##-----##-----##------#######--RR--##---------#ZB--RTTR-##---------#PJ--RTTTR###--------#-----RTT#####-------#------R########################");
 				remarksw_.push("main hub");
@@ -2856,7 +2845,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace storage</option>`;
 				layoutsw_.push("[ShareString.1.3]:########################-------#-----PP#####--------#-----PPP###---------#-----PPPP##---------#-----PPPP##------#######--PPPP##-----##SASLS##-PPPP##----##ASASLSL##PPPP##----#SASASLSLS#-PPP##----#SASASLSLS#JPPP#######SASA#LSLS#######----#SASASLSLS#----##----#SASASLSLS#----##----##ASASLSL##----##-----##SASLS##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksw_.push("palace storage");
@@ -2864,7 +2853,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace feeder</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-PPPPPP#PPPPPPP#####--PPPPPP#PPPPPPPP###---PPPPPP#PPPPPPPPP##---PPPPPP#PPPPPPPPP##----PP#######PPPPPP##-----##----J##PPPPP##----##-A-----##PPPP##----#-SSS-----#PPPP##----#-AAA-----#PPPP#######-SSST----#######----#-LLL-----#----##----#-SSS-----#----##----##-L-----##----##-----##-----##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksw_.push("palace feeder");
@@ -2872,7 +2861,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">palace Hub mixed</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#PPPPPPP#####--------#PPPPPPPP###---------#PPPPPPPPP##---------#PPPPPPPPP##------#######PPPPPP##-----##-----##PPPPP##----##-------##PPPP##----#SLSASLSAS#PPPP##----#SASLSASLS#JPPP#######SLSATLSAS#######----#SASLSASLS#----##----#SLSASLSAS#----##----##-------##----##-----##-----##-----##------#######--__--##---------#----_TT_-##---------#----_TTT_###--------#-----_TT#####-------#------_########################");
 				remarksw_.push("palace Hub mixed");
@@ -2880,7 +2869,7 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">Stingers</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##-----##-----##----##-------##----##----#---------#----##----#---------#----#######----T----#######----#---------#SPHX##----#---------#-M--##----##-------##----##-----##-----##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#----BBV########################");
 				remarksw_.push("stingers");
@@ -2888,16 +2877,16 @@ function avactor() {
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3480, 0]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
 				cww_++;
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">Warships</option>`;
 				layoutsw_.push("[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##-----##-----##----##-------##----##----#---------#----##----#---------#----#######----T----#######----#---------#SPHX##----#---------#-M--##----##-------##----##-----##-----##BBBB-##------#######BBVVBB##---------#---BVTTVB##---------#---BVTTTV###--------#---BBVTT#####-------#----BBV########################");
 				remarksw_.push("warships");
 				notesw_.push("870 warships @ 42 days");
 				troopcounw_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 870]);
 				resw_.push([0, 0, 0, 0, 1, 500000, 500000, 500000, 500000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 500000, 500000, 500000, 500000]);
-				/** @type {string} */
+				
 				selectbuttsw_ = `${selectbuttsw_}</select>`;
-				/** @type {string} */
+				
 				var selectbuttsl_ = '<select id="funkylayoutl" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select land layout</option>';
 				/** @type {number} */
 				var ll_1 = 1;
@@ -2919,7 +2908,7 @@ function avactor() {
 				}];
 				var l_locked_;
 				for (l_locked_ in land_locked_data_) {
-					/** @type {string} */
+					
 					selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">${land_locked_data_[l_locked_].name}</option>`;
 					layoutsl_.push(land_locked_data_[l_locked_].string);
 					remarksl_.push(land_locked_data_[l_locked_].remarks);
@@ -2928,7 +2917,7 @@ function avactor() {
 					resl_.push(land_locked_data_[l_locked_].res_count);
 					ll_1++;
 				}
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">3 sec vanqs raiding</option>`;
 				layoutsl_.push("[ShareString.1.3];########################----PJX#-------#####BB----PP#--------###BGBGB--SS#---------##BBBBB--MP#---------##BGBGB-#######------##BBBBB##BBBBB##-----##--G-##BBGBGBB##----##----#BBBBBBBBB#----##----#BGBGBGBGB#----#######BBBBTBBBB#######----#BGBGBGBGB#----##----#BBBBBBBBB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksl_.push("vanqs");
@@ -2936,7 +2925,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 296000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">2 sec rangers</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BGBGB-PP#--------###-BGBGB-MS#---------##-BGBGB--H#---------##-BGBGB#######------##--BBB##BGBGB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBGBGBGB#----#######BGBGTGBGB#######----#BGBGBGBGB#----##----#BGBGBGBGB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("rangers/triari");
@@ -2944,7 +2933,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 186000, 50000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">3 sec priests</option>`;
 				layoutsl_.push("[ShareString.1.3];########################-------#-----BB#####--------#----BBBB###---------#----BZZZB##---------#----BBBBB##------#######-BZZZB##-----##BZBZB##BBBBB##----##ZBZBZBZ##----##----#BZBZBZBZB#SP--##----#BZBZBZBZB#SP--#######BZBZTZBZB#######----#BZBZBZBZB#JX--##----#BZBZBZBZB#----##----##ZBZBZBZ##----##-----##BZBZB##-----##------#######--__--##---------#----_##_-##---------#----_###_###--------#-----_#######-------#------_########################");
 				remarksl_.push("priests");
@@ -2952,7 +2941,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 224000, 50000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">6 sec praetors</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BZBZB-PP#--------###-BZBZB-MS#---------##-BZBZB--H#---------##-BZBZB#######------##--BBB##BZBZB##-----##----##ZBZBZBZ##----##----#BZBZBZBZB#----##----#BZBZBZBZB#----#######BZBZTZBZB#######----#BZBZBZBZB#----##----#BZBZBZBZB#----##----##BBZBZBB##----##-----##BZBZB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("praetors");
@@ -2960,7 +2949,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 110000, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">4 sec horses</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--ZBB##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBE##----##-----##BEBEB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("horses");
@@ -2968,7 +2957,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 106000, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec horses</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################-B---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB-PH#---------##-BEBEB#######------##--BBB##BBBBB##-----##----##BBEBEBB##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBBTBBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("horses");
@@ -2976,7 +2965,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124000, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec arbs</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BEBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--BBB##BEBEB##-----##----##EBEBEBE##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BEBEB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("arbs");
@@ -2984,7 +2973,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 110000, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">6 sec arbs</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BB---JX#-------#####BEBEB-PP#--------###-BBBEB-MS#---------##-BEBEB--H#---------##-BEBEB#######------##--BBB##BBBBB##-----##----##BBEBEBB##----##----#BEBEBEBEB#----##----#BEBEBEBEB#----#######BEBETEBEB#######----#BEBEBEBEB#----##----#BEBEBEBEB#----##----##BBEBEBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("arbs");
@@ -2992,7 +2981,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 124000, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">4 sec sorc</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BJBJ--X#-------#####JBJBJ--S#--------###-JBJBJ--M#---------##-JBJBJ--H#---------##-JBJBJ#######------##-ZBJB##JBJBJ##-----##----##BJBJBJB##----##----#JBJBJBJBJ#----##----#JBJBJBJBJ#----#######JBJBTBJBJ#######----#JBJBJBJBJ#----##----#JBJBJBJBJ#----##----##BJBJBJB##----##-----##JBJBJ##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("sorc");
@@ -3000,7 +2989,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 176000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">5 sec sorc</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBB---X#-------#####BJBJB--P#--------###-BJBJB-MS#---------##-BJBJB--H#---------##-BJBJB#######------##-ZBBB##BJBJB##-----##----##JBJBJBJ##----##----#BJBJBJBJB#----##----#BJBJBJBJB#----#######BJBJTJBJB#######----#BJBJBJBJB#----##----#BJBJBJBJB#----##----##BBJBJBB##----##-----##BJBJB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("sorc");
@@ -3008,7 +2997,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 224000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">10 sec druids</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################-J----X#-------#####JBJB--MS#--------###BJBJB---H#---------##BJBJB----#---------##BJBJB-#######------##BJBJB##BJBJB##-----##-JBJ##JBJBJBJ##----##----#BJBJBJBJB#----##----#BJBJBJBJB#----#######BJBJTJBJB#######----#BJBJBJBJB#----##----#BJBJBJBJB#----##----##JBJBJBJ##----##-----##BJBJB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("druids");
@@ -3016,7 +3005,7 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102000, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">scorp/rams</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBYB--X#-------#####BYBYB---#--------###-BYBYB-MS#---------##-BYBYB--H#---------##-BYBYB#######------##-BYBB##BYBYB##-----##----##YBYBYBY##----##----#BYBYBYBYB#----##----#BYBYBYBYB#----#######BYBYTYBYB#######----#BYBYBYBYB#----##----#BYBYBYBYB#----##----##YBYBYBY##----##-----##BYBYB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("scorp/rams");
@@ -3024,14 +3013,14 @@ function avactor() {
 				troopcounl_.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5500, 16100, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
 				ll_1++;
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}<option value="${ll_1}">ballista</option>`;
 				layoutsl_.push("[ShareString.1.3]:########################BBBB--X#-------#####BYBYB---#--------###-BYBYB-MS#---------##-BYBYB--H#---------##-BYBYB#######------##-BBBB##BBBBB##-----##----##BBYBYBB##----##----#BYBYBYBYB#----##----#BYBYBYBYB#----#######BYBYTYBYB#######----#BYBYBYBYB#----##----#BYBYBYBYB#----##----##BBYBYBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################");
 				remarksl_.push("ballista");
 				notesl_.push("25600 siege engines @ 10.5 days");
 				troopcounl_.push([0, 25600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 				resl_.push([0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]);
-				/** @type {string} */
+				
 				selectbuttsl_ = `${selectbuttsl_}</select>`;
 				$("#removeoverlayGo").after(selectbuttsdf_);
 				$("#dfunkylayout").after(selectbuttsl_);
@@ -3580,9 +3569,9 @@ function avactor() {
 					var tspeed_ = 0;
 					for (j_1 in tempt_) {
 						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
+							if (AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2));
 							}
 						}
 					}
@@ -3628,9 +3617,9 @@ function avactor() {
 					tspeed_ = 0;
 					for (j_1 in tempt_) {
 						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
+							if (AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
 								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed_[j_1] / ttSpeedBonus[j_1]).toFixed(2));
+								tspeed_ = AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2));
 							}
 						}
 					}
@@ -3643,7 +3632,7 @@ function avactor() {
 		cit_.sort((a_, b_1) => {
 			return a_[8] - b_1[8];
 		});
-		/** @type {string} */
+		
 		var neardeftab_ = "<table id='ndeftable'><thead><th></th><th>City</th><th>Coords</th><th>TS Total</th><th>TS Home</th><th id='ndefdist'>Travel Time</th><th>type</th></thead><tbody>";
 		for (i_5 in cit_) {
 			if (i_5 > 0) {
@@ -3654,21 +3643,21 @@ function avactor() {
 				/** @type {(number|string)} */
 
 				/** @type {(number|string)} */
-				/** @type {string} */
+				
 				neardeftab_ = `${neardeftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_[i_5][7]}'>Go To</button></td><td>${cit_[i_5][3]}</td><td class='coordblink shcitt' data='${cit_[i_5][7]}'>${cit_[i_5][0]}:${cit_[i_5][1]}</td>`;
-				/** @type {string} */
+				
 				neardeftab_ = `${neardeftab_}<td>${cit_[i_5][5]}</td><td>${cit_[i_5][6]}</td><td>${TwoDigitNum(h1_)}:${TwoDigitNum(m1_)}</td><td><table>`;
 				for (j_1 in cit_[i_5][4]) {
 					if (cit_[i_5][4][j_1] > 0) {
-						/** @type {string} */
+						
 						neardeftab_ = `${neardeftab_}<td><div class='${tpicdiv20_[j_1]}'></div></td>`;
 					}
 				}
-				/** @type {string} */
+				
 				neardeftab_ = `${neardeftab_}</table></td></tr>`;
 			}
 		}
-		/** @type {string} */
+		
 		neardeftab_ = `${neardeftab_}</tbody></table>`;
 		$("#Ndefbox").html(neardeftab_);
 		$("#ndeftable td").css("text-align", "center");
@@ -3751,25 +3740,25 @@ function avactor() {
 			return b_2[2] - a_1[2];
 		});
 		$("#asdfg").text(`Total:${counteroff_}`);
-		/** @type {string} */
+		
 		var nearofftab_ = "<table id='nofftable'><thead><th></th><th>City</th><th>Coords</th><th>TS</th><th>type</th></thead><tbody>";
 		for (i_6 in cit_1) {
 			if (i_6 > 0) {
-				/** @type {string} */
+				
 				nearofftab_ = `${nearofftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_1[i_6][5]}'>Go To</button></td><td>${cit_1[i_6][4]}</td><td class='coordblink shcitt' data='${cit_1[i_6][5]}'>${cit_1[i_6][0]}:${cit_1[i_6][1]}</td>`;
-				/** @type {string} */
+				
 				nearofftab_ = `${nearofftab_}<td>${cit_1[i_6][2]}</td><td><table>`;
 				for (j_2 in cit_1[i_6][3]) {
 					if (cit_1[i_6][3][j_2] > 0) {
-						/** @type {string} */
+						
 						nearofftab_ = `${nearofftab_}<td><div class='${tpicdiv20_[j_2]}'></div></td>`;
 					}
 				}
-				/** @type {string} */
+				
 				nearofftab_ = `${nearofftab_}</table></td></tr>`;
 			}
 		}
-		/** @type {string} */
+		
 		nearofftab_ = `${nearofftab_}</tbody></table>`;
 		$("#Noffbox").html(nearofftab_);
 		$("#nofftable td").css("text-align", "center");
@@ -3782,34 +3771,34 @@ function avactor() {
 		});
 		$("#mailoff").click(() => {
 			var conttemp_ = $("#noffx").val();
-			/** @type {string} */
+			
 			var dhruv_ = `<p>AsNumber of offensive castles is '${counteroff_}'</p>`;
-			/** @type {string} */
+			
 			dhruv_ = `${dhruv_}</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>AsNumber</th><th>Troop</th><th>TS Amount</th></thead><tbody>`;
 			var i_7;
 			for (i_7 in troopmail_) {
 				if (i_7 > 0) {
-					/** @type {string} */
+					
 					dhruv_ = `${dhruv_}<tr><td style="text-align: center;" data-mce-style="text-align: center;">${i_7}</td>`;
-					/** @type {string} */
+					
 					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;"><table>`;
 					var j_3;
 					for (j_3 in troopmail_[i_7][0]) {
 						if (troopmail_[i_7][0][j_3] > 0) {
-							/** @type {string} */
+							
 							dhruv_ = `${dhruv_}<td>${ttname_[j_3]}</td>`;
 						}
 					}
-					/** @type {string} */
+					
 					dhruv_ = `${dhruv_}</table></td>`;
-					/** @type {string} */
+					
 					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;">${troopmail_[i_7][1]}</td></tr>`;
 				}
 			}
-			/** @type {string} */
+			
 			dhruv_ = `${dhruv_}</tbody></table>`;
 			if (conttemp_ == 99) {
-				/** @type {string} */
+				
 				conttemp_ = "Navy";
 			}
 			jQuery("#mnlsp")[0].click();
@@ -3833,6 +3822,7 @@ function callDemo() {
 		"1"
 	);
 }
+
 function setAutoDemo(_autodemoon: boolean) {
 	if (_autodemoon == __autodemoon_)
 		return;
@@ -3847,6 +3837,22 @@ function setAutoDemo(_autodemoon: boolean) {
 	$("#fb4").addClass("greenb");
 	$("#city_map").off("click", callDemo);
 	}
+}
+
+function getFormattedTime(date_2) {
+	var year_1 = date_2.getFullYear();
+	var month_1 = (1 + date_2.getMonth()).toString();
+	month_1 = month_1.length > 1 ? month_1 : `0${month_1}`;
+	var day_ = date_2.getDate().toString();
+	day_ = day_.length > 1 ? day_ : `0${day_}`;
+	
+	var hour_ = TwoDigitNum(date_2.getHours());
+
+	
+	var min_ = TwoDigitNum(date_2.getMinutes());
+	
+	var sec_ = TwoDigitNum(date_2.getSeconds());
+	return `${month_1}/${day_}/${year_1} ${hour_}:${min_}:${sec_}`;
 }
 
 //(function ()

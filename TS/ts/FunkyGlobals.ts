@@ -139,7 +139,6 @@ class CommandInfo {
 
 		 public c: Command [];
 		 public i: TroopTypeInfo[];
-
 		 public perc: number = 100;
 		// dep: 0,
 		 public ret: number = 0;
@@ -168,883 +167,707 @@ function GetAttackTime(source) {
 	 * @return {void}
 	 */
 
-//function IssueCommandsAndReturnTroops() { }
-	// function IssueCommandsAndReturnTroops() {
-	// 	$("#commandsPopUpBox").hide();
-	// 	if(commandInfo.ret==1) {
-	// 		jQuery(".toptdinncommtbl1:first")[0].click();
-	// 		setTimeout(() => {
-	// 			$("#outgoingPopUpBox").hide();
-	// 		},500);
-	// 		/** @type {!Date} */
-	// 		var minddate_=new Date(2050,0,0);
-	// 		var i_10;
-	// 		for(i_10 in OGA) {
-	// 			if(commandInfo.cstr.indexOf(OGA[i_10][5])>-1) {
 
-	// 				let d_1=GetAttackTime(OGA[i_10][6]);
-
-	// 				if(d_1<minddate_) {
-	// 					/** @type {!Date} */
-	// 					minddate_=d_1;
-	// 				}
-
-	// 			}
-	// 		}
-	// 		minddate_=new Date(minddate_.getTime()-AsNumber(localStorage.getItem("retHr"))*60*60*10000);
-	// 		/** @type {string} */
-	// 		var retdate_=getFormattedTime(minddate_);
-	// 		$("#raidrettimesela").val(3).change();
-	// 		$("#raidrettimeselinp").val(retdate_);
-	// 		jQuery("#doneOGAll")[0].click();
-	// 		alert("Commands set and troops returned");
-	// 	} else {
-	// 		alert("Commands set");
-	// 	}
-	// }
-
-					/// @todo
-
-	/**
-	 * @param {!Object} defobj_
-	 * @return {void}
-	 */
-	// function SendDef_() {
-	// 	/**
-	// 	 * @return {void}
-	// 	 */
-	// 	function dloop_() {
-	// 		var i_9;
-	// 		for(i_9 in commandInfo.home) {
-	// 			if(commandInfo.use[i_9]==1) {
-	// 				$(`#reiIP${commandInfo.type[i_9]}`).val(commandInfo.amount[i_9]);
-	// 			}
-	// 		}
-	// 		$("#reinxcoord").val(commandInfo.x[l_]);
-	// 		$("#reinycoord").val(commandInfo.y[l_]);
-	// 		setTimeout(() => {
-	// 			$("#reinfcoordgo").trigger({
-	// 				type: "click",
-	// 				originalEvent: "1"
-	// 			});
-	// 		},100);
-	// 		$("#reinforcetimingselect").val(AsNumber(commandInfo.dep)+1).change();
-	// 		if($("#defdeparture").val()>0) {
-	// 			/** @type {string} */
-	// 			var date_3=`${commandInfo.date} ${commandInfo.hr}:${commandInfo.min}:${commandInfo.sec}`;
-	// 			$("#reinfotimeinp").val(date_3);
-	// 		}
-	// 		var event_1=jQuery.Event("logged");
-	// 		/** @type {string} */
-	// 		event_1.user="foo";
-	// 		$("#reinforceGo").trigger({
-	// 			type: "click",
-	// 			originalEvent: "1"
-	// 		});
-	// 		l_++;
-	// 		if(l_<end_4) {
-	// 			setTimeout(dloop_,1500);
-	// 		} else {
-	// 			$("#commandsPopUpBox").hide();
-	// 			setTimeout(IssueCommandsAndReturnTroops,4000);
-	// 		}
-	// 	}
-
-	// 	$("#commandsPopUpBox").show();
-	// 	var commandtabs_=$("#commandsdiv").tabs();
-	// 	commandtabs_.tabs("option","active",2);
-	// 	$("#reintabb").trigger({
-	// 		type: "click",
-	// 		originalEvent: "1"
-	// 	});
-	// 	/** @type {number} */
-	// 	var maxdist_=Math.max(...commandInfo.dist);
-	// 	var time_;
-	// 	if(commandInfo.type.indexOf(14)>-1) {
-	// 		if(commandInfo.use[commandInfo.type.indexOf(14)]==1) {
-	// 			/** @type {number} */
-	// 			time_=ttspeed_[14]/ttspeedres_[14]*maxdist_;
-	// 			var gali_=commandInfo.type.indexOf(14);
-	// 			if(commandInfo.dep==0) {
-	// 				/** @type {number} */
-	// 				var galnumb_=Math.floor(commandInfo.home[gali_]/commandInfo.numb);
-	// 			} else {
-	// 				/** @type {number} */
-	// 				galnumb_=Math.floor(commandInfo.tot[gali_]/commandInfo.numb);
-	// 			}
-	// 			/** @type {number} */
-	// 			var maxts_=0;
-	// 			var i_8;
-	// 			for(i_8 in commandInfo.home) {
-	// 				if(i_8!=gali_) {
-	// 					if(commandInfo.use[i_8]==1) {
-	// 						if(commandInfo.type[i_8]!=15) {
-	// 							if(commandInfo.dep==0) {
-	// 								/** @type {number} */
-	// 								maxts_=maxts_+Math.floor(commandInfo.home[i_8]*ttts_[commandInfo.type[i_8]]/commandInfo.numb);
-	// 							} else {
-	// 								/** @type {number} */
-	// 								maxts_=maxts_+Math.floor(commandInfo.tot[i_8]*ttts_[commandInfo.type[i_8]]/commandInfo.numb);
-	// 							}
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 			if(maxts_<=galnumb_*500) {
-	// 				/** @type {number} */
-	// 				commandInfo.amount[gali_]=Math.ceil(maxts_/500);
-	// 				for(i_8 in commandInfo.home) {
-	// 					if(i_8!=gali_) {
-	// 						if(commandInfo.use[i_8]==1) {
-	// 							if(commandInfo.dep==0) {
-	// 								/** @type {number} */
-	// 								commandInfo.amount[i_8]=Math.floor(commandInfo.home[i_8]/commandInfo.numb);
-	// 							} else {
-	// 								/** @type {number} */
-	// 								commandInfo.amount[i_8]=Math.floor(commandInfo.tot[i_8]/commandInfo.numb);
-	// 							}
-	// 						}
-	// 					}
-	// 				}
-	// 			} else {
-	// 				/** @type {number} */
-	// 				var rat_=galnumb_*500/maxts_;
-	// 				/** @type {number} */
-	// 				commandInfo.amount[gali_]=galnumb_;
-	// 				for(i_8 in commandInfo.home) {
-	// 					if(i_8!=gali_) {
-	// 						if(commandInfo.use[i_8]==1) {
-	// 							if(commandInfo.type[i_8]!=15) {
-	// 								if(commandInfo.dep==0) {
-	// 									/** @type {number} */
-	// 									commandInfo.amount[i_8]=Math.floor(rat_*commandInfo.home[i_8]/commandInfo.numb);
-	// 								} else {
-	// 									/** @type {number} */
-	// 									commandInfo.amount[i_8]=Math.floor(rat_*commandInfo.tot[i_8]/commandInfo.numb);
-	// 								}
-	// 							} else {
-	// 								if(commandInfo.dep==0) {
-	// 									/** @type {number} */
-	// 									commandInfo.amount[i_8]=Math.floor(commandInfo.home[i_8]/commandInfo.numb);
-	// 								} else {
-	// 									/** @type {number} */
-	// 									commandInfo.amount[i_8]=Math.floor(commandInfo.tot[i_8]/commandInfo.numb);
-	// 								}
-	// 							}
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	} else {
-	// 		/** @type {number} */
-	// 		time_=Math.max(...commandInfo.speed)*maxdist_;
-	// 		for(i_8 in commandInfo.home) {
-	// 			if(commandInfo.use[i_8]==1) {
-	// 				if(commandInfo.dep==0) {
-	// 					/** @type {number} */
-	// 					commandInfo.amount[i_8]=Math.floor(commandInfo.home[i_8]/commandInfo.numb);
-	// 				} else {
-	// 					/** @type {number} */
-	// 					commandInfo.amount[i_8]=Math.floor(commandInfo.tot[i_8]/commandInfo.numb);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	/** @type {number} */
-	// 	var l_=0;
-	// 	var end_4=commandInfo.x.length;
-	// 	dloop_();
-	// }
-	// function EnumerateTroops(predicate) {
-	// 	var troops=cotg.city.troops();
-	// 	commandInfo.scouts=0;
-	// 	for(let i in troops) {
-	// 		let total=troops[i].total;
-	// 		if(total>0) {
-	// 			let id=TroopNameToId(i);
-	// 			if(id==7)
-	// 				commandInfo.scouts=total;
-
-	// 			commandInfo.total.push(Math.ceil(total*AsNumber($("#perc").val())/100));
-	// 			commandInfo.home.push(Math.ceil(troops[i].home*AsNumber($("#perc").val())/100));
-	// 			commandInfo.type.push(id);
-	// 			if(predicate(id)) {
-	// 				commandInfo.speed.push(ttspeed_[id]/ttspeedres_[id]);
-	// 				commandInfo.use.push(true);
-	// 			} else {
-	// 				commandInfo.speed.push(0);
-	// 				commandInfo.use.push(false);
-
-	// 			}
-	// 		}
-	// 	}
-
-	// 	return commandInfo;
-	// }
-	/**
-	 * @return {void}
-	 */
-function updateattack_() {
-
-		/** @type {string} */
-		let ttseltab_ = "<table><thead><th>Troop Type</th><th>Use for real</th><th>Use for fake</th></thead><tbody>";
-		const troops = cotg.city.troops();
-		for (const id in cotg.city.troops()) {
-			const t = troops[id];
-			if (t.total == 0) {
-				continue;
+function SendDef(defobj) {
+	$("#commandsPopUpBox").show();
+	var commandtabs = $("#commandsdiv").tabs();
+	commandtabs.tabs("option", "active", 2);
+	$("#reintabb").trigger({ type: "click", originalEvent: "1" });
+	var targets = defobj.targets;
+	var tarnumb = defobj.targets.numb;
+	var t = defobj.t;
+	var maxdist = Math.max.apply(Math, targets.dist);
+	var time;
+	//galley defend
+	if (t.type.indexOf(14) > -1) {
+		if (t.use[t.type.indexOf(14)] == 1) {
+			time = ttspeed[14] / ttSpeedBonus[14] * maxdist;
+			//console.log(time);
+			var gali = t.type.indexOf(14);
+			if (defobj.dep == 0) {
+				var galnumb = Math.floor(t.home[gali] / tarnumb);
+			} else {
+				var galnumb = Math.floor(t.tot[gali] / tarnumb);
 			}
-			const i = TroopNameToId(id);
-			ttseltab_ = `${ttseltab_}<tr><td style='height:40px;'><div class='${tpicdiv_[i]}'></div></td><td style='text-align: center;'><input id='usereal${i}' class='clsubopti' type='checkbox' checked></td>`;
-			/** @type {string} */
-			ttseltab_ = `${ttseltab_}<td style='text-align: center;'><input id='usefake${1}' class='clsubopti' type='checkbox' checked></td></tr>`;
+			var maxts = 0;
+			for (let i in t.home) {
+				if (i != gali) {
+					if (t.use[i] == 1) {
+						if (t.type[i] != 15) {
+							if (defobj.dep == 0) {
+								maxts += Math.floor(t.home[i] * ttts_[t.type[i]] / tarnumb);
+							} else {
+								maxts += Math.floor(t.tot[i] * ttts_[t.type[i]] / tarnumb);
+							}
+						}
+					}
+				}
+			}
+			if (maxts <= galnumb * 500) {
+				t.amount[gali] = Math.ceil(maxts / 500);
+				for (let i in t.home) {
+					if (i != gali) {
+						if (t.use[i] == 1) {
+							if (defobj.dep == 0) {
+								t.amount[i] = Math.floor(t.home[i] / tarnumb);
+							} else {
+								t.amount[i] = Math.floor(t.tot[i] / tarnumb);
+							}
+						}
+					}
+				}
+			} else {
+				var rat = galnumb * 500 / maxts;
+				t.amount[gali] = galnumb;
+				for (let i in t.home) {
+					if (i != gali) {
+						if (t.use[i] == 1) {
+							if (t.type[i] != 15) {
+								if (defobj.dep == 0) {
+									t.amount[i] = Math.floor(rat * t.home[i] / tarnumb);
+								} else {
+									t.amount[i] = Math.floor(rat * t.tot[i] / tarnumb);
+								}
+							} else {
+								if (defobj.dep == 0) {
+									t.amount[i] = Math.floor(t.home[i] / tarnumb);
+								} else {
+									t.amount[i] = Math.floor(t.tot[i] / tarnumb);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-		/** @type {string} */
-		ttseltab_ = `${ttseltab_}</tbody></table>`;
-		$("#picktype").html(ttseltab_);
+		// normal def
+	} else {
+		time = Math.max.apply(Math, t.speed) * maxdist;
+		for (let i in t.home) {
+			if (t.use[i] == 1) {
+				if (defobj.dep == 0) {
+					t.amount[i] = Math.floor(t.home[i] / tarnumb);
+				} else {
+					t.amount[i] = Math.floor(t.tot[i] / tarnumb);
+				}
+			}
+		}
 	}
-	/**
+	// sending def
+	//console.log(t);
+	var l = 0; var end = targets.x.length;
+	function dloop() {
+		for (let i in t.home) {
+			if (t.use[i] == 1) {
+				$("#reiIP" + t.type[i]).val(t.amount[i]);
+			}
+		}
+		$("#reinxcoord").val(targets.x[l]);
+		$("#reinycoord").val(targets.y[l]);
+		setTimeout(function () {
+			$("#reinfcoordgo").trigger({ type: "click", originalEvent: "1" });
+		}, 100);
+		$("#reinforcetimingselect").val(Number(defobj.dep) + 1).change();
+		if ($("#defdeparture").val() > 0) {
+			//console.log(defobj.min,defobj.hr,defobj.sec);
+			var date = defobj.date + " " + defobj.hr + ":" + defobj.min + ":" + defobj.sec;
+			$("#reinfotimeinp").val(date);
+		}
+
+	//	var event = jQuery.Event("logged");
+//		event.user = "foo";
+		//$("#reinforceGo").trigger({type:"click",originalEvent:"1"});
+		$("#reinforceGo").trigger({
+			type: "click",
+			originalEvent: "1"
+		});
+		l++;
+		if (l < end) {
+			setTimeout(dloop, 1500);
+		} else {
+			$("#commandsPopUpBox").hide();
+			setTimeout(function () {
+				art();
+			}, 4000);
+		}
+	}
+	dloop();
+	function art() { //setting return time for raids according to city view outgoing list
+		//console.log(OGA);
+		$("#commandsPopUpBox").hide();
+		if (defobj.ret == 1) {
+			jQuery(".toptdinncommtbl1:first")[0].click();
+			setTimeout(function () {
+				$("#outgoingPopUpBox").hide();
+			}, 500);
+			var minddate = new Date(2050, 0, 0);
+			for (let i in OGA) {
+
+				//console.log(targets.cstr,OGA[i][5]);
+				if (targets.cstr.indexOf(OGA[i][5]) > -1) {
+
+						var d = GetAttackTime( OGA[i][6] );
+						//console.log(d,minddate);
+						if (d < minddate) {
+							minddate = d;
+						}
+					
+				}
+			}
+			minddate.setHours(minddate.getHours() - defobj.rettime);
+			//console.log(minddate);
+			var retdate = getFormattedTime(minddate);
+			//console.log(retdate);
+			$("#raidrettimesela").val(3).change();
+			$("#raidrettimeselinp").val(retdate);
+			jQuery("#doneOGAll")[0].click();
+			alert("Defense set and troops returned");
+		} else {
+			alert("Defense set");
+		}
+	}
+}	/**
 	 * @return {void}
 	 */
-function updatedef_() {
-		const t_4 = {
-			home: [],
-			type: [],
-		};
-						/// @todo
+function updateattack() {
+	let counc = document.getElementById("warcouncbox");
+	if (counc == null || counc.style === null || counc.style.display !== "")
+		return;
 
-		// var i_12;
-		// for(i_12 in D6.tc) {
-		// 	if(D6.tc[i_12]) {
-		// 		t_4.home.push(D6.tc[i_12]);
-		// 		t_4.type.push(i_12);
-		// 	}
-		// }
-		/// ** @type {string} */
-		// var ttseltab_1="<table><thead><th>Troop Type</th><th>Use</th></thead><tbody>";
-		// for(i_12 in t_4.home) {
-		// 	/** @type {string} */
-		// 	ttseltab_1=`${ttseltab_1}<tr><td style='height:40px;'><div class='${tpicdiv_[t_4.type[i_12]]}'></div></td><td style='text-align: center;'><input id='usedef${t_4.type[i_12]}' class='clsubopti' type='checkbox' checked></td></tr>`;
-		// }
-		/// ** @type {string} */
-		// ttseltab_1=`${ttseltab_1}</tbody></table>`;
-		// $("#dpicktype").html(ttseltab_1);
+	var t = { home: [], type: [] };
+	var scouttts;
+	for (let i in D6.tc) {
+		if (D6.tc[i]) {
+			if (Number(i) == 7) {
+				scouttts = D6.tc[7];
+			}
+			else {
+				t.home.push(D6.tc[i]);
+				t.type.push(i);
+			}
+		}
 	}
-	/**
-	 * @return {void}
-	 */
-function SendAttack_() {
-	// 	var l_1=0;
-	// 	var end_5=0;
-	// 	/**
-	// 	 * @return {void}
-	// 	 */
-	// 	function GetAttackTime() {
-	// 		var date=new Date($("#attackDat").val());
-	// 		return getFormattedTime(date);
-
-	// 	}
-	// 	function loop_() {
-	// 		if(commandInfo.real[l_1]==1) {
-	// 			if($("#realtype").val()==0) {
-	// 				pvptabs_.tabs("option","active",0);
-	// 				var i_14;
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#assIP${t_5.type[i_14]}`).val(t_5.real[i_14]);
-	// 				}
-	// 				$("#assaultxcoord").val(commandInfo.x[l_1]);
-	// 				$("#assaultycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#assaultcoordgo")[0].click();
-	// 				},100);
-	// 				$("#assaulttimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#assaulttimeinp").val(date_4);
-	// 				alltimes_.a.push($("#assaulttraveltime").text());
-	// 				jQuery("#assaultGo")[0].click();
-	// 			}
-	// 			if($("#realtype").val()==1) {
-	// 				pvptabs_.tabs("option","active",1);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#sieIP${t_5.type[i_14]}`).val(t_5.real[i_14]);
-	// 				}
-	// 				$("#siexcoord").val(commandInfo.x[l_1]);
-	// 				$("#sieycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#siegecoordgo")[0].click();
-	// 				},100);
-	// 				$("#siegetimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#siegetimeinp").val(date_4);
-	// 				alltimes_.a.push($("#siegetraveltime").text());
-	// 				jQuery("#siegeGo")[0].click();
-	// 			}
-	// 			if($("#realtype").val()==2) {
-	// 				pvptabs_.tabs("option","active",2);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#pluIP${t_5.type[i_14]}`).val(t_5.real[i_14]);
-	// 				}
-	// 				$("#pluxcoord").val(commandInfo.x[l_1]);
-	// 				$("#pluycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#plundercoordgo")[0].click();
-	// 				},100);
-	// 				$("#plundertimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#plundtimeinp").val(date_4);
-	// 				alltimes_.a.push($("#plundtraveltime").text());
-	// 				$("#plunderGo").prop("disabled",false);
-	// 				jQuery("#plunderGo")[0].click();
-	// 			}
-	// 			if($("#realtype").val()==3) {
-	// 				pvptabs_.tabs("option","active",3);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#scoIP${t_5.type[i_14]}`).val(t_5.real[i_14]);
-	// 				}
-	// 				$("#scoIP7").val(t_5.scoutreal[0]);
-	// 				$("#scoxcoord").val(commandInfo.x[l_1]);
-	// 				$("#scoycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					$("#scoutcoordgo")[0].click();
-	// 				},100);
-	// 				$("#scouttimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#scouttimeinp").val(date_4);
-	// 				$("#scoutGo")[0].click();
-	// 			}
-	// 		}
-	// 		if(commandInfo.real[l_1]==0) {
-	// 			if($("#faketype").val()==0) {
-	// 				pvptabs_.tabs("option","active",0);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#assIP${t_5.type[i_14]}`).val(t_5.fake[i_14]);
-	// 				}
-	// 				$("#assaultxcoord").val(commandInfo.x[l_1]);
-	// 				$("#assaultycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#assaultcoordgo")[0].click();
-	// 				},100);
-	// 				$("#assaulttimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#assaulttimeinp").val(date_4);
-	// 				alltimes_.a.push($("#assaulttraveltime").text());
-	// 				jQuery("#assaultGo")[0].click();
-	// 			}
-	// 			if($("#faketype").val()==1) {
-	// 				pvptabs_.tabs("option","active",1);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#sieIP${t_5.type[i_14]}`).val(t_5.fake[i_14]);
-	// 				}
-	// 				$("#siexcoord").val(commandInfo.x[l_1]);
-	// 				$("#sieycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#siegecoordgo")[0].click();
-	// 				},100);
-	// 				$("#siegetimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#siegetimeinp").val(date_4);
-	// 				alltimes_.a.push($("#siegetraveltime").text());
-	// 				jQuery("#siegeGo")[0].click();
-	// 			}
-	// 			if($("#faketype").val()==2) {
-	// 				pvptabs_.tabs("option","active",2);
-	// 				for(i_14 in t_5.real) {
-	// 					$(`#pluIP${t_5.type[i_14]}`).val(t_5.fake[i_14]);
-	// 				}
-	// 				$("#pluxcoord").val(commandInfo.x[l_1]);
-	// 				$("#pluycoord").val(commandInfo.y[l_1]);
-	// 				setTimeout(() => {
-	// 					jQuery("#plundercoordgo")[0].click();
-	// 				},100);
-	// 				$("#plundertimingselect").val(3).change();
-	// 				var date_4=GetAttackTime();
-	// 				$("#plundtimeinp").val(date_4);
-	// 				alltimes_.a.push($("#plundtraveltime").text());
-	// 				$("#plunderGo").prop("disabled",false);
-	// 				jQuery("#plunderGo")[0].click();
-	// 			}
-	// 			if($("#faketype").val()==3) {
-	// 				if($("#scoutick").prop("checked")===true) {
-	// 					pvptabs_.tabs("option","active",3);
-	// 					$("#scoIP7").val(1);
-	// 					$("#scoIP14").val(faketss_/100);
-	// 					$("#scoxcoord").val(commandInfo.x[l_1]);
-	// 					$("#scoycoord").val(commandInfo.y[l_1]);
-	// 					setTimeout(() => {
-	// 						$("#scoutcoordgo")[0].click();
-	// 					},100);
-	// 					$("#scouttimingselect").val(3).change();
-	// 					var date_4=GetAttackTime();
-	// 					$("#scouttimeinp").val(date_4);
-	// 					$("#scoutGo")[0].click();
-	// 				} else {
-	// 					pvptabs_.tabs("option","active",3);
-	// 					for(i_14 in t_5.real) {
-	// 						$(`#scoIP${t_5.type[i_14]}`).val(t_5.fake[i_14]);
-	// 					}
-	// 					$("#scoIP7").val(t_5.scoutfake[0]);
-	// 					$("#scoxcoord").val(commandInfo.x[l_1]);
-	// 					$("#scoycoord").val(commandInfo.y[l_1]);
-	// 					setTimeout(() => {
-	// 						$("#scoutcoordgo")[0].click();
-	// 					},100);
-	// 					$("#scouttimingselect").val(3).change();
-	// 					var date_4=GetAttackTime();
-	// 					$("#scouttimeinp").val(date_4);
-	// 					$("#scoutGo")[0].click();
-	// 				}
-	// 			}
-	// 		}
-	// 		l_1++;
-	// 		if(l_1<end_5) {
-	// 			setTimeout(loop_,1000);
-	// 		} else {
-	// 			setTimeout(IssueCommandsAndReturnTroops,4000);
-	// 		}
-	// 	}
-	// 	$("#commandsPopUpBox").show();
-	// 	var commandtabs_1=$("#commandsdiv").tabs();
-	// 	var pvptabs_=$("#pvpTab").tabs();
-	// 	jQuery("#pvptabb")[0].click();
-	// 	commandtabs_1.tabs("option","active",1);
-
-	// 	/** @type {number} */
-	// 	let fakenumb_=0;
-	// 	/** @type {number} */
-	// 	let realnumb_=0;
-	// 	let tempx_2;
-	// 	let tempy_2;
-	// 	/** @type {number} */
-	// 	ResetTargets();
-	// 	var i_13=1;
-	// 	for(; i_13<16; i_13++) {
-	// 		if($(`#t${i_13}x`).val()) {
-	// 			tempx_2=$(`#t${i_13}x`).val();
-	// 			tempy_2=$(`#t${i_13}y`).val();
-	// 			commandInfo.x.push(tempx_2);
-	// 			commandInfo.y.push(tempy_2);
-	// 			commandInfo.cstr.push(`${tempx_2}:${tempy_2}`);
-	// 			commandInfo.real.push($(`#type${i_13}`).val());
-	// 			if($(`#type${i_13}`).val()==1) {
-	// 				/** @type {number} */
-	// 				realnumb_=realnumb_+1;
-	// 			} else {
-	// 				/** @type {number} */
-	// 				fakenumb_=fakenumb_+1;
-	// 			}
-	// 			commandInfo.dist.push(Math.sqrt((tempx_2-D6.x)*(tempx_2-D6.x)+(tempy_2-D6.y)*(tempy_2-D6.y)));
-	// 		}
-	// 	}
-
-	// 	EnumerateTroops((id) => ($(`#usereal${id}`).prop("checked")));
-
-	// 	/** @type {number} */
-	// 	var maxdist_1=Math.max(...commandInfo.dist);
-	// 	var time_2;
-	// 	var faketss_;
-	// 	var fakeg_;
-	// 	var tscbr_=D6.tt;
-	// 	if(tscbr_<20000) {
-	// 		/** @type {number} */
-	// 		faketss_=1;
-	// 		/** @type {number} */
-	// 		fakeg_=1;
-	// 	} else {
-	// 		if(tscbr_<40000) {
-	// 			/** @type {number} */
-	// 			faketss_=200;
-	// 			/** @type {number} */
-	// 			fakeg_=1;
-	// 		} else {
-	// 			if(tscbr_<60000) {
-	// 				/** @type {number} */
-	// 				faketss_=500;
-	// 				/** @type {number} */
-	// 				fakeg_=1;
-	// 			} else {
-	// 				if(tscbr_<80000) {
-	// 					/** @type {number} */
-	// 					faketss_=800;
-	// 					/** @type {number} */
-	// 					fakeg_=2;
-	// 				} else {
-	// 					if(tscbr_<100000) {
-	// 						/** @type {number} */
-	// 						faketss_=1000;
-	// 						/** @type {number} */
-	// 						fakeg_=2;
-	// 					} else {
-	// 						if(tscbr_<120000) {
-	// 							/** @type {number} */
-	// 							faketss_=1200;
-	// 							/** @type {number} */
-	// 							fakeg_=2;
-	// 						} else {
-	// 							if(tscbr_<160000) {
-	// 								/** @type {number} */
-	// 								faketss_=1600;
-	// 								/** @type {number} */
-	// 								fakeg_=3;
-	// 							} else {
-	// 								if(tscbr_<200000) {
-	// 									/** @type {number} */
-	// 									faketss_=2000;
-	// 									/** @type {number} */
-	// 									fakeg_=4;
-	// 								} else {
-	// 									if(tscbr_<240000) {
-	// 										/** @type {number} */
-	// 										faketss_=2500;
-	// 										/** @type {number} */
-	// 										fakeg_=5;
-	// 									} else {
-	// 										/** @type {number} */
-	// 										faketss_=3000;
-	// 										/** @type {number} */
-	// 										fakeg_=5;
-	// 									}
-	// 								}
-	// 							}
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	if(scouts>0) {
-	// 		if($("#realtype").val()==3&&$("#faketype").val()==3) {
-	// 			if($("#usereal14").prop("checked")===true) {
-	// 				if($("#usefake14").prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					t_5.scoutfake[0]=fakeg_*250;
-	// 					/** @type {number} */
-	// 					t_5.scoutreal[0]=Math.floor((scouts-fakeg_*250*fakenumb_)/realnumb_);
-	// 				} else {
-	// 					/** @type {number} */
-	// 					t_5.scoutfake[0]=faketss_/2;
-	// 					/** @type {number} */
-	// 					t_5.scoutreal[0]=Math.floor((scouts-faketss_/2*fakenumb_)/realnumb_);
-	// 				}
-	// 			} else {
-	// 				if($("#usereal14").prop("checked")!==true) {
-	// 					if($("#usefake14").prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						t_5.scoutfake[0]=fakeg_*250;
-	// 						/** @type {number} */
-	// 						t_5.scoutreal[0]=Math.floor((scouts-fakeg_*250*fakenumb_)/realnumb_);
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.scoutfake[0]=faketss_/2;
-	// 						/** @type {number} */
-	// 						t_5.scoutreal[0]=Math.floor((scouts-faketss_/2*fakenumb_)/realnumb_);
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		if($("#realtype").val()==3&&$("#faketype").val()!=3) {
-	// 			if($("#usereal14").prop("checked")===true) {
-	// 				if($("#usefake14").prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					t_5.scoutreal[0]=Math.floor(scouts/realnumb_);
-	// 				} else {
-	// 					/** @type {number} */
-	// 					t_5.scoutreal[0]=Math.floor(scouts/realnumb_);
-	// 				}
-	// 			} else {
-	// 				/** @type {number} */
-	// 				t_5.scoutreal[0]=Math.floor(scouts/realnumb_);
-	// 			}
-	// 		}
-	// 		if($("#realtype").val()!=3&&$("#faketype").val()==3) {
-	// 			if($("#usereal14").prop("checked")===true) {
-	// 				if($("#usefake14").prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					t_5.scoutfake[0]=fakeg_*250;
-	// 				} else {
-	// 					/** @type {number} */
-	// 					t_5.scoutfake[0]=faketss_/2;
-	// 				}
-	// 			} else {
-	// 				if($("#usereal14").prop("checked")!==true) {
-	// 					if($("#usefake14").prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						t_5.scoutfake[0]=fakeg_*250;
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.scoutfake[0]=faketss_/2;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	if(t_5.type.indexOf(14)>-1&&$("#usereal14").prop("checked")===true) {
-	// 		/** @type {number} */
-	// 		time_2=ttspeed_[14]/ttspeedres_[14]*maxdist_1;
-	// 		/** @type {number} */
-	// 		var gali_1=t_5.type.indexOf(14);
-	// 		/** @type {number} */
-	// 		var galnumb_1=Math.floor((t_5.home[gali_1]-fakeg_*fakenumb_)/realnumb_);
-	// 		/** @type {number} */
-	// 		t_5.real[gali_1]=galnumb_1;
-	// 		/** @type {number} */
-	// 		t_5.fake[gali_1]=fakeg_;
-	// 		/** @type {number} */
-	// 		var galcap_=500*galnumb_1;
-	// 		/** @type {number} */
-	// 		var nongalts_=0;
-	// 		for(i_13 in t_5.home) {
-	// 			if(t_5.type[i_13]==14&&t_5.type[i_13]==17&&t_5.type[i_13]==16) {
-	// 				if(t_5.type[i_13]==14) {
-	// 					if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 							t_5.real[i_13]==1;
-	// 							t_5.fake[i_13]==1;
-	// 						} else {
-	// 							t_5.real[i_13]==1;
-	// 							t_5.fake[i_13]==0;
-	// 						}
-	// 					}
-	// 				}
-	// 				if(t_5.type[i_13]==17) {
-	// 					if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 							if(t_5.home[i_13]>=fakenumb_+realnumb_) {
-	// 								/** @type {number} */
-	// 								t_5.fake[i_13]=1;
-	// 								/** @type {number} */
-	// 								t_5.real[i_13]=1;
-	// 							} else {
-	// 								/** @type {number} */
-	// 								t_5.fake[i_13]=0;
-	// 								/** @type {number} */
-	// 								t_5.real[i_13]=1;
-	// 							}
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=0;
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=1;
-	// 						}
-	// 					} else {
-	// 						if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=0;
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=1;
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=0;
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=0;
-	// 						}
-	// 					}
-	// 				}
-	// 				if(t_5.type[i_13]==16) {
-	// 					if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=Math.ceil(faketss_*t_5.home[i_13]);
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor((t_5.home[i_13]-t_5.fake[i_13]*fakenumb_)/realnumb_);
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor(t_5.home[i_13]/realnumb_);
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		for(i_13 in t_5.home) {
-	// 			if(i_13!=gali_1&&t_5.type[i_13]!=17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						nongalts_=nongalts_+ttts_[t_5.type[i_13]]*(t_5.home[i_13]-Math.ceil(fakeg_*500/ttts_[t_5.type[i_13]])*fakenumb_)/realnumb_;
-	// 					} else {
-	// 						/** @type {number} */
-	// 						nongalts_=nongalts_+ttts_[t_5.type[i_13]]*t_5.home[i_13]/realnumb_;
-	// 					}
-	// 				}
-	// 			}
-	// 			if(t_5.type[i_13]==17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if(t_5.home[i_13]>=fakenumb_+realnumb_) {
-	// 							/** @type {number} */
-	// 							nongalts_=nongalts_+1;
-	// 						} else {
-	// 							/** @type {number} */
-	// 							nongalts_=nongalts_+1;
-	// 						}
-	// 					} else {
-	// 						/** @type {number} */
-	// 						nongalts_=nongalts_+1;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		/** @type {number} */
-	// 		var fakerat_=0;
-	// 		for(i_13 in t_5.home) {
-	// 			if(i_13!=gali_1) {
-	// 				if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					fakerat_=fakerat_+ttts_[t_5.type[i_13]]*t_5.home[i_13];
-	// 				}
-	// 			}
-	// 		}
-	// 		for(i_13 in t_5.home) {
-	// 			if(i_13!=gali_1&&t_5.type[i_13]!=17) {
-	// 				if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					t_5.fake[i_13]=Math.ceil(fakeg_*500*t_5.home[i_13]/fakerat_);
-	// 				}
-	// 			}
-	// 			if(t_5.type[i_13]==17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if(t_5.home[i_13]>=fakenumb_+realnumb_) {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=1;
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=1;
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=0;
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=1;
-	// 						}
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=1;
-	// 					}
-	// 				} else {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=1;
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=0;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		for(i_13 in t_5.home) {
-	// 			if(i_13!=gali_1&&t_5.type[i_13]!=17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if(nongalts_>galcap_) {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor(galcap_/nongalts_*(t_5.home[i_13]-t_5.fake[i_13]*fakenumb_)/realnumb_);
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor((t_5.home[i_13]-t_5.fake[i_13]*fakenumb_)/realnumb_);
-	// 						}
-	// 					} else {
-	// 						if(nongalts_>galcap_) {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor(galcap_/nongalts_*t_5.home[i_13]/realnumb_);
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=Math.floor(t_5.home[i_13]/realnumb_);
-	// 						}
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=0;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	} else {
-	// 		/** @type {number} */
-	// 		fakerat_=0;
-	// 		/** @type {number} */
-	// 		time_2=Math.max(...t_5.speed)*maxdist_1;
-	// 		for(i_13 in t_5.home) {
-	// 			if(t_5.type[i_13]!==17) {
-	// 				if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					fakerat_=fakerat_+ttts_[t_5.type[i_13]]*t_5.home[i_13];
-	// 				}
-	// 			}
-	// 		}
-	// 		for(i_13 in t_5.home) {
-	// 			if(t_5.type[i_13]!=17) {
-	// 				if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					/** @type {number} */
-	// 					t_5.fake[i_13]=Math.ceil(faketss_*t_5.home[i_13]/fakerat_);
-	// 				}
-	// 			}
-	// 		}
-	// 		for(i_13 in t_5.home) {
-	// 			if(t_5.type[i_13]!=17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=Math.floor((t_5.home[i_13]-t_5.fake[i_13]*fakenumb_)/realnumb_);
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=Math.floor(t_5.home[i_13]/realnumb_);
-	// 					}
-	// 				} else {
-	// 					/** @type {number} */
-	// 					t_5.real[i_13]=0;
-	// 				}
-	// 			}
-	// 			if(t_5.type[i_13]==17) {
-	// 				if($(`#usereal${t_5.type[i_13]}`).prop("checked")===true) {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						if(t_5.home[i_13]>=fakenumb_+realnumb_) {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=1;
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=1;
-	// 						} else {
-	// 							/** @type {number} */
-	// 							t_5.fake[i_13]=0;
-	// 							/** @type {number} */
-	// 							t_5.real[i_13]=1;
-	// 						}
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=1;
-	// 					}
-	// 				} else {
-	// 					if($(`#usefake${t_5.type[i_13]}`).prop("checked")===true) {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=1;
-	// 					} else {
-	// 						/** @type {number} */
-	// 						t_5.real[i_13]=0;
-	// 						/** @type {number} */
-	// 						t_5.fake[i_13]=0;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	var alltimes_={
-	// 		a: [],
-	// 		b: [],
-	// 		c: [],
-	// 		d: []
-	// 	};
-	// 	/** @type {number} */
-	// 	l_1=0;
-	// 	/** @type {number} */
-	// 	end_5=commandInfo.x.length;
-	// 	loop_();
+	var ttseltab = "<table><thead><th>Troop Type</th><th>Use for real</th><th>Use for fake</th></thead><tbody>";
+	for (let i in t.home) {
+		ttseltab += "<tr><td style='height:40px;'><div class='" + tpicdiv[t.type[i]] + "'></div></td><td style='text-align: center;'><input id='usereal" + t.type[i] + "' class='clsubopti' type='checkbox' checked></td>";
+		ttseltab += "<td style='text-align: center;'><input id='usefake" + t.type[i] + "' class='clsubopti' type='checkbox' checked></td></tr>";
 	}
+	ttseltab += "</tbody></table>";
+	$("#picktype").html(ttseltab);
+}
+function updatedef() {
+	var t = { home: [], type: [] };
+	for (let i in D6.tc) {
+		if (D6.tc[i]) {
+			t.home.push(D6.tc[i]);
+			t.type.push(i);
+		}
+	}
+	var ttseltab = "<table><thead><th>Troop Type</th><th>Use</th></thead><tbody>";
+	for (let i in t.home) {
+		//ttseltab+="<tr><td>"+ttname[t.type[i]]+"</td><td><input id='usereal"+t.type[i]+"' class='clsubopti' type='checkbox' checked></td>";
+		ttseltab += "<tr><td style='height:40px;'><div class='" + tpicdiv[t.type[i]] + "'></div></td><td style='text-align: center;'><input id='usedef" + t.type[i] + "' class='clsubopti' type='checkbox' checked></td></tr>";
+	}
+	ttseltab += "</tbody></table>";
+	$("#dpicktype").html(ttseltab);
+}
+function SendAttack() {
+	$("#commandsPopUpBox").show();
+	var commandtabs = $("#commandsdiv").tabs();
+	var pvptabs = $("#pvpTab").tabs();
+	jQuery("#pvptabb")[0].click();
+	commandtabs.tabs("option", "active", 1);
+	var targets = { x: [], y: [], real: [], dist: [], cstr: [] };
+	var fakenumb = 0;
+	var realnumb = 0;
+	var tempx;
+	var tempy;
+	for (let i = 1; i < 16; i++) {
+		if ($("#t" + i + "x").val()) {
+			tempx = $("#t" + i + "x").val();
+			tempy = $("#t" + i + "y").val();
+			targets.x.push(tempx);
+			targets.y.push(tempy);
+			targets.cstr.push(tempx + ":" + tempy);
+			targets.real.push($("#type" + i).val());
+			if ($("#type" + i).val() == 1) { realnumb += 1; }
+			else { fakenumb += 1; }
+			targets.dist.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
+		}
+	}
+	var scouttts;
+	var t = { home: [], type: [], real: [], fake: [], speed: [], scoutfake: [], scoutreal: [] };
+	for (let i in D6.tc) {
+		if (D6.tc[i]) {
+			if (Number(i) == 7) { scouttts = D6.tc[7]; }
+			else {
+				t.home.push(Math.ceil(D6.tc[i] * Number($("#perc").val()) / 100));
+				t.type.push(Number(i));
+				if ($("#usereal" + i).prop("checked") === true) {
+					t.speed.push(ttspeed[i] / ttSpeedBonus[i]);
+				} else { t.speed.push(0); }
+			}
+		}
+	}
+	var maxdist = Math.max.apply(Math, targets.dist);
+	var time;
+	var faketss;
+	var fakeg;
+	var tscbr = D6.tt;
+	/*    if(tscbr<20000){faketss=200;fakeg=1;}
+		else if(tscbr<40000){faketss=500;fakeg=1;}
+		else if(tscbr<60000){faketss=800;fakeg=2;}
+		else if(tscbr<80000){faketss=1000;fakeg=2;}
+		else if(tscbr<100000){faketss=1200;fakeg=3;}
+		else if(tscbr<120000){faketss=1600;fakeg=4;}
+		else if(tscbr<160000){faketss=2000;fakeg=4;}
+		else if(tscbr<200000){faketss=2500;fakeg=5;}
+		else if(tscbr<240000){faketss=3000;fakeg=6;}
+		else{faketss=3000;fakeg=6;}*/
+	if (tscbr < 20000) { faketss = 1; fakeg = 1; }
+	else if (tscbr < 40000) { faketss = 200; fakeg = 1; }//1 600, 2 1200, 3 1800, 4 2400, 5 3000
+	else if (tscbr < 60000) { faketss = 500; fakeg = 1; }
+	else if (tscbr < 80000) { faketss = 800; fakeg = 2; }
+	else if (tscbr < 100000) { faketss = 1000; fakeg = 2; }
+	else if (tscbr < 120000) { faketss = 1200; fakeg = 2; }
+	else if (tscbr < 160000) { faketss = 1600; fakeg = 3; }
+	else if (tscbr < 200000) { faketss = 2000; fakeg = 4; }
+	else if (tscbr < 240000) { faketss = 2500; fakeg = 5; }
+	else { faketss = 3000; fakeg = 5; }
+	if (scouttts > 0) {
+		if ($("#realtype").val() == 3 && $("#faketype").val() == 3) {
+			if ($("#usereal14").prop("checked") === true) {
+				if ($("#usefake14").prop("checked") === true) {
+					t.scoutfake[0] = fakeg * 250;
+					t.scoutreal[0] = Math.floor((scouttts - ((fakeg * 250) * fakenumb)) / realnumb);
+				} else {
+					t.scoutfake[0] = faketss / 2;
+					t.scoutreal[0] = Math.floor((scouttts - ((faketss / 2) * fakenumb)) / realnumb);
+				}
+			} else if ($("#usereal14").prop("checked") !== true) {
+				if ($("#usefake14").prop("checked") === true) {
+					t.scoutfake[0] = fakeg * 250;
+					t.scoutreal[0] = Math.floor((scouttts - ((fakeg * 250) * fakenumb)) / realnumb);
+				} else {
+					t.scoutfake[0] = faketss / 2;
+					t.scoutreal[0] = Math.floor((scouttts - ((faketss / 2) * fakenumb)) / realnumb);
+				}
+			}
+		}
+		if ($("#realtype").val() == 3 && $("#faketype").val() != 3) {
+			if ($("#usereal14").prop("checked") === true) {
+				if ($("#usefake14").prop("checked") === true) {
+					t.scoutreal[0] = Math.floor(scouttts / realnumb);
+				} else {
+					t.scoutreal[0] = Math.floor(scouttts / realnumb);
+				}
+			} else {
+				t.scoutreal[0] = Math.floor(scouttts / realnumb);
+			}
+		}
+		if ($("#realtype").val() != 3 && $("#faketype").val() == 3) {
+			if ($("#usereal14").prop("checked") === true) {
+				if ($("#usefake14").prop("checked") === true) {
+					t.scoutfake[0] = fakeg * 250;
+				} else {
+					t.scoutfake[0] = faketss / 2;
+				}
+			} else if ($("#usereal14").prop("checked") !== true) {
+				if ($("#usefake14").prop("checked") === true) {
+					t.scoutfake[0] = fakeg * 250;
+				} else {
+					t.scoutfake[0] = faketss / 2;
+				}
+			}
+		}
+	}
+	//galley attack
+	if (t.type.indexOf(14) > -1 && $("#usereal14").prop("checked") === true) {
+		time = ttspeed[14] / ttSpeedBonus[14] * maxdist;
+		var gali = t.type.indexOf(14);
+		var galnumb = Math.floor((t.home[gali] - fakeg * fakenumb) / realnumb);
+		t.real[gali] = galnumb;
+		t.fake[gali] = fakeg;
+		var galcap = 500 * galnumb;
+		var nongalts = 0;
+		for (let i in t.home) {
+			if (t.type[i] == 14 && t.type[i] == 17 && t.type[i] == 16) {
+				if (t.type[i] == 14) {
+					if ($("#usereal" + t.type[i]).prop("checked") === true) {
+						if ($("#usefake" + t.type[i]).prop("checked") === true) {
+							t.real[i] == 1;
+							t.fake[i] == 1;
+						} else {
+							t.real[i] == 1;
+							t.fake[i] == 0;
+						}
+					}
+				}
+				if (t.type[i] == 17) {
+					if ($("#usereal" + t.type[i]).prop("checked") === true) {
+						if ($("#usefake" + t.type[i]).prop("checked") === true) {
+							if (t.home[i] >= fakenumb + realnumb) {
+								t.fake[i] = 1;
+								t.real[i] = 1;
+							} else {
+								t.fake[i] = 0;
+								t.real[i] = 1;
+							}
+						} else {
+							t.fake[i] = 0;
+							t.real[i] = 1;
+						}
+					} else if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						t.real[i] = 0;
+						t.fake[i] = 1;
+					} else {
+						t.real[i] = 0;
+						t.fake[i] = 0;
+					}
+				}
+				if (t.type[i] == 16) {
+					if ($("#usereal" + t.type[i]).prop("checked") === true) {
+						if ($("#usefake" + t.type[i]).prop("checked") === true) {
+							t.fake[i] = Math.ceil(faketss * t.home[i]);
+							t.real[i] = Math.floor((t.home[i] - t.fake[i] * fakenumb) / realnumb);
+						} else {
+							t.real[i] = Math.floor((t.home[i]) / realnumb);
+						}
+					}
+				}
+			}
+		}
+		for (let i in t.home) {
+			if (Number(i) != gali && t.type[i] != 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						nongalts += ttts_[t.type[i]] * (t.home[i] - Math.ceil((fakeg * 500) / ttts_[t.type[i]]) * fakenumb) / realnumb;
+					} else { nongalts += ttts_[t.type[i]] * (t.home[i]) / realnumb; }
+				}
+			}
+			if (t.type[i] == 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						if (t.home[i] >= fakenumb + realnumb) {
+							nongalts += 1;
+						} else {
+							nongalts += 1;
+						}
+					} else {
+						nongalts += 1;
+					}
+				}
+			}
+		}
+		var fakerat = 0;
+		for (let i in t.home) {
+			if (Number(i) != gali) {
+				if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					fakerat += ttts_[t.type[i]] * t.home[i];
+				}
+			}
+		}
+		for (let i in t.home) {
+			if (Number(i) != gali && t.type[i] != 17) {
+				if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					t.fake[i] = Math.ceil((fakeg * 500) * t.home[i] / fakerat);
+				}
+			}
+			// number of senators to send on each fake/reak attack
+			if (t.type[i] == 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						if (t.home[i] >= fakenumb + realnumb) {
+							t.fake[i] = 1;
+							t.real[i] = 1;
+						} else {
+							t.fake[i] = 0;
+							t.real[i] = 1;
+						}
+					} else {
+						t.fake[i] = 0;
+						t.real[i] = 1;
+					}
+				} else if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					t.real[i] = 0;
+					t.fake[i] = 1;
+				} else {
+					t.real[i] = 0;
+					t.fake[i] = 0;
+				}
+			}
+		}
+		for (let i in t.home) {
+			if (Number(i) != gali && t.type[i] != 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						if (nongalts > galcap) {
+							t.real[i] = Math.floor(galcap / nongalts * (t.home[i] - t.fake[i] * fakenumb) / realnumb);
+						} else {
+							t.real[i] = Math.floor((t.home[i] - t.fake[i] * fakenumb) / realnumb);
+						}
+					} else {
+						if (nongalts > galcap) {
+							t.real[i] = Math.floor(galcap / nongalts * (t.home[i]) / realnumb);
+						} else {
+							t.real[i] = Math.floor((t.home[i]) / realnumb);
+						}
+						t.fake[i] = 0;
+					}
+				}
+			}
+		}
+	}
+	else {
+		var fakerat = 0;
+		time = Math.max.apply(Math, t.speed) * maxdist;
+		//Adding all the TS standing home with fake ticked into fakerat
+		for (let i in t.home) {
+			if (t.type[i] !== 17) {
+				if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					fakerat += ttts_[t.type[i]] * t.home[i];
+				}
+			}
+		}
+		//getting fake TS proportions of each troop type in a fake attack and moving them into t.fake[i]
+		for (let i in t.home) {
+			if (t.type[i] != 17) {
+				if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					t.fake[i] = Math.ceil(faketss * t.home[i] / fakerat);
+				}
+			}
+		}
+		//subracting fake numbers to get real numbers and distributing senator too
+		for (let i in t.home) {
+			if (t.type[i] != 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						t.real[i] = Math.floor((t.home[i] - t.fake[i] * fakenumb) / realnumb);
+					} else {
+						t.real[i] = Math.floor((t.home[i]) / realnumb);
+					}
+				} else { t.real[i] = 0; }
+			}
+			//senator numbers
+			if (t.type[i] == 17) {
+				if ($("#usereal" + t.type[i]).prop("checked") === true) {
+					if ($("#usefake" + t.type[i]).prop("checked") === true) {
+						if (t.home[i] >= fakenumb + realnumb) {
+							t.fake[i] = 1;
+							t.real[i] = 1;
+						} else {
+							t.fake[i] = 0;
+							t.real[i] = 1;
+						}
+					} else {
+						t.fake[i] = 0;
+						t.real[i] = 1;
+					}
+				} else if ($("#usefake" + t.type[i]).prop("checked") === true) {
+					t.real[i] = 0;
+					t.fake[i] = 1;
+				} else {
+					t.real[i] = 0;
+					t.fake[i] = 0;
+				}
+			}
+		}
+	}
+	var alltimes = { a: [], b: [], c: [], d: [] };
+	var l = 0; var end = targets.x.length;
+	function loop() {
+		if (targets.real[l] == 1) {
+			if ($("#realtype").val() == 0) {
+				pvptabs.tabs("option", "active", 0);
+				for (let i in t.real) {
+					$("#assIP" + t.type[i]).val(t.real[i]);
+				}
+				$("#assaultxcoord").val(targets.x[l]);
+				$("#assaultycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#assaultcoordgo")[0].click();
+				}, 100);
+				$("#assaulttimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#assaulttimeinp").val(date);
+				alltimes.a.push($("#assaulttraveltime").text());
+				jQuery("#assaultGo")[0].click();
+			}
+			if ($("#realtype").val() == 1) {
+				pvptabs.tabs("option", "active", 1);
+				for (let i in t.real) {
+					$("#sieIP" + t.type[i]).val(t.real[i]);
+				}
+				$("#siexcoord").val(targets.x[l]);
+				$("#sieycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#siegecoordgo")[0].click();
+				}, 100);
+				$("#siegetimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#siegetimeinp").val(date);
+				alltimes.a.push($("#siegetraveltime").text());
+				jQuery("#siegeGo")[0].click();
+			}
+			if ($("#realtype").val() == 2) {
+				pvptabs.tabs("option", "active", 2);
+				for (let i in t.real) {
+					$("#pluIP" + t.type[i]).val(t.real[i]);
+				}
+				$("#pluxcoord").val(targets.x[l]);
+				$("#pluycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#plundercoordgo")[0].click();
+				}, 100);
+				$("#plundertimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#plundtimeinp").val(date);
+				alltimes.a.push($("#plundtraveltime").text());
+				$("#plunderGo").prop('disabled', false);
+				jQuery("#plunderGo")[0].click();
+			}
+			if ($("#realtype").val() == 3) {
+				pvptabs.tabs("option", "active", 3);
+				for (let i in t.real) {
+					$("#scoIP" + t.type[i]).val(t.real[i]);
+				}
+				$("#scoIP7").val(t.scoutreal[0]);
+				$("#scoxcoord").val(targets.x[l]);
+				$("#scoycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#scoutcoordgo")[0].click();
+				}, 100);
+				$("#scouttimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#scouttimeinp").val(date);
+				jQuery("#scoutGo")[0].click();
+			}
+		}
+		if (targets.real[l] == 0) {
+			if ($("#faketype").val() == 0) {
+				pvptabs.tabs("option", "active", 0);
+				for (let i in t.real) {
+					$("#assIP" + t.type[i]).val(t.fake[i]);
+				}
+				$("#assaultxcoord").val(targets.x[l]);
+				$("#assaultycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#assaultcoordgo")[0].click();
+				}, 100);
+				$("#assaulttimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#assaulttimeinp").val(date);
+				alltimes.a.push($("#assaulttraveltime").text());
+				jQuery("#assaultGo")[0].click();
+			}
+			if ($("#faketype").val() == 1) {
+				pvptabs.tabs("option", "active", 1);
+				for (let i in t.real) {
+					$("#sieIP" + t.type[i]).val(t.fake[i]);
+				}
+				$("#siexcoord").val(targets.x[l]);
+				$("#sieycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#siegecoordgo")[0].click();
+				}, 100);
+				$("#siegetimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#siegetimeinp").val(date);
+				alltimes.a.push($("#siegetraveltime").text());
+				jQuery("#siegeGo")[0].click();
+			}
+			if ($("#faketype").val() == 2) {
+				pvptabs.tabs("option", "active", 2);
+				for (let i in t.real) {
+					$("#pluIP" + t.type[i]).val(t.fake[i]);
+				}
+				$("#pluxcoord").val(targets.x[l]);
+				$("#pluycoord").val(targets.y[l]);
+				setTimeout(function () {
+					jQuery("#plundercoordgo")[0].click();
+				}, 100);
+				$("#plundertimingselect").val(3).change();
+				var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+				$("#plundtimeinp").val(date);
+				alltimes.a.push($("#plundtraveltime").text());
+				$("#plunderGo").prop('disabled', false);
+				jQuery("#plunderGo")[0].click();
+			}
+			if ($("#faketype").val() == 3) {
+				if ($("#scoutick").prop("checked") === true) {
+					pvptabs.tabs("option", "active", 3);
+					$("#scoIP7").val(1);
+					$("#scoIP14").val(30);
+					$("#scoxcoord").val(targets.x[l]);
+					$("#scoycoord").val(targets.y[l]);
+					setTimeout(function () {
+						jQuery("#scoutcoordgo")[0].click();
+					}, 100);
+					$("#scouttimingselect").val(3).change();
+					var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+					$("#scouttimeinp").val(date);
+					jQuery("#scoutGo")[0].click();
+				}
+				else {
+					pvptabs.tabs("option", "active", 3);
+					for (let i in t.real) {
+						$("#scoIP" + t.type[i]).val(t.fake[i]);
+					}
+					$("#scoIP7").val(t.scoutfake[0]);
+					$("#scoxcoord").val(targets.x[l]);
+					$("#scoycoord").val(targets.y[l]);
+					setTimeout(function () {
+						jQuery("#scoutcoordgo")[0].click();
+					}, 100);
+					$("#scouttimingselect").val(3).change();
+					var date = $("#attackDat").val() + " " + $("#attackHr").val() + ":" + $("#attackMin").val() + ":" + $("#attackSec").val();
+					$("#scouttimeinp").val(date);
+					jQuery("#scoutGo")[0].click();
+				}
+			}
+		}
+		l++;
+		if (l < end) {
+			setTimeout(loop, 1000);
+		} else {
+			setTimeout(function () {
+				art();
+			}, 4000);
+		}
+	}
+	loop();
+	function art() { //setting return time for raids according to city view attacks list
+		//console.log(OGA);
+		$("#commandsPopUpBox").hide();
+		if ($("#retcheck").prop("checked") == true) {
+			jQuery(".toptdinncommtbl1:first")[0].click();
+			setTimeout(function () {
+				$("#outgoingPopUpBox").hide();
+			}, 500);
+			var minddate = new Date(2050, 0, 0);
+			for (let i in OGA) {
+				//console.log(targets.cstr,OGA[i][5]);
+				if (targets.cstr.indexOf(OGA[i][5]) > -1) {
+						var d = GetAttackTime(OGA[i][6]);
+						if (d < minddate) {
+							minddate = d;
+						}
+					
+				}
+			}
+			minddate.setHours(minddate.getHours() - Number($("#retHr").val()));
+			//console.log(minddate);
+			var retdate = getFormattedTime(minddate);
+			//console.log(retdate);
+			$("#raidrettimesela").val(3).change();
+			$("#raidrettimeselinp").val(retdate);
+			jQuery("#doneOGAll")[0].click();
+			alert("Attack set and troops returned");
+		} else {
+			alert("Attack set");
+		}
+	}
+}
 
 //var pendingBuildUpdate = false;
 
@@ -1776,11 +1599,11 @@ let other_loot_ = [350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500,
 /** @type {!Array} */
 let mountain_loot_ = [350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500];
 /** @type {!Array} */
-let tpicdiv_ = ["guard32 trooptdcm", "bally32 trooptdcm", "ranger32 trooptdcm", "triari32 trooptdcm", "priest32 trooptdcm", "vanq32 trooptdcm", "sorc32 trooptdcm", "scout32 trooptdcm", "arbal32 trooptdcm", "praet32 trooptdcm", "horsem32 trooptdcm", "druid32 trooptdcm", "ram32 trooptdcm", "scorp32 trooptdcm", "galley32 trooptdcm", "sting32 trooptdcm", "wship32 trooptdcm", "senat32 trooptdcm"];
+let tpicdiv = ["guard32 trooptdcm", "bally32 trooptdcm", "ranger32 trooptdcm", "triari32 trooptdcm", "priest32 trooptdcm", "vanq32 trooptdcm", "sorc32 trooptdcm", "scout32 trooptdcm", "arbal32 trooptdcm", "praet32 trooptdcm", "horsem32 trooptdcm", "druid32 trooptdcm", "ram32 trooptdcm", "scorp32 trooptdcm", "galley32 trooptdcm", "sting32 trooptdcm", "wship32 trooptdcm", "senat32 trooptdcm"];
 /** @type {!Array} */
 let tpicdiv20_ = ["guard20 trooptdcm", "bally20 trooptdcm", "ranger20 trooptdcm", "triari20 trooptdcm", "priest20 trooptdcm", "vanq20 trooptdcm", "sorc20 trooptdcm", "scout20 trooptdcm", "arbal20 trooptdcm", "praet20 trooptdcm", "horsem20 trooptdcm", "druid20 trooptdcm", "ram20 trooptdcm", "scorp20 trooptdcm", "galley20 trooptdcm", "sting20 trooptdcm", "wship20 trooptdcm", "senat20 trooptdcm"];
 /** @type {!Array} */
-let ttspeed_ = [0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40];
+let ttspeed = [0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40];
 /** @type {!Array} */
 //let ttres_ = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 /** @type {number} */

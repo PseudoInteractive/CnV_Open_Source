@@ -1,7 +1,7 @@
 namespace jsonT {
 	export interface City {
 		_id?: number;
-		cid?: Coord;
+		cid?: number;
 		pn?: string;
 		pid?: number;
 		pan?: string;

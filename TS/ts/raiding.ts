@@ -214,12 +214,12 @@ function openbosswin_() {
 			if(boss.cid.cont==cont) {
 				if(_city.th[2]||_city.th[3]||_city.th[4]||_city.th[5]||_city.th[6]) {
 			/** @type {number} */
-boss.minutes=distance_*ttspeed_[2]/ttSpeedBonus[2];
+boss.minutes=distance_*ttspeed[2]/ttSpeedBonus[2];
 /** @type {string} */
 				}
 				if(_city.th[8]||_city.th[9]||_city.th[10]||_city.th[11]) {
 /** @type {number} */
-						boss.minutes=distance_*ttspeed_[8]/ttSpeedBonus[8];
+						boss.minutes=distance_*ttspeed[8]/ttSpeedBonus[8];
 /** @type {string} */
 				}
 				boss.distance =(RoundTo2Digits(distance_));
@@ -230,7 +230,7 @@ boss.minutes=distance_*ttspeed_[2]/ttSpeedBonus[2];
 		if(distance_<220) {
 			if(_city.th[14]||_city.th[15]||_city.th[16]) {
 /** @type {number} */
-					boss.minutes=distance_*ttspeed_[14]/ttSpeedBonus[14];
+					boss.minutes=distance_*ttspeed[14]/ttSpeedBonus[14];
 /** @type {string} */
 				
 				boss.distance=(RoundTo2Digits(distance_));
@@ -261,7 +261,7 @@ var notallow_=[0,1,7,12,13];
 		if(notallow_.indexOf(i)==-1) {
 			if(_city.th[i]>0) {
 		/** @type {string} */
-					idle_=`${idle_}<td><div class='${tpicdiv_[i]}' style='text-align: right;'></div></td><td style='text-align: left;'><span id='thbr${i}' style='text-align: left;'>${_city.th[i]}</span></td>`;
+					idle_=`${idle_}<td><div class='${tpicdiv[i]}' style='text-align: right;'></div></td><td style='text-align: left;'><span id='thbr${i}' style='text-align: left;'>${_city.th[i]}</span></td>`;
 			}
 		}
 	}
@@ -787,13 +787,13 @@ function opensumwin_() {
 	/** @type {string} */
 	sumwin_=`${sumwin_}<div  class='beigemenutable scroll-pane ava' style='width:99%;height:95%;margin-left:4px;'><table  id='troopstable' style='width:250%'>`;
 	/** @type {string} */
-	sumwin_=`${sumwin_}<thead><tr data='0'><th>Name</th><th style='width:150px;'>Notes</th><th>Coords</th><th><div class='${tpicdiv_[8]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[1]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[11]}'></div>(home)</th><th>(Total)</th></th>`;
+	sumwin_=`${sumwin_}<thead><tr data='0'><th>Name</th><th style='width:150px;'>Notes</th><th>Coords</th><th><div class='${tpicdiv[8]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[1]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[11]}'></div>(home)</th><th>(Total)</th></th>`;
 	/** @type {string} */
-	sumwin_=`${sumwin_}<th><div class='${tpicdiv_[14]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[0]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[10]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[9]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[4]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[12]}'></div>(home)</th><th>(Total)</th>`;
+	sumwin_=`${sumwin_}<th><div class='${tpicdiv[14]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[0]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[10]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[9]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[4]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[12]}'></div>(home)</th><th>(Total)</th>`;
 	/** @type {string} */
-	sumwin_=`${sumwin_}<th><div class='${tpicdiv_[2]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[13]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[7]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[17]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[6]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[15]}'></div>(home)</th><th>(Total)</th>`;
+	sumwin_=`${sumwin_}<th><div class='${tpicdiv[2]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[13]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[7]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[17]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[6]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[15]}'></div>(home)</th><th>(Total)</th>`;
 	/** @type {string} */
-	sumwin_=`${sumwin_}<th><div class='${tpicdiv_[3]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[5]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[16]}'></div>(home)</th><th>(Total)</th><th>TS(home)</th><th>(Total)</th>`;
+	sumwin_=`${sumwin_}<th><div class='${tpicdiv[3]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[5]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[16]}'></div>(home)</th><th>(Total)</th><th>TS(home)</th><th>(Total)</th>`;
 	/** @type {string} */
 	sumwin_=`${sumwin_}</tr></thead></table></div></div>`;
 	/** @type {string} */
@@ -1622,10 +1622,10 @@ function UpdateDonate(resData,blessData,filter) {
  */
 function updatetroops_(data_46,notes_3) {
 	/** @type {string} */
-	var troopstab_=`<thead><tr data='0'><th>Name</th><th style='width:150px;'>Notes</th><th>Coords</th><th><div class='${tpicdiv_[8]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[1]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[11]}'></div>(home)</th><th>(Total)</th></th>`;
-	troopstab_=`${troopstab_}<th><div class='${tpicdiv_[14]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[0]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[10]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[9]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[4]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[12]}'></div>(home)</th><th>(Total)</th>`;
-	troopstab_=`${troopstab_}<th><div class='${tpicdiv_[2]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[13]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[7]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[17]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[6]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[15]}'></div>(home)</th><th>(Total)</th>`;
-	troopstab_=`${troopstab_}<th><div class='${tpicdiv_[3]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[5]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv_[16]}'></div>(home)</th><th>(Total)</th><th>TS(home)</th><th>(Total)</th>`;
+	var troopstab_=`<thead><tr data='0'><th>Name</th><th style='width:150px;'>Notes</th><th>Coords</th><th><div class='${tpicdiv[8]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[1]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[11]}'></div>(home)</th><th>(Total)</th></th>`;
+	troopstab_=`${troopstab_}<th><div class='${tpicdiv[14]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[0]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[10]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[9]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[4]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[12]}'></div>(home)</th><th>(Total)</th>`;
+	troopstab_=`${troopstab_}<th><div class='${tpicdiv[2]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[13]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[7]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[17]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[6]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[15]}'></div>(home)</th><th>(Total)</th>`;
+	troopstab_=`${troopstab_}<th><div class='${tpicdiv[3]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[5]}'></div>(home)</th><th>(Total)</th><th><div class='${tpicdiv[16]}'></div>(home)</th><th>(Total)</th><th>TS(home)</th><th>(Total)</th>`;
 	troopstab_=`${troopstab_}</tr></thead><tbody>`;
 	/** @type {number} */
 	var arbstot_=0;

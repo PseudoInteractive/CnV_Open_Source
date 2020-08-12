@@ -57359,9 +57359,9 @@ console.log("Bad");
             v71);
         }
         if (j71.hasOwnProperty("OGA")) {
-            var o71 = j71["OGA"];
+            OGA = j71["OGA"];
 
-          m6F(o71);
+          m6F(OGA);
           
         }
           if (j71.hasOwnProperty("OGT")) {
