@@ -32,12 +32,18 @@ namespace COTG.Game
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Spot : IEquatable<Spot>, INotifyPropertyChanged
     {
-        public virtual event PropertyChangedEventHandler PropertyChanged;
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
         public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
+        public virtual event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        internal static Spot GetFocus()
+        {
+            return focus == 0 ? null : GetOrAdd(focus);
+        }
+
         public static Spot invalid = new Spot() { _cityName = "?" };
 
         public static Spot[] emptySpotSource = Array.Empty<Spot>();
@@ -99,7 +105,7 @@ namespace COTG.Game
         public const byte typeDungeon = 0x5;
         public const byte typeNone = 0x0;
         // Water and obscurred terriain are not defined :(
-        public bool isCity => type == typeCity;
+        public bool isCityOrCastle => type == typeCity;
         public bool isBoss => type == typeBoss;
         public bool isDungeon => type == typeDungeon;
 
@@ -196,7 +202,7 @@ namespace COTG.Game
                         ProcessCoordClick(cid, false);
                         wantRaidScan = false;
                         break;
-                    case nameof(icon):
+                    case "I":
                         if (City.IsMine(cid))
                         {
                             var wasBuild = City.IsBuild(cid);
@@ -549,7 +555,7 @@ namespace COTG.Game
         {
             var flyout = new MenuFlyout();
 
-            if (this.isCity)
+            if (this.isCityOrCastle)
             {
                 // Look - its my city!
                 if (this.isMine)
@@ -574,7 +580,7 @@ namespace COTG.Game
                     }
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-                App.AddItem(flyout, "Defend", (_, _) => Spot.JSDefend(cid));
+                App.AddItem(flyout, "Defend", DefendMe );
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
             }
             else if (this.isDungeon || this.isBoss)
@@ -588,6 +594,22 @@ namespace COTG.Game
 
             flyout.XamlRoot = uie.XamlRoot;
             flyout.ShowAt(uie, position);
+        }
+        public void DefendMe()
+        {
+            DefendTab.defendant = this;
+            var tab = DefendTab.instance;
+            if (!tab.isActive)
+            {
+                TabPage.mainTabs.AddTab(tab, true);
+            }
+            else 
+            {
+                if (!tab.isVisible)
+                    TabPage.Show(tab);
+                else
+                    tab.Refresh();
+            }
         }
 
     }

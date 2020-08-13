@@ -33,7 +33,7 @@
     <Type Name="Microsoft.UI.Xaml.Controls.TabView">
       <Event Name="TabCloseRequested" Dynamic="Required"/>
     </Type>
-	  <Type Name="COTG.Views.TipsSeen"
+	  <Type Name="COTG.Helpers.TipsSeen"
 			Dynamic="Required All"/>
 
 	  <Namespace Name="System.Configuration" Serialize="Required PublicAndInternal" />

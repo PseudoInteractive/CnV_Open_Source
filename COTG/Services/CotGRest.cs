@@ -451,8 +451,8 @@ namespace COTG.Services
                 {
                     v.troopsTotal = v.troopsHome = Array.Empty<TroopTypeCount>();
                 }
-                var tsh = TroopTypeCount.TS(v.troopsHome);
-                var tst = TroopTypeCount.TS(v.troopsTotal);
+                var tsh = v.troopsHome.TS();
+                var tst = v.troopsTotal.TS();
                 if ((tsh - v.tsHome).Abs().Max((tst - v.tsTotal).Abs()) > 16)
                 {
                     v.tsTotal = tst;

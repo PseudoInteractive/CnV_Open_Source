@@ -42,6 +42,7 @@
                         UserSortMode="Auto">
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
+                                        Header="I"
                                         SizeMode="Fixed"
                                         Width="32" />
                 <tg:DataGridTextColumn PropertyName="Claim"

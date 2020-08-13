@@ -1,0 +1,93 @@
+﻿<local:UserTab
+    x:Class="COTG.Views.DefendTab"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:game="using:COTG.Game"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:cotg="using:COTG"
+      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:local="using:COTG.Views"
+        DataContext="Defend"
+    mc:Ignorable="d">
+    <Grid>
+
+        <telerikGrid:RadDataGrid x:Name="supportGrid" x:FieldModifier="public"
+                        AutoGenerateColumns="False"
+                        CanUserChooseColumns="True"
+                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                        ColumnDataOperationsMode="Flyout"
+                        FontSize="12"
+                        ItemsSource="{x:Bind local:DefendTab.supporters, Mode=OneWay}"
+                        RowHeight="34"
+                        AlternationStep="2"
+                        SelectionMode="Single"
+                        SelectionUnit="Row"
+                        FrozenColumnCount="4"
+                         UserEditMode="Inline"
+                        GroupPanelPosition="Bottom"
+                        >
+            <tg:RadDataGrid.Commands>
+                <local:SupporterTapCommand />
+            </tg:RadDataGrid.Commands>
+            <telerikGrid:RadDataGrid.Columns>
+                <telerikGrid:DataGridImageColumn PropertyName="icon" CanUserEdit="False"
+                                                 Header="I"
+                                        SizeMode="Fixed"
+                                        Width="34" />
+                <telerikGrid:DataGridTextColumn PropertyName="Send" CanUserEdit="False"
+                                                SizeMode="Fixed"
+                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                                       Width="50" />
+                <telerikGrid:DataGridTextColumn PropertyName="xy" CanUserEdit="False"
+                                                SizeMode="Fixed"
+                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                                       Width="44" />
+                <telerikGrid:DataGridNumericalColumn  PropertyName="travel" CanUserEdit="False"
+                                                      SizeMode="Fixed"
+                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                            CellContentFormat="{}{0,4:N2}"
+                                            Width="40" />
+                <telerikGrid:DataGridTextColumn PropertyName="name" CanUserEdit="False"
+                                                SizeMode="Auto"
+                                                CellContentStyle="{StaticResource LeftAlign}"
+                                       Width="50" />
+                <tg:DataGridNumericalColumn PropertyName="tsTotal" CanUserEdit="False"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                       Width="70" />
+                <tg:DataGridNumericalColumn PropertyName="tsHome" CanUserEdit="False"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                       Width="70" />
+                <telerikGrid:DataGridDateColumn Width="80" CanUserEdit="False"
+                                       PropertyName="time"
+                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
+                                       SizeMode="Fixed" />
+                <telerikGrid:DataGridDateColumn Width="80" CanUserEdit="False"
+                                       PropertyName="eta"
+                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
+                                       SizeMode="Fixed" />
+                <telerikGrid:DataGridDateColumn Width="80" CanUserEdit="False"
+                                       PropertyName="etaWings"
+                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
+                                       SizeMode="Fixed" />
+                <tg:DataGridNumericalColumn PropertyName="RangerSend" CanUserEdit="True"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,6:N0}"
+                                       Width="70" />
+                <tg:DataGridNumericalColumn PropertyName="RangerTotal" CanUserEdit="False"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,6:N0}"
+                                       Width="70" />
+            </telerikGrid:RadDataGrid.Columns>
+        </telerikGrid:RadDataGrid>
+    </Grid>
+</local:UserTab>

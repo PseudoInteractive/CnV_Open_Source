@@ -48,6 +48,7 @@
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
+                                        Header="I"
                                         SizeMode="Fixed"
                                         Width="34" />
                 <tg:DataGridTextColumn PropertyName="nameAndRemarks"

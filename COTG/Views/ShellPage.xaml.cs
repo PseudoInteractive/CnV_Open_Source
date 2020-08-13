@@ -208,7 +208,7 @@ namespace COTG.Views
                 UserTab.InitUserTabs();
                 {
                     var tabPage = CreateTabPage(shellFrame);
-
+                    TabPage.mainTabs = tabPage;
                     tabPage.AddTab(MainPage.instance, true);
 
                     tabPage.AddTab(DefenderPage.instance, false);

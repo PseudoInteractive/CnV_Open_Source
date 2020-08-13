@@ -188,8 +188,8 @@ namespace COTG.Game
 
                 }
             }
-            tsHome = TroopTypeCount.TS(troopsHome);
-            tsTotal = TroopTypeCount.TS(troopsTotal);
+            tsHome = troopsHome.TS();
+            tsTotal = troopsTotal.TS();
           
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
             // one off change
@@ -461,6 +461,23 @@ namespace COTG.Game
             }
             return best;
         }
+        public byte GetPrimaryTroopType() // troop type with most TS
+        {
+            byte best = 0; // if no raiding troops we return guards 
+            var bestTS = 0;
+            foreach (var ttc in troopsHome)
+            {
+                var type = ttc.type;
+                var ts = ttc.ts;
+                if (ts > bestTS)
+                {
+                    bestTS = ts;
+                    best = (byte)type;
+                }
+
+            }
+            return best;
+        }
 
         public byte GetIdealDungeonType()
         {
@@ -520,6 +537,23 @@ namespace COTG.Game
             //            });
 
         }
+        public bool ComputeTravelTime(int target, out float hours)
+        {
+            hours = 0;
+            var type = GetPrimaryTroopType();
+            bool isWater = IsWaterRaider(type);
+            if (cont != target.CidToContinent() && (!isWater||!Spot.GetOrAdd(target).isOnWater) )
+            {
+                return false;                
+            }
+            var dist = cid.DistanceToCid(target);
+            hours = dist * ttTravel[type] / (60f * ttSpeedBonus[type]);
+            if (isWater)
+               hours += 1.0f;
+            return true;
+
+        }
+
     }
     public class SenatorInfo
     {
@@ -583,7 +617,8 @@ namespace COTG.Game
                 City[] l;
                 if (selectedCityList == null || selectedCityList.id == -1) // "all"
                 {
-                    l = City.allCities.Values.OrderBy((a) => a.cityName).ToArray();
+                    l = City.allCities.Values.OrderByDescending((a) => a.tsHome)
+                                        .ThenBy((a)=> a._cityName).ToArray();
                 }
                 else
                 {
@@ -596,12 +631,14 @@ namespace COTG.Game
                             filtered.Add(c);
                         }
                     }
-                    l = filtered.OrderBy((a) => a.cityName).ToArray();
+                    l = filtered.OrderByDescending((a) => a.tsHome)
+                                            .ThenBy((a) => a._cityName).ToArray();
                 }
                 ShellPage.instance.cityBox.ItemsSource = l;
                 var reserveCartsFilter = DonationTab.instance.reserveCarts;
                 if (DonationTab.IsVisible())
-                    DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter);
+                    DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
+                        .OrderByDescending(a=>a.cartsHome);
              //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
                    City.GetBuild().SelectInUI();

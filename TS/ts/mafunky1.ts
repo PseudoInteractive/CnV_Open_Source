@@ -1764,13 +1764,13 @@ function avactor() {
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 3);
 			jQuery("#attacktab")[0].click();
-			updateattack();
+			setTimeout(updateattack,200);
 		});
         $('#defGo').click(function() {
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 4);
 			$("#deftab").click();
-			updatedef();
+			setTimeout( updatedef,200);
 		});
 	    $('#ndefGo').click(function() {
 			NearDefSubscribe();

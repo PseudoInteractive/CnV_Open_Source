@@ -38,9 +38,9 @@ namespace COTG.Game
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
 
-        public int ts => troops.Sum((t) => t.ts);
+        public int ts => troops.TS();
         public int tsDef => sumDef.Any() ? sumDef.Last().ts : 0;
-        public string details => TroopTypeCount.Format(troops);
+        public string details => TroopTypeCountHelper.Format(troops);
         public int pid; // The owner of the army, 
         public string playerName => Player.IdToName(pid);
 
@@ -133,7 +133,73 @@ namespace COTG.Game
         public bool isArt  =>  Enum.ttArtillery[type];
         public bool isNaval => Enum.ttNavy[type];
 
-        public static string Format( IEnumerable<TroopTypeCount> l )
+        public int ts => Enum.ttTs[type] * count;
+        public static void SortByTS(TroopTypeCount[] l) => Array.Sort(l);
+
+        // Sort greatest TS to least TS
+        int IComparable<TroopTypeCount>.CompareTo(TroopTypeCount other)
+        {
+           return other.ts.CompareTo(ts);
+        }
+    }
+    public static class TroopTypeCountHelper
+    {
+        public static int Count(this TroopTypeCount[] me, int type)
+        {
+            foreach (var i in me)
+            {
+                if (i.type == type)
+                    return i.count;
+            }
+            return 0;
+        }
+        public static bool SetCount(this TroopTypeCount[] me, int type, int count)
+        {
+            foreach (var i in me)
+            {
+                if (i.type == type)
+                {
+                    i.count=count;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static TroopTypeCount[]  SetOrAdd(this TroopTypeCount[] me, int type, int count)
+        {
+            foreach (var i in me)
+            {
+                if (i.type == type)
+                {
+                    i.count = count;
+                    return me;
+                }
+            }
+            return me.ArrayAppend(new TroopTypeCount(type, count));
+        }
+        public static int TS(this TroopTypeCount[] me, int type)
+        {
+            foreach (var i in me)
+            {
+                if (i.type == type)
+                    return i.count * Game.Enum.ttTs[type];
+            }
+            return 0;
+        }
+        // combined TS
+        public static int TS(this IEnumerable<TroopTypeCount> l)
+        {
+            if (l.IsNullOrEmpty())
+                return 0;
+            var rv = 0;
+            foreach (var ttc in l)
+            {
+                rv += ttc.ts;
+            }
+            return rv;
+        }
+
+        public static string Format(this IEnumerable<TroopTypeCount> l)
         {
             string rv = "";
             var wantComma = false;
@@ -145,25 +211,6 @@ namespace COTG.Game
                 rv += $"{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
             }
             return rv;
-        }
-        public int ts => Enum.ttTs[type] * count;
-        public static int TS(IEnumerable<TroopTypeCount> l)
-        {
-            if (l.IsNullOrEmpty() )
-                return 0;
-            var rv = 0;
-            foreach (var ttc in l)
-            {
-                rv += ttc.ts;
-            }
-            return rv;
-        }
-        public static void Sort(TroopTypeCount[] l) => Array.Sort(l);
-
-        // Sort greatest TS to least TS
-        int IComparable<TroopTypeCount>.CompareTo(TroopTypeCount other)
-        {
-            return other.ts.CompareTo(ts);
         }
     }
 }

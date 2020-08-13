@@ -60,7 +60,8 @@
                         SelectionChanged="donationGrid_SelectionChanged"
                         >
                 <telerikGrid:RadDataGrid.Columns>
-                    <telerikGrid:DataGridImageColumn PropertyName="icon"
+                <telerikGrid:DataGridImageColumn PropertyName="icon"
+                                        Header="I"
                                         SizeMode="Fixed"
                                         Width="34" />
                     <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"

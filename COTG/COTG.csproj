@@ -132,9 +132,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -206,6 +206,7 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Spot.cs" />
+    <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\aContainers.cs" />
@@ -290,6 +291,9 @@
     </Compile>
     <Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
       <DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DefendTab.xaml.cs">
+      <DependentUpon>DefendTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DefensePage.xaml.cs">
       <DependentUpon>DefensePage.xaml</DependentUpon>
@@ -406,6 +410,10 @@
     <Page Include="Views\CmdLineActivationSamplePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DefendTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DefensePage.xaml">
       <SubType>Designer</SubType>

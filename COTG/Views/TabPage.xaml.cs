@@ -36,6 +36,7 @@ namespace COTG.Views
                 new SpotTab(),
                 new OutgoingTab(),
                 new HitTab(),
+                new DefendTab(),
         };
             }
 
@@ -59,6 +60,7 @@ namespace COTG.Views
     }
     public sealed partial class TabPage : Page
     {
+        public static TabPage mainTabs;
         AppWindow RootAppWindow = null;
 
         private const string DataIdentifier = "ChatTabItem";
@@ -70,7 +72,34 @@ namespace COTG.Views
         }
         static public List<TabPage> tabPages = new List<TabPage>();
 
-        
+        public static (TabPage, TabViewItem) Get(UserTab tab)
+        {
+            foreach(var tabPage in tabPages)
+            {
+                foreach(TabViewItem ti in tabPage.Tabs.TabItems)
+                {
+                    if (ti.Content == tab)
+                        return (tabPage,ti);
+                }
+            }
+            return (null,null);
+        }
+        public static bool Show(UserTab tab)
+        {
+            bool rv = false;
+            foreach (var tabPage in tabPages)
+            {
+                foreach (TabViewItem ti in tabPage.Tabs.TabItems)
+                {
+                    if (ti.Content == tab)
+                    {
+                        tabPage.Tabs.SelectedItem=(ti);
+                        rv=true;
+                    }
+                }
+            }
+            return rv;
+        }
 
         private void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
         {
@@ -154,15 +183,15 @@ namespace COTG.Views
             { "Donation", Symbol.Share },
             { "Boss", Symbol.View },
             { "world", Symbol.Microphone },
-            { "alliance" ,  Symbol.People },
             { "whisper" , Symbol.Comment },
             { "officer" ,Symbol.Admin },
         };
 
         static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {
-            { "Defender" , "\uEA18" },//tab.DataContext as string,
+            { "Incomming" , "\uF0EF"  },//tab.DataContext as string,
             {    "Defense", "\uEA0D" },
             {    "Recent" ,  "\uF738" },
+            {  "Defend", "\uEA18" },            
             { "alliance", "\uE902" },
             { "Outgoing","\uE189" },
             { "Hits","\uEA69" }
