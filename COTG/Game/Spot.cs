@@ -128,7 +128,7 @@ namespace COTG.Game
         }
 
         
-
+        // The UIElement returned will be the RadDataGrid
         public static (Spot spot, string column, PointerPoint pt,UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
         {
             var grid = sender as RadDataGrid;
@@ -161,6 +161,7 @@ namespace COTG.Game
             var spot = hit.spot;
             uiPress = spot != null ? spot.cid : 0;
             uiPressColumn = hit.column;
+            // The UIElement returned will be the RadDataGrid
             if (spot != null)
                 spot.ProcessClick(hit.column, hit.pt,hit.uie);
         }
@@ -258,12 +259,8 @@ namespace COTG.Game
             }
             else if (pt.Properties.IsRightButtonPressed)
             {
+                ShowContextMenu(uie, pt.Position);
 
-                var flyout = new MenuFlyout();
-                App.AddItem(flyout,"Home Whenever", MainPage.ReturnSlowClick,cid);
-                App.AddItem(flyout, "Home Please", MainPage.ReturnFastClick,cid);
-                flyout.XamlRoot = uie.XamlRoot;
-                flyout.ShowAt(uie, pt.Position);
             }
         }
 
@@ -546,6 +543,51 @@ namespace COTG.Game
         public static void JSRaid(int cid)
         {
             JSCommand("spotRaid", cid);
+        }
+
+        public void ShowContextMenu(UIElement uie,Windows.Foundation.Point position)
+        {
+            var flyout = new MenuFlyout();
+
+            if (this.isCity)
+            {
+                // Look - its my city!
+                if (this.isMine)
+                {
+                    // This one has multi select
+                    int count = 1;
+                    if (uie == MainPage.CityGrid)
+                    {
+                        count = MainPage.GetContextCidCount(cid);
+                    }
+                    if (count > 1)
+                        {
+                        App.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+                        App.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+
+                    }
+                    else
+                     {
+
+                        App.AddItem(flyout, "End Raids", this.ReturnSlowClick);
+                        App.AddItem(flyout, "Home Please", this.ReturnFastClick);
+                    }
+                }
+                App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
+                App.AddItem(flyout, "Defend", (_, _) => Spot.JSDefend(cid));
+                App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+            }
+            else if (this.isDungeon || this.isBoss)
+            {
+                App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+
+            }
+            App.AddItem(flyout, "Select", () => JSClient.ShowCity(cid, true));
+            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteCoords($"<coords>{cid.CidToString()}</coords>"));
+
+
+            flyout.XamlRoot = uie.XamlRoot;
+            flyout.ShowAt(uie, position);
         }
 
     }

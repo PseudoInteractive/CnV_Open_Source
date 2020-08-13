@@ -155,6 +155,22 @@ namespace COTG.Views
             }
             return cids;
         }
+        public static int GetContextCidCount(int focusCid)
+		{
+            int counter = 1;
+            if (!MainPage.IsVisible())
+                return counter;
+            foreach (var sel in instance.cityGrid.SelectedItems)
+            {
+                if (sel is City city)
+                {
+                    if (city.cid != focusCid)
+                        ++counter;
+                }
+            }
+            return counter;
+
+        }
         public static void ReturnSlowClick(object sender, RoutedEventArgs e)
         {
             var cids = GetContextCids(sender);

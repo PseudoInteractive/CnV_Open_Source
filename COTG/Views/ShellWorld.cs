@@ -86,38 +86,14 @@ namespace COTG.Views
                     case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
                         {
                             var position = pointerPoint.Position;
-                            App.DispatchOnUIThread(() =>
-                            {
-                                var flyout = new MenuFlyout();
+							App.DispatchOnUIThread(() =>
+							{
 
-                                var spot = Spot.GetOrAdd(cid);
+								var spot = Spot.GetOrAdd(cid);
 
-                                
-                                if (spot.isCity)
-                                {
-                                    // Look - its my city!
-                                    if (spot.isMine)
-                                    {
-                                        App.AddItem(flyout, "Raiders home whenever", spot.ReturnSlowClick);
-                                        App.AddItem(flyout, "Raiders home please", spot.ReturnFastClick);
-                                    }
-                                    App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-                                    App.AddItem(flyout, "Defend", (_, _) => Spot.JSDefend(cid));
-                                    App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-                                }
-                                else if(spot.isDungeon || spot.isBoss)
-                                {
-                                    App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+								spot.ShowContextMenu(canvas, position);
 
-                                }
-                                App.AddItem(flyout, "Select", () => JSClient.ShowCity(cid, true));
-                                App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteCoords($"<coords>{cid.CidToString()}</coords>"));
-
-
-                                flyout.XamlRoot = canvas.XamlRoot;
-                                flyout.ShowAt(canvas, position);
-
-                            });
+							});
                             break;
                         }
                     case Windows.UI.Input.PointerUpdateKind.XButton1Released:
@@ -141,25 +117,26 @@ namespace COTG.Views
             }
         }
 
-       
-
-        //public static void EnsureOnScreen( int cid,bool lazy)
-        //{
-        //    var worldC = cid.CidToWorldV();
-        //    if( lazy )
-        //    {
-        //        var cc = worldC.WToC();
-        //        if (cc.X > 0 && cc.Y > 0 && cc.X < clientSpan.X && cc.Y < clientSpan.Y)
-        //            return;
-        //    }
-
-        //    ShellPage.cameraC = (-halfSpan  / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
 
 
 
-        //}
+		//public static void EnsureOnScreen( int cid,bool lazy)
+		//{
+		//    var worldC = cid.CidToWorldV();
+		//    if( lazy )
+		//    {
+		//        var cc = worldC.WToC();
+		//        if (cc.X > 0 && cc.Y > 0 && cc.X < clientSpan.X && cc.Y < clientSpan.Y)
+		//            return;
+		//    }
 
-        public static void SetJSCamera()
+		//    ShellPage.cameraC = (-halfSpan  / ShellPage.pixelScale) +worldC - ShellPage.clientC/ ShellPage.pixelScale;
+
+
+
+		//}
+
+		public static void SetJSCamera()
         {
             //var cBase = halfSpan + clientC+halfSpan;
             //var c0 = cBase / cameraZoom;
@@ -461,29 +438,6 @@ namespace COTG.Views
             eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Hour}:{serverTime.Minute:D2}";
         }
 
-        private static bool TryGetSpot(out Spot spot)
-        {
-            spot = null;
-            if (Spot.uiPress == 0)
-                return false;
-            spot = Spot.GetOrAdd(Spot.uiPress);
-            return true;
-        }
-        private void CityFlyoutView(object sender, RoutedEventArgs e)
-        {
-            if (TryGetSpot(out var spot))
-            {
-                JSClient.ViewCity(spot.cid);
-            }
-        }
-
-        private void CityFlyoutInfo(object sender, RoutedEventArgs e)
-        {
-            if (TryGetSpot(out var spot))
-            {
-                JSClient.ChangeCity(spot.cid,true);
-            }
-
-        }
+        
     }
 }

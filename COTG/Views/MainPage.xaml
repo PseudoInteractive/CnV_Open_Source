@@ -198,10 +198,10 @@ TextSubmitted="RaidCarrySubmitted"
                     <LineBreak/>    -   If the number is positive, they are returning
                     <LineBreak/>    -   If negative, they are on their way to the dungeon
                     <LineBreak/>    -   999 means that there are no raids 
-                    <LineBreak/>If you right-click on a city, you will see the commands 'Home Please' and 'Home Whenever'
-                    <LineBreak/>    -   If raiders are returning from a dungeon, 'Home Please' and 'Home Whenever' are the same.
+                    <LineBreak/>If you right-click on a city, you will see the commands 'Home Please' and 'End Raids'
+                    <LineBreak/>    -   If raiders are returning from a dungeon, 'Home Please' and 'End Raids' are the same.
                     <LineBreak/>    -   If the raiders are on their way to a dungeon, 'Home Please' will tell them to come home immediately, without loot.
-                    <LineBreak/>    -   'Home Whenever' will tell them to complete the current raid, bring home the loot and then wait at home, watching TV and eating pizza until you order them out.</TextBlock>
+                    <LineBreak/>    -   'End Raids' will tell them to complete the current raid, bring home the loot and then wait at home, watching TV and eating pizza until you order them out.</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding202"
                                 Title="Shortcuts Please, Whenever"
@@ -211,9 +211,9 @@ TextSubmitted="RaidCarrySubmitted"
                            PreferredPlacement="Left" >
             <TextBlock TextWrapping="Wrap">
                      Clicking on the "Raid Return" cell of city is a shortcut for issuing the 'Home Please' context action<LineBreak/>
-                     Clicking on the "Carry Capacity" cell of city is a shortcut for issuing the 'Home Whenever' context action<LineBreak/>
+                     Clicking on the "Carry Capacity" cell of city is a shortcut for issuing the 'End Raids' context action<LineBreak/>
                      If the "Raid Return" is negative and close to 0, the raiders just left<LineBreak/>
-                    If you ask them to "Return Please" they might teleport home instantly for you through various small temporary personal portals</TextBlock>
+                    If you ask them to return "Home Please" they might teleport home instantly for you through various small temporary personal portals</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding203"
                                 Title="Multiple Selection"
@@ -252,7 +252,7 @@ TextSubmitted="RaidCarrySubmitted"
                 <LineBreak/>    -   Use "Home Please" to return raids that:
                 <LineBreak/>        -  Have started within the last 20 minutes, or
                 <LineBreak/>        -  Will return within the next 30 minutes
-                <LineBreak/>Alternatively, use "Home Whenever" to encourage raiders to complete thier raids before returning
+                <LineBreak/>Alternatively, use "End Raids" to ask raiders to complete thier raids before returning
 </TextBlock>
         </winui:TeachingTip>
     </Grid>

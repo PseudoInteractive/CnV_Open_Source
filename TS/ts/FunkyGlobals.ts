@@ -119,7 +119,7 @@ function LocalStoreGetBool(__s: string, __def: boolean = false) {
 	return rv == "1";
 }
 // import from jQuery;
-function TroopNameToId(__name: string): number { return ttname_.indexOf(__name); }
+function TroopNameToId(__name: string): number { return ttname.indexOf(__name); }
 
 class Command {
 	public cid: number;
@@ -195,9 +195,9 @@ function SendDef(defobj) {
 					if (t.use[i] == 1) {
 						if (t.type[i] != 15) {
 							if (defobj.dep == 0) {
-								maxts += Math.floor(t.home[i] * ttts_[t.type[i]] / tarnumb);
+								maxts += Math.floor(t.home[i] * ttts[t.type[i]] / tarnumb);
 							} else {
-								maxts += Math.floor(t.tot[i] * ttts_[t.type[i]] / tarnumb);
+								maxts += Math.floor(t.tot[i] * ttts[t.type[i]] / tarnumb);
 							}
 						}
 					}
@@ -541,8 +541,8 @@ function SendAttack() {
 			if (Number(i) != gali && t.type[i] != 17) {
 				if ($("#usereal" + t.type[i]).prop("checked") === true) {
 					if ($("#usefake" + t.type[i]).prop("checked") === true) {
-						nongalts += ttts_[t.type[i]] * (t.home[i] - Math.ceil((fakeg * 500) / ttts_[t.type[i]]) * fakenumb) / realnumb;
-					} else { nongalts += ttts_[t.type[i]] * (t.home[i]) / realnumb; }
+						nongalts += ttts[t.type[i]] * (t.home[i] - Math.ceil((fakeg * 500) / ttts[t.type[i]]) * fakenumb) / realnumb;
+					} else { nongalts += ttts[t.type[i]] * (t.home[i]) / realnumb; }
 				}
 			}
 			if (t.type[i] == 17) {
@@ -563,7 +563,7 @@ function SendAttack() {
 		for (let i in t.home) {
 			if (Number(i) != gali) {
 				if ($("#usefake" + t.type[i]).prop("checked") === true) {
-					fakerat += ttts_[t.type[i]] * t.home[i];
+					fakerat += ttts[t.type[i]] * t.home[i];
 				}
 			}
 		}
@@ -625,7 +625,7 @@ function SendAttack() {
 		for (let i in t.home) {
 			if (t.type[i] !== 17) {
 				if ($("#usefake" + t.type[i]).prop("checked") === true) {
-					fakerat += ttts_[t.type[i]] * t.home[i];
+					fakerat += ttts[t.type[i]] * t.home[i];
 				}
 			}
 		}
@@ -1590,7 +1590,7 @@ function GetCidData(a: JQuery<HTMLElement>) {
 	return new Coord(ToInt(a.attr("data")));
 }
 /** @type {!Array} */
-let ttts_ = [1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1];
+let ttts = [1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1];
 
 /** @type {string} */
 let message_23 = "Not enough TS to kill this boss!";
@@ -1601,7 +1601,7 @@ let mountain_loot_ = [350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 28550
 /** @type {!Array} */
 let tpicdiv = ["guard32 trooptdcm", "bally32 trooptdcm", "ranger32 trooptdcm", "triari32 trooptdcm", "priest32 trooptdcm", "vanq32 trooptdcm", "sorc32 trooptdcm", "scout32 trooptdcm", "arbal32 trooptdcm", "praet32 trooptdcm", "horsem32 trooptdcm", "druid32 trooptdcm", "ram32 trooptdcm", "scorp32 trooptdcm", "galley32 trooptdcm", "sting32 trooptdcm", "wship32 trooptdcm", "senat32 trooptdcm"];
 /** @type {!Array} */
-let tpicdiv20_ = ["guard20 trooptdcm", "bally20 trooptdcm", "ranger20 trooptdcm", "triari20 trooptdcm", "priest20 trooptdcm", "vanq20 trooptdcm", "sorc20 trooptdcm", "scout20 trooptdcm", "arbal20 trooptdcm", "praet20 trooptdcm", "horsem20 trooptdcm", "druid20 trooptdcm", "ram20 trooptdcm", "scorp20 trooptdcm", "galley20 trooptdcm", "sting20 trooptdcm", "wship20 trooptdcm", "senat20 trooptdcm"];
+let tpicdiv20 = ["guard20 trooptdcm", "bally20 trooptdcm", "ranger20 trooptdcm", "triari20 trooptdcm", "priest20 trooptdcm", "vanq20 trooptdcm", "sorc20 trooptdcm", "scout20 trooptdcm", "arbal20 trooptdcm", "praet20 trooptdcm", "horsem20 trooptdcm", "druid20 trooptdcm", "ram20 trooptdcm", "scorp20 trooptdcm", "galley20 trooptdcm", "sting20 trooptdcm", "wship20 trooptdcm", "senat20 trooptdcm"];
 /** @type {!Array} */
 let ttspeed = [0, 30, 20, 20, 20, 20, 20, 8, 10, 10, 10, 10, 30, 30, 5, 5, 5, 40, 40];
 /** @type {!Array} */
@@ -1633,7 +1633,7 @@ let ttattack_ = [10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000,
 /** @type {!Array} */
 let Res_ = [0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 /** @type {!Array} */
-let ttname_ = ["guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator"];
+let ttname = ["guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator"];
 /** @type {!Array} */
 let layoutsl_ = [""];
 /** @type {!Array} */

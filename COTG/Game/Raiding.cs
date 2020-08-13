@@ -175,7 +175,7 @@ namespace COTG.Game
         }
         public static async void ReturnSlow(int cid, bool updateUI )
         {
-            Note.Show($"{cid.CidToStringMD()} Home Whenever");
+            Note.Show($"{cid.CidToStringMD()} End Raids");
             var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
             if (cid != 0)
             {
@@ -219,7 +219,7 @@ namespace COTG.Game
                     ++counter;
                 }
             }
-            Note.Show($"Issued Home Whenever on {counter} cities");
+            Note.Show($"Issued End Raids on {counter} cities");
             ShellPage.ShowTipRefresh();
             UpdateTSHome(true, true);
         }

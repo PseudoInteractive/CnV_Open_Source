@@ -257,8 +257,13 @@ function sendCityData(delayInMs) {
 		};
 		window['external']['notify'](JSON.stringify(wrapper));
 		clearTimeout(updateTimeout);
-		updateattack();
+		let counc = document.getElementById("warcouncbox");
+		if (counc !== null && counc.style !== null && counc.style.display === "") {
+			
 
+			updateattack();
+			updatedef();
+		}
 	}, delayInMs);
 }
 
@@ -1493,152 +1498,122 @@ function avactor() {
 		var addtoatt = "<button id='addtoAtt' style='margin-left: 7%;margin-top: -5%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Attack Sender</button>";
 		
 		var addtodef = "<button id='addtoDef' style='margin-left: 7%;width: 40%;height: 26px !important; font-size: 9px !important;' class='regButton greenb'>Add to Defense Sender</button>";
-		
+	//bosstab
 		var bosstab = "<li id='bosshuntab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warBossmanager'";
 		
-		bosstab = `${bosstab}aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>`;
+        bosstab+="aria-labeledby='ui-id-20' aria-selected='false' aria-expanded='false'>";
 		
-		bosstab = `${bosstab}<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>`;
+        bosstab+="<a href='#warBossmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-20'>Find Bosses</a></li>";
 		
 		var bosstabbody = "<div id='warBossmanager' aria-labeledby='ui-id-20' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		
-		bosstabbody = `${bosstabbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>`;
+        bosstabbody+=" role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >CFunky's Boss Raiding tool:</div>";
 		
-		bosstabbody = `${bosstabbody}<div id='bossbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
+        bosstabbody+="<div id='bossbox' class='beigemenutable scroll-pane' style='width: 96%; height: 85%; margin-left: 2%;'></div>";
 		
-		bosstabbody = `${bosstabbody}<div id='idletroops'></div></div>`;
-		
+        bosstabbody+="<div id='idletroops'></div></div>";
+        //attack tab
 		var attacktab = "<li id='attacktab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warAttackmanager'";
 		
-		attacktab = `${attacktab}aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>`;
+        attacktab+="aria-labeledby='ui-id-21' aria-selected='false' aria-expanded='false'>";
 		
-		attacktab = `${attacktab}<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>`;
-		
+        attacktab+="<a href='#warAttackmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-21'>Attack</a></li>";
+        //attack body
 		var attacktabbody = "<div id='warAttackmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		
-		attacktabbody = `${attacktabbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>`;
+        attacktabbody+=" role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Attack Sender:</div>";
 		
-		attacktabbody = `${attacktabbody}<div id='attackbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+        attacktabbody+="<div id='attackbox' class='beigemenutable scroll-pane' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>";
 		
-		attacktabbody = `${attacktabbody}<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>`;
-		/** @type {number} */
-		var i_35 = 1;
-		for (; i_35 < 16; i_35++) {
+        attacktabbody+="<table><thead><th></th><th>X</th><th>Y</th><th>Type</th></thead><tbody>";
+        for (let i=1;i<16;i++) {
 			
-			attacktabbody = `${attacktabbody}<tr><td>Target ${i_35} </td><td><input id='t${i_35}x' type='number' style='width: 85%'></td><td><input id='t${i_35}y' type='number' style='width: 85%'></td>`;
+            attacktabbody+="<tr><td>Target "+i+" </td><td><input id='t"+i+"x' type='number' style='width: 85%'></td><td><input id='t"+i+"y' type='number' style='width: 85%'></td>";
 			
-			attacktabbody = `${attacktabbody}<td><select id='type${i_35}' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>`;
+            attacktabbody+="<td><select id='type"+i+"' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'><option value='0'>Fake</option><option value='1'>Real</option></select></td></tr>";
 		}
 		
-		attacktabbody = `${attacktabbody}</tbody></table></div>`;
+        attacktabbody+="</tbody></table></div>";
 		
-		attacktabbody = `${attacktabbody}<div id='picktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
+        attacktabbody+="<div id='picktype' class='beigemenutable scroll-pane' style='width: 43%; height: 50%;'></div>";
 		
-		attacktabbody = `${attacktabbody}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>`;
+        attacktabbody+="<table><tr><td><span>Use percentage of troops:</span></td><td><input id='perc' type='number' style='width: 30px'>%</td><td></td></tr>";
 		
-		attacktabbody = `${attacktabbody}<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+        attacktabbody+="<tr><td><span>Send real as:</span></td><td><select id='realtype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>";
 		
-		attacktabbody = `${attacktabbody}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+        attacktabbody+="<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>";
 		
-		attacktabbody = `${attacktabbody}<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
+        attacktabbody+="<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>";
 		
-		attacktabbody = `${attacktabbody}<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>`;
+        attacktabbody+="<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>";
 		
-		attacktabbody = `${attacktabbody}<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>`;
+        attacktabbody+="<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>";
 		
-		attacktabbody = `${attacktabbody}<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>`;
+        attacktabbody+="<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>";
 		
-		attacktabbody = `${attacktabbody}<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th colspan='5'>Date</th></tr>`;
+        attacktabbody+="<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>";
 		
-		//    attacktabbody_ = attacktabbody_ + "<tr><td>Set Time: </td><td><input id='attackHr' type='number style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='attackMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";
+        attacktabbody+="<tr><td>Set Time: </td><td><input id='attackHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='attackMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";
 		
-		attacktabbody = `${attacktabbody}<tr><td colspan='5'><input style='width:96%;' id='attackDat' type='datetime-local' step='1'></td></tr></tbody></table>`;
+        attacktabbody+="<td><input style='width: 35px;height: 22px;font-size: 10px;' id='attackSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='attackDat' type='text' value='00/00/0000'></td></tr></tbody></table>";
 		
-		attacktabbody = `${attacktabbody}<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>`;
+        attacktabbody+="<table style='margin-left: 10%; margin-top:20px;'><tbody><tr><td style='width: 20%'><button id='Attack' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Attack!</button></td>";
 		
-		attacktabbody = `${attacktabbody}<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>`;
+        attacktabbody+="<td style='width: 20%'><button id='Aexport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Export Order</button></td>";
 		
-		attacktabbody = `${attacktabbody}<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>`;
-		
+        attacktabbody+="<td style='width: 20%'><button id='Aimport' style='width: 95%;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Import Order</button></td></tr></tbody></table>";
+        // defend tab
 		var deftab = "<li id='deftab' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='warDefmanager'";
 		
-		deftab = `${deftab}aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>`;
+        deftab+="aria-labeledby='ui-id-22' aria-selected='false' aria-expanded='false'>";
 		
-		deftab = `${deftab}<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>`;
-		
+        deftab+="<a href='#warDefmanager' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-22'>Defend</a></li>";
+        //defense body
 		var deftabbbody = "<div id='warDefmanager' aria-labeledby='ui-id-21' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
 		
-		deftabbbody = `${deftabbbody} role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>`;
+        deftabbbody+=" role='tabpanel' aria-hidden='true' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Defense Sender:</div>";
 		
-		deftabbbody = `${deftabbbody}<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>`;
+        deftabbbody+="<div><p style='font-size: 10px;'>Defense sender will split all the troops you choose to send according to the number of targets you input.</p></div>";
 		
-		deftabbbody = `${deftabbbody}<div id='defbox' class='beigemenutable scroll-pane ava' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>`;
+        deftabbbody+="<div id='defbox' class='beigemenutable scroll-pane' style='width: 53%; height: 50%; float:left; margin-left: 1%; margin-right: 1%;'>";
 		
-		deftabbbody = `${deftabbbody}<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>`;
-		/** @type {number} */
-		i_35 = 1;
-		for (; i_35 <= 15; i_35++) {
+        deftabbbody+="<table><thead><th></th><th>X</th><th>Y</th></thead><tbody>";
+        for (let i=1;i<15;i++) {
 			
-			deftabbbody = `${deftabbbody}<tr><td>Target ${i_35} </td><td><input id='d${i_35}x' type='number' style='width: 85%'></td><td><input id='d${i_35}y' type='number' style='width: 85%'></td></tr>`;
+            deftabbbody+="<tr><td>Target "+i+" </td><td><input id='d"+i+"x' type='number' style='width: 85%'></td><td><input id='d"+i+"y' type='number' style='width: 85%'></td></tr>";
 		}
 		
-		deftabbbody = `${deftabbbody}</tbody></table></div>`;
+        deftabbbody+="</tbody></table></div>";
 		
-		deftabbbody = `${deftabbbody}<div id='dpicktype' class='beigemenutable scroll-pane ava' style='width: 43%; height: 50%;'></div>`;
-		
-		deftabbbody = `${deftabbbody}<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>`;
-		
-		deftabbbody = `${deftabbbody}<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>`;
-		
-		deftabbbody = `${deftabbbody}<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>`;
-		
-		deftabbbody = `${deftabbbody}<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>`;
-		
-		deftabbbody = `${deftabbbody}<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>`;
-		
-		deftabbbody = `${deftabbbody}<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>`;
-		
-		deftabbbody = `${deftabbbody}<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='date' type='text' value='00/00/0000'></td></tr></tbody></table>`;
-		
-		deftabbbody = `${deftabbbody}<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>`;
-		
-		var ndeftab = "<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
-		
-		ndeftab = `${ndeftab}<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>`;
-		
-		var ndeftabbody = "<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		
-		ndeftabbody = `${ndeftabbody} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>`;
-		
-		ndeftabbody = ndeftabbody + '<table><td>Choose city:</td><td><input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefx\' type=\'number\'> : <input style=\'width: 30px;height: 22px;font-size: 10px;\' id=\'ndefy\' type=\'number\'></td>';
-		
-		ndeftabbody = `${ndeftabbody}<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>`;
-		
-		ndeftabbody = `${ndeftabbody}<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>`;
-		
-		ndeftabbody = `${ndeftabbody}<div id='Ndefbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
-		
-		var nofftab = "<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
-		
-		nofftab = `${nofftab}<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>`;
-		
-		var nofftabbody = "<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		
-		nofftabbody = `${nofftabbody} role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>`;
-		
-		nofftabbody = `${nofftabbody}<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>`;
-		
-		nofftabbody = `${nofftabbody}<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>`;
-		
-		nofftabbody = `${nofftabbody}<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>`;
-		
-		nofftabbody = `${nofftabbody}<div id='Noffbox' class='beigemenutable scroll-pane ava' style='width: 96%; height: 85%; margin-left: 2%;'></div>`;
-		
-		var expwin_ = "<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
-		
-		expwin_ = `${expwin_}<button id="cfunkyX" onclick="$('#ExpImp').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div id='expbody' class="popUpWindow">`;
-		
-		expwin_ = `${expwin_}<textarea style='font-size:11px;width:300px;height:200px;' id='expstring'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>`;
+        deftabbbody+="<div id='dpicktype' class='beigemenutable scroll-pane' style='width: 43%; height: 50%;'></div>";
+        deftabbbody+="<table><tr><td><span>Use percentage of troops:</span></td><td><input id='defperc' type='number' style='width: 30px'>%</td><td></td></tr>";
+        deftabbbody+="<tr><td><span>Select Departure:</span></td><td><select id='defdeparture' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>";
+        deftabbbody+="<option value='0'>Now</option><option value='1'>Departure time</option><option value='2'>Arrival time</option></select></td><td></td></tr>";
+        deftabbbody+="<tr id='dret'><td><input id='dretcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='dretHr' type='number' style='width: 20px' value='2'> Hours before departure</td></tr></table>";
+        deftabbbody+="<table id='deftime' style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>";
+        deftabbbody+="<tr><td>Set Time: </td><td><input id='defHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='defMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";
+        deftabbbody+="<td><input style='width: 35px;height: 22px;font-size: 10px;' id='defSec' type='number' value='00'></td><td colspan='2'><input style='width:90px;' id='defDat' type='text' value='00/00/0000'></td></tr></tbody></table>";
+        deftabbbody+="<button id='Defend' style='width: 35%;height: 30px; font-size: 12px; margin:10px;' class='regButton greenb'>Send Defense</button>";
+	    var ndeftab="<li id='neardeftab' class='ui-state-default ui-corner-top' role='tab'>";
+        ndeftab+="<a href='#warNdefmanager' class='ui-tabs-anchor' role='presentation'>Near Def</a></li>";
+        var ndeftabbody="<div id='warNdefmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+        ndeftabbody+=" role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >Nearest defense:</div>";
+        ndeftabbody+="<table><td>Choose city:</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='ndefx' type='number'> : <input style='width: 30px;height: 22px;font-size: 10px;' id='ndefy' type='number'></td>";
+        ndeftabbody+="<td>Showing For:</td><td id='asdfgh' class='coordblink shcitt'></td>";        
+        ndeftabbody+="<td><button class='regButton greenb' id='ndefup' style='height:30px; width:70px;'>Update</button></td></table>";
+        ndeftabbody+="<div id='Ndefbox' class='beigemenutable scroll-pane' style='width: 96%; height: 85%; margin-left: 2%;'></div>";
+        var nofftab="<li id='nearofftab' class='ui-state-default ui-corner-top' role='tab'>";
+        nofftab+="<a href='#warNoffmanager' class='ui-tabs-anchor' role='presentation'>Offensive TS</a></li>";
+        var nofftabbody="<div id='warNoffmanager' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
+        nofftabbody+=" role='tabpanel' style='display: none;'><div id='fpdcdiv3' class='redheading' style='margin-left: 2%;' >ALL Offensive TS:</div>";
+        nofftabbody+="<table><td colspan='2'> Continent(99 for navy):</td><td><input style='width: 30px;height: 22px;font-size: 10px;' id='noffx' type='number' value='0'>";
+        nofftabbody+="<td><button class='regButton greenb' id='noffup' style='height:30px; width:70px;'>Update</button></td>";
+        nofftabbody+="<td id='asdfg' style='width:10% !important;'></td><td><button class='regButton greenb' id='mailoff' style='height:30px; width:50px;'>Mail</button></td><td><input style='width: 100px;height: 22px;font-size: 10px;' id='mailname' type='text' value='Name_here;'></table>"
+        nofftabbody+="<div id='Noffbox' class='beigemenutable scroll-pane' style='width: 96%; height: 85%; margin-left: 2%;'></div>";
+        var expwin="<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
+        expwin+="<button id=\"cfunkyX\" onclick=\"$('#ExpImp').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div id='expbody' class=\"popUpWindow\">";
+        expwin+="<textarea style='font-size:11px;width:97%;margin-left:1%;height:17%;' id='expstring' maxlength='200'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>";
+
 		var tabs = $("#warcouncTabs").tabs();
 		var ul = tabs.find("ul");
 		$(bosstab).appendTo(ul);
@@ -1647,11 +1622,11 @@ function avactor() {
 		$(ndeftab).appendTo(ul);
 		$(nofftab).appendTo(ul);
 		tabs.tabs("refresh");
-		$("#warCidlemanager").after(bosstabbody);
-		$("#warCidlemanager").after(attacktabbody);
-		$("#warAttackmanager").after(deftabbbody);
-		$("#warDefmanager").after(ndeftabbody);
-		$("#warNdefmanager").after(nofftabbody);
+        $('#warCidlemanager').after(bosstabbody);
+        $('#warCidlemanager').after(attacktabbody);
+        $('#warAttackmanager').after(deftabbbody);
+        $('#warDefmanager').after(ndeftabbody);
+        $('#warNdefmanager').after(nofftabbody);
 		$("#senddefCityGo").after(quickdefbut);
 		$("#deftime").hide();
 		$("#dret").hide();
@@ -1665,7 +1640,7 @@ function avactor() {
 		$("#loccavwarconGo").css("right", "65%");
 		$("#idluniwarconGo").css("left", "34%");
 		$("#idluniwarconGo").after(raidbossbut);
-		$("#defdeparture").change(() => {
+        $("#defdeparture").change(function() {
 			if ($("#defdeparture").val() == 0) {
 				$("#deftime").hide();
 				$("#dret").hide();
@@ -1674,62 +1649,85 @@ function avactor() {
 				$("#dret").show();
 			}
 		});
-		$("#troopperc").val(localStorage.getItem("troopperc") || 100);
-		$("#retcheck").prop("checked", (LocalStoreAsInt("retcheck") == 1));
 
-		$("#retHr").val(localStorage.getItem("retHr") || 0);
-		// $("#attackDat").datepicker();
+        if (localStorage.getItem('attperc')) {
+            $("#perc").val(localStorage.getItem('attperc'));
+        } else {$("#perc").val(99);}
+        if (localStorage.getItem('defperc')) {
+            $("#defperc").val(localStorage.getItem('defperc'));
+        } else {$("#defperc").val(99);}
+        if (localStorage.getItem('retcheck')) {
+            if (localStorage.getItem('retcheck')==1) {
+                $("#retcheck").prop( "checked", true );
+            }
+            if (localStorage.getItem('retcheck')==0) {
+                $("#retcheck").prop( "checked", false );
+            }
+        }
+        if (localStorage.getItem('dretcheck')) {
+            if (localStorage.getItem('rdetcheck')==1) {
+                $("#dretcheck").prop( "checked", true );
+            }
+            if (localStorage.getItem('dretcheck')==0) {
+                $("#dretcheck").prop( "checked", false );
+            }
+        }
+        if (localStorage.getItem('retHr')) {
+            $("#retHr").val(localStorage.getItem('retHr'));
+        }
+        if (localStorage.getItem('dretHr')) {
+            $("#dretHr").val(localStorage.getItem('dretHr'));
+        }
+        $( "#attackDat" ).datepicker();
 		$("#defDat").datepicker();
-		$("#bosshuntab").click(() => {
-			if (beentoworld_) {
-				openbosswin_();
-			} else {
-				alert("Press World Button");
-			}
-		});
-		$("#returnAllb").click(() => {
-			jQuery.ajax({
-				url: "includes/gIDl.php",
-				type: "POST",
-				// async false,
-				success: function success_10(data_49) {
-					/** @type {*} */
-					var thdata_ = JSON.parse(data_49);
-					$("#returnAll").remove();
-					openreturnwin_(thdata_);
-				}
-			});
-		});
-		$("#raidbossGo").click(() => {
-			if (beentoworld_) {
-				$("#warcouncbox").show();
-				tabs.tabs("option", "active", 2);
-				$("#bosshuntab").click();
-			} else {
-				alert("Press World Button");
-			}
-		});
+  //       $('#bosshuntab').click(function() {
+  //          if (beentoworld)
+  //          {
+  //              openbosswin();
+		//	} else {
+		//		alert("Press World Button");
+		//	}
+		//});
+  //      $('#returnAllb').click(function() {
+  //          jQuery.ajax({url: 'includes/gIDl.php',type: 'POST',
+  //                       success: function(data) {
+  //                           var thdata=JSON.parse(data);
+		//			$("#returnAll").remove();
+  //                           openreturnwin(thdata);
+		//		}
+		//	});
+		//});
+  //      $('#raidbossGo').click(function() {
+  //          if (beentoworld)
+  //          {
+		//		$("#warcouncbox").show();
+		//		tabs.tabs("option", "active", 2);
+		//		$("#bosshuntab").click();
+		//	} else {
+		//		alert("Press World Button");
+		//	}
+		//});
 		$("#Attack").click(function () {
-			localStorage.setItem('attperc', $("#perc").val().toString());
-			localStorage.setItem('retHr', $("#retHr").val().toString());
+            localStorage.setItem('attperc',$("#perc").val());
+            localStorage.setItem('retHr',$("#retHr").val());
             if ($("#retcheck").prop( "checked")==true) {
-                localStorage.setItem('retcheck',"1");
+                localStorage.setItem('retcheck',1);
             }
             if ($("#retcheck").prop( "checked")==false) {
-                localStorage.setItem('retcheck',"0");
+                localStorage.setItem('retcheck',0);
             }
             SendAttack();
         });
 		$("#Defend").click(function () {
-			localStorage.setItem('defperc', $("#defperc").val().toString());
-			localStorage.setItem('dretHr', $("#dretHr").val().toString());
+            localStorage.setItem('defperc',$("#defperc").val());
+            localStorage.setItem('dretHr',$("#dretHr").val());
             var defobj={targets:{x:[],y:[],dist:[],numb:0,cstr:[]},t:{tot:[],home:[],type:[],use:[],speed:[],amount:[]},perc:$("#defperc").val(),dep:$("#defdeparture").val(),ret:1,rettime:$("#dretHr").val(),hr:$("#defHr").val(),min:$("#defMin").val(),sec:$("#defSec").val(),date:$("#defDat").val(),dat:$("#defDat").datepicker('getDate')};
             if ($("#dretcheck").prop( "checked")==true) {
-                localStorage.setItem('dretcheck',"1");
+                localStorage.setItem('dretcheck',1);
                 defobj.ret=1;
             }
             if ($("#dretcheck").prop( "checked")==false) {
-                localStorage.setItem('dretcheck',"0");
+                localStorage.setItem('dretcheck',0);
                 defobj.ret=0;
             }
             var tempx;
@@ -1762,73 +1760,61 @@ function avactor() {
             }
             SendDef(defobj);
         });
-		$("#attackGo").click(() => {
+        $('#attackGo').click(function() {
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 3);
 			jQuery("#attacktab")[0].click();
+			updateattack();
 		});
-		$("#defGo").click(() => {
+        $('#defGo').click(function() {
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 4);
 			$("#deftab").click();
+			updatedef();
 		});
-		$("#ndefGo").click(() => {
+	    $('#ndefGo').click(function() {
 			NearDefSubscribe();
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 5);
-			//$("#neardeftab").trigger({
-			//	type: "click",
-			//	originalEvent: "1"
-			//});
-		});
-		$("#neardeftab").click(() => {
+            $("#neardeftab").trigger({type:"click",originalEvent:"1"});
+        });
+        $('#neardeftab').click(function() {
 			NearDefSubscribe();
+
 		});
-		$("#ui-id-115").click(() => {
+        $('#ui-id-115').click(function() {
 			NearDefSubscribe();
-		});
-		$("#noffGo").click(() => {
+
+        });
+        $('#noffGo').click(function() {
 			$("#warcouncbox").show();
 			tabs.tabs("option", "active", 6);
-			//$("#nearofftab").trigger({
-			//	type: "click",
-			//	originalEvent: "1"
-			//});
+            $("#nearofftab").trigger({type:"click",originalEvent:"1"});
 		});
-		$("#addtoAtt").click(() => {
-			/** @type {number} */
-			var i_37 = 1;
-			for (; i_37 < 16; i_37++) {
-				if (!$(`#t${i_37}x`).val()) {
-					/** @type {number} */
-					var tid_4 = AsNumber($("#showReportsGo").attr("data"));
-					var tempx_7;
-					var tempy_7;
-					/** @type {number} */
-					tempx_7 = AsNumber(tid_4 % 65536);
-					/** @type {number} */
-					tempy_7 = AsNumber((tid_4 - tempx_7) / 65536);
-					$(`#t${i_37}x`).val(tempx_7);
-					$(`#t${i_37}y`).val(tempy_7);
+        $("#addtoAtt").click(function() {
+            for (let i=1;i<8;i++) {
+                if (!$("#t"+i+"x").val()) {
+                    var tid=Number($("#showReportsGo").attr("data"));
+                    var tempx;
+                    var tempy;
+                    tempx=Number(tid % 65536);
+                    tempy=Number((tid-tempx)/65536);
+                    $("#t"+i+"x").val(tempx);
+                    $("#t"+i+"y").val(tempy);
 					break;
 				}
 			}
 		});
-		$("#addtoDef").click(() => {
-			/** @type {number} */
-			var i_38 = 1;
-			for (; i_38 < 16; i_38++) {
-				if (!$(`#d${i_38}x`).val()) {
-					/** @type {number} */
-					var tid_5 = AsNumber($("#showReportsGo").attr("data"));
-					var tempx_8;
-					var tempy_8;
-					/** @type {number} */
-					tempx_8 = AsNumber(tid_5 % 65536);
-					/** @type {number} */
-					tempy_8 = AsNumber((tid_5 - tempx_8) / 65536);
-					$(`#d${i_38}x`).val(tempx_8);
-					$(`#d${i_38}y`).val(tempy_8);
+        $("#addtoDef").click(function() {
+            for (let i=1;i<15;i++) {
+                if (!$("#d"+i+"x").val()) {
+                    var tid=Number($("#showReportsGo").attr("data"));
+                    var tempx;
+                    var tempy;
+                    tempx=Number(tid % 65536);
+                    tempy=Number((tid-tempx)/65536);
+                    $("#d"+i+"x").val(tempx);
+                    $("#d"+i+"y").val(tempy);
 					break;
 				}
 			}
@@ -1840,10 +1826,10 @@ function avactor() {
 			tempx = Number(tid % 65536);
 			tempy = Number((tid - tempx) / 65536);
 			var defobj = { targets: { x: [tempx], y: [tempy], dist: [], numb: 1 }, t: { home: [], type: [], use: [], speed: [], amount: [] }, perc: 100, dep: 0, ret: 0, rettime: 0, hr: 0, min: 0, sec: 0, dat: 0 };
-			defobj.targets.dist.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
-			for (var i in D6.th) {
-				if (D6.th[i]) {
-					defobj.t.home.push(Math.ceil(D6.th[i] * Number($("#defperc").val()) / 100));
+            defobj.targets.dist.push(Math.sqrt((tempx-D6.x)*(tempx-D6.x)+(tempy-D6.y)*(tempy-D6.y)));
+            for (let i in D6.th) {
+                if (D6.th[i]) {
+                    defobj.t.home.push(Math.ceil(D6.th[i]*Number($("#defperc").val())/100));
 					defobj.t.type.push(Number(i));
 					defobj.t.speed.push(ttspeed[i] / ttSpeedBonus[i]);
 					defobj.t.use.push(1);
@@ -1852,79 +1838,53 @@ function avactor() {
 			}
 			SendDef(defobj);
 		});
-		$("#ndefup").click(() => {
-			/** @type {number} */
-			var tempxs_ = AsNumber($("#ndefx").val());
-			/** @type {number} */
-			var tempys_ = AsNumber($("#ndefy").val());
-			/** @type {number} */
-			var tids_ = tempxs_ + tempys_ * 65536;
-			$("#asdfgh").data('data', tids_);
-			$("#asdfgh").text(`${tempxs_}:${tempys_}`);
-			///@todo
+        $("#ndefup").click(function() {
+            var tempxs=Number($("#ndefx").val());
+            var tempys=Number($("#ndefy").val());
+			var tids = tempxs + (tempys * 65536);
+			$("#asdfgh").data(tids.toString());
+            $("#asdfgh").text(tempxs+":"+tempys);
+            jQuery.ajax({url: 'overview/trpover.php',type: 'POST',
 
-			jQuery.ajax({
-				url: "overview/trpover.php",
-				type: "POST",
-				async: true,
-				success: function success_11(data_53) {
-					/** @type {*} */
-					var t_6=JSON.parse(data_53);
-					neardeftable_(t_6);
+                         success: function(data) {
+                             var t=JSON.parse(data);
+                             neardeftable(t);
 				}
 			});
 		});
-		$("#noffup").click(() => {
-			///@todo
+        $("#noffup").click(function() {
+            jQuery.ajax({url: 'overview/trpover.php',type: 'POST',
 
-			jQuery.ajax({
-				url: "overview/trpover.php",
-				type: "POST",
-				async: true,
-				success: function success_12(data_54) {
-					/** @type {*} */
-					var t_7=JSON.parse(data_54);
-					nearofftable_(t_7);
+                         success: function(data) {
+                             var t=JSON.parse(data);
+                             nearofftable(t);
 				}
 			});
 		});
-		$("#Aexport").click(() => {
-			var Aexp_1 = {
-				x: [],
-				y: [],
-				type: [],
-				time: []
-			};
-			/** @type {number} */
-			var i_40 = 1;
-			for (; i_40 < 16; i_40++) {
-				if ($(`#t${i_40}x`).val()) {
-					Aexp_1.x.push($(`#t${i_40}x`).val());
-					Aexp_1.y.push($(`#t${i_40}y`).val());
-					Aexp_1.type.push($(`#type${i_40}`).val());
+        $("#Aexport").click(function() {
+            var Aexp={x:[],y:[],type:[],time:[]};
+            for (let i=1;i<16;i++) {
+                if ($("#t"+i+"x").val()) {
+                    Aexp.x.push($("#t"+i+"x").val());
+                    Aexp.y.push($("#t"+i+"y").val());
+                    Aexp.type.push($("#type"+i).val());
 				}
 			}
-			/** @type {Date} */
-			var date = GetDate("#attackDat");
-			Aexp_1.time[0] = date.getHours();
-			Aexp_1.time[1] = date.getMinutes();
-			Aexp_1.time[2] = date.getSeconds();
-			Aexp_1.time[3] = date.toLocaleDateString();
-			prompt("Attack Orders Expot", JSON.stringify(Aexp_1));
+            Aexp.time[0]=$("#attackHr").val();
+            Aexp.time[1]=$("#attackMin").val();
+            Aexp.time[2]=$("#attackSec").val();
+            Aexp.time[3]=$("#attackDat").val();
+            var aa=prompt("Attack Orders Expot", JSON.stringify(Aexp));
 
 		});
-		$("#Aimport").click(() => {
-			$("body").append(expwin_);
-			$("#ExpImp").draggable({
-				handle: ".popUpBar",
-				containment: "window",
-				scroll: false
+        $("#Aimport").click(function() {
+            $("body").append(expwin);
+            $("#ExpImp").draggable({ handle: ".popUpBar" , containment: "window", scroll: false});
+            document.addEventListener('paste', function (evt) {
+                $("#expstring").val(evt.clipboardData.getData('text/plain'));
 			});
-			document.addEventListener("paste", evt_27 => {
-				$("#expstring").val(evt_27.clipboardData.getData("text/plain"));
-			});
-			$("#applyExp").click(() => {
-				Aimp_($("#expstring").val());
+            $("#applyExp").click(function() {
+                Aimp($("#expstring").val());
 				$("#ExpImp").remove();
 			});
 		});
@@ -3491,324 +3451,256 @@ function avactor() {
 
 	//replaceElem('h2','h1','#test');
 
-	/**
-	 * @param {?} str_6
-	 * @return {void}
-	 */
-	function Aimp_(str_6) {
-		/** @type {*} */
-		var Aexp_ = JSON.parse(str_6);
-		/** @type {number} */
-		var i_4 = 1;
-		for (; i_4 <= Aexp_.x.length; i_4++) {
-			$(`#t${i_4}x`).val(Aexp_.x[i_4 - 1]);
-			$(`#t${i_4}y`).val(Aexp_.y[i_4 - 1]);
-			$(`#type${i_4}`).val(Aexp_.type[i_4 - 1]).change();
+  	function Aimp(str) {
+        var Aexp=JSON.parse(str);
+        for (let i=1; i<=Aexp.x.length; i++) {
+            $("#t"+i+"x").val(Aexp.x[i-1]);
+            $("#t"+i+"y").val(Aexp.y[i-1]);
+            $("#type"+i).val(Aexp.type[i-1]).change();
 		}
-		var date = new Date(`${Aexp_.time[3]} ${Aexp_.time[0]}:${Aexp_.time[1]}:${Aexp_.time[2]}`);
-
-		$("#attackDat").val(date.toISOString().substr(0, 19));
+        $("#attackHr").val(Aexp.time[0]);
+        $("#attackMin").val(Aexp.time[1]);
+        $("#attackSec").val(Aexp.time[2]);
+        $("#attackDat").val(Aexp.time[3]);
 
 	}
-	/**
-	 * @param {!Object} t_
-	 * @return {void}
-	 */
-	function neardeftable_(t_) {
-		var cx_ = AsNumber($("#ndefx").val());
-		var cy_ = AsNumber($("#ndefy").val());
-		/** @type {number} */
-		var cont_ = AsNumber(Math.floor(cx_ / 100) + 10 * Math.floor(cy_ / 100));
-		/** @type {!Array} */
-		var cit_ = [[]];
-		/** @type {any} */
-		var i_5;
-		for (i_5 in t_) {
-			var tid_ = t_[i_5].id;
-			/** @type {number} */
-			var tempx_ = AsNumber(tid_ % 65536);
-			/** @type {number} */
-			var tempy_ = AsNumber((tid_ - tempx_) / 65536);
-			/** @type {number} */
-			var tcont_ = AsNumber(Math.floor(tempx_ / 100) + 10 * Math.floor(tempy_ / 100));
-			if (cont_ == tcont_) {
-				if (t_[i_5].Ballista_total > 0 || t_[i_5].Ranger_total > 0 || t_[i_5].Triari_total > 0 || t_[i_5].Priestess_total || t_[i_5].Arbalist_total > 0 || t_[i_5].Praetor_total > 0) {
-					/** @type {number} */
-					var tdist_ = Math.sqrt((tempx_ - cx_) * (tempx_ - cx_) + (tempy_ - cy_) * (tempy_ - cy_));
-					/** @type {!Array} */
-					var tempt_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					tempt_[1] = t_[i_5].Ballista_total;
-					tempt_[2] = t_[i_5].Ranger_total;
-					tempt_[3] = t_[i_5].Triari_total;
-					tempt_[4] = t_[i_5].Priestess_total;
-					tempt_[8] = t_[i_5].Arbalist_total;
-					tempt_[9] = t_[i_5].Praetor_total;
-					/** @type {!Array} */
-					var temph_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					temph_[1] = t_[i_5].Ballista_home;
-					temph_[2] = t_[i_5].Ranger_home;
-					temph_[3] = t_[i_5].Triari_home;
-					temph_[4] = t_[i_5].Priestess_home;
-					temph_[8] = t_[i_5].Arbalist_home;
-					temph_[9] = t_[i_5].Praetor_home;
-					/** @type {number} */
-					var tempts_ = 0;
-					var j_1;
-					for (j_1 in tempt_) {
-						/** @type {number} */
-						tempts_ = tempts_ + tempt_[j_1] * ttts_[j_1];
+    
+	function neardeftable(t) {
+        var cx= Number($("#ndefx").val());
+        var cy= Number($("#ndefy").val());
+        var cont=Number(Math.floor(cx/100)+10*Math.floor(cy/100));
+        var cit=[[]];
+        for (let i in t) {
+            var tid=t[i].id;
+            var tempx=Number(tid % 65536);
+            var tempy=Number((tid-tempx)/65536);
+            var tcont=Number(Math.floor(tempx/100)+10*Math.floor(tempy/100));
+            var ttspd=0;
+            if (cont==tcont) {
+                if (t[i].Ballista_total>0 || t[i].Ranger_total>0 || t[i].Triari_total>0 || t[i].Priestess_total || t[i].Arbalist_total>0 || t[i].Praetor_total>0 ) {
+                    var tdist=(Math.sqrt((tempx-cx)*(tempx-cx)+(tempy-cy)*(tempy-cy)));
+                    var tempt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    tempt[1]=t[i].Ballista_total;
+                    tempt[2]=t[i].Ranger_total;
+                    tempt[3]=t[i].Triari_total;
+                    tempt[4]=t[i].Priestess_total;
+                    tempt[8]=t[i].Arbalist_total;
+                    tempt[9]=t[i].Praetor_total;
+                    var temph=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    temph[1]=t[i].Ballista_home;
+                    temph[2]=t[i].Ranger_home;
+                    temph[3]=t[i].Triari_home;
+                    temph[4]=t[i].Priestess_home;
+                    temph[8]=t[i].Arbalist_home;
+                    temph[9]=t[i].Praetor_home;
+                    var tempts=0; //TS total
+                    for (var j in tempt) {
+                        tempts+=tempt[j]*ttts[j];
 					}
-					/** @type {number} */
-					var tempth_ = 0;
-					var h_6;
-					for (h_6 in temph_) {
-						/** @type {number} */
-						tempth_ = tempth_ + temph_[h_6] * ttts_[h_6];
+                    var tempth=0; //TS Home
+                    for (var h in temph) {
+                        tempth+=temph[h]*ttts[h];
 					}
-					/** @type {number} */
-					var tspeed_ = 0;
-					for (j_1 in tempt_) {
-						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
-								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2));
+                    var tspeed=0;
+                    for (var j in tempt) {
+                        if (tempt[j]>0) {
+                            if (Number((ttspeed[j]/ttSpeedBonus[j]).toFixed(2))>tspeed) {
+                                tspeed=Number((ttspeed[j]/ttSpeedBonus[j]).toFixed(2));
 							}
 						}
 					}
-					cit_.push([tempx_, tempy_, tdist_, t_[i_5].c, tempt_, tempts_, tempth_, tid_, tdist_ * tspeed_]);
+                    cit.push([tempx,tempy,tdist,t[i].c,tempt,tempts,tempth,tid,tdist*tspeed]);
 				}
 			}
-			if (cont_ != tcont_ || t_[i_5].Galley_total > 0 || t_[i_5].Stinger_total > 0) {
-				if (t_[i_5].Stinger_total > 0 || t_[i_5].Galley_total > 0) {
-					tdist_ = RoundTo2Digits(Math.sqrt((tempx_ - cx_) * (tempx_ - cx_) + (tempy_ - cy_) * (tempy_ - cy_)));
-					/** @type {!Array} */
-					tempt_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					tempt_[1] = t_[i_5].Ballista_total;
-					tempt_[2] = t_[i_5].Ranger_total;
-					tempt_[3] = t_[i_5].Triari_total;
-					tempt_[4] = t_[i_5].Priestess_total;
-					tempt_[8] = t_[i_5].Arbalist_total;
-					tempt_[9] = t_[i_5].Praetor_total;
-					tempt_[14] = t_[i_5].Galley_total;
-					tempt_[15] = t_[i_5].Stinger_total;
-					/** @type {!Array} */
-					temph_ = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					temph_[1] = t_[i_5].Ballista_home;
-					temph_[2] = t_[i_5].Ranger_home;
-					temph_[3] = t_[i_5].Triari_home;
-					temph_[4] = t_[i_5].Priestess_home;
-					temph_[8] = t_[i_5].Arbalist_home;
-					temph_[9] = t_[i_5].Praetor_home;
-					temph_[14] = t_[i_5].Galley_home;
-					temph_[15] = t_[i_5].Stinger_home;
-					/** @type {number} */
-					tempts_ = 0;
-					for (j_1 in tempt_) {
-						/** @type {number} */
-						tempts_ = tempts_ + tempt_[j_1] * ttts_[j_1];
+            if (cont!=tcont || t[i].Galley_total>0 || t[i].Stinger_total>0) {
+				if (t[i].Stinger_total > 0 || t[i].Galley_total > 0) {
+					var tdist = RoundTo2Digits(Math.sqrt((tempx - cx) * (tempx - cx) + (tempy - cy) * (tempy - cy)));
+                    var tempt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    tempt[1]=t[i].Ballista_total;
+                    tempt[2]=t[i].Ranger_total;
+                    tempt[3]=t[i].Triari_total;
+                    tempt[4]=t[i].Priestess_total;
+                    tempt[8]=t[i].Arbalist_total;
+                    tempt[9]=t[i].Praetor_total;
+                    tempt[14]=t[i].Galley_total;
+                    tempt[15]=t[i].Stinger_total;
+                    var temph=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    temph[1]=t[i].Ballista_home;
+                    temph[2]=t[i].Ranger_home;
+                    temph[3]=t[i].Triari_home;
+                    temph[4]=t[i].Priestess_home;
+                    temph[8]=t[i].Arbalist_home;
+                    temph[9]=t[i].Praetor_home;
+                    temph[14]=t[i].Galley_home;
+                    temph[15]=t[i].Stinger_home;
+                    var tempts=0;
+                    for (var j in tempt) {
+                        tempts+=tempt[j]*ttts[j];
 					}
-					/** @type {number} */
-					tempth_ = 0;
-					for (h_6 in temph_) {
-						/** @type {number} */
-						tempth_ = tempth_ + temph_[h_6] * ttts_[h_6];
+                    var tempth=0; //TS Home
+                    for (var h in temph) {
+                        tempth+=temph[h]*ttts[h];
 					}
-					/** @type {number} */
-					tspeed_ = 0;
-					for (j_1 in tempt_) {
-						if (tempt_[j_1] > 0) {
-							if (AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2)) > tspeed_) {
-								/** @type {number} */
-								tspeed_ = AsNumber((ttspeed[j_1] / ttSpeedBonus[j_1]).toFixed(2));
+                    var tspeed=0;
+                    for (var j in tempt) {
+                        if (tempt[j]>0) {
+                            if (Number((ttspeed[j]/ttSpeedBonus[j]).toFixed(2))>tspeed) {
+                                tspeed=Number((ttspeed[j]/ttSpeedBonus[j]).toFixed(2));
 							}
 						}
 					}
-					/** @type {number} */
-					var timetssp_ = tdist_ * tspeed_ + 60;
-					cit_.push([tempx_, tempy_, tdist_, t_[i_5].c, tempt_, tempts_, tempth_, tid_, timetssp_]);
+                    var timetssp=(tdist*tspeed)+60;
+                    cit.push([tempx,tempy,tdist,t[i].c,tempt,tempts,tempth,tid,timetssp]);
 				}
 			}
 		}
-		cit_.sort((a_, b_1) => {
-			return a_[8] - b_1[8];
-		});
+        cit.sort(function(a,b) {return a[8]-b[8];});
 		
-		var neardeftab_ = "<table id='ndeftable'><thead><th></th><th>City</th><th>Coords</th><th>TS Total</th><th>TS Home</th><th id='ndefdist'>Travel Time</th><th>type</th></thead><tbody>";
-		for (i_5 in cit_) {
-			if (i_5 > 0) {
-				/** @type {number} */
-				var h1_ = Math.floor(cit_[i_5][8] / 60);
-				/** @type {number} */
-				var m1_ = Math.floor(cit_[i_5][8] % 60);
-				/** @type {(number|string)} */
-
-				/** @type {(number|string)} */
+        var neardeftab="<table id='ndeftable'><thead><th></th><th>City</th><th>Coords</th><th>TS Total</th><th>TS Home</th><th id='ndefdist'>Travel Time</th><th>type</th></thead><tbody>";
+        for (let i in cit) {
+            if(Number(i)>0){
+            let h1=Math.floor(cit[i][8]/60);
+            let m1=Math.floor(cit[i][8]%60);
+            let _h1 = h1 < 10 ? '0' + h1 : h1;
+            let _m1 = m1 < 10 ? '0' + m1 : m1; 
 				
-				neardeftab_ = `${neardeftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_[i_5][7]}'>Go To</button></td><td>${cit_[i_5][3]}</td><td class='coordblink shcitt' data='${cit_[i_5][7]}'>${cit_[i_5][0]}:${cit_[i_5][1]}</td>`;
-				
-				neardeftab_ = `${neardeftab_}<td>${cit_[i_5][5]}</td><td>${cit_[i_5][6]}</td><td>${TwoDigitNum(h1_)}:${TwoDigitNum(m1_)}</td><td><table>`;
-				for (j_1 in cit_[i_5][4]) {
-					if (cit_[i_5][4][j_1] > 0) {
+            neardeftab+="<tr><td><button class='greenb chcity' id='cityGoTowm' a='"+cit[i][7]+"'>Go To</button></td><td>"+cit[i][3]+"</td><td class='coordblink shcitt' data='"+cit[i][7]+"'>"+cit[i][0]+":"+cit[i][1]+"</td>";
+            //style='font-size: 9px;border-radius: 10px;width: 85%;height: 22px;padding: 1;white-space: nowrap;'
+            neardeftab+="<td>"+cit[i][5]+"</td><td>"+cit[i][6]+"</td><td>"+_h1+":"+_m1+"</td><td><table>";
+            for (var j in cit[i][4]) {
+                if (cit[i][4][j]>0) {
 						
-						neardeftab_ = `${neardeftab_}<td><div class='${tpicdiv20_[j_1]}'></div></td>`;
+                    neardeftab+="<td><div class='"+tpicdiv20[j]+"'></div></td>";
 					}
 				}
 				
-				neardeftab_ = `${neardeftab_}</table></td></tr>`;
+            neardeftab+="</table></td></tr>";
 			}
 		}
 		
-		neardeftab_ = `${neardeftab_}</tbody></table>`;
-		$("#Ndefbox").html(neardeftab_);
+        neardeftab+="</tbody></table>";
+        $("#Ndefbox").html(neardeftab);
 		$("#ndeftable td").css("text-align", "center");
 		$("#ndeftable td").css("height", "25px");
-		/** @type {(Element|null)} */
-		var newTableObject_ = document.getElementById("ndeftable");
-		//		sorttable.makeSortable(newTableObject_);
+        var newTableObject = document.getElementById('ndeftable');
+        sorttable.makeSortable(newTableObject);
+  //      $("#ndefdist").trigger({type:"click",originalEvent:"1"});
+  //      $("#ndefdist").trigger({type:"click",originalEvent:"1"});
 	}
-	/**
-	 * @param {!Object} t_1
-	 * @return {void}
-	 */
-	function nearofftable_(t_1) {
-		/** @type {number} */
-		var contoff_ = AsNumber($("#noffx").val());
-		/** @type {!Array} */
-		var cit_1 = [[]];
-		/** @type {!Array} */
-		var troopmail_ = [[]];
-		/** @type {number} */
-		var counteroff_ = 0;
-		var i_6;
-		for (i_6 in t_1) {
-			var tid_1 = t_1[i_6].id;
-			/** @type {number} */
-			var tempx_1 = AsNumber(tid_1 % 65536);
-			/** @type {number} */
-			var tempy_1 = AsNumber((tid_1 - tempx_1) / 65536);
-			/** @type {number} */
-			var tcont_1 = AsNumber(Math.floor(tempx_1 / 100) + 10 * Math.floor(tempy_1 / 100));
-			if (contoff_ == tcont_1) {
-				if (t_1[i_6].Druid_total > 0 || t_1[i_6].Horseman_total > 0 || t_1[i_6].Sorcerer_total > 0 || t_1[i_6].Vanquisher_total > 0 || t_1[i_6].Scorpion_total > 0 || t_1[i_6].Ram_total > 0) {
-					/** @type {number} */
-					counteroff_ = counteroff_ + 1;
-					/** @type {!Array} */
-					var tempt_1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					tempt_1[5] = t_1[i_6].Vanquisher_total;
-					tempt_1[6] = t_1[i_6].Sorcerer_total;
-					tempt_1[10] = t_1[i_6].Horseman_total;
-					tempt_1[11] = t_1[i_6].Druid_total;
-					tempt_1[12] = t_1[i_6].Ram_total;
-					tempt_1[13] = t_1[i_6].Scorpion_total;
-					/** @type {number} */
-					var tempts_1 = 0;
-					var j_2;
-					for (j_2 in tempt_1) {
-						/** @type {number} */
-						tempts_1 = tempts_1 + tempt_1[j_2] * ttts_[j_2];
+
+    function nearofftable(t) {
+        var contoff=Number($("#noffx").val());
+        var cit=[[]];
+        var troopmail=[[]];
+        var counteroff=0;
+        for (let i in t) {
+            var tid=t[i].id;
+            var tempx=Number(tid % 65536);
+            var tempy=Number((tid-tempx)/65536);
+            var tcont=Number(Math.floor(tempx/100)+10*Math.floor(tempy/100));
+            if (contoff==tcont) {
+                if (t[i].Druid_total>0 || t[i].Horseman_total>0 || t[i].Sorcerer_total>0 || t[i].Vanquisher_total>0 || t[i].Scorpion_total>0 || t[i].Ram_total>0) {
+                    counteroff+=1;
+                    var tempt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    tempt[5]=t[i].Vanquisher_total;
+                    tempt[6]=t[i].Sorcerer_total;
+                    tempt[10]=t[i].Horseman_total;
+                    tempt[11]=t[i].Druid_total;
+                    tempt[12]=t[i].Ram_total;
+                    tempt[13]=t[i].Scorpion_total;
+                    var tempts=0;
+                    for (var j in tempt) {
+                        tempts+=tempt[j]*ttts[j];
 					}
-					troopmail_.push([tempt_1, tempts_1]);
-					cit_1.push([tempx_1, tempy_1, tempts_1, tempt_1, t_1[i_6].c, tid_1]);
+                    troopmail.push([tempt,tempts]);
+                    cit.push([tempx,tempy,tempts,tempt,t[i].c,tid]);
 				}
 			}
-			if (contoff_ == 99) {
-				if (t_1[i_6].Warship_total > 0 || t_1[i_6].Galley_total > 0) {
-					/** @type {number} */
-					counteroff_ = counteroff_ + 1;
-					/** @type {!Array} */
-					tempt_1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-					tempt_1[5] = t_1[i_6].Vanquisher_total;
-					tempt_1[6] = t_1[i_6].Sorcerer_total;
-					tempt_1[10] = t_1[i_6].Horseman_total;
-					tempt_1[11] = t_1[i_6].Druid_total;
-					tempt_1[12] = t_1[i_6].Ram_total;
-					tempt_1[13] = t_1[i_6].Scorpion_total;
-					tempt_1[14] = t_1[i_6].Galley_total;
-					tempt_1[16] = t_1[i_6].Warship_total;
-					/** @type {number} */
-					tempts_1 = 0;
-					for (j_2 in tempt_1) {
-						/** @type {number} */
-						tempts_1 = tempts_1 + tempt_1[j_2] * ttts_[j_2];
+            if(contoff==99){
+                if (t[i].Warship_total>0  || t[i].Galley_total>0) {
+                    counteroff+=1;
+                    var tempt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                    tempt[5]=t[i].Vanquisher_total;
+                    tempt[6]=t[i].Sorcerer_total;
+                    tempt[10]=t[i].Horseman_total;
+                    tempt[11]=t[i].Druid_total;
+                    tempt[12]=t[i].Ram_total;
+                    tempt[13]=t[i].Scorpion_total;
+                    tempt[14]=t[i].Galley_total;
+                    tempt[16]=t[i].Warship_total;
+                    var tempts=0;
+                    for (var j in tempt) {
+                        tempts+=tempt[j]*ttts[j];
 					}
-					troopmail_.push([tempt_1, tempts_1]);
-					cit_1.push([tempx_1, tempy_1, tempts_1, tempt_1, t_1[i_6].c, tid_1]);
+                    troopmail.push([tempt,tempts]);
+                    cit.push([tempx,tempy,tempts,tempt,t[i].c,tid]);
 				}
 			}
 		}
-		cit_1.sort((a_1, b_2) => {
-			return b_2[2] - a_1[2];
-		});
-		$("#asdfg").text(`Total:${counteroff_}`);
+        cit.sort(function(a,b) {return b[2]-a[2];});
+        $("#asdfg").text("Total:"+counteroff);
 		
-		var nearofftab_ = "<table id='nofftable'><thead><th></th><th>City</th><th>Coords</th><th>TS</th><th>type</th></thead><tbody>";
-		for (i_6 in cit_1) {
-			if (i_6 > 0) {
+        var nearofftab="<table id='nofftable'><thead><th></th><th>City</th><th>Coords</th><th>TS</th><th>type</th></thead><tbody>";
+        for (let i in cit) {
+            if( Number(i)>0){
 				
-				nearofftab_ = `${nearofftab_}<tr><td><button class='greenb chcity' id='cityGoTowm' a='${cit_1[i_6][5]}'>Go To</button></td><td>${cit_1[i_6][4]}</td><td class='coordblink shcitt' data='${cit_1[i_6][5]}'>${cit_1[i_6][0]}:${cit_1[i_6][1]}</td>`;
-				
-				nearofftab_ = `${nearofftab_}<td>${cit_1[i_6][2]}</td><td><table>`;
-				for (j_2 in cit_1[i_6][3]) {
-					if (cit_1[i_6][3][j_2] > 0) {
+                nearofftab+="<tr><td><button class='greenb chcity' id='cityGoTowm' a='"+cit[i][5]+"'>Go To</button></td><td>"+cit[i][4]+"</td><td class='coordblink shcitt' data='"+cit[i][5]+"'>"+cit[i][0]+":"+cit[i][1]+"</td>";
+                //style='font-size: 9px;border-radius: 6px;width: 80%;height: 22px;padding: 0;white-space: nowrap;'
+                nearofftab+="<td>"+cit[i][2]+"</td><td><table>";
+                for (var j in cit[i][3]) {
+                    if (cit[i][3][j]>0) {
 						
-						nearofftab_ = `${nearofftab_}<td><div class='${tpicdiv20_[j_2]}'></div></td>`;
+                        nearofftab+="<td><div class='"+tpicdiv20[j]+"'></div></td>";
 					}
 				}
 				
-				nearofftab_ = `${nearofftab_}</table></td></tr>`;
+                nearofftab+="</table></td></tr>";
 			}
 		}
 		
-		nearofftab_ = `${nearofftab_}</tbody></table>`;
-		$("#Noffbox").html(nearofftab_);
+        nearofftab+="</tbody></table>";
+        $("#Noffbox").html(nearofftab);
 		$("#nofftable td").css("text-align", "center");
 		$("#nofftable td").css("height", "26px");
-		/** @type {(Element|null)} */
-		var newTableObject_1 = document.getElementById("nofftable");
-		//	sorttable.makeSortable(newTableObject_1);
-		troopmail_.sort((a_2, b_3) => {
-			return b_3[1] - a_2[1];
-		});
-		$("#mailoff").click(() => {
-			var conttemp_ = $("#noffx").val();
+        var newTableObject = document.getElementById('nofftable');
+        sorttable.makeSortable(newTableObject);
+        troopmail.sort(function(a,b) {return b[1]-a[1];});
+        $("#mailoff").click(function() {
+            //$("#mailComposeBox").show();
+            var conttemp=$("#noffx").val();
 			
-			var dhruv_ = `<p>AsNumber of offensive castles is '${counteroff_}'</p>`;
+            var dhruv="<p>Number of offensive castles is '"+counteroff+"'</p>";
 			
-			dhruv_ = `${dhruv_}</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>AsNumber</th><th>Troop</th><th>TS Amount</th></thead><tbody>`;
-			var i_7;
-			for (i_7 in troopmail_) {
-				if (i_7 > 0) {
+            dhruv+='</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>Number</th><th>Troop</th><th>TS Amount</th></thead><tbody>';
+            for (let i in troopmail) {
+                if(Number(i)>0){
 					
-					dhruv_ = `${dhruv_}<tr><td style="text-align: center;" data-mce-style="text-align: center;">${i_7}</td>`;
+                    dhruv+='<tr><td style="text-align: center;" data-mce-style="text-align: center;">'+i+'</td>';
 					
-					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;"><table>`;
-					var j_3;
-					for (j_3 in troopmail_[i_7][0]) {
-						if (troopmail_[i_7][0][j_3] > 0) {
+                    dhruv+='<td style="text-align: center;" data-mce-style="text-align: center;"><table>';
+                    for (var j in troopmail[i][0]) {
+                        if (troopmail[i][0][j]>0) {
 							
-							dhruv_ = `${dhruv_}<td>${ttname_[j_3]}</td>`;
+                            dhruv+='<td>'+ttname[j]+'</td>';
 						}
 					}
 					
-					dhruv_ = `${dhruv_}</table></td>`;
+                    dhruv+='</table></td>';
 					
-					dhruv_ = `${dhruv_}<td style="text-align: center;" data-mce-style="text-align: center;">${troopmail_[i_7][1]}</td></tr>`;
+                    dhruv+='<td style="text-align: center;" data-mce-style="text-align: center;">'+troopmail[i][1]+'</td></tr>';
 				}
 			}
 			
-			dhruv_ = `${dhruv_}</tbody></table>`;
-			if (conttemp_ == 99) {
-				
-				conttemp_ = "Navy";
-			}
-			jQuery("#mnlsp")[0].click();
-			jQuery("#composeButton")[0].click();
-			var temppo_ = $("#mailname").val();
-			$("#mailToto").val(temppo_);
-			$("#mailToSub").val(`${conttemp_} Offensive TS`);
-			var $iframe_ = $("#mailBody_ifr");
-			$iframe_.ready(() => {
-				$iframe_.contents().find("body").append(dhruv_);
+            dhruv+="</tbody></table>";
+            if(conttemp==99){conttemp="Navy";}
+            jQuery("#mnlsp")[0].click();
+            jQuery("#composeButton")[0].click();
+            var temppo=$("#mailname").val();
+            $("#mailToto").val(temppo);
+            $("#mailToSub").val(conttemp+" Offensive TS");
+            var $iframe = $('#mailBody_ifr');
+            $iframe.ready(function() {
+                $iframe.contents().find("body").append(dhruv);
 			});
 		});
 	}

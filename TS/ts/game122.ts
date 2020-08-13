@@ -68252,7 +68252,6 @@ _viewMode = viewModeWorld;
         if (ppdt.itc) return ppdt.itc;
         else return 0;
       },
-      alliance: function() { return ppdt.planame; },
       ref_iron: function() {
         return ppdt.r[+
           "3"];
