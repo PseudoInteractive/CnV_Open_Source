@@ -15,7 +15,7 @@
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-      DataContext="Outgoing"
+      Tag="Outgoing"
       mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

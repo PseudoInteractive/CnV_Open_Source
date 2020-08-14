@@ -169,7 +169,7 @@ namespace COTG.Views
         {
             var vi = new TabViewItem()
             {
-                Header = tab.DataContext as string,
+                Header = tab.Tag as string,
                 IconSource = GetIconForTab(tab),
                 Content = tab
             };
@@ -188,7 +188,7 @@ namespace COTG.Views
         };
 
         static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {
-            { "Incomming" , "\uF0EF"  },//tab.DataContext as string,
+            { "Incoming" , "\uF0EF"  },//tab.Tag as string,
             {    "Defense", "\uEA0D" },
             {    "Recent" ,  "\uF738" },
             {  "Defend", "\uEA18" },            
@@ -198,17 +198,17 @@ namespace COTG.Views
         };
         private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {
-            if (tabSymbolIcons.TryGetValue(tab.DataContext as string, out var symbol))
+            if (tabSymbolIcons.TryGetValue(tab.Tag as string, out var symbol))
                 return new SymbolIconSource() { Symbol = symbol };
-            if (tabFontIcons.TryGetValue(tab.DataContext as string, out var glyph))
+            if (tabFontIcons.TryGetValue(tab.Tag as string, out var glyph))
                 return new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = glyph };
             return null;
         }
         private static IconElement GetOldIconForTab(UserTab tab)
         {
-            if (tabSymbolIcons.TryGetValue(tab.DataContext as string, out var symbol))
+            if (tabSymbolIcons.TryGetValue(tab.Tag as string, out var symbol))
                 return new SymbolIcon() { Symbol = symbol };
-            if (tabFontIcons.TryGetValue(tab.DataContext as string, out var glyph))
+            if (tabFontIcons.TryGetValue(tab.Tag as string, out var glyph))
                 return new FontIcon() { Glyph = glyph };
             return null;
         }
@@ -419,7 +419,7 @@ namespace COTG.Views
 
         public MenuFlyoutItem AddTabMenuItem(UserTab tab)
         {
-            var title = tab.DataContext as string;
+            var title = tab.Tag as string;
             var rv = new MenuFlyoutItem() { Text = title, Icon= GetOldIconForTab(tab)  };
             rv.Click += (_, _) => AddTab(tab,true);
             return rv;
@@ -452,7 +452,7 @@ namespace COTG.Views
                 //AddChatTab(true);
                 //sender.TabItems.Add(new TabViewItem()
                 //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
-                //    Header = "New Item", Content = new ChatTab() { DataContext = "New Item" } });
+                //    Header = "New Item", Content = new ChatTab() { Tag = "New Item" } });
             }
             static void RemoveTab(TabView view, TabViewItem tab)
         {

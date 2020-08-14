@@ -101,7 +101,6 @@ namespace COTG.Views
         {
             instance = this;
             InitializeComponent();
-            DataContext = this;
             Initialize();
         }
 

@@ -56,11 +56,11 @@ namespace COTG.Views
 
     public sealed partial class ChatTab : UserTab
     {
-        public static ChatTab alliance = new ChatTab() { DataContext = nameof(alliance) };
-        public static ChatTab world = new ChatTab() { DataContext = nameof(world) };
-        public static ChatTab officer = new ChatTab() { DataContext = nameof(officer) };
-        public static ChatTab whisper = new ChatTab() { DataContext = nameof(whisper) };
-        public static ChatTab debug = new ChatTab() { DataContext = nameof(debug) };
+        public static ChatTab alliance = new ChatTab() { Tag = nameof(alliance) };
+        public static ChatTab world = new ChatTab() { Tag = nameof(world) };
+        public static ChatTab officer = new ChatTab() { Tag = nameof(officer) };
+        public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
+        public static ChatTab debug = new ChatTab() { Tag = nameof(debug) };
 
         public static ChatTab[] all = Array.Empty<ChatTab>();
         public static ChatTab[] Ctor()
@@ -180,7 +180,7 @@ namespace COTG.Views
         }
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (DataContext is string s)
+            if (Tag is string s)
             {
                 int id = chatToId.IndexOf(s);
                 if (id >= 0)

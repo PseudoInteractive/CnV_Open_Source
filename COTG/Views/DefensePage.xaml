@@ -9,7 +9,7 @@
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-      DataContext="Defense"
+      Tag="Defense"
       mc:Ignorable="d">
     <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">

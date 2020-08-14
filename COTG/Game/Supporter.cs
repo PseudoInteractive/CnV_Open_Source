@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace COTG.Game
 {
@@ -24,8 +25,8 @@ namespace COTG.Game
 
         public TroopTypeCount[] tSend;
         public int RangerHome { get => city.troopsHome.Count(Enum.ttRanger); set => _ = value; }
-        public int RangerTotal { get => city.troopsTotal.Count(Enum.ttRanger); set =>_=value; }
-        public int RangerSend {  get => tSend.Count(Enum.ttRanger);      set => tSend=tSend.SetOrAdd(Enum.ttRanger, value);  }
+        public int RangerTotal { get => city.troopsTotal.Count(Enum.ttRanger); set => _ = value; }
+        public int RangerSend { get => tSend.Count(Enum.ttRanger); set => tSend = tSend.SetOrAdd(Enum.ttRanger, value); }
 
         public int TriariHome { get => city.troopsHome.Count(Enum.ttTriari); set => _ = value; }
         public int TriariTotal { get => city.troopsTotal.Count(Enum.ttTriari); set => _ = value; }
@@ -34,9 +35,35 @@ namespace COTG.Game
         public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel); set => _ = value; }
         public DateTimeOffset etaWings { get => JSClient.ServerTime() + 0.5f * TimeSpan.FromHours(travel); set => _ = value; }
         public DateTimeOffset time { get; set; }
+        public string troopInfo
+        {
+            get
+            {
+
+                string rv = "Troops Home/Total";
+                foreach (var ttc in city.troopsTotal)
+                {
+                    rv += $"\n{Enum.ttNameWithCapsAndBatteringRam[ttc.type]}: {city.troopsHome.Count(ttc.type),4:N0}/{ttc.count,4:N0}";
+                }
+                return rv;
+            }
+
+        }
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+    }
+    // Proxy for a datagrid that displays 1 row per troop type
+    public class SupportByTroopType
+    {
+        public Supporter supporter;
+        public int type;
+
+        public BitmapImage icon => ImageHelper.FromImages($"troops{type}.png");
+        public string troopType => Enum.ttNameWithCaps[type];
+        public int send { get => supporter.tSend.Count(type); set => supporter.tSend = supporter.tSend.SetOrAdd(type,value); }
+        public int home { get => supporter.city.troopsHome.Count(type); }
+        public int total { get => supporter.city.troopsTotal.Count(type); }
     }
 }

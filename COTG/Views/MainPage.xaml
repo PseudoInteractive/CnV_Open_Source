@@ -12,7 +12,7 @@
       xmlns:cotg="using:COTG"
       xmlns:view="using:COTG.Views"
       mc:Ignorable="d"
-      DataContext="Raid"
+      Tag="Raid"
       Background="{x:Null}">
     <Grid x:Name="cityBaseGrid">
         <Grid.ColumnDefinitions>

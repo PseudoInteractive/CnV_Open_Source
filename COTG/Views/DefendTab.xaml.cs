@@ -34,6 +34,7 @@ namespace COTG.Views
         public static int filterTSHome; // need at this this many ts at home to be considered for def
 
         public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
+        public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
 
         public async override void VisibilityChanged(bool visible)
@@ -76,7 +77,7 @@ namespace COTG.Views
             else
             {
                 supporters.Clear();
-           
+                troopTypeGrid.ItemsSource=supportByTroopTypeEmpty;
                 //              supportGrid.ItemsSource = null;
 
             }
@@ -105,6 +106,52 @@ namespace COTG.Views
             var image = sender as FrameworkElement;
             var supporter = image.DataContext as Supporter;
             supporter.city.ShowContextMenu(image, e.GetPosition(image));
+        }
+
+        private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateSupportByType();
+        }
+        public void UpdateSupportByType()
+        {
+            var sel = supportGrid.SelectedItem;
+            if( sel is Supporter support )
+            {
+                var stt = new List<SupportByTroopType>();
+                foreach (var i in support.city.troopsTotal)
+                {
+                    stt.Add(new SupportByTroopType() { type = i.type, supporter = support });
+                }
+                troopTypeGrid.ItemsSource = stt;
+            }
+            else
+            {
+                troopTypeGrid.ItemsSource = supportByTroopTypeEmpty; 
+            }
+
+        }
+
+
+        private void SendRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var text = sender as FrameworkElement;
+            var stt = text.DataContext as SupportByTroopType;
+            var flyout = new MenuFlyout();
+            App.AddItem(flyout, "Troops Home", (_, _) =>
+            {
+                var supporter = stt.supporter;
+                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
+                UpdateSupportByType();
+            });
+            App.AddItem(flyout, "Total Troops", (_, _) =>
+            {
+                var supporter = stt.supporter;
+                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
+                UpdateSupportByType();
+            });
+
+            flyout.ShowAt(text, e.GetPosition(text));
+
         }
     }
 

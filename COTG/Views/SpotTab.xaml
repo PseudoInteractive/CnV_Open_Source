@@ -20,7 +20,7 @@
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
-        DataContext="Recent"
+        Tag="Recent"
     mc:Ignorable="d">
 
     <Grid>
