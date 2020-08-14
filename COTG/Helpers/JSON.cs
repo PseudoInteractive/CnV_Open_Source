@@ -220,9 +220,9 @@ namespace COTG.Helpers
         public static DateTimeOffset ParseDateTime(this string src, bool monthThenDay=true)
         {
             var format = "s";
-            var s = src; // src may be missing the date or year
             var serverTime = JSClient.ServerTime();
             var split = src.Split(' ', StringSplitOptions.RemoveEmptyEntries) ;
+            string s;
             if (split.Length == 1)
             {
                 s = $"{serverTime.Year}-{serverTime.Month:D2}-{serverTime.Day:D2}T{split[0]}";
@@ -239,16 +239,22 @@ namespace COTG.Helpers
                 else if (dateEtc.Length == 2)
                 {
                     // month then day
-                    s = $"{serverTime.Year}-{int.Parse(dateEtc[monthThenDay?0:1]):D2}-{int.Parse(dateEtc[monthThenDay?1:0]):D2}T{split[0]}";
+                    s = $"{serverTime.Year}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
                 }
                 else
                 {
                     // month then day
-                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[monthThenDay?0:1]):D2}-{int.Parse(dateEtc[monthThenDay?1:0]):D2}T{split[0]}";
+                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
                 }
             }
 
-            return DateTimeOffset.ParseExact(s ,format, DateTimeFormatInfo.InvariantInfo,  DateTimeStyles.AllowInnerWhite|DateTimeStyles.AssumeUniversal);
+            if (DateTimeOffset.TryParseExact(s, format, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var rv))
+                return rv;
+            if (DateTimeOffset.TryParse(s, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out rv))
+                return rv;
+            Assert(false);
+            return AUtil.dateTimeZero;
+
         }
     }
 }

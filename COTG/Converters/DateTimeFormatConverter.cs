@@ -6,7 +6,7 @@ namespace COTG.Converters
 {
     public class DateTimeConverter : IValueConverter
     {
-        const string defaultFormat = "dd',' HH':'mm':'ss";
+        const string defaultFormat = "MM/dd HH':'mm':'ss";
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is DateTimeOffset dt )

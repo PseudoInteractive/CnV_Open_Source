@@ -34,6 +34,7 @@ namespace COTG.Views
         public static int filterTSHome; // need at this this many ts at home to be considered for def
 
         public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
+        public static int[] splitArray = { 1, 2, 3, 4, 5 };
 
         public async override void VisibilityChanged(bool visible)
         {
@@ -43,7 +44,11 @@ namespace COTG.Views
                     defendant = Spot.GetFocus();
                 if (defendant != null && defendant.isCityOrCastle)
                 {
-                    await RestAPI.troopsOverview.Post();
+                    // Dispatch both and then wait for results in parallel
+                    var task0 = RestAPI.troopsOverview.Post();
+                    var task1 = RaidOverview.Send();
+                    await task0;
+                    await task1;
                     List<Supporter> s = new List<Supporter>();
                     //                supportGrid.ItemsSource = null;
                     foreach (var city in City.allCities.Values)
@@ -56,20 +61,23 @@ namespace COTG.Views
                         var supporter = supporters.Find((a) => a.city == city);
                         if (supporter == null)
                         {
-                            supporter = new Supporter() { city = city,tSend = city.troopsHome.ToArray() };
+                            supporter = new Supporter() { city = city };
                         }
                         s.Add(supporter);
+                        supporter.tSend = city.troopsHome.ToArray(); // clone array
                         supporter.travel = hours;
                         supporter.time = supporter.eta;
                     }
-                    supporters.Set(s);
+                    supporters.Set(s.OrderBy(a=>a.travel));
                 }
 
 
             }
             else
             {
-  //              supportGrid.ItemsSource = null;
+                supporters.Clear();
+           
+                //              supportGrid.ItemsSource = null;
 
             }
         }
@@ -84,6 +92,20 @@ namespace COTG.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        private void Coord_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var image = sender as FrameworkElement;
+            var supporter = image.DataContext as Supporter;
+            Spot.ProcessCoordClick(supporter.city.cid, false);
+
+        }
+
+        private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var image = sender as FrameworkElement;
+            var supporter = image.DataContext as Supporter;
+            supporter.city.ShowContextMenu(image, e.GetPosition(image));
+        }
     }
 
     public class SupporterTapCommand : DataGridCommand

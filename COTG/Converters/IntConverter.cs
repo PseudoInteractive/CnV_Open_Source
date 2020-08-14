@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Globalization;
 using Windows.UI.Xaml.Data;
 
 namespace COTG.Converters
@@ -14,7 +14,9 @@ namespace COTG.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return int.Parse(value.ToString(), System.Globalization.NumberStyles.Number);
+            if (int.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+                return v;
+            return default(int);
         }
     }
 
@@ -28,7 +30,9 @@ namespace COTG.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return float.Parse(value.ToString(), System.Globalization.NumberStyles.Number);
+            if (float.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+                return v;
+            return default(float);
         }
     }
 }

@@ -26,62 +26,99 @@ CanUserSortColumns="True"
                      
                      >
             <tk:DataGrid.Columns>
-                <tk:DataGridTextColumn Header="Send" Binding="{Binding Send}" 
-                                       CellStyle="{StaticResource CellCenterLink}"
-                                        />
-                <tk:DataGridTemplateColumn Header="I" >
+                <tk:DataGridTemplateColumn Header="Send" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Supporter">
-                            <Image Source= "{x:Bind icon}" />
+                            <HyperlinkButton Content="Send" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                                                           ToolTipService.ToolTip="Sends defense, or schedules them to depart if arrival time is later than ETA"
+                                             />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTextColumn Header="xy" Binding="{Binding xy}"
-                                       CellStyle="{StaticResource CellCenterLink}"
-                                        />
-                <tk:DataGridTextColumn  Header="Travel" Binding="{Binding travel, Converter={StaticResource FloatConverter} }" 
+                <tk:DataGridTemplateColumn Header="I" >
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Supporter">
+                            <Image Source= "{x:Bind icon}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" Stretch= "UniformToFill"
+              ToolTipService.ToolTip="Selects support city, right click to bring troops home from raids"                                             
+                                   VerticalAlignment="Center" MaxWidth="32" />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
+                <tk:DataGridTemplateColumn Header="xy" >
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Supporter">
+                            <HyperlinkButton Content="{x:Bind xy}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" FontSize="1" HorizontalContentAlignment="Center"
+                                                           ToolTipService.ToolTip="Selects support city, right click to bring troops home from raids"
+                                             />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
+                <tk:DataGridTextColumn  Header="Travel"
+                                        Binding="{Binding travel, Converter={StaticResource FloatConverter},Mode=OneTime}"
+                                        IsReadOnly="True"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
-                <!--<tk:DataGridTextColumn PropertyName="name" 
-                                                SizeMode="Auto"
-                                                CellStyle="{StaticResource LeftAlign}"
-                                       Width="50" />
-                <tk:DataGridTextColumn PropertyName="tsTotal" CanUserEdit="False"
-                                            SizeMode="Fixed"
-                                            CellStyle="{StaticResource RightAlign}"
-                                            CellFormat="{}{0,7:N0}"
-                                       Width="70" />
-                <tk:DataGridTextColumn PropertyName="tsHome" CanUserEdit="False"
-                                            SizeMode="Fixed"
-                                            CellStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
-                                       Width="70" />
-                <tk:DataGridTextColumn Width="80" CanUserEdit="True"
-                                       PropertyName="time"
-                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-                                       SizeMode="Fixed" />-->
-                <tk:DataGridTextColumn Header="Time"
+                <tk:DataGridTextColumn  Header="RaidReturn"
+                                        Binding="{Binding raidReturn, Mode=OneTime }"
+                                        IsReadOnly="True"
+                                            CellStyle="{StaticResource CellRight}"/>
+                <tk:DataGridTextColumn  Header="Name"
+                                        Binding="{Binding name, Mode=OneTime }"
+                                        IsReadOnly="True"
+                                            CellStyle="{StaticResource CellLeft}" />
+                
+                <tk:DataGridComboBoxColumn Header="Split-up" Binding="{Binding split}"
+                                           CellStyle="{StaticResource CellCenter}"
+                                       IsReadOnly="False"
+                                           ToolTipService.ToolTip="Send multiple batches to allow more effective use of wings"
+                                           ItemsSource="{x:Bind local:DefendTab.splitArray}"
+                                        >
+                </tk:DataGridComboBoxColumn>
+                <tk:DataGridTextColumn Header="Arrival"
                                        CellStyle="{StaticResource CellCenter}"
+                                       ToolTipService.ToolTip="Time at which defense will arrive.  Is this is earlier than ETA, troops will be sent immediately"
                                        IsReadOnly="False"
                                        Binding="{Binding time,Converter={StaticResource DateTimeConverter} }"
                                        />
+                
                 <tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
+                                       IsReadOnly="False"
+                                       ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter} }"
                                        />
                 <tk:DataGridTextColumn Header="ETA Wings"
+                                       IsReadOnly="False"
+                                       ToolTipService.ToolTip="Time at which troops would arrive if sent now with wing speedup (2x speed)"
                                        CellStyle="{StaticResource CellCenter}"
                                        Binding="{Binding etaWings,Converter={StaticResource DateTimeConverter} }"
                                        />
                 <tk:DataGridTextColumn Header="Ranger" Binding="{Binding RangerSend, Converter={StaticResource IntConverter} }"
-                                           CellStyle="{StaticResource CellRight}"
-                                       IsReadOnly="False"
+                                      ToolTipService.ToolTip="Rangers to send, defalts to rangers currently at home.  Copy and past T Ranger if you will return troops before they are sent"
+                                           CellStyle="{StaticResource CellRight}" IsReadOnly="False"
                                         />
-                <tk:DataGridTextColumn Header="T Ranger" Binding="{Binding RangerTotal,Converter={StaticResource DateTimeConverter} }"
-                                            
-                                            CellStyle="{StaticResource CellRight}"
-                                            
+                <tk:DataGridTextColumn Header="H Ranger" Binding="{Binding RangerHome,Converter={StaticResource IntConverter}, Mode=OneWay}"
+                                      ToolTipService.ToolTip="Total Ranger count.  Rangers that would be here if you brought eveyone home"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
                                         />
+                <tk:DataGridTextColumn Header="T Ranger" Binding="{Binding RangerTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                      ToolTipService.ToolTip="Total Ranger count.  Rangers that would be here if you brought eveyone home"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
+                                        />
+
+                <tk:DataGridTextColumn Header="Triari" Binding="{Binding TriariSend, Converter={StaticResource IntConverter} }"
+                                      ToolTipService.ToolTip="Triaris to send, defalts to Triaris currently at home.  Copy and past T Triari if you will return troops before they are sent"
+                                           CellStyle="{StaticResource CellRight}" IsReadOnly="False"
+                                        />
+                <tk:DataGridTextColumn Header="T Triari" Binding="{Binding TriariHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                      ToolTipService.ToolTip="Home Triari count.  Triaris that would be here if you brought eveyone home"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
+                                        />
+                <tk:DataGridTextColumn Header="T Triari" Binding="{Binding TriariTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                      ToolTipService.ToolTip="Total Triari count.  Triaris that would be here if you brought eveyone home"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
+                                        />
+
             </tk:DataGrid.Columns>
         </tk:DataGrid>
     </Grid>

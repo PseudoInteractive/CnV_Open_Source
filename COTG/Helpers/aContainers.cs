@@ -48,14 +48,18 @@ namespace COTG.Helpers
             App.DispatchOnUIThreadSneaky(() =>
             {
                 // catch for thread safety
-                Clear();
-                base.AddRange(src);
+                base.Clear();
+                if(src!=null)
+                    base.AddRange(src);
                 NotifyReset();
             });
           }
-        
+        public new void Clear()
+        {
+            Set(null);
+        }
 
-        public void OnPropertyChanged(T city, string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+            public void OnPropertyChanged(T city, string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
         public event PropertyChangedEventHandler PropertyChanged;
 
  //       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

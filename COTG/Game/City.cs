@@ -101,7 +101,7 @@ namespace COTG.Game
             get
             {
                 if (raids.IsNullOrEmpty())
-                    return 999; // no troops
+                    return 999; // no raids
                 var dt = (float)(raids[0].time- JSClient.ServerTime()).TotalMinutes; // should we check more than one
                 if (raids[0].isReturning)
                     return dt;
@@ -194,6 +194,7 @@ namespace COTG.Game
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
             // one off change
             NotifyChange();
+            
 
             //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
             //            COTG.Views.MainPage.CityListUpdateAll();
@@ -245,16 +246,25 @@ namespace COTG.Game
         //  static List<City> dummies = new List<City>();
 
 
-        public void NotifyChange(string member ="")
+        public void NotifyChange(string member = "")
         {
             App.DispatchOnUIThreadSneaky(() =>
        {
            OnPropertyChanged(member);
        });
-            //spots
+            if (DefendTab.IsVisible())
+            {
+                foreach (var i in DefendTab.supporters)
+                {
+                    if (i.city == this)
+                    {
+                        App.DispatchOnUIThreadSneaky(() => i.OnPropertyChanged(string.Empty));
+                        break;
+                    }
+                }
 
+            }
         }
-
       
 
         
