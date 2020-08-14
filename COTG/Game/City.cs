@@ -614,11 +614,10 @@ namespace COTG.Game
                 Log("CityListChange");
 
                 var selectedCityList = CityList.box.SelectedItem as CityList;
-                City[] l;
+                IEnumerable<City> l;
                 if (selectedCityList == null || selectedCityList.id == -1) // "all"
                 {
-                    l = City.allCities.Values.OrderByDescending((a) => a.tsHome)
-                                        .ThenBy((a)=> a._cityName).ToArray();
+                    l = City.allCities.Values;
                 }
                 else
                 {
@@ -631,16 +630,16 @@ namespace COTG.Game
                             filtered.Add(c);
                         }
                     }
-                    l = filtered.OrderByDescending((a) => a.tsHome)
-                                            .ThenBy((a) => a._cityName).ToArray();
+                    l = filtered;
                 }
+                l = l.OrderBy((a) => a._cityName).ToArray();
                 ShellPage.instance.cityBox.ItemsSource = l;
                 var reserveCartsFilter = DonationTab.instance.reserveCarts;
                 if (DonationTab.IsVisible())
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
                         .OrderByDescending(a=>a.cartsHome);
              //   if (MainPage.IsVisible())
-                    City.gridCitySource.Set(l);
+                    City.gridCitySource.Set(l.OrderByDescending(a=>a.tsHome));
                    City.GetBuild().SelectInUI();
             });
         }

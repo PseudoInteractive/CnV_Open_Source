@@ -16,7 +16,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <toolkitConverters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility" TrueValue="Collapsed" FalseValue="Visible" />
-        <converters:DateTimeFormatConverter x:Name="dateTimeFormatConverter" />
+        <converters:DateTimeConverter x:Name="dateTimeFormatConverter" />
     </Page.Resources>
 
     <Grid x:Name="ContentArea">

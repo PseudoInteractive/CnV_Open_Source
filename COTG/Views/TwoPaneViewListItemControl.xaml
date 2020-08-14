@@ -11,7 +11,7 @@
     d:DesignHeight="80"
     d:DesignWidth="400">
     <UserControl.Resources>
-        <converters:DateTimeFormatConverter x:Name="dateTimeFormatConverter" />
+        <converters:DateTimeConverter x:Name="dateTimeFormatConverter" />
     </UserControl.Resources>
     <Grid x:Name="mainGrid">
         <VisualStateManager.VisualStateGroups>

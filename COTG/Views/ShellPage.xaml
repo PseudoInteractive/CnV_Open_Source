@@ -187,9 +187,10 @@
             <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
                         Background="Transparent"
-                        VerticalAlignment="Bottom"
+                        VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
                         Height="11"
+                        Grid.Row="1"
                         Canvas.ZIndex="22">
                 <tk:GridSplitter.Element>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"

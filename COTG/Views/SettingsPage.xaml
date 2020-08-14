@@ -8,7 +8,8 @@
       
       Style="{StaticResource PageStyle}"
       xmlns:xaml="using:Windows.UI.Xaml"
-      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters" xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+      xmlns:controls="using:Microsoft.UI.Xaml.Controls"
       mc:Ignorable="d">
     <Page.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"

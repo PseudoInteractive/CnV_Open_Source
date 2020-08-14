@@ -10,7 +10,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
-        <converters:DateTimeFormatConverter x:Key="dateTimeFormatConverter" />
+        <converters:DateTimeConverter x:Key="dateTimeFormatConverter" />
     </UserControl.Resources>
     <ScrollViewer
         Name="ForegroundElement"
