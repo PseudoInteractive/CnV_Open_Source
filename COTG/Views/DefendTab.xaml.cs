@@ -110,10 +110,11 @@ namespace COTG.Views
 
         private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateSupportByType();
+            RefreshSupportByType();
         }
-        public void UpdateSupportByType()
+        public void RefreshSupportByType()
         {
+            Log("Refresh");
             var sel = supportGrid.SelectedItem;
             if( sel is Supporter support )
             {
@@ -132,7 +133,7 @@ namespace COTG.Views
         }
 
 
-        private void SendRightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void TTSendRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var text = sender as FrameworkElement;
             var stt = text.DataContext as SupportByTroopType;
@@ -141,13 +142,34 @@ namespace COTG.Views
             {
                 var supporter = stt.supporter;
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
-                UpdateSupportByType();
+                supporter.NotifyChange();
             });
             App.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
-                UpdateSupportByType();
+                supporter.NotifyChange();
+            });
+
+            flyout.ShowAt(text, e.GetPosition(text));
+
+        }
+
+        private void TsSendRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var text = sender as FrameworkElement;
+            var supporter = text.DataContext as Supporter;
+            var flyout = new MenuFlyout();
+            App.AddItem(flyout, "Troops Home", (_, _) =>
+            {
+               
+                supporter.tSend = supporter.city.troopsHome.ToArray();
+                supporter.NotifyChange();
+            });
+            App.AddItem(flyout, "Total Troops", (_, _) =>
+            {
+                supporter.tSend = supporter.city.troopsTotal.ToArray();
+                supporter.NotifyChange();
             });
 
             flyout.ShowAt(text, e.GetPosition(text));

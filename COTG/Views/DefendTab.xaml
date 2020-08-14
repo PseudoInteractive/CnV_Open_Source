@@ -103,39 +103,22 @@ CanUserSortColumns="True"
                                        CellStyle="{StaticResource CellCenter}"
                                        Binding="{Binding etaWings,Converter={StaticResource DateTimeConverter} }"
                                        />
-                <tk:DataGridTextColumn Header="Ranger" Binding="{Binding RangerSend, Converter={StaticResource IntConverter} }"
-                                      ToolTipService.ToolTip="Rangers to send, defalts to rangers currently at home.  Copy and past T Ranger if you will return troops before they are sent"
-                                           CellStyle="{StaticResource CellRight}" IsReadOnly="False"
-                                        />
-                <tk:DataGridTextColumn Header="H Ranger" Binding="{Binding RangerHome,Converter={StaticResource IntConverter}, Mode=OneWay}"
-                                      ToolTipService.ToolTip="Total Ranger count.  Rangers that would be here if you brought eveyone home"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
-                                        />
-                <tk:DataGridTextColumn Header="T Ranger" Binding="{Binding RangerTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                      ToolTipService.ToolTip="Total Ranger count.  Rangers that would be here if you brought eveyone home"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="False"
-                                        />
-                <tk:DataGridTemplateColumn Header="Triari" IsReadOnly="False">
+                
+                <tk:DataGridTemplateColumn Header="Send TS" IsReadOnly="True">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Supporter">
-                            <TextBlock Text= "{x:Bind TriariSend, Converter={StaticResource IntConverter} }"
-                                      ToolTipService.ToolTip="Triaris to send.  Right click to select troops home or total troops (if troops will return before the send)"
+                            <TextBlock Text= "{x:Bind tsSend, Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                      ToolTipService.ToolTip="Total TS send, see the grid below for details.  Right click to select troops home or total troops (if troops will return before the send)"
+                                       RightTapped="TsSendRightTapped"
+                                       Style="{StaticResource RightAlign}"
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
-                    <tk:DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate x:DataType="game:Supporter">
-                            <my:NumberBox Text= "{x:Bind TriariSend,Mode=TwoWay}" FontSize="12" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000"
-                                        />
-                        </DataTemplate>
-                    </tk:DataGridTemplateColumn.CellEditingTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTextColumn Header="T Triari" Binding="{Binding TriariHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                      ToolTipService.ToolTip="Home Triari count.  Triaris that would be here if you brought eveyone home"
+                <tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="False"
                                         />
-                <tk:DataGridTextColumn Header="T Triari" Binding="{Binding TriariTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                      ToolTipService.ToolTip="Total Triari count.  Triaris that would be here if you brought eveyone home"
+                <tk:DataGridTextColumn Header="Total TS" Binding="{Binding tsTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="False"
                                         />
 
@@ -155,10 +138,10 @@ CanUserSortColumns="True"
         </tk:GridSplitter>
         <tk:DataGrid x:Name="troopTypeGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
-                        FontSize="14"
+                        FontSize="12"
                      Grid.Row="1"
                         ItemsSource="{x:Bind local:DefendTab.supportByTroopTypeEmpty, Mode=OneWay}"
-                        RowHeight="40"
+                        RowHeight="46"
                      Margin="0,16,0,0"
                      CanUserReorderColumns="True"
                      CanUserSortColumns="True"
@@ -182,13 +165,13 @@ CanUserSortColumns="True"
                         <DataTemplate x:DataType="game:SupportByTroopType">
                             <TextBlock Text= "{x:Bind send, Converter={StaticResource IntConverter} }"
                                       ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
-                                       HorizontalTextAlignment="Center" VerticalAlignment="Center" RightTapped="SendRightTapped"
+                                      Style="{StaticResource RightAlign}" RightTapped="TTSendRightTapped"
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                     <tk:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate x:DataType="game:SupportByTroopType">
-                            <my:NumberBox Text= "{x:Bind send,Mode=TwoWay,Converter={StaticResource IntConverter}}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center"
+                            <my:NumberBox Text= "{x:Bind send,Mode=TwoWay,Converter={StaticResource IntConverter}}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
                                         />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellEditingTemplate>

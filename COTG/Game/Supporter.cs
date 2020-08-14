@@ -1,4 +1,5 @@
 ﻿using COTG.Helpers;
+using COTG.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,9 +25,22 @@ namespace COTG.Game
         public float travel { get; set; }
 
         public TroopTypeCount[] tSend;
-        public int RangerHome { get => city.troopsHome.Count(Enum.ttRanger); set => _ = value; }
-        public int RangerTotal { get => city.troopsTotal.Count(Enum.ttRanger); set => _ = value; }
-        public int RangerSend { get => tSend.Count(Enum.ttRanger); set => tSend = tSend.SetOrAdd(Enum.ttRanger, value); }
+        public int tsSend
+        {
+            get => tSend.TS();
+        }
+        public void NotifyChange(string member = "")
+        {
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                OnPropertyChanged(member);
+                Debug.Log("NotifyChange");
+
+                if (DefendTab.instance.supportGrid.SelectedItem == this)
+                    DefendTab.instance.RefreshSupportByType();
+
+            });
+        }
 
         public int TriariHome { get => city.troopsHome.Count(Enum.ttTriari); set => _ = value; }
         public int TriariTotal { get => city.troopsTotal.Count(Enum.ttTriari); set => _ = value; }

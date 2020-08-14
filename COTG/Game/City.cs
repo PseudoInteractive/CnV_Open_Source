@@ -258,8 +258,8 @@ namespace COTG.Game
                 {
                     if (i.city == this)
                     {
-                        App.DispatchOnUIThreadSneaky(() => i.OnPropertyChanged(string.Empty));
-                        break;
+                        i.NotifyChange(string.Empty);
+                         break;
                     }
                 }
 
