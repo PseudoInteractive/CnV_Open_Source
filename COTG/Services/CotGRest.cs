@@ -659,16 +659,21 @@ namespace COTG.Services
             var p = new Post(url);
             await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
         }
+        async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret)
+        {
+            var p = new Post(url);
+            return await p.AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8)));
+        }
 
-/*
-{
-	"rcid": 21627422,
-	"tr": "[{\"tt\":\"5\",\"tv\":\"1\"}]",
-	"snd": 1,
-	"cid": 21692958,
-	"ts": 0
-}
-*/
+        /*
+        {
+            "rcid": 21627422,
+            "tr": "[{\"tt\":\"5\",\"tv\":\"1\"}]",
+            "snd": 1,
+            "cid": 21692958,
+            "ts": 0
+        }
+        */
         public struct tt_tv
         {
             public int tt { get; set; }
@@ -683,7 +688,7 @@ namespace COTG.Services
             public string ts { get; set; }
         };
 
-        public static void SendRein( int cid,int rcid, TroopTypeCount[] tsSend, DateTimeOffset arrival, float travelTime,int splits )
+        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend, DateTimeOffset arrival, float travelTime,int splits )
         {
             var tttv = new List<tt_tv>();
             foreach(var t in tsSend)
@@ -697,14 +702,32 @@ namespace COTG.Services
                 tr = JsonSerializer.Serialize(tttv),
                 snd = 1,
             };
-            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime))
+            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime+1.0f/64.0))
             {
                 sr.snd = 3;
                 sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
             }
              var post = JsonSerializer.Serialize(sr);
-            for(int i=0;i<splits;++i)
-               SendEncrypted("includes/sndRein.php", post, $"XTR977sW{Player.myId}sss2x2");
+            var secret = $"XTR977sW{Player.myId}sss2x2";
+            var city = City.GetOrAddCity(cid);
+            for(var i = 0; ; )
+            {
+                Note.Show("Sending Reinforcements "+(i+1));
+                var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret);
+                if(jsd ==null)
+                {
+                    Note.Show("Something went wrong");
+                    break;
+                }
+
+                if (++i >= splits)
+                {
+                    city.LoadFromJson(jsd.RootElement);
+                    Note.Show("Sent Reinforcements");
+                    break;
+                }
+                await Task.Delay(500); 
+            }
         }
 
     }

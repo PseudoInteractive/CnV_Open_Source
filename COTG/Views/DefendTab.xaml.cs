@@ -20,6 +20,7 @@ using static COTG.Debug;
 using COTG.Helpers;
 using System.ComponentModel;
 using COTG.Services;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace COTG.Views
 {
@@ -150,6 +151,12 @@ namespace COTG.Views
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
                 supporter.NotifyChange();
             });
+            App.AddItem(flyout, "None", (_, _) =>
+            {
+                var supporter = stt.supporter;
+                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, 0);
+                supporter.NotifyChange();
+            });
 
             flyout.ShowAt(text, e.GetPosition(text));
 
@@ -171,6 +178,11 @@ namespace COTG.Views
                 supporter.tSend = supporter.city.troopsTotal.ToArray();
                 supporter.NotifyChange();
             });
+            App.AddItem(flyout, "None", (_, _) =>
+            {
+                supporter.tSend = Array.Empty<TroopTypeCount>();
+                supporter.NotifyChange();
+            });
 
             flyout.ShowAt(text, e.GetPosition(text));
 
@@ -180,11 +192,64 @@ namespace COTG.Views
         {
             var text = sender as FrameworkElement;
             var supporter = text.DataContext as Supporter;
+            if(supporter.city.commandSlots!=0 &&  supporter.split > supporter.city.freeCommandSlots)
+            {
+                Note.Show("To few command slots");
+                return;
+            }
 
             Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, supporter.arrival,supporter.travel,supporter.split);
             
-            Note.Show("Sent Reinforcements");
 
+        }
+
+
+        private void supportGrid_Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+        {
+            var dg = supportGrid;
+            var tag = e.Column.Tag?.ToString();
+            //Use the Tag property to pass the bound column name for the sorting implementation
+            Comparison<Supporter> comparer =null;
+            switch (tag)
+            {
+                case nameof(Supporter.tsTotal): comparer = ( a,  b) => b.tsTotal.CompareTo(a.tsTotal);  break;
+                case nameof(Supporter.tsHome): comparer = (a, b) => b.tsHome.CompareTo(a.tsHome); break;
+                case nameof(Supporter.tsSend): comparer = (a, b) => b.tsSend.CompareTo(a.tsSend); break;
+                case nameof(Supporter.travel): comparer = (b, a) => b.travel.CompareTo(a.travel); break;
+                case nameof(Supporter.raidReturn): comparer = (b, a) => b.raidReturn.CompareTo(a.raidReturn); break;
+            }
+
+            if (comparer != null)
+            {
+                //Implement sort on the column "Range" using LINQ
+                if (e.Column.SortDirection == null)
+                {
+                    e.Column.SortDirection = DataGridSortDirection.Descending;
+                    supporters.Sort(comparer);
+                    supporters.NotifyReset();
+                }
+                else if(e.Column.SortDirection == DataGridSortDirection.Descending)
+                {
+                    e.Column.SortDirection = DataGridSortDirection.Ascending;
+                    supporters.Sort((b, a) => comparer(a,b) ); // swap order of comparison
+                    supporters.NotifyReset();
+                }
+                else
+                {
+                    e.Column.SortDirection = null;
+
+                }
+            }
+            // add code to handle sorting by other columns as required
+
+            // Remove sorting indicators from other columns
+            foreach (var dgColumn in dg.Columns)
+            {
+                if (dgColumn.Tag!=null && dgColumn.Tag.ToString() != tag)
+                {
+                    dgColumn.SortDirection = null;
+                }
+            }
         }
     }
 

@@ -25,7 +25,8 @@
                      AreRowDetailsFrozen="True" 
                      FrozenColumnCount="2"
                      CanUserReorderColumns="True"
-CanUserSortColumns="True"
+                    CanUserSortColumns="True"
+                     Sorting="supportGrid_Sorting"
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF102020"
                      SelectionChanged="supportGrid_SelectionChanged"
@@ -62,32 +63,33 @@ CanUserSortColumns="True"
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTextColumn  Header="Travel"
                                         Binding="{Binding travel, Converter={StaticResource FloatConverter},Mode=OneTime}"
-                                        IsReadOnly="True"
+                                        IsReadOnly="True" Tag="travel"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
                 <tk:DataGridTextColumn  Header="Return"
                                         Binding="{Binding raidReturn, Mode=OneTime }"
-                                        IsReadOnly="True"
+                                        IsReadOnly="True" Tag="raidReturn"
                                             CellStyle="{StaticResource CellRight}"/>
                 <tk:DataGridTextColumn  Header="Name"
                                         Binding="{Binding name, Mode=OneTime }"
                                         IsReadOnly="True"
                                             CellStyle="{StaticResource CellLeft}" />
-                <tk:DataGridTextColumn Header="TS Send" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"
+                <tk:DataGridTextColumn Header="Send TS" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="tsSend"
                                         />
                 <tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsHome"
                                         />
                 <tk:DataGridTextColumn Header="Total TS" Binding="{Binding tsTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsTotal"
                                         />
-                <tk:DataGridTextColumn Header="Arrival"
+                <tk:DataGridTextColumn Header="Desired"
                                        CellStyle="{StaticResource CellCenter}"
                                        ToolTipService.ToolTip="Time at which defense will arrive.  Is this is earlier than ETA, troops will be sent immediately"
                                        IsReadOnly="False"
                                        Binding="{Binding arrival,Converter={StaticResource DateTimeConverter},Mode=TwoWay}"
-                                       />
+                                       >
+                    </tk:DataGridTextColumn>
                 <tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
                                        IsReadOnly="False"
@@ -137,7 +139,7 @@ CanUserSortColumns="True"
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:SupportByTroopType">
                             <Image Source= "{x:Bind icon}" HorizontalAlignment="Center" Stretch= "UniformToFill"
-                                   VerticalAlignment="Center" MaxWidth="32" />
+                                   VerticalAlignment="Center" RightTapped="TTSendRightTapped"  />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>

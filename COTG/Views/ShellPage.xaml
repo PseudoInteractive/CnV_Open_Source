@@ -14,7 +14,7 @@
       x:Name="shellPage"
       Loaded="OnLoaded"
       mc:Ignorable="d"
-	  FontFamily="Segoe UI Emoji">
+>
     <Page.Resources>
         <Style x:Key="DebugFlyoutStyle"
                TargetType="FlyoutPresenter">

@@ -9,16 +9,14 @@
        <Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="NoWrap" />
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
     </Style>
 
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
     </Style>
 
 	<!--  MasterDetail TextBlock Styles  -->
@@ -29,16 +27,14 @@
 		<Setter Property="FontSize" Value="12" />
 		<Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
     </Style>
 
 	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
 		<Setter Property="FontSize" Value="12" />
         <Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
     </Style>
 
 	<Style
@@ -46,16 +42,13 @@
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
 		<Setter Property="FontSize" Value="12" />
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
     </Style>
 
 	<Style
 		x:Key="DetailBodyBaseMediumStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
         <Setter Property="FontSize" Value="12" />
 		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
 	</Style>
@@ -63,16 +56,13 @@
     <Style
 		x:Key="ButtonTextStyle"
 		TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
+        
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="#FF8060FF" />
     </Style>
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style
@@ -85,8 +75,6 @@
 		x:Key="DetailBodyStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontFamily"
-                Value="Segoe UI Emoji" />
         <Setter Property="FontSize" Value="12" />
 	</Style>
 
