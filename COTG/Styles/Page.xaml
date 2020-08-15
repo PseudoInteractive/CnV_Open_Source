@@ -11,8 +11,10 @@
     <Style TargetType="TextBlock">
         <Setter Property="FontSize" Value="12" />
     </Style>
-    <Style  x:Key="RightAlign"
-                    TargetType="TextBlock">
+    <Style x:Key="TextBlockSmall" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style  x:Key="RightAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
         <Setter Property="HorizontalAlignment"
@@ -29,9 +31,8 @@
         <Setter Property="Margin"
                         Value="0,0,4,0" />
     </Style>
-    
-    <Style x:Key="LeftAlign"
-                   TargetType="TextBlock">
+    <Style x:Key="LeftAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+        
         <Setter Property="VerticalAlignment"
                         Value="Center" />
         <Setter Property="Margin"
@@ -39,8 +40,7 @@
         <Setter Property="HorizontalAlignment"
                         Value="Left" />
     </Style>
-    <Style x:Key="CenterAlign"
-               TargetType="TextBlock">
+    <Style x:Key="CenterAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
         <Setter Property="Margin" Value="0,0,0,0" />

@@ -28,12 +28,12 @@
                                 <CornerRadius x:Key="OverlayCornerRadius">1,4,4,1</CornerRadius>
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
-                                <Color x:Key="SystemAccentColorDark1">#FF6259B9</Color>
-                                <Color x:Key="SystemAccentColorDark2">#FF8C41FD</Color>
-                                <Color x:Key="SystemAccentColorDark3">#FF8F88D2</Color>
-                                <Color x:Key="SystemAccentColorLight1">#FF3D379E</Color>
-                                <Color x:Key="SystemAccentColorLight2">#FF2E2D8F</Color>
-                                <Color x:Key="SystemAccentColorLight3">#FF1F2280</Color>
+                                <Color x:Key="SystemAccentColorDark1">#FF625909</Color>
+                                <Color x:Key="SystemAccentColorDark2">#FF8C410D</Color>
+                                <Color x:Key="SystemAccentColorDark3">#FF8F8802</Color>
+                                <Color x:Key="SystemAccentColorLight1">#FF3D37FE</Color>
+                                <Color x:Key="SystemAccentColorLight2">#FF2F2D8F</Color>
+                                <Color x:Key="SystemAccentColorLight3">#FF10F200</Color>
                                 <Color x:Key="RegionColor">#FF000000</Color>
                         </ResourceDictionary>
                         </ResourceDictionary.MergedDictionaries>
