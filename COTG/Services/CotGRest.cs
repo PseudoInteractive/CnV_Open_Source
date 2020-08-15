@@ -658,9 +658,55 @@ namespace COTG.Services
         {
             var p = new Post(url);
             await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
-
-
         }
+
+/*
+{
+	"rcid": 21627422,
+	"tr": "[{\"tt\":\"5\",\"tv\":\"1\"}]",
+	"snd": 1,
+	"cid": 21692958,
+	"ts": 0
+}
+*/
+        public struct tt_tv
+        {
+            public int tt { get; set; }
+            public int tv { get; set; }
+        };
+        public struct SndRein
+        {
+            public int rcid { get; set; }
+            public string tr { get; set; }
+            public int snd { get; set; }
+            public int cid { get; set; }
+            public string ts { get; set; }
+        };
+
+        public static void SendRein( int cid,int rcid, TroopTypeCount[] tsSend, DateTimeOffset arrival, float travelTime,int splits )
+        {
+            var tttv = new List<tt_tv>();
+            foreach(var t in tsSend)
+            {
+                tttv.Add(new tt_tv() { tt = t.type, tv = t.count/splits });
+            }
+            var sr = new SndRein()
+            {
+                cid = cid,
+                rcid = rcid,
+                tr = JsonSerializer.Serialize(tttv),
+                snd = 1,
+            };
+            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime))
+            {
+                sr.snd = 3;
+                sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
+            }
+             var post = JsonSerializer.Serialize(sr);
+            for(int i=0;i<splits;++i)
+               SendEncrypted("includes/sndRein.php", post, $"XTR977sW{Player.myId}sss2x2");
+        }
+
     }
     public static class TileMapFetch
     {

@@ -25619,8 +25619,7 @@ console.log("Bad");
               var w2l = 0;
               var I2l = 0;
               var z2l = 0;
-              var X2l = '0' ^
-                0;
+              var X2l = 0;
               var s2l = 0;
               var L2l = 0;
               var o2l = 0;
@@ -25659,18 +25658,23 @@ console.log("Bad");
                   H2l = $(_s(+t74))
                     .val();
                 }
+                
                 var O2l = {
                   rcid: Number(x2l),
                   tr: JSON.stringify(j2l),
-                  snd: E6l,
+                  snd: E6l, // when to send, 1 is now, 2? is arrival 3? is departure 
                   cid: cid,
-                  ts: H2l
+                  ts: H2l // timedate
                 };
+                console.log(O2l);
+                console.log(JSON.stringify(O2l));
                 var Q2l = _s(4865) + b2() + _s(3927);
+
+                console.log(Q2l);
                 var t2l = a6.ccazzx
                   .encrypt(JSON.stringify(O2l), Q2l, +U7y);
                 N6();
-                var T2l = $.post(q6 + _s(2535), { a: t2l });
+                var T2l = $.post(q6 + "sndRein.php", { a: t2l });
                 F6();
                 T2l.done(function(M2l) {
                   if (M2l == 1) {

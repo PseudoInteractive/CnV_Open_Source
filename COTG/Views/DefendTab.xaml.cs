@@ -67,7 +67,7 @@ namespace COTG.Views
                         s.Add(supporter);
                         supporter.tSend = city.troopsHome.ToArray(); // clone array
                         supporter.travel = hours;
-                        supporter.time = supporter.eta;
+                        supporter.arrival = supporter.eta;
                     }
                     supporters.Set(s.OrderBy(a=>a.travel));
                 }
@@ -173,6 +173,17 @@ namespace COTG.Views
             });
 
             flyout.ShowAt(text, e.GetPosition(text));
+
+        }
+
+        private void SendClick(object sender, RoutedEventArgs e)
+        {
+            var text = sender as FrameworkElement;
+            var supporter = text.DataContext as Supporter;
+
+            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, supporter.arrival,supporter.travel,supporter.split);
+            
+            Note.Show("Sent Reinforcements");
 
         }
     }
