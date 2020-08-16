@@ -820,6 +820,7 @@ namespace COTG.Services
 //        public string city { get; set; }
  //       public string location { get; set; }
         public int score { get; set; }
+        [JsonConverter(typeof(UShortConverter))]
         public ushort carts_total { get; set; }
         [JsonConverter(typeof(UShortConverter))]
         public ushort carts_home { get; set; }
@@ -835,6 +836,7 @@ namespace COTG.Services
        // public int food_per_hour { get; set; }
         public int food { get; set; }
         public int food_storage { get; set; }
+        [JsonConverter(typeof(UShortConverter))]
         public ushort ships_total { get; set; }
 
         [JsonConverter(typeof(UShortConverter))]
@@ -870,7 +872,10 @@ namespace COTG.Services
 
                 return (ushort)reader.GetSingle();
             }
-
+            else if (reader.TokenType == JsonTokenType.Null)
+            {
+                return 0;
+            }
             throw new JsonException();
         }
 

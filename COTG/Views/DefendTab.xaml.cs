@@ -30,7 +30,7 @@ namespace COTG.Views
         public static DefendTab instance;
         public static bool IsVisible() => instance.isVisible;
         public static Spot defendant;
-        public float filterTime=2;
+        public float filterTime=6;
         public int filterTSTotal=10000;
         public int filterTSHome;
         public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
