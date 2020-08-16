@@ -21,27 +21,27 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" >
             <my:NumberBox Margin="4" Header="Reserve Carts" Value="{x:Bind reserveCarts,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="100" HorizontalContentAlignment="Right"
+                          SmallChange="100" TextAlignment="Right"
                           LargeChange="1000" SpinButtonPlacementMode="Compact" FontSize="12"
                            Width="80" />
             <my:NumberBox Margin="4" Header="Reserve Carts %" Value="{x:Bind reserveCartsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                          SpinButtonPlacementMode="Compact" HorizontalContentAlignment="Right"
+                          SpinButtonPlacementMode="Compact" TextAlignment="Right"
                           SmallChange="0.02" Width="90" FontSize="12"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Ships" Value="{x:Bind reserveShips,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="10"  FontSize="12" HorizontalContentAlignment="Right"
+                          SmallChange="10"  FontSize="12" TextAlignment="Right"
                           LargeChange="100" SpinButtonPlacementMode="Compact"
                                 Width="80"  />
             <my:NumberBox Margin="4" Header="Reserve Ships %" Value="{x:Bind reserveShipsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                          SpinButtonPlacementMode="Compact" HorizontalContentAlignment="Right"
+                          SpinButtonPlacementMode="Compact" TextAlignment="Right"
                           SmallChange="0.02" Width="90"  FontSize="12"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Wood" Value="{x:Bind reserveWood,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="100000"  FontSize="12" HorizontalContentAlignment="Right"
+                          SmallChange="100000"  FontSize="12" TextAlignment="Right"
                           LargeChange="1000000" SpinButtonPlacementMode="Compact"
                            Width="110" />
             <my:NumberBox Margin="4" Header="Reserve Stone" Value="{x:Bind reserveStone,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="100000"  FontSize="12" HorizontalContentAlignment="Right"
+                          SmallChange="100000"  FontSize="12" TextAlignment="Right"
                           LargeChange="1000000" SpinButtonPlacementMode="Compact"
                            Width="110" />
         </StackPanel>

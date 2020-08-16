@@ -11320,8 +11320,8 @@ var cotgsubscribe = amplify;
       ppdtChanged(T11);
       plDa.playstr = T11;
       var t11 = {};
-      for (var v11 in ppdt) t11[v11] = ppdt[v11];
-      for (var v11 in
+      for (let v11 in ppdt) t11[v11] = ppdt[v11];
+      for (let v11 in
           T11) t11[v11] = T11[v11];
       ppdt = t11;
       var G11;
@@ -11333,7 +11333,7 @@ var cotgsubscribe = amplify;
         if (Object.keys(ppdt[_s(c9y | 4112)])
           .length > 0) Q4F(ppdt[_s(c9y * 1)]);
         if (T11.hasOwnProperty("clc")) X8();
-      var w11 = $(E6k
+      let w11 = $(E6k
         .o55(+M9y));
       if (ppdt["#city_map"] * 1000 >= currentTime() && w11.css("display") == _s(
           1146)) w11.css("display", "block");
@@ -11341,17 +11341,17 @@ var cotgsubscribe = amplify;
       if (ppdt[_s(C9y >> 133914752)][_s(Z9y <<
           1533910080)] != 0 && ppdt[_s(C9y >> 653508896)][_s(K9y << 1512718176)] != '0' >>
         246984896) {
-        var w11 = $(_s(M9y - 0));
+        let __w11 = $(_s(M9y - 0));
         if (ppdt[_s(+C9y)][_s(+K9y)] * 1000 >= currentTime() &&
-          ppdt[_s(C9y >> 806459168)][_s(+Z9y)] * (1000) <= currentTime() && w11.css("display") == "none" && w11.css(_s(+u9y)) != 1) {
-          w11.css("display", "block");
-          w11.css(_s(u9y >> 107244032), 1);
+          ppdt[_s(C9y >> 806459168)][_s(+Z9y)] * (1000) <= currentTime() && __w11.css("display") == "none" && __w11.css(_s(+u9y)) != 1) {
+          __w11.css("display", "block");
+          __w11.css(_s(u9y >> 107244032), 1);
         } else if (ppdt[_s(+C9y)][_s(Z9y | 4)] * 1000 >=
-          currentTime() && w11.css("display") == "none") {
-          w11.css("display",
+          currentTime() && __w11.css("display") == "none") {
+          __w11.css("display",
             "block");
-          w11.css(_s(+u9y), a9y * 1);
-        } else if (ppdt["#city_map"] * 1000 < currentTime() && w11.css(_s(2723)) != "none") w11.css("display", "none");
+          __w11.css(_s(+u9y), a9y * 1);
+        } else if (ppdt["#city_map"] * 1000 < currentTime() && __w11.css(_s(2723)) != "none") __w11.css("display", "none");
       }
       if ($(_s(
           "1485" | 12))
@@ -11365,7 +11365,7 @@ var cotgsubscribe = amplify;
         $(_s(6765))
           .text(p6(ppdt["pr"][4]));
       }
-      for (var l11 in bam[_s(m9y & 2147483647)])
+      for (let l11 in bam[_s(m9y & 2147483647)])
         if (l11 < 9) {
           L11 = bam[_s(+m9y)][l11][_s(+B9y)][1];
           G11 = bam[_s(+m9y)][Number(l11) + (1)][_s(+B9y)][1];
@@ -11376,19 +11376,15 @@ var cotgsubscribe = amplify;
             B9y)][1];
           if (ppdt.r >= L11) var X11 = bam[_s(+m9y)][l11]["n"];
         } if (D6) w6F();
-      var O11 = ppdt["rw"][78][_s(L9y | 32)];
+      let O11 = ppdt["rw"][78][_s(L9y | 32)];
       if (O11 == 0)
         if (O11 < +y9y) {
           o5F(O11);
           Q0F = 1;
         } $(_s(5435))
         .text(Math.floor(ppdt[_s(263)][_s(L9y >> 1990423296)]));
-      var h11;
-      var V11;
-      var i11 =
-        "";
-      var W11 = ppdt[_s(+Y9y)];
-      var C11 = $(_s(2595))
+  //    var W11 = ppdt[_s(+Y9y)];
+      let C11 = $(_s(2595))
         .length;
       if (C11 != ppdt[_s(+x9y)].length);
       if (ppdt[_s(3201)]) {
@@ -18209,12 +18205,11 @@ var cotgsubscribe = amplify;
           else if (R9T == 3) Y6(_s(+d3R));
           else if (R9T == 4) Y6(_s(2121));
           else {
-            var q9T = JSON.parse(R9T);
+            let q9T = JSON.parse(R9T);
             ppdtChanged(q9T);
-            var y9T = {};
-            for (var P9T in ppdt) y9T[P9T] = ppdt[P9T];
-            for (var
-                P9T in q9T) y9T[P9T] = q9T[P9T];
+            let y9T = {};
+            for (let P9T in ppdt) y9T[P9T] = ppdt[P9T];
+            for (let P9T in q9T) y9T[P9T] = q9T[P9T];
             ppdt = y9T;
             $(_s(R2p * 1) + d9T)
               .val("");
@@ -30897,7 +30892,7 @@ console.log("Bad");
         $(_s("3121" | 2049))
           .text(p6(D6[_s("7032" | 4112)]));
       }
-      if (D6.triin.length == 0) {
+        if (!D6.triin || D6.triin.length == 0) {
         $(_s(4722))
           .css("display", "block");
         $(_s("4471" | 54))

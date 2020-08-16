@@ -1,7 +1,7 @@
 ﻿declare var worldidnumid : number;
 declare var wdomain: string;
 declare var plDa : {
-	playst: string;
+	playstr: string;
 	citstr: string;
 	currcit: string;
 }
