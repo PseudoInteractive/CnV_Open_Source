@@ -17,6 +17,10 @@ namespace COTG
     }
     public static class AUtil
     {
+        public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
+        public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
+
+        public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
         public static Color WithAlpha(this Color c, byte alpha)
         {
             return Color.FromArgb(alpha, c.R, c.G, c.B);

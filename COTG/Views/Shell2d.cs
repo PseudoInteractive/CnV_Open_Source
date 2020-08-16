@@ -25,7 +25,7 @@ namespace COTG.Views
 {
     public partial class ShellPage
     {
-        const float detailsZoomThreshold = 40;
+        const float detailsZoomThreshold = 30;
         const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
         public static CanvasBitmap worldObjects;

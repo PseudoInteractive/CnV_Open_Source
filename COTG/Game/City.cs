@@ -330,10 +330,10 @@ namespace COTG.Game
         }
         public async static void UpdateSenatorInfo()
         {
-            var a = await Post.SendForJson("overview/senfind.php", "a=0");
 
             try
             {
+                var a = await Post.SendForJson("overview/senfind.php", "a=0");
                 var empty = Array.Empty<SenatorInfo>();
                 var changed = new HashSet<City>();
                 foreach (var city in City.allCities.Values)

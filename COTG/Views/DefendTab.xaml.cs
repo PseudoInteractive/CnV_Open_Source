@@ -30,10 +30,13 @@ namespace COTG.Views
         public static DefendTab instance;
         public static bool IsVisible() => instance.isVisible;
         public static Spot defendant;
-        public static float filterTime=8;  // defenders outside of this window are not included
-        public static int filterTSTotal=10000;
-        public static int filterTSHome; // need at this this many ts at home to be considered for def
-
+        public float filterTime=2;
+        public int filterTSTotal=10000;
+        public int filterTSHome;
+        public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
+        public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; Refresh(); } }
+        public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; Refresh(); } } // need at this this many ts at home to be considered for def
+        public DateTimeOffset sendAt { get; set; } = DateTimeOffset.Now.Date;
         public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
@@ -68,7 +71,6 @@ namespace COTG.Views
                         s.Add(supporter);
                         supporter.tSend = city.troopsHome.ToArray(); // clone array
                         supporter.travel = hours;
-                        supporter.arrival = supporter.eta;
                     }
                     supporters.Set(s.OrderBy(a=>a.travel));
                 }
@@ -198,7 +200,7 @@ namespace COTG.Views
                 return;
             }
 
-            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, supporter.arrival,supporter.travel,supporter.split);
+            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, sendAt,supporter.travel,supporter.split);
             
 
         }
@@ -251,6 +253,17 @@ namespace COTG.Views
                 }
             }
         }
+
+        private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+            var dateTime = new DateTimePicker(sendAt, "Send At");
+            await dateTime.ShowAsync();
+            sendAt = DateTimePicker.dateTime;
+            OnPropertyChanged(nameof(sendAt));
+        }
+
+       
     }
 
     public class SupporterTapCommand : DataGridCommand

@@ -407,18 +407,6 @@ namespace COTG.Views
         //    args.Handled = result;
         //}
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Equals(storage, value))
-            {
-                return;
-            }
-
-            storage = value;
-            OnPropertyChanged(propertyName);
-        }
 
 
         public void TestPost(object o, RoutedEventArgs e)
@@ -455,7 +443,20 @@ namespace COTG.Views
             
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value))
+            {
+                return;
+            }
+
+            storage = value;
+            OnPropertyChanged(propertyName);
+        }
+
 
         private async void TestPost2(object sender, RoutedEventArgs e)
         {

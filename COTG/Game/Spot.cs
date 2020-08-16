@@ -580,7 +580,8 @@ namespace COTG.Game
                     }
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-                App.AddItem(flyout, "Defend", DefendMe );
+                App.AddItem(flyout, "Near Defence", DefendMe );
+                App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
             }
             else if (this.isDungeon || this.isBoss)

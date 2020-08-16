@@ -84,13 +84,34 @@ namespace COTG.Services
         public virtual async Task<JsonDocument> AcceptJson(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
-            return JsonDocument.Parse(data);
+
+            try
+            {
+                return JsonDocument.Parse(data);
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+
 
         }
         public virtual async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
-            return JsonSerializer.Deserialize<T>(data);
+            try
+            {
+                return JsonSerializer.Deserialize<T>(data);
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return default;
+            }
+
 
         }
 

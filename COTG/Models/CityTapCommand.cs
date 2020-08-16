@@ -235,47 +235,47 @@ namespace COTG.Models
 
         }
     }
-    public class CityKeyCommand : DataGridCommand
-    {
-        public CityKeyCommand()
-        {
-            this.Id = CommandId.KeyDown;
+//    public class CityKeyCommand : DataGridCommand
+//    {
+//        public CityKeyCommand()
+//        {
+//            this.Id = CommandId.KeyDown;
 
-        }
+//        }
 
-        public override bool CanExecute(object parameter)
-        {
-            var context = parameter as DataGridCellInfo;
-            // put your custom logic here
-        //    Log("CanExecute");
-            return true;
-        }
+//        public override bool CanExecute(object parameter)
+//        {
+//            var context = parameter as DataGridCellInfo;
+//            // put your custom logic here
+//        //    Log("CanExecute");
+//            return true;
+//        }
 
-        public override void Execute(object parameter)
-        {
-            var keyEvent = parameter as KeyRoutedEventArgs;
-            var grid = Views.MainPage.CityGrid;
-            var sel = grid.SelectedItem as DataGridCellInfo;
-            // put your custom logic here
-            if (sel!=null)
-            {
-                switch (keyEvent.Key)
-                {
-                    case Windows.System.VirtualKey.Up:
-                        {
-//                            sel.
+//        public override void Execute(object parameter)
+//        {
+//            var keyEvent = parameter as KeyRoutedEventArgs;
+//            var grid = Views.MainPage.CityGrid;
+//            var sel = grid.SelectedItem as DataGridCellInfo;
+//            // put your custom logic here
+//            if (sel!=null)
+//            {
+//                switch (keyEvent.Key)
+//                {
+//                    case Windows.System.VirtualKey.Up:
+//                        {
+////                            sel.
 
-                            break;
-                        }
-                }
-            }
+//                            break;
+//                        }
+//                }
+//            }
          
           
-            //            if (base.CanExecute(parameter))
-            base.Execute(parameter);
+//            //            if (base.CanExecute(parameter))
+//            base.Execute(parameter);
 
-        }
-    }
+//        }
+//    }
     //    public class CityInfoCommand : DataGridCommand
     //    {
     //        public CityInfoCommand()

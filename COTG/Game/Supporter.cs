@@ -48,7 +48,6 @@ namespace COTG.Game
 
         public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel); set => _ = value; }
         public DateTimeOffset etaWings { get => JSClient.ServerTime() + 0.5f * TimeSpan.FromHours(travel); set => _ = value; }
-        public DateTimeOffset arrival { get; set; }
         public string troopInfo
         {
             get

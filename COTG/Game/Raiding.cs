@@ -131,21 +131,30 @@ namespace COTG.Game
             {
                 var changed = new HashSet<City>();
                 nextAllowedTsHomeUpdate = n + TimeSpan.FromSeconds(24);
-                var jso = await Post.SendForJson("includes/gIDl.php", "");
-                foreach (var ci in jso.RootElement.EnumerateArray())
+                try
                 {
-                    var cid = ci.GetAsInt("i");
-                    var ts = ci.GetAsInt("ts");
-                    var v = City.allCities[cid];
-                    if ((v.tsHome - ts).Abs() > 8)
+                    var jso = await Post.SendForJson("includes/gIDl.php", "");
+                    foreach (var ci in jso.RootElement.EnumerateArray())
                     {
-                        v.tsHome = ts;
-                        changed.Add(v);
+                        var cid = ci.GetAsInt("i");
+                        var ts = ci.GetAsInt("ts");
+                        var v = City.allCities[cid];
+                        if ((v.tsHome - ts).Abs() > 8)
+                        {
+                            v.tsHome = ts;
+                            changed.Add(v);
+                        }
                     }
+                    changed.NotifyChange(nameof(City.tsHome));
+                    if (updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
+                        ScanDungeons.Post(Spot.focus, true);
                 }
-                changed.NotifyChange(nameof(City.tsHome));
-                if (updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
-                    ScanDungeons.Post(Spot.focus, true);
+                catch (Exception e)
+                {
+                    Log(e);
+                }
+
+
             }
         }
         // should this be waitable?

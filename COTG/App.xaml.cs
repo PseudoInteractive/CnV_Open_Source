@@ -58,7 +58,7 @@ namespace COTG
             //try
             //{
             //    {
-           
+
             //        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
             //    }
             //}
@@ -91,7 +91,7 @@ namespace COTG
 
         private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
-            switch(args.VirtualKey)
+            switch (args.VirtualKey)
             {
                 case VirtualKey.Shift:
                     shiftPressed &= 254;
@@ -156,7 +156,7 @@ namespace COTG
             this.DebugSettings.FailFastOnErrors = true;
 #endif
 #if DEBUG
- //           this.DebugSettings.EnableFrameRateCounter = true;
+            //           this.DebugSettings.EnableFrameRateCounter = true;
             this.DebugSettings.FailFastOnErrors = false;
             //           this.DebugSettings.IsBindingTracingEnabled = true;
             //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
@@ -174,7 +174,7 @@ namespace COTG
         private static void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
         {
             // reset timer if active
-            if(timerActive)
+            if (timerActive)
             {
                 idleTimer.Stop();
                 idleTimer.Start();
@@ -197,22 +197,22 @@ namespace COTG
         public static void QueueIdleTask(Action a)
         {
             idleTasks.Enqueue(a);
-            if(!timerActive)
+            if (!timerActive)
             {
                 timerActive = true;
-                DispatchOnUIThreadSneaky( idleTimer.Start );
+                DispatchOnUIThreadSneaky(idleTimer.Start);
             }
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
         {
-            if(args.Kind==ActivationKind.Protocol)
+            if (args.Kind == ActivationKind.Protocol)
             {
                 ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
                 var s = eventArgs.Uri.Fragment;
                 Debug.Log(s);
                 // format is sub?s=1&w=
-              //  if (s.Length >= 3)
+                //  if (s.Length >= 3)
                 {
                     JSClient.subId = 1;// int.Parse(s.Substring(3,1));
                     JSClient.world = 20;// int.Parse(s.Substring(7));
@@ -223,14 +223,14 @@ namespace COTG
             //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
             //   typeof(Analytics), typeof(Crashes));
 
-        
+
 
             //var configuration = new ConfigurationBuilder()
             //                                .AddJsonFile("appsettings.json", false, true)
             //                                .Build();
 
 
-            
+
 
             //    CreateDefaultBuilder(args)
             //        .ConfigureWebHostDefaults(webBuilder =>
@@ -255,7 +255,7 @@ namespace COTG
             //logger.LogInformation("logger information");
             //logger.LogWarning("logger warning");
 
-          
+
             //using (var listener = new LoggerTraceListener(logger))
             //{
             //    System.Diagnostics.Trace.Listeners.Add(listener);
@@ -269,7 +269,7 @@ namespace COTG
         }
         private ActivationService CreateActivationService()
         {
-            return new ActivationService(this,null, new Lazy<UIElement>(CreateShell));
+            return new ActivationService(this, null, new Lazy<UIElement>(CreateShell));
         }
 
         private UIElement CreateShell()
@@ -283,16 +283,16 @@ namespace COTG
             if (ShellPage.canvas != null)
                 ShellPage.canvas.Paused = true;
             SettingsPage.SaveAll();
-//            var deferral = e.GetDeferral();
-//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
- //           deferral.Complete();
+            //            var deferral = e.GetDeferral();
+            //            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+            //           deferral.Complete();
         }
 
         private void App_Resuming(object sender, object e)
         {
             Trace("Resume");
-            
-   //         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
+
+            //         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
         }
 
         protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
@@ -316,7 +316,7 @@ namespace COTG
         {
             var d = GlobalDispatcher();
             // run it immediately if we can
-            if (d.HasThreadAccess )
+            if (d.HasThreadAccess)
                 action();
             else
                 d.RunAsync(CoreDispatcherPriority.Low, action);
@@ -337,11 +337,11 @@ namespace COTG
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
         {
             var rv = new MenuFlyoutItem() { Text = text };
-            if(command != null)
+            if (command != null)
                 rv.Click += (_, _) => command();
             return rv;
         }
-        public static MenuFlyoutItem AddItem (MenuFlyout menu,string text, RoutedEventHandler command, object context=null)
+        public static MenuFlyoutItem AddItem(MenuFlyout menu, string text, RoutedEventHandler command, object context = null)
         {
             var rv = new MenuFlyoutItem() { Text = text };
             rv.DataContext = context;
@@ -354,58 +354,60 @@ namespace COTG
         {
             var rv = new MenuFlyoutItem() { Text = text };
             if (command != null)
-                rv.Click += (_,_) => command();
+                rv.Click += (_, _) => command();
             menu.Items.Add(rv);
             return rv;
         }
         public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter)
         {
-            return new MenuFlyoutItem() { Text = text,Command=command,CommandParameter=parameter };
+            return new MenuFlyoutItem() { Text = text, Command = command, CommandParameter = parameter };
         }
         ///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
-        public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1 };
+        public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1, NumberRounder=new IncrementNumberRounder() { Increment=.001,RoundingAlgorithm=RoundingAlgorithm.RoundHalfToEven} };
+        public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true };
+        public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits = 0, IsGrouped = true };
+        public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits = 0, IntegerDigits = 2 };
     }
 
 
 
+        //public static class UserAgent
+        //{
+        //    const int URLMON_OPTION_USERAGENT = 0x10000001;
 
-    //public static class UserAgent
-    //{
-    //    const int URLMON_OPTION_USERAGENT = 0x10000001;
+        //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+        //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
 
-    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-    //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+        //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+        //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
 
-    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-    //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
+        //    public static string GetUserAgent()
+        //    {
+        //        int capacity = 255;
+        //        var buf = new StringBuilder(capacity);
+        //        int length = 0;
 
-    //    public static string GetUserAgent()
-    //    {
-    //        int capacity = 255;
-    //        var buf = new StringBuilder(capacity);
-    //        int length = 0;
+        //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
 
-    //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+        //        return buf.ToString();
+        //    }
 
-    //        return buf.ToString();
-    //    }
+        //    public static void SetUserAgent(string agent)
+        //    {
+        //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
+        //        var ex = Marshal.GetExceptionForHR(hr);
+        //        if (null != ex)
+        //        {
+        //            throw ex;
+        //        }
+        //    }
 
-    //    public static void SetUserAgent(string agent)
-    //    {
-    //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
-    //        var ex = Marshal.GetExceptionForHR(hr);
-    //        if (null != ex)
-    //        {
-    //            throw ex;
-    //        }
-    //    }
-
-    //    public static void AppendUserAgent(string suffix)
-    //    {
-    //        SetUserAgent(GetUserAgent() + suffix);
-    //    }
-    //}
-    public static class AApp
+        //    public static void AppendUserAgent(string suffix)
+        //    {
+        //        SetUserAgent(GetUserAgent() + suffix);
+        //    }
+        //}
+        public static class AApp
     {
         public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
         {

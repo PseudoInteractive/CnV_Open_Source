@@ -6,12 +6,11 @@ namespace COTG.Converters
 {
     public class DateTimeConverter : IValueConverter
     {
-        const string defaultFormat = "MM/dd HH':'mm':'ss";
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is DateTimeOffset dt )
             {
-                return dt.ToString(parameter != null ? parameter.ToString() : defaultFormat );
+                return dt.ToString(parameter != null ? parameter.ToString() : AUtil.defaultDateFormat );
             }
             return value.ToString();
         }
@@ -20,7 +19,7 @@ namespace COTG.Converters
         {
             if (value != null)
             {
-                if (DateTimeOffset.TryParseExact(value.ToString(), parameter != null ? parameter.ToString() : defaultFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var result))
+                if (DateTimeOffset.TryParseExact(value.ToString(), parameter != null ? parameter.ToString() : AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var result))
                     return result;
                 if (DateTimeOffset.TryParse(value.ToString(), DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result))
                     return result;

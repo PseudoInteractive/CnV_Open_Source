@@ -37,7 +37,7 @@ namespace COTG.Views
         {
             if(args.AddedDates.Any())
             {
-                Services.WorldStorage.SetHeatmapStartDate(args.AddedDates.First().Date);
+                Services.WorldStorage.SetHeatmapStartDate(args.AddedDates.First().Date); // Is Timezone Right?
             }
             else
             {
