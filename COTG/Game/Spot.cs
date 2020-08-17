@@ -115,7 +115,7 @@ namespace COTG.Game
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
         public byte claim; // only if this is under attack
-        public string Claim => $"{(int)claim,3:D0}%";
+        public string Claim => $"{(int)claim:00}%";
             public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
         public ushort points { get; set; }

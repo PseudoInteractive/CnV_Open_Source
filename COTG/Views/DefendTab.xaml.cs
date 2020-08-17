@@ -29,6 +29,7 @@ namespace COTG.Views
     {
         public static DefendTab instance;
         public static bool IsVisible() => instance.isVisible;
+        public bool waitReturn { get; set; }
         public static Spot defendant;
         public float filterTime=6;
         public int filterTSTotal=10000;
@@ -215,8 +216,16 @@ namespace COTG.Views
                 Note.Show("To few command slots");
                 return;
             }
+            var at = sendAt;
+            if(waitReturn)
+            {
+                var canReturnAt = supporter.city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 128.0f);
+                if (canReturnAt > at)
+                    at = canReturnAt;
 
-            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, sendAt,supporter.travel,supporter.split);
+            }
+
+            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, at,supporter.travel,supporter.split);
             
 
         }

@@ -210,7 +210,7 @@ namespace COTG.Game
         }
         public static async Task ReturnAt(int cid, DateTimeOffset at)
         {
-            Note.Show($"{cid.CidToStringMD()} End Raids");
+            Note.Show($"{cid.CidToStringMD()} End Raids At");
             var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
             if (cid != 0)
             {

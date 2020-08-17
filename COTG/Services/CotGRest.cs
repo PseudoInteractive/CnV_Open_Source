@@ -747,8 +747,16 @@ namespace COTG.Services
 
                 if (++i >= splits)
                 {
-                    city.LoadFromJson(jsd.RootElement);
-                    Note.Show("Sent Reinforcements");
+                    if (sr.snd != 3)
+                    {
+                        Log("Sent last");
+                        city.LoadFromJson(jsd.RootElement);
+                        Note.Show("Sent Reinforcements");
+                    }
+                    else
+                    {
+                        Note.Show("Scheduled Reinforcements");
+                    }
                     break;
                 }
                 await Task.Delay(500); 

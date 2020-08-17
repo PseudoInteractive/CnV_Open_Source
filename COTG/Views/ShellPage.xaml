@@ -91,7 +91,8 @@
                               Label="Fresh"
                               AccessKey="F5"                         
                               Click="Refresh"
-                               ToolTipService.ToolTip="When in doubt, refresh - Shift click to refresh world data"
+                          RightTapped="RefreshX"
+                               ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
                 <AppBarButton.Resources>
                     <winui:TeachingTip x:Name="RefreshTip"
@@ -99,7 +100,7 @@
                                 Title="Refresh"
                                 Target="{x:Bind Fresh}"
                                 Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
-                        <TextBlock Text="Holding Shift will refresh all World data (castles, cities, bosses etc)" />
+                        <TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
                     </winui:TeachingTip>
                 </AppBarButton.Resources>
             </AppBarButton>

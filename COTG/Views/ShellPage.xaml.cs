@@ -420,15 +420,24 @@ namespace COTG.Views
             Refresh();
 
         }
+        private static void RefreshWorldData()
+        {
+            Note.Show("Refresh world data");
+            GetWorldInfo.Send();
+            TileData.Ctor();
 
+        }
+        private void RefreshX(object sender, RightTappedRoutedEventArgs e)
+        {
+            RefreshWorldData();
+
+        }
         private static void Refresh()
         {
 
             if (App.IsKeyPressedShift())
             {
-                Note.Show("Refresh world data");
-                GetWorldInfo.Send();
-                TileData.Ctor();
+                RefreshWorldData();
             }
             else
             {
@@ -803,5 +812,7 @@ namespace COTG.Views
 
             }
         }
+
+       
     }
 }

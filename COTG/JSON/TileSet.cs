@@ -73,8 +73,6 @@ namespace COTG.JSON
             
                 for (var i = 0; i < World.worldDim * World.worldDim; ++i)
                 {
-                    int put = 0;
-                    ulong packedLayer = 0;
                     foreach (var layer in instance.layers)
                     {
                         var tile = layer.data[i];
@@ -91,12 +89,10 @@ namespace COTG.JSON
                         }
                         }
                     }
-                  //  packedLayers[i] = packedLayer;
-    
+            
                 }
             
         }
-            public static ulong[] packedLayers = new ulong[World.worldDim * World.worldDim];
         
         
 
@@ -145,9 +141,7 @@ namespace COTG.JSON
                 try
                 {
                     var resName = image;
-                  //  if (resName == "land.png")
-                  //      resName = "land.jpg";
-                    //  ShellPage.SetHeaderText(resName);
+
                     var uri = new Uri($"ms-appx:///Assets/{ resName.Substring(0,resName.Length-3)}dds");
                     var temp = this;
                 Debug.Log(uri.ToString());

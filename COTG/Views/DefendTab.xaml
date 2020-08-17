@@ -18,18 +18,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" PointerPressed="SendAtTapped">
-            <Border  Margin="16" Background="#FF103030" VerticalAlignment="Bottom">
+            <Border  Margin="12" Background="#FF103030" VerticalAlignment="Bottom">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind sendAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
                            Width="120" HorizontalAlignment="Center" FontSize="16" HorizontalTextAlignment="Center"
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             </Border>
+            <ToggleSwitch Header="Wait Return" IsOn="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" OnContent="" OffContent=""
+                          Width="80" HorizontalAlignment="Center" FontSize="12"
+                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
-                          Header="Max Travel" Width="140" Margin="12,0,12,0" AcceptsExpression="True" SmallChange="0.5" NumberFormatter="{x:Bind cotg:App.formatter2Digit}"
+                          Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5" NumberFormatter="{x:Bind cotg:App.formatter2Digit}"
                           TextAlignment="Right"/>
             <my:NumberBox Value="{x:Bind _filterTSHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
-                          Header="Min TS(Home)" Width="140" Margin="12,0,12,0" AcceptsExpression="True" SmallChange="5000" TextAlignment="Right" SpinButtonPlacementMode="Inline" />
+                          Header="Min TS(Home)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" TextAlignment="Right" SpinButtonPlacementMode="Inline" />
             <my:NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          Header="Min TS(Total)" Width="140" Margin="12,0,12,0" AcceptsExpression="True" SmallChange="5000" TextAlignment="Right" SpinButtonPlacementMode="Inline"/>
+                          Header="Min TS(Total)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" TextAlignment="Right" SpinButtonPlacementMode="Inline"/>
         </StackPanel>
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
