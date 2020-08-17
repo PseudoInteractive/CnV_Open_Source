@@ -384,12 +384,26 @@ namespace COTG.Views
                                         }
                                         else
                                         {
-                                            toolTip += "\nWas rennovated";
+                                            if (pData.isTemple != data.isTemple)
+                                            {
+                                                if (data.isTemple)
+                                                    toolTip += "\nBecame a Temple";
+                                                else
+                                                    toolTip += "\nBecame not a temple";
+                                            }
+                                            else if (pData.isCastle != data.isCastle)
+                                            {
+                                                toolTip += "\nWas castled";
+                                            }
+                                            else
+                                            {
+                                                toolTip += "\nWas rennovated";
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        toolTip += "\nWas founded";
+                                        toolTip += "\nWas taken";
                                     }
                                     break;
                                 case World.typeShrine:

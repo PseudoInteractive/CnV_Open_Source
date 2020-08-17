@@ -22,18 +22,18 @@
         <StackPanel Orientation="Horizontal" Grid.Row="0" >
             <my:NumberBox Margin="4" Header="Reserve Carts" Value="{x:Bind reserveCarts,Mode=TwoWay}" AcceptsExpression="True"
                           SmallChange="100" TextAlignment="Right"
-                          LargeChange="1000" SpinButtonPlacementMode="Compact" FontSize="12"
+                          LargeChange="1000" FontSize="12"
                            Width="80" />
             <my:NumberBox Margin="4" Header="Reserve Carts %" Value="{x:Bind reserveCartsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                          SpinButtonPlacementMode="Compact" TextAlignment="Right"
+                           TextAlignment="Right"
                           SmallChange="0.02" Width="90" FontSize="12"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Ships" Value="{x:Bind reserveShips,Mode=TwoWay}" AcceptsExpression="True"
                           SmallChange="10"  FontSize="12" TextAlignment="Right"
-                          LargeChange="100" SpinButtonPlacementMode="Compact"
+                          LargeChange="100" 
                                 Width="80"  />
             <my:NumberBox Margin="4" Header="Reserve Ships %" Value="{x:Bind reserveShipsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                          SpinButtonPlacementMode="Compact" TextAlignment="Right"
+                           TextAlignment="Right"
                           SmallChange="0.02" Width="90"  FontSize="12"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Wood" Value="{x:Bind reserveWood,Mode=TwoWay}" AcceptsExpression="True"

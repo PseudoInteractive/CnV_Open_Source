@@ -161,13 +161,13 @@ namespace COTG.Views
             if (World.changePixels != null)
             {
                 var pixels = World.changePixels;
-                ClearHeatmap();
+                ClearHeatmapImage();
                 worldChanges = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
                 
             }
 
         }
-        public static void ClearHeatmap()
+        public static void ClearHeatmapImage()
         {
             World.changePixels = null;
             if (worldChanges != null)
@@ -177,9 +177,13 @@ namespace COTG.Views
                 w.Dispose();
             }
             World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
+           
+        }
+        public static void ClearHeatmap()
+        {
+            ClearHeatmapImage();
             World.rawPrior = null;
         }
-
         public static void SetCanvasVisibility(bool visible)
 		{
             if ( canvas.Visibility == Visibility.Visible )
@@ -721,7 +725,7 @@ namespace COTG.Views
                                 var c = city.cid.CidToCC();
 
                                 // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-                                //var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                                //varr = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
                                 //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
                                 foreach (var raid in city.raids)
                                 {

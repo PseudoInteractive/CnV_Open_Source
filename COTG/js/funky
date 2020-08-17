@@ -37887,103 +37887,113 @@ var cotgsubscribe = amplify;
         //    //  module.exports = u29 : 
         //    u29(jQuery);
         //  }
-        (function (H29) {
-            var k9t = '1118';
-            E6k.y6();
-            function x29(J29, h29) {
-                E6k.y6();
-                return I29.settings.adjustOldDeltas && _s(k9t - 0) === J29.type &&
-                    h29 % +v9y === 0;
-            }
-            var v29, j29, l29 = [_s(638), _s(+k9t), _s(4496), _s(+"4017")], w29 = _s(2484) in document || document.documentMode >= 9 ? [_s(638)] : [
-                _s(+k9t), _s(6761), _s(4017)
-            ], O29 = Array.prototype.slice;
-            if (H29.event.fixHooks)
-                for (var T29 = l29.length; T29;)
-                    H29.event.fixHooks[l29[--T29]] = H29.event.mouseHooks;
-            var I29 = H29.event
-                .special.mousewheel = {
-                version: _s(7009),
-                getPageHeight: function (K29) {
-                    E6k
-                        .R6();
-                    return H29(K29)
-                        .height();
-                },
-                getLineHeight: function (f29) {
-                    var n29 = H29(f29), A29 = n29[_s(3871) in H29.fn ? _s(3871) : _s(1377)]();
-                    E6k.R6();
-                    return A29.length || (A29 = H29(_s(E5y * 1))), parseInt(A29.css(_s(7012)), +'10') || parseInt(n29.css(_s(7012)), 10) || 16;
-                },
-                teardown: function () {
-                    E6k.y6();
-                    if (this.removeEventListener)
-                        for (var r29 = w29.length; r29;)
-                            this.removeEventListener(w29[--r29], Q29, !!0);
-                    else
-                        this.onmousewheel = null;
-                    H29.removeData(this, _s(3005));
-                    H29.removeData(this, _s(1057));
-                },
-                settings: {
-                    normalizeOffset: !0,
-                    adjustOldDeltas: !![]
-                },
-                setup: function () {
-                    if (this.addEventListener)
-                        for (var V29 = w29.length; V29;)
-                            this.addEventListener(w29[--V29], Q29, !1);
-                    else
-                        this.onmousewheel = Q29;
-                    H29.data(this, _s(3005), I29.getLineHeight(this));
-                    H29.data(this, _s(1057), I29.getPageHeight(this));
-                }
-            };
-            function t29() { j29 = null; }
-            H29.fn.extend({
-                unmousewheel: function (Z29) {
-                    return this.unbind(_s(k9t ^
-                        0), Z29);
-                },
-                mousewheel: function (g29) {
-                    return g29 ? this.bind(_s(k9t & 2147483647), g29) : this
-                        .trigger(_s(k9t & 2147483647));
-                }
-            });
-            function Q29(z29) {
-                var L29 = z29 || window.event, S29 = O29.call(arguments, 1), M29 = 0, X29 = 0, o29 = 0, G29 = 0, i29 = 0, d29 = 0;
-                if (z29 = H29.event.fix(L29), z29.type = _s(+k9t), _s(4554) in L29 && (o29 = -(1) * L29.detail), _s(1273) in L29 && (o29 = L29.wheelDelta), _s(5534) in
-                    L29 && (o29 = L29.wheelDeltaY), _s(1516) in L29 && (X29 = -1 * L29.wheelDeltaX), _s(+"4145") in L29 && L29.axis === L29.HORIZONTAL_AXIS && (X29 = -(1) * o29, o29 = 0), M29 = +'0' === o29 ? X29 : o29, _s(R1R * 1) in L29 && (o29 = -(1) * L29.deltaY, M29 = o29), E6k
-                    .o55("1756" | 712) in L29 && (X29 = L29.deltaX, 0 === o29 && (M29 = -(1) * X29)), 0 !==
-                    o29 || (0) !== X29) {
-                    if (1 === L29.deltaMode) {
-                        var C29 = H29.data(this, _s('3005' *
-                            1));
-                        M29 *= C29;
-                        o29 *= C29;
-                        X29 *= C29;
-                    }
-                    else if (2 === L29.deltaMode) {
-                        var W29 = H29.data(this, _s(1057));
-                        M29 *= W29;
-                        o29 *= W29;
-                        X29 *= W29;
-                    }
-                    if (G29 = Math.max(Math.abs(o29), Math.abs(X29)), (!j29 || j29 > G29) && (j29 = G29, x29(L29, G29) && (j29 /= c8y - 0)), x29(L29, G29) && (M29 /= +c8y, X29 /= c8y | 8, o29 /= c8y * 1), M29 =
-                        Math[M29 >= 1 ? _s(g3t << 364003360) : _s(+W3t)](M29 / j29), X29 = Math[X29 >= 1 ?
-                        _s(g3t >> 2014217824) : _s(+W3t)](X29 / j29), o29 = Math[o29 >= 1 ? _s(g3t ^ 0) :
-                        _s(W3t & 2147483647)](o29 / j29), I29.settings.normalizeOffset && this.getBoundingClientRect) {
-                        var b29 = this.getBoundingClientRect();
-                        i29 = z29.clientX - b29.left;
-                        d29 = z29.clientY - b29.top;
-                    }
-                    return z29.deltaX = X29, z29.deltaY = o29, z29.deltaFactor = j29, z29
-                        .offsetX = i29, z29.offsetY = d29, z29.deltaMode = 0, S29.unshift(z29, M29, X29, o29), v29 &&
-                        clearTimeout(v29), v29 = setTimeout(t29, +e2R), (H29.event.dispatch || H29.event.handle)
-                        .apply(this, S29);
-                }
-            }
-        });
+        //(function(H29) {
+        //  var k9t = '1118';
+        //  E6k.y6();
+        //  function x29(J29, h29) {
+        //    E6k.y6();
+        //    return I29.settings.adjustOldDeltas && _s(k9t - 0) === J29.type &&
+        //      h29 % +v9y === 0;
+        //  }
+        //  var v29, j29, l29 = [_s(638), _s(+k9t), _s(4496), _s(+
+        //      "4017")],
+        //    w29 = _s(2484) in document || document.documentMode >= 9 ? [_s(638)] : [
+        //      _s(+k9t), _s(6761), _s(4017)],
+        //    O29 = Array.prototype.slice;
+        //  if (H29.event.fixHooks)
+        //    for (var T29 = l29.length; T29;) H29.event.fixHooks[l29[--T29]] = H29.event.mouseHooks;
+        //  var I29 = H29.event
+        //    .special.mousewheel = {
+        //      version: _s(7009),
+        //      getPageHeight: function(K29) {
+        //        E6k
+        //          .R6();
+        //        return H29(K29)
+        //          .height();
+        //      },
+        //      getLineHeight: function(f29) {
+        //        var n29 = H29(f29),
+        //          A29 = n29[_s(3871) in H29.fn ? _s(3871) : _s(1377)]();
+        //        E6k.R6();
+        //        return A29.length || (A29 = H29(_s(E5y * 1))), parseInt(A29.css(_s(7012)), +
+        //          '10') || parseInt(n29.css(_s(7012)), 10) || 16;
+        //      },
+        //      teardown: function() {
+        //        E6k.y6();
+        //        if (
+        //          this.removeEventListener)
+        //          for (var r29 = w29.length; r29;) this.removeEventListener(w29[--r29], Q29, !!0);
+        //        else this.onmousewheel = null;
+        //        H29.removeData(this, _s(3005));
+        //        H29.removeData(this, _s(1057));
+        //      },
+        //      settings: {
+        //        normalizeOffset: !0,
+        //        adjustOldDeltas: !![]
+        //      },
+        //      setup: function() {
+        //        if (this.addEventListener)
+        //          for (var V29 = w29.length; V29;) this.addEventListener(w29[--V29], Q29, !1);
+        //        else this.onmousewheel = Q29;
+        //        H29.data(this, _s(3005), I29.getLineHeight(this));
+        //        H29.data(this, _s(1057), I29.getPageHeight(this));
+        //      }
+        //    };
+        //  function t29() { j29 = null; } H29.fn.extend({
+        //    unmousewheel: function(Z29) {
+        //      return this.unbind(_s(k9t ^
+        //        0), Z29);
+        //    },
+        //    mousewheel: function(g29) {
+        //      return g29 ? this.bind(_s(k9t & 2147483647), g29) : this
+        //        .trigger(_s(k9t & 2147483647));
+        //    }
+        //  });
+        //  function Q29(z29) {
+        //    var L29 = z29 || window.event,
+        //      S29 = O29.call(arguments, 1),
+        //      M29 = 0,
+        //      X29 = 0,
+        //      o29 = 0,
+        //      G29 = 0,
+        //      i29 = 0,
+        //      d29 = 0;
+        //    if (z29 = H29.event.fix(L29), z29.type = _s(+k9t), _s(4554) in L29 && (o29 = -(
+        //        1) * L29.detail), _s(1273) in L29 && (o29 = L29.wheelDelta), _s(5534) in
+        //      L29 && (o29 = L29.wheelDeltaY), _s(1516) in L29 && (X29 = - 1 * L29.wheelDeltaX), _s(+
+        //        "4145") in L29 && L29.axis === L29.HORIZONTAL_AXIS && (X29 = -(1) * o29, o29 = 0), M29 = +
+        //      '0' === o29 ? X29 : o29, _s(R1R * 1) in L29 && (o29 = -(1) * L29.deltaY, M29 = o29), E6k
+        //      .o55("1756" | 712) in L29 && (X29 = L29.deltaX, 0 === o29 && (M29 = -(1) * X29)), 0 !==
+        //      o29 || (0) !== X29) {
+        //      if (1 === L29.deltaMode) {
+        //        var C29 = H29.data(this, _s('3005' *
+        //          1));
+        //        M29 *= C29;
+        //        o29 *= C29;
+        //        X29 *= C29;
+        //      } else if (2 === L29.deltaMode) {
+        //        var W29 = H29.data(this, _s(1057));
+        //        M29 *= W29;
+        //        o29 *= W29;
+        //        X29 *= W29;
+        //      }
+        //      if (G29 = Math.max(Math.abs(o29), Math.abs(X29)), (!j29 || j29 > G29) && (j29 = G29, x29(
+        //          L29, G29) && (j29 /= c8y - 0)), x29(L29, G29) && (M29 /= +c8y, X29 /= c8y | 8, o29 /= c8y * 1), M29 =
+        //        Math[M29 >= 1 ? _s(g3t << 364003360) : _s(+W3t)](M29 / j29), X29 = Math[X29 >= 1 ?
+        //          _s(g3t >> 2014217824) : _s(+W3t)](X29 / j29), o29 = Math[o29 >= 1 ? _s(g3t ^ 0) :
+        //          _s(W3t & 2147483647)](o29 / j29), I29.settings.normalizeOffset && this.getBoundingClientRect) {
+        //        var
+        //          b29 = this.getBoundingClientRect();
+        //        i29 = z29.clientX - b29.left;
+        //        d29 = z29.clientY - b29.top;
+        //      }
+        //      return z29.deltaX = X29, z29.deltaY = o29, z29.deltaFactor = j29, z29
+        //        .offsetX = i29, z29.offsetY = d29, z29.deltaMode = 0, S29.unshift(z29, M29, X29, o29), v29 &&
+        //        clearTimeout(v29), v29 = setTimeout(t29, +e2R), (H29.event.dispatch || H29.event.handle)
+        //        .apply(this, S29);
+        //    }
+        //  }
+        //});
         function w5V() {
             var f0U = $(_s(+G9R))
                 .val();
@@ -40015,7 +40025,7 @@ var cotgsubscribe = amplify;
             .ready(function () {
             var m1n = parseFloat(0);
             var Y1n = parseFloat(0);
-            var N1n = parseFloat(+'0');
+            var N1n = parseFloat(0);
             var F1n = parseFloat(0);
             var q1n = parseFloat(0);
             var c1n = parseFloat('0' <<
@@ -59878,7 +59888,7 @@ var cotgsubscribe = amplify;
                     }
                     // only if raids have come home
                     if (lastCid != cid) {
-                        lastTroopsHome = troopsHome; // only trigger on 0
+                        //   lastTroopsHome = troopsHome; // only trigger on 0
                         lastCid = cid;
                     }
                     if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
@@ -69257,6 +69267,18 @@ var cotgsubscribe = amplify;
                 Z1FTimeout = setTimeout(Z1F, delay);
             }
         }
+        function PausePoll(delay) {
+            let desiredTime = Date.now() + delay;
+            if (Z1FTimeout != 0) {
+                clearTimeout(Z1FTimeout);
+            }
+            Z1FTimeout = 1;
+            nextPoll = 0;
+        }
+        function ResumePoll(delay) {
+            Z1FTimeout = 0;
+            DoPoll2(delay);
+        }
         var _zoom = 1;
         var _popupCountCache = 0;
         var _popupCount = 0;
@@ -69334,16 +69356,21 @@ var cotgsubscribe = amplify;
                 DoPoll2(20); // Do a normal one
                 return;
             }
-            DoPoll2(4000); // pause the next one
             let a51 = $.post("/includes/poll2.php", { world: "", cid: cidN, ai: 0, ss: s }); // /includes/poll2.php
             a51.done(function (e71) {
                 let cidBackup = cid;
-                cid = cidN;
-                K6F(e71);
-                cid = cidBackup;
+                try {
+                    cid = cidN;
+                    K6F(e71);
+                }
+                catch (e) {
+                }
+                finally {
+                    cid = cidBackup;
+                }
             });
         }
-        pollthis = __pollthis;
+        window['pollthis'] = __pollthis;
         function Z1F() {
             if (M4F == 0)
                 try {

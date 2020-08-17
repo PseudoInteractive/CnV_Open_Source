@@ -512,14 +512,35 @@ namespace COTG.Game
         }
         public void ReturnSlowClick()
         {
-                Raiding.ReturnSlow(cid, false);
+                Raiding.ReturnSlow(cid, true);
+        }
+        public async void ReturnAt(object sender, RoutedEventArgs e)
+        {
+            (var at,var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
+            if (!okay)
+                return; // aborted
+            
+            await Raiding.ReturnAt(cid, at);
+        }
+        public async void ReturnAtBatch(object sender, RoutedEventArgs e)
+        {
+            (var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
+            if (!okay)
+                return; // aborted
+
+            var cids = MainPage.GetContextCids(cid);
+            foreach (var _cid in cids)
+            {
+                var __cid = _cid;
+               await Raiding.ReturnAt(__cid, at);
+            }
         }
 
 
 
         public void ReturnFastClick()
         {
-             Raiding.ReturnFast(cid, false);
+             Raiding.ReturnFast(cid, true);
         }
 
         //int IKeyedItem.GetKey()
@@ -562,7 +583,7 @@ namespace COTG.Game
                 {
                     // This one has multi select
                     int count = 1;
-                    if (uie == MainPage.CityGrid)
+                    if (uie == MainPage.CityGrid || uie == DefendTab.instance.supportGrid)
                     {
                         count = MainPage.GetContextCidCount(cid);
                     }
@@ -570,6 +591,7 @@ namespace COTG.Game
                         {
                         App.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
                         App.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+                        App.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
 
                     }
                     else
@@ -577,7 +599,9 @@ namespace COTG.Game
 
                         App.AddItem(flyout, "End Raids", this.ReturnSlowClick);
                         App.AddItem(flyout, "Home Please", this.ReturnFastClick);
+                        App.AddItem(flyout, "Return At...", this.ReturnAt);
                     }
+
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
                 App.AddItem(flyout, "Near Defence", DefendMe );

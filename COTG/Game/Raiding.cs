@@ -18,9 +18,9 @@ namespace COTG.Game
     public struct Raid : IEquatable<Raid>
     {
         public int target;// cid
-        public DateTimeOffset time;
         public bool isReturning;
         public bool isRepeating; // neighter timed return nor raid once
+        public DateTimeOffset time;
 
         public override bool Equals(object obj)
         {
@@ -58,6 +58,15 @@ namespace COTG.Game
 
     public static class Raiding
     {
+        public static bool IsPresent(this List<Raid> me, int target, DateTimeOffset dt)
+        {
+            foreach(var raid in me)
+            {
+                if (raid.target == target && raid.time == dt)
+                    return true;
+            }
+            return false;
+        }
         public static float desiredCarry = 1.03f;
         public static bool raidOnce;
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
@@ -199,6 +208,15 @@ namespace COTG.Game
                 }
             }
         }
+        public static async Task ReturnAt(int cid, DateTimeOffset at)
+        {
+            Note.Show($"{cid.CidToStringMD()} End Raids");
+            var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
+            if (cid != 0)
+            {
+                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
+            }
+        }
         public static async void ReturnFast(int cid, bool updateUI)
         {
             Note.Show($"{cid.CidToStringMD()} Home Please");
@@ -207,11 +225,12 @@ namespace COTG.Game
                 await Post.Send("overview/rcallall.php", "a=" + cid);
                 if (updateUI)
                 {
+                   // await JSClient.PollCity(cid);
                     JSClient.ChangeCity(cid,false);
                     NavStack.Push(cid);
-                    // await JSClient.PollCity(cid);
-                    //  await Task.Delay(300); // this might not be useful.
-                    //  ScanDungeons.Post(cid, true);
+                    //// await JSClient.PollCity(cid);
+                    ////  await Task.Delay(300); // this might not be useful.
+                    ////  ScanDungeons.Post(cid, true);
                 }
             }
         }
@@ -241,6 +260,7 @@ namespace COTG.Game
                 {
                     ++counter;
                     await Post.Send("overview/rcallall.php", "a=" + cid);
+                    await JSClient.PollCity(cid);
                 }
             }
             Note.Show($"Issued Home Please on {counter} cities");

@@ -747,7 +747,7 @@ namespace COTG.Views
         {
             var menu = new MenuFlyout();
             bool any = false;
-            for(int i=1;i<8;++i)
+            for(int i=1;i<25;++i)
             {
                 var str = NavStack.GetSpotName(-i);
                 if (str == null)
@@ -756,7 +756,7 @@ namespace COTG.Views
                 menu.Items.Add(App.CreateMenuItem(str, NavStack.instance,-i));
             }
             if(!any)
-                menu.Items.Add(App.CreateMenuItem("at initial", ()=>{ }));
+                menu.Items.Add(App.CreateMenuItem("no more :(", ()=>{ }));
 
             menu.ShowAt(sender as FrameworkElement);
 
@@ -766,7 +766,7 @@ namespace COTG.Views
         {
             var menu = new MenuFlyout();
             bool any = false;
-            for (int i = 1; i < 8; ++i)
+            for (int i = 1; i < 25; ++i)
             {
                 var str = NavStack.GetSpotName(i);
                 if (str == null)
@@ -775,7 +775,7 @@ namespace COTG.Views
                 menu.Items.Add(App.CreateMenuItem(str, NavStack.instance, i));
             }
             if (!any)
-                menu.Items.Add(App.CreateMenuItem("at most recent", () => { }));
+                menu.Items.Add(App.CreateMenuItem("this is the most recent :(", () => { }));
 
             menu.ShowAt(sender as FrameworkElement);
         }

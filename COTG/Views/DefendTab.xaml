@@ -36,6 +36,7 @@
                         ItemsSource="{x:Bind local:DefendTab.supporters, Mode=OneWay}"
                         RowHeight="48"
                      Grid.Row="1"
+                     SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      AreRowDetailsFrozen="True" 
                      FrozenColumnCount="2"

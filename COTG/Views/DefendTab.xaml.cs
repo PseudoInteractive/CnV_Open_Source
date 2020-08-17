@@ -41,6 +41,21 @@ namespace COTG.Views
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
 
+
+        public static void GetSelected(List<int> rv)
+        {
+            var i = instance;
+            if (!DefendTab.IsVisible())
+                return;
+            
+            foreach(var sel in  i.supportGrid.SelectedItems)
+            {
+                var s = sel as Supporter;
+                Assert(s != null);
+                rv.AddIfAbsent(s.cid);
+            }
+        }
+
         public async override void VisibilityChanged(bool visible)
         {
             if (visible)
@@ -49,6 +64,7 @@ namespace COTG.Views
                     defendant = Spot.GetFocus();
                 if (defendant != null && defendant.isCityOrCastle)
                 {
+                   
                     // Dispatch both and then wait for results in parallel
                     var task0 = RestAPI.troopsOverview.Post();
                     var task1 = RaidOverview.Send();
@@ -108,7 +124,7 @@ namespace COTG.Views
         {
             var image = sender as FrameworkElement;
             var supporter = image.DataContext as Supporter;
-            supporter.city.ShowContextMenu(image, e.GetPosition(image));
+            supporter.city.ShowContextMenu(supportGrid, e.GetPosition(supportGrid));
         }
 
         private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -257,10 +273,13 @@ namespace COTG.Views
         private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
-            var dateTime = new DateTimePicker(sendAt, "Send At");
-            await dateTime.ShowAsync();
-            sendAt = DateTimePicker.dateTime;
-            OnPropertyChanged(nameof(sendAt));
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
+            if (okay)
+            {
+                sendAt = dateTime;
+                OnPropertyChanged(nameof(sendAt));
+            }
+
         }
 
        

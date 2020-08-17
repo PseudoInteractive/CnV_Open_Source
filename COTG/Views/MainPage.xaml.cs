@@ -133,43 +133,39 @@ namespace COTG.Views
             Spot.ProcessPointerExited();
         }
 
-
+      
         public static List<int> GetContextCids(object sender)
         {
-            var cids = new List<int>();
             
             var cid = (int)((sender as MenuFlyoutItem).DataContext);
-            if (cid != 0)
-            {
-                cids.Add(cid);
-            }
+            return GetContextCids(cid);
+        }
+        public static List<int> GetContextCids(int cid)
+        {
+            var cids = new List<int>();
+
+            if(cid != 0)
+             cids.Add(cid);
             if (MainPage.IsVisible())
             {
                 foreach (var sel in instance.cityGrid.SelectedItems)
                 {
                     if (sel is City city)
                     {
-                        cids.AddIfAbsent(city.cid);
+                        if(city.cid != cid)
+                            cids.Add(city.cid);
                     }
                 }
             }
+            DefendTab.GetSelected(cids);
             return cids;
         }
-        public static int GetContextCidCount(int focusCid)
-		{
-            int counter = 1;
-            if (!MainPage.IsVisible())
-                return counter;
-            foreach (var sel in instance.cityGrid.SelectedItems)
-            {
-                if (sel is City city)
-                {
-                    if (city.cid != focusCid)
-                        ++counter;
-                }
-            }
-            return counter;
 
+
+        public static int GetContextCidCount(int focusCid)
+        {
+            return GetContextCids(focusCid).Count;
+      
         }
         public static void ReturnSlowClick(object sender, RoutedEventArgs e)
         {

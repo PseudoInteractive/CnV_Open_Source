@@ -606,11 +606,15 @@ namespace COTG.Services
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())
                 {
+                    var target = r[8].GetInt32();
+                    var dateTime = r[7].GetString().ParseDateTime(false);
+                    if (raids.IsPresent(target, dateTime))
+                        continue;
                     string desc = r[2].GetString();
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
-                    raid.target = r[8].GetInt32();
-                    raid.time = r[7].GetString().ParseDateTime(false);
+                    raid.target = target;
+                    raid.time = dateTime;
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
                     //    Log(raid.ToString());

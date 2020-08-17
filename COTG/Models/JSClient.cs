@@ -336,8 +336,8 @@ namespace COTG
             {
                 Log(e);
             }
-
         }
+
         public static void ChangeCity(int cityId, bool lazyMove)
         {
             try
@@ -513,12 +513,14 @@ namespace COTG
         //    UpdatePPDT(ppdt.RootElement);
         //}
 
-        //public static async Task PollCity(int cid)
-        //{
-        //    await Task.Delay(200);
-        //    await view.InvokeScriptAsync("eval", new[]{ $"pollthis('{cid.ToString()}')" });
-        //    await Task.Delay(1000); // hack:  Todo, handle this property
-        //}
+        public static async Task PollCity(int cid)
+        {
+            await Task.Delay(50);
+            await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() } );
+            await Task.Delay(400); // hack:  Todo, handle this property
+            await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
+            await Task.Delay(300); // hack:  Todo, handle this property
+        }
         static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
 
         private static void BonusesUpdated()
@@ -1023,16 +1025,16 @@ namespace COTG
                                         ShellPage.cameraC = cid.CidToWorldV();
                                     var isFromTs = jse.TryGetProperty("ts", out _);
                                     //Note.L("citydata=" + cid.CidToString());
-                                    var city = isFromTs ? City.GetOrAddCity(cid) : City.StBuild(cid);
+                                    var city =  City.GetOrAddCity(cid);
                                     city.LoadFromJson(jse);
 
 
-                                    if (isFromTs && MainPage.IsVisible() && City.focus == City.build)
+                                    if (isFromTs && MainPage.IsVisible())
                                     {
-                                        if (jse.TryGetProperty("ts", out _))
-                                        {
+                                     //   if (jse.TryGetProperty("ts", out _))
+                                      //  {
                                             ScanDungeons.Post(cid, false);
-                                        }
+                                      //  }
                                     }
                                     break;
 

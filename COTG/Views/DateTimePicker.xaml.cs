@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static COTG.Debug;
@@ -12,9 +13,10 @@ namespace COTG.Views
 {
     public sealed partial class DateTimePicker : ContentDialog,INotifyPropertyChanged
     {
+        public static DateTimePicker instance = new DateTimePicker();
         byte pauseChange;
         public static DateTimeOffset dateTime;
-        DateTimeOffset saved;
+        static bool pressedOkay;
         public static List<string> recentTimes = new List<String>();
         
         public int seconds
@@ -46,31 +48,39 @@ namespace COTG.Views
             --pauseChange;
         }
 
-        public DateTimePicker(DateTimeOffset i,string title)
+        public static async Task<(DateTimeOffset t,bool yes)> ShowAsync(string title)
         {
-            saved = i;
+            if (title != null)
+                instance.Title = title;
+
+            Assert(pressedOkay == false);
+            await instance.ShowAsync();
+            var yes = pressedOkay;
+            pressedOkay = false;
+            return (dateTime, yes);
+        }
+
+        public DateTimePicker()
+        {
             this.InitializeComponent();
-            if(title != null)
-                Title = title;
-            UpdateDate();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            pressedOkay = true;
             var s = dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
-            Log(s);
-            Log(dateTime);
-            if (!recentTimes.Contains(s))
-            {
-                recentTimes.Insert(0, s);
-                if (recentTimes.Count > 8)
+
+            var i = recentTimes.IndexOf(s);
+            if (i != -1)
+                recentTimes.RemoveAt(i);
+
+             recentTimes.Insert(0, s);
+                if (recentTimes.Count > 16)
                     recentTimes.RemoveAt(recentTimes.Count - 1);
-            }
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            dateTime = saved;
         }
 
         private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
