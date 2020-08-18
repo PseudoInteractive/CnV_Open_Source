@@ -46,7 +46,7 @@ namespace COTG.Views
         public float eventTimeOffset;
         public float eventTimeOffsetLag;
         public float eventTimeEnd;
-        static public CanvasSolidColorBrush raidBrush, shadowBrush;
+        static public CanvasSolidColorBrush raidBrush, shadowBrush, desaturateBrush;
         static public Color nameBrush, myNameBrush;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
@@ -69,6 +69,7 @@ namespace COTG.Views
         static readonly Color focusColor = Colors.Magenta;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
         static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
+        static Vector2 troopImageOriginOffset;
         static Dictionary<string, CanvasTextLayout> nameLayoutCache = new Dictionary<string, CanvasTextLayout>();
         const int bottomMargin = 0;
         const int cotgPopupWidth = 550;
@@ -79,7 +80,7 @@ namespace COTG.Views
         public static int cachedTopOffset = 0;
         const int cotgPopupTopDefault = 95;
         const int cotgPopupTopLong = 300+95;
-
+        const float actionStopDistance = 24.0f;
         static public CanvasAnimatedControl canvas;
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
@@ -254,8 +255,14 @@ namespace COTG.Views
 
             for (int i = 0; i < ttCount; ++i)
             {
-                troopImages[i] = await CanvasBitmap.LoadAsync(new Uri($"ms-appx:///Assets/troop{i}.dds"))
-             }
+                troopImages[i] = await CanvasBitmap.LoadAsync(canvas.Device,new Uri($"ms-appx:///images/troops{i}.png"));
+                if (i == 0)
+                {
+                    var size = troopImages[i].Size;
+                    troopImageOriginOffset.X = (float)size.Width*0.5f;
+                    troopImageOriginOffset.Y = (float)size.Height*0.5f;
+                }
+            }
           //  while (JSClient.cid == 0)
           //     await Task.Delay(1 * 1000);
           //   var ob = World.CreateBitmap();
@@ -378,6 +385,7 @@ namespace COTG.Views
                     nameBrush = Colors.White;
                     myNameBrush = new Color() { A = 255, G = 255, B = 190, R = 210 };
 
+                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 80, B = 80, R = 80 }) { Opacity = 0.675f };
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
                     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
@@ -532,8 +540,11 @@ namespace COTG.Views
                                 }
                             }// sprite batch
                             //
+                            ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+
+                            //
+                            // Text names
                             {
-                                ds.Antialiasing = CanvasAntialiasing.Antialiased;
                                 // Labels last
                                 for (var cy = cy0; cy < cy1; ++cy)
                                 {
@@ -559,6 +570,10 @@ namespace COTG.Views
                                 }
                             }
                         }
+                        else
+                        {
+                            ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+                        }
 
                             // overlay
                             if (worldChanges != null)
@@ -566,9 +581,10 @@ namespace COTG.Views
                                     new Rect(destP0, destP1),
                                     new Rect(srcP0, srcP1), 1.0f,
                                     CanvasImageInterpolation.Linear, CanvasComposite.Add);
-                        
+
                     }
-            }
+                    ds.Antialiasing = CanvasAntialiasing.Antialiased;
+                }
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
             //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
@@ -577,170 +593,182 @@ namespace COTG.Views
 
                 if (!IsCityView())
                 {
-                    if (DefensePage.IsVisible()||HitTab.IsVisible())
+                    using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
                     {
-                        for (var dfof = 0; dfof < 2; ++dfof)
+                        if (DefensePage.IsVisible() || HitTab.IsVisible())
                         {
-                            if( dfof == 0)
+                            for (var dfof = 0; dfof < 2; ++dfof)
                             {
-                                if (!DefensePage.IsVisible())
-                                    continue;
-                            }
-                            else
-                            {
-                                if (!HitTab.IsVisible())
-                                    continue;
-
-                            }
-                            var reports = dfof == 0 ? DefensePage.instance.history: HitTab.instance.history;
-                            if (reports.Length > 0)
-                            {
-                                var defenderVisible = DefenderPage.IsVisible();
-                                var outgoingVisible = OutgoingTab.IsVisible();
-                                var counts = new Dictionary<int, IncomingCounts>();
-                                foreach (var attack in reports)
+                                if (dfof == 0)
                                 {
-                                    if(attack.type== Report.typePending )
-                                    {
-                                        if(dfof == 0)
-                                        {
-                                            // this will be drawn later, don't repeat
-                                            if (defenderVisible)
-                                                continue;
-
-                                        }
-                                        else
-                                        {
-                                            // this will be drawn later, don't repeat
-                                            if (outgoingVisible)
-                                                continue;
-                                        }
-
-                                    }
-                                    var targetCid = attack.defCid;
-                                    var c1 = targetCid.CidToCC();
-                                    var c0 = attack.atkCid.CidToCC();
-                                    // cull (should do this pre-transform as that would be more efficient
-                                    if (c0.X.Min(c1.X) >= clientSpan.X)
+                                    if (!DefensePage.IsVisible())
                                         continue;
-                                    if (c0.X.Max(c1.X) <= 0.0f)
-                                        continue;
-                                    if (c0.Y.Min(c1.Y) >= clientSpan.Y)
-                                        continue;
-                                    if (c0.Y.Max(c1.Y) <= 0.0f)
-                                        continue;
-                                    var dt1 = attack.TimeToArrival(serverNow);
-
-                                    // before attack
-                                    var journeyTime = attack.journeyTime;
-                                    {
-                                        // register attack
-                                        if (!counts.TryGetValue(targetCid, out var count))
-                                        {
-                                            count = new IncomingCounts();
-                                            counts.Add(targetCid, count);
-                                        }
-                                        if (dt1 > 0)
-                                            ++count.incoming;
-                                        else
-                                            ++count.prior;
-                                    }
-
-                                    if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
-                                        continue;
-                                    var c = attack.type switch {
-                                        Report.typeAssault => Color.FromArgb(255,0x7e,0x3e,0xd4),
-                                        Report.typeSiege=> Color.FromArgb(255,0xcf,0x50,0x07),
-                                        Report.typeSieging => Color.FromArgb(255,0xc5,0x7f,0x4a),
-                                        Report.typePlunder => Color.FromArgb(255,0x28,0x86,0xc0),
-                                        Report.typeScout => Color.FromArgb(255,0xc8,0x2d,0xbf),
-
-                                        _ => incomingHistoryColor };
-
-                                    if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
-                                    {
-                                        continue;
-                                        c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
-                                    }
-                                    {
-                                        var t = (tick * attack.atkCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                                        var r = t.Wave().Lerp(rectSpanMin, rectSpanMax);
-                                        DrawAction(ds, dt1, journeyTime, r, c0, c1, c);
-                                    }
-                                    //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
-                                    //var mid = progress.Lerp(c0, c1);
-                                    //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
-                                    //ds.FillCircle(mid, span, shadowBrush);
-                                    //var midS = mid - shadowOffset;
-                                    //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
-                                    //ds.FillCircle(midS, span, raidBrush);
                                 }
-                                foreach (var i in counts)
+                                else
                                 {
-                                    var cid = i.Key;
-                                    var count = i.Value;
-                                    var c = cid.CidToCC();
-                                    DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
+                                    if (!HitTab.IsVisible())
+                                        continue;
+
+                                }
+                                var reports = dfof == 0 ? DefensePage.instance.history : HitTab.instance.history;
+                                if (reports.Length > 0)
+                                {
+                                    var defenderVisible = DefenderPage.IsVisible();
+                                    var outgoingVisible = OutgoingTab.IsVisible();
+                                    var counts = new Dictionary<int, IncomingCounts>();
+                                    foreach (var attack in reports)
+                                    {
+                                        if (attack.type == Report.typePending)
+                                        {
+                                            if (dfof == 0)
+                                            {
+                                                // this will be drawn later, don't repeat
+                                                if (defenderVisible)
+                                                    continue;
+
+                                            }
+                                            else
+                                            {
+                                                // this will be drawn later, don't repeat
+                                                if (outgoingVisible)
+                                                    continue;
+                                            }
+
+                                        }
+                                        var targetCid = attack.defCid;
+                                        var c1 = targetCid.CidToCC();
+                                        var c0 = attack.atkCid.CidToCC();
+                                        // cull (should do this pre-transform as that would be more efficient
+                                        if (c0.X.Min(c1.X) >= clientSpan.X)
+                                            continue;
+                                        if (c0.X.Max(c1.X) <= 0.0f)
+                                            continue;
+                                        if (c0.Y.Min(c1.Y) >= clientSpan.Y)
+                                            continue;
+                                        if (c0.Y.Max(c1.Y) <= 0.0f)
+                                            continue;
+                                        var dt1 = attack.TimeToArrival(serverNow);
+
+                                        // before attack
+                                        var journeyTime = attack.journeyTime;
+                                        {
+                                            // register attack
+                                            if (!counts.TryGetValue(targetCid, out var count))
+                                            {
+                                                count = new IncomingCounts();
+                                                counts.Add(targetCid, count);
+                                            }
+                                            if (dt1 > 0)
+                                                ++count.incoming;
+                                            else
+                                                ++count.prior;
+                                        }
+
+                                        if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
+                                            continue;
+                                        var c = attack.type switch
+                                        {
+                                            Report.typeAssault => Color.FromArgb(255, 0x7e, 0x3e, 0xd4),
+                                            Report.typeSiege => Color.FromArgb(255, 0xcf, 0x50, 0x07),
+                                            Report.typeSieging => Color.FromArgb(255, 0xc5, 0x7f, 0x4a),
+                                            Report.typePlunder => Color.FromArgb(255, 0x28, 0x86, 0xc0),
+                                            Report.typeScout => Color.FromArgb(255, 0xc8, 0x2d, 0xbf),
+
+                                            _ => incomingHistoryColor
+                                        };
+
+                                        if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
+                                        {
+                                            continue;
+                                            c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                        }
+                                        {
+                                            var t = (tick * attack.atkCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var r = t.Wave().Lerp(rectSpanMin, rectSpanMax);
+                                            DrawAction(ds, dt1, journeyTime, r, c0, c1, c);
+                                        }
+                                        //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
+                                        //var mid = progress.Lerp(c0, c1);
+                                        //ds.DrawLine(c0, c1, shadowBrush, lineThickness, defaultStrokeStyle);
+                                        //ds.FillCircle(mid, span, shadowBrush);
+                                        //var midS = mid - shadowOffset;
+                                        //ds.DrawLine(c0 - shadowOffset, midS, raidBrush, lineThickness, defaultStrokeStyle);
+                                        //ds.FillCircle(midS, span, raidBrush);
+                                    }
+                                    foreach (var i in counts)
+                                    {
+                                        var cid = i.Key;
+                                        var count = i.Value;
+                                        var c = cid.CidToCC();
+                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
 
 
+                                    }
                                 }
                             }
                         }
-                    }
-                    if (DefenderPage.IsVisible() || OutgoingTab.IsVisible())
-                    {
-                        var cullSlopSpace = 80 * pixelScale;
-                        foreach (var city in Spot.allSpots.Values)
+                        if (DefenderPage.IsVisible() || OutgoingTab.IsVisible())
                         {
-                            if ( city.incoming.Length > 0)
+                            var cullSlopSpace = 80 * pixelScale;
+                            foreach (var city in Spot.allSpots.Values)
                             {
-                               
-                                var targetCid = city.cid;
-                                var c1 = targetCid.CidToCC();
-                                if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
-                                    continue;
-                                var incAttacks = 0;
-                                foreach (var i in city.incoming)
+                                if (city.incoming.Length > 0)
                                 {
-                                    var c0 = i.sourceCid.CidToCC();
-                                    if (IsCulled(c0, c1))
+
+                                    var targetCid = city.cid;
+                                    var c1 = targetCid.CidToCC();
+                                    if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                         continue;
-                                    Color c;
-                                    if (i.isDefense)
+                                    var incAttacks = 0;
+                                    foreach (var i in city.incoming)
                                     {
-
-                                        if (i.sourceCid == targetCid)
+                                        var c0 = i.sourceCid.CidToCC();
+                                        if (IsCulled(c0, c1))
                                             continue;
+                                        Color c;
+                                        if (i.isDefense)
+                                        {
 
-                                        c = defenseColor;
-                                    }
-                                    else
-                                    {
-                                        ++incAttacks;
-                                        if (i.hasArt)
-                                        {
-                                            c = artColor;
-                                        }
-                                        else if (i.Senny)
-                                        {
-                                            c = senatorColor; ;
+                                            if (i.sourceCid == targetCid)
+                                                continue;
+
+                                            c = defenseColor;
                                         }
                                         else
                                         {
-                                            c = attackColor;
+                                            ++incAttacks;
+                                            if (i.hasArt)
+                                            {
+                                                c = artColor;
+                                            }
+                                            else if (i.Senny)
+                                            {
+                                                c = senatorColor; ;
+                                            }
+                                            else
+                                            {
+                                                c = attackColor;
+                                            }
+                                        }
+                                        if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
+                                        {
+                                            continue;
+                                            c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                        }
+                                        if (i.troops.Any())
+                                        {
+                                            var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var r = t.Wave().Lerp(0.5f, 1.0f);
+
+                                            DrawAction(ds,batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[0].type]);
+                                        }
+                                        else
+                                        {
+                                            Assert(false);
                                         }
                                     }
-                                    if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
-                                    {
-                                        continue;
-                                        c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
-                                    }
-                                    var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                                    var r = t.Wave().Lerp(rectSpanMin, rectSpanMax);
-
-                                    DrawAction(ds,i.TimeToArrival(serverNow),i.journeyTime, r, c0, c1, c);
+                                    DrawTextBox(ds, $"{incAttacks}`{city.tsMax / 1000}k", c1, tipTextFormatCentered);
                                 }
-                                DrawTextBox(ds, $"{incAttacks}`{city.tsMax/1000}k", c1, tipTextFormatCentered);
                             }
                         }
                     }
@@ -921,15 +949,16 @@ namespace COTG.Views
                 else
                     progress = 1f - (timeToArrival / journeyTime); // we don't know the duration so we approximate with 2 hours
             }
+            progress = progress.Min(1.0f - actionStopDistance / Vector2.Distance(c0, c1));
             if (timeToArrival < postAttackDisplayTime)
-                rectSpan *= 2.0f - timeToArrival / postAttackDisplayTime;
+                rectSpan = (rectSpan* 2.0f - timeToArrival / postAttackDisplayTime).Min(1.0f);
             var mid = progress.Lerp(c0, c1);
             var shadowC = color.GetShadowColor();
             var midS = mid - shadowOffset;
 
             ds.DrawLine(c0, c1, shadowC, lineThickness, defaultStrokeStyle);
             ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
-            batch.Draw(bitmap,mid );
+            batch.Draw(bitmap,mid - troopImageOriginOffset- shadowOffset*0.5f,new Vector4(rectSpan,rectSpan,rectSpan,1.0f) );
             //            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
         }
 
