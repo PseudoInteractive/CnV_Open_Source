@@ -22,12 +22,24 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
+            <winui:NumberBox x:Name="rWood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+                          Header="Wood k/h" Width="80" Margin="4" TextAlignment="Right" />
+            <winui:NumberBox x:Name="rStone" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+                          Header="Stone k/h" Width="80" Margin="4" TextAlignment="Right" />
+            <winui:NumberBox x:Name="rIron" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+                          Header="Iron k/h" Width="80" Margin="4" TextAlignment="Right" />
+            <winui:NumberBox x:Name="rFood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+                          Header="Food k/h" Width="80" Margin="4" TextAlignment="Right" />
+            <winui:NumberBox x:Name="rGold" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+                          Header="Gold k/h" Width="80" Margin="4" TextAlignment="Right" />
+        </StackPanel>
         
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="Always"
                         Grid.Row="0"
-                       EnsureCurrentItemIntoView="True"
-                       
+                        Margin="0,56,0,0"
+                       FrozenColumnCount="3"
                         IsTabStop="True"
                         AllowFocusOnInteraction="True"
                         UserGroupMode="Disabled"
@@ -121,7 +133,7 @@ TextSubmitted="RaidCarrySubmitted"
             
         </ComboBox>
         <tg:RadDataGrid x:Name="dungeonGrid"
-                        Margin="0,54,0,0"
+                        Margin="0,58,0,0"
                         UseSystemFocusVisuals="True"
                         AlternationStep="2"
                         UserGroupMode="Disabled"
@@ -131,7 +143,7 @@ TextSubmitted="RaidCarrySubmitted"
                         FontSize="12"
                         Grid.Row="1"
                         CanUserChooseColumns="True"
-                        UserSortMode="Auto"
+                        UserSortMode="Single"
                         SelectionUnit="Row"
                        >
             

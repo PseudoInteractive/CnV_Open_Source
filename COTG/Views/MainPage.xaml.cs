@@ -40,8 +40,6 @@ namespace COTG.Views
 
         //        public static City showingRowDetails;
 
-        
-        //public DataTemplate GetTsInfoDataTemplate()
         //{
         //    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
         //    Assert(rv != null);

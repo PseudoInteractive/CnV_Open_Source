@@ -62,7 +62,7 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" >
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"  >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
@@ -73,7 +73,7 @@
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
                       Margin="4" />
-                    <ComboBox x:Name="cityBox" x:FieldModifier="public"
+                    <ComboBox x:Name="cityBox" x:FieldModifier="public" FontFamily="Segoe UI Emoji"
                       Width="200"
                       DisplayMemberPath="nameAndRemarks"
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
@@ -87,13 +87,14 @@
                     </Button>
                     <TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
                     <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Segoe UI Emoji"
                             ToolTipService.ToolTip="Spot with Focus.\nClick to re-center or switch to city view\nRight clck for menu"/>
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" />
             <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" />
-                        <AppBarButton x:Name="Fresh"
+            <AppBarSeparator/>
+            <AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               AccessKey="F5"                         
                               Click="Refresh"
@@ -110,6 +111,7 @@
                     </winui:TeachingTip>
                 </AppBarButton.Resources>
             </AppBarButton>
+            <AppBarSeparator/>
             <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
@@ -149,6 +151,7 @@
                     </Flyout>
                 </Button.Flyout>
             </AppBarButton>
+            <AppBarSeparator/>
             <AppBarButton Label="Heatmap"
                                ToolTipService.ToolTip="View city changes on the world map">
 				<AppBarButton.Icon>
@@ -183,6 +186,7 @@
                     </Flyout>
                 </Button.Flyout>
             </AppBarButton>
+            <AppBarSeparator/>
             <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings"/>
         </CommandBar>
         <Grid Grid.Column="2" Grid.RowSpan="6">

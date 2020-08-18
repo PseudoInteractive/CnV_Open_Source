@@ -36,7 +36,25 @@ namespace COTG.Game
                    isRepeating == other.isRepeating;
         }
 
-        public override int GetHashCode()
+        // restul int minutes
+        public float GetOneWayTripTime(City city)
+        {
+            var dist = target.DistanceToCid(city.cid);
+            // based on slowest troop
+            var rv = 0f;
+            foreach (var tt in city.troopsTotal)
+            {
+                var type = tt.type;
+                var travel = dist * ttTravel[type] / (ttSpeedBonus[type]);
+                // if (IsWaterRaider(type))
+                // 1 hour extra for all raids
+                travel += 60.0f;
+                if (travel > rv)
+                    rv = travel;
+            }
+            return rv;
+        }
+    public override int GetHashCode()
         {
             return HashCode.Combine(target, time, isReturning, isRepeating);
         }

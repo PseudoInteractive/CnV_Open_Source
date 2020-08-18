@@ -28522,6 +28522,7 @@ var cotgsubscribe = amplify;
                     E6k.R6();
                     $(_s(3359))
                         .text('');
+                    let type = 0;
                     for (var g5B = 0; g5B < r5B.length; g5B++)
                         if (A5B == 3 || type == 6)
                             $(_s(4402) + r5B[g5B])

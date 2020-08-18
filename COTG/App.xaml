@@ -22,7 +22,8 @@
                             <ResourceDictionary>
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CC000000</Color>
                                 <Color x:Key="SystemChromeAltHighColor">#FF4D2B3A</Color>
-                                <!-- Override system shape defaults -->
+                                <Color x:Key="SystemAccentColor">#FF308BA8</Color>
+                            <!-- Override system shape defaults -->
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
                         </ResourceDictionary>

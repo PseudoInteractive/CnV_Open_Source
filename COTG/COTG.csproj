@@ -205,7 +205,6 @@
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />
-    <Compile Include="Game\Incoming.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Raiding.cs" />

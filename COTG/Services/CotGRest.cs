@@ -596,6 +596,7 @@ namespace COTG.Services
                 city.raids = Array.Empty<Raid>();
                 city.raidCarry = 0;
             }
+            float rWood = 0, rStone = 0, rIron = 0, rFood = 0, rGold = 0;
             //           string dateExtra = DateTime.Now.Year
             var a = jsd.RootElement.GetProperty("a");
             foreach (var cr in a.EnumerateArray())
@@ -604,13 +605,19 @@ namespace COTG.Services
                 var city = City.GetOrAddCity(cid);
                 var raids = Array.Empty<Raid>();
                 var minCarry = 255;
+                float tWood = 0, tStone = 0, tIron = 0, tFood = 0, tGold = 0;
                 foreach (var r in cr[12].EnumerateArray())
                 {
                     var target = r[8].GetInt32();
                     var dateTime = r[7].GetString().ParseDateTime(false);
-                    
-                    if(raids.FindAndIncrement(target, dateTime))
+
+                    if (raids.FindAndIncrement(target, dateTime))
                     {
+                        rWood += tWood;
+                        rStone += tStone;
+                        rIron += tIron;
+                        rFood += tFood;
+                        rGold += tGold;
                         continue;
                     }
                     string desc = r[2].GetString();
@@ -640,6 +647,25 @@ namespace COTG.Services
                         cc += ttCarry[tt] * tv;
                         //   Log($"{tt}:{tv}");
                     }
+                    if (raid.isReturning)
+                    {
+                        var resO = r[6];
+                        var rate = 60.0f * 0.5f / (raid.GetOneWayTripTime(city)); // to res per hour
+                        tWood = resO.GetAsInt("w") * rate;
+                        tIron = resO.GetAsInt("i") * rate;
+                        tFood = resO.GetAsInt("f") * rate;
+                        tStone = resO.GetAsInt("s") * rate;
+                        tGold = resO.GetAsInt("g") * rate;
+                        rWood += tWood;
+                        rStone += tStone;
+                        rIron += tIron;
+                        rFood += tFood;
+                        rGold += tGold;
+                    }
+                    else
+                    {
+                        tWood = 0; tStone = 0; tIron = 0; tFood = 0; tGold = 0;
+                    }
                     var carry = (cc * 100.0f / res).RoundToInt();
                     if (carry < minCarry)
                         minCarry = carry;
@@ -652,7 +678,21 @@ namespace COTG.Services
                 // Log($"cid:{cid} carry: {minCarry}");
 
             }
-           // MainPage.CityListUpdateAll();
+            App.DispatchOnUIThreadSneaky(()
+                =>
+            {
+                MainPage.instance.rWood.Value = (rWood*0.001).RoundToInt();
+                MainPage.instance.rStone.Value = (rStone * 0.001).RoundToInt();
+                MainPage.instance.rIron.Value = (rIron * 0.001).RoundToInt();
+                MainPage.instance.rFood.Value = (rFood * 0.001).RoundToInt();
+                MainPage.instance.rGold.Value = (rGold * 0.001).RoundToInt();
+                //MainPage.rStone = rStone;
+                //MainPage.rIron = rIron;
+                //MainPage.rFood = rFood;
+                //MainPage.rGold = rGold;
+                //// MainPage.CityListUpdateAll();
+                ///
+            });
         }
     }
 

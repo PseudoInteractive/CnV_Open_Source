@@ -62,19 +62,11 @@ namespace COTG.Game
                 }
                 else
                 {
-                    var dist = r.target.DistanceToCid(cid);
-                    // based on slowest troop
-                    foreach(var tt in troopsTotal)
-                    {
-                        var type = tt.type;
-                        var travel = dist*ttTravel[type] / (ttSpeedBonus[type]);
-                       // if (IsWaterRaider(type))
-                       // 1 hour extra for all raids
-                            travel += 60.0f;
-                        var _t = r.time + TimeSpan.FromMinutes(travel);
+                    var travel = r.GetOneWayTripTime(this);
+                    var _t = r.time + TimeSpan.FromMinutes(travel);
                         if (_t > rv)
                             rv = _t;
-                    }
+                    
                 }
             }
             return rv;

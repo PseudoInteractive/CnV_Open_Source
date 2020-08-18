@@ -8,14 +8,18 @@
     >
     <Style x:Key="PageStyle" TargetType="Page">
 		<Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-	</Style>
+        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
+    </Style>
     <Style TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style x:Key="TextBoxSmall" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">

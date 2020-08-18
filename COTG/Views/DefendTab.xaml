@@ -17,13 +17,13 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" PointerPressed="SendAtTapped">
-            <Border  Margin="12" Background="#FF103030" VerticalAlignment="Bottom">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+            <Border  Margin="12" Background="#FF103030" VerticalAlignment="Center">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind sendAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
-                           Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center"
+                           Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             </Border>
-            <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Bottom" 
+            <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
@@ -47,7 +47,7 @@
                     CanUserSortColumns="True"
                      Sorting="supportGrid_Sorting"
                      GridLinesVisibility="All"
-                     AlternatingRowBackground="#FF103030"
+                     AlternatingRowBackground="#FF301030"
                      SelectionChanged="supportGrid_SelectionChanged"
                      
                      >
