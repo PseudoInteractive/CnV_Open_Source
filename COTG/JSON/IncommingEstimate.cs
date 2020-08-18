@@ -252,6 +252,7 @@ namespace COTG.Game
             var zas_ = artspeed_.IndexOf(landSpeed);
             /** @type {number} */
             var zsn_ = senspeed_.IndexOf(landSpeed);
+            const int tsGain = -5;
             if (targetContinent == sourceContinent)
             {
                 if (landSpeed > 30)
@@ -264,7 +265,7 @@ namespace COTG.Game
                     else
                     {
                         //							rv.Add(new TroopTypeCount(ttsenator , 5*zsn_));
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * 5));
+                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
                     }
                 }
                 if (landSpeed > 20 && landSpeed <= 30)
@@ -277,16 +278,16 @@ namespace COTG.Game
                     }
                     if (zsn_ == -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, zas_ * 5));
+                        rv.Add(new TroopTypeCount(ttRam, zas_ * tsGain));
                     }
                     if (zsn_ != -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * 5));
+                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
                     }
                     if (zsn_ != -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, zas_ * 5));
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * 5));
+                        rv.Add(new TroopTypeCount(ttRam, zas_ * tsGain));
+                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
                     }
                 }
                 if (landSpeed == 20)
@@ -304,16 +305,16 @@ namespace COTG.Game
                     }
                     if (zis_ == -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, 5 * zas_));
+                        rv.Add(new TroopTypeCount(ttRam, tsGain * zas_));
                     }
                     if (zis_ != -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, 5 * zis_));
+                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
                     }
                     if (zis_ != -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, 5 * zis_));
-                        rv.Add(new TroopTypeCount(ttRam, 5 * zas_));
+                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
+                        rv.Add(new TroopTypeCount(ttRam, tsGain * zas_));
                     }
                 }
                 if (landSpeed >= 10 && landSpeed < 15)
@@ -324,16 +325,16 @@ namespace COTG.Game
                     }
                     if (zis_ == -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, 5 * zcs_));
+                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
                     }
                     if (zis_ != -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, 5 * zis_));
+                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
                     }
                     if (zis_ != -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, 5 * zcs_));
-                        rv.Add(new TroopTypeCount(ttVanquisher, 5 * zis_));
+                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
+                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
                     }
                 }
                 if (landSpeed > 8 && landSpeed < 10)
@@ -344,7 +345,7 @@ namespace COTG.Game
                     }
                     else
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, 5 * zcs_));
+                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
                     }
                 }
                 if (landSpeed > 5 && landSpeed <= 8)
@@ -355,16 +356,16 @@ namespace COTG.Game
                     }
                     if (zss_ == -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, 5 * zcs_));
+                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
                     }
                     if (zss_ != -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, 5 * zss_));
+                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
                     }
                     if (zss_ != -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, 5 * zss_));
-                        rv.Add(new TroopTypeCount(ttHorseman, 5 * zcs_));
+                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
+                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
                     }
                 }
                 if (landSpeed == 5)
@@ -381,16 +382,16 @@ namespace COTG.Game
                     }
                     if (zss_ == -1 && zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, 5 * zns_));
+                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
                     }
                     if (zss_ != -1 && zns_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, 5 * zss_));
+                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
                     }
                     if (zss_ != -1 && zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, 5 * zns_));
-                        rv.Add(new TroopTypeCount(ttScout, 5 * zss_));
+                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
+                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
                     }
                 }
                 if (landSpeed < 4)
@@ -401,7 +402,7 @@ namespace COTG.Game
                     }
                     else
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, 5 * zns_));
+                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
                     }
                 }
             }
@@ -414,7 +415,7 @@ namespace COTG.Game
                 {
                     if (zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, 5 * zns_));
+                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
                     }
                     else
                     {

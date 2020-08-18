@@ -29,7 +29,7 @@ namespace COTG.Views
     {
         public static DefendTab instance;
         public static bool IsVisible() => instance.isVisible;
-        public bool waitReturn { get; set; }
+        public bool waitReturn { get; set; } = true;
         public static Spot defendant;
         public float filterTime=6;
         public int filterTSTotal=10000;
@@ -207,11 +207,12 @@ namespace COTG.Views
 
         }
 
-        private void SendClick(object sender, RoutedEventArgs e)
+        private async void SendClick(object sender, RoutedEventArgs e)
         {
             var text = sender as FrameworkElement;
             var supporter = text.DataContext as Supporter;
-            if(supporter.city.commandSlots!=0 &&  supporter.split > supporter.city.freeCommandSlots)
+            var city = supporter.city;
+            if(city.commandSlots!=0 &&  supporter.split > city.freeCommandSlots)
             {
                 Note.Show("To few command slots");
                 return;
@@ -219,7 +220,11 @@ namespace COTG.Views
             var at = sendAt;
             if(waitReturn)
             {
-                var canReturnAt = supporter.city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 128.0f);
+                if(city.AreRaidsRepeating())
+                {
+                    await Raiding.ReturnFast(city.cid, false);
+                }
+                var canReturnAt = city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 128.0f);
                 if (canReturnAt > at)
                     at = canReturnAt;
 

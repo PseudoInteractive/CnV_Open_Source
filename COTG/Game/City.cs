@@ -41,6 +41,15 @@ namespace COTG.Game
             Assert(cid > 65536);
             return allCities.GetOrAdd(cid, City.Factory );
         }
+        public bool AreRaidsRepeating()
+        {
+            foreach (var r in raids)
+            {
+                if (r.isRepeating)
+                    return true;
+            }
+            return false;
+        }
         public DateTimeOffset GetRaidReturnTime()
         {
             var rv = AUtil.dateTimeZero;

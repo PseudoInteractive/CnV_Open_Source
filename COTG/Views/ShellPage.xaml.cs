@@ -719,22 +719,23 @@ namespace COTG.Views
 
         private void ChangeCityClick(int delta)
         {
+            var items = ShellPage.instance.cityBox.ItemsSource as City[];
             City newSel;
-            if (City.gridCitySource.Count <= 1)
+            if (items.Length <= 1)
             {
-                if (City.gridCitySource.Count == 0)
+                if (items.Length == 0)
                     return;
-                newSel = City.gridCitySource.First();
+                newSel = items.First();
             }
             else
             {
-                int id = City.gridCitySource.IndexOf(City.GetBuild()) + delta;
+                int id = Array.IndexOf(items,City.GetBuild()) + delta;
                 if (id < 0)
-                    id += City.gridCitySource.Count;
-                if (id >= City.gridCitySource.Count)
-                    id -= City.gridCitySource.Count;
+                    id += items.Length;
+                if (id >= items.Length)
+                    id -= items.Length;
 
-                newSel = City.gridCitySource[id];
+                newSel = items[id];
             }
             newSel.SetBuild();
             JSClient.ChangeCity(newSel.cid,false);

@@ -20,6 +20,7 @@ namespace COTG.Game
         public int target;// cid
         public bool isReturning;
         public bool isRepeating; // neighter timed return nor raid once
+        public byte repeatCount;
         public DateTimeOffset time;
 
         public override bool Equals(object obj)
@@ -58,12 +59,17 @@ namespace COTG.Game
 
     public static class Raiding
     {
-        public static bool IsPresent(this List<Raid> me, int target, DateTimeOffset dt)
+        public static bool FindAndIncrement(this Raid[] me, int target, DateTimeOffset dt)
         {
-            foreach(var raid in me)
+            int count = me.Length;
+            for(int i=0;i<count;++i)
             {
+                ref var raid = ref me[i];
                 if (raid.target == target && raid.time == dt)
+                {
+                    ++raid.repeatCount;
                     return true;
+                }
             }
             return false;
         }
@@ -217,7 +223,7 @@ namespace COTG.Game
                 await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
             }
         }
-        public static async void ReturnFast(int cid, bool updateUI)
+        public static async Task ReturnFast(int cid, bool updateUI)
         {
             Note.Show($"{cid.CidToStringMD()} Home Please");
             if (cid != 0)
@@ -231,6 +237,12 @@ namespace COTG.Game
                     //// await JSClient.PollCity(cid);
                     ////  await Task.Delay(300); // this might not be useful.
                     ////  ScanDungeons.Post(cid, true);
+                }
+                if(DefendTab.IsVisible())
+                {
+
+                    await JSClient.PollCity(cid);
+                    await RaidOverview.Send(); 
                 }
             }
         }
@@ -265,7 +277,7 @@ namespace COTG.Game
             }
             Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
-            await Task.Delay(500);
+            await RaidOverview.Send();
             UpdateTSHome(true,true);
         }
     }

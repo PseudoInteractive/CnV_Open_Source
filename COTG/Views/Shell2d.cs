@@ -910,7 +910,7 @@ namespace COTG.Views
         }
         public static Color GetShadowColor(this Color c)
         {
-            return Color.FromArgb(128,(byte)(c.R>>1),(byte)(c.G>>1),(byte)(c.B >>1) );
+            return Color.FromArgb(192,(byte)(c.R>>1),(byte)(c.G>>1),(byte)(c.B >>1) );
 //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
 //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
         }

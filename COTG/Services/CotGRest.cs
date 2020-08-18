@@ -602,19 +602,24 @@ namespace COTG.Services
             {
                 int cid = cr[0].GetInt32();
                 var city = City.GetOrAddCity(cid);
-                List<Raid> raids = new List<Raid>();
+                var raids = Array.Empty<Raid>();
                 var minCarry = 255;
                 foreach (var r in cr[12].EnumerateArray())
                 {
                     var target = r[8].GetInt32();
                     var dateTime = r[7].GetString().ParseDateTime(false);
-                    if (raids.IsPresent(target, dateTime))
+                    
+                    if(raids.FindAndIncrement(target, dateTime))
+                    {
                         continue;
+                    }
                     string desc = r[2].GetString();
                     //    Mountain Cavern, Level 4(91 %)
                     var raid = new Raid();
+                    raid.repeatCount = 1;
                     raid.target = target;
                     raid.time = dateTime;
+                    raid.repeatCount = 1;
                     raid.isReturning = r[3].GetInt32() != 0;
                     raid.isRepeating = r[4].GetInt32() == 2;
                     //    Log(raid.ToString());
@@ -640,14 +645,14 @@ namespace COTG.Services
                         minCarry = carry;
                     // Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
-                    raids.AddIfAbsent(raid);
+                    raids = raids.ArrayAppend(raid);
                 }
                 city.raidCarry = (byte)minCarry;
-                city.raids = raids.ToArray();
+                city.raids = raids;
                 // Log($"cid:{cid} carry: {minCarry}");
 
             }
-            MainPage.CityListUpdateAll();
+           // MainPage.CityListUpdateAll();
         }
     }
 

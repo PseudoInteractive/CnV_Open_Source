@@ -24,7 +24,7 @@
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             </Border>
             <ToggleSwitch Header="Wait Return" IsOn="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" OnContent="" OffContent=""
-                          Width="80" HorizontalAlignment="Center" FontSize="12"
+                          Width="70" HorizontalAlignment="Center" FontSize="12"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5" NumberFormatter="{x:Bind cotg:App.formatter2Digit}"

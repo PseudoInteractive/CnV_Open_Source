@@ -28,9 +28,9 @@
                                 <CornerRadius x:Key="OverlayCornerRadius">1,4,4,1</CornerRadius>
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
-                                <Color x:Key="SystemAccentColorDark1">#FF625909</Color>
-                                <Color x:Key="SystemAccentColorDark2">#FF8C410D</Color>
-                                <Color x:Key="SystemAccentColorDark3">#FF8F8802</Color>
+                                <Color x:Key="SystemAccentColorDark1">#FF820009</Color>
+                                <Color x:Key="SystemAccentColorDark2">#FF8C210D</Color>
+                                <Color x:Key="SystemAccentColorDark3">#FFA92925</Color>
                                 <Color x:Key="SystemAccentColorLight1">#FF3D37FE</Color>
                                 <Color x:Key="SystemAccentColorLight2">#FF2F2D8F</Color>
                                 <Color x:Key="SystemAccentColorLight3">#FF10F200</Color>
