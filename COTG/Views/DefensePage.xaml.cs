@@ -84,6 +84,7 @@ namespace COTG.Views
                 case Report.typeSiege: return siegeStyle;
                 case Report.typeSieging: return siegingStyle;
                 case Report.typePlunder: return plunderStyle;
+                case Report.typePending: return pendingStyle;
                 default: return scoutStyle;
             }
 

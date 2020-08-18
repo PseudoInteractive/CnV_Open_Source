@@ -157,39 +157,65 @@ public class BlessedTapCommand : DataGridCommand
                         if (sender != null)
                         {
                             var inst = DonationTab.instance;
-                            var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
-                                    .Max(inst.reserveCarts);
-                            var carts = sender.cartsHome - cartReserve-1;
-                            if (carts <= 0)
-                            {
-                                Note.Show("Not enough carts");
-                                return;
-                            }
-                            var wood = (sender.wood - inst.reserveWood.Max(1000) ).Max0();
-                            var stone = (sender.stone - inst.reserveStone.Max(1000)).Max0();
-                            if (wood + stone > carts * 1000)
-                            {
-                                var desiredC = (wood + stone) / 1000 + 1;
-                                var ratio = (float)carts / desiredC;
-                                wood = (int)(wood * ratio);
-                                stone = (int)(stone * ratio);
-                            }
-                            else if (wood + stone <= 0)
-                            {
-                                Note.Show("Not enough res");
-                                return;
+                                var wood = (sender.wood - inst.reserveWood.Max(1000)).Max0();
+                                var stone = (sender.stone - inst.reserveStone.Max(1000)).Max0();
+                                if (wood + stone <= 0)
+                                {
+                                    Note.Show("Not enough res");
+                                    return;
 
-                            }
-                            sender.wood -= wood;
-                            sender.stone -= stone;
-                            sender.cartsHome -= (ushort)((wood + stone + 999) / 1000);
-                            i.SendDonation(wood, stone);
-                            DonationTab.instance.blessedGrid.ItemsSource = null;
-                            BlessedCity.senderCity = null;
-                            var tempSource = DonationTab.instance.donationGrid.ItemsSource;
-                            //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
-                            DonationTab.instance.donationGrid.ItemsSource = null;
-                            DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
+                                }
+                                var useShips = sender.cid.CidToContinent() != i.cid.CidToContinent();
+                                if (useShips)
+                                {
+
+                                    var shipReserve = (inst.reserveShipsPCT * sender.ships).RoundToInt()
+                                            .Max(inst.reserveShips);
+                                    var ships = sender.shipsHome - shipReserve - 1;
+                                    if (ships <= 0)
+                                    {
+                                        Note.Show("Not enough ships");
+                                        return;
+                                    }
+                                    if (wood + stone > ships * 10000)
+                                    {
+                                        var desiredC = (wood + stone) / 10000 + 1;
+                                        var ratio = (float)ships / desiredC;
+                                        wood = (int)(wood * ratio);
+                                        stone = (int)(stone * ratio);
+                                    }
+                                    sender.shipsHome -= (ushort)((wood + stone + 9999) / 10000);
+
+                                }
+                                else
+                                {
+                                    var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
+                                            .Max(inst.reserveCarts);
+                                    var carts = sender.cartsHome - cartReserve - 1;
+                                    if (carts <= 0)
+                                    {
+                                        Note.Show("Not enough carts");
+                                        return;
+                                    }
+                                    if (wood + stone > carts * 1000)
+                                    {
+                                        var desiredC = (wood + stone) / 1000 + 1;
+                                        var ratio = (float)carts / desiredC;
+                                        wood = (int)(wood * ratio);
+                                        stone = (int)(stone * ratio);
+                                    }
+                                    sender.cartsHome -= (ushort)((wood + stone + 999) / 1000);
+                                }
+                                sender.wood -= wood;
+                                    sender.stone -= stone;
+                                    i.SendDonation(wood, stone, useShips ? 2 : 1);
+                                    DonationTab.instance.blessedGrid.ItemsSource = null;
+                                    BlessedCity.senderCity = null;
+                                    var tempSource = DonationTab.instance.donationGrid.ItemsSource;
+                                    //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
+                                    DonationTab.instance.donationGrid.ItemsSource = null;
+                                    DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
+                                
 
                         }
                     }

@@ -45,7 +45,6 @@ namespace COTG.JSON
         public string atkC => atkCid.CidToString();
 
         public int Cont => defCid.CidToContinent();
-
         public float claim { get; set; }
         public DateTimeOffset time { get; set; }
         // No longer used
@@ -55,8 +54,8 @@ namespace COTG.JSON
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
 
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
-        public string Type => type < typeAttackCount ? typeStrings[type] : "incom";
-
+        public string Type => type == typePending ? troopEstimate : typeStrings[type];
+        public string troopEstimate = "Pending";
         public bool Sen { get; set; }
         public bool SE { get; set; }
         public bool Nvl { get; set; }

@@ -56,7 +56,14 @@ namespace COTG.Game
 
         public readonly static string[] ttNameWithCapsAndBatteringRam = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Battering Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };
 
-        
+        public readonly static string[] ttCategory = { null, "Art",
+                                    "Inf", "Inf", "Inf", "Inf", "Inf",
+                                    "Scout",
+                                    "Cav","Cav","Cav","Cav",
+                                    "Art","Art",
+                                    "Nav","Nav","Nav",
+                                    "Sen" };
+
 
 
         public readonly static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };

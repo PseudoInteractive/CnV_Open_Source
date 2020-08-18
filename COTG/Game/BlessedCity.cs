@@ -82,13 +82,13 @@ namespace COTG.Game
             rv.Sort((a, b) => a.sortScore.CompareTo(b.sortScore));
             return rv;
         }
-        public void SendDonation(int woodToSend,int stoneToSend)
+        public void SendDonation(int woodToSend,int stoneToSend, int sendType)
         {
             var secret = $"JJx452Tdd{Player.myId}sRAssa";
-            var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"1\"}}"; // t==1 is land, t==2 is water
+            var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
 
             Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f="+HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8)) ;
-            Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / 1000):N0} carts");
+            Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) /(sendType==1?1000:10000)):N0} {(sendType==1?"carts":"ships")}");
         }
 
 

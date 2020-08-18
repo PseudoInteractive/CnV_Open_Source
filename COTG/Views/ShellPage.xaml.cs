@@ -818,8 +818,10 @@ namespace COTG.Views
         {
             if (Spot.focus == 0)
                 return;
-            if (Spot.focus.BringCidIntoWorldView(false)) // first just focus
+            if (Spot.focus.BringCidIntoWorldView(false)&& City.IsBuild(Spot.focus)) // first just focus
+            {
                 return;
+            }
             Spot.ProcessCoordClick(Spot.focus, false); // then normal click
 
         }

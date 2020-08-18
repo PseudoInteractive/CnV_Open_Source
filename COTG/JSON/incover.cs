@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-
+using static COTG.Game.Enum;
 using static COTG.Debug;
 
 namespace COTG.JSON
@@ -101,6 +101,7 @@ namespace COTG.JSON
               using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
               {
                   {
+                      var estimator = new Army();
                       var jse = jsd.RootElement.GetProperty("b");
                       foreach (var b in jse.EnumerateArray())
                       {
@@ -124,9 +125,38 @@ namespace COTG.JSON
                           rep.dTsLeft = rep.dTS;
                           rep.aTsLeft = rep.aTS;
                           rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
+
                           rep.claim = b.GetAsFloat("baron cap %");
+                          
                           rep.Sen = rep.claim > 0.0f;
-                          reportsIncoming.Add(rep);
+                           if (rep.type == Report.typePending)
+                              {
+                                  estimator.sourceCid = atkCid;
+                                  estimator.targetCid = defCid;
+                                  estimator.time = time;
+                                  estimator.spotted = spotted;
+                                  IncommingEstimate.Get(estimator);
+                                  bool wantComma = false;
+                                  string troops = string.Empty;
+                                  foreach(var tt in estimator.troops)
+                                  {
+                                      if (wantComma)
+                                          troops += ", ";
+                                      else
+                                          wantComma = true;
+                                      troops += ttCategory[tt.type];
+                                      if (tt.count == -1)
+                                          troops += '?';
+                                      else
+                                          troops += $" {(tt.count)/ -10.0f}%";
+                                  }
+                                  estimator.troops = Array.Empty<TroopTypeCount>();
+                                  rep.troopEstimate = troops;
+                              }
+
+
+                           reportsIncoming.Add(rep);
+                          
                       }
                   }
                   {
@@ -375,90 +405,128 @@ namespace COTG.JSON
                             else
                             {
 
+
                                 // we have to look up the report
-                                using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
+                                try
                                 {
-                                    var root = jsdr.RootElement;
-                                    int reportType = -1;
-                                    foreach (var attackType in Report.attackTypes)
+                                    using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
                                     {
-                                        ++reportType;
-                                        if (root.TryGetProperty(attackType, out var reportsByType))
+                                        var root = jsdr.RootElement;
+                                        int reportType = -1;
+                                        foreach (var attackType in Report.attackTypes)
                                         {
-                                            var defTS = reportsByType.GetAsInt("ts_sent");
-                                            var defTSLeft = reportsByType.GetAsInt("ts_lost");
-                                            var atkTSKilled = reportsByType.GetAsInt("ts_killed");
-
-                                            foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
+                                            ++reportType;
+                                            if (root.TryGetProperty(attackType, out var reportsByType))
                                             {
-                                                bool hasSen = false;
-                                                bool hasSE = false;
-                                                bool hasNavy = false;
+                                                var defTS = reportsByType.GetAsInt("ts_sent");
+                                                //var defTSLeft = reportsByType.GetAsInt("ts_lost");
+                                                var atkTSKilled = reportsByType.GetAsInt("ts_killed");
 
-                                                if (report.TryGetProperty("ats", out var ats))
+                                                foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
                                                 {
-                                                    foreach (var at in ats.EnumerateObject())
-                                                    {
-                                                        //  public static string[] ttName = { 0:"guard", 1:"ballista", 2:"ranger", 3:"triari", 4:"priestess", 5:"vanquisher", 6:"sorcerers", 7:"scout", 8:"arbalist", 9:"praetor", 10:"horseman", 11:"druid", 12:"ram", 13:"scorpion", 14:"galley", 15:"stinger", 16:"warship", 17:"senator" };
-                                                        switch (at.Name)
-                                                        {
-                                                            case "17": hasSen = true; break;
-                                                            case "12":
-                                                            case "13": hasSE = true; break;
-                                                            case "16": hasSE = true; hasNavy = true; break;
-                                                            case "14":
-                                                            case "15": hasNavy = true; break;
+                                                    bool hasSen = false;
+                                                    bool hasSE = false;
+                                                    bool hasNavy = false;
 
+                                                    if (report.TryGetProperty("ats", out var ats))
+                                                    {
+                                                        foreach (var at in ats.EnumerateObject())
+                                                        {
+                                                            //  public static string[] ttName = { 0:"guard", 1:"ballista", 2:"ranger", 3:"triari", 4:"priestess", 5:"vanquisher", 6:"sorcerers", 7:"scout", 8:"arbalist", 9:"praetor", 10:"horseman", 11:"druid", 12:"ram", 13:"scorpion", 14:"galley", 15:"stinger", 16:"warship", 17:"senator" };
+                                                            switch (at.Name)
+                                                            {
+                                                                case "17": hasSen = true; break;
+                                                                case "12":
+                                                                case "13": hasSE = true; break;
+                                                                case "16": hasSE = true; hasNavy = true; break;
+                                                                case "14":
+                                                                case "15": hasNavy = true; break;
+
+                                                            }
                                                         }
                                                     }
-                                                }
-
-
-                                                source = report.GetAsInt("acid");
-                                                if (source > 0)
-                                                {
-                                                    var atkTS = report.GetAsInt("ts_sent");
-                                                    var atkTSLeft = report.GetAsInt("ts_left");
-                                                    var atkPN = report.GetAsString("apn");
-                                                    var atkCN = report.GetAsString("acn");
+                                                    var defTSLeft = 0;
+                                                    if (report.TryGetProperty("ttle", out var ttle))
                                                     {
-                                                        var lg = atkCN.Length;
-                                                        if (lg > 9)  // trim off '(000:000)'
-                                                            atkCN = atkCN.Substring(0, lg - 9);
-
+                                                        int tt = 0;
+                                                        foreach (var tle in ttle.EnumerateArray())
+                                                        {
+                                                            defTSLeft += tle.GetInt32() * ttTs[tt];
+                                                            ++tt;
+                                                        }
                                                     }
-                                                    Spot.GetOrAdd(source, atkCN);
-
-                                                    var rep = new Report()
+                                                    if (report.TryGetProperty("reinforcers", out var reinforcers))
                                                     {
-                                                        reportId = recId,
-                                                        dTS = defTS,
-                                                        dTsLeft = defTSLeft,
-                                                        dTsKill = defTS - defTSLeft,
-                                                        aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
-                                                        aTS = atkTS,
-                                                        aTsLeft = atkTSLeft,
-                                                        atkCid = source,
-                                                        defCid = target,
-                                                        SE = hasSE,
-                                                        Nvl = hasNavy,
-                                                        Sen = hasSen,
-                                                        claim = hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1,
-                                                        defP = defP,
-                                                        atkP = Player.NameToId(atkPN),
-                                                        time = time,
-                                                        spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * Report.averageSpeed),
-                                                        type = (byte)reportType
-                                                        // todo TS info
+                                                        if (reinforcers.ValueKind == System.Text.Json.JsonValueKind.Object)
+                                                        {
+                                                            foreach (var rein in reinforcers.EnumerateObject())
+                                                            {
+                                                                if (rein.Value.TryGetProperty("ttle", out var tle))
+                                                                {
+                                                                    if (tle.ValueKind == System.Text.Json.JsonValueKind.Object)
+                                                                    {
+                                                                        foreach (var ttc in tle.EnumerateObject())
+                                                                        {
+                                                                            var tt = int.Parse(ttc.Name);
+                                                                            defTSLeft += ttc.Value.GetInt32() * ttTs[tt];
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    source = report.GetAsInt("acid");
+                                                    if (source > 0)
+                                                    {
+                                                        var atkTS = report.GetAsInt("ts_sent");
+                                                        var atkTSLeft = report.GetAsInt("ts_left");
+                                                        var atkPN = report.GetAsString("apn");
+                                                        var atkCN = report.GetAsString("acn");
+                                                        {
+                                                            var lg = atkCN.Length;
+                                                            if (lg > 9)  // trim off '(000:000)'
+                                                                atkCN = atkCN.Substring(0, lg - 9);
 
-                                                    };
-                                                    parts[part].Add(rep);
+                                                        }
+                                                        Spot.GetOrAdd(source, atkCN);
+
+                                                        var rep = new Report()
+                                                        {
+                                                            reportId = recId,
+                                                            dTS = defTS,
+                                                            dTsLeft = defTSLeft,
+                                                            dTsKill = defTS - defTSLeft,
+                                                            aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
+                                                            aTS = atkTS,
+                                                            aTsLeft = atkTSLeft,
+                                                            atkCid = source,
+                                                            defCid = target,
+                                                            SE = hasSE,
+                                                            Nvl = hasNavy,
+                                                            Sen = hasSen,
+                                                            claim = hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1,
+                                                            defP = defP,
+                                                            atkP = Player.NameToId(atkPN),
+                                                            time = time,
+                                                            spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * Report.averageSpeed),
+                                                            type = (byte)reportType
+                                                            // todo TS info
+
+                                                        };
+                                                        parts[part].Add(rep);
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
+                                    }
                                 }
+                                catch (Exception e)
+                                {
+                                    Log(e);
+                                }
+
+
                             }
                         }
                         

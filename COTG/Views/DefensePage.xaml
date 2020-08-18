@@ -73,6 +73,18 @@
                             Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.plunderStyle>
+            <local:ReportTypeStyleSelector.pendingStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground"
+                            Value="#8886C0" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
+                </Style>
+            </local:ReportTypeStyleSelector.pendingStyle>
         </local:ReportTypeStyleSelector>
         <local:ReportKillStyleSelector x:Key="ReportKillStyleSelector">
             <local:ReportKillStyleSelector.attackerWinStyle>
@@ -139,6 +151,7 @@
                         RowHeight="30"
                         AlternationStep="2"
                         SelectionMode="Single"
+                                 FrozenColumnCount="2"
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
@@ -153,9 +166,9 @@
                                        CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="80"
                                        PropertyName="Type"
-                                       SizeMode="Fixed"
+                                       SizeMode="Auto"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn Width="80"
                                        CellContentStyle="{StaticResource LeftAlign}"
