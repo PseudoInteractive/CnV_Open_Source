@@ -51898,10 +51898,10 @@ var cotgsubscribe = amplify;
             });
         }
         function ProcessBuuPoll() {
-            if (D6.bq.length <= 1)
-                DoPoll2(200);
-            else
-                DoPoll2(1000);
+            if (D6.bq.length <= 2)
+                DoPoll2(500);
+            //        else
+            //            DoPoll2(1000);
         }
         function C5F(v0w) {
             J9();
@@ -74064,6 +74064,7 @@ function postppdt() {
         console.log("Notify failed");
         //		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
     }
+    document.getElementById("tbbuttons").style.display = "none"; // these no longer work
     setTimeout(avactor, 3000);
 }
 function GetDate(jq) {
@@ -77044,7 +77045,7 @@ function openreturnwin_(data_33) {
         $("#returnDat").datepicker();
     });
     $("#returnbody").append(returnAllgo_);
-    $("#returnAllGo").after(nextcity_);
+    //	$("#returnAllGo").after(nextcity_);
     $("#nextCity").after(returntroops_);
     $("#returnSel").change(() => {
         if ($("#returnSel").val() == 3) {

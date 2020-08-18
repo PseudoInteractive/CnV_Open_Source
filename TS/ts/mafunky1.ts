@@ -592,6 +592,7 @@ function postppdt()
 		console.log("Notify failed");
 //		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
 	}
+	document.getElementById("tbbuttons").style.display = "none"; // these no longer work
 	setTimeout(avactor, 3000);
 
 }

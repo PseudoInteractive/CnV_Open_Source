@@ -18,23 +18,13 @@
             <ResourceDictionary.ThemeDictionaries>
                     <ResourceDictionary x:Key="Default">
                         <ResourceDictionary.MergedDictionaries>
-                        <Windows10version1809:ColorPaletteResources Accent="#FF7C51FF" AltHigh="#FF000000" AltLow="#FF000000" AltMedium="#FF000000" AltMediumHigh="#FF000000" AltMediumLow="#FF000000" BaseHigh="#FFFFFFFF" BaseLow="#FF4D2B3A" BaseMedium="#FFAF939F" BaseMediumHigh="#FFC7ADB8" BaseMediumLow="#FF7E5F6C" ChromeAltLow="#FFC7ADB8" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFC7ADB8" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF4D2B3A" ChromeDisabledLow="#FFAF939F" ChromeGray="#FF967986" ChromeHigh="#FF967986" ChromeLow="#FF31091D" ChromeMedium="#FF381124" ChromeMediumLow="#FF462233" ChromeWhite="#FFFFFFFF" ListLow="#FF381124" ListMedium="#FF4D2B3A" />
+                        <Windows10version1809:ColorPaletteResources Accent="#FF5C41FF" AltHigh="#FF000000" AltLow="#FF000000" AltMedium="#FF000000" AltMediumHigh="#FF000000" AltMediumLow="#FF000000" BaseHigh="#FFFFFFFF" BaseLow="#FF4D2B3A" BaseMedium="#FFAF939F" BaseMediumHigh="#FFC7ADB8" BaseMediumLow="#FF7E5F6C" ChromeAltLow="#FFC7ADB8" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFC7ADB8" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF4D2B3A" ChromeDisabledLow="#FFAF939F" ChromeGray="#FF967986" ChromeHigh="#FF967986" ChromeLow="#FF31091D" ChromeMedium="#FF381124" ChromeMediumLow="#FF462233" ChromeWhite="#FFFFFFFF" ListLow="#FF381124" ListMedium="#FF4D2B3A" />
                             <ResourceDictionary>
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CC000000</Color>
                                 <Color x:Key="SystemChromeAltHighColor">#FF4D2B3A</Color>
-                                <AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" BackgroundSource="HostBackdrop" TintOpacity="0.8" />
                                 <!-- Override system shape defaults -->
-                                <CornerRadius x:Key="ControlCornerRadius">0,2,2,0</CornerRadius>
-                                <CornerRadius x:Key="OverlayCornerRadius">1,4,4,1</CornerRadius>
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
-                                <Color x:Key="SystemAccentColorDark1">#FF820009</Color>
-                                <Color x:Key="SystemAccentColorDark2">#FF8C210D</Color>
-                                <Color x:Key="SystemAccentColorDark3">#FFA92925</Color>
-                                <Color x:Key="SystemAccentColorLight1">#FF3D37FE</Color>
-                                <Color x:Key="SystemAccentColorLight2">#FF2F2D8F</Color>
-                                <Color x:Key="SystemAccentColorLight3">#FF10F200</Color>
-                                <Color x:Key="RegionColor">#FF000000</Color>
                         </ResourceDictionary>
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>

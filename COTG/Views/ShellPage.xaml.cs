@@ -814,6 +814,21 @@ namespace COTG.Views
             }
         }
 
-       
+        private void HomeClick(object sender, RoutedEventArgs e)
+        {
+            if (Spot.focus == 0)
+                return;
+            if (Spot.focus.BringCidIntoWorldView(false)) // first just focus
+                return;
+            Spot.ProcessCoordClick(Spot.focus, false); // then normal click
+
+        }
+
+        private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var ui = sender as UIElement;
+            Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
+
+        }
     }
 }

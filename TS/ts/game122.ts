@@ -26656,6 +26656,7 @@ console.log("Bad");
               E6k.R6();
               $(_s(3359))
                 .text('');
+                let type = 0;
               for (var g5B = 0; g5B < r5B.length; g5B++)
                 if (A5B == 3 || type == 6) $(_s(4402) + r5B[g5B])
                   .remove();
@@ -49593,10 +49594,10 @@ console.log("Bad");
 
     function ProcessBuuPoll()
 	{
-        if (D6.bq.length<=1)
-            DoPoll2(200);
-        else
-            DoPoll2(1000);
+        if (D6.bq.length<=2)
+            DoPoll2(500);
+//        else
+//            DoPoll2(1000);
 
 	}
 

@@ -1006,7 +1006,7 @@ namespace COTG
                                         {
                                             city._cityName = name;
                                             if (cid == Spot.focus)
-                                                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Text = city.nameAndRemarks);
+                                                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
                                         }
                                     }
                                     break;

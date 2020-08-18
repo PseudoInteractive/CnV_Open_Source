@@ -20,11 +20,11 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" PointerPressed="SendAtTapped">
             <Border  Margin="12" Background="#FF103030" VerticalAlignment="Bottom">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind sendAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
-                           Width="120" HorizontalAlignment="Center" FontSize="16" HorizontalTextAlignment="Center"
+                           Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center"
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             </Border>
-            <ToggleSwitch Header="Wait Return" IsOn="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" OnContent="" OffContent=""
-                          Width="70" HorizontalAlignment="Center" FontSize="12"
+            <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Bottom" 
+                          Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5" NumberFormatter="{x:Bind cotg:App.formatter2Digit}"

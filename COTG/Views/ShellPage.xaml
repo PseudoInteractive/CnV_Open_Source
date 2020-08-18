@@ -62,7 +62,7 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" Canvas.ZIndex="45" >
+        <CommandBar Grid.ColumnSpan="2" >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
@@ -72,22 +72,28 @@
                       DisplayMemberPath="name"
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
-                      Margin="10,2,0,0" />
+                      Margin="4" />
                     <ComboBox x:Name="cityBox" x:FieldModifier="public"
                       Width="200"
                       DisplayMemberPath="nameAndRemarks"
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
-                      Margin="10,2,0,0" />
-                    <TextBox x:Name="coords" Margin="10,2,0,0" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-                    <TextBlock x:Name="focus" Margin="10,2,0,0" Width="200" TextAlignment="Center" VerticalAlignment="Center" x:FieldModifier="public" ToolTipService.ToolTip="Spot with Focus"/>
+                      Margin="4" />
+                    <Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}">
+						<SymbolIcon Symbol="Previous"/>
+					</Button>
+                    <Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}" >
+                        <SymbolIcon Symbol="Next"/>
+                    </Button>
+                    <TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+                    <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped"
+                            ToolTipService.ToolTip="Spot with Focus.\nClick to re-center or switch to city view\nRight clck for menu"/>
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" />
             <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" />
-            <AppBarButton Click="PriorCityClick" Icon="Previous" Label="Prior City" />
-            <AppBarButton Click="NextCityClick" Icon="Next" Label="Next City" />
-            <AppBarButton x:Name="Fresh"
+                        <AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               AccessKey="F5"                         
                               Click="Refresh"

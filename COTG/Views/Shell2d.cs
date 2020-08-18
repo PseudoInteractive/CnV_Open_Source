@@ -891,7 +891,7 @@ namespace COTG.Views
         }
 
         
-        public static void BringCidIntoWorldView(this int cid,bool lazy)
+        public static bool BringCidIntoWorldView(this int cid,bool lazy)
         {
             var v = cid.CidToWorldV();
             var newC = v;
@@ -901,12 +901,15 @@ namespace COTG.Views
                 dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X*0.675f  ||
                 dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y*0.675f )
             {
+                if (Vector2.DistanceSquared(ShellPage.cameraC, newC) >= 0.875f)
+                {
+                    ShellPage.cameraC = newC;
+                    ShellPage.SetJSCamera();
+                    return true;
+                }
 
-                ShellPage.cameraC = newC;
-                ShellPage.SetJSCamera();
             }
-
-
+            return false;
         }
         public static Color GetShadowColor(this Color c)
         {

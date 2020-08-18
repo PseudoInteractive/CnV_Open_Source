@@ -280,6 +280,7 @@ namespace COTG.Game
                 {
                     JSClient.ChangeView(!JSClient.IsCityView());// toggle between city/region view
 
+                    cid.BringCidIntoWorldView(lazyMove);
                 }
                 else
                 {
@@ -506,7 +507,7 @@ namespace COTG.Game
             if(changed)
             {
                 var spot = Spot.GetOrAdd(cid);
-                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Text = spot.nameAndRemarks);
+                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = spot.nameAndRemarks);
             }
             cid.BringCidIntoWorldView(true);
         }

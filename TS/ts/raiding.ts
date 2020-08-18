@@ -56,7 +56,7 @@ function openreturnwin_(data_33) {
 		$("#returnDat").datepicker();
 	});
 	$("#returnbody").append(returnAllgo_);
-	$("#returnAllGo").after(nextcity_);
+//	$("#returnAllGo").after(nextcity_);
 	$("#nextCity").after(returntroops_);
 	$("#returnSel").change(() => {
 		if($("#returnSel").val()==3) {
