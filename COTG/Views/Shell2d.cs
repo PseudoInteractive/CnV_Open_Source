@@ -407,6 +407,8 @@ namespace COTG.Views
                 //                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
 
                 ds.Antialiasing = CanvasAntialiasing.Aliased;
+                //ds.TextRenderingParameters = new CanvasTextRenderingParameters(!App.IsKeyPressedControl() ? CanvasTextRenderingMode.Outline : CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
+
                 //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
                 // var scale = ShellPage.canvas.ConvertPixelsToDips(1);
                 pixelScale = (cameraZoomLag);
@@ -450,11 +452,11 @@ namespace COTG.Views
 
                     if (wantImage)
                     {
-                                ds.DrawImage(attacksVisible? worldBackgroundDark : worldBackground,
+                                ds.DrawImage(attacksVisible? worldBackground : worldBackground,
                                     new Rect(destP0, destP1),
                                     new Rect(srcP0, srcP1)); //, 1.0f, CanvasImageInterpolation.Cubic);
                                 if (worldObjects != null)
-                                    ds.DrawImage(attacksVisible ? worldObjectsDark:worldObjects,
+                                    ds.DrawImage(attacksVisible ? worldObjects:worldObjects,
                                         new Rect(destP0, destP1),
                                         new Rect(srcP0, srcP1));
 
@@ -477,7 +479,7 @@ namespace COTG.Views
                         {
                             var wantFade = wantImage;
                             var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
-                            var rgb = attacksVisible ? 0.5f : 1.0f;
+                            var rgb = attacksVisible ? 1.0f : 1.0f;
                             Vector4 tint = new Vector4(rgb,rgb,rgb, alpha);
                             var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
                             nameBrush = nameBrush.WithAlpha(intAlpha);
@@ -583,13 +585,13 @@ namespace COTG.Views
                                     CanvasImageInterpolation.Linear, CanvasComposite.Add);
 
                     }
-                    ds.Antialiasing = CanvasAntialiasing.Antialiased;
+                //    ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 }
                 var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
-            //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
-                ds.Antialiasing = CanvasAntialiasing.Antialiased;
-//                ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
+                //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
+                    ds.Antialiasing = CanvasAntialiasing.Antialiased;
+
 
                 if (!IsCityView())
                 {
@@ -684,7 +686,7 @@ namespace COTG.Views
                                         }
                                         {
                                             var t = (tick * attack.atkCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                                            var r = t.Wave().Lerp(rectSpanMin, rectSpanMax);
+                                            var r = t.Ramp();
                                             DrawAction(ds, dt1, journeyTime, r, c0, c1, c);
                                         }
                                         //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
@@ -758,9 +760,9 @@ namespace COTG.Views
                                         if (i.troops.Any())
                                         {
                                             var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                                            var r = t.Wave().Lerp(0.5f, 1.0f);
+                                            var r = t.Ramp();
 
-                                            DrawAction(ds,batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[0].type]);
+                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[0].type]);
                                         }
                                         else
                                         {
@@ -771,10 +773,9 @@ namespace COTG.Views
                                 }
                             }
                         }
-                    }
-                }
-                if (!IsCityView())
-                {
+                        var raidCullSlopSpace = 8 * pixelScale;
+
+
                         foreach (var city in City.allCities.Values)
                         {
                             // Todo: clip thi
@@ -795,8 +796,11 @@ namespace COTG.Views
                                     if (sen.target != 0)
                                     {
                                         var c1 = sen.target.CidToCC();
-                                    // Todo: more accurate senator travel times
-                                        DrawAction(ds, rectSpan,(float)(sen.time- serverNow).TotalSeconds, 2*60*60, c, c1, senatorColor);
+                                        var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                        var r = t.Ramp();
+                                        // Todo: more accurate senator travel times
+                                        DrawAction(ds,batch, r, (float)(sen.time - serverNow).TotalSeconds, 2 * 60 * 60, c, c1, senatorColor,
+                                            troopImages[ttSenator]);
                                     }
                                 }
                                 DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered);
@@ -806,36 +810,37 @@ namespace COTG.Views
                             if (MainPage.IsVisible())
                             {
                                 var c = city.cid.CidToCC();
-
-                                // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-                                //varr = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                                //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+                                if (IsCulled(c, raidCullSlopSpace))
+                                    continue;
+                                    // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                                    //varr = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                                    //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
                                 foreach (var raid in city.raids)
                                 {
                                     var ct = raid.target.CidToCC();
                                     (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-                                    DrawAction( ds,(float)(raid.time-serverNow).TotalSeconds,60*60*2.0f, rectSpan, c0, c1, raidColor);
+                                    DrawAction(ds,batch, (float)(raid.time - serverNow).TotalSeconds,
+                                        raid.GetOneWayTripTimeMinutes(city)*60.0f,
+                                        rectSpan / 8.0f, c0, c1, raidColor,troopImages[raid.troopType]);
 
                                 }
                             }
                         }
-                    
-                }                
-
-                if (!IsCityView())
-                {
-                    foreach(var city in Spot.GetSelected())
-                    {
-                        var c = city.CidToCC();
-                        var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f))+0.25f;
-                        var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                        ds.DrawRoundedSquareWithShadow(c, r,City.IsBuild(city) ? buildColor:
-                                                            City.IsFocus(city) ? focusColor :
-                                                            City.IsHover(city)?hoverColor :
-                                                            selectColor);
-
                     }
+
+                        foreach (var city in Spot.GetSelected())
+                        {
+                            var c = city.CidToCC();
+                            var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                            var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                            ds.DrawRoundedSquareWithShadow(c, r, City.IsBuild(city) ? buildColor :
+                                                                City.IsFocus(city) ? focusColor :
+                                                                City.IsHover(city) ? hoverColor :
+                                                                selectColor);
+
+                        }
                 }
+                
 
                 // show selected
                 var _toolTip =toolTip;
@@ -958,7 +963,7 @@ namespace COTG.Views
 
             ds.DrawLine(c0, c1, shadowC, lineThickness, defaultStrokeStyle);
             ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
-            batch.Draw(bitmap,mid - troopImageOriginOffset- shadowOffset*0.5f,new Vector4(rectSpan,rectSpan,rectSpan,1.0f) );
+            batch.Draw(bitmap,mid - troopImageOriginOffset- shadowOffset*0.5f,HSLToRGB.ToRGBA(rectSpan,0.5f,0.75f)  );
             //            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
         }
 

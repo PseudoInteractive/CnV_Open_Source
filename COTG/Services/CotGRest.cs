@@ -640,17 +640,25 @@ namespace COTG.Services
                     var completion = int.Parse(ss[2]);
                     var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
                     int cc = 0;
+                  
+                    var tsMaxTS = 0;
                     foreach (var ttr in r[5].EnumerateArray())
                     {
                         var tt = ttr.GetAsInt("tt");
                         int tv = ttr.GetAsInt("tv");
                         cc += ttCarry[tt] * tv;
+                        var ts = ttTs[tt] * tv;
+                        if(ts > tsMaxTS)
+                        {
+                            tsMaxTS = ts;
+                            raid.troopType = (byte)tt;
+                        }
                         //   Log($"{tt}:{tv}");
                     }
                     if (raid.isReturning)
                     {
                         var resO = r[6];
-                        var rate = 60.0f * 0.5f / (raid.GetOneWayTripTime(city)); // to res per hour
+                        var rate = 60.0f * 0.5f / (raid.GetOneWayTripTimeMinutes(city)); // to res per hour
                         tWood = resO.GetAsInt("w") * rate;
                         tIron = resO.GetAsInt("i") * rate;
                         tFood = resO.GetAsInt("f") * rate;

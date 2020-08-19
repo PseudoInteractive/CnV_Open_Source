@@ -62,7 +62,7 @@ namespace COTG.Game
                 }
                 else
                 {
-                    var travel = r.GetOneWayTripTime(this);
+                    var travel = r.GetOneWayTripTimeMinutes(this);
                     var _t = r.time + TimeSpan.FromMinutes(travel);
                         if (_t > rv)
                             rv = _t;
@@ -135,7 +135,7 @@ namespace COTG.Game
                 if (raids[0].isReturning)
                     return dt;
                 else
-                    return (-1.0f).Min(dt-75f);
+                    return (-1.0f).Min(dt- raids[0].GetOneWayTripTimeMinutes(this) );
             }
         }
 

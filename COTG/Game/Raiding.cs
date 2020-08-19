@@ -21,6 +21,7 @@ namespace COTG.Game
         public bool isReturning;
         public bool isRepeating; // neighter timed return nor raid once
         public byte repeatCount;
+        public byte troopType; // todo:  We should store3 of these, or specials value for RT, VRT, VT
         public DateTimeOffset time;
 
         public override bool Equals(object obj)
@@ -37,7 +38,7 @@ namespace COTG.Game
         }
 
         // restul int minutes
-        public float GetOneWayTripTime(City city)
+        public float GetOneWayTripTimeMinutes(City city)
         {
             var dist = target.DistanceToCid(city.cid);
             // based on slowest troop

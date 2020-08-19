@@ -80,6 +80,14 @@ namespace COTG
         {
             return 0.5f+ 0.5f*MathF.Sin(t * (2 * MathF.PI));
         }
+        public static float RampSym(this float t) // -0.5 .. 0.5
+        {
+            return t - MathF.Round(t);
+        }
+        public static float Ramp(this float t) // 0.0 .. 1.0
+        {
+            return t - MathF.Floor(t);
+        }
         public static float SignOr0(this float t)
         {
             return t > 0 ? 1.0f : t < 0 ? -1.0f : 0;

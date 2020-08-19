@@ -218,6 +218,7 @@
     <Compile Include="Helpers\aParallelFor.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\AUtil.cs" />
+    <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
