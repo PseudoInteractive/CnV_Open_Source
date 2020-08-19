@@ -159,8 +159,8 @@ namespace COTG.Game
 
         public int tsTotal { get; set; } // ts total including those on commands like raids, def etc.
 
-        public TroopTypeCount[] troopsHome = Array.Empty<TroopTypeCount>();
-        public TroopTypeCount[] troopsTotal = Array.Empty<TroopTypeCount>();
+        public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
+        public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 
         public void LoadFromJson(JsonElement jse)
@@ -184,9 +184,9 @@ namespace COTG.Game
                         }
                     }
                 }
-            
-            troopsHome = Array.Empty<TroopTypeCount>();
-            troopsTotal = Array.Empty<TroopTypeCount>();
+
+            troopsHome = TroopTypeCount.empty;
+            troopsTotal = TroopTypeCount.empty;
 
             for (int hc = 0; hc < 2; ++hc)
             {

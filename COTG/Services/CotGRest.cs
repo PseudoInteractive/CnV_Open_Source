@@ -470,7 +470,7 @@ namespace COTG.Services
                 }
                 else
                 {
-                    v.troopsTotal = v.troopsHome = Array.Empty<TroopTypeCount>();
+                    v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
                 }
                 var tsh = v.troopsHome.TS();
                 var tst = v.troopsTotal.TS();

@@ -84,6 +84,8 @@ namespace COTG.Game
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
         public readonly static short[] ttAttack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 
+        public static float TTTravel(int type) { return ttTravel[type] / (ttSpeedBonus[type]); }
+
         //
         // Templates not working for me
         //
@@ -124,5 +126,44 @@ namespace COTG.Game
                     return i;
             return -1;
         }
+
+        public const byte reportAssault = 0;
+        public const byte reportSiege = 1; // siege in history
+        public const byte reportPlunder = 2;
+        public const byte reportScout = 3;
+        public const byte reportSieging = 4; // siege in progress
+        public const byte reportPending = 5; // siege in progress
+
+        public const byte reportArt = 6;
+        public const byte reportSen = 7;
+        public const byte reportInf = 8;
+        public const byte reportCav = 9;
+        public const byte reportNavy = 10;
+        public const byte reportAttackCount = 11;
+        public const byte reportDefenseStart = 11;
+        public const byte reportDefensePending = reportDefenseStart;
+        public const byte reportDefenseStationed = reportDefenseStart+1;
+
+        public static readonly string[] reportStrings =
+        {
+             "Assault",
+             "Siege",
+             "Plunder",
+             "Scout",
+             "Sieging",
+             "Pending", // is this right?
+             "Art",
+             "Sen",
+             "Inf",
+             "Cav",
+             "Nav",
+             "Def Pending",
+             "Def"
+        };
+        public static int GetReportType(string s)
+        {
+            return reportStrings.IndexOf(s);
+        }
+
     }
 }

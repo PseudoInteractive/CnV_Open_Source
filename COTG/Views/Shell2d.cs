@@ -260,7 +260,7 @@ namespace COTG.Views
                 {
                     var size = troopImages[i].Size;
                     troopImageOriginOffset.X = (float)size.Width*0.5f;
-                    troopImageOriginOffset.Y = (float)size.Height*0.5f;
+                    troopImageOriginOffset.Y = (float)size.Height*0.625f;
                 }
             }
           //  while (JSClient.cid == 0)
@@ -542,7 +542,8 @@ namespace COTG.Views
                                 }
                             }// sprite batch
                             //
-                            ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+                            if(attacksVisible)
+                                ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
 
                             //
                             // Text names
@@ -574,7 +575,8 @@ namespace COTG.Views
                         }
                         else
                         {
-                            ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+                            if(attacksVisible)
+                                ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
                         }
 
                             // overlay
@@ -620,7 +622,7 @@ namespace COTG.Views
                                     var counts = new Dictionary<int, IncomingCounts>();
                                     foreach (var attack in reports)
                                     {
-                                        if (attack.type == Report.typePending)
+                                        if (attack.type == reportPending)
                                         {
                                             if (dfof == 0)
                                             {
@@ -637,9 +639,10 @@ namespace COTG.Views
                                             }
 
                                         }
-                                        var targetCid = attack.defCid;
+                                        var targetCid = attack.targetCid;
+                                        var sourceCid = attack.sourceCid;
                                         var c1 = targetCid.CidToCC();
-                                        var c0 = attack.atkCid.CidToCC();
+                                        var c0 = sourceCid.CidToCC();
                                         // cull (should do this pre-transform as that would be more efficient
                                         if (c0.X.Min(c1.X) >= clientSpan.X)
                                             continue;
@@ -670,22 +673,22 @@ namespace COTG.Views
                                             continue;
                                         var c = attack.type switch
                                         {
-                                            Report.typeAssault => Color.FromArgb(255, 0x7e, 0x3e, 0xd4),
-                                            Report.typeSiege => Color.FromArgb(255, 0xcf, 0x50, 0x07),
-                                            Report.typeSieging => Color.FromArgb(255, 0xc5, 0x7f, 0x4a),
-                                            Report.typePlunder => Color.FromArgb(255, 0x28, 0x86, 0xc0),
-                                            Report.typeScout => Color.FromArgb(255, 0xc8, 0x2d, 0xbf),
+                                            reportAssault => Color.FromArgb(255, 0x7e, 0x3e, 0xd4),
+                                            reportSiege => Color.FromArgb(255, 0xcf, 0x50, 0x07),
+                                            reportSieging => Color.FromArgb(255, 0xc5, 0x7f, 0x4a),
+                                            reportPlunder => Color.FromArgb(255, 0x28, 0x86, 0xc0),
+                                            reportScout => Color.FromArgb(255, 0xc8, 0x2d, 0xbf),
 
                                             _ => incomingHistoryColor
                                         };
 
-                                        if (!Spot.IsSelectedOrHovered(targetCid, attack.atkCid))
+                                        if (!Spot.IsSelectedOrHovered(targetCid,sourceCid))
                                         {
                                             continue;
                                             c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
                                         }
                                         {
-                                            var t = (tick * attack.atkCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                                             var r = t.Ramp();
                                             DrawAction(ds, dt1, journeyTime, r, c0, c1, c);
                                         }
@@ -812,8 +815,8 @@ namespace COTG.Views
                                 var c = city.cid.CidToCC();
                                 if (IsCulled(c, raidCullSlopSpace))
                                     continue;
-                                    // var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-                                    //varr = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                                    var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+                                    var r = t.Ramp();
                                     //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
                                 foreach (var raid in city.raids)
                                 {
@@ -821,7 +824,7 @@ namespace COTG.Views
                                     (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
                                     DrawAction(ds,batch, (float)(raid.time - serverNow).TotalSeconds,
                                         raid.GetOneWayTripTimeMinutes(city)*60.0f,
-                                        rectSpan / 8.0f, c0, c1, raidColor,troopImages[raid.troopType]);
+                                        r, c0, c1, raidColor,troopImages[raid.troopType]);
 
                                 }
                             }
@@ -946,6 +949,7 @@ namespace COTG.Views
             if (timeToArrival <= 0.0f)
             {
                 progress = 1.0f;
+                timeToArrival = 0;
             }
             else
             {
@@ -955,15 +959,16 @@ namespace COTG.Views
                     progress = 1f - (timeToArrival / journeyTime); // we don't know the duration so we approximate with 2 hours
             }
             progress = progress.Min(1.0f - actionStopDistance / Vector2.Distance(c0, c1));
+            var gain = 1.0f;
             if (timeToArrival < postAttackDisplayTime)
-                rectSpan = (rectSpan* 2.0f - timeToArrival / postAttackDisplayTime).Min(1.0f);
+                gain = 1.0f +  (1.0f - timeToArrival / postAttackDisplayTime)*0.25f;
             var mid = progress.Lerp(c0, c1);
             var shadowC = color.GetShadowColor();
             var midS = mid - shadowOffset;
 
             ds.DrawLine(c0, c1, shadowC, lineThickness, defaultStrokeStyle);
             ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
-            batch.Draw(bitmap,mid - troopImageOriginOffset- shadowOffset*0.5f,HSLToRGB.ToRGBA(rectSpan,0.5f,0.75f)  );
+            batch.Draw(bitmap,mid - troopImageOriginOffset- shadowOffset*0.5f,gain*HSLToRGB.ToRGBA(rectSpan,0.25f,0.825f)  );
             //            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
         }
 

@@ -1,4 +1,5 @@
-﻿using COTG.JSON;
+﻿using COTG.Game;
+using COTG.JSON;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,8 +24,8 @@ namespace COTG.Views
     {
         public static HitTab instance;
         public static bool IsVisible() => instance.isVisible;
-        public Report[] history { get; set; } = Array.Empty<Report>();
-        public void SetHistory(Report[] _history)
+        public Army[] history { get; set; } = Army.empty;
+        public void SetHistory(Army[] _history)
         {
             history = _history;
             historyGrid.ItemsSource = history;
@@ -36,7 +37,7 @@ namespace COTG.Views
         }
         override public void VisibilityChanged(bool visible)
         {
-            historyGrid.ItemsSource = Array.Empty<Report>();
+            historyGrid.ItemsSource = Army.empty;
             if (visible)
                 OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
             base.VisibilityChanged(visible);

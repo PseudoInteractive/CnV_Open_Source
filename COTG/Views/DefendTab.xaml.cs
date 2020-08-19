@@ -199,7 +199,7 @@ namespace COTG.Views
             });
             App.AddItem(flyout, "None", (_, _) =>
             {
-                supporter.tSend = Array.Empty<TroopTypeCount>();
+                supporter.tSend = TroopTypeCount.empty;
                 supporter.NotifyChange();
             });
 

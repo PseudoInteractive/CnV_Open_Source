@@ -27,6 +27,7 @@ using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
+using static COTG.Game.Enum;
 
 namespace COTG.Views
 {
@@ -42,16 +43,16 @@ namespace COTG.Views
         protected override Style SelectStyleCore(object item, DependencyObject container)
         {
             var cell = (item as DataGridCellInfo);
-            var report = cell.Item as Report;
-            if (report.type == Report.typePending)
+            var report = cell.Item as Army;
+            if (report.type == reportPending)
                 return noKillsStyle;
-            if(report.type == Report.typeSieging)
+            if(report.type == reportSieging)
                 return report.claim > 0 ? attackerWinStyle : tieStyle;
 
             var dKill = report.dTsKill;
             var aKill = report.aTsKill;
             if (dKill < 1000 && aKill < 1000)
-                return report.type == Report.typeScout ? attackerWinStyle : noKillsStyle;
+                return report.type == reportScout ? attackerWinStyle : noKillsStyle;
             if (dKill > aKill * 3 / 2)
                 return defenderWinStyle;
             if (aKill > dKill * 3 / 2)
@@ -77,14 +78,14 @@ namespace COTG.Views
         protected override Style SelectStyleCore(object item, DependencyObject container)
         {
             var cell = (item as DataGridCellInfo);
-            var report = cell.Item as Report;
+            var report = cell.Item as Army;
             switch (report.type)
 			{
-                case Report.typeAssault: return assaultStyle;
-                case Report.typeSiege: return siegeStyle;
-                case Report.typeSieging: return siegingStyle;
-                case Report.typePlunder: return plunderStyle;
-                case Report.typePending: return pendingStyle;
+                case reportAssault: return assaultStyle;
+                case reportSiege: return siegeStyle;
+                case reportSieging: return siegingStyle;
+                case reportPlunder: return plunderStyle;
+                case reportPending: return pendingStyle;
                 default: return scoutStyle;
             }
 
@@ -92,8 +93,8 @@ namespace COTG.Views
     }
     public sealed partial class DefensePage : UserTab, INotifyPropertyChanged
     {
-        public Report[] history { get; set; } = Array.Empty<Report>();
-        public void SetHistory( Report[] _history)
+        public Army[] history { get; set; } = Army.empty;
+        public void SetHistory( Army[] _history)
         {
             history = _history;
             historyGrid.ItemsSource = history;
@@ -101,7 +102,7 @@ namespace COTG.Views
 
         public static DefensePage instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;
-        //        public static Report showingRowDetails;
+        //        public static Army showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
         //{
@@ -121,7 +122,7 @@ namespace COTG.Views
         }
         override public void VisibilityChanged(bool visible)
         {
-            historyGrid.ItemsSource = Array.Empty<Report>();
+            historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
                 IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
             base.VisibilityChanged(visible);

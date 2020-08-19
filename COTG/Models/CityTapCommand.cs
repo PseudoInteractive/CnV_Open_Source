@@ -118,9 +118,9 @@ namespace COTG.Models
             {
 
 
-                var i = context.Item as COTG.JSON.Report;
+                var i = context.Item as Army;
              
-                var isSelected =  grid.SelectedItem as Report == i;
+                var isSelected =  grid.SelectedItem as Army == i;
                 if (isSelected)
                     grid.DeselectItem(context);
                 else
@@ -138,15 +138,15 @@ namespace COTG.Models
                 //    Log(context.Column.Header);
                     switch (context.Column.Header.ToString())
                     {
-                        case nameof(Report.Type): JSClient.ShowReport(i.reportId); break;
-                        case nameof(Report.atkC):
-                        case nameof(Report.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
-                        case nameof(Report.defC):
-                        case nameof(Report.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
-                        case nameof(Report.atkAli): JSClient.ShowAlliance(i.atkAli);break;
-                        case nameof(Report.defAli): JSClient.ShowAlliance(i.defAli); break;
-                        case nameof(Report.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
-                        case nameof(Report.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
+                        case nameof(i.Type): if(i.reportId!=null) JSClient.ShowReport(i.reportId); break;
+                        //case nameof(i.atkC):
+                        //case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
+                        //case nameof(i.defC):
+                        //case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
+                        //case nameof(i.atkAli): JSClient.ShowAlliance(i.atkAli);break;
+                        //case nameof(i.defAli): JSClient.ShowAlliance(i.defAli); break;
+                        //case nameof(i.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
+                        //case nameof(i.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
 
 
                     }

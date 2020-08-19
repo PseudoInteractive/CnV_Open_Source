@@ -28,7 +28,7 @@ using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
-
+using static COTG.Game.Enum;
 namespace COTG.Views
 {
 
@@ -72,13 +72,13 @@ namespace COTG.Views
             protected override Style SelectStyleCore(object item, DependencyObject container)
             {
                 var cell = (item as DataGridCellInfo);
-                var report = cell.Item as Report;
+                var report = cell.Item as Army;
                 switch (report.type)
                 {
-                    case Report.typeAssault: return assaultStyle;
-                    case Report.typeSiege: return siegeStyle;
-                    case Report.typeSieging: return siegingStyle;
-                    case Report.typePlunder: return plunderStyle;
+                    case reportAssault: return assaultStyle;
+                    case reportSiege: return siegeStyle;
+                    case reportSieging: return siegingStyle;
+                    case reportPlunder: return plunderStyle;
                     default: return scoutStyle;
                 }
 

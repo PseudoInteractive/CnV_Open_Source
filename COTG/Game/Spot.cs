@@ -274,7 +274,7 @@ namespace COTG.Game
 
         public static void ProcessCoordClick(int cid,bool lazyMove)
         {
-            if (City.IsMine(cid) && City.IsFocus(cid) && !(App.IsKeyPressedShift()||App.IsKeyPressedControl()) )
+            if (City.IsMine(cid) && !(App.IsKeyPressedShift()||App.IsKeyPressedControl()) )
             {
                 if (City.IsBuild(cid))
                 {
@@ -341,19 +341,19 @@ namespace COTG.Game
             }
         }
 
-        public int activeSieges
-        {
-            get 
-                {
-                    var rv = 0;
-                    foreach (var a in incoming)
-                    {
-                        if (a.isSiege)
-                            ++rv;
-                    }
-                    return rv;
-                }
-            }
+        //public int activeSieges
+        //{
+        //    get 
+        //        {
+        //            var rv = 0;
+        //            foreach (var a in incoming)
+        //            {
+        //                if (a.isSiege)
+        //                    ++rv;
+        //            }
+        //            return rv;
+        //        }
+        //    }
         public bool iNav => incoming.Any((a) => a.hasNaval);
         public bool iSenny => incoming.Any((a) => a.Senny);
         public bool iArt => incoming.Any((a) => a.hasArt);

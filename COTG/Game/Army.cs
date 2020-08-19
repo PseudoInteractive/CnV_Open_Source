@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
 using Windows.Foundation;
 using Windows.UI.Xaml.Input;
+using static COTG.Game.Enum;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace COTG.Game
@@ -20,17 +21,21 @@ namespace COTG.Game
 
         // todo
         public byte type; // see Report types
-        public string Type => type < Report.typeAttackCount ? Report.typeStrings[type] : "Def";
-
-        public TroopTypeCount[] troops { get; set; } = Array.Empty<TroopTypeCount>();
-        public TroopTypeCount[] sumDef { get; set; } = Array.Empty<TroopTypeCount>();
-        // todo
-        public bool isPending { get; set; }
+        public byte claim;
         public bool isAttack { get; set; }
+        public string Type => reportStrings[type];
+
+        public TroopTypeCount[] troops { get; set; } = TroopTypeCount.empty;
+        public TroopTypeCount[] sumDef { get; set; } = TroopTypeCount.empty;
+        // todo
         public bool isDefense => !isAttack;
         public string xy => sourceCid.CidToString();
         public int targetCid;
         public int sourceCid;
+
+        public string reportId; // If not null, this is a history report with a report id
+        public static int ReportHash(string reportId) => HashCode.Combine(reportId);
+        public static int ReportHash(Army report) => ReportHash(report.reportId);
 
         public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
         public DateTimeOffset time { get; set; }
@@ -38,13 +43,17 @@ namespace COTG.Game
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
 
+        public string troopEstimate;
         public int ts => troops.TS();
         public int tsDef => sumDef.Any() ? sumDef.Last().ts : 0;
         public string details => TroopTypeCountHelper.Format(troops);
         public int pid; // The owner of the army, 
         public string playerName => Player.IdToName(pid);
 
-        public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
+        public int dTsKill { get; set; }
+        public int aTsKill { get; set; }
+
+        //    public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
 
         public static (Army spot, string column, Vector2 point) HitTest(object sender, TappedRoutedEventArgs e)
         {
@@ -110,9 +119,11 @@ namespace COTG.Game
         public bool hasArt => troops.Any((a) => a.isArt);
 
         public float dist => targetCid.DistanceToCid(sourceCid);
+        public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
     }
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
+        public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
         public int type;
         public int count;
         public string Count => count.ToString(" N0 ");
@@ -152,6 +163,15 @@ namespace COTG.Game
                     return i.count;
             }
             return 0;
+        }
+        public static bool  HasTT(this TroopTypeCount[] me, int type)
+        {
+            foreach (var i in me)
+            {
+                if (i.type == type)
+                    return true;
+            }
+            return false;
         }
         public static bool SetCount(this TroopTypeCount[] me, int type, int count)
         {
