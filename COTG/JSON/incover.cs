@@ -80,7 +80,7 @@ namespace COTG.JSON
             {
                 if (r.reportId.IsNullOrEmpty())
                     continue;
-                var hash = Army.ReportHash(r);
+                var hash = Army.ReportHash(r.reportId);
                 if(reportCache.TryGetValue(hash,out var reports))
                 {
                     reportCache[hash] = reports.ArrayAppend(r);
@@ -94,6 +94,7 @@ namespace COTG.JSON
             // ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
             var reportsIncoming = new List<Army>();
+            int incCount = 0;
 
             var task0 = Task.Run(async () =>
               {
@@ -168,6 +169,7 @@ namespace COTG.JSON
                       var jse = jsd.RootElement.GetProperty("a");
                       foreach (var prop in jse.EnumerateObject())
                       {
+                        ++incCount;
                           var val = prop.Value;
                           var cid = DecodeCid(5, val.GetString("2"));
                           if (cid >= 0)
@@ -203,11 +205,11 @@ namespace COTG.JSON
                                   var army = new Army();
                                   army.isAttack = armyV.GetAsInt("5") != 3;
                                   var armyPid = armyV.GetAsString("1");
-                                  army.pid = armyPid switch
-                                  {
-                                      "Troops home" => spot.pid,
-                                      var name => Player.NameToId(name)
-                                  };
+                                  //army.pid = armyPid switch
+                                  //{
+                                  //    "Troops home" => spot.pid,
+                                  //    var name => Player.NameToId(name)
+                                  //};
                                       var arrival = armyV.GetAsString("7");
                                   army.time = arrival switch
                                   {
@@ -228,8 +230,7 @@ namespace COTG.JSON
                                       else
                                       {
                                           army.sourceCid = armyV.GetAsInt("11");
-                                          var sourceSpot = Spot.GetOrAdd(army.sourceCid);
-                                          sourceSpot.pid = army.pid;
+                                      //    var sourceSpot = Spot.GetOrAdd(army.sourceCid, army.sPid);
                                           
                                       }
                                   if( armyV.TryGetProperty("6", out var p6)&&(p6.ValueKind == System.Text.Json.JsonValueKind.String))
@@ -305,6 +306,7 @@ namespace COTG.JSON
 
                   }
               });
+            var fetched = 0;
             if (hasFetchedReports)
             {
                 // defense history
@@ -312,51 +314,14 @@ namespace COTG.JSON
                 {
                     //int counter = 0;
                     await jsd.RootElement.EnumerateArray().ToArray().ParallelForAsync4(reportParts,
-                        async (inc,part,index,parts) =>
+                        async (_inc,_part,_index,_parts) =>
                     {
-
-                        /*
-    [
-		"Siege", //0
-		"Falsestep", // 1
-		"Phoenix", // 2
-		"Pandemonium", // 3
-		"220:224", // 4
-		"02:15:08 03\/07", // 5
-		"arve", // 6
-		"-", // 7
-		0, // 8
-		3230, // 9
-		"-", // 10
-		"6dad1d830846567f",// 11
-		61298, // 12
-		0, // 13
-		"-", // 14
-		14680284, // 15
-		{ // 16
-			"14483687": 1
-		}
-	],
-	[
-		"Scout", // 0
-		"Nayawen", // 1
-		"Unidos-", // 2
-		"C22 004", // 3
-		"222:281", // 4
-		"22:06:39 02\/07", // 5
-		"3MP7Y", // 6
-		"225:284", // 7
-		44730, // 8  defending TS
-		4000, // 9  attacking TS
-		"-",// 10
-		"489b050779fb3d90", // 11
-		2195, // 12
-		22, // 13
-		"A22_005", // 14
-		18415838, // 15 
-		18612449 // 16
-	],
-                         */
+                        var inc = _inc;
+                        var part = _part;
+                        var index = _index;
+                        var parts = _parts;
+                      
+                         
                         var target = TryDecodeCid(0, inc[4].GetString());
                         if (target <= 0)
                             return;
@@ -389,7 +354,6 @@ namespace COTG.JSON
                                     sourceCid = source,
                                     targetCid = target,
                                   
-                                    pid = Player.NameToId(atkPNS), // todo:  add scouts to troops
                                     time = time,
                                     reportId = recId,
                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),
@@ -412,7 +376,7 @@ namespace COTG.JSON
                                     {
                                         var root = jsdr.RootElement;
                                         int reportType = -1;
-
+                                        ++fetched;
                                         foreach (var attackType in Army.reportAttackTypes)
                                         {
                                             ++reportType;
@@ -522,7 +486,6 @@ namespace COTG.JSON
                                                             sourceCid = source,
                                                             targetCid = target,
                                                             claim = (byte)(  hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1),
-                                                            pid = Player.NameToId(atkPN),
                                                             time = time,
                                                             spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher) ),
                                                             type = (byte)reportType
@@ -571,7 +534,7 @@ namespace COTG.JSON
                     }
 
                     updateInProgress = false;
-                    Note.Show($"Complete: {reportsIncoming.Count} attacks");
+                    Note.Show($"Complete: {reportsIncoming.Count+ incCount} attacks, {fetched} fetched");
                 });
         }
     }

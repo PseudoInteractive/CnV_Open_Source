@@ -15,6 +15,10 @@ namespace COTG.Game
 {
     static class WorldHelper
     {
+        public static int CidToPid(this int cid)
+        {
+           return World.CityLookup( CidToWorld(cid) ).player;
+        }
         static internal uint SubStrAsInt(this string s, int start, int count)
         {
             uint rv = default;

@@ -57314,9 +57314,11 @@ console.log("Bad");
             if (lastCid != cid) {
              //   lastTroopsHome = troopsHome; // only trigger on 0
                 lastCid = cid;
+                lastTroopsHome=-1; // always update on switch.  This is a perf hit
             }
             if ( (troopsHome>>7) != (lastTroopsHome>>7) ) {
-                if (troopsHome > lastTroopsHome) {
+              //  if (troopsHome > lastTroopsHome) 
+                {
                     setTimeout(() => {
                         let wrapper = { citydata: 
                         { cid: D6.cid, 
@@ -57363,7 +57365,8 @@ console.log("Bad");
         }
         if (j71.hasOwnProperty("OGA")) {
             OGA = j71["OGA"];
-
+//            console.log(OGA);
+//  if OGA is empty it will sometimes fire repeatedly
           m6F(OGA);
           
         }
@@ -66683,10 +66686,16 @@ _viewMode = viewModeWorld;
                           _popupCount+=128;
                   }
               );
+              $(".popUpBox2").each(
+                  function () {
+                          _popupCount ++;
+                  }
+              );
 
-              
-                  if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
-                      || _zoom != __zoom || _popupCountCache !=_popupCount)) {
+              // if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
+             //         || _zoom != __zoom || _popupCountCache != _popupCount))
+                  if (cid != 0 &&(  _viewMode !== _viewModeCache 
+                      ||  _popupCountCache !=_popupCount)) {
                       _viewModeCache = _viewMode;
                       _cid = cid;
                       _zoom = __zoom;

@@ -62,7 +62,7 @@ namespace COTG.JSON
             {
                 if (r.reportId.IsNullOrEmpty())
                     continue;
-                var hash = Army.ReportHash(r);
+                var hash = Army.ReportHash(r.reportId);
                 if (reportCache.TryGetValue(hash, out var reports))
                 {
                     reportCache[hash] = reports.ArrayAppend(r);
@@ -104,7 +104,7 @@ namespace COTG.JSON
                                  //         var spotted = b[6].GetString().ParseDateTime();
                                  var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
-                                 var army = new Army() { isAttack=true, sourceCid = atkCid, targetCid = defCid, pid = atkP, time = time, spotted = AUtil.dateTimeZero };
+                                 var army = new Army() { isAttack=true, sourceCid = atkCid, targetCid = defCid,  time = time, spotted = AUtil.dateTimeZero };
 
                                  army.type = (byte)GetReportType(b[1].GetAsString());
                                  var claim = b[11].GetAsFloat().RoundToInt();
@@ -200,7 +200,7 @@ namespace COTG.JSON
                                         isAttack = true,
                                         //  atkCN = inc[14].GetAsString(),
                                         // defP = defP,
-                                        pid = Player.NameToId(atkPNS),
+                                        
                                         time = time,
                                         reportId = recId,
                                         spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
@@ -304,7 +304,6 @@ namespace COTG.JSON
                                                             targetCid = target,
                                                             claim =  (byte)report.GetAsFloat("senator").RoundToInt(),
                                                             
-                                                            pid = Player.NameToId(atkPN),
                                                             time = time,
                                                             spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
                                                             type = (byte)reportType

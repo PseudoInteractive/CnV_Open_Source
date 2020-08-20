@@ -21,7 +21,7 @@ namespace COTG.Game
 
         // todo
         public byte type; // see Report types
-        public byte claim;
+        public byte claim { get; set; }
         public bool isAttack { get; set; }
         public string Type => reportStrings[type];
 
@@ -29,29 +29,42 @@ namespace COTG.Game
         public TroopTypeCount[] sumDef { get; set; } = TroopTypeCount.empty;
         // todo
         public bool isDefense => !isAttack;
-        public string xy => sourceCid.CidToString();
+        public string sXY => sourceCid.CidToString();
+        public string tXY => targetCid.CidToString();
         public int targetCid;
         public int sourceCid;
 
+        public int sourceAlliance => Player.Get(sourceCid.CidToPid()).alliance;
+        public string sourceAllianceName => Player.Get(sourceCid.CidToPid()).allianceName;
+
+        public int targetAlliance => Player.Get(targetCid.CidToPid()).alliance;
+        public string targetAllianceName => Player.Get(targetCid.CidToPid()).allianceName;
+
         public string reportId; // If not null, this is a history report with a report id
-        public static int ReportHash(string reportId) => HashCode.Combine(reportId);
-        public static int ReportHash(Army report) => ReportHash(report.reportId);
+        public static int ReportHash(string reportId) => HashCode.Combine( reportId);
+        public int ReportHash() => ReportHash(reportId);
 
         public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
+        public string targetCN => Spot.GetOrAdd(targetCid).cityName;
         public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
-
+        public int Cont => sourceCid.CidToContinent();
         public string troopEstimate;
         public int ts => troops.TS();
-        public int tsDef => sumDef.Any() ? sumDef.Last().ts : 0;
-        public string details => TroopTypeCountHelper.Format(troops);
-        public int pid; // The owner of the army, 
-        public string playerName => Player.IdToName(pid);
+        public int sPid => sourceCid.CidToPid(); // The owner of the army, 
+        public int tPid => targetCid.CidToPid(); // The owner of the army, 
+        public string sPlayer => Player.IdToName(sPid);
+        public string tPlayer => Player.IdToName(tPid);
 
         public int dTsKill { get; set; }
         public int aTsKill { get; set; }
+        public int dTS => sumDef.TS();
+        public int aTS => troops.TS();
+
+        public int dTsLeft => dTS - dTsKill;
+        public int aTsLeft => aTS - aTsKill;
 
         //    public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
 
@@ -71,7 +84,7 @@ namespace COTG.Game
             switch (column)
             {
                 case "city":
-                case nameof(xy): Spot.ProcessCoordClick(sourceCid,false); break;
+                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false); break;
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
@@ -114,12 +127,47 @@ namespace COTG.Game
         public BitmapImage si7 => iN(sumDef, 7);
 
 
-        public bool Senny => troops.Any((a) => a.isSenator);
+        public bool hasSenator => troops.Any((a) => a.isSenator);
         public bool hasNaval => troops.Any((a) => a.isNaval);
         public bool hasArt => troops.Any((a) => a.isArt);
 
         public float dist => targetCid.DistanceToCid(sourceCid);
         public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
+
+        internal string GetToopTip(DateTimeOffset serverNow)
+        {
+            if (isDefense)
+            {
+                return  troops.Format(time <= serverNow ? "Stationed:": "Incoming:",'\n'); ;
+            }
+            else
+            {
+                if (troops.IsNullOrEmpty())
+                    return string.Empty;
+                if(troops.First().count<0)
+                {
+                    // estimate
+                    string rv = "Predicted:";
+                    foreach (var tt in troops)
+                    {
+                        rv += $"\n{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
+                        //                    (tt.count == -1)
+                        //                        troops += '?';
+                        //                    else
+                        //                        troops += $" {(tt.count)/ -10.0f}%";
+
+        //                rv += $"\n{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                    }
+                    return rv;
+                }
+                else
+                {
+                   return troops.Format("Attack:",'\n');
+                    
+
+                }
+            }
+        }
     }
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
@@ -219,16 +267,12 @@ namespace COTG.Game
             return rv;
         }
 
-        public static string Format(this IEnumerable<TroopTypeCount> l)
+        public static string Format(this IEnumerable<TroopTypeCount> l,string header,char separator)
         {
-            string rv = "";
-            var wantComma = false;
+            string rv = header;
             foreach (var ttc in l)
             {
-                if (wantComma)
-                    rv += ",";
-                else wantComma = true;
-                rv += $"{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                rv += $"{separator}{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
             }
             return rv;
         }

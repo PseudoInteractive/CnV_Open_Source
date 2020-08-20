@@ -53,7 +53,6 @@ namespace COTG.Game
         {
             return  focus==cid;
         }
-
         public static Spot GetOrAdd(int cid, string cityName = null)
         {
             if( cid <= 0)
@@ -327,19 +326,19 @@ namespace COTG.Game
             }
         }
 
-        public int incomingAttackTS
-        {
-            get
-            {
-                var rv = 0;
-                foreach (var a in incoming)
-                {
-                    if (!a.isDefense)
-                        rv += a.ts;
-                }
-                return rv;
-            }
-        }
+        //public int incomingAttackTS
+        //{
+        //    get
+        //    {
+        //        var rv = 0;
+        //        foreach (var a in incoming)
+        //        {
+        //            if (!a.isDefense)
+        //                rv += a.ts;
+        //        }
+        //        return rv;
+        //    }
+        //}
 
         //public int activeSieges
         //{
@@ -355,7 +354,7 @@ namespace COTG.Game
         //        }
         //    }
         public bool iNav => incoming.Any((a) => a.hasNaval);
-        public bool iSenny => incoming.Any((a) => a.Senny);
+        public bool iSenny => incoming.Any((a) => a.hasSenator);
         public bool iArt => incoming.Any((a) => a.hasArt);
 
         public bool isFocus => focus == cid;
