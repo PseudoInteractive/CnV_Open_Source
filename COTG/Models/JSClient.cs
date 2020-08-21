@@ -471,7 +471,7 @@ namespace COTG
                 //             if( City.IsMine(cityId)  )
                 //                 Raiding.UpdateTSHome();
 
-#if DEBUG
+#if true
                 if (!City.IsMine(cityId))
                 {
                     var str = await Post.SendForText("includes/gLay.php", $"cid={cityId}");

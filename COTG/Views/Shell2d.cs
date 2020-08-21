@@ -905,7 +905,7 @@ namespace COTG.Views
 
                 if (underMouse!=null)
                 {
-                    Spot.viewHover = 0; // clear
+           //         Spot.viewHover = 0; // clear
                     _toolTip = underMouse.GetToopTip(serverNow);
                 }
                 if(_toolTip != null && IsWorldView() )
