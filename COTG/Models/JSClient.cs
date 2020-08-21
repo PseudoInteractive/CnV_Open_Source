@@ -999,7 +999,7 @@ namespace COTG
                                     var cid = jso.GetAsInt("cid");
                                     {
                                         var pid = Player.NameToId(jso.GetAsString("player"));
-                                        var city = COTG.Views.SpotTab.TouchSpot(cid, pid);
+                                        var city = Spot.GetOrAdd(cid);
                                         var name = jso.GetString("name");
                                         city.pid = pid; // todo: this shoule be an int playerId
                                                         //Assert(city.pid > 0);

@@ -88,23 +88,17 @@ namespace COTG
             //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
 
         }
-        static public byte shiftPressed, controlPressed;
+        static public bool shiftPressed, controlPressed;
 
         private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
             switch (args.VirtualKey)
             {
                 case VirtualKey.Shift:
-                    shiftPressed &= 254;
-                    break;
-                case VirtualKey.RightShift:
-                    shiftPressed &= 253;
+                    shiftPressed = false;
                     break;
                 case VirtualKey.Control:
-                    controlPressed &= 254;
-                    break;
-                case VirtualKey.RightControl:
-                    controlPressed &= 253;
+                    controlPressed = false;
                     break;
 
             }
@@ -115,16 +109,10 @@ namespace COTG
             switch (args.VirtualKey)
             {
                 case VirtualKey.Shift:
-                    shiftPressed |= 1;
-                    break;
-                case VirtualKey.RightShift:
-                    shiftPressed |= 2;
+                    shiftPressed =true;
                     break;
                 case VirtualKey.Control:
-                    controlPressed |= 1;
-                    break;
-                case VirtualKey.RightControl:
-                    controlPressed |= 2;
+                    controlPressed = true;
                     break;
             }
         }
@@ -328,11 +316,11 @@ namespace COTG
         public static bool IsOnUIThread() => GlobalDispatcher().HasThreadAccess;
         public static bool IsKeyPressedControl()
         {
-            return controlPressed != 0;
+            return controlPressed;
         }
         public static bool IsKeyPressedShift()
         {
-            return shiftPressed != 0;
+            return shiftPressed;
         }
 
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)

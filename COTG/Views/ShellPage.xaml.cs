@@ -239,6 +239,8 @@ namespace COTG.Views
             PointerPressed+=  PointerPressedCB;
         }
 
+        
+
         private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
         {
             var prop = e.GetCurrentPoint(this).Properties;

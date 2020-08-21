@@ -35,6 +35,7 @@ namespace COTG.Views
         public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
 
         public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
+        public static int disableSelection;
 
         public static SpotTab instance;
         public SpotTab()
@@ -56,20 +57,14 @@ namespace COTG.Views
                 try
                 {
 
+                    var sel = selectedGrid.SelectedItems;
                     Spot.selected.EnterWriteLock();
 
-                    foreach (var __item in e.RemovedItems)
+                    Spot.selected.Clear();
+                    foreach (Spot s in sel)
                     {
-                        var item = __item as Spot;
-                        Spot.selected.Remove(item.cid);
-                        Log("removed " + item.cid);
-
-                    }
-                    foreach (var __item in e.AddedItems)
-                    {
-                        var item = __item as Spot;
-                        Spot.selected.Add(item.cid);
-                        Log("added " + item.cid);
+                        Spot.selected.Add(s.cid);
+ 
                     }
                 }
                 catch(Exception ex)
@@ -85,7 +80,19 @@ namespace COTG.Views
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            Spot.ProcessPointerPress(sender, e);
+            try
+            {
+                ++disableSelection;
+                Spot.ProcessPointerPress(sender, e);
+            }
+            catch(Exception ex)
+            {
+                Log(ex);
+            }
+            finally
+            {
+                --disableSelection;
+            }
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{
@@ -96,39 +103,67 @@ namespace COTG.Views
             Spot.ProcessPointerExited();
         }
 
-        public static Spot TouchSpot(int cid, int pid)
-        {
-            var spot = !Player.IsMe(pid) ? Spot.GetOrAdd(cid) : City.GetOrAddCity(cid);
-            AddToGrid(spot);
-            return spot;
 
+        public static Spot TouchSpot(int cid)
+        {
+            var spot = Spot.GetOrAdd(cid);
+            if (disableSelection == 0)
+            {
+                AddToGrid(spot);
+            }
+            return spot;
         }
         public static void SelectSilent(Spot spot, bool selected )
         {
-            try
+            App.DispatchOnUIThreadSneaky(() =>
             {
-                ++silenceChanges;
-                if( selected )
-                    instance.selectedGrid.SelectItem(spot);
-                else
-                    instance.selectedGrid.DeselectItem(spot);
+                try
+                {
+                    ++silenceChanges;
+                    if (selected)
+                        instance.selectedGrid.SelectItem(spot);
+                    else
+                        instance.selectedGrid.DeselectItem(spot);
 
-            }
-            catch (Exception e)
+                    Assert(instance.selectedGrid.SelectedItems.Contains(spot) == selected);
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                }
+                finally
+                {
+                    --silenceChanges;
+                }
+            });
+        }
+        public static void SelectOne(Spot spot)
+        {
+            App.DispatchOnUIThreadSneaky(() =>
             {
-                Log(e);
-            }
-            finally
-            {
-                --silenceChanges;
-            }
+                try
+                {
+                    ++silenceChanges;
+                    instance.selectedGrid.DeselectAll();
+                    instance.selectedGrid.SelectItem(spot);
+
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                }
+                finally
+                {
+                    --silenceChanges;
+                }
+            });
         }
 
         public static void AddToGrid(Spot spot)
         {
             // Toggle Selected
 
-            instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            App.DispatchOnUIThreadSneaky( () =>
             {
            
                     if (!SpotMRU.Contains(spot))
@@ -136,15 +171,15 @@ namespace COTG.Views
                         SpotMRU.Add(spot);
                     }
 
-                    spot.ToggleSelected();
+                    spot.ProcessSelection();
             });
 
         }
-        public static void ToggleSelected(Spot rv)
-        {
-            var isSelected = rv.ToggleSelected();
-  //          SelectSilent(rv, isSelected);
-        }
+  //      public static void ToggleSelected(Spot rv)
+  //      {
+  //          var isSelected = rv.ToggleSelected();
+  ////          SelectSilent(rv, isSelected);
+  //      }
 
 
     }

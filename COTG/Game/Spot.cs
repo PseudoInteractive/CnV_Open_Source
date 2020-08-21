@@ -266,8 +266,9 @@ namespace COTG.Game
             else if (pt.Properties.IsRightButtonPressed)
             {
                 ShowContextMenu(uie, pt.Position);
-
+                return;
             }
+            SpotTab.TouchSpot(cid);
         }
 
         
@@ -294,6 +295,7 @@ namespace COTG.Game
                 JSClient.ShowCity(cid, lazyMove);
                 NavStack.Push(cid);
             }
+            SpotTab.TouchSpot(cid);
         }
 
 
@@ -401,22 +403,45 @@ namespace COTG.Game
             return rv;
 
         }
+        public void SelectMe()
+        {
+            ProcessSelection(true);
+            JSClient.ShowCity(cid, true);
+        }
      
-        public bool ToggleSelected()
+        public bool ProcessSelection(bool forceSelect=false)
         {
             bool rv = false;
             try
             {
                 selected.EnterWriteLock();
-                if (selected._hashSet.Contains(cid))
+                if (App.IsKeyPressedShift() || forceSelect)
                 {
-                    rv = false;
-                    selected._hashSet.Remove(cid);
+                    rv = true; // this should also add "in between spots"
+                    selected._hashSet.Add(cid);
+                    SpotTab.SelectSilent(this, rv);
+                }
+                else if (App.IsKeyPressedControl())
+                {
+                    if (selected._hashSet.Contains(cid))
+                    {
+                        rv = false;
+                        selected._hashSet.Remove(cid);
+                    }
+                    else
+                    {
+                        rv = true;
+                        selected._hashSet.Add(cid);
+                    }
+                    SpotTab.SelectSilent(this, rv);
                 }
                 else
                 {
+                    // clear selection and select this
                     rv = true;
+                    selected._hashSet.Clear();
                     selected._hashSet.Add(cid);
+                    SpotTab.SelectOne(this);
                 }
             }
             catch (Exception e)
@@ -427,7 +452,6 @@ namespace COTG.Game
             {
                 selected.ExitWriteLock();
             }
-            SpotTab.SelectSilent(this, rv);
             return rv;
         }
         public static bool AreAnySelected()
@@ -616,7 +640,7 @@ namespace COTG.Game
                 App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
             }
-            App.AddItem(flyout, "Select", () => JSClient.ShowCity(cid, true));
+            App.AddItem(flyout, "Select",  SelectMe );
             App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteCoords($"<coords>{cid.CidToString()}</coords>"));
 
 
@@ -639,6 +663,7 @@ namespace COTG.Game
                     tab.Refresh();
             }
         }
+        
 
     }
 }

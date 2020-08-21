@@ -83,7 +83,7 @@ namespace COTG.Views
         public static int cachedTopOffset = 0;
         const int cotgPopupTopDefault = 95;
         const int cotgPopupTopLong = 300+95;
-        const float actionStopDistance = 64.0f;
+        const float actionStopDistance = 32.0f;
         static public CanvasAnimatedControl canvas;
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
