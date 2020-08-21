@@ -132,7 +132,7 @@ namespace COTG.Game
         public const byte reportPlunder = 2;
         public const byte reportScout = 3;
         public const byte reportSieging = 4; // siege in progress
-        public const byte reportPending = 5; // siege in progress
+        public const byte reportPending = 5; 
 
         public const byte reportArt = 6;
         public const byte reportSen = 7;

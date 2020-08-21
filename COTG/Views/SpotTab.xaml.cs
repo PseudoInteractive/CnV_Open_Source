@@ -124,7 +124,8 @@ namespace COTG.Views
                         instance.selectedGrid.SelectItem(spot);
                     else
                         instance.selectedGrid.DeselectItem(spot);
-
+                //    var sel = instance.selectedGrid.SelectedItems;
+//                    sel.A
                     Assert(instance.selectedGrid.SelectedItems.Contains(spot) == selected);
                 }
                 catch (Exception e)
@@ -144,8 +145,11 @@ namespace COTG.Views
                 try
                 {
                     ++silenceChanges;
-                    instance.selectedGrid.DeselectAll();
-                    instance.selectedGrid.SelectItem(spot);
+                    var sel = instance.selectedGrid.SelectedItems;
+                    sel.Clear();
+                    sel.Add(spot);
+//                    instance.selectedGrid.DeselectAll();
+//                    instance.selectedGrid.SelectItem(spot);
 
                 }
                 catch (Exception e)
@@ -159,17 +163,32 @@ namespace COTG.Views
             });
         }
 
+        const int maxMRUSize = 12;
         public static void AddToGrid(Spot spot)
         {
             // Toggle Selected
 
             App.DispatchOnUIThreadSneaky( () =>
             {
-           
-                    if (!SpotMRU.Contains(spot))
+
+                if (!SpotMRU.Contains(spot))
+                {
+                    if (SpotMRU.Count >= maxMRUSize)
                     {
-                        SpotMRU.Add(spot);
+                        var counter = SpotMRU.Count;
+                        while(--counter>= 0)
+                        {
+                            if (!Spot.selected.Contains(SpotMRU[counter].cid))
+                            {
+                                SpotMRU.RemoveAt(counter);
+                                break;
+                            }
+
+                        }
                     }
+
+                    SpotMRU.Insert(0,spot);
+                }
 
                     spot.ProcessSelection();
             });

@@ -71,6 +71,17 @@ namespace COTG.Helpers
             base.Add(item);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
         }
+        public new void Insert(int id,T item)
+        {
+            base.Insert(id,item);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+        }
+        public new void RemoveAt(int id)
+        {
+            var item = base[id];
+            base.RemoveAt(id);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,item, id));
+        }
 
         // Use Reset if you are clearning first
         public void AddRange(IList<T> src)

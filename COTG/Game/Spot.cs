@@ -329,19 +329,19 @@ namespace COTG.Game
             }
         }
 
-        //public int incomingAttackTS
-        //{
-        //    get
-        //    {
-        //        var rv = 0;
-        //        foreach (var a in incoming)
-        //        {
-        //            if (!a.isDefense)
-        //                rv += a.ts;
-        //        }
-        //        return rv;
-        //    }
-        //}
+        public int incomingAttackTS
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (!a.isDefense)
+                        rv += a.ts;
+                }
+                return rv;
+            }
+        }
 
         //public int activeSieges
         //{

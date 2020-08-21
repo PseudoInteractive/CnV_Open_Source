@@ -120,11 +120,11 @@ namespace COTG.Models
 
                 var i = context.Item as Army;
              
-                var isSelected =  grid.SelectedItem as Army == i;
-                if (isSelected)
-                    grid.DeselectItem(context);
-                else
-                    grid.SelectItem(context);
+                //var isSelected =  grid.SelectedItem as Army == i;
+                //if (isSelected)
+                //    grid.DeselectItem(context);
+                //else
+                //    grid.SelectItem(context);
 
               //  Log(context.Item.GetType());
               //  Log(context.Item.ToString());
@@ -138,15 +138,22 @@ namespace COTG.Models
                 //    Log(context.Column.Header);
                     switch (context.Column.Header.ToString())
                     {
-                        case nameof(i.Type): if(i.reportId!=null) JSClient.ShowReport(i.reportId); break;
-                        //case nameof(i.atkC):
-                        //case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
-                        //case nameof(i.defC):
-                        //case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
-                        //case nameof(i.atkAli): JSClient.ShowAlliance(i.atkAli);break;
-                        //case nameof(i.defAli): JSClient.ShowAlliance(i.defAli); break;
-                        //case nameof(i.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
-                        //case nameof(i.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
+                        case nameof(i.Type): if (i.reportId != null)
+                                JSClient.ShowReport(i.reportId);
+                            else
+                                Note.Show("This attack is in the future, there is no report yet");
+                            break;
+                        case "dXY": Spot.ProcessCoordClick(i.targetCid, false); break;
+                        case "aXY": Spot.ProcessCoordClick(i.sourceCid, false); break;
+                        case "aPlyr": JSClient.ShowPlayer(i.sPlayer); break;
+                        case "dPlyr": JSClient.ShowPlayer(i.tPlayer); break;
+                            //case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
+                            //case nameof(i.defC):
+                            //case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
+                        case "atkAli": JSClient.ShowAlliance(i.sourceAllianceName);break;
+                        case "defAli": JSClient.ShowAlliance(i.targetAllianceName); break;
+                            //case nameof(i.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
+                            //case nameof(i.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
 
 
                     }

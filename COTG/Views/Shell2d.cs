@@ -675,14 +675,21 @@ namespace COTG.Views
                                             var r = t.Ramp();
                                             int iType = 0;
                                             float alpha = 1;
-                                            if (attack.troops.Length > 1)
+                                            var nSprite = attack.troops.Length;
+
+                                            if (nSprite > 1)
                                             {
-                                                var rtype = attack.troops.Length * r;
+                                                Assert(t > 0);
+                                                var rtype = t % nSprite;
                                                 iType = (int)rtype;
                                                 var frac = rtype - iType;
-                                                iType = iType.Min(attack.troops.Length - 1);
-                                                alpha = MathF.Cos((frac * 2.0f - 1) * MathF.PI) * 0.5f + 0.5f;
-                                            } 
+                                                iType = iType.Min(nSprite - 1);
+                                                if (frac < 0.25f)
+                                                    alpha = AMath.STerm(frac * 4.0f);
+                                                else if (frac > 0.75f)
+                                                    alpha = AMath.STerm((1 - frac) * 4.0f);
+
+                                            }
                                             DrawAction(ds,batch, dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,32,alpha);
                                         }
                                         //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours

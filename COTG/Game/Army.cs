@@ -20,10 +20,10 @@ namespace COTG.Game
         public static Army[] empty = Array.Empty<Army>(); 
 
         // todo
-        public byte type; // see Report types
+        public byte type; // reportType* in Enum.cs
         public byte claim { get; set; }
         public bool isAttack { get; set; }
-        public string Type => reportStrings[type];
+        public string Type => type== reportPending ? FormatEstimate() : reportStrings[type];
 
         public TroopTypeCount[] troops { get; set; } = TroopTypeCount.empty;
         public TroopTypeCount[] sumDef { get; set; } = TroopTypeCount.empty;
@@ -51,7 +51,6 @@ namespace COTG.Game
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
         public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
         public int Cont => sourceCid.CidToContinent();
-        public string troopEstimate;
         public int ts => troops.TS();
         public int sPid => sourceCid.CidToPid(); // The owner of the army, 
         public int tPid => targetCid.CidToPid(); // The owner of the army, 
@@ -134,6 +133,22 @@ namespace COTG.Game
         public float dist => targetCid.DistanceToCid(sourceCid);
         public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
 
+        internal string FormatEstimate()
+        {
+            string rv = string.Empty;
+            var wantComma = false;
+            foreach (var tt in troops)
+            {
+                if (wantComma)
+                    rv += ',';
+                else
+                    wantComma = true;
+                rv += $"{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
+
+            }
+            return rv;
+
+        }
         internal string GetToopTip(DateTimeOffset serverNow)
         {
             if (isDefense)
@@ -151,12 +166,7 @@ namespace COTG.Game
                     foreach (var tt in troops)
                     {
                         rv += $"\n{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
-                        //                    (tt.count == -1)
-                        //                        troops += '?';
-                        //                    else
-                        //                        troops += $" {(tt.count)/ -10.0f}%";
-
-        //                rv += $"\n{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                      
                     }
                     return rv;
                 }

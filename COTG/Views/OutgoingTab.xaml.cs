@@ -36,7 +36,6 @@ namespace COTG.Views
     {
 
         public static OutgoingTab instance;
-        public List<Spot> defenders = new List<Spot>();
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()

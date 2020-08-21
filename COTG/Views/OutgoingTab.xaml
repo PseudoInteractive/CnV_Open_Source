@@ -82,7 +82,8 @@
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Width="60" />
-                <tg:DataGridTextColumn PropertyName="alliance"
+                <tg:DataGridTextColumn Header="Alliance"
+                                       PropertyName="alliance"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />
@@ -124,7 +125,7 @@
                 <tg:DataGridTextColumn PropertyName="sPlayer"
                                                    Header="Player"
                                                    Width="70"
-                                                   SizeMode="Auto"
+                                                   SizeMode="Stretch"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                 <tg:DataGridNumericalColumn PropertyName="dist"
                                             SizeMode="Fixed"
@@ -134,9 +135,9 @@
                 <tg:DataGridTextColumn PropertyName="sourceCN"
                                                    Header="City"
                                                    Width="70"
-                                                   SizeMode="Auto"
+                                                   SizeMode="Stretch"
                                                    CellContentStyle="{StaticResource LeftAlign}" />
-                <tg:DataGridNumericalColumn PropertyName="tsDef"
+                <tg:DataGridNumericalColumn PropertyName="dTS"
                                             SizeMode="Fixed"
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"

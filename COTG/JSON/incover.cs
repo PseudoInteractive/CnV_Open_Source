@@ -249,6 +249,7 @@ namespace COTG.JSON
                                               continue; // empty entries for troops at home when no def is present.
                                           if (army.isDefense)
                                           {
+                                              army.type = reportDefensePending;
                                               foreach (var tti in ttl)
                                               {
                                                   var present = false;
@@ -270,6 +271,7 @@ namespace COTG.JSON
                                           }
                                           else
                                           {
+                                              army.type = reportPending;
                                               if (ttl.IsNullOrEmpty())
                                                   COTG.Game.IncommingEstimate.Get(army);
                                           }
@@ -280,7 +282,8 @@ namespace COTG.JSON
                                               army.troops = ttl.ToArray();
                                           Array.Sort(army.troops);
                                           spot.incoming = spot.incoming.ArrayAppend(army);
-                                          reportsIncoming.Add(army);
+                                          if(!army.isDefense)
+                                              reportsIncoming.Add(army);
                                       }
                                       spot.tsMax = sumDef.TS();
                                   }

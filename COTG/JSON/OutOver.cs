@@ -104,7 +104,12 @@ namespace COTG.JSON
                                  //         var spotted = b[6].GetString().ParseDateTime();
                                  var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
-                                 var army = new Army() { isAttack=true, sourceCid = atkCid, targetCid = defCid,  time = time, spotted = AUtil.dateTimeZero };
+                                  var serverTime = JSClient.ServerTime();
+                                  var spotted = time - TimeSpan.FromMinutes(atkCid.DistanceToCid(defCid) * TTTravel(ttVanquisher));
+                                 if (spotted > serverTime)
+                                     spotted = serverTime;
+                                 var army = new Army() { isAttack=true, sourceCid = atkCid, targetCid = defCid,  time = time,
+                                     spotted = spotted };
 
                                  army.type = (byte)GetReportType(b[1].GetAsString());
                                  var claim = b[11].GetAsFloat().RoundToInt();
