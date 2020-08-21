@@ -27488,14 +27488,14 @@ console.log("Bad");
           .change(function() { B2(2); });
       });
 
-    function s8F() {
-      P0F = 1;
-      E6k.y6();
-      setTimeout(function() {
-        E6k.y6();
-        P0F = 0;
-      }, +z9p);
-    }
+    //function s8F() {
+    //  P0F = 1;
+    //  E6k.y6();
+    //  setTimeout(function() {
+    //    E6k.y6();
+    //    P0F = 0;
+    //  }, +z9p);
+    //}
 
     function z4F(P11) {
       localStorage.setItem(_s(Y4p ^ 0), P11);
@@ -41774,53 +41774,51 @@ console.log("Bad");
        {
          _viewMode = viewModeWorld;
 
-       /*
-      c6.paused = !!0;
-      c6.raf.start();
+       
+    //  c6.paused = !!0;
+    //  c6.raf.start();
       var y9V = document.getElementById("cvs");
       var Y9V = document.getElementById("content");
       var B9V = document.getElementById("city_map");
-      y9V.style.display = "block";
+      y9V.style.display = "none";
       Y9V.style.display = "none";
       B9V.style.display = "none";
       $("#quickBuildMenu")
         .css("display", "none");
-      $(_s(1509))
-        .show();
-      $(_s(b2p * 1))
-        .show();
-      $(_s(+h2p))
-        .show();
+     // $(_s(1509)).show();
+     // $(_s(b2p * 1)).show();
+     // $(_s(+h2p)).show();
       $(_s(+D44))
         .css("display", "none");
       $(_s(+T24))
         .css("display", "none");
       $(_s(+S4m))
         .css("display", "none");
-      c6.paused = ![];
-      c6.lockRender = !"1";
-      regrender = 1;
-        _viewMode = viewModeRegion;
-      worldrender = 0;
-      citrender = 0;
-      c6.time.advancedTiming = !![];
-      c6.time.desiredFps = 10;
-      c6.time.fpsMax = 10;
-      if (g9V == E6k
-        .S55(4867)) g9V = 0;
-      if (U9V == '') U9V = 0;
-      var D9V = g9V * +64 -
-        Number(window.innerWidth) / +t1m;
-      var p9V = U9V * (64 >> 1620114016) - (Number(window.innerHeight) / ('2' ^
-        0) - +h8y);
-      var P9V = Math.round(Z9V % (l9p * 1));
-      var R9V = Math.round((Z9V - P9V) / +l9p);
-   //   console.log("Set camera O8");
-      _camera.x = D9V;
-      _camera.y = p9V;
-      phaserGraphics.x = P9V * +64;
-      phaserGraphics.y = R9V * (64 ^ 0);
-      c6.step();*/
+ //     _viewMode = viewModeWorld;
+
+   //   c6.paused = ![];
+   //   c6.lockRender = !"1";
+   //   regrender = 1;
+   //   worldrender = 0;
+   //   citrender = 0;
+   //   c6.time.advancedTiming = !![];
+   //   c6.time.desiredFps = 10;
+   //   c6.time.fpsMax = 10;
+   //   if (g9V == E6k
+   //     .S55(4867)) g9V = 0;
+   //   if (U9V == '') U9V = 0;
+   //   var D9V = g9V * +64 -
+   //     Number(window.innerWidth) / +t1m;
+   //   var p9V = U9V * (64 >> 1620114016) - (Number(window.innerHeight) / ('2' ^
+   //     0) - +h8y);
+   //   var P9V = Math.round(Z9V % (l9p * 1));
+   //   var R9V = Math.round((Z9V - P9V) / +l9p);
+   ////   console.log("Set camera O8");
+   //   _camera.x = D9V;
+   //   _camera.y = p9V;
+   //   phaserGraphics.x = P9V * +64;
+   //   phaserGraphics.y = R9V * (64 ^ 0);
+   //   c6.step();
      
      }
       p5F(g9V, U9V);
@@ -47959,16 +47957,14 @@ console.log("Bad");
     }
     var u7F;
       gStphp =p5F;
- 
+
     function p5F(r46, A46) {
       clearTimeout(a8);
-      var f46 = E8(r46, A46);
+      var f46 = Number(E8(r46, A46));
       var n46 = A46 * +l9p + r46;
-      var K46 = A46 * (
-        R5y - 0) + r46;
-      f46 = Number(f46);
-      wtile = 0;
-      ttile = 0;
+      var K46 = A46 * (65536) + r46;
+    //  wtile = 0;
+    //  ttile = 0;
       //if (tileMap.getTile(r46, A46, waterLayer)) {
       //  wtile = tileMap.getTile(r46, A46, waterLayer);
       //  wtile = wtile[_s(+X5m)];
@@ -47978,7 +47974,10 @@ console.log("Bad");
       //  ttile = ttile[_s(X5m * 1)];
       //}
       if (P0F == 0) {
-        s8F();
+         
+          P0F = setTimeout(function () {
+              P0F = 0;
+          }, 5000 );
         $(_s(4272))
           .css("display", "none");
         $(_s(6822))
@@ -48004,6 +48003,7 @@ console.log("Bad");
           var
             T3m = '2647';
           var n9m = "6115";
+          clearTimeout(P0F);
           P0F = 0;
           if (r16 != "") {
             $(_s(n9m & 2147483647))
@@ -61549,7 +61549,10 @@ console.log("Bad");
           if (D92 == 0) {
             var q92 =
               '';
-            for (var Y92 in N92) {
+            for (var Y92 in N92) 
+            {
+            try
+            {
               var e09 = N92[Y92][_s(+j1k)]['a'];
               var k09 = N92[Y92][_s(+j1k)][_s(+B9y)];
               var a92 = N92[Y92][_s(j1k *
@@ -61573,6 +61576,10 @@ console.log("Bad");
                   .S55(+W6m)] + _s(W1R >> 2141931648) + E92 + _s(W1R ^ 0) + c92 + _s(G5k - 0) +
                 N92[Y92][_s(+r5k)] + _s(+F6y) + N92[Y92][_s(217)] + _s(K5y &
                   2147483647);
+                  }
+                  catch(eee)
+                  {
+                  }
             }
             $(_s(2327))
               .html(q92);

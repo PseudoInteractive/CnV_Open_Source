@@ -18,13 +18,14 @@ namespace COTG.JSON
     {
         public static bool updateInProgress;
         public static bool hasFetchedReports; // sticky bit.  Once reports have been fetched at least once, all calls to update will process all report history
+        static ConcurrentHashSet<int> supportReports = new ConcurrentHashSet<int>();
 
         // uses Report.Hash(), can have several reports per reportId
 
 
 
         //        public IncomingOverview() : base("overview/incover.php") { }
-       
+
 
         public async static Task Process(bool fetchReports)
         {
@@ -74,7 +75,6 @@ namespace COTG.JSON
                 }
             }
 
-            // ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
             var reportsIncoming = new List<Army>();
             int incCount = 0;
@@ -271,9 +271,16 @@ namespace COTG.JSON
                                           }
                                           else
                                           {
-                                              army.type = reportPending;
                                               if (ttl.IsNullOrEmpty())
+                                              {
+                                                  army.type = reportPending;
                                                   COTG.Game.IncommingEstimate.Get(army);
+                                              }
+                                              else
+                                              {
+                                                  army.type = reportSieging;
+
+                                              }
                                           }
                                           army.sumDef = sumDef.ToArray();
                                           Array.Sort(army.sumDef);
@@ -329,6 +336,10 @@ namespace COTG.JSON
                                 parts[part].Add(r);
                             }
                         }
+                        else if(supportReports.Contains(hash))
+                            {
+                                // Nothing needed
+                            }
                         else
                         {
                             if (source > 0)
@@ -377,6 +388,11 @@ namespace COTG.JSON
 
                                                 foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
                                                 {
+                                                    if(report.GetAsInt("acid") <= 0)
+                                                        {
+                                                            supportReports.Add(Army.ReportHash(recId));
+                                                            continue;
+                                                        }
                                                     var atkTrops = TroopTypeCount.empty;
                                                     var defTrops = TroopTypeCount.empty;
                                                     var defTSLeft = 0;
@@ -460,7 +476,7 @@ namespace COTG.JSON
                                                             }
                                                         }
                                                     }
-//                                                    source = report.GetAsInt("acid");
+                                                    
                                                     if (source > 0)
                                                     {
                                                         var atkTS = report.GetAsInt("ts_sent");

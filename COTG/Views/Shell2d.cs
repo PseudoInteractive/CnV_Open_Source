@@ -31,7 +31,7 @@ namespace COTG.Views
         public static CanvasBitmap worldBackground;
         public static TintEffect worldBackgroundDark;
         public static CanvasBitmap worldObjects;
-        public static TintEffect worldObjectsDark;
+   //     public static TintEffect worldObjectsDark;
         public static CanvasBitmap worldChanges;
         public static Vector2 clientTL;
         public static Vector2 cameraC = new Vector2(300,300);
@@ -63,7 +63,7 @@ namespace COTG.Views
         static readonly Color defenseArrivedColor = Color.FromArgb(255, 20, 255, 192);
         static readonly Color artColor = Colors.DarkOrange;
         static readonly Color senatorColor = Colors.OrangeRed;
-        static readonly Color incomingHistoryColor = Color.FromArgb(255, 20, 200, 200);// (0xFF8B008B);// Colors.DarkMagenta;
+        static readonly Color incomingHistoryColor = Colors.White;// (0xFF8B008B);// Colors.DarkMagenta;
         static readonly Color raidColor = Colors.Yellow;
 //        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
         static readonly Color selectColor = Colors.DarkMagenta;
@@ -83,7 +83,7 @@ namespace COTG.Views
         public static int cachedTopOffset = 0;
         const int cotgPopupTopDefault = 95;
         const int cotgPopupTopLong = 300+95;
-        const float actionStopDistance = 32.0f;
+        const float actionStopDistance = 48.0f;
         static public CanvasAnimatedControl canvas;
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
@@ -174,9 +174,9 @@ namespace COTG.Views
                 }
                 worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
                 //canvas.Paused = false;
-                if (worldObjectsDark != null)
-                    worldObjectsDark.Dispose();
-                worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+                //if (worldObjectsDark != null)
+                //    worldObjectsDark.Dispose();
+                //worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
             }
             if (World.changePixels != null)
@@ -325,6 +325,7 @@ namespace COTG.Views
         const float srcImageSpan = 2400;
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale=1;
+        public static float shapeSizeGain = 1.0f;
         public static float pixelScaleInverse = 1;
         const float dashLength = (dashD0 + dashD1) * lineThickness;
 
@@ -421,6 +422,7 @@ namespace COTG.Views
                 // var scale = ShellPage.canvas.ConvertPixelsToDips(1);
                 pixelScale = (cameraZoomLag);
                 pixelScaleInverse = 1.0f / cameraZoomLag;
+                shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
                 var deltaZoom = cameraZoomLag - detailsZoomThreshold;
                 var wantDetails = deltaZoom > 0;
                 var wantImage = deltaZoom < detailsZoomFade;
@@ -461,13 +463,14 @@ namespace COTG.Views
 
                         if (wantImage)
                         {
+
                             ds.DrawImage(attacksVisible ? worldBackground : worldBackground,
                                 new Rect(destP0, destP1),
-                                new Rect(srcP0, srcP1)); //, 1.0f, CanvasImageInterpolation.Cubic);
+                                new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Linear);
                             if (worldObjects != null)
                                 ds.DrawImage(attacksVisible ? worldObjects : worldObjects,
                                     new Rect(destP0, destP1),
-                                    new Rect(srcP0, srcP1));
+                                    new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Linear);
 
                         }
 
@@ -572,8 +575,8 @@ namespace COTG.Views
                     }
                     //    ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 }
-                var circleRadBase = circleRadMin * MathF.Sqrt(pixelScale);
-                var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * MathF.Sqrt(pixelScale);
+                var circleRadBase = circleRadMin * shapeSizeGain*6.5f;
+                var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * shapeSizeGain * 6.5f;
                 //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
 
@@ -665,7 +668,7 @@ namespace COTG.Views
                                             reportSieging => Color.FromArgb(255, 0xc5, 0x7f, 0x4a),
                                             reportPlunder => Color.FromArgb(255, 0x28, 0x86, 0xc0),
                                             reportScout => Color.FromArgb(255, 0xc8, 0x2d, 0xbf),
-
+                                            
                                             _ => incomingHistoryColor
                                         };
 
@@ -690,7 +693,7 @@ namespace COTG.Views
                                                     alpha = AMath.STerm((1 - frac) * 4.0f);
 
                                             }
-                                            DrawAction(ds,batch, dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,32,alpha);
+                                            DrawAction(ds,batch, dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,28,alpha);
                                         }
                                         //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                                         //var mid = progress.Lerp(c0, c1);
@@ -782,7 +785,7 @@ namespace COTG.Views
 
                                             }
 
-                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i,32,alpha);
+                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i,28 , alpha);
                                         }
                                         else
                                         {
@@ -822,7 +825,7 @@ namespace COTG.Views
                                         var r = t.Ramp();
                                         // Todo: more accurate senator travel times
                                         DrawAction(ds, batch,  (float)(sen.time - serverNow).TotalSeconds, dist*60.0f,r, c, c1, senatorColor,
-                                            troopImages[ttSenator],false, null,16);
+                                            troopImages[ttSenator],false, null,20);
                                     }
                                 }
                                 DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered);
@@ -843,7 +846,7 @@ namespace COTG.Views
                                     (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
                                     DrawAction(ds, batch, (float)(raid.time - serverNow).TotalSeconds,
                                         raid.GetOneWayTripTimeMinutes(city) * 60.0f,
-                                        r, c0, c1, raidColor, troopImages[raid.troopType],false,null,16);
+                                        r, c0, c1, raidColor, troopImages[raid.troopType],false,null,20);
 
                                 }
                             }
@@ -1019,7 +1022,7 @@ namespace COTG.Views
             }
             if(applyStopDistance)
             {
-                           progress = progress.Min(1.0f - actionStopDistance / Vector2.Distance(c0, c1));
+                           progress = progress.Min(1.0f - shapeSizeGain*actionStopDistance  / Vector2.Distance(c0, c1));
           //      var dc01 = c0 - c1;
          //       c1 += dc01 *( actionStopDistance / dc01.Length());
             }
@@ -1043,7 +1046,7 @@ namespace COTG.Views
             if(applyStopDistance)
              ds.FillRectangle(new Rect(c0.X- shadowOffset.X - smallRectSpan, c0.Y- shadowOffset.Y - smallRectSpan, smallRectSpan * 2, smallRectSpan * 2.0f), color);
             var dc = new Vector2(spriteSize, spriteSize);
-            batch.Draw(bitmap,new Rect(mid.X-spriteSize,mid.Y-spriteSize,spriteSize*2,spriteSize*2),gain*HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha)  );
+            batch.Draw(bitmap,new Rect(mid.X-spriteSize,mid.Y-spriteSize,spriteSize*2,spriteSize*2),HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha, gain*1.1875f)  );
             //            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
         }
 

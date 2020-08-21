@@ -143,7 +143,10 @@ namespace COTG.Game
                     rv += ',';
                 else
                     wantComma = true;
-                rv += $"{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
+                if(tt.count>0)
+                    rv += $"{ttNameWithCaps[tt.type]}:{tt.count:N0}";
+                else
+                    rv += $"{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
 
             }
             return rv;
