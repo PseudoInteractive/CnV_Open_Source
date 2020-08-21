@@ -73,6 +73,18 @@
                             Value="4,0,0,0" />
                 </Style>
             </local:ReportTypeStyleSelector.plunderStyle>
+            <local:ReportTypeStyleSelector.pendingStyle>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground"
+                            Value="#8886C0" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Left" />
+                    <Setter Property="Margin"
+                            Value="4,0,0,0" />
+                </Style>
+            </local:ReportTypeStyleSelector.pendingStyle>
         </local:ReportTypeStyleSelector>
         <local:ReportKillStyleSelector x:Key="ReportKillStyleSelector">
             <local:ReportKillStyleSelector.attackerWinStyle>
@@ -139,6 +151,7 @@
                         RowHeight="30"
                         AlternationStep="2"
                         SelectionMode="Single"
+                                 FrozenColumnCount="2"
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
@@ -152,22 +165,26 @@
                                        CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                        SizeMode="Fixed"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn Width="80"
                                        PropertyName="Type"
-                                       SizeMode="Fixed"
+                                       SizeMode="Auto"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn Width="80"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="dPlyr" />
+                                       Header="dPlyr"
+                                        PropertyName="tPlayer"        />
                 <telerikGrid:DataGridTextColumn Width="80"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="aPlyr" />
+                                       Header="aPlyr"
+                                       PropertyName="sPlayer"         />
                 <telerikGrid:DataGridTextColumn Width="60"
-                                       PropertyName="defC"
+                                       Header="dXY"
+                                                PropertyName="tXY"
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                        SizeMode="Fixed" />
                 <telerikGrid:DataGridTextColumn Width="60"
-                                       PropertyName="atkC"
+                                       Header="aXY"
+                                                PropertyName="sXY"
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                        SizeMode="Fixed" />
                 <telerikGrid:DataGridNumericalColumn Width="50"
@@ -192,10 +209,12 @@
                                             SizeMode="Fixed" />
                 <telerikGrid:DataGridTextColumn Width="50"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="defCN" />
+                                       Header="defCN"
+                                       PropertyName="targetCN"         />
                 <telerikGrid:DataGridTextColumn Width="50"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="atkCN" />
+                                       Header="atkCN"
+                                       PropertyName="sourceCN"         />
                 <telerikGrid:DataGridNumericalColumn Width="32"
                                             PropertyName="claim"
                                             CellContentFormat="{}{0,3:N0}"
@@ -207,14 +226,17 @@
                                             SizeMode="Fixed" />
                 <telerikGrid:DataGridBooleanColumn Width="30"
                                           CellContentStyle="{StaticResource CenterAlign}"
-                                          PropertyName="Sen"
+                                          Header="Sen"
+                                          PropertyName="hasSenator"
                                           SizeMode="Fixed" />
                 <telerikGrid:DataGridBooleanColumn Width="30"
                                           CellContentStyle="{StaticResource CenterAlign}"
-                                          PropertyName="Nvl"
+                                          Header="Nav"
+                                                   PropertyName="hasNaval"
                                           SizeMode="Fixed" />
                 <telerikGrid:DataGridBooleanColumn Width="30"
-                                          PropertyName="SE"
+                                          Header="SE"
+                                           PropertyName="hasArt"
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           SizeMode="Fixed" />
                 <telerikGrid:DataGridNumericalColumn Width="50"
@@ -229,10 +251,12 @@
                                             SizeMode="Fixed" />
                 <telerikGrid:DataGridTextColumn Width="60"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="atkAli" />
+                                       Header="atkAli"
+                                                PropertyName="sourceAllianceName" />
                 <telerikGrid:DataGridTextColumn Width="60"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       PropertyName="defAli"
+                                       Header="defAli"
+                                                PropertyName="targetAllianceName"
                                        IsVisible="False" />
             </telerikGrid:RadDataGrid.Columns>
             <!--<telerikGrid:RadDataGrid.AggregateDescriptors>

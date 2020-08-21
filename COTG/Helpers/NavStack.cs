@@ -16,7 +16,7 @@ namespace COTG.Helpers
 
         public static void Push(int cid)
         {
-            var cityView = JSClient.IsCityView();
+            var cityView = false;// JSClient.IsCityView();
             // end current stack naviation session?
             if (position != -1)
             {
@@ -85,7 +85,7 @@ namespace COTG.Helpers
                 if (City.IsMine(cid))
                 {
                     Note.Show($"Navigate to {City.GetOrAddCity(cid).nameAndRemarks} {position} {NavStack.backStack.Count}");
-                    if (!City.IsBuild(cid))
+                    if (!City.IsBuild(cid) || !City.IsFocus(cid))
                     {
                         JSClient.ChangeCity(cid,false);
                     }

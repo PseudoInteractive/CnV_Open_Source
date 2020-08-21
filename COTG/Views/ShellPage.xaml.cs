@@ -33,6 +33,7 @@ using System.Threading;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Input;
 
 namespace COTG.Views
 {
@@ -235,8 +236,27 @@ namespace COTG.Views
             cityBox.SelectionChanged += CityBox_SelectionChanged;
             heatMapFlyout.Content = new HeatmapDatePicker();
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
+            PointerPressed+=  PointerPressedCB;
         }
 
+        private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
+        {
+            var prop = e.GetCurrentPoint(this).Properties;
+            switch(prop.PointerUpdateKind)
+            {
+                case PointerUpdateKind.XButton1Pressed:
+                NavStack.Back();
+                Log("XButton1");
+                e.Handled = true;
+                    break;
+                case PointerUpdateKind.XButton2Pressed:
+                    NavStack.Forward();
+                    Log("XButton2");
+                    e.Handled = true;
+                    break;
+            }
+
+        }
         private void ShellPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Log("Back!!");

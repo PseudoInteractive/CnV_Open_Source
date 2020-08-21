@@ -23,15 +23,20 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Top" >
-            <winui:NumberBox x:Name="rWood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+            <winui:NumberBox x:Name="rWood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"
+                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"                          
                           Header="Wood k/h" Width="80" Margin="4" TextAlignment="Right" />
-            <winui:NumberBox x:Name="rStone" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+            <winui:NumberBox x:Name="rStone" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                           Header="Stone k/h" Width="80" Margin="4" TextAlignment="Right" />
-            <winui:NumberBox x:Name="rIron" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+            <winui:NumberBox x:Name="rIron" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                           Header="Iron k/h" Width="80" Margin="4" TextAlignment="Right" />
-            <winui:NumberBox x:Name="rFood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+            <winui:NumberBox x:Name="rFood" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                           Header="Food k/h" Width="80" Margin="4" TextAlignment="Right" />
-            <winui:NumberBox x:Name="rGold" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"  
+            <winui:NumberBox x:Name="rGold" x:FieldModifier="public" Style="{StaticResource RightAlignNumberBox}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                           Header="Gold k/h" Width="80" Margin="4" TextAlignment="Right" />
         </StackPanel>
         

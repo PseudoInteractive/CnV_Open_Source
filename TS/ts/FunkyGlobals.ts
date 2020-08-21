@@ -1640,7 +1640,6 @@ let layoutsl_ = [""];
 let layoutsw_ = [""];
 /** @type {!Array} */
 let layoutdf_ = [""];
-let cdata_: jsonT.City = null;
 let resl_ = [[]];
 let OGA: jsonT.Command[] = [];
 let wdata_;

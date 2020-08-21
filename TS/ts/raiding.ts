@@ -594,87 +594,68 @@ function getDugRows_() {
 /**
  * @return {void}
  */
-function PostMMNIO(j_12) {
-	let _city=GetCity();
-	/** @type {!Array} */
-	let res_=[0,0,0,0,1,130000,130000,130000,130000,0,0,0,0,1,0,0,0,0,0,250000,250000,250000,250000];
-	let aa_1=_city.mo;
-	let hubs_={
-		cid: [],
-		distance: []
-	};
-	$.each(ppdt.clc,(key_42,value_90) => {
-		if(key_42==$("#selHub").val()) {
-			/** @type {number} */
-			hubs_.cid=value_90;
-		}
-	});
-	for(let i_25 in hubs_.cid) {
-		let _cid=hubs_.cid[i_25];
+var nearesthub;
 
-		hubs_.distance.push(Distance(_cid.x,_cid.y,_city.x,_city.y));
-	}
-	/** @type {number} */
-	let mindist_=Math.min(...hubs_.distance);
-	let nearesthub_=hubs_.cid[hubs_.distance.indexOf(mindist_)];
-	if(j_12!=undefined) {
-		if($("#addnotes").prop("checked")==true) {
+
+function setnearhub(j_12) {
+	
+
+	var res = [0, 0, 0, 0, 1, 130000, 130000, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 300000, 300000, 300000, 400000];
+	var aa = D6.mo;
+	if (j_12 != undefined) {
+		if ($("#addnotes").prop("checked") == true) {
 			$("#CNremarks").val(remarksl_[j_12]);
 			$("#citynotestextarea").val(notesl_[j_12]);
 			setTimeout(() => {
 				jQuery("#citnotesaveb")[0].click();
-			},100);
+			}, 100);
 		}
-		var aa_7=_city.mo;
-		if($("#addtroops").prop("checked")==true) {
+		if ($("#addtroops").prop("checked") == true) {
 			var k_3;
-			for(k_3 in troopcounl_[j_12]) {
-				aa_7[9+AsNumber(k_3)]=troopcounl_[j_12][k_3];
+			for (k_3 in troopcounl_[j_12]) {
+				aa[9 + AsNumber(k_3)] = troopcounl_[j_12][k_3];
 			}
 		}
 	}
-	if($("#addwalls").prop("checked")==true) {
-		/** @type {number} */
-		aa_1[26]=1;
-	}
-	if($("#addtowers").prop("checked")==true) {
-		/** @type {number} */
-		aa_1[27]=1;
-	}
-	if($("#addbuildings").prop("checked")==true) {
-		/** @type {!Array} */
-		aa_1[51]=[1,GetFloatValue($("#cablev"))];
-		/** @type {!Array} */
-		aa_1[68]=[1,10];
-		/** @type {!Array} */
-		aa_1[69]=[1,10];
-		/** @type {!Array} */
-		aa_1[70]=[1,10];
-		/** @type {!Array} */
-		aa_1[71]=[1,10];
-		/** @type {number} */
-		aa_1[1]=1;
-	}
-	res_[14]=nearesthub_.cid;
-	res_[15]=nearesthub_.cid;
-	res_[5]=GetFloatValue($("#woodin"));
-	res_[6]=GetFloatValue($("#stonein"));
-	res_[7]=GetFloatValue($("#ironin"));
-	res_[8]=GetFloatValue($("#foodin"));
-	var k_;
-	for(k_ in res_) {
-		aa_1[28+AsNumber(k_)]=res_[k_];
-	}
-	var dat_1={
-		a: JSON.stringify(aa_1),
-		b: cotg.city.id()
-	};
-	jQuery.ajax({
-		url: "includes/mnio.php",
-		type: "POST",
-		// async false,
-		data: dat_1
+
+	var hubs = { cid: [], distance: [] };
+	$.each(ppdt.clc, function (key, value) {
+		if (key == $("#selHub").val()) {
+			hubs.cid = value;
+		}
 	});
+	for (var i in hubs.cid) {
+		var tempx = Number(hubs.cid[i] % 65536);
+		var tempy = Number((hubs.cid[i] - tempx) / 65536);
+		hubs.distance.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
+	}
+	var mindist = Math.min.apply(Math, hubs.distance);
+	nearesthub = hubs.cid[hubs.distance.indexOf(mindist)];
+	if ($("#addwalls").prop("checked") == true) {
+		aa[26] = 1;
+	}
+	if ($("#addtowers").prop("checked") == true) {
+		aa[27] = 1;
+	}
+	if ($("#addbuildings").prop("checked") == true) {
+		aa[51] = [1, $("#cablev").val()];
+		aa[68] = [1, 10];
+		aa[69] = [1, 10];
+		aa[70] = [1, 10];
+		aa[71] = [1, 10];
+		aa[1] = 1;
+	}
+	res[14] = nearesthub;
+	res[15] = nearesthub;
+	res[5] = $("#woodin").val();
+	res[6] = $("#stonein").val();
+	res[7] = $("#ironin").val();
+	res[8] = $("#foodin").val();
+	for (var k in res) {
+		aa[28 + Number(k)] = res[k];
+	}
+	var dat = { a: JSON.stringify(aa), b: D6.cid };
+	jQuery.ajax({ url: 'includes/mnio.php', type: 'POST', aysnc: false, data: dat });
 }
 /**
  * @return {void}
@@ -703,7 +684,7 @@ function setinfantry_() {
 	}
 	/** @type {number} */
 	var mindist_1=Math.min(...hubs_1.distance);
-	var nearesthub_1=hubs_1.cid[hubs_1.distance.indexOf(mindist_1)];
+	nearesthub=hubs_1.cid[hubs_1.distance.indexOf(mindist_1)];
 	if($("#addwalls").prop("checked")==true) {
 		/** @type {number} */
 		aa_2[26]=1;
@@ -732,8 +713,8 @@ function setinfantry_() {
 		/** @type {number} */
 		aa_2[1]=1;
 	}
-	res_1[14]=nearesthub_1;
-	res_1[15]=nearesthub_1;
+	res_1[14]=nearesthub;
+	res_1[15]=nearesthub;
 	res_1[5]=$("#woodin").val() as number;
 	res_1[6]=$("#stonein").val() as number;
 	res_1[7]=$("#ironin").val() as number;

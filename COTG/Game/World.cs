@@ -660,7 +660,12 @@ namespace COTG.Game
                         pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                         pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
                     }
-                    raw[index] = (uint)(pid | typeCity | isBig * typeCityFlagBig | isCastle * typeCityFlagCastle | (isTemple ? typeCityFlagTemple : 0) | isWater * typeCityFlagWater);
+                    raw[index] = (uint)(pid
+                                        | typeCity
+                                        | isBig * typeCityFlagBig
+                                        | isCastle * typeCityFlagCastle
+                                        | (isTemple ? typeCityFlagTemple : 0)
+                                        | isWater * typeCityFlagWater);
 
 
 

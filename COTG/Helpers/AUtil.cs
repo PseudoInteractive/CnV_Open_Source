@@ -87,6 +87,24 @@ namespace COTG
             }
             return value;
         }
+        public static int DecodeCid(int offset, string s)
+        {
+            var x = int.Parse(s.Substring(offset, 3));
+            var y = int.Parse(s.Substring(offset + 4, 3));
+            return x + y * 65536;
+        }
+        public static int TryDecodeCid(int offset, string s)
+        {
+            var lg = s.Length;
+            if (lg < offset + 7)
+                return -1;
+            if (!int.TryParse(s.Substring(offset, 3), out var x))
+                return -1;
+            if (!int.TryParse(s.Substring(offset + 4, 3), out var y))
+                return -1;
+
+            return x + y * 65536;
+        }
     }
     public class ConcurrentHashSet<T> : IDisposable
     {

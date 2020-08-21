@@ -24,15 +24,26 @@ namespace COTG.Views
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
-  //      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
+        //      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
- //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
+        //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
         private static ElementTheme _elementTheme = ThemeSelectorService.Theme;
         //private static bool _isLoggedIn;
         //private static bool _isBusy;
 //        private static UserData _user;
         public static bool fetchFullHistory;
+        public static string hubCitylistName;
+        public static int reqWood = 160000;
+        public static int reqStone = 205000;
+        public static int reqIron = 100000;
+        public static int reqFood = 100000;
+        public static int maxWood = 250000;
+        public static int maxStone =250000;
+        public static int maxIron = 300000;
+        public static int maxFood = 300000;
+        public static int cottageLevel = 8;
+
         public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory { get=>fetchFullHistory; set
             {
@@ -45,9 +56,18 @@ namespace COTG.Views
 
         public static void LoadAll()
         {
-            fetchFullHistory = App.Settings().Read<bool>(nameof(fetchFullHistory),true ); // default is true
-            Raiding.desiredCarry = App.Settings().Read<float>(nameof(raidCarry), 1.02f);
-            TipsSeen.instance = App.Settings().Read<TipsSeen>(nameof(TipsSeen), new TipsSeen());
+            fetchFullHistory = App.Settings().Read(nameof(fetchFullHistory),true ); // default is true
+            Raiding.desiredCarry = App.Settings().Read(nameof(raidCarry), 1.02f);
+            TipsSeen.instance = App.Settings().Read(nameof(TipsSeen), new TipsSeen());
+            hubCitylistName = App.Settings().Read(nameof(hubCitylistName), "Hubs");
+            reqWood = App.Settings().Read(nameof(reqWood), 160000);
+            reqStone = App.Settings().Read(nameof(reqWood), 205000);
+            reqIron = App.Settings().Read(nameof(reqIron), 100000);
+            reqFood = App.Settings().Read(nameof(reqFood), 100000);
+            maxWood = App.Settings().Read(nameof(maxWood), 250000);
+            maxStone = App.Settings().Read(nameof(maxWood), 250000);
+            maxIron = App.Settings().Read(nameof(maxIron), 300000);
+            maxFood = App.Settings().Read(nameof(maxFood), 300000);
 
         }
         public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
@@ -55,6 +75,15 @@ namespace COTG.Views
            App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
             App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
             App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
+            App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
+            App.Settings().Save(nameof(reqWood), reqWood);
+            App.Settings().Save(nameof(reqStone), reqStone);
+            App.Settings().Save(nameof(reqFood), reqFood);
+            App.Settings().Save(nameof(reqIron), reqIron);
+            App.Settings().Save(nameof(maxWood), maxWood);
+            App.Settings().Save(nameof(maxStone), maxStone);
+            App.Settings().Save(nameof(maxFood), maxFood);
+            App.Settings().Save(nameof(maxIron), maxIron);
 
         }
         public ElementTheme ElementTheme
@@ -95,6 +124,27 @@ namespace COTG.Views
         public SettingsPage()
         {
             InitializeComponent();
+
+            foreach (var list in CityList.all)
+            {
+                if (list.name == SettingsPage.hubCitylistName)
+                {
+                    hubCityListBox.SelectedItem = list;
+                    break;
+                }
+            }
+            hubCityListBox.SelectionChanged += HubCityListBox_SelectionChanged;
+
+        }
+
+        private void HubCityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = hubCityListBox.SelectedItem as CityList;
+            if (item != null)
+            {
+                Debug.Log("CityList Changed to " + item.name);
+                hubCitylistName = item.name;
+            }
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

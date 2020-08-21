@@ -724,27 +724,27 @@ function avactor() {
 			if ($("#cityplayerInfo div table tbody tr").length === 11) {
 				bossele_();
 			}
-			/** @type {number} */
+			
 			let home_loot_2 = 0;
 
 			for (let i in troops) {
 				let d = troops[i];
-				/** @type {number} */
+				
 				let home_1 = d.home;
-				/** @type {number} */
+				
 				home_loot_2 = home_loot_2 + home_1 * ttloot_[TroopNameToId(i)];
 
 
 			}
 			if (type_113 === "Siren's Cove") {
-				/** @type {number} */
+				
 				let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
 
-				/** @type {number} */
+				
 				var galleyTS_ = Math.ceil(optimalTS_ / 100);
-				/** @type {number} */
+				
 				var stingerTS_ = Math.ceil(optimalTS_ / 150);
-				/** @type {number} */
+				
 				var warshipTS_ = Math.ceil(optimalTS_ / 300);
 				/**
 				 * @return {void}
@@ -795,34 +795,34 @@ function avactor() {
 				let total_lootm_ = Math.ceil(loot_[AsNumber(lvl_) - 1] * (1 - AsNumber(prog_) / 100 + 1) * 1.05);
 				document.getElementById("raidDungGo").onclick = () => {
 					setTimeout(() => {
-						/** @type {number} */
+						
 						if (home_loot_2 > total_lootm_) {
-							/** @type {number} */
+							
 							const option_numbersm_ = Math.floor(home_loot_2 / total_lootm_);
-							/** @type {number} */
+							
 							const templ1m_ = home_loot_2 / total_lootm_ * 100 / option_numbersm_;
-							/** @type {number} */
+							
 							const templ2m_ = (templ1m_ - 100) / templ1m_ * 100;
-							/** @type {number} */
+							
 							for (let i in troops) {
 								const id = TroopNameToId(i);
 								const th = troops[i].home;
-								/** @type {number} */
+								
 								$(`#raidIP${id}`).val(th / option_numbersm_);
 							}
 						}
 					}, 1500);
 				};
-				/** @type {number} */
+				
 				const optimalTSM_ = total_lootm_;
 				var infoptim_ = Math.ceil(optimalTSM_ / 10);
-				/** @type {number} */
+				
 				var cavoptim_ = Math.ceil(optimalTSM_ / 15);
-				/** @type {number} */
+				
 				var praoptim_ = Math.ceil(optimalTSM_ / 20);
-				/** @type {number} */
+				
 				var sorcoptim_ = Math.ceil(optimalTSM_ / 5);
-				/** @type {number} */
+				
 				var RToptim_ = cavoptim_;
 				$("#cityplayerInfo div table tbody tr:nth-child(5) td:nth-child(2)").text(infoptim_);
 				$("#cityplayerInfo div table tbody tr:nth-child(6) td:nth-child(2)").text(RToptim_);
@@ -857,102 +857,102 @@ function avactor() {
 			}
 			
 			message_23 = "Not enough TS to kill this boss!";
-			/** @type {!Array} */
+			
 			var attackres_ = [];
-			/** @type {!Array} */
+			
 			var attackwres_ = [];
 			for (let i_42 in ttattack_) {
-				/** @type {number} */
+				
 				var bossTS_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(ttCombatBonus[i_42])));
 				attackres_.push(bossTS_);
-				/** @type {number} */
+				
 				var bosswTS_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4 / (AsNumber(ttattack_[i_42]) * AsNumber(ttCombatBonus[i_42])));
 				attackwres_.push(bosswTS_);
 			}
-			/** @type {number} */
+			
 			var home_strength_ = 0;
-			/** @type {number} */
+			
 			let home_loot_2 = 0;
-			/** @type {!Array} */
+			
 			let km_2 = [];
-			/** @type {!Array} */
+			
 			var bm_ = [];
-			/** @type {!Array} */
+			
 			var bmw_ = [];
-			/** @type {!Array} */
+			
 			var kg_ = [];
-			/** @type {number} */
+			
 			var home_TSw_ = 0;
-			/** @type {number} */
+			
 			var boss_strength_ = Math.ceil(AsNumber(bossdef_[lvl_ - 1]) * 4);
-			/** @type {number} */
+			
 			var boss_strengthw_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4);
-			/** @type {number} */
+			
 			let i_4X = 0;
 			for (var x_85 in D6.th) {
-				/** @type {number} */
+				
 				let home_1 = AsNumber(D6.th[x_85]);
 				if (i_4X === 0 || i_4X === 1 || i_4X === 7 || i_4X === 12 || i_4X === 13) {
-					/** @type {number} */
+					
 					home_1 = 0;
 				}
 				kg_.push(home_1);
 				if (i_4X === 14 || i_4X === 15 || i_4X === 16) {
-					/** @type {number} */
+					
 					home_1 = 0;
 				}
-				/** @type {number} */
+				
 				home_strength_ = home_strength_ + AsNumber(ttattack_[i_4X]) * AsNumber(home_1) * AsNumber(ttCombatBonus[i_4X]);
-				/** @type {number} */
+				
 				home_TSw_ = home_TSw_ + home_1 * TS_type_[i_4X];
 				km_2.push(home_1);
-				/** @type {number} */
+				
 				i_4X = i_4X + 1;
 				if (i_4X === 17) {
 					break;
 				}
 			}
 			if (home_strength_ > boss_strength_) {
-				/** @type {number} */
+				
 				var proportion_ = home_strength_ / boss_strength_;
 				for (let i_42 in km_2) {
-					/** @type {number} */
+					
 					bm_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportion_);
 				}
 			}
 			if (home_strength_ > boss_strengthw_) {
-				/** @type {number} */
+				
 				var proportionw_ = home_strength_ / boss_strengthw_;
 				for (let i_42 in km_2) {
-					/** @type {number} */
+					
 					bmw_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportionw_);
 				}
 			}
 			if (bossname_ === "Triton") {
-				/** @type {!Array} */
+				
 				var bmz_ = [];
-				/** @type {number} */
+				
 				var home_strengthw_ = 0;
-				/** @type {number} */
+				
 				var galleytroops_ = 0;
-				/** @type {number} */
+				
 				var tempgalley_ = 0;
-				/** @type {number} */
+				
 				var galley_TSneeded_ = Math.ceil(home_TSw_ / 500);
 				if (kg_[14]) {
-					/** @type {number} */
+					
 					home_strengthw_ = home_strength_ + AsNumber(galley_TSneeded_) * 3000 * AsNumber(ttCombatBonus[14]);
 					if (home_strengthw_ > boss_strength_) {
-						/** @type {number} */
+						
 						var proportionz_ = home_strengthw_ / boss_strength_;
 						for (let i_42 in km_2) {
-							/** @type {number} */
+							
 							bmz_[i_42] = Math.ceil(AsNumber(km_2[i_42]) / proportionz_);
-							/** @type {number} */
+							
 							tempgalley_ = tempgalley_ + bmz_[i_42] * TS_type_[i_42];
 						}
 					}
-					/** @type {number} */
+					
 					galleytroops_ = Math.ceil(tempgalley_ / 500);
 				}
 				/**
@@ -1268,7 +1268,7 @@ function avactor() {
 			//	}
 			//}
 			//if (mru.length > maxCount) {
-			//	/** @type {number} */
+			//	
 			//	for (var i = mru.length; --i >= 0;) {
 			//		if (!mru[i].pin) {
 			//			mru.splice(i, 1);
@@ -1404,13 +1404,13 @@ function avactor() {
 
 		var a_5 = $("#organiser > option");
 		var l_3 = a_5.length;
-		/** @type {number} */
+		
 		var i_32 = 0;
 		for (; i_32 < l_3; i_32++) {
 			
 			var temp_3 = String($(a_5[i_32]).attr("value"));
 			//	$("#organiser").val(temp_3).change();
-			/** @type {!Array} */
+			
 			//  console.log(ppdt.clc);
 			//console.log(temp_3);
 			//  if(ppdt.clc !== null && temp_3 !== null )
@@ -1422,7 +1422,7 @@ function avactor() {
 			//    ppdt.clc[temp_3].push($(tempcl_[0]).attr("value"));
 			//  }
 			//  if (ll_ > 1) {
-			//    /** @type {number} */
+			//    
 			//    var j_10 = 1;
 			//    for (; j_10 < ll_; j_10++) {
 			//      ppdt.clc[temp_3].push($(tempcl_[j_10]).attr("value"));
@@ -1439,7 +1439,7 @@ function avactor() {
 
 	//this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 
-	/** @type {number} */
+	
 	var errz_: number = 0;
 	/**
 	 * @param {?} index_54
@@ -1472,7 +1472,7 @@ function avactor() {
 	// 	}
 	// 	return a_7;
 	// };
-	/** @type {!Array} */
+	
 
 
 	//var _mru = localStorage.getItem("mru");
@@ -1890,7 +1890,7 @@ function avactor() {
 			});
 		});
 		
-		var fourbutton_ = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>flip q</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
+		var fourbutton = "<div id='fourbuttons' class='commandinndiv'><div><button id='fb1' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>flip q</button><button id='fb2' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Refine</button><button id='fb3' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Raid</button><button id='fb4' style='height:28px; width:65px; margin-left:7px; margin-bottom:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;' class='regButton greenb'>Demolish</button></div></div>";
 
 	//
 	//	var bdcountbox_ = "<div id='currentBd'><div id='bdcountbar' class='queueBar'>";
@@ -1917,10 +1917,10 @@ function avactor() {
 		//});
 
 
-		$("#buildQueue").before(fourbutton_);
+		$("#buildQueue").before(fourbutton);
 		
-		var fillbut_ = '<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
-		$("#sortbut").after(fillbut_);
+		var fillbut = '<button id="fillque" class="greenb tooltipstered" style="height:18px; width:40px; margin-left:7px; margin-top:5px ; border-radius:4px ; font-size: 10px !important; padding: 0px;">Fill</button>';
+		$("#sortbut").after(fillbut);
 		$("#fillque").click(() => {
 			OverviewPost('overview/fillq.php', { a: cotg.city.id() });
 			event.stopPropagation();
@@ -1971,55 +1971,55 @@ function avactor() {
 		//	jQuery("#councillorXbutton")[0].click();
 		//  }, 100);
 		//  if (coon_ == 0) {
-		//	/** @type {number} */
+		//	
 		//	coon_ = 1;
 		//	$(this).removeClass("greenb");
 		//	$(this).addClass("redb");
 		//  } else {
-		//	/** @type {number} */
+		//	
 		//	coon_ = 0;
 		//	$(this).removeClass("redb");
 		//	$(this).addClass("greenb");
 		//  }
 		});
-		$("#fb2").click(() => {
-			$("#tradePopUpBox").show();
-			setTimeout(() => {
+        $("#fb2").click(function() {
+            $('#tradePopUpBox').show();
+            setTimeout(function(){
 				jQuery("#ui-id-27")[0].click();
 			}, 100);
 		});
-		$("#fb3").click(() => {
-			$("#warcouncbox").show();
+        $("#fb3").click(function() {
+            $('#warcouncbox').show();
 			jQuery("#ui-id-19")[0].click();
 		});
-		/** @type {number} */
+		
 		$("#fb4").click(function () {
 			setAutoDemo(!__autodemoon_);
 		});
 
 		$("#centarrowNextDiv").click(() => {
-			/** @type {number} */
+			
 			setAutoDemo(false);
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#centarrowPrevDiv").click(() => {
-			/** @type {number} */
+			
 			setAutoDemo(false);
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#ddctd").click(() => {
-			/** @type {number} */
+			
 			setAutoDemo(false);
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		$("#qbuildtbButton").click(() => {
-			/** @type {number} */
+			
 			setAutoDemo(false);
 			$("#fb4").removeClass("redb").addClass("greenb");
 		});
 		
-		var sumbut_ = "<button class='tabButton' id='Sum'>Summary</button>";
-		$("#items").after(sumbut_);
+		var sumbut = "<button class='tabButton' id='Sum'>Summary</button>";
+		$("#items").after(sumbut);
 		$("#Sum").click(() => {
 			if (sum_) {
 				opensumwin_();
@@ -2034,55 +2034,55 @@ function avactor() {
 		var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";
 		$("#woodmaxbutton").parent().after(wood50_);
 		$("#wood50").click(() => {
-			/** @type {number} */
+			
 			var res_3 = AsNumber($("#maxwoodsend").text().replace(/,/g, ""));
 			if ($("#landseasendres").val() == "1") {
-				/** @type {number} */
+				
 				var carts_ = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
-				/** @type {number} */
+				
 				carts_ = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
 			if (res_3 > carts_) {
-				/** @type {number} */
+				
 				res_3 = carts_;
 			}
 			$("#woodsendamt").val(res_3);
 		});
 		
-		var stone50_ = "<td><button class='brownb' id='stone50'>Add 50%</button></td>";
-		$("#stonemaxbutton").parent().after(stone50_);
+		var stone50 = "<td><button class='brownb' id='stone50'>Add 50%</button></td>";
+		$("#stonemaxbutton").parent().after(stone50);
 		$("#stone50").click(() => {
 			if ($("#landseasendres").val() == "1") {
-				/** @type {number} */
+				
 				var carts_1 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
-				/** @type {number} */
+				
 				carts_1 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
-			/** @type {number} */
+			
 			var res_4 = AsNumber($("#maxstonesend").text().replace(/,/g, ""));
 			if (res_4 > carts_1) {
-				/** @type {number} */
+				
 				res_4 = carts_1;
 			}
 			$("#stonesendamt").val(res_4);
 		});
 		
-		var iron50_ = "<td><button class='brownb' id='iron50'>Add 50%</button></td>";
-		$("#ironmaxbutton").parent().after(iron50_);
+		var iron50 = "<td><button class='brownb' id='iron50'>Add 50%</button></td>";
+		$("#ironmaxbutton").parent().after(iron50);
 		$("#iron50").click(() => {
-			/** @type {number} */
+			
 			var res_5 = AsNumber($("#maxironsend").text().replace(/,/g, ""));
 			if ($("#landseasendres").val() == "1") {
-				/** @type {number} */
+				
 				var carts_2 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
-				/** @type {number} */
+				
 				carts_2 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
 			if (res_5 > carts_2) {
-				/** @type {number} */
+				
 				res_5 = carts_2;
 			}
 			$("#ironsendamt").val(res_5);
@@ -2091,17 +2091,17 @@ function avactor() {
 		var food50_ = "<td><button class='brownb' id='food50'>Add 50%</button></td>";
 		$("#foodmaxbutton").parent().after(food50_);
 		$("#food50").click(() => {
-			/** @type {number} */
+			
 			var res_6 = AsNumber($("#maxfoodsend").text().replace(/,/g, ""));
 			if ($("#landseasendres").val() == "1") {
-				/** @type {number} */
+				
 				var carts_3 = Math.floor(AsNumber($("#availcartscity").text()) / 2) * 1000;
 			} else {
-				/** @type {number} */
+				
 				carts_3 = Math.floor(AsNumber($("#availshipscity").text()) / 2) * 10000;
 			}
 			if (res_6 > carts_3) {
-				/** @type {number} */
+				
 				res_6 = carts_3;
 			}
 			$("#foodsendamt").val(res_6);
@@ -2111,40 +2111,40 @@ function avactor() {
 		$("#inactiveshrineInfo").before(shrinebut_);
 		$("#shrineP").click(() => {
 			if (beentoworld_) {
-				/** @type {!Array} */
+				
 				shrinec_ = [[]];
 				splayers_ = {
 					name: [],
 					ally: [],
 					cities: []
 				};
-				/** @type {!Array} */
+				
 				var players_ = [];
 				var coords_ = $("#coordstochatGo3").attr("data");
-				/** @type {number} */
+				
 				var shrinex_ = parseInt(coords_);
-				/** @type {number} */
+				
 				var shriney_ = AsNumber(coords_.match(/\d+$/)[0]);
-				/** @type {number} */
+				
 				var shrinecont_ = AsNumber(Math.floor(shrinex_ / 100) + 10 * Math.floor(shriney_ / 100));
 				var i_41;
 				for (i_41 in wdata_.cities) {
-					/** @type {number} */
+					
 					var tempx_10 = AsNumber(wdata_.cities[i_41].substr(8, 3)) - 100;
-					/** @type {number} */
+					
 					var tempy_10 = AsNumber(wdata_.cities[i_41].substr(5, 3)) - 100;
-					/** @type {number} */
+					
 					var cont_2 = AsNumber(Math.floor(tempx_10 / 100) + 10 * Math.floor(tempy_10 / 100));
 					if (cont_2 == shrinecont_) {
-						/** @type {number} */
+						
 						var dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
 						if (dist_1 < 10) {
-							/** @type {number} */
+							
 							var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
-							/** @type {number} */
+							
 							var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
 							var pname_12 = F5F[pid_];
-							/** @type {!Array} */
+							
 							var csn_ = [3, 4, 7, 8];
 							if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
 								shrinec_.push(["castle", pname_12, 0, tempx_10, tempy_10, dist_1, "0", 0, 0, 0]);
@@ -2248,9 +2248,9 @@ function avactor() {
 						$("#addadd").click(() => {
 							let tempx_10 = $("#addx").val() as number;
 							let tempy_10 = $("#addy").val() as number;
-							/** @type {number} */
+							
 							dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
-							/** @type {!Array} */
+							
 							var temp_4 = [$("#addtype").val(), "Poseidon", "Atlantis", tempx_10, tempy_10, dist_1, "1", $("#addscore").val(), "Hellas", "1"];
 							shrinec_.push(temp_4);
 							shrinec_.sort((a_9, b_7) => {
@@ -2331,25 +2331,25 @@ function avactor() {
 			});
 		}
 		
-		var cancelallya_ = "<input id='cancelAllya' type='checkbox' checked='checked'> Cancel attack if same alliance";
+        // var cancelallya="<input id='cancelAllya' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		
-		var cancelallys_ = "<input id='cancelAllys' type='checkbox' checked='checked'> Cancel attack if same alliance";
+        // var cancelallys="<input id='cancelAllys' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		
-		var cancelallyp_ = "<input id='cancelAllyp' type='checkbox' checked='checked'> Cancel attack if same alliance";
+        // var cancelallyp="<input id='cancelAllyp' type='checkbox' checked='checked'> Cancel attack if same alliance";
 		
-		var cancelallyc_ = "<input id='cancelAllyc' type='checkbox' checked='checked'> Cancel attack if same alliance";
-		$("#assaulttraveltime").parent().next().html(cancelallya_);
-		$("#siegetraveltime").parent().next().html(cancelallys_);
-		$("#plundtraveltime").parent().next().html(cancelallyp_);
-		$("#scouttraveltime").parent().next().html(cancelallyc_);
-		$("#assaultGo").click(() => {
+        // var cancelallyc="<input id='cancelAllyc' type='checkbox' checked='checked'> Cancel attack if same alliance";
+        // $("#assaulttraveltime").parent().next().html(cancelallya);
+        // $("#siegetraveltime").parent().next().html(cancelallys);
+        // $("#plundtraveltime").parent().next().html(cancelallyp);
+        // $("#scouttraveltime").parent().next().html(cancelallyc);
+        $("#assaultGo").click(function() {
 			if ($("#cancelAllya").prop("checked") == false) {
 				setTimeout(() => {
 					$(".shAinf").each(function () {
 						let tid_7 = ToInt($(this).parent().next().find(".cityblink").attr("data"));
-						/** @type {number} */
+						
 						var tx_1 = tid_7 % 65536;
-						/** @type {number} */
+						
 						var ty_1 = (tid_7 - tx_1) / 65536;
 						if (tx_1 == $("#assaultxcoord").val() && ty_1 == $("#assaultycoord").val()) {
 							var aid_ = $(this).attr("data");
@@ -2368,9 +2368,9 @@ function avactor() {
 					$(".shPinf").each(function () {
 						let a = $(this).parent().next().find(".cityblink");
 						let tid_8 = GetIntData(a);
-						/** @type {number} */
+						
 						var tx_2 = tid_8 % 65536;
-						/** @type {number} */
+						
 						var ty_2 = (tid_8 - tx_2) / 65536;
 						if (tx_2 == $("#assaultxcoord").val() && ty_2 == $("#assaultycoord").val()) {
 							var aid_1 = $(this).attr("data");
@@ -2394,9 +2394,9 @@ function avactor() {
 				setTimeout(() => {
 					$(".shAinf").each(function () {
 						var tid_9 = GetIntData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						var tx_3 = tid_9 % 65536;
-						/** @type {number} */
+						
 						var ty_3 = (tid_9 - tx_3) / 65536;
 						if (tx_3 == $("#pluxcoord").val() && ty_3 == $("#pluycoord").val()) {
 							var aid_2 = $(this).attr("data");
@@ -2414,9 +2414,9 @@ function avactor() {
 					});
 					$(".shPinf").each(function () {
 						var tid_10 = GetIntData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						var tx_4 = tid_10 % 65536;
-						/** @type {number} */
+						
 						var ty_4 = (tid_10 - tx_4) / 65536;
 						if (tx_4 == $("#pluxcoord").val() && ty_4 == $("#pluycoord").val()) {
 							var aid_3 = $(this).attr("data");
@@ -2440,9 +2440,9 @@ function avactor() {
 				setTimeout(() => {
 					$(".shAinf").each(function () {
 						var tid_11 = GetIntData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						var tx_5 = tid_11 % 65536;
-						/** @type {number} */
+						
 						var ty_5 = (tid_11 - tx_5) / 65536;
 						if (tx_5 == $("#scoxcoord").val() && ty_5 == $("#scoycoord").val()) {
 							var aid_4 = $(this).attr("data");
@@ -2460,9 +2460,9 @@ function avactor() {
 					});
 					$(".shPinf").each(function () {
 						var tid_12 = GetIntData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						var tx_6 = tid_12 % 65536;
-						/** @type {number} */
+						
 						var ty_6 = (tid_12 - tx_6) / 65536;
 						if (tx_6 == $("#scoxcoord").val() && ty_6 == $("#scoycoord").val()) {
 							var aid_5 = $(this).attr("data");
@@ -2486,9 +2486,9 @@ function avactor() {
 				setTimeout(() => {
 					$(".shAinf").each(function () {
 						var tid_13 = GetIntData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						var tx_7 = tid_13 % 65536;
-						/** @type {number} */
+						
 						var ty_7 = (tid_13 - tx_7) / 65536;
 						if (tx_7 == $("#siexcoord").val() && ty_7 == $("#sieycoord").val()) {
 							var aid_6 = $(this).attr("data");
@@ -2506,9 +2506,9 @@ function avactor() {
 					});
 					$(".shPinf").each(function () {
 						let cid = GetCidData($(this).parent().next().find(".cityblink"));
-						/** @type {number} */
+						
 						let tx_8 = cid.x;
-						/** @type {number} */
+						
 						let ty_8 = cid.y;
 						if (tx_8 == $("#siexcoord").val() && ty_8 == $("#sieycoord").val()) {
 							var aid_7 = $(this).attr("data");
@@ -2568,13 +2568,13 @@ function avactor() {
 		$("#CNtabs").append(layoutoptbody_);
 		$("#buttd").append(layoptbut_);
 		$("#nearhubAp").click(() => {
-			PostMMNIO(null);
+			setnearhub(null);
 		});
 		$("#infantryAp").click(() => {
 			setinfantry_();
 		});
 		$("#layoptBut").click(() => {
-			localStorage.setItem("woodin", $('$woodin').val().toString());
+			localStorage.setItem("woodin", $("#woodin").val().toString());
 			localStorage.setItem("foodin", $("#foodin").val().toString());
 			localStorage.setItem("ironin", $("#ironin").val().toString());
 			localStorage.setItem("stonein", $("#stonein").val().toString());
@@ -2623,7 +2623,7 @@ function avactor() {
 			$("#funkylayoutw").remove();
 			setTimeout(() => {
 				var currentlayout_ = $("#currentLOtextarea").text();
-				/** @type {number} */
+				
 				var i_53 = 20;
 				for (; i_53 < currentlayout_.length - 20; i_53++) {
 					var tmpchar_ = currentlayout_.charAt(i_53);
@@ -2633,7 +2633,7 @@ function avactor() {
 						currentlayout_ = ReplaceAt(currentlayout_, i_53, "-");
 					}
 				}
-				/** @type {!Array} */
+				
 				var prefered_data_ = [{
 					name: "Guz 7s Prae 122k",
 					string: "[ShareString.1.3]:########################-------#-------#####BBBB----#--------###BZZZB----#---------##BBBBB----#---------##BZZZZ-#######------##BBBBB##BBBBB##-----##----##BZZZZZB##----##----#BBBBBBBBB#----##----#BZZZZZZZB#----#######BBBBTBBBB#######P--X#BZZZZZZZB#----##-SSJ#BBBBBBBBB#----##P---##BZZZZZB##----##P----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
@@ -2714,7 +2714,7 @@ function avactor() {
 				}];
 				
 				var selectbuttsdf_ = '<select id="dfunkylayout" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:30%;" class="regButton greenb"><option value="0">Prefered build layout</option>';
-				/** @type {number} */
+				
 				var ww_ = 1;
 				var prefered_;
 				for (prefered_ in prefered_data_) {
@@ -2732,7 +2732,7 @@ function avactor() {
 				selectbuttsdf_ = `${selectbuttsdf_}</select>`;
 				
 				var selectbuttsw_ = '<select id="funkylayoutw" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select water layout</option>';
-				/** @type {number} */
+				
 				var cww_ = 1;
 				
 				selectbuttsw_ = `${selectbuttsw_}<option value="${cww_}">2 sec rang/galley</option>`;
@@ -2849,9 +2849,9 @@ function avactor() {
 				selectbuttsw_ = `${selectbuttsw_}</select>`;
 				
 				var selectbuttsl_ = '<select id="funkylayoutl" style="font-size: 10px !important;margin-top:1%;margin-left:2%;width:45%;" class="regButton greenb"><option value="0">Select land layout</option>';
-				/** @type {number} */
+				
 				var ll_1 = 1;
-				/** @type {!Array} */
+				
 				var land_locked_data_ = [{
 					name: "1 sec vanqs",
 					string: "[ShareString.1.3]:########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##GBGBG##-----##----##BGBGBGB##----##----#GBGBGBGBG#----##----#GBGBGBGBG#----#######GBGBTBGBG#######----#GBGBGBGBG#----##----#GBGBGBGBG#----##----##BGBGBGB##----##GGGGG##GBGBG##-----##BBBBB-#######------##GGGGGG--H#---------##BBBBBB--J#---------###GGGG---X#--------#####BB----S#-------########################",
@@ -2988,11 +2988,11 @@ function avactor() {
 				$("#funkylayoutl").after(selectbuttsw_);
 				$("#funkylayoutl").change(() => {
 					var newlayout_ = currentlayout_;
-					/** @type {number} */
+					
 					var j_12 = 1;
 					for (; j_12 < layoutsl_.length; j_12++) {
 						if ($("#funkylayoutl").val() == j_12) {
-							/** @type {number} */
+							
 							var i_54 = 20;
 							for (; i_54 < currentlayout_.length; i_54++) {
 								var tmpchar_1 = layoutsl_[j_12].charAt(i_54);
@@ -3006,17 +3006,17 @@ function avactor() {
 							setTimeout(() => {
 								jQuery("#applyoverlayGo")[0].click();
 							}, 300);
-							PostMMNIO(j_12);
+							setnearhub(j_12);
 						}
 					}
 				});
 				$("#funkylayoutw").change(() => {
 					var newlayout_1 = currentlayout_;
-					/** @type {number} */
+					
 					var j_13 = 1;
 					for (; j_13 < layoutsw_.length; j_13++) {
 						if ($("#funkylayoutw").val() == j_13) {
-							/** @type {number} */
+							
 							for (let i_55 = 20; i_55 < currentlayout_.length; i_55++) {
 								var tmpchar_2 = layoutsw_[j_13].charAt(i_55);
 								/** @type {!RegExp} */
@@ -3044,11 +3044,11 @@ function avactor() {
 								}
 							}
 							if ($("#addwalls").prop("checked") == true) {
-								/** @type {number} */
+								
 								aa_8[26] = 1;
 							}
 							if ($("#addtowers").prop("checked") == true) {
-								/** @type {number} */
+								
 								aa_8[27] = 1;
 							}
 							if ($("#addhub").prop("checked") == true) {
@@ -3058,26 +3058,26 @@ function avactor() {
 								};
 								$.each(ppdt.clc, (key_57, value_105) => {
 									if (key_57 == $("#selHub").val()) {
-										/** @type {number} */
+										
 										hubs_3.cid = value_105;
 									}
 								});
 								for (let i_55 in hubs_3.cid) {
-									/** @type {number} */
+									
 									var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
-									/** @type {number} */
+									
 									var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
 									hubs_3.distance.push(Math.sqrt((tempx_12 - D6.x) * (tempx_12 - D6.x) + (tempy_12 - D6.y) * (tempy_12 - D6.y)));
 								}
-								/** @type {number} */
+								
 								var mindist_3 = Math.min(...hubs_3.distance);
-								var nearesthub_3 = hubs_3.cid[hubs_3.distance.indexOf(mindist_3)];
+								let nearesthub_3 = hubs_3.cid[hubs_3.distance.indexOf(mindist_3)];
 								resw_[j_13][14] = nearesthub_3;
 								resw_[j_13][15] = nearesthub_3;
 							} else {
-								/** @type {number} */
+								
 								resw_[j_13][14] = 0;
-								/** @type {number} */
+								
 								resw_[j_13][15] = 0;
 							}
 							if ($("#addres").prop("checked") == true) {
@@ -3094,9 +3094,9 @@ function avactor() {
 								}
 							}
 							if ($("#addbuildings").prop("checked") == true) {
-								/** @type {!Array} */
+								
 								aa_8[51] = [1, GetFloatValue($("#cablev"))];
-								/** @type {number} */
+								
 								aa_8[1] = 1;
 							}
 							var dat_16 = {
@@ -3114,11 +3114,11 @@ function avactor() {
 				});
 				$("#dfunkylayout").change(() => {
 					var newlayout_2 = currentlayout_;
-					/** @type {number} */
+					
 					var j_14 = 1;
 					for (; j_14 < layoutdf_.length; j_14++) {
 						if ($("#dfunkylayout").val() == j_14) {
-							/** @type {number} */
+							
 
 							for (let i_56 = 20; i_56 < currentlayout_.length; i_56++) {
 								var tmpchar_3 = layoutdf_[j_14].charAt(i_56);
@@ -3147,11 +3147,11 @@ function avactor() {
 								}
 							}
 							if ($("#addwalls").prop("checked") == true) {
-								/** @type {number} */
+								
 								aa_9[26] = 1;
 							}
 							if ($("#addtowers").prop("checked") == true) {
-								/** @type {number} */
+								
 								aa_9[27] = 1;
 							}
 							if ($("#addhub").prop("checked") == true) {
@@ -3161,26 +3161,26 @@ function avactor() {
 								};
 								$.each(ppdt.clc, (key_58, value_106) => {
 									if (key_58 == $("#selHub").val()) {
-										/** @type {number} */
+										
 										hubs_4.cid = value_106;
 									}
 								});
 								for (let i_56 in hubs_4.cid) {
-									/** @type {number} */
+									
 									var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
-									/** @type {number} */
+									
 									var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
 									hubs_4.distance.push(Math.sqrt((tempx_13 - D6.x) * (tempx_13 - D6.x) + (tempy_13 - D6.y) * (tempy_13 - D6.y)));
 								}
-								/** @type {number} */
+								
 								var mindist_4 = Math.min(...hubs_4.distance);
-								var nearesthub_4 = hubs_4.cid[hubs_4.distance.indexOf(mindist_4)];
+								let nearesthub_4 = hubs_4.cid[hubs_4.distance.indexOf(mindist_4)];
 								resd_[j_14][14] = nearesthub_4;
 								resd_[j_14][15] = nearesthub_4;
 							} else {
-								/** @type {number} */
+								
 								resd_[j_14][14] = 0;
-								/** @type {number} */
+								
 								resd_[j_14][15] = 0;
 							}
 							if ($("#addres").prop("checked") == true) {
@@ -3193,9 +3193,9 @@ function avactor() {
 								}
 							}
 							if ($("#addbuildings").prop("checked") == true) {
-								/** @type {!Array} */
+								
 								aa_9[51] = [1, GetFloatValue($("#cablev"))];
-								/** @type {number} */
+								
 								aa_9[1] = 1;
 							}
 							var dat_17 = {
@@ -3707,7 +3707,7 @@ function avactor() {
 	}
 
 }
-/** @type {number} */
+
 var __autodemoon_ = false;
 function callDemo() {
 	$("#buildingDemolishButton").trigger(

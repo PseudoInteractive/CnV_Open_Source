@@ -96,17 +96,17 @@ namespace COTG.Views
 							});
                             break;
                         }
-                    case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-                        {
-                            NavStack.Back();
-                        }
-                        break;
-                    case Windows.UI.Input.PointerUpdateKind.XButton2Released:
-                        {
-                            NavStack.Forward();
+                    //case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+                    //    {
+                    //        NavStack.Back();
+                    //    }
+                    //    break;
+                    //case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+                    //    {
+                    //        NavStack.Forward();
 
-                            break;
-                        }
+                    //        break;
+                    //    }
                     default:
                         break;
                 }
@@ -152,24 +152,22 @@ namespace COTG.Views
             var point = e.CurrentPoint;
            
             var properties = point.Properties;
-            //if (JSClient.IsCityView())
-            //{
-            //    switch (properties.PointerUpdateKind)
-            //    {
-            //        case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
-            //        case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-            //            e.Handled = true;
-            //            NavStack.Back();
-            //            return;
-            //        case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
-            //        case Windows.UI.Input.PointerUpdateKind.XButton2Released:
-            //            e.Handled = true;
-            //            NavStack.Forward();
-            //            return;
-            //    }
+          //  if (JSClient.IsCityView())
+            {
+                switch (properties.PointerUpdateKind)
+                {
+                    case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
+                        e.Handled = true;
+                        NavStack.Back();
+                        return;
+                    case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
+                        e.Handled = true;
+                        NavStack.Forward();
+                        return;
+                }
             //    e.Handled = false;
             //    return;
-            //}
+            }
 
 
             mousePosition = GetCanvasPosition(point);

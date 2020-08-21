@@ -123,7 +123,7 @@ namespace COTG.JSON
                                  }
                                  //                            army.sumDef = Array.Empty<TroopTypeCount>();
                                  spot.incoming = spot.incoming.ArrayAppend(army);
-
+                                 reportsOutgoing.Add(army);
                                  //var rep = new Army();
                                  //rep.atkCid = atkCid;
                                  //rep.defCid = defCid;
@@ -156,7 +156,8 @@ namespace COTG.JSON
                  }
              });
 
-           
+
+            int fetched = 0;
             if (hasFetchedReports)
             {
                 // hits history
@@ -167,34 +168,36 @@ namespace COTG.JSON
                         async (inc, part, index, parts) =>
                         {
 
-                            var target = inc[15].GetAsInt();
-                            if (target <= 0)
-                                return;
-                            var type = GetReportType(inc[0].GetAsString());
-                            var defP = Player.NameToId(inc[1].GetAsString());
-                            var atkPNS = inc[6].GetString();
-                            var defCN = inc[3].ToString();
-                            Spot.GetOrAdd(target, defCN);
-                            var time = inc[5].GetString().ParseDateTime(false);
-                            var source =  inc[14].GetAsInt().Max(0);
-                            var recId = inc[11].GetAsString();
-                            var hash = Army.ReportHash(recId);
-                            if (reportCache.TryGetValue(hash, out var reports))
+                        var target = inc[15].GetAsInt();
+                        if (target <= 0)
+                            return;
+                        var type = GetReportType(inc[0].GetAsString());
+                        var defP = Player.NameToId(inc[1].GetAsString());
+                        var atkPNS = inc[6].GetString();
+                        var defCN = inc[3].ToString();
+                        Spot.GetOrAdd(target, defCN);
+                        var time = inc[5].GetString().ParseDateTime(false);
+                        var source = inc[14].GetAsInt().Max(0);
+                        var recId = inc[11].GetAsString();
+                        var hash = Army.ReportHash(recId);
+                        if (reportCache.TryGetValue(hash, out var reports))
+                        {
+                            foreach (var r in reports)
                             {
-                                foreach (var r in reports)
-                                {
-                                    parts[part].Add(r);
-                                }
+                                parts[part].Add(r);
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (source > 0)
                             {
-                                if (source > 0 )
-                                {
-                                    // Scout
-                                    // this is a scout
-
+                                // Scout
+                                // this is a scout
+                                var ts = inc[8].GetAsInt();
+                                Assert((ts & 1) == 0);
                                     var report = new Army()
                                     {
+                                        troops= new[] { new TroopTypeCount(ttScout, ts / 2) },
                                         sourceCid = source,
                                         targetCid = target,
                                         isAttack = true,
@@ -219,6 +222,7 @@ namespace COTG.JSON
                                     // we have to look up the report
                                     using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
                                     {
+                                        ++fetched;
                                         var root = jsdr.RootElement;
                                         int reportType = -1;
                                         foreach (var attackType in Army.reportAttackTypes)
@@ -269,7 +273,7 @@ namespace COTG.JSON
                                                             defTSLeft += t.GetInt32() * Game.Enum.ttTs[counter];
                                                             ++counter;
                                                         }
-                                                        Assert(defTS > 0);
+                                                      //  Assert(defTS > 0);
                                                         {
                                                             defTSKilled = defTS - defTSLeft;  // overwrite with calculated value
                                                         }
@@ -284,9 +288,9 @@ namespace COTG.JSON
                                                         var atkPN = report.GetAsString("apn");
                                                         var atkCN = report.GetAsString("acn");
                                                         {
-                                                            var lg = atkCN.Length;
-                                                            if (lg > 9)  // trim off '(000:000)'
-                                                                atkCN = atkCN.Substring(0, lg - 9);
+                                                            var sss = atkCN.Split('(',StringSplitOptions.RemoveEmptyEntries);
+                                                            if (sss.Length > 0)
+                                                                atkCN = sss[0];
 
                                                         }
                                                         Spot.GetOrAdd(source, atkCN);
@@ -294,16 +298,16 @@ namespace COTG.JSON
                                                         var rep = new Army()
                                                         {
                                                             isAttack = true,
-                                                            troops =troops,
-                                                            sumDef=sumDef,
+                                                            troops = troops,
+                                                            sumDef = sumDef,
                                                             reportId = recId,
-                                                            
+
                                                             dTsKill = defTSKilled,
                                                             aTsKill = (atkTS - atkTSLeft),
                                                             sourceCid = source,
                                                             targetCid = target,
-                                                            claim =  (byte)report.GetAsFloat("senator").RoundToInt(),
-                                                            
+                                                            claim = (byte)report.GetAsFloat("senator").RoundToInt(),
+
                                                             time = time,
                                                             spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
                                                             type = (byte)reportType
@@ -312,6 +316,11 @@ namespace COTG.JSON
                                                         };
                                                         parts[part].Add(rep);
                                                     }
+                                                    else
+                                                    {
+                                                        Log("Error!");
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -341,7 +350,7 @@ namespace COTG.JSON
                 OutgoingTab.NotifyOutgoingUpdated();
 
                 updateInProgress = false;
-                Note.Show($"Complete: {reportsOutgoing.Count} attacks");
+                Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched");
             });
         }
 

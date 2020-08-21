@@ -98,6 +98,23 @@ namespace COTG.Services
 
 
         }
+        public virtual async Task<string> AcceptText(HttpResponseMessage resp)
+        {
+            var data = await AcceptAndReturn(resp);
+
+            try
+            {
+                return UTF8Encoding.UTF8.GetString( data);
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+                return null;
+            }
+
+
+        }
         public virtual async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
@@ -721,9 +738,13 @@ namespace COTG.Services
         {
             var p = new Post(url);
             return await p.AcceptJson(await p.Send(postContent));
-
-
         }
+        async public static Task<string> SendForText(string url, string postContent = nullPost)
+        {
+            var p = new Post(url);
+            return  await p.AcceptText(await p.Send(postContent));
+        }
+
         async public static Task<T> SendForJsonT<T>(string url, string postContent=nullPost)
         {
             var p = new Post(url);

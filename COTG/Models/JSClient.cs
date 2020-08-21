@@ -453,7 +453,7 @@ namespace COTG
         //    }
         //}
 
-        public static void ShowCity(int cityId, bool lazyMove)
+        public static async void ShowCity(int cityId, bool lazyMove)
         {
 			try
 			{
@@ -468,10 +468,18 @@ namespace COTG
 
                 App.DispatchOnUIThreadSneaky(() =>  
                     view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() }));
-       //             if( City.IsMine(cityId)  )
-       //                 Raiding.UpdateTSHome();
-                
-			}
+                //             if( City.IsMine(cityId)  )
+                //                 Raiding.UpdateTSHome();
+
+#if DEBUG
+                if (!City.IsMine(cityId))
+                {
+                    var str = await Post.SendForText("includes/gLay.php", $"cid={cityId}");
+                    Log(str);
+                    App.DispatchOnUIThreadSneaky(() => App.CopyTextToClipboard(str));
+                }
+#endif
+            }
 			catch (Exception e)
 			{
 				Log(e);
@@ -648,13 +656,16 @@ namespace COTG
                        var priorIndex = CityList.box.SelectedIndex;
                        CityList.selections = new CityList[lists.Count+1];
                        CityList.selections[0]=(CityList.allCities);
+                       CityList hubs = null;
                        for (int i = 0; i < lists.Count; ++i)
-                           CityList.selections[i+1]=(lists[i]);
-
+                       {
+                           CityList.selections[i + 1] = (lists[i]);
+                       }
                        CityList.all = lists.ToArray();
 
                        CityList.box.ItemsSource =  CityList.selections;
                        CityList.box.SelectedIndex = priorIndex; // Hopefully this is close enough
+//                       SettingsPage.instance.
                    });
                 }
             }

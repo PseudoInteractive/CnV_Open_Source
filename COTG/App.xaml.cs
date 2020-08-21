@@ -39,6 +39,7 @@ using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using System.Collections.Concurrent;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace COTG
 {
@@ -367,6 +368,15 @@ namespace COTG
         public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true };
         public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits = 0, IsGrouped = true };
         public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits = 0, IntegerDigits = 2 };
+
+        public static void CopyTextToClipboard(string s)
+        {
+            DataPackage dataPackage = new DataPackage();
+            // copy 
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetText(s);
+            Clipboard.SetContent(dataPackage);
+        }
     }
 
 

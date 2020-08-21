@@ -26086,7 +26086,7 @@ console.log("Bad");
             $(_s(3556))
               .html(T0B);
             N6();
-            var t0B = $.post(q6 + _s(2108), { cid: cid });
+            var t0B = $.post(q6 + _s(2108), { cid: cid }); // gLay.php
             F6();
             t0B.done(function(L0B) {
               E6k.R6();

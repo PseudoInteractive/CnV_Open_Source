@@ -35,7 +35,7 @@
     <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
-        <Setter Property="HorizontalAlignment"
+        <Setter Property="TextAlignment"
                         Value="Right" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>
