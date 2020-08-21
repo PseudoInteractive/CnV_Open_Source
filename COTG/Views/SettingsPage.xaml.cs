@@ -33,6 +33,7 @@ namespace COTG.Views
         //private static bool _isBusy;
 //        private static UserData _user;
         public static bool fetchFullHistory;
+        public static bool autoBuildOn;
         public static string hubCitylistName;
         public static int reqWood = 160000;
         public static int reqStone = 205000;
@@ -68,7 +69,7 @@ namespace COTG.Views
             maxStone = App.Settings().Read(nameof(maxWood), 250000);
             maxIron = App.Settings().Read(nameof(maxIron), 300000);
             maxFood = App.Settings().Read(nameof(maxFood), 300000);
-
+            autoBuildOn = App.Settings().Read(nameof(autoBuildOn),false );
         }
         public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
         {
@@ -84,6 +85,8 @@ namespace COTG.Views
             App.Settings().Save(nameof(maxStone), maxStone);
             App.Settings().Save(nameof(maxFood), maxFood);
             App.Settings().Save(nameof(maxIron), maxIron);
+            App.Settings().Save(nameof(autoBuildOn), autoBuildOn);
+
 
         }
         public ElementTheme ElementTheme
@@ -125,14 +128,9 @@ namespace COTG.Views
         {
             InitializeComponent();
 
-            foreach (var list in CityList.all)
-            {
-                if (list.name == SettingsPage.hubCitylistName)
-                {
-                    hubCityListBox.SelectedItem = list;
-                    break;
-                }
-            }
+            var cl = CityList.Find(hubCitylistName);
+            if(cl != null)
+                hubCityListBox.SelectedItem = cl;
             hubCityListBox.SelectionChanged += HubCityListBox_SelectionChanged;
 
         }

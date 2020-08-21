@@ -198,7 +198,7 @@ namespace COTG.JSON
                                           army.time = arrival switch
                                           {
                                               "home" => AUtil.dateTimeZero,
-                                              "on support" => AUtil.dateTimeZero,
+                                              "on support" => JSClient.ServerTime() - TimeSpan.FromHours(1),
                                               var t => t.ParseDateTime()
                                           };
                                           army.targetCid = cid;
@@ -223,7 +223,7 @@ namespace COTG.JSON
                                           }
                                           else
                                           {
-                                              army.spotted = AUtil.dateTimeZero;
+                                              army.spotted = army.time - TimeSpan.FromMinutes(cid.DistanceToCid(army.sourceCid) * TTTravel(ttScout));
                                           }
                                           var ttl = new List<TroopTypeCount>();
                                           if (armyV.TryGetProperty("3", out var ttp) && ttp.ValueKind == System.Text.Json.JsonValueKind.Array)

@@ -224,6 +224,7 @@
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Helpers\TileMap.cs" />
+    <Compile Include="JSON\CitySettings.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\IncommingEstimate.cs" />

@@ -669,11 +669,21 @@ namespace COTG.Views
                                             _ => incomingHistoryColor
                                         };
 
-                                        
+
                                         {
                                             var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                                             var r = t.Ramp();
-                                            DrawAction(ds,batch, dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[0].type], true, attack,32);
+                                            int iType = 0;
+                                            float alpha = 1;
+                                            if (attack.troops.Length > 1)
+                                            {
+                                                var rtype = attack.troops.Length * r;
+                                                iType = (int)rtype;
+                                                var frac = rtype - iType;
+                                                iType = iType.Min(attack.troops.Length - 1);
+                                                alpha = MathF.Cos((frac * 2.0f - 1) * MathF.PI) * 0.5f + 0.5f;
+                                            } 
+                                            DrawAction(ds,batch, dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,32,alpha);
                                         }
                                         //var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
                                         //var mid = progress.Lerp(c0, c1);
@@ -745,10 +755,27 @@ namespace COTG.Views
                                         }
                                         if (i.troops.Any())
                                         {
-                                            var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
                                             var r = t.Ramp();
+                                            int iType = 0;
+                                            float alpha = 1;
+                                            var nSprite = i.troops.Length;
 
-                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[0].type], true, i,32);
+                                            if (nSprite > 1)
+                                            {
+                                                Assert(t > 0);
+                                                var rtype = t%nSprite;
+                                                iType = (int)rtype;
+                                                var frac = rtype - iType;
+                                                iType = iType.Min(nSprite- 1);
+                                                if (frac < 0.25f)
+                                                    alpha = AMath.STerm(frac*4.0f);
+                                                else if(frac > 0.75f)
+                                                    alpha = AMath.STerm( (1-frac) * 4.0f);
+
+                                            }
+
+                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i,32,alpha);
                                         }
                                         else
                                         {
@@ -966,7 +993,7 @@ namespace COTG.Views
   //          ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
   //      }
         private void DrawAction(CanvasDrawingSession ds,CanvasSpriteBatch batch, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-            CanvasBitmap bitmap,bool applyStopDistance, Army army,float spriteSize)
+            CanvasBitmap bitmap,bool applyStopDistance, Army army,float spriteSize,float alpha=1)
         {
             if (IsCulled(c0, c1))
                 return;
@@ -1009,7 +1036,7 @@ namespace COTG.Views
             if(applyStopDistance)
              ds.FillRectangle(new Rect(c0.X- shadowOffset.X - smallRectSpan, c0.Y- shadowOffset.Y - smallRectSpan, smallRectSpan * 2, smallRectSpan * 2.0f), color);
             var dc = new Vector2(spriteSize, spriteSize);
-            batch.Draw(bitmap,new Rect(mid.X-spriteSize,mid.Y-spriteSize,spriteSize*2,spriteSize*2),gain*HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f)  );
+            batch.Draw(bitmap,new Rect(mid.X-spriteSize,mid.Y-spriteSize,spriteSize*2,spriteSize*2),gain*HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha)  );
             //            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
         }
 

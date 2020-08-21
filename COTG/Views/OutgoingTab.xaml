@@ -108,7 +108,7 @@
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                                    SizeMode="Fixed"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
-                <tg:DataGridTextColumn PropertyName="xy"
+                <tg:DataGridTextColumn PropertyName="sXY"
                                                    Width="45"
                                                    SizeMode="Fixed"
                                                    CellContentStyle="{StaticResource CenterAlignLink}" />
@@ -121,7 +121,7 @@
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                             Width="50" />
-                <tg:DataGridTextColumn PropertyName="playerName"
+                <tg:DataGridTextColumn PropertyName="sPlayer"
                                                    Header="Player"
                                                    Width="70"
                                                    SizeMode="Auto"

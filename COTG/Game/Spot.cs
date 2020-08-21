@@ -21,6 +21,7 @@ using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
+using COTG.JSON;
 
 namespace COTG.Game
 {
@@ -601,6 +602,8 @@ namespace COTG.Game
                         App.AddItem(flyout, "Home Please", this.ReturnFastClick);
                         App.AddItem(flyout, "Return At...", this.ReturnAt);
                     }
+
+                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
 
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));

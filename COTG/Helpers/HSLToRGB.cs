@@ -11,7 +11,7 @@ namespace COTG.Helpers
 {
     public static class HSLToRGB
     {
-        public static Vector4 ToRGBA(float h, float sl, float l)
+        public static Vector4 ToRGBA(float h, float sl, float l, float alpha =1)
 
         {
 
@@ -127,7 +127,7 @@ namespace COTG.Helpers
 
             }
 
-            return new Vector4(r, g, b, 1f);
+            return new Vector4(r, g, b, alpha);
 
         }
 

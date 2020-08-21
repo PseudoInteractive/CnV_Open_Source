@@ -123,11 +123,11 @@
                                                    SizeMode="Fixed"
                                                    
                                                    CellContentStyle="{StaticResource CenterAlign}" />
-                <tg:DataGridTextColumn PropertyName="xy"
+                <tg:DataGridTextColumn PropertyName="sXY"
                                                    Width="45"
                                                    SizeMode="Fixed"
                                                    CellContentStyle="{StaticResource CenterAlignLink}" />
-                <tg:DataGridTextColumn PropertyName="playerName"
+                <tg:DataGridTextColumn PropertyName="sPlayer"
                                                    Header="Player"
                                                    Width="70"
                                                    SizeMode="Auto"

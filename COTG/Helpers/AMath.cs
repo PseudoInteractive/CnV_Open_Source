@@ -72,6 +72,16 @@ namespace COTG
             var t0 = 1.0f - t;
             return new Vector2(t0*c0.X+t*c1.X, t0 * c0.Y + t * c1.Y);
         }
+
+        public static float STerm(this float t)
+        {
+            return t * t * (3 - 2 * t);
+        }
+        public static float SLerp(this float t, float c0, float c1)
+        {
+            return c0 + (c1 - c0) * STerm(t);
+        }
+
         public static float Lerp(this float t, float c0, float c1)
         {
             return c0 + (c1 - c0) * t;
