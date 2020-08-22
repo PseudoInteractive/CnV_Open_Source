@@ -394,7 +394,7 @@ namespace COTG.Views
                     nameBrush = Colors.White;
                     myNameBrush = new Color() { A = 255, G = 255, B = 190, R = 210 };
 
-                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 80, B = 80, R = 80 }) { Opacity = 0.675f };
+                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 80, B = 80, R = 80 }) { Opacity = 0.8f };
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
                     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]

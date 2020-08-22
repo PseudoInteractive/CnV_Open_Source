@@ -14,7 +14,7 @@
   <Identity
     Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
     Publisher="CN=dwu"
-    Version="1.0.23.0" />
+    Version="1.0.26.0" />
 
   <mp:PhoneIdentity PhoneProductId="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -48,19 +48,10 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
       </uap:VisualElements>
 
       <Extensions>
-        <uap:Extension Category="windows.shareTarget">
-          <uap:ShareTarget Description="Cotg">
-            <uap:SupportedFileTypes>
-              <uap:FileType>.jpg</uap:FileType>
-              <uap:FileType>.png</uap:FileType>
-            </uap:SupportedFileTypes>
-            <uap:DataFormat>URI</uap:DataFormat>
-            <uap:DataFormat>Bitmap</uap:DataFormat>
-          </uap:ShareTarget>
-        </uap:Extension>
         <uap3:Extension Category="windows.appUriHandler">
           <uap3:AppUriHandler>
             <uap3:Host Name="myapp.website.com"/>

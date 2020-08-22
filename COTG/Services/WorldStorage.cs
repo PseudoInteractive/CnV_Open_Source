@@ -13,7 +13,7 @@ namespace COTG.Services
 {
     public static class WorldStorage
     {
-        const string fileName = "gwrd.zip";
+        static string fileName => $"gwrd{(JSClient.world==20?"":JSClient.world.ToString())}.zip";
         public static StorageFolder folder => ApplicationData.Current.LocalFolder;
      
         const int deltasPerBatch = 16;

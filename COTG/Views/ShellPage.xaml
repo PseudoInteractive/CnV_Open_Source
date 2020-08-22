@@ -91,14 +91,15 @@
                             ToolTipService.ToolTip="Spot with Focus.\nClick to re-center or switch to city view\nRight clck for menu"/>
                 </StackPanel>
             </CommandBar.Content>
-            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" />
-            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}" />
             <AppBarSeparator/>
             <AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               AccessKey="F5"                         
                               Click="Refresh"
                           RightTapped="RefreshX"
+                          Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
                 <AppBarButton.Resources>
@@ -115,6 +116,7 @@
             <AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
+                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
                 <Button.Flyout>
@@ -153,6 +155,7 @@
             </AppBarButton>
             <AppBarSeparator/>
             <AppBarButton Label="Heatmap"
+                          Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="View city changes on the world map">
 				<AppBarButton.Icon>
 					<FontIcon Glyph="&#xF738;"/>
@@ -164,6 +167,7 @@
             </AppBarButton>
             <AppBarButton Label="Time"
                               Icon="Shuffle"
+                          Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
                 <Button.Flyout>
                     <Flyout Placement="Right"
@@ -187,7 +191,7 @@
                 </Button.Flyout>
             </AppBarButton>
             <AppBarSeparator/>
-            <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings"/>
+            <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
         </CommandBar>
         <Grid Grid.Column="2" Grid.RowSpan="6">
             <Grid.RowDefinitions>
