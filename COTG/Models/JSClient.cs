@@ -471,15 +471,17 @@ namespace COTG
                 //             if( City.IsMine(cityId)  )
                 //                 Raiding.UpdateTSHome();
 
-#if DEBUG
 
-                if (!City.IsMine(cityId))
+                if (App.IsKeyPressedControl() && App.IsKeyPressedShift() )
                 {
                     var str = await Post.SendForText("includes/gLay.php", $"cid={cityId}");
                     Log(str);
-                    App.DispatchOnUIThreadSneaky(() => App.CopyTextToClipboard(str));
+                    App.DispatchOnUIThreadSneaky(() =>
+                    {
+                        App.CopyTextToClipboard(str);
+                        Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
+                    });
                 }
-#endif
             }
 			catch (Exception e)
 			{
@@ -1097,8 +1099,8 @@ namespace COTG
 
                                     break;
                                 }
-                            case "coords":
-                                App.DispatchOnUIThreadLow(() => ChatTab.PasteCoords(jsp.Value.GetString()));
+                            case "chatin":
+                                App.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(jsp.Value.GetString()));
                                 break;
 
                             case "c":

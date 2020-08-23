@@ -126,8 +126,8 @@ namespace COTG.Views
 
 
             var webView = JSClient.Initialize(grid);
-            foreach (var i in webView.KeyboardAccelerators)
-                i.IsEnabled = false;
+ //           foreach (var i in webView.KeyboardAccelerators)
+  //              i.IsEnabled = false;
             webView.AllowFocusOnInteraction = false;
 
             grid.Background = null;
@@ -186,12 +186,12 @@ namespace COTG.Views
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-
+            
             KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked, VirtualKeyModifiers.Menu));
-            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
+//            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
             KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked, VirtualKeyModifiers.Menu));
-            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
+//            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
             KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked));
 
@@ -236,7 +236,7 @@ namespace COTG.Views
             cityBox.SelectionChanged += CityBox_SelectionChanged;
             heatMapFlyout.Content = new HeatmapDatePicker();
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
-            PointerPressed+=  PointerPressedCB;
+//            PointerPressed+=  PointerPressedCB;
         }
 
         

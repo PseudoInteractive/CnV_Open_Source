@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <Grid>
+    <Grid PointerEntered="Grid_PointerEntered" TabFocusNavigation="Once">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="32"/>
@@ -36,7 +36,7 @@ sent or received, and those values are bound in the DataTemplate.-->
                         <ColumnDefinition Width ="*" />
                     </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray"  FontSize="13" Margin="0,0,0,0" Padding="0,0,0,0" />
-                    <HyperlinkButton Grid.Column="1" Foreground="Green" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="13" Margin="0,0,0,0" />
+                    <HyperlinkButton Grid.Column="1" Foreground="Green" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="13" Margin="0,0,0,0" RightTapped="HyperlinkButton_RightTapped" />
                     <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="13" Margin="0,0,0,0"  Padding="0,0,0,0"
                                               InlineCodeForeground="Firebrick" InlineCodeBackground="Black"
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked" />
@@ -44,8 +44,7 @@ sent or received, and those values are bound in the DataTemplate.-->
                 
             </DataTemplate>
         </Grid.Resources>
-        
-        <SemanticZoom x:Name="Control1" >
+        <SemanticZoom TabFocusNavigation="Once">
             <SemanticZoom.ZoomedInView>
                 <ListView x:Name="listView" x:FieldModifier="public" 
              ItemTemplate="{StaticResource MessageViewTemplate}"
@@ -73,6 +72,6 @@ sent or received, and those values are bound in the DataTemplate.-->
                 <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Message" IsTabStop="True" MaxLength="244"/>
+        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" MaxLength="244" Margin="4,0,4,0" IsHitTestVisible="True"  InputScope="Chat" IsSpellCheckEnabled="True" IsTapEnabled="False" PointerEntered="input_PointerEntered" />
     </Grid>
 </local:UserTab>

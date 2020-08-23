@@ -40,6 +40,7 @@ using Windows.UI.ViewManagement;
 using System.Collections.Concurrent;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Input;
 
 namespace COTG
 {
@@ -155,9 +156,28 @@ namespace COTG
             idleTimer.Tick += IdleTimer_Tick;
             Assert(idleTimer.IsEnabled == false);
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed; ;
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
 
+        }
+
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
+        {
+            var prop = e.CurrentPoint.Properties;
+            switch (prop.PointerUpdateKind)
+            {
+                case PointerUpdateKind.XButton1Pressed:
+                    NavStack.Back();
+                    Log("XButton1");
+                    e.Handled = true;
+                    break;
+                case PointerUpdateKind.XButton2Pressed:
+                    NavStack.Forward();
+                    Log("XButton2");
+                    e.Handled = true;
+                    break;
+            }
         }
 
         private static void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)

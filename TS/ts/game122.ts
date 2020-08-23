@@ -7131,9 +7131,9 @@ function setCameraC( a, b)
 //    console.log("Set camera");
 }
 
-function PostCoords(c)
+function PostChatIn(c)
 {
-const wrapper = { coords: c }
+const wrapper = { chatin: c }
 window['external']['notify'](JSON.stringify(wrapper));
 }
 I0rr(X0rr());
@@ -18397,7 +18397,7 @@ var cotgsubscribe = amplify;
         .hasClass(_s(+n4p))) document.getElementById(_s(H2R << 695995168))
         .value = document.getElementById(_s(H2R * 1))
         .value + _s(l4p * 1) + Y0v + _s(k4p | 35);
-        PostCoords("<report>" + Y0v + "</report>");
+        PostChatIn("<report>" + Y0v + "</report>");
     }
     a6.subBytes = function(C6v, W6v) {
       E6k.R6();
@@ -23955,7 +23955,7 @@ var cotgsubscribe = amplify;
               .value = document.getElementById(_s(H2R | 4864))
               .value + " " + a4U + " ";
             
-              PostCoords(a4U);
+              PostChatIn(a4U);
           });
         $(_s(486))
           .click(function() {
@@ -23978,7 +23978,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p - 0))) document.getElementById(_s(+H2R))
               .value = document.getElementById(_s(H2R >> 351536864))
               .value + " " + E4U + " ";
-              PostCoords(E4U);
+              PostChatIn(E4U);
           });
         $(_s(3203))
           .click(function() {
@@ -24001,7 +24001,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(+n4p))) document.getElementById(_s(H2R << 2005856544))
               .value = document.getElementById(_s(+H2R))
               .value + " " + k3U + " ";
-              PostCoords(E4U);
+              PostChatIn(E4U);
           });
         $(_s(2430))
           .click(function() {
@@ -24024,7 +24024,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p >> 1474913920))) document.getElementById(_s(+H2R))
               .value = document.getElementById(_s(H2R << 1513710880))
               .value + " " + e3U + " ";
-              PostCoords(E4U);
+              PostChatIn(E4U);
           });
         $(_s(6919))
           .click(function() {
@@ -24047,7 +24047,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p & 2147483647))) document.getElementById(_s(H2R ^ 0))
               .value = document.getElementById(_s(H2R >> 1393086016))
               .value + " " + s3U + " ";
-              PostCoords(E4U);
+              PostChatIn(E4U);
           });
         $(_s(5985))
           .click(function() { p2F(); });
@@ -55032,28 +55032,31 @@ console.log("Bad");
     }
 
     function E4F(K9V) {
+    var message = _s(+A2R) + K9V + " ";
+        PostChatIn(message);
+     sendChat(message);
       if ($(_s(+I7R))
         .hasClass(_s(+n4p))) {
         document.getElementById(_s(d4p ^ 0))
-          .value = _s(+A2R) + K9V + " ";
+          .value = message;
         document.getElementById(_s(+d4p))
           .focus();
       } else if ($("#achat")
         .hasClass(_s(+n4p))) {
         document.getElementById(_s(S4p >> 285647680))
-          .value = _s(A2R | 4371) + K9V + " ";
+            .value = message;
         document.getElementById(_s(+S4p))
           .focus();
       } else if ($(_s(t1p & 2147483647))
         .hasClass(_s(n4p - 0))) {
         document.getElementById(_s(+J1p))
-          .value = _s(+A2R) + K9V + " ";
+            .value = message;
         document.getElementById(_s(+J1p))
           .focus();
       } else if ($(_s(+T1p))
         .hasClass(_s(+n4p))) {
         document.getElementById(_s(H2R * 1))
-          .value = _s(+A2R) + K9V + " ";
+            .value = message;
         document.getElementById(_s(H2R - 0))
           .focus();
       }

@@ -74,7 +74,7 @@
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="cotg" DesiredView="useMore">
             <uap:Logo>Assets\protocolImage.png</uap:Logo>
-            <uap:DisplayName>COTG</uap:DisplayName>
+            <uap:DisplayName>Crown of the Gods A</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>

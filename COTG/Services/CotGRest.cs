@@ -295,14 +295,15 @@ namespace COTG.Services
         }
         public static async void Send()
         {
-            if (Alliance.diplomacyFetched)
+            for(var i = 0;;++i )
             {
-                (new GetWorldInfo()).Post();
-            }
-            else
-            {
+                if (Alliance.diplomacyFetched || i >= 20)
+                {
+                    (new GetWorldInfo()).Post();
+                    return;
+                }
                 await Task.Delay(200);
-                Send();
+              
             }
         }
 

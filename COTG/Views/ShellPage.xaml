@@ -62,7 +62,7 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"  >
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True"  >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
@@ -96,7 +96,6 @@
             <AppBarSeparator/>
             <AppBarButton x:Name="Fresh"
                               Label="Fresh"
-                              AccessKey="F5"                         
                               Click="Refresh"
                           RightTapped="RefreshX"
                           Style="{StaticResource AppBarButtonRevealStyle}"
@@ -198,8 +197,8 @@
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" />
-            <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
+            <Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False" />
+            <Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
                         Background="Transparent"
                         VerticalAlignment="Top"

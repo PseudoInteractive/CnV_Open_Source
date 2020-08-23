@@ -641,7 +641,7 @@ namespace COTG.Game
 
             }
             App.AddItem(flyout, "Select",  SelectMe );
-            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteCoords($"<coords>{cid.CidToString()}</coords>"));
+            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput($"<coords>{cid.CidToString()}</coords>"));
 
 
             flyout.XamlRoot = uie.XamlRoot;

@@ -81,7 +81,7 @@ namespace COTG.Views
                 {
                     listView.ScrollIntoView(Groups[count - 1].Items.Last());
                 }
-                input.Focus(FocusState.Keyboard);
+                input.Focus(FocusState.Programmatic);
             }
 
             base.VisibilityChanged(visible);
@@ -167,12 +167,20 @@ namespace COTG.Views
 
 
 
-        private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
+        private void HyperlinkButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var chatEntry = sender as HyperlinkButton;
             if (chatEntry != null)
                 JSClient.ShowPlayer(chatEntry.Content.ToString());
         }
+        private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var chatEntry = sender as HyperlinkButton;
+            if (chatEntry != null)
+                PasteToChatInput($"/w {chatEntry.Content.ToString()} ");
+
+        }
+
         static List<string> messageCache = new List<string>();
         private void Paste(string s)
         {
@@ -238,7 +246,15 @@ namespace COTG.Views
                         // remove duplicates
 
                         JSClient.SendChat(id + 1, str);
-                        input.Text = "";
+                       
+                        {
+                            var count = Groups.Count;
+                            if (count > 0)
+                            {
+                                listView.ScrollIntoView(Groups[count - 1].Items.Last());
+                            }
+                        }
+
                     }
                 }
                 else
@@ -271,7 +287,8 @@ namespace COTG.Views
 
             return ch;
         }
-        public static void PasteCoords(string coords)
+        // also for whisper
+        public static void PasteToChatInput(string coords)
         {
             foreach (var tab in all)
                 tab.Paste(coords);
@@ -328,6 +345,22 @@ namespace COTG.Views
                         break;
                     }
             }
+        }
+
+
+       
+
+        private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+
+            input.Focus(FocusState.Programmatic);
+        
+        }
+
+        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            input.Focus(FocusState.Programmatic);
+
         }
     }
 }
