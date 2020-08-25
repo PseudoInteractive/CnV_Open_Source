@@ -297,7 +297,8 @@ namespace COTG.Services
         {
             for(var i = 0;;++i )
             {
-                if (Alliance.diplomacyFetched || i >= 20)
+                var _i = i;
+                if (Alliance.diplomacyFetched || _i >= 48)
                 {
                     (new GetWorldInfo()).Post();
                     return;

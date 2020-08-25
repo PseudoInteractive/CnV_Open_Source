@@ -143,8 +143,8 @@ namespace COTG.Models
                             else
                                 Note.Show("This attack is in the future, there is no report yet");
                             break;
-                        case "dXY": Spot.ProcessCoordClick(i.targetCid, false); break;
-                        case "aXY": Spot.ProcessCoordClick(i.sourceCid, false); break;
+                        case "dXY": Spot.ProcessCoordClick(i.targetCid, false, App.keyModifiers); break;
+                        case "aXY": Spot.ProcessCoordClick(i.sourceCid, false, App.keyModifiers); break;
                         case "aPlyr": JSClient.ShowPlayer(i.sPlayer); break;
                         case "dPlyr": JSClient.ShowPlayer(i.tPlayer); break;
                             //case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
@@ -366,7 +366,7 @@ namespace COTG.Models
                 switch (context.Column.Header.ToString())
                 {
                     case nameof(Dungeon.xy):
-                        Spot.ProcessCoordClick(cid,false);
+                        Spot.ProcessCoordClick(cid,false, App.keyModifiers);
                         break;
                     case nameof(Dungeon.plan):
                         Raiding.SendRaids(i);

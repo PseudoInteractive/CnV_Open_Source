@@ -14,7 +14,7 @@
   <Identity
     Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
     Publisher="CN=dwu"
-    Version="1.0.26.0" />
+    Version="1.0.30.0" />
 
   <mp:PhoneIdentity PhoneProductId="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -44,14 +44,14 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="ms-resource:AppDescription"
         BackgroundColor="black">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="COTG">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="COTG (A)">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="wide310x150Logo"/>
             <uap:ShowOn Tile="square310x310Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="transparent"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="black"/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>

@@ -50,7 +50,7 @@ namespace COTG.Game
                 _nameToId.Add(str, id);
             }
             // bonus!
-            var bonus = new string[] { "Cersei", "tlgger","Vacant", "Trump", "TTC","Gordy", "adi" };
+            var bonus = new string[] { "Empty", "tlgger2","Vacant", "Trump", "TTC","Gordy", "adi" };
             {
                 int counter = -1;
                 foreach (var i in bonus)

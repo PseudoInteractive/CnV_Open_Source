@@ -128,9 +128,9 @@ namespace COTG.Services
             yield return Singleton<ShareTargetActivationHandler>.Instance;
             // TODO restore    yield return Singleton<BackgroundTaskService>.Instance;
 //            yield return Singleton<SuspendAndResumeService>.Instance;
-            yield return Singleton<WebToAppLinkActivationHandler>.Instance;
-            yield return Singleton<SchemeActivationHandler>.Instance;
-            yield return Singleton<CommandLineActivationHandler>.Instance;
+           // yield return Singleton<WebToAppLinkActivationHandler>.Instance;
+          //  yield return Singleton<SchemeActivationHandler>.Instance;
+           // yield return Singleton<CommandLineActivationHandler>.Instance;
         }
 
         private bool IsInteractive(object args)

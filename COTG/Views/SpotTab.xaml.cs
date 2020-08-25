@@ -27,6 +27,7 @@ using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
+using Windows.System;
 
 namespace COTG.Views
 {
@@ -104,12 +105,12 @@ namespace COTG.Views
         }
 
 
-        public static Spot TouchSpot(int cid)
+        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod)
         {
             var spot = Spot.GetOrAdd(cid);
             if (disableSelection == 0)
             {
-                AddToGrid(spot);
+                AddToGrid(spot,mod);
             }
             return spot;
         }
@@ -120,10 +121,11 @@ namespace COTG.Views
                 try
                 {
                     ++silenceChanges;
+                    instance.selectedGrid.DeselectItem(spot);
                     if (selected)
                         instance.selectedGrid.SelectItem(spot);
-                    else
-                        instance.selectedGrid.DeselectItem(spot);
+                    
+                        
                 //    var sel = instance.selectedGrid.SelectedItems;
 //                    sel.A
                     Assert(instance.selectedGrid.SelectedItems.Contains(spot) == selected);
@@ -164,7 +166,7 @@ namespace COTG.Views
         }
 
         const int maxMRUSize = 12;
-        public static void AddToGrid(Spot spot)
+        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod)
         {
             // Toggle Selected
 
@@ -190,7 +192,7 @@ namespace COTG.Views
                     SpotMRU.Insert(0,spot);
                 }
 
-                    spot.ProcessSelection();
+                    spot.ProcessSelection(mod);
             });
 
         }

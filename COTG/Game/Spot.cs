@@ -169,7 +169,7 @@ namespace COTG.Game
             uiPressColumn = hit.column;
             // The UIElement returned will be the RadDataGrid
             if (spot != null)
-                spot.ProcessClick(hit.column, hit.pt,hit.uie);
+                spot.ProcessClick(hit.column, hit.pt,hit.uie,e.KeyModifiers);
         }
         public static void ProcessPointerExited()
         {
@@ -183,11 +183,11 @@ namespace COTG.Game
         }
 
 
-        public void ProcessClick(string column, PointerPoint pt, UIElement uie)
+        public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
         {
             //    Note.Show($"{this} {column} {pt.Position}");
 
-            if (pt.Properties.IsLeftButtonPressed && !(App.IsKeyPressedControl() || App.IsKeyPressedShift())) // ignore selection style clicks
+            if (pt.Properties.IsLeftButtonPressed && !(modifiers.IsShiftOrControl())) // ignore selection style clicks
             {
 
 
@@ -199,7 +199,7 @@ namespace COTG.Game
                 switch (column)
                 {
                     case nameof(xy):
-                        ProcessCoordClick(cid, false);
+                        ProcessCoordClick(cid, false,modifiers);
                         wantRaidScan = false;
                         break;
                     case "I":
@@ -268,14 +268,14 @@ namespace COTG.Game
                 ShowContextMenu(uie, pt.Position);
                 return;
             }
-            SpotTab.TouchSpot(cid);
+            SpotTab.TouchSpot(cid,modifiers);
         }
 
         
 
-        public static void ProcessCoordClick(int cid,bool lazyMove)
+        public static async void ProcessCoordClick(int cid,bool lazyMove,VirtualKeyModifiers mod)
         {
-            if (City.IsMine(cid) && !(App.IsKeyPressedShift()||App.IsKeyPressedControl()) )
+            if (City.IsMine(cid) && !mod.IsShiftOrControl())
             {
                 if (City.IsBuild(cid))
                 {
@@ -285,7 +285,7 @@ namespace COTG.Game
                 }
                 else
                 {
-                    JSClient.ChangeCity(cid,lazyMove); // keep current view, switch to city
+                    JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
                 }
                 NavStack.Push(cid);
 
@@ -294,8 +294,21 @@ namespace COTG.Game
             {
                 JSClient.ShowCity(cid, lazyMove);
                 NavStack.Push(cid);
+              
+                
             }
-            SpotTab.TouchSpot(cid);
+            SpotTab.TouchSpot(cid,mod);
+
+            if (mod.IsShiftAndControl())
+            {
+                var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
+                Log(str);
+                App.DispatchOnUIThreadSneaky(() =>
+                {
+                    App.CopyTextToClipboard(str);
+                    Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
+                });
+            }
         }
 
 
@@ -405,23 +418,23 @@ namespace COTG.Game
         }
         public void SelectMe()
         {
-            ProcessSelection(true);
+            ProcessSelection(VirtualKeyModifiers.None,true);
             JSClient.ShowCity(cid, true);
         }
      
-        public bool ProcessSelection(bool forceSelect=false)
+        public bool ProcessSelection(VirtualKeyModifiers mod,bool forceSelect=false)
         {
             bool rv = false;
             try
             {
                 selected.EnterWriteLock();
-                if (App.IsKeyPressedShift() || forceSelect)
+                if (mod.IsShift() || forceSelect)
                 {
                     rv = true; // this should also add "in between spots"
                     selected._hashSet.Add(cid);
                     SpotTab.SelectSilent(this, rv);
                 }
-                else if (App.IsKeyPressedControl())
+                else if (mod.IsControl())
                 {
                     if (selected._hashSet.Contains(cid))
                     {

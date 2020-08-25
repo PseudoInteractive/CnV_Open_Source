@@ -624,25 +624,25 @@ namespace COTG.Views
             // Log("Why is this closing?");
         }
 
-        private void GridLostMouse(object sender, PointerRoutedEventArgs e)
-        {
+        //private void GridLostMouse(object sender, PointerRoutedEventArgs e)
+        //{
 
-            try
-            {
-                //   Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
-                //  var me = sender as GridView;
-                //  var button = buildingsButton;
-                //  var flyout = FlyoutBase.GetAttachedFlyout(button);
-                //  if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
-                //     flyout.Hide();
+        //    try
+        //    {
+        //        //   Log($"grid lost: {GetName(sender)} {GetName(e.OriginalSource)}");
+        //        //  var me = sender as GridView;
+        //        //  var button = buildingsButton;
+        //        //  var flyout = FlyoutBase.GetAttachedFlyout(button);
+        //        //  if((DateTime.Now - flyoutCreatedTime).TotalSeconds > 0.25f )
+        //        //     flyout.Hide();
 
 
-            }
-            catch (Exception)
-            {
+        //    }
+        //    catch (Exception)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
         //      public static string GetName(object o )
         //{
@@ -844,7 +844,7 @@ namespace COTG.Views
             {
                 return;
             }
-            Spot.ProcessCoordClick(Spot.focus, false); // then normal click
+            Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers); // then normal click
 
         }
 

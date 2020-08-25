@@ -218,13 +218,14 @@ namespace COTG
             if (args.Kind == ActivationKind.Protocol)
             {
                 ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
-                var s = eventArgs.Uri.Fragment;
+                var s = eventArgs.Uri.OriginalString;
                 Debug.Log(s);
-                // format is sub?s=1&w=
+                // format $"cotg:launch?w={world}&s=1")
+                // are / chars inserted?
                 //  if (s.Length >= 3)
                 {
-                    JSClient.subId = 1;// int.Parse(s.Substring(3,1));
-                    JSClient.world = 20;// int.Parse(s.Substring(7));
+                    JSClient.subId = 1;// int.Parse(s.Substring(7,1));
+                    JSClient.world = int.Parse(s.Substring(14,2));
 
                 }
             }
@@ -385,47 +386,48 @@ namespace COTG
             dataPackage.SetText(s);
             Clipboard.SetContent(dataPackage);
         }
+        public static VirtualKeyModifiers keyModifiers => VirtualKeyModifiers.None;
     }
 
 
 
-        //public static class UserAgent
-        //{
-        //    const int URLMON_OPTION_USERAGENT = 0x10000001;
+    //public static class UserAgent
+    //{
+    //    const int URLMON_OPTION_USERAGENT = 0x10000001;
 
-        //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-        //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+    //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
 
-        //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-        //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
+    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+    //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
 
-        //    public static string GetUserAgent()
-        //    {
-        //        int capacity = 255;
-        //        var buf = new StringBuilder(capacity);
-        //        int length = 0;
+    //    public static string GetUserAgent()
+    //    {
+    //        int capacity = 255;
+    //        var buf = new StringBuilder(capacity);
+    //        int length = 0;
 
-        //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+    //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
 
-        //        return buf.ToString();
-        //    }
+    //        return buf.ToString();
+    //    }
 
-        //    public static void SetUserAgent(string agent)
-        //    {
-        //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
-        //        var ex = Marshal.GetExceptionForHR(hr);
-        //        if (null != ex)
-        //        {
-        //            throw ex;
-        //        }
-        //    }
+    //    public static void SetUserAgent(string agent)
+    //    {
+    //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
+    //        var ex = Marshal.GetExceptionForHR(hr);
+    //        if (null != ex)
+    //        {
+    //            throw ex;
+    //        }
+    //    }
 
-        //    public static void AppendUserAgent(string suffix)
-        //    {
-        //        SetUserAgent(GetUserAgent() + suffix);
-        //    }
-        //}
-        public static class AApp
+    //    public static void AppendUserAgent(string suffix)
+    //    {
+    //        SetUserAgent(GetUserAgent() + suffix);
+    //    }
+    //}
+    public static class AApp
     {
         public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
         {
@@ -481,8 +483,27 @@ namespace COTG
 
             return new Vector2(x, y);
         }
+        public static bool IsShift(this VirtualKeyModifiers mod)
+        {
+            return mod.HasFlag(VirtualKeyModifiers.Shift);
+        }
+        public static bool IsControl(this VirtualKeyModifiers mod)
+        {
+            return mod.HasFlag(VirtualKeyModifiers.Control);
+        }
+        public static bool IsShiftOrControl(this VirtualKeyModifiers mod)
+        {
+            return mod.HasFlag(VirtualKeyModifiers.Control)|mod.HasFlag(VirtualKeyModifiers.Shift);
+        }
+        public static bool IsShiftAndControl(this VirtualKeyModifiers mod)
+        {
+            return mod.HasFlag(VirtualKeyModifiers.Control) & mod.HasFlag(VirtualKeyModifiers.Shift);
+        }
+
+
     }
-        public static class Note 
+
+    public static class Note 
     {
         [Conditional("TRACE")]
         public static void L(string s)
@@ -530,7 +551,7 @@ namespace COTG
                     switch (paths[1])
                     {
                         case "c":
-                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false);
+                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false,VirtualKeyModifiers.None);
                             break;
                         case "p": // player
                             JSClient.ShowPlayer(paths[2]);

@@ -254,6 +254,9 @@
                                   Grid.Row="4"
                                   Grid.RowSpan="2"
                                   Grid.ColumnSpan="3"
+                              IsFocusEngaged="False"
+                              IsTabStop="False"
+                              IsHitTestVisible="False"
                                   AnimationDuration="00:00:00.3000"
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />

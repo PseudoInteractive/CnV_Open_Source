@@ -16,29 +16,31 @@
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
+            <local:HyperlinkColorConverter x:Key="hyperlinkColorConverter" />
             <CollectionViewSource x:Name="cvsGroups" Source="{x:Bind Groups}" IsSourceGrouped="True" ItemsPath="Items"
                               />
             <DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="local:ChatEntryGroup">
-                <TextBlock Text="{x:Bind Title,Mode=OneTime}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" FontStretch="ExtraExpanded" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind Title,Mode=OneTime}" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Style="{StaticResource SubtitleTextBlockStyle}"/>
             </DataTemplate>
             <DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title,Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}" FontStretch="UltraExpanded" TextWrapping="Wrap"/>
+                <TextBlock Text="{x:Bind ((local:ChatEntryGroup)Group).Title,Mode=OneTime}" Style="{StaticResource SubtitleTextBlockStyle}" />
             </DataTemplate>
             <!-- Data template used: -->
             <!-- The data template is bound to a custom DataType called Message. -->
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
-                    <Grid  Background="{x:Null}" >
+                    <Grid  Background="{x:Null}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width ="60"  />
                         <ColumnDefinition Width ="90" />
                         <ColumnDefinition Width ="*" />
                     </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray"  FontSize="13" Margin="0,0,0,0" Padding="0,0,0,0" />
-                    <HyperlinkButton Grid.Column="1" Foreground="Green" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="13" Margin="0,0,0,0" RightTapped="HyperlinkButton_RightTapped" />
-                    <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="13" Margin="0,0,0,0"  Padding="0,0,0,0"
-                                              InlineCodeForeground="Firebrick" InlineCodeBackground="Black"
+                    
+                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" />
+                    <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="12" Margin="0,0,0,0" RightTapped="HyperlinkButton_RightTapped"  />
+                    <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0"
+                                              InlineCodeForeground="Firebrick" InlineCodeBackground="Black" ParagraphLineHeight="12" ParagraphMargin="0" 
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked" />
                     </Grid>
                 
@@ -46,7 +48,7 @@ sent or received, and those values are bound in the DataTemplate.-->
         </Grid.Resources>
         <SemanticZoom TabFocusNavigation="Once">
             <SemanticZoom.ZoomedInView>
-                <ListView x:Name="listView" x:FieldModifier="public" 
+                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0"
              ItemTemplate="{StaticResource MessageViewTemplate}"
                    ItemsSource="{x:Bind cvsGroups.View}" >
                     <ListView.GroupStyle>
@@ -69,9 +71,9 @@ sent or received, and those values are bound in the DataTemplate.-->
                 </ListView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
-                <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
+                <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" MaxLength="244" Margin="4,0,4,0" IsHitTestVisible="True"  InputScope="Chat" IsSpellCheckEnabled="True" IsTapEnabled="False" PointerEntered="input_PointerEntered" />
+        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" AllowFocusOnInteraction="True" AllowFocusWhenDisabled="True" PlaceholderText="Please enter message" IsTabStop="True" MaxLength="244" Margin="4,0,4,0" InputScope="Chat" IsSpellCheckEnabled="True" IsTapEnabled="False" TabFocusNavigation="Once" PointerEntered="input_PointerEntered" />
     </Grid>
 </local:UserTab>

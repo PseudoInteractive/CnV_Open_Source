@@ -118,7 +118,7 @@ namespace COTG.Views
                     {
 
                         case nameof(i.xy):
-                            Spot.ProcessCoordClick(i.cid, false);
+                            Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);
                             break;
                     }
                 }

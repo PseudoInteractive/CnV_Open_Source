@@ -78,7 +78,7 @@ namespace COTG.Views
                 {
                     case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
                         {
-                            Spot.ProcessCoordClick(cid, true);
+                            Spot.ProcessCoordClick(cid, true,e.KeyModifiers);
                             e.Handled = true;
                             break;
                         }
@@ -401,7 +401,7 @@ namespace COTG.Views
                                     }
                                     else
                                     {
-                                        toolTip += "\nWas taken";
+                                        toolTip += "\nWas founded";
                                     }
                                     break;
                                 case World.typeShrine:

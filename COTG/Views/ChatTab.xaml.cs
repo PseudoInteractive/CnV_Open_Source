@@ -24,6 +24,7 @@ using static COTG.Debug;
 using Windows.UI.Xaml.Documents;
 using COTG.Game;
 using System.Text.Json;
+using Windows.UI;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -124,7 +125,7 @@ namespace COTG.Views
             //              await _logSemaphore.WaitAsync();
             // try
             ////  {
-            debug.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => {
+            App.DispatchOnUIThreadSneaky( () => {
 
                 try
                 {
@@ -245,6 +246,7 @@ namespace COTG.Views
                         messageCache.Add(str);
                         // remove duplicates
 
+                        input.Text = "";
                         JSClient.SendChat(id + 1, str);
                        
                         {
@@ -353,14 +355,50 @@ namespace COTG.Views
         private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
 
-            input.Focus(FocusState.Programmatic);
-        
+            var rv=input.Focus(FocusState.Keyboard);
+            Assert(rv == true);
+
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            input.Focus(FocusState.Programmatic);
+            var rv = input.Focus(FocusState.Pointer);
+            Assert(rv == true);
 
         }
     }
-}
+    class HyperlinkColorConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var ce = value as ChatEntry;
+            //   Debug.Log(value.GetType());
+            //    Log(value.ToString());
+            return ce.type switch
+            {
+                2 => new SolidColorBrush() { Color = Colors.Magenta },
+                3 => new SolidColorBrush() { Color = Colors.MediumVioletRed },
+                4 => new SolidColorBrush() { Color = Colors.ForestGreen },
+                5 => new SolidColorBrush() { Color = Colors.Cyan },
+                _ => new SolidColorBrush() { Color =Colors.Orange },
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+        //object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
+        //{
+        //    throw new NotImplementedException();
+        //}
+    }
+

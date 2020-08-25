@@ -75,7 +75,7 @@ namespace COTG
 
         const int researchCount = 64; // I think this is really 49
         public static byte[] research = new byte[researchCount];
-        public static int world = 20;
+        public static int world = 21;
         public static int subId = 0;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;
@@ -472,16 +472,7 @@ namespace COTG
                 //                 Raiding.UpdateTSHome();
 
 
-                if (App.IsKeyPressedControl() && App.IsKeyPressedShift() )
-                {
-                    var str = await Post.SendForText("includes/gLay.php", $"cid={cityId}");
-                    Log(str);
-                    App.DispatchOnUIThreadSneaky(() =>
-                    {
-                        App.CopyTextToClipboard(str);
-                        Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
-                    });
-                }
+             
             }
 			catch (Exception e)
 			{
@@ -993,7 +984,7 @@ namespace COTG
                                 }
                             case "sub":
                                 {
-                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:sub{world}")));
+                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:launch?w={world}&s=1")));
                                     break;
                                 }
                             case "cityclick":

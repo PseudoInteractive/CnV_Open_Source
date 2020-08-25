@@ -117,7 +117,7 @@ namespace COTG.Views
         {
             var image = sender as FrameworkElement;
             var supporter = image.DataContext as Supporter;
-            Spot.ProcessCoordClick(supporter.city.cid, false);
+            Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers);
 
         }
 
@@ -324,7 +324,7 @@ namespace COTG.Views
                 {
 
                     case nameof(i.xy):
-                        Spot.ProcessCoordClick(i.cid, false);
+                        Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);
                         break;
                 }
             }

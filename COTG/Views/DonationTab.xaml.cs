@@ -221,7 +221,7 @@ public class BlessedTapCommand : DataGridCommand
                     }
                     break;
                 case nameof(i.xy):
-                    Spot.ProcessCoordClick(i.cid, false);
+                    Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);
                     break;
                     //            case nameof(Dungeon.plan):
                     //                Raiding.SendRaids(i);

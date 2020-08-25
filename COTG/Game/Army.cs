@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml.Input;
 using static COTG.Game.Enum;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.System;
 
 namespace COTG.Game
 {
@@ -83,7 +84,7 @@ namespace COTG.Game
             switch (column)
             {
                 case "city":
-                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false); break;
+                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, VirtualKeyModifiers.None); break;
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;

@@ -70,8 +70,8 @@ function GetCity(): jsonT.City {
 	return new Promise<Response>();
 }
 */
-var __fetch=Window.prototype.fetch;
-var __debugMe: any;
+//var __fetch=Window.prototype.fetch;
+//var __debugMe: any;
 
 //function sleep(time) {
 //	return new Promise((resolve) => setTimeout(resolve,time));
