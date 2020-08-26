@@ -58,7 +58,33 @@ namespace COTG
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 6;
         public static ConcurrentBag<HttpClient> clientPool;
-        public static HttpClient downloadImageClient;
+        static HttpClient _downloadImageClient;
+        public static HttpClient downloadImageClient { get
+            {
+                if (_downloadImageClient == null)
+                {
+                    _downloadImageClient = new HttpClient();
+                    _downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
+                    _downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
+                    _downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
+                    _downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                }
+                return _downloadImageClient;
+            }
+        }
+        public static HttpClient _translatorClient;
+        public static HttpClient translatorClient
+        {
+            get {
+                if(_translatorClient==null)
+                {
+                    _translatorClient = new HttpClient();
+                    
+                }
+                return _translatorClient;
+            }
+        }
+
 
         public struct Faith
         {
@@ -747,11 +773,7 @@ namespace COTG
 
                         httpsHostString = $"https://{args.Uri.Host}";
                         httpsHost = new Uri(httpsHostString);
-                        downloadImageClient = new HttpClient();
-                        downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
-                        downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
-                        downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
-                        downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+                        
 
                         httpFilter = new HttpBaseProtocolFilter();// HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
                      //   httpFilter.AllowAutoRedirect = true;
@@ -1137,7 +1159,10 @@ namespace COTG
                         City.UpdateSenatorInfo();  // no async
                         Raiding.UpdateTS(true,true);
                         TileData.Ctor();
-                        if (TipsSeen.instance.refresh == false)
+                        if (TipsSeen.instance.refresh == false
+                        ||TipsSeen.instance.chat0==false
+                        || TipsSeen.instance.chat1 == false
+                        || TipsSeen.instance.chat2 == false)
                             App.QueueIdleTask(ShellPage.ShowTipRefresh);
                         // await RaidOverview.Send();
                     }

@@ -25,6 +25,8 @@ using Windows.UI.Xaml.Documents;
 using COTG.Game;
 using System.Text.Json;
 using Windows.UI;
+using COTG.Services;
+using System.Threading.Tasks;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -112,7 +114,11 @@ namespace COTG.Views
         public ChatTab()
         {
             this.InitializeComponent();
-
+            Task.Delay(2000).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+         { //ChatTip0.IsOpen = true;
+            /// ChatTip1.IsOpen = true;
+            // ChatTip2.IsOpen = true;
+         }));
 
         }
         //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
@@ -355,16 +361,147 @@ namespace COTG.Views
         private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
 
-            var rv=input.Focus(FocusState.Keyboard);
+            var rv=input.Focus(FocusState.Programmatic);
             Assert(rv == true);
 
         }
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            var rv = input.Focus(FocusState.Pointer);
+            var rv = input.Focus(FocusState.Programmatic);
             Assert(rv == true);
 
+        }
+
+        private void sender_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var chatEntry = sender as HyperlinkButton;
+            var pt = e.GetCurrentPoint(chatEntry).Properties;
+
+            if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed)
+            {
+                if (chatEntry != null)
+                    JSClient.ShowPlayer(chatEntry.Content.ToString());
+            }
+            else if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.LeftButtonPressed)
+            {
+                if (chatEntry != null)
+                    PasteToChatInput($"/w {chatEntry.Content.ToString()} ");
+            }
+        }
+
+
+
+
+
+        private async void MarkdownTextBlock_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            var msg = sender as MarkdownTextBlock;
+            var fly = new MenuFlyout();
+            var i = fly.Items;
+            var ll = await Avatarslate.TouchAsync();
+            var langs = await ll.GetLanguagesAsync();
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                foreach (var l in langs)
+                {
+                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+                    item.CommandParameter = item;
+                    i.Add(item);
+                }
+                fly.ShowAt(msg);
+            });
+        }
+
+        private async void input_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+         
+        }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+    
+        private async void input_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var msg = sender as TextBox;
+            var fly = new MenuFlyout();
+            var i = fly.Items;
+            var ll = await Avatarslate.TouchAsync();
+            var langs = await Avatarslate.GetLanguagesAsync();
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                foreach (var l in langs)
+                {
+                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+                    item.CommandParameter = item;
+                    i.Add(item);
+                }
+                fly.ShowAt(msg);
+            });
+
+        }
+
+        private async void input_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            var msg = sender as TextBox;
+            var fly = new MenuFlyout();
+            var i = fly.Items;
+            var ll = await Avatarslate.TouchAsync();
+            var langs = await Avatarslate.GetLanguagesAsync();
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                foreach (var l in langs)
+                {
+                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+                    item.CommandParameter = item;
+                    i.Add(item);
+                }
+                fly.ShowAt(msg);
+            });
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = sender as Button;
+            var fly = new MenuFlyout();
+            var i = fly.Items;
+            var ll = await Avatarslate.TouchAsync();
+            var langs = await Avatarslate.GetLanguagesAsync();
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                foreach (var l in langs)
+                {
+                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = input };
+                    item.CommandParameter = item;
+                    i.Add(item);
+                }
+                fly.ShowAt(msg);
+            });
+        }
+
+        private async void MarkdownTextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            var msg = sender as MarkdownTextBlock;
+            var fly = new MenuFlyout();
+            var i = fly.Items;
+            var ll = await Avatarslate.TouchAsync();
+            var langs = await ll.GetLanguagesAsync();
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                foreach (var l in langs)
+                {
+                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+                    item.CommandParameter = item;
+                    i.Add(item);
+                }
+                fly.ShowAt(msg);
+            });
         }
     }
     class HyperlinkColorConverter : IValueConverter

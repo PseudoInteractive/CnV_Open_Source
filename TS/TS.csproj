@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.1.0-beta-20200817-1">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.1.0-beta-20200819-1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

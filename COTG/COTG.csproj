@@ -81,11 +81,14 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Services">
+      <Version>7.0.0-build.184</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.0-preview2</Version>
+      <Version>7.0.0-build.184</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
-      <Version>7.0.0-preview2</Version>
+      <Version>7.0.0-build.184</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0-prerelease.200812001</Version>
@@ -94,19 +97,19 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>5.0.0-rc.1.20416.2</Version>
+      <Version>5.0.0-rc.1.20425.11</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
     <PackageReference Include="System.Security.AccessControl">
-      <Version>5.0.0-rc.1.20416.2</Version>
+      <Version>5.0.0-rc.1.20425.11</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
-      <Version>5.0.0-rc.1.20416.2</Version>
+      <Version>5.0.0-rc.1.20425.11</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>5.0.0-rc.1.20416.2</Version>
+      <Version>5.0.0-rc.1.20425.11</Version>
     </PackageReference>
     <PackageReference Include="System.Utf8String.Experimental">
       <Version>5.0.0-preview.8.20352.3</Version>
@@ -173,6 +176,7 @@
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Helpers\Debug.cs" />
     <Compile Include="Helpers\DataRequestExtensions.cs" />

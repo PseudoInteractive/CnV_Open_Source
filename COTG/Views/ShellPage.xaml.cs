@@ -613,7 +613,27 @@ namespace COTG.Views
                 TipsSeen.instance.refresh = true;
                 instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
             }
+            else if(TipsSeen.instance.chat0==false)
+            {
+                TipsSeen.instance.chat0 = true;
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip0.IsOpen = true);
+
+            }
+            else if (TipsSeen.instance.chat1 == false)
+            {
+                TipsSeen.instance.chat1 = true;
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip1.IsOpen = true);
+
+
+            }
+            else if (TipsSeen.instance.chat2 == false)
+            {
+                TipsSeen.instance.chat2 = true;
+                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip2.IsOpen = true);
+
+            }
         }
+       
         //private void DoNothing(object sender, RoutedEventArgs e)
         //{
 

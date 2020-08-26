@@ -7,13 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wuxdata="using:Windows.UI.Xaml.Data"
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
-    <Grid PointerEntered="Grid_PointerEntered" TabFocusNavigation="Once">
+ >
+    <Grid x:Name="chatGrid" PointerEntered="Grid_PointerEntered" TabFocusNavigation="Once">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
             <local:HyperlinkColorConverter x:Key="hyperlinkColorConverter" />
@@ -30,17 +30,19 @@
             <!-- Each Message object has a color and alignment assigned to it based on whether it was
 sent or received, and those values are bound in the DataTemplate.-->
             <DataTemplate x:Key="MessageViewTemplate" x:DataType="local:ChatEntry">
-                    <Grid  Background="{x:Null}">
+                    <Grid  Background="{x:Null}" Height="Auto" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width ="60"  />
                         <ColumnDefinition Width ="90" />
                         <ColumnDefinition Width ="*" />
                     </Grid.ColumnDefinitions>
-                    
-                        <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" />
-                    <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped="HyperlinkButton_Tapped"  FontSize="12" Margin="0,0,0,0" RightTapped="HyperlinkButton_RightTapped"  />
-                    <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0"
-                                              InlineCodeForeground="Firebrick" InlineCodeBackground="Black" ParagraphLineHeight="12" ParagraphMargin="0" 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" />
+                    <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="12" Margin="0,0,0,0"  />
+                    <tk:MarkdownTextBlock Grid.Column="2" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" ParagraphLineHeight="4" Margin="0,0,0,0"  Padding="0,0,0,0" RightTapped="MarkdownTextBlock_RightTapped"  MinHeight="10" Height="Auto" Tapped="MarkdownTextBlock_Tapped"
+                                              InlineCodeForeground="Firebrick" InlineCodeBackground="Black" ParagraphMargin="0"
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked" />
                     </Grid>
                 
@@ -48,10 +50,10 @@ sent or received, and those values are bound in the DataTemplate.-->
         </Grid.Resources>
         <SemanticZoom TabFocusNavigation="Once">
             <SemanticZoom.ZoomedInView>
-                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0"
-             ItemTemplate="{StaticResource MessageViewTemplate}"
+                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}"
                    ItemsSource="{x:Bind cvsGroups.View}" >
-                    <ListView.GroupStyle>
+            
+                     <ListView.GroupStyle>
                         <GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}" />
                     </ListView.GroupStyle>
                     <!-- The ItemsStackPanel must be edited to update the following two properties -->
@@ -66,6 +68,7 @@ sent or received, and those values are bound in the DataTemplate.-->
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="4,0,4,0" />
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
@@ -74,6 +77,16 @@ sent or received, and those values are bound in the DataTemplate.-->
                 <ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" ItemTemplate="{StaticResource ZoomedOutTemplate}"  />
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-        <TextBox x:Name="input" x:FieldModifier="public" Grid.Row="1" VerticalAlignment="Center" KeyDown="input_KeyDown" AllowFocusOnInteraction="True" AllowFocusWhenDisabled="True" PlaceholderText="Please enter message" IsTabStop="True" MaxLength="244" Margin="4,0,4,0" InputScope="Chat" IsSpellCheckEnabled="True" IsTapEnabled="False" TabFocusNavigation="Once" PointerEntered="input_PointerEntered" />
+        <Grid Grid.Row="1" Width="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="translateButton" Click="Button_Click">
+                <SymbolIcon Symbol="Library" />
+            </Button>
+			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="1"  VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True"  Margin="4,0,4,0" InputScope="Chat" IsSpellCheckEnabled="True" TextWrapping="Wrap" TabFocusNavigation="Once"  />
+        </Grid>
+       
     </Grid>
 </local:UserTab>

@@ -189,47 +189,51 @@ namespace COTG.Services
             try
             {
 
-
-                var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath));
-                req.Content = new HttpStringContent(postContent,
-                            Windows.Storage.Streams.UnicodeEncoding.Utf8,
-                            "application/x-www-form-urlencoded");
-                //req.TransportInformation.
-
-                req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
-
-
-                //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
-                //    req.Headers.Append("Sec-Fetch-Mode", "cors");
-                //    req.Headers.Append("Sec-Fetch-Dest", "empty");
-
                 for (; ; )
                 {
                     if (JSClient.clientPool.TryTake(out client))
                         break;
                     await Task.Delay(128);
                 }
-                var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
-                //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
-                //     Log($"req: {resp.RequestMessage.ToString()}");
-                //   if (resp.ExtendedError != null)
-                //      Log(resp.ExtendedError);
-                JSClient.clientPool.Add(client);
-                // Log("HTTP:" + resp.Version);
-                client = null;
-                if (resp != null)
+                HttpResponseMessage resp;
+                using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
                 {
-                    return resp;
-                    //var b = await resp.Content.ReadAsInputStreamAsync();
+                    req.Content = new HttpStringContent(postContent,
+                                Windows.Storage.Streams.UnicodeEncoding.Utf8,
+                                "application/x-www-form-urlencoded");
+                    //req.TransportInformation.
 
-                    //                    jso = await JsonDocument.ParseAsync(b.ToString);
+                    req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
 
-                    // Log(b.ToString());
+
+                    //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
+                    //    req.Headers.Append("Sec-Fetch-Mode", "cors");
+                    //    req.Headers.Append("Sec-Fetch-Dest", "empty");
+
+
+                    resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
+                    //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
+                    //     Log($"req: {resp.RequestMessage.ToString()}");
+                    //   if (resp.ExtendedError != null)
+                    //      Log(resp.ExtendedError);
                 }
-                else
-                {
+                    JSClient.clientPool.Add(client);
+                    // Log("HTTP:" + resp.Version);
+                    client = null;
+                    if (resp != null)
+                    {
+                        return resp;
+                        //var b = await resp.Content.ReadAsInputStreamAsync();
 
-                };
+                        //                    jso = await JsonDocument.ParseAsync(b.ToString);
+
+                        // Log(b.ToString());
+                    }
+                    else
+                    {
+
+                    }
+                
             }
             catch (Exception e)
             {
