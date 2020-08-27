@@ -738,7 +738,7 @@ function avactor() {
 			}
 			if (type_113 === "Siren's Cove") {
 				
-				let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
+				let optimalTS_ = Math.ceil(other_loot[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
 
 				
 				var galleyTS_ = Math.ceil(optimalTS_ / 100);
@@ -786,9 +786,9 @@ function avactor() {
 			else {
 				let loot_: number[];
 				if (type_113 === "Mountain Cavern")
-					loot_ = mountain_loot_;
+					loot_ = mountain_loot;
 				else
-					loot_ = other_loot_;
+					loot_ = other_loot;
 				/**
 				 * @return {void}
 				 */

@@ -70,6 +70,7 @@ namespace COTG.Services
                 viewControl.Title = windowTitle;
                 viewControl.StartViewInUse();
                 var frame = new Frame();
+                frame.IsNavigationStackEnabled = false;
                 frame.RequestedTheme = ThemeSelectorService.Theme;
                 frame.Navigate(pageType, viewControl);
                 Window.Current.Content = frame;

@@ -1649,11 +1649,8 @@ function GetCidData(a) {
 let ttts = [1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1];
 /** @type {string} */
 let message_23 = "Not enough TS to kill this boss!";
-/** @type {!Array} */
-let other_loot_ = [350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600];
-/** @type {!Array} */
-let mountain_loot_ = [350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500];
-/** @type {!Array} */
+var other_loot = [400, 1050, 4500, 15000, 34250, 60000, 125000, 210000, 320000, 462000]; //forest, hill loot
+var mountain_loot = [400, 1050, 4500, 15000, 34250, 60000, 125000, 210000, 320000, 462000]; //mountain loot
 let tpicdiv = ["guard32 trooptdcm", "bally32 trooptdcm", "ranger32 trooptdcm", "triari32 trooptdcm", "priest32 trooptdcm", "vanq32 trooptdcm", "sorc32 trooptdcm", "scout32 trooptdcm", "arbal32 trooptdcm", "praet32 trooptdcm", "horsem32 trooptdcm", "druid32 trooptdcm", "ram32 trooptdcm", "scorp32 trooptdcm", "galley32 trooptdcm", "sting32 trooptdcm", "wship32 trooptdcm", "senat32 trooptdcm"];
 /** @type {!Array} */
 let tpicdiv20 = ["guard20 trooptdcm", "bally20 trooptdcm", "ranger20 trooptdcm", "triari20 trooptdcm", "priest20 trooptdcm", "vanq20 trooptdcm", "sorc20 trooptdcm", "scout20 trooptdcm", "arbal20 trooptdcm", "praet20 trooptdcm", "horsem20 trooptdcm", "druid20 trooptdcm", "ram20 trooptdcm", "scorp20 trooptdcm", "galley20 trooptdcm", "sting20 trooptdcm", "wship20 trooptdcm", "senat20 trooptdcm"];
@@ -25809,7 +25806,7 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R << 2005856544))
                         .value = document.getElementById(_s(+H2R))
                         .value + " " + k3U + " ";
-                PostChatIn(E4U);
+                PostChatIn(k3U);
             });
             $(_s(2430))
                 .click(function () {
@@ -25836,7 +25833,7 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(+H2R))
                         .value = document.getElementById(_s(H2R << 1513710880))
                         .value + " " + e3U + " ";
-                PostChatIn(E4U);
+                PostChatIn(e3U);
             });
             $(_s(6919))
                 .click(function () {
@@ -25863,7 +25860,7 @@ var cotgsubscribe = amplify;
                     document.getElementById(_s(H2R ^ 0))
                         .value = document.getElementById(_s(H2R >> 1393086016))
                         .value + " " + s3U + " ";
-                PostChatIn(E4U);
+                PostChatIn(s3U);
             });
             $(_s(5985))
                 .click(function () { p2F(); });
@@ -74184,7 +74181,7 @@ function avactor() {
                 home_loot_2 = home_loot_2 + home_1 * ttloot_[TroopNameToId(i)];
             }
             if (type_113 === "Siren's Cove") {
-                let optimalTS_ = Math.ceil(other_loot_[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
+                let optimalTS_ = Math.ceil(other_loot[lvl_ - 1] / 10 * (1 - prog_ / 100 + 1) * 1.05);
                 var galleyTS_ = Math.ceil(optimalTS_ / 100);
                 var stingerTS_ = Math.ceil(optimalTS_ / 150);
                 var warshipTS_ = Math.ceil(optimalTS_ / 300);
@@ -74229,9 +74226,9 @@ function avactor() {
             else {
                 let loot_;
                 if (type_113 === "Mountain Cavern")
-                    loot_ = mountain_loot_;
+                    loot_ = mountain_loot;
                 else
-                    loot_ = other_loot_;
+                    loot_ = other_loot;
                 /**
                  * @return {void}
                  */
@@ -77172,11 +77169,11 @@ function recallraidl100_() {
         var dungeon_ = splitlp_[0].substring(0, splitlp_[0].indexOf(","));
         if (dungeon_ === "Mountain Cavern") {
             /** @type {!Array} */
-            loot_ = mountain_loot_;
+            loot_ = mountain_loot;
         }
         else {
             /** @type {!Array} */
-            loot_ = other_loot_;
+            loot_ = other_loot;
         }
         /** @type {number} */
         var total_loot_c_ = Math.ceil(loot_[AsNumber(Dungeon_lvl_) - 1] * (1 - AsNumber(Dungeion_prog_) / 100 + 1));
@@ -77274,11 +77271,11 @@ function carrycheck_() {
         var dungeonType = splitlp_1[0].substring(0, splitlp_1[0].indexOf(","));
         if (dungeonType === "Mountain Cavern") {
             /** @type {!Array} */
-            loot_1 = mountain_loot_;
+            loot_1 = mountain_loot;
         }
         else {
             /** @type {!Array} */
-            loot_1 = other_loot_;
+            loot_1 = other_loot;
         }
         /** @type {number} */
         var total_loot_c_1 = Math.ceil(loot_1[AsNumber(dungeonLevel) - 1] * (1 - AsNumber(dungeonProg) / 100 + 1));
@@ -77387,11 +77384,11 @@ function getDugRows_() {
             var type_dung_ = $(this).attr("type");
             if (type_dung_ === "Mountain") {
                 /** @type {!Array} */
-                loot1_ = mountain_loot_;
+                loot1_ = mountain_loot;
             }
             else {
                 /** @type {!Array} */
-                loot1_ = other_loot_;
+                loot1_ = other_loot;
             }
             /** @type {number} */
             var total_loot_1 = Math.ceil(loot1_[AsNumber(dunglvl_) - 1] * (2 - AsNumber(progress_) / 100) * 1.02);

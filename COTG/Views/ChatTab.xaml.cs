@@ -373,22 +373,22 @@ namespace COTG.Views
 
         }
 
-        private void sender_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var chatEntry = sender as HyperlinkButton;
-            var pt = e.GetCurrentPoint(chatEntry).Properties;
+        //private void sender_PointerPressed(object sender, PointerRoutedEventArgs e)
+        //{
+        //    var chatEntry = sender as HyperlinkButton;
+        //    var pt = e.GetCurrentPoint(chatEntry).Properties;
 
-            if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed)
-            {
-                if (chatEntry != null)
-                    JSClient.ShowPlayer(chatEntry.Content.ToString());
-            }
-            else if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.LeftButtonPressed)
-            {
-                if (chatEntry != null)
-                    PasteToChatInput($"/w {chatEntry.Content.ToString()} ");
-            }
-        }
+        //    if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed)
+        //    {
+        //        if (chatEntry != null)
+        //            JSClient.ShowPlayer(chatEntry.Content.ToString());
+        //    }
+        //    else if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.LeftButtonPressed)
+        //    {
+        //        if (chatEntry != null)
+        //            PasteToChatInput($"/w {chatEntry.Content.ToString()} ");
+        //    }
+        //}
 
 
 
@@ -410,60 +410,60 @@ namespace COTG.Views
                     item.CommandParameter = item;
                     i.Add(item);
                 }
-                fly.ShowAt(msg);
+                fly.ShowAt(msg, e.GetPosition(msg));
             });
         }
 
-        private async void input_Tapped(object sender, TappedRoutedEventArgs e)
-        {
+        //private async void input_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
          
-        }
+        //}
 
-        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
-        {
+        //private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        //{
 
-        }
+        //}
 
     
-        private async void input_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            var msg = sender as TextBox;
-            var fly = new MenuFlyout();
-            var i = fly.Items;
-            var ll = await Avatarslate.TouchAsync();
-            var langs = await Avatarslate.GetLanguagesAsync();
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                foreach (var l in langs)
-                {
-                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
-                    item.CommandParameter = item;
-                    i.Add(item);
-                }
-                fly.ShowAt(msg);
-            });
+        //private async void input_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        //{
+        //    var msg = sender as TextBox;
+        //    var fly = new MenuFlyout();
+        //    var i = fly.Items;
+        //    var ll = await Avatarslate.TouchAsync();
+        //    var langs = await Avatarslate.GetLanguagesAsync();
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        foreach (var l in langs)
+        //        {
+        //            MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+        //            item.CommandParameter = item;
+        //            i.Add(item);
+        //        }
+        //        fly.ShowAt(msg);
+        //    });
 
-        }
+        //}
 
-        private async void input_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            var msg = sender as TextBox;
-            var fly = new MenuFlyout();
-            var i = fly.Items;
-            var ll = await Avatarslate.TouchAsync();
-            var langs = await Avatarslate.GetLanguagesAsync();
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                foreach (var l in langs)
-                {
-                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
-                    item.CommandParameter = item;
-                    i.Add(item);
-                }
-                fly.ShowAt(msg);
-            });
-        }
+        //private async void input_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        //{
+        //    e.Handled = true;
+        //    var msg = sender as TextBox;
+        //    var fly = new MenuFlyout();
+        //    var i = fly.Items;
+        //    var ll = await Avatarslate.TouchAsync();
+        //    var langs = await Avatarslate.GetLanguagesAsync();
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        foreach (var l in langs)
+        //        {
+        //            MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+        //            item.CommandParameter = item;
+        //            i.Add(item);
+        //        }
+        //        fly.ShowAt(msg);
+        //    });
+        //}
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -484,10 +484,12 @@ namespace COTG.Views
             });
         }
 
-        private async void MarkdownTextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            e.Handled = true;
-            var msg = sender as MarkdownTextBlock;
+
+            //            e.Handled = true;
+            var date = sender as TextBlock;
+            var msg = date.Tag as MarkdownTextBlock;
             var fly = new MenuFlyout();
             var i = fly.Items;
             var ll = await Avatarslate.TouchAsync();
@@ -500,7 +502,7 @@ namespace COTG.Views
                     item.CommandParameter = item;
                     i.Add(item);
                 }
-                fly.ShowAt(msg);
+                fly.ShowAt(date,e.GetPosition(date) );
             });
         }
     }

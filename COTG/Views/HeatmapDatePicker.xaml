@@ -15,7 +15,7 @@
 			<RowDefinition Height="38"/>
 		</Grid.RowDefinitions>
 		<TextBlock Text="Highlight world changes since:" VerticalAlignment="Center" HorizontalAlignment="Center" IsColorFontEnabled="False" FocusVisualPrimaryThickness="3,2,2,2" IsHitTestVisible="False"  />
-		<CalendarView  x:Name="date" Grid.Row="1" SelectedDatesChanged="date_SelectedDatesChanged"  SelectionMode="Single" IsTabStop="True" TabNavigation="Cycle" HorizontalAlignment="Center" VerticalAlignment="Center" IsTodayHighlighted="False" />
+		<CalendarView  x:Name="date" Grid.Row="1" SelectedDatesChanged="date_SelectedDatesChanged"  SelectionMode="Single" IsTabStop="True" TabFocusNavigation="Cycle" HorizontalAlignment="Center" VerticalAlignment="Center" IsTodayHighlighted="False" />
 		<Button Click="Now_Click" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" >
 			<TextBlock Text="Clear" HorizontalAlignment="Center" FontSize="14" />
 		</Button>

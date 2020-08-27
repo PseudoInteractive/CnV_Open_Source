@@ -24006,7 +24006,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(+n4p))) document.getElementById(_s(H2R << 2005856544))
               .value = document.getElementById(_s(+H2R))
               .value + " " + k3U + " ";
-              PostChatIn(E4U);
+              PostChatIn(k3U);
           });
         $(_s(2430))
           .click(function() {
@@ -24029,7 +24029,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p >> 1474913920))) document.getElementById(_s(+H2R))
               .value = document.getElementById(_s(H2R << 1513710880))
               .value + " " + e3U + " ";
-              PostChatIn(E4U);
+              PostChatIn(e3U);
           });
         $(_s(6919))
           .click(function() {
@@ -24052,7 +24052,7 @@ var cotgsubscribe = amplify;
               .hasClass(_s(n4p & 2147483647))) document.getElementById(_s(H2R ^ 0))
               .value = document.getElementById(_s(H2R >> 1393086016))
               .value + " " + s3U + " ";
-              PostChatIn(E4U);
+              PostChatIn(s3U);
           });
         $(_s(5985))
           .click(function() { p2F(); });

@@ -317,10 +317,10 @@ function recallraidl100_() {
 		var dungeon_=splitlp_[0].substring(0,splitlp_[0].indexOf(","));
 		if(dungeon_==="Mountain Cavern") {
 			/** @type {!Array} */
-			loot_=mountain_loot_;
+			loot_=mountain_loot;
 		} else {
 			/** @type {!Array} */
-			loot_=other_loot_;
+			loot_=other_loot;
 		}
 		/** @type {number} */
 		var total_loot_c_=Math.ceil(loot_[AsNumber(Dungeon_lvl_)-1]*(1-AsNumber(Dungeion_prog_)/100+1));
@@ -419,10 +419,10 @@ function carrycheck_() {
 		var dungeonType=splitlp_1[0].substring(0,splitlp_1[0].indexOf(","));
 		if(dungeonType==="Mountain Cavern") {
 			/** @type {!Array} */
-			loot_1=mountain_loot_;
+			loot_1=mountain_loot;
 		} else {
 			/** @type {!Array} */
-			loot_1=other_loot_;
+			loot_1=other_loot;
 		}
 		/** @type {number} */
 		var total_loot_c_1=Math.ceil(loot_1[AsNumber(dungeonLevel)-1]*(1-AsNumber(dungeonProg)/100+1));
@@ -536,10 +536,10 @@ function getDugRows_() {
 			var type_dung_=$(this).attr("type");
 			if(type_dung_==="Mountain") {
 				/** @type {!Array} */
-				loot1_=mountain_loot_;
+				loot1_=mountain_loot;
 			} else {
 				/** @type {!Array} */
-				loot1_=other_loot_;
+				loot1_=other_loot;
 			}
 			/** @type {number} */
 			var total_loot_1=Math.ceil(loot1_[AsNumber(dunglvl_)-1]*(2-AsNumber(progress_)/100)*1.02);

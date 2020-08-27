@@ -62,7 +62,7 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True"  >
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"  >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
@@ -197,8 +197,8 @@
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False" />
-            <Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
+            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" />
+            <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
                         Background="Transparent"
                         VerticalAlignment="Top"
@@ -232,12 +232,12 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                                    IsLightDismissEnabled="True"
                                 Title="Translate Incoming"
                               Target="{x:Bind chatTabFrame}" 
-                                Subtitle="Right click on message and select language to translate"></winui:TeachingTip>
+                                Subtitle="Right click on a message and select a language to translate"></winui:TeachingTip>
                 <winui:TeachingTip x:Name="ChatTip2"
                                 Title="Translate Outgoing"
                                    IsLightDismissEnabled="True"
                                Target="{x:Bind chatTabFrame}"
-                                Subtitle="Click here to translate outgoing, you can repeat for more languages"></winui:TeachingTip>
+                                Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
                 </Frame.Resources>
             </Frame>
             <tk:GridSplitter
@@ -272,9 +272,8 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                                   Grid.Row="4"
                                   Grid.RowSpan="2"
                                   Grid.ColumnSpan="3"
-                              IsFocusEngaged="False"
                               IsTabStop="False"
-                              IsHitTestVisible="False"
+                             
                                   AnimationDuration="00:00:00.3000"
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />
@@ -285,7 +284,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
                         Width="11"
-                        Canvas.ZIndex="44">
+                        Canvas.ZIndex="33">
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
                     Foreground="White"  IsHitTestVisible="False"    />
