@@ -576,9 +576,17 @@ namespace COTG.Game
 
 
 
-        public void ReturnFastClick()
+        public async void ReturnFastClick()
         {
-             Raiding.ReturnFast(cid, true);
+            if (App.IsKeyPressedShift())
+            {
+                await Post.Send("overview/rcallall.php", "a=" + cid);
+                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3");
+            }
+            else
+            {
+                Raiding.ReturnFast(cid, true);
+            }
         }
 
         //int IKeyedItem.GetKey()

@@ -219,10 +219,10 @@ namespace COTG.Game
         public static async void ReturnSlow(int cid, bool updateUI )
         {
             Note.Show($"{cid.CidToStringMD()} End Raids");
-            var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+     
             if (cid != 0)
             {
-                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3");
+                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":1}", "Rx3x5DdAxxerx3");
                 if (updateUI)
                 {
                     // await JSClient.PollCity(cid);

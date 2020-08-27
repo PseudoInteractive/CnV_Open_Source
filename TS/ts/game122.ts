@@ -44247,7 +44247,7 @@ console.log("Bad");
             .show();
           var h6U = _s(m24 | 2064) + T6U + " " + bam[_s(+Q5y)][l6U][_s(+
             C5y)];
-          if (x6U <= 10 && x6U != 0) {
+          if (x6U <= 10 && x6U > 0) {
             var O6U = Math.ceil(bam[_s(+Q5y)][Number(l6U)][_s(+h6R)][
               Number(x6U)][_s(X6R ^ 0)] / (Number(D6.cs) / (100)));
             var U6U = Q2(O6U);

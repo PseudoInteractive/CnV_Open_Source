@@ -750,7 +750,7 @@ function opensumwin_() {
 	/** @type {boolean} */
 	sum_=false;
 	/** @type {string} */
-	var sumwin_="<div id='sumWin' style='width:60%;height:50%;left: 360px; z-index: 2000;' class='popUpBox'><div id='popsum' class='popUpBar'><span class=\"ppspan\">Cities Summaries</span> <button id=\"sumX\" onclick=\"$('#sumWin').hide();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
+	var sumwin_ ="<div id='sumWin' style='width:60%;height:50%;left: 360px; z-index: 2000;' class='longwindow'><div id='popsum' class='popUpBar'><span class=\"ppspan\">Cities Summaries</span> <button id=\"sumX\" onclick=\"$('#sumWin').hide();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
 	/** @type {string} */
 	sumwin_=`${sumwin_}<div id='sumdiv' class='beigetabspopup ava' style='background:none;border: none;padding: 0px;height:74%;'><ul id='sumtabs' role='tablist'><li role='tab'><a href='#resTab' role='presentation'>Resources</a></li>`;
 	/** @type {string} */
