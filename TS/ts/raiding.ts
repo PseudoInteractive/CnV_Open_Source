@@ -736,13 +736,13 @@ function setinfantry_() {
 }
 
 
-function GetRecentTabHTML() {
-	var rv=`<thead><tr data="0">`;
-	for(var key in defaultMru) {
-		rv+=`<th>${key}</th>`;
-	}
-	return `${rv}</tr></thead>`;
-}
+//function GetRecentTabHTML() {
+//	var rv=`<thead><tr data="0">`;
+//	for(var key in defaultMru) {
+//		rv+=`<th>${key}</th>`;
+//	}
+//	return `${rv}</tr></thead>`;
+//}
 /**
  * @return {void}
  */
@@ -750,13 +750,13 @@ function opensumwin_() {
 	/** @type {boolean} */
 	sum_=false;
 	/** @type {string} */
-	var sumwin_ ="<div id='sumWin' style='width:60%;height:50%;left: 360px; z-index: 2000;' class='longwindow'><div id='popsum' class='popUpBar'><span class=\"ppspan\">Cities Summaries</span> <button id=\"sumX\" onclick=\"$('#sumWin').hide();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
+	var sumwin_ ="<div id='sumWin' style='width:60%;height:50%;left: 360px; display: block; z-index: 2000;' class='obscuretop'><div id='popsum' class='popUpBar'><span class=\"ppspan\">Cities Summaries</span> <button id=\"sumX\" onclick=\"$('#sumWin').hide();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
 	/** @type {string} */
 	sumwin_=`${sumwin_}<div id='sumdiv' class='beigetabspopup ava' style='background:none;border: none;padding: 0px;height:74%;'><ul id='sumtabs' role='tablist'><li role='tab'><a href='#resTab' role='presentation'>Resources</a></li>`;
 	/** @type {string} */
 	sumwin_=`${sumwin_}<li role='tab'><a href='#troopsTab' role='presentation'>Troops</a></li><li role='tab'><a href='#raidTab' role='presentation'>Raids</a></li><li role='tab'><a href='#raidoverTab' role='presentation'>Raids Overview</a></li>`;
 	/** @type {string} */
-	sumwin_=`${sumwin_}<li role='tab'><a href='#supportTab' role='presentation'>Support</a></li><li role='tab'><a href='#recentTab' role='presentation'>Recent</a></li><li role='tab'><a href='#donateTab' role='presentation'>Donate</a></li></ul>`;
+	sumwin_=`${sumwin_}<li role='tab'><a href='#supportTab' role='presentation'>Support</a></li></ul>`;
 	/** @type {string} */
 	sumwin_=`${sumwin_}<div id='resTab'><button id='resup' class='greenb' style='font-size:14px;border-radius:6px; margin:4px;'>Update</button><span style='margin-left:50px;'>Show cities from: </span>`;
 	/** @type {string} */
@@ -796,18 +796,18 @@ function opensumwin_() {
 	/** @type {string} */
 	sumwin_=`${sumwin_}<thead><th></th><th>Player</th><th>City</th><th>Coords</th><th>Alliance</th><th>TS supporting</th><th>TS sending</th><th>TS returning</th></thead></table></div></div>`;
 
-	sumwin_=`${sumwin_}<div id='recentTab'><button id='recentup' class='greenb' style='font-size:14px;border-radius:6px; margin:4px;'>Update</button>`;
-	/** @type {string} */
-	sumwin_=`${sumwin_}<div class='beigemenutable scroll-pane ava' style='width:99%;height:110%;margin-left:4px;' ><table  id='recenttable'>`;
-	/** @type {string} */
-	sumwin_=`${sumwin_+GetRecentTabHTML()}</table></div></div>`;
-	/** @type {string} */
-	sumwin_=`${sumwin_}<div id='donateTab'><button id='donateup' class='greenb' style='font-size:14px;border-radius:6px; margin:4px;'>Update</button><span style='margin-left:50px;'>Show cities from: </span>`;
-	/** @type {string} */
-	sumwin_=`${sumwin_}<div class='beigemenutable scroll-pane ava' style='width:99%;height:110%;margin-left:4px;' ><table  id='donatetable' class='ava'>`;
-	/** @type {string} */
-	sumwin_=`${sumwin_}${GetDonateHeader()}</table></div></div>`;
-	/** @type {string} */
+	//sumwin_=`${sumwin_}<div id='recentTab'><button id='recentup' class='greenb' style='font-size:14px;border-radius:6px; margin:4px;'>Update</button>`;
+	///** @type {string} */
+	//sumwin_=`${sumwin_}<div class='beigemenutable scroll-pane ava' style='width:99%;height:110%;margin-left:4px;' ><table  id='recenttable'>`;
+	///** @type {string} */
+	//sumwin_=`${sumwin_+GetRecentTabHTML()}</table></div></div>`;
+	///** @type {string} */
+	//sumwin_=`${sumwin_}<div id='donateTab'><button id='donateup' class='greenb' style='font-size:14px;border-radius:6px; margin:4px;'>Update</button><span style='margin-left:50px;'>Show cities from: </span>`;
+	///** @type {string} */
+	//sumwin_=`${sumwin_}<div class='beigemenutable scroll-pane ava' style='width:99%;height:110%;margin-left:4px;' ><table  id='donatetable' class='ava'>`;
+	///** @type {string} */
+	//sumwin_=`${sumwin_}${GetDonateHeader()}</table></div></div>`;
+	///** @type {string} */
 	sumwin_=`${sumwin_}</div></div>`;
 	$("#reportsViewBox").after(sumwin_);
 	$("#sumWin").draggable({
@@ -842,18 +842,18 @@ function opensumwin_() {
 		id: "selRaids",
 		style: "height: 30px;width:150px;font-size:14px;border-radius:6px;margin:7px"
 	});
-	var selDonate_=$("#organiser").clone(false).attr({
-		id: "selDonate",
-		style: "height: 30px;width:150px;font-size:14px;border-radius:6px;margin:7px"
-	});
+	//var selDonate_=$("#organiser").clone(false).attr({
+	//	id: "selDonate",
+	//	style: "height: 30px;width:150px;font-size:14px;border-radius:6px;margin:7px"
+	//});
 	$("#resup").next().after(selres_);
 	$("#troopsup").next().after(seltroops_);
 	$("#raidoverup").next().after(selraids_);
-	$("#donateup").next().after(selDonate_);
+//	$("#donateup").next().after(selDonate_);
 	$("#selTroops").val("all").change();
 	$("#selRes").val("all").change();
 	$("#selRaids").val("all").change();
-	$("#selDonate").val("all").change();
+//	$("#selDonate").val("all").change();
 
 	$("#resup").click(() => {
 		$("#selRes").val("all").change();
@@ -864,25 +864,25 @@ function opensumwin_() {
 				updateres_(sumres_);
 			});
 	});
-	$("#donateup").click(() => {
-		let filtered=null;
-		var listName=$("#selDonate").val();
-		$.each(ppdt.clc,(_listName,_list) => {
-			if(listName==_listName) {
-				/** @type {!Object} */
-				filtered=_list;
-				return;
-			}
-		});
-		OverviewPost("overview/citover.php",null,
-			function(sumres_) {
-				OverviewPost("overview/bleover.php",null,
-					function(bleover) {
+	//$("#donateup").click(() => {
+	//	let filtered=null;
+	//	var listName=$("#selDonate").val();
+	//	$.each(ppdt.clc,(_listName,_list) => {
+	//		if(listName==_listName) {
+	//			/** @type {!Object} */
+	//			filtered=_list;
+	//			return;
+	//		}
+	//	});
+	//	OverviewPost("overview/citover.php",null,
+	//		function(sumres_) {
+	//			OverviewPost("overview/bleover.php",null,
+	//				function(bleover) {
 
-						UpdateDonate(sumres_,bleover,filtered);
-					});
-			});
-	});
+	//					UpdateDonate(sumres_,bleover,filtered);
+	//				});
+	//		});
+	//});
 	$("#troopsup").click(() => {
 		$("#selTroops").val("all").change();
 		var notes_={
@@ -976,9 +976,9 @@ function opensumwin_() {
 			}
 		);
 	});
-	$("#recentup").click(() => {
-		updaterecent_();
-	});
+	//$("#recentup").click(() => {
+	//	updaterecent_();
+	//});
 	/** @type {!Array} */
 	var citylist_: number[]=[];
 	$("#selTroops").change(() => {
@@ -1238,58 +1238,58 @@ function updatesupport_(data_43) {
 		$(this).remove();
 	});
 }
-function updaterecent_() {
-	var recenttab_=`${GetRecentTabHTML()}<tbody>`;
-	/** @type {string} */
-	$.each(mru,function() {
+//function updaterecent_() {
+//	var recenttab_=`${GetRecentTabHTML()}<tbody>`;
+//	/** @type {string} */
+//	$.each(mru,function() {
 
-		recenttab_=`${recenttab_}<tr id='recent_row_${this.cid}' >`
-			+`<td class='coordblink' data='${this.cid}'>${this.cid%65536}:${Math.floor(this.cid/65536)}</td>`
-			+`<td><button class='greenb chcity' id='recent_name' a='${this.cid}'>${this.name}</button></td>`
-			+`<td><input id='recent_pin' class='clsubopti' type='checkbox' ${(this.pin===true? "checked":"")}></td>`
-			+`<td><input id='recent_misc0' class='clsubopti' type='checkbox' ${(this.misc0===true? "checked":"")}></td>`
-			+`<td><input id='recent_misc1' class='clsubopti' type='checkbox' ${(this.misc1===true? "checked":"")}></td>`
-			+`<td><input id='recent_notes'  value = '${this.notes}'></td>`
-			+`<td data='${this.player}' id='recent_player'>${this.player}</td>`
-			+`<td data='${this.alliance}' id='recent_alliance'>${this.alliance}</td>`
-			+`<td><input id='recent_last' value='${this.last.toLocaleString()}' type = 'date-time-locale'></td>`;
-	});
+//		recenttab_=`${recenttab_}<tr id='recent_row_${this.cid}' >`
+//			+`<td class='coordblink' data='${this.cid}'>${this.cid%65536}:${Math.floor(this.cid/65536)}</td>`
+//			+`<td><button class='greenb chcity' id='recent_name' a='${this.cid}'>${this.name}</button></td>`
+//			+`<td><input id='recent_pin' class='clsubopti' type='checkbox' ${(this.pin===true? "checked":"")}></td>`
+//			+`<td><input id='recent_misc0' class='clsubopti' type='checkbox' ${(this.misc0===true? "checked":"")}></td>`
+//			+`<td><input id='recent_misc1' class='clsubopti' type='checkbox' ${(this.misc1===true? "checked":"")}></td>`
+//			+`<td><input id='recent_notes'  value = '${this.notes}'></td>`
+//			+`<td data='${this.player}' id='recent_player'>${this.player}</td>`
+//			+`<td data='${this.alliance}' id='recent_alliance'>${this.alliance}</td>`
+//			+`<td><input id='recent_last' value='${this.last.toLocaleString()}' type = 'date-time-locale'></td>`;
+//	});
 
-	/** @type {string} */
-	recenttab_=`${recenttab_}</tbody>`;
-	$("#recenttable").html(recenttab_);
-	$("#recenttable td").css("text-align","center");
-	$("input[id^='recent_']").change(UpdateFromRecent);
+//	/** @type {string} */
+//	recenttab_=`${recenttab_}</tbody>`;
+//	$("#recenttable").html(recenttab_);
+//	$("#recenttable td").css("text-align","center");
+//	$("input[id^='recent_']").change(UpdateFromRecent);
 
-	/** @type {(Element|null)} */
-	sorttable.makeSortable(document.getElementById("recenttable"));
-}
-function UpdateFromRecent() {
-	$.each(mru,function() {
-		var r=$('#recent_row_'+this.cid);
-		let _city=GetCity();
-		if(r!==null&&r!=undefined) {
-			var HTMLElement
-			this.pin=IsChecked(r.find("#recent_pin"));
-			this.misc0=IsChecked(r.find("#recent_misc0"));
-			this.misc1=IsChecked(r.find("#recent_misc1"));
-			var notes=r.find("#recent_notes").val();
-			if(notes!==this.notes) {
-				this.notes=notes; //  change city notes
-				if(this.player===_city.pn) {
-					$.post('includes/sNte.php',{ cid: this.cid,a: this.notes,b: "" });
+//	/** @type {(Element|null)} */
+//	sorttable.makeSortable(document.getElementById("recenttable"));
+//}
+//function UpdateFromRecent() {
+//	$.each(mru,function() {
+//		var r=$('#recent_row_'+this.cid);
+//		let _city=GetCity();
+//		if(r!==null&&r!=undefined) {
+//			var HTMLElement
+//			this.pin=IsChecked(r.find("#recent_pin"));
+//			this.misc0=IsChecked(r.find("#recent_misc0"));
+//			this.misc1=IsChecked(r.find("#recent_misc1"));
+//			var notes=r.find("#recent_notes").val();
+//			if(notes!==this.notes) {
+//				this.notes=notes; //  change city notes
+//				if(this.player===_city.pn) {
+//					$.post('includes/sNte.php',{ cid: this.cid,a: this.notes,b: "" });
 
-				}
+//				}
 
-			}
+//			}
 
-		}
+//		}
 
-	});
+//	});
 
-//	console.log(mru);
+////	console.log(mru);
 
-}
+//}
 /**
  * @param {!Object} data_44
  * @param {?} turnc_
@@ -1420,22 +1420,22 @@ function updateres_(data_45) {
 	});
 }
 
-function GetDonateHeader() {
-	return "<thead><tr data='0' class = 'ava'>"
-		+"<th>Send</th>"
-		+"<th>Name</th><th>Notes</th><th>Coords</th>"
-		+"<th>Coords</th>"
-		+"<th>Dist</th>"
-		+"<th>W needed</th>"
-		+"<th>S needed</th>"
-		+"<th>Priority</th>"
-		+"<th>notes</th>"
-		+"<th>Wood</th>"
-		+"<th>Stone</th>"
-		+"<th>Carts</th>"
-		+"<th>Total</th>"
-		+"</tr></thead>";
-}
+//function GetDonateHeader() {
+//	return "<thead><tr data='0' class = 'ava'>"
+//		+"<th>Send</th>"
+//		+"<th>Name</th><th>Notes</th><th>Coords</th>"
+//		+"<th>Coords</th>"
+//		+"<th>Dist</th>"
+//		+"<th>W needed</th>"
+//		+"<th>S needed</th>"
+//		+"<th>Priority</th>"
+//		+"<th>notes</th>"
+//		+"<th>Wood</th>"
+//		+"<th>Stone</th>"
+//		+"<th>Carts</th>"
+//		+"<th>Total</th>"
+//		+"</tr></thead>";
+//}
 /**
  * @param {?} data_45
  * @return {void}
@@ -1455,147 +1455,147 @@ function DistanceCC(__a: Coord,__b: Coord): number{
 }
 
 
-function SendDonation() {
-	let me=$(this);
-	let parent=me.parent().parent();
-	let wood=GetFloatValue(parent.find("[id^='donate_wood']"));
-	let stone=GetFloatValue(parent.find("[id^='donate_stone']"));
-	const carts=GetFloatValue(parent.find("[id^='donate_carts']"));
-	const desiredRes=wood+stone;
-	let resCap=carts*1000;
-	if(desiredRes>resCap) {
-		const fract=resCap/desiredRes;
-		stone=Math.floor(stone*fract);
-		wood=Math.floor(wood*fract);
-	}
-	let _cid=parent.data();
-	var args={
-		b: stone.toString(),"d": 0,"cid": _cid,"rcid": me.val(),a: wood.toString(),"t": "1","c": 0
-	};
-	var req='includes/sndTtr.php';
+//function SendDonation() {
+//	let me=$(this);
+//	let parent=me.parent().parent();
+//	let wood=GetFloatValue(parent.find("[id^='donate_wood']"));
+//	let stone=GetFloatValue(parent.find("[id^='donate_stone']"));
+//	const carts=GetFloatValue(parent.find("[id^='donate_carts']"));
+//	const desiredRes=wood+stone;
+//	let resCap=carts*1000;
+//	if(desiredRes>resCap) {
+//		const fract=resCap/desiredRes;
+//		stone=Math.floor(stone*fract);
+//		wood=Math.floor(wood*fract);
+//	}
+//	let _cid=parent.data();
+//	var args={
+//		b: stone.toString(),"d": 0,"cid": _cid,"rcid": me.val(),a: wood.toString(),"t": "1","c": 0
+//	};
+//	var req='includes/sndTtr.php';
 
-	gamePost(req,{
-		cid: _cid,f: encryptJs(req,args)
-	});
-	$(this).remove();
-	//	cid: 17695065
-	//	f: pgOAHrJYbl4LLkiRPpgYUBBEvLjIL0l5KrX9w5ayFfHnMetN9rW1bP3aiihA4jTuYtFk+ibyNwK6nSy1Oo6r20ITiFpLB8PDiyr324xc
-
-
-}
-
-function UpdateDonate(resData,blessData,filter) {
-	/** @type {string} */
-	let restabb_=GetDonateHeader()+"<tbody class = 'ava'>";
-	/** @type {number} */
-	let woodtot_=0;
-	/** @type {number} */
-	let stonetot_=0;
-	/** @type {number} */
-	var cartstot_=0;
-	$.each(resData,function() {
-		let cid_3=AsNumber(this.id);
-		if(filter!=null&&filter.indexOf(cid_3)==-1) {
-			return;
-		}
-
-		/** @type {number} */
-		let __x=AsNumber(cid_3%65536);
-		/** @type {number} */
-		let __y=AsNumber((cid_3-__x)/65536);
-
-		// find closest blessed city
-		let closest=null;//["None","None","Avatar","Cyndros",0,"12: 00: 00 ",0,0,0,"None on continent",cid_3,0];
-		let closestD=256*256;
-		let cont=GetContinent(__x,__y);
-
-		for(let i=0;i<blessData.a.length;++i) {
-			let bcid=blessData.a[i][10];
-
-			/** @type {number} */
-			let tempx=AsNumber(bcid%65536);
-			/** @type {number} */
-			let tempy=AsNumber((bcid-tempx)/65536);
-			if(GetContinent(tempx,tempy)!==cont)
-				continue;
-			let distance=Distance(tempx,tempy,__x,__y);
-			if(distance<closestD) {
-				closestD=distance;
-				closest=blessData.a[i];
-			}
-		}
-		if(closest===null)
-			return;
-		restabb_=`${restabb_}<tr data='${cid_3}'><td><button id='donate_rcid' data='${closest[10]}' class='ava' style='color:white;background-color: #3f0896;font-weight:800' >${closest[0]}</button></td>`
-			+`<td id='donate_cid' class='chcity ava' data='${cid_3}'>${this.city}</td>`
-			+`<td>${this.reference}</td><td class='coordblink' data='${cid_3}'>${__x}:${__y}</td>`
-			+`<td class='shcitt ava' data='${closest[10]}' >${closest[10]}</td>`
-			+`<td>${closestD}</td>`
-			+`<td><input value='${closest[6]}'></input></td>`
-			+`<td><input value='${closest[7]}'></input></td>`
-			+`<td>${closest[8]}</td>`
-			+`<td>${closest[9]}</td>`;
-
-		let res_2;
-		let sto_;
-		cartstot_=cartstot_+this.carts_total;
-		/** @type {number} */
-
-		for(let i_29=0;i_29<2;i_29++) {
-			switch(i_29) {
-				case 0:
-					res_2=this.wood;
-					woodtot_=woodtot_+res_2;
-					sto_=this.wood_storage;
-					break;
-				case 1:
-					res_2=this.stone;
-					stonetot_=stonetot_+res_2;
-					sto_=this.stone_storage;
-					break;
-
-			}
-			/** @type {string} */
-			restabb_=`${restabb_}<td><input id = 'donate_${(i_29===0? 'wood':'stone')}_${cid_3}' style='color:green;' value='${res_2.toLocaleString()}'></input></td>`;
-
-		}
-		/** @type {string} */
-		restabb_=`${restabb_}<td><input id = 'donate_carts_${cid_3}' value='${this.carts_home.toLocaleString()}'></input></td><td>${this.carts_total.toLocaleString()}</td></tr>`;
-	});
-	restabb_=`${restabb_}</tbody>`;
-	let jqTable=$("#donatetable");
-	jqTable.html(restabb_);
-	//$("#donatetable td").css("text-align","center");
-	/** @type {(Element|null)} */
-	let newTableObject_6=document.getElementById("donatetable");
-	sorttable.makeSortable(newTableObject_6);
-	/** @type {string} */
-	let tottab_=`<div id='rsum' class='beigemenutable scroll-pane ava'><table><td>Total wood: </td><td>${woodtot_.toLocaleString()}</td><td>Total stone: </td><td>${stonetot_.toLocaleString()}</td>`;
-	/** @type {string} */
-	tottab_=`${tottab_}<td>Total carts: </td><td>${cartstot_.toLocaleString()}</td></table></div>`;
-	$("#rsum").remove();
-	$("#donateTab").append(tottab_);
-
-	var temp=jqTable.find("button");
-	console.log(temp);
-	temp.click(this,SendDonation);
+//	gamePost(req,{
+//		cid: _cid,f: encryptJs(req,args)
+//	});
+//	$(this).remove();
+//	//	cid: 17695065
+//	//	f: pgOAHrJYbl4LLkiRPpgYUBBEvLjIL0l5KrX9w5ayFfHnMetN9rW1bP3aiihA4jTuYtFk+ibyNwK6nSy1Oo6r20ITiFpLB8PDiyr324xc
 
 
+//}
+
+//function UpdateDonate(resData,blessData,filter) {
+//	/** @type {string} */
+//	let restabb_=GetDonateHeader()+"<tbody class = 'ava'>";
+//	/** @type {number} */
+//	let woodtot_=0;
+//	/** @type {number} */
+//	let stonetot_=0;
+//	/** @type {number} */
+//	var cartstot_=0;
+//	$.each(resData,function() {
+//		let cid_3=AsNumber(this.id);
+//		if(filter!=null&&filter.indexOf(cid_3)==-1) {
+//			return;
+//		}
+
+//		/** @type {number} */
+//		let __x=AsNumber(cid_3%65536);
+//		/** @type {number} */
+//		let __y=AsNumber((cid_3-__x)/65536);
+
+//		// find closest blessed city
+//		let closest=null;//["None","None","Avatar","Cyndros",0,"12: 00: 00 ",0,0,0,"None on continent",cid_3,0];
+//		let closestD=256*256;
+//		let cont=GetContinent(__x,__y);
+
+//		for(let i=0;i<blessData.a.length;++i) {
+//			let bcid=blessData.a[i][10];
+
+//			/** @type {number} */
+//			let tempx=AsNumber(bcid%65536);
+//			/** @type {number} */
+//			let tempy=AsNumber((bcid-tempx)/65536);
+//			if(GetContinent(tempx,tempy)!==cont)
+//				continue;
+//			let distance=Distance(tempx,tempy,__x,__y);
+//			if(distance<closestD) {
+//				closestD=distance;
+//				closest=blessData.a[i];
+//			}
+//		}
+//		if(closest===null)
+//			return;
+//		restabb_=`${restabb_}<tr data='${cid_3}'><td><button id='donate_rcid' data='${closest[10]}' class='ava' style='color:white;background-color: #3f0896;font-weight:800' >${closest[0]}</button></td>`
+//			+`<td id='donate_cid' class='chcity ava' data='${cid_3}'>${this.city}</td>`
+//			+`<td>${this.reference}</td><td class='coordblink' data='${cid_3}'>${__x}:${__y}</td>`
+//			+`<td class='shcitt ava' data='${closest[10]}' >${closest[10]}</td>`
+//			+`<td>${closestD}</td>`
+//			+`<td><input value='${closest[6]}'></input></td>`
+//			+`<td><input value='${closest[7]}'></input></td>`
+//			+`<td>${closest[8]}</td>`
+//			+`<td>${closest[9]}</td>`;
+
+//		let res_2;
+//		let sto_;
+//		cartstot_=cartstot_+this.carts_total;
+//		/** @type {number} */
+
+//		for(let i_29=0;i_29<2;i_29++) {
+//			switch(i_29) {
+//				case 0:
+//					res_2=this.wood;
+//					woodtot_=woodtot_+res_2;
+//					sto_=this.wood_storage;
+//					break;
+//				case 1:
+//					res_2=this.stone;
+//					stonetot_=stonetot_+res_2;
+//					sto_=this.stone_storage;
+//					break;
+
+//			}
+//			/** @type {string} */
+//			restabb_=`${restabb_}<td><input id = 'donate_${(i_29===0? 'wood':'stone')}_${cid_3}' style='color:green;' value='${res_2.toLocaleString()}'></input></td>`;
+
+//		}
+//		/** @type {string} */
+//		restabb_=`${restabb_}<td><input id = 'donate_carts_${cid_3}' value='${this.carts_home.toLocaleString()}'></input></td><td>${this.carts_total.toLocaleString()}</td></tr>`;
+//	});
+//	restabb_=`${restabb_}</tbody>`;
+//	let jqTable=$("#donatetable");
+//	jqTable.html(restabb_);
+//	//$("#donatetable td").css("text-align","center");
+//	/** @type {(Element|null)} */
+//	let newTableObject_6=document.getElementById("donatetable");
+//	sorttable.makeSortable(newTableObject_6);
+//	/** @type {string} */
+//	let tottab_=`<div id='rsum' class='beigemenutable scroll-pane ava'><table><td>Total wood: </td><td>${woodtot_.toLocaleString()}</td><td>Total stone: </td><td>${stonetot_.toLocaleString()}</td>`;
+//	/** @type {string} */
+//	tottab_=`${tottab_}<td>Total carts: </td><td>${cartstot_.toLocaleString()}</td></table></div>`;
+//	$("#rsum").remove();
+//	$("#donateTab").append(tottab_);
+
+//	var temp=jqTable.find("button");
+//	console.log(temp);
+//	temp.click(this,SendDonation);
 
 
 
-	var temp2=jqTable.find(".chcity");
-	console.log(temp2);
 
-	//temp2.click(gspotfunct.chcity);
-	//$.each(resData,function() {
-	//	let aa_4=this.id;
-	//	$(`#cn${aa_4}`).click(() => {
-	//		$("#organiser").val("all").change();
-	//		$("#cityDropdownMenu").val(aa_4).change();
-	//	});
-	//});
-}
+
+//	var temp2=jqTable.find(".chcity");
+//	console.log(temp2);
+
+//	//temp2.click(gspotfunct.chcity);
+//	//$.each(resData,function() {
+//	//	let aa_4=this.id;
+//	//	$(`#cn${aa_4}`).click(() => {
+//	//		$("#organiser").val("all").change();
+//	//		$("#cityDropdownMenu").val(aa_4).change();
+//	//	});
+//	//});
+//}
 /**
  * @param {?} data_46
  * @param {!Object} notes_3

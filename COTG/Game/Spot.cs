@@ -137,6 +137,7 @@ namespace COTG.Game
         // The UIElement returned will be the RadDataGrid
         public static (Spot spot, string column, PointerPoint pt,UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
         {
+            e.KeyModifiers.UpdateKeyModifiers();
             var grid = sender as RadDataGrid;
             var physicalPoint = e.GetCurrentPoint(grid);
             var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
@@ -163,7 +164,9 @@ namespace COTG.Game
         //}
         public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            var hit= Spot.HitTest(sender, e);
+            e.KeyModifiers.UpdateKeyModifiers();
+
+            var hit = Spot.HitTest(sender, e);
             var spot = hit.spot;
             uiPress = spot != null ? spot.cid : 0;
             uiPressColumn = hit.column;
@@ -185,6 +188,7 @@ namespace COTG.Game
 
         public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
         {
+            modifiers.UpdateKeyModifiers();
             //    Note.Show($"{this} {column} {pt.Position}");
 
             if (pt.Properties.IsLeftButtonPressed && !(modifiers.IsShiftOrControl())) // ignore selection style clicks
@@ -275,6 +279,7 @@ namespace COTG.Game
 
         public static async void ProcessCoordClick(int cid,bool lazyMove,VirtualKeyModifiers mod)
         {
+            mod.UpdateKeyModifiers();
             if (City.IsMine(cid) && !mod.IsShiftOrControl())
             {
                 if (City.IsBuild(cid))
@@ -662,7 +667,7 @@ namespace COTG.Game
 
             }
             App.AddItem(flyout, "Select",  SelectMe );
-            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput($"<coords>{cid.CidToString()}</coords>"));
+            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput($"<coords>{cid.CidToString()}</coords>",true));
 
 
             flyout.XamlRoot = uie.XamlRoot;

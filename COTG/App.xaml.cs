@@ -89,8 +89,10 @@ namespace COTG
             //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
 
         }
+        // these are not reliably set
+        // We set then on key up and key down events and on mouse input events
         static public bool shiftPressed, controlPressed;
-
+        
         private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
             switch (args.VirtualKey)
@@ -444,9 +446,12 @@ namespace COTG
                 d.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
-        
 
-
+        public static void UpdateKeyModifiers(this VirtualKeyModifiers mod)
+        {
+            App.shiftPressed = mod.IsShift();
+            App.controlPressed = mod.IsControl();
+        }
         public static string CidToStringMD(this int cid)
         {
             var coord = cid.CidToString();
@@ -537,7 +542,7 @@ namespace COTG
         }
         public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
 		{
-
+            
 			try
 			{
                 if (e.Link.StartsWith("https", StringComparison.OrdinalIgnoreCase))

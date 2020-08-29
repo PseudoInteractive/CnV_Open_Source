@@ -11325,9 +11325,10 @@ var cotgsubscribe = amplify;
       ppdt = t11;
       var G11;
       var L11;
-      if (ppdt[_s(V9y >> 1977374752)][4] * (1000) > currentTime()) var
-        z11 = 1;
-      else var z11 = 0;
+      //let z11;
+      //if (ppdt[_s(V9y >> 1977374752)][4] * (1000) > currentTime()) 
+      //  z11 = 1;
+      //else z11 = 0;
       if (T11[_s(c9y ^ 0)])
         if (Object.keys(ppdt[_s(c9y | 4112)])
           .length > 0) Q4F(ppdt[_s(c9y * 1)]);
@@ -55045,7 +55046,7 @@ console.log("Bad");
     function E4F(K9V) {
     var message = _s(+A2R) + K9V + " ";
         PostChatIn(message);
-     sendChat(message);
+     
       if ($(_s(+I7R))
         .hasClass(_s(+n4p))) {
         document.getElementById(_s(d4p ^ 0))
@@ -66696,24 +66697,21 @@ _viewMode = viewModeWorld;
                        _popupCount++;
               }
               );
-              $(".medpopupstyle,.popUpBox,.smallpopupstyle").each(
+              $(".medpopupstyle,.popUpBox2,.smallpopupstyle,.popUpBox").each(
                   function () {
                       if (this.style.display == "block")
                           _popupCount++;
                   }
               );
 
-              $(".longwindow").each(
-                  function () {
-                      if (this.style.display != "none" && this.style.display != "hidden")
-                          _popupCount+=128;
+              $(".obscuretop,.longwindow").each(
+                function (){
+              if (this.style.display != "none" && this.style.display != "hidden")
+                  _popupCount+=128;
                   }
               );
-              $(".popUpBox2").each(
-                  function () {
-                          _popupCount ++;
-                  }
-              );
+
+              
 
               // if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
              //         || _zoom != __zoom || _popupCountCache != _popupCount))

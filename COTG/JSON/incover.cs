@@ -348,16 +348,20 @@ namespace COTG.JSON
                                 // this is a scout
 
                                 Spot.GetOrAdd(source, inc[14].GetString());
-                                 var ts = inc[8].GetAsInt();
-                                var report = new Army()
+                                 var dts = inc[8].GetAsInt();
+                                    var ats = inc[9].GetAsInt();
+                                    var report = new Army()
                                 {
                                     sourceCid = source,
                                     targetCid = target,
-                                    troops = new[] { new TroopTypeCount(ttScout, ts / 2) },
+                                    troops = new[] { new TroopTypeCount(ttScout, ats / 2) },
+                                    sumDef = new [] { new TroopTypeCount(ttGuard, dts) },
                                     time = time,
                                     reportId = recId,
                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),
-                                    type = reportScout
+                                    type = reportScout,
+                                    
+
                                     // todo TS info
 
                                 };

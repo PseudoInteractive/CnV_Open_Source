@@ -858,6 +858,7 @@ namespace COTG.Views
 
         private void HomeClick(object sender, RoutedEventArgs e)
         {
+
             if (Spot.focus == 0)
                 return;
             if (Spot.focus.BringCidIntoWorldView(false)&& City.IsBuild(Spot.focus)) // first just focus

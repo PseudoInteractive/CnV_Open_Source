@@ -147,8 +147,10 @@ namespace COTG.Views
 
         private void Canvas_PointerPressed(object sender, PointerEventArgs e)
         {
+            e.KeyModifiers.UpdateKeyModifiers();
 
-//            canvas.CapturePointer(e.Pointer);
+
+            //            canvas.CapturePointer(e.Pointer);
             var point = e.CurrentPoint;
            
             var properties = point.Properties;
@@ -276,6 +278,7 @@ namespace COTG.Views
         int lastCanvasC;
         private void Canvas_PointerMoved(object sender, PointerEventArgs e)
         {
+            e.KeyModifiers.UpdateKeyModifiers();
            //if(JSClient.IsCityView() )
            // {
            //     e.Handled = false;

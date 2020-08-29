@@ -184,14 +184,17 @@ namespace COTG.Views
         {
             var chatEntry = sender as HyperlinkButton;
             if (chatEntry != null)
-                PasteToChatInput($"/w {chatEntry.Content.ToString()} ");
+                PasteToChatInput($"/w {chatEntry.Content.ToString()} ",false);
 
         }
 
         static List<string> messageCache = new List<string>();
-        private void Paste(string s)
+        private void Paste(string s, bool afterInput)
         {
-            input.Text = input.Text + s;
+            if(afterInput)
+                input.Text = input.Text + s;
+            else
+                input.Text = s + input.Text;
         }
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -296,10 +299,12 @@ namespace COTG.Views
             return ch;
         }
         // also for whisper
-        public static void PasteToChatInput(string coords)
+        public static void PasteToChatInput(string coords, bool afterInput=true)
         {
+            if (coords[0] == '/')
+                afterInput = false;
             foreach (var tab in all)
-                tab.Paste(coords);
+                tab.Paste(coords, afterInput);
 
             
             var lg = coords.Length;  //  <coords>000:000</coords>
@@ -368,6 +373,8 @@ namespace COTG.Views
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            e.KeyModifiers.UpdateKeyModifiers();
+
             var rv = input.Focus(FocusState.Programmatic);
             Assert(rv == true);
 

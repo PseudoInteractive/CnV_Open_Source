@@ -116,6 +116,7 @@ namespace COTG.Views
         private void Coord_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var image = sender as FrameworkElement;
+            
             var supporter = image.DataContext as Supporter;
             Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers);
 
@@ -286,6 +287,7 @@ namespace COTG.Views
 
         private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
         {
+            e.KeyModifiers.UpdateKeyModifiers();
             e.Handled = true;
             (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
             if (okay)
