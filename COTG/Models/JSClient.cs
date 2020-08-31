@@ -328,8 +328,32 @@ namespace COTG
         {
             try
             {
-
-                view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(),message });
+                const int div = 220;
+                for(; ;)
+                {
+                    string remainder = null;
+                    if (message.Length > div + 8)
+                    {
+                        remainder = message.Substring(div);
+                        message = message.Substring(0, div);
+                    }
+                    view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(), message });
+                    if (remainder == null)
+                        break;
+                    // Copy Whisper to the next segment
+                    if (message[0] == '/')
+                    {
+                        var sp = message.IndexOf(' ', 3); // break at second space
+                        if(sp == -1)
+                        {
+                            Assert(false);
+                            break;
+                        }
+                        remainder = message.Substring(0, sp+1) + remainder;
+                    }
+                   
+                    message = remainder;
+                }
 
 
             }

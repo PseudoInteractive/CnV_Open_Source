@@ -510,7 +510,7 @@ namespace COTG
 
     public static class Note 
     {
-        [Conditional("TRACE")]
+       // [Conditional("TRACE")]
         public static void L(string s)
         {
             ChatTab.L(s);

@@ -203,7 +203,8 @@ namespace COTG.Views
          //   ChatTab.Ctor();
             {
                 ChatTab.Ctor();
-                CreateTabPage(chatTabFrame).AddChatTabs();
+                ChatTab.tabPage= CreateTabPage(chatTabFrame).AddChatTabs();
+                
 
                 UserTab.InitUserTabs();
                 {

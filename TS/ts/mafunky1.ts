@@ -259,8 +259,6 @@ function sendCityData(delayInMs) {
 		clearTimeout(updateTimeout);
 		let counc = document.getElementById("warcouncbox");
 		if (counc !== null && counc.style !== null && counc.style.display === "") {
-			
-
 			updateattack();
 			updatedef();
 		}
@@ -272,6 +270,7 @@ function sendchat(channel:string,message:string)
 {
 	__c.sendchat(+channel,message)
 }
+
 function gCPosted()
 {
 	setAutoDemo(false); // clear auto demo flag

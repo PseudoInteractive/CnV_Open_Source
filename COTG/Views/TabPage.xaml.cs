@@ -72,7 +72,7 @@ namespace COTG.Views
         }
         static public List<TabPage> tabPages = new List<TabPage>();
 
-        public static (TabPage, TabViewItem) Get(UserTab tab)
+        public static (TabPage tabPage, TabViewItem tabViewItem) Get(UserTab tab)
         {
             foreach(var tabPage in tabPages)
             {
@@ -183,7 +183,7 @@ namespace COTG.Views
             { "Donation", Symbol.Share },
             { "Boss", Symbol.View },
             { "world", Symbol.Microphone },
-            { "whisper" , Symbol.Comment },
+            
             { "officer" ,Symbol.Admin },
         };
 
@@ -202,7 +202,7 @@ namespace COTG.Views
                 return new SymbolIconSource() { Symbol = symbol };
             if (tabFontIcons.TryGetValue(tab.Tag as string, out var glyph))
                 return new Microsoft.UI.Xaml.Controls.FontIconSource() { Glyph = glyph };
-            return null;
+            return new SymbolIconSource() { Symbol = Symbol.Comment };
         }
         private static IconElement GetOldIconForTab(UserTab tab)
         {
@@ -210,7 +210,7 @@ namespace COTG.Views
                 return new SymbolIcon() { Symbol = symbol };
             if (tabFontIcons.TryGetValue(tab.Tag as string, out var glyph))
                 return new FontIcon() { Glyph = glyph };
-            return null;
+            return new SymbolIcon() { Symbol=Symbol.Comment }; // whisper
         }
 
         void SetupWindow(AppWindow window)
@@ -255,13 +255,14 @@ namespace COTG.Views
 
         }
 
-        public void AddChatTabs()
+        public TabPage AddChatTabs()
         {
             var selectIt = true;
             while (AddAnyChatTab(selectIt))
             {
                 selectIt = false;
             }
+            return this;
         }
 
         private void Window_Closed(AppWindow sender, AppWindowClosedEventArgs args)
@@ -424,6 +425,7 @@ namespace COTG.Views
             rv.Click += (_, _) => AddTab(tab,true);
             return rv;
         }
+
         private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
             var _args = args as RoutedEventArgs;
@@ -454,6 +456,7 @@ namespace COTG.Views
                 //{ IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Placeholder },
                 //    Header = "New Item", Content = new ChatTab() { Tag = "New Item" } });
             }
+
             static void RemoveTab(TabView view, TabViewItem tab)
         {
             var itab = tab.Content as UserTab;
