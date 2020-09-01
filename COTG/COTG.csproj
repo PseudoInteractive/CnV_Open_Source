@@ -162,6 +162,7 @@
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
+    <Compile Include="Helpers\SmallTime.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Helpers\TileMap.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="JSON\incover.cs" />
     <Compile Include="JSON\OutOver.cs" />
     <Compile Include="JSON\Report.cs" />
+    <Compile Include="JSON\SpotJson.cs" />
     <Compile Include="JSON\TileSet.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />

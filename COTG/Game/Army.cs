@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Input;
 using static COTG.Game.Enum;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.System;
+using System.Text.Json.Serialization;
 
 namespace COTG.Game
 {
@@ -186,9 +187,13 @@ namespace COTG.Game
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
         public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
+        [JsonPropertyName("t")]
         public int type;
+        [JsonPropertyName("c")]
         public int count;
+        [JsonIgnore]
         public string Count => count.ToString(" N0 ");
+        [JsonIgnore]
         public BitmapImage Type => ImageHelper.FromImages($"troops{type}.png");
 
         public TroopTypeCount() { }
@@ -202,10 +207,14 @@ namespace COTG.Game
             type = _type;
             count = _count;
         }
+        [JsonIgnore]
         public bool isSenator => type == Enum.ttSenator;
+        [JsonIgnore]
         public bool isArt  =>  Enum.ttArtillery[type];
+        [JsonIgnore]
         public bool isNaval => Enum.ttNavy[type];
 
+        [JsonIgnore]
         public int ts => Enum.ttTs[type] * count;
         public static void SortByTS(TroopTypeCount[] l) => Array.Sort(l);
 
