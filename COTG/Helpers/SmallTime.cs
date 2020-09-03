@@ -8,7 +8,7 @@ namespace COTG
     /// </summary>
     public struct SmallTime
     {
-        internal static readonly DateTimeOffset t0 = new DateTime(2020, 1, 1, 0, 0, 0,0);
+        internal static readonly DateTimeOffset t0 = new DateTimeOffset(2020, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
         internal int seconds;
 
         internal DateTimeOffset dateTime => t0.AddSeconds(seconds); // should we convert with localTimeError?

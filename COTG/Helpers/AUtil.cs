@@ -59,6 +59,8 @@ namespace COTG
         }
         public static T[] ArrayAppend<T>(this T[] l, T a)
         {
+            if (l == null || l.Length == 0)
+                return new T[1] { a };
             int lg = l.Length;
             var result = new T[lg + 1];
             for(int i=0;i<lg;++i)

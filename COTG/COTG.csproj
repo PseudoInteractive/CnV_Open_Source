@@ -49,7 +49,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>COTG1.ruleset</CodeAnalysisRuleSet>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -62,14 +62,15 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
+    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
     <DocumentationFile>
     </DocumentationFile>
     <WarningLevel>3</WarningLevel>
     <FileAlignment>4096</FileAlignment>
     <DebugSymbols>true</DebugSymbols>
+    <CodeAnalysisRuleSet>COTG1.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -179,6 +180,7 @@
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
+    <Compile Include="Services\Cosmos.cs" />
     <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Helpers\Debug.cs" />
     <Compile Include="Helpers\DataRequestExtensions.cs" />
@@ -607,6 +609,8 @@
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="COTG.ruleset" />
+    <None Include="COTG1.ruleset" />
     <None Include="COTG_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

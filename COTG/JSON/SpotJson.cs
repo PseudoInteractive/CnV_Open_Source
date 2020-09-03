@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using System;
+using System.Linq;
+
 namespace COTG.DB
 {
-    public class Spot
+    public sealed class Spot
     {
         public const byte typeEmpty = 0;
         public const byte typeCity = 1;
@@ -27,7 +29,24 @@ namespace COTG.DB
         public long flg { get; set; } // playerId
         public RecordBattle[] recb { get; set; }
         public RecordNote[] recn { get; set; }
+        public bool AddRecord(RecordBattle rb)
+        {
+            if (recb == null)
+            {
+                recb = new RecordBattle[1] { rb };
+ //               recb[0] = rb;
+                return true;
+            }
 
+            foreach(var r in recb)
+            {
+                if (r.rep == rb.rep)
+                    return false;
+            }
+            recb = recb.ArrayAppend(rb);
+            Array.Sort(recb, (b, a) => a.t.CompareTo(b.t));
+            return true;
+        }
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);
@@ -44,7 +63,7 @@ namespace COTG.DB
 
 
 
-    public class RecordBattle : Record
+    public sealed class RecordBattle : Record
     {
         public string rep { get; set; } // 
         public COTG.Game.TroopTypeCount[] trp { get; set; } // todo: array?
@@ -55,7 +74,7 @@ namespace COTG.DB
     /// <summary>
     /// This can be a settlment claim too.  Note should start with 'Claim'
     /// </summary>
-    public class RecordNote : Record
+    public sealed class RecordNote : Record
     {
         public int src { get; set; }
         public string n { get; set; }

@@ -71,11 +71,11 @@ namespace COTG.Game
 
         public static int WorldToCid( this (int x, int y) a )
         {
-            return a.x + a.y*65536;
+            return a.x +  (a.y<<16);
         }
         public static (int x,int y) CidToWorld(this int c)
         {
-            return (c%65536,c/65536);
+            return (c&65535,c>>16);
         }
         public static Vector2 CidToWorldV(this int c)
         {

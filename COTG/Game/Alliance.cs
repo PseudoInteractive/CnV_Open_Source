@@ -210,5 +210,10 @@ else
             nameToId = _nameToId;
             all = _all;
         }
+
+        internal static bool IsMine(int allianceId)
+        {
+            return myId == allianceId;
+        }
     }
 }

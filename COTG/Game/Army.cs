@@ -187,9 +187,7 @@ namespace COTG.Game
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
         public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
-        [JsonPropertyName("t")]
         public int type;
-        [JsonPropertyName("c")]
         public int count;
         [JsonIgnore]
         public string Count => count.ToString(" N0 ");
@@ -223,6 +221,12 @@ namespace COTG.Game
         {
            return other.ts.CompareTo(ts);
         }
+        /// <summary>
+        ///  Json Serialization
+        /// </summary>
+        public byte t { get => (byte)type; set => type = value; }
+
+        public int c { get => count; set => count = value; }
     }
     public static class TroopTypeCountHelper
     {

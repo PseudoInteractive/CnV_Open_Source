@@ -101,7 +101,7 @@ namespace COTG
 
         const int researchCount = 64; // I think this is really 49
         public static byte[] research = new byte[researchCount];
-        public static int world = 21;
+        public static int world = 0;
         public static int subId = 0;
         static Regex urlMatch = new Regex(@"^w(\d\d).crownofthegods.com$");
         public static Uri httpsHost;

@@ -291,6 +291,7 @@ namespace COTG.JSON
                                           spot.incoming = spot.incoming.ArrayAppend(army);
                                           if(!army.isDefense)
                                               reportsIncoming.Add(army);
+                                     
                                       }
                                       spot.tsMax = sumDef.TS();
                                   }
@@ -352,6 +353,7 @@ namespace COTG.JSON
                                     var ats = inc[9].GetAsInt();
                                     var report = new Army()
                                 {
+                                        isAttack=true,
                                     sourceCid = source,
                                     targetCid = target,
                                     troops = new[] { new TroopTypeCount(ttScout, ats / 2) },
@@ -360,15 +362,16 @@ namespace COTG.JSON
                                     reportId = recId,
                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),
                                     type = reportScout,
-                                    
 
-                                    // todo TS info
 
+                                        // todo TS info
+                                     
                                 };
                                 parts[part].Add(report);
+                                   await Cosmos.AddBattleRecord(report);
 
 
-                            }
+                                }
                             else
                             {
 
@@ -490,6 +493,7 @@ namespace COTG.JSON
                                                         bool hasSen = atkTrops.HasTT(ttSenator);
                                                         var rep = new Army()
                                                         {
+                                                            isAttack=true,
                                                             reportId = recId,
                                                             sumDef = defTrops,
                                                             dTsKill = defTS - defTSLeft,
@@ -505,9 +509,10 @@ namespace COTG.JSON
                                                             // todo TS info
 
                                                         };
-                                                        parts[part].Add(rep);
-                                                    }
-                                                    else
+                                                            parts[part].Add(rep);
+                                                            await Cosmos.AddBattleRecord(rep);
+                                                        }
+                                                        else
                                                     {
                                                         Log("bad cid?");
                                                     }
