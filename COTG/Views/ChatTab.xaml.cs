@@ -49,7 +49,7 @@ namespace COTG.Views
     public  class ChatEntryGroup
     {
         public DateTimeOffset time;
-        public string Title => time.ToString("MM/DD, HH:mm:ss");
+        public string Title => time.ToString("yyyy/MM/dd, HH:mm:ss");
         public DumbCollection<ChatEntry> Items { get; set; } = new DumbCollection<ChatEntry>();
 
         public override string ToString()

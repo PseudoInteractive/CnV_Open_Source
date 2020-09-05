@@ -334,9 +334,8 @@ namespace COTG
                     string remainder = null;
                     if (message.Length > div + 8)
                     {
-                        var _message = message.Substring(div);
-                        remainder = message.Substring(0, div);
-                        message = remainder;
+                        remainder = message.Substring(div);
+                        message = message.Substring(0, div);
                     }
                     view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(), message });
                     if (remainder == null)
