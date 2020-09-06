@@ -139,7 +139,7 @@ namespace COTG.Services
             var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
             using (var ms = new System.IO.MemoryStream(temp))
             {
-                await blobClient.UploadAsync(ms, Azure.Storage.Blobs.Models.BlobUploadOptions);
+                await blobClient.UploadAsync(ms);
             }
         }
         
