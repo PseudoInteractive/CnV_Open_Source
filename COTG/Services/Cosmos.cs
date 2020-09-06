@@ -9,6 +9,10 @@ using SpotDB = COTG.DB.Spot;
 using Windows.Web.Http;
 using System.Threading;
 using static COTG.Debug;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
+
+
 namespace COTG.Services
 {
 
@@ -30,15 +34,12 @@ namespace COTG.Services
 		private static CosmosContainer container;
 
 		// The name of the database and container we will create
-		private static string databaseId = $"w{JSClient.world}";
-		private static string containerId = $"i{111+Alliance.myId}";
+		private static string databaseId => $"w{JSClient.world}";
+		private static string containerId => $"i{111+Alliance.myId}";
+        private static string blobContainerId => $"c{JSClient.world}";
+        private static string blobName => $"b{311 + Alliance.myId}22";
         private static SemaphoreSlim semaphore;
-        // <Main>
 
-        // <GetStartedDemoAsync>
-        /// <summary>
-        /// Entry point to call methods that operate on Azure Cosmos DB resources in this sample
-        /// </summary>
         static Cosmos()
 		{
             Assert(JSClient.world != 0);
@@ -54,56 +55,96 @@ namespace COTG.Services
             //	await AddItemsToContainerAsync();
             //		await ReplaceFamilyItemAsync();
         }
-		// </GetStartedDemoAsync>
+        // </GetStartedDemoAsync>
 
-		// <CreateDatabaseAsync>
-		/// <summary>
-		/// Create the database if it does not exist
-		/// </summary>
-		//private static async Task CreateDatabaseAsync()
-		//{
-		//	// Create a new database
-		//	database = cosmosClient.GetDatabase(databaseId);
-		//	container = database.GetContainer(containerId);
-		//	Console.WriteLine("Created CosmosDatabase: {0}\n", database.Id);
-		//	Console.WriteLine("Created CosmosContainer: {0}\n", container.Id);
-		//}
-		// </CreateDatabaseAsync>
+        // <CreateDatabaseAsync>
+        /// <summary>
+        /// Create the database if it does not exist
+        /// </summary>
+        //private static async Task CreateDatabaseAsync()
+        //{
+        //	// Create a new database
+        //	database = cosmosClient.GetDatabase(databaseId);
+        //	container = database.GetContainer(containerId);
+        //	Console.WriteLine("Created CosmosDatabase: {0}\n", database.Id);
+        //	Console.WriteLine("Created CosmosContainer: {0}\n", container.Id);
+        //}
+        // </CreateDatabaseAsync>
 
-		// <CreateContainerAsync>
-		/// <summary>
-		/// Create the container if it does not exist. 
-		/// Specifiy "/LastName" as the partition key since we're storing family information, to ensure good distribution of requests and storage.
-		/// </summary>
-		/// <returns></returns>
-		// </CreateContainerAsync>
+        // <CreateContainerAsync>
+        /// <summary>
+        /// Create the container if it does not exist. 
+        /// Specifiy "/LastName" as the partition key since we're storing family information, to ensure good distribution of requests and storage.
+        /// </summary>
+        /// <returns></returns>
+        // </CreateContainerAsync>
 
-		// <ScaleContainerAsync>
-		/// <summary>
-		/// Scale the throughput provisioned on an existing CosmosContainer.
-		/// You can scale the throughput (RU/s) of your container up and down to meet the needs of the workload. Learn more: https://aka.ms/cosmos-request-units
-		/// </summary>
-		/// <returns></returns>
-		//private static async Task ScaleContainerAsync()
-		//{
-		//	// Read the current throughput
-		//	int? throughput = await container.ReadThroughputAsync();
-		//	if (throughput.HasValue)
-		//	{
-		//		Console.WriteLine("Current provisioned throughput : {0}\n", throughput.Value);
-		//		int newThroughput = throughput.Value + 100;
-		//		// Update throughput
-		//		await container.ReplaceThroughputAsync(newThroughput);
-		//		Console.WriteLine("New provisioned throughput : {0}\n", newThroughput);
-		//	}
+        // <ScaleContainerAsync>
+        /// <summary>
+        /// Scale the throughput provisioned on an existing CosmosContainer.
+        /// You can scale the throughput (RU/s) of your container up and down to meet the needs of the workload. Learn more: https://aka.ms/cosmos-request-units
+        /// </summary>
+        /// <returns></returns>
+        //private static async Task ScaleContainerAsync()
+        //{
+        //	// Read the current throughput
+        //	int? throughput = await container.ReadThroughputAsync();
+        //	if (throughput.HasValue)
+        //	{
+        //		Console.WriteLine("Current provisioned throughput : {0}\n", throughput.Value);
+        //		int newThroughput = throughput.Value + 100;
+        //		// Update throughput
+        //		await container.ReplaceThroughputAsync(newThroughput);
+        //		Console.WriteLine("New provisioned throughput : {0}\n", newThroughput);
+        //	}
 
-		//}
-		// </ScaleContainerAsync>
+        //}
+        // </ScaleContainerAsync>
 
-		//static public string id0 = Spot.CoordsToString((220, 220));
+        //static public string id0 = Spot.CoordsToString((220, 220));
+        public static async Task SummarizeNotes()
+        {
+            if(!await semaphore.WaitAsync(30 * 1000) )
+                return;
+            var blobData = new Dictionary<string, string>();
+            try
+            {
+                var allSalesForAccount1 = new List<SpotDB>();
+                await foreach (var spot in container.GetItemQueryIterator<SpotDB>(
+                    queryDefinition: null,
+                    requestOptions: new QueryRequestOptions()
+                    {
 
+                    }))
+                {
+                    var s = string.Empty;
+                    int counter = 0;
+                    foreach (var rec in spot.recb)
+                    {
+                        if (counter != 0)
+                            s = s+ '\n';
+                        s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
+                        if (++counter >= 4)
+                            break;
+                    }
+                    blobData[spot.id] = s;
+                }
+            }finally
+            {
+                semaphore.Release();
+            }
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=avag;AccountKey=G545SQSDGDM6LSu3eanZ6wSbsiz2rt7/jrusjll4Hh7yS9rJaQTX7CSOLLdN2C7dX+Z+PCOWyXrDgGZX5YT1dw==;EndpointSuffix=core.windows.net");
+            var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerId);
+            var blobClient = containerClient.GetBlockBlobClient(blobName);
+            var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
+            using (var ms = new System.IO.MemoryStream(temp))
+            {
+                await blobClient.UploadAsync(ms, Azure.Storage.Blobs.Models.BlobUploadOptions);
+            }
+        }
+        
 
-		public static async Task AddBattleRecord(Army army)
+            public static async Task AddBattleRecord(Army army)
 		{
             if (container == null || database == null)
                 return;
@@ -160,7 +201,7 @@ namespace COTG.Services
                         s1 = new SpotDB() { id = targetId, own = army.tPid }; // todo:  set owner
 
                     }
-                    var recb = new RecordBattle() { rep = army.reportId, typ = army.type, trp = army.sumDef };
+                    var recb = new RecordBattle() { rep = army.reportId, typ = Game.Enum.reportDefenseStationed, trp = army.sumDef };
                     recb.SetTime(army.time);
                     if (s1.AddRecord(recb))
                     {

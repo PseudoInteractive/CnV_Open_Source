@@ -294,12 +294,14 @@ namespace COTG.Game
             return rv;
         }
 
-        public static string Format(this IEnumerable<TroopTypeCount> l,string header,char separator)
+        public static string Format(this IEnumerable<TroopTypeCount> l,string header,char firstSeparater,char furtherSeparator=(char)0)
         {
             string rv = header;
             foreach (var ttc in l)
             {
-                rv += $"{separator}{ttc.count,4:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                rv += $"{firstSeparater}{ttc.count:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                if(furtherSeparator != (char)0 )
+                    firstSeparater = furtherSeparator;
             }
             return rv;
         }

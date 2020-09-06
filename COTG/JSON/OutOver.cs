@@ -375,6 +375,8 @@ namespace COTG.JSON
 
             await task0;
 
+            await Cosmos.SummarizeNotes();
+
             App.DispatchOnUIThreadLow(() =>
             {
                 {

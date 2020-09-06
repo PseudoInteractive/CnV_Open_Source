@@ -20,6 +20,9 @@ namespace COTG
         public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
+        public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
+        public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat);
+
         public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
         public static Color WithAlpha(this Color c, byte alpha)
         {

@@ -57,7 +57,8 @@ namespace COTG.DB
     public class Record
     {
         public int t { get; set; } // smalltime seconds
-        public void  SetTime(DateTimeOffset _t) { t = new SmallTime(_t).seconds; } 
+        public void  SetTime(DateTimeOffset _t) { t = SmallTime.ToSeconds(_t); }
+        public DateTimeOffset dateTime => SmallTime.ToDateTime(t);
 
     }
 
