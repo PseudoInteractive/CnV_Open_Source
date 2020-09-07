@@ -62,9 +62,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableGatekeeperAnalysis>true</EnableGatekeeperAnalysis>
+    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
     <DocumentationFile>
     </DocumentationFile>
     <WarningLevel>3</WarningLevel>
@@ -106,17 +106,11 @@
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
-    <PackageReference Include="System.Security.AccessControl">
-      <Version>5.0.0-rc.2.20454.25</Version>
-    </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
       <Version>5.0.0-rc.2.20454.25</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>5.0.0-rc.2.20454.25</Version>
-    </PackageReference>
-    <PackageReference Include="System.Utf8String.Experimental">
-      <Version>5.0.0-preview.8.20352.3</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.25.0</Version>

@@ -44,7 +44,7 @@ namespace COTG.Services
 		{
             Assert(JSClient.world != 0);
 			// Create a new instance of the Cosmos Client
-			cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { ApplicationName = "COTGA" });
+			cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { });
 			database = cosmosClient.GetDatabase(databaseId);
             if (database != null)
             {

@@ -11,7 +11,7 @@ using System.Text.Json;
 //using System.Security.Cryptography;
 using System.Collections.Generic;
 //using System.Convert;
-using Cysharp.Text;
+//using Cysharp.Text;
 
 namespace COTG
 {

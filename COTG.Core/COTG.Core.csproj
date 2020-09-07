@@ -35,14 +35,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Cosmos" Version="4.0.0-preview3" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0-rc.2.20454.25" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-rc.2.20454.25" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-rc.2.20454.25" />
-    <PackageReference Include="System.Security.AccessControl" Version="5.0.0-rc.2.20454.25" />
     <PackageReference Include="System.Text.Json" Version="5.0.0-rc.2.20454.25" />
-    <PackageReference Include="System.Utf8String.Experimental" Version="5.0.0-preview.8.20352.3" />
-    <PackageReference Include="ZString" Version="2.2.0" />
   </ItemGroup>
 </Project>
