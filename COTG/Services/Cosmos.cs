@@ -99,7 +99,7 @@ namespace COTG.Services
 
         //}
         // </ScaleContainerAsync>
-        public static Dictionary<int, COTG.DB.Spot> spots = Dictionary<int,COTG.DB.Spot>.e;
+        public static Dictionary<int, COTG.DB.Spot> spots = new Dictionary<int,COTG.DB.Spot>();
        
             async static public Task GetSpotDB()
             {
