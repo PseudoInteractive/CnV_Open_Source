@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using Azure.Cosmos;
 using COTG.DB;
 using COTG.Game;
-using SpotDB = COTG.DB.Spot;
 using Windows.Web.Http;
 using System.Threading;
 using static COTG.Debug;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
-
+using System.Text.Json;
 
 namespace COTG.Services
 {
@@ -100,17 +99,67 @@ namespace COTG.Services
 
         //}
         // </ScaleContainerAsync>
+        public static Dictionary<int, COTG.DB.Spot> spots = Dictionary<int,COTG.DB.Spot>.e;
+       
+            async static public Task GetSpotDB()
+            {
+                HttpClient client = null;
+                try
+                {
+                    for (; ; )
+                    {
+                        if (JSClient.clientPool.TryTake(out client))
+                            break;
+                        await Task.Delay(128);
+                    }
+                    var buff = await client.GetBufferAsync(new Uri( $"https://avag.blob.core.windows.net/c{JSClient.world}/b{311+Alliance.myId}22"));
+                    JSClient.clientPool.Add(client);
+                    client = null;
+                    if (buff != null)
+                    {
+                        var temp = new byte[buff.Length];
 
-        //static public string id0 = Spot.CoordsToString((220, 220));
-        public static async Task SummarizeNotes()
+                        using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+                        {
+                            dataReader.ReadBytes(temp);
+                        }
+                    // Log("Hello!");
+                  //  var str = new Dictionary<int, COTG.DB.Spot>();
+
+                    var str = JsonSerializer.Deserialize<Dictionary<string, COTG.DB.Spot>>(temp);
+                    // Log("Helllo!");
+                    spots = new Dictionary<int, DB.Spot>(str.Count);
+                    foreach(var s in str)
+                    {
+                        var x = int.Parse(s.Key.Substring(0, 3));
+                        var y = int.Parse(s.Key.Substring(3, 3));
+                        spots[(x, y).WorldToCid()] = s.Value; 
+                    }
+                }
+                    else
+                    {
+                        Log("Error!");
+                    };
+                }
+                catch (Exception e)
+                {
+                    if (client != null)
+                        JSClient.clientPool.Add(client);
+                    client = null;
+                    Log(e);
+                }
+
+
+            }        //static public string id0 = Spot.CoordsToString((220, 220));
+            public static async Task SummarizeNotes()
         {
             if(!await semaphore.WaitAsync(30 * 1000) )
                 return;
-            var blobData = new Dictionary<string, string>();
+            var blobData = new Dictionary<string, COTG.DB.Spot>();
             try
             {
-                var allSalesForAccount1 = new List<SpotDB>();
-                await foreach (var spot in container.GetItemQueryIterator<SpotDB>(
+              
+                await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
                     queryDefinition: null,
                     requestOptions: new QueryRequestOptions()
                     {
@@ -119,15 +168,15 @@ namespace COTG.Services
                 {
                     var s = string.Empty;
                     int counter = 0;
-                    foreach (var rec in spot.recb)
-                    {
-                        if (counter != 0)
-                            s = s+ '\n';
-                        s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
-                        if (++counter >= 4)
-                            break;
-                    }
-                    blobData[spot.id] = s;
+                    //foreach (var rec in spot.recb)
+                    //{
+                    //    if (counter != 0)
+                    //        s = s+ '\n';
+                    //    s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
+                    //    if (++counter >= 4)
+                    //        break;
+                    //}
+                    blobData[spot.id] = spot;
                 }
             }finally
             {
@@ -142,7 +191,7 @@ namespace COTG.Services
                 await blobClient.UploadAsync(ms);
             }
         }
-        
+        public static int battleRecordsUpserted;
 
             public static async Task AddBattleRecord(Army army)
 		{
@@ -155,10 +204,10 @@ namespace COTG.Services
 
             try
             {
-                SpotDB s0, s1;
+                COTG.DB.Spot s0, s1;
                 // Create a family object for the Andersen family
-                var sourceId = SpotDB.CoordsToString(army.sourceCid.CidToWorld());
-                var targetId = SpotDB.CoordsToString(army.targetCid.CidToWorld());
+                var sourceId = COTG.DB.Spot.CoordsToString(army.sourceCid.CidToWorld());
+                var targetId = COTG.DB.Spot.CoordsToString(army.targetCid.CidToWorld());
                 var targetMine = Alliance.IsMine(army.targetAlliance);
                 var sourceMine = Alliance.IsMine(army.sourceAlliance);
                 if (!sourceMine && army.isAttack)
@@ -166,23 +215,24 @@ namespace COTG.Services
                     try
                     {
                         // Read the item to see if it exists.  
-                        ItemResponse<SpotDB> source = await container.ReadItemAsync<SpotDB>(sourceId, new PartitionKey(sourceId));
+                        ItemResponse<COTG.DB.Spot> source = await container.ReadItemAsync<COTG.DB.Spot>(sourceId, new PartitionKey(sourceId));
                         s0 = source.Value;
                     }
                     catch (CosmosException ex)
                     {
                         if (ex.Status != (int)HttpStatusCode.NotFound)
                             Log(ex);
-                        s0 = new SpotDB() { id = sourceId, own = army.sPid }; // todo:  set owner
+                        s0 = new COTG.DB.Spot() { id = sourceId, own = army.sPid }; // todo:  set owner
                                                                               // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
-                                                                              //         ItemResponse<SpotDB> source = await container.CreateItemAsync<SpotDB>(s0, new PartitionKey(sourceId));
+                                                                              //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
 
                     }
                     var recb = new RecordBattle() { rep = army.reportId, typ = army.type, trp = army.troops };
                     recb.SetTime(army.time);
                     if (s0.AddRecord(recb))
                     {
-                        await container.UpsertItemAsync<SpotDB>(s0, new PartitionKey(sourceId));
+                        await container.UpsertItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+                        ++battleRecordsUpserted;
                     }
                 }
                 if (!targetMine && army.isAttack && army.sumDef.TS() > 0) // defense report
@@ -190,7 +240,7 @@ namespace COTG.Services
                     try
                     {
                         // Read the item to see if it exists.  
-                        ItemResponse<SpotDB> source = await container.ReadItemAsync<SpotDB>(targetId, new PartitionKey(targetId));
+                        ItemResponse<COTG.DB.Spot> source = await container.ReadItemAsync<COTG.DB.Spot>(targetId, new PartitionKey(targetId));
                         s1 = source.Value;
                     }
                     catch (CosmosException ex)
@@ -198,14 +248,15 @@ namespace COTG.Services
                         if (ex.Status != (int)HttpStatusCode.NotFound)
                            Log(ex);
                         //      if(ex.Status == (int)HttpStatusCode.NotFound)
-                        s1 = new SpotDB() { id = targetId, own = army.tPid }; // todo:  set owner
+                        s1 = new COTG.DB.Spot() { id = targetId, own = army.tPid }; // todo:  set owner
 
                     }
                     var recb = new RecordBattle() { rep = army.reportId, typ = Game.Enum.reportDefenseStationed, trp = army.sumDef };
                     recb.SetTime(army.time);
                     if (s1.AddRecord(recb))
                     {
-                        await container.UpsertItemAsync<SpotDB>(s1, new PartitionKey(targetId));
+                        await container.UpsertItemAsync<COTG.DB.Spot>(s1, new PartitionKey(targetId));
+                        ++battleRecordsUpserted;
 
                     }
                 }

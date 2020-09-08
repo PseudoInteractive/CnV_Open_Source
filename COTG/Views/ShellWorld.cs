@@ -63,7 +63,7 @@ namespace COTG.Views
                 e.Handled = false;
                 return;
             }
-
+            e.KeyModifiers.UpdateKeyModifiers();
             var pointerPoint = e.CurrentPoint;
             mousePosition = GetCanvasPosition(pointerPoint);
             e.Handled = false;

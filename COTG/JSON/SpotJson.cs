@@ -58,6 +58,7 @@ namespace COTG.DB
     {
         public int t { get; set; } // smalltime seconds
         public void  SetTime(DateTimeOffset _t) { t = SmallTime.ToSeconds(_t); }
+        [JsonIgnore]
         public DateTimeOffset dateTime => SmallTime.ToDateTime(t);
 
     }
@@ -73,7 +74,7 @@ namespace COTG.DB
 
 
     /// <summary>
-    /// This can be a settlment claim too.  Note should start with 'Claim'
+    /// This can be a senator claim too.  Note should start with 'Claim'
     /// </summary>
     public sealed class RecordNote : Record
     {

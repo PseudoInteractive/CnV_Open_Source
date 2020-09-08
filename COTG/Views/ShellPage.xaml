@@ -221,7 +221,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,0,4" >
+            <Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Cycle" >
                 <Frame.Resources>
                 <winui:TeachingTip x:Name="ChatTip0"
                                 Title="Chat Window"

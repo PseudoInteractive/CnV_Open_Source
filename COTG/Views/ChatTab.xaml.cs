@@ -410,22 +410,22 @@ namespace COTG.Views
 
        
 
-        private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
+        //private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
+        //{
 
-            var rv=input.Focus(FocusState.Programmatic);
-            Assert(rv == true);
+        //    var rv=input.Focus(FocusState.Programmatic);
+        //    Assert(rv == true);
 
-        }
+        //}
 
-        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            e.KeyModifiers.UpdateKeyModifiers();
+        //private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        //{
+        //    e.KeyModifiers.UpdateKeyModifiers();
 
-            var rv = input.Focus(FocusState.Programmatic);
-            Assert(rv == true);
+        //    var rv = input.Focus(FocusState.Programmatic);
+        //    Assert(rv == true);
 
-        }
+        //}
 
         //private void sender_PointerPressed(object sender, PointerRoutedEventArgs e)
         //{

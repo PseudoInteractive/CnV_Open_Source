@@ -556,7 +556,7 @@ namespace COTG.JSON
                     }
 
                     updateInProgress = false;
-                    Note.Show($"Complete: {reportsIncoming.Count+ incCount} attacks, {fetched} fetched");
+                    Note.Show($"Complete: {reportsIncoming.Count+ incCount} attacks, {fetched} fetched {Cosmos.battleRecordsUpserted}");
                 });
         }
     }

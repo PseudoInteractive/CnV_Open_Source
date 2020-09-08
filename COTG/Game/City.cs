@@ -567,7 +567,7 @@ namespace COTG.Game
             //   CityGrid.ScrollItemIntoView(city);
             if (MainPage.IsVisible())
             {
-                MainPage.CityGrid.SetCurrentItem(this);
+//                MainPage.CityGrid.SetCurrentItem(this);
                 MainPage.CityGrid.SelectItem(this);
  //               MainPage.CityGrid.ScrollItemIntoView(this);
             }
