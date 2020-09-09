@@ -462,10 +462,10 @@ namespace COTG.Game
             var changed = cid != build;
             City.build = cid;
 
+            SetFocus();
             if ( changed )
             {
-                SetFocus();
-                App.DispatchOnUIThreadLow(()=>{
+                App.DispatchOnUIThreadSneaky(()=>{
                     SelectInUI();
                     ShellPage.instance.coords.Text = cid.CidToString();
                 });

@@ -112,7 +112,8 @@ namespace COTG.Services
                             break;
                         await Task.Delay(128);
                     }
-                    var buff = await client.GetBufferAsync(new Uri( $"https://avag.blob.core.windows.net/c{JSClient.world}/b{311+Alliance.myId}22"));
+                var blobName = $"https://avag.blob.core.windows.net/c{JSClient.world}/b{311 + Alliance.myId}22";
+                    var buff = await client.GetBufferAsync(new Uri(blobName));
                     JSClient.clientPool.Add(client);
                     client = null;
                     if (buff != null)
@@ -158,7 +159,7 @@ namespace COTG.Services
             var blobData = new Dictionary<string, COTG.DB.Spot>();
             try
             {
-              
+
                 await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
                     queryDefinition: null,
                     requestOptions: new QueryRequestOptions()
@@ -178,7 +179,10 @@ namespace COTG.Services
                     //}
                     blobData[spot.id] = spot;
                 }
-            }finally
+            } catch (Exception e)
+            {
+                Log(e);
+            } finally
             {
                 semaphore.Release();
             }
@@ -276,6 +280,9 @@ namespace COTG.Services
                 //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
                 //	},
                 //};
+            }catch(Exception e)
+            {
+                Log(e);
             }
             finally
             {

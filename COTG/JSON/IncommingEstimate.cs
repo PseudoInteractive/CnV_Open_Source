@@ -12,9 +12,9 @@ namespace COTG.Game
 {
     public static class IncommingEstimate
     {
-        public static float RoundTo2Digits(double f)
+        public static float RoundTo6Bits(double f)
         {
-            return (f * 100).RoundToInt() * 0.01f;
+            return (float)(Math.Round(f * 100)/100.0);
 
         }
         static float StepValue(int i) => i * 0.5f;
@@ -33,23 +33,23 @@ namespace COTG.Game
             for (int i_17 = 0; i_17 < steps; ++i_17)
             {
                 /** @type {number} */
-                var temp_1 = 5 / (1 + StepValue(i_17) * 1.0 / 100);
-                navyspeed_[i_17] = RoundTo2Digits(temp_1);
+                var temp_1 = 5*100 / (100 + StepValue(i_17));
+                navyspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 8 / (1 + StepValue(i_17) * 1.0 / 100);
-                scoutspeed_[i_17] = RoundTo2Digits(temp_1);
+                temp_1 = 8*100 / (100 + StepValue(i_17));
+                scoutspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 10 / (1 + StepValue(i_17) * 1.0 / 100);
-                cavspeed_[i_17] = RoundTo2Digits(temp_1);
+                temp_1 = 10 * 100 / (100 + StepValue(i_17));
+                cavspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 20 / (1 + StepValue(i_17) * 1.0 / 100);
-                infspeed_[i_17] = RoundTo2Digits(temp_1);
+                temp_1 = 20 * 100 / (100 + StepValue(i_17));
+                infspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 30 / (1 + StepValue(i_17) * 1.0 / 100);
-                artspeed_[i_17] = RoundTo2Digits(temp_1);
+                temp_1 = 30 * 100 / (100 + StepValue(i_17));
+                artspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 40 / (1 + StepValue(i_17) * 1.0 / 100);
-                senspeed_[i_17] = RoundTo2Digits(temp_1);
+                temp_1 = 40 * 100 / (100 + StepValue(i_17));
+                senspeed_[i_17] = RoundTo6Bits(temp_1);
             }
             var targetContinent = army.targetCid.CidToContinent();
             var sourceContinent = army.sourceCid.CidToContinent();
@@ -118,11 +118,11 @@ namespace COTG.Game
             //              time_4 = time_4 + mdiff_;
             //              /** @type {number} */
             //              time_4 = time_4 + sdiff_ / 60;
-            var journeyTime = army.journeyTime / 60.0f; // want minutes
+            var journeyTime = army.journeyTime / 60.0; // want minutes
             var dist_ = army.dist;
-            float landSpeed = RoundTo2Digits(journeyTime / dist_);
+            float landSpeed = RoundTo6Bits(journeyTime / (double)dist_);
 
-            float navySpeed = RoundTo2Digits((journeyTime - 60) / dist_);
+            float navySpeed = RoundTo6Bits((journeyTime - 60) / (double)dist_);
             //            let locks_;
             //            let lockm_;
             //            let lockh_;

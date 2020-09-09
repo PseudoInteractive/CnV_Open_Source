@@ -91,7 +91,7 @@ namespace COTG.JSON
                     }
             
                 }
-            await Cosmos.GetSpotDB();
+
         }
         
         

@@ -66,7 +66,7 @@ namespace COTG.Game
             var element = _aldt.RootElement.GetProperty("aldt");
             myId = my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
-            
+
             var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();
             var _diplomacy = new SortedList<byte, byte>();
@@ -209,6 +209,8 @@ else
 
             nameToId = _nameToId;
             all = _all;
+            await Cosmos.GetSpotDB();
+
         }
 
         internal static bool IsMine(int allianceId)

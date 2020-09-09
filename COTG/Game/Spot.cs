@@ -258,11 +258,11 @@ namespace COTG.Game
                 }
 
 
-                if (MainPage.IsVisible() && isMine && wantRaidScan)
-                {
-                    //                MainPage.SetRaidCity(cid,true);
-                    ScanDungeons.Post(cid, true);
-                }
+                //if (MainPage.IsVisible() && isMine && wantRaidScan)
+                //{
+                //    //                MainPage.SetRaidCity(cid,true);
+                //    ScanDungeons.Post(cid, true);
+                //}
                 SetFocus();
                 NavStack.Push(cid);
 
@@ -545,11 +545,16 @@ namespace COTG.Game
         public static void SetFocus(int cid)
         {
             var changed = cid != focus;
-            focus = cid;
             if(changed)
             {
+                focus = cid;
                 var spot = Spot.GetOrAdd(cid);
-                App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = spot.nameAndRemarks);
+                App.DispatchOnUIThreadSneaky(() =>
+                { ShellPage.instance.focus.Content = spot.nameAndRemarks;
+                    ShellPage.instance.coords.Text = cid.CidToString();
+                }
+
+                );
             }
             cid.BringCidIntoWorldView(true);
         }
