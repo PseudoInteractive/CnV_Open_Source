@@ -344,6 +344,7 @@ namespace COTG.Views
             {
                 var parseEnd = coords.IndexOf(' ', 3);
                 var player = coords.Substring(3, parseEnd - 3);
+                App.CopyTextToClipboard(player);
                 var tab = ChatTab.GetWhisperTab(player,true);
                 tab.Paste(coords, false);
                 return;
@@ -356,8 +357,9 @@ namespace COTG.Views
             var lg = coords.Length;  //  <coords>000:000</coords>
             if (lg == 24)
             {
-            //    var c = coords.Substring(8, 7);
-           //     Note.Show($"[{c}](/c/{c}) posted to chat");
+                var c = coords.Substring(8, 7);
+                App.CopyTextToClipboard(c);
+ //               Note.Show($"[{c}](/c/{c}) posted to chat");
             }
             
         }

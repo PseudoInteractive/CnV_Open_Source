@@ -455,6 +455,7 @@ namespace COTG
         {
             try
             {
+                App.CopyTextToClipboard(playerName);
                 //     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
                      view.InvokeScriptAsync("infoPlay", new string[] {playerName});
             }

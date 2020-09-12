@@ -628,7 +628,7 @@ namespace COTG.Game
                     var isCastle = 0;
                     var isWater = (type & 1);
 
-                    if (type == 3 || type == 4) // 3,4 is on/off water
+                    if (type == 3 || type == 7) // 3,4 is on/off water
                     {
                         isCastle = 1;
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
@@ -636,7 +636,7 @@ namespace COTG.Game
                         pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                         pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                     }
-                    else if (type == 7 || type == 8) // 7 is on water
+                    else if (type == 4 || type == 8) // 7 is on water
                     {
                         isCastle = 1;
                         pixels[index * 8 + 4] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));

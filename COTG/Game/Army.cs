@@ -177,7 +177,7 @@ namespace COTG.Game
                 }
                 else
                 {
-                   return troops.Format("Attack:",'\n');
+                   return troops.Format($"{sPlayer} (from)\n{tPlayer} (to)",'\n');
                     
 
                 }

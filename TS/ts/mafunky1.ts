@@ -19,7 +19,7 @@ function encryptJs(req,k2v) {
 interface stringCType {
 
 }
-var shrinec_= [[]];//string,string,number,number,number,number,string, number,number,number]] = [[[]]];// = [[["castle", "", 0, 0,0,0,1, "0", 0, 0, 0]]];
+var shrinec= [[]];//string,string,number,number,number,number,string, number,number,number]] = [[[]]];// = [[["castle", "", 0, 0,0,0,1, "0", 0, 0, 0]]];
 
 //function betterBase64Decode() {
 //	try {
@@ -2106,166 +2106,112 @@ function avactor() {
 			$("#foodsendamt").val(res_6);
 		});
 		
-		var shrinebut_ = "<button class='regButton greenb' id='shrineP' style='width: 98%;margins: 1%;'>Shrine Planner</button>";
-		$("#inactiveshrineInfo").before(shrinebut_);
-		$("#shrineP").click(() => {
-			if (beentoworld_) {
-				
-				shrinec_ = [[]];
-				splayers_ = {
-					name: [],
-					ally: [],
-					cities: []
-				};
-				
-				var players_ = [];
-				var coords_ = $("#coordstochatGo3").attr("data");
-				
-				var shrinex_ = parseInt(coords_);
-				
-				var shriney_ = AsNumber(coords_.match(/\d+$/)[0]);
-				
-				var shrinecont_ = AsNumber(Math.floor(shrinex_ / 100) + 10 * Math.floor(shriney_ / 100));
-				var i_41;
-				for (i_41 in wdata_.cities) {
-					
-					var tempx_10 = AsNumber(wdata_.cities[i_41].substr(8, 3)) - 100;
-					
-					var tempy_10 = AsNumber(wdata_.cities[i_41].substr(5, 3)) - 100;
-					
-					var cont_2 = AsNumber(Math.floor(tempx_10 / 100) + 10 * Math.floor(tempy_10 / 100));
-					if (cont_2 == shrinecont_) {
-						
-						var dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
-						if (dist_1 < 10) {
-							
-							var l_4 = AsNumber(wdata_.cities[i_41].substr(11, 1));
-							
-							var pid_ = AsNumber(wdata_.cities[i_41].substr(12, l_4));
-							var pname_12 = F5F[pid_];
-							
-							var csn_ = [3, 4, 7, 8];
-							if (csn_.indexOf(AsNumber(wdata_.cities[i_41].charAt(4))) > -1) {
-								shrinec_.push(["castle", pname_12, 0, tempx_10, tempy_10, dist_1, "0", 0, 0, 0]);
+		//shrine planer part
+		var shrinebut = "<button class='regButton greenb' id='shrineP' style='width: 98%;margins: 1%;'>Shrine Planner</button>";
+		$("#inactiveshrineInfo").before(shrinebut);
+		$("#shrineP").click(function () {
+			if (beentoworld) {
+				shrinec = [[]];
+				splayers = { name: [], ally: [], cities: [] };
+				var players = [];
+				var coords = $("#coordstochatGo3").attr("data");
+				var shrinex = parseInt(coords);
+				var shriney = Number(coords.match(/\d+$/)[0]);
+				var shrinecont = Number(Math.floor(shrinex / 100) + 10 * Math.floor(shriney / 100));
+				for (var i in wdata.cities) {
+					var tempx = Number(wdata.cities[i].substr(8, 3)) - 100;
+					var tempy = Number(wdata.cities[i].substr(5, 3)) - 100;
+					var cont = Number(Math.floor(tempx / 100) + 10 * Math.floor(tempy / 100));
+					if (cont == shrinecont) {
+						var dist = Math.sqrt((tempx - shrinex) * (tempx - shrinex) + (tempy - shriney) * (tempy - shriney));
+						//console.log("dist");
+						if (dist < 10) {
+							var l = Number(wdata.cities[i].substr(11, 1));
+							var pid = Number(wdata.cities[i].substr(12, l));
+							var pname = pldata[pid];
+							//console.log(pname);
+							//console.log(splayers.name.indexOf(pname),pname,splayers.name);
+							var csn = [3, 4, 7, 8];
+							if (csn.indexOf(Number(wdata.cities[i].charAt(4))) > -1) {
+								shrinec.push(["castle", pname, 0, tempx, tempy, dist, "0", 0, 0, 0]);
 							} else {
-								shrinec_.push(["city", pname_12, 0, tempx_10, tempy_10, dist_1, "0", 0, 0, 0]);
+								shrinec.push(["city", pname, 0, tempx, tempy, dist, "0", 0, 0, 0]);
 							}
 						}
 					}
 				}
-				shrinec_.sort((a, b) => {
-					return a[5] - b[5];
-				});
-				
-				var planwin_ = "<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox obscuretop'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
-				
-				planwin_ = `${planwin_}<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id="sumX" onclick="$('#shrinePopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
-				
-				planwin_ = `${planwin_}<div id='shrinediv' class='beigemenutable scroll-pane ava' style='background:none;border: none;padding: 0px;height:90%;'></div></div>`;
-				for (i_41 in shrinec_) {
-					if (i_41 < 101) {
-						pname_12 = shrinec_[i_41][1];
-						if (players_.indexOf(pname_12) == -1) {
-							players_.push(pname_12);
-							jQuery.ajax(
-								{
-									url: "includes/gPi.php", type: "POST",
-									async: true,
-									data: {
-										a: pname_12
-									},
-									success: function success_13(_data) {
-										var pinfo_ = JSON.parse(_data);
-										splayers_.name.push(pinfo_.player);
-										splayers_.ally.push(pinfo_.a);
-										splayers_.cities.push(pinfo_.h);
-									}
-								});
-
-
-							//data: {
-							//	a: pname_12
-							//},
-							//success: function success_13(status: SuccessTextStatus,j: jqXHR) {
-							//	/** @type {*} */
-							//	var pinfo_=JSON.parse(data_55);
-							//	splayers_.name.push(pinfo_.player);
-							//	splayers_.ally.push(pinfo_.a);
-							//	splayers_.cities.push(pinfo_.h);
-							//}
-						};
+				shrinec.sort(function (a, b) { return a[5] - b[5]; });
+				var planwin = "<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
+				planwin += "<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id=\"sumX\" onclick=\"$('#shrinePopup').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
+				planwin += "<div id='shrinediv' class='beigemenutable scroll-pane' style='background:none;border: none;padding: 0px;height:90%;'></div></div>";
+				for (var i in shrinec) {
+					if (i < 101) {
+						var pname = shrinec[i][1];
+						if (players.indexOf(pname) == -1) {
+							players.push(pname);
+							jQuery.ajax({
+								url: 'includes/gPi.php', type: 'POST', aysnc: false, data: { a: pname },
+								success: function (data) {
+									var pinfo = JSON.parse(data);
+									splayers.name.push(pinfo.player);
+									splayers.ally.push(pinfo.a);
+									splayers.cities.push(pinfo.h);
+									//console.log(pinfo.a,pinfo.h,pinfo.player);
+								}
+							});
+						}
 					}
 				}
-
-				setTimeout(() => {
-					$("#reportsViewBox").after(planwin_);
-					$("#shrinePopup").draggable({
-						handle: ".popUpBar",
-						containment: "window",
-						scroll: false
-					});
+				setTimeout(function () {
+					$("#reportsViewBox").after(planwin);
+					$("#shrinePopup").draggable({ handle: ".popUpBar", containment: "window", scroll: false });
 					$("#shrinePopup").resizable();
 					if (localStorage.getItem("hidecities")) {
 						1 == 1;
 					} else {
+						//console.log("hideciies nonexists");
 						localStorage.setItem("hidecities", "0");
 					}
 					if (localStorage.getItem("hidecities") == "1") {
 						$("#hidec").html("Show Cities");
 					}
-					$("#hidec").click(() => {
+					$("#hidec").click(function () {
 						if (localStorage.getItem("hidecities") == "0") {
-							hidecities_();
+							hidecities();
 							localStorage.setItem("hidecities", "1");
 							$("#hidec").html("Show Cities");
-						} else {
-							if (localStorage.getItem("hidecities") == "1") {
-								showcities_();
-								localStorage.setItem("hidecities", "0");
-								$("#hidec").html("Hide Cities");
-							}
+						} else if (localStorage.getItem("hidecities") == "1") {
+							showcities();
+							localStorage.setItem("hidecities", "0");
+							$("#hidec").html("Hide Cities");
 						}
 					});
-					updateshrine_();
-					
-					var addcitypop_ = "<div id='addcityPopup' style='width:500px;height:100px;left: 360px; z-index: 3000;' class='popUpBox obscuretop'><div class='popUpBar'><span class=\"ppspan\">Add City</span>";
-					
-					addcitypop_ = `${addcitypop_}<button id="sumX" onclick="$('#addcityPopup').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div class="popUpWindow" style='height:100%'>`;
-					
-					addcitypop_ = `${addcitypop_}<div><table><td>X: <input id='addx' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td><td>y: <input id='addy' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td>`;
-					
-					addcitypop_ = `${addcitypop_}<td>score: <input id='addscore' type='number' style='width: 45px;height: 22px;font-size: 10px;'></td><td>Type: <select id='addtype' class='greensel' style='font-size: 15px !important;width:55%;height:30px;'>`;
-					
-					addcitypop_ = `${addcitypop_}<option value='city'>City</option><option value='castle'>Castle</option></select></td><td><button id='addadd' class='greenb'>Add</button></td></table></div></div>`;
-					$("#addcity").click(() => {
-						$("body").append(addcitypop_);
-						$("#addcityPopup").draggable({
-							handle: ".popUpBar",
-							containment: "window",
-							scroll: false
-						});
-						$("#addadd").click(() => {
-							let tempx_10 = $("#addx").val() as number;
-							let tempy_10 = $("#addy").val() as number;
-							
-							dist_1 = Math.sqrt((tempx_10 - shrinex_) * (tempx_10 - shrinex_) + (tempy_10 - shriney_) * (tempy_10 - shriney_));
-							
-							var temp_4 = [$("#addtype").val(), "Poseidon", "Atlantis", tempx_10, tempy_10, dist_1, "1", $("#addscore").val(), "Hellas", "1"];
-							shrinec_.push(temp_4);
-							shrinec_.sort((a_9, b_7) => {
-								return a_9[5] - b_7[5];
-							});
-							updateshrine_();
+					updateshrine();
+					var addcitypop = "<div id='addcityPopup' style='width:500px;height:100px;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Add City</span>";
+					addcitypop += "<button id=\"sumX\" onclick=\"$('#addcityPopup').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
+					addcitypop += "<div><table><td>X: <input id='addx' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td><td>y: <input id='addy' type='number' style='width: 35px;height: 22px;font-size: 10px;'></td>";
+					addcitypop += "<td>score: <input id='addscore' type='number' style='width: 45px;height: 22px;font-size: 10px;'></td><td>Type: <select id='addtype' class='greensel' style='font-size: 15px !important;width:55%;height:30px;'>";
+					addcitypop += "<option value='city'>City</option><option value='castle'>Castle</option></select></td><td><button id='addadd' class='greenb'>Add</button></td></table></div></div>";
+					$("#addcity").click(function () {
+						$("body").append(addcitypop);
+						$("#addcityPopup").draggable({ handle: ".popUpBar", containment: "window", scroll: false });
+						$("#addadd").click(function () {
+							tempx = $("#addx").val();
+							tempy = $("#addy").val();
+							dist = Math.sqrt((tempx - shrinex) * (tempx - shrinex) + (tempy - shriney) * (tempy - shriney));
+							var temp = [$("#addtype").val(), "Poseidon", "Atlantis", tempx, tempy, dist, "1", $("#addscore").val(), "Hellas", "1"];
+							shrinec.push(temp);
+							shrinec.sort(function (a, b) { return a[5] - b[5]; });
+							updateshrine();
 							$("#addcityPopup").remove();
 						});
 					});
-
 				}, 2000);
 			} else {
 				alert("Press World Button");
 			}
 		});
-
+	
 		var incomingtabledata_ = $("#incomingsAttacksTable").children().children().children();
 		$("#incomingsAttacksTable table thead tr th:nth-child(2)").width(140);
 		
