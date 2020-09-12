@@ -13,7 +13,7 @@
 
 function incommingfilterInit() {
 
-    let cachedIncoming = -1;
+let cachedIncoming = -1;
     $("#contselectorAIPic").after("<button id='jscript_incattackfilter_choose' class='greensel aipcbsel' style='width:150px'>Incoming Filter</button>");
     $("#incomingsSpan").append("<span id='jscript_incattackfilter'>(0)</span>");
 
@@ -113,20 +113,21 @@ function incommingfilterInit() {
 
     function notify() {
         let players = JSON.parse(localStorage.getItem('jscript_incattackfilter'));
-        if (players) { }
-        $.post('includes/getIO.php', {}, data => {
-            let attacks = [];
+        if (players) {
+            $.post('includes/getIO.php', {}, data => {
+                let attacks = [];
 
-            let parsedData = JSON.parse(data);
+                let parsedData = JSON.parse(data);
 
-            parsedData.inc.forEach(atk => {
-                if (players.includes(atk.tpn)) {
-                    attacks.push(atk);
-                }
+                parsedData.inc.forEach(atk => {
+                    if (players.includes(atk.tpn)) {
+                        attacks.push(atk);
+                    }
+                });
+
+                $("#jscript_incattackfilter").text("(" + attacks.length + ")");
             });
-
-            $("#jscript_incattackfilter").text("(" + attacks.length + ")");
-        });
+        }
     }
     
 

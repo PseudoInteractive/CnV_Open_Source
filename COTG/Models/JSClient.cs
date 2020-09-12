@@ -257,6 +257,15 @@ namespace COTG
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
                 }
+                else if (req.RequestUri.ToString().Contains("/jsfunctions/pack.js"))
+                {
+                    var js = GetJsString("pack");
+
+                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+                }
 
                 else if ( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
                 {

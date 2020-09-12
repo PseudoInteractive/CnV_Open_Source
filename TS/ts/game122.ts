@@ -12702,7 +12702,7 @@ var cotgsubscribe = amplify;
         1767194880);
     }
     $(window)
-      .unload(function() {
+        .on("unload", function() {
         var D3q = 516918832;
         if (E6k.T3q(p0y >> 263703616, 437370) === D3q) {
           E6k.R6();
@@ -33833,6 +33833,9 @@ console.log("Bad");
             console.log("Aldt!!!");
         const wrapper = { aldt: aldt }
         window['external']['notify'](JSON.stringify(wrapper));
+            incommingfilterInit();
+            mailcitycoordsInit();
+
         }
     }
 
