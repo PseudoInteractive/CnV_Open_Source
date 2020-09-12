@@ -1305,8 +1305,9 @@ function avactor() {
 	});
 	//SendAllianceInfo();
 	//setTimeout(SendCreds, 600);
-	
 
+	incommingfilterInit();
+	mailcitycoordsInit();
 
 
 
