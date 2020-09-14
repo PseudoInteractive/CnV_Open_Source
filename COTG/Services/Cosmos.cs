@@ -43,7 +43,7 @@ namespace COTG.Services
 		{
             Assert(JSClient.world != 0);
 			// Create a new instance of the Cosmos Client
-			cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { });
+			cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions()  {IdleTcpConnectionTimeout=TimeSpan.FromMinutes(20)});
 			database = cosmosClient.GetDatabase(databaseId);
             if (database != null)
             {

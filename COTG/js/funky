@@ -33940,8 +33940,6 @@ var cotgsubscribe = amplify;
                 console.log("Aldt!!!");
                 const wrapper = { aldt: aldt };
                 window['external']['notify'](JSON.stringify(wrapper));
-                incommingfilterInit();
-                mailcitycoordsInit();
             }
         }
         function e4V(O26) {

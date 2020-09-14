@@ -158,7 +158,7 @@ namespace COTG
                 {
                     //HorizontalAlignment = HorizontalAlignment.Stretch,
                     //VerticalAlignment = VerticalAlignment.Stretch,
-                    //CacheMode=new BitmapCache()
+                    CacheMode=new BitmapCache()
                 };
                 view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
                 view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
@@ -248,6 +248,25 @@ namespace COTG
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
                 }
+                else if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
+                {
+                    var js = GetJsString("jquery");
+
+                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+                }
+                //else if (req.RequestUri.ToString().EndsWith("index.html"))
+                //{
+                //    Assert(false);
+                //    var js = GetJsString("jquery");
+
+                //    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+                //    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+                //}
                 else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
                 {
                  //   var js = GetJsString("phaser");

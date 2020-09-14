@@ -33833,8 +33833,8 @@ console.log("Bad");
             console.log("Aldt!!!");
         const wrapper = { aldt: aldt }
         window['external']['notify'](JSON.stringify(wrapper));
-            incommingfilterInit();
-            mailcitycoordsInit();
+         //   incommingfilterInit();
+         //   mailcitycoordsInit();
 
         }
     }
