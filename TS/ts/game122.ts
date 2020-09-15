@@ -25667,11 +25667,11 @@ console.log("Bad");
                   cid: cid,
                   ts: H2l // timedate
                 };
-                console.log(O2l);
-                console.log(JSON.stringify(O2l));
+              //  console.log(O2l);
+              //  console.log(JSON.stringify(O2l));
                 var Q2l = _s(4865) + b2() + _s(3927);
 
-                console.log(Q2l);
+              //  console.log(Q2l);
                 var t2l = a6.ccazzx
                   .encrypt(JSON.stringify(O2l), Q2l, +U7y);
                 N6();
@@ -66782,7 +66782,7 @@ _viewMode = viewModeWorld;
           else{
           E51 = JSON.stringify(L8);
           L8 = [];
-          console.log("!!!!!" + E51);
+        //  console.log("!!!!!" + E51);
           }
           var allyiance = 0;
           if ($("#withAlliance").css("display") != "none" || 

@@ -42,8 +42,8 @@ namespace COTG.Services
         static Cosmos()
 		{
             Assert(JSClient.world != 0);
-			// Create a new instance of the Cosmos Client
-			cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions()  {IdleTcpConnectionTimeout=TimeSpan.FromMinutes(20)});
+            // Create a new instance of the Cosmos Client
+            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { IdleTcpConnectionTimeout = TimeSpan.FromMinutes(20), LimitToEndpoint = true });
 			database = cosmosClient.GetDatabase(databaseId);
             if (database != null)
             {

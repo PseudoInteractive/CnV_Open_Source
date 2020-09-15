@@ -158,7 +158,7 @@ namespace COTG
                 {
                     //HorizontalAlignment = HorizontalAlignment.Stretch,
                     //VerticalAlignment = VerticalAlignment.Stretch,
-                    CacheMode=new BitmapCache()
+                    //CacheMode=new BitmapCache()
                 };
                 view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
                 view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
