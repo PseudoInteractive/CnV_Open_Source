@@ -37,13 +37,14 @@ namespace COTG.Views
         public string player { get; set; }
         public byte crown { get; set; }
         public byte type { get; internal set; }
+        public bool seen;
         public sbyte allignment;
         public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
         public DateTimeOffset time;
         public string arrivedString => time.ToString("HH':'mm':'ss");
         public string text { get; set; }= string.Empty;
 
-        public ChatEntry(string _a,DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
+        public ChatEntry(string _a,DateTimeOffset _time = default) {  text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
       //  public ChatEntry() { }
     }
     public  class ChatEntryGroup
@@ -73,7 +74,7 @@ namespace COTG.Views
             return all;
         }
         public string whisperTarget; // null if no target
-
+        public DateTimeOffset lastRead;
         public static string[] chatToId = { nameof(world), "whisper", nameof(alliance), nameof(officer) };
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
         public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
@@ -95,6 +96,11 @@ namespace COTG.Views
 
         public void Post(ChatEntry entry)
         {
+            if (!isActive)
+            {
+
+                tabPage.AddTab(this,false);
+            }
             var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
             var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
             var newHour = entry.time.Hour;
@@ -104,6 +110,7 @@ namespace COTG.Views
                 Groups.Add(activeGroup);
             }
             activeGroup.Items.Add(entry);
+            SetPlus(true);
 
         }
         public void Post(IEnumerable<ChatEntry> entries)
@@ -117,6 +124,7 @@ namespace COTG.Views
         public ChatTab()
         {
             this.InitializeComponent();
+            
          //   Task.Delay(2000).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
          //{ //ChatTip0.IsOpen = true;
          //   /// ChatTip1.IsOpen = true;
@@ -125,7 +133,7 @@ namespace COTG.Views
 
         }
         //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-        [Conditional("TRACE")]
+       // [Conditional("TRACE")]
         public static void L(string s)
         {
 
@@ -561,6 +569,19 @@ namespace COTG.Views
                 fly.ShowAt(date,e.GetPosition(date) );
             });
         }
+
+        private void input_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SetPlus(false);
+        }
+
+        private void input_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+ //           Log("Tapped");
+            listView.Focus(FocusState.Programmatic);
+            input.Focus(FocusState.Programmatic);
+        }
+
     }
     class HyperlinkColorConverter : IValueConverter
     {

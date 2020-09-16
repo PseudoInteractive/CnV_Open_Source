@@ -57,6 +57,35 @@ namespace COTG.Views
                 VisibilityChanged(true);  // close enough default behaviour
             }
         }
+        public void SetPlus(bool set)
+        {
+            (var tp, var tvi) = GetViewItem();
+            if(tvi!=null)
+            {
+                var h = tvi.Header as string;
+                 
+                if( (h[0] == '+') != set )
+                {
+                    if (set)
+                        tvi.Header = '+' + h;
+                    else
+                        tvi.Header = h.Substring(1);
+                }
+            }
+        }
+
+        public (TabPage tabPage, TabViewItem tabViewItem) GetViewItem()
+        {
+            foreach (var tabPage in TabPage.tabPages)
+            {
+                foreach (TabViewItem ti in tabPage.Tabs.TabItems)
+                {
+                    if (ti.Content == this)
+                        return (tabPage, ti);
+                }
+            }
+            return (null, null);
+        }
     }
     public sealed partial class TabPage : Page
     {
@@ -72,18 +101,7 @@ namespace COTG.Views
         }
         static public List<TabPage> tabPages = new List<TabPage>();
 
-        public static (TabPage tabPage, TabViewItem tabViewItem) Get(UserTab tab)
-        {
-            foreach(var tabPage in tabPages)
-            {
-                foreach(TabViewItem ti in tabPage.Tabs.TabItems)
-                {
-                    if (ti.Content == tab)
-                        return (tabPage,ti);
-                }
-            }
-            return (null,null);
-        }
+       
         public static bool Show(UserTab tab)
         {
             bool rv = false;

@@ -7,16 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  Background="{ThemeResource SystemAccentColor}"
+    >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <muxc:TabView x:Name="Tabs" x:FieldModifier="public"
-                      TabWidthMode="Compact" 
+                      TabWidthMode="SizeToContent" 
                              VerticalAlignment="Stretch"
                              HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
-                      
+                      TabFocusNavigation="Cycle"
+                      IsTabStop="True"
                       CloseButtonOverlayMode="Auto"
                       
                       SelectionChanged="Tabs_SelectionChanged"
@@ -27,11 +29,11 @@
                              TabStripDragOver="Tabs_TabStripDragOver"
                              TabStripDrop="Tabs_TabStripDrop"
                              TabDragStarting="Tabs_TabDragStarting" >
-            <!--<muxc:TabView.TabStripHeader>
-                <Grid x:Name="ShellTitlebarInset" Background="Transparent" />
-            </muxc:TabView.TabStripHeader>-->
+            <muxc:TabView.TabStripHeader>
+                <Grid x:Name="ShellTitlebarInset"  Background="Transparent"  />
+            </muxc:TabView.TabStripHeader>
             <muxc:TabView.TabStripFooter>
-                <Grid x:Name="CustomDragRegion" Background="Transparent" />
+                <Grid x:Name="CustomDragRegion"  Background="Transparent"  />
             </muxc:TabView.TabStripFooter>
         </muxc:TabView>
     </Grid>

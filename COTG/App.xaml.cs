@@ -545,7 +545,7 @@ namespace COTG
             
 			try
 			{
-                if (e.Link.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+                if (e.Link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
                     Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
                 }
