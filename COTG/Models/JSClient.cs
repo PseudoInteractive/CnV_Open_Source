@@ -1051,6 +1051,15 @@ namespace COTG
 
                                     break;
                                 }
+                            case "aexp":
+                                {
+                                    var msg = jsp.Value.GetString();
+                                    Note.Show($"Exported Order to clipboard: {msg}");
+                                    App.CopyTextToClipboard(msg);
+                                    break;
+
+                                    break;
+                                }
                             case "error":
                                 {
                                     var msg = jsp.Value.GetString();

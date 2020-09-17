@@ -285,7 +285,7 @@ function gWrdPosted(data) {
 		beentoworld_ = true;
 		wdata_ = DecodeWorldData(data);
 		UpdateResearchAndFaith();
-		getbossinfo_();
+		getbossinfo();
 	}, 1000);
 }
 
@@ -539,20 +539,20 @@ function avagetts() {
 	var rv = { tc: D6.tc, th: D6.th };
 	return JSON.stringify(rv);
 }
-async function avafetch(url: string, args: string) {
-	let req = fetch(url, {
-		method: 'POST',
-		headers: defaultHeaders,
+//async function avafetch(url: string, args: string) {
+//	let req = fetch(url, {
+//		method: 'POST',
+//		headers: defaultHeaders,
 
-		mode: 'cors',
-		cache: "no-cache",
-		body: args
-	});
-	let a = await req;
-	let txt = a.text();
-	console.log(txt);
-	return txt;
-}
+//		mode: 'cors',
+//		cache: "no-cache",
+//		body: args
+//	});
+//	let a = await req;
+//	let txt = a.text();
+//	console.log(txt);
+//	return txt;
+//}
 var raidSecret: string;
 
 function postppdt()
@@ -1656,18 +1656,18 @@ function avactor() {
             $("#defperc").val(localStorage.getItem('defperc'));
         } else {$("#defperc").val(99);}
         if (localStorage.getItem('retcheck')) {
-            if (localStorage.getItem('retcheck')==1) {
+			if (localStorage.getItem('retcheck') == '1') {
                 $("#retcheck").prop( "checked", true );
             }
-            if (localStorage.getItem('retcheck')==0) {
+            if (localStorage.getItem('retcheck')=='0') {
                 $("#retcheck").prop( "checked", false );
             }
         }
         if (localStorage.getItem('dretcheck')) {
-            if (localStorage.getItem('rdetcheck')==1) {
+			if (localStorage.getItem('rdetcheck') == '1') {
                 $("#dretcheck").prop( "checked", true );
             }
-            if (localStorage.getItem('dretcheck')==0) {
+			if (localStorage.getItem('dretcheck') == '0') {
                 $("#dretcheck").prop( "checked", false );
             }
         }
@@ -1872,8 +1872,14 @@ function avactor() {
             Aexp.time[0]=$("#attackHr").val();
             Aexp.time[1]=$("#attackMin").val();
             Aexp.time[2]=$("#attackSec").val();
-            Aexp.time[3]=$("#attackDat").val();
-            var aa=prompt("Attack Orders Expot", JSON.stringify(Aexp));
+			Aexp.time[3] = $("#attackDat").val();
+
+			const wrapper = {
+				aexp: Aexp
+			};
+			window['external']['notify'](JSON.stringify(wrapper));
+
+    //        var aa=prompt("Attack Orders Expot", JSON.stringify(Aexp));
 
 		});
         $("#Aimport").click(function() {
@@ -2304,7 +2310,6 @@ function avactor() {
 							jQuery.ajax({
 								url: "includes/UaO.php",
 								type: "POST",
-								async: true,
 								data: dat_7
 							});
 						}
@@ -2325,7 +2330,6 @@ function avactor() {
 							jQuery.ajax({
 								url: "includes/UpO.php",
 								type: "POST",
-								async: true,
 								data: dat_8
 							});
 						}

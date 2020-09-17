@@ -177,6 +177,7 @@
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
+    <Compile Include="Services\ChatStorage.cs" />
     <Compile Include="Services\Cosmos.cs" />
     <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Helpers\Debug.cs" />

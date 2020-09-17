@@ -136,8 +136,9 @@ namespace COTG.Views
 			{
 				IsHitTestVisible = false,
                 IsTabStop=true,
-				TargetElapsedTime=TimeSpan.FromSeconds(1.0f/60.0f),
-				AllowFocusOnInteraction=true,
+                UseSharedDevice = true,
+                TargetElapsedTime =TimeSpan.FromSeconds(1.0f/60.0f),
+                
 				IsFixedTimeStep = false
 			};
 			canvas.Draw += Canvas_Draw;

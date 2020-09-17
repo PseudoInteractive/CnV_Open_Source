@@ -37,7 +37,6 @@ namespace COTG.Views
         public string player { get; set; }
         public byte crown { get; set; }
         public byte type { get; internal set; }
-        public bool seen;
         public sbyte allignment;
         public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
         public DateTimeOffset time;
@@ -45,7 +44,8 @@ namespace COTG.Views
         public string text { get; set; }= string.Empty;
 
         public ChatEntry(string _a,DateTimeOffset _time = default) {  text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
-      //  public ChatEntry() { }
+        public ChatEntry(string _player,string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time;  type = _type; player = _player; }
+        //  public ChatEntry() { }
     }
     public  class ChatEntryGroup
     {

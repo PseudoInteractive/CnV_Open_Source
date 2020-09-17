@@ -1175,7 +1175,7 @@ function updateshrine() {
     var ccounter = 0;
     var w = [];
     var wtot = 0;
-    for (var i in shrinec) {
+    for (let i in shrinec) {
         if (i > 0) {
             var k = splayers.name.indexOf(shrinec[i][1]);
             for (var j in splayers.cities[k]) {
@@ -1196,11 +1196,11 @@ function updateshrine() {
             }
         }
     }
-    for (var i in w) {
+    for (let i in w) {
         w[i] = Math.round(w[i] / wtot * 100);
     }
     var ccounter = 0;
-    for (var i in shrinec) {
+    for (let i in shrinec) {
         if (i > 0) {
             var cid = shrinec[i][4] * 65536 + Number(shrinec[i][3]);
             if (shrinec[i][0] == "castle") {
@@ -1415,7 +1415,7 @@ let notesw_ = [""];
 let notedf_ = [""];
 let emptyspots_ = ",.;:#-T";
 let beentoworld_ = false;
-let splayers_ = {
+let splayers = {
     name: [],
     ally: [],
     cities: [],
@@ -25613,10 +25613,7 @@ var cotgsubscribe = amplify;
                             cid: cid,
                             ts: H2l
                         };
-                        console.log(O2l);
-                        console.log(JSON.stringify(O2l));
                         var Q2l = _s(4865) + b2() + _s(3927);
-                        console.log(Q2l);
                         var t2l = a6.ccazzx
                             .encrypt(JSON.stringify(O2l), Q2l, +U7y);
                         N6();
@@ -66102,7 +66099,6 @@ var cotgsubscribe = amplify;
                         else {
                             E51 = JSON.stringify(L8);
                             L8 = [];
-                            console.log("!!!!!" + E51);
                         }
                         var allyiance = 0;
                         if ($("#withAlliance").css("display") != "none" ||
@@ -69095,15 +69091,6 @@ function incommingfilterInit() {
     }, 30000);
     notify();
 }
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 let __base64Encode = null;
 let __base64Decode = null;
 var encryptStr = [""];
@@ -69167,7 +69154,7 @@ function gWrdPosted(data) {
         beentoworld_ = true;
         wdata_ = DecodeWorldData(data);
         UpdateResearchAndFaith();
-        getbossinfo_();
+        getbossinfo();
     }, 1000);
 }
 function _pleaseNoMorePrefilters() { }
@@ -69242,21 +69229,6 @@ function avapost(url, args) {
 function avagetts() {
     var rv = { tc: D6.tc, th: D6.th };
     return JSON.stringify(rv);
-}
-function avafetch(url, args) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let req = fetch(url, {
-            method: 'POST',
-            headers: defaultHeaders,
-            mode: 'cors',
-            cache: "no-cache",
-            body: args
-        });
-        let a = yield req;
-        let txt = a.text();
-        console.log(txt);
-        return txt;
-    });
 }
 var raidSecret;
 function postppdt() {
@@ -69990,18 +69962,18 @@ function avactor() {
             $("#defperc").val(99);
         }
         if (localStorage.getItem('retcheck')) {
-            if (localStorage.getItem('retcheck') == 1) {
+            if (localStorage.getItem('retcheck') == '1') {
                 $("#retcheck").prop("checked", true);
             }
-            if (localStorage.getItem('retcheck') == 0) {
+            if (localStorage.getItem('retcheck') == '0') {
                 $("#retcheck").prop("checked", false);
             }
         }
         if (localStorage.getItem('dretcheck')) {
-            if (localStorage.getItem('rdetcheck') == 1) {
+            if (localStorage.getItem('rdetcheck') == '1') {
                 $("#dretcheck").prop("checked", true);
             }
-            if (localStorage.getItem('dretcheck') == 0) {
+            if (localStorage.getItem('dretcheck') == '0') {
                 $("#dretcheck").prop("checked", false);
             }
         }
@@ -70177,7 +70149,10 @@ function avactor() {
             Aexp.time[1] = $("#attackMin").val();
             Aexp.time[2] = $("#attackSec").val();
             Aexp.time[3] = $("#attackDat").val();
-            var aa = prompt("Attack Orders Expot", JSON.stringify(Aexp));
+            const wrapper = {
+                aexp: Aexp
+            };
+            window['external']['notify'](JSON.stringify(wrapper));
         });
         $("#Aimport").click(function () {
             $("body").append(expwin);
@@ -70505,7 +70480,6 @@ function avactor() {
                             jQuery.ajax({
                                 url: "includes/UaO.php",
                                 type: "POST",
-                                async: true,
                                 data: dat_7
                             });
                         }
@@ -70524,7 +70498,6 @@ function avactor() {
                             jQuery.ajax({
                                 url: "includes/UpO.php",
                                 type: "POST",
-                                async: true,
                                 data: dat_8
                             });
                         }
@@ -71687,7 +71660,7 @@ class Boss {
 }
 let bossinfo_;
 let bosslist_;
-function getbossinfo_() {
+function getbossinfo() {
     bossinfo_ = [];
     var i_19;
     for (i_19 in wdata_.bosses) {
@@ -72042,7 +72015,7 @@ function setnearhub(j_12) {
         aa[28 + Number(k)] = res[k];
     }
     var dat = { a: JSON.stringify(aa), b: D6.cid };
-    jQuery.ajax({ url: 'includes/mnio.php', type: 'POST', aysnc: false, data: dat });
+    jQuery.ajax({ url: 'includes/mnio.php', type: 'POST', data: dat });
 }
 function setinfantry_() {
     let _city = GetCity();

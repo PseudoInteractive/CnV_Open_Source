@@ -170,9 +170,11 @@ class Boss {
 	minutes: number;
 
 }
+
 let bossinfo_: any [];
-let bosslist_: any [];
-function getbossinfo_() {
+let bosslist_: any[];
+
+function getbossinfo() {
 
 	bossinfo_= [];
 	var i_19;
@@ -638,7 +640,7 @@ function setnearhub(j_12) {
 		aa[27] = 1;
 	}
 	if ($("#addbuildings").prop("checked") == true) {
-		aa[51] = [1, $("#cablev").val()];
+		aa[51] = [1, $("#cablev").val() as number];
 		aa[68] = [1, 10];
 		aa[69] = [1, 10];
 		aa[70] = [1, 10];
@@ -647,15 +649,15 @@ function setnearhub(j_12) {
 	}
 	res[14] = nearesthub;
 	res[15] = nearesthub;
-	res[5] = $("#woodin").val();
-	res[6] = $("#stonein").val();
-	res[7] = $("#ironin").val();
-	res[8] = $("#foodin").val();
+	res[5] = $("#woodin").val() as number;
+	res[6] = $("#stonein").val() as number;
+	res[7] = $("#ironin").val() as number;
+	res[8] = $("#foodin").val() as number;
 	for (var k in res) {
 		aa[28 + Number(k)] = res[k];
 	}
 	var dat = { a: JSON.stringify(aa), b: D6.cid };
-	jQuery.ajax({ url: 'includes/mnio.php', type: 'POST', aysnc: false, data: dat });
+	jQuery.ajax( { url: 'includes/mnio.php', type: 'POST',  data: dat });
 }
 /**
  * @return {void}

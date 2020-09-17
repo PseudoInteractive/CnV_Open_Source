@@ -1304,7 +1304,7 @@ function updateshrine() {
 	var ccounter = 0;
 	var w = [];
 	var wtot = 0;
-	for (var i in shrinec) {
+	for (let i in shrinec) {
 		if (i > 0) {
 			var k = splayers.name.indexOf(shrinec[i][1]);
 			//console.log(k,splayers);
@@ -1326,12 +1326,12 @@ function updateshrine() {
 			}
 		}
 	}
-	for (var i in w) {
+	for (let i in w) {
 		w[i] = Math.round(w[i] / wtot * 100);
 	}
 	//console.log(shrinec);
 	var ccounter = 0;
-	for (var i in shrinec) {
+	for (let i in shrinec) {
 		if (i > 0) {
 			var cid = shrinec[i][4] * 65536 + Number(shrinec[i][3]);
 			if (shrinec[i][0] == "castle") {
@@ -1622,7 +1622,7 @@ let notedf_ = [""];
 let emptyspots_ = ",.;:#-T";
 /** @type {boolean} */
 let beentoworld_ = false;
-let splayers_ = {
+let splayers = {
 	name: [],
 	ally: [],
 	cities: [],

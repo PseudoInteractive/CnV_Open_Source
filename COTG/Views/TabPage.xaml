@@ -7,11 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-  Background="{ThemeResource SystemAccentColor}"
+  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <muxc:TabView x:Name="Tabs" x:FieldModifier="public"
-                      TabWidthMode="SizeToContent" 
+                      TabWidthMode="SizeToContent"
+                      
                              VerticalAlignment="Stretch"
                              HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
