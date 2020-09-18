@@ -382,11 +382,14 @@ namespace COTG
 
         public static void CopyTextToClipboard(string s)
         {
-            DataPackage dataPackage = new DataPackage();
+            App.DispatchOnUIThreadSneaky(() =>
+         {
+             DataPackage dataPackage = new DataPackage();
             // copy 
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetText(s);
             Clipboard.SetContent(dataPackage);
+        } );
         }
         public static VirtualKeyModifiers keyModifiers => VirtualKeyModifiers.None;
     }

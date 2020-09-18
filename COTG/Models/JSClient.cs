@@ -763,7 +763,7 @@ namespace COTG
 
                     var city = City.GetOrAddCity(cid);
                     city._cityName = jsCity.GetProperty("2").GetString();
-                    int i = city.cityName.IndexOf('-');
+                    int i = city.cityName.LastIndexOf('-');
                     if(i!= -1)
                     {
                         city.remarks = city.cityName.Substring(i + 2);
@@ -1053,12 +1053,12 @@ namespace COTG
                                 }
                             case "aexp":
                                 {
-                                    var msg = jsp.Value.GetString();
+                                    var msg = jsp.Value.ToString();
                                     Note.Show($"Exported Order to clipboard: {msg}");
                                     App.CopyTextToClipboard(msg);
                                     break;
 
-                                    break;
+                                   ;
                                 }
                             case "error":
                                 {

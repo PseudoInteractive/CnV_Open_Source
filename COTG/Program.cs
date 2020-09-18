@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -39,8 +40,18 @@ namespace COTG
                 //{
                 //    key = "cotga20";
                 //}
-                var key = Guid.NewGuid().ToString();
-                var instance = AppInstance.FindOrRegisterInstanceForKey(key);
+                // todo handle url activation
+                AppInstance instance=null;
+                if (xargs.Kind == ActivationKind.ToastNotification)
+                {
+                    var toast = xargs as ToastNotificationActivatedEventArgs;
+                    instance= AppInstance.GetInstances().FirstOrDefault();
+                }
+                if(instance==null)
+                {
+                    var key = Guid.NewGuid().ToString();
+                    instance = AppInstance.FindOrRegisterInstanceForKey(key);
+                }
                 if (instance.IsCurrentInstance)
                 {
                     // If successfully registered this instance, do normal XAML initialization.
