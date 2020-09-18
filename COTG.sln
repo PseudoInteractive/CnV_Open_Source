@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COTG", "COTG\COTG.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTG.Core", "COTG.Core\COTG.Core.csproj", "{7105B740-FB9F-43A6-ACF3-42A421DB81B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TS", "TS\TS.csproj", "{0307942A-8E65-47E5-984C-53D9BE01E7AC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A932D01D-2F2F-4C1F-8CF9-BD778D7D42D3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -30,10 +28,6 @@ Global
 		{7105B740-FB9F-43A6-ACF3-42A421DB81B0}.Debug|x64.Build.0 = Debug|x64
 		{7105B740-FB9F-43A6-ACF3-42A421DB81B0}.Release|x64.ActiveCfg = Release|x64
 		{7105B740-FB9F-43A6-ACF3-42A421DB81B0}.Release|x64.Build.0 = Release|x64
-		{0307942A-8E65-47E5-984C-53D9BE01E7AC}.Debug|x64.ActiveCfg = Release|x64
-		{0307942A-8E65-47E5-984C-53D9BE01E7AC}.Debug|x64.Build.0 = Release|x64
-		{0307942A-8E65-47E5-984C-53D9BE01E7AC}.Release|x64.ActiveCfg = Release|x64
-		{0307942A-8E65-47E5-984C-53D9BE01E7AC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
