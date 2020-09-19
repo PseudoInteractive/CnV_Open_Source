@@ -16,8 +16,30 @@ namespace COTG
         // }
         // TODO WTS: Update the logic in this method if you want to control the launching of multiple instances.
         // You may find the `AppInstance.GetActivatedEventArgs()` useful for your app-defined logic.
-        public static void Main(string[] args)
+        public static void Main(string[] _args)
         {
+            var args = AppInstance.GetActivatedEventArgs();
+            var key = "cotgadefault";
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs eventArgs = args as ProtocolActivatedEventArgs;
+                var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
+
+                Debug.Log(s);
+                // format $"cotg:launch?w={world}&s=1&n=1"
+                // are / chars inserted?
+                //  if (s.Length >= 3)
+                {
+                    if (int.TryParse(s["s"], out int _s))
+                        JSClient.subId = _s;
+                    if (int.TryParse(s["w"], out int _w))
+                        JSClient.world = _w;
+                    if (int.TryParse(s["n"], out int _n)) // new instance
+                        key = Guid.NewGuid().ToString();
+
+                }
+            }
+
             // If the platform indicates a recommended instance, use that.
             if (AppInstance.RecommendedInstance != null)
             {
@@ -25,7 +47,6 @@ namespace COTG
             }
             else
             {
-                var xargs = AppInstance.GetActivatedEventArgs();
                 // Update the logic below as appropriate for your app.
                 // Multiple instances of an app are registered using keys.
                 // Creating a unique key (as below) allows a new instance to always be created.
@@ -40,18 +61,15 @@ namespace COTG
                 //{
                 //    key = "cotga20";
                 //}
+
                 // todo handle url activation
-                AppInstance instance=null;
-                if (xargs.Kind == ActivationKind.ToastNotification)
-                {
-                    var toast = xargs as ToastNotificationActivatedEventArgs;
-                    instance= AppInstance.GetInstances().FirstOrDefault();
-                }
-                if(instance==null)
-                {
-                    var key = Guid.NewGuid().ToString();
-                    instance = AppInstance.FindOrRegisterInstanceForKey(key);
-                }
+                //if (xargs.Kind == ActivationKind.ToastNotification)
+                //{
+                //    var toast = xargs as ToastNotificationActivatedEventArgs;
+                //    instance= AppInstance.GetInstances().FirstOrDefault();
+                //}
+                var  instance = AppInstance.FindOrRegisterInstanceForKey(key);
+                
                 if (instance.IsCurrentInstance)
                 {
                     // If successfully registered this instance, do normal XAML initialization.

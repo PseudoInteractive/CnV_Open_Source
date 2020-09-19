@@ -109,6 +109,17 @@ namespace COTG.Views
                 activeGroup = new ChatEntryGroup() { time = entry.time };
                 Groups.Add(activeGroup);
             }
+            int count = 0;
+            foreach (var g in Groups)
+                count += g.Items.Count;
+            if (count >= maxItems)
+            {
+                var g = Groups.First();
+                if(g.Items.Any())
+                    g.Items.RemoveAt(0);
+                if (!g.Items.Any())
+                    Groups.RemoveAt(0);
+            }
             activeGroup.Items.Add(entry);
             SetPlus(true);
 
@@ -201,6 +212,7 @@ namespace COTG.Views
 
         static List<string> messageCache = new List<string>();
         internal static TabPage tabPage;
+        const int maxItems =100;
 
         private void Paste(string s, bool afterInput)
         {

@@ -1068,7 +1068,7 @@ namespace COTG
                                 }
                             case "sub":
                                 {
-                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:launch?w={world}&s=1")));
+                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:launch?w={world}&s=1&n=1")));
                                     break;
                                 }
                             case "cityclick":
