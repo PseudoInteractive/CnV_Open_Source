@@ -4,7 +4,6 @@
       xmlns:behaviors="using:COTG.Behaviors"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:COTG.Game"
-      xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:COTG.Models"
       xmlns:cotg="using:COTG"

@@ -47,7 +47,7 @@ namespace COTG.Views
         public ChatEntry(string _player,string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time;  type = _type; player = _player; }
         //  public ChatEntry() { }
     }
-    public  class ChatEntryGroup
+    public  sealed class ChatEntryGroup
     {
         public DateTimeOffset time;
         public string Title => time.ToString("yyyy/MM/dd, HH:mm:ss");
@@ -121,7 +121,9 @@ namespace COTG.Views
                     Groups.RemoveAt(0);
             }
             activeGroup.Items.Add(entry);
-            SetPlus(true);
+            // Set + if not from me
+            if(entry.player != Player.myName && entry.type != 3)
+                SetPlus(true);
 
         }
         public void Post(IEnumerable<ChatEntry> entries)
