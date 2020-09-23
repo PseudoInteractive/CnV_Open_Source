@@ -148,7 +148,8 @@ namespace COTG.Game
         public const uint typeDungeon = 0x50000000;
         public const uint typeNone = 0x00000000;
         public const int playerMask = 0x00ffffff;
-        public const int typeCityFlagCastle = 0x1000000;
+        public const int typeCityFlagMask =   0x00f000000;
+        public const int typeCityFlagCastle = 0x001000000;
         public const int typeCityFlagTemple = 0x2000000;
         public const int typeCityFlagWater = 0x4000000;
         public const int typeCityFlagBig = 0x8000000;
@@ -287,8 +288,10 @@ namespace COTG.Game
 
                         if(alliance0 == alliance1)
                         {
+                            var isCastle0 = d0 & typeCityFlagCastle;
+                            var isCastle1 = d1 & typeCityFlagCastle;
                             // castle change or size change or handover  Dodo:  differentiate this two
-                            color = WorldHelper.RGB16(0x0, 0x0, 0x60);
+                            color = WorldHelper.RGB16(0x0, 0x0, isCastle0!= isCastle1? 0xA0: 0x60);
                         }
                         else if( alliance0 == Alliance.myId)
                         {

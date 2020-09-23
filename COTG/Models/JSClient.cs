@@ -1089,7 +1089,7 @@ namespace COTG
                                         city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
 
-
+                                       
                                         cid.BringCidIntoWorldView(true);
                                         if (city._cityName != name)
                                         {
@@ -1097,6 +1097,7 @@ namespace COTG
                                             if (cid == Spot.focus)
                                                 App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
                                         }
+                                        city.SetFocus();
                                     }
                                     break;
 

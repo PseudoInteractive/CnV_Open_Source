@@ -103,7 +103,13 @@ namespace COTG.Helpers
                         return long.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
                     }
                 case JsonValueKind.Number:
-                    return js.GetInt64();
+                    {
+                        if (js.TryGetInt64(out var rv))
+                            return rv;
+                        if (js.TryGetDouble(out var d))
+                            return (long)d;
+                        return -1;
+                    }
                 case JsonValueKind.True:
                     return 1;
                 case JsonValueKind.False:
