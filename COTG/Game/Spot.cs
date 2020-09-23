@@ -111,6 +111,7 @@ namespace COTG.Game
 
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
+        public byte attackGroup { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
@@ -659,6 +660,15 @@ namespace COTG.Game
                     }
 
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
+
+                }
+                else
+                {
+                    App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid,0));
+                    App.AddItem(flyout, "Add as Fake (1)", (_, _) => AttackTab.AddTarget(cid, 1));
+                    App.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
+                    App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
+                    App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
 
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));

@@ -372,7 +372,7 @@ namespace COTG
             App.DispatchOnUIThreadSneaky(() =>
          {
              DataPackage dataPackage = new DataPackage();
-            // copy 
+            // copy
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetText(s);
             Clipboard.SetContent(dataPackage);

@@ -8,15 +8,30 @@ namespace COTG.Game
 {
     public class Attack
     {
-        int player { get; set; }
-        int target { get; set; }
+       public string player { get; set; }
+        public int target { get; set; }
+        public string xy => target.CidToString();
         public enum Type
         {
-            assult,
             senator,
+            assult,
             se, 
         }
-        public Type type { get; set; }
+        // Todo: make enum
+        public int type { get; set; }
         public bool fake { get; set; }
+    }
+    public class AttackType
+    {
+        public AttackType(int _type, string _name) { type = _type;name = _name; }
+        public int type { get; set; }
+        public string name { get; set; }
+        public static AttackType[] types = { new AttackType(0, "Senator"), new AttackType(1, "Assault"), new AttackType(2, "se") };
+    }
+    public struct TargetPersist // structure use to persist targets
+    {
+        public int cid { get; set; }
+        public byte attackGroup { get; set; }
+
     }
 }

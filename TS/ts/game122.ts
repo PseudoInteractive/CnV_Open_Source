@@ -43351,6 +43351,7 @@ console.log("Bad");
     }
 
     function Z5F(a9V) {
+    navigator.clipboard.writeText(a9V);
       var m9V = a9V;
       $(_s(5398))
         .text(a9V);

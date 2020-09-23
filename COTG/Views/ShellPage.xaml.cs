@@ -214,8 +214,9 @@ namespace COTG.Views
 
                     tabPage.AddTab(DefenderPage.instance, false);
 
-                  //   tabPage.AddTab(DefensePage.instance, false);
+                    //   tabPage.AddTab(DefensePage.instance, false);
 
+                    tabPage.AddTab(AttackTab.instance, false);
                     tabPage.AddTab(DonationTab.instance, false);
                     tabPage.AddTab(BossTab.instance, false);
 

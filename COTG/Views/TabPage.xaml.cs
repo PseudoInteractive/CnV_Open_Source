@@ -33,6 +33,7 @@ namespace COTG.Views
                 new DonationTab(),
                 new DefensePage(),
                 new BossTab(),
+                new AttackTab(),
                 new SpotTab(),
                 new OutgoingTab(),
                 new HitTab(),
@@ -200,6 +201,7 @@ namespace COTG.Views
             { "Raid", Symbol.ReShare },
             { "Donation", Symbol.Share },
             { "Boss", Symbol.View },
+            { "Attack", Symbol.Audio },
             { "world", Symbol.Microphone },
             
             { "officer" ,Symbol.Admin },

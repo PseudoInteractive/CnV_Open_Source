@@ -70,6 +70,7 @@ namespace COTG.Views
             maxIron = App.Settings().Read(nameof(maxIron), 300000);
             maxFood = App.Settings().Read(nameof(maxFood), 300000);
             autoBuildOn = App.Settings().Read(nameof(autoBuildOn),false );
+           
         }
         public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
         {
@@ -86,6 +87,17 @@ namespace COTG.Views
             App.Settings().Save(nameof(maxFood), maxFood);
             App.Settings().Save(nameof(maxIron), maxIron);
             App.Settings().Save(nameof(autoBuildOn), autoBuildOn);
+            App.Settings().Save(nameof(AttackTab.attacks), AttackTab.attacks.ToArray());
+            {
+                int targetCount = AttackTab.targets.Count;
+                var targets = new TargetPersist[targetCount];
+                for (int i = 0; i < targetCount; ++i)
+                {
+                    targets[i].attackGroup = AttackTab.targets[i].attackGroup;
+                    targets[i].cid = AttackTab.targets[i].cid;
+                }
+                App.Settings().Save("targets", targets);
+            }
 
 
         }
