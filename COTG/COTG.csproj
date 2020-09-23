@@ -86,19 +86,22 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance">
-      <Version>7.0.0-build.217</Version>
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Services">
-      <Version>7.0.0-build.217</Version>
+      <Version>7.0.0-preview2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.0.0-build.217</Version>
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.0-build.217</Version>
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
-      <Version>7.0.0-build.217</Version>
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0-prerelease.200812001</Version>
@@ -146,6 +149,7 @@
     <Compile Include="EventHandlers\Ink\RemoveEventArgs.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
+    <Compile Include="Game\Attack.cs" />
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\Dungeon.cs" />
@@ -238,6 +242,9 @@
     <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
     <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
+    <Compile Include="Views\AttackTab.xaml.cs">
+      <DependentUpon>AttackTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BossTab.xaml.cs">
       <DependentUpon>BossTab.xaml</DependentUpon>
     </Compile>
@@ -354,6 +361,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AttackTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
