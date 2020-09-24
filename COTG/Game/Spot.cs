@@ -111,7 +111,7 @@ namespace COTG.Game
 
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
-        public byte attackGroup { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
+        public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }

@@ -93,7 +93,7 @@ namespace COTG.Views
                 var targets = new TargetPersist[targetCount];
                 for (int i = 0; i < targetCount; ++i)
                 {
-                    targets[i].attackGroup = AttackTab.targets[i].attackGroup;
+                    targets[i].attackCluster = AttackTab.targets[i].attackCluster;
                     targets[i].cid = AttackTab.targets[i].cid;
                 }
                 App.Settings().Save("targets", targets);

@@ -32,6 +32,7 @@ using System.Numerics;
 using Windows.UI.Xaml.Media;
 using COTG.JSON;
 using static COTG.Game.Enum;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace COTG
 {
@@ -1178,7 +1179,11 @@ namespace COTG
                             case "chatin":
                                 App.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(jsp.Value.GetString()));
                                 break;
-
+                            case "copyclip":
+                                {
+                                    App.CopyTextToClipboard(jsp.Value.GetAsString());
+                                    break;
+                                }
                             case "c":
                                 {
                                     var jso = jsp.Value;

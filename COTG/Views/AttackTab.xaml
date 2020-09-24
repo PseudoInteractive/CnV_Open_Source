@@ -18,15 +18,17 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-           
+            <Button Content="Assign Attacks" VerticalAlignment="Center" Margin="12"
+                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+                      Click="AssignAttacks_Click" />
             <Button Content="Remove Selected" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ButtonRevealStyle}"
+                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="RemoveSelected_Click" />
             <Button Content="Add Senator" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ButtonRevealStyle}"
+                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AddSenator_Click" />
             <Button Content="Add Fake" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ButtonRevealStyle}"
+                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AddFake_Click" />
         </StackPanel>
         <tk:DataGrid x:Name="attackGrid" x:FieldModifier="public"
@@ -36,8 +38,6 @@
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-                     AreRowDetailsFrozen="True" 
-                     FrozenColumnCount="2"
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
              
@@ -67,7 +67,17 @@
                                              />
                 <tk:DataGridCheckBoxColumn Header="Fake" Binding="{Binding fake, Mode=TwoWay}"
                                         />
-                </tk:DataGrid.Columns>
+                <tk:DataGridTemplateColumn Header="Remove" >
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Attack">
+                            <HyperlinkButton Content="Remove" Tapped="AttackRemove_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                                                           ToolTipService.ToolTip="Remove this Attack"
+                                             
+                                             />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
+            </tk:DataGrid.Columns>
         </tk:DataGrid>
         <tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
@@ -88,7 +98,7 @@
                         RowHeight="46"
                      Margin="0,14,0,0"
                      GridLinesVisibility="All"
-                     
+                      SelectionMode="Extended"
                      AlternatingRowBackground="#FF103020"
                      >
             <tk:DataGrid.Columns>
@@ -100,7 +110,6 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-
                 <tk:DataGridTemplateColumn Header="xy" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
@@ -112,7 +121,9 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTextColumn Header="Player" Binding="{Binding player, Mode=OneTime}" />
-                
+                <tk:DataGridTextColumn Header="Cluster" Binding="{Binding attackCluster, Mode=OneTime}" />
+                <tk:DataGridTextColumn Header="City" Binding="{Binding cityName, Mode=OneTime}" />
+                <tk:DataGridTextColumn Header="Alliance" Binding="{Binding alliance, Mode=OneTime}" />
             </tk:DataGrid.Columns>
         </tk:DataGrid>
     </Grid>

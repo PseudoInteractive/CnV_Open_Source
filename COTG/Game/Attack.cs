@@ -31,7 +31,7 @@ namespace COTG.Game
     public struct TargetPersist // structure use to persist targets
     {
         public int cid { get; set; }
-        public byte attackGroup { get; set; }
+        public byte attackCluster { get; set; } // 0 is real
 
     }
 }

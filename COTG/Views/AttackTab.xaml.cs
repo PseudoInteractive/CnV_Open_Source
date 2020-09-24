@@ -36,17 +36,6 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
 
-          //  AttackTab.attacks.Clear();
-            AttackTab.attacks.AddRange(App.Settings().Read(nameof(AttackTab.attacks), Array.Empty<Attack>()));
-
-            var lastTargets = App.Settings().Read("targets", Array.Empty<TargetPersist>());
-            foreach(var target in lastTargets)
-            {
-                var t = Spot.GetOrAdd(target.cid);
-                t.attackGroup = target.attackGroup;
-                targets.Add(t);
-
-            }
         }
 
         private void AttackCoord_Tapped(object sender, TappedRoutedEventArgs e)
@@ -62,6 +51,46 @@ namespace COTG.Views
                     if (t.cid == spot.target)
                         targetGrid.ScrollIntoView(t, null);
                 }
+            }
+        }
+
+        public void TouchLists()
+        {
+            // First init
+            //  AttackTab.attacks.Clear();
+
+            if (attacks.IsNullOrEmpty() && targets.IsNullOrEmpty())
+            {
+                App.DispatchOnUIThreadSneaky(() =>
+                {
+                    attacks.Set(App.Settings().Read(nameof(attacks), Array.Empty<Attack>()));
+
+                    var lastTargets = App.Settings().Read(nameof(targets), Array.Empty<TargetPersist>());
+                    var spots = new List<Spot>();
+                    foreach (var target in lastTargets)
+                    {
+                        var t = Spot.GetOrAdd(target.cid);
+                        t.attackCluster = target.attackCluster;
+                        spots.Add(t);
+
+                    }
+                    targets.Set(spots);
+                });
+            }
+
+        }
+
+        public async override void VisibilityChanged(bool visible)
+        {
+            if (visible)
+            {
+                TouchLists();
+
+
+            }
+            else
+            {
+
             }
         }
 
@@ -81,24 +110,44 @@ namespace COTG.Views
 
         private void RemoveSelected_Click(object sender, RoutedEventArgs e)
         {
-            var temp = new List<Attack>();
-            foreach (var sel in attackGrid.SelectedItems)
             {
-                temp.Add(sel as Attack);
-            }
-            foreach(var sel in temp)
-            { 
-                var id = attacks.IndexOf(sel as Attack);
-                if( id >= 0)
+                var temp = new List<Attack>();
+                foreach (var sel in attackGrid.SelectedItems)
                 {
-                    attacks.RemoveAt(id);
+                    temp.Add(sel as Attack);
                 }
+                foreach (var sel in temp)
+                {
+                    var id = attacks.IndexOf(sel as Attack);
+                    if (id >= 0)
+                    {
+                        attacks.RemoveAt(id);
+                    }
 
+                }
             }
+            {
+                var temp = new List<Spot>();
+                foreach (var sel in targetGrid.SelectedItems)
+                {
+                    temp.Add(sel as Spot);
+                }
+                foreach (var sel in temp)
+                {
+                    var id = targets.IndexOf(sel);
+                    if (id >= 0)
+                    {
+                        targets.RemoveAt(id);
+                    }
+
+                }
+            }
+
         }
 
         private async void AddAttackWithNameFromClipboard(Attack atk)
         {
+            TouchLists();
             try
             {
 
@@ -129,9 +178,49 @@ namespace COTG.Views
 
         internal static void AddTarget(int cid, byte group)
         {
+            instance.TouchLists();
             var spot = Spot.GetOrAdd(cid);
-            spot.attackGroup = group;
+            spot.attackCluster = group;
             targets.Add(spot);
+        }
+
+        private void AssignAttacks_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var a in attacks)
+            {
+                a.target = 0;
+
+            }
+            string bad = string.Empty;
+            var reals = 0;
+            var fakes = 0;
+            foreach (var t in targets)
+            {
+                var isReal = t.attackCluster == 0;
+                // find an attack
+                bool found = false;
+                foreach (var a in attacks)
+                {
+                    if (a.target == 0 && a.fake != isReal)
+                    {
+                        found = true;
+                        if (isReal)
+                            ++reals;
+                        else
+                            ++fakes;
+                        a.target = t.cid;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    bad = $"{bad}No attack for {t.xy} isReal: {isReal}\n";
+
+                }
+            }
+            bad = $"{bad}Assigned {reals} reals and {fakes} fakes";
+            Note.Show(bad);
+            attacks.NotifyReset();
         }
     }
 }
