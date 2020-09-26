@@ -82,14 +82,22 @@ namespace COTG.Helpers
             base.RemoveAt(id);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,item, id));
         }
+        public new void Remove(T i)
+        {
+            var index = IndexOf(i);
+            if(index >= 0 )
+            {
+                RemoveAt(index);
+            }
+        }
 
         // Use Reset if you are clearning first
-        public void AddRange(IList<T> src)
-        {
-            var id = Count;
-            base.AddRange(src);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,src ,id ));
-        }
+        //public void AddRange(IList<T> src)
+        //{
+        //    var id = Count;
+        //    base.AddRange(src);
+        //    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,src ,id ));
+        //}
 
     }
     public static class DumbHelpers

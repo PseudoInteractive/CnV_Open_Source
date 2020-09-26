@@ -458,6 +458,8 @@ namespace COTG.Views
                         srcP1.Y = srcImageSpan;
 
                     }
+                    var planVisible = AttackTab.IsVisible();
+
                     var attacksVisible = DefensePage.IsVisible() | OutgoingTab.IsVisible() | DefenderPage.IsVisible() | HitTab.IsVisible();
                     if (worldBackground != null && IsWorldView() && wantImage)
                     {
@@ -704,6 +706,22 @@ namespace COTG.Views
 
 
                                     }
+                                }
+                            }
+                        }
+                        if(AttackTab.IsVisible())
+                        {
+                            foreach(var t in AttackTab.targets)
+                            {
+                                var c1 = t.cid.CidToCC();
+                                DrawTextBox(ds, $"{t.attackCluster}", c1, tipTextFormatCentered);
+                            }
+                            foreach (var t in AttackTab.attacks)
+                            {
+                                if (t.target != 0)
+                                {
+                                    var c1 = t.target.CidToCC();
+                                    DrawTextBox(ds, $"{t.type} {t.fake} {t.player}", c1, tipTextFormatCentered);
                                 }
                             }
                         }

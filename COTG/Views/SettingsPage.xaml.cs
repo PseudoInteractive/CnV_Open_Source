@@ -70,7 +70,7 @@ namespace COTG.Views
             maxIron = App.Settings().Read(nameof(maxIron), 300000);
             maxFood = App.Settings().Read(nameof(maxFood), 300000);
             autoBuildOn = App.Settings().Read(nameof(autoBuildOn),false );
-           
+           // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
         }
         public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
         {
@@ -78,6 +78,7 @@ namespace COTG.Views
             App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
             App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
             App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
+
             App.Settings().Save(nameof(reqWood), reqWood);
             App.Settings().Save(nameof(reqStone), reqStone);
             App.Settings().Save(nameof(reqFood), reqFood);
@@ -87,16 +88,21 @@ namespace COTG.Views
             App.Settings().Save(nameof(maxFood), maxFood);
             App.Settings().Save(nameof(maxIron), maxIron);
             App.Settings().Save(nameof(autoBuildOn), autoBuildOn);
-            App.Settings().Save(nameof(AttackTab.attacks), AttackTab.attacks.ToArray());
+          //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
+
+            if (!AttackTab.targets.IsNullOrEmpty() || !AttackTab.attacks.IsNullOrEmpty())
             {
-                int targetCount = AttackTab.targets.Count;
-                var targets = new TargetPersist[targetCount];
-                for (int i = 0; i < targetCount; ++i)
+                App.Settings().Save(nameof(AttackTab.attacks), AttackTab.attacks.ToArray());
                 {
-                    targets[i].attackCluster = AttackTab.targets[i].attackCluster;
-                    targets[i].cid = AttackTab.targets[i].cid;
+                    int targetCount = AttackTab.targets.Count;
+                    var targets = new TargetPersist[targetCount];
+                    for (int i = 0; i < targetCount; ++i)
+                    {
+                        targets[i].attackCluster = AttackTab.targets[i].attackCluster;
+                        targets[i].cid = AttackTab.targets[i].cid;
+                    }
+                    App.Settings().Save(nameof(targets), targets);
                 }
-                App.Settings().Save("targets", targets);
             }
 
 

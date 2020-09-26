@@ -18,23 +18,31 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-            <Button Content="Assign Attacks" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+            <Button Content="Assign Attacks" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AssignAttacks_Click" />
-            <Button Content="Remove Selected" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+            <Button Content="X Selected" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="RemoveSelected_Click" />
-            <Button Content="Add Senator" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+            <Button Content="+Senny" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AddSenator_Click" />
-            <Button Content="Add Fake" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+            <Button Content="+Fake" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AddFake_Click" />
+            <Button Content="Sort" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+                      Click="SortAttacks" />
+            <Border  Margin="4" Background="#FF103030" VerticalAlignment="Center">
+                <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind local:AttackTab.time,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
+                           Width="100" HorizontalAlignment="Center" FontSize="12" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
+                           ToolTipService.ToolTip="Time at which attacks arrive." />
+            </Border>
         </StackPanel>
         <tk:DataGrid x:Name="attackGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:AttackTab.attacks, Mode=OneWay}"
-                        RowHeight="48"
+                        RowHeight="24"
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
@@ -46,7 +54,7 @@
                     
                      >
             <tk:DataGrid.Columns>
-                <tk:DataGridTextColumn Header="Player" Binding="{Binding player, Mode=TwoWay}"
+                <tk:DataGridTextColumn Header="Player" Binding="{Binding player, Mode=OneTime}"
                                         />
                 <tk:DataGridTemplateColumn Header="Target" >
                     <tk:DataGridTemplateColumn.CellTemplate>
@@ -59,20 +67,19 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridComboBoxColumn  Header="Type" 
-                                        Binding="{Binding type,Mode=TwoWay}"
+                                        Binding="{Binding type,Mode=OneTime}"
                                             ItemsSource="{x:Bind game:AttackType.types , Mode=OneTime}"
                                         
                                              DisplayMemberPath="name"
                                             
                                              />
-                <tk:DataGridCheckBoxColumn Header="Fake" Binding="{Binding fake, Mode=TwoWay}"
+                <tk:DataGridCheckBoxColumn Header="Fake" Binding="{Binding fake, Mode=OneTime}"
                                         />
                 <tk:DataGridTemplateColumn Header="Remove" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Attack">
-                            <HyperlinkButton Content="Remove" Tapped="AttackRemove_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                            <HyperlinkButton Content="Remove" Tapped="AttackRemove_Tapped" HorizontalAlignment="Center" FontSize="12" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="Remove this Attack"
-                                             
                                              />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
@@ -95,7 +102,7 @@
                         AutoGenerateColumns="False"
                      Grid.Row="2"
                         ItemsSource="{x:Bind local:AttackTab.targets, Mode=OneWay}"
-                        RowHeight="46"
+                        RowHeight="24"
                      Margin="0,14,0,0"
                      GridLinesVisibility="All"
                       SelectionMode="Extended"
@@ -105,7 +112,7 @@
                 <tk:DataGridTemplateColumn Header="Icon" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
-                            <Image Source= "{x:Bind icon}" HorizontalAlignment="Center" Stretch= "UniformToFill"
+                            <Image Source= "{x:Bind icon,Mode=OneTime}" HorizontalAlignment="Center" Stretch= "UniformToFill"
                                    VerticalAlignment="Center"   />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
@@ -113,7 +120,7 @@
                 <tk:DataGridTemplateColumn Header="xy" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
-                            <HyperlinkButton Content="{x:Bind xy}" Tapped="TargetCoord_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                            <HyperlinkButton Content="{x:Bind xy, Mode=OneTime}" Tapped="TargetCoord_Tapped" HorizontalAlignment="Center" FontSize="12" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="The target to attack"
                                              
                                              />
@@ -124,6 +131,16 @@
                 <tk:DataGridTextColumn Header="Cluster" Binding="{Binding attackCluster, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="City" Binding="{Binding cityName, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="Alliance" Binding="{Binding alliance, Mode=OneTime}" />
+                <tk:DataGridTemplateColumn Header="Remove" >
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Spot">
+                            <HyperlinkButton Content="Remove" Tapped="TargetRemove_Tapped" HorizontalAlignment="Center" FontSize="12" HorizontalContentAlignment="Center"
+                                                           ToolTipService.ToolTip="Remove this Target"
+                                             />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
+                <tk:DataGridTextColumn Header="Attackers" Binding="{Binding attackers, Mode=OneWay}" />
             </tk:DataGrid.Columns>
         </tk:DataGrid>
     </Grid>

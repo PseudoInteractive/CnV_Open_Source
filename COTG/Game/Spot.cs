@@ -48,32 +48,32 @@ namespace COTG.Game
         public static Spot invalid = new Spot() { _cityName = "?" };
 
         public static Spot[] emptySpotSource = Array.Empty<Spot>();
-        public  virtual string nameAndRemarks => cityName;
+        public virtual string nameAndRemarks => cityName;
 
         public static bool IsFocus(int cid)
         {
-            return  focus==cid;
+            return focus == cid;
         }
         public static Spot GetOrAdd(int cid, string cityName = null)
         {
-            if( cid <= 0)
+            if (cid <= 0)
             {
                 return invalid;
             }
             if (!Spot.allSpots.TryGetValue(cid, out var rv))
             {
                 Assert(City.allCities.ContainsKey(cid) == false);
-                    var worldC = cid.CidToWorld();
-                    var info = World.CityLookup(worldC);
-            //    Assert(info.type == World.typeCity);
-                    rv = new Spot() { cid = cid,pid=info.player };
-             //       Assert( info.player != 0);
-                    rv.type = (byte)(info.type >> 28);
-                    rv.isTemple = info.isTemple;
-                    rv.isOnWater = info.isWater;
-                    rv.isCastle = info.isCastle;
-                    rv.points = (ushort)(info.isBig ? 8000 : 1500);
-                
+                var worldC = cid.CidToWorld();
+                var info = World.CityLookup(worldC);
+                //    Assert(info.type == World.typeCity);
+                rv = new Spot() { cid = cid, pid = info.player };
+                //       Assert( info.player != 0);
+                rv.type = (byte)(info.type >> 28);
+                rv.isTemple = info.isTemple;
+                rv.isOnWater = info.isWater;
+                rv.isCastle = info.isCastle;
+                rv.points = (ushort)(info.isBig ? 8000 : 1500);
+
                 Spot.allSpots.TryAdd(cid, rv);
             }
             if (cityName != null)
@@ -84,7 +84,7 @@ namespace COTG.Game
         public bool isMine => pid == Player.myId;
 
         public string _cityName;
-        public string cityName=>  _cityName ?? xy;
+        public string cityName => _cityName ?? xy;
 
         public int cid; // x,y combined into 1 number
         public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
@@ -112,6 +112,21 @@ namespace COTG.Game
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
+        public string attackers { get {
+                var rv = new List<string>();
+
+                foreach (var atk in AttackTab.attacks)
+                {
+                    if (atk.target == cid)
+                    {
+                        rv.Add(atk.player);
+                    }
+                }
+                if (rv.IsNullOrEmpty())
+                    return "None";
+                else
+                    return string.Join(',', rv);
+            } }
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
@@ -312,7 +327,7 @@ namespace COTG.Game
                 App.DispatchOnUIThreadSneaky(() =>
                 {
                     App.CopyTextToClipboard(str);
-                    Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
+         //           Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
                 });
             }
         }

@@ -131,7 +131,7 @@ namespace COTG
                }
                finally
                {
-                   Application.Current.Exit();
+       //            Application.Current.Exit();
                }
            });
         }

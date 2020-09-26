@@ -60,7 +60,7 @@ namespace COTG.Helpers
                 double a => a,
                 string a => a,
                 bool a => a,
-                DateTimeOffset a => a,
+                DateTime a => a,
                 TimeSpan a => a,
                 Guid a => a,
                 Point a => a,
