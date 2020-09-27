@@ -147,11 +147,12 @@ namespace COTG
 #if TRACE || DEBUG
             this.DebugSettings.FailFastOnErrors = true;
 #endif
+            this.DebugSettings.EnableFrameRateCounter = false;
+            this.DebugSettings.IsBindingTracingEnabled = false;
+            this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
 #if DEBUG
-            //           this.DebugSettings.EnableFrameRateCounter = true;
-            this.DebugSettings.FailFastOnErrors = false;
-            //           this.DebugSettings.IsBindingTracingEnabled = true;
-            //           this.DebugSettings.IsTextPerformanceVisualizationEnabled = true;
+            //this.DebugSettings.FailFastOnErrors = false;
+#else
 #endif
             idleTimer = new DispatcherTimer();
             idleTimer.Interval = TimeSpan.FromSeconds(10);  // 10s idle delay

@@ -414,7 +414,7 @@ namespace COTG.Services
 
             try
             {
-                var city = City.allCities[cid];
+              
                 var buff = await resp.Content.ReadAsBufferAsync();
 
                 var temp = new byte[buff.Length - 1];
@@ -433,6 +433,7 @@ namespace COTG.Services
 
                     var jse = json.RootElement;
                     jse = jse[0];
+                    var city = City.allCities[cid];
                     Dungeon.ShowDungeonList(city, jse);
                 }
             }

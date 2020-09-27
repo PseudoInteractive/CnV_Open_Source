@@ -327,7 +327,7 @@ namespace COTG.Game
                 App.DispatchOnUIThreadSneaky(() =>
                 {
                     App.CopyTextToClipboard(str);
-         //           Launcher.LaunchUriAsync(new Uri($"http://louopt.com/?map={str}"));
+                    Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
                 });
             }
         }

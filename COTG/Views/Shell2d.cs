@@ -132,7 +132,7 @@ namespace COTG.Views
             //Assert((0.0f).FloorToInt() == 0);
             //Assert((-0.5f).FloorToInt() == -1);
 
-            canvas = new CanvasAnimatedControl()
+            canvas = new CanvasAnimatedControl( )
 			{
 				IsHitTestVisible = false,
                 IsTabStop=true,

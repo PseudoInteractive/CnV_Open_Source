@@ -227,7 +227,7 @@ namespace COTG.JSON
                                             // todo TS info
 
                                         };
-                                        if (jsdr.RootElement.TryGetProperty("tts", out var tts))
+                                        if (jsdr != null && jsdr.RootElement.TryGetProperty("tts", out var tts))
                                         {
                                             int counter = 0;
                                             var defTS = 0;
@@ -259,110 +259,116 @@ namespace COTG.JSON
 
                                         // we have to look up the report
                                         // we have to look up the report
-
-                                        var root = jsdr.RootElement;
-                                        int reportType = -1;
-                                        foreach (var attackType in Army.reportAttackTypes)
+                                        if (jsdr != null)
                                         {
-                                            ++reportType;
-                                            if (root.TryGetProperty(attackType, out var reportsByType))
+                                            var root = jsdr.RootElement;
+                                            int reportType = -1;
+                                            foreach (var attackType in Army.reportAttackTypes)
                                             {
-                                                //    var defTS = reportsByType.GetAsInt("ts_sent");
-                                                //    var defTSLeft = reportsByType.GetAsInt("ts_lost");
-                                                var defTSKilled = reportsByType.GetAsInt("ts_killed");
-
-                                                foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
+                                                ++reportType;
+                                                if (root.TryGetProperty(attackType, out var reportsByType))
                                                 {
+                                                    //    var defTS = reportsByType.GetAsInt("ts_sent");
+                                                    //    var defTSLeft = reportsByType.GetAsInt("ts_lost");
+                                                    var defTSKilled = reportsByType.GetAsInt("ts_killed");
 
-                                                    var troops = TroopTypeCount.empty;
-                                                    var sumDef = TroopTypeCount.empty;
-                                                    if (report.TryGetProperty("ats", out var ats))
+                                                    foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
                                                     {
-                                                        foreach (var at in ats.EnumerateObject())
-                                                        {
 
-                                                            var tt = int.Parse(at.Name);
-                                                            var tc = at.Value.GetAsInt();
-                                                            troops = troops.ArrayAppend(new TroopTypeCount() { type = tt, count = tc });
-                                                        }
-                                                    }
-                                                    int defTS = 0;
-                                                    int defTSLeft = 0;
-                                                    if (report.TryGetProperty("tts", out var tts))
-                                                    {
-                                                        int counter = 0;
-                                                        foreach (var t in tts.EnumerateArray())
+                                                        var troops = TroopTypeCount.empty;
+                                                        var sumDef = TroopTypeCount.empty;
+                                                        if (report.TryGetProperty("ats", out var ats))
                                                         {
-                                                            var tc = t.GetInt32();
-                                                            if (tc > 0)
+                                                            foreach (var at in ats.EnumerateObject())
                                                             {
-                                                                sumDef = sumDef.ArrayAppend(new TroopTypeCount() { type = counter, count = tc });
-                                                                defTS += tc * ttTs[counter];
+
+                                                                var tt = int.Parse(at.Name);
+                                                                var tc = at.Value.GetAsInt();
+                                                                troops = troops.ArrayAppend(new TroopTypeCount() { type = tt, count = tc });
                                                             }
-                                                            ++counter;
                                                         }
-                                                    }
-                                                    if (report.TryGetProperty("ttle", out var ttle))
-                                                    {
-                                                        int counter = 0;
-                                                        foreach (var t in ttle.EnumerateArray())
+                                                        int defTS = 0;
+                                                        int defTSLeft = 0;
+                                                        if (report.TryGetProperty("tts", out var tts))
                                                         {
-                                                            defTSLeft += t.GetInt32() * Game.Enum.ttTs[counter];
-                                                            ++counter;
+                                                            int counter = 0;
+                                                            foreach (var t in tts.EnumerateArray())
+                                                            {
+                                                                var tc = t.GetInt32();
+                                                                if (tc > 0)
+                                                                {
+                                                                    sumDef = sumDef.ArrayAppend(new TroopTypeCount() { type = counter, count = tc });
+                                                                    defTS += tc * ttTs[counter];
+                                                                }
+                                                                ++counter;
+                                                            }
                                                         }
-                                                        //  Assert(defTS > 0);
+                                                        if (report.TryGetProperty("ttle", out var ttle))
                                                         {
-                                                            defTSKilled = defTS - defTSLeft;  // overwrite with calculated value
+                                                            int counter = 0;
+                                                            foreach (var t in ttle.EnumerateArray())
+                                                            {
+                                                                defTSLeft += t.GetInt32() * Game.Enum.ttTs[counter];
+                                                                ++counter;
+                                                            }
+                                                            //  Assert(defTS > 0);
+                                                            {
+                                                                defTSKilled = defTS - defTSLeft;  // overwrite with calculated value
+                                                            }
                                                         }
-                                                    }
 
 
-                                                    source = report.GetAsInt("acid");
-                                                    if (source > 0)
-                                                    {
-                                                        var atkTS = report.GetAsInt("ts_sent");
-                                                        var atkTSLeft = report.GetAsInt("ts_left");
-                                                        var atkPN = report.GetAsString("apn");
-                                                        var atkCN = report.GetAsString("acn");
+                                                        source = report.GetAsInt("acid");
+                                                        if (source > 0)
                                                         {
-                                                            var sss = atkCN.Split('(', StringSplitOptions.RemoveEmptyEntries);
-                                                            if (sss.Length > 0)
-                                                                atkCN = sss[0];
+                                                            var atkTS = report.GetAsInt("ts_sent");
+                                                            var atkTSLeft = report.GetAsInt("ts_left");
+                                                            var atkPN = report.GetAsString("apn");
+                                                            var atkCN = report.GetAsString("acn");
+                                                            {
+                                                                var sss = atkCN.Split('(', StringSplitOptions.RemoveEmptyEntries);
+                                                                if (sss.Length > 0)
+                                                                    atkCN = sss[0];
+
+                                                            }
+                                                            Spot.GetOrAdd(source, atkCN);
+
+                                                            var rep = new Army()
+                                                            {
+                                                                isAttack = true,
+                                                                troops = troops,
+                                                                sumDef = sumDef,
+                                                                reportId = recId,
+
+                                                                dTsKill = defTSKilled,
+                                                                aTsKill = (atkTS - atkTSLeft),
+                                                                sourceCid = source,
+                                                                targetCid = target,
+                                                                claim = (byte)report.GetAsFloat("senator").RoundToInt(),
+
+                                                                time = time,
+                                                                spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
+                                                                type = (byte)reportType
+                                                                // todo TS info
+
+                                                            };
+                                                            parts[part].Add(rep);
+                                                            await Cosmos.AddBattleRecord(rep);
 
                                                         }
-                                                        Spot.GetOrAdd(source, atkCN);
-
-                                                        var rep = new Army()
+                                                        else
                                                         {
-                                                            isAttack = true,
-                                                            troops = troops,
-                                                            sumDef = sumDef,
-                                                            reportId = recId,
-
-                                                            dTsKill = defTSKilled,
-                                                            aTsKill = (atkTS - atkTSLeft),
-                                                            sourceCid = source,
-                                                            targetCid = target,
-                                                            claim = (byte)report.GetAsFloat("senator").RoundToInt(),
-
-                                                            time = time,
-                                                            spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
-                                                            type = (byte)reportType
-                                                            // todo TS info
-
-                                                        };
-                                                        parts[part].Add(rep);
-                                                        await Cosmos.AddBattleRecord(rep);
+                                                            Log("Error!");
+                                                        }
 
                                                     }
-                                                    else
-                                                    {
-                                                        Log("Error!");
-                                                    }
-
                                                 }
                                             }
                                         }
+                                        else
+										{
+                                            Log("Bad!");
+										}
 
                                     }
                                 }
