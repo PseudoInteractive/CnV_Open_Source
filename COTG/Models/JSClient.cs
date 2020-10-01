@@ -1120,7 +1120,7 @@ namespace COTG
                                     city.LoadFromJson(jse);
 
 
-                                    if (isFromTs && MainPage.IsVisible())
+                                    if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
                                     {
                                      //   if (jse.TryGetProperty("ts", out _))
                                       //  {

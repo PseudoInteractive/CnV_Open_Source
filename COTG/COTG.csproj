@@ -143,10 +143,6 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
-    <Compile Include="EventHandlers\Ink\AddStrokeEventArgs.cs" />
-    <Compile Include="EventHandlers\Ink\CopyPasteStrokesEventArgs.cs" />
-    <Compile Include="EventHandlers\Ink\MoveStrokesEventArgs.cs" />
-    <Compile Include="EventHandlers\Ink\RemoveEventArgs.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
     <Compile Include="Game\Attack.cs" />
@@ -218,10 +214,6 @@
     <Compile Include="Services\DragAndDrop\VisualDropConfiguration.cs" />
     <Compile Include="Services\FirstRunDisplayService.cs" />
     <Compile Include="Services\HubNotificationsService.cs" />
-    <Compile Include="Services\Ink\InkFileService.cs" />
-    <Compile Include="Services\Ink\InkPointerDeviceService.cs" />
-    <Compile Include="Services\Ink\InkStrokesService.cs" />
-    <Compile Include="Services\Ink\InkZoomService.cs" />
     <Compile Include="Services\LiveTileService.cs" />
     <Compile Include="Services\LiveTileService.Samples.cs" />
     <Compile Include="Services\NavigationService.cs" />
@@ -278,12 +270,6 @@
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MasterDetailDetailControl.xaml.cs">
-      <DependentUpon>MasterDetailDetailControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MasterDetailPage.xaml.cs">
-      <DependentUpon>MasterDetailPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DefenderPage.xaml.cs">
       <DependentUpon>DefenderPage.xaml</DependentUpon>
     </Compile>
@@ -308,23 +294,8 @@
     <Compile Include="Views\SpotTab.xaml.cs">
       <DependentUpon>SpotTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TabbedPivotPage.xaml.cs">
-      <DependentUpon>TabbedPivotPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\TabPage.xaml.cs">
       <DependentUpon>TabPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TreeViewPage.xaml.cs">
-      <DependentUpon>TreeViewPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewDetailControl.xaml.cs">
-      <DependentUpon>TwoPaneViewDetailControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewListItemControl.xaml.cs">
-      <DependentUpon>TwoPaneViewListItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewPage.xaml.cs">
-      <DependentUpon>TwoPaneViewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>
@@ -412,14 +383,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MasterDetailDetailControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MasterDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\DefenderPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -448,27 +411,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TabbedPivotPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\TabPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TreeViewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewDetailControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewListItemControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -665,7 +608,9 @@
       <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="EventHandlers\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

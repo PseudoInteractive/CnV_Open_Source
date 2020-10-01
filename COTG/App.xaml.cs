@@ -145,7 +145,7 @@ namespace COTG
                 await ActivationService.ActivateAsync(args);
             }
 #if TRACE || DEBUG
-            this.DebugSettings.FailFastOnErrors = true;
+//            this.DebugSettings.FailFastOnErrors = true;
 #endif
             this.DebugSettings.EnableFrameRateCounter = false;
             this.DebugSettings.IsBindingTracingEnabled = false;
@@ -465,7 +465,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-             //   Log(e);
+                Log(e);
                 return 0; // invalid
             }
         }

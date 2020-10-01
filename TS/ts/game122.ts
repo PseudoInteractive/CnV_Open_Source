@@ -47980,9 +47980,9 @@ console.log("Bad");
 
     function p5F(r46, A46) {
       clearTimeout(a8);
-      var f46 = Number(E8(r46, A46));
-      var n46 = A46 * +l9p + r46;
-      var K46 = A46 * (65536) + r46;
+      let f46 = Number(E8(r46, A46));
+      let n46 = A46 * +l9p + r46;
+      let K46 = A46 * (65536) + r46;
     //  wtile = 0;
     //  ttile = 0;
       //if (tileMap.getTile(r46, A46, waterLayer)) {
@@ -47997,7 +47997,7 @@ console.log("Bad");
          
           P0F = setTimeout(function () {
               P0F = 0;
-          }, 5000 );
+          }, 1000 );
         $(_s(4272))
           .css("display", "none");
         $(_s(6822))
