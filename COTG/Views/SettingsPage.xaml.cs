@@ -88,22 +88,9 @@ namespace COTG.Views
             App.Settings().Save(nameof(maxFood), maxFood);
             App.Settings().Save(nameof(maxIron), maxIron);
             App.Settings().Save(nameof(autoBuildOn), autoBuildOn);
-          //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
+            //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
 
-            if (!AttackTab.targets.IsNullOrEmpty() || !AttackTab.attacks.IsNullOrEmpty())
-            {
-                App.Settings().Save(nameof(AttackTab.attacks), AttackTab.attacks.ToArray());
-                {
-                    int targetCount = AttackTab.targets.Count;
-                    var targets = new TargetPersist[targetCount];
-                    for (int i = 0; i < targetCount; ++i)
-                    {
-                        targets[i].attackCluster = AttackTab.targets[i].attackCluster;
-                        targets[i].cid = AttackTab.targets[i].cid;
-                    }
-                    App.Settings().Save(nameof(targets), targets);
-                }
-            }
+            AttackTab.SaveAttacks();
 
 
         }

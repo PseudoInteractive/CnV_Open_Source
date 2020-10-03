@@ -857,7 +857,7 @@ namespace COTG.Views
 
             }
         }
-
+  
         private void HomeClick(object sender, RoutedEventArgs e)
         {
 
@@ -873,8 +873,24 @@ namespace COTG.Views
 
         private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
+          
             var ui = sender as UIElement;
             Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
+
+        }
+
+        private void BuildHomeClick(object sender, RoutedEventArgs e)
+        {
+            if (City.build == 0)
+                return;
+
+            Spot.ProcessCoordClick(City.build, false, App.keyModifiers); // then normal click
+        }
+
+        private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var ui = sender as UIElement;
+            City.GetBuild()?.ShowContextMenu(ui, e.GetPosition(ui));
 
         }
     }

@@ -17784,8 +17784,7 @@ var cotgsubscribe = amplify;
             }
         }
         gspotfunct.shCit = function (N9V) {
-            E6k.y6();
-            O8(N9V);
+            O8Internal(N9V);
         };
         function H3F(U79) {
             E6k.y6();
@@ -41881,7 +41880,13 @@ var cotgsubscribe = amplify;
                     }
             });
         }
-        function O8(Z9V) {
+        function O8(cid) {
+            let wrapper = {
+                shcit: Number(cid)
+            };
+            window['external']['notify'](JSON.stringify(wrapper));
+        }
+        function O8Internal(Z9V) {
             Z9V = Number(Z9V);
             var g9V = Math.round(Z9V % +R5y);
             var U9V = Math.round((Z9V - g9V) / +R5y);

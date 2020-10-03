@@ -533,7 +533,7 @@ namespace COTG
         //    }
         //}
 
-        public static async void ShowCity(int cityId, bool lazyMove)
+        public static void ShowCity(int cityId, bool lazyMove)
         {
 			try
 			{
@@ -1070,6 +1070,13 @@ namespace COTG
                             case "sub":
                                 {
                                     App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:launch?w={world}&s=1&n=1")));
+                                    break;
+                                }
+                            case "shcit":
+                                {
+                                    var jso = jsp.Value;
+                                    var cid = jso.GetAsInt();
+                                    Spot.ProcessCoordClick(cid, false, App.keyModifiers); // then normal click
                                     break;
                                 }
                             case "cityclick":

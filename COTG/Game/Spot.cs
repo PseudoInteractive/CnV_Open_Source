@@ -112,6 +112,33 @@ namespace COTG.Game
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
+        public enum Classification : byte
+        {
+            unknown,
+            inf,
+            magic,
+            academy,
+            stables,
+            se,
+            hub,
+            navy,
+            misc
+        }
+        public Classification classification { get; set; }
+
+        private static string[] classifications =
+        {
+            "unknown",
+            "inf",
+            "magic",
+            "academy",
+            "stables",
+            "se",
+            "hub",
+            "navy",
+            "misc"
+        };
+        public string classificationString => classifications[(int)classification];
         public string attackers { get {
                 var rv = new List<string>();
 
@@ -330,6 +357,70 @@ namespace COTG.Game
                     Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
                 });
             }
+        }
+        internal async Task Classify()
+        {
+            var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
+
+            try
+            {
+                const int start = 14;
+                const int end = 459;
+                var stables = 0;
+                var academies = 0;
+                var training = 0;
+                var sorc = 0;
+                var se = 0;
+                for(int i=start;i<end;++i)
+                {
+                    switch(str[i])
+                    {
+                        case 'E': ++stables;break;
+                        case 'K': ++se;break;
+                        case 'W': ++sorc; break;
+                        case 'T': ++training; break;
+                        case 'Y': ++academies;break;
+
+                    }
+                }
+                var mx = stables.Max(academies).Max(training.Max(sorc)).Max(academies.Max(training)).Max(se);
+                if(mx <= 4)
+                {
+                    classification = Classification.misc;
+                }
+                else if(mx==stables)
+                {
+                    classification = Classification.stables;
+                }
+                else if(mx==sorc)
+                {
+                    classification = Classification.magic;
+                }
+                else if(mx==training)
+                {
+                    classification = Classification.inf;
+                }
+                else if (mx == academies)
+                {
+                    classification = Classification.academy;
+                }
+                else if (mx == se)
+                {
+                    classification = Classification.se;
+                }
+                else
+                {
+                    classification = Classification.misc;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+
+
         }
 
 

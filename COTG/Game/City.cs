@@ -173,7 +173,7 @@ namespace COTG.Game
             {
                 const int bidCastle = 467;
                 if (jse.TryGetProperty("bd", out var bd))
-                    {
+                {
                         commandSlots = 5;
                         foreach (var b in bd.EnumerateArray())
                         {
@@ -580,6 +580,8 @@ namespace COTG.Game
         {
             hours = 0;
             var type = GetPrimaryTroopType();
+            if (type == 0)
+                return false;
             bool isWater = IsWaterRaider(type);
             if (cont != target.CidToContinent() && (!isWater||!Spot.GetOrAdd(target).isOnWater) )
             {

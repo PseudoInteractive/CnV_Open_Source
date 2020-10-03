@@ -16405,8 +16405,8 @@ var cotgsubscribe = amplify;
       }
     }
     gspotfunct.shCit = function(N9V) {
-      E6k.y6();
-      O8(N9V);
+     
+        O8Internal(N9V);
     };
 
     function H3F(U79) {
@@ -19058,7 +19058,6 @@ var cotgsubscribe = amplify;
         C3F();
       }
     }
-
     function r9F(N0v) {
       $(_s(h4p ^ 0))
         .remove();
@@ -22683,7 +22682,7 @@ var cotgsubscribe = amplify;
         n0F();
       }
     }
-
+  
     function f9F(o5v) {
       var E04 = '2859';
       $(_s(h4p & 2147483647))
@@ -41780,7 +41779,15 @@ console.log("Bad");
     }
  //   var waterLayer : Phaser.TilemapLayer;
 
-    function O8(Z9V) {
+    function O8(cid ) {
+        let wrapper = {
+            shcit: Number(cid)
+            };
+        window['external']['notify'](JSON.stringify(wrapper));
+
+    }
+    
+    function O8Internal(Z9V) {
         Z9V = Number(Z9V);
         var g9V = Math.round(Z9V % +R5y);
         var U9V = Math.round((Z9V - g9V) / +R5y);

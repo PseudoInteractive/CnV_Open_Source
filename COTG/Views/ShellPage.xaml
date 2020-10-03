@@ -79,6 +79,9 @@
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
                       Margin="4" />
+                    <Button Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}">
+                        <SymbolIcon Symbol="Home"/>
+                    </Button>
                     <Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}">
 						<SymbolIcon Symbol="Previous"/>
 					</Button>

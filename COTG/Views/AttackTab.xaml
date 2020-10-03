@@ -24,6 +24,9 @@
             <Button Content="X Selected" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="RemoveSelected_Click" />
+            <Button Content="Clear Targets" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+                      Click="ClearTargets_Click" />
             <Button Content="+Senny" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="AddSenator_Click" />
@@ -56,10 +59,20 @@
             <tk:DataGrid.Columns>
                 <tk:DataGridTextColumn Header="Player" Binding="{Binding player, Mode=OneTime}"
                                         />
+                <tk:DataGridTemplateColumn Header="Source" >
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Attack">
+                            <HyperlinkButton Content="{x:Bind xy}" Tapped="AttackSourceCoord_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                                                           ToolTipService.ToolTip="The city to attack from"
+                                             
+                                             />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
                 <tk:DataGridTemplateColumn Header="Target" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Attack">
-                            <HyperlinkButton Content="{x:Bind xy}" Tapped="AttackCoord_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                            <HyperlinkButton Content="{x:Bind targetXy}" Tapped="AttackTargetCoord_Tapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="The target to attack"
                                              
                                              />
@@ -131,6 +144,7 @@
                 <tk:DataGridTextColumn Header="Cluster" Binding="{Binding attackCluster, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="City" Binding="{Binding cityName, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="Alliance" Binding="{Binding alliance, Mode=OneTime}" />
+                <tk:DataGridTextColumn Header="Intel" Binding="{Binding classificationString, Mode=OneTime}" />
                 <tk:DataGridTemplateColumn Header="Remove" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">

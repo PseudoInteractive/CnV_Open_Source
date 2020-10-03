@@ -8,10 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,7 +30,7 @@ namespace COTG.Views
     public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
         public static DateTimeOffset time { get; set; }
-
+        public static StorageFolder folder => ApplicationData.Current.LocalFolder;
         public static AttackTab instance;
         public static bool IsVisible() => instance.isVisible;
 
@@ -47,42 +49,84 @@ namespace COTG.Views
 
 
 
-        private void AttackCoord_Tapped(object sender, TappedRoutedEventArgs e)
+        private void AttackTargetCoord_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var i = sender as FrameworkElement;
 
-            var spot = i.DataContext as Attack;
-            if (spot.target != 0)
+            var atk = i.DataContext as Attack;
+            if (atk.target != 0)
             {
-                Spot.ProcessCoordClick(spot.target, false, App.keyModifiers);
+              
+                Spot.ProcessCoordClick(atk.target, false,App.keyModifiers);
                 foreach (var t in targets)
                 {
-                    if (t.cid == spot.target)
+                    if (t.cid == atk.target)
                         targetGrid.ScrollIntoView(t, null);
                 }
             }
         }
+        private void AttackSourceCoord_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var i = sender as FrameworkElement;
 
-        public void TouchLists()
+            var spot = i.DataContext as Attack;
+            if (spot.cid != 0)
+            {
+
+                Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers);
+            }
+        }
+        static bool loaded = false;
+
+        struct AttackPersister
+        {
+           public List<Attack> attacks { get; set; }
+            public TargetPersist[] targets { get; set; }
+        }
+        internal static void SaveAttacks()
+        {
+            if (!AttackTab.targets.IsNullOrEmpty() || !AttackTab.attacks.IsNullOrEmpty())
+            {
+                var persist = new AttackPersister() { attacks = attacks };
+                
+                    int targetCount = AttackTab.targets.Count;
+                    var targets = new TargetPersist[targetCount];
+                    for (int i = 0; i < targetCount; ++i)
+                    {
+                        targets[i].attackCluster = AttackTab.targets[i].attackCluster;
+                        targets[i].cid = AttackTab.targets[i].cid;
+                        targets[i].classification = (byte)AttackTab.targets[i].classification;
+                    }
+                  persist.targets = targets;
+                 folder.SaveAsync("attacks",persist);
+                
+            }
+        }
+
+        public async Task TouchLists()
         {
             // First init
             //  AttackTab.attacks.Clear();
 
-            if (attacks.IsNullOrEmpty() && targets.IsNullOrEmpty())
+            if (!loaded)
             {
+                loaded = true;
+                var persist = await folder.ReadAsync<AttackPersister>("attacks" );
                 App.DispatchOnUIThreadSneaky(() =>
                 {
-                    attacks.Set(App.Settings().Read(nameof(attacks), Array.Empty<Attack>()));
-
-                    var lastTargets = App.Settings().Read(nameof(targets), Array.Empty<TargetPersist>());
+                    attacks.Set(persist.attacks);
+                  
+                    var lastTargets = persist.targets;
                     var spots = new List<Spot>();
                     foreach (var target in lastTargets)
                     {
                         var t = Spot.GetOrAdd(target.cid);
                         t.attackCluster = target.attackCluster;
+                        t.classification = (Spot.Classification)target.classification;
                         spots.Add(t);
 
                     }
+                    
                     targets.Set(spots);
                 });
             }
@@ -116,6 +160,7 @@ namespace COTG.Views
             }
 
         }
+
 
         private void RemoveSelected_Click(object sender, RoutedEventArgs e)
         {
@@ -151,20 +196,21 @@ namespace COTG.Views
 
                 }
             }
-
+            CleanTargets();
         }
 
-        private async void AddAttackWithNameFromClipboard(Attack atk)
+        private async void AddAttackWithCoordsFromClipboard(Attack atk)
         {
             TouchLists();
             try
             {
 
-                atk.player = await Clipboard.GetContent().GetTextAsync();
+                atk.cid  = (await Clipboard.GetContent().GetTextAsync()).FromCoordinate();
+                atk.player = Spot.GetOrAdd(atk.cid).player;
             }
             catch (Exception ex)
             {
-                atk.player = string.Empty;
+                Log(ex);
             }
             attacks.Add(atk);
             
@@ -187,7 +233,7 @@ namespace COTG.Views
             var atk = new Attack();
             atk.type = (int)Attack.Type.senator;
             atk.fake = true;
-            AddAttackWithNameFromClipboard(atk);
+            AddAttackWithCoordsFromClipboard(atk);
         }
 
         private void AddSenator_Click(object sender, RoutedEventArgs e)
@@ -195,58 +241,100 @@ namespace COTG.Views
             var atk = new Attack();
             atk.type = (int)Attack.Type.senator;
             atk.fake = false;
-            AddAttackWithNameFromClipboard(atk);
+            AddAttackWithCoordsFromClipboard(atk);
 
         }
 
-        internal static void AddTarget(int cid, byte group)
+        internal static async void AddTarget(int cid, byte group)
         {
             instance.TouchLists();
             var spot = Spot.GetOrAdd(cid);
-            spot.attackCluster = group;
             if (targets.Contains(spot))
             {
-                Note.Show("Target is already present");
+                Note.Show($"Target is already present in {spot.attackCluster}");
                 return;
             }
+            spot.attackCluster = group;
+            await spot.Classify();
             targets.Add(spot);
         }
 
+        private  static void CleanTargets()
+        {
+            var set = new HashSet<int>(targets.Count);
+            foreach(var t in targets)
+            {
+                set.Add(t.cid);
+            }
+            foreach(var a in attacks)
+            {
+                if (a.target != 0)
+                {
+                    if (!set.Contains(a.target))
+                    {
+                        a.target = 0;
+                    }
+                }
+            }
+        }
         private void AssignAttacks_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var a in attacks)
-            {
-                a.target = 0;
-
-            }
             string bad = string.Empty;
             var reals = 0;
             var fakes = 0;
+            CleanTargets();
+
             foreach (var t in targets)
             {
                 var isReal = t.attackCluster == 0;
                 // find an attack
-                bool found = false;
+                Attack best = null;
+                int bestScore = 0;
                 foreach (var a in attacks)
                 {
-                    if (a.target == 0 && a.fake != isReal)
+                    // already set?
+                    if(a.target == t.cid)
                     {
-                        found = true;
-                        if (isReal)
-                            ++reals;
-                        else
-                            ++fakes;
-                        a.target = t.cid;
+                        best = a;
+                        
                         break;
                     }
+                    if (a.target == 0 && a.fake != isReal)
+                    {
+                        // todo:  score
+                        best = a;
+                    }
                 }
-                if (!found)
+                if (best == null)
                 {
                     bad = $"{bad}No attack for {t.xy} isReal: {isReal}\n";
 
                 }
+                else
+                {
+                    best.target = t.cid;
+                    if (isReal)
+                        ++reals;
+                    else
+                        ++fakes;
+
+                }
             }
-            bad = $"{bad}Assigned {reals} reals and {fakes} fakes";
+            var unusedReals = 0;
+            var unusedFakes = 0;
+            foreach (var a in attacks)
+            {
+                if(a.target == 0)
+                {
+                    if (a.fake)
+                        ++unusedFakes;
+                    else
+                        ++unusedReals;
+                }
+            }
+
+            bad = $"{bad}Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
+
             Note.Show(bad);
             attacks.NotifyReset();
             targets.NotifyReset();
@@ -267,6 +355,8 @@ namespace COTG.Views
 
             var spot = i.DataContext as Spot;
             targets.Remove(spot);
+            CleanTargets();
+
         }
         private void AttackRemove_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -288,6 +378,16 @@ namespace COTG.Views
             }
         }
 
-        
+        private void ClearTargets_Click(object sender, RoutedEventArgs e)
+        {
+            {
+                var temp = new List<Attack>();
+                foreach (var sel in attackGrid.SelectedItems)
+                {
+                    (sel as Attack).target=0;
+                }
+            }
+            attacks.NotifyReset();
+        }
     }
 }

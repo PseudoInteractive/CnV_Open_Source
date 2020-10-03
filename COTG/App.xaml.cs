@@ -144,15 +144,16 @@ namespace COTG
 
                 await ActivationService.ActivateAsync(args);
             }
+            this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
-//            this.DebugSettings.FailFastOnErrors = true;
 #endif
             this.DebugSettings.EnableFrameRateCounter = false;
-            this.DebugSettings.IsBindingTracingEnabled = false;
             this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
 #if DEBUG
             //this.DebugSettings.FailFastOnErrors = false;
+            this.DebugSettings.IsBindingTracingEnabled = true;
 #else
+            this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
             idleTimer = new DispatcherTimer();
             idleTimer.Interval = TimeSpan.FromSeconds(10);  // 10s idle delay
@@ -458,7 +459,7 @@ namespace COTG
         {
             try
             {
-                var links = s.Split('.',':');
+                var links = s.Split( new char[] { ' ','.',':',',',';'},StringSplitOptions.RemoveEmptyEntries);
                 return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
 
 
