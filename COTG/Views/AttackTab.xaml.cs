@@ -112,23 +112,25 @@ namespace COTG.Views
             {
                 loaded = true;
                 var persist = await folder.ReadAsync<AttackPersister>("attacks" );
-                App.DispatchOnUIThreadSneaky(() =>
-                {
+               // App.DispatchOnUIThreadSneaky(() =>
+              //  {
                     attacks.Set(persist.attacks);
                   
-                    var lastTargets = persist.targets;
                     var spots = new List<Spot>();
-                    foreach (var target in lastTargets)
+                    if (persist.targets != null)
                     {
-                        var t = Spot.GetOrAdd(target.cid);
-                        t.attackCluster = target.attackCluster;
-                        t.classification = (Spot.Classification)target.classification;
-                        spots.Add(t);
+                        foreach (var target in persist.targets)
+                        {
+                            var t = Spot.GetOrAdd(target.cid);
+                            t.attackCluster = target.attackCluster;
+                            t.classification = (Spot.Classification)target.classification;
+                            spots.Add(t);
 
+                        }
                     }
                     
                     targets.Set(spots);
-                });
+                //});
             }
 
         }
@@ -201,7 +203,7 @@ namespace COTG.Views
 
         private async void AddAttackWithCoordsFromClipboard(Attack atk)
         {
-            TouchLists();
+            await TouchLists();
             try
             {
 
@@ -247,7 +249,7 @@ namespace COTG.Views
 
         internal static async void AddTarget(int cid, byte group)
         {
-            instance.TouchLists();
+            await instance.TouchLists();
             var spot = Spot.GetOrAdd(cid);
             if (targets.Contains(spot))
             {

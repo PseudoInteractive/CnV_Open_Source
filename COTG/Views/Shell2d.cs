@@ -458,8 +458,7 @@ namespace COTG.Views
                         srcP1.Y = srcImageSpan;
 
                     }
-                    var planVisible = AttackTab.IsVisible();
-
+ 
                     var attacksVisible = DefensePage.IsVisible() | OutgoingTab.IsVisible() | DefenderPage.IsVisible() | HitTab.IsVisible();
                     if (worldBackground != null && IsWorldView() && wantImage)
                     {

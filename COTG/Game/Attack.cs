@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace COTG.Game
@@ -16,12 +17,16 @@ namespace COTG.Game
         public enum Type
         {
             senator,
-            assult,
+            assault,
             se, 
         }
         // Todo: make enum
         public int type { get; set; }
         public bool fake { get; set; }
+        public byte troopType { get; set; }
+        [JsonIgnore]
+        public string troopTypeString => Game.Enum.ttNameWithCaps[troopType];
+        public int ts { get; set; }
     }
     public class AttackType
     {

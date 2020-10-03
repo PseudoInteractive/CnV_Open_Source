@@ -376,10 +376,10 @@ namespace COTG.Game
                     switch(str[i])
                     {
                         case 'E': ++stables;break;
-                        case 'K': ++se;break;
-                        case 'W': ++sorc; break;
-                        case 'T': ++training; break;
-                        case 'Y': ++academies;break;
+                        case 'Y': ++se;break;
+                        case 'J': ++sorc; break;
+                        case 'G': ++training; break;
+                        case 'Z': ++academies;break;
 
                     }
                 }
