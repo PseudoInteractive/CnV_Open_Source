@@ -27,12 +27,9 @@
             <Button Content="Clear Targets" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="ClearTargets_Click" />
-            <Button Content="+Senny" VerticalAlignment="Center" Margin="4"
+            <Button Content="+Attacks" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
-                      Click="AddSenator_Click" />
-            <Button Content="+Fake" VerticalAlignment="Center" Margin="4"
-                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
-                      Click="AddFake_Click" />
+                      Click="AddAttacksFromClipboard" />
             <Button Content="Sort" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="SortAttacks" />
@@ -86,8 +83,9 @@
                                              DisplayMemberPath="name"
                                             
                                              />
-                <tk:DataGridCheckBoxColumn Header="Fake" Binding="{Binding fake, Mode=OneTime}"
-                                        />
+                <tk:DataGridCheckBoxColumn Header="Fake" Binding="{Binding fake, Mode=OneTime}" />
+                <tk:DataGridTextColumn Header="tt" Binding="{Binding troopTypeString, Mode=OneTime}"    />
+                <tk:DataGridTextColumn Header="ts" Binding="{Binding ts, Mode=OneTime}"    />
                 <tk:DataGridTemplateColumn Header="Remove" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Attack">

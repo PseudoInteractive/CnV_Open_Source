@@ -701,7 +701,7 @@ namespace COTG.Views
                                         var cid = i.Key;
                                         var count = i.Value;
                                         var c = cid.CidToCC();
-                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered);
+                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered,Colors.White);
 
 
                                     }
@@ -713,14 +713,20 @@ namespace COTG.Views
                             foreach(var t in AttackTab.targets)
                             {
                                 var c1 = t.cid.CidToCC();
-                                DrawTextBox(ds, $"{t.attackCluster}", c1, tipTextFormatCentered);
+                                DrawTextBox(ds, $"{t.classificationString}", c1, tipTextFormatCentered,t.attackCluster == 0 ? Colors.White : Colors.Teal );
                             }
                             foreach (var t in AttackTab.attacks)
                             {
                                 if (t.target != 0)
                                 {
+                                    var _t = (tick * t.cid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
+                                    var r = _t.Ramp();
+                                    var c = t.fake ? Colors.White : Colors.Red;
+                                    var c0 = t.cid.CidToCC();
                                     var c1 = t.target.CidToCC();
-                                    DrawTextBox(ds, $"{t.type} {t.fake} {t.player}", c1, tipTextFormatCentered);
+                                 //   DrawTextBox(ds, $"{t.type} {t.fake} {t.player}", c1, tipTextFormatCentered);
+                                    DrawAction(ds, batch, .5f,1.0f, r, c0, c1, c, troopImages[t.troopType], false, null, 28, 0.8f);
+
                                 }
                             }
                         }
@@ -803,7 +809,7 @@ namespace COTG.Views
                                             Assert(false);
                                         }
                                     }
-                                    DrawTextBox(ds, $"{incAttacks}`{ (outgoingVisible ? (incTs+500)/1000 : (city.tsMax+500) / 1000) }k", c1, tipTextFormatCentered);
+                                    DrawTextBox(ds, $"{incAttacks}`{ (outgoingVisible ? (incTs+500)/1000 : (city.tsMax+500) / 1000) }k", c1, tipTextFormatCentered, Colors.White);
                                 }
                             }
                         }
@@ -839,7 +845,7 @@ namespace COTG.Views
                                             troopImages[ttSenator],false, null,20);
                                     }
                                 }
-                                DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered);
+                                DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Colors.White);
 
                             }
 
@@ -986,7 +992,7 @@ namespace COTG.Views
 			};
 		}
 
-		private static void DrawTextBox(CanvasDrawingSession ds, string text, Vector2 at, CanvasTextFormat format)
+		private static void DrawTextBox(CanvasDrawingSession ds, string text, Vector2 at, CanvasTextFormat format,Color color  )
         {
             float xLoc = at.X;
             float yLoc = at.Y;
@@ -998,7 +1004,7 @@ namespace COTG.Views
             bounds.Width += expand * 2;
             bounds.Height += expand * 2;
             ds.FillRoundedRectangle(bounds,3,3, shadowBrush);
-            ds.DrawTextLayout(textLayout, at.X,at.Y, Colors.White );
+            ds.DrawTextLayout(textLayout, at.X,at.Y, color);
         }
 
   //      private void DrawAction( CanvasDrawingSession ds, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1,Color color)

@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace COTG.Game
 {
+   
     public class Attack
     {
         public string player { get; set; } = string.Empty;
         public int cid { get; set; }
+        [JsonIgnore]
         public string xy => cid.CidToString();
         public int target { get; set; }
+        [JsonIgnore]
         public string targetXy => target.CidToString();
         public enum Type
         {

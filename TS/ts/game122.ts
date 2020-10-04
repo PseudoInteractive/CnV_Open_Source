@@ -55393,7 +55393,12 @@ console.log("Bad");
     }
     var B7F = 1;
 
-      function d8(Q7l) { N6(); var T7l = $.post("/includes/pL.php", { type: Q7l }); }
+   function d8(Q7l) 
+   {
+   N6(); 
+   var T7l = $.post("/includes/pL.php", { type: Q7l }); 
+  
+  }
     var g9F = 1;
     $(document)
       .ready(function() {

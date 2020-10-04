@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using static COTG.Game.Enum;
 using static COTG.Debug;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -201,20 +201,50 @@ namespace COTG.Views
             CleanTargets();
         }
 
-        private async void AddAttackWithCoordsFromClipboard(Attack atk)
+        private async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
         {
             await TouchLists();
-            try
+            var text = await Clipboard.GetContent().GetTextAsync();
+            if(text.IsNullOrEmpty())
             {
+                Note.Show("No clipboard text");
+                return;
+            }
+            var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                try
+                {
+                    var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-                atk.cid  = (await Clipboard.GetContent().GetTextAsync()).FromCoordinate();
-                atk.player = Spot.GetOrAdd(atk.cid).player;
+                    var atk = new Attack();
+                    atk.type = (int)Attack.Type.senator;
+                    atk.fake = parts[3] == "fake";
+                    var tt = parts[2].ToLowerInvariant();
+                    if (tt.StartsWith("sorc"))
+                        atk.troopType = ttSorcerer;
+                    else if (tt.StartsWith("horse"))
+                        atk.troopType = ttHorseman;
+                    else if (tt.StartsWith("vanq"))
+                        atk.troopType = ttVanquisher;
+                    else if (tt.StartsWith("druid"))
+                        atk.troopType = ttDruid;
+                    else atk.troopType = ttGuard;            
+
+                    atk.cid = parts[0].FromCoordinate();
+                    if (int.TryParse(parts[2], out var ts))
+                    {
+                        atk.ts = ts;
+                    }
+                    
+                    atk.player = Spot.GetOrAdd(atk.cid).player;
+                    attacks.Add(atk);
+                }
+                catch (Exception ex)
+                {
+                    Log(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-            attacks.Add(atk);
             
         }
         private void SortAttacks(object sender, RoutedEventArgs e)
@@ -230,22 +260,7 @@ namespace COTG.Views
             );
             attacks.NotifyReset();
         }
-        private void AddFake_Click(object sender, RoutedEventArgs e)
-        {
-            var atk = new Attack();
-            atk.type = (int)Attack.Type.senator;
-            atk.fake = true;
-            AddAttackWithCoordsFromClipboard(atk);
-        }
-
-        private void AddSenator_Click(object sender, RoutedEventArgs e)
-        {
-            var atk = new Attack();
-            atk.type = (int)Attack.Type.senator;
-            atk.fake = false;
-            AddAttackWithCoordsFromClipboard(atk);
-
-        }
+       
 
         internal static async void AddTarget(int cid, byte group)
         {
