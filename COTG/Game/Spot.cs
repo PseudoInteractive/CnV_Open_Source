@@ -112,6 +112,7 @@ namespace COTG.Game
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
+        public Attack attackAssignment;
         public enum Classification : byte
         {
             unknown,
@@ -734,7 +735,12 @@ namespace COTG.Game
         {
             JSCommand("spotRaid", cid);
         }
-
+        public void ShowDistanceTo(int _cid)
+        {
+            var dist = cid.DistanceToCid(_cid).ToString("0.00");
+            App.CopyTextToClipboard(dist);
+            Note.Show(dist);
+        }
         public void ShowContextMenu(UIElement uie,Windows.Foundation.Point position)
         {
             var flyout = new MenuFlyout();
@@ -766,6 +772,10 @@ namespace COTG.Game
                     }
 
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
+                    App.AddItem(flyout, "Attack to Clipboard", (_, _) =>
+                        App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} vanqs real 200000\n{cid.CidToString()} {Player.myName} vanqs fake 3000\n"));
+
+
 
                 }
                 else
@@ -781,6 +791,7 @@ namespace COTG.Game
                 App.AddItem(flyout, "Near Defence", DefendMe );
                 App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+                App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
             }
             else if (this.isDungeon || this.isBoss)
             {

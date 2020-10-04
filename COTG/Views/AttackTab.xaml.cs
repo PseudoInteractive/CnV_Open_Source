@@ -210,6 +210,9 @@ namespace COTG.Views
                 Note.Show("No clipboard text");
                 return;
             }
+            var reals = 0;
+            var fakes = 0;
+            text = text.Replace("\r", "");
             var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines)
             {
@@ -219,13 +222,13 @@ namespace COTG.Views
 
                     var atk = new Attack();
                     atk.type = (int)Attack.Type.senator;
-                    atk.fake = parts[3] == "fake";
+                    atk.fake = parts[3].ToLowerInvariant() == "fake";
                     var tt = parts[2].ToLowerInvariant();
                     if (tt.StartsWith("sorc"))
                         atk.troopType = ttSorcerer;
                     else if (tt.StartsWith("horse"))
                         atk.troopType = ttHorseman;
-                    else if (tt.StartsWith("vanq"))
+                    else if (tt.StartsWith("van"))
                         atk.troopType = ttVanquisher;
                     else if (tt.StartsWith("druid"))
                         atk.troopType = ttDruid;
@@ -238,6 +241,10 @@ namespace COTG.Views
                     }
                     
                     atk.player = Spot.GetOrAdd(atk.cid).player;
+                    if (atk.fake)
+                        ++fakes;
+                    else
+                        ++reals;
                     attacks.Add(atk);
                 }
                 catch (Exception ex)
@@ -245,6 +252,7 @@ namespace COTG.Views
                     Log(ex);
                 }
             }
+            Note.Show($"{reals} reals, {fakes} fakes added");
             
         }
         private void SortAttacks(object sender, RoutedEventArgs e)
@@ -274,13 +282,15 @@ namespace COTG.Views
             spot.attackCluster = group;
             await spot.Classify();
             targets.Add(spot);
-        }
+            Note.Show($"Added {spot.nameAndRemarks}, {targets.Count} targets");
+     }
 
         private  static void CleanTargets()
         {
             var set = new HashSet<int>(targets.Count);
             foreach(var t in targets)
             {
+                t.attackAssignment = null;
                 set.Add(t.cid);
             }
             foreach(var a in attacks)
@@ -290,6 +300,10 @@ namespace COTG.Views
                     if (!set.Contains(a.target))
                     {
                         a.target = 0;
+                    }
+                    else
+                    {
+                        Spot.GetOrAdd(a.target).attackAssignment = a;
                     }
                 }
             }
@@ -301,36 +315,143 @@ namespace COTG.Views
             var fakes = 0;
             CleanTargets();
 
-            foreach (var t in targets)
+            foreach (var a in attacks)
             {
-                var isReal = t.attackCluster == 0;
-                // find an attack
-                Attack best = null;
-                int bestScore = 0;
-                foreach (var a in attacks)
+                if (a.target != 0) // not already assigned
                 {
-                    // already set?
-                    if(a.target == t.cid)
-                    {
-                        best = a;
-                        
-                        break;
-                    }
-                    if (a.target == 0 && a.fake != isReal)
-                    {
-                        // todo:  score
-                        best = a;
-                    }
+                    if (!a.fake)
+                        ++reals;
+                    else
+                        ++fakes;
+                    continue;
                 }
+                    Spot best = null;
+                    float bestScore = float.MaxValue;
+                    foreach (var t in targets)
+                    {
+                        if (a.fake == (t.attackCluster == 0)) // real or fake match
+                            continue;
+                        if (t.attackAssignment != null)
+                            continue; // already taken
+                        var score = a.cid.DistanceToCid(t.cid);
+                    if (!a.fake)
+                    {
+                        switch (a.troopType)
+                        {
+                            case ttSorcerer:
+                            case ttDruid:
+                                {
+                                    switch (t.classification)
+                                    {
+                                        case Spot.Classification.unknown:
+                                            break;
+                                        case Spot.Classification.inf:
+                                            score -= 3;
+                                            break;
+                                        case Spot.Classification.magic:
+                                            score += 2;
+                                            break;
+                                        case Spot.Classification.academy:
+                                            score += 8;
+                                            break;
+                                        case Spot.Classification.stables:
+                                            score -= 4;
+                                            break;
+                                        case Spot.Classification.se:
+                                            break;
+                                        case Spot.Classification.hub:
+                                            break;
+                                        case Spot.Classification.navy:
+                                            break;
+                                        case Spot.Classification.misc:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                }
+                            case ttVanquisher:
+                                {
+                                    switch (t.classification)
+                                    {
+                                        case Spot.Classification.unknown:
+                                            break;
+                                        case Spot.Classification.inf:
+                                            score += 4;
+                                            break;
+                                        case Spot.Classification.magic:
+                                            score -= 2;
+                                            break;
+                                        case Spot.Classification.academy:
+                                            score -= 4;
+                                            break;
+                                        case Spot.Classification.stables:
+                                            score -= 3;
+                                            break;
+                                        case Spot.Classification.se:
+                                            break;
+                                        case Spot.Classification.hub:
+                                            break;
+                                        case Spot.Classification.navy:
+                                            break;
+                                        case Spot.Classification.misc:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                }
+                            case ttHorseman:
+                                {
+                                    switch (t.classification)
+                                    {
+                                        case Spot.Classification.unknown:
+                                            break;
+                                        case Spot.Classification.inf:
+                                            score += 2;
+                                            break;
+                                        case Spot.Classification.magic:
+                                            score -= 2;
+                                            break;
+                                        case Spot.Classification.academy:
+                                            score -= 6;
+                                            break;
+                                        case Spot.Classification.stables:
+                                            score += 7;
+                                            break;
+                                        case Spot.Classification.se:
+                                            break;
+                                        case Spot.Classification.hub:
+                                            break;
+                                        case Spot.Classification.navy:
+                                            break;
+                                        case Spot.Classification.misc:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                    if (score < bestScore)
+                        {
+                            bestScore = score;
+                            best = t;
+
+                        }
+
+                    }
                 if (best == null)
                 {
-                    bad = $"{bad}No attack for {t.xy} isReal: {isReal}\n";
+                    bad = $"{bad}No target for {a.xy} isReal: {!a.fake}\n";
 
                 }
                 else
                 {
-                    best.target = t.cid;
-                    if (isReal)
+                    a.target = best.cid;
+                    best.attackAssignment = a;
+                    if (!a.fake)
                         ++reals;
                     else
                         ++fakes;

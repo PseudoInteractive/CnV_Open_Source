@@ -1126,6 +1126,11 @@ namespace COTG
                                     var city =  City.GetOrAddCity(cid);
                                     city.LoadFromJson(jse);
 
+                                    // If it does not include TS it is from a call to chcity
+                                    // Otherwise is is from a change in TS
+
+                                    if(!isFromTs)
+                                        city.SetBuild();
 
                                     if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
                                     {
