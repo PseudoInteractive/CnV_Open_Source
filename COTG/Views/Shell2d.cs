@@ -459,7 +459,7 @@ namespace COTG.Views
 
                     }
  
-                    var attacksVisible = DefensePage.IsVisible() | OutgoingTab.IsVisible() | DefenderPage.IsVisible() | HitTab.IsVisible();
+                    var attacksVisible = DefensePage.IsVisible() | OutgoingTab.IsVisible() | DefenderPage.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
                     if (worldBackground != null && IsWorldView() && wantImage)
                     {
 

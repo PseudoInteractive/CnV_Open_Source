@@ -24,6 +24,9 @@
             <Button Content="X Selected" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="RemoveSelected_Click" />
+            <Button Content="Sender" VerticalAlignment="Center" Margin="4"
+                          Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
+                      Click="AttackSender_Tapped" />
             <Button Content="Clear Targets" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
                       Click="ClearTargets_Click" />
@@ -32,7 +35,8 @@
                       Click="AddAttacksFromClipboard" />
             <Button Content="Sort" VerticalAlignment="Center" Margin="4"
                           Width="60" HorizontalAlignment="Center" FontSize="12" Style="{ThemeResource ButtonRevealStyle}"
-                      Click="SortAttacks" />
+                      Click="SortAttacks" /> 
+            
             <Border  Margin="4" Background="#FF103030" VerticalAlignment="Center">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind local:AttackTab.time,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
                            Width="100" HorizontalAlignment="Center" FontSize="12" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"

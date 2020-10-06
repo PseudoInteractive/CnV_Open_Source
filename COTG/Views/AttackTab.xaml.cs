@@ -27,6 +27,7 @@ using static COTG.Debug;
 
 namespace COTG.Views
 {
+    
     public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
         public static DateTimeOffset time { get; set; }
@@ -47,7 +48,34 @@ namespace COTG.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        private void AttackSender_Tapped(object sender, RoutedEventArgs e)
+        {
+            var used = new HashSet<int>(attacks.Count);
+            StringBuilder sb = new StringBuilder();
+            foreach (var a in attacks)
+            {
+                if (!used.Add(a.cid))
+                    continue;
+                var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>() };
+                foreach (var a1 in attacks)
+                {
+                    if (a1.cid != a.cid)
+                        continue;
+                    atk.type.Add(a1.fake ? 0 : 1);
+                    
+                    var xy = a1.target.CidToWorld();
+                    atk.x.Add(xy.x);
+                    atk.y.Add(xy.y);
+                }
+                atk.time = new string[] { time.Hour.ToString(), time.Minute.ToString(), time.Second.ToString(), time.ToString("MM/dd/yyyy") };
+                sb.Append($"\n{a.player} <coords>{a.cid.CidToString()}</coords>\n");
 
+                sb.Append(System.Text.Json.JsonSerializer.Serialize(atk));
+             
+            }
+            App.CopyTextToClipboard(sb.ToString());
+            Note.Show("Copied Attack sender scripts to clipboard");
+        }
 
         private void AttackTargetCoord_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -83,6 +111,7 @@ namespace COTG.Views
            public List<Attack> attacks { get; set; }
             public TargetPersist[] targets { get; set; }
         }
+
         internal static void SaveAttacks()
         {
             if (!AttackTab.targets.IsNullOrEmpty() || !AttackTab.attacks.IsNullOrEmpty())

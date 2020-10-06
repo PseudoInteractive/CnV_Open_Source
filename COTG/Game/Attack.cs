@@ -46,4 +46,31 @@ namespace COTG.Game
         public byte attackCluster { get; set; } // 0 is real
 
     }
+    public struct AttackSenderScript
+    {
+        public List<int> x { get; set; }
+        public List<int> y { get; set; }
+        public List<int> type { get; set; }
+        public string[] time { get; set; }
+/*	"x": [
+		"282",
+		"282"
+	],
+	"y": [
+		"231",
+		"230"
+	],
+	"type": [
+		"0",
+		"0"
+	],
+	"time": [
+		"10",
+		"00",
+		"00",
+		"00/00/0000"
+	]
+    }*/
+
+    }
 }

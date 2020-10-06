@@ -396,11 +396,14 @@ function SendAttack() {
 		}
 	}
 	var scouttts;
+	let rams = 0;
 	var t = { home: [], type: [], real: [], fake: [], speed: [], scoutfake: [], scoutreal: [] };
 	for (let i in D6.tc) {
 		if (D6.tc[i]) {
 			if (Number(i) == 7) { scouttts = D6.tc[7]; }
 			else {
+				if (Number(i) == 12)
+					rams = D6.tc[12];
 				t.home.push(Math.ceil(D6.tc[i] * Number($("#perc").val()) / 100));
 				t.type.push(Number(i));
 				if ($("#usereal" + i).prop("checked") === true) {
@@ -634,6 +637,9 @@ function SendAttack() {
 			if (t.type[i] != 17) {
 				if ($("#usefake" + t.type[i]).prop("checked") === true) {
 					t.fake[i] = Math.ceil(faketss * t.home[i] / fakerat);
+					if (t.type[i] == 12 && rams < 100 && rams > 1) {
+						t.fake[i] = 1;
+					}
 				}
 			}
 		}
@@ -645,6 +651,9 @@ function SendAttack() {
 						t.real[i] = Math.floor((t.home[i] - t.fake[i] * fakenumb) / realnumb);
 					} else {
 						t.real[i] = Math.floor((t.home[i]) / realnumb);
+					}
+					if (t.type[i] == 12&& rams <100 && rams > 1) {
+						t.real[i] = 1;
 					}
 				} else { t.real[i] = 0; }
 			}
@@ -797,7 +806,7 @@ function SendAttack() {
 				if ($("#scoutick").prop("checked") === true) {
 					pvptabs.tabs("option", "active", 3);
 					$("#scoIP7").val(1);
-					$("#scoIP14").val(30);
+					$("#scoIP14").val(faketss/100);
 					$("#scoxcoord").val(targets.x[l]);
 					$("#scoycoord").val(targets.y[l]);
 					setTimeout(function () {
@@ -1367,7 +1376,7 @@ function updateshrine() {
 					shrinetab += "<button data='" + i + "' class='greenb shrine7pt' style='font-size: 10px;height: 20px;padding: 3px;width: 25px;border-radius: 4px;'>7pt</button></td><td></td>";
 				}
 			}
-			shrinetab += "<td>" + roundToTwo(shrinec[i][5]) + "</td><td class='playerblink'>" + shrinec[i][1] + "</td><td>" + shrinec[i][2] + "</td><td class='coordblink shcitt' data='" + cid + "'>" + shrinec[i][3] + ":" + shrinec[i][4] + "</td><td class='allyblink'>" + shrinec[i][8] + "</td><td>" + shrinec[i][7] + "</td><td>" + shrinec[i][0] + "</td></tr>";
+			shrinetab += "<td>" + RoundTo2Digits(shrinec[i][5]) + "</td><td class='playerblink'>" + shrinec[i][1] + "</td><td>" + shrinec[i][2] + "</td><td class='coordblink shcitt' data='" + cid + "'>" + shrinec[i][3] + ":" + shrinec[i][4] + "</td><td class='allyblink'>" + shrinec[i][8] + "</td><td>" + shrinec[i][7] + "</td><td>" + shrinec[i][0] + "</td></tr>";
 			if (ccounter == 20) {
 				break;
 			}
