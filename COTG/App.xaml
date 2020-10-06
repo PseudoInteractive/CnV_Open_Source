@@ -35,10 +35,8 @@
                             <ResourceDictionary>
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CCD6DAEB</Color>
                                 <Color x:Key="SystemChromeAltHighColor">#FFA4ACCC</Color>
-                                <AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" BackgroundSource="Backdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
                                 <!-- Override system shape defaults -->
-                                <CornerRadius x:Key="ControlCornerRadius">0,2,2,0</CornerRadius>
-                                <CornerRadius x:Key="OverlayCornerRadius">1,4,4,1</CornerRadius>
+                   
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
                                 <Color x:Key="SystemAccentColorLight1">#FF73AF9A</Color>

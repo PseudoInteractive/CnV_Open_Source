@@ -200,7 +200,7 @@
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" />
+            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" Margin="0,8,0,0" />
             <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
                         Background="Transparent"
