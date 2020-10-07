@@ -1139,6 +1139,7 @@ namespace COTG
                                             ScanDungeons.Post(cid, false);
                                       //  }
                                     }
+                                    NavStack.Push(cid);
                                     break;
 
                                 }

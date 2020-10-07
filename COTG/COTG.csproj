@@ -80,10 +80,10 @@
       <Version>4.0.0-preview3</Version>
     </PackageReference>
     <PackageReference Include="Azure.Storage.Blobs">
-      <Version>12.6.0</Version>
+      <Version>12.7.0-preview.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Primitives">
-      <Version>5.0.0-rtm.20480.9</Version>
+      <Version>5.0.0-rtm.20506.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
@@ -113,16 +113,16 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>5.0.0-rtm.20480.9</Version>
+      <Version>5.0.0-rtm.20506.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
-      <Version>5.0.0-rtm.20480.9</Version>
+      <Version>5.0.0-rtm.20506.3</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>5.0.0-rtm.20480.9</Version>
+      <Version>5.0.0-rtm.20506.3</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.25.0</Version>

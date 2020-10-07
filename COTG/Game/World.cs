@@ -388,7 +388,7 @@ namespace COTG.Game
                 pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-                Trace($"Boss: {b}");
+           //     Trace($"Boss: {b}");
                 raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
             }
@@ -552,6 +552,17 @@ namespace COTG.Game
             {
                 var ll = isLL == 1;
                 var key = ll ? lkey_ : ckey;
+                var used = new bool[16];
+                /*
+                 1 :small city
+                 2: small city on water
+                 3: small castle on water
+                 4: small castle on land
+                 5: big city, land
+                 6: big city water
+                 7: big castle on water
+                 8: big castle on land
+                 */
                 foreach (var id in ll ? lawless_ : cities_)
                 {
                     if (id == "")
@@ -598,7 +609,11 @@ namespace COTG.Game
                     if (isTemple)
                         pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
 
-
+                    if (used[type] == false)
+                    {
+                        used[type] = true;
+                        Log($"{type} at {x:000}:{y:000}");
+                    }
                     if (pid == 0)
                     {
                         pixels.SetColor(index, 0xA0, 0x00, 0xB0);
@@ -629,9 +644,9 @@ namespace COTG.Game
                     }
                     var isBig = type >= 5 ? 1 : 0;
                     var isCastle = 0;
-                    var isWater = (type & 1);
+                    var isWater = (type == 2 || type == 3 || type == 6||type==7) ? 1 : 0;
 
-                    if (type == 3 || type == 7) // 3,4 is on/off water
+                    if (type == 3 || type == 4) // 3,4 is on/off water
                     {
                         isCastle = 1;
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
@@ -639,7 +654,7 @@ namespace COTG.Game
                         pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                         pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                     }
-                    else if (type == 4 || type == 8) // 7 is on water
+                    else if (type == 7 || type == 8) // 7 is on water
                     {
                         isCastle = 1;
                         pixels[index * 8 + 4] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
@@ -647,7 +662,7 @@ namespace COTG.Game
                         pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                         pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                     }
-                    else if (type == 1 || type == 2)
+                    else if (type == 1 || type == 2) // 1 is lawless I 
                     {
                         // City
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
