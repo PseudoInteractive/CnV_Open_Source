@@ -1,4 +1,4 @@
-﻿<Page x:Class="COTG.Views.SettingsPage"
+﻿<ContentDialog x:Class="COTG.Views.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,43 +7,63 @@
       xmlns:cotg="using:COTG"
       xmlns:game="using:COTG.Game"
       xmlns:views="using:COTG.Views"
-      Style="{StaticResource PageStyle}"
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-      mc:Ignorable="d">
-    <Page.Resources>
-        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
+      mc:Ignorable="d" PrimaryButtonText="Okay" FullSizeDesired="True" Title="Settings"
+      Margin="4"
+      Padding="80"
+               >
+	<ContentDialog.Resources>
+		<helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
                                        EnumType="ElementTheme" />
-        <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
+		<converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
                                               FalseValue="Visible"
                                               TrueValue="Collapsed" />
-        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
-    </Page.Resources>
-    <Grid Margin="{StaticResource MediumLeftRightMargin}">
-        <StackPanel x:Name="ContentArea">
-            <TextBlock Text="Misc" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,16,8,4"/>
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}"
-                       >
-                <Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
-                <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
-                <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
-                <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />
-                <TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>
-                <StackPanel Orientation="Horizontal">
-                       
-                    <controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
+		<converters:BoolNegationConverter x:Name="BoolNegationConverter" />
+	</ContentDialog.Resources>
+	<Grid  >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="97*"/>
+			<RowDefinition Height="259*"/>
+		</Grid.RowDefinitions>
+		<StackPanel x:Name="ContentArea" Grid.RowSpan="2" >
+			<StackPanel        >
+				<Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
+				<CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
+				<controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
+				<Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />
+				<TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>
+				<StackPanel Orientation="Horizontal" Margin="4" Width="600" >
+					<controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Req Stone" Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}" Width="120"
+					<controls:NumberBox Header="Req Stone" Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Req Iron" Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
+					<controls:NumberBox Header="Req Iron" Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Req Food" Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}" Width="120"
+					<controls:NumberBox Header="Req Food" Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+					
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<controls:NumberBox Header="Max Wood" Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
+                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
+                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+					<controls:NumberBox Header="Max Stone" Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}" Width="120"
+                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+					<controls:NumberBox Header="Max Iron" Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
+                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
+                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+					<controls:NumberBox Header="Max Food" Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}" Width="120"
+                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+				</StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <ComboBox x:Name="hubCityListBox" x:FieldModifier="public"
                      Header="Hub City List"
                       Width="120"
@@ -52,66 +72,51 @@
                       ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
                       ToolTipService.ToolTip="Active City List"
                       Margin="4" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <controls:NumberBox Header="Max Wood" Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
-                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Max Stone" Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}" Width="120"
-                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Max Iron" Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
-                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
-                    <controls:NumberBox Header="Max Food" Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}" Width="120"
-                                    NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
                     <controls:NumberBox Header="Cottage Level" Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="1" />
                     <ToggleSwitch Header="Autobuild" IsOn="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" Margin="4" HorizontalContentAlignment="Center" />
                 </StackPanel>
-                <TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,4" />
-                
-                <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                    <RadioButton x:Uid="Settings_Theme_Light"
+                <Button Content="Export Intel" Click="ExportIntelClick" />
+				<TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,4" />
+				<StackPanel Margin="{StaticResource XSmallTopMargin}">
+					<RadioButton x:Uid="Settings_Theme_Light"
                                  Checked="ThemeChanged_CheckedAsync"
                                  IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Light</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton x:Uid="Settings_Theme_Dark"
+						<RadioButton.CommandParameter>
+							<xaml:ElementTheme>Light</xaml:ElementTheme>
+						</RadioButton.CommandParameter>
+					</RadioButton>
+					<RadioButton x:Uid="Settings_Theme_Dark"
                                  Checked="ThemeChanged_CheckedAsync"
                                  IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                    <RadioButton x:Uid="Settings_Theme_Default"
+						<RadioButton.CommandParameter>
+							<xaml:ElementTheme>Dark</xaml:ElementTheme>
+						</RadioButton.CommandParameter>
+					</RadioButton>
+					<RadioButton x:Uid="Settings_Theme_Default"
                                  Checked="ThemeChanged_CheckedAsync"
                                  IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
-                        <RadioButton.CommandParameter>
-                            <xaml:ElementTheme>Default</xaml:ElementTheme>
-                        </RadioButton.CommandParameter>
-                    </RadioButton>
-                </StackPanel>
-            </StackPanel>
-            <TextBlock x:Uid="Settings_About"
+						<RadioButton.CommandParameter>
+							<xaml:ElementTheme>Default</xaml:ElementTheme>
+						</RadioButton.CommandParameter>
+					</RadioButton>
+				</StackPanel>
+			</StackPanel>
+			<TextBlock x:Uid="Settings_About"
                        Style="{ThemeResource SubtitleTextBlockStyle}" />
-            <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                <TextBlock Style="{ThemeResource BodyTextBlockStyle}"
+			<StackPanel Margin="{StaticResource XSmallTopMargin}">
+				<TextBlock Style="{ThemeResource BodyTextBlockStyle}"
                            Text="{x:Bind VersionDescription, Mode=OneWay}" />
-                <TextBlock x:Uid="Settings_AboutDescription"
+				<TextBlock x:Uid="Settings_AboutDescription"
                            Margin="{StaticResource XSmallTopMargin}"
                            Style="{ThemeResource BodyTextBlockStyle}" />
-                
-            </StackPanel>
-        </StackPanel>
-    </Grid>
-</Page>
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</ContentDialog>

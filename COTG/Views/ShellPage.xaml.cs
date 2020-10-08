@@ -721,12 +721,15 @@ namespace COTG.Views
 
         private async void ShowSettings(object sender, RoutedEventArgs e)
         {
-            AppWindow newWindow = await AppWindow.TryCreateAsync();
-            newWindow.Title = "Settings";
-            var newPage = new SettingsPage();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                           CoreDispatcherPriority.Normal, async () =>
+                           {
+                                   //shown = true;
+                                   var dialog = new SettingsPage();
+                                   await dialog.ShowAsync();
+                           });
 
-            ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
-            await newWindow.TryShowAsync();
+    
 
         }
 

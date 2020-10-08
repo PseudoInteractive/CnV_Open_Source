@@ -11,6 +11,7 @@ using static COTG.Debug;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
 using System.Text.Json;
+using System.Text;
 
 namespace COTG.Services
 {
@@ -99,67 +100,69 @@ namespace COTG.Services
 
         //}
         // </ScaleContainerAsync>
-        public static Dictionary<int, COTG.DB.Spot> spots = new Dictionary<int,COTG.DB.Spot>();
+        //public static Dictionary<int, COTG.DB.Spot> spots = new Dictionary<int,COTG.DB.Spot>();
        
-            async static public Task GetSpotDB()
-            {
-                HttpClient client = null;
-                try
-                {
-                    for (; ; )
-                    {
-                        if (JSClient.clientPool.TryTake(out client))
-                            break;
-                        await Task.Delay(128);
-                    }
-                var blobName = $"https://avag.blob.core.windows.net/c{JSClient.world}/b{311 + Alliance.myId}22";
-                    var buff = await client.GetBufferAsync(new Uri(blobName));
-                    JSClient.clientPool.Add(client);
-                    client = null;
-                    if (buff != null)
-                    {
-                        var temp = new byte[buff.Length];
+        //    async static public Task GetSpotDB()
+        //    {
+        //        HttpClient client = null;
+        //        try
+        //        {
+        //            for (; ; )
+        //            {
+        //                if (JSClient.clientPool.TryTake(out client))
+        //                    break;
+        //                await Task.Delay(128);
+        //            }
+        //        var blobName = $"https://avag.blob.core.windows.net/c{JSClient.world}/b{311 + Alliance.myId}22";
+        //            var buff = await client.GetBufferAsync(new Uri(blobName));
+        //            JSClient.clientPool.Add(client);
+        //            client = null;
+        //            if (buff != null)
+        //            {
+        //                var temp = new byte[buff.Length];
 
-                        using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-                        {
-                            dataReader.ReadBytes(temp);
-                        }
-                    // Log("Hello!");
-                  //  var str = new Dictionary<int, COTG.DB.Spot>();
+        //                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+        //                {
+        //                    dataReader.ReadBytes(temp);
+        //                }
+        //            // Log("Hello!");
+        //          //  var str = new Dictionary<int, COTG.DB.Spot>();
 
-                    var str = JsonSerializer.Deserialize<Dictionary<string, COTG.DB.Spot>>(temp);
-                    // Log("Helllo!");
-                    spots = new Dictionary<int, DB.Spot>(str.Count);
-                    foreach(var s in str)
-                    {
-                        var x = int.Parse(s.Key.Substring(0, 3));
-                        var y = int.Parse(s.Key.Substring(3, 3));
-                        spots[(x, y).WorldToCid()] = s.Value; 
-                    }
-                }
-                    else
-                    {
-                        Log("Error!");
-                    };
-                }
-                catch (Exception e)
-                {
-                    if (client != null)
-                        JSClient.clientPool.Add(client);
-                    client = null;
-                    Log(e);
-                }
+        //            var str = JsonSerializer.Deserialize<Dictionary<string, COTG.DB.Spot>>(temp);
+        //            // Log("Helllo!");
+        //            spots = new Dictionary<int, DB.Spot>(str.Count);
+        //            foreach(var s in str)
+        //            {
+        //                var x = int.Parse(s.Key.Substring(0, 3));
+        //                var y = int.Parse(s.Key.Substring(3, 3));
+        //                spots[(x, y).WorldToCid()] = s.Value; 
+        //            }
+        //        }
+        //            else
+        //            {
+        //                Log("Error!");
+        //            };
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            if (client != null)
+        //                JSClient.clientPool.Add(client);
+        //            client = null;
+        //            Log(e);
+        //        }
 
 
-            }        //static public string id0 = Spot.CoordsToString((220, 220));
+        //    }        //static public string id0 = Spot.CoordsToString((220, 220));
             public static async Task SummarizeNotes()
         {
             if(!await semaphore.WaitAsync(30 * 1000) )
                 return;
-            var blobData = new Dictionary<string, COTG.DB.Spot>();
+          //  var blobData = new Dictionary<string, COTG.DB.Spot>();
+            var sb = new StringBuilder();
+
             try
             {
-
+                sb.Append("Alliance\tPlayer\tCoords\tCity\tTroops\tAction\nrRport\n");
                 await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
                     queryDefinition: null,
                     requestOptions: new QueryRequestOptions()
@@ -167,17 +170,20 @@ namespace COTG.Services
 
                     }))
                 {
-                    var s = string.Empty;
-                    int counter = 0;
-                    //foreach (var rec in spot.recb)
-                    //{
-                    //    if (counter != 0)
-                    //        s = s+ '\n';
-                    //    s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
-                    //    if (++counter >= 4)
-                    //        break;
-                    //}
-                    blobData[spot.id] = spot;
+                    var xy = spot.cid;
+                    var cid = xy.WorldToCid();
+                    var sp= COTG.Game.Spot.GetOrAdd(cid);
+                    foreach (var rec in spot.recb)
+                    {
+                        sb.Append($"{sp.alliance}\t{sp.player}\t{sp.xy}\t{sp.cityName}\t{rec.trp.Format("",' ',',')}\t{COTG.Game.Enum.reportStrings[rec.typ]}\t<report>{rec.rep}</report>\n");
+                        //    if (counter != 0)
+                        //        s = s+ '\n';
+                        //    s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
+                        //    if (++counter >= 4)
+                        //        break;
+                        //}
+                    }
+                    //                        blobData[spot.id] = spot;
                 }
             } catch (Exception e)
             {
@@ -189,8 +195,8 @@ namespace COTG.Services
             var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=avag;AccountKey=G545SQSDGDM6LSu3eanZ6wSbsiz2rt7/jrusjll4Hh7yS9rJaQTX7CSOLLdN2C7dX+Z+PCOWyXrDgGZX5YT1dw==;EndpointSuffix=core.windows.net");
             var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerId);
             var blobClient = containerClient.GetBlockBlobClient(blobName);
-            var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
-            using (var ms = new System.IO.MemoryStream(temp))
+          //  var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
+            using (var ms = new System.IO.MemoryStream(new UTF8Encoding().GetBytes(sb.ToString())))
             {
                 await blobClient.UploadAsync(ms);
             }

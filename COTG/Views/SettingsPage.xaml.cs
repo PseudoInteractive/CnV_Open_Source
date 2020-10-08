@@ -22,7 +22,7 @@ namespace COTG.Views
 {
     // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/pages/settings-codebehind.md
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
-    public sealed partial class SettingsPage : Page, INotifyPropertyChanged
+    public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
     {
         //      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
@@ -150,9 +150,7 @@ namespace COTG.Views
             }
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-        }
+    
 
         public  static void Initialize()
         {
@@ -172,7 +170,6 @@ namespace COTG.Views
             //}
         }
 
-      
 
         private static string GetVersionDescription()
         {
@@ -345,6 +342,11 @@ namespace COTG.Views
         {
             TipsSeen.instance = new TipsSeen();
             Note.Show("Keener :)");
+        }
+
+        private void ExportIntelClick(object sender, RoutedEventArgs e)
+        {
+            Cosmos.SummarizeNotes();
         }
 
         //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)

@@ -13,13 +13,18 @@ namespace COTG.DB
         public const byte typeShrine = 3;
         [JsonPropertyName("id")]
         public string id { get; set; } // city id format is xxxyyy
-
+        public (int x, int y) cid { get {
+                var i = int.Parse(id);
+                var x = i / 1000;
+                var y = i - x * 1000;
+                return (x, y);
+            } }
  //       public static int XYToId(int x, int y)
 //		{
 //            return x + (y << idYShift);
 
 	//	}
-        public static string CoordsToString((int x, int y) c) => $"{c.x:D3}{c.y:D3}";
+        public static string CoordsToString((int x, int y) c) => $"{c.x:000}{c.y:000}";
     //    const int idXMask = 65535;
    //     const int idYShift = 16;
       //  internal int x => id & idXMask;

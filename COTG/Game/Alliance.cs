@@ -209,7 +209,7 @@ else
 
             nameToId = _nameToId;
             all = _all;
-            await Cosmos.GetSpotDB();
+          //  await Cosmos.GetSpotDB();
 
         }
 
