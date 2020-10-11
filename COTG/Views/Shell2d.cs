@@ -735,7 +735,7 @@ namespace COTG.Views
                             var cullSlopSpace = 80 * pixelScale;
                             foreach (var city in Spot.allSpots.Values)
                             {
-                                if (city.incoming.Length > 0)
+                                if (city.incoming.Length > 0 || city.isMine)
                                 {
 
                                     var targetCid = city.cid;
@@ -809,7 +809,7 @@ namespace COTG.Views
                                             Assert(false);
                                         }
                                     }
-                                    DrawTextBox(ds, $"{incAttacks}`{ (outgoingVisible ? (incTs+500)/1000 : (city.tsMax+500) / 1000) }k", c1, tipTextFormatCentered, Colors.White);
+                                    DrawTextBox(ds, $"{incAttacks}`{ (outgoingVisible ? (incTs+500)/1000 : (city.tsMax.Max(city.tsHome)+500) / 1000) }k", c1, tipTextFormatCentered, incAttacks!=0?Colors.White: Colors.Teal);
                                 }
                             }
                         }
@@ -819,7 +819,7 @@ namespace COTG.Views
                         foreach (var city in City.allCities.Values)
                         {
                             // Todo: clip thi
-                            if (city.senatorInfo.Length != 0)
+                            if (city.senatorInfo.Length != 0 && !defenderVisible )
                             {
                                 var c = city.cid.CidToCC();
                                 var idle = 0;

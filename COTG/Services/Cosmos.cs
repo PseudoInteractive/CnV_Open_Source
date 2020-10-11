@@ -35,7 +35,7 @@ namespace COTG.Services
 
 		// The name of the database and container we will create
 		private static string databaseId => $"w{JSClient.world}";
-		private static string containerId => $"i{111+Alliance.myId}";
+		private static string containerId => $"i{111+(Alliance.myId==131? 22 : Alliance.myId) }";
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
         private static SemaphoreSlim semaphore;
