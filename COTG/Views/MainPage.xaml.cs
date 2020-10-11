@@ -27,7 +27,7 @@ using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
-
+using static COTG.Game.Enum;
 namespace COTG.Views
 {
 
@@ -342,7 +342,36 @@ namespace COTG.Views
             }
         }
 
-        
+        private void IncludeButtonClick(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
+            var flyout = new MenuFlyout();
+            for (int i = 0; i < ttCount; ++i)
+            {
+                if (IsRaider(i))
+                {
+                    var but = new ToggleMenuFlyoutItem() { IsChecked = Raid.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
+                    flyout.Items.Add(but);
+                }
+            }
+            flyout.Closing += Flyout_Closing;
+            flyout.ShowAt(button);
+        }
+
+        private void Flyout_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        {
+            var menu = (sender as MenuFlyout);
+            int counter = 0;
+            for (int i = 0; i < ttCount; ++i)
+            {
+                if (IsRaider(i))
+                {
+                    var but = menu.Items[counter] as ToggleMenuFlyoutItem;
+                    Raid.includeRaiders[i] = but.IsChecked;
+                    ++counter;
+                }
+            }
+        }
 
         override public void VisibilityChanged(bool visible)
         {
@@ -429,6 +458,7 @@ namespace COTG.Views
             raidingTip3.Dispatch(instance.TipRaiding301, () => TipsSeen.instance.raiding3 = true);
         }
 
+      
 
         private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {

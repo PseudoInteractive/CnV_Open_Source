@@ -7,6 +7,7 @@
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+      xmlns:wwinui="using:Windows.UI.Xaml.Controls"
       xmlns:model="using:COTG.Models"
       xmlns:game="using:COTG.Game"
       xmlns:cotg="using:COTG"
@@ -131,12 +132,12 @@
             </tg:RadDataGrid.Columns>
           
         </tg:RadDataGrid>
-        <ComboBox x:Name="raidCarryBox" Grid.Row="1" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
-                  Width="200" IsEditable="True"
-TextSubmitted="RaidCarrySubmitted"
-                  Margin="8,2,0,0" >
-            
-        </ComboBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="4,0,0,0" Height="64" VerticalAlignment="Top">
+            <ComboBox x:Name="raidCarryBox" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
+                  Width="200" IsEditable="True" TextSubmitted="RaidCarrySubmitted" Margin="2"
+                />
+            <winui:DropDownButton x:Name="includeButton" Content="Iinclude" Margin="2" Click="IncludeButtonClick" Style="{ThemeResource DropDownButtonRevealStyle}" />
+        </StackPanel>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Margin="0,58,0,0"
                         UseSystemFocusVisuals="True"

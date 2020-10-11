@@ -113,7 +113,7 @@ namespace COTG.Game
                 var _carryCapacity = 0;
                 foreach (var tc in troopsHome)
                 {
-                if (!IsRaider(tc.type))
+                if (!IsRaider(tc.type) || !Raid.includeRaiders[tc.type])
                     continue;
                     if(IsWaterRaider(tc.type) == forWater)
                     {
@@ -488,7 +488,7 @@ namespace COTG.Game
             foreach (var ttc in troopsHome)
             {
                 var type = ttc.type;
-                if (!IsRaider(type))
+                if (!IsRaider(type) || !Raid.includeRaiders[type])
                     continue;
                 var ts = ttc.ts;
                 if (ts > bestTS)

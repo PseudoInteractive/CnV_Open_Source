@@ -24,6 +24,19 @@ namespace COTG.Game
         public byte troopType; // todo:  We should store3 of these, or specials value for RT, VRT, VT
         public DateTimeOffset time;
 
+        //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
+        //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+        //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+        //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
+        //  16 "warship",17 "senator"
+
+        public static bool[] includeRaiders = new[] {
+                false, false,true,true,
+                true,true,true,false,
+                true,true,true,true,
+                false,false,true,true,
+                true,false};
+
         public override bool Equals(object obj)
         {
             return obj is Raid raid && Equals(raid);
@@ -136,7 +149,7 @@ namespace COTG.Game
             var tr = new List<sndRaidtr>();
             foreach (var ttc in city.troopsHome)
             {
-                if (!IsRaider(ttc.type))
+                if (!IsRaider(ttc.type) || !Raid.includeRaiders[ttc.type])
                     continue;
                 if(IsWaterRaider(ttc.type) == d.isWater)
                     tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
