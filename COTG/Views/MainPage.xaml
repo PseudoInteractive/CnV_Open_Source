@@ -136,7 +136,7 @@
             <ComboBox x:Name="raidCarryBox" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
                   Width="200" IsEditable="True" TextSubmitted="RaidCarrySubmitted" Margin="2"
                 />
-            <winui:DropDownButton x:Name="includeButton" Content="Iinclude" Margin="2" Click="IncludeButtonClick" Style="{ThemeResource DropDownButtonRevealStyle}" />
+            <winui:DropDownButton x:Name="includeButton" Content="Iinclude" Margin="6" Click="IncludeButtonClick" VerticalAlignment="Bottom" Style="{ThemeResource DropDownButtonRevealStyle}" />
         </StackPanel>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Margin="0,58,0,0"

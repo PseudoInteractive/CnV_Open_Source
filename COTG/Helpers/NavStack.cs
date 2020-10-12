@@ -23,7 +23,7 @@ namespace COTG.Helpers
                 if (backStack[position].cid == cid)
                     return;// altready here
 
-               backStack.RemoveRange(position+1, backStack.Count-2-position);
+               backStack.RemoveRange(position+1, backStack.Count-1-position);
                 Assert(backStack.Count-1 == position);
                 position = -1;
             }
