@@ -91,6 +91,7 @@ namespace COTG.Game
 
     public static class Raiding
     {
+        public static float troopFraction = 1;
         public static bool FindAndIncrement(this Raid[] me, int target, DateTimeOffset dt)
         {
             int count = me.Length;
@@ -114,7 +115,7 @@ namespace COTG.Game
             if (carry <= 0)
                 return (0, 0);
          //   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
-            int ideal = (int)( carry/(loot * desiredCarry) + 0.5f);
+            int ideal = (int)( carry / (loot * desiredCarry) + 0.5f);
             ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
             return (ideal, carry /(ideal*loot) );
         }
@@ -152,7 +153,7 @@ namespace COTG.Game
                 if (!IsRaider(ttc.type) || !Raid.includeRaiders[ttc.type])
                     continue;
                 if(IsWaterRaider(ttc.type) == d.isWater)
-                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count/r.reps).ToString() });
+                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count* troopFraction / r.reps).ToString() });
 
             }
             var trs = JsonSerializer.Serialize(tr);

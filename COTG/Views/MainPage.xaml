@@ -136,7 +136,8 @@
             <ComboBox x:Name="raidCarryBox" Header="Carry%" SelectionChanged="RaidCarrySelChanged"
                   Width="200" IsEditable="True" TextSubmitted="RaidCarrySubmitted" Margin="2"
                 />
-            <winui:DropDownButton x:Name="includeButton" Content="Iinclude" Margin="6" Click="IncludeButtonClick" VerticalAlignment="Bottom" Style="{ThemeResource DropDownButtonRevealStyle}" />
+            <winui:DropDownButton x:Name="includeButton" Content="Include" Margin="6" Click="IncludeButtonClick" VerticalAlignment="Bottom" Style="{ThemeResource DropDownButtonRevealStyle}" />
+            <winui:NumberBox  x:Name="raidFraction" Header="Use fraction" Margin="6,0,4,0" Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}" ValueChanged="RaidFraction_ValueChanged" SmallChange=".0625" SpinButtonPlacementMode="Compact" Width="200" />
         </StackPanel>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Margin="0,58,0,0"

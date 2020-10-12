@@ -107,17 +107,17 @@ namespace COTG.Game
                 return atk;
             }
         }
-        public int CarryCapacity(bool forWater)
+        public float CarryCapacity(bool forWater)
         {
                 // Todo: water
-                var _carryCapacity = 0;
+                var _carryCapacity = 0.0f;
                 foreach (var tc in troopsHome)
                 {
                 if (!IsRaider(tc.type) || !Raid.includeRaiders[tc.type])
                     continue;
                     if(IsWaterRaider(tc.type) == forWater)
                     {
-                        _carryCapacity += tc.count * ttCarry[tc.type];
+                        _carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
                     }
 
 

@@ -213,10 +213,11 @@ namespace COTG
             //    WebViewPage.instance.Focus(FocusState.Programmatic);
             //    return;
             //}
+
             Trace(args.Uri.ToString());
             Trace(args.Uri.Host);
-            Trace(httpsHost.Host);
-            if (args.Uri.Host == httpsHost.Host)
+  //          Trace(httpsHost.Host);
+            if ( (httpsHost!= null && args.Uri.Host == httpsHost.Host) )
             {
                 WebViewPage.DefaultUrl = args.Uri;
                 await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");

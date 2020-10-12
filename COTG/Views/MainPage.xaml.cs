@@ -38,6 +38,7 @@ namespace COTG.Views
         static float[] raidSteps;
         public static MainPage instance;
 
+        public float troopPercent = 1;
         //        public static City showingRowDetails;
 
         //{
@@ -371,6 +372,7 @@ namespace COTG.Views
                     ++counter;
                 }
             }
+            Raiding.UpdateTS(true, true);
         }
 
         override public void VisibilityChanged(bool visible)
@@ -458,9 +460,14 @@ namespace COTG.Views
             raidingTip3.Dispatch(instance.TipRaiding301, () => TipsSeen.instance.raiding3 = true);
         }
 
-      
+	
+		private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		{
+            Raiding.UpdateTS(true,true);
 
-        private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		}
+
+		private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             TipRaiding203.IsOpen = true;
         }
