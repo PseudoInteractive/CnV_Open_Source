@@ -564,13 +564,14 @@ namespace COTG.Game
             //         await Task.Delay(2000);
             //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             //           {
-            //   CityGrid.ScrollItemIntoView(city);
+            
             if (MainPage.IsVisible())
             {
 //                MainPage.CityGrid.SetCurrentItem(this);
                 MainPage.CityGrid.SelectItem(this);
  //               MainPage.CityGrid.ScrollItemIntoView(this);
             }
+            MainPage.CityGrid.ScrollItemIntoView(this);
             // todo: donations page and boss hunting
             ShellPage.instance.cityBox.SelectedItem = this;
             //            });
@@ -680,7 +681,7 @@ namespace COTG.Game
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
                         .OrderByDescending(a=>a.cartsHome);
              //   if (MainPage.IsVisible())
-                    City.gridCitySource.Set(l.OrderByDescending(a=>a.tsHome));
+                    City.gridCitySource.Set(l);
                    City.GetBuild().SelectInUI();
             });
         }

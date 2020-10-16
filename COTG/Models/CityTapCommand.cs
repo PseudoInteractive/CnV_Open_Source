@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using COTG.Services;
 using COTG.Views;
 using COTG.JSON;
+using Telerik.Data.Core;
 
 namespace COTG.Models
 {
@@ -21,7 +22,7 @@ namespace COTG.Models
     //    public CityTapCommand()
     //    {
     //        this.Id = CommandId.CellTap;
-           
+
     //    }
 
     //    public override bool CanExecute(object parameter)
@@ -43,7 +44,7 @@ namespace COTG.Models
     //    //    try
     //    //    {
 
-            
+
     //    //        var i = context.Item as COTG.Game.Spot;
     //    //        var cid = i.cid;
 
@@ -88,6 +89,35 @@ namespace COTG.Models
     //    //}
 
     //}
+    //public class CustomFilterButtonTapCommand : DataGridCommand
+    //{
+    //    public CustomFilterButtonTapCommand()
+    //    {
+    //        this.Id = CommandId.FilterButtonTap;
+    //    }
+
+    //    public override bool CanExecute(object parameter)
+    //    {
+    //        return true;
+    //    }
+
+    //    public override void Execute(object parameter)
+    //    {
+    //        var context = parameter as FilterButtonTapContext;
+    //        if ( (context.Column.Header?. == "Name" )
+    //        {
+    //            context.FirstFilterControl = new TextFilterDescriptor() {  IsCaseSensitive=false,Operator=TextOperator.Contains,PropertyName= };
+    //            {
+    //                PropertyName = "EyeColor",
+    //                DataContext = context.AssociatedDescriptor
+    //            };
+
+    //            context.SecondFilterControl = null;
+    //        }
+    //        this.Owner.CommandService.ExecuteDefaultCommand(CommandId.FilterButtonTap, context);
+    //    }
+   // }
+   //
 
     public class DefenseTapCommand : DataGridCommand
     {

@@ -94,6 +94,10 @@
                                        SizeMode="Stretch"
                                        IsVisible="False"
                                        Width="50" />
+                <tg:DataGridNumericalColumn PropertyName="cont"
+                                            CellContentStyle="{StaticResource CenterAlign}"
+                                            SizeMode="Fixed"
+                                            Width="40" />
                 <tg:DataGridNumericalColumn PropertyName="scoutRange"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             SizeMode="Fixed"
@@ -309,7 +313,7 @@
                                                                Height="22" />
                                     </StackPanel>
                                 </StackPanel>
-                                <TextBlock Text="{Binding defTs}"
+                                <TextBlock Text="{Binding dTS}"
                                                        FontSize="12"
                                                        HorizontalAlignment="Center"
                                                        Height="22" />

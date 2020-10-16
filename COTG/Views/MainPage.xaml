@@ -42,13 +42,13 @@
         </StackPanel>
         
         <tg:RadDataGrid x:Name="cityGrid"
-                        ColumnResizeHandleDisplayMode="Always"
+                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         Grid.Row="0"
                         Margin="0,56,0,0"
                        FrozenColumnCount="3"
                         IsTabStop="True"
                         AllowFocusOnInteraction="True"
-                        UserGroupMode="Disabled"
+                        UserGroupMode="Auto"
                         GridLinesThickness="1.0"
                         AlternationStep="2"
                         ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
@@ -56,12 +56,15 @@
                         SelectionMode="Extended"
                         CanUserChooseColumns="True"
                         RowHeight="34"
+                        UserFilterMode="Auto"
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="12"
                         GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
+           
             <tg:RadDataGrid.Commands>
+         
                 <model:CityGridToggleColumnVisibilityCommand />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>

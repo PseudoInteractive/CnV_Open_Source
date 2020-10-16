@@ -381,7 +381,7 @@ namespace COTG.Views
 
             if (visible)
             {
-                Raiding.UpdateTS();
+                Raiding.UpdateTS(true,true);
                 RaidOverview.Send();
                 if(City.build!=0)
                     GetCity.Post(City.build);
