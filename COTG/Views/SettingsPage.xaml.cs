@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -152,7 +153,7 @@ namespace COTG.Views
 
     
 
-        public  static void Initialize()
+        public static void Initialize()
         {
             _versionDescription = GetVersionDescription();
       //      IdentityService.LoggedIn += OnLoggedIn;
@@ -336,24 +337,37 @@ namespace COTG.Views
 				   //   JSClient.GetCitylistOverview();
 	//			   Note.Show($"Successfully added continent citylists :)");
 			   });
-		}
+            this.Hide();
+        }
 
         private void TipsRestore(object sender, RoutedEventArgs e)
         {
             TipsSeen.instance = new TipsSeen();
             Note.Show("Keener :)");
+            this.Hide();
         }
 
         private void ExportIntelClick(object sender, RoutedEventArgs e)
         {
             Cosmos.SummarizeNotes();
+            this.Hide();
         }
 
-        //private async void FeedbackLink_Click(object sender, RoutedEventArgs e)
-        //{
-        //    // This launcher is part of the Store Services SDK https://docs.microsoft.com/windows/uwp/monetize/microsoft-store-services-sdk
-        //    var launcher = Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.GetDefault();
-        //    await launcher.LaunchAsync();
-        //}
+        private void CastlesIntel(object sender, RoutedEventArgs e)
+        {
+            if (!int.TryParse(CastlesCont.Text, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var cont))
+            {
+                Note.Show("Invalid Continent");
+            }
+            else
+            {
+                var x = cont / 10;
+                var y = cont - x * 10;
+                World.DumpCities(x*100,y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text);
+            }
+            this.Hide();
+        }
+
+  
     }
 }

@@ -28,9 +28,14 @@
 			<RowDefinition Height="259*"/>
 		</Grid.RowDefinitions>
 		<StackPanel x:Name="ContentArea" Grid.RowSpan="2" >
-			<StackPanel        >
+			<StackPanel >
 				<Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
-				<CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
+                    <TextBox x:Name="CastlesCont" Text="22" Header="continent"  />
+                    <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
+                </StackPanel>
+                <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
 				<controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
 				<Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />
 				<TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>

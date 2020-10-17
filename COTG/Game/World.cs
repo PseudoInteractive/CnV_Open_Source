@@ -749,5 +749,37 @@ namespace COTG.Game
                     return (null,false);
             }
         }
+        public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName)
+        {
+            var sb = new StringBuilder();
+            var allianceId = Alliance.nameToId[allianceName];
+            sb.Append("Coords\tplayer\tclassification\n");
+            int counter = 0;
+            for (int x=x0;x<x1;++x)
+                for(int y=y0;y<y1;++y)
+                {
+                    var dat = CityLookup((x, y));
+                    if (dat.type != World.typeCity)
+                        continue;
+                    if (!dat.isCastle)
+                        continue;
+                    if (dat.player == 0) // lawless
+                        continue;
+                    var player = Player.Get(dat.player);
+                    if (player.alliance != allianceId)
+                        continue;
+                    var cid = (x, y).WorldToCid();
+                    var spot = Spot.GetOrAdd(cid);
+                    await spot.Classify();
+                    sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\n");
+                    ++counter;
+                }
+            var str = sb.ToString();
+            App.CopyTextToClipboard(str);
+            Note.Show($"Complete: {counter}");
+
+
+
+        }
     }
 }
