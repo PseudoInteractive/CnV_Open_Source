@@ -24,12 +24,14 @@
         </Grid.RowDefinitions>
 
         <tg:RadDataGrid x:Name="defenderGrid"
+                        x:FieldModifier="public"
                         GridLinesThickness="1"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="12"
                         RowHeight="32"
+                        IsSynchronizedWithCurrentItem="True"           
                        
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"

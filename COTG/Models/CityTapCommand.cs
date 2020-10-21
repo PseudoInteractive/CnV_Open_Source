@@ -400,6 +400,7 @@ namespace COTG.Models
                         break;
                     case nameof(Dungeon.plan):
                         Raiding.SendRaids(i);
+
                         break;
 
                 }

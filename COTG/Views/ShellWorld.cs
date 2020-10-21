@@ -327,14 +327,17 @@ namespace COTG.Views
                                         if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
                                         {
                                             var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-                                            toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+                                            toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{city.cityName}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
                                             //     Raiding.UpdateTS();
                                         }
 
                                     }
                                     else
                                     {
-                                        toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+                                        var info = (Spot.allSpots.TryGetValue(c.WorldToCid(), out var spot)) ?
+                                            $"{spot.cityName}\n{spot.points}\n"
+                                         : ""; 
+                                            toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
                                     }
                                 }
                                 break;

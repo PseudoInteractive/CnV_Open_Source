@@ -279,16 +279,63 @@ function gCPosted()
 
 function gWrdPosted(data) {
 	setTimeout(function () {
-		/** @type {*} */
-//		const wrapper = JSON.parse(data);
-		/** @type {boolean} */
-		beentoworld_ = true;
-		wdata_ = DecodeWorldData(data);
-		UpdateResearchAndFaith();
-		getbossinfo();
+		
+			wdata = JSON.parse(data);
+			beentoworld = true;
+			wdata = decwdata(wdata.a);
+			getbossinfo();
+		
 	}, 1000);
 }
-
+function decwdata(data) {
+	var DecData = { bosses: [], cities: [], ll: [], cavern: [], portals: [], shrines: [] },
+		temp = data.split("|"),
+		keys = temp[1].split("l"),
+		ckey = keys[0],
+		skey = keys[1],
+		bkey = keys[2],
+		lkey = keys[3],
+		cavkey = keys[4],
+		pkey = keys[5],
+		cities = temp[0].split("l"),
+		shrines = temp[2].split("l"),
+		bosses = temp[3].split("l"),
+		lawless = temp[4].split("l"),
+		caverns = temp[5].split("l"),
+		portals = temp[6].split("l"),
+		dat = "";
+	for (var i in bosses) {
+		dat = (Number(bosses[i]) + Number(bkey)) + "";
+		bkey = dat;
+		DecData.bosses.push("1" + dat);
+	}
+	for (var i in cities) {
+		dat = (Number(cities[i]) + Number(ckey)) + "";
+		ckey = dat;
+		DecData.cities.push("2" + dat);
+	}
+	for (var i in lawless) {
+		dat = (Number(lawless[i]) + Number(lkey)) + "";
+		lkey = dat;
+		DecData.ll.push("3" + dat);
+	}
+	for (var i in caverns) {
+		dat = (Number(caverns[i]) + Number(cavkey)) + "";
+		cavkey = dat;
+		DecData.cavern.push("7" + dat);
+	}
+	for (var i in portals) {
+		dat = (Number(portals[i]) + Number(pkey)) + "";
+		pkey = dat;
+		DecData.portals.push("8" + dat);
+	}
+	for (var i in shrines) {
+		dat = (Number(shrines[i]) + Number(skey)) + "";
+		skey = dat;
+		DecData.shrines.push("9" + dat);
+	}
+	return DecData;
+}
 //function __avatarAjaxDone(url: string,
 //	data: string) {
 //	//console.log("Change: " + this.readyState + " " + this.responseURL);
@@ -1707,8 +1754,8 @@ function avactor() {
 		//	}
 		//});
 		$("#Attack").click(function () {
-            localStorage.setItem('attperc',$("#perc").val());
-            localStorage.setItem('retHr',$("#retHr").val());
+            localStorage.setItem('attperc',$("#perc").val() as string );
+			localStorage.setItem('retHr', $("#retHr").val() as string);
             if ($("#retcheck").prop( "checked")==true) {
                 localStorage.setItem('retcheck',1);
             }
@@ -1718,8 +1765,8 @@ function avactor() {
             SendAttack();
         });
 		$("#Defend").click(function () {
-            localStorage.setItem('defperc',$("#defperc").val());
-            localStorage.setItem('dretHr',$("#dretHr").val());
+			localStorage.setItem('defperc', $("#defperc").val() as string);
+			localStorage.setItem('dretHr', $("#dretHr").val() as string);
             var defobj={targets:{x:[],y:[],dist:[],numb:0,cstr:[]},t:{tot:[],home:[],type:[],use:[],speed:[],amount:[]},perc:$("#defperc").val(),dep:$("#defdeparture").val(),ret:1,rettime:$("#dretHr").val(),hr:$("#defHr").val(),min:$("#defMin").val(),sec:$("#defSec").val(),date:$("#defDat").val(),dat:$("#defDat").datepicker('getDate')};
             if ($("#dretcheck").prop( "checked")==true) {
                 localStorage.setItem('dretcheck',1);
@@ -2155,7 +2202,7 @@ function avactor() {
 						if (players.indexOf(pname) == -1) {
 							players.push(pname);
 							jQuery.ajax({
-								url: 'includes/gPi.php', type: 'POST', aysnc: false, data: { a: pname },
+								url: 'includes/gPi.php', type: 'POST', data: { a: pname },
 								success: function (data) {
 									var pinfo = JSON.parse(data);
 									splayers.name.push(pinfo.player);
@@ -2213,7 +2260,8 @@ function avactor() {
 					});
 				}, 2000);
 			} else {
-				alert("Press World Button");
+				PostgWrd();
+				alert("Please try again in 5 seconds");
 			}
 		});
 	
@@ -2227,12 +2275,12 @@ function avactor() {
 		incomingtabledata_.append(Addth1_);
 		$("#allianceIncomings").parent().click(() => {
 			setTimeout(() => {
-				incomings_();
+				incomings();
 			}, 5000);
 		});
 		$("#incomingsPic").click(() => {
 			setTimeout(() => {
-				incomings_();
+				incomings();
 			}, 5000);
 		});
 
@@ -2262,12 +2310,12 @@ function avactor() {
 		});
 		$("#allianceIncomings").parent().click(() => {
 			setTimeout(() => {
-				incomings_();
+				incomings();
 			}, 4000);
 		});
 		$("#ui-id-37").click(() => {
 			setTimeout(() => {
-				incomings_();
+				incomings();
 			}, 1000);
 		});
 

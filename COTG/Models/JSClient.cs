@@ -73,16 +73,17 @@ namespace COTG
                 return _downloadImageClient;
             }
         }
-        public static HttpClient _translatorClient;
-        public static HttpClient translatorClient
+        public static HttpClient _genericClient;
+        public static HttpClient genericClient
         {
-            get {
-                if(_translatorClient==null)
+            get
+            {
+                if (_genericClient == null)
                 {
-                    _translatorClient = new HttpClient();
-                    
+                    _genericClient = new HttpClient();
+
                 }
-                return _translatorClient;
+                return _genericClient;
             }
         }
 
@@ -1080,6 +1081,39 @@ namespace COTG
                                     Spot.ProcessCoordClick(cid, false, App.keyModifiers); // then normal click
                                     break;
                                 }
+
+                            //case "cityinfo":
+                            //    {
+                            //        var jso = jsp.Value;
+                            //        var cid = jso.GetAsInt("cid");
+                            //        var pid = Player.NameToId(jso.GetAsString("player"));
+                            //        var city = Spot.GetOrAdd(cid);
+                            //        var name = jso.GetString("name");
+                            //        city.pid = pid; // todo: this shoule be an int playerId
+                            //                        //Assert(city.pid > 0);
+                            //        city.points = (ushort)jso.GetAsInt("score");
+                            //        //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
+                            //        city.lastAccessed = DateTimeOffset.UtcNow;
+                            //        // city.isCastle = jso.GetAsInt("castle") == 1;
+                            //        city.isBlessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+                            //        city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
+                            //        city.isTemple = jso.GetAsInt("plvl") != 0;
+
+
+                            //        break;
+                            //    }
+                            case "incoming":
+                                {
+                                    var jso = jsp.Value;
+                                    var aic = jso.GetAsInt("aic");
+                                    var  ic = jso.GetAsInt("ic");
+                                    var lastIc = jso.GetAsInt("lic");
+                                    if(ic > lastIc)
+                                    {
+                                        Note.Show($"Incoming: ({ic}) {aic}");
+                                    }
+                                    break;
+                                }
                             case "cityclick":
                                 {
                                     var jso = jsp.Value;
@@ -1371,5 +1405,6 @@ namespace COTG
 
 
 //        }
+
     }
 }

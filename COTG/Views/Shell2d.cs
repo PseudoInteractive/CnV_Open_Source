@@ -585,7 +585,7 @@ namespace COTG.Views
 
                 if (!IsCityView())
                 {
-                    var defenderVisible = DefenderPage.IsVisible();
+                    var defenderVisible = DefenderPage.IsVisible() || DefendTab.IsVisible();
                     var outgoingVisible = OutgoingTab.IsVisible();
                     using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
                     {

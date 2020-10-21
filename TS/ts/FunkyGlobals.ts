@@ -939,7 +939,7 @@ function SendAttack() {
 	/**
 	 * @return {void}
 	 */
-function incomings_() {
+function incomings() {
 		/** @type {!Array} */
 		const speeeed_ = [];
 		/** @type {number} */
@@ -1295,13 +1295,23 @@ let mru = [];
 	/**
 	 * @return {void}
 	 */
-function showcities_() {
-		$("#shrineTab tr").each(function() {
-			if ($(this).attr("data") == "city") {
-				$(this).show();
-			}
-		});
-	}
+//hiding cities in shrine planner
+function hidecities() {
+	$("#shrineTab tr").each(function () {
+		if ($(this).attr("data") == "city") {
+			$(this).hide();
+		}
+	});
+}
+//showing cities in shrine planner
+function showcities() {
+	$("#shrineTab tr").each(function () {
+		if ($(this).attr("data") == "city") {
+			$(this).show();
+		}
+	});
+}
+
 	/**
 	 * @return {void}
 	 */
@@ -1314,7 +1324,7 @@ function updateshrine() {
 	var w = [];
 	var wtot = 0;
 	for (let i in shrinec) {
-		if (i > 0) {
+		if ( Number(i) > 0) {
 			var k = splayers.name.indexOf(shrinec[i][1]);
 			//console.log(k,splayers);
 			for (var j in splayers.cities[k]) {
@@ -1341,7 +1351,7 @@ function updateshrine() {
 	//console.log(shrinec);
 	var ccounter = 0;
 	for (let i in shrinec) {
-		if (i > 0) {
+		if ( Number(i) > 0) {
 			var cid = shrinec[i][4] * 65536 + Number(shrinec[i][3]);
 			if (shrinec[i][0] == "castle") {
 				ccounter++;
@@ -1403,7 +1413,7 @@ function updateshrine() {
 		updateshrine();
 	});
 	$(".shrineremove").click(function () {
-		shrinec.splice($(this).attr("data"), 1);
+		shrinec.splice(Number($(this).attr("data")), 1);
 		updateshrine();
 	});
 	$(".shrine7pt").click(function () {
@@ -1429,6 +1439,8 @@ function updateshrine() {
 		updateshrine();
 	});
 }
+
+
 
 //	 * @param {string} data
 //	 * @return {?}
@@ -1604,7 +1616,8 @@ let layoutsw_ = [""];
 let layoutdf_ = [""];
 let resl_ = [[]];
 let OGA: jsonT.Command[] = [];
-let wdata_;
+let wdata;
+let PostgWrd = () => { };
 /** @type {!Array} */
 let remarksl_ = [""];
 /** @type {!Array} */
@@ -1630,7 +1643,8 @@ let notedf_ = [""];
 /** @type {string} */
 let emptyspots_ = ",.;:#-T";
 /** @type {boolean} */
-let beentoworld_ = false;
+let beentoworld = false;
+let pldata = [];
 let splayers = {
 	name: [],
 	ally: [],

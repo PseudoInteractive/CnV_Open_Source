@@ -7093,7 +7093,7 @@ const viewModeRegion = 1;
 const viewModeWorld = 2;
 var pollthis;
 let D6: jsonT.City;
-var F5F;
+
 var P8 = 0;
 
 var a6 =
@@ -7143,6 +7143,7 @@ i011.J0EE = J0EE;
 w5SS(K5SS());
 let lastTroopsHome = 0;
 let lastCid = 0;
+
 
 i011.J55 = function() {
   var Q55 = 2;
@@ -45499,7 +45500,7 @@ console.log("Bad");
       $(_s(q1t * 1))
         .css("display", "none");
       N6();
-      var r91 = $.post(_s('854' | 854), { a: A91 });
+      var r91 = $.post(_s(854), { a: A91 });
       F6();
       r91.done(function(n91) {
         n91 = JSON.parse(n91);
@@ -47982,7 +47983,6 @@ console.log("Bad");
         h0F();
       }
     }
-    var u7F;
       gStphp =p5F;
 
     function p5F(r46, A46) {
@@ -57334,6 +57334,9 @@ console.log("Bad");
         }
       });
 
+    let lastAllianceIncoming=0;
+    let lastIncoming=0;
+
     function K6F(G71:string) {
       if (G71.length > 1) {
         var j71 : jsonT.Poll = JSON.parse(G71);
@@ -57460,8 +57463,21 @@ console.log("Bad");
             .S55(4935))
           .text() != '') $(_s(4935))
           .text("");
-        var i71 = j71[_s(343)];
-        Q5V(i71);
+        let AIC = j71['AIC'];// alliance incoming
+        let IC = j71['IC']; // my incoming
+       
+        if (lastAllianceIncoming!=AIC || lastIncoming != IC)
+        {
+           
+             Q5V(AIC);
+             L5V(IC);
+            const wrapper = { incoming: { aic:AIC,ic:IC,lic:lastIncoming }  }
+            lastAllianceIncoming = AIC;
+            lastIncoming = IC;
+            window['external']['notify'](JSON.stringify(wrapper));
+
+
+        }
         if (j71["iNt"]) {
             var d71 = j71["iNt"];
          //   console.log(JSON.stringify(d71));
@@ -57475,8 +57491,6 @@ console.log("Bad");
         R5V(J71);
         var h71 = j71[_s(3058)];
         Y5V(h71);
-        var V71 = j71[_s(t5R ^ 0)];
-        L5V(V71);
         if (j71["ICC"]) {
           var r71 = j71["ICC"];
           g0V(r71);
@@ -59796,48 +59810,48 @@ console.log("Bad");
     //$(document)
     //  .ready(function() {});
 
-    //function d7F() {
-    //  var c6D = window.event || arguments.callee.caller.arguments[0];
-    //  E6k.R6();
-    //  if (c6D.target.id == _s(613)) {
-    //    if (X5F <= currentTime() - (300000)) {
-    //      X5F =
-    //        currentTime();
-    //      x8();
-    //      Q8 = 0;
-    //        var m6D = "Addxdd" + 'x5DdAxxer' + b2() + _s(97);
-    //      var a6D = {
-    //        a: c6D
-    //          .target.id,
-    //        b: $("#content")
-    //          .css("display"),
-    //        c: c6D.isTrusted,
-    //        d: currentTime(),
-    //        e: c6D.target.innerHTML
-    //      };
-    //      var E6D = a6
-    //        .ccazzx.encrypt(JSON.stringify(a6D), m6D, U7y & 2147483647);
-    //      N6();
-    //        var k2D = $.post("/includes/gWrd.php", { a: E6D });
-    //      F6();
-    //      k2D.done(function(__e2D) {
-    //      if(__e2D && __e2D.length > 0)
-    //      {
-    //        var e2D = JSON.parse(__e2D);
-    //        gWrdPosted(e2D['a']);
-    //          T0F = y8F(e2D['a']);
-    //        f8 = e2D[_s(+B9y)];
-    //        R8();
-    //        Y1F(+Y6y);
-    //        }
-    //        else
-		  //{
-    //       //   X5F=0;
-		  //}
-    //      });
-    //    }
-    //  } else R8();
-    //}
+    PostgWrd = ()=> {
+      var c6D = window.event || arguments.callee.caller.arguments[0];
+      E6k.R6();
+      if (c6D.target.id == _s(613)) {
+        if (X5F <= currentTime() - (300000)) {
+          X5F =
+            currentTime();
+          x8();
+          Q8 = 0;
+            var m6D = "Addxdd" + 'x5DdAxxer' + b2() + _s(97);
+          var a6D = {
+            a: c6D
+              .target.id,
+            b: $("#content")
+              .css("display"),
+            c: c6D.isTrusted,
+            d: currentTime(),
+            e: c6D.target.innerHTML
+          };
+          var E6D = a6
+            .ccazzx.encrypt(JSON.stringify(a6D), m6D, U7y & 2147483647);
+          N6();
+            var k2D = $.post("/includes/gWrd.php", { a: E6D });
+          F6();
+          k2D.done(function(__e2D) {
+          if(__e2D && __e2D.length > 0)
+          {
+            var e2D = JSON.parse(__e2D);
+            gWrdPosted(e2D['a']);
+              T0F = y8F(e2D['a']);
+            f8 = e2D[_s(+B9y)];
+            R8();
+            Y1F(+Y6y);
+            }
+            else
+		  {
+              X5F=0;
+		  }
+          });
+        }
+      } else R8();
+    }
 
     function o0V(b6T) {
       var n6T = m6[b6T]["n"];
@@ -69014,11 +69028,11 @@ _viewMode = viewModeWorld;
       var e5T = $.post("/includes/gPlA.php");
       F6();
       e5T.done(function(s5T) {
-        var s5T = JSON.parse(s5T);
-        F5F = s5T;
+          pldata = JSON.parse(s5T);
+ 
       
           {
-              const wrapper = { gPlA: F5F }
+              const wrapper = { gPlA: pldata }
               window['external']['notify'](JSON.stringify(wrapper));
           }
       });

@@ -262,14 +262,22 @@ namespace COTG.Game
         }
         public static TroopTypeCount[]  SetOrAdd(this TroopTypeCount[] me, int type, int count)
         {
+            int counter = 0;
             foreach (var i in me)
             {
                 if (i.type == type)
                 {
+                    if(count == 0)
+                    {
+                        return me.ArrayRemove(counter); // 0 == remove
+                    }
                     i.count = count;
                     return me;
                 }
+                ++counter;
             }
+            if (count == 0)
+                return me;
             return me.ArrayAppend(new TroopTypeCount(type, count));
         }
         public static int TS(this TroopTypeCount[] me, int type)

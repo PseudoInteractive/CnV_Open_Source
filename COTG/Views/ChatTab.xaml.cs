@@ -37,6 +37,11 @@ namespace COTG.Views
         public string player { get; set; }
         public byte crown { get; set; }
         public byte type { get; internal set; }
+        public const byte typeWorld = 1;
+        public const byte typeWhisperFrom = 2;
+        public const byte typeWhisperTo = 3;
+        public const byte typeAlliance = 4;
+        public const byte typeOfficer = 5;
         public sbyte allignment;
         public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
         public DateTimeOffset time;
@@ -46,18 +51,19 @@ namespace COTG.Views
         public ChatEntry(string _a,DateTimeOffset _time = default) {  text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
         public ChatEntry(string _player,string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time;  type = _type; player = _player; }
         //  public ChatEntry() { }
+       
     }
-    public  sealed class ChatEntryGroup
-    {
-        public DateTimeOffset time;
-        public string Title => time.ToString("yyyy/MM/dd, HH:mm:ss");
-        public DumbCollection<ChatEntry> Items { get; set; } = new DumbCollection<ChatEntry>();
+    //public  sealed class ChatEntryGroup
+    //{
+    //    public DateTimeOffset time;
+    //    public string Title => time.ToString("yyyy/MM/dd, HH:mm:ss");
+    //    public DumbCollection<ChatEntry> Items { get; set; } = new DumbCollection<ChatEntry>();
 
-        public override string ToString()
-        {
-            return this.Title;
-        }
-    }
+    //    public override string ToString()
+    //    {
+    //        return this.Title;
+    //    }
+    //}
 
     public sealed partial class ChatTab : UserTab
     {
@@ -77,17 +83,13 @@ namespace COTG.Views
         public DateTimeOffset lastRead;
         public static string[] chatToId = { nameof(world), "whisper", nameof(alliance), nameof(officer) };
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
-        public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
-
+        // public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
+        public DumbCollection<ChatEntry> items { get; set; } = new DumbCollection<ChatEntry>();
         override public void VisibilityChanged(bool visible)
         {
-            if (visible)
+            if(items.Count > 0)
             {
-                var count = Groups.Count;
-                if (count > 0)
-                {
-                    listView.ScrollIntoView(Groups[count - 1].Items.Last());
-                }
+                listView.ScrollIntoView(items.Last());
                 input.Focus(FocusState.Programmatic);
             }
 
@@ -101,28 +103,25 @@ namespace COTG.Views
 
                 tabPage.AddTab(this,false);
             }
-            var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
-            var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
-            var newHour = entry.time.Hour;
-            if (lastHour != newHour)
-            {
-                activeGroup = new ChatEntryGroup() { time = entry.time };
-                Groups.Add(activeGroup);
-            }
-            int count = 0;
-            foreach (var g in Groups)
-                count += g.Items.Count;
+            //var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
+            //var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
+            //var newHour = entry.time.Hour;
+            //if (lastHour != newHour)
+            //{
+            //    activeGroup = new ChatEntryGroup() { time = entry.time };
+            //    Groups.Add(activeGroup);
+            //}
+            int count = items.Count;
+            
+            //foreach (var g in Groups)
+            //    count += g.Items.Count;
             if (count >= maxItems)
             {
-                var g = Groups.First();
-                if(g.Items.Any())
-                    g.Items.RemoveAt(0);
-                if (!g.Items.Any())
-                    Groups.RemoveAt(0);
+                items.RemoveAt(0);
             }
-            activeGroup.Items.Add(entry);
+            items.Add(entry);
             // Set + if not from me
-            if(entry.player != Player.myName && entry.type != 3)
+            if(entry.player != Player.myName && entry.type != ChatEntry.typeWhisperTo)
                 SetPlus(true);
 
         }
@@ -305,10 +304,10 @@ namespace COTG.Views
                             JSClient.SendChat(id + 1, str);
                        
                             {
-                                var count = Groups.Count;
+                                var count = items.Count;
                                 if (count > 0)
                                 {
-                                    listView.ScrollIntoView(Groups[count - 1].Items.Last());
+                                    listView.ScrollIntoView(items.Last());
                                 }
                             }
                         }
@@ -412,10 +411,10 @@ namespace COTG.Views
                 case 3:
                     {
                         var ch = GetChatMessage(jsp.Value);
-                        if (ch.type == 2 || ch.type == 3) // whisper
+                        if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
                         {
                             // add to all tabs
-                            ch.text = $"`{(ch.type==2?"whispers":"you whisper")}` {ch.text}";
+                            ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers":"you whisper")}` {ch.text}";
                             ChatTab.GetWhisperTab(ch.player, true).Post(ch);
                             // ChatTab.whisper.Post(ch);
                      //       ChatTab.alliance.Post(ch);

@@ -22,6 +22,8 @@ using Windows.UI.Xaml;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using COTG.JSON;
+using System.Text.Json;
+using Windows.Web.Http;
 
 namespace COTG.Game
 {
@@ -73,7 +75,6 @@ namespace COTG.Game
                 if (info.type == 0)
                 {
                     Log("Uninitialized");
-                    rv.type = typeCity;
                 }
                 rv.isTemple = info.isTemple;
                 rv.isOnWater = info.isWater;
@@ -114,7 +115,7 @@ namespace COTG.Game
         public bool isCityOrCastle => type == typeCity;
         public bool isBoss => type == typeBoss;
         public bool isDungeon => type == typeDungeon;
-
+        public bool isEmpty => type == typeNone;
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
@@ -699,13 +700,17 @@ namespace COTG.Game
         }
 
 
+        public async Task SuperRaid()
+        {
+            await Post.Send("overview/rcallall.php", "a=" + cid);
+            await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3");
+        }
 
-        public async void ReturnFastClick()
+        public void ReturnFastClick()
         {
             if (App.IsKeyPressedShift())
             {
-                await Post.Send("overview/rcallall.php", "a=" + cid);
-                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3");
+                SuperRaid();
             }
             else
             {
@@ -795,6 +800,10 @@ namespace COTG.Game
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
                 App.AddItem(flyout, "Near Defence", DefendMe );
+                if(incoming.Any())
+                    App.AddItem(flyout, "Incoming", ShowIncoming);
+
+
                 App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
                 App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
@@ -802,6 +811,11 @@ namespace COTG.Game
             else if (this.isDungeon || this.isBoss)
             {
                 App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+
+            }
+            else if( this.isEmpty && Discord.isValid)
+            {
+                App.AddItem(flyout, "Claim", this.DiscordClaim);
 
             }
             App.AddItem(flyout, "Select",  SelectMe );
@@ -827,7 +841,61 @@ namespace COTG.Game
                     tab.Refresh();
             }
         }
-        
+        public async void ShowIncoming()
+        {
+            var tab = DefenderPage.instance;
+            if (!tab.isActive)
+            {
+                TabPage.mainTabs.AddTab(tab, true);
+            }
+            else
+            {
+                if (!tab.isVisible)
+                    TabPage.Show(tab);
+                else
+                    tab.Refresh();
+            }
+            for (; ; )
+            {
+                await Task.Delay(1000);
+                if (tab.defenderGrid.ItemsSource != null)
+                    break;
+            }
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                tab.defenderGrid.SetCurrentItem(this,false);
+            });
+
+        }
+        public async void DiscordClaim()
+        {
+            if(!Discord.isValid)
+            {
+                Log("Invalid");
+                return;
+            }
+            try
+            {
+                Note.Show($"Registering claim on {xy}");
+                var client = JSClient.genericClient;
+
+
+                var message = new Discord.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
+
+                var content = new HttpStringContent(
+                          JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+                           "application/json");
+
+                var result = await client.PostAsync(Discord.discordHook, content);
+                result.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+
+
+        }
 
     }
 }

@@ -37,7 +37,7 @@ namespace COTG.Views
         public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; Refresh(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; Refresh(); } } // need at this this many ts at home to be considered for def
-        public DateTimeOffset sendAt { get; set; } = DateTimeOffset.Now.Date;
+        public DateTimeOffset sendAt { get; set; } = AUtil.dateTimeZero;
         public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };

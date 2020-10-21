@@ -178,8 +178,8 @@ function getbossinfo() {
 
 	bossinfo_= [];
 	var i_19;
-	for(i_19 in wdata_.bosses) {
-		var wb=wdata_.bosses[i_19];
+	for(i_19 in wdata.bosses) {
+		var wb=wdata.bosses[i_19];
 		/** @type {number} */
 		var templvl_=AsNumber(wb.substr(1,2))-10;
 		/** @type {number} */

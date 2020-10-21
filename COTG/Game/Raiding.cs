@@ -167,7 +167,11 @@ namespace COTG.Game
 
              city.NotifyChange(nameof(city.tsHome));
             MainPage.ClearDungeonList();
-
+            if(App.IsKeyPressedShift())
+            {
+                await Task.Delay(2000);
+                await city.SuperRaid();
+            }
 
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;

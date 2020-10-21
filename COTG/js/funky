@@ -880,7 +880,7 @@ function SendAttack() {
         }
     }
 }
-function incomings_() {
+function incomings() {
     const speeeed_ = [];
     speeeed_[0] = 0;
     for (let i_17 = 1; i_17 < 201; i_17++) {
@@ -1172,7 +1172,14 @@ let defaultMru = {
     bless: 0
 };
 let mru = [];
-function showcities_() {
+function hidecities() {
+    $("#shrineTab tr").each(function () {
+        if ($(this).attr("data") == "city") {
+            $(this).hide();
+        }
+    });
+}
+function showcities() {
     $("#shrineTab tr").each(function () {
         if ($(this).attr("data") == "city") {
             $(this).show();
@@ -1185,7 +1192,7 @@ function updateshrine() {
     var w = [];
     var wtot = 0;
     for (let i in shrinec) {
-        if (i > 0) {
+        if (Number(i) > 0) {
             var k = splayers.name.indexOf(shrinec[i][1]);
             for (var j in splayers.cities[k]) {
                 if (shrinec[i][3] == splayers.cities[k][j].b && shrinec[i][4] == splayers.cities[k][j].c) {
@@ -1210,7 +1217,7 @@ function updateshrine() {
     }
     var ccounter = 0;
     for (let i in shrinec) {
-        if (i > 0) {
+        if (Number(i) > 0) {
             var cid = shrinec[i][4] * 65536 + Number(shrinec[i][3]);
             if (shrinec[i][0] == "castle") {
                 ccounter++;
@@ -1277,7 +1284,7 @@ function updateshrine() {
         updateshrine();
     });
     $(".shrineremove").click(function () {
-        shrinec.splice($(this).attr("data"), 1);
+        shrinec.splice(Number($(this).attr("data")), 1);
         updateshrine();
     });
     $(".shrine7pt").click(function () {
@@ -1410,7 +1417,8 @@ let layoutsw_ = [""];
 let layoutdf_ = [""];
 let resl_ = [[]];
 let OGA = [];
-let wdata_;
+let wdata;
+let PostgWrd = () => { };
 let remarksl_ = [""];
 let remarksw_ = [""];
 let remarkdf_ = [""];
@@ -1423,7 +1431,8 @@ let notesl_ = [""];
 let notesw_ = [""];
 let notedf_ = [""];
 let emptyspots_ = ",.;:#-T";
-let beentoworld_ = false;
+let beentoworld = false;
+let pldata = [];
 let splayers = {
     name: [],
     ally: [],
@@ -8539,7 +8548,6 @@ const viewModeRegion = 1;
 const viewModeWorld = 2;
 var pollthis;
 let D6;
-var F5F;
 var P8 = 0;
 var a6 = {
     ccazzx: {
@@ -45400,7 +45408,7 @@ var cotgsubscribe = amplify;
             $(_s(q1t * 1))
                 .css("display", "none");
             N6();
-            var r91 = $.post(_s('854' | 854), { a: A91 });
+            var r91 = $.post(_s(854), { a: A91 });
             F6();
             r91.done(function (n91) {
                 n91 = JSON.parse(n91);
@@ -47547,7 +47555,6 @@ var cotgsubscribe = amplify;
                 h0F();
             }
         }
-        var u7F;
         gStphp = p5F;
         function p5F(r46, A46) {
             clearTimeout(a8);
@@ -56887,6 +56894,8 @@ var cotgsubscribe = amplify;
                     Y2(b8g, S8g, 3);
             }
         });
+        let lastAllianceIncoming = 0;
+        let lastIncoming = 0;
         function K6F(G71) {
             if (G71.length > 1) {
                 var j71 = JSON.parse(G71);
@@ -56993,8 +57002,16 @@ var cotgsubscribe = amplify;
                     .text() != '')
                     $(_s(4935))
                         .text("");
-                var i71 = j71[_s(343)];
-                Q5V(i71);
+                let AIC = j71['AIC'];
+                let IC = j71['IC'];
+                if (lastAllianceIncoming != AIC || lastIncoming != IC) {
+                    Q5V(AIC);
+                    L5V(IC);
+                    const wrapper = { incoming: { aic: AIC, ic: IC, lic: lastIncoming } };
+                    lastAllianceIncoming = AIC;
+                    lastIncoming = IC;
+                    window['external']['notify'](JSON.stringify(wrapper));
+                }
                 if (j71["iNt"]) {
                     var d71 = j71["iNt"];
                     d9F(d71);
@@ -57007,8 +57024,6 @@ var cotgsubscribe = amplify;
                 R5V(J71);
                 var h71 = j71[_s(3058)];
                 Y5V(h71);
-                var V71 = j71[_s(t5R ^ 0)];
-                L5V(V71);
                 if (j71["ICC"]) {
                     var r71 = j71["ICC"];
                     g0V(r71);
@@ -59515,6 +59530,48 @@ var cotgsubscribe = amplify;
                 });
             }
         }
+        PostgWrd = () => {
+            var c6D = window.event || arguments.callee.caller.arguments[0];
+            E6k.R6();
+            if (c6D.target.id == _s(613)) {
+                if (X5F <= currentTime() - (300000)) {
+                    X5F =
+                        currentTime();
+                    x8();
+                    Q8 = 0;
+                    var m6D = "Addxdd" + 'x5DdAxxer' + b2() + _s(97);
+                    var a6D = {
+                        a: c6D
+                            .target.id,
+                        b: $("#content")
+                            .css("display"),
+                        c: c6D.isTrusted,
+                        d: currentTime(),
+                        e: c6D.target.innerHTML
+                    };
+                    var E6D = a6
+                        .ccazzx.encrypt(JSON.stringify(a6D), m6D, U7y & 2147483647);
+                    N6();
+                    var k2D = $.post("/includes/gWrd.php", { a: E6D });
+                    F6();
+                    k2D.done(function (__e2D) {
+                        if (__e2D && __e2D.length > 0) {
+                            var e2D = JSON.parse(__e2D);
+                            gWrdPosted(e2D['a']);
+                            T0F = y8F(e2D['a']);
+                            f8 = e2D[_s(+B9y)];
+                            R8();
+                            Y1F(+Y6y);
+                        }
+                        else {
+                            X5F = 0;
+                        }
+                    });
+                }
+            }
+            else
+                R8();
+        };
         function o0V(b6T) {
             var n6T = m6[b6T]["n"];
             var h6T = m6[b6T][_s(+x9y)];
@@ -68364,10 +68421,9 @@ var cotgsubscribe = amplify;
             var e5T = $.post("/includes/gPlA.php");
             F6();
             e5T.done(function (s5T) {
-                var s5T = JSON.parse(s5T);
-                F5F = s5T;
+                pldata = JSON.parse(s5T);
                 {
-                    const wrapper = { gPlA: F5F };
+                    const wrapper = { gPlA: pldata };
                     window['external']['notify'](JSON.stringify(wrapper));
                 }
             });
@@ -69172,11 +69228,45 @@ function gCPosted() {
 }
 function gWrdPosted(data) {
     setTimeout(function () {
-        beentoworld_ = true;
-        wdata_ = DecodeWorldData(data);
-        UpdateResearchAndFaith();
+        wdata = JSON.parse(data);
+        beentoworld = true;
+        wdata = decwdata(wdata.a);
         getbossinfo();
     }, 1000);
+}
+function decwdata(data) {
+    var DecData = { bosses: [], cities: [], ll: [], cavern: [], portals: [], shrines: [] }, temp = data.split("|"), keys = temp[1].split("l"), ckey = keys[0], skey = keys[1], bkey = keys[2], lkey = keys[3], cavkey = keys[4], pkey = keys[5], cities = temp[0].split("l"), shrines = temp[2].split("l"), bosses = temp[3].split("l"), lawless = temp[4].split("l"), caverns = temp[5].split("l"), portals = temp[6].split("l"), dat = "";
+    for (var i in bosses) {
+        dat = (Number(bosses[i]) + Number(bkey)) + "";
+        bkey = dat;
+        DecData.bosses.push("1" + dat);
+    }
+    for (var i in cities) {
+        dat = (Number(cities[i]) + Number(ckey)) + "";
+        ckey = dat;
+        DecData.cities.push("2" + dat);
+    }
+    for (var i in lawless) {
+        dat = (Number(lawless[i]) + Number(lkey)) + "";
+        lkey = dat;
+        DecData.ll.push("3" + dat);
+    }
+    for (var i in caverns) {
+        dat = (Number(caverns[i]) + Number(cavkey)) + "";
+        cavkey = dat;
+        DecData.cavern.push("7" + dat);
+    }
+    for (var i in portals) {
+        dat = (Number(portals[i]) + Number(pkey)) + "";
+        pkey = dat;
+        DecData.portals.push("8" + dat);
+    }
+    for (var i in shrines) {
+        dat = (Number(shrines[i]) + Number(skey)) + "";
+        skey = dat;
+        DecData.shrines.push("9" + dat);
+    }
+    return DecData;
 }
 function _pleaseNoMorePrefilters() { }
 function OptimizeAjax() {
@@ -70367,7 +70457,7 @@ function avactor() {
                         if (players.indexOf(pname) == -1) {
                             players.push(pname);
                             jQuery.ajax({
-                                url: 'includes/gPi.php', type: 'POST', aysnc: false, data: { a: pname },
+                                url: 'includes/gPi.php', type: 'POST', data: { a: pname },
                                 success: function (data) {
                                     var pinfo = JSON.parse(data);
                                     splayers.name.push(pinfo.player);
@@ -70426,7 +70516,8 @@ function avactor() {
                 }, 2000);
             }
             else {
-                alert("Press World Button");
+                PostgWrd();
+                alert("Please try again in 5 seconds");
             }
         });
         var incomingtabledata_ = $("#incomingsAttacksTable").children().children().children();
@@ -70437,12 +70528,12 @@ function avactor() {
         incomingtabledata_.append(Addth1_);
         $("#allianceIncomings").parent().click(() => {
             setTimeout(() => {
-                incomings_();
+                incomings();
             }, 5000);
         });
         $("#incomingsPic").click(() => {
             setTimeout(() => {
-                incomings_();
+                incomings();
             }, 5000);
         });
         var newbutz_ = "<div style='float: left; margin-left: 2%;'><button id='newbuttonu' style='font-size:8px; padding: 4px; border-radius: 8px;' class='greenb shRnTr'>Recall(<90%)</button></div>";
@@ -70469,12 +70560,12 @@ function avactor() {
         });
         $("#allianceIncomings").parent().click(() => {
             setTimeout(() => {
-                incomings_();
+                incomings();
             }, 4000);
         });
         $("#ui-id-37").click(() => {
             setTimeout(() => {
-                incomings_();
+                incomings();
             }, 1000);
         });
         if (localStorage.getItem("raidbox") != null) {
@@ -71684,8 +71775,8 @@ let bosslist_;
 function getbossinfo() {
     bossinfo_ = [];
     var i_19;
-    for (i_19 in wdata_.bosses) {
-        var wb = wdata_.bosses[i_19];
+    for (i_19 in wdata.bosses) {
+        var wb = wdata.bosses[i_19];
         var templvl_ = AsNumber(wb.substr(1, 2)) - 10;
         var tempy_3 = AsNumber(wb.substr(4, 3)) - 100;
         var tempx_3 = AsNumber(wb.substr(7, 3)) - 100;

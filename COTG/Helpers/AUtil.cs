@@ -74,6 +74,22 @@ namespace COTG
             return result;
 
         }
+        public static T[] ArrayRemove<T>(this T[] l, int index)
+        {
+            if (l == null || l.Length <= 0)
+                return Array.Empty<T>();
+            int lg = l.Length;
+
+               var result = new T[lg - 1];
+            var put = 0;
+            for (int i = 0; i < lg; ++i)
+            {
+                if( i != index )
+                    result[put++] = l[i];
+            }
+            return result;
+
+        }
         public static TValue GetOrAdd<TKey,TValue>(this SortedList<TKey,TValue> l,TKey key, Func<TKey, TValue> factory )
         {
             if (!l.TryGetValue(key, out var value))
