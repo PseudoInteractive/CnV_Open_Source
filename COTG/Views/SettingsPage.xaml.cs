@@ -361,8 +361,8 @@ namespace COTG.Views
             }
             else
             {
-                var x = cont / 10;
-                var y = cont - x * 10;
+                var y = cont / 10;
+                var x = cont - y * 10;
                 World.DumpCities(x*100,y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text);
             }
             this.Hide();

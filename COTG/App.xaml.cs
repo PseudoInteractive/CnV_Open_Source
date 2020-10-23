@@ -137,6 +137,7 @@ namespace COTG
         static bool timerActive;
         private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 
+
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             if (!args.PrelaunchActivated)
@@ -144,6 +145,10 @@ namespace COTG
 
                 await ActivationService.ActivateAsync(args);
             }
+            OnLaunchedOrActivated();
+        }
+        private void OnLaunchedOrActivated()
+        { 
             this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
 #endif
@@ -221,6 +226,7 @@ namespace COTG
         {
            
             await ActivationService.ActivateAsync(args);
+            OnLaunchedOrActivated();
             //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
             //   typeof(Analytics), typeof(Crashes));
 

@@ -124,7 +124,7 @@ namespace COTG.Services
         {
             // TODO restore        yield return Singleton<LiveTileService>.Instance;
             // TODO restore     yield return Singleton<HubNotificationsService>.Instance;
-            yield return Singleton<ToastNotificationsService>.Instance;
+            yield return ToastNotificationsService.instance;
             yield return Singleton<ShareTargetActivationHandler>.Instance;
             // TODO restore    yield return Singleton<BackgroundTaskService>.Instance;
 //            yield return Singleton<SuspendAndResumeService>.Instance;

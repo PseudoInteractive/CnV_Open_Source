@@ -23,7 +23,7 @@ namespace COTG.Game
         public string allianceName => Alliance.IdToName(alliance);
 
         public static Dictionary<int, Player> all = new Dictionary<int, Player>();
-        public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
+        public static Dictionary<string, int> nameToId = new Dictionary<string, int>(AUtil.stringCompareOrdinal);
         public static string IdToName(int id)
         {
             return Get(id).name;

@@ -773,6 +773,8 @@ namespace COTG.Game
                     await spot.Classify();
                     sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\n");
                     ++counter;
+                    if( (counter&63)==0)
+                        Note.Show($"Progress: {counter}");
                 }
             var str = sb.ToString();
             App.CopyTextToClipboard(str);

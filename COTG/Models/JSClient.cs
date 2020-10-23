@@ -53,7 +53,8 @@ namespace COTG
         public static bool IsWorldView()	=> viewMode == ViewMode.world;
         public static bool IsCityView() => viewMode == ViewMode.city;
 
-//        public static JsonDocument ppdt;
+        static DateTime lastIncomingNotification = DateTime.UtcNow;
+        //        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static HttpBaseProtocolFilter httpFilter;
@@ -914,7 +915,7 @@ namespace COTG
 
         }
 
-        static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
+        static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>(AUtil.stringCompareOrdinal);
         public static BitmapImage GetImage(string dir,string name)
         {
             return ImageHelper.FromImages(name);
@@ -1110,8 +1111,16 @@ namespace COTG
                                     var lastIc = jso.GetAsInt("lic");
                                     if(ic > lastIc)
                                     {
-                                        Note.Show($"Incoming: ({ic}) {aic}");
+                                        var now = DateTime.UtcNow;
+                                        if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
+                                        {
+                                            lastIncomingNotification = now;
+                                            Note.Show($"Incoming: ({ic}) {aic}");
+                                            COTG.Services.ToastNotificationsService.instance.ShowIncomingNotification(ic, aic);
+
+                                        }
                                     }
+                                    IncomingOverview.Process(false,false);
                                     break;
                                 }
                             case "cityclick":

@@ -10,11 +10,12 @@ namespace COTG.Services
 {
     internal partial class ToastNotificationsService : ActivationHandler<ToastNotificationActivatedEventArgs>
     {
+        public static ToastNotificationsService instance = new ToastNotificationsService();
         public void ShowToastNotification(ToastNotification toastNotification)
         {
             try
             {
-           //     ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
+                ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
             }
             catch (Exception)
             {
