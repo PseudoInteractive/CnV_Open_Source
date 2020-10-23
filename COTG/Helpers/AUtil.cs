@@ -137,7 +137,7 @@ namespace COTG
 
         public void EnterWriteLock() => _lock.EnterWriteLock();
         public void ExitWriteLock() => _lock.ExitWriteLock();
-
+        public T[] ToArray() => _hashSet.ToArray();
         #region Implementation of ICollection<T> ...ish
         public bool Add(T item)
         {

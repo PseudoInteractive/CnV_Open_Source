@@ -89,13 +89,7 @@ namespace COTG.Views
                 {
                     App.DispatchOnUIThreadSneaky(() =>
                     {
-                        var defenders = new List<Spot>();
-                        foreach (var spot in Spot.allSpots)
-                        {
-                            if (spot.Value.incoming.Length > 0)
-                                defenders.Add(spot.Value);
-                        }
-                        instance.defenderGrid.ItemsSource = defenders;
+                        instance.defenderGrid.ItemsSource = Spot.defenders;
                     });
                 }
                 catch (Exception e)

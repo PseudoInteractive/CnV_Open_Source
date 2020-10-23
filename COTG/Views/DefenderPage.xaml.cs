@@ -36,7 +36,6 @@ namespace COTG.Views
     {
 
         public static DefenderPage instance;
-        public List<Spot> defenders = new List<Spot>();
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -136,12 +135,6 @@ namespace COTG.Views
                 {
                     App.DispatchOnUIThread(() =>
                     {
-                        defenders = new List<Spot>();
-                        foreach (var spot in Spot.allSpots)
-                        {
-                            if (spot.Value.incoming.Length > 0)
-                                defenders.Add(spot.Value);
-                        }
                         defenderGrid.ItemsSource = defenders;
                     });
                 }catch( Exception e)

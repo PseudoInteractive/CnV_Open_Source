@@ -37,6 +37,8 @@ namespace COTG.Game
     {
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
+        public static Spot[] defenders = Array.Empty<Spot>();
+
         public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
         public virtual event PropertyChangedEventHandler PropertyChanged;

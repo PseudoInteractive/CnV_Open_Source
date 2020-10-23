@@ -733,7 +733,7 @@ namespace COTG.Views
                         if (defenderVisible || outgoingVisible)
                         {
                             var cullSlopSpace = 80 * pixelScale;
-                            foreach (var city in Spot.allSpots.Values)
+                            foreach (var city in Spot.defenders)
                             {
                                 if (city.incoming.Length > 0 || city.isMine)
                                 {
