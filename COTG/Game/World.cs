@@ -717,7 +717,7 @@ namespace COTG.Game
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             return rv;
         }
-        public static (string label,bool isMine) GetLabel((int x, int y) c)
+        public static (string label,bool isMine,bool hasIncoming) GetLabel((int x, int y) c)
         {
             var data = CityLookup(c);
             switch (data.type)
@@ -727,7 +727,7 @@ namespace COTG.Game
 
                         if (data.player == 0)
                         {
-                            return (null,false); // lawless
+                            return (null,false,false); // lawless
                         }
                         else
                         {
@@ -738,15 +738,15 @@ namespace COTG.Game
                                 isMine = true;
                                 if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
                                 {
-                                    return (city.cityName,true);
+                                    return (city.cityName,true,city.incoming.Any());
                                 }
 
                             }
-                            return (player.name,isMine);
+                            return (player.name,isMine, Spot.TryGet(c.WorldToCid(),out var spot) ? spot.incoming.Any() : false);
                         }
                     }
                 default:
-                    return (null,false);
+                    return (null,false,false);
             }
         }
         public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName)

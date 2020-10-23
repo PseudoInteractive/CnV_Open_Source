@@ -39,6 +39,7 @@ namespace COTG.Game
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
         public static Spot[] defenders = Array.Empty<Spot>();
 
+        public static bool TryGet(int cid, out Spot spot) => allSpots.TryGetValue(cid, out spot);
         public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
@@ -64,7 +65,7 @@ namespace COTG.Game
             {
                 return invalid;
             }
-            if (!Spot.allSpots.TryGetValue(cid, out var rv))
+            if (!Spot.TryGet(cid, out var rv))
             {
                 Assert(City.allCities.ContainsKey(cid) == false);
                 var worldC = cid.CidToWorld();

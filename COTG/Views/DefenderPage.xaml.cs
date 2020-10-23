@@ -133,10 +133,7 @@ namespace COTG.Views
             {
                 try
                 {
-                    App.DispatchOnUIThread(() =>
-                    {
-                        defenderGrid.ItemsSource = defenders;
-                    });
+                        defenderGrid.ItemsSource = Spot.defenders;
                 }catch( Exception e)
                 {
                     Log(e);

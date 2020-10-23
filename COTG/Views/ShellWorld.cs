@@ -334,7 +334,7 @@ namespace COTG.Views
                                     }
                                     else
                                     {
-                                        var info = (Spot.allSpots.TryGetValue(c.WorldToCid(), out var spot)) ?
+                                        var info = (Spot.TryGet(c.WorldToCid(), out var spot)) ?
                                             $"{spot.cityName}\n{spot.points}\n"
                                          : ""; 
                                             toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";

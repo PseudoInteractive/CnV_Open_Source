@@ -915,7 +915,7 @@ namespace COTG
 
         }
 
-        static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>(AUtil.stringCompareOrdinal);
+        static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
         public static BitmapImage GetImage(string dir,string name)
         {
             return ImageHelper.FromImages(name);

@@ -562,7 +562,6 @@ namespace COTG.JSON
                             if(defenderPage != null)
                                 defenderPage.NotifyIncomingUpdated();
                         }
-
                         Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {Cosmos.battleRecordsUpserted}");
                     });
                 }
