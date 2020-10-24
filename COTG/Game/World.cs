@@ -318,7 +318,7 @@ namespace COTG.Game
             changePixels = pixels;
             rawPrior = prior;
         }
-
+        public static bool initialized;
         public static World Decode(JsonDocument jsd)
         {
             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
@@ -612,7 +612,7 @@ namespace COTG.Game
                     if (used[type] == false)
                     {
                         used[type] = true;
-                        Log($"{type} at {x:000}:{y:000}");
+                       // Log($"{type} at {x:000}:{y:000}");
                     }
                     if (pid == 0)
                     {
@@ -715,6 +715,7 @@ namespace COTG.Game
             }
 
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
+            initialized = true;
             return rv;
         }
         public static (string label,bool isMine,bool hasIncoming) GetLabel((int x, int y) c)

@@ -736,7 +736,7 @@ namespace COTG.Views
                             var cullSlopSpace = 80 * pixelScale;
                             foreach (var city in Spot.defenders)
                             {
-                                if (city.incoming.Length > 0 || city.isMine)
+                                if (city.incoming.Any() || city.isMine)
                                 {
 
                                     var targetCid = city.cid;
@@ -810,7 +810,25 @@ namespace COTG.Views
                                             Assert(false);
                                         }
                                     }
-                                    DrawTextBox(ds, $"{incAttacks}`{ (outgoingVisible ? (incTs+500)/1000 : (city.tsMax.Max(city.tsHome)+500) / 1000) }k", c1, tipTextFormatCentered, incAttacks!=0?Colors.White: Colors.Teal);
+                                    DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome)+500) / 1000 }k", c1, tipTextFormatCentered, incAttacks!=0?Colors.White: Colors.Teal);
+                                }
+                            }
+                            if (defenderVisible)
+                            {
+                                foreach (var _city in City.allCities)
+                                {
+
+                                    var city = _city.Value;
+                                    Assert(city is City);
+                                    if (!city.incoming.Any())
+                                    {
+                                        var targetCid = city.cid;
+                                        var c1 = targetCid.CidToCC();
+                                        if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+                                            continue;
+                                        DrawTextBox(ds, $"{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal);
+
+                                    }
                                 }
                             }
                         }

@@ -102,7 +102,7 @@ namespace COTG.Game
         public int y => cid >> 16;
 
         public int tsHome { get; set; }
-        public int tsMax { get; set; }
+        public int tsMax => incomingDefTS + tsHome;
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -126,9 +126,13 @@ namespace COTG.Game
         public enum Classification : byte
         {
             unknown,
+            infO,
+            infD,
             inf,
             magic,
             academy,
+            stablesO,
+            stablesD,
             stables,
             se,
             hub,
@@ -140,9 +144,13 @@ namespace COTG.Game
         private static string[] classifications =
         {
             "unknown",
+            "infO",
+            "infD",
             "inf",
             "magic",
             "academy",
+            "stablesO",
+            "stablesD",
             "stables",
             "se",
             "hub",
@@ -401,7 +409,11 @@ namespace COTG.Game
                 }
                 else if(mx==stables)
                 {
-                    classification = Classification.stables;
+                    if (se > 0 || academies > 0 || stables == 39 || stables == 24 || stables <= 20)
+                        classification = Classification.stablesO;
+                    else                     {
+                        classification = Classification.stablesD;
+                    }
                 }
                 else if(mx==sorc)
                 {
@@ -409,7 +421,11 @@ namespace COTG.Game
                 }
                 else if(mx==training)
                 {
-                    classification = Classification.inf;
+                    if (se > 0 || academies > 0 || training == 26 || training <= 18 )
+                        classification = Classification.infO;
+                    else
+                        classification = Classification.infD;
+
                 }
                 else if (mx == academies)
                 {
@@ -460,6 +476,20 @@ namespace COTG.Game
                 {
                     if (a.isDefense)
                         ++rv;
+                }
+                return rv;
+            }
+        }
+
+        public int incomingDefTS
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (a.isDefense)
+                        rv += a.ts;
                 }
                 return rv;
             }

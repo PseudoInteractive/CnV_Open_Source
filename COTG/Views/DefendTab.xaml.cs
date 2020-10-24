@@ -75,6 +75,7 @@ namespace COTG.Views
                     //                supportGrid.ItemsSource = null;
                     foreach (var city in City.allCities.Values)
                     {
+                        Assert(city is City);
                         if (city.tsHome < filterTSHome | city.tsTotal < filterTSTotal)
                             continue;
                         if (!city.ComputeTravelTime(defendant.cid, out var hours) || hours > filterTime)

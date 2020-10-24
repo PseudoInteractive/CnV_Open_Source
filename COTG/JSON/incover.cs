@@ -28,12 +28,13 @@ namespace COTG.JSON
         // TODO
         //        static DateTime lastUpdate = new DateTime();
         static bool updatePending;
-        public async static Task Process(bool fetchReports, bool force=false)
+        public static void ProcessTask() { Process(false, false); }
+        public async static Task Process(bool fetchReports, bool showNote)
         {
 
-            if (!force)
+            if (true)
             {
-                if(updateInProgress)
+                if(updateInProgress || !World.initialized)
                 {
                     if (updatePending)
                         return;
@@ -42,7 +43,7 @@ namespace COTG.JSON
                     {
 
                         await Task.Delay(1000);
-                    } while (updateInProgress);
+                    } while (updateInProgress|| !World.initialized);
                     updatePending = false;
                 }
             }
@@ -65,7 +66,6 @@ namespace COTG.JSON
                     var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
                     var reportsIncoming = new List<Army>();
                     int incCount = 0;
-
                     var task0 = Task.Run(async () =>
                       {
                           //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
@@ -282,7 +282,7 @@ namespace COTG.JSON
                                                       reportsIncoming.Add(army);
 
                                               }
-                                              spot.tsMax = sumDef.TS();
+                                            //  spot.tsMax = sumDef.TS();
                                           }
                                           else
                                           { Assert(false); }
@@ -389,6 +389,7 @@ namespace COTG.JSON
                                                     var root = jsdr.RootElement;
                                                     int reportType = -1;
                                                     ++fetched;
+                                                    
                                                     foreach (var attackType in Army.reportAttackTypes)
                                                     {
                                                         ++reportType;
@@ -548,11 +549,25 @@ namespace COTG.JSON
                     App.DispatchOnUIThreadLow(() =>
                     {
 
+                        string killNote = "";
+
                         if (fetchReports)
                         {
                             var defPage = DefensePage.instance;
                             for (int i = 0; i < reportParts.Length; ++i)
                                 reportsIncoming.AddRange(reportParts[i]);
+                            var defKilled = 0;
+                            var atkKilled = 0;
+                            foreach (var i in reportsIncoming)
+                            {
+                                if (i.aTsKill > 0 && i.dTsKill > 0 && (i.tPlayer== "Avatar") )
+                                {
+                                    defKilled += i.dTsKill;
+                                    atkKilled += i.aTsKill;
+                                }
+                            }
+                            killNote = $", {atkKilled} attack ts killed, {defKilled} def ts Killed";
+                            App.CopyTextToClipboard(killNote);
                             // App.DispatchOnUIThread(() =>
                             // We should do this on the Render Thread
                             defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
@@ -562,7 +577,8 @@ namespace COTG.JSON
                             if(defenderPage != null)
                                 defenderPage.NotifyIncomingUpdated();
                         }
-                        Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {Cosmos.battleRecordsUpserted}");
+                        if(showNote)
+                            Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {Cosmos.battleRecordsUpserted}{killNote}");
                     });
                 }
                 catch (Exception exception)

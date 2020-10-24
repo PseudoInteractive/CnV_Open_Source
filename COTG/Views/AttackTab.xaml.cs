@@ -375,6 +375,8 @@ namespace COTG.Views
                                         case Spot.Classification.unknown:
                                             break;
                                         case Spot.Classification.inf:
+                                        case Spot.Classification.infO:
+                                        case Spot.Classification.infD:
                                             score -= 3;
                                             break;
                                         case Spot.Classification.magic:
@@ -384,6 +386,8 @@ namespace COTG.Views
                                             score += 8;
                                             break;
                                         case Spot.Classification.stables:
+                                        case Spot.Classification.stablesO:
+                                        case Spot.Classification.stablesD:
                                             score -= 4;
                                             break;
                                         case Spot.Classification.se:
@@ -406,6 +410,9 @@ namespace COTG.Views
                                         case Spot.Classification.unknown:
                                             break;
                                         case Spot.Classification.inf:
+                                        case Spot.Classification.infO:
+                                        case Spot.Classification.infD:
+
                                             score += 4;
                                             break;
                                         case Spot.Classification.magic:
@@ -415,6 +422,9 @@ namespace COTG.Views
                                             score -= 4;
                                             break;
                                         case Spot.Classification.stables:
+                                        case Spot.Classification.stablesO:
+                                        case Spot.Classification.stablesD:
+
                                             score -= 3;
                                             break;
                                         case Spot.Classification.se:
@@ -437,6 +447,9 @@ namespace COTG.Views
                                         case Spot.Classification.unknown:
                                             break;
                                         case Spot.Classification.inf:
+                                        case Spot.Classification.infO:
+                                        case Spot.Classification.infD:
+
                                             score += 2;
                                             break;
                                         case Spot.Classification.magic:
@@ -446,6 +459,9 @@ namespace COTG.Views
                                             score -= 6;
                                             break;
                                         case Spot.Classification.stables:
+                                        case Spot.Classification.stablesO:
+                                        case Spot.Classification.stablesD:
+
                                             score += 7;
                                             break;
                                         case Spot.Classification.se:

@@ -124,7 +124,7 @@ namespace COTG.Views
         {
             historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
-                IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+                IncomingOverview.Process(SettingsPage.fetchFullHistory,true); // Todo: throttle
             base.VisibilityChanged(visible);
 
 

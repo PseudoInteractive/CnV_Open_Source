@@ -283,7 +283,9 @@ namespace COTG.Views
                    }
                    foreach (var city in City.allCities.Values)
 				   {
-					   var cl = CityList.FindForContinent(city.cont);
+                       COTG.Debug.Assert(city is City);
+
+                       var cl = CityList.FindForContinent(city.cont);
 					   if (cl == null)
 					   {
 						   var id = AMath.random.Next(65536) + 10000;

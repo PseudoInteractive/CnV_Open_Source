@@ -161,7 +161,7 @@ namespace COTG.Views
                 armyGrid.ItemsSource = Army.empty;
             });
             if (visible)
-                IncomingOverview.Process(false);
+                IncomingOverview.Process(false,true);
             base.VisibilityChanged(visible);
 
         }

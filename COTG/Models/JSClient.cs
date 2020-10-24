@@ -650,8 +650,13 @@ namespace COTG
             ttCombatBonus[16] = 1 + (faith.cyndros) * 0.5f / 100 + (researchRamp[research[45]]) / 100;
             ttCombatBonus[17] = 1; // no combat research for senator
         }
-        public static void UpdatePPDT(JsonElement jse)
+        public static async void UpdatePPDT(JsonElement jse)
         {
+            //while( !World.initialized)
+            //{
+            //    await Task.Delay(1000);
+
+            //}
             int clChanged = 0;
             // City lists
             try
@@ -752,6 +757,7 @@ namespace COTG
             Log(E);
             Log("City lists invalid, maybe you have none");
         }
+            
 
             var cUpdated = false;
             // extract cities
@@ -763,8 +769,9 @@ namespace COTG
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in cProp.EnumerateArray())
                 {
+                    Log(jsCity.ToString());
                     var cid = jsCity.GetProperty("1").GetInt32();
-
+                  
                     var city = City.GetOrAddCity(cid);
                     city._cityName = jsCity.GetProperty("2").GetString();
                     int i = city.cityName.LastIndexOf('-');
@@ -1107,9 +1114,9 @@ namespace COTG
                                 {
                                     var jso = jsp.Value;
                                     var aic = jso.GetAsInt("aic");
-                                    var  ic = jso.GetAsInt("ic");
+                                    var ic = jso.GetAsInt("ic");
                                     var lastIc = jso.GetAsInt("lic");
-                                    if(ic > lastIc)
+                                    if (ic > lastIc)
                                     {
                                         var now = DateTime.UtcNow;
                                         if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
@@ -1120,7 +1127,7 @@ namespace COTG
 
                                         }
                                     }
-                                    IncomingOverview.Process(false,false);
+                                    App.QueueIdleTask(IncomingOverview.ProcessTask);
                                     break;
                                 }
                             case "cityclick":

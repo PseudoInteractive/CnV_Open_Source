@@ -130,7 +130,7 @@ namespace COTG
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             Debug.Log(e.Message);
-            e.Handled = true;
+         //   e.Handled = true;
         }
 
         static DispatcherTimer idleTimer;
@@ -151,6 +151,7 @@ namespace COTG
         { 
             this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
+         //   this.DebugSettings.FailFastOnErrors = true;
 #endif
             this.DebugSettings.EnableFrameRateCounter = false;
             this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
@@ -214,6 +215,12 @@ namespace COTG
         }
         public static void QueueIdleTask(Action a)
         {
+            foreach(var i in idleTasks)
+            {
+                if (i == a)
+                    return;
+
+            }
             idleTasks.Enqueue(a);
             if (!timerActive)
             {
