@@ -303,7 +303,7 @@ namespace COTG.Game
         public static City Factory(int cid)
         {
             var rv = new City() { cid = cid, pid=Player.myId };
-            allSpots.TryAdd(cid, rv);
+            allSpots[cid]= rv;
             return rv;
         }
 
@@ -381,7 +381,8 @@ namespace COTG.Game
                 {
                     var cid = cit[0].GetInt32();
                     //  Log(cid.ToString());
-                    var city = City.allCities[cid];
+                    if (!City.allCities.TryGetValue(cid, out var city))
+                        continue;
                     List<SenatorInfo> sens = new List<SenatorInfo>();
                     foreach (var target in cit[7].EnumerateArray())
                     {

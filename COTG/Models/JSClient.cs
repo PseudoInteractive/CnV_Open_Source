@@ -652,11 +652,7 @@ namespace COTG
         }
         public static async void UpdatePPDT(JsonElement jse)
         {
-            //while( !World.initialized)
-            //{
-            //    await Task.Delay(1000);
-
-            //}
+           
             int clChanged = 0;
             // City lists
             try
@@ -759,19 +755,34 @@ namespace COTG
         }
             
 
-            var cUpdated = false;
             // extract cities
             if (jse.TryGetProperty("c", out var cProp))
             {
-                cUpdated = true;
- //               Note.Show("Pre PPDT");
+                while (!World.initialized)
+                {
+                    await Task.Delay(1000);
 
+                }
+           
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in cProp.EnumerateArray())
                 {
                     Log(jsCity.ToString());
                     var cid = jsCity.GetProperty("1").GetInt32();
-                  
+
+                    var info = World.GetInfoFromCid(cid);
+                    if(info.player != Player.myId)
+                    {
+                        Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
+                        App.DispatchOnUIThreadSneaky(() =>
+                         view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
+
+                        await Task.Delay(1000);
+                        continue;
+
+                    }
+                    
+                    
                     var city = City.GetOrAddCity(cid);
                     city._cityName = jsCity.GetProperty("2").GetString();
                     int i = city.cityName.LastIndexOf('-');
@@ -1225,8 +1236,6 @@ namespace COTG
                             case "gPlA":
                                 {
                                     Player.Ctor(jsp.Value);
-                                    
-                                    GetWorldInfo.Send();
                                     break;
                                 }
                             case "ppdt":
@@ -1287,6 +1296,8 @@ namespace COTG
 
                     if (gotCreds)
                     {
+                        GetWorldInfo.Send();
+
                         ///                   await GetCitylistOverview();
                         City.UpdateSenatorInfo();  // no async
                         Raiding.UpdateTS(true,true);

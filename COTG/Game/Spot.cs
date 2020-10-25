@@ -69,7 +69,7 @@ namespace COTG.Game
             {
                 Assert(City.allCities.ContainsKey(cid) == false);
                 var worldC = cid.CidToWorld();
-                var info = World.CityLookup(worldC);
+                var info = World.GetInfo(worldC);
                
                 //    Assert(info.type == World.typeCity);
                 rv = new Spot() { cid = cid, pid = info.player };

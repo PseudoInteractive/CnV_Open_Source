@@ -308,7 +308,7 @@ namespace COTG.Views
 
                     lastCanvasC = cid;
                     var packedId = World.GetPackedId(c);
-                    var data = World.CityLookup(packedId);
+                    var data = World.GetInfoFromPackedId(packedId);
                     switch (data.type)
                     {
                         case World.typeCity:
@@ -357,7 +357,7 @@ namespace COTG.Views
                     }
                     if(World.rawPrior!=null)
                     {
-                        var pData = World.CityLookupPrior(packedId);
+                        var pData = World.GetInfoPrior(packedId);
                         if(pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
                         {
                             // no change

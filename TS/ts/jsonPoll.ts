@@ -75,17 +75,7 @@
         t?: number;
     }
 
-    //export enum I {
-    //    Atta="Atta",
-    //    BarbiSlave="BarbiSlave",
-    //    Cybel="Cybel",
-    //    Daisan="Daisan",
-    //    Empty="",
-    //    Fayllin="Fayllin",
-    //    Jaxie="Jaxie",
-    //    Skurj="Skurj",
-    //    ZooeyZ="ZooeyZ",
-    //}
+ 
 
    /* export enum N {
         AllianceCreated="Alliance Created",

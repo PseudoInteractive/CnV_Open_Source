@@ -7093,7 +7093,7 @@ const viewModeRegion = 1;
 const viewModeWorld = 2;
 var pollthis;
 let D6: jsonT.City;
-
+let pollJ: jsonT.Poll;
 var P8 = 0;
 
 var a6 =
@@ -13196,7 +13196,7 @@ var cotgsubscribe = amplify;
       var k5Z = [];
       var m0Z;
       var c0Z = 0;
-      if (!D6.mo) D6.mo = new Object();
+      if (!D6.mo) D6.mo = [];
       for (var
           c0Z = 0; c0Z < 9; c0Z++) {
         m0Z = 0;
@@ -27868,7 +27868,7 @@ console.log("Bad");
           });
         $(_s(876))
           .click(function() {
-            if (!D6.mo) D6.mo = new Object();
+              if (!D6.mo) D6.mo = [];
             if ($(_s(+e04))
               .prop(_s(286)) && $(_s(R04 - 0))
               .prop(_s(286))) D6.mo[A8y * 1] = 1;
@@ -31957,9 +31957,9 @@ console.log("Bad");
         $(_s(3656))
           .click(function() {
             if (D6) {
-              if (!D6.mo) D6.mo = new Object();
+                if (!D6.mo) D6.mo = [];
               if (D6.mo.length == 0) D6.mo =
-                new Object();
+                  [];
               for (var O6Z = 0; O6Z < (17 ^ 0); O6Z++) {
                 var t6Z = Number(O6Z) + +
                   '9';
@@ -57339,9 +57339,9 @@ console.log("Bad");
 
     function K6F(G71:string) {
       if (G71.length > 1) {
-        var j71 : jsonT.Poll = JSON.parse(G71);
-        if (j71.hasOwnProperty("city")) {
-          var t71 = j71["city"];
+        pollJ = JSON.parse(G71);
+        if (pollJ.hasOwnProperty("city")) {
+          var t71 = pollJ["city"];
           d3F(t71);
 
             let troopsHome=0;
@@ -57375,11 +57375,11 @@ console.log("Bad");
           //  window['external']['notify'](JSON.stringify(wrapper));
           // }
         }
-          if (j71.hasOwnProperty("resregion"))
-          if (j71["resregion"] == 1) n2F();
-        var w71 = j71["player"];
+          if (pollJ.hasOwnProperty("resregion"))
+          if (pollJ["resregion"] == 1) n2F();
+        var w71 = pollJ["player"];
         if (w71 != "" && w71 != "undefined" && w71 != undefined) u7V(w71);
-        let Q1F = j71[_s(6286)];
+        let Q1F = pollJ[_s(6286)];
         if (!(Q1F == 1)) {
           console.log("exit K6F");
 
@@ -57390,29 +57390,29 @@ console.log("Bad");
             window.location.replace(_s(C2R & 2147483647));
           }, 1000);
         }
-        var W71 = j71[_s(3271)];
+        var W71 = pollJ[_s(3271)];
         t1F(W71);
-        var n71 = j71[_s(3383)];
+        var n71 = pollJ[_s(3383)];
         if (n71 >= 1) R2(cid);
-        var x71 = j71[E6k
+        var x71 = pollJ[E6k
           .o55(1076)];
         if (x71 >= 1) a7F();
-        var O71 = j71[_s(1203)];
+        var O71 = pollJ[_s(1203)];
         Z6F(O71);
-        if (j71[_s("631" | 624)]) {
-          var v71 = j71[_s(631)];
+        if (pollJ[_s("631" | 624)]) {
+          var v71 = pollJ[_s(631)];
           if (n9(v71) == 1) y6F(
             v71);
         }
-        if (j71.hasOwnProperty("OGA")) {
-            OGA = j71["OGA"];
+        if (pollJ.hasOwnProperty("OGA")) {
+            OGA = pollJ["OGA"];
 //            console.log(OGA);
 //  if OGA is empty it will sometimes fire repeatedly
           m6F(OGA);
           
         }
-          if (j71.hasOwnProperty("OGT")) {
-            var L71 = j71["OGT"];
+          if (pollJ.hasOwnProperty("OGT")) {
+            var L71 = pollJ["OGT"];
           N6F(L71);
           //if(L71.length > 0)
           //{
@@ -57420,8 +57420,8 @@ console.log("Bad");
           //    window['external']['notify'](JSON.stringify(wrapper));
           //    }
         }
-        if (j71.hasOwnProperty('OGR')) {
-          var X71 = j71['OGR'];
+        if (pollJ.hasOwnProperty('OGR')) {
+          var X71 = pollJ['OGR'];
           F6F(X71);
           //if(X71.length > 0)
           //{
@@ -57429,42 +57429,42 @@ console.log("Bad");
           //  window['external']['notify'](JSON.stringify(wrapper));
           // }
         }
-        var z71 = j71["rep"];
+        var z71 = pollJ["rep"];
         U6F(z71);
-          if (j71.hasOwnProperty("alliance")) {
-          var M71 = j71["alliance"];
+          if (pollJ.hasOwnProperty("alliance")) {
+          var M71 = pollJ["alliance"];
           s7V(M71);
         }
-          if (j71["nmw"]) {
-          var I71 = j71["nmw"];
+          if (pollJ["nmw"]) {
+          var I71 = pollJ["nmw"];
          //   console.log(JSON.stringify(I71));
 
           if (n9(I71) == +
             '1') i2F(I71);
         }
-          if (j71["RI"]) {
-          var l71 = j71["RI"];
+          if (pollJ["RI"]) {
+          var l71 = pollJ["RI"];
           if (n9(l71) == '1' <<
             1707281792) G0V(l71);
         }
-        if (j71["aiv"]) {
-          var Q71 = j71["aiv"];
+        if (pollJ["aiv"]) {
+          var Q71 = pollJ["aiv"];
           // remove
         //  console.log(JSON.stringify(Q71));
           if (n9(
               Q71) == 1) c5V(Q71);
         }
-        if (j71["aic"]) {
+        if (pollJ["aic"]) {
         //  console.log(JSON.stringify(j71["aic"]));
           if ($(_s(4935))
-            .text() != _s(2397) + j71["aic"] + ")") $(_s(4935))
-                .text(_s("2397" | 2052) + j71["aic"] + ")");
+            .text() != _s(2397) + pollJ["aic"] + ")") $(_s(4935))
+                .text(_s("2397" | 2052) + pollJ["aic"] + ")");
         } else if ($(E6k
             .S55(4935))
           .text() != '') $(_s(4935))
           .text("");
-        let AIC = j71['AIC'];// alliance incoming
-        let IC = j71['IC']; // my incoming
+        let AIC = pollJ['AIC'];// alliance incoming
+        let IC = pollJ['IC']; // my incoming
        
         if (lastAllianceIncoming!=AIC || lastIncoming != IC)
         {
@@ -57478,36 +57478,36 @@ console.log("Bad");
 
 
         }
-        if (j71["iNt"]) {
-            var d71 = j71["iNt"];
+        if (pollJ["iNt"]) {
+            var d71 = pollJ["iNt"];
          //   console.log(JSON.stringify(d71));
           d9F(d71);
         }
-        var b71 = j71[_s(6935)];
+        var b71 = pollJ[_s(6935)];
         T5V(b71);
-        var S71 = j71[_s(845)];
+        var S71 = pollJ[_s(845)];
         K5V(S71);
-        var J71 = j71[_s(677)];
+        var J71 = pollJ[_s(677)];
         R5V(J71);
-        var h71 = j71[_s(3058)];
+        var h71 = pollJ[_s(3058)];
         Y5V(h71);
-        if (j71["ICC"]) {
-          var r71 = j71["ICC"];
+        if (pollJ["ICC"]) {
+          var r71 = pollJ["ICC"];
           g0V(r71);
         }
-        if (j71.hasOwnProperty("cstr")) var f71 = j71["cstr"];
-          if (n9(j71["world"]) == 1) {
-          var T71 = W0V(j71["world"]);
+        if (pollJ.hasOwnProperty("cstr")) var f71 = pollJ["cstr"];
+          if (n9(pollJ["world"]) == 1) {
+          var T71 = W0V(pollJ["world"]);
           if (T71) {
             $.extend(worldd, T71);
             F1F();
           }
         }
-        if (j71[_s(b6m * 1)]) {
-          var A71 = j71[_s(+b6m)];
+        if (pollJ[_s(b6m * 1)]) {
+          var A71 = pollJ[_s(+b6m)];
           if (n9(A71) == ("1" & E6k
               .s6s)) {
-            ctim = j71[_s(b6m >> 1862421376)];
+            ctim = pollJ[_s(b6m >> 1862421376)];
             var C71 = new Date();
             ctims = C71.getTime();
           }
@@ -61960,8 +61960,8 @@ console.log("Bad");
 
     function W8F() {
       if (D6) {
-        if (!D6.mo) D6.mo = new Object();
-        if (D6.mo.length == 0) D6.mo = new Object();
+          if (!D6.mo) D6.mo = [];
+          if (D6.mo.length == 0) D6.mo = [];
         if ((
             Number($(_s(+R94))
               .val()) > Number($(_s(+e94))

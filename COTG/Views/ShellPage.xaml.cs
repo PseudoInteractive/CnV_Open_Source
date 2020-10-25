@@ -212,13 +212,13 @@ namespace COTG.Views
                     TabPage.mainTabs = tabPage;
                     tabPage.AddTab(MainPage.instance, true);
 
-                    tabPage.AddTab(DefenderPage.instance, false);
+                //    tabPage.AddTab(DefenderPage.instance, false);
 
                     //   tabPage.AddTab(DefensePage.instance, false);
 
-                    tabPage.AddTab(AttackTab.instance, false);
-                    tabPage.AddTab(DonationTab.instance, false);
-                    tabPage.AddTab(BossTab.instance, false);
+                //    tabPage.AddTab(AttackTab.instance, false);
+                //    tabPage.AddTab(DonationTab.instance, false);
+                //    tabPage.AddTab(BossTab.instance, false);
 
                 }
                 {

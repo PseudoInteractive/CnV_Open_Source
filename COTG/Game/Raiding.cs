@@ -190,11 +190,14 @@ namespace COTG.Game
                     {
                         var cid = ci.GetAsInt("i");
                         var ts = ci.GetAsInt("ts");
-                        var v = City.allCities[cid];
-                        if ((v.tsHome - ts).Abs() > 8)
+                        if (City.allCities.TryGetValue(cid, out var v))
                         {
-                            v.tsHome = ts;
-                            changed.Add(v);
+
+                            if ((v.tsHome - ts).Abs() > 8)
+                            {
+                                v.tsHome = ts;
+                                changed.Add(v);
+                            }
                         }
                     }
                     changed.NotifyChange(nameof(City.tsHome));

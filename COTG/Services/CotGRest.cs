@@ -297,19 +297,9 @@ namespace COTG.Services
         {
             World.UpdateCurrent(json);
         }
-        public static async void Send()
+        public static void Send()
         {
-            for(var i = 0;;++i )
-            {
-                var _i = i;
-                if (Alliance.diplomacyFetched || _i >= 48)
-                {
-                    (new GetWorldInfo()).Post();
-                    return;
-                }
-                await Task.Delay(200);
-              
-            }
+            (new GetWorldInfo()).Post();
         }
 
         //async public void Post2()
@@ -462,7 +452,8 @@ namespace COTG.Services
             foreach (var item in jsd.RootElement.EnumerateArray())
             {
                 var cid = item.GetAsInt("id");
-                var v = City.allCities[cid];
+                if (!City.allCities.TryGetValue(cid, out var v))
+                    continue;
                 List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
                 List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
                 var hasAny = false;
