@@ -48,7 +48,7 @@
                          Color="#900238" />
     </Page.Resources>
     <!--HeaderTemplate="{StaticResource headerTemplate}"-->
-    <Grid x:Name="grid">
+    <Grid x:Name="grid" >
         <Grid.RowDefinitions>
             <RowDefinition Height="42" />
             <RowDefinition />
@@ -62,7 +62,7 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"  >
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"   >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"
@@ -195,12 +195,12 @@
             <AppBarSeparator/>
             <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
         </CommandBar>
-        <Grid Grid.Column="2" Grid.RowSpan="6">
+        <Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,12,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False" Margin="0,8,0,0" />
+            <Frame x:Name="shellFrame" TabFocusNavigation="Cycle" IsNavigationStackEnabled="False"  />
             <Frame x:Name="spotFrame" TabFocusNavigation="Cycle" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
                         Background="Transparent"

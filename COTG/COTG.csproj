@@ -253,6 +253,9 @@
     <Compile Include="Views\ChatTab.xaml.cs">
       <DependentUpon>ChatTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CityRename.xaml.cs">
+      <DependentUpon>CityRename.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CmdLineActivationSamplePage.xaml.cs">
       <DependentUpon>CmdLineActivationSamplePage.xaml</DependentUpon>
     </Compile>
@@ -354,6 +357,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChatTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CityRename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

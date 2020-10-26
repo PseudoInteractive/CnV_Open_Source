@@ -160,14 +160,20 @@ namespace COTG.Views
 			webView.ContentLoading += WebView_ContentLoading;
 			webView.ScriptNotify += WebView_ScriptNotify;
 			webView.DOMContentLoaded += WebView_DOMContentLoaded;
-
+            webView.PermissionRequested += WebView_PermissionRequested;
 			webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
 			webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
 			webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
 			webView.NewWindowRequested += WebView_NewWindowRequested;
         }
 
-		private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        private void WebView_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
+            {
+            Log("Permission");
+            args.PermissionRequest.Allow();
+            }
+
+        private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
 		{
             Log("Todo");
 		}

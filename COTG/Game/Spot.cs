@@ -818,10 +818,11 @@ namespace COTG.Game
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
                     App.AddItem(flyout, "Attack to Clipboard", (_, _) =>
                         App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} vanqs real 200000\n{cid.CidToString()} {Player.myName} vanqs fake 3000\n"));
+                    App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
 
 
 
-                }
+                    }
                 else
                 {
                     App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid,0));
@@ -830,6 +831,12 @@ namespace COTG.Game
                     App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
                     App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
 
+                }
+                if (cid != City.build)
+                {
+                    App.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
+                    //if(Player.myName == "Avatar")
+                    //    App.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
                 }
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
                 App.AddItem(flyout, "Near Defence", DefendMe );

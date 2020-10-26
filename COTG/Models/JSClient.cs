@@ -650,6 +650,7 @@ namespace COTG
             ttCombatBonus[16] = 1 + (faith.cyndros) * 0.5f / 100 + (researchRamp[research[45]]) / 100;
             ttCombatBonus[17] = 1; // no combat research for senator
         }
+        static bool ppdtInitialized;
         public static async void UpdatePPDT(JsonElement jse)
         {
            
@@ -769,18 +770,20 @@ namespace COTG
                 {
                     Log(jsCity.ToString());
                     var cid = jsCity.GetProperty("1").GetInt32();
+                    if (!ppdtInitialized)
+                        {
+                        var info = World.GetInfoFromCid(cid);
+                        if (info.player != Player.myId)
+                            {
+                            Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
+                            App.DispatchOnUIThreadSneaky(() =>
+                             view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
 
-                    var info = World.GetInfoFromCid(cid);
-                    if(info.player != Player.myId)
-                    {
-                        Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
-                        App.DispatchOnUIThreadSneaky(() =>
-                         view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
+                            await Task.Delay(1000);
+                            continue;
 
-                        await Task.Delay(1000);
-                        continue;
-
-                    }
+                            }
+                        }
                     
                     
                     var city = City.GetOrAddCity(cid);
@@ -802,7 +805,7 @@ namespace COTG
                     
 
                 }
-
+                ppdtInitialized = true;
                 //    Log(City.all.ToString());
                 //   Log(City.all.Count());
                 CityList.SelectedChange();
