@@ -160,6 +160,7 @@ namespace COTG.Game
             var args = new sndRaidArgs() { rcid = d.cid, type = raidOnce?1:2, co = r.reps, rt = "1", snd = 1, rut = 0, ts = "", tr = trs };
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.CidToStringMD()} raid {d.cid.CidToStringMD()}");
+            var shiftPressed = App.IsKeyPressedShift();
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
@@ -167,7 +168,7 @@ namespace COTG.Game
 
              city.NotifyChange(nameof(city.tsHome));
             MainPage.ClearDungeonList();
-            if(App.IsKeyPressedShift())
+            if(shiftPressed)
             {
                 await Task.Delay(2000);
                 await city.SuperRaid();

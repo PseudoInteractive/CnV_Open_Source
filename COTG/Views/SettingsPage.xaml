@@ -10,23 +10,17 @@
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-      mc:Ignorable="d" PrimaryButtonText="Done" FullSizeDesired="True"  Title="Settings"
+      mc:Ignorable="d" PrimaryButtonText="Done"   Title="Settings"
       Margin="4"
-               Width="1024"
-               Height="768"
-             MaxWidth="1024"
-               MaxHeight="768" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Black" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" 
+               BorderBrush="{x:Null}"
+               VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 
                >
     <ContentDialog.Resources>
         <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
                                        EnumType="ElementTheme" />
-        <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
-                                              FalseValue="Visible"
-                                              TrueValue="Collapsed" />
-        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
     </ContentDialog.Resources>
-    <StackPanel Orientation="Vertical" Width="960"  >
+    <StackPanel Orientation="Vertical" >
         <Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
         <StackPanel Orientation="Horizontal">
             <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
@@ -37,7 +31,7 @@
         <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
         <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />
         <TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>
-        <StackPanel Orientation="Horizontal" Width="1000" Margin="4" >
+        <StackPanel Orientation="Horizontal"  Margin="4" >
             <controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
@@ -51,7 +45,7 @@
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Width="1000" Margin="4">
+        <StackPanel Orientation="Horizontal" Margin="4">
             <controls:NumberBox Header="Max Wood" Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
@@ -65,7 +59,13 @@
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Width="956">
+        <StackPanel Orientation="Horizontal"  Margin="4">
+            <ToggleSwitch  Header="Export Wood" IsOn="{x:Bind views:SettingsPage.sendWood, Mode=TwoWay}" Margin="4"  Width="120" />
+            <ToggleSwitch  Header="Export Stone" IsOn="{x:Bind views:SettingsPage.sendStone, Mode=TwoWay}" Margin="4" Width="120"  />
+            <ToggleSwitch  Header="Export Iron" IsOn="{x:Bind views:SettingsPage.sendIron, Mode=TwoWay}" Margin="4" Width="120" />
+            <ToggleSwitch  Header="Export Food" IsOn="{x:Bind views:SettingsPage.sendFood, Mode=TwoWay}" Margin="4" Width="120" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
             <ComboBox x:Name="hubCityListBox" x:FieldModifier="public"
                      Header="Hub City List"
                       Width="120"
@@ -76,7 +76,7 @@
                       Margin="4" />
             <controls:NumberBox Header="Cottage Level" Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}" Width="120"
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="1" />
-            <ToggleSwitch Header="Autobuild" IsOn="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" Margin="4" HorizontalContentAlignment="Center" />
+            <CheckBox Content="Autobuild" Margin="4" IsThreeState="True" IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
         </StackPanel>
         <Button Content="Export Intel" Click="ExportIntelClick" />
         <TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,4" />

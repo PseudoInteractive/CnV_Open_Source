@@ -34,7 +34,7 @@ namespace COTG.Views
         //private static bool _isBusy;
 //        private static UserData _user;
         public static bool fetchFullHistory;
-        public static bool autoBuildOn;
+        public static bool? autoBuildOn;
         public static string hubCitylistName;
         public static int reqWood = 160000;
         public static int reqStone = 205000;
@@ -45,6 +45,10 @@ namespace COTG.Views
         public static int maxIron = 300000;
         public static int maxFood = 300000;
         public static int cottageLevel = 8;
+        public static bool sendWood;
+        public static bool sendStone;
+        public static bool sendIron;
+        public static bool sendFood;
 
         public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory { get=>fetchFullHistory; set
@@ -70,7 +74,11 @@ namespace COTG.Views
             maxStone = App.Settings().Read(nameof(maxWood), 250000);
             maxIron = App.Settings().Read(nameof(maxIron), 300000);
             maxFood = App.Settings().Read(nameof(maxFood), 300000);
-            autoBuildOn = App.Settings().Read(nameof(autoBuildOn),false );
+            sendWood = App.Settings().Read(nameof(sendWood), true);
+            sendStone = App.Settings().Read(nameof(sendWood), true);
+            sendIron = App.Settings().Read(nameof(sendIron), true);
+            sendFood = App.Settings().Read(nameof(sendFood), true);
+            autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
            // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
         }
         public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
@@ -88,7 +96,13 @@ namespace COTG.Views
             App.Settings().Save(nameof(maxStone), maxStone);
             App.Settings().Save(nameof(maxFood), maxFood);
             App.Settings().Save(nameof(maxIron), maxIron);
-            App.Settings().Save(nameof(autoBuildOn), autoBuildOn);
+            App.Settings().Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
+
+            App.Settings().Save(nameof(sendWood), sendWood);
+            App.Settings().Save(nameof(sendStone), sendStone);
+            App.Settings().Save(nameof(sendFood), sendFood);
+            App.Settings().Save(nameof(sendIron), sendIron);
+
             //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
 
             AttackTab.SaveAttacks();

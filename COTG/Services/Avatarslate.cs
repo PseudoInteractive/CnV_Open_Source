@@ -15,7 +15,7 @@ namespace COTG.Services
     {
         public static Avatarslate instance = new Avatarslate();
         public const string endpoint= "https://api.cognitive.microsofttranslator.com/";
-        public const string apiKey = "c21130319da44a4694b1a6bf47699f5f";
+        public const string apiKey = "a6ddb858baa84bba93fdad98cc3f6b39";
         public const string getLangauges = "/languages?api-version=3.0";
         public static string[] languages;
        // public const string displayLanguage = "en";
@@ -29,7 +29,7 @@ namespace COTG.Services
             if (service == null)
             {
                 Assert(service == null);
-                await TranslatorService.Instance.InitializeAsync(apiKey, null);
+                await TranslatorService.Instance.InitializeAsync(apiKey, "en");
                 service = TranslatorService.Instance;
             }
             return service;
@@ -43,6 +43,7 @@ namespace COTG.Services
         public async void Execute(object parameter)
         {
             var item = parameter as MenuFlyoutItem;
+            var lang = item.Text;
             var markdown = item.Tag as MarkdownTextBlock;
             var textblock = item.Tag as TextBox;
             var txt = markdown!=null ? markdown.Text : textblock.Text;
@@ -52,7 +53,7 @@ namespace COTG.Services
             var id = src.IndexOf('{');
             if (id > 2)
                 txt = txt.Substring(0, id-1);
-            var xl = await service.TranslateAsync(txt, item.Text);
+            var xl = await service.TranslateAsync(txt,lang);
             var result = $"{src} {{ {item.Text}: {xl} }}";
             if (markdown != null)
             {

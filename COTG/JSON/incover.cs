@@ -224,12 +224,14 @@ namespace COTG.JSON
                                                           int firstSpace = str.IndexOf(' ');
 
                                                           var type = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
-                                                          Assert(type != -1);
-                                                          ttl.Add(new TroopTypeCount()
+                                                          if (type != -1)
                                                           {
-                                                              count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
-                                                              type = type >= 0 ? type : 0
-                                                          });
+                                                              ttl.Add(new TroopTypeCount()
+                                                              {
+                                                                  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
+                                                                  type = type >= 0 ? type : 0
+                                                              });
+                                                          }
 
                                                       }
                                                   }

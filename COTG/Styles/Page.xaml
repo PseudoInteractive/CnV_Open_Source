@@ -6,6 +6,8 @@
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     >
+    <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
+    <x:Double x:Key="ContentDialogMaxHeight">1024</x:Double>
     <Style x:Key="PageStyle" TargetType="Page">
 		<Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>

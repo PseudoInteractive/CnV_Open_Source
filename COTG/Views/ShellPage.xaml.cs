@@ -719,14 +719,14 @@ namespace COTG.Views
             ShowTipRefresh();
         }
 
-        private async void ShowSettings(object sender, RoutedEventArgs e)
+        private void ShowSettings(object sender, RoutedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                           CoreDispatcherPriority.Normal, async () =>
+            App.DispatchOnUIThread(async () =>
                            {
-                                   //shown = true;
-                                   var dialog = new SettingsPage();
-                                   await dialog.ShowAsync();
+                               //shown = true;
+                               var dialog = new SettingsPage();
+                               var result=  await dialog.ShowAsync();
+                            //   dialog.auto
                            });
 
     

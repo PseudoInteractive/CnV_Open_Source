@@ -66114,14 +66114,17 @@ var cotgsubscribe = amplify;
                 if (_viewMode === viewModeWorld) {
                 }
                 _popupCount = 0;
-                $(".atkpops,.longmenu").each(function () {
+                $(".atkpops,.longmenu,.popUpBox2").each(function () {
                     if (this.style.display != "none" && this.style.display != "hidden")
                         _popupCount++;
                 });
-                $(".medpopupstyle,.popUpBox2,.smallpopupstyle,.popUpBox").each(function () {
+                $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
                     if (this.style.display == "block")
                         _popupCount++;
                 });
+                if (document.getElementById("speedupusePopup") !== null) {
+                    _popupCount++;
+                }
                 $(".obscuretop,.longwindow").each(function () {
                     if (this.style.display != "none" && this.style.display != "hidden")
                         _popupCount += 128;

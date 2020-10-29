@@ -378,7 +378,8 @@ namespace COTG.Views
                                             }
                                             else if (data.player == 0)
                                             {
-                                                toolTip += "\nWas abandoned";
+                                                var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+                                                toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
                                             }
                                             else
                                             {

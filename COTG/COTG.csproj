@@ -83,12 +83,15 @@
       <Version>12.7.0-preview.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Primitives">
-      <Version>5.0.0-rtm.20506.3</Version>
+      <Version>5.0.0-rtm.20509.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance">
+      <Version>7.0.0-preview3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Parsers">
       <Version>7.0.0-preview3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Services">
@@ -109,26 +112,29 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
       <Version>7.0.0-preview3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Layout">
+      <Version>7.0.0-preview3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
       <Version>7.0.0-preview3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.5.0-prerelease.200923002</Version>
+      <Version>2.5.0-prerelease.201027002</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>5.0.0-rtm.20506.3</Version>
+      <Version>5.0.0-rtm.20509.6</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
-      <Version>5.0.0-rtm.20506.3</Version>
+      <Version>5.0.0-rtm.20509.6</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>5.0.0-rtm.20506.3</Version>
+      <Version>5.0.0-rtm.20509.6</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.25.0</Version>

@@ -117,6 +117,9 @@
                 <tg:DataGridBooleanColumn PropertyName="isCastle"
                                           IsVisible="False"
                                           Width="40" />
+                <tg:DataGridBooleanColumn PropertyName="isOnWater"
+                                          IsVisible="False"
+                                          Width="40" />
                 <tg:DataGridNumericalColumn PropertyName="carryCapacity"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,8:N0}"

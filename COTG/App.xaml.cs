@@ -202,7 +202,10 @@ namespace COTG
 
         private static void IdleTimer_Tick(object sender, object e)
         {
-            Assert(idleTasks.Count >= 1);
+            if (idleTasks.Count < 1)
+            {
+                Log("no tasks for tick?");
+            }
             if (idleTasks.Count <= 1)
             {
                 timerActive = false;

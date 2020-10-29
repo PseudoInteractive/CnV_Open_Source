@@ -33,7 +33,6 @@ namespace COTG.JSON
                 }
 
 
-                var auto = autoBuildOn ? 1 : 0;
                 //        var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,   0
                 //                      0,0,0,0,0,0,0,0,0,0,                                      10
                 //                      0,0,0,0,0,0,0,0,0,0,                                      20
@@ -43,7 +42,14 @@ namespace COTG.JSON
                 //                      10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
                 //                var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron},{maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 
+                if(autoBuildOn.HasValue)
+                {
+                    var auto = autoBuildOn.GetValueOrDefault() ? "1" : "0";
+                    split[0] = '[' + auto;
+                    for (int i = 1; i < 8; ++i)
+                        split[i] = auto;
 
+                }
                 split[32] = "1"; // use the same city all requests
                 split[33] = reqWood.ToString();
                 split[34] = reqStone.ToString();
@@ -51,10 +57,10 @@ namespace COTG.JSON
                 split[36] = reqFood.ToString();
 
                 // send target
-                split[37] = reqHub.ToString(); // hub to use for this res
-                split[38] = reqHub.ToString(); // hub to use for this res
-                split[39] = reqHub.ToString(); // hub to use for this res
-                split[40] = reqHub.ToString(); // hub to use for this res
+                split[37] = sendWood ? reqHub.ToString() : "0"; // hub to use for this res
+                split[38] = sendStone ? reqHub.ToString() : "0"; // hub to use for this res
+                split[39] = sendIron ? reqHub.ToString() : "0"; // hub to use for this res
+                split[40] = sendFood ? reqHub.ToString() : "0"; // hub to use for this res
                 split[41] = "0"; // use a different city for all sends
 
 
@@ -76,12 +82,17 @@ namespace COTG.JSON
             try
             {
                 var split = args.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
+                if (split.Length != 99)
+                {
+                    COTG.Debug.Log($"Invalid options {split.Length}");
+                    var defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
+                    split = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                }
                 opts(split);
                 var args2 = string.Join(',', split);
                 Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}");
                 // find closest hub
-
+                Note.Show($"Set hub settings {args2}");
             }
             catch (Exception e)
             {
@@ -95,10 +106,10 @@ namespace COTG.JSON
         {
             UpdateMinisterOptions(cid, (split) =>
             {
-                split[37] = targetHub.ToString(); // hub to use for this res
-                split[38] = targetHub.ToString(); // hub to use for this res
-                split[39] = targetHub.ToString(); // hub to use for this res
-                split[40] = targetHub.ToString(); // hub to use for this res
+                split[37] = sendWood? targetHub.ToString() : "0"; // hub to use for this res
+                split[38] = sendStone?targetHub.ToString() : "0"; // hub to use for this res
+                split[39] = sendIron?targetHub.ToString() : "0"; // hub to use for this res
+                split[40] = sendFood?targetHub.ToString() : "0"; // hub to use for this res
                 split[41] = "0"; // use a different city for all sends
        //         split[43] = targetHub.ToString();
             });
@@ -130,7 +141,7 @@ namespace COTG.JSON
                     var name = lastName;
                     var lg = name.Length;
                     var numberEnd = lg;
-                    while (numberEnd > 0 && char.IsNumber(name[numberEnd]))
+                    while (numberEnd > 0 && char.IsNumber(name[numberEnd-1]))
                     {
                         --numberEnd;
                     }
@@ -153,7 +164,7 @@ namespace COTG.JSON
                     lastName = nameDialog.name.Text;
                     Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
 
-
+                    Note.Show($"Set name to {lastName}");
                 }
             }
             catch (Exception e)
