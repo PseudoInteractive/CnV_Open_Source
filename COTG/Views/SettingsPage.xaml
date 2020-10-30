@@ -27,6 +27,7 @@
             <TextBox x:Name="CastlesCont" Text="22" Header="continent"  />
             <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
         </StackPanel>
+        <Button Content="Watch incoming for players" Click="WatchIncomingForPlayers" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
         <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
         <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
         <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />

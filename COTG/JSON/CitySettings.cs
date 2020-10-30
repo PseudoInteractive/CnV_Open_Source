@@ -44,10 +44,17 @@ namespace COTG.JSON
 
                 if(autoBuildOn.HasValue)
                 {
-                    var auto = autoBuildOn.GetValueOrDefault() ? "1" : "0";
+                    var autoVal = autoBuildOn.GetValueOrDefault();
+                    var auto = autoVal ? "1" : "0";
                     split[0] = '[' + auto;
                     for (int i = 1; i < 8; ++i)
                         split[i] = auto;
+                    if(autoVal)
+                    {
+                        for (int i = 51; i < 51+24*2; i+=2)
+                            split[i] = '[' + auto;
+
+                    }
 
                 }
                 split[32] = "1"; // use the same city all requests

@@ -57003,12 +57003,12 @@ var cotgsubscribe = amplify;
                     .text() != '')
                     $(_s(4935))
                         .text("");
-                let AIC = pollJ['AIC'];
-                let IC = pollJ['IC'];
+                let AIC = pollJ.AIC;
+                let IC = pollJ.IC;
                 if (lastAllianceIncoming != AIC || lastIncoming != IC) {
                     Q5V(AIC);
                     L5V(IC);
-                    const wrapper = { incoming: { aic: AIC, ic: IC, lic: lastIncoming } };
+                    const wrapper = { incoming: { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC } };
                     lastAllianceIncoming = AIC;
                     lastIncoming = IC;
                     window['external']['notify'](JSON.stringify(wrapper));

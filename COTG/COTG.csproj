@@ -295,6 +295,9 @@
     <Compile Include="Views\OutgoingTab.xaml.cs">
       <DependentUpon>OutgoingTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PlayerGroup.xaml.cs">
+      <DependentUpon>PlayerGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SchemeActivationSamplePage.xaml.cs">
       <DependentUpon>SchemeActivationSamplePage.xaml</DependentUpon>
     </Compile>
@@ -411,6 +414,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\OutgoingTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlayerGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

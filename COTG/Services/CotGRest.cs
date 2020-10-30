@@ -159,26 +159,20 @@ namespace COTG.Services
 
         async public Task Post()
         {
-            for (; ;)
+            while( JSClient.jsVars.token == null)
             {
+                await Task.Delay(400);
+            }
                 try
                 {
-                    if (JSClient.jsVars.token != null  )
-                    {
                         await Accept(await Send(GetPostContent()));
-                        return;
-                    }
 
 
                 }
                 catch (Exception e)
                 {
                     Log(e);
-                    return;
                 }
-                await Task.Delay(400);
-
-            }
 
         }
 

@@ -17,7 +17,6 @@ namespace COTG.JSON
     public static class OutgoingOverview
     {
         public static bool updateInProgress;
-        public static bool hasFetchedReports; // sticky bit.  Once reports have been fetched at least once, all calls to update will process all report history
 
         // uses Report.Hash(), can have several reports per reportId
 
@@ -27,10 +26,8 @@ namespace COTG.JSON
 
         public async static Task Process(bool fetchReports)
         {
-            if (fetchReports && !hasFetchedReports)
+            if (true)
             {
-                hasFetchedReports = true;
-
                 if (updateInProgress)
                 {
                     // If there is one in progress that did not fetch history and this time we want history, we need to wait and the start a new fetch right after the prior one completes
@@ -57,21 +54,7 @@ namespace COTG.JSON
                 await Task.Delay(1000);
             }
 
-            var reportCache = new Dictionary<int, Army[]>();
-            foreach (var r in HitTab.instance.history)
-            {
-                if (r.reportId.IsNullOrEmpty())
-                    continue;
-                var hash = Army.ReportHash(r.reportId);
-                if (reportCache.TryGetValue(hash, out var reports))
-                {
-                    reportCache[hash] = reports.ArrayAppend(r);
-                }
-                else
-                {
-                    reportCache[hash] = new[] { r };
-                }
-            }
+            
 
             // ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
@@ -85,7 +68,7 @@ namespace COTG.JSON
                    //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
                    using (var jsd = await Post.SendForJson("overview/outover.php", "a=0"))
                    {
-                       foreach (var spot in Spot.defenders)
+                       foreach (var spot in Spot.defendersO)
                        {
                            // is this a safe time to do this?
                            spot.incoming = Army.empty; // Todo:  this wipes incoming as well, we may want to preserve it at some point
@@ -137,7 +120,8 @@ namespace COTG.JSON
                                spot.incoming = spot.incoming.ArrayAppend(army);
                                defenders.Add(spot);
                                     //   defenders.Add(spot);
-                               reportsOutgoing.Add(army);
+                               if(fetchReports)
+                                   reportsOutgoing.Add(army);
                                //var rep = new Army();
                                //rep.atkCid = atkCid;
                                //rep.defCid = defCid;
@@ -172,8 +156,23 @@ namespace COTG.JSON
 
 
                 int fetched = 0;
-                if (hasFetchedReports)
+                if (fetchReports)
                 {
+                    var reportCache = new Dictionary<int, Army[]>();
+                    foreach (var r in HitTab.instance.history)
+                    {
+                        if (r.reportId.IsNullOrEmpty())
+                            continue;
+                        var hash = Army.ReportHash(r.reportId);
+                        if (reportCache.TryGetValue(hash, out var reports))
+                        {
+                            reportCache[hash] = reports.ArrayAppend(r);
+                        }
+                        else
+                        {
+                            reportCache[hash] = new[] { r };
+                        }
+                    }
                     // hits history
                     using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=1"))
                     {
@@ -383,9 +382,12 @@ namespace COTG.JSON
                 }
 
                 await task0;
-
+                Spot.defendersO = defenders.ToArray();
                 App.DispatchOnUIThreadLow(() =>
                 {
+
+                    var killNote = "";
+                    if (fetchReports)
                     {
                         var page = HitTab.instance;
                         for (int i = 0; i < reportParts.Length; ++i)
@@ -393,12 +395,31 @@ namespace COTG.JSON
                     // App.DispatchOnUIThread(() =>
                     // We should do this on the Render Thread
                     page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
+                        var defKilled = 0;
+                        var atkKilled = 0;
+                        var myDefKilled = 0;
+                        var myAtkKilled = 0;
+                        foreach (var i in reportsOutgoing)
+                        {
+                            if (i.aTsKill > 0 && i.dTsKill > 0)
+                            {
+                                defKilled += i.dTsKill;
+                                atkKilled += i.aTsKill;
+                                if (i.sPid == Player.myId || i.tPid == Player.myId)
+                                {
+                                    myDefKilled += i.dTsKill;
+                                    myAtkKilled += i.aTsKill;
+                                }
+                            }
+                        }
+                        killNote= $", {atkKilled:N0}({myAtkKilled:N0})TS atk killed, {defKilled:N0}({myAtkKilled:N0})TS def Killed";
                     }
+                    App.CopyTextToClipboard(killNote);
 
                     OutgoingTab.NotifyOutgoingUpdated();
 
                     updateInProgress = false;
-                    Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {Cosmos.battleRecordsUpserted}");
+                    Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {Cosmos.battleRecordsUpserted}{killNote}");
                 });
             }
         }

@@ -57336,7 +57336,7 @@ console.log("Bad");
 
     let lastAllianceIncoming=0;
     let lastIncoming=0;
-
+    
     function K6F(G71:string) {
       if (G71.length > 1) {
         pollJ = JSON.parse(G71);
@@ -57463,15 +57463,15 @@ console.log("Bad");
             .S55(4935))
           .text() != '') $(_s(4935))
           .text("");
-        let AIC = pollJ['AIC'];// alliance incoming
-        let IC = pollJ['IC']; // my incoming
+        let AIC = pollJ.AIC;// alliance incoming
+        let IC = pollJ.IC; // my incoming
        
         if (lastAllianceIncoming!=AIC || lastIncoming != IC)
         {
            
              Q5V(AIC);
              L5V(IC);
-            const wrapper = { incoming: { aic:AIC,ic:IC,lic:lastIncoming }  }
+            const wrapper = { incoming: { aic:AIC,ic:IC,lic:lastIncoming,oc:pollJ.OC }  }
             lastAllianceIncoming = AIC;
             lastIncoming = IC;
             window['external']['notify'](JSON.stringify(wrapper));

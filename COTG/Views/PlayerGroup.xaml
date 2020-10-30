@@ -1,0 +1,28 @@
+﻿<ContentDialog
+    x:Class="COTG.Views.PlayerGroup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Players"
+    PrimaryButtonText="Okay"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <AutoSuggestBox x:Name="suggest" PlaceholderText="Type a player name" TextChanged="Suggest_TextChanged"
+                QueryIcon="Find" QuerySubmitted="Suggest_QuerySubmitted" 
+                Width="300" HorizontalAlignment="Left" />
+
+        <ListView x:Name="names" Grid.Row="1" x:FieldModifier="public" MinHeight="128" Width="300"
+                HorizontalAlignment="Left" SelectionMode="None" IsItemClickEnabled="True"  ItemClick="NamesClick" />
+        
+    </Grid>
+</ContentDialog>

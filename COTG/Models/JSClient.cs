@@ -53,7 +53,7 @@ namespace COTG
         public static bool IsWorldView()	=> viewMode == ViewMode.world;
         public static bool IsCityView() => viewMode == ViewMode.city;
 
-        static DateTime lastIncomingNotification = DateTime.UtcNow;
+        
         //        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
@@ -1132,14 +1132,7 @@ namespace COTG
                                     var lastIc = jso.GetAsInt("lic");
                                     if (ic > lastIc)
                                     {
-                                        var now = DateTime.UtcNow;
-                                        if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
-                                        {
-                                            lastIncomingNotification = now;
-                                            Note.Show($"Incoming: ({ic}) {aic}");
-                                            COTG.Services.ToastNotificationsService.instance.ShowIncomingNotification(ic, aic);
-
-                                        }
+                                        
                                     }
                                     App.QueueIdleTask(IncomingOverview.ProcessTask);
                                     break;

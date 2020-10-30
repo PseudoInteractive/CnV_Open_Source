@@ -92,6 +92,7 @@
                     <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Segoe UI Emoji"
                             ToolTipService.ToolTip="Spot with Focus.\nClick to re-center or switch to city view\nRight clck for menu"/>
+                    <TextBlock x:Name="incoming" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}" />

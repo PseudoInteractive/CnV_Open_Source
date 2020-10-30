@@ -37,7 +37,8 @@ namespace COTG.Game
     {
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
         public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
-        public static Spot[] defenders = Array.Empty<Spot>();
+        public static Spot[] defendersI = Array.Empty<Spot>();
+        public static Spot[] defendersO = Array.Empty<Spot>();
 
         public static bool TryGet(int cid, out Spot spot) => allSpots.TryGetValue(cid, out spot);
         public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
@@ -320,11 +321,11 @@ namespace COTG.Game
                 }
 
 
-                //if (MainPage.IsVisible() && isMine && wantRaidScan)
-                //{
-                //    //                MainPage.SetRaidCity(cid,true);
-                //    ScanDungeons.Post(cid, true);
-                //}
+                if (MainPage.IsVisible() && isMine && wantRaidScan)
+                {
+                    //                MainPage.SetRaidCity(cid,true);
+                    ScanDungeons.Post(cid, true);
+                }
                 SetFocus();
                 NavStack.Push(cid);
 

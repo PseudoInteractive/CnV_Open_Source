@@ -89,7 +89,7 @@ namespace COTG.Views
                 {
                     App.DispatchOnUIThreadSneaky(() =>
                     {
-                        instance.defenderGrid.ItemsSource = Spot.defenders;
+                        instance.defenderGrid.ItemsSource = Spot.defendersO;
                     });
                 }
                 catch (Exception e)

@@ -10,6 +10,7 @@ using COTG.Core.Helpers;
 using COTG.Core.Services;
 using COTG.Game;
 using COTG.Helpers;
+using COTG.JSON;
 using COTG.Models;
 using COTG.Services;
 
@@ -49,6 +50,7 @@ namespace COTG.Views
         public static bool sendStone;
         public static bool sendIron;
         public static bool sendFood;
+        public static string[] incomingWatch = Array.Empty<string>();
 
         public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory { get=>fetchFullHistory; set
@@ -78,6 +80,7 @@ namespace COTG.Views
             sendStone = App.Settings().Read(nameof(sendWood), true);
             sendIron = App.Settings().Read(nameof(sendIron), true);
             sendFood = App.Settings().Read(nameof(sendFood), true);
+            incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
             autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
            // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
         }
@@ -102,6 +105,7 @@ namespace COTG.Views
             App.Settings().Save(nameof(sendStone), sendStone);
             App.Settings().Save(nameof(sendFood), sendFood);
             App.Settings().Save(nameof(sendIron), sendIron);
+            App.Settings().Save(nameof(incomingWatch), incomingWatch);
 
             //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
 
@@ -384,6 +388,19 @@ namespace COTG.Views
             this.Hide();
         }
 
-  
+        private async void WatchIncomingForPlayers(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            await Task.Delay(100);
+            
+            var names = await PlayerGroup.ChooseNames("Players to watch", incomingWatch);
+            if (names != null)
+            {
+                incomingWatch = names;
+                SaveAll();
+                Note.Show("Updated incoming watch list");
+                IncomingOverview.ProcessTask();
+            }
+        }
     }
 }

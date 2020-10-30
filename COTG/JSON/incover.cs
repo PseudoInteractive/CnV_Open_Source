@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using static COTG.Debug;
+using Windows.UI.ViewManagement;
 
 namespace COTG.JSON
 {
@@ -27,7 +28,10 @@ namespace COTG.JSON
 
         // TODO
         //        static DateTime lastUpdate = new DateTime();
+        static DateTime lastIncomingNotification = DateTime.UtcNow;
         static bool updatePending;
+        static int lastPersonalIncomingCount = 0;
+        static int lastWatchIncomingCount = 0;
         public static void ProcessTask() { Process(false, false); }
         public async static Task Process(bool fetchReports, bool showNote)
         {
@@ -62,6 +66,9 @@ namespace COTG.JSON
                         await Task.Delay(1000);
                     }
 
+                    var watch = SettingsPage.incomingWatch;
+                    int personalIncomingCount = 0;
+                    int watchIncomingCount = 0;
 
                     var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
                     var reportsIncoming = new List<Army>();
@@ -132,7 +139,7 @@ namespace COTG.JSON
                               //}
                               {
 
-                                  foreach (var spot in Spot.defenders)
+                                  foreach (var spot in Spot.defendersI)
                                   {
                                       // is this a safe time to do this?
                                       spot.incoming = Army.empty;
@@ -150,7 +157,13 @@ namespace COTG.JSON
                                               var spot = Spot.GetOrAdd(cid, val.GetAsString("1"));
                                               // set info if needed
                                               spot.tsHome = val.GetAsInt("8");
-                                              spot.pid = Player.NameToId(val.GetAsString("0"));
+                                              var name = val.GetAsString("0");
+                                              spot.pid = Player.NameToId(name);
+                                              if (watch.Contains(name))
+                                                  watchIncomingCount++;
+                                               if ( spot.pid == Player.myId)
+                                                  ++personalIncomingCount;
+
                                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
                                               try
                                               {
@@ -220,7 +233,7 @@ namespace COTG.JSON
 
                                                       foreach (var tt in ttp.EnumerateArray())
                                                       {
-                                                          var str = tt.GetString();
+                                                          var str = tt.GetAsString();
                                                           int firstSpace = str.IndexOf(' ');
 
                                                           var type = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
@@ -329,8 +342,8 @@ namespace COTG.JSON
                                     var target = AUtil.TryDecodeCid(0, inc[4].GetString());
                                     if (target <= 0)
                                         return;
-                                    var defP = Player.NameToId(inc[1].GetString());
-                                    var atkPNS = inc[6].GetString();
+                                    var defP = Player.NameToId(inc[1].GetAsString());
+                                  //  var atkPNS = inc[6].GetAsString();
                                     var defCN = inc[3].ToString();
                                     Spot.GetOrAdd(target, defCN);
                                     var time = inc[5].GetString().ParseDateTime(false);
@@ -355,7 +368,7 @@ namespace COTG.JSON
                                             // Scout
                                             // this is a scout
 
-                                            Spot.GetOrAdd(source, inc[14].GetString());
+                                            Spot.GetOrAdd(source, inc[14].GetAsString());
                                             var dts = inc[8].GetAsInt();
                                             var ats = inc[9].GetAsInt();
                                             var report = new Army()
@@ -546,11 +559,32 @@ namespace COTG.JSON
 
                     await task0;
 
-                    Spot.defenders = defenders.ToArray();
+                    Spot.defendersI = defenders.ToArray();
                     //if(ShellPage.IsPageDefense())
                     App.DispatchOnUIThreadLow(() =>
                     {
+                        if(lastPersonalIncomingCount != personalIncomingCount || watchIncomingCount != lastWatchIncomingCount)
+                        {
+                            if (lastPersonalIncomingCount < personalIncomingCount || watchIncomingCount < lastWatchIncomingCount)
+                            {
+                                var now = DateTime.UtcNow;
+                                if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
+                                {
+                                    lastIncomingNotification = now;
+                                    Note.Show($"Incoming: {personalIncomingCount} ({watchIncomingCount})");
+                                    COTG.Services.ToastNotificationsService.instance.ShowIncomingNotification(personalIncomingCount, watchIncomingCount);
 
+                                }
+                            }
+                            lastPersonalIncomingCount = personalIncomingCount;
+                            lastWatchIncomingCount = watchIncomingCount;
+                            ShellPage.instance.incoming.Text = $"In {personalIncomingCount} ({watchIncomingCount})";
+                            if (personalIncomingCount != 0 || watchIncomingCount != 0)
+                                ApplicationView.GetForCurrentView().Title = $"Incoming {personalIncomingCount} (watched {watchIncomingCount})";
+                            else
+                                ApplicationView.GetForCurrentView().Title = $"No incoming";
+
+                        }
                         string killNote = "";
 
                         if (fetchReports)
@@ -560,15 +594,22 @@ namespace COTG.JSON
                                 reportsIncoming.AddRange(reportParts[i]);
                             var defKilled = 0;
                             var atkKilled = 0;
+                            var myDefKilled = 0;
+                            var myAtkKilled = 0;
                             foreach (var i in reportsIncoming)
                             {
-                                if (i.aTsKill > 0 && i.dTsKill > 0 && (i.tPlayer== "Avatar") )
+                                if (i.aTsKill > 0 && i.dTsKill > 0 )
                                 {
                                     defKilled += i.dTsKill;
                                     atkKilled += i.aTsKill;
+                                    if(i.sPid == Player.myId || i.tPid == Player.myId)
+                                    {
+                                        myDefKilled += i.dTsKill;
+                                        myAtkKilled += i.aTsKill;
+                                    }
                                 }
                             }
-                            killNote = $", {atkKilled} attack ts killed, {defKilled} def ts Killed";
+                            killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myAtkKilled:N0})TS def Killed";
                             App.CopyTextToClipboard(killNote);
                             // App.DispatchOnUIThread(() =>
                             // We should do this on the Render Thread

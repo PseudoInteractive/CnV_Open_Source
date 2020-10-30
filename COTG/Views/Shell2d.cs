@@ -734,83 +734,86 @@ namespace COTG.Views
                         if (defenderVisible || outgoingVisible)
                         {
                             var cullSlopSpace = 80 * pixelScale;
-                            foreach (var city in Spot.defenders)
+                            for (int iOrO = 0; iOrO < 2; ++iOrO)
                             {
-                                if (city.incoming.Any() || city.isMine)
+                                foreach (var city in (iOrO ==0) ? Spot.defendersI : Spot.defendersO )
                                 {
-
-                                    var targetCid = city.cid;
-                                    var c1 = targetCid.CidToCC();
-                                    if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
-                                        continue;
-                                    var incAttacks = 0;
-                                    var incTs = 0;
-                                    foreach (var i in city.incoming)
+                                    if (city.incoming.Any() || city.isMine)
                                     {
-                                        var c0 = i.sourceCid.CidToCC();
-                                        if (IsCulled(c0, c1))
+
+                                        var targetCid = city.cid;
+                                        var c1 = targetCid.CidToCC();
+                                        if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
-                                        Color c;
-                                        if (i.isDefense)
+                                        var incAttacks = 0;
+                                        var incTs = 0;
+                                        foreach (var i in city.incoming)
                                         {
-
-                                            if (i.sourceCid == targetCid)
+                                            var c0 = i.sourceCid.CidToCC();
+                                            if (IsCulled(c0, c1))
                                                 continue;
+                                            Color c;
+                                            if (i.isDefense)
+                                            {
 
-                                            c = i.time <= serverNow? defenseArrivedColor: defenseColor;
-                                        }
-                                        else
-                                        {
-                                            ++incAttacks;
-                                            incTs += i.ts;
-                                            if (i.hasArt)
-                                            {
-                                                c = artColor;
-                                            }
-                                            else if (i.hasSenator)
-                                            {
-                                                c = senatorColor; ;
+                                                if (i.sourceCid == targetCid)
+                                                    continue;
+
+                                                c = i.time <= serverNow ? defenseArrivedColor : defenseColor;
                                             }
                                             else
                                             {
-                                                c = GetAttackColor(i) ;
+                                                ++incAttacks;
+                                                incTs += i.ts;
+                                                if (i.hasArt)
+                                                {
+                                                    c = artColor;
+                                                }
+                                                else if (i.hasSenator)
+                                                {
+                                                    c = senatorColor; ;
+                                                }
+                                                else
+                                                {
+                                                    c = GetAttackColor(i);
+                                                }
                                             }
-                                        }
-                                        if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
-                                        {
-                                            continue;
-                                            c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
-                                        }
-                                        if (i.troops.Any())
-                                        {
-                                            var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
-                                            var r = t.Ramp();
-                                            int iType = 0;
-                                            float alpha = 1;
-                                            var nSprite = i.troops.Length;
-
-                                            if (nSprite > 1)
+                                            if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
                                             {
-                                                Assert(t > 0);
-                                                var rtype = t%nSprite;
-                                                iType = (int)rtype;
-                                                var frac = rtype - iType;
-                                                iType = iType.Min(nSprite- 1);
-                                                if (frac < 0.25f)
-                                                    alpha = AMath.STerm(frac*4.0f);
-                                                else if(frac > 0.75f)
-                                                    alpha = AMath.STerm( (1-frac) * 4.0f);
-
+                                                continue;
+                                                c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
                                             }
+                                            if (i.troops.Any())
+                                            {
+                                                var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
+                                                var r = t.Ramp();
+                                                int iType = 0;
+                                                float alpha = 1;
+                                                var nSprite = i.troops.Length;
 
-                                            DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i,28 , alpha);
+                                                if (nSprite > 1)
+                                                {
+                                                    Assert(t > 0);
+                                                    var rtype = t % nSprite;
+                                                    iType = (int)rtype;
+                                                    var frac = rtype - iType;
+                                                    iType = iType.Min(nSprite - 1);
+                                                    if (frac < 0.25f)
+                                                        alpha = AMath.STerm(frac * 4.0f);
+                                                    else if (frac > 0.75f)
+                                                        alpha = AMath.STerm((1 - frac) * 4.0f);
+
+                                                }
+
+                                                DrawAction(ds, batch, i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, 28, alpha);
+                                            }
+                                            else
+                                            {
+                                                Assert(false);
+                                            }
                                         }
-                                        else
-                                        {
-                                            Assert(false);
-                                        }
+                                        DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal);
                                     }
-                                    DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome)+500) / 1000 }k", c1, tipTextFormatCentered, incAttacks!=0?Colors.White: Colors.Teal);
                                 }
                             }
                             if (defenderVisible)

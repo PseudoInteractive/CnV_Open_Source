@@ -57,17 +57,17 @@ namespace COTG
         public App()
         {
 
-            //try
-            //{
-            //    {
+            try
+            {
+                {
 
-            //        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    Log(e);
-            //}
+                    ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
 
 
 

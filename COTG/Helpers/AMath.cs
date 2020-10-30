@@ -13,6 +13,10 @@ namespace COTG
     {
         public static Random random = new Random();
 
+        public static int IDivNearest(this int val,int denometer)
+        {
+            return (val + (denometer >> 1)) / denometer;
+        }
         public static int Random(this (int min, int max) range ) => random.Next(range.min, range.max);
         public static float Random(this (float min, float max) range) => ((float)random.NextDouble()).Lerp(range.min,range.max);
 
