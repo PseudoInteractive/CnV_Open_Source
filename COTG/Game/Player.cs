@@ -20,6 +20,8 @@ namespace COTG.Game
         public static int myId;
         public static string myName;
 
+        public static int viewHover; // in the view menu
+
         public string allianceName => Alliance.IdToName(alliance);
 
         public static Dictionary<int, Player> all = new Dictionary<int, Player>();

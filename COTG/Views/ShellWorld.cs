@@ -220,6 +220,8 @@ namespace COTG.Views
             lastCont = -1;
             toolTip = null;
             Spot.viewHover = 0;
+            Player.viewHover = 0;
+
 
         }
         private void Canvas_PointerExited(object sender, PointerEventArgs e)
@@ -304,6 +306,7 @@ namespace COTG.Views
                 {
                     Spot.uiPress = cid;
                     Spot.viewHover = 0;
+                    Player.viewHover = 0;
                     toolTip = null;
 
                     lastCanvasC = cid;
@@ -321,6 +324,8 @@ namespace COTG.Views
                                 }
                                 else
                                 {
+                                    Player.viewHover = data.player;
+                                    
                                     var player = Player.all.GetValueOrDefault(data.player, Player._default);
                                     if (Player.IsMe(data.player))
                                     {

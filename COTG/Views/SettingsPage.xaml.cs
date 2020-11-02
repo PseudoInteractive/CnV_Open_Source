@@ -80,7 +80,17 @@ namespace COTG.Views
             sendStone = App.Settings().Read(nameof(sendWood), true);
             sendIron = App.Settings().Read(nameof(sendIron), true);
             sendFood = App.Settings().Read(nameof(sendFood), true);
-            incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
+            DonationTab.reserveCarts = App.Settings().Read(nameof(DonationTab.reserveCarts), 800);
+            DonationTab.reserveCartsPCT = App.Settings().Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
+            DonationTab.reserveShips = App.Settings().Read(nameof(DonationTab.reserveShips), 10);
+            DonationTab.reserveShipsPCT = App.Settings().Read(nameof(DonationTab.reserveShipsPCT), 0f);
+            DonationTab.woodStoneRatio = App.Settings().Read(nameof(DonationTab.woodStoneRatio), -1f);
+            DonationTab.reserveWood = App.Settings().Read(nameof(DonationTab.reserveWood), 0);
+            DonationTab.reserveStone = App.Settings().Read(nameof(DonationTab.reserveStone), 0);
+
+
+
+        incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
             autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
            // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
         }
@@ -106,6 +116,14 @@ namespace COTG.Views
             App.Settings().Save(nameof(sendFood), sendFood);
             App.Settings().Save(nameof(sendIron), sendIron);
             App.Settings().Save(nameof(incomingWatch), incomingWatch);
+
+            App.Settings().Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
+            App.Settings().Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
+            App.Settings().Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
+            App.Settings().Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
+            App.Settings().Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
+            App.Settings().Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
+            App.Settings().Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
 
             //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
 

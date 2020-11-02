@@ -677,7 +677,7 @@ namespace COTG.Game
                 }
                 l = l.OrderBy((a) => a._cityName).ToArray();
                 ShellPage.instance.cityBox.ItemsSource = l;
-                var reserveCartsFilter = DonationTab.instance.reserveCarts;
+                var reserveCartsFilter = DonationTab.reserveCarts;
                 if (DonationTab.IsVisible())
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
                         .OrderByDescending(a=>a.cartsHome);

@@ -36,6 +36,21 @@ namespace COTG.Game
         public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static bool diplomacyFetched;
+        public static bool PartNameToId(string name, out int id)
+        {
+            name = name.ToLower();
+            foreach(var a in nameToId)
+            {
+                if (a.Key.ToLower().Contains(name))
+                {
+                    id = a.Value;
+                    return true;
+                }
+            }
+            id = -1;
+            return false;
+        }
+
         public static string IdToName(int id)
         {
             if (all.TryGetValue(id, out var a))

@@ -27,12 +27,13 @@ namespace COTG.Views
     public sealed partial class DonationTab : UserTab, INotifyPropertyChanged
     {
         public static DonationTab instance;
-        public int reserveCarts=800;
-        public float reserveCartsPCT=0.06f;
-        public int reserveShips = 10;
-        public float reserveShipsPCT = 0.0f;
-        public int reserveWood = 0;
-        public int reserveStone = 0;
+        public static int reserveCarts=800;
+        public static float reserveCartsPCT =0.06f;
+        public static int reserveShips = 10;
+        public static float reserveShipsPCT = 0.0f;
+        public static float woodStoneRatio = -1;
+        public static int reserveWood = 0;
+        public static int reserveStone = 0;
         public DonationTab()
         {
             Assert(instance == null);
@@ -157,8 +158,8 @@ public class BlessedTapCommand : DataGridCommand
                         if (sender != null)
                         {
                             var inst = DonationTab.instance;
-                                var wood = (sender.wood - inst.reserveWood.Max(1000)).Max0();
-                                var stone = (sender.stone - inst.reserveStone.Max(1000)).Max0();
+                                var wood = (sender.wood - DonationTab.reserveWood.Max(1000)).Max0();
+                                var stone = (sender.stone - DonationTab.reserveStone.Max(1000)).Max0();
                                 if (wood + stone <= 0)
                                 {
                                     Note.Show("Not enough res");
@@ -169,8 +170,8 @@ public class BlessedTapCommand : DataGridCommand
                                 if (useShips)
                                 {
 
-                                    var shipReserve = (inst.reserveShipsPCT * sender.ships).RoundToInt()
-                                            .Max(inst.reserveShips);
+                                    var shipReserve = (DonationTab.reserveShipsPCT * sender.ships).RoundToInt()
+                                            .Max(DonationTab.reserveShips);
                                     var ships = sender.shipsHome - shipReserve - 1;
                                     if (ships <= 0)
                                     {
@@ -189,8 +190,8 @@ public class BlessedTapCommand : DataGridCommand
                                 }
                                 else
                                 {
-                                    var cartReserve = (inst.reserveCartsPCT * sender.carts).RoundToInt()
-                                            .Max(inst.reserveCarts);
+                                    var cartReserve = (DonationTab.reserveCartsPCT * sender.carts).RoundToInt()
+                                            .Max(DonationTab.reserveCarts);
                                     var carts = sender.cartsHome - cartReserve - 1;
                                     if (carts <= 0)
                                     {
@@ -201,8 +202,26 @@ public class BlessedTapCommand : DataGridCommand
                                     {
                                         var desiredC = (wood + stone) / 1000 + 1;
                                         var ratio = (float)carts / desiredC;
+                                        
+                                        var maxWood = wood;
+                                        var maxStone = stone;
                                         wood = (int)(wood * ratio);
                                         stone = (int)(stone * ratio);
+                                        float denom = (wood + stone);
+                                        var desRatio = DonationTab.woodStoneRatio;
+                                        if (desRatio >= 0)
+                                        {
+                                            while (wood > 1000 && stone < maxStone -1000 &&  (wood-1000)/ denom > desRatio)
+                                            {
+                                                wood -= 1000;
+                                                stone += 1000;
+                                            }
+                                            while (stone > 1000 && wood < maxWood - 1000 && (wood+1000) / denom < desRatio)
+                                            {
+                                                wood += 1000;
+                                                stone -= 1000;
+                                            }
+                                        }
                                     }
                                     sender.cartsHome -= (ushort)((wood + stone + 999) / 1000);
                                 }

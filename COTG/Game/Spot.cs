@@ -103,7 +103,7 @@ namespace COTG.Game
         public int y => cid >> 16;
 
         public int tsHome { get; set; }
-        public int tsMax => incomingDefTS + tsHome;
+        public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : tsHome; } }
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -214,6 +214,7 @@ namespace COTG.Game
 
             var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
             viewHover = spot != null ? spot.cid : 0;
+            Player.viewHover = spot != null ? spot.pid : 0;
             var uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             
             return (spot, uiHoverColumn, physicalPoint,grid);
@@ -245,6 +246,7 @@ namespace COTG.Game
         public static void ClearHover()
         {
             viewHover = 0;
+            Player.viewHover = 0;
         //    uiHoverColumn = string.Empty;
         }
 
@@ -640,7 +642,7 @@ namespace COTG.Game
 
         public static int viewHover; // in the view menu
 
-//        public static string uiHoverColumn = string.Empty;
+        //        public static string uiHoverColumn = string.Empty;
         public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
         public static string uiPressColumn = string.Empty;
 

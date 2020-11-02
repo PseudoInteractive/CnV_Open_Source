@@ -170,7 +170,7 @@ namespace COTG.Game
             MainPage.ClearDungeonList();
             if(shiftPressed)
             {
-                await Task.Delay(2000);
+                await Task.Delay(3000);
                 await city.SuperRaid();
             }
 

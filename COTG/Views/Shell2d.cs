@@ -49,7 +49,7 @@ namespace COTG.Views
         public float eventTimeOffsetLag;
         public float eventTimeEnd;
         static public CanvasSolidColorBrush raidBrush, shadowBrush, desaturateBrush;
-        static public Color nameColor, myNameColor, nameColorIncoming, myNameColorIncoming;
+        static public Color nameColor, nameColorHover,myNameColor, nameColorIncoming, nameColorIncomingHover, myNameColorIncoming;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap };
@@ -494,10 +494,12 @@ namespace COTG.Views
                             var rgb = attacksVisible ? 1.0f : 1.0f;
                             Vector4 tint = new Vector4(rgb, rgb, rgb, alpha);
                             var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
-                            
+
                             nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
+                            nameColorHover = new Color() { A = intAlpha, G = 230, B = 255, R = 255 };
                             myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
                             nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
+                            nameColorIncomingHover = new Color() { A = intAlpha, G = 200, B = 220, R = 255 };
                             myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
 
                             var td = TileData.instance;
@@ -917,7 +919,7 @@ namespace COTG.Views
                             {
                                 for (var cx = cx0; cx < cx1; ++cx)
                                 {
-                                    (var name, var isMine,var hasIncoming) = World.GetLabel((cx, cy));
+                                    (var name, var isMine,var hasIncoming, var hovered) = World.GetLabel((cx, cy));
                                     if (name != null)
                                     {
                                         if (!nameLayoutCache.TryGetValue(name, out var layout))
@@ -930,7 +932,9 @@ namespace COTG.Views
 
                                         ds.DrawTextLayout(layout, new Vector2((float)(rect.Left + rect.Right) * 0.5f,
                                             (float)rect.Top + (float)rect.Height * 7.25f / 8.0f),
-                                            isMine ? (hasIncoming?myNameColorIncoming:myNameColor) : (hasIncoming?nameColorIncoming:nameColor));
+                                            isMine ? (hasIncoming?myNameColorIncoming:myNameColor) :
+                                            (hasIncoming?hovered ? nameColorIncomingHover:nameColorIncoming
+                                                        :hovered ? nameColorHover:nameColor));
 
                                     }
                                 }

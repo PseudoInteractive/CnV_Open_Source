@@ -788,7 +788,7 @@ namespace COTG.Game
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             current= rv;
         }
-        public static (string label,bool isMine,bool hasIncoming) GetLabel((int x, int y) c)
+        public static (string label,bool isMine,bool hasIncoming,bool hovered) GetLabel((int x, int y) c)
         {
             var data = GetInfo(c);
             switch (data.type)
@@ -798,7 +798,7 @@ namespace COTG.Game
 
                         if (data.player == 0)
                         {
-                            return (null,false,false); // lawless
+                            return (null,false,false,false); // lawless
                         }
                         else
                         {
@@ -809,21 +809,25 @@ namespace COTG.Game
                                 isMine = true;
                                 if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
                                 {
-                                    return (city.cityName,true,city.incoming.Any());
+                                    return (city.cityName,true,city.incoming.Any(),false);
                                 }
 
                             }
-                            return (player.name,isMine, Spot.TryGet(c.WorldToCid(),out var spot) ? spot.incoming.Any() : false);
+                            return (player.name,isMine, Spot.TryGet(c.WorldToCid(),out var spot) ? spot.incoming.Any() : false,data.player==Player.viewHover);
                         }
                     }
                 default:
-                    return (null,false,false);
+                    return (null,false,false,false);
             }
         }
         public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName)
         {
             var sb = new StringBuilder();
-            var allianceId = Alliance.nameToId[allianceName];
+            if(!Alliance.PartNameToId(allianceName, out var allianceId) )
+             {
+                Note.Show("Invalid alliance name");
+                return;
+            }
             sb.Append("Coords\tplayer\tclassification\n");
             int counter = 0;
             for (int x=x0;x<x1;++x)
