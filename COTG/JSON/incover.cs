@@ -69,6 +69,9 @@ namespace COTG.JSON
                     var watch = SettingsPage.incomingWatch;
                     int personalIncomingCount = 0;
                     int watchIncomingCount = 0;
+                    var firstIncoming = new DateTimeOffset(2050,1,1,1,1,1, TimeSpan.Zero);
+                    var firstWatchIncoming = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero);
+
 
                     var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
                     var reportsIncoming = new List<Army>();
@@ -159,10 +162,7 @@ namespace COTG.JSON
                                               spot.tsHome = val.GetAsInt("8");
                                               var name = val.GetAsString("0");
                                               spot.pid = Player.NameToId(name);
-                                              if (watch.Contains(name))
-                                                  watchIncomingCount++;
-                                               if ( spot.pid == Player.myId)
-                                                  ++personalIncomingCount;
+                                         
 
                                               spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
                                               try
@@ -202,6 +202,18 @@ namespace COTG.JSON
                                                       "on support" => JSClient.ServerTime() - TimeSpan.FromHours(1),
                                                       var t => t.ParseDateTime()
                                                   };
+                                                  if (army.isAttack && watch.Contains(name) )
+                                                  {
+                                                      watchIncomingCount++;
+                                                      if (army.time < firstWatchIncoming)
+                                                          firstWatchIncoming = army.time;
+                                                  }
+                                                  if (army.isAttack && spot.pid == Player.myId)
+                                                  {
+                                                      if (army.time < firstIncoming)
+                                                          firstIncoming = army.time;
+                                                      ++personalIncomingCount;
+                                                  }
                                                   army.targetCid = cid;
                                                   var home = (arrival == "home");
                                                   if (home)
@@ -565,22 +577,24 @@ namespace COTG.JSON
                     {
                         if(lastPersonalIncomingCount != personalIncomingCount || watchIncomingCount != lastWatchIncomingCount)
                         {
+                            var firstIncomingStr = firstIncoming.FormatDefault();
+                            var firstWatchIncomingStr = firstWatchIncoming.FormatDefault();
                             if (lastPersonalIncomingCount < personalIncomingCount || watchIncomingCount < lastWatchIncomingCount)
                             {
                                 var now = DateTime.UtcNow;
                                 if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
                                 {
                                     lastIncomingNotification = now;
-                                    Note.Show($"Incoming: {personalIncomingCount} ({watchIncomingCount})");
+                                    Note.Show($"Incoming: {personalIncomingCount} at {firstIncomingStr} ({watchIncomingCount} at {firstWatchIncomingStr})");
                                     COTG.Services.ToastNotificationsService.instance.ShowIncomingNotification(personalIncomingCount, watchIncomingCount);
 
                                 }
                             }
                             lastPersonalIncomingCount = personalIncomingCount;
                             lastWatchIncomingCount = watchIncomingCount;
-                            ShellPage.instance.incoming.Text = $"In {personalIncomingCount} ({watchIncomingCount})";
+                            ShellPage.instance.incoming.Text = $"In {personalIncomingCount} at {firstIncomingStr} ({watchIncomingCount} at {firstWatchIncomingStr})";
                             if (personalIncomingCount != 0 || watchIncomingCount != 0)
-                                ApplicationView.GetForCurrentView().Title = $"Incoming {personalIncomingCount} (watched {watchIncomingCount})";
+                                ApplicationView.GetForCurrentView().Title = $"Incoming {personalIncomingCount} at {firstWatchIncomingStr} (watched {watchIncomingCount} at {firstWatchIncomingStr})";
                             else
                                 ApplicationView.GetForCurrentView().Title = $"No incoming";
 
