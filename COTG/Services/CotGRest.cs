@@ -483,10 +483,12 @@ namespace COTG.Services
                 }
                 var tsh = v.troopsHome.TS();
                 var tst = v.troopsTotal.TS();
-                if ((tsh - v.tsHome).Abs().Max((tst - v.tsTotal).Abs()) > 16)
+                var tsr = v.troopsHome.TSRaid();
+                if ((tsh - v.tsHome).Abs().Max((tsr - v.tsRaid).Abs().Max((tst - v.tsTotal).Abs())) > 16)
                 {
                     v.tsTotal = tst;
                     v.tsHome = tsh;
+                    v.tsRaid = tsr;
                     changed.Add(v);
 
                     //v.OnPropertyChanged(nameof(v.tsTotal));

@@ -261,10 +261,11 @@ namespace COTG.Models
                         Raiding.UpdateTS(true,true);
                     }
                     break;
+                case nameof(City.tsRaid):
                 case nameof(City.tsHome):
                     if (  MainPage.IsVisible())
                     {
-                        Raiding.UpdateTSHome(true,true);
+                        Raiding.UpdateTS(true,true);
                     }
                     break;
 

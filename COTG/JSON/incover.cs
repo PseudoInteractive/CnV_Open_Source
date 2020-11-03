@@ -189,7 +189,7 @@ namespace COTG.JSON
                                               {
                                                   var army = new Army();
                                                   army.isAttack = armyV.GetAsInt("5") != 3;
-                                                  var armyPid = armyV.GetAsString("1");
+                                                 // var armyPid = armyV.GetAsString("1");
                                                   //army.pid = armyPid switch
                                                   //{
                                                   //    "Troops home" => spot.pid,
@@ -202,18 +202,7 @@ namespace COTG.JSON
                                                       "on support" => JSClient.ServerTime() - TimeSpan.FromHours(1),
                                                       var t => t.ParseDateTime()
                                                   };
-                                                  if (army.isAttack && watch.Contains(name) )
-                                                  {
-                                                      watchIncomingCount++;
-                                                      if (army.time < firstWatchIncoming)
-                                                          firstWatchIncoming = army.time;
-                                                  }
-                                                  if (army.isAttack && spot.pid == Player.myId)
-                                                  {
-                                                      if (army.time < firstIncoming)
-                                                          firstIncoming = army.time;
-                                                      ++personalIncomingCount;
-                                                  }
+                                                 
                                                   army.targetCid = cid;
                                                   var home = (arrival == "home");
                                                   if (home)
@@ -230,6 +219,19 @@ namespace COTG.JSON
                                                       //    var sourceSpot = Spot.GetOrAdd(army.sourceCid, army.sPid);
 
                                                   }
+                                                  if (army.isAttack && watch.Contains(name) && army.targetAlliance != army.sourceAlliance )
+                                                  {
+                                                      watchIncomingCount++;
+                                                      if (army.time < firstWatchIncoming)
+                                                          firstWatchIncoming = army.time;
+                                                  }
+                                                  if (army.isAttack && spot.pid == Player.myId)
+                                                  {
+                                                      if (army.time < firstIncoming)
+                                                          firstIncoming = army.time;
+                                                      ++personalIncomingCount;
+                                                  }
+
                                                   if (armyV.TryGetProperty("6", out var p6) && (p6.ValueKind == System.Text.Json.JsonValueKind.String))
                                                   {
                                                       army.spotted = p6.GetString().ParseDateTime();
@@ -623,7 +625,7 @@ namespace COTG.JSON
                                     }
                                 }
                             }
-                            killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myAtkKilled:N0})TS def Killed";
+                            killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
                             App.CopyTextToClipboard(killNote);
                             // App.DispatchOnUIThread(() =>
                             // We should do this on the Render Thread

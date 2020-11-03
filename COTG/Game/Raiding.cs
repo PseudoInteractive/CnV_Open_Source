@@ -164,9 +164,9 @@ namespace COTG.Game
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
-            city.tsHome = 0;
+            city.tsRaid = 0;
 
-             city.NotifyChange(nameof(city.tsHome));
+             city.NotifyChange(nameof(city.tsRaid));
             MainPage.ClearDungeonList();
             if(shiftPressed)
             {
@@ -302,7 +302,7 @@ namespace COTG.Game
             }
             Note.Show($"Issued End Raids on {counter} cities");
             ShellPage.ShowTipRefresh();
-            UpdateTSHome(true, true);
+            UpdateTS(true, true);
         }
         public static async void ReturnFastBatch(IEnumerable<int> cids)
         {
@@ -319,7 +319,7 @@ namespace COTG.Game
             Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
             await RaidOverview.Send();
-            UpdateTSHome(true,true);
+            UpdateTS(true,true);
         }
     }
 }

@@ -88,10 +88,11 @@
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
+                <tg:DataGridNumericalColumn PropertyName="tsRaid" CellContentStyle="{StaticResource RightAlign}"
+                        CellContentFormat="{}{0,7:N0}" Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="tsHome"
                                             CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
-                                       Width="80" />
+                                            CellContentFormat="{}{0,7:N0}" Width="80" IsVisible="False" />
                 <tg:DataGridNumericalColumn PropertyName="raidReturn"
                                             CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,6:N0}"

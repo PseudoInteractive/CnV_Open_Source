@@ -496,10 +496,10 @@ namespace COTG.Views
                             var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
                             nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
-                            nameColorHover = new Color() { A = intAlpha, G = 230, B = 255, R = 255 };
+                            nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 225 };
                             myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
                             nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
-                            nameColorIncomingHover = new Color() { A = intAlpha, G = 200, B = 220, R = 255 };
+                            nameColorIncomingHover = new Color() { A = intAlpha, G = 220, B = 190, R = 255 };
                             myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
 
                             var td = TileData.instance;

@@ -435,7 +435,7 @@ namespace COTG.Views
 
         public void TestPost(object o, RoutedEventArgs e)
         {
-            Raiding.UpdateTSHome(true);
+            Raiding.UpdateTS(true);
 
         }
 

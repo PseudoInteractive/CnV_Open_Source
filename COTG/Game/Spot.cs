@@ -102,6 +102,7 @@ namespace COTG.Game
         public int x => cid % 65536;
         public int y => cid >> 16;
 
+        public int tsRaid { get; set; }
         public int tsHome { get; set; }
         public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : tsHome; } }
         public int pid { get; set; }
@@ -297,9 +298,10 @@ namespace COTG.Game
                         wantRaidScan = false;
                         break;
                     case nameof(tsHome):
+                    case nameof(tsRaid):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
-                            Raiding.UpdateTSHome(true, true);
+                            Raiding.UpdateTS(true, true);
                         }
                         wantRaidScan = false;
                         break;
@@ -701,7 +703,8 @@ namespace COTG.Game
                 focus = cid;
                 var spot = Spot.GetOrAdd(cid);
                 App.DispatchOnUIThreadSneaky(() =>
-                { ShellPage.instance.focus.Content = spot.nameAndRemarks;
+                {
+                    ShellPage.instance.focus.Content = spot.nameAndRemarks;
                     ShellPage.instance.coords.Text = cid.CidToString();
                 }
 

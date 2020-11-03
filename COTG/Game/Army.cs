@@ -301,6 +301,18 @@ namespace COTG.Game
             }
             return rv;
         }
+        public static int TSRaid(this IEnumerable<TroopTypeCount> l)
+        {
+            if (l.IsNullOrEmpty())
+                return 0;
+            var rv = 0;
+            foreach (var ttc in l)
+            {
+                if( IsRaider(ttc.type) )
+                    rv += ttc.ts;
+            }
+            return rv;
+        }
 
         public static string Format(this IEnumerable<TroopTypeCount> l,string header,char firstSeparater,char furtherSeparator=(char)0)
         {

@@ -217,6 +217,7 @@ namespace COTG.Game
 
                 }
             }
+            tsRaid = troopsHome.TSRaid();
             tsHome = troopsHome.TS();
             tsTotal = troopsTotal.TS();
           
@@ -243,7 +244,7 @@ namespace COTG.Game
             int homeCount = 0;
             foreach (var city in City.allCities)
             {
-                if (city.Value.tsHome >= city.Value.tsTotal && city.Value.tsHome > 4000)
+                if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
                 {
                     ++homeCount;
                 }
@@ -560,22 +561,32 @@ namespace COTG.Game
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
 
-        public void SelectInUI()
+        public async void  SelectInUI()
         {
             //         await Task.Delay(2000);
             //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             //           {
-            
-            if (MainPage.IsVisible())
+            await Task.Delay(200);
+            App.DispatchOnUIThreadSneaky(() =>
             {
-//                MainPage.CityGrid.SetCurrentItem(this);
-                MainPage.CityGrid.SelectItem(this);
- //               MainPage.CityGrid.ScrollItemIntoView(this);
-            }
-            MainPage.CityGrid.ScrollItemIntoView(this);
-            // todo: donations page and boss hunting
-            ShellPage.instance.cityBox.SelectedItem = this;
-            //            });
+                if (MainPage.IsVisible())
+                {
+                    //                MainPage.CityGrid.SetCurrentItem(this);
+                 
+                    MainPage.CityGrid.SetCurrentItem(this,false);
+                   // await Task.Delay(200);
+                    MainPage.CityGrid.SelectItem(this);
+                    //var id = gridCitySource.IndexOf(this);
+                    //if (id != -1)
+                    //{
+                    //    MainPage.CityGrid.ScrollIndexIntoView(id);
+
+                    //}
+                }
+                // todo: donations page and boss hunting
+                ShellPage.instance.cityBox.SelectedItem = this;
+                //            });
+            });
 
         }
         public bool ComputeTravelTime(int target, out float hours)

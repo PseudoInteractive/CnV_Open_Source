@@ -273,9 +273,12 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
             </tk:GridSplitter>
         </Grid>
         <tk:InAppNotification x:Name="InAppNote"
-                                  Grid.Row="4"
-                                  Grid.RowSpan="2"
-                                  Grid.ColumnSpan="3"
+                                  Grid.Row="1"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+
+                              VerticalOffset="-160"
+                                  Grid.Column="1"
                               IsTabStop="False"
                              
                                   AnimationDuration="00:00:00.3000"
