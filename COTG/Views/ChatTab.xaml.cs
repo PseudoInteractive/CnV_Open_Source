@@ -76,7 +76,7 @@ namespace COTG.Views
         public static ChatTab[] all = Array.Empty<ChatTab>();
         public static ChatTab[] Ctor()
         {
-           all = new ChatTab[]{ world, alliance, officer,  debug };
+           all = new ChatTab[]{ alliance, world, officer,  debug };
             return all;
         }
         public string whisperTarget; // null if no target
@@ -326,6 +326,8 @@ namespace COTG.Views
             {
                 if(w.whisperTarget!=null && w.whisperTarget == player)
                 {
+                    if (activate)
+                        TabPage.Show(w);
                     return w;
                 }
             }

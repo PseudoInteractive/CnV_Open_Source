@@ -226,7 +226,7 @@ namespace COTG.Views
                 {
                     await Raiding.ReturnFast(city.cid, false);
                 }
-                var canReturnAt = city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 128.0f);
+                var canReturnAt = city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 256.0f);
                 if (canReturnAt > at)
                     at = canReturnAt;
 

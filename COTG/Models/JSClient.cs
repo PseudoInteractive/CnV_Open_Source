@@ -305,6 +305,7 @@ namespace COTG
                         var asm = typeof(JSClient).Assembly;
 
                         var js = GetJsString("funky")
+                            + GetJsString("DHRUVCC.js")
                                + GetJsString("J0EE");
                                 var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
 
@@ -704,7 +705,7 @@ namespace COTG
                             lists.Add(l);
                         }
                     }
-                    lists.Sort((a, b) => a.name.CompareTo(b.name));
+                  //  lists.Sort((a, b) => a.name.CompareTo(b.name));
 
                 }
 

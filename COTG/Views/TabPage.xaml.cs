@@ -112,7 +112,8 @@ namespace COTG.Views
                 {
                     if (ti.Content == tab)
                     {
-                        tabPage.Tabs.SelectedItem=(ti);
+                        if(tabPage.Tabs.SelectedItem!=ti)
+                            tabPage.Tabs.SelectedItem=(ti);
                         rv=true;
                     }
                 }

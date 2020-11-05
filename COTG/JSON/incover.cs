@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using static COTG.Debug;
 using Windows.UI.ViewManagement;
+using static COTG.Game.Enum;
 
 namespace COTG.JSON
 {
@@ -144,6 +145,7 @@ namespace COTG.JSON
 
                                   foreach (var spot in Spot.defendersI)
                                   {
+                                      spot.claim = 0;
                                       // is this a safe time to do this?
                                       spot.incoming = Army.empty;
                                   }
@@ -164,7 +166,7 @@ namespace COTG.JSON
                                               spot.pid = Player.NameToId(name);
                                          
 
-                                              spot.claim = (byte)val.GetAsFloat("4").RoundToInt();
+                                              spot.claim = (byte)val.GetAsFloat("4").RoundToInt().Max(spot.claim);
                                               try
                                               {
                                                   var scoutRange = val.GetAsString("6");

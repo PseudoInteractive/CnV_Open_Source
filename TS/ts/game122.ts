@@ -66742,7 +66742,7 @@ _viewMode = viewModeWorld;
               if (document.getElementById("speedupusePopup")!==null)
 			  {
 
-                  _popupCount++;
+                  _popupCount+=128;
 
 			  }
               

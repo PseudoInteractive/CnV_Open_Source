@@ -8,7 +8,6 @@
       xmlns:model="using:COTG.Models"
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"

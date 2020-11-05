@@ -66123,7 +66123,7 @@ var cotgsubscribe = amplify;
                         _popupCount++;
                 });
                 if (document.getElementById("speedupusePopup") !== null) {
-                    _popupCount++;
+                    _popupCount += 128;
                 }
                 $(".obscuretop,.longwindow").each(function () {
                     if (this.style.display != "none" && this.style.display != "hidden")

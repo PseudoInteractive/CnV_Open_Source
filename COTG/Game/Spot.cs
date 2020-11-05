@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Controls;
 using COTG.JSON;
 using System.Text.Json;
 using Windows.Web.Http;
-
+using static COTG.Game.Enum;
 namespace COTG.Game
 {
     //public interface IKeyedItem
@@ -52,8 +52,9 @@ namespace COTG.Game
         }
 
         public static Spot invalid = new Spot() { _cityName = "?" };
+        public static Spot pending = new Spot() { _cityName = "pending" };
 
-        public static Spot[] emptySpotSource = Array.Empty<Spot>();
+        public static Spot[] emptySpotSource = new[] { pending };
         public virtual string nameAndRemarks => cityName;
 
         public static bool IsFocus(int cid)
@@ -787,9 +788,17 @@ namespace COTG.Game
         }
         public void ShowDistanceTo(int _cid)
         {
-            var dist = cid.DistanceToCid(_cid).ToString("0.00");
-            App.CopyTextToClipboard(dist);
-            Note.Show(dist);
+            var dist = cid.DistanceToCid(_cid);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(dist.ToString("0.00"));
+            for (int i = 1; i <  ttCount;++i)
+            {
+                var dt = TimeSpan.FromMinutes(dist * TTTravel(i));
+                sb.Append($"\n{ttName[i]}: {dt.ToString()}");
+            }
+            var str = sb.ToString();
+            App.CopyTextToClipboard(str);
+            Note.Show(str);
         }
         public void ShowContextMenu(UIElement uie,Windows.Foundation.Point position)
         {

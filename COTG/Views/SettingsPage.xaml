@@ -65,6 +65,7 @@
             <ToggleSwitch  Header="Export Stone" IsOn="{x:Bind views:SettingsPage.sendStone, Mode=TwoWay}" Margin="4" Width="120"  />
             <ToggleSwitch  Header="Export Iron" IsOn="{x:Bind views:SettingsPage.sendIron, Mode=TwoWay}" Margin="4" Width="120" />
             <ToggleSwitch  Header="Export Food" IsOn="{x:Bind views:SettingsPage.sendFood, Mode=TwoWay}" Margin="4" Width="120" />
+            <ToggleSwitch Header="Carts for req" IsOn="{x:Bind views:SettingsPage.reserveRequestsForCarts, Mode=TwoWay}" Margin="4" Width="120" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <ComboBox x:Name="hubCityListBox" x:FieldModifier="public"

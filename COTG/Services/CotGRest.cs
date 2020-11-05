@@ -795,7 +795,7 @@ namespace COTG.Services
                 tr = JsonSerializer.Serialize(tttv),
                 snd = 1,
             };
-            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime+1.0f/64.0))
+            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime+1.0f/256.0))
             {
                 sr.snd = 3;
                 sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
@@ -807,7 +807,7 @@ namespace COTG.Services
             {
                 Note.Show("Sending Reinforcements "+(i+1));
                 var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret);
-                if(jsd ==null)
+                if(jsd ==null )
                 {
                     Note.Show("Something went wrong");
                     break;
@@ -818,6 +818,11 @@ namespace COTG.Services
                     if (sr.snd != 3)
                     {
                         Log("Sent last");
+                        if( jsd.RootElement.ValueKind != JsonValueKind.Object)
+                        {
+                            Note.Show("Something went wrong, maybe not enought troops home or troops cannot make scheduled time");
+                            break;
+                        }
                         city.LoadFromJson(jsd.RootElement);
                         Note.Show("Sent Reinforcements");
                     }

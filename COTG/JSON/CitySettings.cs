@@ -72,12 +72,18 @@ namespace COTG.JSON
 
 
                 split[42] = reqHub.ToString();
- //               split[43] = reqHub.ToString();
+                //                split[43] = sendHub.ToString();
+
+                split[45] = reserveRequestsForCarts ? "100" : "0"; // 45 is % carts reserved for requests
+
                 split[47] = maxWood.ToString();
                 split[48] = maxStone.ToString();
                 split[49] = maxIron.ToString();
                 split[50] = maxFood.ToString();
-                split[52] = cottageLevel.ToString() + ']';
+                if(cottageLevel > 0)
+                    split[52] = cottageLevel.ToString() + ']';
+
+
             });
 
 
@@ -118,24 +124,25 @@ namespace COTG.JSON
                 split[39] = sendIron?targetHub.ToString() : "0"; // hub to use for this res
                 split[40] = sendFood?targetHub.ToString() : "0"; // hub to use for this res
                 split[41] = "0"; // use a different city for all sends
-       //         split[43] = targetHub.ToString();
+                split[45] = reserveRequestsForCarts ? "100" : "0"; // 45 is % carts reserved for requests
+                                                                   //         split[43] = targetHub.ToString();
             });
         }
-        public static void SetOtherHubSettings(int cid, int sourceHub)
-        {
-            UpdateMinisterOptions(sourceHub, (split) =>
-            {
-                split[33] = reqWood.ToString();
-                split[34] = reqStone.ToString();
-                split[35] = reqIron.ToString();
-                split[36] = reqFood.ToString();
-                split[47] = maxWood.ToString();
-                split[48] = maxStone.ToString();
-                split[49] = maxIron.ToString();
-                split[50] = maxFood.ToString();
-                split[43] = cid.ToString();
-            });
-        }
+        //public static void SetOtherHubSettings(int cid, int sourceHub)
+        //{
+        //    UpdateMinisterOptions(sourceHub, (split) =>
+        //    {
+        //        split[33] = reqWood.ToString();
+        //        split[34] = reqStone.ToString();
+        //        split[35] = reqIron.ToString();
+        //        split[36] = reqFood.ToString();
+        //        split[47] = maxWood.ToString();
+        //        split[48] = maxStone.ToString();
+        //        split[49] = maxIron.ToString();
+        //        split[50] = maxFood.ToString();
+        //        split[43] = cid.ToString();
+        //    });
+        //}
         static string lastName = string.Empty;
         public static async void RenameDialog(int cid)
         {

@@ -50,6 +50,7 @@ namespace COTG.Views
         public static bool sendStone;
         public static bool sendIron;
         public static bool sendFood;
+        public static bool reserveRequestsForCarts;
         public static string[] incomingWatch = Array.Empty<string>();
 
         public TipsSeen tips => TipsSeen.instance;
@@ -80,6 +81,7 @@ namespace COTG.Views
             sendStone = App.Settings().Read(nameof(sendWood), true);
             sendIron = App.Settings().Read(nameof(sendIron), true);
             sendFood = App.Settings().Read(nameof(sendFood), true);
+            reserveRequestsForCarts = App.Settings().Read(nameof(sendFood), true);
             DonationTab.reserveCarts = App.Settings().Read(nameof(DonationTab.reserveCarts), 800);
             DonationTab.reserveCartsPCT = App.Settings().Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
             DonationTab.reserveShips = App.Settings().Read(nameof(DonationTab.reserveShips), 10);
@@ -115,6 +117,7 @@ namespace COTG.Views
             App.Settings().Save(nameof(sendStone), sendStone);
             App.Settings().Save(nameof(sendFood), sendFood);
             App.Settings().Save(nameof(sendIron), sendIron);
+            App.Settings().Save(nameof(reserveRequestsForCarts), reserveRequestsForCarts);
             App.Settings().Save(nameof(incomingWatch), incomingWatch);
 
             App.Settings().Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);

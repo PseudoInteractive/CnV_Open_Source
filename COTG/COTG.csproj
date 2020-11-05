@@ -565,6 +565,7 @@
     <Content Include="images\troops8.png" />
     <Content Include="images\troops9.png" />
     <Content Include="images\windmill.png" />
+    <EmbeddedResource Include="JS\DHRUVCC.js" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -600,6 +601,9 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="EventHandlers\" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Telerik.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.Core.dll</HintPath>
@@ -612,16 +616,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Grid.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Input.UWP">
+    <Reference Include="Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Input.UWP.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="EventHandlers\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

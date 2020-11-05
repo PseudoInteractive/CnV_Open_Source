@@ -188,35 +188,18 @@ namespace COTG.Game
             troopsHome = TroopTypeCount.empty;
             troopsTotal = TroopTypeCount.empty;
 
-            for (int hc = 0; hc < 2; ++hc)
-            {
 
 
-                if (jse.TryGetProperty((hc == 0) ? "th" : "tc", out var tt))
+                if (jse.TryGetProperty("tc", out var tc))
                 {
-                    var tc = new List<TroopTypeCount>();
-                    var tType = -1;
-                    // stores one count per troop type, mostly 0s
-                    foreach (var a in tt.EnumerateArray())
-                    {
-                        ++tType;
-                        var count = a.GetInt32();
-                        if (count > 0)
-                        {
-                            tc.Add(new TroopTypeCount(tType, count));
-                        }
-
-                    }
-                    if (tc.Count > 0)
-                    {
-                        if (hc == 0)
-                            troopsHome = tc.ToArray();
-                        else
-                            troopsTotal = tc.ToArray();
-                    }
-
+                    troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
                 }
+            if (jse.TryGetProperty("th", out var th))
+            {
+                troopsHome = th.GetTroopTypeCount().ToArray(); ;
             }
+
+           
             tsRaid = troopsHome.TSRaid();
             tsHome = troopsHome.TS();
             tsTotal = troopsTotal.TS();
@@ -229,6 +212,8 @@ namespace COTG.Game
             //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
             //            COTG.Views.MainPage.CityListUpdateAll();
         }
+
+        
 
         internal static City GetBuild()
         {

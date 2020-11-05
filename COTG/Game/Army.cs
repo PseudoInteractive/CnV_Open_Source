@@ -13,6 +13,7 @@ using static COTG.Game.Enum;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.System;
 using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace COTG.Game
 {
@@ -324,6 +325,47 @@ namespace COTG.Game
                     firstSeparater = furtherSeparator;
             }
             return rv;
+        }
+        public static List<TroopTypeCount> GetTroopTypeCount(this JsonElement tt, Func<int, bool> filter = null)
+        {
+            var tc = new List<TroopTypeCount>();
+            if (tt.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var a in tt.EnumerateObject())
+                {
+                    if (int.TryParse(a.Name, out var tType))
+                    {
+                        if (filter == null || filter(tType))
+                        {
+                            var count = a.Value.GetAsInt();
+                            if (count > 0)
+                            {
+                                tc.Add(new TroopTypeCount(tType, count));
+                            }
+                        }
+                    }
+
+                }
+            }
+            else if (tt.ValueKind == JsonValueKind.Array)
+            {
+                var tType = -1;
+                foreach (var a in tt.EnumerateArray())
+                {
+                    ++tType;
+                    if (filter == null || filter(tType))
+                    {
+                        var count = a.GetInt32();
+                        if (count > 0)
+                        {
+                            tc.Add(new TroopTypeCount(tType, count));
+                        }
+                    }
+
+                }
+            }
+            return tc;
+
         }
     }
 }

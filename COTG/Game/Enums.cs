@@ -164,6 +164,7 @@ namespace COTG.Game
         {
             return reportStrings.IndexOf(s);
         }
+      
 
     }
 }
