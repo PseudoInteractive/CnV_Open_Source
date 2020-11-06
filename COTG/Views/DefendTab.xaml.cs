@@ -78,7 +78,7 @@ namespace COTG.Views
                         Assert(city is City);
                         if (city.tsHome < filterTSHome | city.tsTotal < filterTSTotal)
                             continue;
-                        if (!city.ComputeTravelTime(defendant.cid, out var hours) || hours > filterTime)
+                        if (!city.ComputeTravelTime(defendant.cid, out var hours, out var onDifferentContinent) || hours > filterTime)
                             continue;
                         // re-use if possible
                         var supporter = supporters.Find((a) => a.city == city);
@@ -87,7 +87,50 @@ namespace COTG.Views
                             supporter = new Supporter() { city = city };
                         }
                         s.Add(supporter);
-                        supporter.tSend = city.troopsHome.ToArray(); // clone array
+                        if (onDifferentContinent)
+                        {
+                            var ttGalleys = city.troopsHome.FirstOrDefault((tt) => tt.type == ttGalley);
+                            // handle Galleys
+                            if (ttGalleys != null)
+                            {
+                                var galleys = ttGalleys.count;
+                                var landTroops = city.troopsHome.Where((tt) => IsLandRaider(tt.type)).Sum((t) => t.count);
+                                var requiredGalleys = (landTroops + 499) / 500;
+                                var sendGain = 1.0;
+                                if(galleys >= requiredGalleys )
+                                {
+                                    galleys = requiredGalleys;
+                                }
+                                else
+                                {
+                                    sendGain = galleys * 500.0 / landTroops;
+                                }
+                                List<TroopTypeCount> tSend = new List<TroopTypeCount>();
+                                tSend.Add(new TroopTypeCount(ttGalley, galleys));
+                                foreach(var tt in city.troopsHome)
+                                {
+                                    if (tt.type == ttStinger)
+                                    {
+                                        tSend.Add(tt); 
+                                    }
+                                    else
+                                    {
+                                        if (!IsLandRaider(tt.type))
+                                            continue;
+                                        tSend.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
+                                    }
+                                }
+                                supporter.tSend = tSend.ToArray();
+                            }
+                            else
+                            {
+                                supporter.tSend = city.troopsHome.Where((tt) => tt.type == ttStinger).ToArray(); // take stingers
+                            }
+                        }
+                        else
+                        {
+                            supporter.tSend = city.troopsHome.ToArray(); // clone array
+                        }
                         supporter.travel = hours;
                     }
                     supporters.Set(s.OrderBy(a=>a.travel));

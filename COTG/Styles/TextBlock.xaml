@@ -24,14 +24,14 @@
 		x:Key="ListTitleStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontSize" Value="12" />
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
         
     </Style>
 
 	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
-		<Setter Property="FontSize" Value="12" />
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
         
@@ -41,7 +41,7 @@
 		x:Key="DetailSubTitleStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontSize" Value="12" />
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         
     </Style>
 
@@ -49,7 +49,7 @@
 		x:Key="DetailBodyBaseMediumStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
 	</Style>
 
@@ -57,13 +57,13 @@
 		x:Key="ButtonTextStyle"
 		TargetType="TextBlock">
         
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="Foreground" Value="#FF8060FF" />
     </Style>
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
     </Style>
     <Style
 		x:Key="CellButtonTextStyle"
@@ -75,7 +75,7 @@
 		x:Key="DetailBodyStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 
 </ResourceDictionary>

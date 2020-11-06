@@ -313,7 +313,7 @@ namespace COTG.Game
                 {
                     ++counter;
                     await Post.Send("overview/rcallall.php", "a=" + cid);
-                    await JSClient.PollCity(cid);
+                //    await JSClient.PollCity(cid);
                 }
             }
             Note.Show($"Issued Home Please on {counter} cities");

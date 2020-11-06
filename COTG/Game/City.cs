@@ -574,23 +574,32 @@ namespace COTG.Game
             });
 
         }
-        public bool ComputeTravelTime(int target, out float hours)
+        public bool ComputeTravelTime(int target, out float hours, out bool onDifferentContinent)
         {
             hours = 0;
-            var type = GetPrimaryTroopType();
-            if (type == 0)
-                return false;
-            bool isWater = IsWaterRaider(type);
-            if (cont != target.CidToContinent() && (!isWater||!Spot.GetOrAdd(target).isOnWater) )
+            onDifferentContinent = cont != target.CidToContinent();
+            if (onDifferentContinent)
             {
-                return false;                
-            }
-            var dist = cid.DistanceToCid(target);
-            hours = dist * ttTravel[type] / (60f * ttSpeedBonus[type]);
-            if (isWater)
-               hours += 1.0f;
-            return true;
+                if(Spot.GetOrAdd(target).isOnWater && troopsHome.Any((t)=> t.type==ttGalley || t.type==ttStinger))
+                {
+                    var tt = ttGalley;
+                    var dist = cid.DistanceToCid(target);
+                    hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt])+1;
+                    return true;
 
+                }
+                return false;
+
+            }
+            else
+            {
+                var tt = GetPrimaryTroopType();
+                if (tt == 0)
+                    return false;
+                var dist = cid.DistanceToCid(target);
+                hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]);
+                return true;
+            }
         }
 
     }
