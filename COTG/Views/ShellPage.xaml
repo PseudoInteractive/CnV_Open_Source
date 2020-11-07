@@ -16,17 +16,7 @@
       mc:Ignorable="d"
 >
     <Page.Resources>
-        <Style x:Key="DebugFlyoutStyle"
-               TargetType="FlyoutPresenter">
-            <Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="Stretch" />
-            <Setter Property="MaxWidth"
-                    Value="1900" />
-            <Setter Property="Background"
-                    Value="{x:Null}" />
-        </Style>
+        
         <Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
             <Setter Property="HorizontalContentAlignment"
@@ -79,24 +69,35 @@
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
                       Margin="4" />
-                    <Button Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}">
+                    <Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+                            ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
+                        <Button.Resources>
+                            <winui:TeachingTip x:Name="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
+                                   IsLightDismissEnabled="True" PreferredPlacement="Right" Target="{x:Bind HomeButton}"
+                                    Subtitle="Click to toggle between city and world view, and to focus on the current city" />
+                        </Button.Resources>
                         <SymbolIcon Symbol="Home"/>
+                        
                     </Button>
-                    <Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}">
+                    <Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+                            ToolTipService.ToolTip="Switch to prior city in the current city list" >
 						<SymbolIcon Symbol="Previous"/>
 					</Button>
-                    <Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}" >
+                    <Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+                            ToolTipService.ToolTip="Switch to next city in the current city list" >
                         <SymbolIcon Symbol="Next"/>
                     </Button>
                     <TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
                     <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Segoe UI Emoji"
-                            ToolTipService.ToolTip="Spot with Focus.\nClick to re-center or switch to city view\nRight clck for menu"/>
+                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
                     <TextBlock x:Name="incoming" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
                 </StackPanel>
             </CommandBar.Content>
-            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}" />
-            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}" />
+            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+                          ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />
+            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+                           ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
             <AppBarSeparator/>
             <AppBarButton x:Name="Fresh"
                               Label="Fresh"
@@ -109,6 +110,7 @@
                     <winui:TeachingTip x:Name="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
+                           x:FieldModifier="public"
                                 Target="{x:Bind Fresh}"
                                 Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
                         <TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
@@ -219,7 +221,7 @@
         <Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="24"/>
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />

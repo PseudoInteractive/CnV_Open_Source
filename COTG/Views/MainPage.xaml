@@ -43,23 +43,22 @@
         
         <tg:RadDataGrid x:Name="cityGrid"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                        ColumnDataOperationsMode="Flyout"
                         Grid.Row="0"
                         Margin="0,56,0,0"
-                       FrozenColumnCount="3"
-                        IsTabStop="True"
-                        AllowFocusOnInteraction="True"
+                IsTabStop="True"
+                       IsSynchronizedWithCurrentItem="True"
                         UserGroupMode="Auto"
-                        GridLinesThickness="1.0"
                         AlternationStep="2"
                         ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
                         AutoGenerateColumns="False"
                         SelectionMode="Extended"
                         CanUserChooseColumns="True"
-                        RowHeight="34"
+                        RowHeight="{StaticResource GridRowHeight}"
                         UserFilterMode="Auto"
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
-                        FontSize="12"
+                        FontSize="{StaticResource MediumFontSize}"
                         GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
            
@@ -71,8 +70,11 @@
                 <tg:DataGridImageColumn PropertyName="icon"
                                         Header="I"
                                         SizeMode="Fixed"
+                                        IsCellFlyoutEnabled="True" Tip="Click to switch to this city" 
                                         Width="34" />
                 <tg:DataGridTextColumn PropertyName="nameAndRemarks"
+                                       Tip="Click to raid from this city without switching cities (faster)"
+                                       IsCellFlyoutEnabled="True"
                                        Header="Name"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Auto"
@@ -86,24 +88,30 @@
                                        Width="42" />
                 <tg:DataGridNumericalColumn PropertyName="tsTotal"
                                             CellContentStyle="{StaticResource RightAlign}"
+                                        IsCellFlyoutEnabled="True" Tip="TS enlisted in city" 
                                             CellContentFormat="{}{0,7:N0}"
                                        Width="80" />
                 <tg:DataGridNumericalColumn PropertyName="tsRaid" CellContentStyle="{StaticResource RightAlign}"
-                        CellContentFormat="{}{0,7:N0}" Width="80" />
+                        CellContentFormat="{}{0,7:N0}" Width="80"
+                      IsCellFlyoutEnabled="True" Tip="TS of Troops at home that can raid" 
+/>
                 <tg:DataGridNumericalColumn PropertyName="tsHome"
                                             CellContentStyle="{StaticResource RightAlign}"
+                      IsCellFlyoutEnabled="True" Tip="TS of Troops at home (including non raiding troops)" 
                                             CellContentFormat="{}{0,7:N0}" Width="80" IsVisible="False" />
                 <tg:DataGridNumericalColumn PropertyName="raidReturn"
+                                           IsCellFlyoutEnabled="True" Tip="Click here to bring troops home rapidly"
                                             CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,6:N0}"
                                             
                                             Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
-                                            CellContentStyle="{StaticResource RightAlignLink}"
+                                           IsCellFlyoutEnabled="True" Tip="% of loot carried per raid.  When this drops below 70 it might be time to reset this raid.  Click here to bring troops home when their next raid completes"  CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,5:N1}"
                                             Width="80"
                                              />
                 <tg:DataGridNumericalColumn PropertyName="points"
+                                           IsCellFlyoutEnabled="True" Tip="City score"
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,6:N0}"
                                             Width="80" />
@@ -148,30 +156,32 @@
         </StackPanel>
         <tg:RadDataGrid x:Name="dungeonGrid"
                         Margin="0,58,0,0"
-                        UseSystemFocusVisuals="True"
                         AlternationStep="2"
                         UserGroupMode="Disabled"
                         AutoGenerateColumns="False"
                         SelectionMode="Single"
-                        RowHeight="34"
-                        FontSize="12"
+                        RowHeight="{StaticResource GridRowHeight}"
+                        FontSize="{StaticResource MediumFontSize}"
                         Grid.Row="1"
                         CanUserChooseColumns="True"
                         UserSortMode="Single"
                         SelectionUnit="Row"
+                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                                    ColumnDataOperationsMode="Flyout"
                        >
             
             <tg:RadDataGrid.Commands>
                 <model:DungeonTapCommand />
             </tg:RadDataGrid.Commands>
             <tg:RadDataGrid.Columns>
-                <tg:DataGridNumericalColumn PropertyName="dist" />
-                <tg:DataGridTextColumn PropertyName="plan" CellContentStyle="{StaticResource RightAlignLink}" />
-                <tg:DataGridNumericalColumn PropertyName="level" />
+                <tg:DataGridNumericalColumn PropertyName="dist" CellContentStyle="{StaticResource RightAlign}" IsCellFlyoutEnabled="True" Tip="Distance to dungeon" />
+                <tg:DataGridTextColumn PropertyName="plan" CellContentStyle="{StaticResource RightAlignLink}" IsCellFlyoutEnabled="True" Tip="Click here to send raids" />
+                <tg:DataGridNumericalColumn PropertyName="level" CellContentStyle="{StaticResource RightAlign}"/>
                 <tg:DataGridNumericalColumn PropertyName="completion"
-                                            CellContentFormat="{}{0,6:N1}" />
-                <tg:DataGridTextColumn PropertyName="kind" />
-                <tg:DataGridTextColumn PropertyName="xy" CellContentStyle="{StaticResource CenterAlignLink}" />
+                                            IsCellFlyoutEnabled="True" Tip="How worn out the dungeon is.  When this reaches 0 the dungeon disappears and troops stop raiding.  Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+                                            CellContentFormat="{}{0,6:N1}" CellContentStyle="{StaticResource RightAlign}" />
+                <tg:DataGridTextColumn PropertyName="kind" CellContentStyle="{StaticResource RightAlign}"/>
+                <tg:DataGridTextColumn PropertyName="xy" CellContentStyle="{StaticResource CenterAlignLink}"  />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tk:GridSplitter Grid.Row="1"
@@ -186,35 +196,35 @@
                      IsHitTestVisible="False"    />
             </tk:GridSplitter.Element>
         </tk:GridSplitter>
-        <winui:TeachingTip x:Name="TipRaiding101"
+        <winui:TeachingTip x:Name="TipRaiding101" x:FieldModifier="public"
                                 Title="Raiding 101"
                                 Target="{x:Bind cityGrid}"
                                 CloseButtonClick="TipRaiding101_ActionButtonClick"
                                CloseButtonContent="Got It"
                            PreferredPlacement="LeftTop"
-                                Subtitle="See which cities have available troops by clicking on the 'tsHome' column header.">
+                                Subtitle="Select a city and recommended raids will appear in the tab below">
                 <TextBlock  TextWrapping="Wrap">
-                This will sort your cities by TS at home.<LineBreak/>
-                Select the city for which you want to set raids.<LineBreak/>
+                The 'tsRaid' column header will sort your cities by TS at home, allowing you to see which cities have the most idle troops.<LineBreak/>
                 Note: Click the column twice to sort in descending order<LineBreak/>
                 </TextBlock>
         </winui:TeachingTip>
             
-            <winui:TeachingTip x:Name="TipRaiding102"
+            <winui:TeachingTip x:Name="TipRaiding102" x:FieldModifier="public"
                                 Title="Dungeons 101"
                                CloseButtonContent="Success"
                             PreferredPlacement="LeftTop"
                                 Target="{x:Bind dungeonGrid}"
                                 Subtitle="Click on a dungeon that you would like to send raids to.">
             <TextBlock  TextWrapping="Wrap">                    
-                    You typically want to select a dungeon appropriate for your troop type:
+                Click the 'plan' cell to dispatch raids
+                <LineBreak/>You typically want to select a dungeon appropriate for your troop type:
                     <LineBreak/>    -   Mountain for Infantry
                     <LineBreak/>    -   Hills for Magic
                     <LineBreak/>    -   Forests for Cavalry
-                <LineBreak/>Clicking on the plan cell will dispatch raids, clicking on the coordinates will show you the dungeon
+                    <LineBreak/> Appropriate dungeons will be shown first unless they are far away
             </TextBlock>
         </winui:TeachingTip>
-        <winui:TeachingTip x:Name="TipRaiding201"
+        <winui:TeachingTip x:Name="TipRaiding201" x:FieldModifier="public"
                                 Title="Home Please"
                                 Target="{x:Bind cityGrid}"
                                 CloseButtonClick="TipRaiding201_ActionButtonClick"
@@ -243,6 +253,7 @@
                     If you ask them to return "Home Please" they might teleport home instantly for you through various small temporary personal portals</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding203"
+                           x:FieldModifier="public"
                                 Title="Multiple Selection"
                                 Target="{x:Bind cityGrid}"
                                CloseButtonContent="Good to Know"
@@ -260,6 +271,7 @@
                 <LineBreak/>        -   Right click on a city and issue 'Return Whenever'</TextBlock>
         </winui:TeachingTip>
         <winui:TeachingTip x:Name="TipRaiding301"
+                           x:FieldModifier="public"
                                 Title="Carry Capacity"
                                 Target="{x:Bind cityGrid}"
                                CloseButtonContent="Done with tips"

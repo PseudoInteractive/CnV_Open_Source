@@ -24,12 +24,12 @@
 
         <tg:RadDataGrid x:Name="defenderGrid"
                         x:FieldModifier="public"
-                        GridLinesThickness="1"
+               
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                        FontSize="12"
-                        RowHeight="32"
+                        FontSize="{StaticResource MediumFontSize}"
+                        RowHeight="{StaticResource GridRowHeight}"
                         IsSynchronizedWithCurrentItem="True"           
                        
                         PointerPressed="gridPointerPress"
@@ -111,7 +111,7 @@
                                     ItemsSource="{x:Bind game:Army.empty}"
                                     CanUserChooseColumns="True"
                                     GridLinesThickness="1"
-                                    FontSize="12"
+                                    FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="74"
                                     ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
@@ -176,7 +176,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding c0}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -186,7 +186,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding c1}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -196,7 +196,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding c2}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -206,13 +206,13 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding c3}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
                                 </StackPanel>
                                 <TextBlock Text="{Binding ts}"
-                                                       FontSize="12"
+                                                       FontSize="{StaticResource MediumFontSize}"
                                                        HorizontalAlignment="Center"
                                                        Height="22" />
                             </StackPanel>
@@ -239,7 +239,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc0}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -249,7 +249,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc1}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -259,7 +259,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc2}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -269,7 +269,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc3}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -279,7 +279,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc4}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -289,7 +289,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc5}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -299,7 +299,7 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc6}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
@@ -309,13 +309,13 @@
                                                            HorizontalAlignment="Center"
                                                            Height="32" />
                                         <TextBlock Text="{Binding sc7}"
-                                                               FontSize="12"
+                                                               FontSize="{StaticResource MediumFontSize}"
                                                                HorizontalAlignment="Center"
                                                                Height="22" />
                                     </StackPanel>
                                 </StackPanel>
                                 <TextBlock Text="{Binding dTS}"
-                                                       FontSize="12"
+                                                       FontSize="{StaticResource MediumFontSize}"
                                                        HorizontalAlignment="Center"
                                                        Height="22" />
                             </StackPanel>

@@ -39,7 +39,7 @@
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:DefendTab.supporters, Mode=OneWay}"
-                        RowHeight="48"
+                        RowHeight="{StaticResource GridRowHeight}"
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"

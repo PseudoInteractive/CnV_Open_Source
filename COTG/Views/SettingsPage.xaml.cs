@@ -30,7 +30,7 @@ namespace COTG.Views
 
         //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
-        private static ElementTheme _elementTheme = ThemeSelectorService.Theme;
+     
         //private static bool _isLoggedIn;
         //private static bool _isBusy;
 //        private static UserData _user;
@@ -53,7 +53,7 @@ namespace COTG.Views
         public static bool reserveRequestsForCarts;
         public static string[] incomingWatch = Array.Empty<string>();
 
-        public TipsSeen tips => TipsSeen.instance;
+       // public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory { get=>fetchFullHistory; set
             {
                 fetchFullHistory = value;
@@ -67,7 +67,7 @@ namespace COTG.Views
         {
             fetchFullHistory = App.Settings().Read(nameof(fetchFullHistory),true ); // default is true
             Raiding.desiredCarry = App.Settings().Read(nameof(raidCarry), 1.02f);
-            TipsSeen.instance = App.Settings().Read(nameof(TipsSeen), new TipsSeen());
+       //     TipsSeen.instance = App.Settings().Read(nameof(TipsSeen), new TipsSeen());
             hubCitylistName = App.Settings().Read(nameof(hubCitylistName), "Hubs");
             reqWood = App.Settings().Read(nameof(reqWood), 160000);
             reqStone = App.Settings().Read(nameof(reqWood), 205000);
@@ -100,7 +100,7 @@ namespace COTG.Views
         {
            App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
             App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
-            App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
+          //  App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
             App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
 
             App.Settings().Save(nameof(reqWood), reqWood);
@@ -136,9 +136,9 @@ namespace COTG.Views
         }
         public ElementTheme ElementTheme
         {
-            get { return _elementTheme; }
+            get { return ThemeSelectorService.Theme; }
 
-            set { Set(ref _elementTheme, value); }
+            set { Set(ref ThemeSelectorService.Theme, value); }
         }
 
         private static string _versionDescription;
@@ -383,7 +383,7 @@ namespace COTG.Views
 
         private void TipsRestore(object sender, RoutedEventArgs e)
         {
-            TipsSeen.instance = new TipsSeen();
+            Tips.seen = new HashSet<string>();
             Note.Show("Keener :)");
             this.Hide();
         }

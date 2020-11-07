@@ -14,7 +14,7 @@ namespace COTG.Services
     {
         private const string SettingsKey = "AppBackgroundRequestedTheme";
 
-        public static ElementTheme Theme { get; set; } = ElementTheme.Dark;
+        public static ElementTheme Theme = ElementTheme.Dark;
 
         public static async Task InitializeAsync()
         {
@@ -24,7 +24,7 @@ namespace COTG.Services
         public static async Task SetThemeAsync(ElementTheme theme)
         {
             Theme = theme;
-            App.Settings().Save(nameof(theme), theme);
+            App.Settings().Save(SettingsKey, theme);
 
             await SetRequestedThemeAsync();
         }

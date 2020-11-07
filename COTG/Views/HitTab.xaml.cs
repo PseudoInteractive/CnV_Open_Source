@@ -29,6 +29,7 @@ namespace COTG.Views
         {
             history = _history;
             historyGrid.ItemsSource = history;
+            historyGrid.IsBusyIndicatorEnabled = false;
         }
         public HitTab()
         {
@@ -39,7 +40,11 @@ namespace COTG.Views
         {
             historyGrid.ItemsSource = Army.empty;
             if (visible)
+            {
+                historyGrid.IsBusyIndicatorEnabled = true;
+
                 OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+            }
             base.VisibilityChanged(visible);
 
 

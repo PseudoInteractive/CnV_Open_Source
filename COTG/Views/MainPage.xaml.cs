@@ -28,6 +28,8 @@ using Windows.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
+using Microsoft.UI.Xaml.Controls;
+
 namespace COTG.Views
 {
 
@@ -432,36 +434,43 @@ namespace COTG.Views
 
         public static bool IsVisible() => instance.isVisible;
 
-       
-        static TipInfo raidingTip1,raidingTip2,raidingTip3;
 
-        static public void ShowTipRaiding1()
-        {
-            if (TipsSeen.instance.raiding1 || raidingTip1.queued )
-                return;
-            raidingTip1.Dispatch(instance.TipRaiding101, () => TipsSeen.instance.raiding1 = true);
-        }
+
+
+
+        //static public void ShowTip(TeachingTip tip)
+        //{
+        //    if (seen || Tips.queued)
+        //        return;
+        //    Tips.Dispatch(tip, () => seen = true);
+        //}
+        //static public void ShowTipRaiding1()
+        //{
+        //    if (Tips.instance.raiding1 || Tips.tipQueued)
+        //        return;
+        //    instance.TipRaiding101.Show();
+        //}
         private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             TipRaiding102.IsOpen = true;
         }
-        static public void ShowTipRaiding2()
-        {
-            if (!TipsSeen.instance.raiding1 || TipsSeen.instance.raiding2 || raidingTip2.queued)
-                return;
-            raidingTip2.Dispatch(instance.TipRaiding201, () => TipsSeen.instance.raiding2 = true);
-        }
+        //static public void ShowTipRaiding2()
+        //{
+        //    if (!Tips.instance.raiding1 || Tips.instance.raiding2 || Tips.tipQueued)
+        //        return;
+        //    raidingTip2.Dispatch(instance.TipRaiding201, () => Tips.instance.raiding2 = true);
+        //}
 
 
-        static public void ShowTipRaiding3()
-        {
-            if (TipsSeen.instance.raiding2|| TipsSeen.instance.raiding3 || raidingTip3.queued)
-                return;
-            raidingTip3.Dispatch(instance.TipRaiding301, () => TipsSeen.instance.raiding3 = true);
-        }
+        //static public void ShowTipRaiding3()
+        //{
+        //    if (Tips.instance.raiding2|| Tips.instance.raiding3 || Tips.tipQueued)
+        //        return;
+        //    raidingTip3.Dispatch(instance.TipRaiding301, () => Tips.instance.raiding3 = true);
+        //}
 
-	
-		private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+
+        private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
             Raiding.UpdateTS(true,true);
 

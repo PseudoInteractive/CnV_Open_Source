@@ -141,17 +141,15 @@
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
 
-                        GridLinesThickness="1.0"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                        FontSize="12"
+                        FontSize="{StaticResource MediumFontSize}"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind history, Mode=OneTime}"
-                        RowHeight="30"
+                        RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
-                                 FrozenColumnCount="2"
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">

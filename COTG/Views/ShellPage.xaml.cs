@@ -238,7 +238,8 @@ namespace COTG.Views
             cityBox.SelectionChanged += CityBox_SelectionChanged;
             heatMapFlyout.Content = new HeatmapDatePicker();
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
-//            PointerPressed+=  PointerPressedCB;
+            //            PointerPressed+=  PointerPressedCB;
+            HomeButtonTip.IsOpen = true;
         }
 
         
@@ -433,11 +434,11 @@ namespace COTG.Views
 
 
 
-        public void TestPost(object o, RoutedEventArgs e)
-        {
-            Raiding.UpdateTS(true);
+        //public void TestPost(object o, RoutedEventArgs e)
+        //{
+        //    Raiding.UpdateTS(true);
 
-        }
+        //}
 
         public void Refresh(object o, RoutedEventArgs e)
         {
@@ -610,30 +611,30 @@ namespace COTG.Views
         }
         public static void ShowTipRefresh()
         {
-            if (TipsSeen.instance.refresh==false)
-            {
-                TipsSeen.instance.refresh = true;
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
-            }
-            else if(TipsSeen.instance.chat0==false)
-            {
-                TipsSeen.instance.chat0 = true;
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip0.IsOpen = true);
+            //if (TipsSeen.instance.refresh==false)
+            //{
+            //    TipsSeen.instance.refresh = true;
+            //    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
+            //}
+            //else if(TipsSeen.instance.chat0==false)
+            //{
+            //    TipsSeen.instance.chat0 = true;
+            //    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip0.IsOpen = true);
 
-            }
-            else if (TipsSeen.instance.chat1 == false)
-            {
-                TipsSeen.instance.chat1 = true;
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip1.IsOpen = true);
+            //}
+            //else if (TipsSeen.instance.chat1 == false)
+            //{
+            //    TipsSeen.instance.chat1 = true;
+            //    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip1.IsOpen = true);
 
 
-            }
-            else if (TipsSeen.instance.chat2 == false)
-            {
-                TipsSeen.instance.chat2 = true;
-                instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip2.IsOpen = true);
+            //}
+            //else if (TipsSeen.instance.chat2 == false)
+            //{
+            //    TipsSeen.instance.chat2 = true;
+            //    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip2.IsOpen = true);
 
-            }
+            //}
         }
        
         //private void DoNothing(object sender, RoutedEventArgs e)
@@ -726,7 +727,8 @@ namespace COTG.Views
                                //shown = true;
                                var dialog = new SettingsPage();
                                var result=  await dialog.ShowAsync();
-                            //   dialog.auto
+                               SettingsPage.SaveAll();
+                               //   dialog.auto
                            });
 
     
@@ -764,7 +766,7 @@ namespace COTG.Views
             }
         }
 
-        private void ChangeCityClick(int delta)
+        public void ChangeCityClick(int delta)
         {
             var items = ShellPage.instance.cityBox.ItemsSource as City[];
             City newSel;

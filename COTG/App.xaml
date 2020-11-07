@@ -18,6 +18,7 @@
             <ResourceDictionary.ThemeDictionaries>
                     <ResourceDictionary x:Key="Default">
                         <ResourceDictionary.MergedDictionaries>
+
                         <Windows10version1809:ColorPaletteResources Accent="#FF5C41FF" AltHigh="#FF000000" AltLow="#FF000000" AltMedium="#FF000000" AltMediumHigh="#FF000000" AltMediumLow="#FF000000" BaseHigh="#FFFFFFFF" BaseLow="#FF4D2B3A" BaseMedium="#FFAF939F" BaseMediumHigh="#FFC7ADB8" BaseMediumLow="#FF7E5F6C" ChromeAltLow="#FFC7ADB8" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFC7ADB8" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF4D2B3A" ChromeDisabledLow="#FFAF939F" ChromeGray="#FF967986" ChromeHigh="#FF967986" ChromeLow="#FF31091D" ChromeMedium="#FF381124" ChromeMediumLow="#FF462233" ChromeWhite="#FFFFFFFF" ListLow="#FF381124" ListMedium="#FF4D2B3A" />
                             <ResourceDictionary>
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CC000000</Color>
@@ -31,10 +32,10 @@
                     </ResourceDictionary>
                     <ResourceDictionary x:Key="Light">
                         <ResourceDictionary.MergedDictionaries>
-                            <Windows10version1809:ColorPaletteResources Accent="#FF62A38C" AltHigh="#FFFFFFFF" AltLow="#FFFFFFFF" AltMedium="#FFFFFFFF" AltMediumHigh="#FFFFFFFF" AltMediumLow="#FFFFFFFF" BaseHigh="#FF000000" BaseLow="#FFA4ACCC" BaseMedium="#FF5B709B" BaseMediumHigh="#FF2B487A" BaseMediumLow="#FF435C8A" ChromeAltLow="#FF2B487A" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFA4ACCC" ChromeBlackMedium="#FF2B487A" ChromeBlackMediumLow="#FF5B709B" ChromeDisabledHigh="#FFA4ACCC" ChromeDisabledLow="#FF5B709B" ChromeGray="#FF435C8A" ChromeHigh="#FFA4ACCC" ChromeLow="#FFD9E0F8" ChromeMedium="#FFCED6EF" ChromeMediumLow="#FFD9E0F8" ChromeWhite="#FFFFFFFF" ListLow="#FFCED6EF" ListMedium="#FFA4ACCC" />
                             <ResourceDictionary>
-                                <Color x:Key="SystemChromeAltMediumHighColor">#CCD6DAEB</Color>
-                                <Color x:Key="SystemChromeAltHighColor">#FFA4ACCC</Color>
+                                
+                                <Color x:Key="SystemChromeAltMediumHighColor">#CCD6FAEB</Color>
+                                <Color x:Key="SystemChromeAltHighColor">#FFF4ACCC</Color>
                                 <!-- Override system shape defaults -->
                    
                                 <!-- Override system borders -->
@@ -48,10 +49,7 @@
                             </ResourceDictionary>
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
-                    <ResourceDictionary x:Key="HighContrast">
-                        <StaticResource x:Key="RegionColor" ResourceKey="SystemColorWindowColor" />
-                        <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
-                    </ResourceDictionary>
+           
                 </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>

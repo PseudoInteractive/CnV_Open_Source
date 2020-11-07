@@ -224,37 +224,36 @@ namespace COTG.Game
 
         public static void CheckTipRaiding()
         {
-            if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3 )
-                return;
-            int homeCount = 0;
-            foreach (var city in City.allCities)
-            {
-                if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
-                {
-                    ++homeCount;
-                }
-            }
-            if (homeCount == 0)
-                return;
-            if (!TipsSeen.instance.raiding1)
-            {
-                MainPage.ShowTipRaiding1();
-                return;
-            }
-            if (homeCount < 2)
-                return;
-            if (!TipsSeen.instance.raiding2)
-            {
-                MainPage.ShowTipRaiding2();
-                return;
-            }
-            if (homeCount < 4)
-                return;
-            if (!TipsSeen.instance.raiding3)
-            {
-                MainPage.ShowTipRaiding3();
-                return;
-            }
+            //if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3 )
+            //    return;
+            //int homeCount = 0;
+            //foreach (var city in City.allCities)
+            //{
+            //    if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
+            //    {
+            //        ++homeCount;
+            //    }
+            //}
+            //if (homeCount == 0)
+            //    return;
+            //if (MainPage.instance.TipRaiding101.Show())
+            //{
+            //    return;
+            //}
+            //if (homeCount < 2)
+            //    return;
+            //if (!TipsSeen.instance.raiding2)
+            //{
+            //    MainPage.ShowTipRaiding2();
+            //    return;
+            //}
+            //if (homeCount < 4)
+            //    return;
+            //if (!TipsSeen.instance.raiding3)
+            //{
+            //    MainPage.ShowTipRaiding3();
+            //    return;
+            //}
 
         }
 
@@ -556,11 +555,13 @@ namespace COTG.Game
             {
                 if (MainPage.IsVisible())
                 {
-                    //                MainPage.CityGrid.SetCurrentItem(this);
-                 
-                    MainPage.CityGrid.SetCurrentItem(this,false);
-                   // await Task.Delay(200);
-                    MainPage.CityGrid.SelectItem(this);
+                    MainPage.CityGrid.SelectedItem = this;
+//                      MainPage.CityGrid.SetCurrentItem(this);
+
+                    //  MainPage.CityGrid.SetCurrentItem(this,false);
+                    MainPage.CityGrid.ScrollItemIntoView(this);
+                    // await Task.Delay(200);
+                    //MainPage.CityGrid.SelectItem(this);
                     //var id = gridCitySource.IndexOf(this);
                     //if (id != -1)
                     //{

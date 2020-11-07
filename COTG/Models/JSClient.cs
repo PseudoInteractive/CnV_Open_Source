@@ -1300,11 +1300,11 @@ namespace COTG
                         City.UpdateSenatorInfo();  // no async
                         Raiding.UpdateTS(true,true);
                         TileData.Ctor();
-                        if (TipsSeen.instance.refresh == false
-                        ||TipsSeen.instance.chat0==false
-                        || TipsSeen.instance.chat1 == false
-                        || TipsSeen.instance.chat2 == false)
-                            App.QueueIdleTask(ShellPage.ShowTipRefresh);
+                        //if (TipsSeen.instance.refresh == false
+                        //||TipsSeen.instance.chat0==false
+                        //|| TipsSeen.instance.chat1 == false
+                        //|| TipsSeen.instance.chat2 == false)
+                        //    App.QueueIdleTask(ShellPage.ShowTipRefresh);
                         // await RaidOverview.Send();
                     }
                     //var cookie = httpClient.DefaultRequestHeaders.Cookie;

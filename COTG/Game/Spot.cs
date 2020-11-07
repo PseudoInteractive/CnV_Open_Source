@@ -794,7 +794,7 @@ namespace COTG.Game
             for (int i = 1; i <  ttCount;++i)
             {
                 var dt = TimeSpan.FromMinutes(dist * TTTravel(i));
-                sb.Append($"\n{ttName[i]}: {dt.ToString()}");
+                sb.Append($"&#x0a;{ttName[i]}: {dt.ToString()}");
             }
             var str = sb.ToString();
             App.CopyTextToClipboard(str);

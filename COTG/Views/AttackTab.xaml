@@ -46,7 +46,7 @@
         <tk:DataGrid x:Name="attackGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:AttackTab.attacks, Mode=OneWay}"
-                        RowHeight="24"
+                        RowHeight="{StaticResource GridRowHeight}"
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"

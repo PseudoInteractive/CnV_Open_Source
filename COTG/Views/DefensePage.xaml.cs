@@ -98,6 +98,8 @@ namespace COTG.Views
         {
             history = _history;
             historyGrid.ItemsSource = history;
+            historyGrid.IsBusyIndicatorEnabled = false;
+
         }
 
         public static DefensePage instance;
@@ -124,7 +126,11 @@ namespace COTG.Views
         {
             historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
-                IncomingOverview.Process(SettingsPage.fetchFullHistory,true); // Todo: throttle
+            {
+                historyGrid.IsBusyIndicatorEnabled = true;
+
+                IncomingOverview.Process(SettingsPage.fetchFullHistory, true); // Todo: throttle
+            }
             base.VisibilityChanged(visible);
 
 

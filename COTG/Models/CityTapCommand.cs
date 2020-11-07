@@ -231,144 +231,144 @@ namespace COTG.Models
             context.Column.IsVisible = context.IsColumnVisible;
         }
     }
-    public class CityHeaderTapCommand : DataGridCommand
-    {
-        public CityHeaderTapCommand()
-        {
-            this.Id = CommandId.ColumnHeaderTap;
-        }
-
-        public override bool CanExecute(object parameter)
-        {
-            var context = parameter as ColumnHeaderTapContext;
-            // put your custom logic here
-            return true;
-        }
-
-        public override void Execute(object parameter)
-        {
-            base.Execute(parameter);
-            var context = parameter as ColumnHeaderTapContext;
-            // put your custom logic here
-            switch (context.Column.Header?.ToString())
-            {
-                case nameof(City.raidReturn):
-                case nameof(City.raidCarry): RaidOverview.Send(); break;
-                case "senny": City.UpdateSenatorInfo(); break;
-                case nameof(City.tsTotal):
-                    if ( MainPage.IsVisible())
-                    {
-                        Raiding.UpdateTS(true,true);
-                    }
-                    break;
-                case nameof(City.tsRaid):
-                case nameof(City.tsHome):
-                    if (  MainPage.IsVisible())
-                    {
-                        Raiding.UpdateTS(true,true);
-                    }
-                    break;
-
-            }
-
-        }
-    }
-//    public class CityKeyCommand : DataGridCommand
-//    {
-//        public CityKeyCommand()
-//        {
-//            this.Id = CommandId.KeyDown;
-
-//        }
-
-//        public override bool CanExecute(object parameter)
-//        {
-//            var context = parameter as DataGridCellInfo;
-//            // put your custom logic here
-//        //    Log("CanExecute");
-//            return true;
-//        }
-
-//        public override void Execute(object parameter)
-//        {
-//            var keyEvent = parameter as KeyRoutedEventArgs;
-//            var grid = Views.MainPage.CityGrid;
-//            var sel = grid.SelectedItem as DataGridCellInfo;
-//            // put your custom logic here
-//            if (sel!=null)
-//            {
-//                switch (keyEvent.Key)
-//                {
-//                    case Windows.System.VirtualKey.Up:
-//                        {
-////                            sel.
-
-//                            break;
-//                        }
-//                }
-//            }
-         
-          
-//            //            if (base.CanExecute(parameter))
-//            base.Execute(parameter);
-
-//        }
-//    }
-    //    public class CityInfoCommand : DataGridCommand
+    //public class CityHeaderTapCommand : DataGridCommand
+    //{
+    //    public CityHeaderTapCommand()
     //    {
-    //        public CityInfoCommand()
+    //        this.Id = CommandId.ColumnHeaderTap;
+    //    }
+
+    //    public override bool CanExecute(object parameter)
+    //    {
+    //        var context = parameter as ColumnHeaderTapContext;
+    //        // put your custom logic here
+    //        return true;
+    //    }
+
+    //    public override void Execute(object parameter)
+    //    {
+    //        base.Execute(parameter);
+    //        var context = parameter as ColumnHeaderTapContext;
+    //        // put your custom logic here
+    //        switch (context.Column.Header?.ToString())
     //        {
-    //            this.Id = CommandId.CellFlyoutAction;
+    //            case nameof(City.raidReturn):
+    //            case nameof(City.raidCarry): RaidOverview.Send(); break;
+    //            case "senny": City.UpdateSenatorInfo(); break;
+    //            case nameof(City.tsTotal):
+    //                if ( MainPage.IsVisible())
+    //                {
+    //                    Raiding.UpdateTS(true,true);
+    //                }
+    //                break;
+    //            case nameof(City.tsRaid):
+    //            case nameof(City.tsHome):
+    //                if (  MainPage.IsVisible())
+    //                {
+    //                    Raiding.UpdateTS(true,true);
+    //                }
+    //                break;
+
+    //        }
+
+    //    }
+    //}
+    //    public class CityKeyCommand : DataGridCommand
+    //    {
+    //        public CityKeyCommand()
+    //        {
+    //            this.Id = CommandId.KeyDown;
 
     //        }
 
     //        public override bool CanExecute(object parameter)
     //        {
-    //            var context = parameter as CellFlyoutActionContext;
+    //            var context = parameter as DataGridCellInfo;
     //            // put your custom logic here
-    //            Log("CanExecute");
+    //        //    Log("CanExecute");
     //            return true;
     //        }
 
     //        public override void Execute(object parameter)
     //        {
-    //            var context = parameter as CellFlyoutActionContext;
+    //            var keyEvent = parameter as KeyRoutedEventArgs;
+    //            var grid = Views.MainPage.CityGrid;
+    //            var sel = grid.SelectedItem as DataGridCellInfo;
     //            // put your custom logic here
-    //            var cellInfo = context.CellInfo;
-    //            var i = cellInfo.Item as COTG.Game.City;
-    //            var cid = i.cid;
-    //            Log(i.GetType());
-    //            Log(i.ToString());
-    //            Log(cellInfo.Value);
-
-    //            Log(cellInfo.Column.Name);
-    //            Log(base.CanExecute(parameter));
-    //            if (cellInfo.Column.Header != null)
+    //            if (sel!=null)
     //            {
-    //                Log(cellInfo.Column.Header);
-    //                switch (cellInfo.Column.Header.ToString())
+    //                switch (keyEvent.Key)
     //                {
-    //                    case "ts":
+    //                    case Windows.System.VirtualKey.Up:
     //                        {
-    //                            context.FlyoutTemplate = COTG.Views.MainPage.cache.GetTsInfoDataTemplate();
-    //                            Assert(context.FlyoutTemplate != null);
+    ////                            sel.
 
-    // //                           var t = new DataGridTextColumn() { PropertyName="ts"} );
-    // //                            context.FlyoutTemplate.Ge;
     //                            break;
-
     //                        }
-    //                 //   case "xy": JSClient.ShowCity(cid); break;
-    //                 //   case "name": JSClient.ChangeCity(cid); break;
-
     //                }
     //            }
 
-    //           // if (base.CanExecute(parameter))
-    //           //     base.Execute(parameter);
-    ////
+
+    //            //            if (base.CanExecute(parameter))
+    //            base.Execute(parameter);
+
     //        }
     //    }
+    //public class CityInfoCommand : DataGridCommand
+    //{
+    //    public CityInfoCommand()
+    //    {
+    //        this.Id = CommandId.CellFlyoutAction;
+
+    //    }
+
+    //    public override bool CanExecute(object parameter)
+    //    {
+    //        var context = parameter as CellFlyoutActionContext;
+    //        // put your custom logic here
+    //        Log("CanExecute");
+    //        return true;
+    //    }
+
+    //    public override void Execute(object parameter)
+    //    {
+    //        var context = parameter as CellFlyoutActionContext;
+    //        // put your custom logic here
+    //        var cellInfo = context.CellInfo;
+    //        var i = cellInfo.Item as COTG.Game.City;
+    //        var cid = i.cid;
+    //        Log(i.GetType());
+    //        Log(i.ToString());
+    //        Log(cellInfo.Value);
+
+    //        Log(cellInfo.Column.Name);
+    //        Log(base.CanExecute(parameter));
+    //        if (cellInfo.Column.Header != null)
+    //        {
+    //            Log(cellInfo.Column.Header);
+    //            switch (cellInfo.Column.Header.ToString())
+    //            {
+    //                case "ts":
+    //                    {
+    //                        context.FlyoutTemplate = COTG.Views.MainPage.cache.GetTsInfoDataTemplate();
+    //                        Assert(context.FlyoutTemplate != null);
+
+    //                        //                           var t = new DataGridTextColumn() { PropertyName="ts"} );
+    //                        //                            context.FlyoutTemplate.Ge;
+    //                        break;
+
+    //                    }
+    //                    //   case "xy": JSClient.ShowCity(cid); break;
+    //                    //   case "name": JSClient.ChangeCity(cid); break;
+
+    //            }
+    //        }
+
+    //        // if (base.CanExecute(parameter))
+    //        //     base.Execute(parameter);
+    //        //
+    //    }
+    //}
     public class DungeonTapCommand : DataGridCommand
     {
         public DungeonTapCommand()

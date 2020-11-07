@@ -93,33 +93,9 @@ namespace COTG
         // We set then on key up and key down events and on mouse input events
         static public bool shiftPressed, controlPressed;
         
-        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
-        {
-            switch (args.VirtualKey)
-            {
-                case VirtualKey.Shift:
-                    shiftPressed = false;
-                    break;
-                case VirtualKey.Control:
-                    controlPressed = false;
-                    break;
+       
 
-            }
-        }
-
-        private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
-        {
-            switch (args.VirtualKey)
-            {
-                case VirtualKey.Shift:
-                    shiftPressed =true;
-                    break;
-                case VirtualKey.Control:
-                    controlPressed = true;
-                    break;
-            }
-        }
-
+       
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             Trace("LeavingBackground");
@@ -167,8 +143,7 @@ namespace COTG
             Assert(idleTimer.IsEnabled == false);
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed; ;
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+          
 
         }
 
@@ -178,12 +153,14 @@ namespace COTG
             switch (prop.PointerUpdateKind)
             {
                 case PointerUpdateKind.XButton1Pressed:
-                    NavStack.Back();
+                    if(!NavStack.Back() )
+                        ShellPage.instance.ChangeCityClick(-1);
                     Log("XButton1");
                     e.Handled = true;
                     break;
                 case PointerUpdateKind.XButton2Pressed:
-                    NavStack.Forward();
+                    if (!NavStack.Forward())
+                        ShellPage.instance.ChangeCityClick(1);
                     Log("XButton2");
                     e.Handled = true;
                     break;
@@ -344,11 +321,24 @@ namespace COTG
         public static bool IsOnUIThread() => GlobalDispatcher().HasThreadAccess;
         public static bool IsKeyPressedControl()
         {
-            return controlPressed;
+            var window = CoreWindow.GetForCurrentThread();
+            if (window == null)
+            {
+                return false;
+            }
+
+            return window.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
+            
         }
         public static bool IsKeyPressedShift()
         {
-            return shiftPressed;
+            var window = CoreWindow.GetForCurrentThread();
+            if (window == null)
+            {
+                return false;
+            }
+
+            return window.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
         }
 
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
@@ -396,7 +386,18 @@ namespace COTG
             Clipboard.SetContent(dataPackage);
         } );
         }
-        public static VirtualKeyModifiers keyModifiers => VirtualKeyModifiers.None;
+        // HTML control messs wit this
+        public static VirtualKeyModifiers keyModifiers {
+            get
+            {
+             var rv=  VirtualKeyModifiers.None;
+                if (IsKeyPressedShift())
+                    rv |= VirtualKeyModifiers.Shift;
+                if (IsKeyPressedControl())
+                    rv |= VirtualKeyModifiers.Control;
+                return rv;
+            }
+        }
     }
 
 
