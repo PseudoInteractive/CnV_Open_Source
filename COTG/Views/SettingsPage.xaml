@@ -8,6 +8,7 @@
       xmlns:game="using:COTG.Game"
       xmlns:views="using:COTG.Views"
       xmlns:xaml="using:Windows.UI.Xaml"
+      xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.UI.Xaml.Controls"
       mc:Ignorable="d" PrimaryButtonText="Done"   Title="Settings"
@@ -21,16 +22,23 @@
                                        EnumType="ElementTheme" />
     </ContentDialog.Resources>
     <StackPanel Orientation="Vertical" >
-        <Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
         <StackPanel Orientation="Horizontal">
             <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
             <TextBox x:Name="CastlesCont" Text="22" Header="continent"  />
             <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
         </StackPanel>
-        <Button Content="Watch incoming for players" Click="WatchIncomingForPlayers" Style="{ThemeResource ButtonRevealStyle}" Margin="8" />
+        <wct:WrapPanel Orientation="Horizontal"  Margin="4">
+        <Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
+        <Button Content="Watch incoming for players" Click="WatchIncomingForPlayers" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
+        <Button Content="Import spots" Click="ImportSpots" Style="{ThemeResource ButtonRevealStyle}" Margin="8" MinWidth="120" />
+        <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" MinWidth="120" />
+           
+             <Button Content="FixupReserve" Click="FixupReserve" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" MinWidth="120" />
+            </wct:WrapPanel>
+        
         <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
         <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
-        <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" />
+        <controls:NumberBox  Header="Spot MRU count" Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}" SmallChange="1" LargeChange="10"  Margin="8" />
         <TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>
         <StackPanel Orientation="Horizontal"  Margin="4" >
             <controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
@@ -65,7 +73,7 @@
             <ToggleSwitch  Header="Export Stone" IsOn="{x:Bind views:SettingsPage.sendStone, Mode=TwoWay}" Margin="4" Width="120"  />
             <ToggleSwitch  Header="Export Iron" IsOn="{x:Bind views:SettingsPage.sendIron, Mode=TwoWay}" Margin="4" Width="120" />
             <ToggleSwitch  Header="Export Food" IsOn="{x:Bind views:SettingsPage.sendFood, Mode=TwoWay}" Margin="4" Width="120" />
-            <ToggleSwitch Header="Carts for req" IsOn="{x:Bind views:SettingsPage.reserveRequestsForCarts, Mode=TwoWay}" Margin="4" Width="120" />
+            <ToggleSwitch Header="Carts for requests" IsOn="{x:Bind views:SettingsPage.cartsAreForRequests, Mode=TwoWay}" Margin="4" Width="120" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <ComboBox x:Name="hubCityListBox" x:FieldModifier="public"
@@ -80,7 +88,7 @@
                                     TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="1" />
             <CheckBox Content="Autobuild" Margin="4" IsThreeState="True" IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
         </StackPanel>
-        <Button Content="Export Intel" Click="ExportIntelClick" />
+        
         <TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,4" />
         <StackPanel >
             <RadioButton x:Uid="Settings_Theme_Light"

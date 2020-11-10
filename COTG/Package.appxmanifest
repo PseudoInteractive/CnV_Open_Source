@@ -14,7 +14,7 @@
   <Identity
     Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
     Publisher="CN=dwu"
-    Version="1.0.44.0" />
+    Version="1.0.48.0" />
 
   <mp:PhoneIdentity PhoneProductId="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -72,7 +72,7 @@
             </uap5:AppExecutionAlias>
           </uap5:Extension>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="cotg" DesiredView="useMore">
+          <uap:Protocol Name="cotg" DesiredView="default">
             <uap:Logo>Assets\protocolImage.png</uap:Logo>
             <uap:DisplayName>Crown of the Gods A</uap:DisplayName>
           </uap:Protocol>

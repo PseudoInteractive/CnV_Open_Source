@@ -1,4 +1,6 @@
 ﻿using COTG.Services;
+using COTG.Views;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -785,6 +787,7 @@ namespace COTG.Game
                 }
             }
 
+            SpotTab.LoadFromPriorSession(SettingsPage.pinned);
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             current= rv;
         }
@@ -828,7 +831,7 @@ namespace COTG.Game
                 Note.Show("Invalid alliance name");
                 return;
             }
-            sb.Append("Coords\tplayer\tclassification\n");
+            sb.Append("Coords\tplayer\tclassification\tWater\tBig\tPoints\tTemple\n");
             int counter = 0;
             for (int x=x0;x<x1;++x)
                 for(int y=y0;y<y1;++y)
@@ -846,7 +849,7 @@ namespace COTG.Game
                     var cid = (x, y).WorldToCid();
                     var spot = Spot.GetOrAdd(cid);
                     await spot.Classify();
-                    sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\n");
+                    sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\t{dat.isWater}\t{dat.isBig}\t{spot.points}\t{dat.isTemple}\n");
                     ++counter;
                     if( (counter&63)==0)
                         Note.Show($"Progress: {counter}");

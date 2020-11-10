@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 
@@ -23,6 +25,7 @@ namespace COTG.Views
 {
     public class UserTab : UserControl
     {
+        
         public static UserTab[] userTabs;
         public static void InitUserTabs()
         {
@@ -90,6 +93,7 @@ namespace COTG.Views
     }
     public sealed partial class TabPage : Page
     {
+        public static List<AppWindow> tabWindows = new List<AppWindow>();
         public static TabPage mainTabs;
         AppWindow RootAppWindow = null;
 
@@ -244,8 +248,8 @@ namespace COTG.Views
                 Tabs.SelectedIndex = 0;
 
                 // Extend into the titlebar
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = true;
+               // var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                //coreTitleBar.ExtendViewIntoTitleBar = true;
 
 //                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
@@ -348,12 +352,16 @@ namespace COTG.Views
 
             AppWindow newWindow = await AppWindow.TryCreateAsync();
 
+            tabWindows.Add(newWindow);
+
+            newWindow.Closed += (sender,b)=> tabWindows.Remove(sender);
+
             var newPage = new TabPage();
             newPage.SetupWindow(newWindow);
             Tabs.TabItems.Remove(args.Tab);
             var ut = args.Tab.Content as UserTab;
             ut.XamlTreeChanged(null);
-
+            newWindow.RequestMoveAdjacentToCurrentView();
             ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
 
             newPage.Add(args.Tab);
@@ -362,6 +370,14 @@ namespace COTG.Views
 
             await newWindow.TryShowAsync();
 
+        }
+
+        public static async Task CloseAllTabWindows()
+        {
+            while(tabWindows.Any())
+            {
+                await tabWindows.First().CloseAsync();
+            }
         }
 
         private void Tabs_TabDragStarting(TabView sender, TabViewTabDragStartingEventArgs args)
@@ -437,6 +453,10 @@ namespace COTG.Views
             {
                 e.AcceptedOperation = DataPackageOperation.Move;
             }
+            //else
+            //{
+            //    e.AcceptedOperation = DataPackageOperation.Copy;
+            //}
         }
 
         public MenuFlyoutItem AddTabMenuItem(UserTab tab)

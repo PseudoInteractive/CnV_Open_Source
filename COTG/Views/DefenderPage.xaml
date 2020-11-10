@@ -30,7 +30,7 @@
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
-                        IsSynchronizedWithCurrentItem="True"           
+                                
                        
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"

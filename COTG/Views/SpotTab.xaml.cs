@@ -28,6 +28,7 @@ using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using Windows.System;
+using System.Linq;
 
 namespace COTG.Views
 {
@@ -65,10 +66,10 @@ namespace COTG.Views
                     foreach (Spot s in sel)
                     {
                         Spot.selected.Add(s.cid);
- 
+
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log(ex);
                 }
@@ -86,7 +87,7 @@ namespace COTG.Views
                 ++disableSelection;
                 Spot.ProcessPointerPress(sender, e);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log(ex);
             }
@@ -105,30 +106,41 @@ namespace COTG.Views
         }
 
 
-        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod)
+        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=true)
         {
             var spot = Spot.GetOrAdd(cid);
             if (disableSelection == 0)
             {
-                AddToGrid(spot,mod);
+                AddToGrid(spot, mod, updateSelected);
             }
             return spot;
         }
-        public static void SelectSilent(Spot spot, bool selected )
+        public static void SelectedToGrid()
         {
+            ++silenceChanges;
             App.DispatchOnUIThreadSneaky(() =>
             {
                 try
                 {
-                    ++silenceChanges;
-                    instance.selectedGrid.DeselectItem(spot);
-                    if (selected)
-                        instance.selectedGrid.SelectItem(spot);
-                    
-                        
-                //    var sel = instance.selectedGrid.SelectedItems;
-//                    sel.A
-                    Assert(instance.selectedGrid.SelectedItems.Contains(spot) == selected);
+                    var sel = new List<int>(Spot.selected._hashSet);
+                    foreach (Spot i in instance.selectedGrid.SelectedItems.ToArray())
+                    {
+                        var id = sel.IndexOf(i.cid);
+                        if (id == -1)
+                            instance.selectedGrid.DeselectItem(i);
+                        else
+                            sel.RemoveAt(id);
+                    }
+                    foreach (var i in sel)
+                    {
+                        instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
+                    }
+
+
+
+                    //    var sel = instance.selectedGrid.SelectedItems;
+                    //                    sel.A
+
                 }
                 catch (Exception e)
                 {
@@ -139,6 +151,7 @@ namespace COTG.Views
                     --silenceChanges;
                 }
             });
+
         }
         public static void SelectOne(Spot spot)
         {
@@ -150,8 +163,8 @@ namespace COTG.Views
                     var sel = instance.selectedGrid.SelectedItems;
                     sel.Clear();
                     sel.Add(spot);
-//                    instance.selectedGrid.DeselectAll();
-//                    instance.selectedGrid.SelectItem(spot);
+                    //                    instance.selectedGrid.DeselectAll();
+                    //                    instance.selectedGrid.SelectItem(spot);
 
                 }
                 catch (Exception e)
@@ -165,42 +178,56 @@ namespace COTG.Views
             });
         }
 
-        const int maxMRUSize = 12;
-        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod)
+
+        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection=true)
         {
             // Toggle Selected
 
-            App.DispatchOnUIThreadSneaky( () =>
-            {
+            App.DispatchOnUIThreadSneaky(() =>
+           {
+               var id = SpotMRU.IndexOf(spot);
+               if (id != 0)
+               {
+                   if (id > 0)
+                   {
+                       SpotMRU.RemoveAt(id);
+                   }
+                   else if (SpotMRU.Count >= SettingsPage.mruSize)
+                   {
+                       // not in list
+                       var counter = SpotMRU.Count;
+                       while (--counter >= 0)
+                       {
+                           if (!Spot.selected.Contains(SpotMRU[counter].cid) && spot.pinned == false)
+                           {
+                               SpotMRU.RemoveAt(counter);
+                               break;
+                           }
 
-                if (!SpotMRU.Contains(spot))
-                {
-                    if (SpotMRU.Count >= maxMRUSize)
-                    {
-                        var counter = SpotMRU.Count;
-                        while(--counter>= 0)
-                        {
-                            if (!Spot.selected.Contains(SpotMRU[counter].cid))
-                            {
-                                SpotMRU.RemoveAt(counter);
-                                break;
-                            }
+                       }
+                   }
 
-                        }
-                    }
+                   SpotMRU.Insert(0, spot);
+               }
 
-                    SpotMRU.Insert(0,spot);
-                }
-
-                    spot.ProcessSelection(mod);
-            });
+               if(updateSelection)
+                   spot.ProcessSelection(mod);
+           });
 
         }
-  //      public static void ToggleSelected(Spot rv)
-  //      {
-  //          var isSelected = rv.ToggleSelected();
-  ////          SelectSilent(rv, isSelected);
-  //      }
+        public static void LoadFromPriorSession( int[] mru)
+        {
+            foreach(var m in mru)
+            {
+              var spot=  TouchSpot(m, VirtualKeyModifiers.None, false);
+                spot.pinned = true;
+            }
+        }
+        //      public static void ToggleSelected(Spot rv)
+        //      {
+        //          var isSelected = rv.ToggleSelected();
+        ////          SelectSilent(rv, isSelected);
+        //      }
 
 
     }

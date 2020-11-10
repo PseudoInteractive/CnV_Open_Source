@@ -54,6 +54,7 @@ namespace COTG.JSON
             }
             using (var defenders = new ConcurrentHashSet<Spot>())
             {
+                defenders.Add(Spot.pending);
                 try
                 {
 

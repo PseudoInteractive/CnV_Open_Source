@@ -239,7 +239,7 @@ namespace COTG.Views
             heatMapFlyout.Content = new HeatmapDatePicker();
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
             //            PointerPressed+=  PointerPressedCB;
-            HomeButtonTip.IsOpen = true;
+         //   HomeButtonTip.IsOpen = true;
         }
 
         

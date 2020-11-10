@@ -198,7 +198,7 @@
             <AppBarSeparator/>
             <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
         </CommandBar>
-        <Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,12,0,0">
+        <Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>

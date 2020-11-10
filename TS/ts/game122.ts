@@ -7096,6 +7096,122 @@ let D6: jsonT.City;
 let pollJ: jsonT.Poll;
 var P8 = 0;
 
+function debounce(func:any, wait :number,maxWait:number, leading:boolean=true,trailing:boolean = true) {
+    var lastArgs,
+        lastThis,
+       
+        result,
+        timerId,
+        lastCallTime,
+        lastInvokeTime = 0,
+        maxing = true;
+
+    
+
+    function invokeFunc(time) {
+        var args = lastArgs,
+            thisArg = lastThis;
+
+        lastArgs = lastThis = undefined;
+        lastInvokeTime = time;
+        result = func.apply(thisArg, args);
+        return result;
+    }
+
+    function leadingEdge(time) {
+        // Reset any `maxWait` timer.
+        lastInvokeTime = time;
+        // Start the timer for the trailing edge.
+        timerId = setTimeout(timerExpired, wait);
+        // Invoke the leading edge.
+        return leading ? invokeFunc(time) : result;
+    }
+
+    function remainingWait(time) {
+        var timeSinceLastCall = time - lastCallTime,
+            timeSinceLastInvoke = time - lastInvokeTime,
+            timeWaiting = wait - timeSinceLastCall;
+
+        return maxing
+            ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
+            : timeWaiting;
+    }
+
+    function shouldInvoke(time) {
+        var timeSinceLastCall = time - lastCallTime,
+            timeSinceLastInvoke = time - lastInvokeTime;
+
+        // Either this is the first call, activity has stopped and we're at the
+        // trailing edge, the system time has gone backwards and we're treating
+        // it as the trailing edge, or we've hit the `maxWait` limit.
+        return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+            (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+    }
+
+    function timerExpired() {
+        var time = Date.now();
+        if (shouldInvoke(time)) {
+            return trailingEdge(time);
+        }
+        // Restart the timer.
+        timerId = setTimeout(timerExpired, remainingWait(time));
+    }
+
+    function trailingEdge(time) {
+        timerId = undefined;
+
+        // Only invoke if we have `lastArgs` which means `func` has been
+        // debounced at least once.
+        if (trailing && lastArgs) {
+            return invokeFunc(time);
+        }
+        lastArgs = lastThis = undefined;
+        return result;
+    }
+
+    function cancel() {
+        if (timerId !== undefined) {
+            clearTimeout(timerId);
+        }
+        lastInvokeTime = 0;
+        lastArgs = lastCallTime = lastThis = timerId = undefined;
+    }
+
+    function flush() {
+        return timerId === undefined ? result : trailingEdge(Date.now());
+    }
+
+    function debounced(_wait: number, _maxWait: number) {
+        var time = Date.now(),
+            isInvoking = shouldInvoke(time);
+            wait = _wait;
+            maxWait =_maxWait;
+        lastArgs = arguments;
+        lastThis = this;
+        lastCallTime = time;
+
+        if (isInvoking) {
+            if (timerId === undefined) {
+                return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+                // Handle invocations in a tight loop.
+                clearTimeout(timerId);
+                timerId = setTimeout(timerExpired, wait);
+                return invokeFunc(lastCallTime);
+            }
+        }
+        if (timerId === undefined) {
+            timerId = setTimeout(timerExpired, wait);
+        }
+        return result;
+    }
+    debounced.cancel = cancel;
+    debounced.flush = flush;
+    return debounced;
+}
+
+
 var a6 =
 {
     ccazzx: {
@@ -7339,7 +7455,7 @@ i011.n5x = function() {
     .N2Q;
 };
 
-function K5SS() {
+function K5SS(): typeof globalThis {
   var s55 = 2;
   for (; s55 !== 3;) {
     switch (s55) {
@@ -9691,7 +9807,7 @@ var cotgsubscribe = amplify;
   const p6R =
     '5892';
   const X5m = '2722';
-  const h4p = "2350";
+  const h4p = 2350;
   const w2y = "4307";
   const K0R = "60";
   const n5R = '209';
@@ -11316,7 +11432,7 @@ var cotgsubscribe = amplify;
         .click(function() { p8(6, +k7y, 1); });
     }
 
-    function u7V(T11) {
+    function u7V(T11): void {
       ppdtChanged(T11);
       plDa.playstr = T11;
       var t11 = {};
@@ -13698,10 +13814,10 @@ var cotgsubscribe = amplify;
     function i5F() {}
     var R0F = 0;
 
-    function H1F() {
+    function ProcessBuildQueue() {
       if (D6.bq)
         if (D6.bq[0]) {
-        let callDelay = 4000;
+        let callDelay = 2000;
           var n1g = Number(D6.bq[0].bid);
           var Y1g = Number(D6.bq[0].btype);
           var J1g =
@@ -13719,8 +13835,7 @@ var cotgsubscribe = amplify;
             y1g = bam[_s(Q5y & 2147483647)][V1g][_s(+c1R)];
           var B1g = h1g - r1g;
           var R1g = new Date(h1g);
-          if (
-            K1g == 1) {
+          if (K1g == 1) { // if ministers??
             var f1g = currentTime();
             var U1g = Number(f1g) - Number(r1g);
             var A1g = Math.floor(U1g /
@@ -13736,10 +13851,11 @@ var cotgsubscribe = amplify;
                   DoPoll2(500);
                   callDelay = 600;
 				}
-             I0V(J1g, A1g, n1g, g1g);
+             UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
           //   console.log("progress " + callDelay);
             }
             else {
+            // this building is complete
             //    console.log("done!");
               D6.bd[J1g].bid = V1g;
               D6.bd[J1g].bl = P1g;
@@ -13751,21 +13867,22 @@ var cotgsubscribe = amplify;
               V8();
               N2();
               DoPoll2(500);
-              callDelay=0;
+              callDelay=200;
             }
+            
           }
           else
 		  {
     // This happens when items are queued but we are out of resources or something
             //  console.log("pa?");
-            //  DoPoll2(500);
+              DoPoll2(500);
 
 
 		  }
           if(callDelay != 0)
           {
           clearTimeout(i8);
-          i8 = setTimeout(H1F, callDelay);
+          i8 = setTimeout(ProcessBuildQueue, callDelay);
           }
         }
         else
@@ -16993,7 +17110,7 @@ var cotgsubscribe = amplify;
       }
     }
 
-    function getCity(R0g) {
+    function getCity(R0g): void {
       if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(
           g5R * 1) || R0g == null || R0g == "undefined" || R0g == undefined) R0g = ppdt[_s(+x9y)][0][
         1];
@@ -18201,7 +18318,7 @@ var cotgsubscribe = amplify;
         N6();
         var r9T = $.post(q6 + _s(4230), { cid: cid, a: A9T });
         F6();
-        r9T.done(function(R9T) {
+        r9T.done(function(R9T): void {
           if (R9T)
             if (R9T == 1) Y6(_s(E4p ^ 0));
             else if (R9T == 3) Y6(_s(+F4R));
@@ -22493,10 +22610,13 @@ var cotgsubscribe = amplify;
     */
     var M9 = _s(4133);
     var z9 = _s(S5R | 70);
+    
+    let _s5V = debounce(s5V,250, 2000);
 
     function J2() {
       E6k.R6();
-      s5V();
+        _s5V();
+//      s5V();
     }
     var X9 = _s(4371);
     var L9 = _s(S5R & 2147483647);
@@ -30777,7 +30897,7 @@ console.log("Bad");
 
     __c.showreport = X3F;
 
-    function l5V() {
+    function UpdateTroopQueue() {
       var p84 = "6119";
       var Q0t = "6338";
       var P84 = '1930';
@@ -49621,10 +49741,10 @@ console.log("Bad");
 
     function ProcessBuuPoll()
 	{
-        if (D6.bq.length<=2)
-            DoPoll2(500);
+        //if (D6.bq.length<=2)
+        //    DoPoll2(500);
 //        else
-//            DoPoll2(1000);
+            DoPoll2(1000);
 
 	}
 
@@ -49720,9 +49840,9 @@ console.log("Bad");
                 g3F();
                 n8();
                 X2(7);
-                var d0w = y9g % (A5y & 2147483647);
-                var b0w = (y9g - d0w) / (A5y & 2147483647);
-                ProcessBuuPoll();
+             //   var d0w = y9g % (A5y & 2147483647);
+             //   var b0w = (y9g - d0w) / (A5y & 2147483647);
+                 ProcessBuuPoll();
               }
             });
           }
@@ -49812,7 +49932,7 @@ console.log("Bad");
                 X2(7);
                 var J0w = y9g % +A5y;
                 var h0w = (y9g - J0w) / +A5y;
-                  ProcessBuuPoll();
+                 ProcessBuuPoll();
 
               }
             });
@@ -49897,7 +50017,7 @@ console.log("Bad");
                 X2(7);
                 var r0w = y9g % +A5y;
                 var A0w = (y9g - r0w) / (A5y - 0);
-                  ProcessBuuPoll();
+                 ProcessBuuPoll();
 
               }
             });
@@ -49981,7 +50101,7 @@ console.log("Bad");
                   n8();
                   var f0w = y9g % +A5y;
                   var K0w = (y9g - f0w) / +A5y;
-                    ProcessBuuPoll();
+                   ProcessBuuPoll();
 
                 }
               });
@@ -50190,7 +50310,7 @@ console.log("Bad");
     //  }
     //}
 
-    function I0V(b3g, W3g, S3g, J3g) {
+    function UpdateBuildProgressBar(b3g, W3g, S3g, J3g) {
       try {
         var i3g = $(_s(3674) + S3g);
         var d3g = currentTime();
@@ -52426,7 +52546,7 @@ console.log("Bad");
           H3F(S1g);
         });
       clearTimeout(i8);
-      i8 = setTimeout(H1F, 250);
+      i8 = setTimeout(ProcessBuildQueue, 250);
     }
     var p7V;
 
@@ -53018,7 +53138,7 @@ console.log("Bad");
                         var H7w = s5w % (A5y - 0);
                         var j7w = (s5w - H7w) / (A5y |
                           5);
-                          ProcessBuuPoll();
+                         ProcessBuuPoll();
 
                       }
                     });
@@ -53090,7 +53210,7 @@ console.log("Bad");
                         var I7w = s5w % (A5y * 1);
                         var v7w = (s5w - I7w) / (A5y *
                           1);
-                          ProcessBuuPoll();
+                         ProcessBuuPoll();
 
                       }
                     });
@@ -53147,7 +53267,7 @@ console.log("Bad");
                             X2(7);
                             var Q7w = s5w % +A5y;
                             var T7w = (s5w - Q7w) / (A5y - 0);
-                              ProcessBuuPoll();;
+                             ProcessBuuPoll();;
                           }
 
                         });
@@ -55233,7 +55353,7 @@ console.log("Bad");
       B0F();
       N2();
       a9F();
-      l5V();
+      UpdateTroopQueue();
     }
     var x9 = 0;
 

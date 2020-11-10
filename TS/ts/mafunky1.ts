@@ -587,9 +587,7 @@ function avagetts() {
 	return JSON.stringify(rv);
 }
 
-function avagetmo() {
-	return JSON.stringify(D6.mo);
-}
+
 //async function avafetch(url: string, args: string) {
 //	let req = fetch(url, {
 //		method: 'POST',

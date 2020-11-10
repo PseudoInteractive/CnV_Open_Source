@@ -788,12 +788,16 @@ namespace COTG
                     
                     
                     var city = City.GetOrAddCity(cid);
-                    city._cityName = jsCity.GetProperty("2").GetString();
-                    int i = city.cityName.LastIndexOf('-');
-                    if(i!= -1)
+                    var name = jsCity.GetProperty("2").GetString();
+                    int i = name.LastIndexOf('-');
+                    if (i != -1)
                     {
-                        city.remarks = city.cityName.Substring(i + 2);
-                        city._cityName = city.cityName.Substring(0, i - 1);
+                        city.remarks = name.Substring(i + 2);
+                        city._cityName = name.Substring(0, i - 1);
+                    }
+                    else
+                    {
+                        city._cityName = name;
                     }
                     city.tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
@@ -1095,7 +1099,7 @@ namespace COTG
                                 }
                             case "sub":
                                 {
-                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"cotg:launch?w={world}&s=1&n=1")));
+                                    App.DispatchOnUIThread( ()=>Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s=1&n=1")));
                                     break;
                                 }
                             case "shcit":
@@ -1148,12 +1152,17 @@ namespace COTG
                                         var city = Spot.GetOrAdd(cid);
                                         var name = jso.GetString("name");
                                         city.pid = pid; // todo: this shoule be an int playerId
-                                                        //Assert(city.pid > 0);
+                                        city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");
                                         //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
                                         city.lastAccessed = DateTimeOffset.UtcNow;
                                         // city.isCastle = jso.GetAsInt("castle") == 1;
-                                        city.isBlessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+                                        var blessed  = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+                                        if (blessed != city.isBlessed)
+                                        {
+                                            city.isBlessed = blessed;
+                                            city.OnPropertyChanged(nameof(City.icon));
+                                        }
                                         city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
 

@@ -83,6 +83,7 @@ namespace COTG.Services
             var t0= ThemeSelectorService.InitializeAsync();
             var t1= WindowManagerService.Current.InitializeAsync();
             await Task.WhenAll(t0, t1);
+            Window.Current.Closed += async (a,b)=> await TabPage.CloseAllTabWindows();
         }
 
         private async Task HandleActivationAsync(object activationArgs)

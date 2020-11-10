@@ -25,6 +25,8 @@ using COTG.JSON;
 using System.Text.Json;
 using Windows.Web.Http;
 using static COTG.Game.Enum;
+using Windows.ApplicationModel.DataTransfer;
+
 namespace COTG.Game
 {
     //public interface IKeyedItem
@@ -55,7 +57,9 @@ namespace COTG.Game
         public static Spot pending = new Spot() { _cityName = "pending" };
 
         public static Spot[] emptySpotSource = new[] { pending };
-        public virtual string nameAndRemarks => cityName;
+   
+        public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+        public string remarks { get; set; } = string.Empty;
 
         public static bool IsFocus(int cid)
         {
@@ -109,7 +113,6 @@ namespace COTG.Game
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
-
         public byte type;
         public const byte typeCity = 0x1;
         public const byte typeShrine = 0x2;
@@ -179,7 +182,10 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
+        public bool pinned { get; set; }  // pinned in MRU
         public byte claim; // only if this is under attack
+        public byte shipyards { get; set; }
+        public byte ports { get; set; }
         public string Claim => $"{(int)claim:00}%";
             public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
@@ -313,6 +319,11 @@ namespace COTG.Game
                         }
                         wantRaidScan = false;
                         break;
+                    case nameof(pinned):
+                        pinned = !pinned;
+                        OnPropertyChanged(nameof(pinned));
+                        return;
+                        break;
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
@@ -338,7 +349,14 @@ namespace COTG.Game
             else if (pt.Properties.IsRightButtonPressed)
             {
                 ShowContextMenu(uie, pt.Position);
-                return;
+               
+            }
+            else if(pt.Properties.IsMiddleButtonPressed)
+            {
+                var text = $"<coords>{cid.CidToString()}</coords>\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+                Note.Show($"Copied to clipboard: {text}");
+                App.CopyTextToClipboard(text);
+                SetFocus();
             }
             SpotTab.TouchSpot(cid,modifiers);
         }
@@ -591,7 +609,7 @@ namespace COTG.Game
                 {
                     rv = true; // this should also add "in between spots"
                     selected._hashSet.Add(cid);
-                    SpotTab.SelectSilent(this, rv);
+   //                 SpotTab.SelectedToGrid();
                 }
                 else if (mod.IsControl())
                 {
@@ -605,7 +623,7 @@ namespace COTG.Game
                         rv = true;
                         selected._hashSet.Add(cid);
                     }
-                    SpotTab.SelectSilent(this, rv);
+                    
                 }
                 else
                 {
@@ -613,7 +631,7 @@ namespace COTG.Game
                     rv = true;
                     selected._hashSet.Clear();
                     selected._hashSet.Add(cid);
-                    SpotTab.SelectOne(this);
+ //                   SpotTab.SelectOne(this);
                 }
             }
             catch (Exception e)
@@ -624,6 +642,7 @@ namespace COTG.Game
             {
                 selected.ExitWriteLock();
             }
+            SpotTab.SelectedToGrid();
             return rv;
         }
         public static bool AreAnySelected()
@@ -831,6 +850,7 @@ namespace COTG.Game
                     }
 
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
+                    App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
                     App.AddItem(flyout, "Attack to Clipboard", (_, _) =>
                         App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} vanqs real 200000\n{cid.CidToString()} {Player.myName} vanqs fake 3000\n"));
                     App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
@@ -920,8 +940,8 @@ namespace COTG.Game
             {
                 tab.defenderGrid.SetCurrentItem(this,false);
             });
-
         }
+
         public async void DiscordClaim()
         {
             if(!Discord.isValid)

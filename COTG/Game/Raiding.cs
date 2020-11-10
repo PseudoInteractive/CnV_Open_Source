@@ -106,7 +106,7 @@ namespace COTG.Game
             }
             return false;
         }
-        public static float desiredCarry = 1.03f;
+        public static float desiredCarry = 1.125f;
         public static bool raidOnce;
         public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
         {

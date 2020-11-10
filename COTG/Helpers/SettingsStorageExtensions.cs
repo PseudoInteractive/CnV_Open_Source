@@ -48,29 +48,66 @@ namespace COTG.Helpers
 
         public static void Save<T>(this ApplicationDataContainer settings, string key, T value)
         {
-
-            settings.Values[key] = value switch
+            if (typeof(T) == typeof(Nullable<bool>))
             {
-                int a => a,
-                byte a => a,
-                sbyte a => a,
-                uint a => a,
-                ulong a => a,
-                float a => a,
-                double a => a,
-                string a => a,
-                bool a => a,
-                DateTime a => a,
-                TimeSpan a => a,
-                Guid a => a,
-                Point a => a,
-                Size a => a,
-                Rect a => a,
-                ApplicationDataCompositeValue a => a,
-                _ => JsonSerializer.Serialize<T>(value)
-            };
-        }
+              settings.Values[key] = value switch { null => -1, true => 1,false=> 0, _ => -1 };
+            }
+            else
+            {
 
+                settings.Values[key] = value switch
+                {
+                    int a => a,
+                    byte a => a,
+                    sbyte a => a,
+                    uint a => a,
+                    ulong a => a,
+                    float a => a,
+                    double a => a,
+                    string a => a,
+                    bool a => a,
+                    DateTime a => a,
+                    TimeSpan a => a,
+                    Guid a => a,
+                    Point a => a,
+                    Size a => a,
+                    Rect a => a,
+                    ApplicationDataCompositeValue a => a,
+                    _ => JsonSerializer.Serialize<T>(value)
+                };
+            }
+        }
+        public static void SaveT(this ApplicationDataContainer settings, string key,Type t,object value)
+        {
+            if (t == typeof(Nullable<bool>))
+            {
+                settings.Values[key] = value switch { null => -1, true => 1, false => 0, _ => -1 };
+            }
+            else
+            {
+
+                settings.Values[key] = value switch
+                {
+                    int a => a,
+                    byte a => a,
+                    sbyte a => a,
+                    uint a => a,
+                    ulong a => a,
+                    float a => a,
+                    double a => a,
+                    string a => a,
+                    bool a => a,
+                    DateTime a => a,
+                    TimeSpan a => a,
+                    Guid a => a,
+                    Point a => a,
+                    Size a => a,
+                    Rect a => a,
+                    ApplicationDataCompositeValue a => a,
+                    _ => JsonSerializer.Serialize(value,t)
+                };
+            }
+        }
 
         public static void SaveString(this ApplicationDataContainer settings, string key, string value)
         {
@@ -90,6 +127,31 @@ namespace COTG.Helpers
             return _default;
         }
 
+        public static object ReadT(this ApplicationDataContainer settings, string key, Type t, object _default) 
+        {
+
+            try
+            {
+                if (settings.Values.TryGetValue(key, out var o))
+                {
+                    if(t == typeof(Nullable<bool>) )
+                    {
+                            bool? rv = (int)o switch { 0 => false, 1 => true, _ => null };
+                            return rv;
+                    }
+                    if (o is string && t != typeof(string))
+                        return JsonSerializer.Deserialize((string)o, t);
+                    else
+                        return o;
+                }
+            }
+            catch (Exception e) // not stored properly
+            {
+                COTG.Debug.Log(e);
+            }
+            return _default;
+
+        }
         public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
         {
             if (content == null)

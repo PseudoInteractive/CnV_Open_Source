@@ -8550,6 +8550,82 @@ var pollthis;
 let D6;
 let pollJ;
 var P8 = 0;
+function debounce(func, wait, maxWait, leading = true, trailing = true) {
+    var lastArgs, lastThis, result, timerId, lastCallTime, lastInvokeTime = 0, maxing = true;
+    function invokeFunc(time) {
+        var args = lastArgs, thisArg = lastThis;
+        lastArgs = lastThis = undefined;
+        lastInvokeTime = time;
+        result = func.apply(thisArg, args);
+        return result;
+    }
+    function leadingEdge(time) {
+        lastInvokeTime = time;
+        timerId = setTimeout(timerExpired, wait);
+        return leading ? invokeFunc(time) : result;
+    }
+    function remainingWait(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+        return maxing
+            ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
+            : timeWaiting;
+    }
+    function shouldInvoke(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+        return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+            (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+    }
+    function timerExpired() {
+        var time = Date.now();
+        if (shouldInvoke(time)) {
+            return trailingEdge(time);
+        }
+        timerId = setTimeout(timerExpired, remainingWait(time));
+    }
+    function trailingEdge(time) {
+        timerId = undefined;
+        if (trailing && lastArgs) {
+            return invokeFunc(time);
+        }
+        lastArgs = lastThis = undefined;
+        return result;
+    }
+    function cancel() {
+        if (timerId !== undefined) {
+            clearTimeout(timerId);
+        }
+        lastInvokeTime = 0;
+        lastArgs = lastCallTime = lastThis = timerId = undefined;
+    }
+    function flush() {
+        return timerId === undefined ? result : trailingEdge(Date.now());
+    }
+    function debounced(_wait, _maxWait) {
+        var time = Date.now(), isInvoking = shouldInvoke(time);
+        wait = _wait;
+        maxWait = _maxWait;
+        lastArgs = arguments;
+        lastThis = this;
+        lastCallTime = time;
+        if (isInvoking) {
+            if (timerId === undefined) {
+                return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+                clearTimeout(timerId);
+                timerId = setTimeout(timerExpired, wait);
+                return invokeFunc(lastCallTime);
+            }
+        }
+        if (timerId === undefined) {
+            timerId = setTimeout(timerExpired, wait);
+        }
+        return result;
+    }
+    debounced.cancel = cancel;
+    debounced.flush = flush;
+    return debounced;
+}
 var a6 = {
     ccazzx: {
         encrypt: (a, b, c) => { return ""; },
@@ -11075,7 +11151,7 @@ var cotgsubscribe = amplify;
     const u7t = '7025';
     const p6R = '5892';
     const X5m = '2722';
-    const h4p = "2350";
+    const h4p = 2350;
     const w2y = "4307";
     const K0R = "60";
     const n5R = '209';
@@ -14990,10 +15066,10 @@ var cotgsubscribe = amplify;
         }
         function i5F() { }
         var R0F = 0;
-        function H1F() {
+        function ProcessBuildQueue() {
             if (D6.bq)
                 if (D6.bq[0]) {
-                    let callDelay = 4000;
+                    let callDelay = 2000;
                     var n1g = Number(D6.bq[0].bid);
                     var Y1g = Number(D6.bq[0].btype);
                     var J1g = Number(D6.bq[0].bspot);
@@ -15022,7 +15098,7 @@ var cotgsubscribe = amplify;
                                 DoPoll2(500);
                                 callDelay = 600;
                             }
-                            I0V(J1g, A1g, n1g, g1g);
+                            UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
                         }
                         else {
                             D6.bd[J1g].bid = V1g;
@@ -15035,14 +15111,15 @@ var cotgsubscribe = amplify;
                             V8();
                             N2();
                             DoPoll2(500);
-                            callDelay = 0;
+                            callDelay = 200;
                         }
                     }
                     else {
+                        DoPoll2(500);
                     }
                     if (callDelay != 0) {
                         clearTimeout(i8);
-                        i8 = setTimeout(H1F, callDelay);
+                        i8 = setTimeout(ProcessBuildQueue, callDelay);
                     }
                 }
                 else {
@@ -22389,9 +22466,10 @@ var cotgsubscribe = amplify;
         var C9 = _s(+Q6R);
         var M9 = _s(4133);
         var z9 = _s(S5R | 70);
+        let _s5V = debounce(s5V, 250, 2000);
         function J2() {
             E6k.R6();
-            s5V();
+            _s5V();
         }
         var X9 = _s(4371);
         var L9 = _s(S5R & 2147483647);
@@ -30861,7 +30939,7 @@ var cotgsubscribe = amplify;
             });
         }
         __c.showreport = X3F;
-        function l5V() {
+        function UpdateTroopQueue() {
             var p84 = "6119";
             var Q0t = "6338";
             var P84 = '1930';
@@ -49174,8 +49252,7 @@ var cotgsubscribe = amplify;
             });
         }
         function ProcessBuuPoll() {
-            if (D6.bq.length <= 2)
-                DoPoll2(500);
+            DoPoll2(1000);
         }
         function C5F(v0w) {
             J9();
@@ -49267,8 +49344,6 @@ var cotgsubscribe = amplify;
                                 g3F();
                                 n8();
                                 X2(7);
-                                var d0w = y9g % (A5y & 2147483647);
-                                var b0w = (y9g - d0w) / (A5y & 2147483647);
                                 ProcessBuuPoll();
                             }
                         });
@@ -49604,7 +49679,7 @@ var cotgsubscribe = amplify;
                 position: _s(+M64)
             });
         }
-        function I0V(b3g, W3g, S3g, J3g) {
+        function UpdateBuildProgressBar(b3g, W3g, S3g, J3g) {
             try {
                 var i3g = $(_s(3674) + S3g);
                 var d3g = currentTime();
@@ -51916,7 +51991,7 @@ var cotgsubscribe = amplify;
                 H3F(S1g);
             });
             clearTimeout(i8);
-            i8 = setTimeout(H1F, 250);
+            i8 = setTimeout(ProcessBuildQueue, 250);
         }
         var p7V;
         function i2F(E71) {
@@ -54708,7 +54783,7 @@ var cotgsubscribe = amplify;
             B0F();
             N2();
             a9F();
-            l5V();
+            UpdateTroopQueue();
         }
         var x9 = 0;
         function Q5V(q31) {
@@ -69344,9 +69419,6 @@ function avapost(url, args) {
 function avagetts() {
     var rv = { tc: D6.tc, th: D6.th };
     return JSON.stringify(rv);
-}
-function avagetmo() {
-    return JSON.stringify(D6.mo);
 }
 var raidSecret;
 function postppdt() {

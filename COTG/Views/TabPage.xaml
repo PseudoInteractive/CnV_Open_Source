@@ -29,6 +29,7 @@
                              TabDroppedOutside="Tabs_TabDroppedOutside"
                              TabStripDragOver="Tabs_TabStripDragOver"
                              TabStripDrop="Tabs_TabStripDrop"
+                    
                              TabDragStarting="Tabs_TabDragStarting" >
             <muxc:TabView.TabStripHeader>
                 <Grid x:Name="ShellTitlebarInset"  Background="Transparent"  />

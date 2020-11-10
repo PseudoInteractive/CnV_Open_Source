@@ -10,7 +10,6 @@
       xmlns:model="using:COTG.Models"
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:my1="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:td="using:Telerik.UI.Xaml.Controls.Data"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
@@ -31,14 +30,13 @@
                         CanUserChooseColumns="True"
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
-                        
                         PointerPressed="gridPointerPress"
                         PointerExited="gridPointerExited"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
-                        SelectionMode="Multiple"
+                        SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
                         >
@@ -47,13 +45,18 @@
                                         Header="I"
                                         SizeMode="Fixed"
                                         Width="34" />
-                <telerikGrid:DataGridTextColumn PropertyName="cityName"
+                <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
                                        SizeMode="Auto"
                                        Width="100" />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
                                        SizeMode="Fixed"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="80" />
+               <tg:DataGridBooleanColumn PropertyName="pinned"
+                                         IsVisible="True"
+                                         CanUserEdit="True"
+                                          Width="20" />
+
                 <telerikGrid:DataGridNumericalColumn PropertyName="cont"
                                        SizeMode="Fixed"
                                        CellContentStyle="{StaticResource CenterAlign}"
@@ -67,6 +70,16 @@
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                        SizeMode="Auto"
                                             Width="80" />
+                                <tg:DataGridTextColumn PropertyName="remarks"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       Width="60"
+                                       IsVisible="False" />
+                                <tg:DataGridBooleanColumn PropertyName="isCastle"
+                                          IsVisible="True"
+                                          Width="20" />
+                <tg:DataGridBooleanColumn PropertyName="isOnWater"
+                                          IsVisible="True"
+                                          Width="20" />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
 

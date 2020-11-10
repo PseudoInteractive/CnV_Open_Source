@@ -22,14 +22,11 @@ namespace COTG.Game
     {
 
         public City() { type = typeCity; }
-        public string remarks { get; set; }
-
+       
 
         public Raid[] raids = Array.Empty<Raid>();
 
         public static int build; // city that has Build selection.  I.e. in city view, the city you are in
-
-        public override string nameAndRemarks=> remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 
         public bool isBuild => cid == build;
         public static bool IsBuild( int cid )
@@ -175,11 +172,13 @@ namespace COTG.Game
                 if (jse.TryGetProperty("bd", out var bd))
                 {
                         commandSlots = 5;
+                        isCastle = false;
                         foreach (var b in bd.EnumerateArray())
                         {
                             if (b.GetAsInt("bid") == bidCastle)
                             {
                                 commandSlots= (byte)( (b.GetInt("bl") + 5));
+                                isCastle = true;
                             }
                         }
                     }
@@ -555,13 +554,13 @@ namespace COTG.Game
             {
                 if (MainPage.IsVisible())
                 {
-                    MainPage.CityGrid.SelectedItem = this;
+                   /// MainPage.CityGrid.SelectedItem = this;
 //                      MainPage.CityGrid.SetCurrentItem(this);
 
-                    //  MainPage.CityGrid.SetCurrentItem(this,false);
+                 //     MainPage.CityGrid.SetCurrentItem(this,false);
                     MainPage.CityGrid.ScrollItemIntoView(this);
                     // await Task.Delay(200);
-                    //MainPage.CityGrid.SelectItem(this);
+                    MainPage.CityGrid.SelectItem(this);
                     //var id = gridCitySource.IndexOf(this);
                     //if (id != -1)
                     //{

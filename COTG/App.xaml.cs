@@ -53,7 +53,7 @@ namespace COTG
             get { return _activationService.Value; }
         }
         public static App instance;
-
+        public static string appLink = "cotg";
         public App()
         {
 
@@ -92,10 +92,42 @@ namespace COTG
         // these are not reliably set
         // We set then on key up and key down events and on mouse input events
         static public bool shiftPressed, controlPressed;
-        
-       
 
-       
+        public static bool IsKeyPressedControl()
+        {
+            return controlPressed;
+        }
+        public static bool IsKeyPressedShift()
+        {
+            return shiftPressed;
+        }
+        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case VirtualKey.Shift:
+                    shiftPressed = false;
+                    break;
+                case VirtualKey.Control:
+                    controlPressed = false;
+                    break;
+
+            }
+        }
+
+        private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case VirtualKey.Shift:
+                    shiftPressed = true;
+                    break;
+                case VirtualKey.Control:
+                    controlPressed = true;
+                    break;
+            }
+        }
+
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             Trace("LeavingBackground");
@@ -116,6 +148,7 @@ namespace COTG
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+            CoreApplication.EnablePrelaunch(false);
             if (!args.PrelaunchActivated)
             {
 
@@ -143,8 +176,9 @@ namespace COTG
             Assert(idleTimer.IsEnabled == false);
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed; ;
-          
 
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
         }
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
@@ -211,7 +245,14 @@ namespace COTG
 
         protected override async void OnActivated(IActivatedEventArgs args)
         {
-           
+            var activation = args as IActivatedEventArgs;
+            if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
+            {
+                // Todo:  Handle arguments and stuff
+                // Ensure the current window is active
+                Window.Current.Activate();
+                return;
+            }
             await ActivationService.ActivateAsync(args);
             OnLaunchedOrActivated();
             //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
@@ -319,27 +360,27 @@ namespace COTG
         public static CoreDispatcher GlobalDispatcher() => ShellPage.instance.Dispatcher;
 
         public static bool IsOnUIThread() => GlobalDispatcher().HasThreadAccess;
-        public static bool IsKeyPressedControl()
-        {
-            var window = CoreWindow.GetForCurrentThread();
-            if (window == null)
-            {
-                return false;
-            }
+        //public static bool IsKeyPressedControl()
+        //{
+        //    var window = CoreWindow.GetForCurrentThread();
+        //    if (window == null)
+        //    {
+        //        return false;
+        //    }
 
-            return window.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
+        //    return window.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
             
-        }
-        public static bool IsKeyPressedShift()
-        {
-            var window = CoreWindow.GetForCurrentThread();
-            if (window == null)
-            {
-                return false;
-            }
+        //}
+        //public static bool IsKeyPressedShift()
+        //{
+        //    var window = CoreWindow.GetForCurrentThread();
+        //    if (window == null)
+        //    {
+        //        return false;
+        //    }
 
-            return window.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
-        }
+        //    return window.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
+        //}
 
         public static MenuFlyoutItem CreateMenuItem(string text, Action command)
         {
@@ -383,9 +424,12 @@ namespace COTG
             // copy
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetText(s);
+            // if(appLink!=null)
+            //     dataPackage.SetApplicationLink(new Uri() )
             Clipboard.SetContent(dataPackage);
         } );
         }
+        
         // HTML control messs wit this
         public static VirtualKeyModifiers keyModifiers {
             get
@@ -526,18 +570,21 @@ namespace COTG
         }
         public static void Show(string s, int timeout = 8000)
         {
+            if (ShellPage.instance != null)
+            {
 
-            App.DispatchOnUIThreadLow(() =>
-            { 
-            var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-            textBlock.LinkClicked += MarkDownLinkClicked;
-            ShellPage.inAppNote.Show(textBlock, timeout);
-            });
+                App.DispatchOnUIThreadLow(() =>
+                {
+                    var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+                    textBlock.LinkClicked += MarkDownLinkClicked;
+                    ShellPage.inAppNote.Show(textBlock, timeout);
+                });
 
-            ChatTab.L(s);
+                ChatTab.L(s);
+            }
         }
 
-        static Regex regexCoords = new Regex(@"\<coords\>(\d{3}:\d{3})\<\/coords\>");
+        static Regex regexCoords = new Regex(@"\<coords\>(\d+:\d+)\<\/coords\>");
         static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>");
         static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>");
         static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>");

@@ -30,13 +30,14 @@ namespace COTG.Views
 
         //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
-     
+
+        
         //private static bool _isLoggedIn;
         //private static bool _isBusy;
 //        private static UserData _user;
-        public static bool fetchFullHistory;
-        public static bool? autoBuildOn;
-        public static string hubCitylistName;
+        public static bool fetchFullHistory=true;
+        public static bool? autoBuildOn=null;
+        public static string hubCitylistName = "Hubs";
         public static int reqWood = 160000;
         public static int reqStone = 205000;
         public static int reqIron = 100000;
@@ -46,12 +47,14 @@ namespace COTG.Views
         public static int maxIron = 300000;
         public static int maxFood = 300000;
         public static int cottageLevel = 8;
-        public static bool sendWood;
-        public static bool sendStone;
-        public static bool sendIron;
-        public static bool sendFood;
-        public static bool reserveRequestsForCarts;
+        public static bool sendWood=true;
+        public static bool sendStone=true;
+        public static bool sendIron=true;
+        public static bool sendFood=true;
+        public static bool cartsAreForRequests=false;
         public static string[] incomingWatch = Array.Empty<string>();
+        public static int mruSize=32;
+        public static int[] pinned=Array.Empty<int>();
 
        // public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory { get=>fetchFullHistory; set
@@ -65,23 +68,30 @@ namespace COTG.Views
 
         public static void LoadAll()
         {
-            fetchFullHistory = App.Settings().Read(nameof(fetchFullHistory),true ); // default is true
-            Raiding.desiredCarry = App.Settings().Read(nameof(raidCarry), 1.02f);
+          ///  fetchFullHistory = App.Settings().Read(nameof(fetchFullHistory),true ); // default is true
+           
        //     TipsSeen.instance = App.Settings().Read(nameof(TipsSeen), new TipsSeen());
-            hubCitylistName = App.Settings().Read(nameof(hubCitylistName), "Hubs");
-            reqWood = App.Settings().Read(nameof(reqWood), 160000);
-            reqStone = App.Settings().Read(nameof(reqWood), 205000);
-            reqIron = App.Settings().Read(nameof(reqIron), 100000);
-            reqFood = App.Settings().Read(nameof(reqFood), 100000);
-            maxWood = App.Settings().Read(nameof(maxWood), 250000);
-            maxStone = App.Settings().Read(nameof(maxWood), 250000);
-            maxIron = App.Settings().Read(nameof(maxIron), 300000);
-            maxFood = App.Settings().Read(nameof(maxFood), 300000);
-            sendWood = App.Settings().Read(nameof(sendWood), true);
-            sendStone = App.Settings().Read(nameof(sendWood), true);
-            sendIron = App.Settings().Read(nameof(sendIron), true);
-            sendFood = App.Settings().Read(nameof(sendFood), true);
-            reserveRequestsForCarts = App.Settings().Read(nameof(sendFood), true);
+          //  hubCitylistName = App.Settings().Read(nameof(hubCitylistName), "Hubs");
+            var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.DeclaredOnly);
+            foreach(var p in props)
+            {
+               p.SetValue(null , App.Settings().ReadT( p.Name, p.FieldType, p.GetValue(null) ) );
+
+            }
+            //reqWood = App.Settings().Read(nameof(reqWood), 160000);
+            //reqStone = App.Settings().Read(nameof(reqWood), 205000);
+            //reqIron = App.Settings().Read(nameof(reqIron), 100000);
+            //reqFood = App.Settings().Read(nameof(reqFood), 100000);
+            //maxWood = App.Settings().Read(nameof(maxWood), maxWood);
+            //maxStone = App.Settings().Read(nameof(maxWood), 250000);
+            //maxIron = App.Settings().Read(nameof(maxIron), 300000);
+            //maxFood = App.Settings().Read(nameof(maxFood), 300000);
+            //sendWood = App.Settings().Read(nameof(sendWood), true);
+            //sendStone = App.Settings().Read(nameof(sendWood), true);
+            //sendIron = App.Settings().Read(nameof(sendIron), true);
+            //sendFood = App.Settings().Read(nameof(sendFood), true);
+            Raiding.desiredCarry = App.Settings().Read(nameof(raidCarry), Raiding.desiredCarry);
+            //reserveCarts = App.Settings().Read(nameof(reserveCarts), reserveCarts);
             DonationTab.reserveCarts = App.Settings().Read(nameof(DonationTab.reserveCarts), 800);
             DonationTab.reserveCartsPCT = App.Settings().Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
             DonationTab.reserveShips = App.Settings().Read(nameof(DonationTab.reserveShips), 10);
@@ -92,33 +102,51 @@ namespace COTG.Views
 
 
 
-        incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
-            autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
+       // incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
+        //    autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
            // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
         }
-        public static void SaveAll(object _=null, Windows.UI.Core.CoreWindowEventArgs __ =null)
+        public static void SaveAll(object _ = null, Windows.UI.Core.CoreWindowEventArgs __ = null)
         {
-           App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
+            var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
+
+            {
+                List<int> mru = new List<int>();
+                foreach (var sp in SpotTab.instance.spotMRU)
+                {
+                    if (sp.pinned)
+                        mru.Add(sp.cid);
+
+                }
+                pinned = mru.ToArray();
+            } 
+            foreach (var p in props)
+            {
+                App.Settings().SaveT(p.Name, p.FieldType, p.GetValue(null));
+
+            }
             App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
-          //  App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
-            App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
 
-            App.Settings().Save(nameof(reqWood), reqWood);
-            App.Settings().Save(nameof(reqStone), reqStone);
-            App.Settings().Save(nameof(reqFood), reqFood);
-            App.Settings().Save(nameof(reqIron), reqIron);
-            App.Settings().Save(nameof(maxWood), maxWood);
-            App.Settings().Save(nameof(maxStone), maxStone);
-            App.Settings().Save(nameof(maxFood), maxFood);
-            App.Settings().Save(nameof(maxIron), maxIron);
-            App.Settings().Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
+          //  App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
+          ////  App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
+          //  App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
 
-            App.Settings().Save(nameof(sendWood), sendWood);
-            App.Settings().Save(nameof(sendStone), sendStone);
-            App.Settings().Save(nameof(sendFood), sendFood);
-            App.Settings().Save(nameof(sendIron), sendIron);
-            App.Settings().Save(nameof(reserveRequestsForCarts), reserveRequestsForCarts);
-            App.Settings().Save(nameof(incomingWatch), incomingWatch);
+          //  App.Settings().Save(nameof(reqWood), reqWood);
+          //  App.Settings().Save(nameof(reqStone), reqStone);
+          //  App.Settings().Save(nameof(reqFood), reqFood);
+          //  App.Settings().Save(nameof(reqIron), reqIron);
+          //  App.Settings().Save(nameof(maxWood), maxWood);
+          //  App.Settings().Save(nameof(maxStone), maxStone);
+          //  App.Settings().Save(nameof(maxFood), maxFood);
+          //  App.Settings().Save(nameof(maxIron), maxIron);
+          //  App.Settings().Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
+
+          //  App.Settings().Save(nameof(sendWood), sendWood);
+          //  App.Settings().Save(nameof(sendStone), sendStone);
+          //  App.Settings().Save(nameof(sendFood), sendFood);
+          //  App.Settings().Save(nameof(sendIron), sendIron);
+          //  App.Settings().Save(nameof(reserveCarts), reserveCarts);
+          //  App.Settings().Save(nameof(incomingWatch), incomingWatch);
 
             App.Settings().Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
             App.Settings().Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
@@ -423,5 +451,45 @@ namespace COTG.Views
                 IncomingOverview.ProcessTask();
             }
         }
+
+        private async void ImportSpots(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var str = await Windows.ApplicationModel.DataTransfer.Clipboard.GetContent().GetTextAsync();
+                var coords = str.Split('\n', options: StringSplitOptions.RemoveEmptyEntries);
+                foreach (var cc in coords)
+                {
+                    var ccc = cc.Split('\t', StringSplitOptions.RemoveEmptyEntries);
+                    var cords = (ccc.Length == 2 ? ccc[1] : ccc[0]).FromCoordinate();
+                    var s = Spot.GetOrAdd(cords);
+                    if (s._cityName == null)
+                        s._cityName = ccc[0];
+
+                    SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift);
+                }
+                Note.Show("Added spots success");
+
+            }
+            catch (Exception ex)
+            {
+                Note.Show("Copy strings and coords to clipboard please");
+               
+            }
+
+
+        }
+        public async void FixupReserve(object sender, RoutedEventArgs e)
+        {
+            var counter = 0;
+            foreach(var a in City.allCities)
+            {
+                ++counter;
+                COTG.Debug.Log(counter);
+                await CitySettings.FixupReserve(a.Value.cid);
+            }
+            Note.Show("Fixup reserve cmoplete");
+        }
+
     }
 }
