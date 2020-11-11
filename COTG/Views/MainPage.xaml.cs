@@ -230,7 +230,7 @@ namespace COTG.Views
             instance.Dispatcher.DispatchOnUIThreadLow(() =>
             {
                 City.gridCitySource.NotifyReset();
-                City.GetBuild()?.SelectInUI();
+                City.GetBuild()?.SelectInUI(false);
             });
             
         }

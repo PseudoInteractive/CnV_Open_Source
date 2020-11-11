@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using COTG.Helpers;
 using static COTG.Debug;
 using static COTG.Game.Enum;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace COTG.Game

@@ -26,7 +26,7 @@ namespace COTG
 
         const int keySize = 256;
         static Random random = new Random();
-        const long k9p = 0x100000000l;
+        const long k9p = 0x100000000L;
         public static byte charCodeAtSafe(this string s, int index)
         {
             Assert(index >= 0);

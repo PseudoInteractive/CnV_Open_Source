@@ -497,7 +497,7 @@ namespace COTG.Services
             }
             if (!changed.IsNullOrEmpty())
             {
-                changed.NotifyChange();
+                changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid),nameof(Spot.tsTotal));
             }
             //  Log("Got JS for troop overview");
             //  Log(json.ToString());

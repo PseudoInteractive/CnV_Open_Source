@@ -177,42 +177,42 @@ namespace COTG.Game
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
-        public static async void UpdateTSHome(bool force = false, bool updateRaids=false)
-        {
-            var n = DateTimeOffset.UtcNow;
-            if (n > nextAllowedTsHomeUpdate || force)
-            {
-                var changed = new HashSet<City>();
-                nextAllowedTsHomeUpdate = n + TimeSpan.FromSeconds(24);
-                try
-                {
-                    var jso = await Post.SendForJson("includes/gIDl.php", "");
-                    foreach (var ci in jso.RootElement.EnumerateArray())
-                    {
-                        var cid = ci.GetAsInt("i");
-                        var ts = ci.GetAsInt("ts");
-                        if (City.allCities.TryGetValue(cid, out var v))
-                        {
+        //public static async void UpdateTSHome(bool force = false, bool updateRaids=false)
+        //{
+        //    var n = DateTimeOffset.UtcNow;
+        //    if (n > nextAllowedTsHomeUpdate || force)
+        //    {
+        //        var changed = new HashSet<City>();
+        //        nextAllowedTsHomeUpdate = n + TimeSpan.FromSeconds(24);
+        //        try
+        //        {
+        //            var jso = await Post.SendForJson("includes/gIDl.php", "");
+        //            foreach (var ci in jso.RootElement.EnumerateArray())
+        //            {
+        //                var cid = ci.GetAsInt("i");
+        //                var ts = ci.GetAsInt("ts");
+        //                if (City.allCities.TryGetValue(cid, out var v))
+        //                {
 
-                            if ((v.tsHome - ts).Abs() > 8)
-                            {
-                                v.tsHome = ts;
-                                changed.Add(v);
-                            }
-                        }
-                    }
-                    changed.NotifyChange(nameof(City.tsHome));
-                    if (updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
-                        ScanDungeons.Post(Spot.focus, true);
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
+        //                    if ((v.tsHome - ts).Abs() > 8)
+        //                    {
+        //                        v.tsHome = ts;
+        //                        changed.Add(v);
+        //                    }
+        //                }
+        //            }
+        //            changed.NotifyChange(nameof(City.tsHome));
+        //            if (updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
+        //                ScanDungeons.Post(Spot.focus, true);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Log(e);
+        //        }
 
 
-            }
-        }
+        //    }
+        //}
         // should this be waitable?
         public static async void UpdateTS(bool force = false, bool updateRaids=false)
         {

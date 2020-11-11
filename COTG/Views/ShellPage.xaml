@@ -91,7 +91,9 @@
                     <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Segoe UI Emoji"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
-                    <TextBlock x:Name="incoming" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
+                    <winui:ProgressRing x:Name="progress" IsActive="False" />
+                    <TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
+                    <TextBlock x:Name="tip" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
@@ -220,8 +222,8 @@
         </Grid>
         <Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />

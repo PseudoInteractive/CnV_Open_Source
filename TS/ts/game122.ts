@@ -7181,11 +7181,10 @@ function debounce(func:any, wait :number,maxWait:number, leading:boolean=true,tr
         return timerId === undefined ? result : trailingEdge(Date.now());
     }
 
-    function debounced(_wait: number, _maxWait: number) {
+    function debounced() {
         var time = Date.now(),
             isInvoking = shouldInvoke(time);
-            wait = _wait;
-            maxWait =_maxWait;
+
         lastArgs = arguments;
         lastThis = this;
         lastCallTime = time;
@@ -11432,7 +11431,7 @@ var cotgsubscribe = amplify;
         .click(function() { p8(6, +k7y, 1); });
     }
 
-    function u7V(T11): void {
+    function u7V(T11) {
       ppdtChanged(T11);
       plDa.playstr = T11;
       var t11 = {};
@@ -17110,7 +17109,7 @@ var cotgsubscribe = amplify;
       }
     }
 
-    function getCity(R0g): void {
+    function getCity(R0g) {
       if (R0g == _s(4552) || R0g == NaN || R0g == "" || R0g == _s(
           g5R * 1) || R0g == null || R0g == "undefined" || R0g == undefined) R0g = ppdt[_s(+x9y)][0][
         1];
@@ -17157,7 +17156,9 @@ var cotgsubscribe = amplify;
             E6k.y6();
             b9F(cit_type);
           }, 1000);
-          U1F();
+
+            clearTimeout(U1FTimeout);
+            U1FTimeout = setTimeout(U1F, 250);
           var c0g = D6.tt - D6.tu;
           $(_s(+x0p))
             .text(p6(c0g));
@@ -18318,7 +18319,7 @@ var cotgsubscribe = amplify;
         N6();
         var r9T = $.post(q6 + _s(4230), { cid: cid, a: A9T });
         F6();
-        r9T.done(function(R9T): void {
+        r9T.done(function(R9T) {
           if (R9T)
             if (R9T == 1) Y6(_s(E4p ^ 0));
             else if (R9T == 3) Y6(_s(+F4R));
@@ -52400,7 +52401,8 @@ console.log("Bad");
         .text(p6(n9w));
     }
 
-    function V8() {
+    let V8 = debounce(V8Imp,250,2000);
+    function V8Imp() {
       //var G1g = arguments.callee.caller.name;
       var Y3g, a3g, q3g, N3g, p3g, c3g, y3g, u1g, m3g, v1g, x1g,
         T1g;
@@ -56050,6 +56052,8 @@ console.log("Bad");
         .css(_s(+d4y), _s(3475));
     }
 
+//    let U1FCall = debounce(U1F,1000,3000);
+    let U1FTimeout=undefined;
     function U1F() {
       try {
         if (!D6[_s(5932)]) D6[_s(5932)] = Math.round(currentTime() / ("1000" ^
@@ -56259,10 +56263,8 @@ console.log("Bad");
             .attr(_s(Z9y * 1)) == 0) wallspot();
           else v9(B8F, Y8F, N8F, e9F, H9F);
       } catch (T6w) {} finally {
-        setTimeout(function() {
-          E6k.y6();
-          U1F();
-        }, +O7p);
+       clearTimeout(U1FTimeout);
+       U1FTimeout= setTimeout(U1F,3000);
       }
     }
 

@@ -28,7 +28,7 @@
             <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
         </StackPanel>
         <wct:WrapPanel Orientation="Horizontal"  Margin="4">
-        <Button Content="Setup Continent Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
+        <Button Content="Update Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
         <Button Content="Watch incoming for players" Click="WatchIncomingForPlayers" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
         <Button Content="Import spots" Click="ImportSpots" Style="{ThemeResource ButtonRevealStyle}" Margin="8" MinWidth="120" />
         <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" MinWidth="120" />

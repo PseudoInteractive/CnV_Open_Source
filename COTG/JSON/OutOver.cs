@@ -59,6 +59,7 @@ namespace COTG.JSON
             // ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
             var reportsOutgoing = new List<Army>();
+            using (new ShellPage.WorkScope("fetch outgoing"))
             using (var defenders = new ConcurrentHashSet<Spot>())
             {
                 var task0 = Task.Run(async () =>

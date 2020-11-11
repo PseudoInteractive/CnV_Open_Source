@@ -92,8 +92,24 @@ namespace COTG.Views
 								var spot = Spot.GetOrAdd(cid);
 
 								spot.ShowContextMenu(canvas, position);
-
+                                
 							});
+                            break;
+                        }
+                    case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
+                        {
+                            var position = pointerPoint.Position;
+                            App.DispatchOnUIThread(() =>
+                            {
+
+                                var spot = Spot.GetOrAdd(cid);
+
+                                var text = spot.ToTsv();
+                                Note.Show($"Copied to clipboard: {text}");
+                                App.CopyTextToClipboard(text);
+                                spot.SelectMe();
+
+                            });
                             break;
                         }
                     //case Windows.UI.Input.PointerUpdateKind.XButton1Released:

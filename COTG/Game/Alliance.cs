@@ -76,8 +76,9 @@ namespace COTG.Game
             Log("Fetch Aldt");
             if (aldt != null)
                 return;
-            // Log(_aldt);
-            aldt = _aldt;
+            using var work = new Views.ShellPage.WorkScope("fetch alliances");
+                // Log(_aldt);
+                aldt = _aldt;
             var element = _aldt.RootElement.GetProperty("aldt");
             myId = my.id = element.GetAsInt("id");
             my.name = element.GetString("n");

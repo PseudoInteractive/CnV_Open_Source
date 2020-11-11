@@ -154,7 +154,6 @@ namespace COTG.Game
         //  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
         //  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 
-        public int tsTotal { get; set; } // ts total including those on commands like raids, def etc.
 
         public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
@@ -436,13 +435,13 @@ namespace COTG.Game
 		}
        
        
-        public static City StBuild(int cid)
+        public static City StBuild(int cid,bool scrollIntoView)
         {
             var city = City.GetOrAddCity(cid);
-            city.SetBuild();
+            city.SetBuild(scrollIntoView);
             return city;
         }
-        public void SetBuild()
+        public void SetBuild(bool scrollIntoView)
         {
             var changed = cid != build;
             City.build = cid;
@@ -451,8 +450,8 @@ namespace COTG.Game
             if ( changed )
             {
                 App.DispatchOnUIThreadSneaky(()=>{
-                    SelectInUI();
-                    ShellPage.instance.coords.Text = cid.CidToString();
+                    SelectInUI(scrollIntoView);
+                    
                 });
             }
             //if (!noRaidScan)
@@ -544,7 +543,7 @@ namespace COTG.Game
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
 
-        public async void  SelectInUI()
+        public async void  SelectInUI(bool scrollIntoView)
         {
             //         await Task.Delay(2000);
             //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -552,7 +551,7 @@ namespace COTG.Game
             await Task.Delay(200);
             App.DispatchOnUIThreadSneaky(() =>
             {
-                if (MainPage.IsVisible())
+                if (scrollIntoView && MainPage.IsVisible())
                 {
                    /// MainPage.CityGrid.SelectedItem = this;
 //                      MainPage.CityGrid.SetCurrentItem(this);
@@ -570,6 +569,7 @@ namespace COTG.Game
                 }
                 // todo: donations page and boss hunting
                 ShellPage.instance.cityBox.SelectedItem = this;
+                ShellPage.instance.coords.Text = cid.CidToString();
                 //            });
             });
 
@@ -629,7 +629,7 @@ namespace COTG.Game
         public int id { get; set; } // 0 is unassigned, others are pids
         public HashSet<int> cities = new HashSet<int>(); // list of cities
         public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
-        public CityList( string _name ) { name = _name;id = AMath.random.Next(65536) + 10000; }
+        public CityList(string _name) { name = _name; id = AMath.random.Next(65536) + 10000; }
         public CityList() { }
         public static CityList Find(int id)
         {
@@ -645,7 +645,22 @@ namespace COTG.Game
                     return c;
             return null;
         }
-        public static CityList FindForContinent(int id) => Find(id.ToString());
+        public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp","galley","ws" };
+        public static string[] globalTags = { "navy","warship", "shipp" };
+        public static CityList GetForContinent(int id) => GetOrAdd(id.ToString());
+        public static CityList GetForContinentAndTag(int id,string tag) => GetOrAdd($"{id.ToString()} {tag}");
+
+        public static CityList GetOrAdd(string name)
+        {
+            var cl = CityList.Find(name);
+            if (cl == null)
+            {
+                var id = AMath.random.Next(65536) + 10000;
+                cl = new CityList(name);
+                CityList.all = CityList.all.ArrayAppend(cl);
+            }
+            return cl;
+        }
         public static CityList FindNewCities() => Find(sNewCities); 
 
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
@@ -688,7 +703,7 @@ namespace COTG.Game
                         .OrderByDescending(a=>a.cartsHome);
              //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
-                   City.GetBuild().SelectInUI();
+                   City.GetBuild().SelectInUI(false);
             });
         }
         

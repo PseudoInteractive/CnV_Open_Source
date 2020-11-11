@@ -321,7 +321,8 @@ namespace COTG.Views
 		{
 			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
 			   {
-				   var addedCityLists = 0;
+                   using var work = new ShellPage.WorkScope("update citylists");
+                   var cityListCount = CityList.all.Length;
 				   var changed = new HashSet<int>();
 				   var temp = new List<string>();
 				   string sli = null;
@@ -331,7 +332,7 @@ namespace COTG.Views
                    {
                        newCities = new CityList(CityList.sNewCities);
                        CityList.all = CityList.all.ArrayAppend(newCities);
-                       ++addedCityLists;
+                    
                    }
                    {
                        var priorNewCities = newCities.cities;
@@ -352,24 +353,40 @@ namespace COTG.Views
 				   {
                        COTG.Debug.Assert(city is City);
 
-                       var cl = CityList.FindForContinent(city.cont);
-					   if (cl == null)
-					   {
-						   var id = AMath.random.Next(65536) + 10000;
-						   cl = new CityList( city.cont.ToString());
-						   CityList.all = CityList.all.ArrayAppend(cl);
-						   ++addedCityLists;
-					   }
+                       var remarks = city.remarks.ToLower();
+                       foreach(var t in CityList.perContinentTags)
+                       {
+                           if(remarks.Contains(t))
+                           {
+                               var cl = CityList.GetForContinentAndTag(city.cont,t);
+                               if (cl.cities.Add(city.cid))
+                                   changed.Add(city.cid);
+                           }
+                       }
+                       foreach (var t in CityList.globalTags)
+                       {
+                           if (remarks.Contains(t))
+                           {
+                               var cl = CityList.GetOrAdd(t);
+                               if (cl.cities.Add(city.cid))
+                                   changed.Add(city.cid);
+                           }
+                       }
 
-					   if (cl.cities.Add(city.cid))
-						   changed.Add(city.cid);
+                       {
+                           var cl = CityList.GetForContinent(city.cont);
+                            if (cl.cities.Add(city.cid))
+                               changed.Add(city.cid);
+                       }
                        if(CityList.IsNew(city))
                        {
                            if(newCities.cities.Add(city.cid))
                                changed.Add(city.cid);
                        }
                    }
-				   if (addedCityLists > 0)
+                   var addedCityLists = CityList.all.Length - cityListCount;
+
+                   if (addedCityLists > 0)
 				   {
 					   var cityList = new List<string>();
 					   foreach (var l in CityList.all)
@@ -400,12 +417,13 @@ namespace COTG.Views
 				   }
 				   if (sli != null)
 					   await Post.Send("includes/sLi.php", sli);
-				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
+				   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
 				   foreach (var it in cgs)
-					   await Post.Send("includes/cgS.php", it);
-				   //   JSClient.GetCitylistOverview();
-	//			   Note.Show($"Successfully added continent citylists :)");
-			   });
+                    await Post.Send("includes/cgS.php", it);
+                   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
+                   //   JSClient.GetCitylistOverview();
+                   //			   Note.Show($"Successfully added continent citylists :)");
+               });
             this.Hide();
         }
 
@@ -474,6 +492,7 @@ namespace COTG.Views
             catch (Exception ex)
             {
                 Note.Show("Copy strings and coords to clipboard please");
+                COTG.Debug.Log(ex);
                
             }
 

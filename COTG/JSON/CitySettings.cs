@@ -283,6 +283,7 @@ namespace COTG.JSON
             catch (Exception e)
             {
                 Note.Show("Something went wrong");
+                COTG.Debug.Log(e);
             }
 
 

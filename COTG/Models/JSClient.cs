@@ -404,7 +404,7 @@ namespace COTG
                 if (City.IsMine(cityId))
                 {
                     SetViewModeCity();
-                    var city = City.StBuild(cityId);
+                    var city = City.StBuild(cityId,true);
                   //  city.SetFocus( false, true, false);
 
                     view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
@@ -427,7 +427,7 @@ namespace COTG
             {
                 if (City.IsMine(cityId))
                 {
-                    var city = City.StBuild(cityId);
+                    var city = City.StBuild(cityId,false);
                     if(!lazyMove)
                         cityId.BringCidIntoWorldView(lazyMove);
                     App.DispatchOnUIThreadSneaky(() =>
@@ -799,7 +799,7 @@ namespace COTG
                     {
                         city._cityName = name;
                     }
-                    city.tsTotal = jsCity.GetAsInt("8");
+                    city._tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
                     city.tsRaid = city.tsHome;
                     city.isCastle = jsCity.GetAsInt("12") > 0;
@@ -1199,7 +1199,7 @@ namespace COTG
                                     // Otherwise is is from a change in TS
 
                                     if(!isFromTs)
-                                        city.SetBuild();
+                                        city.SetBuild(true);
 
                                     if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
                                     {

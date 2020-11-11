@@ -60,9 +60,75 @@ namespace COTG.Views
         private bool _isLoggedIn;
         private bool _isAuthorized;
 
-        private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
-        private UserDataService UserDataService => Singleton<UserDataService>.Instance;
+        static DateTime workStarted;
+        static Queue<string> workQueue = new Queue<string>();
+        public static void WorkStart(string desc)
+        {
+            App.DispatchOnUIThreadSneaky(() =>
+           {
+               if (!workQueue.Any() )
+               {
+                   instance.progress.IsActive = true;
+                   workStarted = DateTime.UtcNow;
+                   instance.work.Text = desc;
+                   instance.work.Visibility = Visibility.Visible;
+               }
+               workQueue.Enqueue(desc);
+              
+           });
+        }
+
+        public static void WorkEnd()
+        {
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                if (!workQueue.Any() )
+                {
+                    Log("End end called too often");
+                }
+                else
+                {
+                    if (DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
+                    {
+                        Log("rogue work item");
+                        workQueue.Clear();
+                    }
+                    else
+                    {
+                         workQueue.Dequeue();
+                    }
+                }
+                if (!workQueue.Any() )
+                {
+                    
+                    instance.progress.IsActive = false;
+                    instance.work.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    workStarted = DateTime.UtcNow;
+                    instance.work.Text = workQueue.Peek();
+                }
+            });
+        }
+        public class WorkScope : IDisposable
+        {
+            public WorkScope(string task)
+            {
+                WorkStart(task);
+
+            }
+
+            public void Dispose()
+            {
+                WorkEnd();
+            }
+        }
+
+    //    private IdentityService IdentityService => Singleton<IdentityService>.Instance;
+
+    //    private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
         public static InAppNotification inAppNote => instance.InAppNote;
 
@@ -758,7 +824,7 @@ namespace COTG.Views
                 var newSel = e.AddedItems?.FirstOrDefault() as City;
                 if (newSel.cid != City.build)
                 {
-                    newSel.SetBuild();
+                    newSel.SetBuild(true);
                     JSClient.ChangeCity(newSel.cid,false);
                     NavStack.Push(newSel.cid);
 
@@ -786,7 +852,7 @@ namespace COTG.Views
 
                 newSel = items[id];
             }
-            newSel.SetBuild();
+            newSel.SetBuild(true);
             JSClient.ChangeCity(newSel.cid,false);
             NavStack.Push(newSel.cid);
         }

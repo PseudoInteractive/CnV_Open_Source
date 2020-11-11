@@ -34,9 +34,13 @@ namespace COTG
         {
             return (f <= max ? f : max);
         }
-        public static float Max(this float f, float min)
+        public static float Max(this float f, float m)
         {
-            return (f >= min ? f : min);
+            return (f >= m ? f : m);
+        }
+        public static byte Max(this byte f, byte m)
+        {
+            return (f >= m ? f : m);
         }
         public static float Max0(this float f)
         {
@@ -46,9 +50,9 @@ namespace COTG
         {
             return (f >= 0 ? f : 0);
         }
-        public static int Max(this int f, int min)
+        public static int Max(this int f, int m)
         {
-            return (f >= min ? f : min);
+            return (f >= m ? f : m);
         }
         public static int Min(this int f, int max)
         {

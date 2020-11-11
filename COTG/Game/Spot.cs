@@ -57,7 +57,7 @@ namespace COTG.Game
         public static Spot pending = new Spot() { _cityName = "pending" };
 
         public static Spot[] emptySpotSource = new[] { pending };
-   
+
         public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
         public string remarks { get; set; } = string.Empty;
 
@@ -76,7 +76,7 @@ namespace COTG.Game
                 Assert(City.allCities.ContainsKey(cid) == false);
                 var worldC = cid.CidToWorld();
                 var info = World.GetInfo(worldC);
-               
+
                 //    Assert(info.type == World.typeCity);
                 rv = new Spot() { cid = cid, pid = info.player };
                 //       Assert( info.player != 0);
@@ -109,6 +109,8 @@ namespace COTG.Game
 
         public int tsRaid { get; set; }
         public int tsHome { get; set; }
+        public int _tsTotal;
+        public int tsTotal { get => _tsTotal > 0 ? _tsTotal : tsHome; set => _tsTotal = value; }
         public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : tsHome; } }
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
@@ -145,6 +147,19 @@ namespace COTG.Game
             navy,
             misc
         }
+        public struct ClassificationExtended 
+         {
+            public Classification classification;
+            public byte stables ;
+            public byte academies ;
+            public byte training ;
+            public byte sorc ;
+            public byte se ;
+            public byte shipyards;
+            public byte ports;
+            public bool castle;
+            static public explicit operator Classification (ClassificationExtended e) => e.classification;
+        };
         public Classification classification { get; set; }
 
         private static string[] classifications =
@@ -323,7 +338,6 @@ namespace COTG.Game
                         pinned = !pinned;
                         OnPropertyChanged(nameof(pinned));
                         return;
-                        break;
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
                         {
@@ -353,7 +367,7 @@ namespace COTG.Game
             }
             else if(pt.Properties.IsMiddleButtonPressed)
             {
-                var text = $"<coords>{cid.CidToString()}</coords>\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+                var text = ToTsv();
                 Note.Show($"Copied to clipboard: {text}");
                 App.CopyTextToClipboard(text);
                 SetFocus();
@@ -361,7 +375,10 @@ namespace COTG.Game
             SpotTab.TouchSpot(cid,modifiers);
         }
 
-        
+        public string ToTsv()
+        {
+            return $"<coords>{cid.CidToString()}</coords>\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+        }
 
         public static async void ProcessCoordClick(int cid,bool lazyMove,VirtualKeyModifiers mod)
         {
@@ -401,61 +418,61 @@ namespace COTG.Game
                 });
             }
         }
-        internal async Task Classify()
+        internal async ValueTask<ClassificationExtended> Classify()
         {
             var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
-
+            ClassificationExtended rv = new ClassificationExtended(); ;
             try
             {
                 const int start = 14;
                 const int end = 459;
-                var stables = 0;
-                var academies = 0;
-                var training = 0;
-                var sorc = 0;
-                var se = 0;
+              
                 for(int i=start;i<end;++i)
                 {
                     switch(str[i])
                     {
-                        case 'E': ++stables;break;
-                        case 'Y': ++se;break;
-                        case 'J': ++sorc; break;
-                        case 'G': ++training; break;
-                        case 'Z': ++academies;break;
+                        case 'E': ++rv.stables;break;
+                        case 'Y': ++rv.se;break;
+                        case 'J': ++rv.sorc; break;
+                        case 'G': ++rv.training; break;
+                        case 'Z': ++rv.academies;break;
+                        case 'X': rv.castle = true;break;
+                        case 'O': ++rv.ports; break;
+                        case 'P': ++rv.shipyards; break;
+
 
                     }
                 }
-                var mx = stables.Max(academies).Max(training.Max(sorc)).Max(academies.Max(training)).Max(se);
+                var mx = rv.stables.Max(rv.academies).Max(rv.training.Max(rv.sorc)).Max(rv.academies.Max(rv.training)).Max(rv.se);
                 if(mx <= 4)
                 {
                     classification = Classification.misc;
                 }
-                else if(mx==stables)
+                else if(mx==rv.stables)
                 {
-                    if (se > 0 || academies > 0 || stables == 39 || stables == 24 || stables <= 20)
+                    if (rv.se > 0 || rv.academies > 0 || rv.stables == 39 || rv.stables == 24 || rv.stables <= 20)
                         classification = Classification.stablesO;
                     else                     {
                         classification = Classification.stablesD;
                     }
                 }
-                else if(mx==sorc)
+                else if(mx==rv.sorc)
                 {
                     classification = Classification.magic;
                 }
-                else if(mx==training)
+                else if(mx==rv.training)
                 {
-                    if (se > 0 || academies > 0 || training == 26 || training <= 18 )
+                    if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training <= 18 )
                         classification = Classification.infO;
                     else
                         classification = Classification.infD;
 
                 }
-                else if (mx == academies)
+                else if (mx == rv.academies)
                 {
                     classification = Classification.academy;
                 }
-                else if (mx == se)
+                else if (mx == rv.se)
                 {
                     classification = Classification.se;
                 }
@@ -469,7 +486,8 @@ namespace COTG.Game
             {
                 Log(e);
             }
-
+            rv.classification = classification;
+            return rv;
 
 
         }
@@ -595,7 +613,9 @@ namespace COTG.Game
         }
         public void SelectMe()
         {
-            ProcessSelection(VirtualKeyModifiers.None,true);
+            NavStack.Push(cid);
+            SpotTab.AddToGrid(this, App.keyModifiers,true);
+            ProcessSelection(App.keyModifiers, true);
             JSClient.ShowCity(cid, true);
         }
      
@@ -835,24 +855,28 @@ namespace COTG.Game
                         count = MainPage.GetContextCidCount(cid);
                     }
                     if (count > 1)
-                        {
+                    {
                         App.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
                         App.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
                         App.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
 
                     }
                     else
-                     {
+                    {
 
                         App.AddItem(flyout, "End Raids", this.ReturnSlowClick);
                         App.AddItem(flyout, "Home Please", this.ReturnFastClick);
                         App.AddItem(flyout, "Return At...", this.ReturnAt);
                     }
 
-                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid) );
+                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid));
                     App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-                    App.AddItem(flyout, "Attack to Clipboard", (_, _) =>
-                        App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} vanqs real 200000\n{cid.CidToString()} {Player.myName} vanqs fake 3000\n"));
+                    App.AddItem(flyout, "Attack to Clipboard", async  (_, _)  =>
+                    {
+
+                    var cl = await Classify();
+                    App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} {classificationString} {(cl.academies==1 ? 2:0)} {tsToal}\n"));
+                }
                     App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
 
 

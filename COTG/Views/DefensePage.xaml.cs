@@ -98,7 +98,7 @@ namespace COTG.Views
         {
             history = _history;
             historyGrid.ItemsSource = history;
-            historyGrid.IsBusyIndicatorEnabled = false;
+       
 
         }
 

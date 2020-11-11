@@ -8600,10 +8600,8 @@ function debounce(func, wait, maxWait, leading = true, trailing = true) {
     function flush() {
         return timerId === undefined ? result : trailingEdge(Date.now());
     }
-    function debounced(_wait, _maxWait) {
+    function debounced() {
         var time = Date.now(), isInvoking = shouldInvoke(time);
-        wait = _wait;
-        maxWait = _maxWait;
         lastArgs = arguments;
         lastThis = this;
         lastCallTime = time;
@@ -18510,7 +18508,8 @@ var cotgsubscribe = amplify;
                         E6k.y6();
                         b9F(cit_type);
                     }, 1000);
-                    U1F();
+                    clearTimeout(U1FTimeout);
+                    U1FTimeout = setTimeout(U1F, 250);
                     var c0g = D6.tt - D6.tu;
                     $(_s(+x0p))
                         .text(p6(c0g));
@@ -51850,7 +51849,8 @@ var cotgsubscribe = amplify;
                 $(_s(369))
                     .text(p6(n9w));
         }
-        function V8() {
+        let V8 = debounce(V8Imp, 250, 2000);
+        function V8Imp() {
             var Y3g, a3g, q3g, N3g, p3g, c3g, y3g, u1g, m3g, v1g, x1g, T1g;
             if (D6.bq.length > 0)
                 for (var D3g in D6.bq) {
@@ -55519,6 +55519,7 @@ var cotgsubscribe = amplify;
                 $(_s(+V34) + T4B)
                     .css(_s(+d4y), _s(3475));
         }
+        let U1FTimeout = undefined;
         function U1F() {
             try {
                 if (!D6[_s(5932)])
@@ -55747,10 +55748,8 @@ var cotgsubscribe = amplify;
             }
             catch (T6w) { }
             finally {
-                setTimeout(function () {
-                    E6k.y6();
-                    U1F();
-                }, +O7p);
+                clearTimeout(U1FTimeout);
+                U1FTimeout = setTimeout(U1F, 3000);
             }
         }
         function O2() {
