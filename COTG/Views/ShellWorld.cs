@@ -88,10 +88,26 @@ namespace COTG.Views
                             var position = pointerPoint.Position;
 							App.DispatchOnUIThread(() =>
 							{
+                                var _underMouse = underMouse;
+                                if (_underMouse!=null)
+                                {
+                                    var flyout = new MenuFlyout();
 
-								var spot = Spot.GetOrAdd(cid);
+                                    var target = Spot.GetOrAdd(_underMouse.targetCid);
+                                    var source = Spot.GetOrAdd(_underMouse.sourceCid);
+                                    void ShowContextContext(object sender, RoutedEventArgs args)
+                                    {
+                                        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
+                                    }
+                                    App.AddItem(flyout, "Source", ShowContextContext, source );
+                                    App.AddItem(flyout, "Target", ShowContextContext, target);
+                                }
+                                else
+                                {
+                                    var spot = Spot.GetOrAdd(cid);
 
-								spot.ShowContextMenu(canvas, position);
+                                    spot.ShowContextMenu(canvas, position);
+                                }
                                 
 							});
                             break;

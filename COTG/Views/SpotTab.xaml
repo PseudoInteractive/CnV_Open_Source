@@ -31,7 +31,6 @@
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
-                        PointerExited="gridPointerExited"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"

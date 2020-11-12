@@ -17,7 +17,7 @@ namespace COTG.Services
             public string content { get; set; } //: message + " claimed by " + name
         }
         public static Uri discordHook = new Uri("https://discord.com/api/webhooks/766166495411437578/xwt4o5KsEjh7MVe3xLluez9Q6keeCjdYOpfBsgBXJriK8WtNUnYvNtKI9IUIqt0hbJbM");
-        public static bool isValid => JSClient.world == 21 && Alliance.myId == 131;
+        public static bool isValid => JSClient.world == 21 && (Alliance.myId==131||Alliance.myId==132);
 
     }
 }

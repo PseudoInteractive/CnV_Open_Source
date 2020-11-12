@@ -720,10 +720,21 @@ namespace COTG
                                 continue;
                             var id = int.Parse(clc.Name);
                             var cityList = lists.Find((a) => a.id == id);
-                            foreach (var cityId in clc.Value.EnumerateArray())
+                            if (clc.Value.ValueKind==JsonValueKind.Array)
                             {
-                                cityList.cities.Add(cityId.GetInt32());
+                                foreach (var cityId in clc.Value.EnumerateArray())
+                                {
+                                    cityList.cities.Add(cityId.GetInt32());
 
+                                }
+                            }
+                            else if (clc.Value.ValueKind==JsonValueKind.Object)
+                            {
+                                foreach (var cityId in clc.Value.EnumerateObject())
+                                {
+                                    cityList.cities.Add(cityId.Value.GetInt32());
+
+                                }
                             }
                         }
                     }

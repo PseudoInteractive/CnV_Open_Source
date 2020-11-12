@@ -791,7 +791,7 @@ namespace COTG.Views
             App.DispatchOnUIThread(async () =>
                            {
                                //shown = true;
-                               var dialog = new SettingsPage();
+                               var dialog = new SettingsPage() { FullSizeDesired=false };
                                var result=  await dialog.ShowAsync();
                                SettingsPage.SaveAll();
                                //   dialog.auto

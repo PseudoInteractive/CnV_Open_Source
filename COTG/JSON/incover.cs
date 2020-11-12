@@ -295,7 +295,7 @@ namespace COTG.JSON
                                                           if (ttl.IsNullOrEmpty())
                                                           {
                                                               army.type = reportPending;
-                                                              COTG.Game.IncommingEstimate.Get(army);
+                                                              COTG.Game.IncomingEstimate.Get(army);
                                                           }
                                                           else
                                                           {

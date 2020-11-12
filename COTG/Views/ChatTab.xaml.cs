@@ -120,7 +120,7 @@ namespace COTG.Views
                 items.RemoveAt(0);
             }
             items.Add(entry);
-            if(entry.text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase))
+            if(this != debug && entry.text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase))
             {
                 Note.Show(entry.text);
 

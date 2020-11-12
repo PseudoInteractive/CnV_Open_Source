@@ -33,7 +33,6 @@
                                 
                        
                         PointerPressed="gridPointerPress"
-                        PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
                         AlternationStep="2"
@@ -145,6 +144,7 @@
                                                       Width="30"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />
+
                 <tg:DataGridTextColumn PropertyName="sourceCN"
                                                    Header="City"
                                                    Width="70"

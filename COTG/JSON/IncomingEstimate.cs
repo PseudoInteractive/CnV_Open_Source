@@ -10,7 +10,7 @@ using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
-    public static class IncommingEstimate
+    public static class IncomingEstimate
     {
         public static float RoundTo6Bits(double f)
         {

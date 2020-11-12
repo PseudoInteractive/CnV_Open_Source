@@ -46,22 +46,24 @@ namespace COTG.Services
                             ActivationType = ToastActivationType.Foreground
                         },
 
-                        new ToastButtonDismiss("Cancel"),
-                        new ToastButtonSnooze("Snooze"),
+
+                        new ToastButtonDismiss(),
+                        new ToastButtonSnooze(){SelectionBoxId="snoozeTime"},
+
 
                     },
                     Inputs =
                     {
                         new ToastSelectionBox("snoozeTime")
                     {
-                        DefaultSelectionBoxItemId = "15",
+                        DefaultSelectionBoxItemId = "5",
                         Items =
                         {
+                            new ToastSelectionBoxItem("1", "1 minute"),
                             new ToastSelectionBoxItem("5", "5 minutes"),
                             new ToastSelectionBoxItem("15", "15 minutes"),
                             new ToastSelectionBoxItem("60", "1 hour"),
                             new ToastSelectionBoxItem("240", "4 hours"),
-                            new ToastSelectionBoxItem("1440", "1 day")
                         }
                     },
                     }

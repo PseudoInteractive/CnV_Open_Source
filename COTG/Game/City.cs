@@ -47,6 +47,7 @@ namespace COTG.Game
             }
             return false;
         }
+        
         public DateTimeOffset GetRaidReturnTime()
         {
             var rv = AUtil.dateTimeZero;
@@ -59,6 +60,7 @@ namespace COTG.Game
                 }
                 else
                 {
+                    
                     var travel = r.GetOneWayTripTimeMinutes(this);
                     var _t = r.time + TimeSpan.FromMinutes(travel);
                         if (_t > rv)

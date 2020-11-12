@@ -61,7 +61,6 @@
                         ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Enabled"
                         PointerPressed="gridPointerPress"
-                        PointerExited="gridPointerExited"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                         RowHeight="{StaticResource GridRowHeight}"

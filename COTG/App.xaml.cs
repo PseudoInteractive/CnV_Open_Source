@@ -41,6 +41,7 @@ using System.Collections.Concurrent;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
+using Windows.Foundation.Collections;
 
 namespace COTG
 {
@@ -57,17 +58,17 @@ namespace COTG
         public App()
         {
 
-            try
-            {
-                {
+            //try
+            //{
+            //    {
 
-                    ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
-                }
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
+            //        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Log(e);
+            //}
 
 
 
@@ -260,6 +261,16 @@ namespace COTG
             {
                 // Todo:  Handle arguments and stuff
                 // Ensure the current window is active
+                if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+                {
+                    // Obtain the arguments from the notification
+                    var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
+                    // Obtain any user input (text boxes, menu selections) from the notification
+                    ValueSet userInput = toastActivationArgs.UserInput;
+
+                    // TODO: Show the corresponding content
+                }
+
                 Window.Current.Activate();
                 return;
             }
@@ -322,7 +333,7 @@ namespace COTG
             return new Views.ShellPage();
         }
 
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             Trace("Enter Background");
             if (ShellPage.canvas != null)

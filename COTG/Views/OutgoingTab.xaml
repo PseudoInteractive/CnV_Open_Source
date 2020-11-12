@@ -29,7 +29,6 @@
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
                         PointerPressed="gridPointerPress"
-                        PointerExited="gridPointerExited"
                         GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
                         AlternationStep="2"

@@ -362,12 +362,12 @@ namespace COTG.Views
 
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
-
+            underMouse = null;
+            bestUnderMouseScore = 32 * 32;
             if (!(IsWorldView() ))
                 return;
 
-            underMouse = null;
-            bestUnderMouseScore = 32 * 32;
+           
 
 
             try

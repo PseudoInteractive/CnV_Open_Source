@@ -234,7 +234,7 @@ namespace COTG.Game
             //}
 
             var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
-            viewHover = spot != null ? spot.cid : 0;
+         //   viewHover = spot != null ? spot.cid : 0;
             Player.viewHover = spot != null ? spot.pid : 0;
             var uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
             

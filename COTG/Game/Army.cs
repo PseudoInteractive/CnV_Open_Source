@@ -87,6 +87,9 @@ namespace COTG.Game
             {
                 case "city":
                 case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, VirtualKeyModifiers.None); break;
+                case nameof(sPlayer):JSClient.ShowPlayer(sPlayer); break;
+                case nameof(tPlayer): JSClient.ShowPlayer(tPlayer); break;
+
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
