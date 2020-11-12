@@ -230,7 +230,7 @@ namespace COTG.Views
             CleanTargets();
         }
 
-        private async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
+        public async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
         {
             await TouchLists();
             var text = await Clipboard.GetContent().GetTextAsync();
@@ -374,20 +374,19 @@ namespace COTG.Views
                                     {
                                         case Spot.Classification.unknown:
                                             break;
-                                        case Spot.Classification.inf:
-                                        case Spot.Classification.infO:
-                                        case Spot.Classification.infD:
+                                        case Spot.Classification.vanqs:
+                                        case Spot.Classification.rt:
                                             score -= 3;
                                             break;
-                                        case Spot.Classification.magic:
+                                        case Spot.Classification.sorcs:
+                                        case Spot.Classification.druids:
                                             score += 2;
                                             break;
                                         case Spot.Classification.academy:
                                             score += 8;
                                             break;
-                                        case Spot.Classification.stables:
-                                        case Spot.Classification.stablesO:
-                                        case Spot.Classification.stablesD:
+                                        case Spot.Classification.horses:
+                                        case Spot.Classification.arbs:
                                             score -= 4;
                                             break;
                                         case Spot.Classification.se:
@@ -409,21 +408,20 @@ namespace COTG.Views
                                     {
                                         case Spot.Classification.unknown:
                                             break;
-                                        case Spot.Classification.inf:
-                                        case Spot.Classification.infO:
-                                        case Spot.Classification.infD:
+                                        case Spot.Classification.vanqs:
+                                        case Spot.Classification.rt:
 
                                             score += 4;
                                             break;
-                                        case Spot.Classification.magic:
+                                        case Spot.Classification.sorcs:
+                                        case Spot.Classification.druids:
                                             score -= 2;
                                             break;
                                         case Spot.Classification.academy:
                                             score -= 4;
                                             break;
-                                        case Spot.Classification.stables:
-                                        case Spot.Classification.stablesO:
-                                        case Spot.Classification.stablesD:
+                                        case Spot.Classification.horses:
+                                        case Spot.Classification.arbs:
 
                                             score -= 3;
                                             break;
@@ -446,21 +444,20 @@ namespace COTG.Views
                                     {
                                         case Spot.Classification.unknown:
                                             break;
-                                        case Spot.Classification.inf:
-                                        case Spot.Classification.infO:
-                                        case Spot.Classification.infD:
+                                        case Spot.Classification.vanqs:
+                                        case Spot.Classification.rt:
 
                                             score += 2;
                                             break;
-                                        case Spot.Classification.magic:
+                                        case Spot.Classification.sorcs:
+                                        case Spot.Classification.druids:
                                             score -= 2;
                                             break;
                                         case Spot.Classification.academy:
                                             score -= 6;
                                             break;
-                                        case Spot.Classification.stables:
-                                        case Spot.Classification.stablesO:
-                                        case Spot.Classification.stablesD:
+                                        case Spot.Classification.horses:
+                                        case Spot.Classification.arbs:
 
                                             score += 7;
                                             break;

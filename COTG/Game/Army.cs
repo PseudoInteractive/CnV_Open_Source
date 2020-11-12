@@ -298,7 +298,8 @@ namespace COTG.Game
             var rv = 0;
             foreach (var ttc in l)
             {
-                rv += ttc.ts;
+                if(ttc.count > 0)
+                    rv += ttc.ts;
             }
             return rv;
         }

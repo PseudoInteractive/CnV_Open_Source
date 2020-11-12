@@ -120,6 +120,11 @@ namespace COTG.Views
                 items.RemoveAt(0);
             }
             items.Add(entry);
+            if(entry.text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase))
+            {
+                Note.Show(entry.text);
+
+            }    
             // Set + if not from me
             if(entry.player != Player.myName && entry.type != ChatEntry.typeWhisperTo)
                 SetPlus(true);

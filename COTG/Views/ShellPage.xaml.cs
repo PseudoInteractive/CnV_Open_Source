@@ -916,10 +916,12 @@ namespace COTG.Views
                 if (e.Key == Windows.System.VirtualKey.Enter)
                 {
                         var cid = str.Text.FromCoordinate();
-                        if (cid != 0)
+                        if (cid > 0)
                         {
+                        NavStack.Push(cid);
+                            SpotTab.TouchSpot(cid,App.keyModifiers);
                             JSClient.ChangeCity(cid, false);
-                            NavStack.Push(cid);
+                            
 
                         }
 

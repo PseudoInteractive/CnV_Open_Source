@@ -110,22 +110,37 @@ namespace COTG
         }
         public static int DecodeCid(int offset, string s)
         {
-            var x = int.Parse(s.Substring(offset, 3));
-            var y = int.Parse(s.Substring(offset + 4, 3));
-            return x + y * 65536;
-        }
-        public static int TryDecodeCid(int offset, string s)
-        {
-            var lg = s.Length;
-            if (lg < offset + 7)
-                return -1;
-            if (!int.TryParse(s.Substring(offset, 3), out var x))
-                return -1;
-            if (!int.TryParse(s.Substring(offset + 4, 3), out var y))
-                return -1;
+            try
+            {
+                if (s.Length <= 1)
+                    return 0;
+                var s0s = offset;
+                while (!char.IsNumber(s[s0s]))
+                    ++s0s;
+                var s0e = s0s + 1;
+                while (char.IsNumber(s[s0e]))
+                    ++s0e;
+                var s1s = s0e + 1; // skip :
+                COTG.Debug.Assert(char.IsNumber(s[s1s]));
+                var s1e = s1s + 1;
+                while (s1e < s.Length && char.IsNumber(s[s1e]))
+                {
+                    ++s1e;
+                }
 
-            return x + y * 65536;
+                var x = int.Parse(s.Substring(s0s, s0e - s0s));
+                var y = int.Parse(s.Substring(s1s, s1e - s1s));
+                return x + y * 65536;
+            }
+            catch (Exception e)
+            {
+                COTG.Debug.Log(e);
+                return -1;
+            }
+
+
         }
+       
     }
     public class ConcurrentHashSet<T> : IDisposable
     {

@@ -73,7 +73,7 @@
                                         IsCellFlyoutEnabled="True" Tip="Click to switch to this city" 
                                         Width="34" />
                 <tg:DataGridTextColumn PropertyName="nameAndRemarks"
-                                       Tip="Click to raid from this city without switching cities (faster)"
+                                       Tip="Click to raid from this city without switching cities (fast)"
                                        IsCellFlyoutEnabled="True"
                                        Header="Name"
                                        CellContentStyle="{StaticResource LeftAlign}"
@@ -100,13 +100,13 @@
                       IsCellFlyoutEnabled="True" Tip="TS of Troops at home (including non raiding troops)" 
                                             CellContentFormat="{}{0,7:N0}" Width="80" IsVisible="False" />
                 <tg:DataGridNumericalColumn PropertyName="raidReturn"
-                                           IsCellFlyoutEnabled="True" Tip="Click here to bring troops home rapidly"
+                                           IsCellFlyoutEnabled="True" Tip="Click here to bring troops home asap"
                                             CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,6:N0}"
                                             
                                             Width="50" />
                 <tg:DataGridNumericalColumn PropertyName="raidCarry"
-                                           IsCellFlyoutEnabled="True" Tip="% of loot carried per raid.  When this drops below 70 it might be time to reset this raid.  Click here to bring troops home when their next raid completes"  CellContentStyle="{StaticResource RightAlignLink}"
+                                           IsCellFlyoutEnabled="True" Tip="% of loot carried per raid&#x0a;When this drops below 70 it might be time to reset this raid&#x0a;Click here to bring troops home after the next raid"  CellContentStyle="{StaticResource RightAlignLink}"
                                             CellContentFormat="{}{0,5:N1}"
                                             Width="80"
                                              />
@@ -178,7 +178,8 @@
                 <tg:DataGridTextColumn PropertyName="plan" CellContentStyle="{StaticResource RightAlignLink}" IsCellFlyoutEnabled="True" Tip="Click here to send raids" />
                 <tg:DataGridNumericalColumn PropertyName="level" CellContentStyle="{StaticResource RightAlign}"/>
                 <tg:DataGridNumericalColumn PropertyName="completion"
-                                            IsCellFlyoutEnabled="True" Tip="How worn out the dungeon is.  When this reaches 0 the dungeon disappears and troops stop raiding.  Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+                                            IsCellFlyoutEnabled="True"
+                                            Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
                                             CellContentFormat="{}{0,6:N1}" CellContentStyle="{StaticResource RightAlign}" />
                 <tg:DataGridTextColumn PropertyName="kind" CellContentStyle="{StaticResource RightAlign}"/>
                 <tg:DataGridTextColumn PropertyName="xy" CellContentStyle="{StaticResource CenterAlignLink}"  />

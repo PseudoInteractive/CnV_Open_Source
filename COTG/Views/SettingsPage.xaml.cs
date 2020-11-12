@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -68,48 +69,50 @@ namespace COTG.Views
 
         public static void LoadAll()
         {
-          ///  fetchFullHistory = App.Settings().Read(nameof(fetchFullHistory),true ); // default is true
+          ///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
            
-       //     TipsSeen.instance = App.Settings().Read(nameof(TipsSeen), new TipsSeen());
-          //  hubCitylistName = App.Settings().Read(nameof(hubCitylistName), "Hubs");
+       //     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
+          //  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
             var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.DeclaredOnly);
+            var st = App.Settings();
             foreach(var p in props)
             {
-               p.SetValue(null , App.Settings().ReadT( p.Name, p.FieldType, p.GetValue(null) ) );
+               p.SetValue(null , st.ReadT( p.Name, p.FieldType, p.GetValue(null) ) );
 
             }
-            //reqWood = App.Settings().Read(nameof(reqWood), 160000);
-            //reqStone = App.Settings().Read(nameof(reqWood), 205000);
-            //reqIron = App.Settings().Read(nameof(reqIron), 100000);
-            //reqFood = App.Settings().Read(nameof(reqFood), 100000);
-            //maxWood = App.Settings().Read(nameof(maxWood), maxWood);
-            //maxStone = App.Settings().Read(nameof(maxWood), 250000);
-            //maxIron = App.Settings().Read(nameof(maxIron), 300000);
-            //maxFood = App.Settings().Read(nameof(maxFood), 300000);
-            //sendWood = App.Settings().Read(nameof(sendWood), true);
-            //sendStone = App.Settings().Read(nameof(sendWood), true);
-            //sendIron = App.Settings().Read(nameof(sendIron), true);
-            //sendFood = App.Settings().Read(nameof(sendFood), true);
-            Raiding.desiredCarry = App.Settings().Read(nameof(raidCarry), Raiding.desiredCarry);
-            //reserveCarts = App.Settings().Read(nameof(reserveCarts), reserveCarts);
-            DonationTab.reserveCarts = App.Settings().Read(nameof(DonationTab.reserveCarts), 800);
-            DonationTab.reserveCartsPCT = App.Settings().Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
-            DonationTab.reserveShips = App.Settings().Read(nameof(DonationTab.reserveShips), 10);
-            DonationTab.reserveShipsPCT = App.Settings().Read(nameof(DonationTab.reserveShipsPCT), 0f);
-            DonationTab.woodStoneRatio = App.Settings().Read(nameof(DonationTab.woodStoneRatio), -1f);
-            DonationTab.reserveWood = App.Settings().Read(nameof(DonationTab.reserveWood), 0);
-            DonationTab.reserveStone = App.Settings().Read(nameof(DonationTab.reserveStone), 0);
+            //reqWood = st.Read(nameof(reqWood), 160000);
+            //reqStone = st.Read(nameof(reqWood), 205000);
+            //reqIron = st.Read(nameof(reqIron), 100000);
+            //reqFood = st.Read(nameof(reqFood), 100000);
+            //maxWood = st.Read(nameof(maxWood), maxWood);
+            //maxStone = st.Read(nameof(maxWood), 250000);
+            //maxIron = st.Read(nameof(maxIron), 300000);
+            //maxFood = st.Read(nameof(maxFood), 300000);
+            //sendWood = st.Read(nameof(sendWood), true);
+            //sendStone = st.Read(nameof(sendWood), true);
+            //sendIron = st.Read(nameof(sendIron), true);
+            //sendFood = st.Read(nameof(sendFood), true);
+            Raiding.desiredCarry = st.Read(nameof(raidCarry), Raiding.desiredCarry);
+            //reserveCarts = st.Read(nameof(reserveCarts), reserveCarts);
+            DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 800);
+            DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
+            DonationTab.reserveShips = st.Read(nameof(DonationTab.reserveShips), 10);
+            DonationTab.reserveShipsPCT = st.Read(nameof(DonationTab.reserveShipsPCT), 0f);
+            DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
+            DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
+            DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
+        //    Tips.seen = new HashSet<string>( st.Read("tipsSeen", Array.Empty<string>()) );
 
 
-
-       // incomingWatch = App.Settings().Read(nameof(incomingWatch), Array.Empty<string>() );
-        //    autoBuildOn = App.Settings().Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
-           // AttackTab.time = App.Settings().Read("attacktime", DateTime.UtcNow.Date);
+       // incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
+        //    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
+           // AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
         }
         public static void SaveAll(object _ = null, Windows.UI.Core.CoreWindowEventArgs __ = null)
         {
             var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
-
+            var st = App.Settings();
+            if(SpotTab.instance.spotMRU.Count>0)
             {
                 List<int> mru = new List<int>();
                 foreach (var sp in SpotTab.instance.spotMRU)
@@ -122,41 +125,41 @@ namespace COTG.Views
             } 
             foreach (var p in props)
             {
-                App.Settings().SaveT(p.Name, p.FieldType, p.GetValue(null));
+                st.SaveT(p.Name, p.FieldType, p.GetValue(null));
 
             }
-            App.Settings().Save(nameof(raidCarry), Raiding.desiredCarry);
+            st.Save(nameof(raidCarry), Raiding.desiredCarry);
 
-          //  App.Settings().Save(nameof(fetchFullHistory), fetchFullHistory);
-          ////  App.Settings().Save(nameof(TipsSeen), TipsSeen.instance);
-          //  App.Settings().Save(nameof(hubCitylistName), hubCitylistName);
+          //  st.Save(nameof(fetchFullHistory), fetchFullHistory);
+          ////  st.Save(nameof(TipsSeen), TipsSeen.instance);
+          //  st.Save(nameof(hubCitylistName), hubCitylistName);
 
-          //  App.Settings().Save(nameof(reqWood), reqWood);
-          //  App.Settings().Save(nameof(reqStone), reqStone);
-          //  App.Settings().Save(nameof(reqFood), reqFood);
-          //  App.Settings().Save(nameof(reqIron), reqIron);
-          //  App.Settings().Save(nameof(maxWood), maxWood);
-          //  App.Settings().Save(nameof(maxStone), maxStone);
-          //  App.Settings().Save(nameof(maxFood), maxFood);
-          //  App.Settings().Save(nameof(maxIron), maxIron);
-          //  App.Settings().Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
+          //  st.Save(nameof(reqWood), reqWood);
+          //  st.Save(nameof(reqStone), reqStone);
+          //  st.Save(nameof(reqFood), reqFood);
+          //  st.Save(nameof(reqIron), reqIron);
+          //  st.Save(nameof(maxWood), maxWood);
+          //  st.Save(nameof(maxStone), maxStone);
+          //  st.Save(nameof(maxFood), maxFood);
+          //  st.Save(nameof(maxIron), maxIron);
+          //  st.Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
 
-          //  App.Settings().Save(nameof(sendWood), sendWood);
-          //  App.Settings().Save(nameof(sendStone), sendStone);
-          //  App.Settings().Save(nameof(sendFood), sendFood);
-          //  App.Settings().Save(nameof(sendIron), sendIron);
-          //  App.Settings().Save(nameof(reserveCarts), reserveCarts);
-          //  App.Settings().Save(nameof(incomingWatch), incomingWatch);
+          //  st.Save(nameof(sendWood), sendWood);
+          //  st.Save(nameof(sendStone), sendStone);
+          //  st.Save(nameof(sendFood), sendFood);
+          //  st.Save(nameof(sendIron), sendIron);
+          //  st.Save(nameof(reserveCarts), reserveCarts);
+          //  st.Save(nameof(incomingWatch), incomingWatch);
 
-            App.Settings().Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
-            App.Settings().Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
-            App.Settings().Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
-            App.Settings().Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
-            App.Settings().Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
-            App.Settings().Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
-            App.Settings().Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
-
-            //  App.Settings().Save("attacktime", AttackTab.time.DateTime);
+            st.Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
+            st.Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
+            st.Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
+            st.Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
+            st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
+            st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
+            st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
+            st.Save("tipsSeen", Tips.seen.ToArray() );
+            //  st.Save("attacktime", AttackTab.time.DateTime);
 
             AttackTab.SaveAttacks();
 

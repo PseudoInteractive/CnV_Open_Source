@@ -1140,7 +1140,7 @@ namespace COTG
                                     {
                                         
                                     }
-                                    App.QueueIdleTask(IncomingOverview.ProcessTask);
+                                    App.QueueIdleTask(IncomingOverview.ProcessTask,1000);
                                     break;
                                 }
                             case "cityclick":

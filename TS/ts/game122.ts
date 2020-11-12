@@ -40347,7 +40347,7 @@ console.log("Bad");
             .text()) == 0) {
           if (!ppdt.opt) X2('14' ^ 0);
           else if (ppdt.opt[0] == ("1" | 1)) X2(+'14');
-          if (document[e0F]) n4F(_s(3353), _s("3231" ^
+          if (document[e0F]) Notification(_s(3353), _s("3231" ^
             0));
         }
         $(_s(6770))
@@ -51027,13 +51027,13 @@ console.log("Bad");
             if (document[e0F]) {
               var A1V = $(_s(871))
                 .text();
-              n4F(o1V + _s(606), A1V);
+              Notification(o1V + _s(606), A1V);
             } else if ($(_s(+T7y))
               .css("display") == "none" && X1V != "") {
               var A1V = $(_s(
                   871))
                 .text();
-              n4F(o1V + _s(606), A1V);
+              Notification(o1V + _s(606), A1V);
             }
           }
         }
@@ -60946,12 +60946,12 @@ console.log("Bad");
 
     function f4V() {}
 
-    function n4F(W3V, i3V) {
+    function Notification(W3V, i3V) {
       if (!Notification) return;
       E6k.y6();
       if (Notification.permission !== _s(4695)) Notification.requestPermission();
       else {
-        var C3V = new Notification(W3V, { icon: _s(1811), body: i3V });
+        var C3V = new Notification(W3V, { body: i3V });
         C3V.onclick = function() {
           window.focus();
           this.close();

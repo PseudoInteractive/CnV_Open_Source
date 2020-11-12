@@ -179,11 +179,11 @@ namespace COTG.Views
         }
 
 
-        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection=true)
+        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true)
         {
             // Toggle Selected
 
-            App.DispatchOnUIThreadSneaky(() =>
+           App.DispatchOnUIThreadSneaky(() =>
            {
                var id = SpotMRU.IndexOf(spot);
                if (id != 0)
@@ -198,7 +198,7 @@ namespace COTG.Views
                        var counter = SpotMRU.Count;
                        while (--counter >= 0)
                        {
-                           if (!Spot.selected.Contains(SpotMRU[counter].cid) && spot.pinned == false)
+                           if (!Spot.selected.Contains(SpotMRU[counter].cid) && SpotMRU[counter].pinned == false)
                            {
                                SpotMRU.RemoveAt(counter);
                                break;

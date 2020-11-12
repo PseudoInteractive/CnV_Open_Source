@@ -29,7 +29,6 @@
         <DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
             <TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
         </DataTemplate>
-        <converters:BoolNegationConverter x:Name="BoolNegationConverter" />
         <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
                                               FalseValue="Visible"
                                               TrueValue="Collapsed" />

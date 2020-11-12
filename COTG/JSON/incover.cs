@@ -157,8 +157,8 @@ namespace COTG.JSON
                                           {
                                               ++incCount;
                                               var val = prop.Value;
-                                              var cid = AUtil.DecodeCid(5, val.GetString("2"));
-                                              if (cid >= 0)
+                                              var cid = AUtil.DecodeCid(4, val.GetString("2"));
+                                              if (cid > 0)
                                               {
 
                                                   var spot = Spot.GetOrAdd(cid, val.GetAsString("1"));
@@ -357,7 +357,7 @@ namespace COTG.JSON
                                         var parts = _parts;
 
 
-                                        var target = AUtil.TryDecodeCid(0, inc[4].GetString());
+                                        var target = AUtil.DecodeCid(0, inc[4].GetString());
                                         if (target <= 0)
                                             return;
                                         var defP = Player.NameToId(inc[1].GetAsString());
@@ -365,7 +365,7 @@ namespace COTG.JSON
                                     var defCN = inc[3].ToString();
                                         Spot.GetOrAdd(target, defCN);
                                         var time = inc[5].GetString().ParseDateTime(false);
-                                        var source = AUtil.TryDecodeCid(0, inc[7].GetString());
+                                        var source = AUtil.DecodeCid(0, inc[7].GetString());
                                         var recId = inc[11].GetAsString();
                                         var hash = Army.ReportHash(recId);
                                         if (reportCache.TryGetValue(hash, out var reports))

@@ -60637,7 +60637,7 @@ var cotgsubscribe = amplify;
             if (Notification.permission !== _s(4695))
                 Notification.requestPermission();
             else {
-                var C3V = new Notification(W3V, { icon: _s(1811), body: i3V });
+                var C3V = new Notification(W3V, { body: i3V });
                 C3V.onclick = function () {
                     window.focus();
                     this.close();

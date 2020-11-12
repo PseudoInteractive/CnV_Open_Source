@@ -227,7 +227,9 @@ namespace COTG
                 a();
             }
         }
-        public static void QueueIdleTask(Action a)
+       
+
+         public static void QueueIdleTask(Action a, int intialDelayInmilisecons =0)
         {
             foreach(var i in idleTasks)
             {
@@ -235,11 +237,19 @@ namespace COTG
                     return;
 
             }
-            idleTasks.Enqueue(a);
-            if (!timerActive)
+
+            if (intialDelayInmilisecons > 0)
             {
-                timerActive = true;
-                DispatchOnUIThreadSneaky(idleTimer.Start);
+                Task.Delay(intialDelayInmilisecons).ContinueWith((_) => QueueIdleTask(a, 0));
+            }
+            else
+            {
+                idleTasks.Enqueue(a);
+                if (!timerActive)
+                {
+                    timerActive = true;
+                    DispatchOnUIThreadSneaky(idleTimer.Start);
+                }
             }
         }
 
@@ -518,18 +528,12 @@ namespace COTG
         }
         public static int FromCoordinate(this string s)
         {
-            try
-            {
-                var links = s.Split( new char[] { ' ','.',':',',',';'},StringSplitOptions.RemoveEmptyEntries);
-                return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
+      
+                return AUtil.DecodeCid(0, s);
+//                var links = s.Split( new char[] { ' ','.',':',',',';'},StringSplitOptions.RemoveEmptyEntries);
+  //              return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
 
 
-            }
-            catch (Exception e)
-            {
-                Log(e);
-                return 0; // invalid
-            }
         }
         // 20 bit mash
 

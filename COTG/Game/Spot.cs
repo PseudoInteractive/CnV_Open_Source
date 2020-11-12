@@ -134,14 +134,13 @@ namespace COTG.Game
         public enum Classification : byte
         {
             unknown,
-            infO,
-            infD,
-            inf,
-            magic,
+            vanqs,
+            rt,
+            sorcs,
+            druids,
             academy,
-            stablesO,
-            stablesD,
-            stables,
+            horses,
+            arbs,
             se,
             hub,
             navy,
@@ -165,15 +164,14 @@ namespace COTG.Game
         private static string[] classifications =
         {
             "unknown",
-            "infO",
-            "infD",
-            "inf",
-            "magic",
+            "vanqs",
+            "rt",
+            "sorcs",
+            "druids",
             "academy",
-            "stablesO",
-            "stablesD",
-            "stables",
-            "se",
+            "horses",
+            "arbs",
+            "scorps",
             "hub",
             "navy",
             "misc"
@@ -451,21 +449,24 @@ namespace COTG.Game
                 else if(mx==rv.stables)
                 {
                     if (rv.se > 0 || rv.academies > 0 || rv.stables == 39 || rv.stables == 24 || rv.stables <= 20)
-                        classification = Classification.stablesO;
+                        classification = Classification.horses;
                     else                     {
-                        classification = Classification.stablesD;
+                        classification = Classification.arbs;
                     }
                 }
                 else if(mx==rv.sorc)
                 {
-                    classification = Classification.magic;
+                    if (rv.sorc == 45 || rv.sorc == 40 || rv.sorc == 29 || rv.sorc == 27)
+                        classification = Classification.druids;
+                    else
+                        classification = Classification.sorcs;
                 }
                 else if(mx==rv.training)
                 {
                     if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training <= 18 )
-                        classification = Classification.infO;
+                        classification = Classification.vanqs;
                     else
-                        classification = Classification.infD;
+                        classification = Classification.rt;
 
                 }
                 else if (mx == rv.academies)
@@ -842,6 +843,7 @@ namespace COTG.Game
         public void ShowContextMenu(UIElement uie,Windows.Foundation.Point position)
         {
             var flyout = new MenuFlyout();
+           
 
             if (this.isCityOrCastle)
             {
@@ -871,12 +873,21 @@ namespace COTG.Game
 
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid));
                     App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-                    App.AddItem(flyout, "Attack to Clipboard", async  (_, _)  =>
+                    App.AddItem(flyout, "To Clipboard as Attacker", async (_, _) =>
                     {
 
-                    var cl = await Classify();
-                    App.CopyTextToClipboard($"{cid.CidToString()} {Player.myName} {classificationString} {(cl.academies==1 ? 2:0)} {tsToal}\n"));
-                }
+                        var cl = await Classify();
+                        string s = $"{cid.CidToString()} {Player.myName} {classificationString} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
+                        App.CopyTextToClipboard(s);
+                        if (AttackTab.instance.isActive)
+                        {
+                            AttackTab.instance.AddAttacksFromClipboard(null,null);
+                            Note.Show($"Added attack {s}");
+                            
+                        }
+                        else
+                            Note.Show(s);
+                    });
                     App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
 
 
@@ -956,13 +967,14 @@ namespace COTG.Game
             }
             for (; ; )
             {
-                await Task.Delay(1000);
+                await Task.Delay(2000);
                 if (tab.defenderGrid.ItemsSource != null)
                     break;
             }
             App.DispatchOnUIThreadSneaky(() =>
             {
-                tab.defenderGrid.SetCurrentItem(this,false);
+                tab.defenderGrid.SelectItem(this);
+                tab.defenderGrid.ScrollItemIntoView(this);
             });
         }
 

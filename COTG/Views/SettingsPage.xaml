@@ -18,8 +18,8 @@
                 
                >
     <ContentDialog.Resources>
-        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
-                                       EnumType="ElementTheme" />
+        <helper:EnumToBooleanConverter x:Key="EnumToBoolConverter"
+                                       EnumType="xaml:ElementTheme" />
     </ContentDialog.Resources>
     <StackPanel Orientation="Vertical" >
         <StackPanel Orientation="Horizontal">
@@ -93,7 +93,7 @@
         <StackPanel >
             <RadioButton x:Uid="Settings_Theme_Light"
                                  Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Light, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
                 <RadioButton.CommandParameter>
@@ -102,7 +102,7 @@
             </RadioButton>
             <RadioButton x:Uid="Settings_Theme_Dark"
                                  Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Dark, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
                 <RadioButton.CommandParameter>
@@ -111,7 +111,7 @@
             </RadioButton>
             <RadioButton x:Uid="Settings_Theme_Default"
                                  Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Default, Mode=OneWay}"
                                  FontSize="15"
                                  GroupName="AppTheme">
                 <RadioButton.CommandParameter>

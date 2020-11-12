@@ -198,7 +198,7 @@ namespace COTG.Models
             //   grid.CommitEdit();
 
             //            if (base.CanExecute(parameter))
-            base.Execute(parameter);
+            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
 
         }
 
@@ -228,7 +228,7 @@ namespace COTG.Models
                     case "senny": City.UpdateSenatorInfo(); break;
                 }
             }
-            context.Column.IsVisible = context.IsColumnVisible;
+            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
         }
     }
     //public class CityHeaderTapCommand : DataGridCommand
@@ -407,8 +407,7 @@ namespace COTG.Models
                 }
             }
 
-            if (base.CanExecute(parameter))
-                base.Execute(parameter);
+            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
 
         }
     }
