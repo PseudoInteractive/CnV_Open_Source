@@ -377,6 +377,15 @@ namespace COTG
             else
                 d.RunAsync(CoreDispatcherPriority.Low, action);
         }
+        public static async Task DispatchOnUIThreadSneakyTask(DispatchedHandler action)
+        {
+            var d = GlobalDispatcher();
+            // run it immediately if we can
+            if (d.HasThreadAccess)
+                action();
+            else
+                await d.RunAsync(CoreDispatcherPriority.Low, action);
+        }
         // We only have 1 UI thread here
         public static CoreDispatcher GlobalDispatcher() => ShellPage.instance.Dispatcher;
 

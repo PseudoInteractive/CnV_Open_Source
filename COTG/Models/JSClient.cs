@@ -447,7 +447,38 @@ namespace COTG
         }
 
 
+        public static async void ClearCenterRes(int cityId)
+        {
+            try
+            {
+             App.DispatchOnUIThreadSneaky(async () =>
+             {
 
+                 if (City.StBuild(cityId, false).changed)
+                 {
+                     await view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
+                     await Task.Delay(1000);
+                 }
+                 view.InvokeScriptAsync("clearres", new string[] { (cityId).ToString() });
+             });
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+        }
+        public static async void ClearCenter(int cid)
+        {
+            Note.Show($"{cid.CidToStringMD()} Clear Center Res");
+
+            if (cid != 0)
+            {
+                await Post.SendEncrypted("includes/clearresque.php", "{\"a\":" + cid + ",\"b\":5}", "BBIdl1a11AEkem24c2");
+
+            }
+        }
         public static void ChangeView(bool cityView)
         {
             try
@@ -819,6 +850,7 @@ namespace COTG
                     city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                     city.isTemple = jsCity.GetAsInt("15") > 0;
                     city.pid = Player.myId;
+                    Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
                     
 
                 }
@@ -1256,6 +1288,7 @@ namespace COTG
                                     Player.Ctor(jsp.Value);
                                     break;
                                 }
+                                // city lists
                             case "ppdt":
                                 {
                                     UpdatePPDT(jsp.Value);

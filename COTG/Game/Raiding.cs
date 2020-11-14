@@ -255,6 +255,7 @@ namespace COTG.Game
                 }
             }
         }
+        
         public static async Task ReturnAt(int cid, DateTimeOffset at)
         {
             Note.Show($"{cid.CidToStringMD()} End Raids At");

@@ -14,6 +14,7 @@ using COTG.Helpers;
 using COTG.JSON;
 using COTG.Models;
 using COTG.Services;
+using static COTG.Debug;
 
 using Windows.ApplicationModel;
 using Windows.Globalization.NumberFormatting;
@@ -77,92 +78,112 @@ namespace COTG.Views
             var st = App.Settings();
             foreach(var p in props)
             {
-               p.SetValue(null , st.ReadT( p.Name, p.FieldType, p.GetValue(null) ) );
-
+                try
+                {
+                    p.SetValue(null, st.ReadT(p.Name, p.FieldType, p.GetValue(null)));
+                }
+                catch (Exception e)
+                {
+                    Log(e);
+                }
             }
-            //reqWood = st.Read(nameof(reqWood), 160000);
-            //reqStone = st.Read(nameof(reqWood), 205000);
-            //reqIron = st.Read(nameof(reqIron), 100000);
-            //reqFood = st.Read(nameof(reqFood), 100000);
-            //maxWood = st.Read(nameof(maxWood), maxWood);
-            //maxStone = st.Read(nameof(maxWood), 250000);
-            //maxIron = st.Read(nameof(maxIron), 300000);
-            //maxFood = st.Read(nameof(maxFood), 300000);
-            //sendWood = st.Read(nameof(sendWood), true);
-            //sendStone = st.Read(nameof(sendWood), true);
-            //sendIron = st.Read(nameof(sendIron), true);
-            //sendFood = st.Read(nameof(sendFood), true);
-            Raiding.desiredCarry = st.Read(nameof(raidCarry), Raiding.desiredCarry);
-            //reserveCarts = st.Read(nameof(reserveCarts), reserveCarts);
-            DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 800);
-            DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
-            DonationTab.reserveShips = st.Read(nameof(DonationTab.reserveShips), 10);
-            DonationTab.reserveShipsPCT = st.Read(nameof(DonationTab.reserveShipsPCT), 0f);
-            DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
-            DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
-            DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
-        //    Tips.seen = new HashSet<string>( st.Read("tipsSeen", Array.Empty<string>()) );
+            try
+            {
+
+                //reqWood = st.Read(nameof(reqWood), 160000);
+                //reqStone = st.Read(nameof(reqWood), 205000);
+                //reqIron = st.Read(nameof(reqIron), 100000);
+                //reqFood = st.Read(nameof(reqFood), 100000);
+                //maxWood = st.Read(nameof(maxWood), maxWood);
+                //maxStone = st.Read(nameof(maxWood), 250000);
+                //maxIron = st.Read(nameof(maxIron), 300000);
+                //maxFood = st.Read(nameof(maxFood), 300000);
+                //sendWood = st.Read(nameof(sendWood), true);
+                //sendStone = st.Read(nameof(sendWood), true);
+                //sendIron = st.Read(nameof(sendIron), true);
+                //sendFood = st.Read(nameof(sendFood), true);
+                Raiding.desiredCarry = st.Read(nameof(raidCarry), Raiding.desiredCarry);
+                //reserveCarts = st.Read(nameof(reserveCarts), reserveCarts);
+                DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 800);
+                DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
+                DonationTab.reserveShips = st.Read(nameof(DonationTab.reserveShips), 10);
+                DonationTab.reserveShipsPCT = st.Read(nameof(DonationTab.reserveShipsPCT), 0f);
+                DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
+                DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
+                DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
+                //    Tips.seen = new HashSet<string>( st.Read("tipsSeen", Array.Empty<string>()) );
 
 
-       // incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
-        //    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
-           // AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
+                // incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
+                //    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
+                // AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
         }
         public static void SaveAll(object _ = null, Windows.UI.Core.CoreWindowEventArgs __ = null)
         {
-            var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
-            var st = App.Settings();
-            if(SpotTab.instance.spotMRU.Count>0)
+            try
             {
-                List<int> mru = new List<int>();
-                foreach (var sp in SpotTab.instance.spotMRU)
+                var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
+                var st = App.Settings();
+                if (SpotTab.instance.spotMRU.Count>0)
                 {
-                    if (sp.pinned)
-                        mru.Add(sp.cid);
+                    List<int> mru = new List<int>();
+                    foreach (var sp in SpotTab.instance.spotMRU)
+                    {
+                        if (sp.pinned)
+                            mru.Add(sp.cid);
+
+                    }
+                    pinned = mru.ToArray();
+                }
+                foreach (var p in props)
+                {
+                    st.SaveT(p.Name, p.FieldType, p.GetValue(null));
 
                 }
-                pinned = mru.ToArray();
-            } 
-            foreach (var p in props)
-            {
-                st.SaveT(p.Name, p.FieldType, p.GetValue(null));
+                st.Save(nameof(raidCarry), Raiding.desiredCarry);
 
+                //  st.Save(nameof(fetchFullHistory), fetchFullHistory);
+                ////  st.Save(nameof(TipsSeen), TipsSeen.instance);
+                //  st.Save(nameof(hubCitylistName), hubCitylistName);
+
+                //  st.Save(nameof(reqWood), reqWood);
+                //  st.Save(nameof(reqStone), reqStone);
+                //  st.Save(nameof(reqFood), reqFood);
+                //  st.Save(nameof(reqIron), reqIron);
+                //  st.Save(nameof(maxWood), maxWood);
+                //  st.Save(nameof(maxStone), maxStone);
+                //  st.Save(nameof(maxFood), maxFood);
+                //  st.Save(nameof(maxIron), maxIron);
+                //  st.Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
+
+                //  st.Save(nameof(sendWood), sendWood);
+                //  st.Save(nameof(sendStone), sendStone);
+                //  st.Save(nameof(sendFood), sendFood);
+                //  st.Save(nameof(sendIron), sendIron);
+                //  st.Save(nameof(reserveCarts), reserveCarts);
+                //  st.Save(nameof(incomingWatch), incomingWatch);
+
+                st.Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
+                st.Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
+                st.Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
+                st.Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
+                st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
+                st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
+                st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
+                st.Save("tipsSeen", Tips.seen.ToArray());
+                //  st.Save("attacktime", AttackTab.time.DateTime);
+
+                AttackTab.SaveAttacks();
             }
-            st.Save(nameof(raidCarry), Raiding.desiredCarry);
-
-          //  st.Save(nameof(fetchFullHistory), fetchFullHistory);
-          ////  st.Save(nameof(TipsSeen), TipsSeen.instance);
-          //  st.Save(nameof(hubCitylistName), hubCitylistName);
-
-          //  st.Save(nameof(reqWood), reqWood);
-          //  st.Save(nameof(reqStone), reqStone);
-          //  st.Save(nameof(reqFood), reqFood);
-          //  st.Save(nameof(reqIron), reqIron);
-          //  st.Save(nameof(maxWood), maxWood);
-          //  st.Save(nameof(maxStone), maxStone);
-          //  st.Save(nameof(maxFood), maxFood);
-          //  st.Save(nameof(maxIron), maxIron);
-          //  st.Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
-
-          //  st.Save(nameof(sendWood), sendWood);
-          //  st.Save(nameof(sendStone), sendStone);
-          //  st.Save(nameof(sendFood), sendFood);
-          //  st.Save(nameof(sendIron), sendIron);
-          //  st.Save(nameof(reserveCarts), reserveCarts);
-          //  st.Save(nameof(incomingWatch), incomingWatch);
-
-            st.Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
-            st.Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
-            st.Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
-            st.Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
-            st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
-            st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
-            st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
-            st.Save("tipsSeen", Tips.seen.ToArray() );
-            //  st.Save("attacktime", AttackTab.time.DateTime);
-
-            AttackTab.SaveAttacks();
-
+            catch(Exception e)
+            {
+                Log(e);
+            }
 
         }
         public ElementTheme ElementTheme

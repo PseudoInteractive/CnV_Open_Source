@@ -44,7 +44,7 @@ namespace COTG.Services
             ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle, typeof(PageType) );
             SecondaryViews.Add(viewControl);
             viewControl.StartViewInUse();
-            await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);
+            await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.UseMore, ApplicationView.GetForCurrentView().Id, ViewSizePreference.UseMore);
             viewControl.StopViewInUse();
             return viewControl;
         }

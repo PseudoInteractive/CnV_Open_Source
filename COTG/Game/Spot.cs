@@ -78,7 +78,11 @@ namespace COTG.Game
                 var info = World.GetInfo(worldC);
 
                 //    Assert(info.type == World.typeCity);
-                rv = new Spot() { cid = cid, pid = info.player };
+                if (info.player == Player.myId)
+                   rv = City.GetOrAddCity(cid);
+                else
+                   rv = new Spot() { cid = cid, pid = info.player };
+
                 //       Assert( info.player != 0);
                 rv.type = (byte)(info.type >> 28);
                 if (info.type == 0)
@@ -411,7 +415,13 @@ namespace COTG.Game
                 Log(str);
                 App.DispatchOnUIThreadSneaky(() =>
                 {
+                    if (World.GetInfoFromCid(cid).isWater)
+
+
+                        // set is water var
+                        str =$"[ShareString.1.3]{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}"; 
                     App.CopyTextToClipboard(str);
+
                     Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
                 });
             }
@@ -889,6 +899,8 @@ namespace COTG.Game
                             Note.Show(s);
                     });
                     App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
+                 //   App.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
+                    App.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
 
 

@@ -166,8 +166,16 @@ namespace COTG.Game
             Debug.Assert(cid == jse.GetInt("cid"));
             if (jse.TryGetProperty("citn", out var citn))
                 _cityName = citn.GetString();
+            if (jse.TryGetProperty("w", out var isOnWataer))
+            {
+                var i = isOnWataer.GetAsInt();
+                if (i==1)
+                    isOnWater=true;
+                else if(i==0)
+                    isOnWater=false;
+            }
 
-            activeCommands = jse.GetAsByte("comm");
+                activeCommands = jse.GetAsByte("comm");
             {
                 const int bidCastle = 467;
                 if (jse.TryGetProperty("bd", out var bd))
@@ -437,13 +445,12 @@ namespace COTG.Game
 		}
        
        
-        public static City StBuild(int cid,bool scrollIntoView)
+        public static (City city,bool changed) StBuild(int cid,bool scrollIntoView)
         {
             var city = City.GetOrAddCity(cid);
-            city.SetBuild(scrollIntoView);
-            return city;
+            return (city, city.SetBuild(scrollIntoView));
         }
-        public void SetBuild(bool scrollIntoView)
+        public bool SetBuild(bool scrollIntoView)
         {
             var changed = cid != build;
             City.build = cid;
@@ -456,6 +463,7 @@ namespace COTG.Game
                     
                 });
             }
+            return changed;
             //if (!noRaidScan)
            // {
           //      if (changed)

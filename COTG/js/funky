@@ -5241,7 +5241,7 @@ const __s = [".shRinf",
     "' class = 'greenb tqueueStop'>Cancel</button></td></tr><tr><td id='b",
     "document.",
     "455",
-    "').remove();\" class=\"xbutton\"> <div ID=\"xbuttondiv\"> <div> <div ID=\"centxbuttondiv\"></div></div></div></button> </div><div class=\"popUpWindow\"><div class=\"reportviewdiv\"> <span ID=\"sharereportcode\"><span class=\"shRep\" data=\"",
+    "').remove();callSyncViewMode();}\" class=\"xbutton\"> <div ID=\"xbuttondiv\"> <div> <div ID=\"centxbuttondiv\"></div></div></div></button> </div><div class=\"popUpWindow\"><div class=\"reportviewdiv\"> <span ID=\"sharereportcode\"><span class=\"shRep\" data=\"",
     "ud",
     "#ElNotes",
     "eAfpr.php",
@@ -6754,7 +6754,7 @@ const __s = [".shRinf",
     "#ProtResFR",
     "\" /></td><td style=\"width:95%;\">Support travel time (seconds) 0 is normal</td></tr>",
     "#saveTCchanges",
-    "http://louopt.com/?map=",
+    "http://cotgopt.com/?map=",
     "/includes/gDu.php",
     "<tr><td style=\"width:5%;text-align:center;\"><input type=\"checkbox\" ID=\"godopt6\" ",
     "#citycitadeldiv",
@@ -7325,7 +7325,7 @@ const __s = [".shRinf",
     "Ylanna�s Rare Pendant",
     "You're doing pretty well so far! Here's 200 stone to get you started � you'll need it!",
     "paddingTop",
-    "px;\" class=\"popUpBox atkpops\"> <div class=\"ppbwinbgr\"> <div class=\"ppbwintop\"></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"> <div class=\"popUpBar\"> <span class=\"ppspan\">Attack Summary Report</span> <button ID=\"reportsummXbutton\" onclick=\"$('#reports",
+    "px;\" class=\"popUpBox atkpops\"> <div class=\"ppbwinbgr\"> <div class=\"ppbwintop\"></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"> <div class=\"popUpBar\"> <span class=\"ppspan\">Attack Summary Report</span> <button ID=\"reportsummXbutton\" onclick=\"{$('#reports",
     "6",
     "</div><div class=\"quadfour\">",
     "#tccfDel",
@@ -8550,6 +8550,10 @@ var pollthis;
 let D6;
 let pollJ;
 var P8 = 0;
+function SetViewMode(mode) {
+    _viewMode = mode;
+    callSyncViewMode();
+}
 function debounce(func, wait, maxWait, leading = true, trailing = true) {
     var lastArgs, lastThis, result, timerId, lastCallTime, lastInvokeTime = 0, maxing = true;
     function invokeFunc(time) {
@@ -8624,6 +8628,81 @@ function debounce(func, wait, maxWait, leading = true, trailing = true) {
     debounced.flush = flush;
     return debounced;
 }
+var _zoom = 1;
+var _popupCountCache = 0;
+var _popupCount = 0;
+function setupSyncView() {
+    const config = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
+    const callback = function (mutationsList, observer) {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'attributes') {
+                if (mutation.attributeName === 'style') {
+                    callSyncViewMode();
+                    return;
+                }
+            }
+        }
+    };
+    const observer = new MutationObserver(callback);
+    $(".atkpops,.longmenu,.popUpBox2").each(function () {
+        observer.observe(this, config);
+    });
+    $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
+        observer.observe(this, config);
+    });
+    $(".obscuretop,.longwindow").each(function () {
+        observer.observe(this, config);
+    });
+}
+var callSyncViewMode = debounce(DoSyncViewMode, 100, 2000);
+function DoSyncViewMode() {
+    try {
+        {
+            let __zoom = 64;
+            let _x = _camera.x;
+            let _y = _camera.y;
+            if (_viewMode == viewModeRegion) {
+                _viewMode = viewModeWorld;
+                var x0g = document.getElementById("cvs");
+                x0g.style.display = "none";
+            }
+            if (_viewMode === viewModeWorld) {
+            }
+            _popupCount = 0;
+            $(".atkpops,.longmenu,.popUpBox2").each(function () {
+                if (this.style.display != "none" && this.style.display != "hidden")
+                    _popupCount++;
+            });
+            $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
+                if (this.style.display == "block")
+                    _popupCount++;
+            });
+            if (document.getElementById("speedupusePopup") !== null) {
+                _popupCount += 128;
+            }
+            $(".obscuretop,.longwindow").each(function () {
+                if (this.style.display != "none" && this.style.display != "hidden")
+                    _popupCount += 128;
+            });
+            if (cid != 0 && (_viewMode !== _viewModeCache
+                || _popupCountCache != _popupCount)) {
+                _viewModeCache = _viewMode;
+                _cid = cid;
+                _zoom = __zoom;
+                _cameraX = _x;
+                _cameraY = _y;
+                _popupCountCache = _popupCount;
+                const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount } };
+                window['external']['notify'](JSON.stringify(wrapper));
+            }
+        }
+    }
+    catch (exc) {
+        console.log(exc);
+    }
+    finally {
+    }
+}
 var a6 = {
     ccazzx: {
         encrypt: (a, b, c) => { return ""; },
@@ -8657,6 +8736,20 @@ i011.J0EE = J0EE;
 w5SS(K5SS());
 let lastTroopsHome = 0;
 let lastCid = 0;
+function showNotification(W3V, i3V) {
+    if (!Notification)
+        return;
+    if (Notification.permission !== _s(4695))
+        Notification.requestPermission();
+    else {
+        var C3V = new Notification(W3V, { body: i3V });
+        C3V.onclick = function () {
+            window.focus();
+            this.close();
+            this.cancel();
+        };
+    }
+}
 i011.J55 = function () {
     var Q55 = 2;
     for (; Q55 !== 1;) {
@@ -19450,8 +19543,8 @@ var cotgsubscribe = amplify;
                 "s": '24.5' - 0
             }
         };
-        var t4F = document.querySelectorAll(_s(+h4p))
-            .length;
+        var t4F = document.querySelectorAll(".atkpops");
+        length;
         var J0F = (z7R << 1733863808) + t4F * +c8y;
         var S0F = X4p * 1;
         var c9 = function (y1v, D1v) {
@@ -20431,8 +20524,9 @@ var cotgsubscribe = amplify;
             }
         }
         function r9F(N0v) {
-            $(_s(h4p ^ 0))
+            $(".atkpops")
                 .remove();
+            callSyncViewMode();
             if ($(_s(4402) + N0v.rid)
                 .find(_s(5171))
                 .hasClass(_s(4617)))
@@ -22465,7 +22559,7 @@ var cotgsubscribe = amplify;
         var C9 = _s(+Q6R);
         var M9 = _s(4133);
         var z9 = _s(S5R | 70);
-        let _s5V = debounce(s5V, 250, 2000);
+        let _s5V = debounce(s5V, 100, 2000);
         function J2() {
             E6k.R6();
             _s5V();
@@ -22670,8 +22764,9 @@ var cotgsubscribe = amplify;
         }
         function f9F(o5v) {
             var E04 = '2859';
-            $(_s(h4p & 2147483647))
+            $(_s(".atkpops"))
                 .remove();
+            callSyncViewMode();
             if ($(_s(4402) + o5v.rid)
                 .find(_s(5171))
                 .hasClass(_s(4617)))
@@ -23964,8 +24059,8 @@ var cotgsubscribe = amplify;
                 u4F();
                 k4F();
                 o3F();
-                SyncViewMode();
             }, z9p << 1518128128);
+            setTimeout(setupSyncView, 10000);
             setTimeout(function () { E6k.y6(); }, +D5y);
             $(_s(5670))
                 .click(function () { j4F("1" | 1); });
@@ -28048,6 +28143,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             F6();
             n7v.done(function (D3v) {
+                callSyncViewMode();
                 var j84 = "4493";
                 var f84 = '4628';
                 var m84 = '1041';
@@ -40428,7 +40524,7 @@ var cotgsubscribe = amplify;
                     else if (ppdt.opt[0] == ("1" | 1))
                         X2(+'14');
                     if (document[e0F])
-                        Notification(_s(3353), _s("3231" ^
+                        showNotification(_s(3353), _s("3231" ^
                             0));
                 }
                 $(_s(6770))
@@ -41986,7 +42082,7 @@ var cotgsubscribe = amplify;
             var g9V = Math.round(Z9V % +R5y);
             var U9V = Math.round((Z9V - g9V) / +R5y);
             if (_viewMode !== viewModeWorld) {
-                _viewMode = viewModeWorld;
+                SetViewMode(viewModeWorld);
                 var y9V = document.getElementById("cvs");
                 var Y9V = document.getElementById("content");
                 var B9V = document.getElementById("city_map");
@@ -42978,6 +43074,7 @@ var cotgsubscribe = amplify;
             if (ppdt[_s(g2m >> 978213504)][1] == 0)
                 H9(1, 1);
         }
+        window['clearres'] = A5F;
         function D9(T8B) {
             var A8B = ppdt["rs"][8]["n"];
             var n8B = ppdt["rs"][+'9']["n"];
@@ -47011,7 +47108,7 @@ var cotgsubscribe = amplify;
                 o7F(p96, N96);
             }
             else {
-                _viewMode = viewModeRegion;
+                SetViewMode(viewModeRegion);
                 worldrender = 0;
                 citrender = 0;
                 $("#wmapcoords")
@@ -47196,7 +47293,7 @@ var cotgsubscribe = amplify;
             var u0g = k0g.keyCode ? k0g.keyCode : k0g.which;
             if (u0g == _s(W8y)) {
                 regrender = 1;
-                _viewMode = viewModeRegion;
+                SetViewMode(viewModeRegion);
                 worldrender = 0;
                 citrender = 0;
                 P9();
@@ -47231,7 +47328,7 @@ var cotgsubscribe = amplify;
         $("#coordgo")
             .click(function () {
             regrender = 1;
-            _viewMode = viewModeRegion;
+            SetViewMode(viewModeRegion);
             worldrender = 0;
             citrender = 0;
             P9();
@@ -47264,7 +47361,7 @@ var cotgsubscribe = amplify;
         $("#regionButton")
             .click(function () {
             regrender = 1;
-            _viewMode = viewModeRegion;
+            SetViewMode(viewModeRegion);
             E6k.R6();
             worldrender = 0;
             P9();
@@ -47324,7 +47421,7 @@ var cotgsubscribe = amplify;
             .click(function () {
             regrender = 0;
             worldrender = 1;
-            _viewMode = viewModeWorld;
+            SetViewMode(viewModeWorld);
             citrender = 0;
             var b0g = 0;
             var J0g = document.getElementById("cvs");
@@ -47385,7 +47482,7 @@ var cotgsubscribe = amplify;
             worldrender = 0;
             E6k.R6();
             citrender = 1;
-            _viewMode = viewModeCity;
+            SetViewMode(viewModeCity);
             P9();
             $(_s(S6p | 1360))
                 .css("display", "none");
@@ -50406,13 +50503,13 @@ var cotgsubscribe = amplify;
                         if (document[e0F]) {
                             var A1V = $(_s(871))
                                 .text();
-                            Notification(o1V + _s(606), A1V);
+                            showNotification(o1V + _s(606), A1V);
                         }
                         else if ($(_s(+T7y))
                             .css("display") == "none" && X1V != "") {
                             var A1V = $(_s(871))
                                 .text();
-                            Notification(o1V + _s(606), A1V);
+                            showNotification(o1V + _s(606), A1V);
                         }
                     }
                 }
@@ -54007,8 +54104,9 @@ var cotgsubscribe = amplify;
                 .show();
             $(_s(h2p - 0))
                 .show();
-            $(_s(+h4p))
+            $(".atkpops")
                 .remove();
+            callSyncViewMode();
         }
         var l9F = [];
         function p8F(m8Z) {
@@ -58340,8 +58438,9 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(_s(4437))
                 .css("display", "none");
-            $(_s(h4p >> 1770304896))
+            $(".atkpops")
                 .remove();
+            callSyncViewMode();
         }
         var b5F;
         var x4F = 0;
@@ -60630,21 +60729,6 @@ var cotgsubscribe = amplify;
             }
         };
         function f4V() { }
-        function Notification(W3V, i3V) {
-            if (!Notification)
-                return;
-            E6k.y6();
-            if (Notification.permission !== _s(4695))
-                Notification.requestPermission();
-            else {
-                var C3V = new Notification(W3V, { body: i3V });
-                C3V.onclick = function () {
-                    window.focus();
-                    this.close();
-                    this.cancel();
-                };
-            }
-        }
         function j8() {
             var D5k = '3492';
             var q5k = '5608';
@@ -66137,8 +66221,9 @@ var cotgsubscribe = amplify;
             E6k.R6();
             $(_s(3458))
                 .css("display", "none");
-            $(_s(h4p ^ 0))
+            $(".atkpops")
                 .remove();
+            callSyncViewMode();
         }
         var gainx = 2;
         var gainy = 2;
@@ -66169,58 +66254,6 @@ var cotgsubscribe = amplify;
         function ResumePoll(delay) {
             Z1FTimeout = 0;
             DoPoll2(delay);
-        }
-        var _zoom = 1;
-        var _popupCountCache = 0;
-        var _popupCount = 0;
-        let syncViewTimeout = 0;
-        function SyncViewMode() {
-            clearTimeout(syncViewTimeout);
-            try {
-                let __zoom = 64;
-                let _x = _camera.x;
-                let _y = _camera.y;
-                if (_viewMode == viewModeRegion) {
-                    _viewMode = viewModeWorld;
-                    var x0g = document.getElementById("cvs");
-                    x0g.style.display = "none";
-                }
-                if (_viewMode === viewModeWorld) {
-                }
-                _popupCount = 0;
-                $(".atkpops,.longmenu,.popUpBox2").each(function () {
-                    if (this.style.display != "none" && this.style.display != "hidden")
-                        _popupCount++;
-                });
-                $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
-                    if (this.style.display == "block")
-                        _popupCount++;
-                });
-                if (document.getElementById("speedupusePopup") !== null) {
-                    _popupCount += 128;
-                }
-                $(".obscuretop,.longwindow").each(function () {
-                    if (this.style.display != "none" && this.style.display != "hidden")
-                        _popupCount += 128;
-                });
-                if (cid != 0 && (_viewMode !== _viewModeCache
-                    || _popupCountCache != _popupCount)) {
-                    _viewModeCache = _viewMode;
-                    _cid = cid;
-                    _zoom = __zoom;
-                    _cameraX = _x;
-                    _cameraY = _y;
-                    _popupCountCache = _popupCount;
-                    const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount } };
-                    window['external']['notify'](JSON.stringify(wrapper));
-                }
-            }
-            catch (exc) {
-                console.log(exc);
-            }
-            finally {
-                syncViewTimeout = setTimeout(SyncViewMode, 500);
-            }
         }
         function __pollthis(__cid) {
             let cidN = Number(__cid);
@@ -69461,10 +69494,12 @@ function setviewmode(mode) {
     if (mode == 'c') {
         $("#cityButton").click();
         _viewModeCache = _viewMode = viewModeCity;
+        callSyncViewMode();
     }
     else {
         $("#worldButton").click();
         _viewModeCache = _viewMode = viewModeWorld;
+        callSyncViewMode();
     }
 }
 function avactor() {

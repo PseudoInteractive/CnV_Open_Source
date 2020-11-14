@@ -705,12 +705,14 @@ function viewcity(cid: string)
 function setviewmode(mode: string) {
 	if (mode == 'c') {
 		$("#cityButton").click();
-		_viewModeCache = _viewMode = viewModeCity; // 
+		_viewModeCache = _viewMode = viewModeCity; //
+		callSyncViewMode();
 
 	}
 	else {
 		$("#worldButton").click();
 		_viewModeCache = _viewMode = viewModeWorld; // 
+		callSyncViewMode();
 
 	}
 }

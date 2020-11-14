@@ -249,7 +249,8 @@ namespace COTG.JSON
             {
                 var city = City.GetOrAddCity(cid);
                 var nameDialog = new CityRename();
-                if (city._cityName == "*New City" && !lastName.IsNullOrEmpty())
+                var isNew = city._cityName == "*New City";
+                if (isNew && !lastName.IsNullOrEmpty())
                 {
                     var name = lastName;
                     var lg = name.Length;
@@ -262,13 +263,21 @@ namespace COTG.JSON
                     {
                         // increment number if there is one
                         var start = name.Substring(0, numberEnd);
-                        var end = (int.Parse(name.Substring(numberEnd, lg - numberEnd)) + 1).ToString();
-                        name = start + end;
+                        var number = int.Parse(name.Substring(numberEnd, lg - numberEnd)) + 1;
+                        for (; ; )
+                        {
+                            name = start + number.ToString();
+                            if(!City.allCities.Any( (v)=> v.Value._cityName == name ))
+                                    break;
+                            ++number;
+                        }
                     }
                     nameDialog.name.Text = name;
                 }
                 else
                 {
+                    if (lastName.IsNullOrEmpty() && !isNew)
+                        lastName = city._cityName;
                     nameDialog.name.Text = city._cityName;
                 }
                 var result = await nameDialog.ShowAsync();

@@ -3784,8 +3784,8 @@ const __s = [".shRinf",
     "Time to upgrade your Farm!",
     "' class = 'greenb tqueueStop'>Cancel</button></td></tr><tr><td id='b",
     "document.",
-    "455",
-    "').remove();\" class=\"xbutton\"> <div ID=\"xbuttondiv\"> <div> <div ID=\"centxbuttondiv\"></div></div></div></button> </div><div class=\"popUpWindow\"><div class=\"reportviewdiv\"> <span ID=\"sharereportcode\"><span class=\"shRep\" data=\"",
+    "455", 
+    "').remove();callSyncViewMode();}\" class=\"xbutton\"> <div ID=\"xbuttondiv\"> <div> <div ID=\"centxbuttondiv\"></div></div></div></button> </div><div class=\"popUpWindow\"><div class=\"reportviewdiv\"> <span ID=\"sharereportcode\"><span class=\"shRep\" data=\"",
     "ud",
     "#ElNotes",
     "eAfpr.php",
@@ -5298,7 +5298,7 @@ const __s = [".shRinf",
     "#ProtResFR",
     "\" /></td><td style=\"width:95%;\">Support travel time (seconds) 0 is normal</td></tr>",
     "#saveTCchanges",
-    "http://louopt.com/?map=",
+    "http://cotgopt.com/?map=",
     "/includes/gDu.php",
     "<tr><td style=\"width:5%;text-align:center;\"><input type=\"checkbox\" ID=\"godopt6\" ",
     "#citycitadeldiv",
@@ -5869,7 +5869,7 @@ const __s = [".shRinf",
     "Ylanna�s Rare Pendant",
     "You're doing pretty well so far! Here's 200 stone to get you started � you'll need it!",
     "paddingTop",
-    "px;\" class=\"popUpBox atkpops\"> <div class=\"ppbwinbgr\"> <div class=\"ppbwintop\"></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"> <div class=\"popUpBar\"> <span class=\"ppspan\">Attack Summary Report</span> <button ID=\"reportsummXbutton\" onclick=\"$('#reports",
+    "px;\" class=\"popUpBox atkpops\"> <div class=\"ppbwinbgr\"> <div class=\"ppbwintop\"></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"> <div class=\"popUpBar\"> <span class=\"ppspan\">Attack Summary Report</span> <button ID=\"reportsummXbutton\" onclick=\"{$('#reports",
     "6",
     "</div><div class=\"quadfour\">",
     "#tccfDel",
@@ -7087,6 +7087,7 @@ function _s(id) {
 
 var _cid = 0;
 var _viewMode = 0; // 
+
 var _viewModeCache = 0;
 const viewModeCity = 0;
 const viewModeRegion = 1;
@@ -7095,6 +7096,10 @@ var pollthis;
 let D6: jsonT.City;
 let pollJ: jsonT.Poll;
 var P8 = 0;
+function SetViewMode(mode) {
+    _viewMode = mode;
+    callSyncViewMode();
+}
 
 function debounce(func:any, wait :number,maxWait:number, leading:boolean=true,trailing:boolean = true) {
     var lastArgs,
@@ -7210,7 +7215,185 @@ function debounce(func:any, wait :number,maxWait:number, leading:boolean=true,tr
     return debounced;
 }
 
+var _zoom = 1;
+var _popupCountCache = 0;
+var _popupCount = 0;
 
+//let syncViewTimeout=0;
+//let viewPortDirty=true;
+
+function setupSyncView() {
+
+    // Options for the observer (which mutations to observe)
+    const config: MutationObserverInit = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
+
+    // Callback function to execute when mutations are observed
+    const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
+        // Use traditional 'for loops' for IE 11
+        for (const mutation of mutationsList) {
+
+            if (mutation.type === 'attributes') {
+               // console.log('attr Change: ' + mutation.attributeName);
+                if (mutation.attributeName === 'style') {
+                    callSyncViewMode();
+                    return;
+                    //                        viewPortDirty=true;
+                }
+            }
+        }
+    };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver(callback);
+
+    // Start observing the target node for configured mutations
+    $(".atkpops,.longmenu,.popUpBox2").each(
+        function () {
+            observer.observe(this, config);
+        });
+
+    $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(
+        function () {
+            observer.observe(this, config);
+        });
+
+    $(".obscuretop,.longwindow").each(
+        function () {
+            observer.observe(this, config);
+        });
+
+    // Later, you can stop observing
+    //  observer.disconnect();
+}
+
+var callSyncViewMode = debounce(DoSyncViewMode, 100, 2000);
+function DoSyncViewMode() {
+    try {
+
+        //  clearTimeout(syncViewTimeout);
+        //    if( viewPortDirty )
+        {
+            ///    viewPortDirty=false;
+
+
+            let __zoom = 64;
+            let _x = _camera.x;
+            let _y = _camera.y;
+            if (_viewMode == viewModeRegion) {
+                _viewMode =viewModeWorld;
+                var x0g = document.getElementById("cvs");
+                x0g.style.display = "none";
+            }
+
+            if (_viewMode === viewModeWorld) {
+                // let matrix = $("#content").panzoom("getMatrix");
+
+                //   _x = +matrix[4]+36000;
+                //    _y = +matrix[5]+36000;
+                //  M0g =
+                //      document.getElementById('worldcanv');
+                //  if(M0g)
+                //  { 
+                //   let t0g = M0g.getBoundingClientRect();
+                //  _x = -t0g.left;// * 4 / 4.22166666666667;
+                //  _y = -t0g.top;// * 4 / 4.22166666666667;
+                //  }
+                //var r1D = document.getElementById("mainMapDiv");
+                //var P1D = r1D.clientWidth;
+                //var B1D =
+                //    r1D.clientHeight;
+
+                // let z0g = m5F(M0g.width * 0.0 - t0g.left, M0g.height * 0.0 - t0g.top);
+                // let d0g = (z0g.x / (+m6p * 1));
+                // let C0g = (z0g.y / (+m6p - 0));
+                // _x = d0g * 64;//- M0g.width/ (gainx);
+                // _y = C0g * 64;// - M0g.height / (gainy) ;
+                // __zoom = +matrix[0] * 4.22166666666667;
+            }
+            //              popUpBox atkpops ui - draggable
+            _popupCount = 0;
+            //         let __x = document.getElementsByClassName("atkpops longmenu popUpBox2");
+
+            //         for (let count = __x.length;--count>=0; ) {
+            //             if (__x[count].style.display !== "none" && __x[count].style.display !== "hidden")
+            //           {
+            //           _popupCount++;
+            //           break;
+            //           }
+            //         } 
+            //          __x = document.getElementsByClassName("medpopupstyle smallpopupstyle popUpBox");
+
+            //         for (let count = __x.length; --count >= 0;) {
+            //             if (__x[count].style.display === "block") {
+            //                 _popupCount++;
+            //                 break;
+            //             }
+            //         } 
+            //         if (document.getElementById("speedupusePopup")!==null)
+            //{
+
+            //             _popupCount+=128;
+
+            //}
+
+            //         __x = document.getElementsByClassName("obscuretop longwindow");
+            //         for (let count = __x.length; --count >= 0;) {
+            //         if (__x[count].style.display !== "none" && __x[count].style.display !== "hidden"){
+            //                   _popupCount+=128;
+            //                            break;
+            //             }
+            //         }
+
+            $(".atkpops,.longmenu,.popUpBox2").each(
+                function () {
+                    if (this.style.display != "none" && this.style.display != "hidden")
+                        _popupCount++;
+                }
+            );
+            $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(
+                function () {
+                    if (this.style.display == "block")
+                        _popupCount++;
+                }
+            );
+
+            if (document.getElementById("speedupusePopup") !== null) {
+
+                _popupCount += 128;
+
+            }
+
+
+            $(".obscuretop,.longwindow").each(
+                function () {
+                    if (this.style.display != "none" && this.style.display != "hidden")
+                        _popupCount += 128;
+                }
+            );
+
+            // if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
+            //         || _zoom != __zoom || _popupCountCache != _popupCount))
+            if (cid != 0 && (_viewMode !== _viewModeCache
+                || _popupCountCache != _popupCount)) {
+                _viewModeCache = _viewMode;
+                _cid = cid;
+                _zoom = __zoom;
+                _cameraX = _x;
+                _cameraY = _y;
+                _popupCountCache = _popupCount;
+                const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount } };
+                window['external']['notify'](JSON.stringify(wrapper));
+            }
+        }
+    } catch (exc) {
+
+        console.log(exc);
+    }
+    finally {
+        //  syncViewTimeout = setTimeout(SyncViewMode,500);
+    }
+
+}
 var a6 =
 {
     ccazzx: {
@@ -7258,7 +7441,19 @@ i011.J0EE = J0EE;
 w5SS(K5SS());
 let lastTroopsHome = 0;
 let lastCid = 0;
-
+function showNotification(W3V:string, i3V:string) {
+    if (!Notification) return;
+   
+    if (Notification.permission !== _s(4695)) Notification.requestPermission();
+    else {
+        var C3V = new Notification(W3V, { body: i3V });
+        C3V.onclick = function () {
+            window.focus();
+            this.close();
+            this.cancel();
+        };
+    }
+}
 
 i011.J55 = function() {
   var Q55 = 2;
@@ -18177,7 +18372,7 @@ var cotgsubscribe = amplify;
         "s": '24.5' - 0
       }
     };
-    var t4F = document.querySelectorAll(_s(+h4p))
+    var t4F = document.querySelectorAll(".atkpops"))
       .length;
     var J0F = (z7R << 1733863808) + t4F * +c8y;
     var S0F = X4p * 1;
@@ -19177,9 +19372,12 @@ var cotgsubscribe = amplify;
         C3F();
       }
     }
+
+    // scout report?
     function r9F(N0v) {
-      $(_s(h4p ^ 0))
+      $(".atkpops")
         .remove();
+        callSyncViewMode();
       if ($(_s(4402) + N0v.rid)
         .find(_s(5171))
         .hasClass(_s(4617))) $(_s(4402) + N0v.rid)
@@ -22612,7 +22810,7 @@ var cotgsubscribe = amplify;
     var M9 = _s(4133);
     var z9 = _s(S5R | 70);
     
-    let _s5V = debounce(s5V,250, 2000);
+    let _s5V = debounce(s5V,100, 2000);
 
     function J2() {
       E6k.R6();
@@ -22807,8 +23005,9 @@ var cotgsubscribe = amplify;
   
     function f9F(o5v) {
       var E04 = '2859';
-      $(_s(h4p & 2147483647))
+      $(_s(".atkpops"))
         .remove();
+        callSyncViewMode();
       if ($(_s(4402) + o5v.rid)
         .find(_s(5171))
         .hasClass(_s(4617))) $(_s(4402) + o5v.rid)
@@ -24054,9 +24253,9 @@ var cotgsubscribe = amplify;
           u4F();
           k4F();
           o3F();
-           SyncViewMode();
         }, z9p << 1518128128);
-        setTimeout(function() { E6k.y6(); }, +D5y);
+          setTimeout(setupSyncView, 10000);
+        setTimeout(function() { E6k.y6()}, +D5y);
         $(_s(5670))
           .click(function() { j4F("1" | 1); });
         $(_s(6660))
@@ -28085,6 +28284,7 @@ console.log("Bad");
         .css("display", "none");
       F6();
       n7v.done(function(D3v) {
+      callSyncViewMode();
         var j84 = "4493";
         var f84 = '4628';
         var m84 = '1041';
@@ -40347,7 +40547,7 @@ console.log("Bad");
             .text()) == 0) {
           if (!ppdt.opt) X2('14' ^ 0);
           else if (ppdt.opt[0] == ("1" | 1)) X2(+'14');
-          if (document[e0F]) Notification(_s(3353), _s("3231" ^
+          if (document[e0F]) showNotification(_s(3353), _s("3231" ^
             0));
         }
         $(_s(6770))
@@ -41915,7 +42115,7 @@ console.log("Bad");
         var U9V = Math.round((Z9V - g9V) / +R5y);
        if(_viewMode !==viewModeWorld) // in world mode we handle it differently
        {
-         _viewMode = viewModeWorld;
+         SetViewMode(viewModeWorld);
 
        
     //  c6.paused = !!0;
@@ -42997,7 +43197,7 @@ console.log("Bad");
         });
       if (ppdt[_s(g2m >> 978213504)][1] == 0) H9(1, 1);
     }
-
+    window['clearres'] = A5F;
     function D9(T8B) {
       var A8B = ppdt["rs"][8]["n"];
       var n8B = ppdt["rs"][+
@@ -47457,7 +47657,7 @@ console.log("Bad");
 //          c6.paused = !1;
 //          c6.lockRender = !{};
        //   regrender = 1;
-            _viewMode = viewModeRegion;
+            SetViewMode( viewModeRegion);
           worldrender = 0;
           citrender = 0;
           
@@ -47623,7 +47823,7 @@ console.log("Bad");
 //          c6.paused = !1;
 //          c6.lockRender = !!0;
           regrender = 1;
-          _viewMode = viewModeRegion;
+          SetViewMode(viewModeRegion);
           worldrender = 0;
           citrender = 0;
           //c6.time.advancedTiming = !!1;
@@ -47664,7 +47864,7 @@ console.log("Bad");
       //  c6.paused = !!0;
       //  c6.lockRender = ![];
         regrender = 1;
-          _viewMode = viewModeRegion;
+          SetViewMode( viewModeRegion);
         worldrender = 0;
         citrender = 0;
       //  c6.time.advancedTiming = !![];
@@ -47706,7 +47906,7 @@ console.log("Bad");
 //        c6.paused = !"1";
 //        c6.lockRender = !"1";
         regrender = 1;
-       _viewMode = viewModeRegion;
+       SetViewMode(viewModeRegion);
         E6k.R6();
         worldrender = 0;
   //      c6.time.advancedTiming = !"";
@@ -47784,7 +47984,7 @@ console.log("Bad");
 //        c6.lockRender = !![];
         regrender = 0;
         worldrender = 1;
-          _viewMode = viewModeWorld;
+          SetViewMode(viewModeWorld);
         citrender = 0;
   //      c6.time.advancedTiming = !!1;
   //      c6.time.desiredFps = 1;
@@ -47854,7 +48054,7 @@ console.log("Bad");
         worldrender = 0;
         E6k.R6();
         citrender = 1;
-          _viewMode = viewModeCity;
+          SetViewMode(viewModeCity);
        // c6.time.advancedTiming = !!{};
       //  c6.time.desiredFps = 1;
       //  c6.time.fpsMax = 1;
@@ -51027,13 +51227,13 @@ console.log("Bad");
             if (document[e0F]) {
               var A1V = $(_s(871))
                 .text();
-              Notification(o1V + _s(606), A1V);
+               showNotification(o1V + _s(606), A1V);
             } else if ($(_s(+T7y))
               .css("display") == "none" && X1V != "") {
               var A1V = $(_s(
                   871))
                 .text();
-              Notification(o1V + _s(606), A1V);
+                showNotification(o1V + _s(606), A1V);
             }
           }
         }
@@ -54563,8 +54763,9 @@ console.log("Bad");
         .show();
       $(_s(h2p - 0))
         .show();
-      $(_s(+h4p))
+        $(".atkpops")
         .remove();
+        callSyncViewMode();
     }
     var l9F = [];
 
@@ -58728,8 +58929,9 @@ console.log("Bad");
         .css("display", "none");
       $(_s(4437))
         .css("display", "none");
-      $(_s(h4p >> 1770304896))
+        $(".atkpops")
         .remove();
+        callSyncViewMode();
     }
     var b5F;
     var x4F = 0;
@@ -59417,7 +59619,7 @@ console.log("Bad");
       prevX = 0;
       prevY = 0;
       citrender = 1;
-      //_viewMode = viewModeCity;
+      //SetViewMode(viewModeCity;
       if (D6.ble)
         if (D6.ble[1] == 1) r9();
       E6k.R6();
@@ -60789,7 +60991,7 @@ console.log("Bad");
     //      _camera.x = R1D;
     //      _camera.y = y1D;
     //      P9();
-    //        _viewMode = viewModeRegion;
+    //        SetViewMode(viewModeRegion;
     //      regrender = 1;
     //      citrender = 0;
     //      //c6.time.advancedTiming = !0;
@@ -60946,19 +61148,7 @@ console.log("Bad");
 
     function f4V() {}
 
-    function Notification(W3V, i3V) {
-      if (!Notification) return;
-      E6k.y6();
-      if (Notification.permission !== _s(4695)) Notification.requestPermission();
-      else {
-        var C3V = new Notification(W3V, { body: i3V });
-        C3V.onclick = function() {
-          window.focus();
-          this.close();
-          this.cancel();
-        };
-      }
-    }
+    
 
     function j8() {
       var D5k = '3492';
@@ -66758,8 +66948,9 @@ console.log("Bad");
       E6k.R6();
       $(_s(3458))
         .css("display", "none");
-      $(_s(h4p ^ 0))
+        $(".atkpops")
         .remove();
+        callSyncViewMode();
     }
 
     var gainx = 2;
@@ -66798,110 +66989,7 @@ console.log("Bad");
       }
 
     
-      var _zoom = 1;
-      var _popupCountCache = 0;
-      var _popupCount = 0;
     
-      let syncViewTimeout=0;
-
-      function SyncViewMode()
-	  {
-          clearTimeout(syncViewTimeout);
-		  try {
-              
-
-                  let __zoom = 64;
-                  let _x = _camera.x;
-                  let _y = _camera.y;
-                  if(_viewMode == viewModeRegion)
-{
-_viewMode = viewModeWorld;
-    var x0g = document.getElementById("cvs");
-                      x0g.style.display = "none";
-}                  
-
-                  if (_viewMode === viewModeWorld) {
-                      // let matrix = $("#content").panzoom("getMatrix");
-
-                      //   _x = +matrix[4]+36000;
-                      //    _y = +matrix[5]+36000;
-                      //  M0g =
-                      //      document.getElementById('worldcanv');
-                      //  if(M0g)
-                      //  { 
-                      //   let t0g = M0g.getBoundingClientRect();
-                      //  _x = -t0g.left;// * 4 / 4.22166666666667;
-                      //  _y = -t0g.top;// * 4 / 4.22166666666667;
-                      //  }
-                      //var r1D = document.getElementById("mainMapDiv");
-                      //var P1D = r1D.clientWidth;
-                      //var B1D =
-                      //    r1D.clientHeight;
-
-                      // let z0g = m5F(M0g.width * 0.0 - t0g.left, M0g.height * 0.0 - t0g.top);
-                      // let d0g = (z0g.x / (+m6p * 1));
-                      // let C0g = (z0g.y / (+m6p - 0));
-                      // _x = d0g * 64;//- M0g.width/ (gainx);
-                      // _y = C0g * 64;// - M0g.height / (gainy) ;
-                      // __zoom = +matrix[0] * 4.22166666666667;
-                  }
-//              popUpBox atkpops ui - draggable
-              _popupCount=0;
-              $(".atkpops,.longmenu,.popUpBox2").each(
-              function ()
-              {
-                      if (this.style.display != "none" && this.style.display != "hidden" )
-                       _popupCount++;
-              }
-              );
-              $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(
-                  function () {
-                      if (this.style.display == "block")
-                          _popupCount++;
-                  }
-              );
-
-              if (document.getElementById("speedupusePopup")!==null)
-			  {
-
-                  _popupCount+=128;
-
-			  }
-              
-
-              $(".obscuretop,.longwindow").each(
-                function (){
-              if (this.style.display != "none" && this.style.display != "hidden")
-                  _popupCount+=128;
-                  }
-              );
-
-              
-
-              // if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
-             //         || _zoom != __zoom || _popupCountCache != _popupCount))
-                  if (cid != 0 &&(  _viewMode !== _viewModeCache 
-                      ||  _popupCountCache !=_popupCount)) {
-                      _viewModeCache = _viewMode;
-                      _cid = cid;
-                      _zoom = __zoom;
-                      _cameraX = _x;
-                      _cameraY = _y;
-                      _popupCountCache = _popupCount;
-                      const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p:_popupCount } };
-                      window['external']['notify'](JSON.stringify(wrapper));
-                  }
-            
-              } catch (exc) {
-
-                  console.log(exc);
-              }
-        finally
-		  {
-            syncViewTimeout = setTimeout(SyncViewMode,500);
-		  }
-
-	  }
 
    function __pollthis(__cid)
 	  {
