@@ -474,7 +474,7 @@ namespace COTG.Views
             {
                 var y = cont / 10;
                 var x = cont - y * 10;
-                World.DumpCities(x*100,y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text);
+                World.DumpCities(x*100,y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault());
             }
             this.Hide();
         }

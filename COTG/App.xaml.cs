@@ -149,6 +149,7 @@ namespace COTG
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+         
             CoreApplication.EnablePrelaunch(false);
             if (!args.PrelaunchActivated)
             {
@@ -180,6 +181,8 @@ namespace COTG
 
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
+          
         }
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)

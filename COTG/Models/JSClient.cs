@@ -683,6 +683,7 @@ namespace COTG
             ttCombatBonus[17] = 1; // no combat research for senator
         }
         static bool ppdtInitialized;
+        static private int[] lastCln = null;
         public static async void UpdatePPDT(JsonElement jse)
         {
            
@@ -736,7 +737,31 @@ namespace COTG
                             lists.Add(l);
                         }
                     }
-                  //  lists.Sort((a, b) => a.name.CompareTo(b.name));
+                    //  lists.Sort((a, b) => a.name.CompareTo(b.name));
+
+
+                    if (jse.TryGetProperty("cln", out var cln))
+                    {
+                        //  ++clChanged;
+
+                        //  var clList = new List<string>();
+                        lastCln =  GetIntArray(cln).Values.ToArray();
+                        
+                    }
+                    if (lastCln != null)
+                    {
+
+                        var prior = lists;
+                        lists = new List<CityList>();
+                        foreach (var id in lastCln)
+                        {
+                            var ins = prior.Find((a) => a.id==id);
+                            if(ins!=null);
+                              lists.Add(ins);
+
+                        }
+                    }
+                    //  lists.Sort((a, b) => a.name.CompareTo(b.name));
 
                 }
 
@@ -751,34 +776,24 @@ namespace COTG
                                 continue;
                             var id = int.Parse(clc.Name);
                             var cityList = lists.Find((a) => a.id == id);
-                            if (clc.Value.ValueKind==JsonValueKind.Array)
-                            {
-                                foreach (var cityId in clc.Value.EnumerateArray())
+                                foreach (var cityId in GetIntArray(clc.Value) )
                                 {
-                                    cityList.cities.Add(cityId.GetInt32());
+                                    cityList.cities.Add(cityId.Value);
 
                                 }
-                            }
-                            else if (clc.Value.ValueKind==JsonValueKind.Object)
-                            {
-                                foreach (var cityId in clc.Value.EnumerateObject())
-                                {
-                                    cityList.cities.Add(cityId.Value.GetInt32());
-
-                                }
-                            }
+                            
                         }
                     }
 
                 }
-                if (clChanged == 2 )
+                if (clChanged >= 2 )
                 {
                     App.DispatchOnUIThreadLow(() =>
                    {
                        var priorIndex = CityList.box.SelectedIndex;
                        CityList.selections = new CityList[lists.Count+1];
                        CityList.selections[0]=(CityList.allCities);
-                       CityList hubs = null;
+                     
                        for (int i = 0; i < lists.Count; ++i)
                        {
                            CityList.selections[i + 1] = (lists[i]);
@@ -867,7 +882,25 @@ namespace COTG
             // Log(ppdt.ToString());
         }
 
-
+        private static SortedList<int,int>  GetIntArray(JsonElement cln)
+        {
+            var rv = new SortedList<int, int >();
+            if (cln.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var cn in cln.EnumerateArray())
+                {
+                    rv.Add(rv.Count, cn.GetAsInt());
+                }
+            }
+            else if (cln.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var cn in cln.EnumerateObject())
+                {
+                    rv.Add(int.Parse(cn.Name), cn.Value.GetAsInt());
+                }
+            }
+            return rv;
+        }
 
         static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
         {

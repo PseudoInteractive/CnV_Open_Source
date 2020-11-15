@@ -41,14 +41,14 @@ namespace COTG.Services
                     Buttons =
                     {
                         // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
-                        new ToastButton("OK", "ToastButtonActivationArguments")
+                        new ToastButton("OK", "incomingNotification")
                         {
                             ActivationType = ToastActivationType.Foreground
                         },
 
 
                         new ToastButtonDismiss(),
-                        new ToastButtonSnooze(){SelectionBoxId="snoozeTime"},
+                        new ToastButtonSnooze() {SelectionBoxId="snoozeTime",},
 
 
                     },

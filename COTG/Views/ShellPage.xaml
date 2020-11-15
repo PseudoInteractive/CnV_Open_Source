@@ -51,7 +51,23 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"   >
+        <!--<Grid x:Name="AppTitleBar" x:FieldModifier="public" Background="Transparent" Canvas.ZIndex="99">
+    --><!-- Width of the padding columns is set in LayoutMetricsChanged handler. -->
+    <!-- Using padding columns instead of Margin ensures that the background
+         paints the area under the caption control buttons (for transparent buttons). --><!--
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+        <ColumnDefinition/>
+        <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+    </Grid.ColumnDefinitions>
+   
+    <TextBlock Text="Custom Title Bar" 
+               Grid.Column="1" 
+               Style="{StaticResource CaptionTextBlockStyle}" 
+               Canvas.ZIndex="100"/>
+</Grid>-->
+
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Cycle" UseSystemFocusVisuals="True"    >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"

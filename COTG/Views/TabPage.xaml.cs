@@ -253,11 +253,11 @@ namespace COTG.Views
 
 //                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+                //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                //titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+                //titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 
-                Window.Current.SetTitleBar(CustomDragRegion);
+                //Window.Current.SetTitleBar(CustomDragRegion);
             }
             else
             {

@@ -11,10 +11,16 @@
       xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-      mc:Ignorable="d" PrimaryButtonText="Done"   Title="Settings"
+      mc:Ignorable="d"
+               PrimaryButtonText="Done"
+               Title="Settings"
+               CloseButtonText="Cancel"
+               FullSizeDesired="True"
+               
+               UseSystemFocusVisuals="True"
       Margin="4"
                BorderBrush="{x:Null}"
-               VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible" FlowDirection="LeftToRight" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+               ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible"
                 
                >
     <ContentDialog.Resources>
@@ -24,8 +30,10 @@
     <StackPanel Orientation="Vertical" >
         <StackPanel Orientation="Horizontal">
             <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
+           
             <TextBox x:Name="CastlesCont" Text="22" Header="continent"  />
             <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
+             <CheckBox x:Name="onlyCastles" Content="Only Castles" IsChecked="True" IsThreeState="False" />
         </StackPanel>
         <wct:WrapPanel Orientation="Horizontal"  Margin="4">
         <Button Content="Update Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
