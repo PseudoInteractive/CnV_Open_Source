@@ -43,7 +43,8 @@ namespace COTG.Services
                         // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
                         new ToastButton("OK", "incomingNotification")
                         {
-                            ActivationType = ToastActivationType.Foreground
+                            ActivationType = ToastActivationType.Foreground,
+                           
                         },
 
 

@@ -22,6 +22,54 @@ namespace COTG.Game
 
         public unsafe static void Get(Army army)
         {
+            if(Player.myName == "Avatar")
+            {
+                var source = Spot.GetOrAdd(army.sourceCid);
+                if (source.isClassified)
+                {
+                    switch (source.classification)
+                    {
+                        case Spot.Classification.unknown:
+                            break;
+                        case Spot.Classification.vanqs:
+                            army.troops = new[] { new TroopTypeCount(ttVanquisher, -1) };
+                            return;
+                        case Spot.Classification.rt:
+                            army.troops = new[] { new TroopTypeCount(ttRanger, -1) };
+                            return;
+                        case Spot.Classification.sorcs:
+                            army.troops = new[] { new TroopTypeCount(ttSorcerer, -1) };
+                            return;
+
+                        case Spot.Classification.druids:
+                            army.troops = new[] { new TroopTypeCount(ttDruid, -1) };
+                            return;
+                        case Spot.Classification.academy:
+                            army.troops = new[] { new TroopTypeCount(ttPraetor, -1) };
+                            return;
+                        case Spot.Classification.horses:
+                            army.troops = new[] { new TroopTypeCount(ttHorseman, -1) };
+                            return;
+                        case Spot.Classification.arbs:
+                            army.troops = new[] { new TroopTypeCount(ttArbalist, -1) };
+                            return;
+                        case Spot.Classification.se:
+                            army.troops = new[] { new TroopTypeCount(ttScorpion, -1) };
+                            return;
+
+                        case Spot.Classification.navy:
+                            army.troops = new[] { new TroopTypeCount(ttWarship, -1) };
+                            return;
+
+                    }
+                }
+                else;
+                {
+                    source.Classify();
+                }
+
+            }
+
             const int steps = 201;
             Span<float> navyspeed_ = stackalloc float[steps];
             Span<float> scoutspeed_ = stackalloc float[steps];

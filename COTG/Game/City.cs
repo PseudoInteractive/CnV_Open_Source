@@ -280,7 +280,7 @@ namespace COTG.Game
                 {
                     if (i.city == this)
                     {
-                        i.NotifyChange(string.Empty);
+                        i.NotifyChange(member);
                          break;
                     }
                 }

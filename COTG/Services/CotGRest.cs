@@ -307,15 +307,17 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
+        int playerId;
         Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action = null) : base("includes/gC.php")
+        public GetCity(int _cid, Action<JsonElement, City> _action, int _playerId) : base("includes/gC.php")
         {
             cid = _cid;
             action = _action;
+            playerId = _playerId;
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{Player.myId}ccJx1e2");
+            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{playerId}ccJx1e2");
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -333,7 +335,13 @@ namespace COTG.Services
         public static Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
             Assert(_cid > 65536);
-            return (new GetCity(_cid, _action)).Post();
+            return (new GetCity(_cid, _action, Player.myId)).Post();
+
+        }
+        public static Task Post(int _cid, int _playerId, Action<JsonElement, City> _action = null)
+        {
+            Assert(_cid > 65536);
+            return (new GetCity(_cid, _action, _playerId)).Post();
 
         }
 
@@ -700,11 +708,11 @@ namespace COTG.Services
             App.DispatchOnUIThreadSneaky(()
                 =>
             {
-                MainPage.instance.rWood.Value = (rWood*0.001).RoundToInt();
-                MainPage.instance.rStone.Value = (rStone * 0.001).RoundToInt();
-                MainPage.instance.rIron.Value = (rIron * 0.001).RoundToInt();
-                MainPage.instance.rFood.Value = (rFood * 0.001).RoundToInt();
-                MainPage.instance.rGold.Value = (rGold * 0.001).RoundToInt();
+                MainPage.instance.rWood.Text = $"Wood: {(rWood*0.001).RoundToInt():N0} k/h";
+                MainPage.instance.rStone.Text = $"Stone: {(rStone * 0.001).RoundToInt():N0} k/h";
+                MainPage.instance.rIron.Text = $"Iron: {(rIron * 0.001).RoundToInt():N0} k/h";
+                MainPage.instance.rFood.Text = $"Food: {(rFood * 0.001).RoundToInt():N0} k/h";
+                MainPage.instance.rGold.Text = $"Gold: {(rGold * 0.001).RoundToInt():N0} k/h";
                 //MainPage.rStone = rStone;
                 //MainPage.rIron = rIron;
                 //MainPage.rFood = rFood;

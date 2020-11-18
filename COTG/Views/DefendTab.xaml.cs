@@ -374,8 +374,7 @@ namespace COTG.Views
                         break;
                 }
             }
-            if (base.CanExecute(parameter))
-                base.Execute(parameter);
+            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
         }
     }
 

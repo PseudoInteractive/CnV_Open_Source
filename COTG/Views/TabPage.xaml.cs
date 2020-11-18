@@ -271,7 +271,7 @@ namespace COTG.Views
 
                 // Due to a bug in AppWindow, we cannot follow the same pattern as CoreWindow when setting the min width.
                 // Instead, set a hardcoded number. 
-                CustomDragRegion.MinWidth = 188;
+            //    CustomDragRegion.MinWidth = 188;
 
                 window.Frame.DragRegionVisuals.Add(CustomDragRegion);
             }

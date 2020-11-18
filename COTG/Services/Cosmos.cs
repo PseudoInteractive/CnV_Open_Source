@@ -38,23 +38,29 @@ namespace COTG.Services
 		private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
-        private static SemaphoreSlim semaphore;
+        private static ReaderWriterLockSlim semaphore = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
         static Cosmos()
-		{
+        {
             Assert(JSClient.world != 0);
             // Create a new instance of the Cosmos Client
-            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() {  LimitToEndpoint = true });
-			database = cosmosClient.GetDatabase(databaseId);
+            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, LimitToEndpoint=true };
+            clientOptions.Diagnostics.IsDistributedTracingEnabled=false;
+            clientOptions.Diagnostics.IsLoggingContentEnabled=false;
+            clientOptions.Diagnostics.IsTelemetryEnabled=false;
+            clientOptions.Diagnostics.IsLoggingEnabled=false;
+
+            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey,clientOptions);
+            database = cosmosClient.GetDatabase(databaseId);
             if (database != null)
             {
                 container = database.GetContainer(containerId);
             }
-            semaphore = new SemaphoreSlim(1, 1);
+          
             //            await ScaleContainerAsync();
             //	await AddItemsToContainerAsync();
-            //		await ReplaceFamilyItemAsync();
         }
+
         // </GetStartedDemoAsync>
 
         // <CreateDatabaseAsync>
@@ -101,7 +107,7 @@ namespace COTG.Services
         //}
         // </ScaleContainerAsync>
         //public static Dictionary<int, COTG.DB.Spot> spots = new Dictionary<int,COTG.DB.Spot>();
-       
+
         //    async static public Task GetSpotDB()
         //    {
         //        HttpClient client = null;
@@ -153,15 +159,17 @@ namespace COTG.Services
 
 
         //    }        //static public string id0 = Spot.CoordsToString((220, 220));
-            public static async Task SummarizeNotes()
+        public static async Task SummarizeNotes()
         {
-            if(!await semaphore.WaitAsync(30 * 1000) )
-                return;
+            await Task.Yield();
+          
           //  var blobData = new Dictionary<string, COTG.DB.Spot>();
             var sb = new StringBuilder();
 
             try
             {
+                semaphore.EnterReadLock();
+
                 sb.Append("Alliance\tPlayer\tCoords\tCity\tTroops\tAction\nrRport\n");
                 await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
                     queryDefinition: null,
@@ -190,7 +198,7 @@ namespace COTG.Services
                 Log(e);
             } finally
             {
-                semaphore.Release();
+                semaphore.ExitReadLock();
             }
             var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=avag;AccountKey=G545SQSDGDM6LSu3eanZ6wSbsiz2rt7/jrusjll4Hh7yS9rJaQTX7CSOLLdN2C7dX+Z+PCOWyXrDgGZX5YT1dw==;EndpointSuffix=core.windows.net");
             var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerId);
@@ -208,12 +216,12 @@ namespace COTG.Services
             if (container == null || database == null)
                 return;
 
-            var success = await semaphore.WaitAsync(30 * 1000);
-            if (!success)
-                return;
+
+        //    await Task.Delay(0);
 
             try
             {
+              //   semaphore.EnterWriteLock();
                 COTG.DB.Spot s0, s1;
                 // Create a family object for the Andersen family
                 var sourceId = COTG.DB.Spot.CoordsToString(army.sourceCid.CidToWorld());
@@ -290,10 +298,10 @@ namespace COTG.Services
             {
                 Log(e);
             }
-            finally
-            {
-               semaphore.Release();
-            }
+            //finally
+            //{
+            //   semaphore.ExitWriteLock();
+            //}
             //try
             //{
             //	// Read the item to see if it exists

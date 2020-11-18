@@ -100,9 +100,8 @@ namespace COTG.Game
                             foreach (var prop in dRoot.EnumerateObject())
                             {
                                 byte relationship = (byte)int.Parse(prop.Name);
-                        if (prop.Value.ValueKind == JsonValueKind.Array)
-                        {
-                            foreach (var a in prop.Value.EnumerateArray())
+                        
+                            foreach (var a in prop.Value.EnumerateArrayOrObject())
                             {
                                 var alliance = new Alliance();
                                 byte allianceId = (byte)a.GetAsInt("id");
@@ -122,7 +121,7 @@ namespace COTG.Game
                             //           { "1":[{ "id":"7","n":"España"}],"2":[{ "id":"80","n":"Blood & Thunder"}],"3":[{ "id":"1","n":"Horizon"},{ "id":"2","n":"The Lunatic Asylum"},{ "id":"49","n":"Unidos-"},{ "id":"62","n":"OvernightObservation"}]}
 
                             }
-                        }
+                        
                     }
 else
                 {

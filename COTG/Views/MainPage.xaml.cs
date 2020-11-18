@@ -29,6 +29,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using Microsoft.UI.Xaml.Controls;
+using Telerik.UI.Xaml.Controls.Grid.Commands;
+using System.Threading;
 
 namespace COTG.Views
 {
@@ -39,7 +41,7 @@ namespace COTG.Views
     {
         static float[] raidSteps;
         public static MainPage instance;
-
+        public string lastTip;
         public float troopPercent = 1;
         //        public static City showingRowDetails;
 
@@ -80,6 +82,8 @@ namespace COTG.Views
 
             cityGrid.SelectionChanged += CityGrid_SelectionChanged;
             cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+            cityGrid.PointerMoved+=CityGrid_PointerMoved;
+            
         }
 
         private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
@@ -119,12 +123,18 @@ namespace COTG.Views
            // newSel.SetFocus(true,false,true);
         }
 
-        
+        private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+           
 
-        //private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
-        //{
-        //    Spot.ProcessPointerMoved(sender, e);
-        //}
+            var info = Spot.HitTest(sender, e);
+            var str = info.column?.Column?.Tip ?? string.Empty;
+            if (str!=lastTip)
+            {
+                lastTip = str;
+                TabPage.mainTabs.tip.Text = str; // Todo:  use the correct tabPage
+            }
+        }
         private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerPress(sender,e);
@@ -132,9 +142,14 @@ namespace COTG.Views
         private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerExited();
+            if (string.Empty!=lastTip)
+            {
+                lastTip = string.Empty;
+                TabPage.mainTabs.tip.Text = string.Empty;
+            }
         }
 
-      
+
         public static List<int> GetContextCids(object sender)
         {
             
@@ -504,5 +519,34 @@ namespace COTG.Views
         //                  ToolTipService.SetToolTip(tip,"None");
         //	}
         //      }
+    }
+
+    public class CustomDataBindingCompleteCommand : DataGridCommand
+    {
+        public CustomDataBindingCompleteCommand()
+        {
+            this.Id = CommandId.DataBindingComplete;
+        }
+
+        public override bool CanExecute(object parameter)
+        {
+            var context = parameter as DataBindingCompleteEventArgs;
+            // put your custom logic here
+            return true;
+        }
+
+        static T TryGetValue<T>(object o) => o == null ? default : (T)o;
+        public override void Execute(object parameter)
+        {
+            var context = parameter as DataBindingCompleteEventArgs;
+            // put your custom logic here
+            var view = context.DataView;
+            
+            MainPage.instance.count.Text =$"Cities: {TryGetValue<ulong>(view.GetAggregateValue(0, null))}";
+            MainPage.instance.tsTotal.Text=$"Troops(total):  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0} TS";
+            MainPage.instance.tsRaid.Text= $"Troops(home): {TryGetValue<double>(view.GetAggregateValue(2, null)):N0} TS";
+            MainPage.instance.castles.Text= $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
+            MainPage.instance.water.Text= $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
+        }
     }
 }

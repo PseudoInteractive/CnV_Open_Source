@@ -1,4 +1,30 @@
 namespace jsonT {
+	export interface Bq {
+		bid: number | string;
+		btype: number;
+		bspot: number;
+		slvl: number;
+		elvl: number;
+		ds: number;
+		de: number;
+		brep: number;
+		btime: number;
+		pa: number;
+	}
+
+	export interface Tq {
+		tid: number |string;
+		ttype: number;
+		bt: number;
+		tc: number;
+		ds: number;
+		de: number;
+		tl: number;
+		tm: number;
+		pa: number;
+	}
+
+
 	export interface City {
 		_id?: number;
 		cid?: number;
@@ -24,8 +50,8 @@ namespace jsonT {
 		rb?: string;
 		sb?: string;
 		bd?: Bd[];
-		bq?: any[];
-		tq?: any[];
+		bq?: Bq[];
+		tq?: Tq[];
 		lup?: number;
 		citn?: string;
 		lut?: number;

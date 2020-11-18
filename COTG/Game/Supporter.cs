@@ -14,6 +14,8 @@ namespace COTG.Game
     {
         public City city;
         public string xy => city.xy;
+        public string SendOrLocked => city.underSiege ? "Sieged" : "Send";
+//        public string SendOrLocked => (city.cid&1)==0  ? "Sieged" : "Send";
         public string Send => "Send"; // make shift button column
         public string name => city.nameAndRemarks;
         public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
@@ -56,7 +58,7 @@ namespace COTG.Game
                 string rv = "Troops Home/Total";
                 foreach (var ttc in city.troopsTotal)
                 {
-                    rv += $"\n{Enum.ttNameWithCapsAndBatteringRam[ttc.type]}: {city.troopsHome.Count(ttc.type),4:N0}/{ttc.count,4:N0}";
+                    rv += $"\n{Enum.ttNameWithCaps[ttc.type]}: {city.troopsHome.Count(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
                 return rv;
             }

@@ -66,7 +66,7 @@
                 <tk:DataGridTemplateColumn Header="Send" CanUserSort="False" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Supporter">
-                            <HyperlinkButton Content="Send" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+                            <HyperlinkButton Content="{x:Bind SendOrLocked}" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="Sends defense, or schedules them to depart if arrival time is later than ETA"
                                              RightTapped="TsSendRightTapped"
                                              />

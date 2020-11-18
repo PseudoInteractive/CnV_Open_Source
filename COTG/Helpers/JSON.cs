@@ -67,6 +67,29 @@ namespace COTG.Helpers
                     return -1;
             }
         }
+
+        static public IEnumerable<JsonElement> EnumerateArrayOrObject(this JsonElement e)
+        {
+            if (e.ValueKind == JsonValueKind.Array)
+                return e.EnumerateArray();
+            else if(e.ValueKind == JsonValueKind.Object)
+            {
+                var rv = new List<JsonElement>();
+                foreach (var i in e.EnumerateObject())
+                {
+                    rv.Add(i.Value);
+                }
+                return rv;
+
+            }
+            else
+            {
+      //          Log($"Not array or object {e.ToString()}");
+                return Array.Empty<JsonElement>();
+            }
+
+        }
+
         public static float GetAsFloat(this JsonElement js, string prop)
         {
             if (!js.IsValid())

@@ -111,12 +111,12 @@ namespace COTG.Helpers
         public static void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             Back();
-            args.Handled = true;
+            //args.Handled = true;
         }
         public static void ForwardInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             Forward();
-            args.Handled = true;
+            //args.Handled = true;
         }
 
         public static void BackClick(object sender, RoutedEventArgs e)

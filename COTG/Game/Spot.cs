@@ -79,9 +79,9 @@ namespace COTG.Game
 
                 //    Assert(info.type == World.typeCity);
                 if (info.player == Player.myId)
-                   rv = City.GetOrAddCity(cid);
+                    rv = City.GetOrAddCity(cid);
                 else
-                   rv = new Spot() { cid = cid, pid = info.player };
+                    rv = new Spot() { cid = cid, pid = info.player };
 
                 //       Assert( info.player != 0);
                 rv.type = (byte)(info.type >> 28);
@@ -113,6 +113,9 @@ namespace COTG.Game
 
         public int tsRaid { get; set; }
         public int tsHome { get; set; }
+
+
+
         public int _tsTotal;
         public int tsTotal { get => _tsTotal > 0 ? _tsTotal : tsHome; set => _tsTotal = value; }
         public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : tsHome; } }
@@ -150,21 +153,21 @@ namespace COTG.Game
             navy,
             misc
         }
-        public struct ClassificationExtended 
-         {
+        public struct ClassificationExtended
+        {
             public Classification classification;
-            public byte stables ;
-            public byte academies ;
-            public byte training ;
-            public byte sorc ;
-            public byte se ;
+            public byte stables;
+            public byte academies;
+            public byte training;
+            public byte sorc;
+            public byte se;
             public byte shipyards;
             public byte ports;
             public bool castle;
-            static public explicit operator Classification (ClassificationExtended e) => e.classification;
+            static public explicit operator Classification(ClassificationExtended e) => e.classification;
         };
         public Classification classification { get; set; }
-
+        public bool isClassified => classification !=Classification.unknown;
         private static string[] classifications =
         {
             "unknown",
@@ -204,11 +207,11 @@ namespace COTG.Game
         public byte shipyards { get; set; }
         public byte ports { get; set; }
         public string Claim => $"{(int)claim:00}%";
-            public bool isBlessed { get; set; }
+        public bool isBlessed { get; set; }
         public float scoutRange { get; set; }
         public ushort points { get; set; }
-        public BitmapImage icon => ImageHelper.FromImages( isBlessed ? "blessed.png" :
-             ($"{(isTemple ? "temple" : isCastle ? "castle" : "city")}{GetSize()}{(isOnWater?"w":"")}.png") );
+        public BitmapImage icon => ImageHelper.FromImages(isBlessed ? "blessed.png" :
+             ($"{(isTemple ? "temple" : isCastle ? "castle" : "city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
         public int cont => cid.CidToContinent();
 
         public static bool operator ==(Spot left, Spot right)
@@ -221,9 +224,9 @@ namespace COTG.Game
             return !(left == right);
         }
 
-        
+
         // The UIElement returned will be the RadDataGrid
-        public static (Spot spot, string column, PointerPoint pt,UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
+        public static (Spot spot, DataGridCellInfo column, PointerPoint pt, UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
         {
             e.KeyModifiers.UpdateKeyModifiers();
             var grid = sender as RadDataGrid;
@@ -238,19 +241,16 @@ namespace COTG.Game
             //}
 
             var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
-         //   viewHover = spot != null ? spot.cid : 0;
+                                                                   //   viewHover = spot != null ? spot.cid : 0;
             Player.viewHover = spot != null ? spot.pid : 0;
-            var uiHoverColumn = cell?.Column.Header?.ToString() ?? string.Empty;
-            
-            return (spot, uiHoverColumn, physicalPoint,grid);
+
+
+            return (spot, cell, physicalPoint, grid);
         }
 
 
-        
-        //public static void ProcessPointerMoved(object sender, PointerRoutedEventArgs e)
-        //{
-        //    HitTest(sender, e);
-        //}
+
+
         public static void ProcessPointerPress(object sender, PointerRoutedEventArgs e)
         {
             e.KeyModifiers.UpdateKeyModifiers();
@@ -258,10 +258,10 @@ namespace COTG.Game
             var hit = Spot.HitTest(sender, e);
             var spot = hit.spot;
             uiPress = spot != null ? spot.cid : 0;
-            uiPressColumn = hit.column;
+            uiPressColumn = hit.column.CellText();
             // The UIElement returned will be the RadDataGrid
             if (spot != null)
-                spot.ProcessClick(hit.column, hit.pt,hit.uie,e.KeyModifiers);
+                spot.ProcessClick(uiPressColumn, hit.pt, hit.uie, e.KeyModifiers);
         }
         public static void ProcessPointerExited()
         {
@@ -272,7 +272,7 @@ namespace COTG.Game
         {
             viewHover = 0;
             Player.viewHover = 0;
-        //    uiHoverColumn = string.Empty;
+            //    uiHoverColumn = string.Empty;
         }
 
 
@@ -293,7 +293,7 @@ namespace COTG.Game
                 switch (column)
                 {
                     case nameof(xy):
-                        ProcessCoordClick(cid, false,modifiers);
+                        ProcessCoordClick(cid, false, modifiers);
                         wantRaidScan = false;
                         break;
                     case "I":
@@ -365,24 +365,24 @@ namespace COTG.Game
             else if (pt.Properties.IsRightButtonPressed)
             {
                 ShowContextMenu(uie, pt.Position);
-               
+
             }
-            else if(pt.Properties.IsMiddleButtonPressed)
+            else if (pt.Properties.IsMiddleButtonPressed)
             {
                 var text = ToTsv();
                 Note.Show($"Copied to clipboard: {text}");
                 App.CopyTextToClipboard(text);
                 SetFocus();
             }
-            SpotTab.TouchSpot(cid,modifiers);
+            SpotTab.TouchSpot(cid, modifiers);
         }
 
         public string ToTsv()
         {
-            return $"<coords>{cid.CidToString()}</coords>\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+            return $"{cid.CidToCoords()}\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
         }
 
-        public static async void ProcessCoordClick(int cid,bool lazyMove,VirtualKeyModifiers mod)
+        public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod)
         {
             mod.UpdateKeyModifiers();
             if (City.IsMine(cid) && !mod.IsShiftOrControl())
@@ -404,22 +404,26 @@ namespace COTG.Game
             {
                 JSClient.ShowCity(cid, lazyMove);
                 NavStack.Push(cid);
-              
-                
+
+
             }
-            SpotTab.TouchSpot(cid,mod);
+            SpotTab.TouchSpot(cid, mod);
 
             if (mod.IsShiftAndControl())
             {
+                var spot = Spot.GetOrAdd(cid);
+                GetCity.Post(cid, spot.pid, (js, city) => Log(js));
+
                 var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
                 Log(str);
+
                 App.DispatchOnUIThreadSneaky(() =>
                 {
                     if (World.GetInfoFromCid(cid).isWater)
 
 
                         // set is water var
-                        str =$"[ShareString.1.3]{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}"; 
+                        str =$"[ShareString.1.3]{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
                     App.CopyTextToClipboard(str);
 
                     Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
@@ -434,17 +438,17 @@ namespace COTG.Game
             {
                 const int start = 14;
                 const int end = 459;
-              
-                for(int i=start;i<end;++i)
+
+                for (int i = start; i<end; ++i)
                 {
-                    switch(str[i])
+                    switch (str[i])
                     {
-                        case 'E': ++rv.stables;break;
-                        case 'Y': ++rv.se;break;
+                        case 'E': ++rv.stables; break;
+                        case 'Y': ++rv.se; break;
                         case 'J': ++rv.sorc; break;
                         case 'G': ++rv.training; break;
-                        case 'Z': ++rv.academies;break;
-                        case 'X': rv.castle = true;break;
+                        case 'Z': ++rv.academies; break;
+                        case 'X': rv.castle = true; break;
                         case 'O': ++rv.ports; break;
                         case 'P': ++rv.shipyards; break;
 
@@ -452,28 +456,28 @@ namespace COTG.Game
                     }
                 }
                 var mx = rv.stables.Max(rv.academies).Max(rv.training.Max(rv.sorc)).Max(rv.academies.Max(rv.training)).Max(rv.se);
-                if(mx <= 4)
+                if (mx <= 4)
                 {
                     classification = Classification.misc;
                 }
-                else if(mx==rv.stables)
+                else if (mx==rv.stables)
                 {
                     if (rv.se > 0 || rv.academies > 0 || rv.stables == 39 || rv.stables == 24 || rv.stables <= 20)
                         classification = Classification.horses;
-                    else                     {
+                    else {
                         classification = Classification.arbs;
                     }
                 }
-                else if(mx==rv.sorc)
+                else if (mx==rv.sorc)
                 {
                     if (rv.sorc == 45 || rv.sorc == 40 || rv.sorc == 29 || rv.sorc == 27)
                         classification = Classification.druids;
                     else
                         classification = Classification.sorcs;
                 }
-                else if(mx==rv.training)
+                else if (mx==rv.training)
                 {
-                    if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training <= 18 )
+                    if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training <= 18)
                         classification = Classification.vanqs;
                     else
                         classification = Classification.rt;
@@ -548,7 +552,7 @@ namespace COTG.Game
             }
         }
 
-        public int incomingAttackTS
+        public int incTotal
         {
             get
             {
@@ -561,6 +565,56 @@ namespace COTG.Game
                 return rv;
             }
         }
+        public string incTT
+        {
+            get
+            {
+                var rv = string.Empty;
+                foreach (var a in incoming)
+                {
+                    if (!a.isDefense)
+                    {
+                        rv += a.Format();
+                    }
+                }
+                return rv;
+            }
+        }
+        public int incMax
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (!a.isDefense)
+                        rv = rv.Max(a.ts);
+                }
+                return rv;
+            }
+        }
+        public bool underSiege
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (a.type == reportSieging)
+                        return true;
+                }
+                return false;
+            }
+        }
+        public enum IncomingClassification
+        {
+            none,
+            incoming,
+            underSiege
+        }
+     
+            
+            
 
         //public int activeSieges
         //{
@@ -838,6 +892,7 @@ namespace COTG.Game
         }
         public void ShowDistanceTo(int _cid)
         {
+            // todo cart travel time, ship travel time
             var dist = cid.DistanceToCid(_cid);
             StringBuilder sb = new StringBuilder();
             sb.Append(dist.ToString("0.00"));
@@ -928,7 +983,6 @@ namespace COTG.Game
 
                 App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-                App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
             }
             else if (this.isDungeon || this.isBoss)
             {
@@ -940,8 +994,9 @@ namespace COTG.Game
                 App.AddItem(flyout, "Claim", this.DiscordClaim);
 
             }
+            App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
             App.AddItem(flyout, "Select",  SelectMe );
-            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput($"<coords>{cid.CidToString()}</coords>",true));
+            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(),true));
 
 
             flyout.XamlRoot = uie.XamlRoot;
@@ -965,18 +1020,7 @@ namespace COTG.Game
         }
         public async void ShowIncoming()
         {
-            var tab = DefenderPage.instance;
-            if (!tab.isActive)
-            {
-                TabPage.mainTabs.AddTab(tab, true);
-            }
-            else
-            {
-                if (!tab.isVisible)
-                    TabPage.Show(tab);
-                else
-                    tab.Refresh();
-            }
+            DefenderPage tab = await DefenderPage.Show();
             for (; ; )
             {
                 await Task.Delay(2000);
@@ -989,6 +1033,8 @@ namespace COTG.Game
                 tab.defenderGrid.ScrollItemIntoView(this);
             });
         }
+
+       
 
         public async void DiscordClaim()
         {
@@ -1020,5 +1066,9 @@ namespace COTG.Game
 
         }
 
+    }
+    public static class SpotHelper
+    {
+        public static string CellText(this DataGridCellInfo cell)=> cell?.Column.Header?.ToString() ?? string.Empty;
     }
 }

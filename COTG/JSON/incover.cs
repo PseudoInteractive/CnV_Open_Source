@@ -192,7 +192,8 @@ namespace COTG.JSON
                                               foreach (var armyV in val.GetProperty("9").EnumerateArray())
                                                   {
                                                       var army = new Army();
-                                                      army.isAttack = armyV.GetAsInt("5") != 3;
+                                                      var type = armyV.GetAsInt("5");
+                                                      army.isAttack = type != 3; // 0 is incoming 1 is sieging I think
                                                   // var armyPid = armyV.GetAsString("1");
                                                   //army.pid = armyPid switch
                                                   //{
@@ -245,32 +246,32 @@ namespace COTG.JSON
                                                           army.spotted = army.time - TimeSpan.FromMinutes(cid.DistanceToCid(army.sourceCid) * TTTravel(ttScout));
                                                       }
                                                       var ttl = new List<TroopTypeCount>();
-                                                      if (armyV.TryGetProperty("3", out var ttp) && ttp.ValueKind == System.Text.Json.JsonValueKind.Array)
+                                                      if (armyV.TryGetProperty("3", out var ttp))
                                                       {
 
-
-                                                          foreach (var tt in ttp.EnumerateArray())
+                                                          foreach (var tt in ttp.EnumerateArrayOrObject())
                                                           {
                                                               var str = tt.GetAsString();
                                                               int firstSpace = str.IndexOf(' ');
 
-                                                              var type = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
-                                                              if (type != -1)
+                                                              var ttype = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
+                                                              if (ttype != -1)
                                                               {
                                                                   ttl.Add(new TroopTypeCount()
                                                                   {
                                                                       count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
-                                                                      type = type >= 0 ? type : 0
+                                                                      type = ttype >= 0 ? ttype : 0
                                                                   });
                                                               }
 
                                                           }
                                                       }
+                                                      
                                                       if (home && ttl.Count == 0)
                                                           continue; // empty entries for troops at home when no def is present.
                                                   if (army.isDefense)
                                                       {
-                                                          army.type = reportDefensePending;
+                                                          army.type = home ? reportDefenseStationed : reportDefensePending;
                                                           foreach (var tti in ttl)
                                                           {
                                                               var present = false;
@@ -292,14 +293,19 @@ namespace COTG.JSON
                                                       }
                                                       else
                                                       {
+                                                          if (type == 0)
+                                                              army.type = reportPending;
+                                                          else
+                                                          {
+                                                              Assert(type == 1);
+                                                              army.type = reportSieging;
+                                                          }
                                                           if (ttl.IsNullOrEmpty())
                                                           {
-                                                              army.type = reportPending;
                                                               COTG.Game.IncomingEstimate.Get(army);
                                                           }
                                                           else
                                                           {
-                                                              army.type = reportSieging;
 
                                                           }
                                                       }
@@ -549,6 +555,7 @@ namespace COTG.JSON
 
                                                                     };
                                                                         parts[part].Add(rep);
+
                                                                         await Cosmos.AddBattleRecord(rep);
                                                                     }
                                                                     else

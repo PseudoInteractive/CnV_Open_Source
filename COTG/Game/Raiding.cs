@@ -66,7 +66,7 @@ namespace COTG.Game
                 if (travel > rv)
                     rv = travel;
             }
-            return rv;
+            return rv > 0 ? rv : 90; // if troops are not updated, cannot compute raid income
         }
     public override int GetHashCode()
         {
@@ -164,9 +164,9 @@ namespace COTG.Game
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
-            city.tsRaid = 0;
+            //city.tsRaid = 0;
 
-             city.NotifyChange(nameof(city.tsRaid));
+             //city.NotifyChange(nameof(city.tsRaid));
             MainPage.ClearDungeonList();
             if(shiftPressed)
             {
@@ -228,16 +228,16 @@ namespace COTG.Game
 
             }
         }
-        public static async Task UpdateTSSync(bool force = false)
-        {
-            var n = DateTimeOffset.UtcNow;
-            if (n > nextAllowedTsUpdate || force)
-            {
-                nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
-                nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
-                await RestAPI.troopsOverview.Post();
-            }
-        }
+        //public static async Task UpdateTSSync(bool force = false)
+        //{
+        //    var n = DateTimeOffset.UtcNow;
+        //    if (n > nextAllowedTsUpdate || force)
+        //    {
+        //        nextAllowedTsUpdate = n + TimeSpan.FromSeconds(24);
+        //        nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
+        //        await RestAPI.troopsOverview.Post();
+        //    }
+        //}
         public static async void ReturnSlow(int cid, bool updateUI )
         {
             Note.Show($"{cid.CidToStringMD()} End Raids");

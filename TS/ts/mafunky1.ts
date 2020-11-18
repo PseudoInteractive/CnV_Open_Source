@@ -3,7 +3,6 @@ let __base64Encode: Function=null;
 let __base64Decode: Function = null;
 var encryptStr = [""];
 var decryptStr = [""];
-var cid: number = 0;
 // This gets replaced immediately
 //function MakeGlobalGetter(a) {
 //	return `window['get${a}'] = ()=> ${a};`;

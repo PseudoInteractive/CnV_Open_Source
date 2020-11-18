@@ -27,6 +27,14 @@ namespace COTG.Game
         public byte claim { get; set; }
         public bool isAttack { get; set; }
         public string Type => type== reportPending ? FormatEstimate() : reportStrings[type];
+        public string aType => type switch
+        {
+            reportDefensePending=> "inc Def",
+            reportDefenseStationed => "Def",
+            reportPending =>  "Attack",
+            reportSieging => "Siege",
+            _ => "unk"
+        };
 
         public TroopTypeCount[] troops { get; set; } = TroopTypeCount.empty;
         public TroopTypeCount[] sumDef { get; set; } = TroopTypeCount.empty;
@@ -89,7 +97,15 @@ namespace COTG.Game
                 case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, VirtualKeyModifiers.None); break;
                 case nameof(sPlayer):JSClient.ShowPlayer(sPlayer); break;
                 case nameof(tPlayer): JSClient.ShowPlayer(tPlayer); break;
-
+                case "Troops":
+                case "Total Def":
+                    {
+                        var s = $"{targetCid.CidToCoords()}\t{sourceCid.CidToCoords()}{ (column=="Troops"?troops:sumDef).Format("", '\t',',')}";
+                        Note.Show(s);
+                        App.CopyTextToClipboard(s);
+                    }
+                    break;
+                
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
@@ -158,7 +174,8 @@ namespace COTG.Game
             return rv;
 
         }
-        internal string GetToopTip(DateTimeOffset serverNow)
+        
+            internal string GetToopTip(DateTimeOffset serverNow)
         {
             if (isDefense)
             {
@@ -187,6 +204,18 @@ namespace COTG.Game
                 }
             }
         }
+
+        internal string Format()
+        {
+
+            var rv = string.Empty;
+                foreach (var tt in troops)
+                {
+                    rv += tt.Format();
+
+                }
+            return rv;
+        }
     }
     public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
@@ -208,6 +237,11 @@ namespace COTG.Game
         {
             type = _type;
             count = _count;
+        }
+
+        internal string Format()
+        {
+            return $"{count:N0} {Enum.ttNameWithCaps[type]} ";
         }
         [JsonIgnore]
         public bool isSenator => type == Enum.ttSenator;
@@ -324,7 +358,7 @@ namespace COTG.Game
             string rv = header;
             foreach (var ttc in l)
             {
-                rv += $"{firstSeparater}{ttc.count:N0} {Enum.ttNameWithCapsAndBatteringRam[ttc.type]}";
+                rv += $"{firstSeparater}{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
                 if(furtherSeparator != (char)0 )
                     firstSeparater = furtherSeparator;
             }

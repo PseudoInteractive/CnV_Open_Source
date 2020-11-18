@@ -35,7 +35,9 @@
                 <Grid x:Name="ShellTitlebarInset"  Background="Transparent"  />
             </muxc:TabView.TabStripHeader>
             <muxc:TabView.TabStripFooter>
-                <Grid x:Name="CustomDragRegion"  Background="Transparent"  />
+                <Grid x:Name="CustomDragRegion"  Background="Transparent" >
+                    <TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid> 
             </muxc:TabView.TabStripFooter>
         </muxc:TabView>
     </Grid>

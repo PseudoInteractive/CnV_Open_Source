@@ -547,10 +547,10 @@ namespace COTG.Game
                 {
                     pixels.SetColor(index, 0xBA, 0xBA, 0xA0);
                 }
-                pixels[index * 8 + 4] = 1 | (1 << 2) | (1 << 4) | (3 << 6);
-                pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
-                pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
-                pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+                pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
+                pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+                pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
                 raw[index] = (b.active ? 1u : 0) | typePortal;
             }
 
@@ -791,7 +791,7 @@ namespace COTG.Game
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             current= rv;
         }
-        public static (string label,bool isMine,bool hasIncoming,bool hovered) GetLabel((int x, int y) c)
+        public static (string label,bool isMine,bool hasIncoming,bool hovered,Spot spot) GetLabel((int x, int y) c)
         {
             var data = GetInfo(c);
             switch (data.type)
@@ -801,7 +801,7 @@ namespace COTG.Game
 
                         if (data.player == 0)
                         {
-                            return (null,false,false,false); // lawless
+                            return (null,false,false,false,null); // lawless
                         }
                         else
                         {
@@ -812,15 +812,15 @@ namespace COTG.Game
                                 isMine = true;
                                 if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
                                 {
-                                    return (city.cityName,true,city.incoming.Any(),false);
+                                    return (city.cityName,true,city.incoming.Any(),false,city);
                                 }
 
                             }
-                            return (player.name,isMine, Spot.TryGet(c.WorldToCid(),out var spot) ? spot.incoming.Any() : false,data.player==Player.viewHover);
+                            return (player.name,isMine, Spot.TryGet(c.WorldToCid(),out var spot) ? spot.incoming.Any() : false,data.player==Player.viewHover, spot);
                         }
                     }
                 default:
-                    return (null,false,false,false);
+                    return (null,false,false,false,null);
             }
         }
         public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles)

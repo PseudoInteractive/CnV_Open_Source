@@ -14,7 +14,7 @@
   <Identity
     Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
     Publisher="CN=dwu"
-    Version="1.0.56.0" />
+    Version="1.0.58.0" />
 
   <mp:PhoneIdentity PhoneProductId="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

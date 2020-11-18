@@ -162,7 +162,10 @@ namespace COTG
                     //HorizontalAlignment = HorizontalAlignment.Stretch,
                     //VerticalAlignment = VerticalAlignment.Stretch,
                     //CacheMode=new BitmapCache()
+                    DefaultBackgroundColor = Windows.UI.Colors.Transparent
                 };
+                view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+                view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
                 view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
                 view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -206,6 +209,16 @@ namespace COTG
 
 
 		}
+
+        private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
+        {
+            Note.Show("Pointer " + e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind + e.KeyModifiers + e.ToString());
+        }
+
+        private static void webViewKeyDownHandler(object sender, KeyRoutedEventArgs e)
+        {
+            Note.Show("Key " + e.Key+ e.ToString());
+        }
 
         async private static void View_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
         {
@@ -397,29 +410,29 @@ namespace COTG
 
         }
 
-        public static void ViewCity(int cityId)
-        {
-            try
-            {
-                if (City.IsMine(cityId))
-                {
-                    SetViewModeCity();
-                    var city = City.StBuild(cityId,true);
-                  //  city.SetFocus( false, true, false);
+        //public static void ViewCity(int cityId)
+        //{
+        //    try
+        //    {
+        //        if (City.IsMine(cityId))
+        //        {
+        //            SetViewModeCity();
+        //            var city = City.StBuild(cityId,true);
+        //          //  city.SetFocus( false, true, false);
 
-                    view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
-                }
-                else
-                {
-                    ShowCity(cityId, false);
-                }
+        //            view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
+        //        }
+        //        else
+        //        {
+        //            ShowCity(cityId, false);
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log(e);
+        //    }
+        //}
 
         public static void ChangeCity(int cityId, bool lazyMove)
         {
@@ -826,7 +839,7 @@ namespace COTG
                 var now = DateTimeOffset.UtcNow;
                 foreach (var jsCity in cProp.EnumerateArray())
                 {
-                    Log(jsCity.ToString());
+//                    Log(jsCity.ToString());
                     var cid = jsCity.GetProperty("1").GetInt32();
                     if (!ppdtInitialized)
                         {
@@ -865,7 +878,7 @@ namespace COTG
                     city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                     city.isTemple = jsCity.GetAsInt("15") > 0;
                     city.pid = Player.myId;
-                    Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
+                  //  Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
                     
 
                 }
@@ -1019,6 +1032,7 @@ namespace COTG
         }
 
         static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
+
         public static BitmapImage GetImage(string dir,string name)
         {
             return ImageHelper.FromImages(name);
@@ -1237,7 +1251,7 @@ namespace COTG
                                         if (blessed != city.isBlessed)
                                         {
                                             city.isBlessed = blessed;
-                                            city.OnPropertyChanged(nameof(City.icon));
+                                            App.DispatchOnUIThreadSneaky(() => city.OnPropertyChanged(nameof(City.icon)));
                                         }
                                         city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
                                         city.isTemple = jso.GetAsInt("plvl") != 0;
@@ -1251,6 +1265,13 @@ namespace COTG
                                                 App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
                                         }
                                         city.SetFocus();
+                                        if (city.classification == Spot.Classification.unknown)
+                                        {
+                                            if (App.IsKeyPressedControl() && App.IsKeyPressedShift() && Discord.isValid)
+                                            {
+                                                city.Classify();
+                                            }
+                                        }
                                     }
                                     break;
 
@@ -1281,7 +1302,7 @@ namespace COTG
                                     {
                                      //   if (jse.TryGetProperty("ts", out _))
                                       //  {
-                                            ScanDungeons.Post(cid, false);
+                                            ScanDungeons.Post(cid, city.commandSlots==0 );  // if command slots is 0, something was not send correctly
                                       //  }
                                     }
                                     NavStack.Push(cid);

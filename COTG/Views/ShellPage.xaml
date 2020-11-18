@@ -108,7 +108,6 @@
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
                     <winui:ProgressRing x:Name="progress" IsActive="False" />
                     <TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-                    <TextBlock x:Name="tip" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
                 </StackPanel>
             </CommandBar.Content>
             <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"

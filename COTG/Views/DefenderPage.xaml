@@ -69,10 +69,24 @@
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                             Width="55" />
+                <tg:DataGridNumericalColumn PropertyName="incMax"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                            Width="55" />
+                <tg:DataGridNumericalColumn PropertyName="incTotal"
+                                            SizeMode="Fixed"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            CellContentFormat="{}{0,7:N0}" IsVisible="False"
+                                            Width="55" />
                 <tg:DataGridTextColumn PropertyName="player"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />
+                <tg:DataGridBooleanColumn PropertyName="underSiege"
+                                                      Width="30"
+                                                      SizeMode="Fixed"
+                                                      CellContentStyle="{StaticResource CenterAlign}" />
                 <tg:DataGridNumericalColumn PropertyName="incomingAttacks"
                                             Header="inA"
                                             SizeMode="Fixed"
@@ -85,6 +99,11 @@
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}"
                                             Width="30" />
+          <tg:DataGridTextColumn PropertyName="incTT"
+                                 IsCellFlyoutEnabled="True"
+                                       SizeMode="Stretch"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       Width="60" />
                 <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
@@ -140,7 +159,7 @@
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,3:N0}"
                                             Width="32" />
-                <tg:DataGridBooleanColumn PropertyName="isDefense"
+                <tg:DataGridTextColumn PropertyName="aType"
                                                       Width="30"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}" />

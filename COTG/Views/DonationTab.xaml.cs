@@ -250,9 +250,8 @@ public class BlessedTapCommand : DataGridCommand
             }
         }
 
-        if (base.CanExecute(parameter))
-            base.Execute(parameter);
+            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
 
-    }
+        }
 }
 }

@@ -8724,6 +8724,8 @@ function DoSyncViewMode() {
     finally {
     }
 }
+var cid = 0;
+var gStCid = 0;
 var a6 = {
     ccazzx: {
         encrypt: (a, b, c) => { return ""; },
@@ -10613,12 +10615,12 @@ function ppdtChanged(__ppdt) {
     }
     if (__ppdt.hasOwnProperty("fa")) {
         wrapper.ppdt['fa'] = __ppdt['fa'];
-        wantUpdate || (wantUpdate = wantFa);
+        wantUpdate = wantUpdate || wantFa;
         wantFa = false;
     }
     if (__ppdt.hasOwnProperty("rs")) {
         wrapper.ppdt['rs'] = __ppdt['rs'];
-        wantUpdate || (wantUpdate = wantRs);
+        wantUpdate = wantUpdate || wantRs;
         wantRs = false;
     }
     if (!wantUpdate)
@@ -10626,6 +10628,10 @@ function ppdtChanged(__ppdt) {
     setTimeout(() => {
         window['external']['notify'](JSON.stringify(wrapper));
     }, 300);
+}
+function reportAway() {
+    $(".atkpops").remove();
+    callSyncViewMode();
 }
 function gaFrep(E7c) {
     var N6k = i011;
@@ -14900,10 +14906,6 @@ var cotgsubscribe = amplify;
         var N0F = 0;
         function n2F() {
         }
-        function T0V(R3g) {
-            s0F();
-            E6k.R6();
-        }
         function O9F() {
             var Y52 = $(__s[5603])
                 .val();
@@ -15189,13 +15191,11 @@ var cotgsubscribe = amplify;
                     var h1g = Number(D6.bq[0].de);
                     var V1g = Number(D6.bq[0].brep);
                     var P1g = Number(D6.bq[0].elvl);
-                    var p1g = Number(D6.bq['0' |
-                        0].slvl);
+                    var p1g = Number(D6.bq[0].slvl);
                     var K1g = Number(D6.bq[0].pa);
                     var D1g = bam[__s[Q5y * 1]][V1g][__s[+C5y]];
                     var y1g = bam[__s[Q5y & 2147483647]][V1g][__s[+c1R]];
                     var B1g = h1g - r1g;
-                    var R1g = new Date(h1g);
                     if (K1g == 1) {
                         var f1g = currentTime();
                         var U1g = Number(f1g) - Number(r1g);
@@ -15316,7 +15316,8 @@ var cotgsubscribe = amplify;
             });
             return b62;
         }
-        function N2() {
+        let N2 = debounce(RedrawCity, 500);
+        function RedrawCity() {
             var D5R = '5723';
             var B5R = '3767';
             var i5R = '6570';
@@ -20544,9 +20545,6 @@ var cotgsubscribe = amplify;
             }
         }
         function r9F(N0v) {
-            $(".atkpops")
-                .remove();
-            callSyncViewMode();
             if ($(__s[4402] + N0v.rid)
                 .find(__s[5171])
                 .hasClass(__s[4617]))
@@ -21941,10 +21939,6 @@ var cotgsubscribe = amplify;
                 }
             }
         }
-        function u8() {
-            E6k.R6();
-            V8();
-        }
         $(document)
             .ready(function () {
             $(__s[5255])
@@ -22784,9 +22778,6 @@ var cotgsubscribe = amplify;
         }
         function f9F(o5v) {
             var E04 = '2859';
-            $(__s[".atkpops"])
-                .remove();
-            callSyncViewMode();
             if ($(__s[4402] + o5v.rid)
                 .find(__s[5171])
                 .hasClass(__s[4617]))
@@ -23280,7 +23271,7 @@ var cotgsubscribe = amplify;
             if (Y2g == 1) {
                 anstart = 0;
                 M7F = 1;
-                u8();
+                V8();
                 clearTimeout(i8);
             }
         }
@@ -23808,6 +23799,7 @@ var cotgsubscribe = amplify;
             var Q46 = l46 * +l9p + v46;
             var T46 = l46 * +R5y + v46;
             var x46 = { rcid: Number(T46), cid: cid };
+            gStCid = Number(T46);
             var O46 = "X22x5DdAxxerj3";
             var t46 = a6.ccazzx.encrypt(JSON.stringify(x46), O46, +U7y);
             N6();
@@ -26245,7 +26237,7 @@ var cotgsubscribe = amplify;
                                 .html('');
                             clearTimeout(i8);
                             anstart = 0;
-                            u8();
+                            V8();
                         }
                     });
                 }
@@ -28163,7 +28155,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             F6();
             n7v.done(function (D3v) {
-                callSyncViewMode();
+                reportAway();
                 var j84 = "4493";
                 var f84 = '4628';
                 var m84 = '1041';
@@ -28189,9 +28181,8 @@ var cotgsubscribe = amplify;
                 var B64 = "1536";
                 var z64 = '6475';
                 var f7v = JSON.parse(D3v);
-                if (f7v[_s('2762' *
-                    1)])
-                    if (f7v[__s["1010" | 560]] == 1)
+                if (f7v["issum"])
+                    if (f7v["reptype"] == 1)
                         f9F(f7v);
                     else
                         r9F(f7v);
@@ -31642,22 +31633,27 @@ var cotgsubscribe = amplify;
                     Q5F(N9n, c9n);
                 });
         }
+        function CoordToCid(__x, __y = -1) {
+            if (__y < 0)
+                return __x;
+            return __x + __y * 65536;
+        }
         function Y5F(l66, Q66) {
             clearTimeout(a8);
             E6k.R6();
             if ($(__s[1793])
                 .css("display") != "none" && $(__s[+O0t])
                 .css("display") != "none") {
-                var T66 = Q66 * (R5y - 0) + l66;
+                let rcid = CoordToCid(l66, Q66);
                 var x66 = {
-                    rcid: Number(T66),
+                    rcid: rcid,
                     cid: cid
                 };
+                gStCid = rcid;
                 var O66 = "X22x5DdAxxerj3";
-                var t66 = a6.ccazzx.encrypt(JSON
-                    .stringify(x66), O66, U7y >> 1576595744);
+                var t66 = a6.ccazzx.encrypt(JSON.stringify(x66), O66, U7y >> 1576595744);
                 N6();
-                var o66 = $.post(__s[4894], { cid: t66 });
+                var o66 = $.post("/includes/gSt.php", { cid: t66 });
                 F6();
                 o66.done(function (a66) {
                     if (a66 != "") {
@@ -31666,7 +31662,6 @@ var cotgsubscribe = amplify;
                         var E66 = 0;
                         E66 = L66.substring(1, 2);
                         if (type == 2) {
-                            c = Number(Q66) * (R5y * 1) + Number(l66);
                             $(__s[o2y << 2022545408])
                                 .show();
                             w2();
@@ -31683,7 +31678,7 @@ var cotgsubscribe = amplify;
                             $(__s[F0t << 279350528])
                                 .css("display", "none");
                             $(__s[A4y ^ 0])
-                                .attr("data", c);
+                                .attr("data", rcid);
                             var M66 = L66.indexOf(__s[n24 * 1], 0);
                             var K66 = L66
                                 .indexOf(__s[+n24], M66 + 1);
@@ -31792,7 +31787,7 @@ var cotgsubscribe = amplify;
                                 clearTimeout(a8);
                                 a8 = setTimeout(function () {
                                     E6k.R6();
-                                    Y5F(l66, Q66);
+                                    Y5F(rcid);
                                 }, +D5y);
                             }
                         }
@@ -34209,7 +34204,7 @@ var cotgsubscribe = amplify;
             if (w86 + ppdt[_s(h2y << 916392960)][3] / 2 > 0)
                 t86 = t86 / (1 + (w86 + ppdt.fa[3] / +'2') / (100));
             if (C86 != 0)
-                s86 = qam["techTreeSteps"][Number(C86)][_s(r2y & E6k
+                s86 = qam["techTreeSteps"][Number(C86)][_s(+r2y & E6k
                     .s6s)][0]["v"];
             if (s86 + ppdt.fa[3] / (2) > 0)
                 o86 =
@@ -34850,7 +34845,7 @@ var cotgsubscribe = amplify;
                     D6 = JSON.parse(r2w);
                     J2();
                     X2(7);
-                    u8();
+                    V8();
                     k8();
                     v9(h2[0].btype, h2[0].elvl, 72000000, +x7t, h2[0]
                         .bspot);
@@ -42099,6 +42094,7 @@ var cotgsubscribe = amplify;
         }
         function O8Internal(Z9V) {
             Z9V = Number(Z9V);
+            gStCid = Z9V;
             var g9V = Math.round(Z9V % +R5y);
             var U9V = Math.round((Z9V - g9V) / +R5y);
             if (_viewMode !== viewModeWorld) {
@@ -42328,10 +42324,10 @@ var cotgsubscribe = amplify;
                                 if (F6g == Z6g) {
                                     D6["r"][1]["r"] = D6["r"][1]["r"] - U6g;
                                     D6["r"][2]["r"] = D6["r"][2][_s(+I6y)] - g6g;
-                                    D6.bq[N6g].pa == 1;
+                                    D6.bq[N6g].pa = 1;
                                     clearTimeout(i8);
                                     anstart = 0;
-                                    u8();
+                                    V8();
                                 }
                             }
                     });
@@ -42366,8 +42362,6 @@ var cotgsubscribe = amplify;
             var v7B = $.post(q6 + __s[2818], { rep: JSON.stringify(I7B), type: w7B });
             $(__s[1786] + j7B)
                 .css("display", "none");
-            $(__s[3411])
-                .css("display", "none");
         }
         function h3F(w6D) {
             this.content = [];
@@ -42392,7 +42386,7 @@ var cotgsubscribe = amplify;
             else {
                 if ($("#cvs")
                     .css("display") != "none")
-                    var Q6T = 0;
+                    var Q6T = gStCid;
                 else
                     var Q6T = 0;
                 var O6T = { a: Number(l6T), b: Number(X6T), d: Q6T, c: cid };
@@ -42804,8 +42798,6 @@ var cotgsubscribe = amplify;
                 p6F(n61);
             });
         }
-        var G1F = 0;
-        var z2F = 1;
         function E0V(B7w) {
             for (var y7w in D6.bq)
                 if (Number(B7w) == Number(D6.bq[y7w].bid))
@@ -46202,43 +46194,6 @@ var cotgsubscribe = amplify;
                     .show();
             }
         }
-        function d7V(k6g, F1g) {
-            if (k6g.length == 0 && F1g.length > 0)
-                V8();
-            else if (k6g.length >= 0 && F1g.length == 0)
-                s0F();
-            var c1g = [];
-            var m1g = [];
-            for (var N1g = '0' &
-                2147483647; N1g < D6[__s[D54 ^ 0]].length; N1g++) {
-                var E1g = D6[__s[D54 << 557171904]][N1g][_s(m54 * 1)];
-                c1g.push(E1g);
-            }
-            $(__s[5823])
-                .each(function () {
-                var I6g = $(this)
-                    .attr("data");
-                var v6g = c1g.indexOf(Number(I6g));
-                m1g.push(Number(I6g));
-                if (v6g == -1)
-                    h9(I6g);
-            });
-            for (var N1g = 0; N1g < F1g
-                .length; N1g++) {
-                var q1g = F1g[N1g][__s[+m54]];
-                var e6g = Number(F1g[N1g].bid);
-                var s6g = m1g.indexOf(Number(q1g));
-                var u6g = Number(D6.bq[N1g].ds);
-                var H6g = Number(D6.bq[N1g].de);
-                var j6g = H6g - u6g;
-                var w6g = Q2(j6g);
-                var a1g = __s[4983] + w6g;
-                if (s6g == -(1)) {
-                    m3F(q1g, "0" >>
-                        1123900064, e6g, a1g);
-                }
-            }
-        }
         var a8;
         function x3F() {
             var E1B = __s[505];
@@ -47748,17 +47703,17 @@ var cotgsubscribe = amplify;
         function p5F(r46, A46) {
             clearTimeout(a8);
             let f46 = Number(E8(r46, A46));
-            let n46 = A46 * +l9p + r46;
-            let K46 = A46 * (65536) + r46;
+            let rcid = CoordToCid(r46, A46);
             if (P0F == 0) {
                 P0F = setTimeout(function () {
                     P0F = 0;
-                }, 1000);
+                }, 500);
                 $(__s[4272])
                     .css("display", "none");
                 $(__s[6822])
                     .css("display", "none");
-                var g46 = { rcid: Number(K46), cid: cid };
+                var g46 = { rcid: rcid, cid: cid };
+                gStCid = rcid;
                 var Z46 = "X22x5DdAxxerj3";
                 var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, U7y - 0);
                 N6();
@@ -47808,7 +47763,7 @@ var cotgsubscribe = amplify;
                                 var P36 = new Date(m36);
                                 var M16 = MDFormat(m36) + __s[+q04] +
                                     formatTimehrs(P36);
-                                var g36 = $.post(q6 + __s[3620], { a: K46 });
+                                var g36 = $.post(q6 + __s[3620], { a: rcid });
                                 g36.done(function (a16) {
                                     a16 = JSON.parse(a16);
                                     var c16 = a16[0];
@@ -47975,7 +47930,6 @@ var cotgsubscribe = amplify;
                                     .text(__s[T3m << 1755667424]);
                         }
                         else if (N46 == 3) {
-                            n46 = Number(A46) * +R5y + Number(r46);
                             $(__s[o2y << 1125038560])
                                 .show();
                             $(__s[F0t ^ 0])
@@ -48153,7 +48107,7 @@ var cotgsubscribe = amplify;
                                 .html(U36);
                             $(__s[2440])
                                 .html(Z36);
-                            var R46 = I9(Number(cid), Number(n46));
+                            var R46 = I9(Number(cid), rcid);
                             if (!!$(__s[+o5y])
                                 .is(":visible")) {
                                 $(__s[+S74])
@@ -48223,7 +48177,6 @@ var cotgsubscribe = amplify;
                                 .css("display", "none");
                         }
                         else if (N46 == 2) {
-                            n46 = Number(A46) * (R5y >> 1600456736) + Number(r46);
                             $(__s[+o2y])
                                 .show();
                             w2();
@@ -48240,7 +48193,7 @@ var cotgsubscribe = amplify;
                             $(__s[+F0t])
                                 .css("display", "none");
                             $(__s[A4y << 572912736])
-                                .attr("data", n46);
+                                .attr("data", rcid);
                             var K36 = B46.indexOf(__s[n24 << 1907619136], 0);
                             var w16 = B46.indexOf(__s[n24 & 2147483647], K36 + (1));
                             var I16 = B46.indexOf(_s(n24 <<
@@ -48609,7 +48562,7 @@ var cotgsubscribe = amplify;
                                 }
                             }
                             if (ppdt.specse == (1)) {
-                                var g36 = $.post(q6 + _s(+'7054'), { a: K46 });
+                                var g36 = $.post(q6 + _s(+'7054'), { a: rcid });
                                 g36.done(function (s66) {
                                     s66 = JSON.parse(s66);
                                     if (s66 == ('1' | 1))
@@ -48752,7 +48705,6 @@ var cotgsubscribe = amplify;
                             w2();
                             $(__s[g5t ^ 0])
                                 .css("display", "");
-                            n46 = Number(A46) * +R5y + Number(r46);
                             var F46 = r46 + ":" + A46;
                             var f36 = Number(B46.substring(8, 10)) - 10;
                             var h16 = Number(B46.substring(10, "11" |
@@ -48799,7 +48751,7 @@ var cotgsubscribe = amplify;
                                 .attr("class", "");
                             $(__s[+t6m])
                                 .attr("class", __s["4410" | 34] + c46);
-                            var R46 = I9(Number(cid), Number(n46));
+                            var R46 = I9(Number(cid), rcid);
                             $(__s[688])
                                 .text(M2(R46["inf"]));
                             $(__s[878])
@@ -48869,7 +48821,6 @@ var cotgsubscribe = amplify;
                             w2();
                             $(__s[g5t ^ 0])
                                 .show();
-                            n46 = Number(A46) * (R5y - 0) + Number(r46);
                             var p46 = Number(B46.substring(7, 8));
                             var U16 = B4F(p46);
                             var F46 = r46 + ":" + A46;
@@ -48935,7 +48886,7 @@ var cotgsubscribe = amplify;
                                 info: { prog: G16, lvl: u16, type: z36, name: z36 + " " + u16, player: "adi" }
                             };
                             cotgPublish("regional", Y46);
-                            var R46 = I9(Number(cid), Number(n46));
+                            var R46 = I9(Number(cid), Number(gStCid));
                             var j16 = +I2y;
                             if (ppdt[_s(W5t - 0)])
                                 if (ppdt[__s[+W5t]] * 1000 > currentTime())
@@ -49010,7 +48961,6 @@ var cotgsubscribe = amplify;
                                 .attr(__s[+p9y], !{});
                             $(__s[+F0t])
                                 .attr("display", "block");
-                            n46 = Number(A46) * +R5y + Number(r46);
                             var L36 = B46.substring(2);
                             var h36 = B46
                                 .substring(1, 2);
@@ -49031,7 +48981,7 @@ var cotgsubscribe = amplify;
                                 .html(Math.floor(J16));
                             $(__s[4350])
                                 .html(Math.floor(g16));
-                            var R46 = I9(Number(cid), Number(n46));
+                            var R46 = I9(Number(cid), gStCid);
                             $(__s[5161])
                                 .text(M2(R46["crt"]));
                             c5F(R46["inf"], R46["cav"], R46["sco"], R46[__s[+m8R]], R46[_s(w2y | 4112)], R46[__s[e3m - 0]], R46["crt"], R46[_s(Y5y >>
@@ -49123,7 +49073,7 @@ var cotgsubscribe = amplify;
                 .html("");
             if ($("#cvs")
                 .css("display") != "none")
-                var j1T = 0;
+                var j1T = gStCid;
             else
                 var j1T = 0;
             var I1T = { a: Number(j1T), b: Number(w1T), c: cid };
@@ -49147,6 +49097,7 @@ var cotgsubscribe = amplify;
                         .css("display") != "none") {
                         clearTimeout(a8);
                         a8 = setTimeout(function () {
+                            Y5F(gStCid);
                         }, 100);
                     }
                 }
@@ -51961,7 +51912,10 @@ var cotgsubscribe = amplify;
                     .text(p6(n9w));
         }
         let V8 = debounce(V8Imp, 250);
+        let buildQueueDirty = false;
         function V8Imp() {
+            if (buildQueueDirty)
+                s0F();
             var Y3g, a3g, q3g, N3g, p3g, c3g, y3g, u1g, m3g, v1g, x1g, T1g;
             if (D6.bq.length > 0)
                 for (var D3g in D6.bq) {
@@ -51977,7 +51931,7 @@ var cotgsubscribe = amplify;
                     var H1g = bam[__s[+Q5y]][N3g][__s[C5y * 1]];
                     var L1g = bam[_s(Q5y ^ 0)][N3g][__s[3584]];
                     var k1g = q3g - a3g;
-                    var Q1g = new Date(q3g);
+                    let Q1g = (q3g);
                     if ($(__s[+P6R] +
                         y3g)
                         .length == 0)
@@ -52707,7 +52661,7 @@ var cotgsubscribe = amplify;
                                                         var u7w = T1F(K5w, U5w);
                                                         V5F(s5w);
                                                     }
-                                                    u8();
+                                                    V8();
                                                     k8();
                                                     N2();
                                                     X2(7);
@@ -52778,7 +52732,7 @@ var cotgsubscribe = amplify;
                                                     w7w = JSON.parse(w7w);
                                                     s8(z5w, M5w, 0, 0, 0);
                                                     D6 = w7w;
-                                                    u8();
+                                                    V8();
                                                     k8();
                                                     N2();
                                                     X2(7);
@@ -52835,7 +52789,7 @@ var cotgsubscribe = amplify;
                                                         D6 = l7w;
                                                         if (o5w == 0)
                                                             s8(z5w, M5w, 0, 0, 0);
-                                                        u8();
+                                                        V8();
                                                         k8();
                                                         N2();
                                                         X2(7);
@@ -52884,7 +52838,7 @@ var cotgsubscribe = amplify;
                                                 x7w = JSON.parse(x7w);
                                                 D6 = x7w;
                                                 X2(7);
-                                                u8();
+                                                V8();
                                                 k8();
                                                 var O7w = s5w % (A5y * 1);
                                                 var t7w = (s5w - O7w) / (A5y & 2147483647);
@@ -52918,7 +52872,7 @@ var cotgsubscribe = amplify;
                                             o7w = JSON.parse(o7w);
                                             D6 = o7w;
                                             X2(7);
-                                            u8();
+                                            V8();
                                             k8();
                                             var L7w = s5w % +A5y;
                                             var X7w = (s5w - L7w) / +A5y;
@@ -54118,9 +54072,7 @@ var cotgsubscribe = amplify;
                 .show();
             $(__s[h2p - 0])
                 .show();
-            $(".atkpops")
-                .remove();
-            callSyncViewMode();
+            reportAway();
         }
         var l9F = [];
         function p8F(m8Z) {
@@ -54360,13 +54312,15 @@ var cotgsubscribe = amplify;
                         var U7D = Number(D6.tc[Number(H7D)]) +
                             n7D;
                         var P7D = Number(D6.th[Number(H7D)]) + n7D;
-                        D6.tq[0].tm = Number(D6.tq[0].tm) + Number(n7D);
-                        var g7D = Number(D6.tq[0].tc) -
-                            Number(D6.tq[0].tm);
-                        if (D6.tq[0].tm <= D6.tq[0].tc) {
-                            D6.tq[0].tl = g7D;
-                            m9();
-                            B0F();
+                        if (D6.tq.length > 0) {
+                            D6.tq[0].tm = Number(D6.tq[0].tm) + Number(n7D);
+                            var g7D = Number(D6.tq[0].tc) -
+                                Number(D6.tq[0].tm);
+                            if (D6.tq[0].tm <= D6.tq[0].tc) {
+                                D6.tq[0].tl = g7D;
+                                m9();
+                                B0F();
+                            }
                         }
                     }
                     $(__s[5149])
@@ -54931,6 +54885,7 @@ var cotgsubscribe = amplify;
             }
         }
         function s0F() {
+            buildQueueDirty = false;
             $(__s[+q8y])
                 .html('');
             k1F();
@@ -55087,13 +55042,7 @@ var cotgsubscribe = amplify;
                 if (D6.bq.length > 0) {
                     if (JSON
                         .stringify(D6.bq) != JSON.stringify(Y31)) {
-                        if (Y31.length > (0))
-                            if (D6.bq[0][__s[m1R - 0]] == Y31[0][__s[+m1R]] && D6.bq[0][_s(6995)] == Y31[0][__s[6995]])
-                                T0V(D6.bq[0][_s(m1R - 0)]);
-                            else
-                                s0F();
-                        else
-                            s0F();
+                        buildQueueDirty = true;
                         V8();
                     }
                 }
@@ -58455,9 +58404,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[4437])
                 .css("display", "none");
-            $(".atkpops")
-                .remove();
-            callSyncViewMode();
+            reportAway();
         }
         var b5F;
         var x4F = 0;
@@ -59204,7 +59151,7 @@ var cotgsubscribe = amplify;
             anstart = 0;
             g3F();
             if (D6.bq.length >= 1)
-                u8();
+                V8();
             if (D6.tq.length >= 1)
                 Z4F();
             if (D6.sts)
@@ -61484,7 +61431,7 @@ var cotgsubscribe = amplify;
             else {
                 if ($("#cvs")
                     .css("display") != "none")
-                    var q1T = 0;
+                    var q1T = gStCid;
                 else
                     var q1T = 0;
                 var a1T = { a: Number(F1T), b: Number(c1T), c: cid, d: q1T };
@@ -61509,6 +61456,13 @@ var cotgsubscribe = amplify;
                         $(__s[R2p | 4661] + c1T)
                             .val('');
                         c7F();
+                        if ($("#cvs")
+                            .css("display") != "none") {
+                            clearTimeout(a8);
+                            a8 = setTimeout(function () {
+                                Y5F(gStCid);
+                            }, 500);
+                        }
                     }
                 });
             }
@@ -66231,16 +66185,12 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[4123])
                 .css("display", "none");
-            $(__s[3411])
-                .css("display", "none");
             $(__s[D4y | 390])
                 .css("display", "none");
             E6k.R6();
             $(__s[3458])
                 .css("display", "none");
-            $(".atkpops")
-                .remove();
-            callSyncViewMode();
+            reportAway();
         }
         var gainx = 2;
         var gainy = 2;
@@ -69300,7 +69250,6 @@ let __base64Encode = null;
 let __base64Decode = null;
 var encryptStr = [""];
 var decryptStr = [""];
-var cid = 0;
 function encryptJs(req, k2v) {
     return a6.ccazzx.encrypt(JSON.stringify(k2v), ekeys[req], 256);
 }

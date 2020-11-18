@@ -29,6 +29,8 @@ using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using static COTG.Game.Enum;
+using System.Threading.Tasks;
+
 namespace COTG.Views
 {
 
@@ -84,7 +86,30 @@ namespace COTG.Views
             }
         }
 
+        public static async Task<DefenderPage> Show()
+        {
+            var tab = DefenderPage.instance;
+            for (; ; )
+            {
+                if (tab != null)
+                    break;
+                await Task.Delay(1000);
+                tab = DefenderPage.instance;
+            }
+            if (!tab.isActive)
+            {
+                TabPage.mainTabs.AddTab(tab, true);
+            }
+            else
+            {
+                if (!tab.isVisible)
+                    TabPage.Show(tab);
+                else
+                    tab.Refresh();
+            }
 
+            return tab;
+        }
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             (var hit,var column,var pointerPoint,_) = Spot.HitTest(sender, e);

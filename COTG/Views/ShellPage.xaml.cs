@@ -49,7 +49,8 @@ namespace COTG.Views
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
-
+        public const int canvasZDefault = 11;
+        public const int canvasZBack = 0;
         //private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         //private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
         //private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
@@ -60,6 +61,7 @@ namespace COTG.Views
         private bool _isLoggedIn;
         private bool _isAuthorized;
 
+        public static TextBlock gridTip;
 
         static DateTime workStarted;
         static Queue<string> workQueue = new Queue<string>();
@@ -198,28 +200,7 @@ namespace COTG.Views
 
 
 
-            var webView = JSClient.Initialize(grid);
- //           foreach (var i in webView.KeyboardAccelerators)
-  //              i.IsEnabled = false;
-            webView.AllowFocusOnInteraction = false;
-
-            grid.Background = null;
-
-            grid.Children.Add(webView);
-
-            //          grid.Children.Add(shellFrame);
-            //           Grid.SetColumn(shellFrame, 2);
-            //           Grid.SetRow(shellFrame, 0);
-            //           Grid.SetRowSpan(shellFrame, 6);
-            //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
-            //          Canvas.SetZIndex(shellFrame, 3);
-
-
-            Grid.SetColumn(webView, 0);
-            Grid.SetRow(webView, 1);
-            Grid.SetRowSpan(webView, 5);
-            Grid.SetColumnSpan(webView, 2);
-            Canvas.SetZIndex(webView, 0);
+       
 
             var canvas = CreateCanvasControl();
           //  canvas.ContextFlyout = CityFlyout;
@@ -240,7 +221,28 @@ namespace COTG.Views
             //   Grid.SetRowSpan(img, 4);
             //   Grid.SetColumnSpan(img, 4);
             //   Canvas.SetZIndex(img, 12);
+            var webView = JSClient.Initialize(grid);
+            //           foreach (var i in webView.KeyboardAccelerators)
+            //              i.IsEnabled = false;
+            //            webView.AllowFocusOnInteraction = false;
+            grid.Children.Add(webView);
 
+            grid.Background = null;
+
+
+            //          grid.Children.Add(shellFrame);
+            //           Grid.SetColumn(shellFrame, 2);
+            //           Grid.SetRow(shellFrame, 0);
+            //           Grid.SetRowSpan(shellFrame, 6);
+            //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
+            //          Canvas.SetZIndex(shellFrame, 3);
+
+
+            Grid.SetColumn(webView, 0);
+            Grid.SetRow(webView, 1);
+            Grid.SetRowSpan(webView, 5);
+            Grid.SetColumnSpan(webView, 2);
+            Canvas.SetZIndex(webView, 0);
 
             //var splitter = new GridSplitter();
             //grid.Children.Add(splitter);
@@ -259,7 +261,7 @@ namespace COTG.Views
 
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-            
+
             KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked, VirtualKeyModifiers.Menu));
 //            KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
@@ -285,13 +287,15 @@ namespace COTG.Views
                     TabPage.mainTabs = tabPage;
                     tabPage.AddTab(MainPage.instance, true);
 
+                   // gridTip=new TextBlock();
+                   // tabPage.Tabs.TabStripFooter = gridTip;
                 //    tabPage.AddTab(DefenderPage.instance, false);
 
                     //   tabPage.AddTab(DefensePage.instance, false);
 
-                //    tabPage.AddTab(AttackTab.instance, false);
-                //    tabPage.AddTab(DonationTab.instance, false);
-                //    tabPage.AddTab(BossTab.instance, false);
+                    //    tabPage.AddTab(AttackTab.instance, false);
+                    //    tabPage.AddTab(DonationTab.instance, false);
+                    //    tabPage.AddTab(BossTab.instance, false);
 
                 }
                 {
@@ -350,7 +354,7 @@ namespace COTG.Views
         {
             Log("Back!!");
             NavStack.Back();
-            e.Handled = true;
+            //e.Handled = true;
         }
 
         private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -358,7 +362,7 @@ namespace COTG.Views
             Refresh();
 
             Note.Show("Refresh");
-           args.Handled = true;
+ //          args.Handled = true;
         }
 
         //public static MenuFlyoutItem MenuAction( Action a, string text)

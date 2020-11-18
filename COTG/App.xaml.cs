@@ -115,6 +115,7 @@ namespace COTG
 
             }
         }
+        static bool webViewInFront = false;
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
@@ -125,6 +126,18 @@ namespace COTG
                     break;
                 case VirtualKey.Control:
                     controlPressed = true;
+                    break;
+                case VirtualKey.Scroll:
+                    if (webViewInFront)
+                    {
+                        webViewInFront=false;
+                        Canvas.SetZIndex(ShellPage.canvas,ShellPage.canvasZDefault);
+                    }
+                    else
+                    {
+                        webViewInFront=true;
+                        Canvas.SetZIndex(ShellPage.canvas, ShellPage.canvasZBack);
+                    }
                     break;
             }
         }
@@ -182,7 +195,12 @@ namespace COTG
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
 
-          
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = false;
+          //  UpdateTitleBarLayout(coreTitleBar);
+
+            // Set XAML element as a draggable region.
+  //          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
         }
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
@@ -262,6 +280,7 @@ namespace COTG
             var activation = args as IActivatedEventArgs;
             if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
             {
+                Window.Current.Activate();
                 // Todo:  Handle arguments and stuff
                 // Ensure the current window is active
                 if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
@@ -270,11 +289,17 @@ namespace COTG
                     var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
                     // Obtain any user input (text boxes, menu selections) from the notification
                     ValueSet userInput = toastActivationArgs.UserInput;
-
+                    foreach(var op in toastArgs.AllKeys)
+                    {
+                        if(op == "incomingNotification")
+                        {
+                            Task.Delay(3000).ContinueWith((_) => DefenderPage.Show());
+                        }
+                    }
                     // TODO: Show the corresponding content
                 }
 
-                Window.Current.Activate();
+               
                 return;
             }
             await ActivationService.ActivateAsync(args);
@@ -542,6 +567,12 @@ namespace COTG
         {
             var coord = cid.CidToString();
             return $"[{coord}](/c/{coord})";
+
+        }
+        public static string CidToCoords(this int cid)
+        {
+            var coord = cid.CidToString();
+            return $"<coords>{coord}</coords>";
 
         }
 
