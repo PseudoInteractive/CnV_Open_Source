@@ -440,7 +440,7 @@ namespace COTG
             {
                 if (City.IsMine(cityId))
                 {
-                    var city = City.StBuild(cityId,false);
+                    var city = City.StBuild(cityId,true);
                     if(!lazyMove)
                         cityId.BringCidIntoWorldView(lazyMove);
                     App.DispatchOnUIThreadSneaky(() =>
@@ -460,7 +460,7 @@ namespace COTG
         }
 
 
-        public static async void ClearCenterRes(int cityId)
+        public static async void ShowClearMenu(int cityId)
         {
             try
             {
@@ -588,7 +588,7 @@ namespace COTG
                 SetViewModeWorld();
                // if (City.IsMine(cityId))
                 {
-                    City.SetFocus(cityId);
+                    Spot.SetFocus(cityId,true);
                 }
 
                 // if (JSClient.IsWorldView())
@@ -1264,7 +1264,7 @@ namespace COTG
                                             if (cid == Spot.focus)
                                                 App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
                                         }
-                                        city.SetFocus();
+                                        city.SetFocus(true);
                                         if (city.classification == Spot.Classification.unknown)
                                         {
                                             if (App.IsKeyPressedControl() && App.IsKeyPressedShift() && Discord.isValid)

@@ -241,7 +241,7 @@ namespace COTG.Game
             //}
 
             var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
-                                                                   //   viewHover = spot != null ? spot.cid : 0;
+            viewHover = spot != null ? spot.cid : 0;
             Player.viewHover = spot != null ? spot.pid : 0;
 
 
@@ -358,7 +358,7 @@ namespace COTG.Game
                     //                MainPage.SetRaidCity(cid,true);
                     ScanDungeons.Post(cid, true);
                 }
-                SetFocus();
+                SetFocus(false);
                 NavStack.Push(cid);
 
             }
@@ -372,7 +372,7 @@ namespace COTG.Game
                 var text = ToTsv();
                 Note.Show($"Copied to clipboard: {text}");
                 App.CopyTextToClipboard(text);
-                SetFocus();
+                SetFocus(false);
             }
             SpotTab.TouchSpot(cid, modifiers);
         }
@@ -411,8 +411,8 @@ namespace COTG.Game
 
             if (mod.IsShiftAndControl())
             {
-                var spot = Spot.GetOrAdd(cid);
-                GetCity.Post(cid, spot.pid, (js, city) => Log(js));
+           //     var spot = Spot.GetOrAdd(cid);
+           //     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
 
                 var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
                 Log(str);
@@ -796,21 +796,24 @@ namespace COTG.Game
         {
             return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
         }
-        public void SetFocus( )
+        public void SetFocus(bool selectInUI)
         {
-            SetFocus(cid);
+            SetFocus(cid, selectInUI);
         }
-        public static void SetFocus(int cid)
+        public static void SetFocus(int cid, bool selectInUI)
         {
             var changed = cid != focus;
             if(changed)
             {
                 focus = cid;
-                var spot = Spot.GetOrAdd(cid);
                 App.DispatchOnUIThreadSneaky(() =>
                 {
+                    var spot = Spot.GetOrAdd(cid);
                     ShellPage.instance.focus.Content = spot.nameAndRemarks;
                     ShellPage.instance.coords.Text = cid.CidToString();
+                    if(selectInUI )
+                        spot.SelectInUI(true);
+
                 }
 
                 );
@@ -1065,7 +1068,43 @@ namespace COTG.Game
 
 
         }
+        public async void SelectInUI(bool scrollIntoView)
+        {
+            //         await Task.Delay(2000);
+            //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            //           {
+            await Task.Delay(200);
+            App.DispatchOnUIThreadSneaky(() =>
+            {
+                if (this is City)
+                {
+                    if (scrollIntoView && MainPage.IsVisible())
+                    {
+                        /// MainPage.CityGrid.SelectedItem = this;
+                        //                      MainPage.CityGrid.SetCurrentItem(this);
 
+                        //     MainPage.CityGrid.SetCurrentItem(this,false);
+                        MainPage.CityGrid.ScrollItemIntoView(this);
+                        // await Task.Delay(200);
+                        MainPage.CityGrid.SelectItem(this);
+                        //var id = gridCitySource.IndexOf(this);
+                        //if (id != -1)
+                        //{
+                        //    MainPage.CityGrid.ScrollIndexIntoView(id);
+
+                        //}
+                    }
+                    // todo: donations page and boss hunting
+                    if (City.IsBuild(cid))
+                    {
+                        ShellPage.instance.cityBox.SelectedItem = this;
+                    }
+                }
+               // ShellPage.instance.coords.Text = cid.CidToString();
+                //            });
+            });
+
+        }
     }
     public static class SpotHelper
     {

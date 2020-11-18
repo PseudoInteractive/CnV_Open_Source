@@ -18,9 +18,9 @@
                FullSizeDesired="True"
                
                UseSystemFocusVisuals="True"
+               BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
       Margin="4"
-               BorderBrush="{x:Null}"
-               ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible"
+             
                 
                >
     <ContentDialog.Resources>

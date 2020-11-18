@@ -455,14 +455,7 @@ namespace COTG.Game
             var changed = cid != build;
             City.build = cid;
 
-            SetFocus();
-            if ( changed )
-            {
-                App.DispatchOnUIThreadSneaky(()=>{
-                    SelectInUI(scrollIntoView);
-                    
-                });
-            }
+            SetFocus(scrollIntoView);
             return changed;
             //if (!noRaidScan)
            // {
@@ -553,37 +546,7 @@ namespace COTG.Game
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
 
-        public async void  SelectInUI(bool scrollIntoView)
-        {
-            //         await Task.Delay(2000);
-            //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            //           {
-            await Task.Delay(200);
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                if (scrollIntoView && MainPage.IsVisible())
-                {
-                   /// MainPage.CityGrid.SelectedItem = this;
-//                      MainPage.CityGrid.SetCurrentItem(this);
-
-                 //     MainPage.CityGrid.SetCurrentItem(this,false);
-                    MainPage.CityGrid.ScrollItemIntoView(this);
-                    // await Task.Delay(200);
-                    MainPage.CityGrid.SelectItem(this);
-                    //var id = gridCitySource.IndexOf(this);
-                    //if (id != -1)
-                    //{
-                    //    MainPage.CityGrid.ScrollIndexIntoView(id);
-
-                    //}
-                }
-                // todo: donations page and boss hunting
-                ShellPage.instance.cityBox.SelectedItem = this;
-                ShellPage.instance.coords.Text = cid.CidToString();
-                //            });
-            });
-
-        }
+       
         public bool ComputeTravelTime(int target, out float hours, out bool onDifferentContinent)
         {
             hours = 0;
@@ -713,7 +676,7 @@ namespace COTG.Game
                         .OrderByDescending(a=>a.cartsHome);
              //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
-                   City.GetBuild().SelectInUI(false);
+                   City.GetBuild().SelectInUI(true);
             });
         }
         

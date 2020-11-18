@@ -22,7 +22,7 @@ namespace COTG.Game
 
         public unsafe static void Get(Army army)
         {
-            if(Player.myName == "Avatar")
+            if(Player.myName == "Avatar" )
             {
                 var source = Spot.GetOrAdd(army.sourceCid);
                 if (source.isClassified)

@@ -11,24 +11,10 @@
               xmlns:game="using:COTG.Game"
               xmlns:cotg="using:COTG"
               xmlns:view="using:COTG.Views"
-              xmlns:localPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
               mc:Ignorable="d"
               Tag="Raid"
-              Background="{x:Null}">
-    <UserControl.Resources>
-        <Style x:Key="style0"
-               TargetType="localPrimitives:DataGridColumnHeader">
-            <Setter Property="ToolTipService.ToolTip"
-                    Value="When raids will return.  A negative value means that they are on their way out, if the value is small and negative you can recall them instantly with 'Home Please' " />
-        </Style>
+              Background="{x:Null}" >
 
-        <Style x:Key="style1"
-               TargetType="TextBlock"
-               BasedOn="{StaticResource LeftAlign}">
-            <Setter Property="ToolTipService.ToolTip"
-                    Value="When raids will return.  A negative value means that they are on their way out, if the value is small and negative you can recall them instantly with 'Home Please' " />
-        </Style>
-    </UserControl.Resources>
     <Grid x:Name="cityBaseGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />

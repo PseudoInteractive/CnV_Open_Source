@@ -245,7 +245,7 @@ namespace COTG.Views
             instance.Dispatcher.DispatchOnUIThreadLow(() =>
             {
                 City.gridCitySource.NotifyReset();
-                City.GetBuild()?.SelectInUI(false);
+                City.GetBuild()?.SelectInUI(true);
             });
             
         }
@@ -543,8 +543,8 @@ namespace COTG.Views
             var view = context.DataView;
             
             MainPage.instance.count.Text =$"Cities: {TryGetValue<ulong>(view.GetAggregateValue(0, null))}";
-            MainPage.instance.tsTotal.Text=$"Troops(total):  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0} TS";
-            MainPage.instance.tsRaid.Text= $"Troops(home): {TryGetValue<double>(view.GetAggregateValue(2, null)):N0} TS";
+            MainPage.instance.tsTotal.Text=$"TS Total:  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0}";
+            MainPage.instance.tsRaid.Text= $"TS Home: {TryGetValue<double>(view.GetAggregateValue(2, null)):N0}";
             MainPage.instance.castles.Text= $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
             MainPage.instance.water.Text= $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
         }

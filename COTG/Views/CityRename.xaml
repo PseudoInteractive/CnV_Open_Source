@@ -7,12 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Name (try to avoid '-')"
-    PrimaryButtonText="Okay"
-    SecondaryButtonText="Cancel"
+    PrimaryButtonText="Name"
+    SecondaryButtonText="Suggested"
+    CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}"
+    >
 
     <Grid>
-        <TextBox x:Name="name" x:FieldModifier="public" PlaceholderText="Enter City Name"  />
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" x:Name="name" Header="Name" x:FieldModifier="public"   />
+        <TextBox Grid.Row="1" x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
     </Grid>
 </ContentDialog>

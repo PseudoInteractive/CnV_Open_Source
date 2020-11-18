@@ -9323,6 +9323,7 @@ function ppdtChanged(__ppdt) {
   if (__ppdt.hasOwnProperty("clc")) {
     wrapper.ppdt['clc'] = __ppdt['clc'];
     wrapper.ppdt['cl'] = __ppdt['cl'];
+      wrapper.ppdt['cln'] = __ppdt['cln'];
     wantUpdate = true;
   }
   if (__ppdt.hasOwnProperty("c")) {

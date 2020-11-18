@@ -250,9 +250,12 @@ namespace COTG.JSON
                 var city = City.GetOrAddCity(cid);
                 var nameDialog = new CityRename();
                 var isNew = city._cityName == "*New City";
-                if (isNew && !lastName.IsNullOrEmpty())
-                {
-                    var name = lastName;
+
+
+                    var name = isNew ? lastName : city._cityName;
+                    if (name.IsNullOrEmpty())
+                         name = $"{city.cont} 1001";
+
                     var lg = name.Length;
                     var numberEnd = lg;
                     while (numberEnd > 0 && char.IsNumber(name[numberEnd-1]))
@@ -263,29 +266,28 @@ namespace COTG.JSON
                     {
                         // increment number if there is one
                         var start = name.Substring(0, numberEnd);
-                        var number = int.Parse(name.Substring(numberEnd, lg - numberEnd)) + 1;
+                        var number = int.Parse(name.Substring(numberEnd, lg - numberEnd)) + (name==lastName?1:0);
                         for (; ; )
                         {
                             name = start + number.ToString();
-                            if(!City.allCities.Any( (v)=> v.Value._cityName == name ))
+                            if(!City.allCities.Any( (v)=> v.Value._cityName == name && v.Value!=city ))
                                     break;
                             ++number;
                         }
                     }
-                    nameDialog.name.Text = name;
-                }
-                else
-                {
-                    if (lastName.IsNullOrEmpty() && !isNew)
-                        lastName = city._cityName;
                     nameDialog.name.Text = city._cityName;
-                }
-                var result = await nameDialog.ShowAsync();
-                if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
-                {
-                    lastName = nameDialog.name.Text;
-                    Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
+                    nameDialog.suggested.Text = name;
 
+                var result = await nameDialog.ShowAsync();
+                if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary ||
+                    result == Windows.UI.Xaml.Controls.ContentDialogResult.Secondary )
+                {
+                    if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+                        lastName = nameDialog.name.Text;
+                    else
+                        lastName = nameDialog.suggested.Text;
+                    city._cityName=lastName;
+                    Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
                     Note.Show($"Set name to {lastName}");
                 }
             }
