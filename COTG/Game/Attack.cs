@@ -14,9 +14,23 @@ namespace COTG.Game
         public int cid { get; set; }
         [JsonIgnore]
         public string xy => cid.CidToString();
-        public int target { get; set; }
+        public int[] targets { get; set; } = Array.Empty<int>();
         [JsonIgnore]
-        public string targetXy => target.CidToString();
+        public string targetString {
+            get {
+                var sb = new StringBuilder();
+                var wantSpace = false;
+                foreach(var t in targets)
+                {
+                    if (wantSpace)
+                        sb.Append(' ');
+                    else
+                        wantSpace= true;
+                    sb.Append(t.CidToStringMD());
+                }
+                return sb.ToString();
+            }
+        }
         public enum Type
         {
             senator,
@@ -25,11 +39,13 @@ namespace COTG.Game
         }
         // Todo: make enum
         public int type { get; set; }
-        public bool fake { get; set; }
+        [JsonIgnore]
+        public Type typeT { get => (Type)type; set=>type=(int)value; }
+        public bool fake { get; set; } // not used currently
         public byte troopType { get; set; }
         [JsonIgnore]
         public string troopTypeString => Game.Enum.ttNameWithCaps[troopType];
-        public int ts { get; set; }
+        public int ts { get; set; } // not used currently
     }
     public class AttackType
     {
@@ -42,8 +58,8 @@ namespace COTG.Game
     public struct TargetPersist // structure use to persist targets
     {
         public int cid { get; set; }
-        public byte classification { get; set; }
-        public byte attackCluster { get; set; } // 0 is real
+        public bool fake { get; set; }
+        public byte attackCluster { get; set; } // for SE clusters, 
 
     }
     public struct AttackSenderScript

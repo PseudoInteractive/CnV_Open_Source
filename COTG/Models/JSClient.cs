@@ -33,6 +33,8 @@ using Windows.UI.Xaml.Media;
 using COTG.JSON;
 using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Input;
+using Windows.UI.Core;
 
 namespace COTG
 {
@@ -198,7 +200,7 @@ namespace COTG
                         App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}"));
                     });
                 }
-
+                App.SetupCoreWindowInputHooks();
             }
             catch (Exception e)
 			{
@@ -1199,7 +1201,58 @@ namespace COTG
                                     Spot.ProcessCoordClick(cid, false, App.keyModifiers); // then normal click
                                     break;
                                 }
+                            case "keyDown":
+                                {
+                                    Log($"Keydown: {jsp.Value.ToString()}");
+                                    VirtualKey key = default;
+                                    switch (jsp.Value.GetString("key"))
+                                    {
+                                        case "Control": key = VirtualKey.Control; break;
+                                        case "Shift": key = VirtualKey.Shift; break;
+                                        case "ScrollLock": key = VirtualKey.Scroll; break;
+                                    }
+                                    if (key != default)
+                                    {
+                                        App.OnKeyDown(key);
+                                    }
+                                    break;
+                                }
+                            case "keyUp":
+                                {
+                                    Log($"KeyUp: {jsp.Value.ToString()}");
+                                    VirtualKey key = default;
+                                    switch(jsp.Value.GetString("key"))
+                                    {
+                                        case "Control": key = VirtualKey.Control;break;
+                                        case "Shift": key = VirtualKey.Shift;break;
+                                        case "ScrollLock": key = VirtualKey.Scroll;break;
+                                    }
+                                    if(key != default)
+                                    {
+                                        App.OnKeyUp(key);
+                                    }
+                                    break;
+                                }
+                            case "mouseDown":
+                                {
+                                    Log($"mouseDown: {jsp.Value.ToString()}");
+                                    var but = jsp.Value.GetInt("button");
+                                    // 2 is context button
+                                    //if(but==2)
+                                    //    Spot.GetFocus().ShowContextMenu(this,App.Current.m.GetPointer)
+                                    //else
+                                    App.OnPointerPressed(but switch
+                                    {
+                                        0 => PointerUpdateKind.LeftButtonPressed,
+                                        1 => PointerUpdateKind.MiddleButtonPressed,
+                                        2 => PointerUpdateKind.RightButtonPressed,
+                                        3 => PointerUpdateKind.XButton1Pressed,
+                                        4 => PointerUpdateKind.XButton2Pressed,
+                                        _ => PointerUpdateKind.Other                                    });
 
+                               
+                                    break;
+                                }
                             //case "cityinfo":
                             //    {
                             //        var jso = jsp.Value;
@@ -1453,9 +1506,16 @@ namespace COTG
         public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
 
 
-        static private void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+        static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
         {
-            Exception("Unviewable");
+            if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
+            {
+                Note.Show($"Launched {args.Uri}");
+            }
+            else
+            {
+                Note.Show($"Failed to launch {args.Uri}");
+            }
         }
 
         static private void View_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)

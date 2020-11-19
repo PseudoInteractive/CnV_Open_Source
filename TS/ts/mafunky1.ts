@@ -603,13 +603,49 @@ function avagetts() {
 //}
 var raidSecret: string;
 
+function onKeyDown(ev: KeyboardEvent) {
+
+	let wrapper = {
+		keyDown: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
+	};
+	window['external']['notify'](JSON.stringify(wrapper));
+}
+
+function onKeyUp(ev: KeyboardEvent) {
+
+	let wrapper = {
+		keyUp: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
+	};
+	window['external']['notify'](JSON.stringify(wrapper));
+}
+
+
+function onMouseDown(ev: MouseEvent ) {
+
+	let wrapper = {
+		mouseDown: {
+			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
+		}
+	}
+	window['external']['notify'](JSON.stringify(wrapper));
+}
+
+
+
 function postppdt()
 {
 
 	try {
 
 		console.log("Notify here");
+		let options: AddEventListenerOptions = { capture: true, passive:true,once:false } 
+		document.addEventListener("keydown", onKeyDown, options);
+		document.addEventListener("keyup", onKeyUp, options);
+	//	window.addEventListener("click", onMouseDown, options);
+	//	document.addEventListener("mousedown", onMouseDown, options);
+		
 	
+
 		let creds = {
 			token: SetupHeaders(),
 			raid:raidSecret,
@@ -1841,7 +1877,7 @@ function avactor() {
             $("#nearofftab").trigger({type:"click",originalEvent:"1"});
 		});
         $("#addtoAtt").click(function() {
-            for (let i=1;i<8;i++) {
+            for (let i=1;i<15;i++) {
                 if (!$("#t"+i+"x").val()) {
                     var tid=Number($("#showReportsGo").attr("data"));
                     var tempx;
@@ -2173,7 +2209,7 @@ function avactor() {
 				var shrinex = parseInt(coords);
 				var shriney = Number(coords.match(/\d+$/)[0]);
 				var shrinecont = Number(Math.floor(shrinex / 100) + 10 * Math.floor(shriney / 100));
-				for (var i in wdata.cities) {
+				for (let i in wdata.cities) {
 					var tempx = Number(wdata.cities[i].substr(8, 3)) - 100;
 					var tempy = Number(wdata.cities[i].substr(5, 3)) - 100;
 					var cont = Number(Math.floor(tempx / 100) + 10 * Math.floor(tempy / 100));
@@ -2199,7 +2235,7 @@ function avactor() {
 				var planwin = "<div id='shrinePopup' style='width:40%;height:50%;left: 360px; z-index: 3000;' class='popUpBox'><div class='popUpBar'><span class=\"ppspan\">Shrine Planner</span><button id='hidec' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Hide Cities</button>";
 				planwin += "<button id='addcity' class='greenb' style='margin-left:10px;border-radius: 7px;margin-top: 2px;height: 28px;'>Add City</button><button id=\"sumX\" onclick=\"$('#shrinePopup').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=\"popUpWindow\" style='height:100%'>";
 				planwin += "<div id='shrinediv' class='beigemenutable scroll-pane' style='background:none;border: none;padding: 0px;height:90%;'></div></div>";
-				for (var i in shrinec) {
+				for (let i in shrinec) {
 					if (i < 101) {
 						var pname = shrinec[i][1];
 						if (players.indexOf(pname) == -1) {

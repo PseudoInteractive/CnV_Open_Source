@@ -102,9 +102,15 @@ namespace COTG
         {
             return shiftPressed;
         }
-        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
+        static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
         {
-            switch (args.VirtualKey)
+            var key = args.VirtualKey;
+            OnKeyUp(key);
+        }
+
+        public static void OnKeyUp(VirtualKey key)
+        {
+            switch (key)
             {
                 case VirtualKey.Shift:
                     shiftPressed = false;
@@ -114,12 +120,21 @@ namespace COTG
                     break;
 
             }
+            App.DispatchOnUIThreadSneaky(ResetIdleTimer);
         }
+
         static bool webViewInFront = false;
 
-        private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
+        static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            switch (args.VirtualKey)
+            var key = args.VirtualKey;
+            OnKeyDown(key);
+
+        }
+
+        public static void OnKeyDown(VirtualKey key)
+        {
+            switch (key)
             {
                 case VirtualKey.Shift:
                     shiftPressed = true;
@@ -131,7 +146,7 @@ namespace COTG
                     if (webViewInFront)
                     {
                         webViewInFront=false;
-                        Canvas.SetZIndex(ShellPage.canvas,ShellPage.canvasZDefault);
+                        Canvas.SetZIndex(ShellPage.canvas, ShellPage.canvasZDefault);
                     }
                     else
                     {
@@ -140,6 +155,7 @@ namespace COTG
                     }
                     break;
             }
+            App.DispatchOnUIThreadSneaky(ResetIdleTimer);
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -189,11 +205,7 @@ namespace COTG
             idleTimer.Interval = TimeSpan.FromSeconds(10);  // 10s idle delay
             idleTimer.Tick += IdleTimer_Tick;
             Assert(idleTimer.IsEnabled == false);
-            Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
-            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed; ;
-
-            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+           
 
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = false;
@@ -202,35 +214,67 @@ namespace COTG
             // Set XAML element as a draggable region.
   //          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
         }
-
-        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
+        public static void SetupCoreWindowInputHooks()
         {
-            var prop = e.CurrentPoint.Properties;
-            switch (prop.PointerUpdateKind)
+            foreach(var view in CoreApplication.Views)
+            {
+                Log($"{view.TitleBar.ToString()} {view.IsMain} ");
+                var window = view.CoreWindow;
+                window.PointerMoved -= OnPointerMoved;
+                window.PointerPressed -= OnPointerPressed; ;
+
+                window.KeyDown -= OnKeyDown;
+                window.KeyUp -= OnKeyUp;
+
+                window.PointerMoved += OnPointerMoved;
+                window.PointerPressed += OnPointerPressed; ;
+
+                window.KeyDown += OnKeyDown;
+                window.KeyUp += OnKeyUp;
+            }
+        }
+        public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
+        {
+            var prop = e.CurrentPoint.Properties.PointerUpdateKind;
+            if (OnPointerPressed(prop))
+                e.Handled=true;
+
+        }
+
+        public static bool OnPointerPressed( PointerUpdateKind prop)
+        {
+            var rv = false;
+            switch (prop)
             {
                 case PointerUpdateKind.XButton1Pressed:
-                    if(!NavStack.Back() )
+                    if (!NavStack.Back())
                         ShellPage.instance.ChangeCityClick(-1);
                     Log("XButton1");
-                    e.Handled = true;
+                    rv = true;
                     break;
                 case PointerUpdateKind.XButton2Pressed:
                     if (!NavStack.Forward())
                         ShellPage.instance.ChangeCityClick(1);
                     Log("XButton2");
-                    e.Handled = true;
+                    rv = true;
                     break;
             }
+            App.DispatchOnUIThreadSneaky( ResetIdleTimer );
+            return rv;
         }
 
-        private static void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
+        private static void ResetIdleTimer()
         {
-            // reset timer if active
             if (timerActive)
             {
                 idleTimer.Stop();
                 idleTimer.Start();
             }
+        }
+        private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+            // reset timer if active
+            ResetIdleTimer();
         }
 
         private static void IdleTimer_Tick(object sender, object e)
@@ -487,7 +531,21 @@ namespace COTG
             Clipboard.SetContent(dataPackage);
         } );
         }
-        
+
+        public static async Task<string> GetClipboardText()
+        {
+            try
+            {
+                return (await Clipboard.GetContent().GetTextAsync()) ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+                return string.Empty;
+            }
+        }
+
+
         // HTML control messs wit this
         public static VirtualKeyModifiers keyModifiers {
             get
@@ -642,13 +700,14 @@ namespace COTG
             }
         }
 
-        static Regex regexCoords = new Regex(@"\<coords\>(\d+:\d+)\<\/coords\>");
-        static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>");
-        static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>");
-        static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>");
+        static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{2,3}:\d{2,3})\<\/coords\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
         public static string TranslateCOTGChatToMarkdown(string s)
         {
-            s = regexCoords.Replace(s, @"[$1](/c/$1)");
+            
+            s = regexCoordsTag.Replace(s, @"[$1](/c/$1)");
             s = regexPlayer.Replace(s, @"[$1](/p/$1)");
             s = regexAlliance.Replace(s, @"[$1](/a/$1)");
             s = regexReport.Replace(s, @"[Report:$1](/r/$1)");

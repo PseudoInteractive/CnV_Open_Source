@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -140,8 +141,11 @@ namespace COTG
 
 
         }
-       
+        public static Regex coordsRegex = new Regex(@"\d{2,3}:\d{2,3}", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+
     }
+
+
     public class ConcurrentHashSet<T> : IDisposable
     {
         public readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);

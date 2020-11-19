@@ -416,7 +416,7 @@ const __s = [".shRinf",
   "#templqbar",
   "</span><span style='color:#79B2FF'> [Game] </span><span style='color:#79B2FF'>: ",
   "mapcontrolfir",
-  "<div id='promoitemdiv' class = 'longwindow'> <div class = 'longwindowbgr'> <div class = 'lngwinbgtop'></div> <div class = 'lngwinbgcent'></div> <div class = 'lngwinbgbott'></div> </div> <div class = 'longwindowcontent'> <div class='popUpBar'> <span class='ppspan'>You have redeemed the following promotional items!</span> <button id='promoitemX' onclick=\"$('#promoitemdiv').remove();\" class='xbutton'> <div id='xbuttondiv'> <div> <div id='centxbuttondiv'></div> </div> </div> </button> </div> <div class='outrdlyrwdv' id='MypromoOutput'>",
+  "<div id='promoitemdiv' class = 'longwindow'> <div class = 'longwindowbgr'> <div class = 'lngwinbgtop'></div> <div class = 'lngwinbgcent'></div> <div class = 'lngwinbgbott'></div> </div> <div class = 'longwindowcontent'> <div class='popUpBar'> <span class='ppspan'>You have redeemed the following promotional items!</span> <button id='promoitemX' onclick=\"RemovePopup('#promoitemdiv');\" class='xbutton'> <div id='xbuttondiv'> <div> <div id='centxbuttondiv'></div> </div> </div> </button> </div> <div class='outrdlyrwdv' id='MypromoOutput'>",
   "cstr",
   "Nicely done! You can now enlist your first Guards. I'd like to reward you with 400 Wood!",
   "Instantly destroys 1 resource node",
@@ -1100,7 +1100,7 @@ const __s = [".shRinf",
   "balltooltip",
   "#idlebody",
   "#sendChat",
-  "<br/><br/><button ID=\"bcouiteOK\" onclick=\"$('#tspeedupusePopup').remove();\" class=\"greenb regButton\">Close</button></div>",
+  "<br/><br/><button ID=\"bcouiteOK\" onclick=\"RemovePopup('#tspeedupusePopup');\" class=\"greenb regButton\">Close</button></div>",
   " overflow-x:hidden;\"><br><span style=\"margin-left:3%;font-weight:700;\">Attacker:</span>",
   "#markPlWorld",
   "\" class = \"notifrightbu aButton clPop\">OK</button></div></div>",
@@ -2167,7 +2167,7 @@ const __s = [".shRinf",
   "</b>: ",
   "#qbuildtbButton",
   "px -0px,radial-gradient(ellipse at center, rgba(181,189,200,1) 0%,rgba(130,140,149,1) 0%,rgba(40,52,59,1) 100%);float:right;\"><span style=\"font-size: 16px;color: #DAA520;float: right;margin-top: 41px;width: 30px;height: 22px;text-align: center; font-weight: 600;font-family: 'Arial Narrow', Arial, sans-serif;\">",
-  "<div id='dailyitemdiv' class = 'longwindow'> <div class = 'longwindowbgr'> <div class = 'lngwinbgtop'></div> <div class = 'lngwinbgcent'></div> <div class = 'lngwinbgbott'></div> </div> <div class = 'longwindowcontent'> <div class='popUpBar'> <span class='ppspan'>Daily Login Reward</span> <button id='claimitemX' onclick=\"$('#dailyitemdiv').remove();\" class='xbutton'> <div id='xbuttondiv'> <div> <div id='centxbuttondiv'></div> </div> </div> </button> </div> <div class='outrdlyrwdv' id='MyDailyOutput'>",
+  "<div id='dailyitemdiv' class = 'longwindow'> <div class = 'longwindowbgr'> <div class = 'lngwinbgtop'></div> <div class = 'lngwinbgcent'></div> <div class = 'lngwinbgbott'></div> </div> <div class = 'longwindowcontent'> <div class='popUpBar'> <span class='ppspan'>Daily Login Reward</span> <button id='claimitemX' onclick=\"RemovePopup('#dailyitemdiv');\" class='xbutton'> <div id='xbuttondiv'> <div> <div id='centxbuttondiv'></div> </div> </div> </button> </div> <div class='outrdlyrwdv' id='MyDailyOutput'>",
   "#buildingUpgradeInfo, #buildingDowngradeInfo,#demorefund,.demoreftr, #buildingMoveInfo, #cspoupspan, #cspodownspan, #cspoupfig, #cspodownfig, #cspodemospan, #cspodemofig, .cspotmenutablecl, #buildingDetailInfo",
   " - Active Portal",
   "#av",
@@ -2696,7 +2696,7 @@ const __s = [".shRinf",
   " seconds.",
   "Server will close for maintenance in ",
   "touchmove",
-  "<div id='claimitemdiv' style='width:600px;height:375px;position:absolute;top: 11%;left: 400px;z-index:4000;overflow:hidden;' class='longwindow '><div class='longwindowbgr'> <div class='lngwinbgtop'></div> <div class='lngwinbgcent'></div> <div class='lngwinbgbott'></div> </div><div class='longwindowcontent'><div class='popUpBar'><span class='ppspan'>You have recieved the following items!</span><button id='claimitemX' onclick=\"$('#claimitemdiv').remove();\" class='xbutton greenb'><div id='xbuttondiv'><div><div id='centxbuttondiv'></div></div></div></button></div><div style='overflow: hidden;height: 85%;' id='MyDevOutput'>",
+  "<div id='claimitemdiv' style='width:600px;height:375px;position:absolute;top: 11%;left: 400px;z-index:4000;overflow:hidden;' class='longwindow '><div class='longwindowbgr'> <div class='lngwinbgtop'></div> <div class='lngwinbgcent'></div> <div class='lngwinbgbott'></div> </div><div class='longwindowcontent'><div class='popUpBar'><span class='ppspan'>You have recieved the following items!</span><button id='claimitemX' onclick=\"RemovePopup('#claimitemdiv');\" class='xbutton greenb'><div id='xbuttondiv'><div><div id='centxbuttondiv'></div></div></div></button></div><div style='overflow: hidden;height: 85%;' id='MyDevOutput'>",
   "#findSRcoordsGo",
   "cityreg2",
   "After a waiting time of 1 day, you are protected from attacks for 2 days",
@@ -3944,7 +3944,7 @@ const __s = [".shRinf",
   "<div id=\"titlehoverpopup\" class=\"tooltiptable\"> <table> <tr> <td>Your Name:</td> <td ID=\"plnamtt\"></td> </tr> <tr> <td>Your Alliance:</td> <td ID=\"plallttt\"></td> </tr> <tr> <td>Number Cities:</td> <td ID=\"nmcittt\"></td> </tr> <tr> <td>Your Empire Score:</td> <td ID=\"empscott\"></td> </tr> <tr> <td>Your Global Rank:</td> <td ID=\"globranktt\"></td> </tr> <tr> <td colspan=\"3\"> To increase your score and global ranking, build and upgrade buildings in your cities! </td> </tr> <tr> <td colspan=\"3\"> <hr/> </td> </tr> <tr> <td>Your Current Title:</td> <td ID=\"currtitltt\"></td> </tr> <tr> <td colspan=\"3\"> To increase your current Title to found more cities, research Title Advancement under the Research menu! </td> </tr> <tr> <td colspan=\"3\"> <hr/> </td> </tr> <tr> <td>Senators enlisted in your cities:</td> <td ID=\"enlsenidl\"></td> </tr> <tr> <td>Senators you can enlist:</td> <td ID=\"enlistpostt\"></td> </tr> <tr> <td colspan=\"3\"> To enlist Senator units, you will need to research Title Advancement, and build a level 10 Academy building. </td> </tr> </table> </div>",
   "000000",
   "Sx2xxresa",
-  "px;z-index:4501;\"><div class=ppbwinbgr><div class=ppbwintop></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"><div class=\"popUpBar\"><span class=\"ppspan\">Clear Resource Quadrants</span><div a=\"1\" class=\"helpicon\"></div> <button class=\"xbutton\" id=\"reportsummXbutton\" onclick=\"$('#clearreswin').remove();\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=popUpWindow>",
+  "px;z-index:4501;\"><div class=ppbwinbgr><div class=ppbwintop></div><div class=\"ppbwincent\"></div><div class=\"ppbwinbott\"></div></div><div class=\"ppbwincontent\"><div class=\"popUpBar\"><span class=\"ppspan\">Clear Resource Quadrants</span><div a=\"1\" class=\"helpicon\"></div> <button class=\"xbutton\" id=\"reportsummXbutton\" onclick=\"RemovePopup('#clearreswin');\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div class=popUpWindow>",
   "'  ' class = 'riteovvw itemwarn' a='2' b='",
   "#navarrivetime",
   "</span></div><div  style=\"width: 22%;\" id=\"raidPlunderedIron\"> <div id=\"ironEnlistmentpic\" class=\"flleft\"></div><span id=\"raidPlunderedIronnum\" class=\"flleft\">",
@@ -4296,7 +4296,7 @@ const __s = [".shRinf",
   "#raidGo",
   "</span><br><span id=\"lastthreapl\" class=\"playerblink\">",
   "#contselectorAIPog",
-  "<div class=\"pplbfade\" style=\"display:block;\" ID=\"altpaypop\"><div class=\"paypallightbox\"><div class=\"paypheader\"><span>Alternative Payment Methods</span><span onclick=\"$('#altpaypop').remove();\" ID=\"pplightbxbutton\">X</span></div><br/><div class=\"paypspan1\">Select one of the following alternative payment methods.</div>",
+  "<div class=\"pplbfade\" style=\"display:block;\" ID=\"altpaypop\"><div class=\"paypallightbox\"><div class=\"paypheader\"><span>Alternative Payment Methods</span><span onclick=\"RemovePopup('#altpaypop');\" ID=\"pplightbxbutton\">X</span></div><br/><div class=\"paypspan1\">Select one of the following alternative payment methods.</div>",
   "#plstCita",
   "beforeunload ",
   "#rankings",
@@ -4936,7 +4936,7 @@ const __s = [".shRinf",
   "#alinv",
   "#leftsfx",
   "<div><div ID = \"cit_w\" title=\"Water City\"></div></div>",
-  "<div ID=\"speedupusePopup\" style=\"right: 5px;top: 100px;width:500px;height: 425px;\" class=\"medpopupstyle\"> <div class = \"medppbwinbgr\"> <div class = \"medppbwintop\"></div> <div class = \"medppbwincent\"></div> <div class = \"medppbwinbott\"></div> </div> <div class = \"medppbwincontent\"><div class=\"popUpBar\"><span class=\"medppspan\">Speed Up Summary</span><button id=\"speedupX\" onclick=\"$('#speedupusePopup').remove();\" class=\"xbutton\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div style=\"right:inherit; left:75px;    top: -85px;z-index: 4999;\" ID=\"buildcounlady\"></div><div ID=\"bcispans\" style=\"text-align:center;\"> You just used a <span ID=\"bcouiteusedpp\">Hammer of Domdis</span>!<br> The following orders were completed: </div><div ID=\"bciteutbl\" style=\"max-height: 250px;overflow-x: auto;\"><table ID=\"bcouiteusetable\">",
+  "<div ID=\"speedupusePopup\" style=\"right: 5px;top: 100px;width:500px;height: 425px;\" class=\"medpopupstyle\"> <div class = \"medppbwinbgr\"> <div class = \"medppbwintop\"></div> <div class = \"medppbwincent\"></div> <div class = \"medppbwinbott\"></div> </div> <div class = \"medppbwincontent\"><div class=\"popUpBar\"><span class=\"medppspan\">Speed Up Summary</span><button id=\"speedupX\" onclick=\"RemovePopup('#speedupusePopup');\" class=\"xbutton\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div style=\"right:inherit; left:75px;    top: -85px;z-index: 4999;\" ID=\"buildcounlady\"></div><div ID=\"bcispans\" style=\"text-align:center;\"> You just used a <span ID=\"bcouiteusedpp\">Hammer of Domdis</span>!<br> The following orders were completed: </div><div ID=\"bciteutbl\" style=\"max-height: 250px;overflow-x: auto;\"><table ID=\"bcouiteusetable\">",
   "wchatMsg",
   "#wormapfreesp",
   "465",
@@ -6075,7 +6075,7 @@ const __s = [".shRinf",
   "#commandtable>tbody>tr",
   "#allyscorankininp",
   "#totalBread",
-  "<div ID=\"tspeedupusePopup\" style=\"right: 5px;top: 100px;width:300px;height: 425px;\" class=\"medpopupstyle\"> <div class = \"medppbwinbgr\"> <div class = \"medppbwintop\"></div> <div class = \"medppbwincent\"></div> <div class = \"medppbwinbott\"></div> </div> <div class = \"medppbwincontent\"><div class=\"popUpBar\"><span class=\"medppspan\">Speed Up Summary</span><button id=\"speedupX\" onclick=\"$('#tspeedupusePopup').remove();\" class=\"xbutton\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div style=\"right:inherit; left:75px;    top: -85px;z-index: 4999;\" ID=\"defcounlady\"></div><div ID=\"bcispans\" style=\"text-align:center;\"> You just used a <span ID=\"bcouiteusedpp\">Shield of Cyndros</span>!<br> The following orders were completed: </div><div ID=\"bciteutbl\" style=\"max-height: 250px;overflow-x: auto;\"><table ID=\"bcouiteusetable\">",
+  "<div ID=\"tspeedupusePopup\" style=\"right: 5px;top: 100px;width:300px;height: 425px;\" class=\"medpopupstyle\"> <div class = \"medppbwinbgr\"> <div class = \"medppbwintop\"></div> <div class = \"medppbwincent\"></div> <div class = \"medppbwinbott\"></div> </div> <div class = \"medppbwincontent\"><div class=\"popUpBar\"><span class=\"medppspan\">Speed Up Summary</span><button id=\"speedupX\" onclick=\"RemovePopup('#tspeedupusePopup');\" class=\"xbutton\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div style=\"right:inherit; left:75px;    top: -85px;z-index: 4999;\" ID=\"defcounlady\"></div><div ID=\"bcispans\" style=\"text-align:center;\"> You just used a <span ID=\"bcouiteusedpp\">Shield of Cyndros</span>!<br> The following orders were completed: </div><div ID=\"bciteutbl\" style=\"max-height: 250px;overflow-x: auto;\"><table ID=\"bcouiteusetable\">",
   "\">Basilica, Level 9</td> </tr> <tr> <td>Cost:</td> <td ID = \"costtbuil\"> <div ID = \"ttstonepic\"></div><span ID = \"#trcosttt\">100</span> </td> </tr> </table> </div>",
   "events",
   "px !important; float:right;",
@@ -7285,7 +7285,11 @@ function setupSyncView() {
   // Later, you can stop observing
   //  observer.disconnect();
 }
-
+function RemovePopup(id:string)
+{
+    $(id).remove();
+    callSyncViewMode();
+}
 var callSyncViewMode = debounce(DoSyncViewMode, 200);
 function DoSyncViewMode() {
   try {
@@ -11423,7 +11427,7 @@ var cotgsubscribe = amplify;
 
     function F3F(A06) {
       var L06 = document.getElementById(A06);
-      var V06 = $(__s[+m7y] + A06);
+      var V06 = $("#" + A06);
       var K06 = q3F(L06);
       E6k.R6();
       var W06 = V06.offset();
@@ -11721,6 +11725,7 @@ var cotgsubscribe = amplify;
       //    var W11 = ppdt[__s[+Y9y]];
       let C11 = $(__s[2595])
         .length;
+
       if (C11 != ppdt['c'].length);
       if (ppdt[__s[3201]]) {
         if (ppdt[_s('3201' |
@@ -12848,7 +12853,7 @@ var cotgsubscribe = amplify;
             "6021");
           else O51 = O51 + __s[C3y ^ 0] + t51[T51] + __s[+g3y] + t51[T51] + __s[6021];
         $(__s[3668])
-          .attr(__s[+y8y], v51);
+          .attr("pl", v51);
         var W51 = atob(L51);
         $(__s[2910])
           .html(__s[7005] + b51 + __s[6021]);
@@ -16391,28 +16396,28 @@ var cotgsubscribe = amplify;
         $(__s[3059])
           .click(function() {
             var x9V = $(this)
-              .attr(__s[+y8y]);
+              .attr("pl");
             p4F(x9V);
           });
         E6k.y6();
         $(__s[1808])
           .click(function() {
             var O9V = $(this)
-              .attr(__s[y8y * 1]);
+              .attr("pl");
             E6k.y6();
             E4F(O9V);
           });
         $(__s[3513])
           .click(function() {
             var t9V = $(this)
-              .attr(__s[y8y << 1475420640]);
+              .attr("pl");
             E6k.y6();
             Z5F(t9V);
           });
         $(__s[5484])
           .click(function() {
             var o9V = $(this)
-              .attr(__s[y8y << 478939712]);
+                .attr("pl");
             s9F(o9V);
           });
         $(__s[4241])
@@ -16904,7 +16909,7 @@ var cotgsubscribe = amplify;
         $(__s[2129])
           .click(function() {
             var d01 = $(this)
-              .attr(__s[+y8y]);
+              .attr("pl");
             E4F(d01);
           });
         $(__s['1725' | 524])
@@ -17087,7 +17092,7 @@ var cotgsubscribe = amplify;
           .click(function() {
             E6k.R6();
             var h51 = $(this)
-              .attr(__s[+y8y]);
+              .attr("pl");
             z6F(h51);
           });
       });
@@ -17125,7 +17130,7 @@ var cotgsubscribe = amplify;
           N8R << 399789376);
         var A1B = __s[E8R | 2054];
         var C1B = __s[4003];
-        var X1B = $(__s[+m7y] +
+        var X1B = $("#" +
           z1B + __s[+q8R])
           .attr(__s[Z9y >> 629888224]);
       } else if (f1B == 1 && n1B == 1) {
@@ -17149,7 +17154,7 @@ var cotgsubscribe = amplify;
         var A1B = __s[+L8R];
         var C1B = _s(
           1992);
-        var X1B = $(__s[+m7y] + z1B + __s[q8R ^ 0])
+        var X1B = $("#" + z1B + __s[q8R ^ 0])
           .attr(__s[+Z9y]);
       } else if (f1B == 3 && n1B == 1) {
         var J1B = __s[Y8R >> 1917959360];
@@ -17159,7 +17164,7 @@ var cotgsubscribe = amplify;
         var r1B = "sco";
         var A1B = "sco";
         var C1B = __s[2566];
-        var X1B = $(__s[+m7y] + z1B + __s[q8R ^ 0])
+        var X1B = $("#" + z1B + __s[q8R ^ 0])
           .attr(__s[Z9y >> 1416872672]);
       } else if (n1B == 2) {
         var J1B = __s[Y8R - 0];
@@ -17176,7 +17181,7 @@ var cotgsubscribe = amplify;
           "2756");
         var o1B = __s[2756];
         var C1B = __s[827];
-        var X1B = $(__s[+m7y] + o1B + E6k
+        var X1B = $("#" + o1B + E6k
           .o55(q8R | 1816))
           .attr(__s[+Z9y]);
       }
@@ -17186,7 +17191,7 @@ var cotgsubscribe = amplify;
       else if (B1B == __s[x8R ^ 0]) var V1B = 2;
       else if (B1B == __s[r8R ^ 0]) var V1B = "3" | 1;
       E6k.R6();
-      if (V1B == 2 && $(__s[+m7y] + C1B)
+      if (V1B == 2 && $("#" + C1B)
         .val() != '') {
         var W1B = $(__s[m7y * 1] + C1B)
           .val();
@@ -17247,15 +17252,15 @@ var cotgsubscribe = amplify;
           .S55(+b8R));
         $(__s[m7y ^ 0] + o1B + __s[X8R - 0])
           .text(h1B);
-        $(__s[+m7y] + o1B + __s[q8R * 1])
+        $("#" + o1B + __s[q8R * 1])
           .text(U1B);
-        $(__s[+m7y] + o1B + __s[+P8R])
+        $("#" + o1B + __s[+P8R])
           .text(P1B);
         $(__s[m7y >> 219073888] + o1B + __s[+I8R])
           .text(K1B);
       } else if (V1B == 3 && $(__s[m7y & 2147483647] + C1B)
         .val() != "") {
-        var W1B = $(__s[+m7y] + C1B)
+        var W1B = $("#" + C1B)
           .val();
         var M1B = W1B.substring(0, 2);
         var G1B = W1B.substring(3, 5);
@@ -17312,13 +17317,13 @@ var cotgsubscribe = amplify;
         var h1B = g1B.format(__s[+b8R]);
         var K1B = Z1B.format(E6k
           .S55(b8R - 0));
-        $(__s[+m7y] + o1B + __s[X8R << 1468710560])
+        $("#" + o1B + __s[X8R << 1468710560])
           .text(P1B);
-        $(__s[+m7y] + o1B + __s[q8R << 1829788832])
+        $("#" + o1B + __s[q8R << 1829788832])
           .text(U1B);
-        $(__s[+m7y] + o1B + __s[P8R << 1702418464])
+        $("#" + o1B + __s[P8R << 1702418464])
           .text(h1B);
-        $(__s[+m7y] + o1B + __s[+I8R])
+        $("#" + o1B + __s[+I8R])
           .text(K1B);
       }
     }
@@ -20012,7 +20017,7 @@ var cotgsubscribe = amplify;
       $(__s[3513])
         .attr(__s[y8y | 2048], l9V);
       $(__s[5484])
-        .attr(__s[+y8y], l9V);
+        .attr("pl", l9V);
       $(__s[+p3R])
         .css("display", "block");
     }
@@ -20109,7 +20114,7 @@ var cotgsubscribe = amplify;
     if (typeof module != "undefined" && module.exports) module.exports = a6;
 
     function X2F(T0Z) {
-      $(__s[+m7y] + T0Z)
+      $("#" + T0Z)
         .css("display", "none");
       N6();
       var x0Z = $.post(q6 + __s[1961], {cid: cid, oid: T0Z});
@@ -20179,7 +20184,7 @@ var cotgsubscribe = amplify;
       function() {return a6;});
 
     function x2F(I0Z) {
-      $(__s[+m7y] + I0Z)
+      $("#" + I0Z)
         .css("display", "none");
       N6();
       E6k.y6();
@@ -20197,8 +20202,8 @@ var cotgsubscribe = amplify;
       });
     }
     a6.ccazzx.encrypt = function(k2v, s2v, H2v) {
-    console.log(k2v);
-    console.log(s2v);
+   // console.log(k2v);
+   // console.log(s2v);
 
       var m6v = 16;
       if (!(H2v == +G5y || H2v ==
@@ -21567,25 +21572,25 @@ var cotgsubscribe = amplify;
       //          var W2D;
       //          var g2D;
       //          var b2D;
-      //          var O8D = j9.replace(__s[+m7y], '');
+      //          var O8D = j9.replace("#", '');
       //          var x8D =
       //            S9.replace(__s[m7y | 1], "");
       //          var T8D = d9.replace(__s[m7y - 0], "");
-      //          var Q8D = i9.replace(__s[+m7y], '');
-      //          var c2D = C9.replace(__s[+m7y], _s(
+      //          var Q8D = i9.replace("#", '');
+      //          var c2D = C9.replace("#", _s(
       //            4867));
-      //          var q2D = M9.replace(__s[+m7y], '');
-      //          var z8D = z9.replace(__s[+m7y], E6k
+      //          var q2D = M9.replace("#", '');
+      //          var z8D = z9.replace("#", E6k
       //            .o55(4867));
-      //          var s8D = X9.replace(__s[+m7y], "");
+      //          var s8D = X9.replace("#", "");
       //          var L8D = L9
-      //            .replace(__s[+m7y], "");
-      //          var y2D = o9.replace(__s[+m7y], _s(
+      //            .replace("#", "");
+      //          var y2D = o9.replace("#", _s(
       //            4867));
-      //          var k8D = O9.replace(__s[+m7y], "");
+      //          var k8D = O9.replace("#", "");
       //          var o8D = m8.replace(_s(+
       //            m7y), '');
-      //          var t8D = T9.replace(__s[+m7y], "");
+      //          var t8D = T9.replace("#", "");
       //          var l8D = { content:this};
       ////          l8D["content"] = this;
       //          this.borderSize = 0;
@@ -21766,7 +21771,7 @@ var cotgsubscribe = amplify;
       //                      mrkcolor = X2D[f2D]['c'];
       //                      mrkonoff = X2D[f2D]["d"];
       //                      a2D = 1;
-      //                      D2D = mrkcolor.replace(__s[+m7y], "");
+      //                      D2D = mrkcolor.replace("#", "");
       //                      p2D = mrkonoff;
       //                    }
       //                  } var Y2D = 0;
@@ -21784,7 +21789,7 @@ var cotgsubscribe = amplify;
       //                      var w8D = X2D[G2D]['c'];
       //                      var I8D = X2D[G2D]["d"];
       //                      Y2D = 1;
-      //                      N2D = w8D.replace(__s[+m7y], "");
+      //                      N2D = w8D.replace("#", "");
       //                      F2D = I8D;
       //                    }
       //                  } if (v8D == f2D) Q2D = 1;
@@ -22524,7 +22529,7 @@ var cotgsubscribe = amplify;
             D21 = n21[A21][5];
             Y21 = n21[A21][6];
             j81 = n21[A21][7];
-            alliance = n21[A21][8];
+            let alliance = n21[A21][8];
             var E21 = n21[A21][9];
             if (f21 != 0)
               if (g21 == __s[3333]) P21 = __s[2843] + f21 + __s[+b1R] + f21 +
@@ -22562,7 +22567,7 @@ var cotgsubscribe = amplify;
             D21 = n21[A21][5];
             Y21 = n21[A21][6];
             j81 = n21[A21][7];
-            alliance = n21[A21][8];
+              let alliance = n21[A21][8];
             P21 = n21[A21][9];
             var Q81 = n21[A21][10];
             var E21 = n21[A21][11];
@@ -22600,7 +22605,7 @@ var cotgsubscribe = amplify;
             D21 = n21[A21][5];
             Y21 = n21[A21][6];
             player = n21[A21][7];
-            alliance = n21[A21]["8" | 8];
+            let alliance = n21[A21]["8" | 8];
             if (f21 != 0) P21 = __s[2843] + f21 + __s[4610] + f21 +
               __s[3292];
             else P21 = "";
@@ -23247,7 +23252,7 @@ var cotgsubscribe = amplify;
           else if (n5v == 2) var r5v = "sco";
           else if (n5v == (3)) var r5v = __s[+E8R];
           else if (n5v == 4) var r5v = __s[m8R ^ 0];
-          var f5v = $(__s[+m7y] + r5v + __s[+V7p] + A5v)
+          var f5v = $("#" + r5v + __s[+V7p] + A5v)
             .attr("class");
           if (f5v == __s[+M7p]) {
             $(__s[m7y | 1033] + r5v + __s[+V7p] + A5v)
@@ -23256,7 +23261,7 @@ var cotgsubscribe = amplify;
             $(__s[m7y | 4128] + r5v + __s[+s7p] + A5v)
               .show();
           } else {
-            $(__s[+m7y] + r5v + __s[+V7p] + A5v)
+            $("#" + r5v + __s[+V7p] + A5v)
               .removeClass(__s[w5R - 0])
               .addClass(__s[+M7p]);
             $(__s[m7y - 0] + r5v + __s[+s7p] + A5v)
@@ -31650,9 +31655,9 @@ var cotgsubscribe = amplify;
         .remove();
       if (helparray[N9n][__s[+K2y]][Y9n].hasOwnProperty(__s[4677])) $(_s(+
         m7y) + helparray[N9n][__s[K2y - 0]][Y9n][__s[4677]])
-        .scrollTop($(__s[+m7y] + helparray[N9n][__s[+K2y]][Y9n][__s[4677]])[0].scrollHeight);
+        .scrollTop($("#" + helparray[N9n][__s[+K2y]][Y9n][__s[4677]])[0].scrollHeight);
       if (
-        helparray[N9n][__s[K2y & 2147483647]][Y9n].hasOwnProperty(__s[3967])) $(__s[+m7y] + helparray[N9n]
+        helparray[N9n][__s[K2y & 2147483647]][Y9n].hasOwnProperty(__s[3967])) $("#" + helparray[N9n]
         [__s[+K2y]][Y9n][__s[3967]])
           .scrollTop(0);
       if (helparray[N9n][__s[+K2y]][Y9n][__s["6440" | 296]] == 1) F3F(helparray[N9n]
@@ -33229,7 +33234,7 @@ var cotgsubscribe = amplify;
               s52
                 = E02.e[1][k52][__s[x9y << 238855392]];
               j52 = E02.e[1][k52][__s[O4t ^ 0]];
-              w52 = E02.e[1][k52][__s[+y8y]];
+              w52 = E02.e[1][k52]["pl"];
               e52 = e52 + __s[v4t ^ 0] + s52 + __s[+w4t] + E02.e[1][k52][__s[+F4t]] + _s(H4t &
                 2147483647) + j52 + __s[+q4t] + w52 + __s[+K5y];
             }
@@ -33244,7 +33249,7 @@ var cotgsubscribe = amplify;
               s52 = E02.e[+
                 "2"][k52]['c'];
               j52 = E02.e['2' | 2][k52][__s[+O4t]];
-              w52 = E02.e[2][k52][__s[+y8y]];
+              w52 = E02.e[2][k52]["pl"];
               e52 = e52 + __s[+v4t] + s52 + __s[w4t >> 891249984] + E02.e[2][k52][__s[+F4t]] + E6k
                 .o55(+H4t) + j52 + __s[q4t ^ 0] + w52 + __s[+K5y];
             }
@@ -33259,7 +33264,7 @@ var cotgsubscribe = amplify;
               s52 = E02
                 .e[3][k52][__s[x9y >> 383932224]];
               j52 = E02.e[3][k52][__s[O4t & 2147483647]];
-              w52 = E02.e[3][k52][__s[+y8y]];
+              w52 = E02.e[3][k52]["pl"];
               e52 = e52 + __s[v4t >> 680473440] + s52 + __s[w4t & 2147483647] + E02.e[3][k52][_s(
                 F4t - 0)] + __s[+H4t] + j52 + __s[q4t << 348770720] + w52 + __s[K5y << 454995200];
             }
@@ -33291,7 +33296,7 @@ var cotgsubscribe = amplify;
               s52 = E02.e[
                 5][k52][__s[x9y >> 853152000]];
               j52 = E02.e[5][k52][__s[O4t ^ 0]];
-              w52 = E02.e[5][k52][__s[+y8y]];
+              w52 = E02.e[5][k52]["pl"];
               e52 = e52 + __s[+v4t] + s52 + __s[w4t << 1677996800] + E02.e[5][k52][__s[+F4t]] + E6k
                 .S55(+H4t) + j52 + __s[+q4t] + w52 + __s[+K5y];
             }
@@ -33306,7 +33311,7 @@ var cotgsubscribe = amplify;
               s52 =
                 E02.e[6][k52][__s[x9y * 1]];
               j52 = E02.e[6][k52][__s[+O4t]];
-              w52 = E02.e[6][k52][__s[+y8y]];
+              w52 = E02.e[6][k52]["pl"];
               e52 = e52 + __s[+v4t] + s52 + __s[w4t << 1019624224] + E02.e[6][k52][E6k
                 .S55(F4t - 0)] + __s[+H4t] + j52 + __s[q4t >> 809210848] + w52 + __s[+K5y];
             }
@@ -33322,7 +33327,7 @@ var cotgsubscribe = amplify;
               s52 = E02.e[+
                 '7'][k52]['c'];
               j52 = E02.e[7][k52][__s[+O4t]];
-              w52 = E02.e[7][k52][__s[+y8y]];
+              w52 = E02.e[7][k52]["pl"];
               e52 = e52 + __s[v4t - 0] + s52 + __s[+w4t] + E02.e[7][k52][__s[+F4t]] +
                 __s[+H4t] + j52 + __s[+q4t] + w52 + __s[K5y | 4129];
             }
@@ -33383,7 +33388,7 @@ var cotgsubscribe = amplify;
               s52 = E02.p[
                 3][k52][__s[x9y - 0]];
               j52 = E02.p[3][k52][__s[+O4t]];
-              w52 = E02.p[3][k52][__s[+y8y]];
+              w52 = E02.p[3][k52]["pl"];
               e52 = e52 + __s[v4t >> 770201760] + s52 + __s[+w4t] + E02.p[3][k52][_s(+
                 F4t)] + __s[+H4t] + j52 + __s[q4t << 145055904] + w52 + __s[K5y ^ 0];
             }
@@ -33399,7 +33404,7 @@ var cotgsubscribe = amplify;
               s52 = E02.p[4]
               [k52]['c'];
               j52 = E02.p[4][k52][__s[O4t << 1454360640]];
-              w52 = E02.p[4][k52][__s[+y8y]];
+              w52 = E02.p[4][k52]["pl"];
               e52 = e52 + __s[+v4t] + s52 + __s[+w4t] + E02.p[4][k52][__s[F4t >> 1279899360]] + E6k
                 .o55(+H4t) + j52 + __s[+q4t] + w52 + __s[+K5y];
             }
@@ -33445,7 +33450,7 @@ var cotgsubscribe = amplify;
               .length; k52++) {
               s52 = E02.p[7][k52]['c'];
               j52 = E02.p[7][k52][__s[+O4t]];
-              w52 = E02.p[7][k52][__s[+y8y]];
+              w52 = E02.p[7][k52]["pl"];
               e52 = e52 + __s[v4t ^ 0] + s52 + __s[w4t | 1088] + E02.p[7][k52][__s[+F4t]] + E6k
                 .S55(H4t & 2147483647) + j52 + __s[q4t >> 1733145664] + w52 + __s[+K5y];
             }
@@ -33461,7 +33466,7 @@ var cotgsubscribe = amplify;
               .length; k52++) {
               s52 = E02.p[8][k52]['c'];
               j52 = E02.p[8][k52][__s[+O4t]];
-              w52 = E02.p[8][k52][__s[+y8y]];
+              w52 = E02.p[8][k52]["pl"];
               e52 = e52 + __s[v4t & 2147483647] + s52 + __s[w4t >> 1171543136] + E02.p[8][k52][_s(+
                 F4t)] + __s[+H4t] + j52 + __s[q4t | 1172] + w52 + __s[+K5y];
             }
@@ -38257,13 +38262,39 @@ var cotgsubscribe = amplify;
 
       function j4n() {return !I4n && s4n;}
     }(jQuery, window, document));
-    $(document)
-      .ready(function() {E6k.y6();});
+    
+    
+      function globalClassClick( evt: MouseEvent) {
+          let that: Element = evt.target;
+          let className = that.className;
 
+          if (className.indexOf("clPop") >= 0) {
+
+              var n61 = that.getAttribute("pl");
+              $("#" + n61).remove();
+              callSyncViewMode();
+          }
+          else if ((className.indexOf("Xbutton") >= 0) || (className.indexOf("xbutton") >= 0))
+          {
+
+              callSyncViewMode();
+         }
+          
+      }
+
+    $(document)
+      .ready(function() 
+      {
+      E6k.y6();
+          let options: AddEventListenerOptions = { capture: true, passive: true, once: false }
+          window.addEventListener('click', globalClassClick, options);
+      });
+      
     function N1F() {
-      $(__s[6888])
-        .remove();
+     RemovePopup(__s[6888]);
     }
+
+
     $(document)
       .ready(function() {
         var m1n = parseFloat(0);
@@ -40278,7 +40309,7 @@ var cotgsubscribe = amplify;
                 .attr("a", n8n);
               $(__s[2052])
                 .show();
-              $(__s[+m7y] + V8n)
+              $("#" + V8n)
                 .addClass(__s[+F2m]);
               $(__s[6551])
                 .hide();
@@ -40320,7 +40351,7 @@ var cotgsubscribe = amplify;
                 .attr('a', n8n);
               $(__s[6551])
                 .show();
-              $(__s[+m7y] + V8n)
+              $("#" + V8n)
                 .addClass(__s[+F2m]);
               $(__s[2052])
                 .hide();
@@ -42918,12 +42949,12 @@ var cotgsubscribe = amplify;
       }
       $(__s[1600])
         .click(function() {N1F();});
-      $(__s[2750])
-        .click(function() {
-          var n61 = $(this)
-            .attr(__s[y8y << 1807759904]);
-          p6F(n61);
-        });
+ //       $(".clPop")
+  //      .click(function() {
+          //var n61 = $(this)
+          //  .attr(__s[y8y << 1807759904]);
+          //p6F(n61);
+    //    });
     }
 //    var G1F = 0;
 //    var z2F = 1;
@@ -43640,7 +43671,7 @@ var cotgsubscribe = amplify;
         });
       var t6B = $(__s[m7y * 1] + I6B + __s[q8R ^ 0])
         .attr(__s[Z9y & 2147483647]);
-      var L6B = $(__s[+m7y] + I6B + __s[G8R ^ 0])
+      var L6B = $("#" + I6B + __s[G8R ^ 0])
         .text();
       if (L6B == __s[T8R - 0]) var v6B = 1;
       else if (L6B == __s[r8R | B9s]) var v6B = 3;
@@ -43663,7 +43694,7 @@ var cotgsubscribe = amplify;
         .text(G6B);
       $(__s[m7y >> 2041989024] + I6B + __s[+q8R])
         .text(z6B);
-      $(__s[+m7y] + I6B + __s[P8R >> 131274688])
+      $("#" + I6B + __s[P8R >> 131274688])
         .text(W6B);
       $(__s[m7y ^ 0] + I6B + __s[+I8R])
         .text(d6B);
@@ -43677,13 +43708,13 @@ var cotgsubscribe = amplify;
       else if (v6B == 3 && $(__s[o5y - 0])
         .css("display") == "block" && O6B == (1)) B2(1);
       else {
-        $(__s[+m7y] + I6B + __s[X8R ^ 0])
+        $("#" + I6B + __s[X8R ^ 0])
           .text("-");
-        $(__s[+m7y] + I6B + __s[+q8R])
+        $("#" + I6B + __s[+q8R])
           .text("-");
-        $(__s[+m7y] + I6B + __s[P8R ^ 0])
+        $("#" + I6B + __s[P8R ^ 0])
           .text("-");
-        $(__s[+m7y] + I6B + __s[+I8R])
+        $("#" + I6B + __s[+I8R])
           .text("-");
         $(__s[m7y * 1] + I6B + __s[+I8R])
           .text("-");
@@ -43711,19 +43742,19 @@ var cotgsubscribe = amplify;
       $(__s[368])
         .attr(__s[y8y & 2147483647], m9V);
       $(__s[6150])
-        .attr(__s[+y8y], m9V);
+        .attr("pl", m9V);
       $(__s[803])
-        .attr(__s[+y8y], m9V);
+        .attr("pl", m9V);
       $(__s[1683])
         .attr(__s[y8y & 2147483647], m9V);
       $(__s[4951])
-        .attr(__s[y8y * 1], m9V);
+        .attr("pl", m9V);
       $(__s[4815])
-        .attr(__s[+y8y], m9V);
+        .attr("pl", m9V);
       $(__s[3426])
-        .attr(__s[+y8y], m9V);
+        .attr("pl", m9V);
       $(__s[1849])
-        .attr(__s[+y8y], m9V);
+        .attr("pl", m9V);
       $(__s[3754])
         .attr(__s[y8y >> 933000480], m9V);
       N6();
@@ -45953,7 +45984,7 @@ var cotgsubscribe = amplify;
       $(__s[m7y - 0] + n8Z)
         .prop(__s[+p9y], !![]);
       setTimeout(function() {
-        $(__s[+m7y] + n8Z)
+        $("#" + n8Z)
           .prop(__s[+p9y], !{});
       }, 1000);
     }
@@ -46692,13 +46723,13 @@ var cotgsubscribe = amplify;
       }
       if (Y1B == 1) B2('2' >>
         460088192);
-      $(__s[+m7y] + p1B + __s[X8R & 2147483647])
+      $("#" + p1B + __s[X8R & 2147483647])
         .text(s6B);
-      $(__s[+m7y] + p1B + __s[+q8R])
+      $("#" + p1B + __s[+q8R])
         .text(m1B);
-      $(__s[+m7y] + p1B + __s[P8R ^ 0])
+      $("#" + p1B + __s[P8R ^ 0])
         .text(H6B);
-      $(__s[+m7y] + p1B + __s[+I8R])
+      $("#" + p1B + __s[+I8R])
         .text(a1B);
       if (Y1B == 1 && $(__s[o5y | 6208])
         .css("display") == "block" && N1B == 1) setTimeout(function() {x3F();}, 1000);
@@ -46707,15 +46738,15 @@ var cotgsubscribe = amplify;
       else if (Y1B == (3) && $(__s[o5y & 2147483647])
         .css("display") == "block" && N1B == 1) B2(2);
       else {
-        $(__s[+m7y] + p1B + __s[+X8R])
+        $("#" + p1B + __s[+X8R])
           .text("-");
-        $(__s[+m7y] + p1B + __s[+q8R])
+        $("#" + p1B + __s[+q8R])
           .text("-");
         $(__s[m7y >> 1917942112] + p1B + __s[+P8R])
           .text("-");
         $(__s[m7y << 480034432] + p1B + __s[+I8R])
           .text("-");
-        $(__s[+m7y] + p1B + __s[I8R << 357306400])
+        $("#" + p1B + __s[I8R << 357306400])
           .text("-");
         $(__s[3312] + p1B + __s[1031])
           .text(0);
@@ -49807,13 +49838,13 @@ var cotgsubscribe = amplify;
       if (p8l == __s[+T8R]) D8l = 1;
       else if (p8l == __s[x8R - 0]) D8l = 2;
       else if (p8l == __s[+r8R]) D8l = 3;
-      if ($(__s[+m7y] + R8l + N8l)
+      if ($("#" + R8l + N8l)
         .val() > F8l && D8l == 1) {
         $(__s[z74 | 133])
           .removeClass(__s[z9y | 2092]);
-        $(__s[+m7y] + P8l)
+        $("#" + P8l)
           .attr(__s[p9y >> 520985056], !!1);
-        $(__s[+m7y] + P8l)
+        $("#" + P8l)
           .addClass(__s[n9y | 1092]);
       } else {
         $(__s[+z74])
@@ -49823,8 +49854,8 @@ var cotgsubscribe = amplify;
         $(__s[m7y | 8] + P8l)
           .removeClass(__s[+n9y]);
       }
-      if ($(__s[+m7y] + B8l + __s[395])
-        .val() != "" && $(__s[+m7y] + B8l + __s[6248])
+      if ($("#" + B8l + __s[395])
+        .val() != "" && $("#" + B8l + __s[6248])
           .val() != '') setTimeout(function() {U2();}, 500);
     }
 
@@ -51203,7 +51234,7 @@ var cotgsubscribe = amplify;
                   .append(O1V);
                 $(__s[P8y - 0])
                   .append(O1V);
-                console.log(__s[12]);
+             //   console.log(__s[12]);
               } else {
                 $(__s[c2R >> 955569536])
                   .append(O1V);
@@ -51221,7 +51252,7 @@ var cotgsubscribe = amplify;
                   .animate({scrollTop: $(__s[P8y * 1])[0].scrollHeight}, +e2R);
                 $(__s[L2R ^ 0])
                   .animate({scrollTop: $(__s[+L2R])[0].scrollHeight}, +e2R);
-                console.log(__s[4119]);
+            //    console.log(__s[4119]);
               }
             }
             if (document[e0F]) {
@@ -51718,7 +51749,7 @@ var cotgsubscribe = amplify;
 
     function M2F(O0Z) {
       E6k.R6();
-      $(__s[+m7y] + O0Z)
+      $("#" + O0Z)
         .css("display", "none");
       N6();
       var t0Z = $.post(q6 + __s[1415], {oid: O0Z, cid: cid});
@@ -52329,14 +52360,14 @@ var cotgsubscribe = amplify;
           .removeClass(__s[+z9y]);
         $(__s[m7y & 2147483647] + e8l)
           .attr(__s[+p9y], !!"1");
-        $(__s[+m7y] + e8l)
+        $("#" + e8l)
           .addClass(__s[+n9y]);
       } else {
         $(__s[z74 << 1011642304])
           .addClass(__s[z9y * 1]);
-        $(__s[+m7y] + e8l)
+        $("#" + e8l)
           .attr(__s[p9y >> 1811077600], ![]);
-        $(__s[+m7y] + e8l)
+        $("#" + e8l)
           .removeClass(__s[n9y & 2147483647]);
       }
     }
@@ -54353,13 +54384,13 @@ var cotgsubscribe = amplify;
               2147483647));
             var E3B = formatT(a3B);
             var k1B = Q2(A3B);
-            $(__s[+m7y] + b3B + __s[+X8R])
+            $("#" + b3B + __s[+X8R])
               .text(q3B);
-            $(__s[+m7y] + b3B + __s[+q8R])
+            $("#" + b3B + __s[+q8R])
               .text(k1B);
-            $(__s[+m7y] + b3B + __s[+q8R])
+            $("#" + b3B + __s[+q8R])
               .attr(__s[+Z9y], A3B);
-            $(__s[+m7y] + b3B + __s[+P8R])
+            $("#" + b3B + __s[+P8R])
               .text(m3B);
             $(__s[m7y ^ 0] + b3B + __s[+I8R])
               .text(E3B);
@@ -57068,8 +57099,10 @@ var cotgsubscribe = amplify;
 
     function p6F(f61) {
       E6k.R6();
-      $(__s[+m7y] + f61)
+      $("#" + f61)
         .remove();
+        
+        callSyncViewMode();
     }
     var q7F = 0;
     var k0F = new Object();
@@ -57887,7 +57920,7 @@ var cotgsubscribe = amplify;
       var
         r6B = 0;
       var A6B = '';
-      $(__s[+m7y] + V6B)
+      $("#" + V6B)
         .find(__s[+E7y])
         .each(function() {
           K6B = $(this)
@@ -57906,20 +57939,20 @@ var cotgsubscribe = amplify;
         0))
         .children(__s[+q0t])
         .attr("id");
-      var R6B = $(__s[+m7y] + J6B + __s[G8R & 2147483647])
+      var R6B = $("#" + J6B + __s[G8R & 2147483647])
         .text();
       if (R6B == __s[+T8R]) var n6B = 1;
       else if (R6B == __s[+r8R]) {
         var n6B = 2;
-        var D6B = $(__s[+m7y] + b6B)
+        var D6B = $("#" + b6B)
           .val();
-        A6B = $(__s[+m7y] + b6B)
+        A6B = $("#" + b6B)
           .val();
       } else {
         var n6B = 3;
-        var D6B = $(__s[+m7y] + b6B)
+        var D6B = $("#" + b6B)
           .val();
-        A6B = $(__s[+m7y] + b6B)
+        A6B = $("#" + b6B)
           .val();
       }
       E6k.R6();
@@ -57928,7 +57961,7 @@ var cotgsubscribe = amplify;
         .prop(__s[286])) y6B = 0;
       //      console.log(__s[485] + r6B);
       if (r6B == 1 && q6B == 0) {
-        var g6B = $(__s[+m7y] + S6B + E6k
+        var g6B = $("#" + S6B + E6k
           .o55(395))
           .val();
         var Z6B = $(__s[m7y & 2147483647] + S6B + __s[6248])
@@ -58823,18 +58856,18 @@ var cotgsubscribe = amplify;
         .prop(__s[286])) ppdt.wmo['15' << 1780566432] = 1;
       else ppdt.wmo['15' - 0] = 0;
       ppdt.wmo[16] = j9.replace(__s[m7y | 1048], '');
-      ppdt.wmo[17 ^ 0] = S9.replace(__s[+m7y], "");
-      ppdt.wmo[+u7y] = d9.replace(__s[+m7y], '');
-      ppdt.wmo[p0y - 0] = i9.replace(__s[+m7y], '');
+      ppdt.wmo[17 ^ 0] = S9.replace("#", "");
+      ppdt.wmo[+u7y] = d9.replace("#", '');
+      ppdt.wmo[p0y - 0] = i9.replace("#", '');
       E6k.y6();
       ppdt.wmo[u6y >> 553931392] = C9.replace(__s[m7y >> 1164478304], '');
       ppdt.wmo[+A5y] = M9.replace(__s[m7y | 5169], '');
-      ppdt.wmo[+j6y] = z9.replace(__s[+m7y], '');
+      ppdt.wmo[+j6y] = z9.replace("#", '');
       ppdt.wmo[F8y * 1] = X9.replace(__s[m7y >> 133268736], '');
-      ppdt.wmo[24] = L9.replace(__s[+m7y], "");
-      ppdt.wmo[25] = o9.replace(__s[+m7y], '');
+      ppdt.wmo[24] = L9.replace("#", "");
+      ppdt.wmo[25] = o9.replace("#", '');
       ppdt.wmo[+A8y] = O9.replace(__s[m7y - 0], '');
-      ppdt.wmo[e2y & 2147483647] = m8.replace(__s[+m7y], "");
+      ppdt.wmo[e2y & 2147483647] = m8.replace("#", "");
       ppdt.wmo[R2y * 1] = T9.replace(__s[m7y & 2147483647], "");
       ppdt.wmo[G8y ^ 0] = $(__s["5656" | 5128])
         .val();
@@ -60591,16 +60624,16 @@ var cotgsubscribe = amplify;
           .prop(__s[286], !![]);
         else $(__s[+w6p])
           .prop(__s[286], ![]);
-        j9 = __s[+m7y] + ppdt.wmo[16];
+        j9 = "#" + ppdt.wmo[16];
         S9 = __s[m7y | 5129] + ppdt.wmo[+17];
         d9 = __s[m7y & 2147483647] + ppdt.wmo[u7y * 1];
         i9 = __s[m7y - 0] + ppdt.wmo[+p0y];
-        C9 = __s[+m7y] + ppdt.wmo[+u6y];
-        M9 = __s[+m7y] + ppdt.wmo[+A5y];
-        z9 = __s[+m7y] + ppdt.wmo[+j6y];
+        C9 = "#" + ppdt.wmo[+u6y];
+        M9 = "#" + ppdt.wmo[+A5y];
+        z9 = "#" + ppdt.wmo[+j6y];
         X9 = __s[m7y ^ 0] + ppdt.wmo[+F8y];
         L9 = __s[m7y ^ 0] + ppdt.wmo[24];
-        o9 = __s[+m7y] + ppdt.wmo[25];
+        o9 = "#" + ppdt.wmo[25];
         O9 = __s[m7y << 521407712] + ppdt.wmo[+A8y];
         m8 = __s[m7y >> 1876365824] + ppdt.wmo[e2y >> 1343235808];
         T9 = __s[m7y >> 21948864] + ppdt.wmo[R2y | 20];
@@ -67143,7 +67176,7 @@ var cotgsubscribe = amplify;
             b7B) {
             if (ppdt.specse == (1)) K7B = K7B + __s[723] + b7B[d7B][__s[x9y * 1]] + E6k
               .S55(1184) + b7B[d7B]["pid"] + __s[2591] + b7B[d7B][__s[+M8R]] + E6k
-                .o55(+c2y) + b7B[d7B][__s[3934]] + __s[a9t >> 2041578880] + b7B[d7B][__s[+y8y]] + E6k
+                .o55(+c2y) + b7B[d7B][__s[3934]] + __s[a9t >> 2041578880] + b7B[d7B]["pl"] + E6k
                   .o55(+c2y) + b7B[d7B][__s["3561" | 289]] + __s[+o3y] + b7B[d7B][__s[6626]] + E6k
                     .S55(g3y * 1) + b7B[d7B][__s[R8y & 2147483647]] + __s[+K5y];
             else {
@@ -67194,7 +67227,7 @@ var cotgsubscribe = amplify;
                 x9y)] + __s[1184] + b7B[d7B]["pid"] + __s[2591] + b7B[d7B][E6k
                   .S55(
                     +M8R)] + __s[c2y ^ 0] + b7B[d7B][__s[3934]] + __s[a9t << 359600768] + b7B[d7B][
-                __s[+y8y]] + __s[c2y ^ 0] + y7B + __s[+c2y] + b7B[d7B][__s['1949' | 388]] + E6k
+                "pl"] + __s[c2y ^ 0] + y7B + __s[+c2y] + b7B[d7B][__s['1949' | 388]] + E6k
                   .o55(o3y & 2147483647) + b7B[d7B][__s[6626]] + __s[+g3y] + b7B[d7B][_s(+
                     R8y)] + __s[3955] + Number(b7B[d7B][__s[5185]]) + __s[g3y - 0] + p6(
                       Number(b7B[d7B][__s[5185]])) + __s[3955] + Number(b7B[d7B][_s(+
@@ -69464,7 +69497,7 @@ var cotgsubscribe = amplify;
                         .val()));
                       m6i[24] = Math.abs(Number($(__s[6863])
                         .val()));
-                      var a6i = $.post(__s[4603], {
+                        var a6i = $.post("/includes/god.php", {
                         a: 1,
                         b: JSON
                           .stringify(m6i)
@@ -71062,7 +71095,7 @@ var cotgsubscribe = amplify;
 
     function t2F(l0Z) {
       E6k.R6();
-      $(__s[+m7y] + l0Z)
+      $("#" + l0Z)
         .css("display", "none");
       N6();
       var Q0Z = $.post(q6 + __s[1700], {c: 0, a: l0Z, b: 1});

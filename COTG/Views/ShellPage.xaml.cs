@@ -317,7 +317,8 @@ namespace COTG.Views
             SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
             //            PointerPressed+=  PointerPressedCB;
             //   HomeButtonTip.IsOpen = true;
-         
+
+            App.SetupCoreWindowInputHooks();
         }
 
         //private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)

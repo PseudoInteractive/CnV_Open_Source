@@ -13,6 +13,10 @@
 		<Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
     </Style>
+    <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
+        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+    </Style>
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />

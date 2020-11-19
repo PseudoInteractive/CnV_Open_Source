@@ -136,7 +136,8 @@ namespace COTG.Game
         public bool isEmpty => type == typeNone;
 
         public DateTimeOffset lastAccessed { get; set; } // lass user access
-        public byte attackCluster { get; set; } // For attackTab, 0 is real, 1 is fake cluster 1, 2 is fake cluster 2 etc.
+        public byte attackCluster { get; set; } // For attackTab
+        public bool attackFake { get; set; } // For attackTab
         public Attack attackAssignment;
         public enum Classification : byte
         {
@@ -187,7 +188,7 @@ namespace COTG.Game
         public string attackers { get {
                 var rv = new List<string>();
 
-                foreach (var atk in AttackTab.attacks)
+                foreach (var atk in AttackTab.readable.attacks)
                 {
                     if (atk.target == cid)
                     {
@@ -902,7 +903,7 @@ namespace COTG.Game
             for (int i = 1; i <  ttCount;++i)
             {
                 var dt = TimeSpan.FromMinutes(dist * TTTravel(i));
-                sb.Append($"&#x0a;{ttName[i]}: {dt.ToString()}");
+                sb.Append($"\n{ttName[i]}: {dt.ToString()}");
             }
             var str = sb.ToString();
             App.CopyTextToClipboard(str);
@@ -941,21 +942,7 @@ namespace COTG.Game
 
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid));
                     App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-                    App.AddItem(flyout, "To Clipboard as Attacker", async (_, _) =>
-                    {
-
-                        var cl = await Classify();
-                        string s = $"{cid.CidToString()} {Player.myName} {classificationString} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
-                        App.CopyTextToClipboard(s);
-                        if (AttackTab.instance.isActive)
-                        {
-                            AttackTab.instance.AddAttacksFromClipboard(null,null);
-                            Note.Show($"Added attack {s}");
-                            
-                        }
-                        else
-                            Note.Show(s);
-                    });
+                    
                     App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
                  //   App.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
                     App.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
@@ -965,11 +952,14 @@ namespace COTG.Game
                     }
                 else
                 {
-                    App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid,0));
-                    App.AddItem(flyout, "Add as Fake (1)", (_, _) => AttackTab.AddTarget(cid, 1));
-                    App.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
-                    App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
-                    App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
+                    if (AttackTab.instance.isActive)
+                    {
+                        App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid,  false));
+                        App.AddItem(flyout, "Add as Fake", (_, _) => AttackTab.AddTarget(cid, true));
+                    }
+                    //App.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
+                    //App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
+                    //App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
 
                 }
                 if (cid != City.build)
@@ -978,6 +968,20 @@ namespace COTG.Game
                     //if(Player.myName == "Avatar")
                     //    App.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
                 }
+                if (AttackTab.instance.isActive)
+                {
+                    App.AddItem(flyout, "Add as Attacker", (_, _) =>
+                    {
+
+                        string s = cid.CidToString();
+                        App.CopyTextToClipboard(s);
+                        
+                            AttackTab.instance.AddAttacksFromClipboard(null, null);
+                            Note.Show($"Added attacker {s}");
+
+                    });
+                }
+
                 App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
                 App.AddItem(flyout, "Near Defence", DefendMe );
                 if(incoming.Any())
@@ -1002,7 +1006,7 @@ namespace COTG.Game
             App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(),true));
 
 
-            flyout.XamlRoot = uie.XamlRoot;
+         //   flyout.XamlRoot = uie.XamlRoot;
             flyout.ShowAt(uie, position);
         }
         public void DefendMe()

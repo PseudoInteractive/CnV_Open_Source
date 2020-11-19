@@ -458,7 +458,10 @@ namespace COTG.Views
                                         toolTip += "\nWas inactive";
                                     break;
                                 default:
-                                    toolTip += "\nDecayed";
+                                    if(pData.player!=0)
+                                        toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
+                                    else
+                                        toolTip += "\nDecayed";
                                     break;
 
                             }

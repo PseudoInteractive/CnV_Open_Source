@@ -721,12 +721,12 @@ namespace COTG.Views
                         }
                         if (AttackTab.IsVisible())
                         {
-                            foreach (var t in AttackTab.targets)
+                            foreach (var t in AttackTab.readable.targets)
                             {
                                 var c1 = t.cid.CidToCC();
-                                DrawTextBox(ds, $"{t.classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Colors.White : Colors.Teal);
+                                DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Colors.White : Colors.Teal);
                             }
-                            foreach (var t in AttackTab.attacks)
+                            foreach (var t in AttackTab.readable.attacks)
                             {
                                 if (t.target != 0)
                                 {
@@ -952,7 +952,7 @@ namespace COTG.Views
                                                    : hovered ? nameColorHover : nameColor));
 
                                     }
-                                    if (spot != null && !spot.isMine && spot.isClassified)
+                                    if (spot != null &&  spot.isClassified)
                                     {
                                         var c1 = (cx, cy).WToC();
                                         DrawTextBox(ds, $"{spot.classificationString}", c1, tipTextFormatCentered, Colors.Cyan);

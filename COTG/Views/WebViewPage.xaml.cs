@@ -178,10 +178,17 @@ namespace COTG.Views
             Log("Todo");
 		}
 
-		private void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+		private async void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
 		{
-            Log("Todo");
-		}
+            if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
+            {
+                Note.Show($"Launched {args.Uri}");
+            }
+            else
+            {
+                Note.Show($"Failed to launch {args.Uri}");
+            }
+        }
 
 		private void WebView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
 		{
