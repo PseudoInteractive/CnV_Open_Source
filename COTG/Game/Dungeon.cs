@@ -56,7 +56,7 @@ namespace COTG.Game
             // lower is better
             var rv = dist;
             if (bestDungeonType != type)
-                rv += 4; // penalty of 4 spaces for wrong type
+                rv += 6; // penalty of 4 spaces for wrong type
             return rv;
         }
         public static void ShowDungeonList(City city, JsonElement jse)

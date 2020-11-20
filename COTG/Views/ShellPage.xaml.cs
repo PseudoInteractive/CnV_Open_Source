@@ -225,6 +225,7 @@ namespace COTG.Views
             //           foreach (var i in webView.KeyboardAccelerators)
             //              i.IsEnabled = false;
             //            webView.AllowFocusOnInteraction = false;
+            webView.Margin = new Thickness(0, 0, 11, 0);
             grid.Children.Add(webView);
 
             grid.Background = null;

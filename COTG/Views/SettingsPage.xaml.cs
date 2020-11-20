@@ -21,6 +21,7 @@ using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Text.RegularExpressions;
 
 namespace COTG.Views
 {
@@ -499,14 +500,11 @@ namespace COTG.Views
             try
             {
                 var str = await Windows.ApplicationModel.DataTransfer.Clipboard.GetContent().GetTextAsync();
-                var coords = str.Split('\n', options: StringSplitOptions.RemoveEmptyEntries);
-                foreach (var cc in coords)
+                foreach (Match m in AUtil.coordsRegex.Matches(str))
                 {
-                    var ccc = cc.Split('\t', StringSplitOptions.RemoveEmptyEntries);
-                    var cords = (ccc.Length == 2 ? ccc[1] : ccc[0]).FromCoordinate();
+                    var cords = m.Value.FromCoordinate();
                     var s = Spot.GetOrAdd(cords);
-                    if (s._cityName == null)
-                        s._cityName = ccc[0];
+                 
 
                     SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift);
                 }
