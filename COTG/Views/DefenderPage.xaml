@@ -30,7 +30,7 @@
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
-                                
+                                IsTextScaleFactorEnabled="False"
                        
                         PointerPressed="gridPointerPress"
                         GroupPanelPosition="Bottom"

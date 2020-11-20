@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
 using static COTG.Debug;
 using System.Text.RegularExpressions;
+using System.Numerics;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -51,32 +52,59 @@ namespace COTG.Views
 
         private void AttackSender_Tapped(object sender, RoutedEventArgs e)
         {
-            SortAttacks(null,null);
-            var used = new HashSet<int>(readable.attacks.Length);
-            StringBuilder sb = new StringBuilder();
-            foreach (var a in readable.attacks)
-            {
-                if (!used.Add(a.cid))
-                    continue;
-                if (!a.targets.Any())
-                    continue;
+            SortAttacks(null, null);
 
+           
+            var clusterCount = attackClusters.Length;
+            var used = new HashSet<int>(readable.attacks.Length);
+
+            var scripts = new string[clusterCount];
+            int clusterId = 0;
+            foreach (var cluster in attackClusters)
+            {
                 var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>() };
                 // group all attacks for this player
-                foreach (var a1 in a.targets)
+                foreach (var a1 in cluster.targets.OrderBy((a)=> Spot.GetOrAdd(a).attackFake) )
                 {
                     var t = Spot.GetOrAdd(a1);
-                 
+
                     atk.type.Add(t.attackFake ? 0 : 1);
 
                     var xy = a1.CidToWorld();
                     atk.x.Add(xy.x);
                     atk.y.Add(xy.y);
                 }
-                atk.time = new string[] { time.Hour.ToString(), time.Minute.ToString(), time.Second.ToString(), time.ToString("MM/dd/yyyy") };
-                sb.Append($"\n{a.player} <coords>{a.cid.CidToString()}</coords>\n");
+                atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
+                scripts[clusterId++] = System.Text.Json.JsonSerializer.Serialize(atk);
+            }
 
-                sb.Append(System.Text.Json.JsonSerializer.Serialize(atk));
+            StringBuilder sb = new StringBuilder();
+            var players = new List<int>();
+
+            foreach (var a in attacks)
+            {
+                var player = Spot.GetOrAdd(a.cid).pid;
+                if (players.Contains(player))
+                    continue;
+                players.Add(player);
+            }
+            foreach (var player in players)
+            {
+                sb.Append($"\n\n{Player.IdToName(player)}");
+                var lastCluster = -1;
+                foreach (var a in attacks)
+                {
+                    if (Spot.GetOrAdd(a.cid).pid != player)
+                        continue;
+                    if (lastCluster != a.attackCluster)
+                    {
+                        lastCluster=a.attackCluster;
+                        sb.Append($"\n\n{scripts[lastCluster]}");
+                    }
+                    sb.Append('\n');
+                    sb.Append(a.cid.CidToCoords());
+                }
+
 
             }
             App.CopyTextToClipboard(sb.ToString());
@@ -89,20 +117,20 @@ namespace COTG.Views
 
             var atk = i.DataContext as Attack;
 
-            if (atk.targets.Any() )
-            {
-                var id = atk.targets.FindIndex(Spot.focus)+1;
-                if (id >= atk.targets.Length)
-                    id =0;
-                var cid = atk.targets[id];
-                var spot = Spot.GetOrAdd(cid);
-                Spot.ProcessCoordClick(cid, false,  App.keyModifiers);
-                foreach (var t in targets)
-                {
-                    if (t.cid == cid)
-                        targetGrid.ScrollIntoView(t, null);
-                }
-            }
+            //if (atk.targets.Any() )
+            //{
+            //    var id = atk.targets.FindIndex(Spot.focus)+1;
+            //    if (id >= atk.targets.Length)
+            //        id =0;
+            //    var cid = atk.targets[id];
+            //    var spot = Spot.GetOrAdd(cid);
+            //    Spot.ProcessCoordClick(cid, false,  App.keyModifiers);
+            //    foreach (var t in targets)
+            //    {
+            //        if (t.cid == cid)
+            //            targetGrid.ScrollIntoView(t, null);
+            //    }
+            //}
         }
         private void AttackSourceCoord_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -119,12 +147,12 @@ namespace COTG.Views
 
         public class ReadableAttacks
         {
-            public Attack[] attacks { get; set; } 
-            public TargetPersist[] targets { get; set; } 
-     
+            public Attack[] attacks { get; set; }
+            public TargetPersist[] targets { get; set; }
+
         }
         // read only cache to enable threads to read the attacks white another thread is writing
-        public static ReadableAttacks readable = new ReadableAttacks() { attacks= Array.Empty<Attack>(),targets  = Array.Empty<TargetPersist>() };
+        public static ReadableAttacks readable = new ReadableAttacks() { attacks= Array.Empty<Attack>(), targets  = Array.Empty<TargetPersist>() };
 
         internal static void WritebackAttacks()
         {
@@ -138,11 +166,46 @@ namespace COTG.Views
                 targets[i].cid = t.cid;
                 targets[i].fake = t.attackFake;
             }
+            foreach (var a in attacks)
+            {
+                Spot.GetOrAdd(a.cid).attackCluster = a.attackCluster;
+            }
             readable.attacks = attacks.ToArray(); // This is not completely atomic
             readable.targets = targets;
             UpdateStats();
+            BuildAttackClusters();
         }
+        public class AttackCluster
+        {
+            public HashSet<int> attacks;// first is SE or siege
+            public HashSet<int> targets;// first is real
+            public Vector2 topLeft;
+            public Vector2 bottomRight;
 
+            public int real => (targets.FirstOrDefault( (a)=> !Spot.GetOrAdd(a).attackFake ));
+ 
+
+        }
+        public static AttackCluster[] attackClusters;
+        public static void BuildAttackClusters()
+        {
+            var reals = targets.Where((a) => !a.attackFake).ToArray();
+            var clusterCount = reals.Length;
+            var _attackClusters = new AttackCluster[clusterCount];
+            for (int i = 0; i<clusterCount; ++i)
+            {
+                var ac = new AttackCluster(); ;
+                _attackClusters[i] = ac;
+                ac.targets = new HashSet<int>( targets.Where((a) => a.attackCluster == (byte)i).Select((a) => a.cid) );
+                ac.attacks = new HashSet<int>( attacks.Where((a) => a.attackCluster == (byte)i).Select((a) => a.cid) );
+                ac.topLeft.X = ac.targets.Select( a=> a.ToWorldC().X ).Min() - 0.5f;
+                ac.topLeft.Y = ac.targets.Select(a => a.ToWorldC().Y).Min() - 0.5f;
+                ac.bottomRight.X = ac.targets.Select(a => a.ToWorldC().X).Max() + 0.5f;
+                ac.bottomRight.Y = ac.targets.Select(a => a.ToWorldC().Y).Max() + 0.5f;
+
+            }
+            attackClusters = _attackClusters;
+        }
         private static void UpdateStats()
         {
             App.DispatchOnUIThreadSneaky(() =>
@@ -160,7 +223,7 @@ namespace COTG.Views
             if (loaded)
             {
                 folder.SaveAsync("attacks", readable);
-            }        
+            }
         }
 
         public async Task TouchLists()
@@ -176,9 +239,12 @@ namespace COTG.Views
                 // App.DispatchOnUIThreadSneaky(() =>
                 //  {
                 attacks.Set(readable.attacks);
-                foreach(var att in readable.attacks)
+                foreach (var att in readable.attacks)
                 {
-                    await Spot.GetOrAdd(att.cid).Classify();
+                    var spot = Spot.GetOrAdd(att.cid);
+                    spot.attackCluster=att.attackCluster;
+                    await spot.Classify();
+
                 }
                 var spots = new List<Spot>();
                 if (readable.targets != null)
@@ -188,6 +254,7 @@ namespace COTG.Views
                         var t = Spot.GetOrAdd(target.cid);
                         t.attackCluster = target.attackCluster;
                         t.classification =  (await t.Classify()).classification;
+                        t.attackFake = target.fake;
                         spots.Add(t);
 
                     }
@@ -196,6 +263,7 @@ namespace COTG.Views
                 targets.Set(spots);
                 //});
                 UpdateStats();
+                BuildAttackClusters();
             }
 
         }
@@ -220,15 +288,15 @@ namespace COTG.Views
 
             var spot = i.DataContext as Spot;
             Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers);
-            foreach (var t in attacks)
-            {
-                // take any one
-                if (t.typeT == Attack.Type.se && t.targets.Contains(spot.cid))
-                {
-                    attackGrid.ScrollIntoView(t, null);
-                    break;
-                }
-            }
+            //foreach (var t in attacks)
+            //{
+            //    // take any one
+            //    if (t.typeT == Attack.Type.se && t.targets.Contains(spot.cid))
+            //    {
+            //        attackGrid.ScrollIntoView(t, null);
+            //        break;
+            //    }
+            //}
 
         }
 
@@ -296,17 +364,20 @@ namespace COTG.Views
                     }
 
                     atk.troopType =  strs[i].ToLower() switch
-                    { "vanq" => ttVanquisher,
+                    {
+                        "vanq" => ttVanquisher,
                         "sorc" => ttSorcerer,
                         "horses" => ttHorseman,
                         "siege engines" => ttScorpion,
-                        "druids" => ttDruid, _ => throw new ArgumentException() };
+                        "druids" => ttDruid,
+                        _ => throw new ArgumentException()
+                    };
 
                     atk.typeT = atk.troopType == ttScorpion ? Attack.Type.se : strs[i+1]=="Yes" ? Attack.Type.senator : Attack.Type.assault;
                     atk.fake = false;
-                    
+
                     atk.player = Spot.GetOrAdd(cid).player;
-                    if(isNew)
+                    if (isNew)
                         attacks.Add(atk);
                 }
                 Note.Show($"Added {attacks.Count-prior}, updated {duplicates}");
@@ -335,17 +406,17 @@ namespace COTG.Views
                     Note.Show("No clipboard text");
                     return;
                 }
-                int duplicates=0;
+                int duplicates = 0;
                 var reals = 0;
                 var fakes = 0;
-           //     text = text.Replace("\r", "");
-            //    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                //     text = text.Replace("\r", "");
+                //    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
                 foreach (Match m in AUtil.coordsRegex.Matches(text))
                 {
-                   
+
                     try
                     {
-                      //  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        //  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                         var cid = m.Value.FromCoordinate();
                         var atk = attacks.Find((a) => a.cid == cid);
                         var isNew = (atk == null);
@@ -359,8 +430,9 @@ namespace COTG.Views
                         }
                         var spot = Spot.GetOrAdd(cid);
                         var cl = await spot.Classify();
-                      //  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
-                        atk.troopType = cl.classification switch {
+                        //  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
+                        atk.troopType = cl.classification switch
+                        {
                             Spot.Classification.sorcs => ttSorcerer,
                             Spot.Classification.druids => ttDruid,
                             Spot.Classification.academy => ttPraetor,
@@ -400,7 +472,7 @@ namespace COTG.Views
                             ++fakes;
                         else
                             ++reals;
-                        if(isNew)
+                        if (isNew)
                             attacks.Add(atk);
                     }
                     catch (Exception ex)
@@ -429,9 +501,20 @@ namespace COTG.Views
                 var c = a.player.CompareTo(b.player);
                 if (c != 0)
                     return c;
-                return b.fake.CompareTo(a.fake);
+                return b.attackCluster.CompareTo(a.attackCluster);
             }
             );
+            targets.Sort((a, b) =>
+            {
+                var c = a.attackCluster.CompareTo(b.attackCluster);
+                if (c!=0)
+                    return c;
+                return a.attackFake.CompareTo(b.attackFake);
+            });
+
+            attacks.NotifyReset();
+            targets.NotifyReset();
+
             WritebackAttacks();
             SaveAttacks();
             attacks.NotifyReset();
@@ -461,210 +544,423 @@ namespace COTG.Views
 
         private static void CleanTargets()
         {
-            var set = new HashSet<int>(targets.Count);
+            // var set = new HashSet<int>(targets.Count);
             foreach (var t in targets)
             {
-                t.attackAssignment = null;
-                set.Add(t.cid);
+
+                t.attackCluster=255;
+                // set.Add(t.cid);
             }
             foreach (var a in attacks)
             {
-                a.targets = a.targets.Where((cid) => set.Contains(cid)).ToArray();
+                a.attackCluster = 255;
+                Spot.GetOrAdd(a.cid).attackCluster=255;
             }
 
         }
+
         private void AssignAttacks_Click(object sender, RoutedEventArgs e)
         {
-            string bad = string.Empty;
-            var reals = 0;
-            var fakes = 0;
-            CleanTargets();
-
+            // first create clusters
+            foreach (var f in targets)
+            {
+                f.attackCluster=255;
+            }
             foreach (var a in attacks)
             {
-                if (a.target != 0) // not already assigned
+                a.attackCluster=255;
+                Spot.GetOrAdd(a.cid).attackCluster=255;
+            }
+            var reals = targets.Where((a) => !a.attackFake).ToArray();
+            if (!reals.Any())
+            {
+                Note.Show("No reals");
+                return;
+            }
+
+            var clusterCount = reals.Length;
+            var fakes = targets.Where((a) => a.attackFake).ToArray();
+            const int fakeCount = 4;
+            //            var fakeCount = fakes.Length / clusterCount; // rounds down
+            
+
+            var targetClusters = new int[reals.Length][];
+
+            {
+                byte cluster = 0;
+                // first pass, select N closest fakes for each real
+                foreach (var real in reals)
                 {
-                    if (!a.fake)
-                        ++reals;
-                    else
-                        ++fakes;
-                    continue;
-                }
-                Spot best = null;
-                float bestScore = float.MaxValue;
-                foreach (var t in targets)
-                {
-                    if (a.fake == (t.attackCluster == 0)) // real or fake match
-                        continue;
-                    if (t.attackAssignment != null)
-                        continue; // already taken
-                    var score = a.cid.DistanceToCid(t.cid);
-                    if (!a.fake)
+                    real.attackCluster=cluster++;
+                    var c = real.cid.ToWorldC();
+
+                    for (int i = 0; i<fakeCount; ++i)
                     {
-                        switch (a.troopType)
+                        var bestDist = float.MaxValue;
+                        Spot bestFake = null;
+                        foreach (var f in fakes)
                         {
-                            case ttSorcerer:
-                            case ttDruid:
-                                {
-                                    switch (t.classification)
-                                    {
-                                        case Spot.Classification.unknown:
-                                            break;
-                                        case Spot.Classification.vanqs:
-                                        case Spot.Classification.rt:
-                                            score -= 3;
-                                            break;
-                                        case Spot.Classification.sorcs:
-                                        case Spot.Classification.druids:
-                                            score += 2;
-                                            break;
-                                        case Spot.Classification.academy:
-                                            score += 8;
-                                            break;
-                                        case Spot.Classification.horses:
-                                        case Spot.Classification.arbs:
-                                            score -= 4;
-                                            break;
-                                        case Spot.Classification.se:
-                                            break;
-                                        case Spot.Classification.hub:
-                                            break;
-                                        case Spot.Classification.navy:
-                                            break;
-                                        case Spot.Classification.misc:
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    break;
-                                }
-                            case ttVanquisher:
-                                {
-                                    switch (t.classification)
-                                    {
-                                        case Spot.Classification.unknown:
-                                            break;
-                                        case Spot.Classification.vanqs:
-                                        case Spot.Classification.rt:
+                            if (f.attackCluster != 255)
+                                continue;
+                            var d = (c-f.cid.ToWorldC()).LengthSquared();
+                            if (d < bestDist)
+                            {
+                                bestDist = d;
+                                bestFake = f;
+                            }
+                        }
+                        if(bestFake != null)
+                            bestFake.attackCluster=real.attackCluster;
+                    }
 
-                                            score += 4;
-                                            break;
-                                        case Spot.Classification.sorcs:
-                                        case Spot.Classification.druids:
-                                            score -= 2;
-                                            break;
-                                        case Spot.Classification.academy:
-                                            score -= 4;
-                                            break;
-                                        case Spot.Classification.horses:
-                                        case Spot.Classification.arbs:
+                }
+            }
+            // optimize
+            for (int iter = 0; iter<8; ++iter)
+            {
+                foreach (var f0 in fakes)
+                {
+                    if (f0.attackCluster==255)
+                        continue;
+                    var real0 = reals[f0.attackCluster];
+                    var d0 = f0.cid.DistanceToCid(real0.cid);
+                    foreach (var f1 in fakes)
+                    {
+                        if (f1.attackCluster==255)
+                            continue;
+                        var real1 = reals[f1.attackCluster];
+                        if (real0==real1)
+                            continue;
+                        var d1 = f1.cid.DistanceToCid(real1.cid);
 
-                                            score -= 3;
-                                            break;
-                                        case Spot.Classification.se:
-                                            break;
-                                        case Spot.Classification.hub:
-                                            break;
-                                        case Spot.Classification.navy:
-                                            break;
-                                        case Spot.Classification.misc:
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    break;
-                                }
-                            case ttHorseman:
-                                {
-                                    switch (t.classification)
-                                    {
-                                        case Spot.Classification.unknown:
-                                            break;
-                                        case Spot.Classification.vanqs:
-                                        case Spot.Classification.rt:
+                        var dd0 = f0.cid.DistanceToCid(real1.cid);
+                        var dd1 = f1.cid.DistanceToCid(real0.cid);
+                        if (d0.Squared() + d1.Squared() > dd0.Squared() + dd1.Squared())
+                        {
+                            // a change improves things
+                            var cluster1 = f1.attackCluster;
+                            f1.attackCluster= f0.attackCluster;
+                            f0.attackCluster=cluster1;
+                            real0 = real1;
+                            d0 = dd0;
+                        }
 
-                                            score += 2;
-                                            break;
-                                        case Spot.Classification.sorcs:
-                                        case Spot.Classification.druids:
-                                            score -= 2;
-                                            break;
-                                        case Spot.Classification.academy:
-                                            score -= 6;
-                                            break;
-                                        case Spot.Classification.horses:
-                                        case Spot.Classification.arbs:
+                    }
 
-                                            score += 7;
-                                            break;
-                                        case Spot.Classification.se:
-                                            break;
-                                        case Spot.Classification.hub:
-                                            break;
-                                        case Spot.Classification.navy:
-                                            break;
-                                        case Spot.Classification.misc:
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    break;
-                                }
+                }
+            }
+            // Assign attacks to clusters
+            var attacksPerCluster = (attacks.Count+clusterCount/2) / clusterCount;
+
+            foreach (var real in reals)
+            {
+                var cluster = real.attackCluster;
+                var c = real.cid.ToWorldC();
+                // first find SE
+               // for (int i = 0; i<attacksPerCluster; ++i)
+                {
+                    Attack best = null;
+                    float bestDist = float.MaxValue;
+                    foreach (var attack in attacks)
+                    {
+                        //   var a = Spot.GetOrAdd(attack.cid);
+                        if (attack.attackCluster != 255 || !attack.isSE )
+                            continue;
+
+                        var d = (c-attack.cid.ToWorldC()).LengthSquared();
+                        if (d < bestDist)
+                        {
+                            bestDist = d;
+                            best = attack;
                         }
                     }
-                    if (score < bestScore)
+                    if (best != null)
                     {
-                        bestScore = score;
-                        best = t;
+                        best.attackCluster = cluster;
+                    }
+
+                }
+                for (int i = 0; i<attacksPerCluster-1; ++i)
+                {
+                    Attack best = null;
+                    float bestDist = float.MaxValue;
+                    foreach (var attack in attacks)
+                    {
+                        //   var a = Spot.GetOrAdd(attack.cid);
+                        if (attack.attackCluster != 255 || attack.isSE)
+                            continue;
+
+                        var d = (c-attack.cid.ToWorldC()).LengthSquared();
+                        if (d < bestDist)
+                        {
+                            bestDist = d;
+                            best = attack;
+                        }
+                    }
+                    if (best != null)
+                    {
+                        best.attackCluster = cluster;
+                    }
+
+                }
+            }
+            // optimize
+            for (int iter = 0; iter<8; ++iter)
+            {
+                foreach (var f0 in attacks)
+                {
+                    //                    var s0 = Spot.GetOrAdd(f0.cid);
+                    if (f0.attackCluster==255)
+                        continue;
+                    var real0 = reals[f0.attackCluster];
+                    var d0 = f0.cid.DistanceToCid(real0.cid);
+                    var isSE = f0.isSE;
+                    foreach (var f1 in attacks)
+                    {
+                        if (f1.attackCluster==255 || f1.isSE != isSE)
+                            continue;
+                        //var s1 = Spot.GetOrAdd(f1.cid);
+                        var real1 = reals[f1.attackCluster];
+                        if (real0==real1)
+                            continue;
+
+                        var d1 = f1.cid.DistanceToCid(real1.cid);
+
+                        var dd0 = f0.cid.DistanceToCid(real1.cid);
+                        var dd1 = f1.cid.DistanceToCid(real0.cid);
+                        if (d0.Squared() + d1.Squared() > dd0.Squared() + dd1.Squared())
+                        {
+                            // a change improves things
+                            var cluster1 = f1.attackCluster;
+                            f1.attackCluster= f0.attackCluster;
+                            f0.attackCluster=cluster1;
+                            real0 = real1;
+                            d0 = dd0;
+                        }
 
                     }
 
                 }
-                if (best == null)
-                {
-                    bad = $"{bad}No target for {a.xy} isReal: {!a.fake}\n";
-
-                }
-                else
-                {
-                    a.target = best.cid;
-                    best.attackAssignment = a;
-                    if (!a.fake)
-                        ++reals;
-                    else
-                        ++fakes;
-
-                }
-            }
-            var unusedReals = 0;
-            var unusedFakes = 0;
-            foreach (var a in attacks)
-            {
-                if (a.target == 0)
-                {
-                    if (a.fake)
-                        ++unusedFakes;
-                    else
-                        ++unusedReals;
-                }
             }
 
-            bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
+            WritebackAttacks();
 
-            Note.Show(bad);
+            //         var targetCluster = new List<int>();
+            //           targetCluster.Add(real.cid);
+            //            targetCluster.Add(bestFake);
+            float maxDistanceToSE = attacks.Where((a) => a.typeT==Attack.Type.se && a.attackCluster!=255).Max((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real));
+            float maxDistanceToAssault =  attacks.Where((a) => a.typeT!=Attack.Type.se && a.attackCluster!=255).Max((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real));
+            float maxDistanceToCluster = targets.Where((a) => a.attackFake==true && a.attackCluster!=255).Max((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real));
+
+            //           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
+
+            Note.Show($"Attack plan done, {clusterCount} reals, {attacksPerCluster} attacks per cluster  SE max Distance- max: {maxDistanceToSE} av: {attacks.Where((a) => a.typeT==Attack.Type.se && a.attackCluster!=255).Average((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real))}  Assault distance- max:{maxDistanceToAssault} av:{attacks.Where((a) => a.typeT!=Attack.Type.se && a.attackCluster!=255).Average((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real))} Cluster size max: {maxDistanceToCluster} av: {targets.Where((a) => a.attackFake==true && a.attackCluster!=255).Average((a) => a.cid.DistanceToCid(attackClusters[a.attackCluster].real))}");
             attacks.NotifyReset();
             targets.NotifyReset();
-            StringBuilder sb = new StringBuilder();
-            foreach (var a in attacks)
-            {
-                if (a.target!=0)
-                {
-                    sb.Append($"{a.player} <coords>{a.target.CidToString()}</coords> {AttackType.types[a.type].name} {(a.fake ? "Fake" : "Real")} at {time.FormatDefault()}\n");
-                }
-            }
-            App.CopyTextToClipboard(sb.ToString());
+            //StringBuilder sb = new StringBuilder();
+            //foreach (var a in attacks)
+            //{
+            //    if (a.target!=0)
+            //    {
+            //        sb.Append($"{a.player} <coords>{a.target.CidToString()}</coords> {AttackType.types[a.type].name} {(a.fake ? "Fake" : "Real")} at {time.FormatDefault()}\n");
+            //    }
+            //}
+            //App.CopyTextToClipboard(sb.ToString());
             SaveAttacks();
         }
+
+        //private void AssignAttacks_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string bad = string.Empty;
+        //    var reals = 0;
+        //    var fakes = 0;
+        //    CleanTargets();
+
+        //    foreach (var a in attacks)
+        //    {
+        //        if (a.target != 0) // not already assigned
+        //        {
+        //            if (!a.fake)
+        //                ++reals;
+        //            else
+        //                ++fakes;
+        //            continue;
+        //        }
+        //        Spot best = null;
+        //        float bestScore = float.MaxValue;
+        //        foreach (var t in targets)
+        //        {
+        //            if (a.fake == (t.attackCluster == 0)) // real or fake match
+        //                continue;
+        //            if (t.attackAssignment != null)
+        //                continue; // already taken
+        //            var score = a.cid.DistanceToCid(t.cid);
+        //            if (!a.fake)
+        //            {
+        //                switch (a.troopType)
+        //                {
+        //                    case ttSorcerer:
+        //                    case ttDruid:
+        //                        {
+        //                            switch (t.classification)
+        //                            {
+        //                                case Spot.Classification.unknown:
+        //                                    break;
+        //                                case Spot.Classification.vanqs:
+        //                                case Spot.Classification.rt:
+        //                                    score -= 3;
+        //                                    break;
+        //                                case Spot.Classification.sorcs:
+        //                                case Spot.Classification.druids:
+        //                                    score += 2;
+        //                                    break;
+        //                                case Spot.Classification.academy:
+        //                                    score += 8;
+        //                                    break;
+        //                                case Spot.Classification.horses:
+        //                                case Spot.Classification.arbs:
+        //                                    score -= 4;
+        //                                    break;
+        //                                case Spot.Classification.se:
+        //                                    break;
+        //                                case Spot.Classification.hub:
+        //                                    break;
+        //                                case Spot.Classification.navy:
+        //                                    break;
+        //                                case Spot.Classification.misc:
+        //                                    break;
+        //                                default:
+        //                                    break;
+        //                            }
+        //                            break;
+        //                        }
+        //                    case ttVanquisher:
+        //                        {
+        //                            switch (t.classification)
+        //                            {
+        //                                case Spot.Classification.unknown:
+        //                                    break;
+        //                                case Spot.Classification.vanqs:
+        //                                case Spot.Classification.rt:
+
+        //                                    score += 4;
+        //                                    break;
+        //                                case Spot.Classification.sorcs:
+        //                                case Spot.Classification.druids:
+        //                                    score -= 2;
+        //                                    break;
+        //                                case Spot.Classification.academy:
+        //                                    score -= 4;
+        //                                    break;
+        //                                case Spot.Classification.horses:
+        //                                case Spot.Classification.arbs:
+
+        //                                    score -= 3;
+        //                                    break;
+        //                                case Spot.Classification.se:
+        //                                    break;
+        //                                case Spot.Classification.hub:
+        //                                    break;
+        //                                case Spot.Classification.navy:
+        //                                    break;
+        //                                case Spot.Classification.misc:
+        //                                    break;
+        //                                default:
+        //                                    break;
+        //                            }
+        //                            break;
+        //                        }
+        //                    case ttHorseman:
+        //                        {
+        //                            switch (t.classification)
+        //                            {
+        //                                case Spot.Classification.unknown:
+        //                                    break;
+        //                                case Spot.Classification.vanqs:
+        //                                case Spot.Classification.rt:
+
+        //                                    score += 2;
+        //                                    break;
+        //                                case Spot.Classification.sorcs:
+        //                                case Spot.Classification.druids:
+        //                                    score -= 2;
+        //                                    break;
+        //                                case Spot.Classification.academy:
+        //                                    score -= 6;
+        //                                    break;
+        //                                case Spot.Classification.horses:
+        //                                case Spot.Classification.arbs:
+
+        //                                    score += 7;
+        //                                    break;
+        //                                case Spot.Classification.se:
+        //                                    break;
+        //                                case Spot.Classification.hub:
+        //                                    break;
+        //                                case Spot.Classification.navy:
+        //                                    break;
+        //                                case Spot.Classification.misc:
+        //                                    break;
+        //                                default:
+        //                                    break;
+        //                            }
+        //                            break;
+        //                        }
+        //                }
+        //            }
+        //            if (score < bestScore)
+        //            {
+        //                bestScore = score;
+        //                best = t;
+
+        //            }
+
+        //        }
+        //        if (best == null)
+        //        {
+        //            bad = $"{bad}No target for {a.xy} isReal: {!a.fake}\n";
+
+        //        }
+        //        else
+        //        {
+        //            a.target = best.cid;
+        //            best.attackAssignment = a;
+        //            if (!a.fake)
+        //                ++reals;
+        //            else
+        //                ++fakes;
+
+        //        }
+        //    }
+        //    var unusedReals = 0;
+        //    var unusedFakes = 0;
+        //    foreach (var a in attacks)
+        //    {
+        //        if (a.target == 0)
+        //        {
+        //            if (a.fake)
+        //                ++unusedFakes;
+        //            else
+        //                ++unusedReals;
+        //        }
+        //    }
+
+        //    bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
+
+        //    Note.Show(bad);
+        //    attacks.NotifyReset();
+        //    targets.NotifyReset();
+        //    StringBuilder sb = new StringBuilder();
+        //    foreach (var a in attacks)
+        //    {
+        //        if (a.target!=0)
+        //        {
+        //            sb.Append($"{a.player} <coords>{a.target.CidToString()}</coords> {AttackType.types[a.type].name} {(a.fake ? "Fake" : "Real")} at {time.FormatDefault()}\n");
+        //        }
+        //    }
+        //    App.CopyTextToClipboard(sb.ToString());
+        //    SaveAttacks();
+        //}
 
         private void TargetRemove_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -701,13 +997,7 @@ namespace COTG.Views
 
         private void ClearTargets_Click(object sender, RoutedEventArgs e)
         {
-            {
-                var temp = new List<Attack>();
-                foreach (var sel in attackGrid.SelectedItems)
-                {
-                    (sel as Attack).target=0;
-                }
-            }
+            CleanTargets();
             attacks.NotifyReset();
         }
     }

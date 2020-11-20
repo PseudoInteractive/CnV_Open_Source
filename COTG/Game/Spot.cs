@@ -138,7 +138,6 @@ namespace COTG.Game
         public DateTimeOffset lastAccessed { get; set; } // lass user access
         public byte attackCluster { get; set; } // For attackTab
         public bool attackFake { get; set; } // For attackTab
-        public Attack attackAssignment;
         public enum Classification : byte
         {
             unknown,
@@ -164,6 +163,7 @@ namespace COTG.Game
             public byte se;
             public byte shipyards;
             public byte ports;
+            public byte forums;
             public bool castle;
             static public explicit operator Classification(ClassificationExtended e) => e.classification;
         };
@@ -185,21 +185,21 @@ namespace COTG.Game
             "misc"
         };
         public string classificationString => classifications[(int)classification];
-        public string attackers { get {
-                var rv = new List<string>();
+        //public string attackers { get {
+        //        var rv = new List<string>();
 
-                foreach (var atk in AttackTab.readable.attacks)
-                {
-                    if (atk.target == cid)
-                    {
-                        rv.Add(atk.player);
-                    }
-                }
-                if (rv.IsNullOrEmpty())
-                    return "None";
-                else
-                    return string.Join(',', rv);
-            } }
+        //        foreach (var atk in AttackTab.readable.attacks)
+        //        {
+        //            if (atk.target == cid)
+        //            {
+        //                rv.Add(atk.player);
+        //            }
+        //        }
+        //        if (rv.IsNullOrEmpty())
+        //            return "None";
+        //        else
+        //            return string.Join(',', rv);
+        //    } }
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
@@ -276,6 +276,24 @@ namespace COTG.Game
             //    uiHoverColumn = string.Empty;
         }
 
+        public virtual byte GetPrimaryTroopType(bool onlyHomeTroops)
+        {
+            return classification switch
+            {
+                Classification.unknown => ttGuard,
+                Classification.vanqs => ttVanquisher,
+                Classification.rt => ttTriari,
+                Classification.sorcs => ttSorcerer,
+                Classification.druids => ttDruid,
+                Classification.academy => ttPraetor,
+                Classification.horses => ttHorseman,
+                Classification.arbs => ttArbalist,
+                Classification.se => ttScorpion,
+                Classification.hub => ttBallista,
+                Classification.navy => ttWarship,
+                _ => ttBallista
+            };
+        }
 
         public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
         {
@@ -450,8 +468,9 @@ namespace COTG.Game
                         case 'G': ++rv.training; break;
                         case 'Z': ++rv.academies; break;
                         case 'X': rv.castle = true; break;
-                        case 'O': ++rv.ports; break;
-                        case 'P': ++rv.shipyards; break;
+                        case 'R': ++rv.ports; break;
+                        case 'V': ++rv.shipyards; break;
+                        case 'P': ++rv.forums;break;
 
 
                     }
@@ -478,7 +497,7 @@ namespace COTG.Game
                 }
                 else if (mx==rv.training)
                 {
-                    if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training <= 18)
+                    if (rv.se > 0 || rv.academies > 0 || rv.training == 26||rv.training == 27 || rv.training <= 18)
                         classification = Classification.vanqs;
                     else
                         classification = Classification.rt;
@@ -491,6 +510,14 @@ namespace COTG.Game
                 else if (mx == rv.se)
                 {
                     classification = Classification.se;
+                }
+                else if(mx == rv.shipyards)
+                {
+                    classification =Classification.navy;
+                }
+                else if (mx == rv.forums)
+                {
+                    classification =Classification.hub;
                 }
                 else
                 {

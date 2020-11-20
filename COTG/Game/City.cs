@@ -487,11 +487,11 @@ namespace COTG.Game
             }
             return best;
         }
-        public byte GetPrimaryTroopType() // troop type with most TS
+        public override byte GetPrimaryTroopType(bool onlyHomeTroops) // troop type with most TS
         {
             byte best = 0; // if no raiding troops we return guards 
             var bestTS = 0;
-            foreach (var ttc in troopsHome)
+            foreach (var ttc in (onlyHomeTroops?troopsHome:troopsTotal))
             {
                 var type = ttc.type;
                 var ts = ttc.ts;
@@ -502,7 +502,10 @@ namespace COTG.Game
                 }
 
             }
-            return best;
+            if (best==0)
+                return base.GetPrimaryTroopType(onlyHomeTroops);
+            else
+                return best;
         }
 
         public byte GetIdealDungeonType()
@@ -566,7 +569,7 @@ namespace COTG.Game
             }
             else
             {
-                var tt = GetPrimaryTroopType();
+                var tt = GetPrimaryTroopType(true);
                 if (tt == 0)
                     return false;
                 var dist = cid.DistanceToCid(target);

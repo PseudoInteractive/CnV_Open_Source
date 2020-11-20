@@ -14,29 +14,16 @@ namespace COTG.Game
         public int cid { get; set; }
         [JsonIgnore]
         public string xy => cid.CidToString();
-        public int[] targets { get; set; } = Array.Empty<int>();
-        [JsonIgnore]
-        public string targetString {
-            get {
-                var sb = new StringBuilder();
-                var wantSpace = false;
-                foreach(var t in targets)
-                {
-                    if (wantSpace)
-                        sb.Append(' ');
-                    else
-                        wantSpace= true;
-                    sb.Append(t.CidToStringMD());
-                }
-                return sb.ToString();
-            }
-        }
+        public byte attackCluster { get; set; }
         public enum Type
         {
             senator,
             assault,
             se, 
         }
+        [JsonIgnore]
+        public bool isSE => typeT == Type.se;
+
         // Todo: make enum
         public int type { get; set; }
         [JsonIgnore]
@@ -47,6 +34,7 @@ namespace COTG.Game
         public string troopTypeString => Game.Enum.ttNameWithCaps[troopType];
         public int ts { get; set; } // not used currently
     }
+
     public class AttackType
     {
         public AttackType(int _type, string _name) { type = _type;name = _name; }

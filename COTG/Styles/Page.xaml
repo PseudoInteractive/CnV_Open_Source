@@ -12,28 +12,36 @@
     <Style x:Key="PageStyle" TargetType="Page">
 		<Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style TargetType="winui:NumberBox">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+        
     </Style>
     <Style x:Key="TextBoxSmall" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"

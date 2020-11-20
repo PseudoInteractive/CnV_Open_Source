@@ -117,14 +117,33 @@ function ResetCommandInfo() {
     return commandInfo;
 }
 function GetAttackTime(source) {
-    const strs = source.split(" ");
-    if (strs.length == 1) {
-        strs.push(ServerDate.now().toLocaleDateString());
+    let departAT = source.indexOf("Departs:");
+    if (departAT >= 0) {
+        let info = source.substr(departAT + 9);
+        let today = info.indexOf("Today");
+        if (today >= 0) {
+            let fields = info.substr(today + 6).split(":");
+            let rv = new Date(ServerDate.now());
+            rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+            return rv;
+        }
+        else {
+            let tomorrow = info.indexOf("Tomorrow");
+            if (tomorrow >= 0) {
+                let fields = info.substr(tomorrow + 9).split(":");
+                let rv = new Date(ServerDate.now());
+                rv.setDate(rv.getDate() + 1);
+                rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+                return rv;
+            }
+            else {
+                return new Date(info);
+            }
+        }
     }
     else {
-        strs[1] = strs[1] + "/" + ServerDate.now().getFullYear();
+        return new Date(source);
     }
-    return new Date(strs[0] + " " + strs[1]);
 }
 function SendDef(defobj) {
     $("#commandsPopUpBox").show();

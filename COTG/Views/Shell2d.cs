@@ -252,9 +252,9 @@ namespace COTG.Views
 
         async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
+            if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged)
             {
-                Fatal();
+                //Fatal();
                 return;
             }
 
@@ -413,6 +413,7 @@ namespace COTG.Views
                     ;
 
                 }
+                var notFaded = true;
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
                 var ds = args.DrawingSession;
@@ -575,7 +576,10 @@ namespace COTG.Views
                         //else
                         {
                             if (attacksVisible)
+                            {
                                 ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+                                notFaded=false;
+                            }
                         }
 
                         // overlay
@@ -712,7 +716,7 @@ namespace COTG.Views
                                         var cid = i.Key;
                                         var count = i.Value;
                                         var c = cid.CidToCC();
-                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.White);
+                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.White,notFaded);
 
 
                                     }
@@ -721,25 +725,78 @@ namespace COTG.Views
                         }
                         if (AttackTab.IsVisible())
                         {
-                            foreach (var t in AttackTab.readable.targets)
+                            if (AttackTab.attackClusters!=null)
                             {
-                                var c1 = t.cid.CidToCC();
-                                DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Colors.White : Colors.Teal);
-                            }
-                            foreach (var t in AttackTab.readable.attacks)
-                            {
-                                if (t.target != 0)
+                                foreach (var cluster in AttackTab.attackClusters)
                                 {
-                                    var _t = (tick * t.cid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
-                                    var r = _t.Ramp();
-                                    var c = t.fake ? Colors.White : Colors.Red;
-                                    var c0 = t.cid.CidToCC();
-                                    var c1 = t.target.CidToCC();
-                                    //   DrawTextBox(ds, $"{t.type} {t.fake} {t.player}", c1, tipTextFormatCentered);
-                                    DrawAction(ds, batch, .5f, 1.0f, r, c0, c1, c, troopImages[t.troopType], false, null, 28, 0.8f);
+                                    var selected = false;
+                                    foreach (var i in cluster.attacks)
+                                    {
+                                        if (Spot.IsSelectedOrHovered(i))
+                                        {
+                                            selected=true;
+                                            break;
+                                        }
+                                    }
+                                    foreach (var i in cluster.targets)
+                                    {
+                                        if (Spot.IsSelectedOrHovered(i))
+                                        {
+                                            selected=true;
+                                            break;
+                                        }
+                                    }
+                                    {
+                                        var c0 = cluster.topLeft.WToC();
+                                        var c1 = cluster.bottomRight.WToC();
+                                        ds.DrawRoundedRectangle(c0.X, c0.Y, c1.X-c0.X, c1.Y-c0.Y, 4.0f, 4.0f, selected ? Colors.White : Colors.Maroon);
+                                    }
+                                    
+                                    if (selected)
+                                    {
+                                        var real = cluster.real;
+                                        var c0 = real.CidToCC();
+                                        foreach (var a in cluster.attacks)
+                                        {
+                                            var t = (tick * a.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var r = t.Ramp();
+                                            var c1 = a.CidToCC();
+                                            var spot = Spot.GetOrAdd(a);
+                                            DrawAction(ds, batch, 0.5f, 1.0f, r, c1, c0, Colors.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
+                                        }
+                                        foreach(var target in cluster.targets)
+                                        {
+                                            var c = target.CidToCC();
+                                            var t = (tick * target.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
+                                            ds.DrawRoundedSquareWithShadow(c, r, Colors.White);
+                                        }
 
+                                    }
                                 }
                             }
+
+                            //foreach (var t in AttackTab.readable.targets)
+                            //{
+                            //    var c1 = t.cid.CidToCC();
+                            //    DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Colors.White : Colors.Teal);
+                            //}
+                            //foreach (var t in AttackTab.readable.attacks)
+                            //{
+                            //  //  DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Colors.White : Colors.Teal);
+
+                            //    //if (t.target != 0)
+                            //    //{
+                            //    //    var _t = (tick * t.cid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
+                            //    //    var r = _t.Ramp();
+                            //    //    var c = t.fake ? Colors.White : Colors.Red;
+                            //    //    var c0 = t.cid.CidToCC();
+                            //    //    var c1 = t.target.CidToCC();
+                            //    //    //   DrawTextBox(ds, $"{t.type} {t.fake} {t.player}", c1, tipTextFormatCentered);
+                            //    //    DrawAction(ds, batch, .5f, 1.0f, r, c0, c1, c, troopImages[t.troopType], false, null, 28, 0.8f);
+
+                            //    //}
+                            //}
                         }
                         if (defenderVisible || outgoingVisible)
                         {
@@ -822,7 +879,7 @@ namespace COTG.Views
                                                 Assert(false);
                                             }
                                         }
-                                        DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal);
+                                        DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
                                     }
                                 }
                             }
@@ -839,7 +896,7 @@ namespace COTG.Views
                                         var c1 = targetCid.CidToCC();
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
-                                        DrawTextBox(ds, $"{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal);
+                                        DrawTextBox(ds, $"{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
 
                                     }
                                 }
@@ -877,7 +934,7 @@ namespace COTG.Views
                                             troopImages[ttSenator], false, null, 20);
                                     }
                                 }
-                                DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Colors.White);
+                                DrawTextBox(ds, $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Colors.White, notFaded);
 
                             }
 
@@ -955,7 +1012,7 @@ namespace COTG.Views
                                     if (spot != null &&  spot.isClassified)
                                     {
                                         var c1 = (cx, cy).WToC();
-                                        DrawTextBox(ds, $"{spot.classificationString}", c1, tipTextFormatCentered, Colors.Cyan);
+                                        DrawTextBox(ds, $"{spot.classificationString}", c1, tipTextFormatCentered, Colors.Cyan, notFaded);
                                     }
                                 }
                             }
@@ -1038,7 +1095,7 @@ namespace COTG.Views
             };
         }
 
-        private static void DrawTextBox(CanvasDrawingSession ds, string text, Vector2 at, CanvasTextFormat format, Color color)
+        private static void DrawTextBox(CanvasDrawingSession ds, string text, Vector2 at, CanvasTextFormat format, Color color, bool drawBackground)
         {
             float xLoc = at.X;
             float yLoc = at.Y;
@@ -1049,7 +1106,8 @@ namespace COTG.Views
             bounds.Y += at.Y -expand;
             bounds.Width += expand * 2;
             bounds.Height += expand * 2;
-            ds.FillRoundedRectangle(bounds, 3, 3, shadowBrush);
+            if(drawBackground)
+                ds.FillRoundedRectangle(bounds, 3, 3, shadowBrush);
             ds.DrawTextLayout(textLayout, at.X, at.Y, color);
         }
 
@@ -1111,11 +1169,14 @@ namespace COTG.Views
             var mid = progress.Lerp(c0, c1);
             var shadowC = color.GetShadowColor();
             var midS = mid - shadowOffset;
-            var d2 = Vector2.DistanceSquared(mid, mousePosition);
-            if (d2<bestUnderMouseScore)
+            if (army!=null)
             {
-                bestUnderMouseScore = d2;
-                underMouse = army;
+                var d2 = Vector2.DistanceSquared(mid, mousePosition);
+                if (d2<bestUnderMouseScore)
+                {
+                    bestUnderMouseScore = d2;
+                    underMouse = army;
+                }
             }
             ds.DrawLine(c0, c1, shadowC, lineThickness, defaultStrokeStyle);
             if (applyStopDistance)

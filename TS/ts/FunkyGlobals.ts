@@ -154,14 +154,41 @@ function ResetCommandInfo() {
 	/**
 	 * @return {Date}
 	 */
-function GetAttackTime(source) {
-		const strs = source.split(" ");
-		if (strs.length == 1) {
-			strs.push(ServerDate.now().toLocaleDateString());
-		} else {
-			strs[1] = strs[1] + "/" + ServerDate.now().getFullYear();
+function GetAttackTime(source:string) : Date {
+	let departAT = source.indexOf("Departs:");
+	if (departAT >= 0) {
+		let info = source.substr(departAT + 9);
+		let today = info.indexOf("Today");
+		if (today >= 0) {
+			let fields = info.substr(today + 6).split(":");
+
+
+			let rv = new Date(ServerDate.now());
+			rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+			return rv;
+
 		}
-		return new Date(strs[0] + " " + strs[1]);
+		else {
+			let tomorrow = info.indexOf("Tomorrow");
+			if (tomorrow >= 0) {
+				let fields = info.substr(tomorrow + 9).split(":");
+
+
+				let rv = new Date(ServerDate.now());
+				rv.setDate( rv.getDate()+1 );
+				rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+				return rv;
+
+			}
+			else {
+				return new Date(info);
+			}
+		}
+	}
+	else
+		{
+		return new Date(source);
+		}
 	}
 	/**
 	 * @return {void}
@@ -306,14 +333,15 @@ function SendDef(defobj) {
 				//console.log(targets.cstr,OGA[i][5]);
 				if (targets.cstr.indexOf(OGA[i][5]) > -1) {
 
-						var d = GetAttackTime( OGA[i][6] );
+					var d = GetAttackTime(OGA[i][6]);
+					
 						//console.log(d,minddate);
 						if (d < minddate) {
 							minddate = d;
 						}
-					
+					}
 				}
-			}
+			
 			minddate.setHours(minddate.getHours() - defobj.rettime);
 			//console.log(minddate);
 			var retdate = getFormattedTime(minddate);

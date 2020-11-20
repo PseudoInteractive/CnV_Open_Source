@@ -49,7 +49,8 @@ namespace COTG.Game
         public static float cartTravel=10.0f;
         public static float shipTravel =5.0f;
 
-        public readonly static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
+        // update:  Galleys no longer considered raiders
+        public readonly static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 255, 3, 3, 255 };
         public readonly static ushort[] ttTs = { 1, 10, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 10, 10, 100, 100, 400, 1 };
         public readonly static string[] ttName = { "guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator" };
         public readonly static string[] ttNameWithCaps = { "Guard", "Ballista", "Ranger", "Triari", "Priestess", "Vanquisher", "Sorcerer", "Scout", "Arbalist", "Praetor", "Horseman", "Druid", "Ram", "Scorpion", "Galley", "Stinger", "Warship", "Senator" };

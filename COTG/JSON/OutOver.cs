@@ -107,8 +107,19 @@ namespace COTG.JSON
                                spot.claim = (byte)claim.Max(spot.claim);
                                var atkTS = b[9].GetAsInt();
                                var defTS = b[10].GetAsInt();
+                               var attacker = Spot.GetOrAdd(atkCid);
+                                    if (attacker.isClassified)
+                                    {
+                                        var type = attacker.GetPrimaryTroopType(false);
 
-                               army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
+                                        army.troops = new[] { new TroopTypeCount(type, atkTS/ttTs[type]) };
+
+                                    }
+                                    else
+                                    {
+                                        attacker.Classify();
+                                        army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
+                                    }
                                if (defTS > 0)
                                {
                                    army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttGuard, defTS) };

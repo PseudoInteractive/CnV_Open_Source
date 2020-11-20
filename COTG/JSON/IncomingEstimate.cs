@@ -63,7 +63,7 @@ namespace COTG.Game
 
                     }
                 }
-                else;
+                else
                 {
                     source.Classify();
                 }

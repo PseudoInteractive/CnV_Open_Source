@@ -501,6 +501,24 @@ namespace COTG.Views
             TipRaiding201.IsOpen = true;
         }
 
+        private async void ResetRaids(object sender, RoutedEventArgs e)
+        {
+            await RaidOverview.Send();
+            await RestAPI.troopsOverview.Post();
+            var ret = new List<int>();
+            foreach(var c in City.allCities.Values)
+            {
+                if(c.raidCarry != 0 && c.raidCarry <= 100 || c.tsRaid >= c.tsTotal/4 )
+                {
+                    ret.Add(c.cid);
+                }
+
+            }
+            Note.Show($"Returning {ret.Count}");
+            Raiding.ReturnFastBatch(ret);
+
+        }
+
 
         //      static Dungeon lastTooltip;
         //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

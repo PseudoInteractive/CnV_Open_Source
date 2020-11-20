@@ -164,9 +164,9 @@ namespace COTG.Game
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
-            //city.tsRaid = 0;
+            city.tsRaid = 0;
 
-             //city.NotifyChange(nameof(city.tsRaid));
+             city.NotifyChange(nameof(city.tsRaid));
             MainPage.ClearDungeonList();
             if(shiftPressed)
             {

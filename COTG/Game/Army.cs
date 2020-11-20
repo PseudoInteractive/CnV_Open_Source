@@ -347,7 +347,7 @@ namespace COTG.Game
             var rv = 0;
             foreach (var ttc in l)
             {
-                if( IsRaider(ttc.type) )
+                if( IsRaider(ttc.type) && Raid.includeRaiders[ttc.type])
                     rv += ttc.ts;
             }
             return rv;

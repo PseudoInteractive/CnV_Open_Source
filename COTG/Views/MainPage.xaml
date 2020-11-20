@@ -44,7 +44,8 @@
                         PointerPressed="CityGrid_PointerPress"
                         PointerExited="cityGrid_PointerExited"
                         FontSize="{StaticResource MediumFontSize}"
-                        GroupPanelPosition="Bottom"
+                              IsTextScaleFactorEnabled="False"
+                         GroupPanelPosition="Bottom"
                         SelectionUnit="Row">
 
             <tg:RadDataGrid.Commands>
@@ -251,13 +252,17 @@
                           Header="Carry%"
                           SelectionChanged="RaidCarrySelChanged"
                           Width="200"
-                          IsEditable="True"
+                          FontSize="{StaticResource MediumFontSize}"
+                              IsTextScaleFactorEnabled="False"
+                           IsEditable="True"
                           TextSubmitted="RaidCarrySubmitted"
                           Margin="2" />
                 <winui:DropDownButton x:Name="includeButton"
                                       Content="Include"
                                       Margin="6"
-                                      Click="IncludeButtonClick"
+                                      FontSize="{StaticResource MediumFontSize}"
+                              IsTextScaleFactorEnabled="False"
+                                       Click="IncludeButtonClick"
                                       VerticalAlignment="Bottom"
                                       Style="{ThemeResource DropDownButtonRevealStyle}" />
                 <winui:NumberBox  x:Name="raidFraction"
@@ -269,6 +274,7 @@
                                   SmallChange=".0625"
                                   SpinButtonPlacementMode="Compact"
                                   Width="200" />
+                <Button Content="Reset" Click="ResetRaids" Style="{StaticResource ButtonSmall}" />
             </StackPanel>
             <tg:RadDataGrid x:Name="dungeonGrid"
                             AlternationStep="3"
@@ -277,7 +283,8 @@
                             SelectionMode="Single"
                             RowHeight="{StaticResource GridRowHeight}"
                             FontSize="{StaticResource MediumFontSize}"
-                            Grid.Row="2"
+                              IsTextScaleFactorEnabled="False"
+                             Grid.Row="2"
                             CanUserChooseColumns="True"
                             UserSortMode="Single"
                             SelectionUnit="Row"

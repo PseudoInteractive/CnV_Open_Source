@@ -771,7 +771,7 @@ namespace COTG
                         foreach (var id in lastCln)
                         {
                             var ins = prior.Find((a) => a.id==id);
-                            if(ins!=null);
+                            if(ins!=null)
                               lists.Add(ins);
 
                         }

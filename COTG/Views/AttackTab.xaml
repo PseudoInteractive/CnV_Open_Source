@@ -153,7 +153,7 @@
                 <tk:DataGridTemplateColumn Header="Target">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Attack">
-                            <HyperlinkButton Content="{x:Bind targetXy}"
+                            <HyperlinkButton Content="{x:Bind attackCluster}"
                                              Tapped="AttackTargetCoord_Tapped"
                                              HorizontalAlignment="Center"
                                              HorizontalContentAlignment="Center"
@@ -229,8 +229,11 @@
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTextColumn Header="Player"
                                        Binding="{Binding player, Mode=OneTime}" />
+                <tk:DataGridCheckBoxColumn Header="Fake"
+                                           Binding="{Binding attackFake, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="Cluster"
-                                       Binding="{Binding attackCluster, Mode=OneTime}" />
+                                       Binding="{Binding attackCluster, Mode=OneWay}"
+                                       IsReadOnly="True" />
                 <tk:DataGridTextColumn Header="City"
                                        Binding="{Binding cityName, Mode=OneTime}" />
                 <tk:DataGridTextColumn Header="Alliance"
@@ -248,8 +251,7 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTextColumn Header="Attackers"
-                                       Binding="{Binding attackers, Mode=OneWay}" />
+
             </tk:DataGrid.Columns>
         </tk:DataGrid>
     </Grid>

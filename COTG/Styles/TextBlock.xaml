@@ -9,6 +9,7 @@
         <Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
@@ -16,6 +17,7 @@
        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
@@ -27,6 +29,7 @@
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
@@ -34,6 +37,7 @@
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
