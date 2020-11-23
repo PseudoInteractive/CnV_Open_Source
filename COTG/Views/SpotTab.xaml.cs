@@ -60,22 +60,24 @@ namespace COTG.Views
                 {
 
                     var sel = selectedGrid.SelectedItems;
-                    Spot.selected.EnterWriteLock();
-
-                    Spot.selected.Clear();
+                    var newSel = new HashSet<int>();
                     foreach (Spot s in sel)
                     {
-                        Spot.selected.Add(s.cid);
+                        newSel.Add(s.cid);
 
                     }
-                }
+
+                    //          Spot.selected.EnterWriteLock();
+
+                    Spot.selected = newSel;
+                                    }
                 catch (Exception ex)
                 {
                     Log(ex);
                 }
                 finally
                 {
-                    Spot.selected.ExitWriteLock();
+          //          Spot.selected.ExitWriteLock();
                 }
             }
         }
@@ -85,6 +87,7 @@ namespace COTG.Views
             try
             {
                 ++disableSelection;
+                ++silenceChanges;
                 Spot.ProcessPointerPress(sender, e);
             }
             catch (Exception ex)
@@ -94,6 +97,7 @@ namespace COTG.Views
             finally
             {
                 --disableSelection;
+                --silenceChanges;
             }
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
@@ -122,20 +126,34 @@ namespace COTG.Views
             {
                 try
                 {
-                    var sel = new List<int>(Spot.selected._hashSet);
+
+                    var sel = new HashSet<int>(Spot.selected);
+                  
+
                     foreach (Spot i in instance.selectedGrid.SelectedItems.ToArray())
                     {
-                        var id = sel.IndexOf(i.cid);
-                        if (id == -1)
+                        if (!sel.Remove(i.cid))
                             instance.selectedGrid.DeselectItem(i);
-                        else
-                            sel.RemoveAt(id);
                     }
                     foreach (var i in sel)
                     {
                         instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
                     }
 
+                    // Todo: optimize this
+                    // now do raiding grid
+                    sel = new HashSet<int>(Spot.selected);
+
+                    foreach (Spot i in MainPage.CityGrid.SelectedItems.ToArray())
+                    {
+                        if (!sel.Remove(i.cid))
+                            instance.selectedGrid.DeselectItem(i);
+                      
+                    }
+                    foreach (var i in sel)
+                    {
+                        instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
+                    }
 
 
                     //    var sel = instance.selectedGrid.SelectedItems;

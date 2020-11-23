@@ -57090,6 +57090,15 @@ var cotgsubscribe = amplify;
                                         ts: 1
                                     }
                                 };
+                                if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
+                                    wrapper.citydata.trin = D6.trin;
+                                }
+                                if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
+                                    wrapper.citydata.trintr = D6.trintr;
+                                }
+                                if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
+                                    wrapper.citydata.triin = D6.triin;
+                                }
                                 window['external']['notify'](JSON.stringify(wrapper));
                             }, 0);
                         }
@@ -69287,6 +69296,58 @@ function encryptJs(req, k2v) {
 }
 ;
 var shrinec = [[]];
+var errz_ = 0;
+function errorgo_(j_) {
+    errz_ = errz_ + 1;
+    let b_ = `errBR${errz_}`;
+    let c_ = `#${b_}`;
+    let d_ = `#${b_} div`;
+    let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
+    $("#errorBRpopup").append(errormsgs_);
+    $(c_).show();
+    $(d_).animate({
+        opacity: 1,
+        bottom: "+10px"
+    }, "slow");
+    setTimeout(() => {
+        $(d_).animate({
+            opacity: 0,
+            bottom: "-10px"
+        }, "slow");
+        $(c_).fadeOut("slow");
+    }, 5000);
+    setTimeout(() => {
+        $(c_).remove();
+    }, 6000);
+    const wrapper = { error: j_ };
+    window['external']['notify'](JSON.stringify(wrapper));
+}
+function addToAttackSender(tid) {
+    let tempx = Number(tid % 65536);
+    let tempy = Number((tid - tempx) / 65536);
+    for (let i = 1; i <= 15; i++) {
+        let tx = "#t" + i + "x";
+        let ty = "#t" + i + "y";
+        let vx = $(tx).val();
+        let vy = $(ty).val();
+        if (vx == tempx && vy == tempy) {
+            errorgo_(tempx + ":" + tempy + " already added");
+            return;
+        }
+    }
+    for (let i = 1; i <= 15; i++) {
+        let tx = "#t" + i + "x";
+        let ty = "#t" + i + "y";
+        let vx = $(tx).val();
+        if (!vx) {
+            $(tx).val(tempx);
+            $(ty).val(tempy);
+            errorgo_(tempx + ":" + tempy + " added");
+            break;
+        }
+    }
+}
+window['addtoattacksender'] = addToAttackSender;
 function GetCity() {
     return D6;
 }
@@ -69319,6 +69380,15 @@ function sendCityData(delayInMs) {
                 bd: D6.bd
             }
         };
+        if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
+            wrapper.citydata['trin'] = D6.trin;
+        }
+        if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
+            wrapper.citydata['trintr'] = D6.trintr;
+        }
+        if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
+            wrapper.citydata['triin'] = D6.triin;
+        }
         window['external']['notify'](JSON.stringify(wrapper));
         clearTimeout(updateTimeout);
         let counc = document.getElementById("warcouncbox");
@@ -69452,24 +69522,22 @@ function avagetts() {
 }
 var raidSecret;
 function onKeyDown(ev) {
+    if (ev.key !== "Control" && ev.key !== "Shift")
+        return;
     let wrapper = {
         keyDown: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
     };
-    window['external']['notify'](JSON.stringify(wrapper));
+    let str = JSON.stringify(wrapper);
+    setTimeout(() => window['external']['notify'](str), 0);
 }
 function onKeyUp(ev) {
+    if (ev.key !== "Control" && ev.key !== "Shift")
+        return;
     let wrapper = {
         keyUp: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
     };
-    window['external']['notify'](JSON.stringify(wrapper));
-}
-function onMouseDown(ev) {
-    let wrapper = {
-        mouseDown: {
-            button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
-        }
-    };
-    window['external']['notify'](JSON.stringify(wrapper));
+    let str = JSON.stringify(wrapper);
+    setTimeout(() => window['external']['notify'](str), 0);
 }
 function postppdt() {
     try {
@@ -70032,31 +70100,6 @@ function avactor() {
         const wrapper = { cityclick: it };
         window['external']['notify'](JSON.stringify(wrapper));
     });
-    function errorgo_(j_) {
-        errz_ = errz_ + 1;
-        let b_ = `errBR${errz_}`;
-        let c_ = `#${b_}`;
-        let d_ = `#${b_} div`;
-        let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
-        $("#errorBRpopup").append(errormsgs_);
-        $(c_).show();
-        $(d_).animate({
-            opacity: 1,
-            bottom: "+10px"
-        }, "slow");
-        setTimeout(() => {
-            $(d_).animate({
-                opacity: 0,
-                bottom: "-10px"
-            }, "slow");
-            $(c_).fadeOut("slow");
-        }, 5000);
-        setTimeout(() => {
-            $(c_).remove();
-        }, 6000);
-        const wrapper = { error: j_ };
-        window['external']['notify'](JSON.stringify(wrapper));
-    }
     setTimeout(() => {
         $("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
         $("<style type='text/css'> .ava td{ width: auto; line-height:100% table-layout: auto; text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px} </style>").appendTo("head");
@@ -70068,7 +70111,6 @@ function avactor() {
             var temp_3 = String($(a_5[i_32]).attr("value"));
         }
     }, 8000);
-    var errz_ = 0;
     function ReplaceAt(me, index_54, char_) {
         var a_6 = me.split("");
         a_6[index_54] = char_;
@@ -70314,18 +70356,8 @@ function avactor() {
             $("#nearofftab").trigger({ type: "click", originalEvent: "1" });
         });
         $("#addtoAtt").click(function () {
-            for (let i = 1; i < 15; i++) {
-                if (!$("#t" + i + "x").val()) {
-                    var tid = Number($("#showReportsGo").attr("data"));
-                    var tempx;
-                    var tempy;
-                    tempx = Number(tid % 65536);
-                    tempy = Number((tid - tempx) / 65536);
-                    $("#t" + i + "x").val(tempx);
-                    $("#t" + i + "y").val(tempy);
-                    break;
-                }
-            }
+            let tid = Number($("#showReportsGo").attr("data"));
+            addToAttackSender(tid);
         });
         $("#addtoDef").click(function () {
             for (let i = 1; i < 15; i++) {

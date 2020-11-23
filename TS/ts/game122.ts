@@ -43623,6 +43623,7 @@ var cotgsubscribe = amplify;
               });
           }
         });
+
       }
     }
 
@@ -57721,6 +57722,15 @@ var cotgsubscribe = amplify;
                     ts: 1
                   }
                 };
+                  if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
+                      wrapper.citydata.trin = D6.trin;
+                  }
+                  if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
+                      wrapper.citydata.trintr = D6.trintr;
+                  }
+                  if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
+                      wrapper.citydata.triin = D6.triin;
+                  }
                 window['external']['notify'](JSON.stringify(wrapper));
               }, 0);
             }

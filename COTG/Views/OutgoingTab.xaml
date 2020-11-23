@@ -59,7 +59,7 @@
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}"
                                             Width="30" />
-                <tg:DataGridNumericalColumn PropertyName="incomingAttackTS"
+                <tg:DataGridNumericalColumn PropertyName="incTotal"
                                             Header="incTS"
                                             SizeMode="Fixed"
                                             CellContentStyle="{StaticResource RightAlign}"
@@ -82,6 +82,10 @@
                                        Width="60" />
                 <tg:DataGridTextColumn Header="Alliance"
                                        PropertyName="alliance"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       SizeMode="Stretch"
+                                       Width="50" />
+                <tg:DataGridTextColumn PropertyName="attackers"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />

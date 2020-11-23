@@ -28,10 +28,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
             
-        <tg:RadDataGrid x:Name="cityGrid"
+        <tg:RadDataGrid x:Name="cityGrid" x:FieldModifier="public"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         ColumnDataOperationsMode="Flyout"
                         Grid.Row="2"
+                        AllowFocusOnInteraction="True"
                         IsTabStop="True"
                         UserGroupMode="Auto"
                         AlternationStep="2"

@@ -17,33 +17,19 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal">
-            <Button Content="Assign Attacks"
-                    VerticalAlignment="Center"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource ButtonSmall}"
-                    Click="AssignAttacks_Click" />
+
             <Button Content="Remove Selected"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
                     Click="RemoveSelected_Click" />
-            <Button Content="Sender"
-                    VerticalAlignment="Center"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource ButtonSmall}"
-                    Click="AttackSender_Tapped" />
-            <Button Content="Clear Targets"
-                    VerticalAlignment="Center"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource ButtonSmall}"
-                    Click="ClearTargets_Click" />
+
             <Button Content="Add Attacks from Clipboard"
                     VerticalAlignment="Center"
                     Margin="4"
@@ -81,6 +67,7 @@
                       HorizontalSpacing="4"
                       VerticalSpacing="4"
                       Grid.Row="1">
+
             <Border BorderThickness="1"
                     BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
                 <TextBlock x:Name="attackCount"
@@ -184,6 +171,65 @@
                 </tk:DataGridTemplateColumn>
             </tk:DataGrid.Columns>
         </tk:DataGrid>
+        <tk:WrapPanel Orientation="Horizontal"
+                      Margin="4"
+                      HorizontalSpacing="4"
+                      VerticalSpacing="4"
+                      Grid.Row="5">
+            <Border BorderThickness="1"
+                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+                <TextBlock x:Name="realCount"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+            </Border>
+            <Border BorderThickness="1"
+                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+                <TextBlock x:Name="fakeCount"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+            </Border>
+             
+             <Border BorderThickness="1"
+                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+                <TextBlock x:Name="sePerTarget"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+            </Border>
+             <Border BorderThickness="1"
+                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+                <TextBlock x:Name="attacksPerTarget"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+            </Border>
+        </tk:WrapPanel>
+        <tk:WrapPanel Orientation="Horizontal"
+                      Margin="4"
+                      HorizontalSpacing="4"
+                      VerticalSpacing="4"
+                      Grid.Row="4">
+            <Button Content="Create Plan"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="AssignAttacks_Click" />
+            <Button Content="Export"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="AttackSender_Tapped" />
+            <Button Content="Clear Targets"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="ClearTargets_Click" />
+        </tk:WrapPanel>
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"
                          Height="11"
@@ -196,10 +242,11 @@
                           IsHitTestVisible="False" />
             </tk:GridSplitter.Element>
         </tk:GridSplitter>
+
         <tk:DataGrid x:Name="targetGrid"
                      x:FieldModifier="public"
                      AutoGenerateColumns="False"
-                     Grid.Row="4"
+                     Grid.Row="6"
                      ItemsSource="{x:Bind local:AttackTab.targets, Mode=OneWay}"
                      RowHeight="24"
                      GridLinesVisibility="All"

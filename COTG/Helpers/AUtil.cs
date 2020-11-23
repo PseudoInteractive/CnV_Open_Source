@@ -148,7 +148,7 @@ namespace COTG
 
     public class ConcurrentHashSet<T> : IDisposable
     {
-        public readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        public readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         public readonly HashSet<T> _hashSet = new HashSet<T>();
 
         public void EnterReadLock() => _lock.EnterReadLock();
@@ -156,7 +156,24 @@ namespace COTG
 
         public void EnterWriteLock() => _lock.EnterWriteLock();
         public void ExitWriteLock() => _lock.ExitWriteLock();
-        public T[] ToArray() => _hashSet.ToArray();
+        public T[] ToArray()
+        {
+            EnterReadLock();
+            T[] rv = null;
+            try
+            {
+                rv = _hashSet.ToArray();
+            }
+            catch
+            {
+                rv = Array.Empty<T>();
+            }
+            finally
+            {
+                ExitReadlLock();
+            }
+            return rv;
+        }
         #region Implementation of ICollection<T> ...ish
         public bool Add(T item)
         {
@@ -195,6 +212,10 @@ namespace COTG
             {
                 if (_lock.IsReadLockHeld) _lock.ExitReadLock();
             }
+        }
+        public bool ContainsAlreadyLocked(T item)
+        {
+                return _hashSet.Contains(item);
         }
 
         public bool Remove(T item)

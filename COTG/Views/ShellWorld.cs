@@ -101,11 +101,12 @@ namespace COTG.Views
                                     }
                                     App.AddItem(flyout, "Source", ShowContextContext, source );
                                     App.AddItem(flyout, "Target", ShowContextContext, target);
+                                    flyout.ShowAt(canvas, pointerPoint.Position);
                                 }
                                 else
                                 {
                                     var spot = Spot.GetOrAdd(cid);
-
+                                    
                                     spot.ShowContextMenu(canvas, position);
                                 }
                                 
@@ -123,7 +124,7 @@ namespace COTG.Views
                                 var text = spot.ToTsv();
                                 Note.Show($"Copied to clipboard: {text}");
                                 App.CopyTextToClipboard(text);
-                                spot.SelectMe();
+                                spot.SelectMe(true);
 
                             });
                             break;

@@ -35,6 +35,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Cosmos" Version="4.0.0-preview3" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />

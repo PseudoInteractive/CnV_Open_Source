@@ -397,7 +397,7 @@ namespace COTG.Views
                 if (shadowBrush == null)
                 {
 
-                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 80, B = 80, R = 80 }) { Opacity = 0.8f };
+                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 60, B = 90, R = 60 }) { Opacity = 0.8f };
                     raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
                     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
@@ -575,6 +575,8 @@ namespace COTG.Views
                         }
                         //else
                         {
+
+                            // fade out background
                             if (attacksVisible)
                             {
                                 ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
@@ -716,7 +718,7 @@ namespace COTG.Views
                                         var cid = i.Key;
                                         var count = i.Value;
                                         var c = cid.CidToCC();
-                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.White,notFaded);
+                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.White, notFaded);
 
 
                                     }
@@ -751,7 +753,7 @@ namespace COTG.Views
                                         var c1 = cluster.bottomRight.WToC();
                                         ds.DrawRoundedRectangle(c0.X, c0.Y, c1.X-c0.X, c1.Y-c0.Y, 4.0f, 4.0f, selected ? Colors.White : Colors.Maroon);
                                     }
-                                    
+
                                     if (selected)
                                     {
                                         var real = cluster.real;
@@ -764,7 +766,7 @@ namespace COTG.Views
                                             var spot = Spot.GetOrAdd(a);
                                             DrawAction(ds, batch, 0.5f, 1.0f, r, c1, c0, Colors.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
                                         }
-                                        foreach(var target in cluster.targets)
+                                        foreach (var target in cluster.targets)
                                         {
                                             var c = target.CidToCC();
                                             var t = (tick * target.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -959,7 +961,7 @@ namespace COTG.Views
                         }
                     }
 
-                    foreach (var city in Spot.GetSelected())
+                    foreach (var city in Spot.GetSelectedIncludingHover())
                     {
                         var c = city.CidToCC();
                         var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -978,6 +980,7 @@ namespace COTG.Views
                     {
                         //
                         // Text names
+                        using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
                         {
                             // Labels last
                             for (var cy = cy0; cy < cy1; ++cy)
@@ -1012,7 +1015,12 @@ namespace COTG.Views
                                     if (spot != null &&  spot.isClassified)
                                     {
                                         var c1 = (cx, cy).WToC();
-                                        DrawTextBox(ds, $"{spot.classificationString}", c1, tipTextFormatCentered, Colors.Cyan, notFaded);
+                                        var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                        var r = t.Ramp();
+                                        var alpha = (t*1.21f).Wave()*0.5f + 0.5f;
+                                        const float spriteSize = 16;
+                                   
+                                        batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X-spriteSize, c1.Y-spriteSize, spriteSize*2, spriteSize*2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.25f));
                                     }
                                 }
                             }
@@ -1106,7 +1114,7 @@ namespace COTG.Views
             bounds.Y += at.Y -expand;
             bounds.Width += expand * 2;
             bounds.Height += expand * 2;
-            if(drawBackground)
+            if (drawBackground)
                 ds.FillRoundedRectangle(bounds, 3, 3, shadowBrush);
             ds.DrawTextLayout(textLayout, at.X, at.Y, color);
         }

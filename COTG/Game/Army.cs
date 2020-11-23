@@ -405,5 +405,23 @@ namespace COTG.Game
             return tc;
 
         }
+        public static List<TroopTypeCount> GetTroopTypeCount2(this JsonElement tt, Func<int, bool> filter = null)
+        {
+            var tc = new List<TroopTypeCount>();
+            if (tt.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var a in tt.EnumerateArray())
+                {
+                    var tType = a.GetAsInt("tt");
+                    var count = a.GetAsInt("tv");
+                    tc.Add(new TroopTypeCount(tType, count));
+                    
+                    
+
+                }
+            }
+            return tc;
+
+        }
     }
 }

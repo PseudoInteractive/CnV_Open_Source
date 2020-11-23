@@ -34,6 +34,7 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Input;
+using Windows.Graphics.Display;
 
 namespace COTG.Views
 {
@@ -320,6 +321,11 @@ namespace COTG.Views
             //   HomeButtonTip.IsOpen = true;
 
             App.SetupCoreWindowInputHooks();
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
+                                      displayInformation.ScreenHeightInRawPixels);
+            ShellPage.webclientSpan.x = (screenSize.Width*.715625f).RoundToInt();
+            ShellPage.webclientSpan.y = (screenSize.Height*0.89236111111111116f).RoundToInt();
         }
 
         //private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)

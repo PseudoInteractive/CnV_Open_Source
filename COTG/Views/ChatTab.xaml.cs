@@ -33,7 +33,7 @@ namespace COTG.Views
 {
     public sealed class ChatEntry
     {
-        
+
         public string player { get; set; }
         public byte crown { get; set; }
         public byte type { get; internal set; }
@@ -43,15 +43,15 @@ namespace COTG.Views
         public const byte typeAlliance = 4;
         public const byte typeOfficer = 5;
         public sbyte allignment;
-        public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1)  switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
+        public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
         public DateTimeOffset time;
         public string arrivedString => time.ToString("HH':'mm':'ss");
-        public string text { get; set; }= string.Empty;
+        public string text { get; set; } = string.Empty;
 
-        public ChatEntry(string _a,DateTimeOffset _time = default) {  text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
-        public ChatEntry(string _player,string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time;  type = _type; player = _player; }
+        public ChatEntry(string _a, DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
+        public ChatEntry(string _player, string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time; type = _type; player = _player; }
         //  public ChatEntry() { }
-       
+
     }
     //public  sealed class ChatEntryGroup
     //{
@@ -70,13 +70,13 @@ namespace COTG.Views
         public static ChatTab alliance = new ChatTab() { Tag = nameof(alliance) };
         public static ChatTab world = new ChatTab() { Tag = nameof(world) };
         public static ChatTab officer = new ChatTab() { Tag = nameof(officer) };
-       // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
+        // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
         public static ChatTab debug = new ChatTab() { Tag = nameof(debug) };
 
         public static ChatTab[] all = Array.Empty<ChatTab>();
         public static ChatTab[] Ctor()
         {
-           all = new ChatTab[]{ alliance, world, officer,  debug };
+            all = new ChatTab[] { alliance, world, officer, debug };
             return all;
         }
         public string whisperTarget; // null if no target
@@ -87,7 +87,7 @@ namespace COTG.Views
         public DumbCollection<ChatEntry> items { get; set; } = new DumbCollection<ChatEntry>();
         override public void VisibilityChanged(bool visible)
         {
-            if(items.Count > 0)
+            if (items.Count > 0)
             {
                 listView.ScrollIntoView(items.Last());
                 input.Focus(FocusState.Programmatic);
@@ -101,7 +101,7 @@ namespace COTG.Views
             if (!isActive)
             {
 
-                tabPage.AddTab(this,false);
+                tabPage.AddTab(this, false);
             }
             //var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
             //var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
@@ -112,7 +112,7 @@ namespace COTG.Views
             //    Groups.Add(activeGroup);
             //}
             int count = items.Count;
-            
+
             //foreach (var g in Groups)
             //    count += g.Items.Count;
             if (count >= maxItems)
@@ -120,13 +120,13 @@ namespace COTG.Views
                 items.RemoveAt(0);
             }
             items.Add(entry);
-            if(this != debug && entry.text.Contains(Player.myName,StringComparison.OrdinalIgnoreCase))
+            if (this != debug && entry.text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase))
             {
                 Note.Show(entry.text);
 
-            }    
+            }
             // Set + if not from me
-            if(entry.player != Player.myName && entry.type != ChatEntry.typeWhisperTo)
+            if (entry.player != Player.myName && entry.type != ChatEntry.typeWhisperTo)
                 SetPlus(true);
 
         }
@@ -141,16 +141,16 @@ namespace COTG.Views
         public ChatTab()
         {
             this.InitializeComponent();
-            
-         //   Task.Delay(2000).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
-         //{ //ChatTip0.IsOpen = true;
-         //   /// ChatTip1.IsOpen = true;
-         //   // ChatTip2.IsOpen = true;
-         //}));
+
+            //   Task.Delay(2000).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+            //{ //ChatTip0.IsOpen = true;
+            //   /// ChatTip1.IsOpen = true;
+            //   // ChatTip2.IsOpen = true;
+            //}));
 
         }
         //     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-       // [Conditional("TRACE")]
+        // [Conditional("TRACE")]
         public static void L(string s)
         {
 
@@ -159,7 +159,8 @@ namespace COTG.Views
             //              await _logSemaphore.WaitAsync();
             // try
             ////  {
-            App.DispatchOnUIThreadSneaky( () => {
+            App.DispatchOnUIThreadSneaky(() =>
+            {
 
                 try
                 {
@@ -212,13 +213,13 @@ namespace COTG.Views
         {
             var chatEntry = sender as HyperlinkButton;
             if (chatEntry != null)
-                PasteToChatInput($"/w {chatEntry.Content.ToString()} ",false);
+                PasteToChatInput($"/w {chatEntry.Content.ToString()} ", false);
 
         }
 
         static List<string> messageCache = new List<string>();
         internal static TabPage tabPage;
-        const int maxItems =100;
+        const int maxItems = 100;
 
         private void Paste(string s, bool afterInput)
         {
@@ -227,10 +228,10 @@ namespace COTG.Views
             else
             {
                 var text = input.Text;
-                if( !text.IsNullOrEmpty() && s[0] == '/' && text[0]=='/') // strip other whispers
+                if (!text.IsNullOrEmpty() && s[0] == '/' && text[0]=='/') // strip other whispers
                 {
                     var index = text.IndexOf(' ', 3);
-                    if( index >= 0)
+                    if (index >= 0)
                         text = text.Substring(index);
                 }
                 input.Text = s + text;
@@ -255,9 +256,9 @@ namespace COTG.Views
                                 if (index <= 0)
                                 {
                                     index = messageCache.Count - 1;
-                                    if(!sel.IsNullOrEmpty())
+                                    if (!sel.IsNullOrEmpty())
                                         messageCache.Add(sel);
-                                    
+
                                 }
                                 else
                                 {
@@ -266,10 +267,10 @@ namespace COTG.Views
                             }
                             else
                             {
-                                if(index == -1)
+                                if (index == -1)
                                 {
                                     index = 0;
-                                    if(!sel.IsNullOrEmpty() )
+                                    if (!sel.IsNullOrEmpty())
                                     {
                                         messageCache.Insert(0, sel);
                                         ++index;
@@ -291,7 +292,7 @@ namespace COTG.Views
                     else if (e.Key == Windows.System.VirtualKey.Enter)
                     {
                         var str = input.Text;
-                        if(!str.IsNullOrEmpty())
+                        if (!str.IsNullOrEmpty())
                         {
 
                             //   Log(input.Text);
@@ -307,7 +308,7 @@ namespace COTG.Views
                             }
                             input.Text = "";
                             JSClient.SendChat(id + 1, str);
-                       
+
                             {
                                 var count = items.Count;
                                 if (count > 0)
@@ -327,9 +328,9 @@ namespace COTG.Views
         }
         public static ChatTab GetWhisperTab(string player, bool activate)
         {
-            foreach(var w in all)
+            foreach (var w in all)
             {
-                if(w.whisperTarget!=null && w.whisperTarget == player)
+                if (w.whisperTarget!=null && w.whisperTarget == player)
                 {
                     if (activate)
                         TabPage.Show(w);
@@ -366,30 +367,30 @@ namespace COTG.Views
             return ch;
         }
         // also for whisper
-        public static void PasteToChatInput(string coords, bool afterInput=true)
+        public static void PasteToChatInput(string coords, bool afterInput = true)
         {
             if (coords[0] == '/')
             {
                 var parseEnd = coords.IndexOf(' ', 3);
                 var player = coords.Substring(3, parseEnd - 3);
                 App.CopyTextToClipboard(player);
-                var tab = ChatTab.GetWhisperTab(player,true);
+                var tab = ChatTab.GetWhisperTab(player, true);
                 tab.Paste(coords, false);
                 return;
             }
-//                afterInput = false;
+            //                afterInput = false;
             foreach (var tab in all)
                 tab.Paste(coords, afterInput);
 
-            
+
             var lg = coords.Length;  //  <coords>000:000</coords>
             if (lg == 24)
             {
                 var c = coords.Substring(8, 7);
                 App.CopyTextToClipboard(c);
- //               Note.Show($"[{c}](/c/{c}) posted to chat");
+                //               Note.Show($"[{c}](/c/{c}) posted to chat");
             }
-            
+
         }
 
         public static void ProcessIncomingChat(JsonProperty jsp)
@@ -421,12 +422,12 @@ namespace COTG.Views
                         if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
                         {
                             // add to all tabs
-                            ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers":"you whisper")}` {ch.text}";
+                            ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
                             ChatTab.GetWhisperTab(ch.player, true).Post(ch);
                             // ChatTab.whisper.Post(ch);
-                     //       ChatTab.alliance.Post(ch);
-                     //       ChatTab.officer.Post(ch);
-                     //       ChatTab.world.Post(ch);
+                            //       ChatTab.alliance.Post(ch);
+                            //       ChatTab.officer.Post(ch);
+                            //       ChatTab.world.Post(ch);
                         }
                         else
                         {
@@ -438,7 +439,7 @@ namespace COTG.Views
         }
 
 
-       
+
 
         //private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
         //{
@@ -500,7 +501,7 @@ namespace COTG.Views
 
         //private async void input_Tapped(object sender, TappedRoutedEventArgs e)
         //{
-         
+
         //}
 
         //private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
@@ -508,7 +509,7 @@ namespace COTG.Views
 
         //}
 
-    
+
         //private async void input_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         //{
         //    var msg = sender as TextBox;
@@ -586,7 +587,7 @@ namespace COTG.Views
                     item.CommandParameter = item;
                     i.Add(item);
                 }
-                fly.ShowAt(date,e.GetPosition(date) );
+                fly.ShowAt(date, e.GetPosition(date));
             });
         }
 
@@ -597,7 +598,7 @@ namespace COTG.Views
 
         private void input_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
- //           Log("Tapped");
+            //           Log("Tapped");
             listView.Focus(FocusState.Programmatic);
             input.Focus(FocusState.Programmatic);
         }
@@ -627,14 +628,14 @@ namespace COTG.Views
         }
     }
 
-        //object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
-        //{
-        //    throw new NotImplementedException();
-        //}
+    //object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-        //object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
-        //{
-        //    throw new NotImplementedException();
-        //}
-    }
+    //object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
+    //{
+    //    throw new NotImplementedException();
+    //}
+}
 

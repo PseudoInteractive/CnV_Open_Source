@@ -54,7 +54,7 @@ namespace COTG.JSON
                 await Task.Delay(1000);
             }
 
-            
+
 
             // ConcurrentDictionary<int, Attack> attacks = new ConcurrentDictionary<int, Attack>();
             var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
@@ -64,50 +64,50 @@ namespace COTG.JSON
             {
                 var task0 = Task.Run(async () =>
                 {
-               try
-               {
-                   //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
-                   using (var jsd = await Post.SendForJson("overview/outover.php", "a=0"))
-                   {
-                       foreach (var spot in Spot.defendersO)
-                       {
-                           // is this a safe time to do this?
-                           spot.incoming = Army.empty; // Todo:  this wipes incoming as well, we may want to preserve it at some point
-                           spot.claim = 0;
-                       }
+                    try
+                    {
+                        //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
+                        using (var jsd = await Post.SendForJson("overview/outover.php", "a=0"))
+                        {
+                            foreach (var spot in Spot.defendersO)
+                            {
+                                // is this a safe time to do this?
+                                spot.incoming = Army.empty; // Todo:  this wipes incoming as well, we may want to preserve it at some point
+                                spot.claim = 0;
+                            }
 
-                       {
-                           var jse = jsd.RootElement.GetProperty("a");
-                           foreach (var b in jse.EnumerateArray())
-                           {
-                               var atkCid = b[12].GetAsInt(); // DecodeCid(5, b.GetString("attacker_locatuin"));
-                               var defCid = b[13].GetAsInt(); // DecodeCid(5, b.GetString("defender_location"));
-                               var atkP = Player.NameToId(b[7].GetAsString());
-                               var defP = Player.NameToId(b[2].GetAsString());
+                            {
+                                var jse = jsd.RootElement.GetProperty("a");
+                                foreach (var b in jse.EnumerateArray())
+                                {
+                                    var atkCid = b[12].GetAsInt(); // DecodeCid(5, b.GetString("attacker_locatuin"));
+                                    var defCid = b[13].GetAsInt(); // DecodeCid(5, b.GetString("defender_location"));
+                                    var atkP = Player.NameToId(b[7].GetAsString());
+                                    var defP = Player.NameToId(b[2].GetAsString());
 
-                               var spot = Spot.GetOrAdd(defCid, b[4].GetAsString());
-                               //         var spotted = b[6].GetString().ParseDateTime();
-                               var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
+                                    var spot = Spot.GetOrAdd(defCid, b[4].GetAsString());
+                                    //         var spotted = b[6].GetString().ParseDateTime();
+                                    var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
-                               var serverTime = JSClient.ServerTime();
-                               var spotted = time - TimeSpan.FromMinutes(atkCid.DistanceToCid(defCid) * TTTravel(ttVanquisher));
-                               if (spotted > serverTime)
-                                   spotted = serverTime;
-                               var army = new Army()
-                               {
-                                   isAttack = true,
-                                   sourceCid = atkCid,
-                                   targetCid = defCid,
-                                   time = time,
-                                   spotted = spotted
-                               };
+                                    var serverTime = JSClient.ServerTime();
+                                    var spotted = time - TimeSpan.FromMinutes(atkCid.DistanceToCid(defCid) * TTTravel(ttVanquisher));
+                                    if (spotted > serverTime)
+                                        spotted = serverTime;
+                                    var army = new Army()
+                                    {
+                                        isAttack = true,
+                                        sourceCid = atkCid,
+                                        targetCid = defCid,
+                                        time = time,
+                                        spotted = spotted
+                                    };
 
-                               army.type = (byte)GetReportType(b[1].GetAsString());
-                               var claim = b[11].GetAsFloat().RoundToInt();
-                               spot.claim = (byte)claim.Max(spot.claim);
-                               var atkTS = b[9].GetAsInt();
-                               var defTS = b[10].GetAsInt();
-                               var attacker = Spot.GetOrAdd(atkCid);
+                                    army.type = (byte)GetReportType(b[1].GetAsString());
+                                    var claim = b[11].GetAsFloat().RoundToInt();
+                                    spot.claim = (byte)claim.Max(spot.claim);
+                                    var atkTS = b[9].GetAsInt();
+                                    var defTS = b[10].GetAsInt();
+                                    var attacker = Spot.GetOrAdd(atkCid);
                                     if (attacker.isClassified)
                                     {
                                         var type = attacker.GetPrimaryTroopType(false);
@@ -120,51 +120,51 @@ namespace COTG.JSON
                                         attacker.Classify();
                                         army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
                                     }
-                               if (defTS > 0)
-                               {
-                                   army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttGuard, defTS) };
-                                   if (!spot.isMine)
-                                   {
-                                       spot.tsHome = defTS;
-                                   }
-                               }
-                               //                            army.sumDef = Array.Empty<TroopTypeCount>();
-                               spot.incoming = spot.incoming.ArrayAppend(army);
-                               defenders.Add(spot);
+                                    if (defTS > 0)
+                                    {
+                                        army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttGuard, defTS) };
+                                        if (!spot.isMine)
+                                        {
+                                            spot.tsHome = defTS;
+                                        }
+                                    }
+                                    //                            army.sumDef = Array.Empty<TroopTypeCount>();
+                                    spot.incoming = spot.incoming.ArrayAppend(army);
+                                    defenders.Add(spot);
                                     //   defenders.Add(spot);
-                               if(fetchReports)
-                                   reportsOutgoing.Add(army);
-                               //var rep = new Army();
-                               //rep.atkCid = atkCid;
-                               //rep.defCid = defCid;
-                               //rep.spotted = AUtil.dateTimeZero;
+                                    if (fetchReports)
+                                        reportsOutgoing.Add(army);
+                                    //var rep = new Army();
+                                    //rep.atkCid = atkCid;
+                                    //rep.defCid = defCid;
+                                    //rep.spotted = AUtil.dateTimeZero;
 
-                               //rep.atkP = atkP;
-                               //rep.defP = defP;
-                               //rep.atkCid = atkCid;
-                               //rep.defCid = defCid;
-                               //rep.time = time;
-                               //rep.aTS = atkTS;
-                               //rep.dTS = defTS;
-                               //rep.dTsLeft = rep.dTS;
-                               //rep.aTsLeft = rep.aTS;
-                               //rep.type = army.type;
-                               //rep.claim = claim;
-                               //rep.Sen = rep.claim > 0.0f;
+                                    //rep.atkP = atkP;
+                                    //rep.defP = defP;
+                                    //rep.atkCid = atkCid;
+                                    //rep.defCid = defCid;
+                                    //rep.time = time;
+                                    //rep.aTS = atkTS;
+                                    //rep.dTS = defTS;
+                                    //rep.dTsLeft = rep.dTS;
+                                    //rep.aTsLeft = rep.aTS;
+                                    //rep.type = army.type;
+                                    //rep.claim = claim;
+                                    //rep.Sen = rep.claim > 0.0f;
 
-                               //reportsOutgoing.Add(rep);
-                           }
+                                    //reportsOutgoing.Add(rep);
+                                }
 
 
 
-                       }
-                   }
-               }
-               catch (Exception e)
-               {
-                   Log(e);
-               }
-           });
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log(e);
+                    }
+                });
 
 
                 int fetched = 0;
@@ -217,30 +217,30 @@ namespace COTG.JSON
                                     using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
                                     {
                                         ++fetched;
-                                    // scout
-                                    if (source > 0)
+                                        // scout
+                                        if (source > 0)
                                         {
-                                        // Scout
-                                        // this is a scout
-                                        var dts = inc[9].GetAsInt();
+                                            // Scout
+                                            // this is a scout
+                                            var dts = inc[9].GetAsInt();
                                             var ats = inc[8].GetAsInt();
-                                        //       Assert((ats & 1) == 0);
-                                        var report = new Army()
+                                            //       Assert((ats & 1) == 0);
+                                            var report = new Army()
                                             {
                                                 troops = new[] { new TroopTypeCount(ttScout, ats / 2) },
                                                 sourceCid = source,
                                                 targetCid = target,
                                                 isAttack = true,
-                                            //  atkCN = inc[14].GetAsString(),
-                                            // defP = defP,
+                                                //  atkCN = inc[14].GetAsString(),
+                                                // defP = defP,
 
-                                            time = time,
+                                                time = time,
                                                 reportId = recId,
                                                 spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
-                                            type = reportScout,
-                                            // todo TS info
+                                                type = reportScout,
+                                                // todo TS info
 
-                                        };
+                                            };
                                             if (jsdr != null && jsdr.RootElement.TryGetProperty("tts", out var tts))
                                             {
                                                 int counter = 0;
@@ -256,8 +256,8 @@ namespace COTG.JSON
                                                     }
                                                     ++counter;
                                                 }
-                                            //Assert(defTS == dts);
-                                            report.sumDef = sumDef;
+                                                //Assert(defTS == dts);
+                                                report.sumDef = sumDef;
                                             }
                                             else
                                             {
@@ -271,9 +271,9 @@ namespace COTG.JSON
                                         else
                                         {
 
-                                        // we have to look up the report
-                                        // we have to look up the report
-                                        if (jsdr != null)
+                                            // we have to look up the report
+                                            // we have to look up the report
+                                            if (jsdr != null)
                                             {
                                                 var root = jsdr.RootElement;
                                                 int reportType = -1;
@@ -282,9 +282,9 @@ namespace COTG.JSON
                                                     ++reportType;
                                                     if (root.TryGetProperty(attackType, out var reportsByType))
                                                     {
-                                                    //    var defTS = reportsByType.GetAsInt("ts_sent");
-                                                    //    var defTSLeft = reportsByType.GetAsInt("ts_lost");
-                                                    var defTSKilled = reportsByType.GetAsInt("ts_killed");
+                                                        //    var defTS = reportsByType.GetAsInt("ts_sent");
+                                                        //    var defTSLeft = reportsByType.GetAsInt("ts_lost");
+                                                        var defTSKilled = reportsByType.GetAsInt("ts_killed");
 
                                                         foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
                                                         {
@@ -325,10 +325,10 @@ namespace COTG.JSON
                                                                     defTSLeft += t.GetInt32() * Game.Enum.ttTs[counter];
                                                                     ++counter;
                                                                 }
-                                                            //  Assert(defTS > 0);
-                                                            {
+                                                                //  Assert(defTS > 0);
+                                                                {
                                                                     defTSKilled = defTS - defTSLeft;  // overwrite with calculated value
-                                                            }
+                                                                }
                                                             }
 
 
@@ -363,9 +363,9 @@ namespace COTG.JSON
                                                                     time = time,
                                                                     spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
                                                                     type = (byte)reportType
-                                                                // todo TS info
+                                                                    // todo TS info
 
-                                                            };
+                                                                };
                                                                 parts[part].Add(rep);
                                                                 await Cosmos.AddBattleRecord(rep);
 
@@ -404,9 +404,9 @@ namespace COTG.JSON
                         var page = HitTab.instance;
                         for (int i = 0; i < reportParts.Length; ++i)
                             reportsOutgoing.AddRange(reportParts[i]);
-                    // App.DispatchOnUIThread(() =>
-                    // We should do this on the Render Thread
-                    page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
+                        // App.DispatchOnUIThread(() =>
+                        // We should do this on the Render Thread
+                        page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
                         var defKilled = 0;
                         var atkKilled = 0;
                         var myDefKilled = 0;

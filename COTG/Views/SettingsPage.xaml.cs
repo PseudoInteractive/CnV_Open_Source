@@ -459,11 +459,11 @@ namespace COTG.Views
             this.Hide();
         }
 
-        private void ExportIntelClick(object sender, RoutedEventArgs e)
-        {
-            Cosmos.SummarizeNotes();
-            this.Hide();
-        }
+        //private void ExportIntelClick(object sender, RoutedEventArgs e)
+        //{
+        //    Cosmos.SummarizeNotes();
+        //    this.Hide();
+        //}
 
         private void CastlesIntel(object sender, RoutedEventArgs e)
         {

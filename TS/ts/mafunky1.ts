@@ -20,6 +20,79 @@ interface stringCType {
 }
 var shrinec= [[]];//string,string,number,number,number,number,string, number,number,number]] = [[[]]];// = [[["castle", "", 0, 0,0,0,1, "0", 0, 0, 0]]];
 
+
+/**
+ * @param {!Date} date_2
+ * @return {?}
+ */
+var errz_: number = 0;
+
+function errorgo_(j_) {
+	errz_ = errz_ + 1;
+
+	let b_ = `errBR${errz_}`;
+
+	let c_ = `#${b_}`;
+
+	let d_ = `#${b_} div`;
+
+	let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
+	$("#errorBRpopup").append(errormsgs_);
+	$(c_).show();
+	$(d_).animate({
+		opacity: 1,
+		bottom: "+10px"
+	}, "slow");
+	setTimeout(() => {
+		$(d_).animate({
+			opacity: 0,
+			bottom: "-10px"
+		}, "slow");
+		$(c_).fadeOut("slow");
+	}, 5000);
+	setTimeout(() => {
+		$(c_).remove();
+	}, 6000);
+	const wrapper = { error: j_ }
+	window['external']['notify'](JSON.stringify(wrapper));
+}
+
+
+function addToAttackSender(tid)  {
+
+let tempx = Number(tid % 65536);
+let tempy = Number((tid - tempx) / 65536);
+
+for (let i = 1; i <= 15; i++) {
+	let tx = "#t" + i + "x";
+	let ty = "#t" + i + "y";
+
+	let vx = $(tx).val();
+	let vy = $(ty).val();
+	if (vx == tempx && vy == tempy) {
+
+		errorgo_(tempx + ":" + tempy + " already added");
+		return;
+	}
+}
+for (let i = 1; i <= 15; i++) {
+	let tx = "#t" + i + "x";
+	let ty = "#t" + i + "y";
+	let vx = $(tx).val();
+
+	if (!vx) {
+
+		$(tx).val(tempx);
+		$(ty).val(tempy);
+		errorgo_(tempx + ":" + tempy + " added");
+		break;
+	}
+}
+			
+}
+
+window['addtoattacksender'] = addToAttackSender;
+
 //function betterBase64Decode() {
 //	try {
 //		//var me=arguments.callee.caller.caller.prototype;
@@ -254,6 +327,17 @@ function sendCityData(delayInMs) {
 				bd: D6.bd
 			}
 		};
+		if (D6.hasOwnProperty('trin') && D6.trin.length > 0)
+		{
+			wrapper.citydata['trin'] = D6.trin;
+		}
+		if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
+			wrapper.citydata['trintr'] = D6.trintr;
+		}
+		if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
+			wrapper.citydata['triin'] = D6.triin;
+		}
+
 		window['external']['notify'](JSON.stringify(wrapper));
 		clearTimeout(updateTimeout);
 		let counc = document.getElementById("warcouncbox");
@@ -605,30 +689,38 @@ var raidSecret: string;
 
 function onKeyDown(ev: KeyboardEvent) {
 
+	if (ev.key !== "Control" && ev.key !== "Shift")
+		return;
+
 	let wrapper = {
 		keyDown: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
 	};
-	window['external']['notify'](JSON.stringify(wrapper));
+	let str = JSON.stringify(wrapper);
+	setTimeout(()=> window['external']['notify'](str),0);
 }
 
 function onKeyUp(ev: KeyboardEvent) {
 
+	if (ev.key !== "Control" && ev.key !== "Shift")
+		return;
+
 	let wrapper = {
 		keyUp: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
 	};
-	window['external']['notify'](JSON.stringify(wrapper));
+	let str = JSON.stringify(wrapper);
+	setTimeout(() => window['external']['notify'](str), 0);
 }
 
 
-function onMouseDown(ev: MouseEvent ) {
+//function onMouseDown(ev: MouseEvent ) {
 
-	let wrapper = {
-		mouseDown: {
-			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
-		}
-	}
-	window['external']['notify'](JSON.stringify(wrapper));
-}
+//	let wrapper = {
+//		mouseDown: {
+//			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
+//		}
+//	}
+//	window['external']['notify'](JSON.stringify(wrapper));
+//}
 
 
 
@@ -1412,40 +1504,6 @@ function avactor() {
 	//}
 
 
-	/**
-	 * @param {!Date} date_2
-	 * @return {?}
-	 */
-	function errorgo_(j_) {
-		errz_ = errz_ + 1;
-		
-		let b_ = `errBR${errz_}`;
-		
-		let c_ = `#${b_}`;
-		
-		let d_ = `#${b_} div`;
-		
-		let errormsgs_ = `<tr ID = "${b_}"><td><div class = "errBR">${j_}<div></td></tr>`;
-		$("#errorBRpopup").append(errormsgs_);
-		$(c_).show();
-		$(d_).animate({
-			opacity: 1,
-			bottom: "+10px"
-		}, "slow");
-		setTimeout(() => {
-			$(d_).animate({
-				opacity: 0,
-				bottom: "-10px"
-			}, "slow");
-			$(c_).fadeOut("slow");
-		}, 5000);
-		setTimeout(() => {
-			$(c_).remove();
-		}, 6000);
-		const wrapper = { error: j_ }
-		window['external']['notify'](JSON.stringify(wrapper));
-	}
-
 	setTimeout(() => {
 
 	//	__base64Encode = String.prototype['base64Encode'];
@@ -1524,7 +1582,6 @@ function avactor() {
 	//this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 
 	
-	var errz_: number = 0;
 	/**
 	 * @param {?} index_54
 	 * @param {string} char_
@@ -1876,19 +1933,9 @@ function avactor() {
 			tabs.tabs("option", "active", 6);
             $("#nearofftab").trigger({type:"click",originalEvent:"1"});
 		});
-        $("#addtoAtt").click(function() {
-            for (let i=1;i<15;i++) {
-                if (!$("#t"+i+"x").val()) {
-                    var tid=Number($("#showReportsGo").attr("data"));
-                    var tempx;
-                    var tempy;
-                    tempx=Number(tid % 65536);
-                    tempy=Number((tid-tempx)/65536);
-                    $("#t"+i+"x").val(tempx);
-                    $("#t"+i+"y").val(tempy);
-					break;
-				}
-			}
+		$("#addtoAtt").click(function () {
+			let tid = Number($("#showReportsGo").attr("data"));
+			addToAttackSender(tid);
 		});
         $("#addtoDef").click(function() {
             for (let i=1;i<15;i++) {

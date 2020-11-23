@@ -38,7 +38,7 @@ namespace COTG.Game
     public class Spot : IEquatable<Spot>, INotifyPropertyChanged
     {
         public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
-        public static ConcurrentHashSet<int> selected = new ConcurrentHashSet<int>();
+        public static HashSet<int> selected = new HashSet<int>();
         public static Spot[] defendersI = Array.Empty<Spot>();
         public static Spot[] defendersO = Array.Empty<Spot>();
 
@@ -184,22 +184,42 @@ namespace COTG.Game
             "navy",
             "misc"
         };
+        private static int [] classificationTTs =
+        {
+            ttGuard,
+            ttVanquisher,
+            ttRanger,
+            ttSorcerer,
+            ttDruid,
+            ttPraetor,
+            ttHorseman,
+            ttArbalist,
+            ttScorpion,
+            ttSenator,
+            ttWarship,
+            ttGuard
+        };
         public string classificationString => classifications[(int)classification];
-        //public string attackers { get {
-        //        var rv = new List<string>();
+        public int classificationTT => classificationTTs[(int)classification];
+        public string attackers
+        {
+            get
+            {
+                var rv = new HashSet<string>();
 
-        //        foreach (var atk in AttackTab.readable.attacks)
-        //        {
-        //            if (atk.target == cid)
-        //            {
-        //                rv.Add(atk.player);
-        //            }
-        //        }
-        //        if (rv.IsNullOrEmpty())
-        //            return "None";
-        //        else
-        //            return string.Join(',', rv);
-        //    } }
+                foreach (var atk in incoming)
+                {
+                    if (atk.isAttack)
+                    {
+                        rv.Add(atk.sPlayer);
+                    }
+                }
+                if (rv.IsNullOrEmpty())
+                    return "None";
+                else
+                    return string.Join(',', rv);
+            }
+        }
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
@@ -379,7 +399,7 @@ namespace COTG.Game
                 }
                 SetFocus(false);
                 NavStack.Push(cid);
-
+                
             }
             else if (pt.Properties.IsRightButtonPressed)
             {
@@ -475,7 +495,7 @@ namespace COTG.Game
 
                     }
                 }
-                var mx = rv.stables.Max(rv.academies).Max(rv.training.Max(rv.sorc)).Max(rv.academies.Max(rv.training)).Max(rv.se);
+                var mx = rv.stables.Max(rv.academies).Max(rv.training.Max(rv.sorc)).Max(rv.academies.Max(rv.training)).Max(rv.se).Max(rv.shipyards).Max(rv.forums).Max(rv.ports);
                 if (mx <= 4)
                 {
                     classification = Classification.misc;
@@ -484,7 +504,8 @@ namespace COTG.Game
                 {
                     if (rv.se > 0 || rv.academies > 0 || rv.stables == 39 || rv.stables == 24 || rv.stables <= 20)
                         classification = Classification.horses;
-                    else {
+                    else
+                    {
                         classification = Classification.arbs;
                     }
                 }
@@ -515,7 +536,7 @@ namespace COTG.Game
                 {
                     classification =Classification.navy;
                 }
-                else if (mx == rv.forums)
+                else if (mx == rv.forums || mx==rv.ports)
                 {
                     classification =Classification.hub;
                 }
@@ -668,13 +689,29 @@ namespace COTG.Game
             return viewHover == cid;
         }
 
-        public static List<int> GetSelected()
+        public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed=true)
+        {
+            var cids = new List<int>();
+            if (cid != 0)
+                cids.Add(cid);
+
+            if (!onlyIfShiftPressed || App.IsKeyPressedShift())
+            {
+                foreach (var sel in Spot.selected.ToArray())
+                {
+                    if (sel != cid)
+                        cids.Add(sel);
+                }
+            }
+            return cids;
+        }
+
+        public static List<int> GetSelectedIncludingHover()
         {
             var rv = new List<int>();
             try
             {
-                selected.EnterReadLock();
-                rv.AddRange(selected._hashSet);
+                rv.AddRange(selected);
                 if (viewHover != 0 && !selected.Contains(viewHover))
                 {
                     rv.Add(viewHover);
@@ -699,64 +736,87 @@ namespace COTG.Game
             }
             finally
             {
-                selected.ExitReadlLock();
             }
             return rv;
 
         }
-        public void SelectMe()
+        public void SelectMe(bool showClick)
         {
             NavStack.Push(cid);
             SpotTab.AddToGrid(this, App.keyModifiers, true);
-            ProcessSelection(App.keyModifiers, true);
-            JSClient.ShowCity(cid, true);
+            ProcessSelection(App.keyModifiers);
+            if (showClick)
+            {
+                JSClient.ShowCity(cid, true);
+            }
         }
 
-        public bool ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false)
+        public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false)
         {
-            bool rv = false;
-            try
+            ++SpotTab.silenceChanges;
+
+            App.DispatchOnUIThreadSneaky(() =>
             {
-                selected.EnterWriteLock();
-                if (mod.IsShift() || forceSelect)
+                try
                 {
-                    rv = true; // this should also add "in between spots"
-                    selected._hashSet.Add(cid);
-                    //                 SpotTab.SelectedToGrid();
-                }
-                else if (mod.IsControl())
-                {
-                    if (selected._hashSet.Contains(cid))
+                    var sel0 = SpotTab.instance.selectedGrid.SelectedItems;
+                    var sel1 = MainPage.instance.cityGrid.SelectedItems;
+                    var sel = selected;
+                    var present = sel.Contains(cid);
+                    if (mod.IsShift() || mod.IsControl() || forceSelect)
                     {
-                        rv = false;
-                        selected._hashSet.Remove(cid);
+                        if (present )
+                        {
+                            if (!forceSelect &&!mod.IsShift())
+                            {
+                                selected = new HashSet<int>(sel.Where(a => a!=cid));
+                                sel0.Remove(this);
+                                sel1.Remove(this);
+                            }
+                        }
+                        else
+                        {
+                            var newSel = new HashSet<int>(sel);
+                            newSel.Add(cid);
+                            selected = newSel;
+
+                            sel0.Add(this);
+                            sel1.Add(this);
+
+                        }
+                        //                 SpotTab.SelectedToGrid();
                     }
+                    
                     else
                     {
-                        rv = true;
-                        selected._hashSet.Add(cid);
-                    }
+                        // clear selection and select this
+                        if (present && selected.Count == 1)
+                        {
+                            /// nothing
+                        }
+                        else
+                        {
+                            selected=new HashSet<int>(new [] { cid });
+                            
+                            sel0.Clear();
+                            sel0.Add(this);
 
+                            sel1.Clear();
+                            sel1.Add(this);
+                        }
+                        //                   SpotTab.SelectOne(this);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    // clear selection and select this
-                    rv = true;
-                    selected._hashSet.Clear();
-                    selected._hashSet.Add(cid);
-                    //                   SpotTab.SelectOne(this);
+                    Log(e);
                 }
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-            finally
-            {
-                selected.ExitWriteLock();
-            }
-            SpotTab.SelectedToGrid();
-            return rv;
+                finally
+                {
+                    --SpotTab.silenceChanges;
+                }
+            });
+        //    SpotTab.SelectedToGrid();
         }
         public static bool AreAnySelected()
         {
@@ -831,12 +891,13 @@ namespace COTG.Game
         public static void SetFocus(int cid, bool selectInUI)
         {
             var changed = cid != focus;
+            var spot = Spot.GetOrAdd(cid);
+            spot.SelectMe(false);
             if (changed)
             {
                 focus = cid;
                 App.DispatchOnUIThreadSneaky(() =>
                 {
-                    var spot = Spot.GetOrAdd(cid);
                     ShellPage.instance.focus.Content = spot.nameAndRemarks;
                     ShellPage.instance.coords.Text = cid.CidToString();
                     if (selectInUI)
@@ -939,7 +1000,7 @@ namespace COTG.Game
         public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
         {
             var flyout = new MenuFlyout();
-
+            SelectMe(false) ;
 
             if (this.isCityOrCastle)
             {
@@ -984,6 +1045,15 @@ namespace COTG.Game
                         App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid, false));
                         App.AddItem(flyout, "Add as Fake", (_, _) => AttackTab.AddTarget(cid, true));
                     }
+                    App.AddItem(flyout, "Add to Attack Sender", async (_, _) =>
+                    {
+                        foreach (var id in Spot.GetSelectedForContextMenu(cid))
+                        {
+                            await JSClient.AddToAttackSender(id);
+                        }
+                    }
+                    );
+
                     //App.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
                     //App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
                     //App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
@@ -1000,10 +1070,12 @@ namespace COTG.Game
                     App.AddItem(flyout, "Add as Attacker", (_, _) =>
                     {
 
-                        string s = cid.CidToString();
-                        App.CopyTextToClipboard(s);
-
-                        AttackTab.instance.AddAttacksFromClipboard(null, null);
+                        string s = string.Empty;
+                        foreach (var id in Spot.GetSelectedForContextMenu(cid))
+                        {
+                           s = s + cid.CidToString() + "\t";
+                        }
+                        AttackTab.instance.AddAttacksFromString(s);
                         Note.Show($"Added attacker {s}");
 
                     });
@@ -1029,7 +1101,7 @@ namespace COTG.Game
 
             }
             App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
-            App.AddItem(flyout, "Select", SelectMe);
+            App.AddItem(flyout, "Select",(_,_)=> SelectMe(true) );
             App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
 
 
@@ -1117,7 +1189,7 @@ namespace COTG.Game
                         //     MainPage.CityGrid.SetCurrentItem(this,false);
                         MainPage.CityGrid.ScrollItemIntoView(this);
                         // await Task.Delay(200);
-                        MainPage.CityGrid.SelectItem(this);
+                        //MainPage.CityGrid.SelectItem(this);
                         //var id = gridCitySource.IndexOf(this);
                         //if (id != -1)
                         //{
@@ -1144,6 +1216,6 @@ namespace COTG.Game
     }
     public static class SpotHelper
     {
-        public static string CellText(this DataGridCellInfo cell)=> cell?.Column.Header?.ToString() ?? string.Empty;
+        public static string CellText(this DataGridCellInfo cell) => cell?.Column.Header?.ToString() ?? string.Empty;
     }
 }

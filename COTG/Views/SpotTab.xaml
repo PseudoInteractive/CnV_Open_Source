@@ -23,7 +23,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <telerikGrid:RadDataGrid x:Name="selectedGrid"
+        <telerikGrid:RadDataGrid x:Name="selectedGrid" x:FieldModifier="public"
                         Grid.Row="1"
                         Margin="0,14,0,0"
                         AutoGenerateColumns="False"

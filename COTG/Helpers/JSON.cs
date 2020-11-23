@@ -50,17 +50,19 @@ namespace COTG.Helpers
                         if (str.Length == 1 && str[0] == '-')
                             return 0;
 
-                        return float.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                        return float.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
                     }
                 case JsonValueKind.Number:
-                    return js.GetSingle();
+                    {
+                        return js.TryGetSingle(out var v) ? v : default;
+                    }
                 case JsonValueKind.True:
                     return 1;
                 case JsonValueKind.False:
-                    return 0;
-                case JsonValueKind.Array:
                 case JsonValueKind.Null:
                 case JsonValueKind.Undefined:
+                    return 0;
+                case JsonValueKind.Array:
                 case JsonValueKind.Object:
                 default:
                     Log("Invalid Json Type " + js.ValueKind);
@@ -97,18 +99,19 @@ namespace COTG.Helpers
             if (!js.TryGetProperty(prop, out var e))
             {
                 Log("Missing " + prop);
-                return -1;
+                return 0;
             }
             return GetAsFloat(e);
         }
-        public static long GetAsInt64(this JsonElement js, string prop)
+        public static long GetAsInt64(this JsonElement js, string prop,bool verbose=false)
         {
             if (!js.IsValid())
                 return -1;
             if (!js.TryGetProperty(prop, out var e))
             {
-                Log("Missing " + prop);
-                return -1;
+                if(verbose)
+                    Log("Missing " + prop);
+                return 0;
             }
             return GetAsInt64(e);
         }
@@ -123,7 +126,7 @@ namespace COTG.Helpers
                         var str = js.GetString();
                         if (str.Length == 1 && str[0] == '-')
                             return 0;
-                        return long.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : -1;
+                        return long.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
                     }
                 case JsonValueKind.Number:
                     {
@@ -136,10 +139,10 @@ namespace COTG.Helpers
                 case JsonValueKind.True:
                     return 1;
                 case JsonValueKind.False:
-                    return 0;
-                case JsonValueKind.Array:
                 case JsonValueKind.Null:
                 case JsonValueKind.Undefined:
+                    return 0;
+                case JsonValueKind.Array:
                 case JsonValueKind.Object:
                 default:
                     return -1;
@@ -149,11 +152,12 @@ namespace COTG.Helpers
         {
             return (int)GetAsInt64(js);
         }
-        public static int GetInt(this JsonElement js, string prop)
+        public static int GetInt(this JsonElement js, string prop,bool verbose=false)
         {
             if (!js.TryGetProperty(prop, out var e))
             {
-                Log("Missing " + prop);
+                if(verbose)
+                    Log("Missing " + prop);
                 return 0;
             }
             return e.GetInt32();

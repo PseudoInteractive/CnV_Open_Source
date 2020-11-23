@@ -35,6 +35,8 @@ using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
 using Windows.UI.Core;
+using Windows.Foundation;
+using Windows.Graphics.Display;
 
 namespace COTG
 {
@@ -412,6 +414,7 @@ namespace COTG
 
         }
 
+      
         //public static void ViewCity(int cityId)
         //{
         //    try
@@ -461,7 +464,24 @@ namespace COTG
 
         }
 
+        public static async Task AddToAttackSender(int cityId)
+        {
+            try
+            {
+                await App.DispatchOnUIThreadSneakyTask( () =>
+                {
 
+                   
+                    view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
+                });
+
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+
+        }
         public static async void ShowClearMenu(int cityId)
         {
             try
@@ -1160,8 +1180,7 @@ namespace COTG
                                     jsVars.gameMSAtStart = jso.GetAsInt64("time");
                                     jsVars.launchTime = DateTimeOffset.UtcNow;
                                     //    Log(jsVars.ToString());
-                                    ShellPage.webclientSpan.x = jso.GetAsInt("spanX");
-                                    ShellPage.webclientSpan.y = jso.GetAsInt("spanY");
+                                    
                                     ShellPage.clientTL.X = jso.GetAsFloat("left");
                                     ShellPage.clientTL.Y = jso.GetAsFloat("top");
                                     Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
@@ -1213,13 +1232,13 @@ namespace COTG
                                     }
                                     if (key != default)
                                     {
+                      
                                         App.OnKeyDown(key);
                                     }
                                     break;
                                 }
                             case "keyUp":
                                 {
-                                    Log($"KeyUp: {jsp.Value.ToString()}");
                                     VirtualKey key = default;
                                     switch(jsp.Value.GetString("key"))
                                     {
@@ -1229,6 +1248,7 @@ namespace COTG
                                     }
                                     if(key != default)
                                     {
+                                     //   Note.Show($"{key} Up");
                                         App.OnKeyUp(key);
                                     }
                                     break;

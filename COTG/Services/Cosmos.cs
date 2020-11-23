@@ -8,55 +8,55 @@ using COTG.Game;
 using Windows.Web.Http;
 using System.Threading;
 using static COTG.Debug;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Specialized;
 using System.Text.Json;
 using System.Text;
 
 namespace COTG.Services
 {
 
-	public static class Cosmos
-	{
-		// The Azure Cosmos DB endpoint for running this sample.
-		private static readonly string EndpointUri = "https://avatars.documents.azure.com:443/";
+    public static class Cosmos
+    {
+        // The Azure Cosmos DB endpoint for running this sample.
+        private static readonly string EndpointUri = "https://avatars.documents.azure.com:443/";
 
-		// The primary key for the Azure Cosmos account.
-		private static readonly string PrimaryKey = "58VB6zTdjvySN7UmmxjalK3dltKdvArFwAOsZ7b2aqQBtPFM0AEwPlUxMnovFVpObUou3QNIEIGjYgI42pNZYQ==";
+        // The primary key for the Azure Cosmos account.
+        private static readonly string PrimaryKey = "58VB6zTdjvySN7UmmxjalK3dltKdvArFwAOsZ7b2aqQBtPFM0AEwPlUxMnovFVpObUou3QNIEIGjYgI42pNZYQ==";
 
-		// The Cosmos client instance
-		private static CosmosClient cosmosClient;
+        // The Cosmos client instance
+        private static CosmosClient cosmosClient;
 
-		// The database we will create
-		private static CosmosDatabase database;
+        // The database we will create
+        private static CosmosDatabase database;
 
-		// The container we will create.
-		private static CosmosContainer container;
+        // The container we will create.
+        private static CosmosContainer container;
 
-		// The name of the database and container we will create
-		private static string databaseId => $"w{JSClient.world}";
-		private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
+        // The name of the database and container we will create
+        private static string databaseId => $"w{JSClient.world}";
+        private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
         private static ReaderWriterLockSlim semaphore = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        const int concurrentRequestCount = 1;
+        private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
         static Cosmos()
         {
             Assert(JSClient.world != 0);
             // Create a new instance of the Cosmos Client
-            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, LimitToEndpoint=true };
+            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual };
             clientOptions.Diagnostics.IsDistributedTracingEnabled=false;
             clientOptions.Diagnostics.IsLoggingContentEnabled=false;
             clientOptions.Diagnostics.IsTelemetryEnabled=false;
             clientOptions.Diagnostics.IsLoggingEnabled=false;
 
-            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey,clientOptions);
+            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, clientOptions);
             database = cosmosClient.GetDatabase(databaseId);
             if (database != null)
             {
                 container = database.GetContainer(containerId);
             }
-          
+
             //            await ScaleContainerAsync();
             //	await AddItemsToContainerAsync();
         }
@@ -159,69 +159,69 @@ namespace COTG.Services
 
 
         //    }        //static public string id0 = Spot.CoordsToString((220, 220));
-        public static async Task SummarizeNotes()
-        {
-            await Task.Yield();
-          
-          //  var blobData = new Dictionary<string, COTG.DB.Spot>();
-            var sb = new StringBuilder();
+        //public static async Task SummarizeNotes()
+        //{
+        //    await Task.Yield();
 
-            try
-            {
-                semaphore.EnterReadLock();
+        //  //  var blobData = new Dictionary<string, COTG.DB.Spot>();
+        //    var sb = new StringBuilder();
 
-                sb.Append("Alliance\tPlayer\tCoords\tCity\tTroops\tAction\nrRport\n");
-                await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
-                    queryDefinition: null,
-                    requestOptions: new QueryRequestOptions()
-                    {
+        //    try
+        //    {
+        //        semaphore.EnterReadLock();
 
-                    }))
-                {
-                    var xy = spot.cid;
-                    var cid = xy.WorldToCid();
-                    var sp= COTG.Game.Spot.GetOrAdd(cid);
-                    foreach (var rec in spot.recb)
-                    {
-                        sb.Append($"{sp.alliance}\t{sp.player}\t{sp.xy}\t{sp.cityName}\t{rec.trp.Format("",' ',',')}\t{COTG.Game.Enum.reportStrings[rec.typ]}\t<report>{rec.rep}</report>\n");
-                        //    if (counter != 0)
-                        //        s = s+ '\n';
-                        //    s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
-                        //    if (++counter >= 4)
-                        //        break;
-                        //}
-                    }
-                    //                        blobData[spot.id] = spot;
-                }
-            } catch (Exception e)
-            {
-                Log(e);
-            } finally
-            {
-                semaphore.ExitReadLock();
-            }
-            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=avag;AccountKey=G545SQSDGDM6LSu3eanZ6wSbsiz2rt7/jrusjll4Hh7yS9rJaQTX7CSOLLdN2C7dX+Z+PCOWyXrDgGZX5YT1dw==;EndpointSuffix=core.windows.net");
-            var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerId);
-            var blobClient = containerClient.GetBlockBlobClient(blobName);
-          //  var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
-            using (var ms = new System.IO.MemoryStream(new UTF8Encoding().GetBytes(sb.ToString())))
-            {
-                await blobClient.UploadAsync(ms);
-            }
-        }
+        //        sb.Append("Alliance\tPlayer\tCoords\tCity\tTroops\tAction\nrRport\n");
+        //        await foreach (var spot in container.GetItemQueryIterator<COTG.DB.Spot>(
+        //            queryDefinition: null,
+        //            requestOptions: new QueryRequestOptions()
+        //            {
+
+        //            }))
+        //        {
+        //            var xy = spot.cid;
+        //            var cid = xy.WorldToCid();
+        //            var sp= COTG.Game.Spot.GetOrAdd(cid);
+        //            foreach (var rec in spot.recb)
+        //            {
+        //                sb.Append($"{sp.alliance}\t{sp.player}\t{sp.xy}\t{sp.cityName}\t{rec.trp.Format("",' ',',')}\t{COTG.Game.Enum.reportStrings[rec.typ]}\t<report>{rec.rep}</report>\n");
+        //                //    if (counter != 0)
+        //                //        s = s+ '\n';
+        //                //    s = $"{s}{ SmallTime.ToDateTime(rec.t).FormatDefault() }:{ Game.Enum.reportStrings[rec.typ]}{rec.trp.Format(":",' ',',')}";
+        //                //    if (++counter >= 4)
+        //                //        break;
+        //                //}
+        //            }
+        //            //                        blobData[spot.id] = spot;
+        //        }
+        //    } catch (Exception e)
+        //    {
+        //        Log(e);
+        //    } finally
+        //    {
+        //        semaphore.ExitReadLock();
+        //    }
+        //    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=avag;AccountKey=G545SQSDGDM6LSu3eanZ6wSbsiz2rt7/jrusjll4Hh7yS9rJaQTX7CSOLLdN2C7dX+Z+PCOWyXrDgGZX5YT1dw==;EndpointSuffix=core.windows.net");
+        //    var containerClient = blobServiceClient.GetBlobContainerClient(blobContainerId);
+        //    var blobClient = containerClient.GetBlockBlobClient(blobName);
+        //  //  var temp = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(blobData);
+        //    using (var ms = new System.IO.MemoryStream(new UTF8Encoding().GetBytes(sb.ToString())))
+        //    {
+        //        await blobClient.UploadAsync(ms);
+        //    }
+        //}
         public static int battleRecordsUpserted;
 
-            public static async Task AddBattleRecord(Army army)
-		{
+        public static async Task AddBattleRecord(Army army)
+        {
             if (container == null || database == null)
                 return;
 
 
-        //    await Task.Delay(0);
+            await throttle.WaitAsync();
 
             try
             {
-              //   semaphore.EnterWriteLock();
+                //   semaphore.EnterWriteLock();
                 COTG.DB.Spot s0, s1;
                 // Create a family object for the Andersen family
                 var sourceId = COTG.DB.Spot.CoordsToString(army.sourceCid.CidToWorld());
@@ -241,15 +241,24 @@ namespace COTG.Services
                         if (ex.Status != (int)HttpStatusCode.NotFound)
                             Log(ex);
                         s0 = new COTG.DB.Spot() { id = sourceId, own = army.sPid }; // todo:  set owner
-                                                                              // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
-                                                                              //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+                                                                                    // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
+                                                                                    //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
 
                     }
                     var recb = new RecordBattle() { rep = army.reportId, typ = army.type, trp = army.troops };
                     recb.SetTime(army.time);
                     if (s0.AddRecord(recb))
                     {
-                        await container.UpsertItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+                        try
+                        {
+                            await container.UpsertItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(ex);
+                        }
+
                         ++battleRecordsUpserted;
                     }
                 }
@@ -264,7 +273,7 @@ namespace COTG.Services
                     catch (CosmosException ex)
                     {
                         if (ex.Status != (int)HttpStatusCode.NotFound)
-                           Log(ex);
+                            Log(ex);
                         //      if(ex.Status == (int)HttpStatusCode.NotFound)
                         s1 = new COTG.DB.Spot() { id = targetId, own = army.tPid }; // todo:  set owner
 
@@ -273,7 +282,17 @@ namespace COTG.Services
                     recb.SetTime(army.time);
                     if (s1.AddRecord(recb))
                     {
-                        await container.UpsertItemAsync<COTG.DB.Spot>(s1, new PartitionKey(targetId));
+                        try
+                        {
+                            await container.UpsertItemAsync<COTG.DB.Spot>(s1, new PartitionKey(targetId));
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(ex);
+
+                        }
+
                         ++battleRecordsUpserted;
 
                     }
@@ -294,9 +313,16 @@ namespace COTG.Services
                 //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
                 //	},
                 //};
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Log(e);
+            }
+            finally
+            {
+                throttle.Release();
+
+
             }
             //finally
             //{
@@ -386,18 +412,18 @@ namespace COTG.Services
         /// <summary>
         /// Delete the database and dispose of the Cosmos Client instance
         /// </summary>
-  //      private static async Task DeleteDatabaseAndCleanupAsync()
-		//{
-		//	DatabaseResponse databaseResourceResponse = await database.DeleteAsync();
-		//	// Also valid: await cosmosClient.Databases["FamilyDatabase"].DeleteAsync();
+        //      private static async Task DeleteDatabaseAndCleanupAsync()
+        //{
+        //	DatabaseResponse databaseResourceResponse = await database.DeleteAsync();
+        //	// Also valid: await cosmosClient.Databases["FamilyDatabase"].DeleteAsync();
 
-		//	Console.WriteLine("Deleted CosmosDatabase: {0}\n", databaseId);
+        //	Console.WriteLine("Deleted CosmosDatabase: {0}\n", databaseId);
 
-		//	//Dispose of CosmosClient
-		//	cosmosClient.Dispose();
-		//}
-		// </DeleteDatabaseAndCleanupAsync>
-	}
+        //	//Dispose of CosmosClient
+        //	cosmosClient.Dispose();
+        //}
+        // </DeleteDatabaseAndCleanupAsync>
+    }
 }
 
 

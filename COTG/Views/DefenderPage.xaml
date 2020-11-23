@@ -77,7 +77,7 @@
                 <tg:DataGridNumericalColumn PropertyName="incTotal"
                                             SizeMode="Fixed"
                                             CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}" IsVisible="False"
+                                            CellContentFormat="{}{0,7:N0}" 
                                             Width="55" />
                 <tg:DataGridTextColumn PropertyName="player"
                                        CellContentStyle="{StaticResource LeftAlign}"

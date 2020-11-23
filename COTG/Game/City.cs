@@ -161,6 +161,8 @@ namespace COTG.Game
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 
+        List<Reinforcement> reinforcementsHere = new List<Reinforcement>(); 
+
         public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
@@ -206,8 +208,21 @@ namespace COTG.Game
             {
                 troopsHome = th.GetTroopTypeCount().ToArray(); ;
             }
+            reinforcementsHere.Clear();
+            if (jse.TryGetProperty("trintr", out var trintr))
+            {
+                foreach(var rein in trintr.EnumerateArray())
+                {
+                    var re = new Reinforcement();
+                    re.targetCid=cid;
+                    re.sourceCid =rein.GetAsInt("c");
+                    re.order = rein.GetAsInt64("o");
+                    re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
+                    reinforcementsHere.Add(re);
+                }
+            }
 
-           
+
             tsRaid = troopsHome.TSRaid();
             tsHome = troopsHome.TS();
             tsTotal = troopsTotal.TS();
@@ -650,7 +665,7 @@ namespace COTG.Game
  
             App.DispatchOnUIThreadLow( () =>
             {
-                Log("CityListChange");
+ //               Log("CityListChange");
 
                 var selectedCityList = CityList.box.SelectedItem as CityList;
                 IEnumerable<City> l;

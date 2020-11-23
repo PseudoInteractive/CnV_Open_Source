@@ -80,8 +80,8 @@ namespace COTG.Views
 
             //cityGrid.ContextFlyout = cityMenuFlyout;
 
-            cityGrid.SelectionChanged += CityGrid_SelectionChanged;
-            cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+       //     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
+           // cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
             cityGrid.PointerMoved+=CityGrid_PointerMoved;
             
         }
@@ -176,7 +176,7 @@ namespace COTG.Views
             DefendTab.GetSelected(cids);
             return cids;
         }
-
+        
 
         public static int GetContextCidCount(int focusCid)
         {
@@ -237,18 +237,18 @@ namespace COTG.Views
 
 
         
-        public static void CityListUpdateAll()
-        {
-            if (instance == null)
-                return;
-            // Note.L("UpdateAll: ");
-            instance.Dispatcher.DispatchOnUIThreadLow(() =>
-            {
-                City.gridCitySource.NotifyReset();
-                City.GetBuild()?.SelectInUI(true);
-            });
+        //public static void CityListUpdateAll()
+        //{
+        //    if (instance == null)
+        //        return;
+        //    // Note.L("UpdateAll: ");
+        //    instance.Dispatcher.DispatchOnUIThreadLow(() =>
+        //    {
+        //        City.gridCitySource.NotifyReset();
+        //        City.GetBuild()?.SelectInUI(true);
+        //    });
             
-        }
+        //}
 
         public static void UpdateDungeonList(IEnumerable<Dungeon> dungeons)
         {
@@ -508,7 +508,7 @@ namespace COTG.Views
             var ret = new List<int>();
             foreach(var c in City.allCities.Values)
             {
-                if(c.raidCarry != 0 && c.raidCarry <= 100 || c.tsRaid >= c.tsTotal/4 )
+                if(c.raidCarry != 0 && (c.raidCarry <= 90 || c.tsRaid >= c.tsTotal/4) )
                 {
                     ret.Add(c.cid);
                 }
