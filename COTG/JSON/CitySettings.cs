@@ -26,6 +26,9 @@ namespace COTG.JSON
                 var bestDist = 4096f;
                 foreach (var hub in cl.cities)
                 {
+                    if (cid == hub)
+                        continue;
+
                     var d = hub.DistanceToCid(cid);
                     if (d < bestDist)
                     {
@@ -85,7 +88,8 @@ namespace COTG.JSON
                 split[50] = maxFood.ToString();
                 if(cottageLevel > 0)
                     split[52] = cottageLevel.ToString() + ']';
-                SetRecruit(split, Spot.GetOrAdd(cid));
+                var str = SetRecruit(split, Spot.GetOrAdd(cid));
+                Note.Show($"Set hub to {Spot.GetOrAdd(reqHub).cityName}{str}");
                 return true;
             });
 
@@ -138,13 +142,14 @@ namespace COTG.JSON
             });
         }
 
-        private static void SetRecruit(string[] split, Spot spot)
+        private static string SetRecruit(string[] split, Spot spot)
         {
             var rem = spot.remarks.ToLower();
-
+            var result = string.Empty;
             if (rem.Contains("priest"))
             {
                 split[13] = "343343";
+                result = "\nSet recruit priestess";
             }
             if (rem.Contains("rt") || rem.Contains("ranger") || rem.Contains("triari"))
             {
@@ -152,23 +157,35 @@ namespace COTG.JSON
                 // 11 is ranger
                 split[11] = "200000";
                 split[12] = "100000";
+                result = "\nSet recruit rt";
             }
             if (rem.Contains("vanq"))
             {
                 split[14] = "343343";
+               result = "\nSet recruit vanqs";
+
+            }
+            if (rem.Contains("arb"))
+            {
+                result = "\nSet recruit arbs";
+                split[17] = "343343";
             }
             if (rem.Contains("sorc"))
             {
+                result = "\nSet recruit sorcs";
                 split[15] = "343343";
-            }
-            if (rem.Contains("galley"))
-            {
-                split[23] = "480";
             }
             if (rem.Contains("prae"))
             {
+                result = "\nSet recruit prae";
                 split[18] = "343343";
             }
+            if (rem.Contains("galley"))
+            {
+                result += "\nSet recruit Gallys";
+                split[23] = "480";
+            }
+            return result;
         }
 
         public static void SetTargetHub(int cid, int targetHub)

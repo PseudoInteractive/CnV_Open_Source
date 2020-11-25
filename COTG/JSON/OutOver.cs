@@ -117,7 +117,7 @@ namespace COTG.JSON
                                     }
                                     else
                                     {
-                                        attacker.Classify();
+                                        attacker.ClassifyIfNeeded();
                                         army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
                                     }
                                     if (defTS > 0)

@@ -116,17 +116,26 @@ namespace COTG
                 if (s.Length <= 1)
                     return 0;
                 var s0s = offset;
-                while (!char.IsNumber(s[s0s]))
+                while (!char.IsDigit(s[s0s]))
                     ++s0s;
+
                 var s0e = s0s + 1;
-                while (char.IsNumber(s[s0e]))
+                int counter = 0;
+                while (char.IsDigit(s[s0e]))
+                {
                     ++s0e;
+                    if (++counter > 3)
+                        return -1;
+                }
                 var s1s = s0e + 1; // skip :
-                COTG.Debug.Assert(char.IsNumber(s[s1s]));
+                COTG.Debug.Assert(char.IsDigit(s[s1s]));
                 var s1e = s1s + 1;
-                while (s1e < s.Length && char.IsNumber(s[s1e]))
+                counter = 0;
+                while (s1e < s.Length && char.IsDigit(s[s1e]))
                 {
                     ++s1e;
+                    if (++counter > 3)
+                        return -1;
                 }
 
                 var x = int.Parse(s.Substring(s0s, s0e - s0s));
@@ -141,7 +150,7 @@ namespace COTG
 
 
         }
-        public static Regex coordsRegex = new Regex(@"\d{2,3}:\d{2,3}", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        public static Regex coordsRegex = new Regex(@"\b\d{1,3}:\d{1,3}\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
 
     }
 

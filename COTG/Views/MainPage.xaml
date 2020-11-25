@@ -155,6 +155,7 @@
                           HorizontalSpacing="4"
                           VerticalSpacing="4"
                           Grid.Row="0">
+                      <Button Content="Reset Raids" Click="ResetRaids" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Resets all with raid carry less than 90% or idle troops greater than 25%" />
                 <Border BorderThickness="1"
                         BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
                     <TextBlock x:Name="count"
@@ -275,7 +276,7 @@
                                   SmallChange=".0625"
                                   SpinButtonPlacementMode="Compact"
                                   Width="200" />
-                <Button Content="Reset" Click="ResetRaids" Style="{StaticResource ButtonSmall}" />
+           
             </StackPanel>
             <tg:RadDataGrid x:Name="dungeonGrid"
                             AlternationStep="3"
@@ -286,6 +287,7 @@
                             FontSize="{StaticResource MediumFontSize}"
                               IsTextScaleFactorEnabled="False"
                              Grid.Row="2"
+                            AllowFocusOnInteraction="True"
                             CanUserChooseColumns="True"
                             UserSortMode="Single"
                             SelectionUnit="Row"

@@ -32,15 +32,15 @@ namespace COTG.Views
 
             userTabs = new UserTab[] {
                 new MainPage(),
-                new DefenderPage(),
+                new IncomingTab(),
                 new DonationTab(),
-                new DefensePage(),
+                new DefenseHistoryTab(),
                 new BossTab(),
                 new AttackTab(),
                 new SpotTab(),
                 new OutgoingTab(),
                 new HitTab(),
-                new DefendTab(),
+                new NearDefenseTab(),
         };
             }
 
@@ -214,9 +214,9 @@ namespace COTG.Views
 
         static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {
             { "Incoming" , "\uF0EF"  },//tab.Tag as string,
-            {    "Defense", "\uEA0D" },
+            {    "DefenseHistory", "\uEA0D" },
             {    "Recent" ,  "\uF738" },
-            {  "Defend", "\uEA18" },            
+            {  "NearDefense", "\uEA18" },            
             { "alliance", "\uE902" },
             { "Outgoing","\uE189" },
             { "Hits","\uEA69" }

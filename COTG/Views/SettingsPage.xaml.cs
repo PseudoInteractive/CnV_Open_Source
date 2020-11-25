@@ -34,50 +34,50 @@ namespace COTG.Views
         //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 
-        
+
         //private static bool _isLoggedIn;
         //private static bool _isBusy;
-//        private static UserData _user;
-        public static bool fetchFullHistory=true;
-        public static bool? autoBuildOn=null;
+        //        private static UserData _user;
+        public static bool fetchFullHistory = true;
+        public static bool? autoBuildOn = null;
         public static string hubCitylistName = "Hubs";
         public static int reqWood = 160000;
         public static int reqStone = 205000;
-        public static int reqIron = 100000;
-        public static int reqFood = 100000;
+        public static int reqIron = 200000;
+        public static int reqFood = 200000;
         public static int maxWood = 250000;
-        public static int maxStone =250000;
+        public static int maxStone = 250000;
         public static int maxIron = 300000;
         public static int maxFood = 300000;
         public static int cottageLevel = 8;
-        public static bool sendWood=true;
-        public static bool sendStone=true;
-        public static bool sendIron=true;
-        public static bool sendFood=true;
-        public static bool cartsAreForRequests=false;
+        public static bool sendWood = true;
+        public static bool sendStone = true;
+        public static bool sendIron = true;
+        public static bool sendFood = true;
+        public static bool cartsAreForRequests = false;
         public static string[] incomingWatch = Array.Empty<string>();
-        public static int mruSize=32;
-        public static int[] pinned=Array.Empty<int>();
+        public static int mruSize = 32;
+        public static int[] pinned = Array.Empty<int>();
 
-       // public TipsSeen tips => TipsSeen.instance;
-        public bool FetchFullHistory { get=>fetchFullHistory; set
+        // public TipsSeen tips => TipsSeen.instance;
+        public bool FetchFullHistory { get => fetchFullHistory; set
             {
                 fetchFullHistory = value;
-                DefensePage.instance.Refresh();
-              }
+                DefenseHistoryTab.instance.Refresh();
+            }
 
         }
-        float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value;  }
+        float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value; }
 
         public static void LoadAll()
         {
-          ///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
-           
-       //     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
-          //  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
+            ///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
+
+            //     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
+            //  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
             var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.Public|System.Reflection.BindingFlags.DeclaredOnly);
             var st = App.Settings();
-            foreach(var p in props)
+            foreach (var p in props)
             {
                 try
                 {
@@ -130,17 +130,17 @@ namespace COTG.Views
             {
                 var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
                 var st = App.Settings();
-                if (SpotTab.instance.spotMRU.Count>0)
-                {
-                    List<int> mru = new List<int>();
-                    foreach (var sp in SpotTab.instance.spotMRU)
-                    {
-                        if (sp.pinned)
-                            mru.Add(sp.cid);
+                //if (SpotTab.instance.spotMRU.Count>0)
+                //{
+                //    List<int> mru = new List<int>();
+                //    foreach (var sp in SpotTab.instance.spotMRU)
+                //    {
+                //        if (sp.pinned)
+                //            mru.Add(sp.cid);
 
-                    }
-                    pinned = mru.ToArray();
-                }
+                //    }
+                //    pinned = mru.ToArray();
+                //}
                 foreach (var p in props)
                 {
                     st.SaveT(p.Name, p.FieldType, p.GetValue(null));
@@ -181,7 +181,7 @@ namespace COTG.Views
 
                 AttackTab.SaveAttacks();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log(e);
             }
@@ -227,7 +227,7 @@ namespace COTG.Views
             InitializeComponent();
 
             var cl = CityList.Find(hubCitylistName);
-            if(cl != null)
+            if (cl != null)
                 hubCityListBox.SelectedItem = cl;
             hubCityListBox.SelectionChanged += HubCityListBox_SelectionChanged;
 
@@ -243,14 +243,14 @@ namespace COTG.Views
             }
         }
 
-    
+
 
         public static void Initialize()
         {
             _versionDescription = GetVersionDescription();
-      //      IdentityService.LoggedIn += OnLoggedIn;
-     //       IdentityService.LoggedOut += OnLoggedOut;
-     //       UserDataService.UserDataUpdated += OnUserDataUpdated;
+            //      IdentityService.LoggedIn += OnLoggedIn;
+            //       IdentityService.LoggedOut += OnLoggedOut;
+            //       UserDataService.UserDataUpdated += OnUserDataUpdated;
             //_isLoggedIn = true;// IdentityService.IsLoggedIn();
             LoadAll();
             Window.Current.Closed -= SaveAll;
@@ -329,7 +329,7 @@ namespace COTG.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
@@ -342,29 +342,29 @@ namespace COTG.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		private void SetContinentCityLists(object sender, RoutedEventArgs e)
-		{
-			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-			   {
+        private void SetContinentCityLists(object sender, RoutedEventArgs e)
+        {
+            _ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+               {
                    using var work = new ShellPage.WorkScope("update citylists");
                    var cityListCount = CityList.all.Length;
-				   var changed = new HashSet<int>();
-				   var temp = new List<string>();
-				   string sli = null;
-				   var cgs = new List<string>();
+                   var changed = new HashSet<int>();
+                   var temp = new List<string>();
+                   string sli = null;
+                   var cgs = new List<string>();
                    var newCities = CityList.FindNewCities();
-                   if(newCities == null)
+                   if (newCities == null)
                    {
                        newCities = new CityList(CityList.sNewCities);
                        CityList.all = CityList.all.ArrayAppend(newCities);
-                    
+
                    }
                    {
                        var priorNewCities = newCities.cities;
                        newCities.cities= new HashSet<int>();
                        foreach (var city in priorNewCities)
                        {
-                           if (!CityList.IsNew(City.GetOrAddCity(city) ))
+                           if (!CityList.IsNew(City.GetOrAddCity(city)))
                            {
                                changed.Add(city);
                            }
@@ -375,15 +375,15 @@ namespace COTG.Views
                        }
                    }
                    foreach (var city in City.allCities.Values)
-				   {
+                   {
                        COTG.Debug.Assert(city is City);
 
                        var remarks = city.remarks.ToLower();
-                       foreach(var t in CityList.perContinentTags)
+                       foreach (var t in CityList.perContinentTags)
                        {
-                           if(remarks.Contains(t))
+                           if (remarks.Contains(t))
                            {
-                               var cl = CityList.GetForContinentAndTag(city.cont,t);
+                               var cl = CityList.GetForContinentAndTag(city.cont, t);
                                if (cl.cities.Add(city.cid))
                                    changed.Add(city.cid);
                            }
@@ -400,51 +400,51 @@ namespace COTG.Views
 
                        {
                            var cl = CityList.GetForContinent(city.cont);
-                            if (cl.cities.Add(city.cid))
+                           if (cl.cities.Add(city.cid))
                                changed.Add(city.cid);
                        }
-                       if(CityList.IsNew(city))
+                       if (CityList.IsNew(city))
                        {
-                           if(newCities.cities.Add(city.cid))
+                           if (newCities.cities.Add(city.cid))
                                changed.Add(city.cid);
                        }
                    }
                    var addedCityLists = CityList.all.Length - cityListCount;
 
                    if (addedCityLists > 0)
-				   {
-					   var cityList = new List<string>();
-					   foreach (var l in CityList.all)
-					   {
-						   if (l.id == 0)
-							   continue;
-						   cityList.Add(l.id.ToString() + l.name);
-					   }
-					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
-					   //                await Post.Send("includes/sLi.php",);
-				   }
-				   foreach (var cid in changed)
-				   {
-					   // enumerate all city
-					   temp.Clear();
-					   foreach (var l in CityList.all)
-					   {
-						   if (l.id == 0)
-							   continue;
-						   if (l.cities.Contains(cid))
-						   {
-							   temp.Add(l.id.ToString());
-						   }
+                   {
+                       var cityList = new List<string>();
+                       foreach (var l in CityList.all)
+                       {
+                           if (l.id == 0)
+                               continue;
+                           cityList.Add(l.id.ToString() + l.name);
+                       }
+                       sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
+                       //                await Post.Send("includes/sLi.php",);
+                   }
+                   foreach (var cid in changed)
+                   {
+                       // enumerate all city
+                       temp.Clear();
+                       foreach (var l in CityList.all)
+                       {
+                           if (l.id == 0)
+                               continue;
+                           if (l.cities.Contains(cid))
+                           {
+                               temp.Add(l.id.ToString());
+                           }
 
-						   //                  await Post.Send("includes/cgS.php",  );
-					   }
-					   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
-				   }
-				   if (sli != null)
-					   await Post.Send("includes/sLi.php", sli);
-				   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
-				   foreach (var it in cgs)
-                    await Post.Send("includes/cgS.php", it);
+                           //                  await Post.Send("includes/cgS.php",  );
+                       }
+                       cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
+                   }
+                   if (sli != null)
+                       await Post.Send("includes/sLi.php", sli);
+                   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
+                   foreach (var it in cgs)
+                       await Post.Send("includes/cgS.php", it);
                    Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
                    //   JSClient.GetCitylistOverview();
                    //			   Note.Show($"Successfully added continent citylists :)");
@@ -475,7 +475,7 @@ namespace COTG.Views
             {
                 var y = cont / 10;
                 var x = cont - y * 10;
-                World.DumpCities(x*100,y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault());
+                World.DumpCities(x*100, y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault());
             }
             this.Hide();
         }
@@ -484,7 +484,7 @@ namespace COTG.Views
         {
             this.Hide();
             await Task.Delay(100);
-            
+
             var names = await PlayerGroup.ChooseNames("Players to watch", incomingWatch);
             if (names != null)
             {
@@ -504,7 +504,7 @@ namespace COTG.Views
                 {
                     var cords = m.Value.FromCoordinate();
                     var s = Spot.GetOrAdd(cords);
-                 
+
 
                     SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift);
                 }
@@ -515,7 +515,7 @@ namespace COTG.Views
             {
                 Note.Show("Copy strings and coords to clipboard please");
                 COTG.Debug.Log(ex);
-               
+
             }
 
 
@@ -523,7 +523,7 @@ namespace COTG.Views
         public async void FixupReserve(object sender, RoutedEventArgs e)
         {
             var counter = 0;
-            foreach(var a in City.allCities)
+            foreach (var a in City.allCities)
             {
                 ++counter;
                 COTG.Debug.Log(counter);
@@ -531,6 +531,15 @@ namespace COTG.Views
             }
             Note.Show("Fixup reserve cmoplete");
         }
+        string appInfo { get
+            {
+                var package = Package.Current;
+                var packageId = package.Id;
+                var version = packageId.Version;
+
+                return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
+            }
+        } 
 
     }
 }

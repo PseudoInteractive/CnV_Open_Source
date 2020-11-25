@@ -19,6 +19,7 @@ using COTG.JSON;
 using Microsoft.Graphics.Canvas;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
+using Windows.UI.Xaml.Controls;
 
 namespace COTG.Services
 {
@@ -449,9 +450,8 @@ namespace COTG.Services
         public TroopsOverview() : base("overview/trpover.php") { }
         public override void ProcessJson(JsonDocument json)
         {
-            jsd = json;
             var changed = new HashSet<City>();
-            foreach (var item in jsd.RootElement.EnumerateArray())
+            foreach (var item in json.RootElement.EnumerateArray())
             {
                 var cid = item.GetAsInt("id");
                 if (!City.allCities.TryGetValue(cid, out var v))
@@ -472,6 +472,7 @@ namespace COTG.Services
                     var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
                     Assert(split.Length == 2);
                     var tE = Game.Enum.ttNameWithCaps.IndexOf(split[0]);
+                    Assert(tE >= 0);
                     var ttc = new TroopTypeCount(tE, count);
 
                     if (split[1] == "home")
@@ -505,21 +506,74 @@ namespace COTG.Services
             }
             if (!changed.IsNullOrEmpty())
             {
-                changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid),nameof(Spot.tsTotal));
+                changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid), nameof(Spot.tsTotal));
             }
             //  Log("Got JS for troop overview");
             //  Log(json.ToString());
         }
-        public static JsonDocument jsd;
-        public static Dictionary<int, JsonElement> dict = new Dictionary<int, JsonElement>();
-        public JsonElement Get(int cid)
-        {
-            return dict.GetValueOrDefault(cid);
-
-        }
     }
+    public class ReinforcementsOverview : OverviewApi
+    {
+        public static ReinforcementsOverview instance = new ReinforcementsOverview();
+        public ReinforcementsOverview() : base("overview/reinover.php") { }
+        public override void ProcessJson(JsonDocument json)
+        {
+            foreach(var s in Spot.allSpots)
+            {
+                s.Value.reinforcementsIn=Array.Empty<Reinforcement>();
+                s.Value.reinforcementsOut=Array.Empty<Reinforcement>();
+            }
+            var jsd = json;
+            var changed = new HashSet<City>();
+            int cityCount = 0;
+            int reinCount = 0;
+            int ts = 0;
+            foreach (var item in jsd.RootElement.EnumerateObject())
+            {
+                var cid = int.Parse(item.Name);
+                var spot = Spot.GetOrAdd(cid);
+                ++cityCount;
+                foreach (var rein in item.Value[9].EnumerateArray())
+                {
+                    var re = new Reinforcement();
+                    re.targetCid = cid;
+                    var targetCId = rein[1].GetAsInt();
+                
+                    Assert(targetCId == cid);
+                    re.sourceCid = rein[15].GetAsInt();
+                    Assert(re.sourceCid!=targetCId);
+                    re.order = rein[10].GetAsInt64();
+                    var troops = new List<TroopTypeCount>();
+                    foreach(var ti in rein[8].EnumerateArray())
+                    {
+                        var str = ti.GetAsString();
+                        int tcEnd = 0;
+                        while (IsDigitOrComma(str, tcEnd))
+                            ++tcEnd;
+                        var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
+                        var typeS = str.Substring(tcEnd+1);
+                        var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
+                        troops.Add(new TroopTypeCount(tE, count));
+                    }
+                    re.troops = troops.ToArray();
+                    ts += re.troops.TS();
+                    spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
+                    var source = Spot.GetOrAdd(re.sourceCid);
+                    source.reinforcementsOut = spot.reinforcementsOut.ArrayAppend(re);
+                    ++reinCount;
+                }
 
 
+            }
+            Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
+        }
+
+        private static bool IsDigitOrComma(string str, int tcEnd)
+        {
+            return tcEnd < str.Length && (char.IsDigit(str, tcEnd)||str[tcEnd]==',');
+        }
+
+    }
 
     /*
      {
@@ -789,7 +843,7 @@ namespace COTG.Services
             public string ts { get; set; }
         };
 
-        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend, DateTimeOffset arrival, float travelTime,int splits )
+        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend,DateTimeOffset departAt, DateTimeOffset arrival, float travelTime,int splits )
         {
             var tttv = new List<tt_tv>();
             foreach(var t in tsSend)
@@ -801,14 +855,19 @@ namespace COTG.Services
                 cid = cid,
                 rcid = rcid,
                 tr = JsonSerializer.Serialize(tttv),
-                snd = 1,
+                snd = 1, // 1 means send immediately
             };
-            if (arrival - JSClient.ServerTime() > TimeSpan.FromHours(travelTime+1.0f/256.0))
+            if (arrival > JSClient.ServerTime() )
             {
                 sr.snd = 3;
                 sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
             }
-             var post = JsonSerializer.Serialize(sr);
+            else if( departAt > JSClient.ServerTime() )
+            {
+                sr.snd = 2;
+                sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
+            }
+            var post = JsonSerializer.Serialize(sr);
             var secret = $"XTR977sW{Player.myId}sss2x2";
             var city = City.GetOrAddCity(cid);
             for(var i = 0; ; )
@@ -828,7 +887,26 @@ namespace COTG.Services
                         Log("Sent last");
                         if( jsd.RootElement.ValueKind != JsonValueKind.Object)
                         {
-                            Note.Show("Something went wrong, maybe not enought troops home or troops cannot make scheduled time");
+                            if (!arrival.IsZero())
+                            {
+                                var content = new ContentDialog()
+                                {
+                                    Title="Not enought Troops home or troops cannot make scheduled time",
+                                    Content="Send now or when they return from raiding?",
+                                    PrimaryButtonText="Yes",
+                                    CloseButtonText="Cancel"
+                                };
+                                if (await content.ShowAsync() == ContentDialogResult.Primary)
+                                {
+                                    SendRein(cid,rcid,tsSend,departAt,AUtil.dateTimeZero,travelTime,splits);
+                                    return;
+                                }
+                                
+                            }
+                            else
+                            {
+                                Note.Show("Something went wrong, maybe not enough troops home");
+                            }
                             break;
                         }
                         city.LoadFromJson(jsd.RootElement);
@@ -840,7 +918,7 @@ namespace COTG.Services
                     }
                     break;
                 }
-                await Task.Delay(500); 
+//                await Task.Delay(500); 
             }
         }
 

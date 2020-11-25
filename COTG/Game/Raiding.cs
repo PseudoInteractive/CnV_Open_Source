@@ -280,7 +280,7 @@ namespace COTG.Game
                     ////  await Task.Delay(300); // this might not be useful.
                     ////  ScanDungeons.Post(cid, true);
                 }
-                if(DefendTab.IsVisible())
+                if(NearDefenseTab.IsVisible())
                 {
 
                     await JSClient.PollCity(cid);

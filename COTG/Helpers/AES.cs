@@ -37,7 +37,7 @@ namespace COTG
 
         static int DateTimeNow()
         {
-            return (int)(DateTimeOffset.UtcNow - new DateTimeOffset(1970, 1, 1,0,0,0,new TimeSpan())).TotalMilliseconds;
+            return (int)(DateTimeOffset.UtcNow - new DateTimeOffset(1970, 1, 1,0,0,0,TimeSpan.Zero)).TotalMilliseconds;
 
 
         }

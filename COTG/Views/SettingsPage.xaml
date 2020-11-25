@@ -28,6 +28,7 @@
                                        EnumType="xaml:ElementTheme" />
     </ContentDialog.Resources>
     <StackPanel Orientation="Vertical" >
+        <TextBlock Text="{x:Bind appInfo}" FontSize="12" />
         <StackPanel Orientation="Horizontal">
             <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
            
@@ -41,7 +42,6 @@
         <Button Content="Import spots" Click="ImportSpots" Style="{ThemeResource ButtonRevealStyle}" Margin="8" MinWidth="120" />
         <Button Content="Restore all Tips" Click="TipsRestore" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" MinWidth="120" />
            
-             <Button Content="FixupReserve" Click="FixupReserve" Style="{ThemeResource ButtonRevealStyle}"  Margin="8" MinWidth="120" />
             </wct:WrapPanel>
         
         <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
@@ -51,30 +51,31 @@
         <StackPanel Orientation="Horizontal"  Margin="4" >
             <controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}"
+                                     SmallChange="10000" />
             <controls:NumberBox Header="Req Stone" Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
             <controls:NumberBox Header="Req Iron" Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
             <controls:NumberBox Header="Req Food" Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="4">
             <controls:NumberBox Header="Max Wood" Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
             <controls:NumberBox Header="Max Stone" Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
             <controls:NumberBox Header="Max Iron" Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
             <controls:NumberBox Header="Max Food" Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}" Width="120"
                                     NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="10000" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="10000" />
         </StackPanel>
         <StackPanel Orientation="Horizontal"  Margin="4">
             <ToggleSwitch  Header="Export Wood" IsOn="{x:Bind views:SettingsPage.sendWood, Mode=TwoWay}" Margin="4"  Width="120" />
@@ -93,7 +94,7 @@
                       ToolTipService.ToolTip="Active City List"
                       Margin="4" />
             <controls:NumberBox Header="Cottage Level" Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}" Width="120"
-                                    TextAlignment="Right" Margin="4" AcceptsExpression="True" SmallChange="1" />
+                                    Style="{StaticResource NumberBoxSmall}" SmallChange="1" />
             <CheckBox Content="Autobuild" Margin="4" IsThreeState="True" IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
         </StackPanel>
         

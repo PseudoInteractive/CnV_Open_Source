@@ -335,7 +335,7 @@ namespace COTG.JSON
                         if (fetchReports)
                         {
                             var reportCache = new Dictionary<int, Army[]>();
-                            foreach (var r in DefensePage.instance.history)
+                            foreach (var r in DefenseHistoryTab.instance.history)
                             {
                                 if (r.reportId.IsNullOrEmpty())
                                     continue;
@@ -616,7 +616,7 @@ namespace COTG.JSON
 
                             if (fetchReports)
                             {
-                                var defPage = DefensePage.instance;
+                                var defPage = DefenseHistoryTab.instance;
                                 for (int i = 0; i < reportParts.Length; ++i)
                                     reportsIncoming.AddRange(reportParts[i]);
                                 var defKilled = 0;
@@ -643,7 +643,7 @@ namespace COTG.JSON
                             defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
                             }
                             {
-                                var defenderPage = DefenderPage.instance;
+                                var defenderPage = IncomingTab.instance;
                                 if (defenderPage != null)
                                     defenderPage.NotifyIncomingUpdated();
                             }

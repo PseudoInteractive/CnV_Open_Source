@@ -33,6 +33,7 @@
                         ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
                         AlternationStep="2"
                         SelectionMode="Single"
+                        AllowFocusOnInteraction="True"
                         ColumnDataOperationsMode="Flyout"
                         SelectionChanged="defenderGrid_SelectionChanged"
                         UserGroupMode="Enabled"
@@ -106,6 +107,7 @@
                                     ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                                     Tapped="ArmyTapped"
+                        AllowFocusOnInteraction="True"
                                     UserGroupMode="Disabled"
                                     AlternationStep="2"
                                     AutoGenerateColumns="False">

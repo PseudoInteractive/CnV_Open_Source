@@ -141,7 +141,7 @@
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
 
-                      
+                      AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

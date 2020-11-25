@@ -254,7 +254,7 @@ namespace COTG.Views
                 {
                     var spot = Spot.GetOrAdd(att.cid);
                     spot.attackCluster=att.attackCluster;
-                    await spot.Classify();
+                    await spot.ClassifyIfNeeded();
 
                 }
                 var spots = new List<Spot>();
@@ -264,7 +264,7 @@ namespace COTG.Views
                     {
                         var t = Spot.GetOrAdd(target.cid);
                         t.attackCluster = target.attackCluster;
-                        t.classification =  (await t.Classify()).classification;
+                        t.classification =  await t.ClassifyIfNeeded();
                         t.attackFake = target.fake;
                         spots.Add(t);
 
@@ -324,6 +324,8 @@ namespace COTG.Views
                 Content=panel,
                 IsPrimaryButtonEnabled=true,
                 PrimaryButtonText="Remove",
+                CloseButtonText="Cancel"
+
 
             };
             panel.Children.Add(removeAttacks);
@@ -576,7 +578,7 @@ namespace COTG.Views
             await instance.TouchLists();
             var spot = Spot.GetOrAdd(cid);
             spot.attackFake = fake;
-            await spot.Classify();
+            await spot.ClassifyIfNeeded();
             if (targets.Contains(spot))
             {
                 Note.Show($"Target is already present, set to {(fake ? "fake" : "real")} {spot.attackCluster}");

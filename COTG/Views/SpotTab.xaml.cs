@@ -113,95 +113,96 @@ namespace COTG.Views
         public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=true)
         {
             var spot = Spot.GetOrAdd(cid);
-            if (disableSelection == 0)
-            {
-                AddToGrid(spot, mod, updateSelected);
-            }
+            
+            AddToGrid(spot, mod, updateSelected);
+            
             return spot;
         }
-        public static void SelectedToGrid()
-        {
-            ++silenceChanges;
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                try
-                {
+        //public static void SelectedToGrid()
+        //{
+        //    ++silenceChanges;
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        try
+        //        {
 
-                    var sel = new HashSet<int>(Spot.selected);
+        //            var sel = new HashSet<int>(Spot.selected);
                   
 
-                    foreach (Spot i in instance.selectedGrid.SelectedItems.ToArray())
-                    {
-                        if (!sel.Remove(i.cid))
-                            instance.selectedGrid.DeselectItem(i);
-                    }
-                    foreach (var i in sel)
-                    {
-                        instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
-                    }
+        //            foreach (Spot i in instance.selectedGrid.SelectedItems.ToArray())
+        //            {
+        //                if (!sel.Remove(i.cid))
+        //                    instance.selectedGrid.DeselectItem(i);
+        //            }
+        //            foreach (var i in sel)
+        //            {
+        //                instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
+        //            }
 
-                    // Todo: optimize this
-                    // now do raiding grid
-                    sel = new HashSet<int>(Spot.selected);
+        //            // Todo: optimize this
+        //            // now do raiding grid
+        //            sel = new HashSet<int>(Spot.selected);
 
-                    foreach (Spot i in MainPage.CityGrid.SelectedItems.ToArray())
-                    {
-                        if (!sel.Remove(i.cid))
-                            instance.selectedGrid.DeselectItem(i);
+        //            foreach (Spot i in MainPage.CityGrid.SelectedItems.ToArray())
+        //            {
+        //                if (!sel.Remove(i.cid))
+        //                    instance.selectedGrid.DeselectItem(i);
                       
-                    }
-                    foreach (var i in sel)
-                    {
-                        instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
-                    }
+        //            }
+        //            foreach (var i in sel)
+        //            {
+        //                instance.selectedGrid.selectionService.SelectRowUnit(Spot.GetOrAdd(i), true, false);
+        //            }
 
 
-                    //    var sel = instance.selectedGrid.SelectedItems;
-                    //                    sel.A
+        //            //    var sel = instance.selectedGrid.SelectedItems;
+        //            //                    sel.A
 
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
-                finally
-                {
-                    --silenceChanges;
-                }
-            });
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Log(e);
+        //        }
+        //        finally
+        //        {
+        //            --silenceChanges;
+        //        }
+        //    });
 
-        }
-        public static void SelectOne(Spot spot)
-        {
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                try
-                {
-                    ++silenceChanges;
-                    var sel = instance.selectedGrid.SelectedItems;
-                    sel.Clear();
-                    sel.Add(spot);
-                    //                    instance.selectedGrid.DeselectAll();
-                    //                    instance.selectedGrid.SelectItem(spot);
+        //}
+        //public static void SelectOne(Spot spot)
+        //{
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        try
+        //        {
+        //            ++silenceChanges;
+        //            var sel = instance.selectedGrid.SelectedItems;
+        //            sel.Clear();
+        //            sel.Add(spot);
+        //            //                    instance.selectedGrid.DeselectAll();
+        //            //                    instance.selectedGrid.SelectItem(spot);
 
-                }
-                catch (Exception e)
-                {
-                    Log(e);
-                }
-                finally
-                {
-                    --silenceChanges;
-                }
-            });
-        }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Log(e);
+        //        }
+        //        finally
+        //        {
+        //            --silenceChanges;
+        //        }
+        //    });
+        //}
 
 
         public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true)
         {
             // Toggle Selected
+            if (disableSelection == 0)
+            {
 
-           App.DispatchOnUIThreadSneaky(() =>
+                App.DispatchOnUIThreadSneaky(() =>
            {
                var id = SpotMRU.IndexOf(spot);
                if (id != 0)
@@ -226,11 +227,13 @@ namespace COTG.Views
                    }
 
                    SpotMRU.Insert(0, spot);
+
                }
 
-               if(updateSelection)
+               if (updateSelection)
                    spot.ProcessSelection(mod);
            });
+            }
 
         }
         public static void LoadFromPriorSession( int[] mru)

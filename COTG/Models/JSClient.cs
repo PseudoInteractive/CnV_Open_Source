@@ -259,7 +259,7 @@ namespace COTG
             {
                 var req = args.Request;
 
-                //            Log(req.RequestUri.ToString());
+                Log(req.RequestUri.ToString());
                 if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
                 {
                     var js = GetJsString("jquery");
@@ -278,10 +278,11 @@ namespace COTG
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
                 }
-                //else if (req.RequestUri.ToString().EndsWith("index.html"))
+                //else if (req.RequestUri.ToString().Contains("index.html"))
                 //{
                 //    Assert(false);
                 //    var js = GetJsString("jquery");
+                //    args.de
 
                 //    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
@@ -1340,7 +1341,7 @@ namespace COTG
                                         city.SetFocus(true);
                                         if (city.classification == Spot.Classification.unknown)
                                         {
-                                            if (App.IsKeyPressedControl() && App.IsKeyPressedShift() && Discord.isValid)
+                                            if (App.IsKeyPressedControl() && Discord.isValid)
                                             {
                                                 city.Classify();
                                             }

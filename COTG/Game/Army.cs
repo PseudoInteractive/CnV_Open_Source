@@ -249,6 +249,8 @@ namespace COTG.Game
         public bool isArt  =>  Enum.ttArtillery[type];
         [JsonIgnore]
         public bool isNaval => Enum.ttNavy[type];
+        [JsonIgnore]
+        public bool isDef=> Enum.ttIsDef[type];
 
         [JsonIgnore]
         public int ts => Enum.ttTs[type] * count;
@@ -348,6 +350,30 @@ namespace COTG.Game
             foreach (var ttc in l)
             {
                 if( IsRaider(ttc.type) && Raid.includeRaiders[ttc.type])
+                    rv += ttc.ts;
+            }
+            return rv;
+        }
+        public static int TSDef(this IEnumerable<TroopTypeCount> l)
+        {
+            if (l.IsNullOrEmpty())
+                return 0;
+            var rv = 0;
+            foreach (var ttc in l)
+            {
+                if (ttIsDef[ttc.type])
+                    rv += ttc.ts;
+            }
+            return rv;
+        }
+        public static int TSOff(this IEnumerable<TroopTypeCount> l)
+        {
+            if (l.IsNullOrEmpty())
+                return 0;
+            var rv = 0;
+            foreach (var ttc in l)
+            {
+                if (!ttIsDef[ttc.type])
                     rv += ttc.ts;
             }
             return rv;

@@ -173,7 +173,7 @@ namespace COTG.Views
                     }
                 }
             }
-            DefendTab.GetSelected(cids);
+            NearDefenseTab.GetSelected(cids);
             return cids;
         }
         

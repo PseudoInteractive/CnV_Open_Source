@@ -276,7 +276,7 @@ namespace COTG.Views
             IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
                                 // grid.hor
             /// we pass this as an argument to let the page know that it is a programmatic navigation
-            // Services.NavigationService.Navigate<Views.DefensePage>(this);
+            // Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this);
          //   ChatTab.Ctor();
             {
                 ChatTab.Ctor();
@@ -291,9 +291,9 @@ namespace COTG.Views
 
                    // gridTip=new TextBlock();
                    // tabPage.Tabs.TabStripFooter = gridTip;
-                //    tabPage.AddTab(DefenderPage.instance, false);
+                //    tabPage.AddTab(IncomingTab.instance, false);
 
-                    //   tabPage.AddTab(DefensePage.instance, false);
+                    //   tabPage.AddTab(DefenseHistoryTab.instance, false);
 
                     //    tabPage.AddTab(AttackTab.instance, false);
                     //    tabPage.AddTab(DonationTab.instance, false);
@@ -939,7 +939,7 @@ namespace COTG.Views
 
         private void coords_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-                var str = sender as TextBox;
+            var str = sender as TextBox;
             Assert(str != null);
             if (str != null)
             {

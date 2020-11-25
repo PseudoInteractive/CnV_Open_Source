@@ -139,7 +139,7 @@ namespace COTG.Models
         public override void Execute(object parameter)
         {
             var context = parameter as DataGridCellInfo;
-            var grid = Views.DefensePage.HistoryGrid;
+            var grid = Views.DefenseHistoryTab.HistoryGrid;
             // put your custom logic here
       //      Assert(MainPage.hoverTarget != null);
             //  var i = MainPage.hoverTarget;

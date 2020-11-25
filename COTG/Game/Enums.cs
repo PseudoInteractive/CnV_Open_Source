@@ -44,6 +44,16 @@ namespace COTG.Game
         //  16 "warship",17 "senator"
 
         // gets filled in 
+        public static bool[] ttIsDef = { true,true,true,true,
+            true,false,false,false,
+            true,true,false,false,
+            false,false,false,true,false,false };
+                    //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
+        //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+        //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+        //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
+        //  16 "warship",17 "senator"
+
         public static float[] ttSpeedBonus = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1 };
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         public static float cartTravel=10.0f;

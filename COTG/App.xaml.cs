@@ -353,7 +353,7 @@ namespace COTG
                     {
                         if(op == "incomingNotification")
                         {
-                            Task.Delay(3000).ContinueWith((_) => DefenderPage.Show());
+                            Task.Delay(3000).ContinueWith((_) => IncomingTab.Show());
                         }
                     }
                     // TODO: Show the corresponding content
@@ -700,7 +700,7 @@ namespace COTG
         {
             ChatTab.L(s);
         }
-        public static void Show(string s, int timeout = 8000)
+        public static void Show(string s, int timeout = 5000)
         {
             if (ShellPage.instance != null)
             {
@@ -716,7 +716,7 @@ namespace COTG
             }
         }
 
-        static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{2,3}:\d{2,3})\<\/coords\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
         static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
         static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
         static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
@@ -745,7 +745,7 @@ namespace COTG
                     switch (paths[1])
                     {
                         case "c":
-                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false,VirtualKeyModifiers.None);
+                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false,App.keyModifiers);
                             break;
                         case "p": // player
                             JSClient.ShowPlayer(paths[2]);

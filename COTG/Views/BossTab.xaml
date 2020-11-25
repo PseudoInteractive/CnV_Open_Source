@@ -75,6 +75,7 @@
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
+                                 AllowFocusOnInteraction="True"
                         SelectionUnit="Row"
                         GroupPanelPosition="Left"
                         >

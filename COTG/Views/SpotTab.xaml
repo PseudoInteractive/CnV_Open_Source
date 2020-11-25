@@ -32,6 +32,7 @@
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
                         FontSize="{StaticResource MediumFontSize}"
+                                 AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
@@ -53,6 +54,7 @@
                                        Width="80" />
                <tg:DataGridBooleanColumn PropertyName="pinned"
                                          IsVisible="True"
+                                         
                                          CanUserEdit="True"
                                           Width="20" />
 

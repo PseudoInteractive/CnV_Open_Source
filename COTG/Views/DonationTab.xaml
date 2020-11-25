@@ -22,40 +22,41 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" >
             <my:NumberBox Margin="4" Header="Reserve Carts" Value="{x:Bind local:DonationTab.reserveCarts,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="100" TextAlignment="Right"
+                          SmallChange="100" 
                            NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
                           
                           LargeChange="1000" FontSize="{StaticResource MediumFontSize}"
                            Width="80" />
             <my:NumberBox Margin="4" Header="Reserve Carts %" Value="{x:Bind local:DonationTab.reserveCartsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                           TextAlignment="Right"
+                           
                           SmallChange="0.02" Width="90" FontSize="{StaticResource MediumFontSize}"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
             <my:NumberBox Margin="4" Header="Reserve Ships" Value="{x:Bind local:DonationTab.reserveShips,Mode=TwoWay}" AcceptsExpression="True"
-                          SmallChange="10"  FontSize="{StaticResource MediumFontSize}" TextAlignment="Right"
+                          SmallChange="10"  FontSize="{StaticResource MediumFontSize}" 
                           LargeChange="100" 
                            NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
                                 Width="80"  />
             <my:NumberBox Margin="4" Header="Reserve Ships %" Value="{x:Bind local:DonationTab.reserveShipsPCT,Mode=TwoWay}" AcceptsExpression="True"
-                           TextAlignment="Right"
+                           
                           SmallChange="0.02" Width="90"  FontSize="{StaticResource MediumFontSize}"
                            NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <my:NumberBox Margin="4" Header="Reserve Wood" Value="{x:Bind local:DonationTab.reserveWood,Mode=TwoWay}"
-                    AcceptsExpression="True" NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                    SmallChange="100000" FontSize="{StaticResource MediumFontSize}" TextAlignment="Right" LargeChange="1000000"
-                    SpinButtonPlacementMode="Compact" Width="110" />
-            <my:NumberBox Margin="4" Header="Reserve Stone" Value="{x:Bind local:DonationTab.reserveStone,Mode=TwoWay}"
-                    AcceptsExpression="True" NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-                    SmallChange="100000" FontSize="{StaticResource MediumFontSize}" TextAlignment="Right" LargeChange="1000000"
-                    SpinButtonPlacementMode="Compact" Width="110" />
-            <my:NumberBox Margin="4" Header="Wood:Stone" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
-                    AcceptsExpression="True" SmallChange="0.125" FontSize="{StaticResource MediumFontSize}" TextAlignment="Right" Width="110" />
+            <my:NumberBox  Header="Reserve Wood" Value="{x:Bind local:DonationTab.reserveWood,Mode=TwoWay}"
+                    Style="{StaticResource NumberBoxSmall}" NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                    SmallChange="100000"  LargeChange="1000000"
+                     Width="110" />
+            <my:NumberBox Header="Reserve Stone" Value="{x:Bind local:DonationTab.reserveStone,Mode=TwoWay}"
+                   Style="{StaticResource NumberBoxSmall}" NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                    SmallChange="100000"  LargeChange="1000000"
+                     Width="110" />
+            <my:NumberBox Header="Wood:Stone" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
+                  Style="{StaticResource NumberBoxSmall}" SmallChange="0.125" FontSize="{StaticResource MediumFontSize}" Width="110" />
         </StackPanel>
         <telerikGrid:RadDataGrid x:Name="donationGrid"
                                  x:FieldModifier="public"
                         Grid.Row="2"
+                                 AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
             CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
@@ -128,7 +129,7 @@
         <telerikGrid:RadDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
                         Margin="0,14,0,0"
-                        
+                        AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

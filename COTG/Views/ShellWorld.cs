@@ -65,6 +65,7 @@ namespace COTG.Views
             }
             e.KeyModifiers.UpdateKeyModifiers();
             var pointerPoint = e.CurrentPoint;
+            var position = pointerPoint.Position;
             mousePosition = GetCanvasPosition(pointerPoint);
             e.Handled = false;
 
@@ -85,38 +86,37 @@ namespace COTG.Views
 
                     case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
                         {
-                            var position = pointerPoint.Position;
-							App.DispatchOnUIThread(() =>
+                            
+							App.DispatchOnUIThreadSneaky(() =>
 							{
-                                var _underMouse = underMouse;
-                                if (_underMouse!=null)
-                                {
-                                    var flyout = new MenuFlyout();
+                             //   var _underMouse = underMouse;
+                                //if (_underMouse!=null)
+                                //{
+                                //    var flyout = new MenuFlyout();
 
-                                    var target = Spot.GetOrAdd(_underMouse.targetCid);
-                                    var source = Spot.GetOrAdd(_underMouse.sourceCid);
-                                    void ShowContextContext(object sender, RoutedEventArgs args)
-                                    {
-                                        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
-                                    }
-                                    App.AddItem(flyout, "Source", ShowContextContext, source );
-                                    App.AddItem(flyout, "Target", ShowContextContext, target);
-                                    flyout.ShowAt(canvas, pointerPoint.Position);
-                                }
-                                else
-                                {
+                                //    var target = Spot.GetOrAdd(_underMouse.targetCid);
+                                //    var source = Spot.GetOrAdd(_underMouse.sourceCid);
+                                //    void ShowContextContext(object sender, RoutedEventArgs args)
+                                //    {
+                                //        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
+                                //    }
+                                //    App.AddItem(flyout, "Source", ShowContextContext, source );
+                                //    App.AddItem(flyout, "Target", ShowContextContext, target);
+                                //    flyout.ShowAt(canvas, pointerPoint.Position);
+                                //}
+                                //else
+                              //  {
                                     var spot = Spot.GetOrAdd(cid);
                                     
                                     spot.ShowContextMenu(canvas, position);
-                                }
+                               // }
                                 
 							});
                             break;
                         }
                     case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
                         {
-                            var position = pointerPoint.Position;
-                            App.DispatchOnUIThread(() =>
+                            App.DispatchOnUIThreadSneaky(() =>
                             {
 
                                 var spot = Spot.GetOrAdd(cid);
@@ -285,7 +285,7 @@ namespace COTG.Views
             var pt = e.CurrentPoint;
             var wheel = pt.Properties.MouseWheelDelta;
             var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
-            var newZoom = cameraZoom * MathF.Exp(dZoom);
+            var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,128.0f);
             var cBase = GetCanvasPosition(pt) - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;

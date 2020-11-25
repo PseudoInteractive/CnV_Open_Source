@@ -91,7 +91,7 @@ namespace COTG.Views
 
         }
     }
-    public sealed partial class DefensePage : UserTab, INotifyPropertyChanged
+    public sealed partial class DefenseHistoryTab : UserTab, INotifyPropertyChanged
     {
         public Army[] history { get; set; } = Army.empty;
         public void SetHistory( Army[] _history)
@@ -102,7 +102,7 @@ namespace COTG.Views
 
         }
 
-        public static DefensePage instance;
+        public static DefenseHistoryTab instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;
         //        public static Army showingRowDetails;
 
@@ -112,7 +112,7 @@ namespace COTG.Views
         //    Assert(rv != null);
         //    return rv;
         //}
-        public DefensePage()
+        public DefenseHistoryTab()
         {
             Assert(instance == null);
             instance = this;

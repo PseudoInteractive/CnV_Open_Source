@@ -26,8 +26,10 @@ namespace COTG.Game
             uint rv = default;
             for (int i = start; i < start + count; ++i)
             {
-                rv *= 10;
                 var c = i < s.Length ? s[i] : '0';
+                if (c==',')
+                    continue;
+                rv *= 10;
                 Assert(c >= '0');
                 Assert(c <= '9');
                 rv += (uint)(c - '0');
@@ -848,7 +850,7 @@ namespace COTG.Game
                         continue;
                     var cid = (x, y).WorldToCid();
                     var spot = Spot.GetOrAdd(cid);
-                    await spot.Classify();
+                    await spot.ClassifyIfNeeded();
                     sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\t{dat.isWater}\t{dat.isBig}\t{dat.isCastle}\t{spot.points}\t{dat.isTemple}\n");
                     ++counter;
                     if( (counter&63)==0)

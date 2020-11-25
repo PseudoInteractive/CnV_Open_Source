@@ -113,12 +113,16 @@ namespace COTG.Game
 
         public int tsRaid { get; set; }
         public int tsHome { get; set; }
+         public int tsDefHome => (this is City city ? city.troopsHome.TSDef() : tsHome);
+         public int tsDefTotal => (this is City city ? city.troopsTotal.TSDef() : tsTotal);
 
-
+        public Reinforcement [] reinforcementsIn =Array.Empty<Reinforcement>();
+        public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
 
         public int _tsTotal;
         public int tsTotal { get => _tsTotal > 0 ? _tsTotal : tsHome; set => _tsTotal = value; }
-        public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : tsHome; } }
+        public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
+        public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
         public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -223,7 +227,15 @@ namespace COTG.Game
         public bool isCastle { get; set; }
         public bool isOnWater { get; set; }
         public bool isTemple { get; set; }
-        public bool pinned { get; set; }  // pinned in MRU
+       
+        public bool pinned { get; set; }
+        public void PinnedChanged()
+        {
+            if (pinned)
+                    SettingsPage.pinned = SettingsPage.pinned.ArrayAppend(cid);
+             else
+                        SettingsPage.pinned = SettingsPage.pinned.Where(a => a!=cid).ToArray();
+             }  // pinned in MRU
         public byte claim; // only if this is under attack
         public byte shipyards { get; set; }
         public byte ports { get; set; }
@@ -245,6 +257,32 @@ namespace COTG.Game
             return !(left == right);
         }
 
+        public void ExportToDefenseSheet()
+        {
+            var sb = new StringBuilder();
+            foreach (var _cid in GetSelectedForContextMenu(cid))
+            {
+                var s = Spot.GetOrAdd(_cid);
+                sb.Append(Player.myName);
+                sb.Append('\t');
+                sb.Append(s.cont);
+                sb.Append('\t');
+                sb.Append(s.xy);
+                sb.Append('\t');
+                sb.Append("13:00");
+                sb.Append('\t');
+                sb.Append(s.incTT);
+                sb.Append('\t');
+                sb.Append("1000000");
+                sb.Append('\t');
+                var ts = s.tsMax;
+                sb.Append(ts);
+                sb.Append('\n');
+            }
+            App.CopyTextToClipboard(sb.ToString());
+
+            Note.Show("Exported to clipboard for sheets");
+        }
 
         // The UIElement returned will be the RadDataGrid
         public static (Spot spot, DataGridCellInfo column, PointerPoint pt, UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
@@ -377,6 +415,7 @@ namespace COTG.Game
                         break;
                     case nameof(pinned):
                         pinned = !pinned;
+                        PinnedChanged();
                         OnPropertyChanged(nameof(pinned));
                         return;
                     case nameof(City.raidCarry):
@@ -468,6 +507,13 @@ namespace COTG.Game
                     Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
                 });
             }
+        }
+        internal async ValueTask<Classification> ClassifyIfNeeded()
+        {
+            if (isClassified)
+                return classification;
+            else
+                return (await Classify()).classification;
         }
         internal async ValueTask<ClassificationExtended> Classify()
         {
@@ -595,12 +641,24 @@ namespace COTG.Game
                 foreach (var a in incoming)
                 {
                     if (a.isDefense)
-                        rv += a.ts;
+                        rv += a.troops.TSDef();
                 }
                 return rv;
             }
         }
-
+        public int incomingOffTS
+        {
+            get
+            {
+                var rv = 0;
+                foreach (var a in incoming)
+                {
+                    if (a.isDefense)
+                        rv += a.troops.TSOff();
+                }
+                return rv;
+            }
+        }
         public int incTotal
         {
             get
@@ -706,36 +764,25 @@ namespace COTG.Game
             return cids;
         }
 
-        public static List<int> GetSelectedIncludingHover()
+        public static HashSet<int> GetSelectedIncludingHover()
         {
-            var rv = new List<int>();
+            var rv = new HashSet<int>(selected);
             try
             {
-                rv.AddRange(selected);
-                if (viewHover != 0 && !selected.Contains(viewHover))
-                {
+                rv.UnionWith(SettingsPage.pinned);
+                if(viewHover!=0)
                     rv.Add(viewHover);
-                }
-                if (focus !=0)
-                {
-                    var cid = City.focus;
-                    if (cid != viewHover && !selected.Contains(cid))
-                    {
-                        rv.Add(cid);
-                    }
-                }
-                if (City.build != 0 && City.build != focus)
-                {
-                    var cid = City.build;
-                    if (cid != viewHover && !selected.Contains(cid))
-                    {
-                        rv.Add(cid);
-                    }
-                }
+                if (focus!=0)
+                    rv.Add(focus);
+                if (City.build!=0)
+                    rv.Add(City.build);
+
 
             }
-            finally
+            catch(Exception ex)
             {
+                Log(ex);
+                return new HashSet<int>(); // if might be corrupt
             }
             return rv;
 
@@ -1009,7 +1056,7 @@ namespace COTG.Game
                 {
                     // This one has multi select
                     int count = 1;
-                    if (uie == MainPage.CityGrid || uie == DefendTab.instance.supportGrid)
+                    if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
                     {
                         count = MainPage.GetContextCidCount(cid);
                     }
@@ -1089,6 +1136,8 @@ namespace COTG.Game
 
                 App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+                App.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid));
+                App.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
             }
             else if (this.isDungeon || this.isBoss)
             {
@@ -1110,8 +1159,8 @@ namespace COTG.Game
         }
         public void DefendMe()
         {
-            DefendTab.defendant = this;
-            var tab = DefendTab.instance;
+            NearDefenseTab.defendant = this;
+            var tab = NearDefenseTab.instance;
             if (!tab.isActive)
             {
                 TabPage.mainTabs.AddTab(tab, true);
@@ -1126,11 +1175,11 @@ namespace COTG.Game
         }
         public async void ShowIncoming()
         {
-            DefenderPage tab = await DefenderPage.Show();
+            IncomingTab tab = await IncomingTab.Show();
             for (; ; )
             {
                 await Task.Delay(2000);
-                if (tab.defenderGrid.ItemsSource != null)
+                if ( tab.defenderGrid.ItemsSource != null && tab.defenderGrid.ItemsSource != Spot.emptySpotSource)
                     break;
             }
             App.DispatchOnUIThreadSneaky(() =>

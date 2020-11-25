@@ -13,18 +13,27 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="64" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+        <tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
             <Border  Margin="12" Background="#FF103030" VerticalAlignment="Center">
-                <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind sendAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
+                <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind arriveAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
                            Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />
             </Border>
             <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
-                          Width="70" HorizontalAlignment="Center" FontSize="14" Style="{ThemeResource ToggleButtonRevealStyle}"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
+                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
+            <ToggleButton Content="Portal" x:Name="portal" VerticalAlignment="Center" Margin="12"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
+                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
+            <ToggleButton Content="Include Offense" IsChecked="{x:Bind local:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
+                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
+            <ToggleButton Content="Only home" x:Name="onlyHome" VerticalAlignment="Center" Margin="12" IsChecked="True"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Travel" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
@@ -36,10 +45,10 @@
             <my:NumberBox Value="{x:Bind _filterTSTotal,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                            NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
                           Header="Min TS(Total)" Width="140" Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" SpinButtonPlacementMode="Inline"/>
-        </StackPanel>
+        </tk:WrapPanel>
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
-                        ItemsSource="{x:Bind local:DefendTab.supporters, Mode=OneWay}"
+                        ItemsSource="{x:Bind local:NearDefenseTab.supporters, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
                      Grid.Row="1"
                      SelectionMode="Extended"
@@ -127,7 +136,7 @@
                 <tk:DataGridComboBoxColumn Header="Split" CanUserSort="False" Binding="{Binding split,Mode=OneTime}"
                                        IsReadOnly="False"
                                            ToolTipService.ToolTip=""
-                                           ItemsSource="{x:Bind local:DefendTab.splitArray}"
+                                           ItemsSource="{x:Bind local:NearDefenseTab.splitArray}"
                                         >
                     <tk:DataGridComboBoxColumn.CellStyle>
                         <Style BasedOn="{StaticResource CellCenter}" TargetType="tk:DataGridCell">
@@ -152,7 +161,7 @@
         <tk:DataGrid x:Name="troopTypeGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                      Grid.Row="2"
-                        ItemsSource="{x:Bind local:DefendTab.supportByTroopTypeEmpty, Mode=OneWay}"
+                        ItemsSource="{x:Bind local:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
                         RowHeight="46"
                      Margin="0,14,0,0"
                      CanUserReorderColumns="False"

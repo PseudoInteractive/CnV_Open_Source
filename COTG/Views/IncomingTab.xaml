@@ -118,6 +118,7 @@
                                             SizeMode="Fixed"
                                             Width="40" />
                  <tg:DataGridNumericalColumn PropertyName="tsOff"
+                                             Header="offense home"
                                             SizeMode="Fixed"
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"

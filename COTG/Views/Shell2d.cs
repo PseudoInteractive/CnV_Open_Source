@@ -74,6 +74,7 @@ namespace COTG.Views
         static readonly Color buildColor = Colors.DarkRed;
         static readonly Color hoverColor = Colors.Purple;
         static readonly Color focusColor = Colors.Magenta;
+        static readonly Color pinnedColor = Colors.Teal;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
         static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
         static Vector2 troopImageOriginOffset;
@@ -462,7 +463,7 @@ namespace COTG.Views
 
                     }
 
-                    var attacksVisible = DefensePage.IsVisible() | OutgoingTab.IsVisible() | DefenderPage.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
+                    var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
                     if (worldBackground != null && IsWorldView() && wantImage)
                     {
 
@@ -602,17 +603,17 @@ namespace COTG.Views
 
                 if (!IsCityView())
                 {
-                    var defenderVisible = DefenderPage.IsVisible() || DefendTab.IsVisible();
+                    var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible();
                     var outgoingVisible = OutgoingTab.IsVisible();
                     using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
                     {
-                        if (DefensePage.IsVisible() || HitTab.IsVisible())
+                        if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
                         {
                             for (var dfof = 0; dfof < 2; ++dfof)
                             {
                                 if (dfof == 0)
                                 {
-                                    if (!DefensePage.IsVisible())
+                                    if (!DefenseHistoryTab.IsVisible())
                                         continue;
                                 }
                                 else
@@ -621,7 +622,7 @@ namespace COTG.Views
                                         continue;
 
                                 }
-                                var reports = dfof == 0 ? DefensePage.instance.history : HitTab.instance.history;
+                                var reports = dfof == 0 ? DefenseHistoryTab.instance.history : HitTab.instance.history;
                                 if (reports.Length > 0)
                                 {
 
@@ -800,7 +801,7 @@ namespace COTG.Views
                             //    //}
                             //}
                         }
-                        if (defenderVisible || outgoingVisible)
+                        if ( (defenderVisible || outgoingVisible))
                         {
                             var cullSlopSpace = 80 * pixelScale;
                             for (int iOrO = 0; iOrO < 2; ++iOrO)
@@ -850,7 +851,7 @@ namespace COTG.Views
                                             if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
                                             {
                                                 continue;
-                                                c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
+                                         //       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
                                             }
                                             if (i.troops.Any())
                                             {
@@ -881,7 +882,8 @@ namespace COTG.Views
                                                 Assert(false);
                                             }
                                         }
-                                        DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
+                                        if(wantDetails || Spot.IsSelectedOrHovered(targetCid) )
+                                           DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
                                     }
                                 }
                             }
@@ -898,7 +900,8 @@ namespace COTG.Views
                                         var c1 = targetCid.CidToCC();
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
-                                        DrawTextBox(ds, $"{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
+                                        if (wantDetails || Spot.IsSelectedOrHovered(targetCid))
+                                            DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
 
                                     }
                                 }
@@ -968,6 +971,7 @@ namespace COTG.Views
                         var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
                         ds.DrawRoundedSquareWithShadow(c, r, City.IsBuild(city) ? buildColor :
                                                             City.IsFocus(city) ? focusColor :
+                                                            Spot.TryGet(city,out var spot)&&spot.pinned ? pinnedColor:
                                                             City.IsHover(city) ? hoverColor :
                                                             selectColor);
 

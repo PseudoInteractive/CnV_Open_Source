@@ -161,7 +161,7 @@ namespace COTG.Game
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 
-        List<Reinforcement> reinforcementsHere = new List<Reinforcement>(); 
+      
 
         public void LoadFromJson(JsonElement jse)
         {
@@ -208,18 +208,32 @@ namespace COTG.Game
             {
                 troopsHome = th.GetTroopTypeCount().ToArray(); ;
             }
-            reinforcementsHere.Clear();
             if (jse.TryGetProperty("trintr", out var trintr))
             {
-                foreach(var rein in trintr.EnumerateArray())
+                var l = new List<Reinforcement>();
+                foreach (var rein in trintr.EnumerateArray())
                 {
-                    var re = new Reinforcement();
-                    re.targetCid=cid;
-                    re.sourceCid =rein.GetAsInt("c");
-                    re.order = rein.GetAsInt64("o");
-                    re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
-                    reinforcementsHere.Add(re);
+                    if (rein.ValueKind==JsonValueKind.Object)
+                    {
+                        var re = new Reinforcement();
+                        re.targetCid=cid;
+                        re.sourceCid =rein.GetAsInt("c");
+                        re.order = rein.GetAsInt64("o");
+                        re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
+                        l.Add(re);
+                    }
                 }
+                reinforcementsIn = l.ToArray();
+            }
+            if (jse.TryGetProperty("trin", out var trin))
+            {
+                Log(trin);
+
+            }
+            if (jse.TryGetProperty("triin", out var triin))
+            {
+                Log(triin);
+
             }
 
 
@@ -289,9 +303,9 @@ namespace COTG.Game
        {
            OnPropertyChanged(member);
        });
-            if (DefendTab.IsVisible())
+            if (NearDefenseTab.IsVisible())
             {
-                foreach (var i in DefendTab.supporters)
+                foreach (var i in NearDefenseTab.supporters)
                 {
                     if (i.city == this)
                     {
