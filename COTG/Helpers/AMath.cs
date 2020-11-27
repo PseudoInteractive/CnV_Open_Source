@@ -54,9 +54,9 @@ namespace COTG
         {
             return (f >= m ? f : m);
         }
-        public static int Min(this int f, int max)
+        public static int Min(this int f, int min)
         {
-            return (f <= max ? f : max);
+            return (f <=min ? f : min);
         }
         public static int Abs(this int f)
         {

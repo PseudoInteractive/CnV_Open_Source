@@ -579,13 +579,13 @@ namespace COTG.Game
         public static City[] emptyCitySource = Array.Empty<City>();
 
        
-        public bool ComputeTravelTime(int target, out float hours, out bool onDifferentContinent)
+        public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
         {
             hours = 0;
             onDifferentContinent = cont != target.CidToContinent();
             if (onDifferentContinent)
             {
-                if(Spot.GetOrAdd(target).isOnWater && troopsHome.Any((t)=> t.type==ttGalley || t.type==ttStinger))
+                if(Spot.GetOrAdd(target).isOnWater && (onlyHome?troopsHome:troopsTotal).Any((t)=> t.type==ttGalley || t.type==ttStinger))
                 {
                     var tt = ttGalley;
                     var dist = cid.DistanceToCid(target);
@@ -598,7 +598,7 @@ namespace COTG.Game
             }
             else
             {
-                var tt = GetPrimaryTroopType(true);
+                var tt = GetPrimaryTroopType(onlyHome);
                 if (tt == 0)
                     return false;
                 var dist = cid.DistanceToCid(target);

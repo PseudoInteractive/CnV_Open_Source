@@ -49,7 +49,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
-    <CodeAnalysisRuleSet>COTG1.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>COTGRules.ruleset</CodeAnalysisRuleSet>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -76,6 +76,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.DependencyValidation.Analyzers">
+      <Version>0.11.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Primitives">
       <Version>5.0.0</Version>
     </PackageReference>
@@ -152,13 +155,14 @@
     <Compile Include="Helpers\aParallelFor.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\AUtil.cs" />
+    <Compile Include="Helpers\DiscordIds.cs" />
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
     <Compile Include="Helpers\SmallTime.cs" />
+    <Compile Include="Helpers\Span2d.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
-    <Compile Include="Helpers\TileMap.cs" />
     <Compile Include="JSON\CitySettings.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />

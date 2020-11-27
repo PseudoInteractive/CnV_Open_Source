@@ -6,7 +6,7 @@
                xmlns:game="using:COTG.Game"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:cotg="using:COTG"
-               xmlns:my="using:Microsoft.UI.Xaml.Controls"
+               xmlns:winui="using:Microsoft.UI.Xaml.Controls"
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:local="using:COTG.Views"
                d:DataContext="{d:DesignInstance Type=local:ShellPage}"
@@ -22,31 +22,62 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal">
-
+            <winui:NumberBox x:Name="maxTravelHours"
+                             Description="Max travel hours"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="12"
+                             ToolTipService.ToolTip="Attacks that would take longer than this to arrive are removed"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="0.25" />
+            <winui:NumberBox x:Name="desiredFakes"
+                             Header="Desired fakes"
+                             ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="4"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
+            <winui:NumberBox x:Name="minAssaults"
+                             Header="Min Assaults"
+                             ToolTipService.ToolTip="If assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="4"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
             <Button Content="Remove Selected"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
+                    ToolTipService.ToolTip="Remove selected Attacks or Targets"
                     Click="RemoveSelected_Click" />
 
             <Button Content="Add Attacks from Clipboard"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}"
                     Click="AddAttacksFromClipboard" />
             <Button Content="Add Attacks from Clipboard (form)"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Adds attacks based on coordinates and other data from the clipboard copied from sheets"
                     Style="{StaticResource ButtonSmall}"
                     Click="AddAttacksFromSheets" />
+            <Button Content="Add Targets from Clipboard"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds fakse, you can later select which are real"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="AddTargetsFromClipboard" />
             <Button Content="Sort"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
+                    ToolTipService.ToolTip="Sort attacks by player"
                     Click="SortAttacks" />
 
             <Border  Margin="4"
@@ -190,15 +221,15 @@
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-             
-             <Border BorderThickness="1"
+
+            <Border BorderThickness="1"
                     BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
                 <TextBlock x:Name="sePerTarget"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-             <Border BorderThickness="1"
+            <Border BorderThickness="1"
                     BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
                 <TextBlock x:Name="attacksPerTarget"
                            Margin="4"

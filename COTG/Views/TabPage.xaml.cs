@@ -70,10 +70,11 @@ namespace COTG.Views
                  
                 if( (h[0] == '+') != set )
                 {
+                    var str = h.Replace("+", string.Empty, StringComparison.Ordinal);
                     if (set)
-                        tvi.Header = '+' + h;
+                        tvi.Header = '+' + str;
                     else
-                        tvi.Header = h.Substring(1);
+                        tvi.Header = str;
                 }
             }
         }

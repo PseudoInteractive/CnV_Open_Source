@@ -109,6 +109,12 @@ namespace COTG
             }
             return value;
         }
+        public static (int x,int y) DecomposeXY(this int xy, int columns)
+        {
+            var y = xy/columns;
+            var x = xy - y*columns;
+            return (x, y);
+        }
         public static int DecodeCid(int offset, string s)
         {
             try
@@ -117,8 +123,9 @@ namespace COTG
                     return 0;
                 var s0s = offset;
                 while (!char.IsDigit(s[s0s]))
+                {
                     ++s0s;
-
+                }
                 var s0e = s0s + 1;
                 int counter = 0;
                 while (char.IsDigit(s[s0e]))
@@ -150,7 +157,7 @@ namespace COTG
 
 
         }
-        public static Regex coordsRegex = new Regex(@"\b\d{1,3}:\d{1,3}\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+        public static Regex coordsRegex = new Regex(@":*\b\d{1,3}:\d{1,3}\b:*", RegexOptions.CultureInvariant|RegexOptions.Compiled);
 
     }
 

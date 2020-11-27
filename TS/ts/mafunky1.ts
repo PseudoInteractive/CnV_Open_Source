@@ -850,7 +850,7 @@ function avactor() {
 	var q7y = 15;
 	var G5y = 128;
 	var q3y = 16;
-	var U7y = 256;
+
 	var v1R = 192;
 //	var P2y = 1000;
 	var l9p = 0xffff;

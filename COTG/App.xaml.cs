@@ -42,6 +42,7 @@ using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
 using Windows.Foundation.Collections;
+using System.Threading;
 
 namespace COTG
 {
@@ -263,14 +264,13 @@ namespace COTG
             switch (prop)
             {
                 case PointerUpdateKind.XButton1Pressed:
-                    if (!NavStack.Back())
-                        ShellPage.instance.ChangeCityClick(-1);
+                    NavStack.Back(true);
+                        
                     Log("XButton1");
                     rv = true;
                     break;
                 case PointerUpdateKind.XButton2Pressed:
-                    if (!NavStack.Forward())
-                        ShellPage.instance.ChangeCityClick(1);
+                    NavStack.Forward(true);
                     Log("XButton2");
                     rv = true;
                     break;
@@ -529,7 +529,7 @@ namespace COTG
             return new MenuFlyoutItem() { Text = text, Command = command, CommandParameter = parameter };
         }
         ///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
-        public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits = 1, NumberRounder=new IncrementNumberRounder() { Increment=.001,RoundingAlgorithm=RoundingAlgorithm.RoundHalfToEven} };
+        public static PercentFormatter percentFormatter = new PercentFormatter();// { FractionDigits = 1, NumberRounder=new IncrementNumberRounder() { Increment=.001,RoundingAlgorithm=RoundingAlgorithm.RoundHalfToEven} };
         public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true };
         public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits = 0, IsGrouped = true };
         public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits = 0, IntegerDigits = 2 };
@@ -695,24 +695,67 @@ namespace COTG
 
     public static class Note 
     {
-       // [Conditional("TRACE")]
+        static Note()
+        {
+            ShellPage.inAppNote.Closed +=InAppNote_Closed;
+        }
+
+        private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
+        {
+           if(e.DismissKind==InAppNotificationDismissKind.User)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource = new CancellationTokenSource();
+            }
+        }
+
+        // [Conditional("TRACE")]
         public static void L(string s)
         {
             ChatTab.L(s);
         }
-        public static void Show(string s, int timeout = 5000)
+        static DateTime nextInAppNote=new DateTime(0);
+        static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        public static async void Show(string s, int timeout = 5000)
         {
+            const int noteDelay=2;
             if (ShellPage.instance != null)
             {
+                
+                var now = DateTime.UtcNow;
+                var next = nextInAppNote;
+                if(now >= next)
+                {
+                    // all clear
+                    nextInAppNote = now + TimeSpan.FromSeconds(noteDelay);
+                }
+                else
+                {
+                    var wait = (next - now);
+                    nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
 
+                    try
+                    {
+                        await Task.Delay(wait, cancellationTokenSource.Token);
+
+                    }
+                    catch (Exception _exception)
+                    {
+                        Log(_exception.Message);
+                        return;
+                    }
+
+                }
+                
                 App.DispatchOnUIThreadLow(() =>
                 {
+                    ChatTab.L(s);
                     var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
                     textBlock.LinkClicked += MarkDownLinkClicked;
                     ShellPage.inAppNote.Show(textBlock, timeout);
                 });
 
-                ChatTab.L(s);
+             
             }
         }
 

@@ -7440,6 +7440,7 @@ var M8 = document.getElementById("mainMapDiv"); // region canvas
 //let c6: Phaser.Game;
 
 var gStphp; // gSt post call
+var gStQuery; // query GST, issue callback
 let _camera = {
   x: 0,
   y: 0
@@ -11333,7 +11334,7 @@ var cotgsubscribe = amplify;
       var r6i = {x: Number(K6i), y: Number(g6i)};
       var A6i = __s[3945] +
         b2() + __s[2915];
-      var n6i = a6.ccazzx.encrypt(JSON.stringify(r6i), A6i, U7y | 256);
+      var n6i = a6.ccazzx.encrypt(JSON.stringify(r6i), A6i, 256 | 256);
       var
         f6i = $.post(q6 + __s[3209], {a: n6i});
       f6i.done(function(Z6i) {Z6i = JSON.parse(Z6i); return Z6i;});
@@ -12537,7 +12538,7 @@ var cotgsubscribe = amplify;
       F6();
       w72.done(function(I72) {
         outtext = Q3F();
-        I72 = a6.ccazzx.decrypt(I72, outtext, U7y & 2147483647);
+        I72 = a6.ccazzx.decrypt(I72, outtext, 256 & 2147483647);
         I72 = JSON.parse(I72);
         var Q72 = I72["1" | 1];
         I72 = I72[0];
@@ -12630,8 +12631,8 @@ var cotgsubscribe = amplify;
       var O9B = ppdt[__s[x9y & 2147483647]].length;
       var t9B = Number(j9B) * (R5y | 0) + Number(I9B);
       var
-        o9B = E8(I9B, j9B);
-      var L9B = E8(D6.x, D6.y);
+        o9B = getContinent(I9B, j9B);
+      var L9B = getContinent(D6.x, D6.y);
       var X9B = s9();
       var v9B = Number(j9B) * +l1y + Number(I9B);
       var
@@ -12730,7 +12731,7 @@ var cotgsubscribe = amplify;
         var G9B = {cid: cid, rcid: t9B, tr: JSON.stringify(x9B), type: M9B, snd: w9B};
         var C9B = _s(
           3945) + b2() + __s[2915];
-        var W9B = a6.ccazzx.encrypt(JSON.stringify(G9B), C9B, U7y & 2147483647);
+        var W9B = a6.ccazzx.encrypt(JSON.stringify(G9B), C9B, 256 & 2147483647);
         N6();
         var z9B = $.post(q6 + "sndNC.php", {a: W9B});
         F6();
@@ -13828,7 +13829,7 @@ var cotgsubscribe = amplify;
           .prop(__s[+p9y], !!{});
         var J79 = __s[2830];
         var h79 = a6.ccazzx.encrypt(JSON.stringify(S79),
-          J79, U7y ^ 0);
+          J79, 256 ^ 0);
         N6();
         var b79 = $.post(q6 + __s[5564], {a: h79});
         F6();
@@ -15963,7 +15964,7 @@ var cotgsubscribe = amplify;
         //  console.log(J0U);
         var V0U = __s[3507];
         var r0U = a6.ccazzx.encrypt(JSON.stringify(J0U), V0U, +
-          U7y);
+          256);
         N6();
         var A0U = $.post(q6 + __s[1951], {a: r0U});
         F6();
@@ -16357,7 +16358,7 @@ var cotgsubscribe = amplify;
       var d0v = {type: Number(0), time: Number(U4F), load: Number(y8)};
       E6k.y6();
       var b0v = __s[+y3R];
-      var S0v = a6.ccazzx.encrypt(JSON.stringify(d0v), b0v, U7y >> 689036960);
+      var S0v = a6.ccazzx.encrypt(JSON.stringify(d0v), b0v, 256 >> 689036960);
       N6();
       var J0v = $.post(q6 + __s[5984], {a: S0v});
       F6();
@@ -16447,7 +16448,7 @@ var cotgsubscribe = amplify;
       var P1T = _s(
         U5R & 2147483647);
       E6k.R6();
-      var B1T = a6.ccazzx.encrypt(JSON.stringify(U1T), P1T, U7y - 0);
+      var B1T = a6.ccazzx.encrypt(JSON.stringify(U1T), P1T, 256 - 0);
       N6();
       var R1T = $.post(q6 + __s[6752], {a: B1T});
       F6();
@@ -16796,7 +16797,7 @@ var cotgsubscribe = amplify;
         var W82 = {b: X82, a: o82, cid: cid};
         var i82 = __s[p4y * 1];
         var z82 = a6.ccazzx.encrypt(JSON
-          .stringify(W82), i82, +U7y);
+          .stringify(W82), i82, +256);
         N6();
         var G82 = $.post(q6 + __s[+S1y], {a: z82});
         F6();
@@ -17335,7 +17336,7 @@ var cotgsubscribe = amplify;
       if (isNaN(R0g)) R0g = Number(ppdt['c'][0][1]);
       var y0g = _s(
         p8R >> 1382085920) + P8 + __s[z8R >> 1673143072];
-      var D0g = a6.ccazzx.encrypt(R0g, y0g, +U7y);
+      var D0g = a6.ccazzx.encrypt(R0g, y0g, +256);
       N6();
       var p0g = $.post(q6 + "gC.php", {a: D0g});
       F6();
@@ -17596,7 +17597,7 @@ var cotgsubscribe = amplify;
       var E3T = {a: Number(a3T), b: Number(u1T)};
       var k1T = _s(U5R <<
         1203377632);
-      var e1T = a6.ccazzx.encrypt(JSON.stringify(E3T), k1T, U7y & 2147483647);
+      var e1T = a6.ccazzx.encrypt(JSON.stringify(E3T), k1T, 256 & 2147483647);
       N6();
       var s1T = $.post(q6 + __s["884" | 852], {a: e1T});
       F6();
@@ -17794,7 +17795,7 @@ var cotgsubscribe = amplify;
 
     function Y6F() {
       var x5U = __s[3338];
-      var O5U = a6.ccazzx.encrypt(currentTime(), x5U, +U7y);
+      var O5U = a6.ccazzx.encrypt(currentTime(), x5U, +256);
       var t5U = $.post("/includes/pD.php", {a: O5U});
       t5U.done(function(M5U) {
         var o5U = JSON.parse(M5U);
@@ -18426,7 +18427,7 @@ var cotgsubscribe = amplify;
       B1v.eClear();
       E6k.y6();
       B1v.dClear();
-      var R1v = +U7y;
+      var R1v = +256;
       while (R1v--) B1v.ddic[R1v] = -("1" | 1);
       R1v = 91;
       while (R1v--) B1v.ddic[B1v.edic.charCodeAt(R1v)] = R1v;
@@ -18459,9 +18460,9 @@ var cotgsubscribe = amplify;
           while (!isNaN(p1v = q1v.charCodeAt(N1v++))) {
             var
               Y1v = [];
-            while (D1v(p1v / (U7y ^ 0))) {
-              Y1v.unshift(p1v % +U7y);
-              p1v = D1v(p1v / +U7y);
+            while (D1v(p1v / (256 ^ 0))) {
+              Y1v.unshift(p1v % +256);
+              p1v = D1v(p1v / +256);
             }
             Y1v.unshift(p1v);
             var F1v;
@@ -18533,7 +18534,7 @@ var cotgsubscribe = amplify;
         var V9T = {b: b9T, a: d9T};
         var h9T = __s[2126];
         var A9T = a6.ccazzx.encrypt(JSON.stringify(
-          V9T), h9T, +U7y);
+          V9T), h9T, +256);
         N6();
         var r9T = $.post(q6 + __s[4230], {cid: cid, a: A9T});
         F6();
@@ -19007,6 +19008,7 @@ var cotgsubscribe = amplify;
     };
 
     function M9F(Y72) {
+    callSyncViewMode();
       $(__s[+q1p] + Y72)
         .remove();
     }
@@ -20025,7 +20027,7 @@ var cotgsubscribe = amplify;
     function H4V(s76, u76) {
       var m56 = Math.floor(s76);
       var a56 = Math.floor(u76);
-      var F56 = E8(m56, a56);
+      var F56 = getContinent(m56, a56);
       var k76 =
         F56;
       $(__s[3014])
@@ -20207,7 +20209,7 @@ var cotgsubscribe = amplify;
 
       var m6v = 16;
       if (!(H2v == +G5y || H2v ==
-        v1R >> 780658144 || H2v == +U7y)) return '';
+        v1R >> 780658144 || H2v == +256)) return '';
       E6k.y6();
       k2v = String(k2v)
         .utf8Encode();
@@ -20288,7 +20290,7 @@ var cotgsubscribe = amplify;
         .panzoom("getMatrix");
     }
 
-    function E8(Q5T, T5T) {
+    function getContinent(Q5T, T5T) {
       var I5T = Math.floor(T5T / 100);
       var v5T = Math.floor(Q5T / 100);
       var l5T = I5T
@@ -20298,7 +20300,7 @@ var cotgsubscribe = amplify;
     a6.ccazzx.decrypt = function(M2v, d2v, h2v) {
       var C2v = "16" & E6k
         .s6s;
-      if (!(h2v == +G5y || h2v == v1R * 1 || h2v == U7y >> 1416089920)) return '';
+      if (!(h2v == +G5y || h2v == v1R * 1 || h2v == 256 >> 1416089920)) return '';
       M2v = String(M2v)
         .base64Decode();
       d2v = String(d2v)
@@ -20365,7 +20367,7 @@ var cotgsubscribe = amplify;
         c: z0v,
         b: M0v
       };
-      var W0v = a6.ccazzx.encrypt(JSON.stringify(C0v), G0v, +U7y);
+      var W0v = a6.ccazzx.encrypt(JSON.stringify(C0v), G0v, +256);
       N6();
       E6k.y6();
       var i0v = $.post(q6 + "UrOA.php", {a: W0v});
@@ -23985,14 +23987,14 @@ var cotgsubscribe = amplify;
     }
 
     function a2F(v46, l46) {
-      var L46 = E8(v46, l46);
+      var L46 = getContinent(v46, l46);
       var Q46 = l46 * +l9p + v46;
       var T46 = l46 * +R5y + v46;
       var
         x46 = {rcid: Number(T46), cid: cid};
         gStCid = Number(T46);
       var O46 = "X22x5DdAxxerj3";
-      var t46 = a6.ccazzx.encrypt(JSON.stringify(x46), O46, +U7y);
+      var t46 = a6.ccazzx.encrypt(JSON.stringify(x46), O46, +256);
       N6();
       var o46 = $.post("/includes/gSt.php", {cid: t46}); // gSt.php
       F6();
@@ -25212,7 +25214,7 @@ var cotgsubscribe = amplify;
       if (w49.length > +
         "0") {
         var v49 = __s[6296];
-        var l49 = a6.ccazzx.encrypt(JSON.stringify(w49), v49, U7y >> 153366240);
+        var l49 = a6.ccazzx.encrypt(JSON.stringify(w49), v49, 256 >> 153366240);
         N6();
         var T49 = $.post(q6 + __s["2691" | 2560], {a: l49});
       }
@@ -26011,7 +26013,7 @@ var cotgsubscribe = amplify;
 
                 //  console.log(Q2l);
                 var t2l = a6.ccazzx
-                  .encrypt(JSON.stringify(O2l), Q2l, +U7y);
+                  .encrypt(JSON.stringify(O2l), Q2l, +256);
                 N6();
                 var T2l = $.post(q6 + "sndRein.php", {a: t2l});
                 F6();
@@ -27228,7 +27230,7 @@ var cotgsubscribe = amplify;
             .val("");
           var o3Z = __s[3867];
           var L3Z = a6.ccazzx.encrypt(JSON.stringify(ppdt[E6k
-            .o55(+r9p)]), o3Z, U7y & 2147483647);
+            .o55(+r9p)]), o3Z, 256 & 2147483647);
           N6();
           var X3Z = $.post(q6 + __s[6820], {a: L3Z});
           F6();
@@ -27991,7 +27993,7 @@ var cotgsubscribe = amplify;
             }
             var Y2B = __s["3603" | 3585];
             var N2B = a6.ccazzx
-              .encrypt(JSON.stringify(D2B), Y2B, U7y ^ 0);
+              .encrypt(JSON.stringify(D2B), Y2B, 256 ^ 0);
             N6();
             var F2B = $.post(q6 + __s[6861], {cid: cid, a: N2B});
             F6();
@@ -31703,7 +31705,7 @@ var cotgsubscribe = amplify;
           gStCid = rcid;
 
         var O66 = "X22x5DdAxxerj3";
-        var t66 = a6.ccazzx.encrypt(JSON.stringify(x66), O66, U7y >> 1576595744);
+        var t66 = a6.ccazzx.encrypt(JSON.stringify(x66), O66, 256 >> 1576595744);
         N6();
           var o66 = $.post("/includes/gSt.php", {cid: t66}); // gST.php
         F6();
@@ -31921,7 +31923,7 @@ var cotgsubscribe = amplify;
               var
                 A3Z = __s[3867];
               var n3Z = a6.ccazzx.encrypt(JSON.stringify(ppdt[__s[+r9p]]), A3Z,
-                U7y << 552159072);
+                256 << 552159072);
               N6();
               var f3Z = $.post(q6 + __s[6820], {a: n3Z});
               g7F();
@@ -32375,7 +32377,7 @@ var cotgsubscribe = amplify;
             if (G6Z == 0) Y6(__s[F4R ^ 0]);
             else {
               var W6Z = __s[166];
-              var i6Z = a6.ccazzx.encrypt(JSON.stringify(M6Z), W6Z, U7y >>
+              var i6Z = a6.ccazzx.encrypt(JSON.stringify(M6Z), W6Z, 256 >>
                 1375778496);
               N6();
               var d6Z = $.post(q6 + __s[6895], {f: i6Z, cid: cid, a: C6Z});
@@ -32615,7 +32617,7 @@ var cotgsubscribe = amplify;
                 var w02 = {type: Number(1), time: Number(U4F), load: Number(y8)};
                 var I02 = E6k
                   .S55(y3R & 2147483647);
-                var v02 = a6.ccazzx.encrypt(JSON.stringify(w02), I02, +U7y);
+                var v02 = a6.ccazzx.encrypt(JSON.stringify(w02), I02, +256);
                 N6();
                 var l02 = $.post(q6 + __s[5984], {a: v02});
                 F6();
@@ -32667,7 +32669,7 @@ var cotgsubscribe = amplify;
                 var z02 = {type: Number(1), time: Number(l3F), load: Number(D0F)};
                 var M02 = E6k
                   .S55(+y3R);
-                var G02 = a6.ccazzx.encrypt(JSON.stringify(z02), M02, U7y & 2147483647);
+                var G02 = a6.ccazzx.encrypt(JSON.stringify(z02), M02, 256 & 2147483647);
                 N6();
                 var C02 = $.post(q6 + __s[1762], {a: G02});
                 F6();
@@ -34782,7 +34784,7 @@ var cotgsubscribe = amplify;
             var b22 = {a: i22, b: d22, cid: cid, c: W22};
             var
               J22 = __s[3448];
-            var h22 = a6.ccazzx.encrypt(JSON.stringify(b22), J22, U7y & E6k
+            var h22 = a6.ccazzx.encrypt(JSON.stringify(b22), J22, 256 & E6k
               .s6s);
             N6();
             var V22 = $.post(q6 + __s[1063], {a: h22});
@@ -34910,7 +34912,7 @@ var cotgsubscribe = amplify;
         };
         var P59 = __s[1724];
         var B59 = a6.ccazzx.encrypt(JSON.stringify(
-          U59), P59, +U7y);
+          U59), P59, +256);
         N6();
         var R59 = $.post(q6 + __s[1574], {a: B59});
         F6();
@@ -35791,7 +35793,7 @@ var cotgsubscribe = amplify;
           if (!(W81.originalEvent === "bad")) {
             var G81 = _s(p8R <<
               407425152) + b2() + __s[z8R << 1806602144];
-            var C81 = a6.ccazzx.encrypt(z81, G81, +U7y);
+            var C81 = a6.ccazzx.encrypt(z81, G81, +256);
             q0V(C81);
           }
         });
@@ -36262,7 +36264,7 @@ var cotgsubscribe = amplify;
         var g0U = {a: f0U, c: Z0U, b: K0U};
         // console.log(g0U);
         var U0U = __s[3507];
-        var P0U = a6.ccazzx.encrypt(JSON.stringify(g0U), U0U, U7y <<
+        var P0U = a6.ccazzx.encrypt(JSON.stringify(g0U), U0U, 256 <<
           852351520);
         N6();
         var B0U = $.post(q6 + __s[5668], {a: P0U}); // "svMLD.php",
@@ -36397,7 +36399,7 @@ var cotgsubscribe = amplify;
         var w92 = {b: H92, a: u92, c: j92};
         var I92 = __s[5431];
         var v92 = a6.ccazzx.encrypt(JSON
-          .stringify(w92), I92, U7y * 1);
+          .stringify(w92), I92, 256 * 1);
         N6();
         var l92 = $.post(q6 + __s[2474], {a: v92});
         F6();
@@ -40448,7 +40450,7 @@ var cotgsubscribe = amplify;
                   var p8n = {b: U8n, a: g8n};
                   var Y8n = __s[+y3R];
                   var N8n = a6
-                    .ccazzx.encrypt(JSON.stringify(p8n), Y8n, +U7y);
+                    .ccazzx.encrypt(JSON.stringify(p8n), Y8n, +256);
                   N6();
                   var F8n = $.post(q6 + __s[509], {a: N8n});
                   F6();
@@ -40470,7 +40472,7 @@ var cotgsubscribe = amplify;
                       };
                       var m8n = __s[y3R | 16];
                       var a8n = a6.ccazzx
-                        .encrypt(JSON.stringify(c8n), m8n, U7y & 2147483647);
+                        .encrypt(JSON.stringify(c8n), m8n, 256 & 2147483647);
                       N6();
                       var E8n = $.post(q6 + __s[5627], {a: a8n});
                       F6();
@@ -40525,7 +40527,7 @@ var cotgsubscribe = amplify;
               };
               var R8n = __s[+y3R];
               var y8n = a6.ccazzx.encrypt(JSON
-                .stringify(B8n), R8n, +U7y);
+                .stringify(B8n), R8n, +256);
               N6();
               var D8n = $.post(q6 + __s[5627], {a: y8n});
               F6();
@@ -42088,7 +42090,7 @@ var cotgsubscribe = amplify;
       var
         e2w = q2[0].bspot;
       var u2w = __s[2478];
-      var H2w = a6.ccazzx.encrypt(JSON.stringify(s2w), u2w, U7y &
+      var H2w = a6.ccazzx.encrypt(JSON.stringify(s2w), u2w, 256 &
         2147483647);
       N6();
       var j2w = $.post(q6 + __s[1837], {cid: cid, a: H2w});
@@ -42493,7 +42495,7 @@ var cotgsubscribe = amplify;
         var O6T = {a: Number(l6T), b: Number(X6T), d: Q6T, c: cid};
         var x6T = _s(
           5322);
-        var z6T = a6.ccazzx.encrypt(JSON.stringify(O6T), x6T, U7y * 1);
+        var z6T = a6.ccazzx.encrypt(JSON.stringify(O6T), x6T, 256 * 1);
         N6();
         var o6T = $.post(q6 + __s[3570], {a: z6T});
         F6();
@@ -43188,7 +43190,7 @@ var cotgsubscribe = amplify;
           var k1D = {a: Number(cid), b: Number(E3D)};
           var e1D = __s[+U5R];
           var
-            s1D = a6.ccazzx.encrypt(JSON.stringify(k1D), e1D, +U7y);
+            s1D = a6.ccazzx.encrypt(JSON.stringify(k1D), e1D, +256);
           N6();
           var u1D = $.post(__s[5038], {a: s1D});
           F6();
@@ -43209,7 +43211,7 @@ var cotgsubscribe = amplify;
           var w1D = {a: Number(cid), b: Number(j1D)};
           var I1D = __s[+U5R];
           var v1D = a6.ccazzx
-            .encrypt(JSON.stringify(w1D), I1D, U7y ^ 0);
+            .encrypt(JSON.stringify(w1D), I1D, 256 ^ 0);
           N6();
           var l1D = $.post(__s[3979], {a: v1D});
           F6();
@@ -43397,7 +43399,7 @@ var cotgsubscribe = amplify;
       };
       var r72 = __s[3280] + b2() + _s(+
         F5p);
-      var i72 = a6.ccazzx.encrypt(JSON.stringify(V72), r72, U7y ^ 0);
+      var i72 = a6.ccazzx.encrypt(JSON.stringify(V72), r72, 256 ^ 0);
       N6();
       var b72 = $.post(q6 + __s[1735], {a: i72, cid: cid});
       F6();
@@ -43558,7 +43560,7 @@ var cotgsubscribe = amplify;
         var X59 = {a: Number(cid), b: Number(o59), c: Number(t59), d: Number(L59), e: Number(O59)};
         var z59 =
           __s[3733];
-        var M59 = a6.ccazzx.encrypt(JSON.stringify(X59), z59, +U7y);
+        var M59 = a6.ccazzx.encrypt(JSON.stringify(X59), z59, +256);
         N6();
         var G59 = $.post(q6 + __s[1256], {a: M59});
         F6();
@@ -44045,7 +44047,7 @@ var cotgsubscribe = amplify;
         var a0w = {bspot: R0w, endlvl: p0w, cid: cid};
         var E0w = __s[1833] + b2() + E6k
           .o55(3483);
-        var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +U7y);
+        var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
         N6();
         var Y0w = $.post(q6 + "nBUu.php", {a: q0w, cid: cid});
         F6();
@@ -44149,7 +44151,7 @@ var cotgsubscribe = amplify;
           };
           var c9B = __s[4865] + b2() + _s(+
             '3927');
-          var q9B = a6.ccazzx.encrypt(JSON.stringify(Y9B), c9B, U7y << 953103872);
+          var q9B = a6.ccazzx.encrypt(JSON.stringify(Y9B), c9B, 256 << 953103872);
           N6();
           var N9B = $.post(q6 + __s[4539], {cid: cid, a: q9B});
           F6();
@@ -44226,7 +44228,7 @@ var cotgsubscribe = amplify;
       //E6k.y6();
       //let b76 = __s[1734];
 
-      //let S76 = a6.ccazzx.encrypt(d76, b76, U7y & 2147483647);
+      //let S76 = a6.ccazzx.encrypt(d76, b76, 256 & 2147483647);
       //N6();
       //let J76 = $.post(q6 + "rMp.php", { a: S76 }); // "rMp.php"
       //F6();
@@ -44384,7 +44386,7 @@ var cotgsubscribe = amplify;
       var Y3T = {a: Number(p3T), b: Number(c3T)};
       var N3T = __s[+U5R];
       var F3T = a6
-        .ccazzx.encrypt(JSON.stringify(Y3T), N3T, U7y & 2147483647);
+        .ccazzx.encrypt(JSON.stringify(Y3T), N3T, 256 & 2147483647);
       N6();
       var q3T = $.post(q6 + __s[5587], {a: F3T});
       F6();
@@ -45479,7 +45481,7 @@ var cotgsubscribe = amplify;
       S6w.push({bid: J6w, cid: cid});
       var h6w = __s[6037];
       var V6w = a6.ccazzx.encrypt(JSON.stringify(S6w),
-        h6w, U7y >> 1044113888);
+        h6w, 256 >> 1044113888);
       N6();
       var r6w = $.post(q6 + __s[142], {a: V6w});
       F6();
@@ -45655,7 +45657,7 @@ var cotgsubscribe = amplify;
       var S4T = {a: Number(cid), c: Number(r4T)};
       var J4T = __s[+U5R];
       var h4T = a6
-        .ccazzx.encrypt(JSON.stringify(S4T), J4T, U7y | 256);
+        .ccazzx.encrypt(JSON.stringify(S4T), J4T, 256 | 256);
       N6();
       var V4T = $.post(q6 + "UBBit.php", {a: h4T});
       E6k.R6();
@@ -48344,10 +48346,45 @@ var cotgsubscribe = amplify;
       }
     }
     gStphp = p5F;
+    gStQuery = gstQueryF;
+      function gstQueryF(_rcid:string) {
+         
+
+          let rcid = Number(_rcid);
+      
+         
+              var g46 = { rcid: rcid, cid: cid };
+              gStCid = rcid;
+              var Z46 = "X22x5DdAxxerj3";
+              var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, 256);
+             
+              var P46 = $.post("/includes/gSt.php", { cid: U46 });
+             
+              P46.done(function (r16) {
+                 
+                  if (r16 != "") {
+                     
+                      var B46 = c9.d(E0F(r16));
+                      let N46 = +B46.substring(0, 1);
+                      if (N46 == 4) {
+                                             
+                                              var L36 = B46.substring(2);
+                                              let h36 = B46
+                                                  .substring(1, 2);
+                          let wrapper = {
+                              gstempty: { water: h36,cid:rcid, res: L36}
+                          };
+                          window['external']['notify'](JSON.stringify(wrapper));
+                                          }
+                  }
+              });
+          }
+          
+       
 
     function p5F(r46, A46) {
       clearTimeout(a8);
-      let f46 = Number(E8(r46, A46));
+      let f46 = Number(getContinent(r46, A46));
      
       let rcid = CoordToCid(r46, A46);
       //  wtile = 0;
@@ -48372,7 +48409,7 @@ var cotgsubscribe = amplify;
         var g46 = {rcid: rcid, cid: cid};
         gStCid = rcid;
         var Z46 = "X22x5DdAxxerj3";
-        var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, U7y - 0);
+        var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, 256 - 0);
         N6();
         var P46 = $.post("/includes/gSt.php", {cid: U46});
         F6();
@@ -49750,7 +49787,7 @@ var cotgsubscribe = amplify;
       var I1T = {a: Number(j1T), b: Number(w1T), c: cid};
       var v1T = _s(U5R <<
         1336466848);
-      var l1T = a6.ccazzx.encrypt(JSON.stringify(I1T), v1T, U7y * 1);
+      var l1T = a6.ccazzx.encrypt(JSON.stringify(I1T), v1T, 256 * 1);
       N6();
       var Q1T = $.post(q6 + __s[2178], {a: l1T});
       F6();
@@ -50059,7 +50096,7 @@ var cotgsubscribe = amplify;
             };
             var H0w = _s(p8R <<
               1918008864) + b2() + __s[+z8R];
-            var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, +U7y);
+            var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
             N6();
             var k0w = $.post(q6 + "nBuu.php", {a: e0w, cid: cid});
             F6();
@@ -50147,7 +50184,7 @@ var cotgsubscribe = amplify;
             };
             var H0w = _s(p8R <<
               1591465440) + b2() + __s[+z8R];
-            var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, U7y & E6k
+            var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, 256 & E6k
               .s6s);
             N6();
             var k0w = $.post(q6 + "nBuu.php", {a: e0w, cid: cid});
@@ -50233,7 +50270,7 @@ var cotgsubscribe = amplify;
               };
             var H0w = __s[p8R & 2147483647] + b2() + __s[+z8R];
             var e0w = a6
-              .ccazzx.encrypt(JSON.stringify(s0w), H0w, +U7y);
+              .ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
             N6();
             var k0w = $.post(q6 + "nBuu.php", {cid: cid, a: e0w});
             F6();
@@ -50318,7 +50355,7 @@ var cotgsubscribe = amplify;
                 };
               var H0w = __s[p8R >> 222518912] + b2() + __s[+z8R];
               var e0w = a6
-                .ccazzx.encrypt(JSON.stringify(s0w), H0w, +U7y);
+                .ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
               N6();
               var k0w = $.post(q6 + "nBuu.php", {a: e0w, cid: cid});
               F6();
@@ -50723,7 +50760,7 @@ var cotgsubscribe = amplify;
       var N22 = {cid: cid, a: p22, b: Y22, c: D22};
       var F22 = E6k
         .S55(3448);
-      var q22 = a6.ccazzx.encrypt(JSON.stringify(N22), F22, U7y - 0);
+      var q22 = a6.ccazzx.encrypt(JSON.stringify(N22), F22, 256 - 0);
       N6();
       var c22 = $.post(q6 + __s[1063], {a: q22});
       F6();
@@ -52014,7 +52051,7 @@ var cotgsubscribe = amplify;
       var B4B = $(__s[a54 - 0])
         .val();
       var k3B = Number(B4B) * +l9p + Number(P4B);
-      var z3B = Number(E8(P4B, B4B));
+      var z3B = Number(getContinent(P4B, B4B));
       var m4B = $(_s(d3m -
         0))
         .attr("data");
@@ -52890,7 +52927,7 @@ var cotgsubscribe = amplify;
             };
             var c79 = _s('2820' -
               0);
-            var m79 = a6.ccazzx.encrypt(JSON.stringify(q79), c79, +U7y);
+            var m79 = a6.ccazzx.encrypt(JSON.stringify(q79), c79, +256);
             N6();
             var Y79 = $.post(q6 + __s['6641' | 6608], {a: m79});
             F6();
@@ -53353,7 +53390,7 @@ var cotgsubscribe = amplify;
                       };
                       var Q5w = __s[+p8R] +
                         b2() + __s[+z8R];
-                      var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, U7y ^ 0);
+                      var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
                       N6();
                       var x5w = $.post(q6 + "nBuu.php", {a: l5w, cid: cid});
                       F6();
@@ -53431,7 +53468,7 @@ var cotgsubscribe = amplify;
                       var Q5w = _s(p8R <<
                         135380192) + b2() + __s[z8R & 2147483647];
                       var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
-                        Q5w, +U7y);
+                        Q5w, +256);
                       N6();
                       var x5w = $.post(q6 + "nBuu.php", {a: l5w, cid: cid});
                       F6();
@@ -53489,7 +53526,7 @@ var cotgsubscribe = amplify;
                         };
                         var Q5w = __s[p8R << 1369875872] +
                           b2() + __s[+z8R];
-                        var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, U7y | 0);
+                        var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 | 0);
                         N6();
                         var x5w = $.post(q6 + "nBuu.php", {a: l5w, cid: cid});
                         F6();
@@ -53539,7 +53576,7 @@ var cotgsubscribe = amplify;
                     var
                       Q5w = __s[+p8R] + b2() + __s[z8R * 1];
                     var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
-                      Q5w, U7y & 2147483647);
+                      Q5w, 256 & 2147483647);
                     N6();
                     var x5w = $.post(q6 + "nBuu.php", {a: l5w, cid: cid});
                     F6();
@@ -53576,7 +53613,7 @@ var cotgsubscribe = amplify;
                   };
                   var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
                   var l5w = a6.ccazzx.encrypt(
-                    JSON.stringify(T5w), Q5w, +U7y);
+                    JSON.stringify(T5w), Q5w, +256);
                   N6();
                   var x5w = $.post(q6 + "nBuu.php", {a: l5w, cid: cid});
                   F6();
@@ -54676,7 +54713,7 @@ var cotgsubscribe = amplify;
           if (x5D == +17) ppdt[__s[+h6R]] = ppdt[_s(+
             h6R)] + i5D;
           var Z5D = __s[5491];
-          var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +U7y);
+          var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
           N6();
           var P5D = $.post(q6 + __s[3174], {cid: cid, a: g5D});
           F6();
@@ -55104,7 +55141,7 @@ var cotgsubscribe = amplify;
       var V3T = {a: Number(f3T), b: Number(K3T)};
       E6k.y6();
       var r3T = __s[U5R * 1];
-      var A3T = a6.ccazzx.encrypt(JSON.stringify(V3T), r3T, U7y * 1);
+      var A3T = a6.ccazzx.encrypt(JSON.stringify(V3T), r3T, 256 * 1);
       N6();
       var n3T = $.post(q6 + __s[4248], {a: A3T});
       F6();
@@ -55401,7 +55438,7 @@ var cotgsubscribe = amplify;
       var o1w = {i: I1w, f: v1w, a: M1w, b: G1w, s: j1w, g: l1w, w: w1w};
       var L1w = _s(+
         '4740');
-      var X1w = a6.ccazzx.encrypt(JSON.stringify(o1w), L1w, +U7y);
+      var X1w = a6.ccazzx.encrypt(JSON.stringify(o1w), L1w, +256);
       N6();
       var C1w = $.post(q6 + __s[2449], {a: X1w, cid: cid});
       $(__s[O5y - 0])
@@ -55515,7 +55552,7 @@ var cotgsubscribe = amplify;
     //function B4V(q3U) {
     //  var Y3U = __s[p8R & 2147483647] + P8 + __s[z8R & 2147483647];
     //  var N3U = a6.ccazzx.encrypt(
-    //    q3U, Y3U, +U7y);
+    //    q3U, Y3U, +256);
     //  E6k.y6();
     //  N6();
     //  var F3U = $.post(q6 +"gC.php", { a: N3U });
@@ -55735,7 +55772,7 @@ var cotgsubscribe = amplify;
       var U3T = {a: Number(Z3T), b: Number(y3T)};
       var P3T = _s(U5R <<
         418677312);
-      var B3T = a6.ccazzx.encrypt(JSON.stringify(U3T), P3T, U7y & 2147483647);
+      var B3T = a6.ccazzx.encrypt(JSON.stringify(U3T), P3T, 256 & 2147483647);
       N6();
       var R3T = $.post(q6 + __s[5587], {a: B3T});
       F6();
@@ -55883,7 +55920,7 @@ var cotgsubscribe = amplify;
         .html('');
       var K19 = __s[1216];
       var g19 = a6.ccazzx.encrypt(JSON.stringify(f19), K19,
-        U7y & 2147483647);
+        256 & 2147483647);
       N6();
       var Z19 = $.post(q6 + "gcIO.php", {a: g19});
       F6();
@@ -57172,7 +57209,7 @@ var cotgsubscribe = amplify;
           };
           var w8g = __s[4200];
           var I8g = a6.ccazzx.encrypt(JSON.stringify(
-            j8g), w8g, +U7y);
+            j8g), w8g, +256);
           N6();
           var v8g = $.post(q6 + __s[462], {cid: cid, a: I8g});
           F6();
@@ -57222,7 +57259,7 @@ var cotgsubscribe = amplify;
               X8g)
           };
           var M8g = __s[4200];
-          var L8g = a6.ccazzx.encrypt(JSON.stringify(z8g), M8g, +U7y);
+          var L8g = a6.ccazzx.encrypt(JSON.stringify(z8g), M8g, +256);
           N6();
           var o8g = $.post(q6 + __s[462], {cid: cid, a: L8g});
           F6();
@@ -57989,7 +58026,7 @@ var cotgsubscribe = amplify;
         //       console.log(B6B);
         var N6B = __s["3945" | 800] + b2() + __s[2915];
         var c6B = a6.ccazzx.encrypt(JSON
-          .stringify(B6B), N6B, U7y ^ 0);
+          .stringify(B6B), N6B, 256 ^ 0);
         N6();
         var F6B = $.post(q6 + __s[5785], {a: c6B});
         F6();
@@ -58541,7 +58578,7 @@ var cotgsubscribe = amplify;
           d: o22
         };
         var z22 = __s[2550];
-        var M22 = a6.ccazzx.encrypt(JSON.stringify(X22), z22, +U7y);
+        var M22 = a6.ccazzx.encrypt(JSON.stringify(X22), z22, +256);
         N6();
         var G22 = $.post(q6 + __s[2303], {a: M22});
         F6();
@@ -59256,14 +59293,14 @@ var cotgsubscribe = amplify;
             c: c2Z
           };
           var a2Z = "JJx452Tdd" + b2() + "sRAssa";
-          var m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, +U7y);
+          var m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, +256);
           N6();
           var s8Z = $.post(q6 + __s[2966], {cid: cid, f: m2Z}); /// "sndTr.php",
         } else if (j8Z == 2) {
           var
             E2Z = {b: Y2Z, d: 0, cid: cid, rcid: e8Z, a: N2Z, t: F2Z, c: 0};
           var a2Z = "JJx452Tdd" + b2() + "sRAssa";
-          var m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, U7y &
+          var m2Z = a6.ccazzx.encrypt(JSON.stringify(E2Z), a2Z, 256 &
             2147483647);
           N6();
           var s8Z = $.post(q6 + __s[762], {cid: cid, f: m2Z}); // sndTtr, temple send?  it sets food and iron to 0.
@@ -60022,7 +60059,7 @@ var cotgsubscribe = amplify;
         var Z4D = {a: K4D, b: A4D, c: n4D, cid: cid, d: f4D};
         var g4D = _s(+
           '2743');
-        var U4D = a6.ccazzx.encrypt(JSON.stringify(Z4D), g4D, U7y << 336814368);
+        var U4D = a6.ccazzx.encrypt(JSON.stringify(Z4D), g4D, 256 << 336814368);
         N6();
         var P4D = $.post(q6 + __s[1554], {a: U4D});
         var R4D = (1000) * Number(
@@ -60193,7 +60230,7 @@ var cotgsubscribe = amplify;
             e: c6D.target.innerHTML
           };
           var E6D = a6
-            .ccazzx.encrypt(JSON.stringify(a6D), m6D, U7y & 2147483647);
+            .ccazzx.encrypt(JSON.stringify(a6D), m6D, 256 & 2147483647);
           N6();
           var k2D = $.post("/includes/gWrd.php", {a: E6D});
           F6();
@@ -60900,7 +60937,7 @@ var cotgsubscribe = amplify;
         if (k5D == +
           '0') {
           var l5D = __s[4398];
-          var Q5D = a6.ccazzx.encrypt(JSON.stringify(e5D), l5D, +U7y);
+          var Q5D = a6.ccazzx.encrypt(JSON.stringify(e5D), l5D, +256);
           N6();
           var I5D = $.post(q6 + __s[6153], {a: Q5D, cid: cid});
           F6();
@@ -61904,7 +61941,7 @@ var cotgsubscribe = amplify;
         var a1T = {a: Number(F1T), b: Number(c1T), c: cid, d: q1T};
         var m1T = _s("5322" <<
           968377792);
-        var s6T = a6.ccazzx.encrypt(JSON.stringify(a1T), m1T, U7y - 0);
+        var s6T = a6.ccazzx.encrypt(JSON.stringify(a1T), m1T, 256 - 0);
         N6();
         var k6T = $.post(q6 + __s[3570], {a: s6T});
         F6();
@@ -63675,7 +63712,7 @@ var cotgsubscribe = amplify;
               var u9T = {c: E8T, a: m8T, b: c8T};
               var H9T = __s[5027];
               var j9T = a6.ccazzx
-                .encrypt(JSON.stringify(u9T), H9T, U7y | 0);
+                .encrypt(JSON.stringify(u9T), H9T, 256 | 0);
               N6();
               var a8T = $.post(q6 + __s[3393], {a: j9T, cid: cid});
               F6();
@@ -63714,7 +63751,7 @@ var cotgsubscribe = amplify;
               var X9T = {b: Q9T, c: O9T, a: T9T};
               var z9T = __s[411];
               var M9T = a6
-                .ccazzx.encrypt(JSON.stringify(X9T), z9T, U7y - 0);
+                .ccazzx.encrypt(JSON.stringify(X9T), z9T, 256 - 0);
               N6();
               var x9T = $.post(q6 + __s[4373], {cid: cid, a: M9T});
               F6();
@@ -66318,7 +66355,7 @@ var cotgsubscribe = amplify;
       "57": {
         "g": 2,
         "n": __s[2051],
-        "d": __s[+U7y],
+        "d": __s[+256],
         "y": +
           '3',
         "r": {"7": 1800000},
@@ -69561,7 +69598,7 @@ var cotgsubscribe = amplify;
       var Q79 = {a: Number(v79), b: Number(l79)};
       var T79 = __s[4807];
       var x79 = a6.ccazzx
-        .encrypt(JSON.stringify(Q79), T79, U7y * 1);
+        .encrypt(JSON.stringify(Q79), T79, 256 * 1);
       N6();
       var O79 = $.post(q6 + __s[6906], {a: x79});
       F6();

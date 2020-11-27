@@ -117,7 +117,8 @@ namespace COTG.Views
             //    count += g.Items.Count;
             if (count >= maxItems)
             {
-                items.RemoveAt(0);
+                for(int i=0;i<16;++i)
+                    items.RemoveAt(0);
             }
             items.Add(entry);
             if (this != debug && entry.text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase))
@@ -126,7 +127,7 @@ namespace COTG.Views
 
             }
             // Set + if not from me
-            if (entry.player != Player.myName && entry.type != ChatEntry.typeWhisperTo)
+            if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
                 SetPlus(true);
 
         }

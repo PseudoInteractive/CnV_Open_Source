@@ -193,11 +193,11 @@ namespace COTG.Views
                 {
                     case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
                         e.Handled = true;
-                        NavStack.Back();
+                        NavStack.Back(true);
                         return;
                     case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
                         e.Handled = true;
-                        NavStack.Forward();
+                        NavStack.Forward(true);
                         return;
                 }
             //    e.Handled = false;

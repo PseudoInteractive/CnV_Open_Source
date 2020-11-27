@@ -110,9 +110,14 @@ namespace COTG.Views
         }
 
 
-        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=true)
+        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=true,bool pin=false)
         {
             var spot = Spot.GetOrAdd(cid);
+            if(pin)
+            {
+                spot.pinned=true;
+                spot.PinnedChanged();
+            }
             
             AddToGrid(spot, mod, updateSelected);
             
@@ -240,8 +245,7 @@ namespace COTG.Views
         {
             foreach(var m in mru)
             {
-              var spot=  TouchSpot(m, VirtualKeyModifiers.None, false);
-                spot.pinned = true;
+              var spot=  TouchSpot(m, VirtualKeyModifiers.None, false,true);
             }
         }
         //      public static void ToggleSelected(Spot rv)

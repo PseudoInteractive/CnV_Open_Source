@@ -918,7 +918,7 @@ namespace COTG.Services
                     }
                     break;
                 }
-//                await Task.Delay(500); 
+                await Task.Delay(500); 
             }
         }
 

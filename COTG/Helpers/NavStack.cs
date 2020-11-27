@@ -37,13 +37,15 @@ namespace COTG.Helpers
             // filter duplicates
 
         }
-        public static bool Back(bool scanOnly =false)
+        public static bool Back(bool cityBackOnEmpty=false, bool scanOnly = false)
         {
             if (position == -1)
             {
                 if (backStack.Count <= 1)
                 {
                     Note.Show("Please navigate first");
+                    if (cityBackOnEmpty)
+                        Views.ShellPage.instance.ChangeCityClick(-1);
                     return false;
                 }
                 position = backStack.Count - 1;
@@ -51,6 +53,8 @@ namespace COTG.Helpers
             if (position <= 0)
             {
                 Note.Show("This is the first city");
+                if(cityBackOnEmpty)
+                    Views.ShellPage.instance.ChangeCityClick(-1);
                 return false;
             }
             --position;
@@ -66,11 +70,13 @@ namespace COTG.Helpers
                 return Spot.GetOrAdd(backStack[p].cid).nameAndRemarks;
             return null;
         }
-        public static bool Forward(bool scanOnly=false)
+        public static bool Forward( bool cityForwardOnEmpty=false, bool scanOnly = false)
         {
             if (position == -1 || position >= backStack.Count - 1)
             {
                 Note.Show("No more forwards left");
+                if (cityForwardOnEmpty)
+                    Views.ShellPage.instance.ChangeCityClick(1);
                 return false;
             }
             ++position;
@@ -110,22 +116,22 @@ namespace COTG.Helpers
         // Keyboard Helpers
         public static void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            Back();
+            Back(true);
             //args.Handled = true;
         }
         public static void ForwardInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            Forward();
+            Forward(true);
             //args.Handled = true;
         }
 
         public static void BackClick(object sender, RoutedEventArgs e)
         {
-            Back();
+            Back(true);
         }
         public static void ForwardClick(object sender, RoutedEventArgs e)
         {
-            Forward();
+            Forward(true);
         }
 
         public static NavStack instance = new NavStack();
@@ -142,14 +148,14 @@ namespace COTG.Helpers
             {
                 do
                 {
-                    Back(++delta != 0);
+                    Back(false,++delta != 0);
                 } while (delta < 0);
             }
             else if (delta > 0)
             {
                 do
                 {
-                    Forward(--delta != 0);
+                    Forward(false,--delta != 0);
                 } while (delta > 0);
             }
         }

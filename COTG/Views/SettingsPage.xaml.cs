@@ -58,9 +58,12 @@ namespace COTG.Views
         public static string[] incomingWatch = Array.Empty<string>();
         public static int mruSize = 32;
         public static int[] pinned = Array.Empty<int>();
+        public static int showAttacksLimit = 100;
 
         // public TipsSeen tips => TipsSeen.instance;
-        public bool FetchFullHistory { get => fetchFullHistory; set
+        public bool FetchFullHistory
+        {
+            get => fetchFullHistory; set
             {
                 fetchFullHistory = value;
                 DefenseHistoryTab.instance.Refresh();
@@ -192,6 +195,16 @@ namespace COTG.Views
             get { return ThemeSelectorService.Theme; }
 
             set { Set(ref ThemeSelectorService.Theme, value); }
+        }
+        public bool isLightTheme
+        {
+            get { return ThemeSelectorService.Theme == ElementTheme.Light; }
+            set { if(value ) ThemeSelectorService.Theme = ElementTheme.Light; }
+        }
+        public bool isDarkTheme
+        {
+            get { return ThemeSelectorService.Theme == ElementTheme.Dark; }
+            set { if (value) ThemeSelectorService.Theme = ElementTheme.Dark; }
         }
 
         private static string _versionDescription;
@@ -467,19 +480,40 @@ namespace COTG.Views
 
         private void CastlesIntel(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(CastlesCont.Text, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var cont))
+
             {
-                Note.Show("Invalid Continent");
-            }
-            else
-            {
+                var cont = (int)CastlesCont.Value;
                 var y = cont / 10;
                 var x = cont - y * 10;
                 World.DumpCities(x*100, y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault());
             }
             this.Hide();
         }
-
+        private async void ShrineFinder(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+           
+            var cont = (int)CastlesCont.Value;
+            var cy = cont / 10;
+            var cx = cont - cy * 10;
+            int x0 = cx*100, y0 = cy*100, x1 = (cx+1)*100, y1 = (cy+1)*100;
+            using (new ShellPage.WorkScope("Shrine Finder"))
+            for (int x = x0; x<x1; ++x)
+            {
+                for (int y = y0; y<y1; ++y)
+                {
+                    if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)
+                    {
+                        var cityId = (x, y).WorldToCid();
+                        App.DispatchOnUIThreadSneaky(() =>  
+                          JSClient.view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() })
+                          );
+                        await Task.Delay(200);
+                    }
+                }
+            }
+           
+        }
         private async void WatchIncomingForPlayers(object sender, RoutedEventArgs e)
         {
             this.Hide();
@@ -502,11 +536,14 @@ namespace COTG.Views
                 var str = await Windows.ApplicationModel.DataTransfer.Clipboard.GetContent().GetTextAsync();
                 foreach (Match m in AUtil.coordsRegex.Matches(str))
                 {
+                    if (m.Value.EndsWith(':')||m.Value.StartsWith(':'))
+                        continue;
+
                     var cords = m.Value.FromCoordinate();
                     var s = Spot.GetOrAdd(cords);
 
 
-                    SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift);
+                    SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift,true,true);
                 }
                 Note.Show("Added spots success");
 
@@ -531,7 +568,9 @@ namespace COTG.Views
             }
             Note.Show("Fixup reserve cmoplete");
         }
-        string appInfo { get
+        string appInfo
+        {
+            get
             {
                 var package = Package.Current;
                 var packageId = package.Id;
@@ -539,7 +578,7 @@ namespace COTG.Views
 
                 return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
             }
-        } 
+        }
 
     }
 }

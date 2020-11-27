@@ -9,7 +9,6 @@
       xmlns:views="using:COTG.Views"
       xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:controls="using:Microsoft.UI.Xaml.Controls"
       mc:Ignorable="d"
                PrimaryButtonText="Done"
@@ -23,19 +22,18 @@
              
                 
                >
-    <ContentDialog.Resources>
-        <helper:EnumToBooleanConverter x:Key="EnumToBoolConverter"
-                                       EnumType="xaml:ElementTheme" />
-    </ContentDialog.Resources>
     <StackPanel Orientation="Vertical" >
         <TextBlock Text="{x:Bind appInfo}" FontSize="12" />
-        <StackPanel Orientation="Horizontal">
+        <wct:WrapPanel Orientation="Horizontal"  Margin="4">
+            
+            <Button Content="Shrine Finder" Click="ShrineFinder" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
             <Button Content="Export Castles" Click="CastlesIntel" Style="{ThemeResource ButtonRevealStyle}" Margin="4" />
-           
-            <TextBox x:Name="CastlesCont" Text="22" Header="continent"  />
+           <controls:NumberBox x:Name="CastlesCont" NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                    Style="{StaticResource NumberBoxSmall}"
+                                Header="Continent"  Value="22" />
             <TextBox x:Name="CastlesAlliance" Text="Unidos" Header="alliance"  />
              <CheckBox x:Name="onlyCastles" Content="Only Castles" IsChecked="True" IsThreeState="False" />
-        </StackPanel>
+        </wct:WrapPanel>
         <wct:WrapPanel Orientation="Horizontal"  Margin="4">
         <Button Content="Update Citylists" Click="SetContinentCityLists" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
         <Button Content="Watch incoming for players" Click="WatchIncomingForPlayers" Style="{ThemeResource ButtonRevealStyle}" Margin="8"  MinWidth="120" />
@@ -45,8 +43,8 @@
             </wct:WrapPanel>
         
         <CheckBox Content="Fetch Full Defense History" IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"  Margin="8"/>
-        <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}"  Margin="8" />
-        <controls:NumberBox  Header="Spot MRU count" Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}" SmallChange="1" LargeChange="10"  Margin="8" />
+        <controls:NumberBox x:Name="raidCarryBox" Header="Raid Carry Target" Value="{x:Bind raidCarry,Mode=TwoWay}" NumberFormatter="{x:Bind cotg:App.percentFormatter,Mode=OneTime}" Style="{StaticResource NumberBoxSmall}" />
+        <controls:NumberBox  Header="Spot MRU count" Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}" SmallChange="1" LargeChange="10"  Style="{StaticResource NumberBoxSmall}" />
         <TextBlock Text="Set Nearest Hub Settings" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,20,4,8"/>
         <StackPanel Orientation="Horizontal"  Margin="4" >
             <controls:NumberBox Header="Req Wood" Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
@@ -102,7 +100,7 @@
         <StackPanel >
             <RadioButton x:Uid="Settings_Theme_Light"
                                  Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Light, Mode=OneWay}"
+                                 IsChecked="{x:Bind isLightTheme}"
                                  FontSize="15"
                                  GroupName="AppTheme">
                 <RadioButton.CommandParameter>
@@ -111,20 +109,11 @@
             </RadioButton>
             <RadioButton x:Uid="Settings_Theme_Dark"
                                  Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                                 IsChecked="{x:Bind isDarkTheme}"
                                  FontSize="15"
                                  GroupName="AppTheme">
                 <RadioButton.CommandParameter>
                     <xaml:ElementTheme>Dark</xaml:ElementTheme>
-                </RadioButton.CommandParameter>
-            </RadioButton>
-            <RadioButton x:Uid="Settings_Theme_Default"
-                                 Checked="ThemeChanged_CheckedAsync"
-                                 IsChecked="{x:Bind ElementTheme, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Default, Mode=OneWay}"
-                                 FontSize="15"
-                                 GroupName="AppTheme">
-                <RadioButton.CommandParameter>
-                    <xaml:ElementTheme>Default</xaml:ElementTheme>
                 </RadioButton.CommandParameter>
             </RadioButton>
         </StackPanel>

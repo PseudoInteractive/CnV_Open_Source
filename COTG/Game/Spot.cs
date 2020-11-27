@@ -235,7 +235,8 @@ namespace COTG.Game
                     SettingsPage.pinned = SettingsPage.pinned.ArrayAppend(cid);
              else
                         SettingsPage.pinned = SettingsPage.pinned.Where(a => a!=cid).ToArray();
-             }  // pinned in MRU
+            App.DispatchOnUIThreadSneaky( ()=> OnPropertyChanged(nameof(pinned)));
+        }  // pinned in MRU
         public byte claim; // only if this is under attack
         public byte shipyards { get; set; }
         public byte ports { get; set; }
@@ -416,7 +417,7 @@ namespace COTG.Game
                     case nameof(pinned):
                         pinned = !pinned;
                         PinnedChanged();
-                        OnPropertyChanged(nameof(pinned));
+                        
                         return;
                     case nameof(City.raidCarry):
                         if (City.IsMine(cid) && MainPage.IsVisible())
@@ -869,15 +870,15 @@ namespace COTG.Game
         {
             return selected.Count != 0;// || viewHover != 0 || uiHover != 0;
         }
-        public static bool IsSelectedOrHovered(int cid)
+        public static bool IsSelectedOrHovered(int cid,bool noneIsAll)
         {
             // if nothing is selected we treat it as if everything is selected
-            return selected.Count == 0 ? true : (cid == viewHover || selected.Contains(cid) || City.IsFocus(cid));
+            return  (noneIsAll && selected.Count == 0) ? true : (cid == viewHover || selected.Contains(cid) || City.IsFocus(cid));
         }
-        public static bool IsSelectedOrHovered(int cid0, int cid1)
+        public static bool IsSelectedOrHovered(int cid0, int cid1, bool noneIsAll)
         {
             // if nothing is selected we treat it as if everything is selected
-            return selected.Count == 0 ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0)
+            return (noneIsAll&&selected.Count == 0) ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0)
                                                 || cid1 == viewHover || selected.Contains(cid1) || City.IsFocus(cid1));
         }
 

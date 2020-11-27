@@ -623,10 +623,13 @@ namespace COTG.Views
 
                                 }
                                 var reports = dfof == 0 ? DefenseHistoryTab.instance.history : HitTab.instance.history;
+                                
                                 if (reports.Length > 0)
                                 {
+                                    var autoShow = reports.Length <= SettingsPage.showAttacksLimit;
 
                                     var counts = new Dictionary<int, IncomingCounts>();
+
                                     foreach (var attack in reports)
                                     {
                                         if (attack.type == reportPending)
@@ -678,7 +681,7 @@ namespace COTG.Views
 
                                         if (dt1 >= journeyTime || dt1 < -postAttackDisplayTime)
                                             continue;
-                                        if (!Spot.IsSelectedOrHovered(targetCid, sourceCid))
+                                        if (!Spot.IsSelectedOrHovered(targetCid, sourceCid, autoShow))
                                         {
                                             continue;
                                         }
@@ -735,7 +738,7 @@ namespace COTG.Views
                                     var selected = false;
                                     foreach (var i in cluster.attacks)
                                     {
-                                        if (Spot.IsSelectedOrHovered(i))
+                                        if (Spot.IsSelectedOrHovered(i,true))
                                         {
                                             selected=true;
                                             break;
@@ -743,7 +746,7 @@ namespace COTG.Views
                                     }
                                     foreach (var i in cluster.targets)
                                     {
-                                        if (Spot.IsSelectedOrHovered(i))
+                                        if (Spot.IsSelectedOrHovered(i,true))
                                         {
                                             selected=true;
                                             break;
@@ -806,7 +809,9 @@ namespace COTG.Views
                             var cullSlopSpace = 80 * pixelScale;
                             for (int iOrO = 0; iOrO < 2; ++iOrO)
                             {
-                                foreach (var city in (iOrO ==0) ? Spot.defendersI : Spot.defendersO)
+                                var list = (iOrO ==0) ? Spot.defendersI : Spot.defendersO;
+                                bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
+                                foreach (var city in list )
                                 {
                                     if (city.incoming.Any() || city.isMine)
                                     {
@@ -848,7 +853,7 @@ namespace COTG.Views
                                                     c = GetAttackColor(i);
                                                 }
                                             }
-                                            if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid))
+                                            if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll))
                                             {
                                                 continue;
                                          //       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
@@ -882,7 +887,7 @@ namespace COTG.Views
                                                 Assert(false);
                                             }
                                         }
-                                        if(wantDetails || Spot.IsSelectedOrHovered(targetCid) )
+                                        if(wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll) )
                                            DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
                                     }
                                 }
@@ -900,7 +905,7 @@ namespace COTG.Views
                                         var c1 = targetCid.CidToCC();
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
-                                        if (wantDetails || Spot.IsSelectedOrHovered(targetCid))
+                                        if (wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
                                             DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
 
                                     }
@@ -1021,10 +1026,10 @@ namespace COTG.Views
                                         var c1 = (cx, cy).WToC();
                                         var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                                         var r = t.Ramp();
-                                        var alpha = (t*1.21f).Wave()*0.5f + 0.5f;
+                                        var alpha = (t*1.21f).Wave()*0.75f + 0.25f;
                                         const float spriteSize = 16;
                                    
-                                        batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X-spriteSize, c1.Y-spriteSize, spriteSize*2, spriteSize*2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.25f));
+                                        batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X-spriteSize, c1.Y-spriteSize, spriteSize*2, spriteSize*2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f));
                                     }
                                 }
                             }

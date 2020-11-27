@@ -302,7 +302,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                                   AnimationDuration="00:00:00.3000"
                               
                                   Canvas.ZIndex="55"
-                                  StackMode="QueueBehind" />
+                                  StackMode="Replace" />
         <tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"

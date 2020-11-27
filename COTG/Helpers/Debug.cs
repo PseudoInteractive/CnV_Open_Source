@@ -110,7 +110,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
         {
-            DumpStack(new StackTrace(e,0, true));
+            DumpStack(new StackTrace(e, true));
             System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Exception: {e.Message} {e.StackTrace}");
             Note.Show(e.Message);
 

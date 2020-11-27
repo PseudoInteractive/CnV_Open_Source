@@ -87,7 +87,7 @@ namespace COTG.Views
                         var onDifferentContinent = false;
                         if (!portal)
                         {
-                            if (!city.ComputeTravelTime(defendant.cid, out hours, out onDifferentContinent) || hours > filterTime)
+                            if (!city.ComputeTravelTime(defendant.cid,onlyHome, out hours, out onDifferentContinent) || hours > filterTime)
                                 continue;
                         }
                         // re-use if possible
@@ -171,21 +171,10 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-            PropertyChanged +=NearDefenseTab_PropertyChanged;
+      
         }
 
-        private void NearDefenseTab_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch(e.PropertyName)
-            {
-                case nameof(includeOffense):
-                case nameof(portal):
-                case nameof(onlyHome):
-                    // refresh
-                    VisibilityChanged(true);
-                    break;
-            }
-        }
+      
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) {
@@ -306,9 +295,22 @@ namespace COTG.Views
                 {
                     await Raiding.ReturnFast(city.cid, false);
                 }
-                var canArriveAt = city.GetRaidReturnTime() + TimeSpan.FromHours(supporter.travel + 1.0f / 256.0f);
-                departAt = canArriveAt;
-
+                departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
+                var canArriveAt = departAt+ TimeSpan.FromHours(supporter.travel );
+                if (_arriveAt > JSClient.ServerTime() && _arriveAt < canArriveAt)
+                {
+                    var msg = new ContentDialog()
+                    { Title="Home Too late to make arrival time",
+                    Content="Would you like to schedule as soon as they return?",
+                    PrimaryButtonText="Yes",
+                    CloseButtonText="Cancel"
+                    };
+                    if( await msg.ShowAsync() != ContentDialogResult.Primary)
+                    {
+                        return;
+                    }
+                    _arriveAt = AUtil.dateTimeZero;
+                }
             }
 
             Post.SendRein(supporter.cid, defendant.cid, supporter.tSend,departAt, _arriveAt,supporter.travel,supporter.split);
@@ -379,6 +381,10 @@ namespace COTG.Views
         }
 
        
+        private void PropChanged(object sender, RoutedEventArgs e)
+        {
+            Refresh();
+        }
     }
 
     public class SupporterTapCommand : DataGridCommand

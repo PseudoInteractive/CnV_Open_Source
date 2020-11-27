@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace COTG.Services
 {
-    public class Discord
+    public  static partial class Discord
     {
         public struct Message
         {

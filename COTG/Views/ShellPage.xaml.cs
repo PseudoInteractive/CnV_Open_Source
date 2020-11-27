@@ -65,8 +65,8 @@ namespace COTG.Views
         public static TextBlock gridTip;
 
         static DateTime workStarted;
-        static Queue<string> workQueue = new Queue<string>();
-        public static void WorkStart(string desc)
+        static List<string> workQueue = new List<string>();
+        public static string WorkStart(string desc)
         {
             App.DispatchOnUIThreadSneaky(() =>
            {
@@ -77,12 +77,13 @@ namespace COTG.Views
                    instance.work.Text = desc;
                    instance.work.Visibility = Visibility.Visible;
                }
-               workQueue.Enqueue(desc);
+               workQueue.Add(desc);
               
            });
+            return desc;
         }
 
-        public static void WorkEnd()
+        public static void WorkEnd(string desc)
         {
             App.DispatchOnUIThreadSneaky(() =>
             {
@@ -99,7 +100,7 @@ namespace COTG.Views
                     }
                     else
                     {
-                         workQueue.Dequeue();
+                         workQueue.Remove(desc);
                     }
                 }
                 if (!workQueue.Any() )
@@ -111,21 +112,25 @@ namespace COTG.Views
                 else
                 {
                     workStarted = DateTime.UtcNow;
-                    instance.work.Text = workQueue.Peek();
+                    instance.work.Text = workQueue.First();
                 }
             });
         }
         public class WorkScope : IDisposable
         {
-            public WorkScope(string task)
+            string task;
+            // passing null results in a Scope with no effect
+            public WorkScope(string _task)
             {
-                WorkStart(task);
+                if(_task != null )
+                    this.task =WorkStart(_task);
 
             }
 
             public void Dispose()
             {
-                WorkEnd();
+                if(task != null)
+                 WorkEnd(task);
             }
         }
 
@@ -346,12 +351,12 @@ namespace COTG.Views
             switch(prop.PointerUpdateKind)
             {
                 case PointerUpdateKind.XButton1Pressed:
-                NavStack.Back();
+                NavStack.Back(true);
                 Log("XButton1");
                 e.Handled = true;
                     break;
                 case PointerUpdateKind.XButton2Pressed:
-                    NavStack.Forward();
+                    NavStack.Forward(true);
                     Log("XButton2");
                     e.Handled = true;
                     break;
@@ -361,7 +366,7 @@ namespace COTG.Views
         private void ShellPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Log("Back!!");
-            NavStack.Back();
+            NavStack.Back(true);
             //e.Handled = true;
         }
 
