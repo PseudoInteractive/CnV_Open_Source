@@ -30,10 +30,12 @@ namespace COTG.Services
 
         // The container we will create.
         private static CosmosContainer container;
+        private static CosmosContainer ordersContainer;
 
         // The name of the database and container we will create
         private static string databaseId => $"w{JSClient.world}";
         private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
+        private static string ordersContainerId => "seenOrders";
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
         private static ReaderWriterLockSlim semaphore = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
@@ -44,7 +46,7 @@ namespace COTG.Services
         {
             Assert(JSClient.world != 0);
             // Create a new instance of the Cosmos Client
-            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual };
+            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual,ConnectionMode=ConnectionMode.Direct,LimitToEndpoint=true };
             clientOptions.Diagnostics.IsDistributedTracingEnabled=false;
             clientOptions.Diagnostics.IsLoggingContentEnabled=false;
             clientOptions.Diagnostics.IsTelemetryEnabled=false;
@@ -55,6 +57,7 @@ namespace COTG.Services
             if (database != null)
             {
                 container = database.GetContainer(containerId);
+                ordersContainer = database.GetContainer(ordersContainerId);
             }
 
             //            await ScaleContainerAsync();
@@ -209,8 +212,32 @@ namespace COTG.Services
         //        await blobClient.UploadAsync(ms);
         //    }
         //}
-        public static int battleRecordsUpserted;
+        public class Order
+        {
+            public string id { get; set; }
+        }
+        /// returns true of the order was inserted, false if it already existed
+        public static async Task<bool> TryAddOrder(long orderId)
+        {
+            if (ordersContainer==null)
+                return false;
+            var order = new Order() { id = orderId.ToString() };
+            try
+            {
+               var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
 
+            }
+            catch (CosmosException ex)
+            {
+                if (ex.Status == (int)HttpStatusCode.Conflict)
+                    return false;
+
+            }
+            return true;
+        }
+
+        public static int battleRecordsUpserted;
+//        static ItemRequestOptions itemRequestOptions = new ItemRequestOptions() { ConsistencyLevel=ConsistencyLevel.Eventual, EnableContentResponseOnWrite =false}
         public static async Task AddBattleRecord(Army army)
         {
             if (container == null || database == null)
@@ -239,7 +266,7 @@ namespace COTG.Services
                     catch (CosmosException ex)
                     {
                         if (ex.Status != (int)HttpStatusCode.NotFound)
-                            Log(ex);
+                            return;
                         s0 = new COTG.DB.Spot() { id = sourceId, own = army.sPid }; // todo:  set owner
                                                                                     // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
                                                                                     //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
@@ -251,7 +278,7 @@ namespace COTG.Services
                     {
                         try
                         {
-                            await container.UpsertItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+                            await container.UpsertItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId) );
 
                         }
                         catch (Exception ex)
@@ -272,8 +299,9 @@ namespace COTG.Services
                     }
                     catch (CosmosException ex)
                     {
+
                         if (ex.Status != (int)HttpStatusCode.NotFound)
-                            Log(ex);
+                            return;
                         //      if(ex.Status == (int)HttpStatusCode.NotFound)
                         s1 = new COTG.DB.Spot() { id = targetId, own = army.tPid }; // todo:  set owner
 

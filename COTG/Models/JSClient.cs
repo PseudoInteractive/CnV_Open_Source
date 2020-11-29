@@ -37,6 +37,7 @@ using Windows.UI.Input;
 using Windows.UI.Core;
 using Windows.Foundation;
 using Windows.Graphics.Display;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace COTG
 {
@@ -1537,6 +1538,23 @@ namespace COTG
                         //|| TipsSeen.instance.chat2 == false)
                         //    App.QueueIdleTask(ShellPage.ShowTipRefresh);
                         // await RaidOverview.Send();
+                        App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
+
+                        {
+                            //var now = DateTime.UtcNow;
+                            //if (now.Day <= 28 && now.Month==11)
+                            {
+                                App.QueueIdleTask(() => App.DispatchOnUIThreadSneaky(() =>
+                           {
+                               if (SystemInformation.IsAppUpdated)
+                               {
+                                   var dialog = new WhatsNewDialog();
+                                   dialog.DefaultButton = ContentDialogButton.Close;
+                                   dialog.ShowAsync();
+                               }
+                           }), 30*1000 );
+                            }
+                        }
                     }
                     //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                     //cookie.Clear();

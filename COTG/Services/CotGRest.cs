@@ -843,7 +843,7 @@ namespace COTG.Services
             public string ts { get; set; }
         };
 
-        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend,DateTimeOffset departAt, DateTimeOffset arrival, float travelTime,int splits )
+        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend,DateTimeOffset departAt, DateTimeOffset arrival, float travelTime,int splits, Windows.UI.Xaml.UIElement uie )
         {
             var tttv = new List<tt_tv>();
             foreach(var t in tsSend)
@@ -896,9 +896,10 @@ namespace COTG.Services
                                     PrimaryButtonText="Yes",
                                     CloseButtonText="Cancel"
                                 };
+                                content.CopyXamlRoomFrom(uie);
                                 if (await content.ShowAsync() == ContentDialogResult.Primary)
                                 {
-                                    SendRein(cid,rcid,tsSend,departAt,AUtil.dateTimeZero,travelTime,splits);
+                                    SendRein(cid,rcid,tsSend,departAt,AUtil.dateTimeZero,travelTime,splits,uie);
                                     return;
                                 }
                                 

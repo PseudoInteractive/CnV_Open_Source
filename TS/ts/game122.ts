@@ -7381,7 +7381,7 @@ function DoSyncViewMode() {
         }
       );
 
-      if (document.getElementById("speedupusePopup") !== null) {
+          if (document.getElementById("speedupusePopup") !== null || document.getElementById("tspeedupusePopup") !== null ) {
 
         _popupCount += 128;
 
@@ -11207,6 +11207,7 @@ var cotgsubscribe = amplify;
           .append(D71);
         $(__s[85])
           .draggable({handle: __s[2633], containment: __s[+q5y], scroll: !{}});
+          callSyncViewMode();
         setTimeout(function() {}, D5y ^ 0);
         setTimeout(function() {}, 13000);
       }
@@ -11900,8 +11901,13 @@ var cotgsubscribe = amplify;
       } else $(__s[875])
         .html("");
     }
-    var l9 = 0;
-
+    var idleMinutes = 0;
+    function clearIdle()
+	{
+        if(idleMinutes >= 10)
+            DoPoll2(500); // reset this, it might be running long
+        idleMinutes=0;
+	}
     function i1F(O7U, x7U) {
       if (O7U == 1) {var t7U = m6[x7U]["n"]; return t7U;}
       if (O7U == '2' -
@@ -33481,10 +33487,10 @@ var cotgsubscribe = amplify;
     cotg = {};
     $(document)
       .ready(function() {
-        var G42 = setInterval(V9F, x44 * 1);
+        var G42 = setInterval(incrementIdleMinutes, x44 * 1);
         $(this)
           .click(function(i42) {
-            l9 = 0;
+            clearIdle();
             if ($(__s[+o4t])
               .css("display") != "none") $(__s[o4t * 1])
                 .css("display", "none");
@@ -33517,7 +33523,7 @@ var cotgsubscribe = amplify;
           });
         $(this)
           .keypress(function(h42) {
-            l9 = 0;
+              clearIdle();
             E6k.y6();
             if ($(__s[o4t - 0])
               .css("display") != "none") $(__s[+o4t])
@@ -33528,7 +33534,7 @@ var cotgsubscribe = amplify;
       .ready(function() {
         $(__s[5355])
           .click(function() {
-            l9 = 0;
+              clearIdle();
             $(__s[+o4t])
               .css("display", "none");
           });
@@ -54122,6 +54128,7 @@ var cotgsubscribe = amplify;
           .append(F71);
         $(__s[6340])
           .draggable({handle: __s[3514], containment: __s[+q5y], scroll: !"1"});
+          callSyncViewMode();
         setTimeout(function() {setTimeout(function() {E6k.R6();}, 2000);}, +D5y);
       }
     }
@@ -55113,7 +55120,7 @@ var cotgsubscribe = amplify;
       }
     }
 
-    function V9F() {l9 = l9 + 1;}
+    function incrementIdleMinutes() {idleMinutes = idleMinutes + 1;}
     var T9F = 0;
     var K7V;
     var f7V;
@@ -67080,11 +67087,11 @@ var cotgsubscribe = amplify;
     }
     window['pollthis'] = __pollthis;
 
-
+    const idleTimeout  = 60;
 
     function Z1F() {
       if (M4F == 0) try {
-        if (l9 <= 30 && w8 == 0) {
+        if (idleMinutes <= idleTimeout && w8 == 0) {
           let E51 = "";
           w8 = 1;
           S6F();
@@ -67149,7 +67156,7 @@ var cotgsubscribe = amplify;
 
       } finally {
           Z1FTimeout = 0;
-          DoPoll2(3000);
+          DoPoll2(idleMinutes < 2 ? 2000 : idleMinutes < 10 ? 3000 : idleMinutes < 20 ? 6000 : 12000);
         }
     }
 

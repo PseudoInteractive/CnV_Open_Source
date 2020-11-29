@@ -45,7 +45,7 @@ namespace COTG.Views
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        List<BlessedCity> blessedGridSource = new List<BlessedCity>();
+       // List<BlessedCity> blessedGridSource = new List<BlessedCity>();
         public async override void VisibilityChanged(bool visible)
         {
             if(visible)

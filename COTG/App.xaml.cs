@@ -43,6 +43,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
 using Windows.Foundation.Collections;
 using System.Threading;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace COTG
 {
@@ -177,11 +179,14 @@ namespace COTG
         static DispatcherTimer idleTimer;
         static bool timerActive;
         private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
+        private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
 
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             {
+                SystemInformation.TrackAppUse(args);
+
                 var view = DisplayInformation.GetForCurrentView();
 
                 // Get the screen resolution (APIs available from 14393 onward).
@@ -201,6 +206,11 @@ namespace COTG
             {
 
                 await ActivationService.ActivateAsync(args);
+                idleTimer = new DispatcherTimer();
+                idleTimer.Interval = TimeSpan.FromSeconds(10);  // 16s idle delay, at most one event per 16 seconds?  What if too many are queued?
+                idleTimer.Tick += IdleTimer_Tick;
+                Assert(idleTimer.IsEnabled == false);
+                ProcessThrottledTasks();
             }
             OnLaunchedOrActivated();
         }
@@ -218,10 +228,7 @@ namespace COTG
 #else
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
-            idleTimer = new DispatcherTimer();
-            idleTimer.Interval = TimeSpan.FromSeconds(10);  // 10s idle delay
-            idleTimer.Tick += IdleTimer_Tick;
-            Assert(idleTimer.IsEnabled == false);
+            
            
 
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -257,7 +264,23 @@ namespace COTG
                 e.Handled=true;
 
         }
+        static async void ProcessThrottledTasks()
+        {
+            for (; ; )
+            {
+                if (!throttledTasks.IsEmpty)
+                {
+                    if (throttledTasks.TryDequeue(out var t))
+                        await t();
 
+                }
+                await Task.Delay(500);
+            }
+        }
+        public static void EnqeueTask(Func<Task> a)
+        {
+            throttledTasks.Enqueue(a);
+        }
         public static bool OnPointerPressed( PointerUpdateKind prop)
         {
             var rv = false;
@@ -309,9 +332,15 @@ namespace COTG
                 a();
             }
         }
-       
 
-         public static void QueueIdleTask(Action a, int intialDelayInmilisecons =0)
+        // with a delay
+        public static void QueueIdleTask( Action a , int intialDelayInmilisecons)
+        {
+        
+                Task.Delay(intialDelayInmilisecons).ContinueWith((_) => QueueIdleTask(a));
+        }
+
+        public static void QueueIdleTask(Action a)
         {
             foreach(var i in idleTasks)
             {
@@ -320,11 +349,7 @@ namespace COTG
 
             }
 
-            if (intialDelayInmilisecons > 0)
-            {
-                Task.Delay(intialDelayInmilisecons).ContinueWith((_) => QueueIdleTask(a, 0));
-            }
-            else
+            
             {
                 idleTasks.Enqueue(a);
                 if (!timerActive)
@@ -689,7 +714,16 @@ namespace COTG
         {
             return mod.HasFlag(VirtualKeyModifiers.Control) & mod.HasFlag(VirtualKeyModifiers.Shift);
         }
-
+        public static void CopyXamlRoomFrom(this FlyoutBase target, UIElement source)
+        {
+            if (source!=null & source.XamlRoot!=null)
+                target.XamlRoot=source.XamlRoot;
+        }
+        public static void CopyXamlRoomFrom(this UIElement target, UIElement source)
+        {
+            if (source!=null & source.XamlRoot!=null)
+                target.XamlRoot=source.XamlRoot;
+        }
 
     }
 

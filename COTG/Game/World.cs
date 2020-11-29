@@ -788,7 +788,7 @@ namespace COTG.Game
                     Continent.all[contId].bosses = cntV[6].GetUInt16();
                 }
             }
-
+            SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
             SpotTab.LoadFromPriorSession(SettingsPage.pinned);
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             current= rv;

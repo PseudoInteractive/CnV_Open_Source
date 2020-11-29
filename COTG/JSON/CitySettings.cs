@@ -170,6 +170,11 @@ namespace COTG.JSON
                 result = "\nSet recruit arbs";
                 split[17] = "343343";
             }
+            if (rem.Contains("horse"))
+            {
+                result = "\nSet recruit horses";
+                split[19] = "343343";
+            }
             if (rem.Contains("sorc"))
             {
                 result = "\nSet recruit sorcs";
@@ -266,12 +271,12 @@ namespace COTG.JSON
             {
                 var city = City.GetOrAddCity(cid);
                 var nameDialog = new CityRename();
-                var isNew = city._cityName == "*New City";
+                var isNew = city._cityName == "*New City"||city._cityName=="*Lawless City";
 
 
                     var name = isNew ? lastName : city._cityName;
                     if (name.IsNullOrEmpty())
-                         name = $"{city.cont} 1001";
+                         name = $"{city.cont:00} 1001";
 
                     var lg = name.Length;
                     var numberEnd = lg;

@@ -26,7 +26,8 @@ namespace COTG.Game
         public byte type; // reportType* in Enum.cs
         public byte claim { get; set; }
         public bool isAttack { get; set; }
-        public string Type => type== reportPending ? FormatEstimate() : reportStrings[type];
+        public string Type => reportStrings[type];
+       
         public string aType => type switch
         {
             reportDefensePending=> "inc Def",
@@ -154,27 +155,26 @@ namespace COTG.Game
 
         public float dist => targetCid.DistanceToCid(sourceCid);
         public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
+        public long order;
+        public string miscInfo { get; set; } = string.Empty;
 
-        internal string FormatEstimate()
-        {
-            string rv = string.Empty;
-            var wantComma = false;
-            foreach (var tt in troops)
-            {
-                if (wantComma)
-                    rv += ',';
-                else
-                    wantComma = true;
-                if(tt.count>0)
-                    rv += $"{ttNameWithCaps[tt.type]}:{tt.count:N0}";
-                else
-                    rv += $"{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
+        public string troopInfo {
+            get {
+                
+                    string rv = miscInfo;
+                    foreach (var tt in troops)
+                    {
+                        if (tt.count>0)
+                            rv += $", {tt.count:N0} {ttNameWithCaps[tt.type]}";
+                        else
+                            rv += $", {ttNameWithCaps[tt.type]}";
 
+                    }
+                    return rv;
+
+                }
             }
-            return rv;
 
-        }
-        
             internal string GetToopTip(DateTimeOffset serverNow)
         {
             if (isDefense)
@@ -185,35 +185,23 @@ namespace COTG.Game
             {
                 if (troops.IsNullOrEmpty())
                     return string.Empty;
-                if(troops.First().count<0)
-                {
-                    // estimate
-                    string rv = "Predicted:";
-                    foreach (var tt in troops)
-                    {
-                        rv += $"\n{ttCategory[tt.type]}{((tt.count == -1) ? "?" : $" {(tt.count) / -10.0f}%")}";
-                      
-                    }
-                    return rv;
-                }
-                else
-                {
-                   return troops.Format($"{sPlayer} (from)\n{tPlayer} (to)",'\n');
+                   return troops.Format($"{sPlayer} (from)\n{tPlayer} (to)\n{miscInfo}",'\n');
                     
 
-                }
+               
             }
         }
 
         internal string Format()
         {
 
-            var rv = string.Empty;
+            var rv = type == reportPending ? miscInfo : string.Empty;
                 foreach (var tt in troops)
                 {
                     rv += tt.Format();
 
                 }
+            rv += ";";
             return rv;
         }
     }
@@ -241,7 +229,7 @@ namespace COTG.Game
 
         internal string Format()
         {
-            return $"{count:N0} {Enum.ttNameWithCaps[type]} ";
+            return count > 0?  $" {count:N0} {Enum.ttNameWithCaps[type]}" : (" " + Enum.ttNameWithCaps[type]);
         }
         [JsonIgnore]
         public bool isSenator => type == Enum.ttSenator;
@@ -378,14 +366,33 @@ namespace COTG.Game
             }
             return rv;
         }
+        public static byte GetPrimaryTroopType(this IEnumerable<TroopTypeCount> l)
+        {
+            byte best = 0; // if no troops we return guards 
+            var bestTS = 0;
+            foreach (var ttc in l)
+            {
+                var type = ttc.type;
+                var ts = ttc.ts;
+                if (ts > bestTS)
+                {
+                    bestTS = ts;
+                    best = (byte)ttc.type;
+                }
 
+            }
+            return best;
+        }
         public static string Format(this IEnumerable<TroopTypeCount> l,string header,char firstSeparater,char furtherSeparator=(char)0)
         {
             string rv = header;
             foreach (var ttc in l)
             {
-                rv += $"{firstSeparater}{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
-                if(furtherSeparator != (char)0 )
+                if(ttc.count>0)
+                    rv += $"{firstSeparater}{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
+                else
+                    rv += $"{firstSeparater}{Enum.ttNameWithCaps[ttc.type]}";
+                if (furtherSeparator != (char)0 )
                     firstSeparater = furtherSeparator;
             }
             return rv;

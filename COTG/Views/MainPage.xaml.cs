@@ -372,6 +372,7 @@ namespace COTG.Views
                     flyout.Items.Add(but);
                 }
             }
+            flyout.CopyXamlRoomFrom(button);
             flyout.Closing += Flyout_Closing;
             flyout.ShowAt(button);
         }

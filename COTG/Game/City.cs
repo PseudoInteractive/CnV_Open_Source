@@ -705,7 +705,7 @@ namespace COTG.Game
                 var reserveCartsFilter = DonationTab.reserveCarts;
                 if (DonationTab.IsVisible())
                     DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
-                        .OrderByDescending(a=>a.cartsHome);
+                        .OrderByDescending(a=>a.cartsHome).ToArray();
              //   if (MainPage.IsVisible())
                     City.gridCitySource.Set(l);
                    City.GetBuild().SelectInUI(true);

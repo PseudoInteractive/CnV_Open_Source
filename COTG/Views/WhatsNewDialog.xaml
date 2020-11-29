@@ -4,27 +4,41 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Uid="WhatsNewDialog"
-    d:DesignHeight="345"
-    d:DesignWidth="550"
+    Title="Whats New"
+    CloseButtonText="Okay"
+   BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}"
     mc:Ignorable="d">
-    <ContentDialog.TitleTemplate>
-        <DataTemplate x:DataType="x:String">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="40"
-                    Height="40"
-                    Source="ms-appx:///Assets/StoreLogo.png" />
-                <TextBlock
-                    Margin="{StaticResource SmallLeftMargin}"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind}" />
-            </StackPanel>
-        </DataTemplate>
-    </ContentDialog.TitleTemplate>
+   
     <ScrollViewer>
         <StackPanel>
-            <TextBlock x:Uid="WhatsNew_Body" TextWrapping="WrapWholeWords" />
-        </StackPanel>
+         
+            <Border BorderThickness="1"
+					Margin="6"
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}">
+                <TextBlock TextWrapping="WrapWholeWords" Margin="6"
+                           FontSize="16"
+                           TextAlignment="Left"
+                        ><Run Text="We now support incoming attack discord notifications. " /><LineBreak /><Run Text="There should be at least one player that has the app open at all times. " /><LineBreak /><Run Text="If its not you, you're not playing correctly." /></TextBlock>
+            </Border>
+            <Border BorderThickness="1"
+					Margin="6"
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}">
+                <TextBlock TextWrapping="WrapWholeWords" Margin="6"
+                           FontSize="16"
+                           TextAlignment="Left"
+                           ><Run Text="There is now a Shrine Finder that will scan new continents for false forest spots that will become shrines." /><LineBreak /><Run Text="If you are online when the continent opens, please run the Shrine Finder (in settings) and share the results with the team." /></TextBlock>
+            </Border>
+			<Border BorderThickness="1"
+					Margin="6"
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}"
+					>
+				<TextBlock TextWrapping="WrapWholeWords"
+						   Margin="6"
+						   FontSize="16"
+						   TextAlignment="Left"
+						   Text="Fixed multiple discord notifications for attacks and redundant notifications for in progress sieges." />
+			</Border>
+
+		</StackPanel>
     </ScrollViewer>
 </ContentDialog>

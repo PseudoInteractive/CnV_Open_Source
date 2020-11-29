@@ -115,8 +115,7 @@ namespace COTG.Views
             var spot = Spot.GetOrAdd(cid);
             if(pin)
             {
-                spot.pinned=true;
-                spot.PinnedChanged();
+               spot.SetPinned(true);
             }
             
             AddToGrid(spot, mod, updateSelected);

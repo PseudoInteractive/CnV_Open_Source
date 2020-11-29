@@ -49,6 +49,7 @@ namespace COTG.DB
                     return false;
             }
             recb = recb.ArrayAppend(rb);
+            // this van be optimized
             Array.Sort(recb, (b, a) => a.t.CompareTo(b.t));
             return true;
         }

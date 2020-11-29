@@ -229,10 +229,13 @@ namespace COTG.Game
         public bool isTemple { get; set; }
        
         public bool pinned { get; set; }
-        public void PinnedChanged()
+        public void SetPinned(bool _pinned)
         {
-            if (pinned)
-                    SettingsPage.pinned = SettingsPage.pinned.ArrayAppend(cid);
+            if (_pinned == pinned)
+                return;
+            pinned = _pinned;
+            if (_pinned)
+                    SettingsPage.pinned = SettingsPage.pinned.ArrayAppendIfAbsent(cid);
              else
                         SettingsPage.pinned = SettingsPage.pinned.Where(a => a!=cid).ToArray();
             App.DispatchOnUIThreadSneaky( ()=> OnPropertyChanged(nameof(pinned)));
@@ -415,8 +418,7 @@ namespace COTG.Game
                         wantRaidScan = false;
                         break;
                     case nameof(pinned):
-                        pinned = !pinned;
-                        PinnedChanged();
+                        SetPinned(!pinned);
                         
                         return;
                     case nameof(City.raidCarry):
@@ -518,6 +520,7 @@ namespace COTG.Game
         }
         internal async ValueTask<ClassificationExtended> Classify()
         {
+            classification = Classification.misc;
             var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
             ClassificationExtended rv = new ClassificationExtended(); ;
             try
@@ -549,7 +552,7 @@ namespace COTG.Game
                 }
                 else if (mx==rv.stables)
                 {
-                    if (rv.se > 0 || rv.academies > 0 || rv.stables == 39 || rv.stables == 24 || rv.stables <= 20)
+                    if (rv.se > 0 || rv.academies > 0 || (rv.stables != 25 && rv.stables == 22) )
                         classification = Classification.horses;
                     else
                     {
@@ -968,6 +971,7 @@ namespace COTG.Game
                 return; // aborted
 
             await Raiding.ReturnAt(cid, at);
+            Note.Show($"{cid.CidToStringMD()} end raids at {at.FormatDefault()}");
         }
         public async void ReturnAtBatch(object sender, RoutedEventArgs e)
         {
@@ -981,6 +985,8 @@ namespace COTG.Game
                 var __cid = _cid;
                 await Raiding.ReturnAt(__cid, at);
             }
+            Note.Show($"End {cids.Count} raids at {at.FormatDefault()} ");
+
         }
 
 
@@ -1047,8 +1053,9 @@ namespace COTG.Game
         }
         public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
         {
-            var flyout = new MenuFlyout();
+         ;
             SelectMe(false) ;
+            var flyout = new MenuFlyout();
 
             if (this.isCityOrCastle)
             {
@@ -1137,7 +1144,7 @@ namespace COTG.Game
 
                 App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
                 App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-                App.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid));
+                App.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
                 App.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
             }
             else if (this.isDungeon || this.isBoss)
@@ -1153,7 +1160,7 @@ namespace COTG.Game
             App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
             App.AddItem(flyout, "Select",(_,_)=> SelectMe(true) );
             App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
-
+            flyout.CopyXamlRoomFrom(uie);
 
             //   flyout.XamlRoot = uie.XamlRoot;
             flyout.ShowAt(uie, position);

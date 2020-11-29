@@ -136,7 +136,7 @@
                         ColumnDataOperationsMode="Flyout"
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
-                        ItemsSource="{x:Bind blessedGridSource, Mode=OneTime}"
+                        
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"

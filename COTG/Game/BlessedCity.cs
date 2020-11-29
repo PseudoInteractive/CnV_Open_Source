@@ -12,7 +12,7 @@ namespace COTG.Game
     // these are transient, not cached, owned by their grid.
     public class BlessedCity
     {
-        public static BlessedCity[] all = Array.Empty<BlessedCity>();
+        public static List<BlessedCity> all = new List<BlessedCity>();
         public static City senderCity;
         public Spot spot;
         public int cid => spot.cid;
@@ -50,7 +50,7 @@ namespace COTG.Game
                     bc.notes = city[9].GetString();
                     cities.Add(bc);
                 }
-                all = cities.ToArray();
+                all = cities;
 
             }
             catch (Exception e)
@@ -60,7 +60,7 @@ namespace COTG.Game
 
         }
 
-        public static IList<BlessedCity> GetForCity(City city)
+        public static List<BlessedCity> GetForCity(City city)
         {
             senderCity = city;
             if(city==null)

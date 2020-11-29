@@ -18,10 +18,19 @@ namespace COTG
     }
     public static class AUtil
     {
+        public const string defaultTimeFormat = "MM/dd HH':'mm':'ss";
         public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
         public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
+        public static string FormatSkipDateIfToday(this DateTimeOffset m)
+        {
+            var serverNow = JSClient.ServerTime();
+            if(serverNow.Day==m.Day && serverNow.Month==m.Month)
+               return  m.ToString(defaultTimeFormat);
+            else
+               return  m.ToString(defaultDateFormat);
+        }
         public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat);
 
         public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
@@ -73,6 +82,62 @@ namespace COTG
             }
             result[lg] = a;
             return result;
+
+        }
+        public static T[] ArrayAppendIfAbsent<T>(this T[] l, T a) where T : IEquatable<T>
+        {
+            if (l == null || l.Length == 0)
+                return new T[1] { a };
+
+            int lg = l.Length;
+            for (int i = 0; i<lg; ++i)
+            {
+                if (a.Equals(l[i]))
+                    return l;
+            }
+            var result = new T[lg + 1];
+            for (int i = 0; i<lg; ++i)
+            {
+                result[i] = l[i];
+            }
+            result[lg] = a;
+            return result;
+
+        }
+        public static T[] ArrayRemoveDuplicates<T>(this T[] l) where T : IEquatable<T>
+        {
+           
+            int lg = l.Length;
+            int removed=0;
+            for (int b = lg; --b>0;)
+            {
+                for (int a = 0; a <b; ++a)
+                {
+                    if (l[a].Equals(l[b]))
+                    {
+                        ++removed;
+                        --lg;
+                        if(b!=lg)
+                        {
+                            l[b] = l[lg];
+                        }
+                        break;
+                    }
+                }
+            }
+            if(removed > 0)
+            {
+                var result = new T[lg];
+                for (int i = 0; i<lg; ++i)
+                {
+                    result[i] = l[i];
+                }
+                return result;
+            }
+            else
+            {
+                return l;
+            }
 
         }
         public static T[] ArrayRemove<T>(this T[] l, int index)

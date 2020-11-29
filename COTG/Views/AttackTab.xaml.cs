@@ -330,6 +330,7 @@ namespace COTG.Views
 
 
             };
+            msg.CopyXamlRoomFrom(sender as UIElement);
             panel.Children.Add(removeAttacks);
             panel.Children.Add(removeTargets);
 

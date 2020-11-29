@@ -228,6 +228,7 @@ namespace COTG.Views
             var text = sender as FrameworkElement;
             var stt = text.DataContext as SupportByTroopType;
             var flyout = new MenuFlyout();
+            flyout.CopyXamlRoomFrom(text);
             App.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
@@ -256,6 +257,7 @@ namespace COTG.Views
             var text = sender as FrameworkElement;
             var supporter = text.DataContext as Supporter;
             var flyout = new MenuFlyout();
+            flyout.CopyXamlRoomFrom(text);
             App.AddItem(flyout, "Troops Home", (_, _) =>
             {
                
@@ -305,6 +307,7 @@ namespace COTG.Views
                     PrimaryButtonText="Yes",
                     CloseButtonText="Cancel"
                     };
+                    msg.CopyXamlRoomFrom(text);
                     if( await msg.ShowAsync() != ContentDialogResult.Primary)
                     {
                         return;
@@ -313,7 +316,7 @@ namespace COTG.Views
                 }
             }
 
-            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend,departAt, _arriveAt,supporter.travel,supporter.split);
+            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend,departAt, _arriveAt,supporter.travel,supporter.split,text);
             
 
         }

@@ -484,18 +484,20 @@ namespace COTG.Views
         {
             e.Handled = true;
             var msg = sender as MarkdownTextBlock;
-            var fly = new MenuFlyout();
-            var i = fly.Items;
+            
             var ll = await Avatarslate.TouchAsync();
             var langs = await ll.GetLanguagesAsync();
             App.DispatchOnUIThreadSneaky(() =>
             {
+                var fly = new MenuFlyout();
+                var i = fly.Items;
                 foreach (var l in langs)
                 {
                     MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
                     item.CommandParameter = item;
                     i.Add(item);
                 }
+                fly.CopyXamlRoomFrom(msg);
                 fly.ShowAt(msg, e.GetPosition(msg));
             });
         }
@@ -554,18 +556,19 @@ namespace COTG.Views
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var msg = sender as Button;
-            var fly = new MenuFlyout();
-            var i = fly.Items;
             var ll = await Avatarslate.TouchAsync();
             var langs = await Avatarslate.GetLanguagesAsync();
             App.DispatchOnUIThreadSneaky(() =>
             {
+                var fly = new MenuFlyout();
+                var i = fly.Items;
                 foreach (var l in langs)
                 {
                     MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = input };
                     item.CommandParameter = item;
                     i.Add(item);
                 }
+                fly.CopyXamlRoomFrom(msg);
                 fly.ShowAt(msg);
             });
         }
@@ -576,18 +579,20 @@ namespace COTG.Views
             //            e.Handled = true;
             var date = sender as TextBlock;
             var msg = date.Tag as MarkdownTextBlock;
-            var fly = new MenuFlyout();
-            var i = fly.Items;
+           
             var ll = await Avatarslate.TouchAsync();
             var langs = await ll.GetLanguagesAsync();
             App.DispatchOnUIThreadSneaky(() =>
             {
+                var fly = new MenuFlyout();
+                var i = fly.Items;
                 foreach (var l in langs)
                 {
                     MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
                     item.CommandParameter = item;
                     i.Add(item);
                 }
+                fly.CopyXamlRoomFrom(date);
                 fly.ShowAt(date, e.GetPosition(date));
             });
         }

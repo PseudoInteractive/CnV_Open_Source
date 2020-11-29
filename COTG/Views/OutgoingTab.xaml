@@ -77,15 +77,16 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
                                        Width="50" />
+                
                 <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       Width="60" />
+                                       Width="60" IsVisible="False" />
                 <tg:DataGridTextColumn Header="Alliance"
                                        PropertyName="alliance"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
-                                       Width="50" />
+                                       Width="50" IsVisible="False" />
                 <tg:DataGridTextColumn PropertyName="attackers"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch"
@@ -94,6 +95,11 @@
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             SizeMode="Fixed"
                                             Width="40" />
+                <tg:DataGridTextColumn PropertyName="classificationString"
+                                       Header="intel"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       SizeMode="Stretch"
+                                       Width="50" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tg:RadDataGrid x:Name="armyGrid"
@@ -125,6 +131,7 @@
                                                    Width="50"
                                                    SizeMode="Fixed"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
+
                 <tg:DataGridNumericalColumn PropertyName="ts"
                                             SizeMode="Fixed"
                                        CellContentStyle="{StaticResource RightAlign}"
@@ -150,6 +157,10 @@
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                             Width="50" />
+                <tg:DataGridTextColumn PropertyName="troopInfo"
+                                                   Width="70"
+                                                   SizeMode="Stretch"
+                                                   CellContentStyle="{StaticResource LeftAlign}" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tk:GridSplitter

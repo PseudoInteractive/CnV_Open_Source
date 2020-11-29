@@ -489,8 +489,7 @@ namespace COTG.Views
             }
             if (menu.Items.Count == 0)
                 menu.Items.Add(new MenuFlyoutItem() { Text = "All the tabs are open" });
-            if(sender.XamlRoot!=null)
-                menu.XamlRoot = sender.XamlRoot;
+            menu.CopyXamlRoomFrom(sender);
 
             menu.ShowAt(_sender);
             

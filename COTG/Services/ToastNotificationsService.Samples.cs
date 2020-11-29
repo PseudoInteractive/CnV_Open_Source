@@ -9,7 +9,7 @@ namespace COTG.Services
     internal partial class ToastNotificationsService
     {
 
-        public void ShowIncomingNotification(int count, int watchedCount)
+        public void ShowIncomingNotification(string info)
         {
 
             // Create the toast content
@@ -26,7 +26,7 @@ namespace COTG.Services
                         {
                             new AdaptiveText()
                             {
-                                Text = $"Incoming Attacks: {count} for you, {watchedCount} for watched players"
+                                Text = info
                             },
 
                         }

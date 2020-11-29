@@ -19,66 +19,16 @@ namespace COTG.Game
         }
         static float StepValue(int i) => i * 0.5f;
         //        static int StepI(int i) => i/2;
-
-        public unsafe static void Get(Army army)
+        const int steps = 201;
+        static float[] navyspeed_ = new float[steps];
+        static float[]  scoutspeed_ = new float[steps];
+        static float[] cavspeed_ = new float[steps];
+        static float[] infspeed_ = new float[steps];
+        static float[] artspeed_ = new float[steps];
+        static float[] senspeed_ = new float[steps];
+        static IncomingEstimate()
         {
-  //          if(Player.myName == "Avatar" )
-            {
-                var source = Spot.GetOrAdd(army.sourceCid);
-                if (source.isClassified)
-                {
-                    switch (source.classification)
-                    {
-                        case Spot.Classification.unknown:
-                            break;
-                        case Spot.Classification.vanqs:
-                            army.troops = new[] { new TroopTypeCount(ttVanquisher, -1) };
-                            return;
-                        case Spot.Classification.rt:
-                            army.troops = new[] { new TroopTypeCount(ttRanger, -1) };
-                            return;
-                        case Spot.Classification.sorcs:
-                            army.troops = new[] { new TroopTypeCount(ttSorcerer, -1) };
-                            return;
-
-                        case Spot.Classification.druids:
-                            army.troops = new[] { new TroopTypeCount(ttDruid, -1) };
-                            return;
-                        case Spot.Classification.academy:
-                            army.troops = new[] { new TroopTypeCount(ttPraetor, -1) };
-                            return;
-                        case Spot.Classification.horses:
-                            army.troops = new[] { new TroopTypeCount(ttHorseman, -1) };
-                            return;
-                        case Spot.Classification.arbs:
-                            army.troops = new[] { new TroopTypeCount(ttArbalist, -1) };
-                            return;
-                        case Spot.Classification.se:
-                            army.troops = new[] { new TroopTypeCount(ttScorpion, -1) };
-                            return;
-
-                        case Spot.Classification.navy:
-                            army.troops = new[] { new TroopTypeCount(ttWarship, -1) };
-                            return;
-
-                    }
-                }
-                else
-                {
-                    source.Classify();
-                }
-
-            }
-
-            const int steps = 201;
-            Span<float> navyspeed_ = stackalloc float[steps];
-            Span<float> scoutspeed_ = stackalloc float[steps];
-            Span<float> cavspeed_ = stackalloc float[steps];
-            Span<float> infspeed_ = stackalloc float[steps];
-            Span<float> artspeed_ = stackalloc float[steps];
-            Span<float> senspeed_ = stackalloc float[steps];
-            List<TroopTypeCount> rv = new List<TroopTypeCount>();
-            for (int i_17 = 0; i_17 < steps; ++i_17)
+            for (int i_17 = 0; i_17<steps; ++i_17)
             {
                 /** @type {number} */
                 var temp_1 = 5*100 / (100 + StepValue(i_17));
@@ -99,6 +49,18 @@ namespace COTG.Game
                 temp_1 = 40 * 100 / (100 + StepValue(i_17));
                 senspeed_[i_17] = RoundTo6Bits(temp_1);
             }
+        }
+
+
+    public unsafe static string Get(Army army)
+        {
+            //          if(Player.myName == "Avatar" )
+                var source = Spot.GetOrAdd(army.sourceCid);
+              
+
+            army.troops = new[] { new TroopTypeCount(source.classificationTT, -1) };
+            
+            
             var targetContinent = army.targetCid.CidToContinent();
             var sourceContinent = army.sourceCid.CidToContinent();
             //$("#iaBody tr").each(function() {
@@ -288,6 +250,7 @@ namespace COTG.Game
             //                }
             //            }
             //  if ($(":nth-child(2)", this).text() == "-") {
+            List<TroopTypeCount> rv = new List<TroopTypeCount>();
             /** @type {number} */
             var zns_ = navyspeed_.IndexOf(navySpeed);
             /** @type {number} */
@@ -300,7 +263,7 @@ namespace COTG.Game
             var zas_ = artspeed_.IndexOf(landSpeed);
             /** @type {number} */
             var zsn_ = senspeed_.IndexOf(landSpeed);
-            const int tsGain = -5;
+            const float tsGain = 0.5f;
             if (targetContinent == sourceContinent)
             {
                 if (landSpeed > 30)
@@ -308,151 +271,146 @@ namespace COTG.Game
                     if (zsn_ == -1)
                     {
                         //							rv.Add(new TroopTypeCount(ttSen");
-                        rv.Add(new TroopTypeCount(ttSenator, -1));
+                        //   rv.Add(new TroopTypeCount(ttSenator, -1));
+                        return "Towers?";
+      
                     }
                     else
                     {
                         //							rv.Add(new TroopTypeCount(ttsenator , 5*zsn_));
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
+                        return $"Sen {zsn_ * tsGain}%";
                     }
                 }
                 if (landSpeed > 20 && landSpeed <= 30)
                 {
                     if (zsn_ == -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, -1));
-                        rv.Add(new TroopTypeCount(ttSenator, -1));
+                  //      rv.Add(new TroopTypeCount(ttRam, -1));
+                 //       rv.Add(new TroopTypeCount(ttSenator, -1));
+                        return "Towers? Inf? SE? Sen?";
 
                     }
                     if (zsn_ == -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, zas_ * tsGain));
+                        return $"SE {zas_ * tsGain}%";
                     }
                     if (zsn_ != -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
+                        return $"Sen {zsn_ * tsGain}%";
                     }
                     if (zsn_ != -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, zas_ * tsGain));
-                        rv.Add(new TroopTypeCount(ttSenator, zsn_ * tsGain));
+                        return $"SE {zas_ * tsGain}% Sen {zsn_ * tsGain}%";
                     }
                 }
                 if (landSpeed == 20)
                 {
-                    rv.Add(new TroopTypeCount(ttVanquisher, 0));
-                    rv.Add(new TroopTypeCount(ttRam, 500));
-                    rv.Add(new TroopTypeCount(ttSenator, 1000));
-                    //						$(":nth-child(2)", this).text("Inf 0%/Art 50%/Sen 100%");
+                    return "Inf 0% SE 50% Sen 100%";
                 }
                 if (landSpeed >= 15 && landSpeed < 20)
                 {
                     if (zis_ == -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, -1));
+                        return "Towers? Inf? SE?";
                     }
                     if (zis_ == -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttRam, tsGain * zas_));
+                        return $"SE {tsGain * zas_}%";
+   
                     }
                     if (zis_ != -1 && zas_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
+                        return $"Inf {tsGain * zis_}%";
                     }
                     if (zis_ != -1 && zas_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
-                        rv.Add(new TroopTypeCount(ttRam, tsGain * zas_));
+                        return $"Inf {tsGain * zis_}% SE {tsGain * zas_}%";
                     }
                 }
                 if (landSpeed >= 10 && landSpeed < 15)
                 {
                     if (zis_ == -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, -1));
+                        return "Towers? Inf? Cav?";
                     }
                     if (zis_ == -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
+                        return $"Cav {tsGain * zcs_}%";
                     }
                     if (zis_ != -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
+                        return $"Inf {tsGain * zis_}%";
                     }
                     if (zis_ != -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
-                        rv.Add(new TroopTypeCount(ttVanquisher, tsGain * zis_));
+                        return $"Cav {tsGain * zcs_}% Inf {tsGain * zis_}%";
                     }
                 }
                 if (landSpeed > 8 && landSpeed < 10)
                 {
                     if (zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, -1));
+                        return $"Towers? Cav?";
                     }
                     else
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
+                        return $"Cav {tsGain * zcs_}%";
                     }
                 }
                 if (landSpeed > 5 && landSpeed <= 8)
                 {
                     if (zss_ == -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, -1));
+                        return "Towers? Scout? Cav?";
                     }
                     if (zss_ == -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
+                        return $"Cav {tsGain * zcs_}%";
                     }
                     if (zss_ != -1 && zcs_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
+                        return $"Scout {tsGain * zss_}%";
                     }
                     if (zss_ != -1 && zcs_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
-                        rv.Add(new TroopTypeCount(ttHorseman, tsGain * zcs_));
+                        return $"Cav {tsGain * zcs_}% Scout {tsGain * zss_}%";
                     }
                 }
                 if (landSpeed == 5)
                 {
-                    rv.Add(new TroopTypeCount(ttWarship, 0));
-                    rv.Add(new TroopTypeCount(ttScout, 600));
-                    rv.Add(new TroopTypeCount(ttHorseman, 1000));
+                    return "Cav 100% Scout 60% Navy 0%";
                 }
                 if (landSpeed >= 4 && landSpeed < 5)
                 {
                     if (zss_ == -1 && zns_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, -1));
+                        return $"Towers? Scout? Navy?";
                     }
                     if (zss_ == -1 && zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
+                        return $"Navy {tsGain * zns_}";
                     }
                     if (zss_ != -1 && zns_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
+                        return $"Scout {tsGain * zss_}%";
                     }
                     if (zss_ != -1 && zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
-                        rv.Add(new TroopTypeCount(ttScout, tsGain * zss_));
+                        return $"Navy {tsGain * zns_}% Scout {tsGain * zss_}%";
                     }
                 }
                 if (landSpeed < 4)
                 {
                     if (zns_ == -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, -1));
+                        return $"Towers? Navy?";
                     }
                     else
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
+                        return $"Navy {tsGain * zns_}%";
                     }
                 }
+                return "Zut";
             }
             else
             {
@@ -463,15 +421,14 @@ namespace COTG.Game
                 {
                     if (zns_ != -1)
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, tsGain * zns_));
+                        return $"Navy {tsGain * zns_}%";
                     }
                     else
                     {
-                        rv.Add(new TroopTypeCount(ttWarship, -1));
+                        return "Navy ?";
                     }
                 }
             }
-            army.troops = rv.ToArray();
         }
     }
 }

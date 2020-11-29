@@ -47,7 +47,7 @@ namespace COTG.Game
         public static bool[] ttIsDef = { true,true,true,true,
             true,false,false,false,
             true,true,false,false,
-            false,false,false,true,false,false };
+            false,false,true,true,false,false };
                     //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
         //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
         //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
@@ -123,6 +123,13 @@ namespace COTG.Game
                     return i;
             return -1;
         }
+        public static int IndexOf(this float[] a, float b)
+        {
+            for (int i = 0; i < a.Length; ++i)
+                if (a[i] == b)
+                    return i;
+            return -1;
+        }
         public static int FindIndex(this byte[] a, byte b)
         {
             for (int i = 0; i < a.Length; ++i)
@@ -162,7 +169,7 @@ namespace COTG.Game
              "Plunder",
              "Scout",
              "Sieging",
-             "Pending", // is this right?
+             "Incoming", // is this right?
              "Art",
              "Sen",
              "Inf",

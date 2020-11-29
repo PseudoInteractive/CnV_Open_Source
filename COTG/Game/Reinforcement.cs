@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace COTG.Game
@@ -25,7 +26,7 @@ namespace COTG.Game
             await Task.Delay(1000);
             await Post.Send("overview/reinreca.php", "a=" + order);
         }
-        internal static async void ShowReturnDialog(int cid)
+        internal static async void ShowReturnDialog(int cid,UIElement uie)
         {
             
 
@@ -43,6 +44,8 @@ namespace COTG.Game
                 CloseButtonText="Cancel"
 
             };
+            msg.CopyXamlRoomFrom(uie);
+
             var orders = new List<long>();
             panel.Children.Add(new TextBlock() { Text="Reinforcements Here:" });
             foreach(var reIn in spot.reinforcementsIn)
