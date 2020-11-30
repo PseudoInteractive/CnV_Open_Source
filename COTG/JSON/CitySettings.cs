@@ -21,7 +21,10 @@ namespace COTG.JSON
             UpdateMinisterOptions(cid, async (split) =>
             {
 
-                var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+				var spot = Spot.GetOrAdd(cid);
+
+				var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+
                 int reqHub = 0;
                 var bestDist = 4096f;
                 foreach (var hub in cl.cities)
@@ -81,14 +84,15 @@ namespace COTG.JSON
                 //                split[43] = sendHub.ToString();
 
                 split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
+				var isHub = spot.HasTag(tagHub);
 
-                split[47] = maxWood.ToString();
+				split[47] = maxWood.ToString();
                 split[48] = maxStone.ToString();
                 split[49] = maxIron.ToString();
                 split[50] = maxFood.ToString();
                 if(cottageLevel > 0)
                     split[52] = cottageLevel.ToString() + ']';
-                var str = SetRecruit(split, Spot.GetOrAdd(cid));
+                var str = SetRecruit(split, spot);
                 Note.Show($"Set hub to {Spot.GetOrAdd(reqHub).cityName}{str}");
                 return true;
             });
@@ -120,7 +124,7 @@ namespace COTG.JSON
                     var args2 = string.Join(',', split);
                     await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}");
                     // find closest hub
-                    Note.Show($"Set hub settings {args2}");
+                    Note.Show($"Set hub settings",true);
                 }
             }
             catch (Exception e)
@@ -264,62 +268,6 @@ namespace COTG.JSON
         //        split[43] = cid.ToString();
         //    });
         //}
-        static string lastName = string.Empty;
-        public static async void RenameDialog(int cid)
-        {
-            try
-            {
-                var city = City.GetOrAddCity(cid);
-                var nameDialog = new CityRename();
-                var isNew = city._cityName == "*New City"||city._cityName=="*Lawless City";
-
-
-                    var name = isNew ? lastName : city._cityName;
-                    if (name.IsNullOrEmpty())
-                         name = $"{city.cont:00} 1001";
-
-                    var lg = name.Length;
-                    var numberEnd = lg;
-                    while (numberEnd > 0 && char.IsNumber(name[numberEnd-1]))
-                    {
-                        --numberEnd;
-                    }
-                    if (numberEnd < lg)
-                    {
-                        // increment number if there is one
-                        var start = name.Substring(0, numberEnd);
-                        var number = int.Parse(name.Substring(numberEnd, lg - numberEnd)) + (name==lastName?1:0);
-                        for (; ; )
-                        {
-                            name = start + number.ToString();
-                            if(!City.allCities.Any( (v)=> v.Value._cityName == name && v.Value!=city ))
-                                    break;
-                            ++number;
-                        }
-                    }
-                    nameDialog.name.Text = city._cityName;
-                    nameDialog.suggested.Text = name;
-
-                var result = await nameDialog.ShowAsync();
-                if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary ||
-                    result == Windows.UI.Xaml.Controls.ContentDialogResult.Secondary )
-                {
-                    if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
-                        lastName = nameDialog.name.Text;
-                    else
-                        lastName = nameDialog.suggested.Text;
-                    city._cityName=lastName;
-                    Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
-                    Note.Show($"Set name to {lastName}");
-                }
-            }
-            catch (Exception e)
-            {
-                Note.Show("Something went wrong");
-                COTG.Debug.Log(e);
-            }
-
-
-        }
+     
     }
 }

@@ -91,6 +91,7 @@ namespace COTG.Game
 
     public static class Raiding
     {
+        public static bool includeOffDungeons = true;
         public static float troopFraction = 1;
         public static bool FindAndIncrement(this Raid[] me, int target, DateTimeOffset dt)
         {
@@ -139,7 +140,7 @@ namespace COTG.Game
             public int rut { get; set; }
             public string ts { get; set; }
         }
-        public static async Task SendRaids(Dungeon d)
+        public static async Task SendRaids(Dungeon d, bool clearDungeonList)
         {
             var city = d.city;
             if (city == null)
@@ -161,14 +162,16 @@ namespace COTG.Game
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
             Note.Show($"{city.cid.CidToStringMD()} raid {d.cid.CidToStringMD()}");
             var shiftPressed = App.IsKeyPressedShift();
+            var controlPressed = App.IsKeyPressedControl();
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
             city.tsRaid = 0;
 
              city.NotifyChange(nameof(city.tsRaid));
-            MainPage.ClearDungeonList();
-            if(shiftPressed)
+			if(clearDungeonList)
+	            MainPage.ClearDungeonList();
+            if( (shiftPressed&&controlPressed) ^ Player.isAvatar)
             {
                 await Task.Delay(3000);
                 await city.SuperRaid();
@@ -214,7 +217,7 @@ namespace COTG.Game
         //    }
         //}
         // should this be waitable?
-        public static async void UpdateTS(bool force = false, bool updateRaids=false)
+        public static async Task UpdateTS(bool force = false, bool updateRaids=false)
         {
             var n = DateTimeOffset.UtcNow;
             if (n > nextAllowedTsUpdate || force)
@@ -224,7 +227,7 @@ namespace COTG.Game
                 await RestAPI.troopsOverview.Post();
 
                 if(updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
-                    ScanDungeons.Post(Spot.focus, true);
+                   await ScanDungeons.Post(Spot.focus, true, false);
 
             }
         }

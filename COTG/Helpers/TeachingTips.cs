@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Windows.Storage;
+
 using static COTG.Debug;
 /*
  For new continents I got through all those "New Cities" and select "Rename" then "Clear Center Res" its a big time saver
@@ -36,6 +38,16 @@ namespace COTG.Helpers
             seen.Add(_queued.Name);
             App.DispatchOnUIThreadLow(() => _queued.IsOpen = true);
         }
-    }
-   
+
+		static StorageFolder folder => ApplicationData.Current.LocalFolder;
+		public static async void SaveSeen()
+		{
+			await folder.SaveAsync("tipsSeen", seen.ToArray());
+		}
+		public static async void ReadSeen()
+		{
+			seen = new HashSet<string>( await folder.ReadAsync("tipsSeen", Array.Empty<string>()));
+		}
+	}
+
 }

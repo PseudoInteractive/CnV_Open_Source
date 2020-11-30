@@ -30,14 +30,16 @@ namespace COTG.Helpers
             await FileIO.WriteTextAsync(file, fileContent);
         }
 
-        public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name)
+        public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name, T _default)
         {
-            if (!File.Exists(Path.Combine(folder.Path, GetFileName(name))))
+			var fileName = GetFileName(name);
+
+			if (!File.Exists(Path.Combine(folder.Path, fileName)))
             {
-                return default(T);
+                return _default;
             }
 
-            var file = await folder.GetFileAsync($"{name}.json");
+            var file = await folder.GetFileAsync(fileName);
             var fileContent = await FileIO.ReadTextAsync(file);
 
             return JsonSerializer.Deserialize<T>(fileContent);

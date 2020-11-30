@@ -36,7 +36,7 @@ namespace COTG.JSON
         public static State state = State.preInit;
 
         public static TileData instance;
-        public static async void Ctor()
+        public static async Task Ctor()
         {
             state = State.preInit; // reset if necessary
             var prior = instance?.tilesets;  // if called previously save the images to reuse
@@ -188,7 +188,7 @@ namespace COTG.JSON
                 // tileset 1 is land details
                 if (tileSet == 0)
                 {
-                    return (SpotType.water,tx,ty);
+               //     return (SpotType.water,tx,ty);
                 }
                 if(tileSet == 2)
                 {

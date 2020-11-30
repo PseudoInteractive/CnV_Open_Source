@@ -21,6 +21,7 @@ namespace COTG.Game
         public static string myName;
 
         public static int viewHover; // in the view menu
+        public static bool isAvatar => myName=="Avatar";
 
         public string allianceName => Alliance.IdToName(alliance);
 

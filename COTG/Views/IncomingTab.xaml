@@ -56,7 +56,8 @@
                                        
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                        Width="44" />
-                <tg:DataGridNumericalColumn PropertyName="tsMax"
+                <tg:DataGridNumericalColumn PropertyName="tsDefMax"
+											Header="MaxD"
                                             SizeMode="Fixed"
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"

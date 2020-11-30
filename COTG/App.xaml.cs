@@ -750,7 +750,7 @@ namespace COTG
         }
         static DateTime nextInAppNote=new DateTime(0);
         static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        public static async void Show(string s, int timeout = 5000)
+        public static async void Show(string s,bool lowPriority=false, int timeout = 5000)
         {
             const int noteDelay=2;
             if (ShellPage.instance != null)
@@ -765,7 +765,12 @@ namespace COTG
                 }
                 else
                 {
+					if (lowPriority)
+						return;
                     var wait = (next - now);
+					if (wait.TotalSeconds >= 20.0f)
+						return;
+
                     nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
 
                     try

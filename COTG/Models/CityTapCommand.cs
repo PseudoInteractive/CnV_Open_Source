@@ -400,7 +400,7 @@ namespace COTG.Models
                         Spot.ProcessCoordClick(cid,false, App.keyModifiers);
                         break;
                     case nameof(Dungeon.plan):
-                        Raiding.SendRaids(i);
+                        Raiding.SendRaids(i,true);
 
                         break;
 

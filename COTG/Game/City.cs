@@ -176,8 +176,14 @@ namespace COTG.Game
                 else if(i==0)
                     isOnWater=false;
             }
+			if (jse.TryGetProperty("cn", out var cn))
+			{
+				remarks = cn[0].GetAsString();
+				notes = cn[1].GetAsString();
+				
+			}
 
-                activeCommands = jse.GetAsByte("comm");
+			activeCommands = jse.GetAsByte("comm");
             {
                 const int bidCastle = 467;
                 if (jse.TryGetProperty("bd", out var bd))
@@ -650,8 +656,8 @@ namespace COTG.Game
                     return c;
             return null;
         }
-        public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp","galley","ws" };
-        public static string[] globalTags = { "navy","warship", "shipp" };
+        public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
+        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
         public static CityList GetForContinent(int id) => GetOrAdd(id.ToString());
         public static CityList GetForContinentAndTag(int id,string tag) => GetOrAdd($"{id.ToString()} {tag}");
 

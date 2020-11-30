@@ -59,9 +59,10 @@ namespace COTG.Game
         public static Spot[] emptySpotSource = new[] { pending };
 
         public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
-        public string remarks { get; set; } = string.Empty;
+        public string remarks { get; set; } = string.Empty; // only for city
+		public string notes { get; set; } = string.Empty; // only for city
 
-        public static bool IsFocus(int cid)
+		public static bool IsFocus(int cid)
         {
             return focus == cid;
         }
@@ -121,7 +122,7 @@ namespace COTG.Game
 
         public int _tsTotal;
         public int tsTotal { get => _tsTotal > 0 ? _tsTotal : tsHome; set => _tsTotal = value; }
-        public int tsMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
+        public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
         public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
         public int pid { get; set; }
         public string player => Player.Get(pid).name;
@@ -264,7 +265,7 @@ namespace COTG.Game
         public void ExportToDefenseSheet()
         {
             var sb = new StringBuilder();
-            foreach (var _cid in GetSelectedForContextMenu(cid))
+            foreach (var _cid in GetSelectedForContextMenu(cid,false))
             {
                 var s = Spot.GetOrAdd(_cid);
                 sb.Append(Player.myName);
@@ -279,7 +280,7 @@ namespace COTG.Game
                 sb.Append('\t');
                 sb.Append("1000000");
                 sb.Append('\t');
-                var ts = s.tsMax;
+                var ts = s.tsDefMax;
                 sb.Append(ts);
                 sb.Append('\n');
             }
@@ -437,7 +438,7 @@ namespace COTG.Game
                 if (MainPage.IsVisible() && isMine && wantRaidScan)
                 {
                     //                MainPage.SetRaidCity(cid,true);
-                    ScanDungeons.Post(cid, true);
+                    ScanDungeons.Post(cid, true,false);
                 }
                 SetFocus(false);
                 NavStack.Push(cid);
@@ -757,7 +758,7 @@ namespace COTG.Game
             if (cid != 0)
                 cids.Add(cid);
 
-            if (!onlyIfShiftPressed || App.IsKeyPressedShift())
+            if (!onlyIfShiftPressed || App.IsKeyPressedShift() || App.IsKeyPressedControl())
             {
                 foreach (var sel in Spot.selected.ToArray())
                 {
@@ -804,7 +805,7 @@ namespace COTG.Game
 
         public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false)
         {
-            ++SpotTab.silenceChanges;
+            ++SpotTab.silenceSelectionChanges;
 
             App.DispatchOnUIThreadSneaky(() =>
             {
@@ -864,7 +865,7 @@ namespace COTG.Game
                 }
                 finally
                 {
-                    --SpotTab.silenceChanges;
+                    --SpotTab.silenceSelectionChanges;
                 }
             });
         //    SpotTab.SelectedToGrid();
@@ -1086,13 +1087,13 @@ namespace COTG.Game
                     App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid));
                     App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
-                    App.AddItem(flyout, "Rename", (_, _) => CitySettings.RenameDialog(cid));
+                    App.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
                     //   App.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
                     App.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
 
-
-                }
+					App.AddItem(flyout, "Troops to Sheets",CopyForSheets);
+				}
                 else
                 {
                     if (AttackTab.instance.isActive)
@@ -1102,7 +1103,7 @@ namespace COTG.Game
                     }
                     App.AddItem(flyout, "Add to Attack Sender", async (_, _) =>
                     {
-                        foreach (var id in Spot.GetSelectedForContextMenu(cid))
+                        foreach (var id in Spot.GetSelectedForContextMenu(cid, false))
                         {
                             await JSClient.AddToAttackSender(id);
                         }
@@ -1126,7 +1127,7 @@ namespace COTG.Game
                     {
 
                         string s = string.Empty;
-                        foreach (var id in Spot.GetSelectedForContextMenu(cid))
+                        foreach (var id in Spot.GetSelectedForContextMenu(cid, false))
                         {
                            s = s + cid.CidToString() + "\t";
                         }
@@ -1228,6 +1229,50 @@ namespace COTG.Game
 
 
         }
+		async void CopyForSheets()
+		{
+			var sb = new StringBuilder();
+			int counter = 0;
+			foreach (var _cid in GetSelectedForContextMenu(cid, false))
+			{
+				++counter;
+				var s = Spot.GetOrAdd(_cid);
+				var c = await s.Classify();
+				switch (c.classification)
+				{
+					case Classification.sorcs:
+						sb.Append("Sorc\t");
+						break;
+					case Classification.druids:
+						sb.Append("Druids\t");
+						break;
+					case Classification.academy:
+						sb.Append("prae\t");
+						break;
+					case Classification.horses:
+					case Classification.arbs:
+						sb.Append("Horses\t");
+						break;
+
+					case Classification.se:
+						sb.Append("Siege engines\t");
+						break;
+					case Classification.navy:
+						sb.Append("Warships\t");
+						break;
+					default:
+						sb.Append("vanq\t");
+						break;
+				}
+				sb.Append(s.tsTotal + "\t");
+				sb.Append(c.academies > 0 ? "Yes\t" : "No\t");
+				sb.Append(s.xy + "\t");
+
+			}
+			App.CopyTextToClipboard(sb.ToString());
+			Note.Show($"Copied {counter} castles to clipboard for sheets");
+		}
+
         public async void SelectInUI(bool scrollIntoView)
         {
             //         await Task.Delay(2000);

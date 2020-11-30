@@ -50,11 +50,11 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
-        public static int silenceChanges;
+        public static int silenceSelectionChanges;
 
         private void SpotTabSelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            if (silenceChanges == 0)
+            if (silenceSelectionChanges == 0)
             {
                 try
                 {
@@ -87,7 +87,7 @@ namespace COTG.Views
             try
             {
                 ++disableSelection;
-                ++silenceChanges;
+                ++silenceSelectionChanges;
                 Spot.ProcessPointerPress(sender, e);
             }
             catch (Exception ex)
@@ -97,7 +97,7 @@ namespace COTG.Views
             finally
             {
                 --disableSelection;
-                --silenceChanges;
+                --silenceSelectionChanges;
             }
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)

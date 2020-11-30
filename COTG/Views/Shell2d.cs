@@ -888,7 +888,7 @@ namespace COTG.Views
                                             }
                                         }
                                         if(wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll) )
-                                           DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
+                                           DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
                                     }
                                 }
                             }
@@ -906,7 +906,7 @@ namespace COTG.Views
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
                                         if (wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
-                                            DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
+                                            DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
 
                                     }
                                 }

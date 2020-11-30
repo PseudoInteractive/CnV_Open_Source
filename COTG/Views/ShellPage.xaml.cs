@@ -546,12 +546,11 @@ namespace COTG.Views
             Refresh();
 
         }
-        private static void RefreshWorldData()
+        private async static void RefreshWorldData()
         {
-            Note.Show("Refresh world data");
+			using var work = new WorkScope("Refresh..");
             GetWorldInfo.Send();
-            TileData.Ctor();
-
+            await TileData.Ctor();
         }
         private void RefreshX(object sender, RightTappedRoutedEventArgs e)
         {

@@ -246,9 +246,7 @@ namespace COTG.Views
             {
                 loaded = true;
                 using var work = new ShellPage.WorkScope("load attacks");
-                var _readable = await folder.ReadAsync<ReadableAttacks>("attacks");
-                if (_readable!=null)
-                    readable = _readable;
+                readable = await folder.ReadAsync<ReadableAttacks>("attacks", readable);
                 // App.DispatchOnUIThreadSneaky(() =>
                 //  {
                 attacks.Set(readable.attacks);

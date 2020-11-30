@@ -367,14 +367,14 @@ namespace COTG
 
         }
 
-        public static void Refresh(object ob,RoutedEventArgs args)
-        {
-            if (view == null)
-                return;
-            Debug.Fatal();  // Todo
-//            view.Refresh();
-//            Services.NavigationService.Navigate<Views.MainPage>();
-        }
+//        public static void Refresh(object ob,RoutedEventArgs args)
+//        {
+//            if (view == null)
+//                return;
+//            Debug.Fatal();  // Todo
+////            view.Refresh();
+////            Services.NavigationService.Navigate<Views.MainPage>();
+//        }
 
         public static void SendChat(int channel,string message )
         {
@@ -902,7 +902,7 @@ namespace COTG
                     }
                     city._tsTotal = jsCity.GetAsInt("8");
                     city.tsHome = jsCity.GetAsInt("17");
-                    city.tsRaid = city.tsHome;
+                 //   city.tsRaid = city.tsHome;
                     city.isCastle = jsCity.GetAsInt("12") > 0;
                     city.points =  (ushort)jsCity.GetAsInt("4");
                     
@@ -1427,7 +1427,7 @@ namespace COTG
                                     {
                                      //   if (jse.TryGetProperty("ts", out _))
                                       //  {
-                                            ScanDungeons.Post(cid, city.commandSlots==0 );  // if command slots is 0, something was not send correctly
+                                            ScanDungeons.Post(cid, city.commandSlots==0,false );  // if command slots is 0, something was not send correctly
                                       //  }
                                     }
                                     NavStack.Push(cid);
@@ -1540,21 +1540,21 @@ namespace COTG
                         // await RaidOverview.Send();
                         App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
 
-                        {
-                            //var now = DateTime.UtcNow;
-                            //if (now.Day <= 28 && now.Month==11)
-                            {
-                                App.QueueIdleTask(() => App.DispatchOnUIThreadSneaky(() =>
-                           {
-                               if (SystemInformation.IsAppUpdated)
-                               {
-                                   var dialog = new WhatsNewDialog();
-                                   dialog.DefaultButton = ContentDialogButton.Close;
-                                   dialog.ShowAsync();
-                               }
-                           }), 30*1000 );
-                            }
-                        }
+                        //{
+                        //    //var now = DateTime.UtcNow;
+                        //    //if (now.Day <= 28 && now.Month==11)
+                        //    {
+                        //        App.QueueIdleTask(() => App.DispatchOnUIThreadSneaky(() =>
+                        //   {
+                        //       if (SystemInformation.IsAppUpdated)
+                        //       {
+                        //           var dialog = new WhatsNewDialog();
+                        //           dialog.DefaultButton = ContentDialogButton.Close;
+                        //           dialog.ShowAsync();
+                        //       }
+                        //   }), 30*1000 );
+                        //    }
+                        //}
                     }
                     //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                     //cookie.Clear();

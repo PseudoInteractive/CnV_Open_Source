@@ -67,22 +67,22 @@ namespace COTG.Views
             raidSteps[4] = (Raiding.desiredCarry*100.0f).RoundToInt();
             raidCarryBox.ItemsSource= raidSteps;
             raidCarryBox.SelectedIndex = 4;
+			cityGrid.SelectionChanged += SelectionChanged;
+	//        var rand = new Random();
 
-    //        var rand = new Random();
+			//cityMenuFlyout = new MenuFlyout();
+			//var c = new MenuFlyoutItem() { Text = "Home Whenever" };
+			//c.Click += ReturnSlowClick;
+			//cityMenuFlyout.Items.Add(c);
+			//c = new MenuFlyoutItem() { Text = "Home Please" };
+			//c.Click += ReturnFastClick;
+			//cityMenuFlyout.Items.Add(c);
 
-            //cityMenuFlyout = new MenuFlyout();
-            //var c = new MenuFlyoutItem() { Text = "Home Whenever" };
-            //c.Click += ReturnSlowClick;
-            //cityMenuFlyout.Items.Add(c);
-            //c = new MenuFlyoutItem() { Text = "Home Please" };
-            //c.Click += ReturnFastClick;
-            //cityMenuFlyout.Items.Add(c);
+			//cityGrid.ContextFlyout = cityMenuFlyout;
 
-            //cityGrid.ContextFlyout = cityMenuFlyout;
-
-       //     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
-           // cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-            cityGrid.PointerMoved+=CityGrid_PointerMoved;
+			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
+			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+			cityGrid.PointerMoved+=CityGrid_PointerMoved;
             
         }
 
@@ -519,26 +519,66 @@ namespace COTG.Views
             Raiding.ReturnFastBatch(ret);
 
         }
+		private async void AutoRaid(object sender, RoutedEventArgs e)
+		{
+			await Raiding.UpdateTS(true);
+			var sel = Spot.GetSelectedForContextMenu(0, false);
+			foreach(var cid in sel)
+			{
+				Spot s = Spot.GetOrAdd(cid);
+				await ScanDungeons.Post(cid, false,true);
+	
+			}
 
+		}
+		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		{
+			if (SpotTab.silenceSelectionChanges == 0)
+			{
+				try
+				{
 
-        //      static Dungeon lastTooltip;
-        //private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        //{
-        //          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
-        //          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-        //          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-        //          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
-        //          var hit = cell?.Item as Dungeon;
-        //          if(hit!=lastTooltip)
-        //	{
-        //              lastTooltip = hit;
-        //              if (hit != null)
-        //                  ToolTipService.SetToolTip(tip, hit.ToString());
-        //              else
-        //                  ToolTipService.SetToolTip(tip,"None");
-        //	}
-        //      }
-    }
+					var sel = cityGrid.SelectedItems;
+					var newSel = new HashSet<int>();
+					foreach (Spot s in sel)
+					{
+						newSel.Add(s.cid);
+
+					}
+
+					//          Spot.selected.EnterWriteLock();
+
+					Spot.selected = newSel;
+				}
+				catch (Exception ex)
+				{
+					Log(ex);
+				}
+				finally
+				{
+					//          Spot.selected.ExitWriteLock();
+				}
+			}
+		}
+
+		//      static Dungeon lastTooltip;
+		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+		//          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+		//          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+		//          var hit = cell?.Item as Dungeon;
+		//          if(hit!=lastTooltip)
+		//	{
+		//              lastTooltip = hit;
+		//              if (hit != null)
+		//                  ToolTipService.SetToolTip(tip, hit.ToString());
+		//              else
+		//                  ToolTipService.SetToolTip(tip,"None");
+		//	}
+		//      }
+	}
 
     public class CustomDataBindingCompleteCommand : DataGridCommand
     {
@@ -567,5 +607,7 @@ namespace COTG.Views
             MainPage.instance.castles.Text= $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
             MainPage.instance.water.Text= $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
         }
-    }
+
+		
+	}
 }

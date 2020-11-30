@@ -59,26 +59,42 @@ namespace COTG.Game
                 rv += 6; // penalty of 4 spaces for wrong type
             return rv;
         }
-        public static void ShowDungeonList(City city, JsonElement jse)
-        {
-            var rv = new List<Dungeon>();
-            foreach (var dung in jse.EnumerateArray())
-            {
-                rv.Add(new Dungeon()
-                {
-                    city = city,
-                    cid = dung.GetAsInt("c"),
-                    type = dung.GetAsByte("t"),
-                    level = dung.GetAsByte("l"),
-                    completion = dung.GetAsFloat("p"),
-                    dist = dung.GetAsFloat("d")
+		public static async Task ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		{
+			var rv = new List<Dungeon>();
+			var idealType = city.GetIdealDungeonType();
+			foreach (var dung in jse.EnumerateArray())
+			{
+				var type = dung.GetAsByte("t");
+				if (Raiding.includeOffDungeons || (type == idealType))
+				{
+					rv.Add(new Dungeon()
+					{
+						city = city,
+						cid = dung.GetAsInt("c"),
+						type = type,
+						level = dung.GetAsByte("l"),
+						completion = dung.GetAsFloat("p"),
+						dist = dung.GetAsFloat("d")
 
-                });
-            }
-            var idealType = city.GetIdealDungeonType();
-            rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType) ));
-            // dont wait on this 
-            COTG.Views.MainPage.UpdateDungeonList(rv);
+					}
+					);
+				}
+			}
+
+			rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType)));
+			if (autoRaid)
+			{
+				if(rv.Count>0)
+				{
+					await Raiding.SendRaids(rv[0],false);
+				}
+			}
+			else
+			{
+				// dont wait on this 
+				COTG.Views.MainPage.UpdateDungeonList(rv);
+			}
         }
 
     }

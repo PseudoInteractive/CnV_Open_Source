@@ -59,6 +59,7 @@ namespace COTG.Views
         public static int mruSize = 32;
         public static int[] pinned = Array.Empty<int>();
         public static int showAttacksLimit = 100;
+		public static HashSet<int> tipSeen;
 
         // public TipsSeen tips => TipsSeen.instance;
         public bool FetchFullHistory
@@ -115,8 +116,8 @@ namespace COTG.Views
                 DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
                 DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
                 DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
-                //    Tips.seen = new HashSet<string>( st.Read("tipsSeen", Array.Empty<string>()) );
-
+				Tips.ReadSeen();
+				
 
                 // incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
                 //    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
@@ -179,7 +180,7 @@ namespace COTG.Views
                 st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
                 st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
                 st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
-                st.Save("tipsSeen", Tips.seen.ToArray());
+                Tips.SaveSeen();
                 //  st.Save("attacktime", AttackTab.time.DateTime);
 
                 AttackTab.SaveAttacks();

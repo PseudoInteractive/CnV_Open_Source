@@ -55,6 +55,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
+				Note.Show("Internet failed");
                 Log(e);
             }
 
@@ -377,13 +378,16 @@ namespace COTG.Services
     public class ScanDungeons : RestAPI
     {
         int cid;
+		bool autoRaid;
         //                       Xs4b22320360lme55s
         public static string secret;// = "Xs4b2261f55dlme55s";
-        public ScanDungeons(int _cid) : base("includes/fCv.php")
+        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php")
         {
             cid = _cid;
-        }
-        public static async void Post(int _cid, bool getCityFirst)
+			autoRaid = _autoRaid;
+
+		}
+        public static async Task Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
             //   Log(_cid.CidToString());
             if (getCityFirst)
@@ -391,7 +395,7 @@ namespace COTG.Services
             //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();
             if(secret != null)
-                new ScanDungeons(_cid).Post();
+                await new ScanDungeons(_cid, _autoRaid).Post();
 
         }
         public override string GetPostContent()
@@ -427,7 +431,7 @@ namespace COTG.Services
                     var jse = json.RootElement;
                     jse = jse[0];
                     var city = City.allCities[cid];
-                    Dungeon.ShowDungeonList(city, jse);
+                    await Dungeon.ShowDungeonList(city, jse,autoRaid);
                 }
             }
             catch (Exception e)
