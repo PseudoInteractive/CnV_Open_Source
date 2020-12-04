@@ -12,8 +12,7 @@
     Title="Trade Settings Settings"
     PrimaryButtonText="Apply"
     CloseButtonText="Cancel"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+  >
 
     <Grid>
 			<StackPanel Style="{StaticResource StackPanelReveal}">
@@ -107,6 +106,7 @@
 							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="Active City List"
 							  Margin="4" />
+					<TextBox x:Name="bestHub" Header="Best hub" Style="{StaticResource TextBoxReveal}" />
 					<controls:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
 										Width="120"

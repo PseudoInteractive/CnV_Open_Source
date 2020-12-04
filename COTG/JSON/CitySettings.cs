@@ -16,30 +16,52 @@ namespace COTG.JSON
 {
     public class CitySettings
     {
-        public static async Task SetCitySettings(int cid)
+		public static int FindBestHub(int cid)
+		{
+			var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+
+			int reqHub = 0;
+			var bestDist = 4096f;
+			foreach (var hub in cl.cities)
+			{
+				if (cid == hub)
+					continue;
+
+				var d = hub.DistanceToCid(cid);
+				if (d < bestDist)
+				{
+					bestDist = d;
+					reqHub = hub;
+				}
+
+			}
+			return reqHub;
+		}
+        public static async Task SetCitySettings(int cid, int reqHub)
         {
             await UpdateMinisterOptions(cid, async (split) =>
             {
 
 				var spot = Spot.GetOrAdd(cid);
+				if (reqHub < 0)
+					reqHub = 0;
+			//	var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
 
-				var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+           //     int reqHub = 0;
+                //var bestDist = 4096f;
+                //foreach (var hub in cl.cities)
+                //{
+                //    if (cid == hub)
+                //        continue;
 
-                int reqHub = 0;
-                var bestDist = 4096f;
-                foreach (var hub in cl.cities)
-                {
-                    if (cid == hub)
-                        continue;
+                //    var d = hub.DistanceToCid(cid);
+                //    if (d < bestDist)
+                //    {
+                //        bestDist = d;
+                //        reqHub = hub;
+                //    }
 
-                    var d = hub.DistanceToCid(cid);
-                    if (d < bestDist)
-                    {
-                        bestDist = d;
-                        reqHub = hub;
-                    }
-
-                }
+                //}
 
 
                 //        var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,   0

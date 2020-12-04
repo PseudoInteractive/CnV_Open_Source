@@ -1422,7 +1422,7 @@ namespace COTG
                                         city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
                                         city.points = (ushort)jso.GetAsInt("score");
                                         //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
-                                        city.lastAccessed = DateTimeOffset.UtcNow;
+                                 //       city.lastAccessed = DateTimeOffset.UtcNow;
                                         // city.isCastle = jso.GetAsInt("castle") == 1;
                                         var blessed  = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
                                         if (blessed != city.isBlessed)

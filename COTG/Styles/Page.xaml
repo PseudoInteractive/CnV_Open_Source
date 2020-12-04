@@ -30,13 +30,20 @@
     </Style>
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
-		<Setter Property="Margin" Value="4"/>
+		<Setter Property="Margin" Value="2"/>
+		<Setter Property="Padding" Value="1"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>
-		<Setter Property="Padding" Value="2"/>
+		<Setter Property="Padding" Value="1"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+    </Style>
+	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
+        <Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Margin" Value="3"/>
+		<Setter Property="Padding" Value="1"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">

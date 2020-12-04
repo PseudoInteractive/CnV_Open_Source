@@ -376,7 +376,7 @@ namespace COTG.Views
         {
             e.KeyModifiers.UpdateKeyModifiers();
             e.Handled = true;
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync2("Send At");
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
             if (okay)
             {
                 arriveAt = dateTime;

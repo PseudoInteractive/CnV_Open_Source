@@ -169,31 +169,31 @@
 						ToolTipService.ToolTip="For all selected castles, raids are sent to the closest appriate dungeon.  Use with care." />
 				<Border Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="count"
-							   Margin="2"
+							   Margin="4"
 							   x:FieldModifier="public"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="tsTotal"
 							   x:FieldModifier="public"
-							   Margin="2"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="tsRaid"
-							   Margin="2"
+							   Margin="4"
 							   x:FieldModifier="public"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="castles"
-							   Margin="2"
+							   Margin="4"
 							   x:FieldModifier="public"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="water"
-							   Margin="2"
+							   Margin="4"
 							   x:FieldModifier="public"
 							   IsTextSelectionEnabled="True" />
 				</Border>
@@ -207,32 +207,32 @@
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="rWood"
 							   x:FieldModifier="public"
-							   Margin="0"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="rStone"
 							   x:FieldModifier="public"
 							
-							   Margin="0"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="rIron"
 							   x:FieldModifier="public"
-							   Margin="0"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="rFood"
 							   x:FieldModifier="public"
-							   Margin="0"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 				<Border  Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="rGold"
 							   x:FieldModifier="public"
-							   Margin="0"
+							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
 

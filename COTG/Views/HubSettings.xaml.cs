@@ -1,4 +1,5 @@
-﻿using COTG.JSON;
+﻿using COTG.Game;
+using COTG.JSON;
 
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,17 @@ namespace COTG.Views
 		}
 		public static async Task<bool> Show(int cid)
 		{
-			if( await instance.ShowAsync2() == ContentDialogResult.Primary)
+			var bestHub = CitySettings.FindBestHub(cid);
+			var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
+			instance.bestHub.Text =hubName;
+			if ( await instance.ShowAsync2() == ContentDialogResult.Primary)
 			{
-				await CitySettings.SetCitySettings(cid);
+				
+				if (!string.Equals(instance.bestHub.Text, hubName, StringComparison.OrdinalIgnoreCase))
+					{
+					 // Todo
+					}
+				await CitySettings.SetCitySettings(cid,bestHub);
 				return true;
 			}
 			return false;

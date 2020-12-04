@@ -24,6 +24,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal">
+			<ToggleButton x:Name="includeSEAttack" Content="SE Demo" IsEnabled="True" />
+			<ToggleButton x:Name="includeSennySiege" Content="Senny Siege" IsEnabled="False" />
             <winui:NumberBox x:Name="maxTravelHours"
                              Header="Max travel hours"
                              Style="{StaticResource NumberBoxSmall}"
@@ -31,8 +33,8 @@
                              ToolTipService.ToolTip="Attacks that would take longer than this to arrive are removed"
                              NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
-            <winui:NumberBox x:Name="desiredFakes"
-                             Header="Desired fakes"
+            <winui:NumberBox x:Name="maxFakes"
+                             Header="Max fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="4"
@@ -40,7 +42,7 @@
                              SmallChange="1" />
             <winui:NumberBox x:Name="minAssaults"
                              Header="Min Assaults"
-                             ToolTipService.ToolTip="If assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
+                             ToolTipService.ToolTip="For Demos only - if assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="4"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"

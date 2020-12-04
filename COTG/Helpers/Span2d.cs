@@ -23,23 +23,23 @@ namespace COTG.Helpers
             c0.X = c1.X = v.X;
             c0.Y = c1.Y = v.Y;
         }
-        public Span2(IEnumerator<Spot> spots)
+        public Span2(IEnumerable<Spot> spots)
         {
             c0 = new Vector2(float.MaxValue);
             c1 = new Vector2(-float.MaxValue);
-            while(spots.MoveNext())
+           foreach(var spot in spots)
             {
-                Union(spots.Current.cid.ToWorldC());
+                Union(spot.cid.ToWorldC());
             }
         }
-        public static Span2 UnionWithout(IEnumerator<Spot>  spots,Spot exclude )
+        public static Span2 UnionWithout(IEnumerable<Spot>  spots,Spot exclude )
         {
             Span2 rv;
             rv.c0 = new Vector2(float.MaxValue);
             rv.c1 = new Vector2(-float.MaxValue);
-            while (spots.MoveNext())
-            {
-                var s = spots.Current;
+			foreach (var s in spots)
+			{
+			
                 if(s != exclude)
                    rv.Union(s.cid.ToWorldC());
             }

@@ -148,9 +148,28 @@ namespace COTG.Game
 		public bool isDungeon => type == typeDungeon;
 		public bool isEmpty => type == typeNone;
 
-		public DateTimeOffset lastAccessed { get; set; } // lass user access
-		public byte attackCluster { get; set; } // For attackTab
-		public bool attackFake { get; set; } // For attackTab
+		//public DateTimeOffset lastAccessed { get; set; } // lass user access
+		public int attackCluster { get; set; } // For attackTab, 
+
+		
+		public AttackType attackType { get; set; }
+		public bool isAttackTypeAssault => attackType == AttackType.assault;
+		public bool isAttackTypeSenator => attackType == AttackType.senator;
+		public bool isAttackTypeSenatorFake => attackType == AttackType.senatorFake;
+		public bool isAttackTypeSE => attackType == AttackType.se;
+		public bool isAttackTypeSEFake => attackType == AttackType.seFake;
+		public bool isAttackTypeReal => !isAttackTypeFake;
+		public bool isAttackTypeFake => attackType == AttackType.seFake || attackType == AttackType.senatorFake;
+
+		public const int attackClusterNone = -1;
+		public const int attackClusterSEStart = 0;
+		public const int attackClusterSennyStart = 10000;
+		public const int attackClusterSEEnd = attackClusterSennyStart;
+
+		public bool isAttackClusterSenny => attackCluster >= attackClusterSennyStart;
+		public bool isAttackClusterSE => attackCluster >= attackClusterSEStart && attackCluster < attackClusterSEEnd;
+		public bool isAttackClusterNone => attackCluster == attackClusterNone;
+		
 		public enum Classification : byte
 		{
 			unknown,
@@ -353,7 +372,8 @@ namespace COTG.Game
 			//    uiHoverColumn = string.Empty;
 		}
 
-		public virtual byte GetPrimaryTroopType(bool onlyHomeTroops)
+		public byte primaryTroopType => GetPrimaryTroopType();
+		public virtual byte GetPrimaryTroopType(bool onlyHomeTroops=false)
 		{
 			return classification switch
 			{
@@ -994,7 +1014,7 @@ namespace COTG.Game
 		}
 		public async void ReturnAt(object sender, RoutedEventArgs e)
 		{
-			(var at, var okay) = await Views.DateTimePicker.ShowAsync2("Return By:");
+			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
 			if (!okay)
 				return; // aborted
 
@@ -1003,7 +1023,7 @@ namespace COTG.Game
 		}
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)
 		{
-			(var at, var okay) = await Views.DateTimePicker.ShowAsync2("Return By:");
+			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
 			if (!okay)
 				return; // aborted
 			using var work = new ShellPage.WorkScope("Return At..");
@@ -1349,7 +1369,7 @@ namespace COTG.Game
                         App.AddItem(flyout, "Return At...", this.ReturnAt);
                     }
 
-                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid));
+                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid) ));
                     App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
                     App.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
