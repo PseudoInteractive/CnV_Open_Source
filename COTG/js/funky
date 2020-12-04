@@ -72204,11 +72204,19 @@ function carrycheck_() {
     }
 }
 function GetCarry() {
-    return LocalStoreAsFloat('carry', 1.02);
+    return LocalStoreAsFloat('carry', 0.95);
 }
 var countOverride = 0;
 var raidCount = 1;
 function carry_percentage_(total_loot_1) {
+    var count;//
+        var countz_ = AsNumber($(".splitRaid").children("option").length);
+        if (countz_ > 1) {
+            count=countz-1;
+        }
+        else {
+            count =countz;
+        }
     var home_loot_ = 0;
     var km_ = [];
     let _city = GetCity();
@@ -72219,16 +72227,32 @@ function carry_percentage_(total_loot_1) {
     }
     var scaledLoot = Math.ceil(total_loot_1 * GetCarry());
     raidCount = countOverride > 0 ? countOverride : Math.max(1, Math.floor(home_loot_ / scaledLoot));
-    $("#WCcomcount").val(raidCount);
-    for (let i_23 in km_) {
-        if (km_[i_23] !== 0) {
-            km_[i_23] = Math.floor(km_[i_23] / raidCount);
-            $(`#rval${i_23}`).val(km_[i_23]);
-            if (km_[14]) {
-                $("#rval14").val("0");
+    if(home_loot_>scaledLoot){
+            var option_numbers=Math.floor(home_loot_/scaledLoot);
+            if(option_numbers<count){
+                $("#WCcomcount").val(option_numbers);
+            }
+            else{$("#WCcomcount").val(count);}
+            for(var i in km){
+                if(count===1){
+                    if(km_[i]!==0){
+                        $("#rval"+i).val(km_[i]);
+                    }
+                }
+                else{
+                    if(km_[i]!==0){
+                        if(option_numbers<count){
+                            km_[i]=Math.floor(km_[i]/option_numbers);
+                            $("#rval"+i).val(km_[i]);
+                            if(km_[14]){$("#rval14").val("0");}
+                        }else{
+                            km_[i]=Math.floor(km_[i]/count);
+                            $("#rval"+i).val(km_[i]);
+                            if(km_[14]){$("#rval14").val("0");}
+                        }
+                    }}
             }
         }
-    }
     carry_percentage_2(total_loot_1);
 }
 function carry_percentage_2(total_loot_1) {
@@ -72260,12 +72284,7 @@ function getDugRows_() {
             buttont_.attr("type", tempz1_);
         }
         $(buttont_).click(function () {
-            var loot1_;
-            var countz_ = AsNumber($(".splitRaid").children("option").length);
-            if (countz_ > 1) {
-            }
-            else {
-            }
+            var loot1_;      
             var dunglvl_ = $(this).attr("lvl");
             var progress_ = $(this).attr("prog");
             var type_dung_ = $(this).attr("type");
