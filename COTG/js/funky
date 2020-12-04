@@ -72233,7 +72233,7 @@ function carry_percentage_(total_loot_1) {
                 $("#WCcomcount").val(option_numbers);
             }
             else{$("#WCcomcount").val(count);}
-            for(var i in km){
+            for(var i in km_){
                 if(count===1){
                     if(km_[i]!==0){
                         $("#rval"+i).val(km_[i]);
