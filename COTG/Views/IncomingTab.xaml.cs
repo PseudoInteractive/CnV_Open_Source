@@ -54,6 +54,7 @@ namespace COTG.Views
 
             InitializeComponent();
 
+			defenderGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
       //      var data = defenderGrid.GetDataView();
@@ -87,37 +88,14 @@ namespace COTG.Views
             }
         }
 
-        public static async Task<IncomingTab> Show()
-        {
-            var tab = IncomingTab.instance;
-            for (; ; )
-            {
-                if (tab != null)
-                    break;
-                await Task.Delay(1000);
-                tab = IncomingTab.instance;
-            }
-            if (!tab.isActive)
-            {
-                TabPage.mainTabs.AddTab(tab, true);
-            }
-            else
-            {
-                if (!tab.isVisible)
-                    TabPage.Show(tab);
-            //    else
-              //      tab.Refresh();
-            }
-
-            return tab;
-        }
+        
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             (var hit,var column,var pointerPoint,_) = Spot.HitTest(sender, e);
             //if (hit != null)
             //    defenderGrid.ShowRowDetailsForItem(hit);
 
-            Spot.ProcessPointerPress(sender, e);
+            Spot.ProcessPointerPress(this,sender, e);
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{
@@ -160,7 +138,7 @@ namespace COTG.Views
                 try
                 {
                     var sel = defenderGrid.SelectedItem as Spot;
-                    defenderGrid.ItemsSource = Spot.defendersI;
+                    defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.myId).ToArray() : Spot.defendersI;
                     if (sel!=null)
                     {
                        

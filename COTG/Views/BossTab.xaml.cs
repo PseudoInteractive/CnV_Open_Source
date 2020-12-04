@@ -53,7 +53,8 @@ namespace COTG.Views
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            Spot.ProcessPointerPress(sender, e);
+			
+			Spot.ProcessPointerPress(this,sender, e);
 
         }
 

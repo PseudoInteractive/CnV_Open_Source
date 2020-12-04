@@ -89,8 +89,10 @@ namespace COTG.Views
             }
             if(title!=null)
                 pg.Title = title;
-            var rv = await pg.ShowAsync();
-            if(rv== ContentDialogResult.Primary)
+            var rv = await pg.ShowAsync2();
+			ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+			if (rv== ContentDialogResult.Primary)
             {
                 names = new string[ pg.names.Items.Count];
                 int put = 0;

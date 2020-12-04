@@ -66,7 +66,7 @@ namespace COTG.Game
 			foreach (var dung in jse.EnumerateArray())
 			{
 				var type = dung.GetAsByte("t");
-				if (Raiding.includeOffDungeons || (type == idealType))
+				if (Views.SettingsPage.raidOffDungeons || (type == idealType))
 				{
 					rv.Add(new Dungeon()
 					{

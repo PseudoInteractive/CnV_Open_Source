@@ -18,12 +18,13 @@ namespace COTG
     }
     public static class AUtil
     {
-        public const string defaultTimeFormat = "MM/dd HH':'mm':'ss";
+        public const string defaultTimeFormat = "HH':'mm':'ss";
         public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
         public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
-        public static string FormatSkipDateIfToday(this DateTimeOffset m)
+		public static string FormatTimeDefault(this DateTimeOffset m) => m.ToString(defaultTimeFormat);
+		public static string FormatSkipDateIfToday(this DateTimeOffset m)
         {
             var serverNow = JSClient.ServerTime();
             if(serverNow.Day==m.Day && serverNow.Month==m.Month)
@@ -156,7 +157,21 @@ namespace COTG
             return result;
 
         }
-        public static TValue GetOrAdd<TKey,TValue>(this SortedList<TKey,TValue> l,TKey key, Func<TKey, TValue> factory )
+		public static T[] ArrayClone<T>(this T[] l)
+		{
+			if (l == null || l.Length <= 0)
+				return Array.Empty<T>();
+			int lg = l.Length;
+
+			var result = new T[lg];
+			for (int i = 0; i < lg; ++i)
+			{
+ 				result[i] = l[i];
+			}
+			return result;
+
+		}
+		public static TValue GetOrAdd<TKey,TValue>(this SortedList<TKey,TValue> l,TKey key, Func<TKey, TValue> factory )
         {
             if (!l.TryGetValue(key, out var value))
             {

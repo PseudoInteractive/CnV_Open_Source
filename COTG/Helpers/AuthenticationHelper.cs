@@ -16,12 +16,12 @@ namespace COTG.Helpers
                 case LoginResultType.NoNetworkAvailable:
                     await new MessageDialog(
                         "DialogNoNetworkAvailableContent".GetLocalized(),
-                        "DialogAuthenticationTitle".GetLocalized()).ShowAsync();
+                        "DialogAuthenticationTitle".GetLocalized()).ShowAsync2();
                     break;
                 case LoginResultType.UnknownError:
                     await new MessageDialog(
                         "DialogStatusUnknownErrorContent".GetLocalized(),
-                        "DialogAuthenticationTitle".GetLocalized()).ShowAsync();
+                        "DialogAuthenticationTitle".GetLocalized()).ShowAsync2();
                     break;
             }
         }

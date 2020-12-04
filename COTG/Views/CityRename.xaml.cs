@@ -1,4 +1,5 @@
 ﻿using COTG.Game;
+using COTG.JSON;
 using COTG.Services;
 
 using System;
@@ -26,6 +27,7 @@ namespace COTG.Views
     public sealed partial class CityRename : ContentDialog
         {
 		public static bool applyTags;
+		public static bool setHub;
 		public static bool useSuggested=true;
 		public CityRename()
             {
@@ -101,8 +103,9 @@ namespace COTG.Views
 				}
 				nameDialog.name.Text = city._cityName;
 				nameDialog.suggested.Text = name;
+			//	ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-				var result = await nameDialog.ShowAsync();
+				var result = await nameDialog.ShowAsync2();
 				if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
 				{
 					if (!useSuggested)
@@ -113,7 +116,7 @@ namespace COTG.Views
 					Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
 					if (applyTags)
 					{
-						await GetCity.Post(City.focus); // need to fetch notes
+						await GetCity.Post(cid); // need to fetch notes
 						string tags = city.remarks;
 						
 							tags = SetTag(tags,"Hub", nameDialog.hub.IsChecked);
@@ -136,6 +139,10 @@ namespace COTG.Views
 						Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}");
 					}
 					Note.Show($"Set name to {lastName}");
+				}
+				if(setHub)
+				{
+					HubSettings.Show(cid);
 				}
 			}
 			catch (Exception e)

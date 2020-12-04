@@ -809,7 +809,18 @@ namespace COTG.Views
                             var cullSlopSpace = 80 * pixelScale;
                             for (int iOrO = 0; iOrO < 2; ++iOrO)
                             {
-                                var list = (iOrO ==0) ? Spot.defendersI : Spot.defendersO;
+								var defenders = (iOrO == 0);
+								if (defenders)
+								{
+									if (!defenderVisible)
+										continue;
+								}
+								else
+								{
+									if (!outgoingVisible)
+										continue;
+								}
+								var list = defenders ? Spot.defendersI : Spot.defendersO;
                                 bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
                                 foreach (var city in list )
                                 {
@@ -888,7 +899,7 @@ namespace COTG.Views
                                             }
                                         }
                                         if(wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll) )
-                                           DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Teal, notFaded);
+                                           DrawTextBox(ds, $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Colors.White : Colors.Cyan, notFaded);
                                     }
                                 }
                             }
@@ -906,7 +917,7 @@ namespace COTG.Views
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
                                         if (wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
-                                            DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Teal, notFaded);
+                                            DrawTextBox(ds, $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Colors.Cyan, notFaded);
 
                                     }
                                 }

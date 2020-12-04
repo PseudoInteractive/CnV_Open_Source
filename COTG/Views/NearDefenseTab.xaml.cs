@@ -308,7 +308,9 @@ namespace COTG.Views
                     CloseButtonText="Cancel"
                     };
                     msg.CopyXamlRoomFrom(text);
-                    if( await msg.ShowAsync() != ContentDialogResult.Primary)
+					ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+					if ( await msg.ShowAsync2() != ContentDialogResult.Primary)
                     {
                         return;
                     }
@@ -374,7 +376,7 @@ namespace COTG.Views
         {
             e.KeyModifiers.UpdateKeyModifiers();
             e.Handled = true;
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync2("Send At");
             if (okay)
             {
                 arriveAt = dateTime;

@@ -39,7 +39,7 @@ namespace COTG.Services
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
         private static ReaderWriterLockSlim semaphore = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        const int concurrentRequestCount = 1;
+        const int concurrentRequestCount = 8;
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
         static Cosmos()
@@ -216,23 +216,32 @@ namespace COTG.Services
         {
             public string id { get; set; }
         }
+		static ConcurrentHashSet<long> used = new ConcurrentHashSet<long>();
         /// returns true of the order was inserted, false if it already existed
         public static async Task<bool> TryAddOrder(long orderId)
         {
+			Assert(used.Add(orderId) == true);
             if (ordersContainer==null)
                 return false;
             var order = new Order() { id = orderId.ToString() };
-            try
+			await throttle.WaitAsync();
+			try
             {
-               var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
+				
+			   var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
 
             }
             catch (CosmosException ex)
             {
                 if (ex.Status == (int)HttpStatusCode.Conflict)
                     return false;
+				Log(ex);
 
             }
+			finally
+			{
+				throttle.Release();
+			}
             return true;
         }
 

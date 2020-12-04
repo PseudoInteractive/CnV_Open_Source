@@ -16,9 +16,9 @@ namespace COTG.JSON
 {
     public class CitySettings
     {
-        public static void SetCitySettings(int cid)
+        public static async Task SetCitySettings(int cid)
         {
-            UpdateMinisterOptions(cid, async (split) =>
+            await UpdateMinisterOptions(cid, async (split) =>
             {
 
 				var spot = Spot.GetOrAdd(cid);
@@ -72,11 +72,14 @@ namespace COTG.JSON
                 split[35] = reqIron.ToString();
                 split[36] = reqFood.ToString();
 
-                // send target
-                split[37] = sendWood ? reqHub.ToString() : "0"; // hub to use for this res
-                split[38] = sendStone ? reqHub.ToString() : "0"; // hub to use for this res
-                split[39] = sendIron ? reqHub.ToString() : "0"; // hub to use for this res
-                split[40] = sendFood ? reqHub.ToString() : "0"; // hub to use for this res
+				// hubs dont send by default
+				var isHub = spot.HasTag(Tag.Hub);
+
+				// send target
+				split[37] = sendWood&& !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+                split[38] = sendStone && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+                split[39] = sendIron && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+                split[40] = sendFood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
                 split[41] = "0"; // use a different city for all sends
 
 
@@ -84,7 +87,7 @@ namespace COTG.JSON
                 //                split[43] = sendHub.ToString();
 
                 split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
-				var isHub = spot.HasTag(tagHub);
+				
 
 				split[47] = maxWood.ToString();
                 split[48] = maxStone.ToString();
@@ -92,8 +95,10 @@ namespace COTG.JSON
                 split[50] = maxFood.ToString();
                 if(cottageLevel > 0)
                     split[52] = cottageLevel.ToString() + ']';
-                var str = SetRecruit(split, spot);
-                Note.Show($"Set hub to {Spot.GetOrAdd(reqHub).cityName}{str}");
+                
+				var str = SettingsPage.setRecruit ? SetRecruit(split, spot) : "";
+                
+				Note.Show($"Set hub to {Spot.GetOrAdd(reqHub).cityName}{str}");
                 return true;
             });
 

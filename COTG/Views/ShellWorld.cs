@@ -48,7 +48,7 @@ namespace COTG.Views
 
         private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
         {
-            App.DispatchOnUIThreadLow(() => canvas.Focus(FocusState.Programmatic));
+            App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
         }
 
         static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
@@ -350,8 +350,9 @@ namespace COTG.Views
                         case World.typeCity:
                             {
                                 Spot.viewHover = cid;
+								Spot.TryGet(c.WorldToCid(), out var spot);
 
-                                if (data.player == 0)
+								if (data.player == 0)
                                 {
                                     toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
                                 }
@@ -362,7 +363,7 @@ namespace COTG.Views
                                     var player = Player.all.GetValueOrDefault(data.player, Player._default);
                                     if (Player.IsMe(data.player))
                                     {
-                                        if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
+                                        if (spot is City city)
                                         {
                                             var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
                                             toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
@@ -372,13 +373,37 @@ namespace COTG.Views
                                     }
                                     else
                                     {
-                                        var info = (Spot.TryGet(c.WorldToCid(), out var spot)) ?
+                                        var info = spot!=null ?
                                             $"{spot.cityName}\n{spot.points}\n"
                                          : ""; 
                                             toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
                                     }
                                 }
-                                break;
+								if(spot!=null && spot.incoming!=null)
+								{
+									var inc = spot.incoming;
+									foreach(var i in inc)
+									{
+										if (i.isAttack)
+										{
+											toolTip = toolTip + '\n' + i.Format('\n');
+										}
+									}
+									var def = Array.Empty<TroopTypeCount>();
+									foreach (var i in inc)
+									{
+										if (!i.isAttack)
+										{
+											def = def.Sum(i.troops);
+										}
+									}
+									if(!def.IsNullOrEmpty())
+									{
+										toolTip += def.Format("\nDef:", '\n', '\n');
+									}
+
+								}
+								break;
                             }
                         case World.typeShrine:
                             toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";

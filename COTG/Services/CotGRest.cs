@@ -20,6 +20,7 @@ using Microsoft.Graphics.Canvas;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 
 namespace COTG.Services
 {
@@ -182,16 +183,21 @@ namespace COTG.Services
         async public Task<HttpResponseMessage> Send(string postContent= nullPost)
         {
             HttpClient client = null;
-            try
+			await JSClient.clientPoolSema.WaitAsync();
+			try
             {
+				
 
-                for (; ; )
-                {
-                    if (JSClient.clientPool.TryTake(out client))
-                        break;
-                    await Task.Delay(128);
-                }
-                HttpResponseMessage resp;
+				for (; ; )
+				{
+					if (JSClient.clientPool.TryTake(out client))
+					{
+						break;
+					}
+					Assert(false);
+					await Task.Delay(128);
+				}
+				HttpResponseMessage resp;
                 using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
                 {
                     req.Content = new HttpStringContent(postContent,
@@ -213,9 +219,7 @@ namespace COTG.Services
                     //   if (resp.ExtendedError != null)
                     //      Log(resp.ExtendedError);
                 }
-                    JSClient.clientPool.Add(client);
-                    // Log("HTTP:" + resp.Version);
-                    client = null;
+                 
                     if (resp != null)
                     {
                         return resp;
@@ -233,11 +237,16 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                if (client != null)
-                    JSClient.clientPool.Add(client);
-                client = null;
+                
                 Log(e);
             }
+			finally
+			{
+				if (client != null)
+					JSClient.clientPool.Add(client);
+				client = null;
+				JSClient.clientPoolSema.Release();
+			}
             return null;
 
 
@@ -900,8 +909,10 @@ namespace COTG.Services
                                     PrimaryButtonText="Yes",
                                     CloseButtonText="Cancel"
                                 };
-                                content.CopyXamlRoomFrom(uie);
-                                if (await content.ShowAsync() == ContentDialogResult.Primary)
+								//ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+								content.CopyXamlRoomFrom(uie);
+                                if (await content.ShowAsync2() == ContentDialogResult.Primary)
                                 {
                                     SendRein(cid,rcid,tsSend,departAt,AUtil.dateTimeZero,travelTime,splits,uie);
                                     return;
@@ -935,15 +946,17 @@ namespace COTG.Services
             HttpClient client = null;
             try
             {
-                for (; ; )
+				await JSClient.clientPoolSema.WaitAsync();
+				for (; ; )
                 {
                     if (JSClient.clientPool.TryTake(out client))
                         break;
+					Assert(false);
                     await Task.Delay(128);
                 }
                 var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json?a=0"));
-                JSClient.clientPool.Add(client);
-                client = null;
+                
+                
                 if (buff != null)
                 {
                     var temp = new byte[buff.Length];
@@ -952,6 +965,7 @@ namespace COTG.Services
                     {
                         dataReader.ReadBytes(temp);
                     }
+					
                    // Log("Hello!");
                     return JsonSerializer.Deserialize<TileData>(temp);
                    // Log("Helllo!");
@@ -963,11 +977,15 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                if (client != null)
-                    JSClient.clientPool.Add(client);
-                client = null;
+                
                 Log(e);
             }
+			finally
+			{
+				if(client!=null)
+					JSClient.clientPool.Add(client);
+				JSClient.clientPoolSema.Release();
+			}
             return null;
 
 

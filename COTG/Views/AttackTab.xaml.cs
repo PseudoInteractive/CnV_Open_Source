@@ -48,6 +48,10 @@ namespace COTG.Views
             this.InitializeComponent();
 
         }
+		static void UpdateArrivalUI()
+		{
+			instance.arrival.Content = time.FormatDefault();
+		}
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -328,11 +332,13 @@ namespace COTG.Views
 
 
             };
-            msg.CopyXamlRoomFrom(sender as UIElement);
+			//ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+			msg.CopyXamlRoomFrom(sender as UIElement);
             panel.Children.Add(removeAttacks);
             panel.Children.Add(removeTargets);
 
-            var result = await msg.ShowAsync();
+            var result = await msg.ShowAsync2();
             if (result == ContentDialogResult.Primary)
             {
                 if (removeAttacks.IsChecked.GetValueOrDefault())
@@ -535,6 +541,7 @@ namespace COTG.Views
                             Spot.Classification.horses => ttHorseman,
                             Spot.Classification.arbs => ttHorseman,
                             Spot.Classification.se => ttScorpion,
+							Spot.Classification.navy=>ttWarship,
                             _ => ttVanquisher
                         };
                         if (atk.troopType == ttScorpion)
@@ -683,6 +690,10 @@ namespace COTG.Views
 
             var targetClusters = new int[clusterCount][];
             var fakesPerCluster = new List<Spot>[clusterCount];
+			for(int i=0;i<clusterCount;++i)
+			{
+				fakesPerCluster[i] = new List<Spot>();
+			}
             {
                 byte cluster = 0;
                 // first pass, select N closest fakes for each real
@@ -743,8 +754,8 @@ namespace COTG.Views
                                 var span0c = span0b + f1.cid.ToWorldC();
                                 var span1c = span1b + f0.cid.ToWorldC();
                                 // L4 distance
-                                var scoreA = span0a.radius2.Squared() + span1a.radius2.Squared();
-                                var scoreC = span0c.radius2.Squared() + span1c.radius2.Squared();
+                                var scoreA = span0a.radius2 + span1a.radius2;
+								var scoreC = span0c.radius2 + span1c.radius2;
                                 var delta = scoreC -scoreA;
                                 if (delta < bestScore)
                                 {
@@ -788,8 +799,8 @@ namespace COTG.Views
             var seCount = attacks.Count(a => a.isSE);
             var assaults = attackCount - seCount;
             
-            var maxAssaultsPerCluster = (assaults+clusterCount-1) / clusterCount;
-            var maxSePerCluster = (seCount+clusterCount-1) / clusterCount;
+           // var maxAssaultsPerCluster = (assaults+clusterCount-1) / clusterCount;
+           // var maxSePerCluster = (seCount+clusterCount-1) / clusterCount;
 
             
                 var assaultsPerCluster = new int[clusterCount];
@@ -805,12 +816,16 @@ namespace COTG.Views
                     {
                         if (isSE)
                         {
-                            if (sePerCluster[cluster] >= maxSePerCluster)
+							var maxSePerCluster = sePerCluster.Min() + 1;
+
+							if (sePerCluster[cluster] >= maxSePerCluster)
                                 continue;
                         }
                         else
                         {
-                            if (assaultsPerCluster[cluster] >= maxAssaultsPerCluster)
+							var max = assaultsPerCluster.Min() + 1;
+
+							if (assaultsPerCluster[cluster] >= max )
                                 continue;
 
                         }
@@ -836,11 +851,64 @@ namespace COTG.Views
 
                 }
 
-            
 
-           
-            // optimize
-            for (int iter = 0; iter<8; ++iter)
+
+			// optimize
+
+			// first pass, shuffle the extras
+			for (int iter = 0; iter < 8; ++iter)
+			{
+				for(int c0=0;c0<clusterCount;++c0)
+				{
+					for (int _isSE = 0; _isSE < 2; ++_isSE)
+					{
+						var isSE = _isSE == 1;
+						Attack best = null;
+						var bestCluster = 0;
+						float bestScore = 0;
+						var count0 = isSE ? sePerCluster[c0] : assaultsPerCluster[c0]; 
+						for (int c1 = 0; c1 < clusterCount; ++c1)
+						{
+							var count1 = isSE ? sePerCluster[c1] : assaultsPerCluster[c1];
+							if (count1 <= count0)
+								continue;
+							foreach(var f0 in attacks)
+							{
+								if (f0.attackCluster != c0 || f0.isSE != isSE)
+									continue;
+								var d0 = spans[c0].Distance2(f0.cid.ToWorldC());
+								var d1 = spans[c1].Distance2(f0.cid.ToWorldC());
+								var score = d1 - d0;
+								if(score < bestScore)
+								{
+									bestScore = score;
+									bestCluster = c1;
+									best = f0;
+								}
+
+							}
+
+						}
+						if (best != null)
+						{
+							best.attackCluster = (byte)bestCluster;
+							if (isSE)
+							{
+								--sePerCluster[c0];
+								++sePerCluster[bestCluster];
+							}
+							else
+							{
+								--assaultsPerCluster[c0];
+								++assaultsPerCluster[bestCluster];
+
+							}
+						}
+					}
+				}
+			}
+			// second pass, symetric swaps
+			for (int iter = 0; iter<8; ++iter)
             {
                 foreach (var f0 in attacks)
                 {
@@ -966,7 +1034,7 @@ namespace COTG.Views
 
             //           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
 
-            Note.Show($"Attack plan done, {clusterCount} reals, {maxAssaultsPerCluster+maxSePerCluster} attacks per cluster, {maxSePerCluster}{fakeCount} fakes per target,{sePerCluster} SE per cluster,{culledClusters} culled clutsers,{culledAttacks},{reassignedAttacks} reassigned attacks, SE max Distance- max: {maxDistanceToSE} av: {averageDistanceToSE}  Assault distance- max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
+            Note.Show($"Attack plan done, {clusterCount} reals, {fakeCount} fakes per target,{sePerCluster.Average()} SE per cluster,{culledClusters} culled clutsers,{culledAttacks},{reassignedAttacks} reassigned attacks, SE max Distance- max: {maxDistanceToSE} av: {averageDistanceToSE}  Assault distance- max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
             attacks.NotifyReset();
             targets.NotifyReset();
             //StringBuilder sb = new StringBuilder();
@@ -1195,16 +1263,14 @@ namespace COTG.Views
             SaveAttacks();
         }
 
-        private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
+        private async void ArrivalTapped(object sender, RoutedEventArgs e)
         {
-            e.KeyModifiers.UpdateKeyModifiers();
-            e.Handled = true;
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync2("Send At");
             if (okay)
             {
                 time = dateTime;
-                OnPropertyChanged(nameof(time));
-            }
+				UpdateArrivalUI();
+			}
         }
 
         private void ClearTargets_Click(object sender, RoutedEventArgs e)

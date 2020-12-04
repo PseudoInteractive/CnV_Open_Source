@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Whats New"
     CloseButtonText="Okay"
-   BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}"
+   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
     mc:Ignorable="d">
    
     <ScrollViewer>
@@ -14,7 +14,7 @@
          
             <Border BorderThickness="1"
 					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}">
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}">
                 <TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="16"
                            TextAlignment="Left"
@@ -22,7 +22,7 @@
             </Border>
             <Border BorderThickness="1"
 					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}">
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}">
                 <TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="16"
                            TextAlignment="Left"
@@ -30,7 +30,7 @@
             </Border>
 			<Border BorderThickness="1"
 					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumLowRevealBorderBrush}"
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
 					>
 				<TextBlock TextWrapping="WrapWholeWords"
 						   Margin="6"

@@ -106,7 +106,7 @@ namespace COTG.Views
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            Spot.ProcessPointerPress(sender, e);
+            Spot.ProcessPointerPress(this,sender, e);
 
         }
 
@@ -229,11 +229,13 @@ public class BlessedTapCommand : DataGridCommand
                                     sender.stone -= stone;
                                     i.SendDonation(wood, stone, useShips ? 2 : 1);
                                     DonationTab.instance.blessedGrid.ItemsSource = null;
+								i.wood -= wood;
+								i.stone -= stone;
                                     BlessedCity.senderCity = null;
-                                    var tempSource = DonationTab.instance.donationGrid.ItemsSource;
+                              //      var tempSource = DonationTab.instance.donationGrid.ItemsSource;
                                     //   DonationTab.instance.donationGrid.ItemsSource = tempSource;
-                                    DonationTab.instance.donationGrid.ItemsSource = null;
-                                    DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
+                               //     DonationTab.instance.donationGrid.ItemsSource = null;
+                               //     DonationTab.instance.donationGrid.ItemsSource = tempSource; // Force a refresh -  We set null in between, (might be needed)
                                 
 
                         }

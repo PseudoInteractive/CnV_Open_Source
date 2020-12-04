@@ -40,7 +40,8 @@ namespace COTG.Views
         //        private static UserData _user;
         public static bool fetchFullHistory = true;
         public static bool? autoBuildOn = null;
-        public static string hubCitylistName = "Hubs";
+		public static bool setRecruit;
+		public static string hubCitylistName = "Hubs";
         public static int reqWood = 160000;
         public static int reqStone = 205000;
         public static int reqIron = 200000;
@@ -60,9 +61,51 @@ namespace COTG.Views
         public static int[] pinned = Array.Empty<int>();
         public static int showAttacksLimit = 100;
 		public static HashSet<int> tipSeen;
+		public static bool soundOn = true;
+		public static float volume = 0.5f;
+		public static bool spatialOn=true;
+		public static bool stayAlive;
+		public static bool raidOffDungeons = true;
 
-        // public TipsSeen tips => TipsSeen.instance;
-        public bool FetchFullHistory
+		bool uiStayAlive
+		{
+			get => stayAlive;
+			set { stayAlive = value; JSClient.SetStayAlive(value);  }
+		}
+		bool uiSoundOn { get => soundOn;
+			set { soundOn = value; SetSoundOn(value); }
+		}
+		bool uiSpatial
+		{
+			get => spatialOn;
+			set { spatialOn = value; ElementSoundPlayer.SpatialAudioMode = SetSpatialOn(value); }
+		}
+		public static async void BoostVolume()
+		{
+			if (volume == 1 || !soundOn)
+				return;
+			ElementSoundPlayer.Volume = 1;
+			await Task.Delay(4000);
+			ElementSoundPlayer.Volume = volume; // restore
+		}
+		private static ElementSpatialAudioMode SetSpatialOn(bool value)
+		{
+			return (value) ? ElementSpatialAudioMode.Auto : ElementSpatialAudioMode.Off;
+		}
+
+		private static void SetSoundOn(bool value)
+		{
+			ElementSoundPlayer.State = value  ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+		}
+
+		float uiVolume
+		{
+			get => volume*100;
+			set { volume = value/100.0f; ElementSoundPlayer.Volume = volume; }
+		}
+
+		// public TipsSeen tips => TipsSeen.instance;
+		public bool FetchFullHistory
         {
             get => fetchFullHistory; set
             {
@@ -117,12 +160,16 @@ namespace COTG.Views
                 DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
                 DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
 				Tips.ReadSeen();
-				
+				World.LoadContinentHistory();
 
-                // incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
-                //    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
-                // AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
-            }
+				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
+				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
+				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
+				SetSoundOn(soundOn);
+				ElementSoundPlayer.Volume = volume;
+				SetSpatialOn(spatialOn);
+
+			}
             catch (Exception e)
             {
                 Log(e);
@@ -191,21 +238,16 @@ namespace COTG.Views
             }
 
         }
-        public ElementTheme ElementTheme
-        {
-            get { return ThemeSelectorService.Theme; }
-
-            set { Set(ref ThemeSelectorService.Theme, value); }
-        }
+     
         public bool isLightTheme
         {
             get { return ThemeSelectorService.Theme == ElementTheme.Light; }
-            set { if(value ) ThemeSelectorService.Theme = ElementTheme.Light; }
+            set { if(value ) ThemeSelectorService.SetThemeAsync( ElementTheme.Light); }
         }
         public bool isDarkTheme
         {
             get { return ThemeSelectorService.Theme == ElementTheme.Dark; }
-            set { if (value) ThemeSelectorService.Theme = ElementTheme.Dark; }
+            set { if (value) ThemeSelectorService.SetThemeAsync(ElementTheme.Dark); }
         }
 
         private static string _versionDescription;
@@ -486,7 +528,7 @@ namespace COTG.Views
                 var cont = (int)CastlesCont.Value;
                 var y = cont / 10;
                 var x = cont - y * 10;
-                World.DumpCities(x*100, y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault());
+                World.DumpCities(x*100, y*100, (x+1)*100, (y+1)*100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault(), this.onlyWater.IsChecked.GetValueOrDefault());
             }
             this.Hide();
         }

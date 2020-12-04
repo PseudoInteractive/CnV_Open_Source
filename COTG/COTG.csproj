@@ -104,7 +104,7 @@
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.5.0-prerelease.201027002</Version>
+      <Version>2.5.0-prerelease.201127001</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -153,6 +153,7 @@
     <Compile Include="Game\Reinforcement.cs" />
     <Compile Include="Game\Spot.cs" />
     <Compile Include="Game\Supporter.cs" />
+    <Compile Include="Game\Tags.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\aContainers.cs" />
@@ -266,6 +267,9 @@
     </Compile>
     <Compile Include="Views\HitTab.xaml.cs">
       <DependentUpon>HitTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HubSettings.xaml.cs">
+      <DependentUpon>HubSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\IncomingTab.xaml.cs">
       <DependentUpon>IncomingTab.xaml</DependentUpon>
@@ -382,6 +386,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HitTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HubSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

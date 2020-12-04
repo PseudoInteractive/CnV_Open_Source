@@ -862,8 +862,16 @@ function avactor() {
 	window['shCit'] = gspotfunct.shCit;
 	window['chcity'] = gspotfunct.chcity;
 
-
-
+	let date = new Date(ServerDate.getTime());
+	console.log( date );
+	console.log(date.getUTCHours());
+	console.log(date.getUTCDate());
+	console.log(date.getDate());
+	let date2 = date;
+	date.setUTCHours(1, 0, 0, 0);
+	date2.setHours(1, 0, 0, 0);
+	console.log(date);
+	console.log(date2);
 	String.prototype['utf8Encode'] = function () {
 		//		//	if (encryptStr.length > 8)
 		//		//		encryptStr.shift();

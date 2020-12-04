@@ -1,4 +1,5 @@
-﻿using COTG.Services;
+﻿using COTG.Helpers;
+using COTG.Services;
 using COTG.Views;
 
 using System;
@@ -10,6 +11,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using static COTG.Debug;
 
@@ -103,13 +106,30 @@ namespace COTG.Game
         public ushort temples; // [5]
         public const int spanX = 6;
         public const int spanY = 6;
+		public const int count = spanX * spanY + 1; // 56 is summary of the workd
         public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x/100,c.y/100) );
         public static int GetPackedIdFromCont( (int x, int y) c) => c.x.Clamp(0,5) + c.y.Clamp(0,5)* spanX;
         public static int GetPackedIdFromCont(int cont) => GetPackedIdFromCont( (cont%10,cont/10) );
-        public static Continent[] all = new Continent[spanX * spanY+1]; // 56 is a summary for world
+		public static int GetPackedIdFromContUnpacked(int cont) => cont==56?count-1: GetPackedIdFromCont((cont % 10, cont / 10));
+		public static Continent[] all = new Continent[count]; // 56 is a summary for world
+
     };
 
-    public class Boss
+	public struct ContinentsSnapshot
+	{
+		public DateTime time { get; set; }
+		public struct ContinentSnapshot
+		{
+			public int settled { get; set; } // includes castles
+			public int castles { get; set; } // [3]
+		};
+
+		public ContinentSnapshot[] continents { get; set; }
+
+		static public ContinentsSnapshot[] all = Array.Empty<ContinentsSnapshot>(); // ordered by date and time
+	};
+
+	public class Boss
     {
         public byte level { get; set; }
         public byte type { get; set; }
@@ -773,11 +793,14 @@ namespace COTG.Game
 
             {
                 var contData = jsd.RootElement.GetProperty("b");//.ToString();
-                foreach (var cnt in contData.EnumerateObject())
+				var shot = new ContinentsSnapshot();
+				shot.continents = new ContinentsSnapshot.ContinentSnapshot[Continent.count];
+
+				foreach (var cnt in contData.EnumerateObject())
                 {
                     var cntV = cnt.Value;
                     var key = int.Parse(cnt.Name);
-                    var contId = Continent.GetPackedIdFromCont(key);
+                    var contId = Continent.GetPackedIdFromContUnpacked(key);
                     Continent.all[contId].id = (byte)key;
                     Continent.all[contId].unsettled = cntV[0].GetInt32();
                     Continent.all[contId].settled = cntV[1].GetInt32();
@@ -786,14 +809,33 @@ namespace COTG.Game
                     Continent.all[contId].dungeons = cntV[4].GetUInt16();
                     Continent.all[contId].temples = cntV[5].GetUInt16();
                     Continent.all[contId].bosses = cntV[6].GetUInt16();
-                }
-            }
+					var index = Continent.GetPackedIdFromContUnpacked(contId);
+					shot.continents[contId].settled = Continent.all[contId].settled;
+					shot.continents[contId].castles = Continent.all[contId].castles;
+				}
+				shot.time = JSClient.ServerTime().UtcDateTime;
+				if(ContinentsSnapshot.all.Length>0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f) )
+				{
+					// don't update, max one snapshot per 1.5 hours
+				}
+				else
+				{
+					ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
+					ApplicationData.Current.LocalFolder.SaveAsync("continentHistory",ContinentsSnapshot.all);
+				}
+
+			}
             SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
             SpotTab.LoadFromPriorSession(SettingsPage.pinned);
             Task.Run(() => WorldStorage.SaveWorldData(raw) );
             current= rv;
         }
-        public static (string label,bool isMine,bool hasIncoming,bool hovered,Spot spot) GetLabel((int x, int y) c)
+		public static async void LoadContinentHistory()
+		{
+			ContinentsSnapshot.all = await ApplicationData.Current.LocalFolder.ReadAsync("continentHistory", ContinentsSnapshot.all);
+
+		}
+		public static (string label,bool isMine,bool hasIncoming,bool hovered,Spot spot) GetLabel((int x, int y) c)
         {
             var data = GetInfo(c);
             switch (data.type)
@@ -825,7 +867,7 @@ namespace COTG.Game
                     return (null,false,false,false,null);
             }
         }
-        public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles)
+        public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles, bool onlyOnWater)
         {
             var sb = new StringBuilder();
             if(!Alliance.PartNameToId(allianceName, out var allianceId) )
@@ -843,7 +885,9 @@ namespace COTG.Game
                         continue;
                     if (onlyCastles && !dat.isCastle)
                         continue;
-                    if (dat.player == 0) // lawless
+					if (onlyOnWater && !dat.isWater)
+						continue;
+					if (dat.player == 0) // lawless
                         continue;
                     var player = Player.Get(dat.player);
                     if (player.alliance != allianceId)
@@ -863,5 +907,6 @@ namespace COTG.Game
 
 
         }
+		public static int[] continentOpeningOrder = {22,23,32,33,12,43,13,42,21,34,24,31,11,44,14,41,02,53,20,35,25,30,52,03,01,54,04,51,40,15,45,10,05,50,00,55};
     }
 }

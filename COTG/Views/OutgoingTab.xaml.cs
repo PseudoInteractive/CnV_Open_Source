@@ -50,7 +50,7 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
-
+			attackerGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
             //      var data = defenderGrid.GetDataView();
@@ -65,7 +65,7 @@ namespace COTG.Views
             //if (hit != null)
             //    defenderGrid.ShowRowDetailsForItem(hit);
 
-            Spot.ProcessPointerPress(sender, e);
+            Spot.ProcessPointerPress(this,sender, e);
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{
@@ -89,7 +89,7 @@ namespace COTG.Views
                 {
                     App.DispatchOnUIThreadSneaky(() =>
                     {
-                        instance.defenderGrid.ItemsSource = Spot.defendersO;
+                        instance.attackerGrid.ItemsSource = Spot.defendersO;
                     });
                 }
                 catch (Exception e)
@@ -114,7 +114,7 @@ namespace COTG.Views
         {
             App.DispatchOnUIThreadSneaky(() =>
             {
-                defenderGrid.ItemsSource = Spot.emptySpotSource;
+                attackerGrid.ItemsSource = Spot.emptySpotSource;
                 armyGrid.ItemsSource = Army.empty;
             });
 
@@ -127,7 +127,7 @@ namespace COTG.Views
 
         private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            var sel = defenderGrid.SelectedItem as Spot;
+            var sel = attackerGrid.SelectedItem as Spot;
             if(sel==null)
             {
                 armyGrid.ItemsSource = Army.empty;

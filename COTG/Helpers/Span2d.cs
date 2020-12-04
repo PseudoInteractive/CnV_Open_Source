@@ -73,18 +73,18 @@ namespace COTG.Helpers
         }
         public float Distance2(Vector2 v)
         {
-            var dx = ((v.X-c1.X).Max(v.Y-c1.Y));
-            var dy = ((c0.X-v.X).Max(c0.Y-v.Y));
+            var dx = ((v.X-c1.X).Max(c0.X-v.X));
+            var dy = ((v.Y-c1.Y).Max(c0.Y-v.Y));
             if ((dx<0)|(dy<0))
-                return dx.Max(dy);
+                return (dx.Max(dy)).Squared();
             else
                 return dx.Squared() + dy.Squared();
         }
 
         //  Bounding circle radius
-        public float radius => (c1.X-c0.X).Max(c1.Y-c1.Y);
+        public float radius => (c1.X-c0.X).Max(c1.Y-c0.Y);
         // Ellipsoid like squared radius
-        public float radius2 => (c1.X-c0.X).Squared()+ (c1.Y-c1.Y).Squared();
+        public float radius2 => (c1.X-c0.X).Squared()+ (c1.Y-c0.Y).Squared();
     }
 
 }

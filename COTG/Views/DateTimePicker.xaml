@@ -10,25 +10,23 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     Title="Please select Date and Time"
     PrimaryButtonText="Okay"
-    SecondaryButtonText="Cancel"
+    CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-
+   >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
             
         </Grid.ColumnDefinitions>
         <CalendarView x:Name="date" SelectionMode="Single" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" SelectedDatesChanged="date_SelectedDatesChanged" IsTodayHighlighted="False" />
-        <TimePicker Grid.Row="1" ClockIdentifier="24HourClock" Time="{x:Bind time,Mode=TwoWay}"/>
-        <winui:NumberBox PlaceholderText="Sec" Grid.Row="1" Grid.Column="1" Text="{x:Bind seconds, Mode=TwoWay}" AcceptsExpression="True"
-                         NumberFormatter="{x:Bind cotg:App.formatterSeconds}" />
+        <TextBox Grid.Row="1" x:Name="time" Grid.ColumnSpan="2"  KeyDown="Time_KeyDown" LostFocus="time_LostFocus"/>
+   
 		<Button x:Name="button" Content="Now"  Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" Click="NowClick"/>
         <ComboBox PlaceholderText="Recent..."  Grid.Row="2" HorizontalAlignment="Stretch" ItemsSource="{x:Bind views:DateTimePicker.recentTimes}" SelectionChanged="ComboBox_SelectionChanged" />
     </Grid>

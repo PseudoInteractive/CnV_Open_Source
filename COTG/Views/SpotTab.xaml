@@ -28,6 +28,9 @@
                         Margin="0,14,0,0"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
+								 IsTabStop="True"
+								 TabFocusNavigation="Once"
+								 
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"

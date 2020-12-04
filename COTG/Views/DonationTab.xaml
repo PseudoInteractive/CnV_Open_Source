@@ -12,6 +12,8 @@
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Donation"
+	TabNavigation="Once"
+			  IsTabStop="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -59,6 +61,7 @@
                                  AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
             CanUserChooseColumns="True"
+								 IsTabStop="True"
                         ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Enabled"
                         PointerPressed="gridPointerPress"
@@ -132,6 +135,7 @@
                         AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
+								 IsTabStop="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         ColumnDataOperationsMode="Flyout"
                         UserGroupMode="Disabled"

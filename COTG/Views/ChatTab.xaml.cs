@@ -87,7 +87,7 @@ namespace COTG.Views
         public DumbCollection<ChatEntry> items { get; set; } = new DumbCollection<ChatEntry>();
         override public void VisibilityChanged(bool visible)
         {
-            if (items.Count > 0)
+            if (items.Count > 0 && visible)
             {
                 listView.ScrollIntoView(items.Last());
                 input.Focus(FocusState.Programmatic);
@@ -117,7 +117,7 @@ namespace COTG.Views
             //    count += g.Items.Count;
             if (count >= maxItems)
             {
-                for(int i=0;i<16;++i)
+                for(int i=0;i<32;++i)
                     items.RemoveAt(0);
             }
             items.Add(entry);
@@ -220,7 +220,7 @@ namespace COTG.Views
 
         static List<string> messageCache = new List<string>();
         internal static TabPage tabPage;
-        const int maxItems = 100;
+        const int maxItems = 300;
 
         private void Paste(string s, bool afterInput)
         {
@@ -602,11 +602,11 @@ namespace COTG.Views
             SetPlus(false);
         }
 
-        private void input_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void inputPointerOver(object sender, PointerRoutedEventArgs e)
         {
             //           Log("Tapped");
             listView.Focus(FocusState.Programmatic);
-            input.Focus(FocusState.Programmatic);
+			input.Focus(FocusState.Programmatic);
         }
 
     }

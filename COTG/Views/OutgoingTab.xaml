@@ -21,10 +21,14 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <tg:RadDataGrid x:Name="defenderGrid"
+        <tg:RadDataGrid x:Name="attackerGrid"
+						 x:FieldModifier="public"
                         GridLinesThickness="1"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
+						IsTabStop="True"
+						TabFocusNavigation="Once"
+
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
@@ -106,6 +110,8 @@
                                     ItemsSource="{x:Bind game:Army.empty, Mode=OneTime}"
                                     CanUserChooseColumns="True"
                                     GridLinesThickness="1"
+IsTabStop="True"
+						TabFocusNavigation="Once"
                                     Grid.Row="1"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"

@@ -36,7 +36,9 @@ namespace COTG.Game
         public static City GetOrAddCity(int cid)
         {
             Assert(cid > 65536);
-            return allCities.GetOrAdd(cid, City.Factory );
+           var rv = allCities.GetOrAdd(cid, City.Factory );
+			Assert(rv.cid == cid);
+			return rv;
         }
         public bool AreRaidsRepeating()
         {

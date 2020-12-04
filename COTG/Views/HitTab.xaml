@@ -10,6 +10,8 @@
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       Tag="Hits"
+			   TabNavigation="Once"
+			  IsTabStop="True"
       mc:Ignorable="d">
     <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
@@ -140,7 +142,7 @@
     <Grid>
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
-
+IsTabStop="True"
                       AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
@@ -151,6 +153,7 @@
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
+								 
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">

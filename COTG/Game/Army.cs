@@ -192,13 +192,13 @@ namespace COTG.Game
             }
         }
 
-        internal string Format()
+        internal string Format(char delimiter = ' ')
         {
 
             var rv = type == reportPending ? miscInfo : string.Empty;
                 foreach (var tt in troops)
                 {
-                    rv += tt.Format();
+					rv += tt.Format(delimiter);
 
                 }
             rv += ";";
@@ -227,9 +227,9 @@ namespace COTG.Game
             count = _count;
         }
 
-        internal string Format()
+        internal string Format(char delimiter)
         {
-            return count > 0?  $" {count:N0} {Enum.ttNameWithCaps[type]}" : (" " + Enum.ttNameWithCaps[type]);
+            return count > 0?  $"{delimiter}{count:N0} {Enum.ttNameWithCaps[type]}" : (" " + Enum.ttNameWithCaps[type]);
         }
         [JsonIgnore]
         public bool isSenator => type == Enum.ttSenator;
@@ -255,7 +255,35 @@ namespace COTG.Game
         public byte t { get => (byte)type; set => type = value; }
 
         public int c { get => count; set => count = value; }
-    }
+
+		public static TroopTypeCount[] operator +(TroopTypeCount[] me, TroopTypeCount tt)
+		{
+			int counter = 0;
+			if (tt.count == 0)
+				return me;
+			foreach (var i in me)
+			{
+				if (i.type == tt.type)
+				{
+					var sum = i.count + tt.count;
+					if (i.count == 0)
+					{
+						return me.ArrayRemove(counter); // 0 == remove
+					}
+					else
+					{
+						var rv = me.ArrayClone();
+						rv[counter] = new TroopTypeCount(tt.type, sum);
+						return rv;
+					}
+				}
+				++counter;
+			}
+
+			return me.ArrayAppend(new TroopTypeCount(tt));
+		}
+		
+	}
     public static class TroopTypeCountHelper
     {
         public static int Count(this TroopTypeCount[] me, int type)
@@ -308,6 +336,8 @@ namespace COTG.Game
                 return me;
             return me.ArrayAppend(new TroopTypeCount(type, count));
         }
+
+		
         public static int TS(this TroopTypeCount[] me, int type)
         {
             foreach (var i in me)
@@ -466,5 +496,17 @@ namespace COTG.Game
                 hours += 1.0f;
             return hours;
         }
-    }
+
+		public static TroopTypeCount[] Sum(this TroopTypeCount[] a, TroopTypeCount[] b)
+		{
+			var rv = a;
+			foreach (var tt in b)
+			{
+				rv = rv + tt;
+			}
+			return rv;
+
+		}
+
+	}
 }

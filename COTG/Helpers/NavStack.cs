@@ -58,8 +58,11 @@ namespace COTG.Helpers
                 return false;
             }
             --position;
-            if(!scanOnly )
-                 backStack[position].Go();
+			if (!scanOnly)
+			{
+				backStack[position].Go();
+			//	ElementSoundPlayer.Play(ElementSoundKind.MovePrevious);
+			}
             return true;
         }
 
@@ -80,8 +83,11 @@ namespace COTG.Helpers
                 return false;
             }
             ++position;
-            if(!scanOnly)
-            backStack[position].Go();
+			if (!scanOnly)
+			{
+				backStack[position].Go();
+//				ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
+			}
             return true;
         }
 

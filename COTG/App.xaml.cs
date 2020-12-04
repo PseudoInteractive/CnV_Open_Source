@@ -92,7 +92,7 @@ namespace COTG
 
             // Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
             _activationService = new Lazy<ActivationService>(CreateActivationService);
-            //UserAgent.SetUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4170.0 Safari/537.36 Edg/85.0.552.1");
+            UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
 
         }
         // these are not reliably set
@@ -185,36 +185,29 @@ namespace COTG
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             {
-                SystemInformation.TrackAppUse(args);
+              
+	
+				//var view = DisplayInformation.GetForCurrentView();
 
-                var view = DisplayInformation.GetForCurrentView();
+				//// Get the screen resolution (APIs available from 14393 onward).
+				//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
 
-                // Get the screen resolution (APIs available from 14393 onward).
-                var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+				//// Calculate the screen size in effective pixels. 
+				//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
+				//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
 
-                // Calculate the screen size in effective pixels. 
-                // Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
-                var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
-                var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
-
-                ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
-                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            }
+				//ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
+				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+			}
 
             CoreApplication.EnablePrelaunch(false);
-            if (!args.PrelaunchActivated)
-            {
+			await ActivationService.ActivateAsync(args);
+			// if (!args.PrelaunchActivated)
 
-                await ActivationService.ActivateAsync(args);
-                idleTimer = new DispatcherTimer();
-                idleTimer.Interval = TimeSpan.FromSeconds(10);  // 16s idle delay, at most one event per 16 seconds?  What if too many are queued?
-                idleTimer.Tick += IdleTimer_Tick;
-                Assert(idleTimer.IsEnabled == false);
-                ProcessThrottledTasks();
-            }
-            OnLaunchedOrActivated();
+			OnLaunchedOrActivated(args);
         }
-        private void OnLaunchedOrActivated()
+        private void OnLaunchedOrActivated(LaunchActivatedEventArgs args)
         { 
             this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
@@ -228,10 +221,21 @@ namespace COTG
 #else
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
-            
-           
+			if(args!=null)
+				SystemInformation.TrackAppUse(args);
+			if (idleTimer == null)
+			{
 
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+				
+				idleTimer = new DispatcherTimer();
+				idleTimer.Interval = TimeSpan.FromSeconds(10);  // 16s idle delay, at most one event per 16 seconds?  What if too many are queued?
+				idleTimer.Tick += IdleTimer_Tick;
+				Assert(idleTimer.IsEnabled == false);
+				ProcessThrottledTasks();
+			}
+
+
+			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = false;
           //  UpdateTitleBarLayout(coreTitleBar);
 
@@ -268,13 +272,24 @@ namespace COTG
         {
             for (; ; )
             {
-                if (!throttledTasks.IsEmpty)
-                {
-                    if (throttledTasks.TryDequeue(out var t))
-                        await t();
 
-                }
-                await Task.Delay(500);
+
+				try
+				{
+					if (!throttledTasks.IsEmpty)
+					{
+						if (throttledTasks.TryDequeue(out var t))
+							await t();
+
+					}
+				}
+				catch (Exception _exception)
+				{
+					COTG.Debug.Log(_exception);
+				}
+
+
+				await Task.Delay(500);
             }
         }
         public static void EnqeueTask(Func<Task> a)
@@ -329,8 +344,17 @@ namespace COTG
             }
             if (idleTasks.TryDequeue(out Action a))
             {
-                a();
-            }
+				try
+				{
+					a();
+				}
+				catch (Exception _exception)
+				{
+					COTG.Debug.Log(_exception);
+				}
+
+
+			}
         }
 
         // with a delay
@@ -378,7 +402,13 @@ namespace COTG
                     {
                         if(op == "incomingNotification")
                         {
-                            Task.Delay(3000).ContinueWith((_) => IncomingTab.Show());
+                            Task.Delay(3000).ContinueWith( async (_) => 
+							{
+								while (IncomingTab.instance == null)
+									await Task.Delay(500);
+								IncomingTab.instance.Show();
+
+							});
                         }
                     }
                     // TODO: Show the corresponding content
@@ -388,7 +418,7 @@ namespace COTG
                 return;
             }
             await ActivationService.ActivateAsync(args);
-            OnLaunchedOrActivated();
+            OnLaunchedOrActivated(args as LaunchActivatedEventArgs);
             //AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
             //   typeof(Analytics), typeof(Crashes));
 
@@ -599,49 +629,91 @@ namespace COTG
                 return rv;
             }
         }
-    }
+	}
 
 
 
-    //public static class UserAgent
-    //{
-    //    const int URLMON_OPTION_USERAGENT = 0x10000001;
+	public static class UserAgent
+	{
+		const int URLMON_OPTION_USERAGENT = 0x10000001;
 
-    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-    //    private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+		[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+		private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
 
-    //    [DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-    //    private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
+		[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+		private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
 
-    //    public static string GetUserAgent()
-    //    {
-    //        int capacity = 255;
-    //        var buf = new StringBuilder(capacity);
-    //        int length = 0;
+		public static string GetUserAgent()
+		{
+			int capacity = 255;
+			var buf = new StringBuilder(capacity);
+			int length = 0;
 
-    //        UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+			UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
 
-    //        return buf.ToString();
-    //    }
+			return buf.ToString();
+		}
 
-    //    public static void SetUserAgent(string agent)
-    //    {
-    //        var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
-    //        var ex = Marshal.GetExceptionForHR(hr);
-    //        if (null != ex)
-    //        {
-    //            throw ex;
-    //        }
-    //    }
+		public static void SetUserAgent(string agent)
+		{
+			var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
+			var ex = Marshal.GetExceptionForHR(hr);
+			if (null != ex)
+			{
+				throw ex;
+			}
+		}
 
-    //    public static void AppendUserAgent(string suffix)
-    //    {
-    //        SetUserAgent(GetUserAgent() + suffix);
-    //    }
-    //}
-    public static class AApp
+		public static void AppendUserAgent(string suffix)
+		{
+			SetUserAgent(GetUserAgent() + suffix);
+		}
+	}
+	public static class AApp
     {
-        public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
+		static ContentDialog active;
+		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog )
+		{
+			var escCounter = 0;
+			for (int i=0;i<30;++i)
+			{
+				if (active == null)
+				{
+					active = dialog;
+					try
+					{
+						var result = await dialog.ShowAsync();
+						Assert(active == dialog);
+						if (active == dialog)
+							active = null;
+						return result;
+					}
+					catch(Exception e)
+					{
+						Log(e);
+						active = null;
+						break;
+					}
+				}
+				else
+				{
+					Log($"Rentry: {dialog.Title} {active.Title}");
+					if (CoreWindow.GetForCurrentThread().GetAsyncKeyState(VirtualKey.Escape).HasFlag(CoreVirtualKeyStates.Down))
+					{
+						++escCounter;
+						if (escCounter > 3)
+							break;
+					}
+					else
+					{
+						escCounter = 0;
+					}
+					await Task.Delay(500);
+				}
+			}
+			return ContentDialogResult.None;
+		}
+		public static void DispatchOnUIThreadLow(this CoreDispatcher d,DispatchedHandler action)
         {
             //if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
             //    action();

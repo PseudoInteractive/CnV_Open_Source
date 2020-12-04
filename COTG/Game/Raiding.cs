@@ -91,7 +91,6 @@ namespace COTG.Game
 
     public static class Raiding
     {
-        public static bool includeOffDungeons = true;
         public static float troopFraction = 1;
         public static bool FindAndIncrement(this Raid[] me, int target, DateTimeOffset dt)
         {
@@ -292,7 +291,8 @@ namespace COTG.Game
         }
         public static async void ReturnSlowBatch(IEnumerable<int>  cids)
         {
-            int counter = 0;
+			using var work = new ShellPage.WorkScope("Home Slow Please..");
+			int counter = 0;
             foreach (var cid in cids)
             {
 
@@ -309,7 +309,9 @@ namespace COTG.Game
         }
         public static async void ReturnFastBatch(IEnumerable<int> cids)
         {
-            int counter = 0;
+			using var work = new ShellPage.WorkScope("Home Please..");
+
+			int counter = 0;
             foreach (var cid in cids)
             {
                 if (cid != 0)

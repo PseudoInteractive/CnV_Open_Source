@@ -824,9 +824,11 @@ namespace COTG.Views
         {
             App.DispatchOnUIThread(async () =>
                            {
-                               //shown = true;
-                               var dialog = new SettingsPage() { FullSizeDesired=false };
-                               var result=  await dialog.ShowAsync();
+							   ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+							   //shown = true;
+							   var dialog = new SettingsPage() { FullSizeDesired=false };
+                               var result=  await dialog.ShowAsync2();
                                SettingsPage.SaveAll();
                                //   dialog.auto
                            });
@@ -888,7 +890,8 @@ namespace COTG.Views
             }
             newSel.SetBuild(true);
             JSClient.ChangeCity(newSel.cid,false);
-            NavStack.Push(newSel.cid);
+		//	ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
+			NavStack.Push(newSel.cid);
         }
 
         private void PriorCityClick(object sender, RoutedEventArgs e)
@@ -1000,5 +1003,72 @@ namespace COTG.Views
             City.GetBuild()?.ShowContextMenu(ui, e.GetPosition(ui));
 
         }
-    }
+
+		private void CityListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		{
+			var text = args.Text.ToLower();
+			var items = CityList.selections;
+			foreach (var it in items)
+			{
+				// its good
+				if (it.name == text)
+					return;
+			}
+			args.Handled = true;
+			foreach (var it in items)
+			{
+				if (it.name.ToLower().StartsWith(text))
+				{
+					sender.Text = it.name;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// try contains
+			foreach (var it in items)
+			{
+				if (it.name.ToLower().Contains(text))
+				{
+					sender.Text = it.name;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// todo!
+			
+		}
+
+		private void CitySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		{
+			var text = args.Text.ToLower();
+			var items = City.gridCitySource;
+			foreach (var it in items)
+			{
+				// its good
+				if (it.nameAndRemarks == text)
+					return;
+			}
+			args.Handled = true;
+			foreach (var it in items)
+			{
+				if (it.nameAndRemarks.ToLower().StartsWith(text))
+				{
+					sender.Text = it.nameAndRemarks;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// try contains
+			foreach (var it in items)
+			{
+				if (it.nameAndRemarks.ToLower().Contains(text))
+				{
+					sender.Text = it.nameAndRemarks;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// todo!
+		}
+	}
 }

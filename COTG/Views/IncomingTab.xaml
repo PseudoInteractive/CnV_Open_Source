@@ -13,16 +13,24 @@
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       Tag="Incoming"
+			   TabNavigation="Once"
+			  IsTabStop="True"
       mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
+<tk:WrapPanel>
+	<ToggleButton x:Name="onlyMe" Content="Only Me"  />
+</tk:WrapPanel>
         <tg:RadDataGrid x:Name="defenderGrid"
+						Grid.Row="1"
                         x:FieldModifier="public"
+						IsTabStop="True"
                AllowFocusOnInteraction="True"
+						TabFocusNavigation="Once"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
@@ -124,21 +132,29 @@
                                             CellContentFormat="{}{0,7:N0}"
                                              IsVisible="False"
                                             Width="55" />
+				<tg:DataGridBooleanColumn PropertyName="isOnWater"
+                                                      Width="30"
+                                                      SizeMode="Fixed"
+                                                      CellContentStyle="{StaticResource CenterAlign}" IsVisible="False" />
                    <tg:DataGridTextColumn PropertyName="incTT"
                                  IsCellFlyoutEnabled="True"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                           
                                        Width="60" />
+				                
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
 
         <tg:RadDataGrid x:Name="armyGrid"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         AllowFocusOnInteraction="True"
+						IsTabStop="True"
+						TabFocusNavigation="Once"
                                     ItemsSource="{x:Bind game:Army.empty}"
                                     CanUserChooseColumns="True"
-                                    GridLinesThickness="1"
+
+						GridLinesThickness="1"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="74"

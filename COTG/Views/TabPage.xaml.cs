@@ -43,8 +43,14 @@ namespace COTG.Views
                 new NearDefenseTab(),
         };
             }
+		// workaround for webview
+		public void FocusOn(DependencyObject ob)
+		{
+			TabPage.Get(this).page.Focus(FocusState.Programmatic);
+			FocusManager.TryFocusAsync(ob, FocusState.Programmatic);
 
-        public virtual void VisibilityChanged(bool visible)
+		}
+		public virtual void VisibilityChanged(bool visible)
         {
             Log($"VisibilityChanged: {visible} {this}");
         }
@@ -91,7 +97,22 @@ namespace COTG.Views
             }
             return (null, null);
         }
-    }
+		public  void Show()
+		{
+			if (!isActive)
+			{
+				TabPage.mainTabs.AddTab(this, true);
+			}
+			else
+			{
+				if (!isVisible)
+					TabPage.Show(this);
+				//    else
+				//      tab.Refresh();
+			}
+
+		}
+	}
     public sealed partial class TabPage : Page
     {
         public static List<AppWindow> tabWindows = new List<AppWindow>();
@@ -101,9 +122,12 @@ namespace COTG.Views
         private const string DataIdentifier = "ChatTabItem";
         public TabPage()
         {
-            this.InitializeComponent();
-            tabPages.Add(this);
-
+			
+			this.InitializeComponent();
+			IsTabStop = true;
+			TabFocusNavigation = KeyboardNavigationMode.Once;
+			AllowFocusOnInteraction = true; tabPages.Add(this);
+			
         }
         static public List<TabPage> tabPages = new List<TabPage>();
 
@@ -125,8 +149,22 @@ namespace COTG.Views
             }
             return rv;
         }
-
-        private void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
+		public static (TabPage page, bool found) Get(UserTab tab)
+		{
+			bool rv = false;
+			foreach (var tabPage in tabPages)
+			{
+				foreach (TabViewItem ti in tabPage.Tabs.TabItems)
+				{
+					if (ti.Content == tab)
+					{
+						return (tabPage,true);
+					}
+				}
+			}
+			return (mainTabs,false);
+		}
+		private void Tabs_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
         {
             // If there are no more tabs, close the window.
             if (sender.TabItems.Count == 0)
@@ -352,7 +390,7 @@ namespace COTG.Views
             }
 
             AppWindow newWindow = await AppWindow.TryCreateAsync();
-
+			newWindow.PersistedStateId = $"tabWindow{tabWindows.Count}";
             tabWindows.Add(newWindow);
 
             newWindow.Closed += (sender,b)=> tabWindows.Remove(sender);

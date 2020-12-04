@@ -8,6 +8,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Text.Json;
 using Windows.Foundation;
+using Windows.Storage.Compression;
 
 namespace COTG.Helpers
 {
@@ -30,7 +31,9 @@ namespace COTG.Helpers
             await FileIO.WriteTextAsync(file, fileContent);
         }
 
-        public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name, T _default)
+	
+
+		public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name, T _default)
         {
 			var fileName = GetFileName(name);
 

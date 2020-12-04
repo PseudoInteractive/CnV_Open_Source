@@ -10,6 +10,8 @@
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       Tag="DefenseHistory"
+			   TabNavigation="Once"
+			  IsTabStop="True"
       mc:Ignorable="d">
     <UserControl.Resources>
         <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
@@ -141,6 +143,7 @@
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
 AllowFocusOnInteraction="True"
+								 IsTabStop="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

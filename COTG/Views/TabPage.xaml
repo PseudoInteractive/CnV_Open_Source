@@ -12,13 +12,13 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <muxc:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
-                      
+                      AllowFocusOnInteraction="True"
                              VerticalAlignment="Stretch"
                              HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
-                      TabFocusNavigation="Cycle"
+                      TabFocusNavigation="Once"
                       IsTabStop="True"
                       CloseButtonOverlayMode="Auto"
                       

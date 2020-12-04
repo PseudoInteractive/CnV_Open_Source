@@ -44,7 +44,8 @@ namespace COTG.Game
                 CloseButtonText="Cancel"
 
             };
-            msg.CopyXamlRoomFrom(uie);
+			ElementSoundPlayer.Play(ElementSoundKind.Show);
+			msg.CopyXamlRoomFrom(uie);
 
             var orders = new List<long>();
             panel.Children.Add(new TextBlock() { Text="Reinforcements Here:" });
@@ -62,7 +63,7 @@ namespace COTG.Game
                 orders.Add(reIn.order);
             }
 
-            var result = await msg.ShowAsync();
+            var result = await msg.ShowAsync2();
             if (result == ContentDialogResult.Primary)
             {
                 int counter = 0;

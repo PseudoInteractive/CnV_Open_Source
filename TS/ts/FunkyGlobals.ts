@@ -163,8 +163,8 @@ function GetAttackTime(source:string) : Date {
 			let fields = info.substr(today + 6).split(":");
 
 
-			let rv = new Date(ServerDate.now());
-			rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+			let rv = new Date(ServerDate.getTime());
+			rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
 			return rv;
 
 		}
@@ -174,9 +174,9 @@ function GetAttackTime(source:string) : Date {
 				let fields = info.substr(tomorrow + 9).split(":");
 
 
-				let rv = new Date(ServerDate.now());
-				rv.setDate( rv.getDate()+1 );
-				rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+				let rv = new Date(ServerDate.getTime());
+				rv.setUTCDate( rv.getUTCDate()+1 );
+				rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
 				return rv;
 
 			}
@@ -314,12 +314,12 @@ function SendDef(defobj) {
 		} else {
 			$("#commandsPopUpBox").hide();
 			setTimeout(function () {
-				art();
+				returnTroops();
 			}, 4000);
 		}
 	}
 	dloop();
-	function art() { //setting return time for raids according to city view outgoing list
+	function returnTroops() { //setting return time for raids according to city view outgoing list
 		//console.log(OGA);
 		$("#commandsPopUpBox").hide();
 		if (defobj.ret == 1) {
@@ -342,7 +342,7 @@ function SendDef(defobj) {
 					}
 				}
 			
-			minddate.setHours(minddate.getHours() - defobj.rettime);
+			minddate.setTime(minddate.getTime() - defobj.dretHr*60*1000*60);
 			//console.log(minddate);
 			var retdate = getFormattedTime(minddate);
 			//console.log(retdate);
@@ -868,12 +868,12 @@ function SendAttack() {
 			setTimeout(loop, 1000);
 		} else {
 			setTimeout(function () {
-				art();
+				returnTroops();
 			}, 4000);
 		}
 	}
 	loop();
-	function art() { //setting return time for raids according to city view attacks list
+	function returnTroops() { //setting return time for raids according to city view attacks list
 		//console.log(OGA);
 		$("#commandsPopUpBox").hide();
 		if ($("#retcheck").prop("checked") == true) {
@@ -892,7 +892,8 @@ function SendAttack() {
 					
 				}
 			}
-			minddate.setHours(minddate.getHours() - Number($("#retHr").val()));
+			
+			minddate.setTime(minddate.getTime() - Number($("#retHr").val())*(60*60*1000) );
 			//console.log(minddate);
 			var retdate = getFormattedTime(minddate);
 			//console.log(retdate);

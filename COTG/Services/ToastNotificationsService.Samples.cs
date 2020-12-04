@@ -16,7 +16,7 @@ namespace COTG.Services
             var content = new ToastContent()
             {
                 // More about the Launch property at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontent
-                Launch = "ToastContentActivationParams",
+                Launch = "IncomingActivationParams",
 
                 Visual = new ToastVisual()
                 {
@@ -77,8 +77,73 @@ namespace COTG.Services
             {
                 // TODO WTS: Set a unique identifier for this notification within the notification group. (optional)
                 // More details at https://docs.microsoft.com/uwp/api/windows.ui.notifications.toastnotification.tag
-                Tag = "ToastTag"
+                Tag = "incomingTag"
             };
+
+            // And show the toast
+            ShowToastNotification(toast);
+        }
+		 public void SpotChanged(string info)
+        {
+
+			// Create the toast content
+			var content = new ToastContent()
+			{
+				// More about the Launch property at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontent
+				Launch = "SpotChangeActivationParams",
+				Audio = new ToastAudio()
+				{
+					Src = new Uri("ms-winsoundevent:Notification.IM")
+				},
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+                        {
+                            new AdaptiveText()
+                            {
+                                Text = info
+                            },
+
+                        }
+                    },
+
+
+                },
+
+                Actions = new ToastActionsCustom()
+                {
+
+                    Buttons =
+                    {
+                        // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
+                        new ToastButton("OK", "incomingNotification")
+                        {
+                            ActivationType = ToastActivationType.Foreground,
+                           
+                        },
+
+
+                        new ToastButtonDismiss(),
+                        new ToastButtonSnooze() {SelectionBoxId="snoozeTime",},
+
+
+                    }
+					
+                    
+                }
+				
+            };
+
+
+            // Add the content to the toast
+            var toast = new ToastNotification(content.GetXml())
+            {
+                // TODO WTS: Set a unique identifier for this notification within the notification group. (optional)
+                // More details at https://docs.microsoft.com/uwp/api/windows.ui.notifications.toastnotification.tag
+                Tag = "SpotChangeTag"
+			};
 
             // And show the toast
             ShowToastNotification(toast);

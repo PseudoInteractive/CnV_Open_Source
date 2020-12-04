@@ -68,7 +68,7 @@ namespace COTG.Views
             raidCarryBox.ItemsSource= raidSteps;
             raidCarryBox.SelectedIndex = 4;
 			cityGrid.SelectionChanged += SelectionChanged;
-	//        var rand = new Random();
+			//        var rand = new Random();
 
 			//cityMenuFlyout = new MenuFlyout();
 			//var c = new MenuFlyoutItem() { Text = "Home Whenever" };
@@ -78,6 +78,8 @@ namespace COTG.Views
 			//c.Click += ReturnFastClick;
 			//cityMenuFlyout.Items.Add(c);
 
+			cityGrid.OnKey = Spot.OnKeyDown;
+			
 			//cityGrid.ContextFlyout = cityMenuFlyout;
 
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
@@ -137,7 +139,8 @@ namespace COTG.Views
         }
         private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
         {
-            Spot.ProcessPointerPress(sender,e);
+			
+            Spot.ProcessPointerPress(this,sender,e);
         }
         private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
@@ -521,12 +524,17 @@ namespace COTG.Views
         }
 		private async void AutoRaid(object sender, RoutedEventArgs e)
 		{
+			using var work = new ShellPage.WorkScope("Auto Raid..");
+
 			await Raiding.UpdateTS(true);
 			var sel = Spot.GetSelectedForContextMenu(0, false);
 			foreach(var cid in sel)
 			{
 				Spot s = Spot.GetOrAdd(cid);
-				await ScanDungeons.Post(cid, false,true);
+				if (s is City city)
+				{
+					await ScanDungeons.Post(cid, city.commandSlots==0, true);
+				}
 	
 			}
 

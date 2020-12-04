@@ -46,7 +46,7 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
             selectedGrid.SelectionChanged += SpotTabSelectionChanged;
-
+			selectedGrid.OnKey = Spot.OnKeyDown;
         }
         public static bool IsVisible() => instance.isVisible;
 
@@ -88,7 +88,7 @@ namespace COTG.Views
             {
                 ++disableSelection;
                 ++silenceSelectionChanges;
-                Spot.ProcessPointerPress(sender, e);
+                Spot.ProcessPointerPress(this,sender, e);
             }
             catch (Exception ex)
             {
@@ -110,7 +110,7 @@ namespace COTG.Views
         }
 
 
-        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=true,bool pin=false)
+        public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=false,bool pin=false)
         {
             var spot = Spot.GetOrAdd(cid);
             if(pin)

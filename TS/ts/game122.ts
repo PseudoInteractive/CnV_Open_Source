@@ -7440,7 +7440,10 @@ var M8 = document.getElementById("mainMapDiv"); // region canvas
 //let c6: Phaser.Game;
 
 var gStphp; // gSt post call
-var gStQuery; // query GST, issue callback
+var gStQuery; // query GST, issue callback for shrines
+var gStQueryCB; // query GST, issue generic callback
+let stayAlive= false;
+
 let _camera = {
   x: 0,
   y: 0
@@ -7454,6 +7457,11 @@ function setCameraC(a, b) {
   _cameraX = _camera.x = +a;
   _cameraY = _camera.y = +b;
   //    console.log("Set camera");
+}
+
+function setStayAlive( on )
+{
+  stayAlive = on ? true : false;
 }
 
 function PostChatIn(c) {
@@ -48353,6 +48361,8 @@ var cotgsubscribe = amplify;
     }
     gStphp = p5F;
     gStQuery = gstQueryF;
+    gStQueryCB = gstQueryCBF;
+
       function gstQueryF(_rcid:string) {
          
 
@@ -48378,14 +48388,53 @@ var cotgsubscribe = amplify;
                                               let h36 = B46
                                                   .substring(1, 2);
                           let wrapper = {
-                              gstempty: { water: h36,cid:rcid, res: L36}
+                              gstempty: { water: h36, cid: rcid, res: L36}
                           };
                           window['external']['notify'](JSON.stringify(wrapper));
                                           }
                   }
+
               });
           }
-          
+
+      function gstQueryCBF(_rcid: string, _tag: string) {
+         
+         let rcid = Number(_rcid);
+
+
+          var g46 = { rcid: rcid, cid: cid };
+          gStCid = rcid;
+          var Z46 = "X22x5DdAxxerj3";
+          var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, 256);
+
+          var P46 = $.post("/includes/gSt.php", { cid: U46 });
+
+          P46.done(function (r16) {
+              let wrapper: any = {
+                  gstcb: { type: -1, tag: _tag,cid:rcid }
+              };
+              if (r16 != "") {
+
+                  var B46 = c9.d(E0F(r16));
+                  let N46 = +B46.substring(0, 1);
+                   wrapper.gstcb.type=N46;
+                  
+
+                  if (N46 == 4) {
+
+                      var L36 = B46.substring(2);
+                      let h36 = B46
+                          .substring(1, 2);
+ 
+                      wrapper.gstcb.water = h36;
+                      wrapper.gstcb.res= L36;
+                      
+                  }
+              }
+              window['external']['notify'](JSON.stringify(wrapper));
+
+          });
+      }
        
 
     function p5F(r46, A46) {
@@ -67091,7 +67140,7 @@ var cotgsubscribe = amplify;
 
     function Z1F() {
       if (M4F == 0) try {
-        if (idleMinutes <= idleTimeout && w8 == 0) {
+        if ((idleMinutes <= idleTimeout || stayAlive) && w8 == 0) {
           let E51 = "";
           w8 = 1;
           S6F();

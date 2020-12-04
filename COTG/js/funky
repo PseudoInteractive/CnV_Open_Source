@@ -123,17 +123,17 @@ function GetAttackTime(source) {
         let today = info.indexOf("Today");
         if (today >= 0) {
             let fields = info.substr(today + 6).split(":");
-            let rv = new Date(ServerDate.now());
-            rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+            let rv = new Date(ServerDate.getTime());
+            rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
             return rv;
         }
         else {
             let tomorrow = info.indexOf("Tomorrow");
             if (tomorrow >= 0) {
                 let fields = info.substr(tomorrow + 9).split(":");
-                let rv = new Date(ServerDate.now());
-                rv.setDate(rv.getDate() + 1);
-                rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+                let rv = new Date(ServerDate.getTime());
+                rv.setUTCDate(rv.getUTCDate() + 1);
+                rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
                 return rv;
             }
             else {
@@ -265,12 +265,12 @@ function SendDef(defobj) {
         else {
             $("#commandsPopUpBox").hide();
             setTimeout(function () {
-                art();
+                returnTroops();
             }, 4000);
         }
     }
     dloop();
-    function art() {
+    function returnTroops() {
         $("#commandsPopUpBox").hide();
         if (defobj.ret == 1) {
             jQuery(".toptdinncommtbl1:first")[0].click();
@@ -286,7 +286,7 @@ function SendDef(defobj) {
                     }
                 }
             }
-            minddate.setHours(minddate.getHours() - defobj.rettime);
+            minddate.setTime(minddate.getTime() - defobj.dretHr * 60 * 1000 * 60);
             var retdate = getFormattedTime(minddate);
             $("#raidrettimesela").val(3).change();
             $("#raidrettimeselinp").val(retdate);
@@ -866,12 +866,12 @@ function SendAttack() {
         }
         else {
             setTimeout(function () {
-                art();
+                returnTroops();
             }, 4000);
         }
     }
     loop();
-    function art() {
+    function returnTroops() {
         $("#commandsPopUpBox").hide();
         if ($("#retcheck").prop("checked") == true) {
             jQuery(".toptdinncommtbl1:first")[0].click();
@@ -887,7 +887,7 @@ function SendAttack() {
                     }
                 }
             }
-            minddate.setHours(minddate.getHours() - Number($("#retHr").val()));
+            minddate.setTime(minddate.getTime() - Number($("#retHr").val()) * (60 * 60 * 1000));
             var retdate = getFormattedTime(minddate);
             $("#raidrettimesela").val(3).change();
             $("#raidrettimeselinp").val(retdate);
@@ -8762,6 +8762,8 @@ let __c = {
 var M8 = document.getElementById("mainMapDiv");
 var gStphp;
 var gStQuery;
+var gStQueryCB;
+let stayAlive = false;
 let _camera = {
     x: 0,
     y: 0
@@ -8771,6 +8773,9 @@ var _cameraY = 0;
 function setCameraC(a, b) {
     _cameraX = _camera.x = +a;
     _cameraY = _camera.y = +b;
+}
+function setStayAlive(on) {
+    stayAlive = on ? true : false;
 }
 function PostChatIn(c) {
     const wrapper = { chatin: c };
@@ -47742,6 +47747,7 @@ var cotgsubscribe = amplify;
         }
         gStphp = p5F;
         gStQuery = gstQueryF;
+        gStQueryCB = gstQueryCBF;
         function gstQueryF(_rcid) {
             let rcid = Number(_rcid);
             var g46 = { rcid: rcid, cid: cid };
@@ -47763,6 +47769,32 @@ var cotgsubscribe = amplify;
                         window['external']['notify'](JSON.stringify(wrapper));
                     }
                 }
+            });
+        }
+        function gstQueryCBF(_rcid, _tag) {
+            let rcid = Number(_rcid);
+            var g46 = { rcid: rcid, cid: cid };
+            gStCid = rcid;
+            var Z46 = "X22x5DdAxxerj3";
+            var U46 = a6.ccazzx.encrypt(JSON.stringify(g46), Z46, 256);
+            var P46 = $.post("/includes/gSt.php", { cid: U46 });
+            P46.done(function (r16) {
+                let wrapper = {
+                    gstcb: { type: -1, tag: _tag, cid: rcid }
+                };
+                if (r16 != "") {
+                    var B46 = c9.d(E0F(r16));
+                    let N46 = +B46.substring(0, 1);
+                    wrapper.gstcb.type = N46;
+                    if (N46 == 4) {
+                        var L36 = B46.substring(2);
+                        let h36 = B46
+                            .substring(1, 2);
+                        wrapper.gstcb.water = h36;
+                        wrapper.gstcb.res = L36;
+                    }
+                }
+                window['external']['notify'](JSON.stringify(wrapper));
             });
         }
         function p5F(r46, A46) {
@@ -66321,7 +66353,7 @@ var cotgsubscribe = amplify;
         function Z1F() {
             if (M4F == 0)
                 try {
-                    if (idleMinutes <= idleTimeout && w8 == 0) {
+                    if ((idleMinutes <= idleTimeout || stayAlive) && w8 == 0) {
                         let E51 = "";
                         w8 = 1;
                         S6F();
@@ -69637,6 +69669,16 @@ function avactor() {
     window['infoPlay'] = gspotfunct.infoPlay;
     window['shCit'] = gspotfunct.shCit;
     window['chcity'] = gspotfunct.chcity;
+    let date = new Date(ServerDate.getTime());
+    console.log(date);
+    console.log(date.getUTCHours());
+    console.log(date.getUTCDate());
+    console.log(date.getDate());
+    let date2 = date;
+    date.setUTCHours(1, 0, 0, 0);
+    date2.setHours(1, 0, 0, 0);
+    console.log(date);
+    console.log(date2);
     String.prototype['utf8Encode'] = function () {
         return unescape(encodeURIComponent(this));
     };

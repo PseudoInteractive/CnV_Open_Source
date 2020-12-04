@@ -1,7 +1,7 @@
 
 
 declare namespace ServerDate {
-	function now(): Date;
+	function now(): number;
 	function getTime(): number;
 }
 declare function currentTime(): number;

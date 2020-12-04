@@ -10,6 +10,8 @@
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:local="using:COTG.Views"
                d:DataContext="{d:DesignInstance Type=local:ShellPage}"
+			   TabNavigation="Once"
+			  IsTabStop="True"
                mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -23,7 +25,7 @@
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal">
             <winui:NumberBox x:Name="maxTravelHours"
-                             Description="Max travel hours"
+                             Header="Max travel hours"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="12"
                              ToolTipService.ToolTip="Attacks that would take longer than this to arrive are removed"
@@ -80,62 +82,60 @@
                     ToolTipService.ToolTip="Sort attacks by player"
                     Click="SortAttacks" />
 
-            <Border  Margin="4"
-                     Background="#FF103030"
-                     VerticalAlignment="Center">
-                <TextBlock x:Name="sendAtUI"
+         
+                <Button x:Name="arrival"
                            VerticalAlignment="Center"
-                           Text="{x:Bind local:AttackTab.time,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
-                           Width="100"
+                           Content="Arrival..."
+						Margin="4"
                            HorizontalAlignment="Center"
-                           HorizontalTextAlignment="Center"
-                           PointerPressed="SendAtTapped"
+                           Click="ArrivalTapped"
+                            Style="{StaticResource ButtonSmall}"
                            ToolTipService.ToolTip="Time at which attacks arrive." />
-            </Border>
         </tk:WrapPanel>
         <tk:WrapPanel Orientation="Horizontal"
                       Margin="4"
                       HorizontalSpacing="4"
                       VerticalSpacing="4"
+					  
                       Grid.Row="1">
 
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="attackCount"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="vanqs"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="SE"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="sorcs"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="druids"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="horses"
                            Margin="4"
                            x:FieldModifier="public"
@@ -207,30 +207,30 @@
                       HorizontalSpacing="4"
                       VerticalSpacing="4"
                       Grid.Row="5">
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="realCount"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="fakeCount"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
 
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="sePerTarget"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border BorderThickness="1"
-                    BorderBrush="{ThemeResource SystemControlBackgroundListMediumRevealBorderBrush}">
+            <Border 
+                    Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="attacksPerTarget"
                            Margin="4"
                            x:FieldModifier="public"

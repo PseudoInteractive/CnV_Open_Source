@@ -58,14 +58,16 @@ namespace COTG
         public static bool IsWorldView()	=> viewMode == ViewMode.world;
         public static bool IsCityView() => viewMode == ViewMode.city;
 
-        
+		public static string userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
+
         //        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 6;
         public static ConcurrentBag<HttpClient> clientPool;
-        static HttpClient _downloadImageClient;
+		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
+		static HttpClient _downloadImageClient;
         public static HttpClient downloadImageClient { get
             {
                 if (_downloadImageClient == null)
@@ -194,8 +196,8 @@ namespace COTG
                     httpsHost = new Uri($"https://w{world}.crownofthegods.com");
              //       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
                 }
-               // else
-                    view.Source = new Uri("https://www.crownofthegods.com");
+				// else
+					view.Source = new Uri("https://www.crownofthegods.com");
                 if (subId != 0)
                 {
                     Task.Delay(1000).ContinueWith(_ =>
@@ -215,7 +217,9 @@ namespace COTG
 
 		}
 
-        private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
+		
+
+		private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
         {
             Note.Show("Pointer " + e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind + e.KeyModifiers + e.ToString());
         }
@@ -376,6 +380,10 @@ namespace COTG
 ////            Services.NavigationService.Navigate<Views.MainPage>();
 //        }
 
+		public static void SetStayAlive(bool stayAlive)
+		{
+			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
+		}
         public static void SendChat(int channel,string message )
         {
             try
@@ -640,41 +648,50 @@ namespace COTG
 
 
 		}
+		public static void gStCB(int cityId, Action<JsonElement> cb, int hash)
+		{
+			gstCBs.TryAdd(hash, cb);
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				view.InvokeScriptAsync("gStQueryCB", new string[] { (cityId).ToString(), hash.ToString() });
+			});
 
-        //private static async Task AddJSPluginAsync()
-        //{
-        //    try
-        //    {
-        //        var asm = typeof(JSClient).Assembly;
-        //        using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
-        //        {
+		}
 
-        //            using (StreamReader reader = new StreamReader(stream))
-        //            {
-        //                Log("execute");
-        //                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
-        //                Log("funky");
-        //                await view.InvokeScriptAsync("avactor", null);
-        //   }
-        //        }
+		//private static async Task AddJSPluginAsync()
+		//{
+		//    try
+		//    {
+		//        var asm = typeof(JSClient).Assembly;
+		//        using (Stream stream = asm.GetManifestResourceStream("COTG.Javascript.funky.js"))
+		//        {
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log(e);
-        //    }
-        //}
+		//            using (StreamReader reader = new StreamReader(stream))
+		//            {
+		//                Log("execute");
+		//                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
+		//                Log("funky");
+		//                await view.InvokeScriptAsync("avactor", null);
+		//   }
+		//        }
 
-        // Gets an overview of all cities
-        //public static async Task GetCitylistOverview()
-        //{
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        Log(e);
+		//    }
+		//}
 
-        //    var str = await view.InvokeScriptAsync("getppdt", null);
-        //    ppdt = JsonDocument.Parse(str);
-        //    UpdatePPDT(ppdt.RootElement);
-        //}
+		// Gets an overview of all cities
+		//public static async Task GetCitylistOverview()
+		//{
 
-        public static async Task PollCity(int cid)
+		//    var str = await view.InvokeScriptAsync("getppdt", null);
+		//    ppdt = JsonDocument.Parse(str);
+		//    UpdatePPDT(ppdt.RootElement);
+		//}
+
+		public static async Task PollCity(int cid)
         {
             await Task.Delay(50);
             await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() } );
@@ -683,6 +700,8 @@ namespace COTG
             await Task.Delay(300); // hack:  Todo, handle this property
         }
         static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
+
+		static ConcurrentDictionary<int, Action<JsonElement>> gstCBs = new ConcurrentDictionary<int, Action<JsonElement>>();
 
         private static void BonusesUpdated()
         {
@@ -1137,7 +1156,7 @@ namespace COTG
         {
             var eValue = __e.Value;
             var eCallingUri = __e.CallingUri;
-            Task.Run(() =>
+            Task.Run( async () =>
             {
             try
             {
@@ -1158,15 +1177,36 @@ namespace COTG
                                 var agent = jso.GetString("agent");
                                 jsVars.cookie = jso.GetString("cookie");
 
-                                {
-                                    //    var clients = clientPool.ToArray();
-                                    foreach (var httpClient in clientPool)
-                                    {
-                                        httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-                                        if (subId == 0)
-                                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
-                                    }
-                                }
+									for (int i = 0; i < clientCount; ++i)
+									{
+										await clientPoolSema.WaitAsync();
+									}
+									for (; ; )
+									{
+										try
+										{
+											{
+												//    var clients = clientPool.ToArray();
+												foreach (var httpClient in clientPool)
+												{
+												
+													httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
+													if (subId == 0)
+														httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+												}
+											}
+										}
+										catch  (Exception _ex)
+										{
+											await Task.Delay(1000);
+											continue;
+
+										}
+										break;
+									}
+									
+										clientPoolSema.Release(clientCount);
+									
                                 var timeOffset = jso.GetAsInt64("timeoffset");
                                 var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
                                 jsVars.gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
@@ -1315,7 +1355,19 @@ namespace COTG
                                 App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
                                 break;
                             }
-                        case "gstempty":
+							case "gstcb":
+								{
+									var jso = jsp.Value;
+									var tag = jso.GetAsInt("tag");
+									if (gstCBs.TryGetValue(tag, out var cb))
+									{
+										cb(jso);
+									}
+
+									break;
+								}
+
+						case "gstempty":
                             {
                                 var jso = jsp.Value;
                                 var water = jso.GetAsInt("water") == 1;
@@ -1539,23 +1591,23 @@ namespace COTG
                         //    App.QueueIdleTask(ShellPage.ShowTipRefresh);
                         // await RaidOverview.Send();
                         App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
-
-                        //{
-                        //    //var now = DateTime.UtcNow;
-                        //    //if (now.Day <= 28 && now.Month==11)
-                        //    {
-                        //        App.QueueIdleTask(() => App.DispatchOnUIThreadSneaky(() =>
-                        //   {
-                        //       if (SystemInformation.IsAppUpdated)
-                        //       {
-                        //           var dialog = new WhatsNewDialog();
-                        //           dialog.DefaultButton = ContentDialogButton.Close;
-                        //           dialog.ShowAsync();
-                        //       }
-                        //   }), 30*1000 );
-                        //    }
-                        //}
-                    }
+						SetStayAlive(SettingsPage.stayAlive);
+						//{
+						//    //var now = DateTime.UtcNow;
+						//    //if (now.Day <= 28 && now.Month==11)
+						//    {
+						//        App.QueueIdleTask(() => App.DispatchOnUIThreadSneaky(() =>
+						//   {
+						//       if (SystemInformation.IsAppUpdated)
+						//       {
+						//           var dialog = new WhatsNewDialog();
+						//           dialog.DefaultButton = ContentDialogButton.Close;
+						//           dialog.ShowAsync();
+						//       }
+						//   }), 30*1000 );
+						//    }
+						//}
+					}
                     //var cookie = httpClient.DefaultRequestHeaders.Cookie;
                     //cookie.Clear();
                     //foreach (var c in jsVars.cookie.Split(";"))

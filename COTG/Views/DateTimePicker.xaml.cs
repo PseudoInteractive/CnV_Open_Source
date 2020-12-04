@@ -4,124 +4,194 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+
 using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace COTG.Views
 {
-    public sealed partial class DateTimePicker : ContentDialog,INotifyPropertyChanged
-    {
-        public static DateTimePicker instance = new DateTimePicker();
-        byte pauseChange;
-        public static DateTimeOffset dateTime;
-        static bool pressedOkay;
-        public static List<string> recentTimes = new List<String>();
-        
-        public int seconds
-        {
-            get => dateTime.Second;
-            set => dateTime = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, value.Clamp(0,59), TimeSpan.Zero);
-        }
+	public sealed partial class DateTimePicker : ContentDialog, INotifyPropertyChanged
+	{
+		public static DateTimePicker instance = new DateTimePicker();
+		byte pauseChange;
+		byte disableFocusNotification;
+		public static DateTimeOffset dateTime;
+		public static List<string> recentTimes = new List<String>();
 
-        public TimeSpan time
-        {
-            get => TimeSpan.FromHours(dateTime.Hour) + TimeSpan.FromMinutes(dateTime.Minute); // Does not zero out seconds, hopefully that is okay
-            set => dateTime = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, value.Hours, value.Minutes, dateTime.Second, TimeSpan.Zero);
-        }
+		void TimeToUI()  { time.Text = dateTime.FormatTimeDefault(); DateToUI(); } // Does not zero out seconds, hopefully that is okay
+		bool TimeFromUI()
+		{
+			var rv = false;
+			if (
+			
+				  DateTimeOffset.TryParseExact(time.Text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var result)||
+				  DateTimeOffset.TryParseExact(time.Text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result) ||
+				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite |
+				DateTimeStyles.AssumeUniversal, out result) )
+				   
+			{
+				dateTime = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, result.Hour, result.Minute, result.Second, TimeSpan.Zero);
+				rv = true;
 
-        private void UpdateDate()
-        {
-            ++pauseChange;
-            var localDateTime = dateTime - AUtil.localTimeOffset;
-            var localDate = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, AUtil.localTimeOffset);
-            //if (date.SelectedDates.Count == 1)
-            //{
-            //    date.SelectedDates[0] = localDate;
-            //}
-            //else
-            {
-                date.SelectedDates.Clear();
-                date.SelectedDates.Add(localDate);
-            }
-            --pauseChange;
-        }
+			}
+			else if (
+				 DateTimeOffset.TryParseExact(time.Text, AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result))
+			{
+				// all except year
+				dateTime = new DateTimeOffset(dateTime.Year, result.Month, result.Day, result.Hour, result.Minute, result.Second, TimeSpan.Zero); // strip off timezone 
+				rv = true;
+			}
+			else if(  // anything goes
+				DateTimeOffset.TryParse(time.Text, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result)
+  )
+			{
+				// includes date
+				dateTime = new DateTimeOffset(result.Year, result.Month, result.Day, result.Hour, result.Minute, result.Second, TimeSpan.Zero); // strip off timezone offset
+				rv = true;
+			}
 
-        public static async Task<(DateTimeOffset t,bool yes)> ShowAsync(string title)
-        {
-            if (title != null)
-                instance.Title = title;
+			// On parse failure the value will be reverted
+			TimeToUI();
+			return rv;
+		}
 
-            Assert(pressedOkay == false);
-            await instance.ShowAsync();
-            var yes = pressedOkay;
-            pressedOkay = false;
-            return (dateTime, yes);
-        }
+		private void DateToUI()
+		{
+			++pauseChange;
+			try
+			{
+				//			var localDateTime = dateTime - AUtil.localTimeOffset;
+				var localDate = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, 12, 0, 0, TimeSpan.Zero);
+				//if (date.SelectedDates.Count == 1)
+				//{
+				//    date.SelectedDates[0] = localDate;
+				//}
+				//else
+				{
+					date.SelectedDates.Clear();
+					date.SelectedDates.Add(localDate);
+					date.SetDisplayDate(localDate);
+				}
+			}
+			finally
+			{
+				--pauseChange;
+			}
+		}
 
-        public DateTimePicker()
-        {
-            this.InitializeComponent();
-        }
+		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title)
+		{
+			if (title != null)
+				instance.Title = title;
+			ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            pressedOkay = true;
-            var s = dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
+			var result = await instance.ShowAsync2();
+			return (dateTime, result == ContentDialogResult.Primary);
+		}
 
-            var i = recentTimes.IndexOf(s);
-            if (i != -1)
-                recentTimes.RemoveAt(i);
+		public DateTimePicker()
+		{
+			this.InitializeComponent();
+			TimeToUI();
+		}
 
-             recentTimes.Insert(0, s);
-                if (recentTimes.Count > 16)
-                    recentTimes.RemoveAt(recentTimes.Count - 1);
-        }
+		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		{
+			var s = dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
+			var i = recentTimes.IndexOf(s);
+			if (i != -1)
+				recentTimes.RemoveAt(i);
 
-        private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
-        {
-            if (pauseChange == 0)
-            {
-                if (args.AddedDates.Any())
-                {
-                    var _date = args.AddedDates.First();// -AUtil.localTimeOffset;
-                    Log(_date);
-                    dateTime = new DateTimeOffset(_date.Year, _date.Month, _date.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, TimeSpan.Zero);
-                    Log(dateTime);
-                }
-            }
-        }
+			recentTimes.Insert(0, s);
+			if (recentTimes.Count > 16)
+				recentTimes.RemoveAt(recentTimes.Count - 1);
+		}
 
-        private void NowClick(object sender, RoutedEventArgs e)
-        {
-            dateTime = JSClient.ServerTime();
-            Log(dateTime);
-            OnPropertyChanged(string.Empty);
-        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+		private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+		{
+			if (pauseChange == 0)
+			{
+				if (args.AddedDates.Any())
+				{
+					// Replace date
+					var _date = args.AddedDates.First();// -AUtil.localTimeOffset;
+					Log(_date);
+					dateTime = new DateTimeOffset(_date.Year, _date.Month, _date.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, TimeSpan.Zero);
+					Log(dateTime);
+				}
+			}
+		}
 
-        private void OnPropertyChanged(string propertyName)
-        {
-            UpdateDate();
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+		private void NowClick(object sender, RoutedEventArgs e)
+		{
+			dateTime = JSClient.ServerTime();
+			TimeToUI();
+			Log(dateTime);
+			OnPropertyChanged(string.Empty);
+		}
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(e.AddedItems.Any())
-            {
-                var sel = e.AddedItems.First() as string;
-                if (DateTimeOffset.TryParseExact(sel,AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out dateTime))
-                {
-                    OnPropertyChanged(string.Empty);
-                }
-            }
-        }
-    }
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private void OnPropertyChanged(string propertyName)
+		{
+			DateToUI();
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (e.AddedItems.Any())
+			{
+				var sel = e.AddedItems.First() as string;
+				if (DateTimeOffset.TryParseExact(sel, AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out dateTime))
+				{
+					TimeToUI();
+					OnPropertyChanged(string.Empty);
+				}
+			}
+		}
+
+
+
+		private void Time_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			if (e.Key == Windows.System.VirtualKey.Enter)
+			{
+				if (TimeFromUI())
+				{
+					//DefaultButton = ContentDialogButton.Primary;
+					try
+					{
+						++disableFocusNotification;
+						for (int i = 0; i < 3; ++i)
+						{// Go to the "Done" button
+							var temp = FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+							Assert(temp);
+			
+						}
+					}
+					finally 
+					{ 
+						--disableFocusNotification;
+					}
+				}
+				else
+				{
+					e.Handled = true;
+				}
+			}
+		}
+
+		private void time_LostFocus(object sender, RoutedEventArgs e)
+		{
+			if(disableFocusNotification==0)
+				TimeFromUI();
+		}
+	}
 }
