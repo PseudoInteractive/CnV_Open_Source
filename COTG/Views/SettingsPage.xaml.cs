@@ -66,6 +66,7 @@ namespace COTG.Views
 		public static bool spatialOn=true;
 		public static bool stayAlive;
 		public static bool raidOffDungeons = true;
+		public static DateTimeOffset attackPlayerTime;
 
 		bool uiStayAlive
 		{
@@ -79,6 +80,12 @@ namespace COTG.Views
 		{
 			get => spatialOn;
 			set { spatialOn = value; ElementSoundPlayer.SpatialAudioMode = SetSpatialOn(value); }
+		}
+
+		public static CityList hubCitylistUI
+		{
+			get => CityList.Find(hubCitylistName);
+			set => hubCitylistName = value.name;
 		}
 		public static async void BoostVolume()
 		{
@@ -282,22 +289,24 @@ namespace COTG.Views
         {
             InitializeComponent();
 
-            var cl = CityList.Find(hubCitylistName);
-            if (cl != null)
-                hubCityListBox.SelectedItem = cl;
-            hubCityListBox.SelectionChanged += HubCityListBox_SelectionChanged;
+   //         var cl = CityList.Find(hubCitylistName);
+			//if (cl != null)
+			//{
+			//	hubCityListBox.SelectedItem = cl;
+			//}
+			//hubCityListBox.SelectionChanged += HubCityListBox_SelectionChanged;
 
         }
 
-        private void HubCityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var item = hubCityListBox.SelectedItem as CityList;
-            if (item != null)
-            {
-                Debug.Log("CityList Changed to " + item.name);
-                hubCitylistName = item.name;
-            }
-        }
+        //private void HubCityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    var item = (sender as ComboBox).SelectedItem as CityList;
+        //    if (item != null)
+        //    {
+        //        Debug.Log("CityList Changed to " + item.name);
+        //        hubCitylistName = item.name;
+        //    }
+        //}
 
 
 

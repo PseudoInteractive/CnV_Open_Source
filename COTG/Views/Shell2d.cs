@@ -986,10 +986,11 @@ namespace COTG.Views
                         var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                         var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
                         ds.DrawRoundedSquareWithShadow(c, r, City.IsBuild(city) ? buildColor :
-                                                            City.IsFocus(city) ? focusColor :
+                                                            Spot.IsSelected(city) ? selectColor :
+															City.IsFocus(city) ? focusColor :
                                                             Spot.TryGet(city,out var spot)&&spot.pinned ? pinnedColor:
-                                                            City.IsHover(city) ? hoverColor :
-                                                            selectColor);
+                                                           hoverColor 
+                                                            );
 
                     }
                 }

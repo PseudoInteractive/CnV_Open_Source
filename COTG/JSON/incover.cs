@@ -357,7 +357,7 @@ namespace COTG.JSON
 														  else
 														  {
 
-															  source.ClassifyIfNeeded();
+															  source.QueueClassify();
 															  if (army.type == reportPending)
 															  {
 																  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
@@ -379,7 +379,7 @@ namespace COTG.JSON
 															  else
 															  {
 																  // attacking info missing?  Use intel
-																  source.ClassifyIfNeeded();
+																  source.QueueClassify();
 																  army.troops = new[] { new TroopTypeCount(source.classificationTT, -1) };
 															  }
 															 

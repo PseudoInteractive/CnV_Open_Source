@@ -66,8 +66,8 @@ namespace COTG.Game
 
 	public class AttackComboType
 	{
-		public AttackComboType(AttackType _type, string _name) { type = (int)_type; name = _name; }
-		public int type { get; set; }
+		public AttackComboType(AttackType _type, string _name) { attackType = _type; name = _name; }
+		public AttackType attackType { get; set; }
 		public string name { get; set; }
 		public static AttackComboType[] targetTypes = { new AttackComboType(AttackType.none, "None"),
 			new AttackComboType(AttackType.senator, "Capture"),

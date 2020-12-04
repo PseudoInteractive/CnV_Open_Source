@@ -915,10 +915,10 @@ namespace COTG.Views
                 if (str == null)
                     break;
                 any = true;
-                menu.Items.Add(App.CreateMenuItem(str, NavStack.instance,-i));
+                menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance,-i));
             }
             if(!any)
-                menu.Items.Add(App.CreateMenuItem("no more :(", ()=>{ }));
+                menu.Items.Add(AApp.CreateMenuItem("no more :(", ()=>{ }));
 
             menu.ShowAt(sender as FrameworkElement);
 
@@ -934,10 +934,10 @@ namespace COTG.Views
                 if (str == null)
                     break;
                 any = true;
-                menu.Items.Add(App.CreateMenuItem(str, NavStack.instance, i));
+                menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, i));
             }
             if (!any)
-                menu.Items.Add(App.CreateMenuItem("this is the most recent :(", () => { }));
+                menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(", () => { }));
 
             menu.ShowAt(sender as FrameworkElement);
         }

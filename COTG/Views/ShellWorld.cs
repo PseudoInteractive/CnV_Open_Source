@@ -100,8 +100,8 @@ namespace COTG.Views
                                 //    {
                                 //        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
                                 //    }
-                                //    App.AddItem(flyout, "Source", ShowContextContext, source );
-                                //    App.AddItem(flyout, "Target", ShowContextContext, target);
+                                //    AApp.AddItem(flyout, "Source", ShowContextContext, source );
+                                //    AApp.AddItem(flyout, "Target", ShowContextContext, target);
                                 //    flyout.ShowAt(canvas, pointerPoint.Position);
                                 //}
                                 //else
@@ -124,7 +124,7 @@ namespace COTG.Views
                                 var text = spot.ToTsv();
                                 Note.Show($"Copied to clipboard: {text}");
                                 App.CopyTextToClipboard(text);
-                                spot.SelectMe(true);
+                                spot.SelectMe(true,App.keyModifiers);
 
                             });
                             break;

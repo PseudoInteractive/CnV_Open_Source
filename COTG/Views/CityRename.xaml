@@ -26,22 +26,24 @@
         <TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
 		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:CityRename.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
 		<controls:WrapPanel Grid.Row="3">
-			<ToggleButton x:Name="hub" Content="Hub" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="vanqs" Content="Vanq" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="rt" Content="RT" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="priestess" Content="Priestess" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="prae" Content="Praetor" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="horse" Content="Horse" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="arb" Content="Arb" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="scorp" Content="Scorp" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="sorc" Content="Sorc" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="druid" Content="Druid" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="galley" Content="Galley" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="stinger" Content="Stinger" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="warship" Content="Warship" Style="{StaticResource ToggleButtonSmall}"/> 
-			<ToggleButton x:Name="shipping" Content="Shipping" Style="{StaticResource ToggleButtonSmall}"/> 
+			<ToggleButton x:Name="hub" Content="Hub"/> 
+			<ToggleButton x:Name="vanqs" Content="Vanq"/> 
+			<ToggleButton x:Name="rt" Content="RT"/> 
+			<ToggleButton x:Name="priestess" Content="Priestess"/> 
+			<ToggleButton x:Name="prae" Content="Praetor"/> 
+			<ToggleButton x:Name="horse" Content="Horse"/> 
+			<ToggleButton x:Name="arb" Content="Arb"/> 
+			<ToggleButton x:Name="scorp" Content="Scorp"/> 
+			<ToggleButton x:Name="sorc" Content="Sorc"/> 
+			<ToggleButton x:Name="druid" Content="Druid"/> 
+			<ToggleButton x:Name="galley" Content="Galley"/> 
+			<ToggleButton x:Name="stinger" Content="Stinger"/> 
+			<ToggleButton x:Name="warship" Content="Warship"/> 
+			<ToggleButton x:Name="shipping" Content="Shipping"/> 
 		</controls:WrapPanel>
-		<ToggleSwitch Grid.Row="4" Header="Tags" IsOn="{x:Bind local:CityRename.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
-		<ToggleSwitch Grid.Row="4" Header="Hub" IsOn="{x:Bind local:CityRename.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
+		<controls:WrapPanel Grid.Row="4">
+		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:CityRename.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
+		<ToggleSwitch Header="Hub" IsOn="{x:Bind local:CityRename.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
+		</controls:WrapPanel>
     </Grid>
 </ContentDialog>

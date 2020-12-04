@@ -229,19 +229,19 @@ namespace COTG.Views
             var stt = text.DataContext as SupportByTroopType;
             var flyout = new MenuFlyout();
             flyout.CopyXamlRoomFrom(text);
-            App.AddItem(flyout, "Troops Home", (_, _) =>
+            AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
                 supporter.NotifyChange();
             });
-            App.AddItem(flyout, "Total Troops", (_, _) =>
+            AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
                 supporter.NotifyChange();
             });
-            App.AddItem(flyout, "None", (_, _) =>
+            AApp.AddItem(flyout, "None", (_, _) =>
             {
                 var supporter = stt.supporter;
                 supporter.tSend = supporter.tSend.SetOrAdd(stt.type, 0);
@@ -258,18 +258,18 @@ namespace COTG.Views
             var supporter = text.DataContext as Supporter;
             var flyout = new MenuFlyout();
             flyout.CopyXamlRoomFrom(text);
-            App.AddItem(flyout, "Troops Home", (_, _) =>
+            AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                
                 supporter.tSend = supporter.city.troopsHome.ToArray();
                 supporter.NotifyChange();
             });
-            App.AddItem(flyout, "Total Troops", (_, _) =>
+            AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 supporter.tSend = supporter.city.troopsTotal.ToArray();
                 supporter.NotifyChange();
             });
-            App.AddItem(flyout, "None", (_, _) =>
+            AApp.AddItem(flyout, "None", (_, _) =>
             {
                 supporter.tSend = TroopTypeCount.empty;
                 supporter.NotifyChange();

@@ -42,23 +42,26 @@ namespace COTG.Services
         const int concurrentRequestCount = 8;
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
-        static Cosmos()
-        {
-            Assert(JSClient.world != 0);
-            // Create a new instance of the Cosmos Client
-            var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual,ConnectionMode=ConnectionMode.Direct,LimitToEndpoint=true };
-            clientOptions.Diagnostics.IsDistributedTracingEnabled=false;
-            clientOptions.Diagnostics.IsLoggingContentEnabled=false;
-            clientOptions.Diagnostics.IsTelemetryEnabled=false;
-            clientOptions.Diagnostics.IsLoggingEnabled=false;
+		static Cosmos()
+		{
+			Assert(JSClient.world != 0);
+			// Create a new instance of the Cosmos Client
+			var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct, LimitToEndpoint = true };
+			clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
+			clientOptions.Diagnostics.IsLoggingContentEnabled = false;
+			clientOptions.Diagnostics.IsTelemetryEnabled = false;
+			clientOptions.Diagnostics.IsLoggingEnabled = false;
+			if (Discord.isValid)
+			{
 
-            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, clientOptions);
-            database = cosmosClient.GetDatabase(databaseId);
-            if (database != null)
-            {
-                container = database.GetContainer(containerId);
-                ordersContainer = database.GetContainer(ordersContainerId);
-            }
+				cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, clientOptions);
+				database = cosmosClient.GetDatabase(databaseId);
+				if (database != null)
+				{
+					container = database.GetContainer(containerId);
+					ordersContainer = database.GetContainer(ordersContainerId);
+				}
+			}
 
             //            await ScaleContainerAsync();
             //	await AddItemsToContainerAsync();

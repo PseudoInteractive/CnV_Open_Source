@@ -83,10 +83,12 @@ namespace COTG.Views
 			}
 		}
 
-		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title)
+		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title, DateTimeOffset? _time=null)
 		{
 			if (title != null)
 				instance.Title = title;
+			if (_time != null)
+				dateTime = _time.Value;
 			ElementSoundPlayer.Play(ElementSoundKind.Show);
 
 			var result = await instance.ShowAsync2();

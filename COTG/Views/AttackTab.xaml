@@ -1,5 +1,5 @@
 ﻿<local:UserTab x:Class="COTG.Views.AttackTab"
-               Tag="Attack"
+               Tag="AttackPlanner"
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -62,13 +62,13 @@
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}"
                     Click="AddAttacksFromClipboard" />
-            <Button Content="Add Attacks from Clipboard (form)"
+            <!--<Button Content="Add Attacks from Clipboard (form)"
                     VerticalAlignment="Center"
                     Margin="4"
                     HorizontalAlignment="Center"
                     ToolTipService.ToolTip="Adds attacks based on coordinates and other data from the clipboard copied from sheets"
                     Style="{StaticResource ButtonSmall}"
-                    Click="AddAttacksFromSheets" />
+                    Click="AddAttacksFromSheets" />-->
             <Button Content="Add Targets from Clipboard"
                     VerticalAlignment="Center"
                     Margin="4"
@@ -76,14 +76,6 @@
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds fakse, you can later select which are real"
                     Style="{StaticResource ButtonSmall}"
                     Click="AddTargetsFromClipboard" />
-            <Button Content="Sort"
-                    VerticalAlignment="Center"
-                    Margin="4"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource ButtonSmall}"
-                    ToolTipService.ToolTip="Sort attacks by player"
-                    Click="SortAttacks" />
-
          
                 <Button x:Name="arrival"
                            VerticalAlignment="Center"
@@ -148,10 +140,23 @@
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      CanUserReorderColumns="True"
+					 
                      CanUserSortColumns="True"
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF301030">
             <tk:DataGrid.Columns>
+				 <tk:DataGridTemplateColumn Header="Icon">
+                    <tk:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="game:Spot">
+                            <Image Source="{x:Bind icon,Mode=OneTime}"
+                                   HorizontalAlignment="Center"
+                                   Stretch="UniformToFill"
+                                    Tapped="AttackSourceCoord_Tapped"
+                                    VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </tk:DataGridTemplateColumn.CellTemplate>
+                </tk:DataGridTemplateColumn>
+
                 <tk:DataGridTextColumn Header="Player"
                                        Binding="{Binding player, Mode=OneTime}" />
                 <tk:DataGridTemplateColumn Header="XY">
@@ -165,7 +170,7 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTemplateColumn Header="Target">
+                <tk:DataGridTemplateColumn Header="Target" IsReadOnly="True" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
                             <HyperlinkButton Content="{x:Bind attackCluster}"
@@ -177,15 +182,16 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridComboBoxColumn  Header="Type"
-                                            Binding="{Binding type,Mode=TwoWay}"
+                                            Binding="{Binding attackType,Mode=TwoWay}"
                                             ItemsSource="{x:Bind game:AttackComboType.sourceTypes , Mode=OneTime}"
                                             DisplayMemberPath="name" />
-                <tk:DataGridCheckBoxColumn Header="Fake"
-                                           Binding="{Binding fake, Mode=OneTime}" />
+                <tk:DataGridTextColumn Header="City"
+									   IsReadOnly="True"
+                                       Binding="{Binding nameAndRemarks, Mode=OneTime}" />
+
                 <tk:DataGridTextColumn Header="tt"
-                                       Binding="{Binding troopTypeString, Mode=OneTime}" />
-                <tk:DataGridTextColumn Header="ts"
-                                       Binding="{Binding ts, Mode=OneTime}" />
+                                       Binding="{Binding classificationString, Mode=OneTime}" />
+
                 <tk:DataGridTemplateColumn Header="Remove">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
@@ -197,6 +203,10 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
+				                <tk:DataGridTextColumn Header="Alliance"
+													   IsReadOnly="True"
+                                       Binding="{Binding alliance, Mode=OneTime}" />
+
             </tk:DataGrid.Columns>
         </tk:DataGrid>
         <tk:WrapPanel Orientation="Horizontal"
@@ -281,40 +291,42 @@
                      SelectionMode="Extended"
                      AlternatingRowBackground="#FF103020">
             <tk:DataGrid.Columns>
-                <tk:DataGridTemplateColumn Header="Icon">
+                <tk:DataGridTemplateColumn Header="Icon" IsReadOnly="True">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
                             <Image Source="{x:Bind icon,Mode=OneTime}"
                                    HorizontalAlignment="Center"
                                    Stretch="UniformToFill"
+								   Tapped="TargetCoord_Tapped"
                                    VerticalAlignment="Center" />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
-                <tk:DataGridTemplateColumn Header="xy">
+                <tk:DataGridTemplateColumn Header="xy" IsReadOnly="True" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
                             <HyperlinkButton Content="{x:Bind xy, Mode=OneTime}"
                                              Tapped="TargetCoord_Tapped"
                                              HorizontalAlignment="Center"
                                              HorizontalContentAlignment="Center"
-                                             ToolTipService.ToolTip="The target to attack" />
+                                           
+											 ToolTipService.ToolTip="The target to attack" />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTextColumn Header="Player"
-                                       Binding="{Binding player, Mode=OneTime}" />
-                <tk:DataGridCheckBoxColumn Header="Fake"
-                                           Binding="{Binding attackFake, Mode=OneTime}" />
+                                       Binding="{Binding player, Mode=OneTime}" IsReadOnly="True" />
+                <tk:DataGridComboBoxColumn  Header="Type"
+                                            Binding="{Binding attackType,Mode=TwoWay}"
+                                            ItemsSource="{x:Bind game:AttackComboType.targetTypes , Mode=OneTime}"
+                                            DisplayMemberPath="name" />
                 <tk:DataGridTextColumn Header="Cluster"
                                        Binding="{Binding attackCluster, Mode=OneWay}"
                                        IsReadOnly="True" />
                 <tk:DataGridTextColumn Header="City"
-                                       Binding="{Binding cityName, Mode=OneTime}" />
-                <tk:DataGridTextColumn Header="Alliance"
-                                       Binding="{Binding alliance, Mode=OneTime}" />
+                                       Binding="{Binding nameAndRemarks, Mode=OneTime}" IsReadOnly="True" />
                 <tk:DataGridTextColumn Header="Intel"
-                                       Binding="{Binding classificationString, Mode=OneTime}" />
+                                       Binding="{Binding classificationString, Mode=OneTime}" IsReadOnly="True" />
                 <tk:DataGridTemplateColumn Header="Remove">
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:Spot">
@@ -326,6 +338,8 @@
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
+                <tk:DataGridTextColumn Header="Alliance"
+                                       Binding="{Binding alliance, Mode=OneTime}" IsReadOnly="True" />
 
             </tk:DataGrid.Columns>
         </tk:DataGrid>

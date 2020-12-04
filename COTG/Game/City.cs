@@ -482,17 +482,17 @@ namespace COTG.Game
 		}
        
        
-        public static (City city,bool changed) StBuild(int cid,bool scrollIntoView)
+        public static (City city,bool changed) StBuild(int cid,bool scrollIntoView, bool select=true)
         {
             var city = City.GetOrAddCity(cid);
-            return (city, city.SetBuild(scrollIntoView));
+            return (city, city.SetBuild(scrollIntoView,select));
         }
-        public bool SetBuild(bool scrollIntoView)
+        public bool SetBuild(bool scrollIntoView, bool select=true)
         {
             var changed = cid != build;
             City.build = cid;
 
-            SetFocus(scrollIntoView);
+            SetFocus(scrollIntoView, select);
             return changed;
             //if (!noRaidScan)
            // {

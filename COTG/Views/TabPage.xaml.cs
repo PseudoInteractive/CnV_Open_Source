@@ -246,7 +246,7 @@ namespace COTG.Views
             { "Raid", Symbol.ReShare },
             { "Donation", Symbol.Share },
             { "Boss", Symbol.View },
-            { "Attack", Symbol.Audio },
+            { "AttackPlanner", Symbol.Audio },
             { "world", Symbol.Microphone },
             
             { "officer" ,Symbol.Admin },

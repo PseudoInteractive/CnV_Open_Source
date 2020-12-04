@@ -490,7 +490,7 @@ namespace COTG.Game
         // approximation using players speed bonus
         public static float ApproxTravelTime(this byte tt,int cid0, int cid1)
         {
-            var dist = cid0.DistanceToCid(cid0);
+            var dist = cid0.DistanceToCid(cid1);
             var hours = dist*ttTravel[tt] / (60f * ttSpeedBonus[tt]);
             if (ttNavy[tt])
                 hours += 1.0f;

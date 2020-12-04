@@ -555,34 +555,8 @@ namespace COTG
         //    return window.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
         //}
 
-        public static MenuFlyoutItem CreateMenuItem(string text, Action command)
-        {
-            var rv = new MenuFlyoutItem() { Text = text };
-            if (command != null)
-                rv.Click += (_, _) => command();
-            return rv;
-        }
-        public static MenuFlyoutItem AddItem(MenuFlyout menu, string text, RoutedEventHandler command, object context = null)
-        {
-            var rv = new MenuFlyoutItem() { Text = text };
-            rv.DataContext = context;
-            if (command != null)
-                rv.Click += command;
-            menu.Items.Add(rv);
-            return rv;
-        }
-        public static MenuFlyoutItem AddItem(MenuFlyout menu, string text, Action command)
-        {
-            var rv = new MenuFlyoutItem() { Text = text };
-            if (command != null)
-                rv.Click += (_, _) => command();
-            menu.Items.Add(rv);
-            return rv;
-        }
-        public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter)
-        {
-            return new MenuFlyoutItem() { Text = text, Command = command, CommandParameter = parameter };
-        }
+     
+		
         ///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
         public static PercentFormatter percentFormatter = new PercentFormatter();// { FractionDigits = 1, NumberRounder=new IncrementNumberRounder() { Increment=.001,RoundingAlgorithm=RoundingAlgorithm.RoundHalfToEven} };
         public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true };
@@ -796,8 +770,65 @@ namespace COTG
             if (source!=null & source.XamlRoot!=null)
                 target.XamlRoot=source.XamlRoot;
         }
+		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)
+		{
+			var rv = new MenuFlyoutItem() { Text = text };
+			rv.DataContext = context;
+			if (command != null)
+				rv.Click += (_, _) => command();
+			return rv;
+		}
+		public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter, object context = null)
+		{
+			return new MenuFlyoutItem() { Text = text, Command = command, CommandParameter = parameter, DataContext = context };
+		}
+		public static MenuFlyoutItem CreateMenuItem(string text, RoutedEventHandler command, object context = null)
+		{
+			var rv = new MenuFlyoutItem() { Text = text };
+			rv.DataContext = context;
+			if (command != null)
+				rv.Click += command;
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, RoutedEventHandler command, object context = null)
+		{
+			var rv = CreateMenuItem(text, command, context);
 
-    }
+			menu.Items.Add(rv);
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, RoutedEventHandler command, object context = null)
+		{
+			var rv = CreateMenuItem(text, command, context);
+
+			menu.Items.Add(rv);
+			return rv;
+		}
+
+		public static MenuFlyoutSubItem AddSubMenu(this MenuFlyout menu, string text)
+		{
+			var rv = new MenuFlyoutSubItem() { Text = text };
+
+			menu.Items.Add(rv);
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, Action command)
+		{
+			var rv = new MenuFlyoutItem() { Text = text };
+			if (command != null)
+				rv.Click += (_, _) => command();
+			menu.Items.Add(rv);
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, Action command)
+		{
+			var rv = new MenuFlyoutItem() { Text = text };
+			if (command != null)
+				rv.Click += (_, _) => command();
+			menu.Items.Add(rv);
+			return rv;
+		}
+	}
 
     public static class Note 
     {

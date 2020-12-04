@@ -81,7 +81,7 @@
                         Value="Center" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>
-	<Style x:Key="ToggleButtonSmall" BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
+	<Style BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="Margin" Value="4"/>

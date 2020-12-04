@@ -180,7 +180,8 @@ namespace COTG.Game
 			hub,
 			navy,
 			misc,
-			pending
+			pending,
+			missing
 		}
 		public struct ClassificationExtended
 		{
@@ -197,6 +198,7 @@ namespace COTG.Game
 			static public explicit operator Classification(ClassificationExtended e) => e.classification;
 		};
 		public Classification classification { get; set; }
+		public bool isNotClassified => classification == Classification.unknown; // does not include pending
 		public bool isClassified => classification != Classification.unknown && classification != Classification.pending;
 		public bool isPending => classification == Classification.pending;
 		private static string[] classifications =
@@ -213,7 +215,8 @@ namespace COTG.Game
 			"hub",
 			"navy",
 			"misc",
-			"pending"
+			"pending",
+			"no intel"
 		};
 		private static int[] classificationTTs =
 		{
@@ -229,6 +232,7 @@ namespace COTG.Game
 			ttSenator,
 			ttWarship,
 			ttGuard,
+			ttBallista,
 			ttBallista
 		};
 		public string classificationString => classifications[(int)classification];
@@ -296,21 +300,24 @@ namespace COTG.Game
 			foreach (var _cid in GetSelectedForContextMenu(cid, false))
 			{
 				var s = Spot.GetOrAdd(_cid);
-				sb.Append(s.player);
-				sb.Append('\t');
-				sb.Append(s.cont);
-				sb.Append('\t');
-				sb.Append(s.cid.CidToCoords());
-				sb.Append('\t');
-				sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatTimeDefault() ?? "??");
-				sb.Append('\t');
-				sb.Append(s.incTT);
-				sb.Append('\t');
-				sb.Append("1000000");
-				sb.Append('\t');
-				var ts = s.tsDefMax;
-				sb.Append(ts);
-				sb.Append('\n');
+				if (s.incoming.Any())
+				{
+					sb.Append(s.player);
+					sb.Append('\t');
+					sb.Append(s.cont);
+					sb.Append('\t');
+					sb.Append(s.cid.CidToCoords());
+					sb.Append('\t');
+					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatTimeDefault() ?? "??");
+					sb.Append('\t');
+					sb.Append(s.incTT);
+					sb.Append('\t');
+					sb.Append("1000000");
+					sb.Append('\t');
+					var ts = s.tsDefMax;
+					sb.Append(ts);
+					sb.Append('\n');
+				}
 			}
 			App.CopyTextToClipboard(sb.ToString());
 
@@ -497,6 +504,7 @@ namespace COTG.Game
 		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod)
 		{
 			mod.UpdateKeyModifiers();
+			
 			if (City.IsMine(cid) && !mod.IsShiftOrControl())
 			{
 				if (City.IsBuild(cid))
@@ -507,21 +515,22 @@ namespace COTG.Game
 				}
 				else
 				{
-					JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
+					JSClient.ChangeCity(cid, lazyMove,false); // keep current view, switch to city
 				}
 				NavStack.Push(cid);
 
 			}
 			else
 			{
-				JSClient.ShowCity(cid, lazyMove);
+				JSClient.ShowCity(cid, lazyMove,false);
 				NavStack.Push(cid);
 
 
 			}
-			SpotTab.TouchSpot(cid, mod);
+			//Spot.GetOrAdd(cid).SelectMe(false,mod);
+			SpotTab.TouchSpot(cid, mod,true);
 
-			if (mod.IsShiftAndControl())
+			if (mod.IsShiftAndControl() && Player.isAvatar)
 			{
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
@@ -542,7 +551,7 @@ namespace COTG.Game
 				});
 			}
 		}
-		internal async ValueTask<Classification> ClassifyIfNeeded()
+		internal async Task<Classification> ClassifyIfNeeded()
 		{
 			if (isClassified)
 			{
@@ -562,8 +571,18 @@ namespace COTG.Game
 				return (await Classify()).classification;
 			}
 		}
+		internal void QueueClassify()
+		{
+			if (isNotClassified)
+			{
+				Classify();
+			}
+		}
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
+			if (!Discord.isValid)
+				return new ClassificationExtended() { classification = Classification.missing };
+
 			classification = Classification.pending;
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
 			ClassificationExtended rv = new ClassificationExtended(); ;
@@ -835,11 +854,10 @@ namespace COTG.Game
 			return rv;
 
 		}
-		public void SelectMe(bool showClick)
+		public void SelectMe(bool showClick, VirtualKeyModifiers mod)
 		{
 			NavStack.Push(cid);
-			SpotTab.AddToGrid(this, App.keyModifiers, true);
-			ProcessSelection(App.keyModifiers);
+			SpotTab.AddToGrid(this, mod, true);
 			if (showClick)
 			{
 				JSClient.ShowCity(cid, true);
@@ -929,7 +947,8 @@ namespace COTG.Game
 												|| cid1 == viewHover || selected.Contains(cid1) || City.IsFocus(cid1));
 		}
 
-
+		public static bool IsSelected(int cid) => selected.Contains(cid);
+		public bool isSelected => selected.Contains(cid);
 		public static int viewHover; // in the view menu
 
 		//        public static string uiHoverColumn = string.Empty;
@@ -979,15 +998,16 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool selectInUI)
+		public void SetFocus(bool selectInUI, bool select=true)
 		{
-			SetFocus(cid, selectInUI);
+			SetFocus(cid, selectInUI,select);
 		}
-		public static void SetFocus(int cid, bool selectInUI)
+		public static void SetFocus(int cid, bool selectInUI, bool select=true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
-			spot.SelectMe(false);
+			if(select)
+				spot.SelectMe(false,App.keyModifiers);
 			if (changed)
 			{
 				focus = cid;
@@ -1146,8 +1166,6 @@ namespace COTG.Game
 						spot.SetFocus(false);
 					return true;
 				case VirtualKey.Right:
-					
-
 					return true;
 				case VirtualKey.Application:
 					break;
@@ -1352,101 +1370,112 @@ namespace COTG.Game
                     }
                     if (count > 1)
                     {
-                        App.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-                        App.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
-                        App.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
+                        AApp.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+                        AApp.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+                        AApp.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
 
                     }
                     else
                     {
 
-                        App.AddItem(flyout, "End Raids", this.ReturnSlowClick);
-                        App.AddItem(flyout, "Home Please", this.ReturnFastClick);
-                        App.AddItem(flyout, "Return At...", this.ReturnAt);
+                        AApp.AddItem(flyout, "End Raids", this.ReturnSlowClick);
+                        AApp.AddItem(flyout, "Home Please", this.ReturnFastClick);
+                        AApp.AddItem(flyout, "Return At...", this.ReturnAt);
                     }
 
-                    App.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid) ));
-                    App.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
+                    AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid) ));
+                    AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
-                    App.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
-                    //   App.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-                    App.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
+                    AApp.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
+                    //   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
+                    AApp.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
 
-					App.AddItem(flyout, "Troops to Sheets",CopyForSheets);
+					AApp.AddItem(flyout, "Troops to Sheets",CopyForSheets);
 				}
-                else
+           
                 {
-                    if (AttackTab.instance.isActive)
-                    {
-                        App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid, false));
-						App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid, false));
-						App.AddItem(flyout, "Add as Fake", (_, _) => AttackTab.AddTarget(cid, true));
-                    }
-                    App.AddItem(flyout, "Add to Attack Sender", async (_, _) =>
-                    {
-						using var work = new WorkScope("Add to attack sender..");
+					var sel = Spot.GetSelectedForContextMenu(cid, false);
+					if (AttackTab.instance.isActive)
+					{
+						var multiString = sel.Count > 1? $" _x {sel.Count} selected" : "";
+						var afly = AApp.AddSubMenu(flyout, "Attack Planner");
+					
+						if (this.allianceId != Alliance.myId)
+						{
+							afly.AddItem("Add as Real Cap"+ multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.senator));
+							afly.AddItem("Add as Fake Cap" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.senatorFake));
+							afly.AddItem("Add as Real SE" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.se));
+							afly.AddItem("Add as Fake SE" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.seFake));
+						}
+						afly.AddItem( "Add as Attacker" +multiString, (_, _) =>
+						{
+							using var work = new WorkScope("Add as attackers..");
 
-						foreach (var id in Spot.GetSelectedForContextMenu(cid, false))
-                        {
-                            await JSClient.AddToAttackSender(id);
-                        }
-                    }
-                    );
+							string s = string.Empty;
+							foreach (var id in sel)
+							{
+								s = s + id.CidToString() + "\t";
+							}
+							AttackTab.instance.AddAttacksFromString(s);
+							Note.Show($"Added attacker {s}");
 
-					//App.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
-					//App.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
-					//App.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
+						});
+					}
+					else
+					{
+						flyout.AddItem( "Add funky Attack String", async (_, _) =>
+						{
+							using var work = new WorkScope("Add to attack string..");
+
+							foreach (var id in sel)
+							{
+								await JSClient.AddToAttackSender(id);
+							}
+						}
+						);
+					}
+					//AApp.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
+					//AApp.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
+					//AApp.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
                 }
                 if (cid != City.build)
                 {
-                    App.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
+                    AApp.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
                     //if(Player.myName == "Avatar")
-                    //    App.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
+                    //    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
                 }
                 if (AttackTab.instance.isActive)
                 {
-                    App.AddItem(flyout, "Add as Attacker", (_, _) =>
-                    {
-						using var work = new WorkScope("Add as attackers..");
-
-						string s = string.Empty;
-                        foreach (var id in Spot.GetSelectedForContextMenu(cid, false))
-                        {
-                           s = s + id.CidToString() + "\t";
-                        }
-                        AttackTab.instance.AddAttacksFromString(s);
-                        Note.Show($"Added attacker {s}");
-
-                    });
+                    
                 }
 
-                App.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-                App.AddItem(flyout, "Near Defence", DefendMe);
+                AApp.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
+                AApp.AddItem(flyout, "Near Defence", DefendMe);
                 if (incoming.Any())
-                    App.AddItem(flyout, "Incoming", ShowIncoming);
+                    AApp.AddItem(flyout, "Incoming", ShowIncoming);
 
 
-                App.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
-                App.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-                App.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
-                App.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
+                AApp.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
+                AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+                AApp.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
+                AApp.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
             }
             else if (this.isDungeon || this.isBoss)
             {
-                App.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+                AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
             }
             else if (this.isEmpty && Discord.isValid)
             {
-                App.AddItem(flyout, "Claim", this.DiscordClaim);
+                AApp.AddItem(flyout, "Claim", this.DiscordClaim);
 
             }
-			App.AddItem(flyout, "Notify on Decay", DecayQuery);
+			AApp.AddItem(flyout, "Notify on Decay", DecayQuery);
 
-			App.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
-            App.AddItem(flyout, "Select",(_,_)=> SelectMe(true) );
-            App.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
+			AApp.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
+            AApp.AddItem(flyout, "Select",(_,_)=> SelectMe(true, App.keyModifiers) );
+            AApp.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
             flyout.CopyXamlRoomFrom(uie);
 
             //   flyout.XamlRoot = uie.XamlRoot;

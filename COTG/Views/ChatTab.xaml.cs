@@ -609,8 +609,12 @@ namespace COTG.Views
 			input.Focus(FocusState.Programmatic);
         }
 
-    }
-    class HyperlinkColorConverter : IValueConverter
+		private void inputPointerExited(object sender, PointerRoutedEventArgs e)
+		{
+
+		}
+	}
+	class HyperlinkColorConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, string language)
