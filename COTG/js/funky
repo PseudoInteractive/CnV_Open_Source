@@ -72209,14 +72209,14 @@ function GetCarry() {
 var countOverride = 0;
 var raidCount = 1;
 function carry_percentage_(total_loot_1) {
-    var count;//
-        var countz_ = AsNumber($(".splitRaid").children("option").length);
-        if (countz_ > 1) {
-            count=countz-1;
-        }
-        else {
-            count =countz;
-        }
+    var count_2;
+    var countz_2 = AsNumber($(".splitRaid").children("option").length);
+    if (countz_2 > 1) {
+       count_2=countz_2-1;
+    }
+    else {
+        count_2 =countz_2;
+    }
     var home_loot_ = 0;
     var km_ = [];
     let _city = GetCity();
@@ -72228,33 +72228,71 @@ function carry_percentage_(total_loot_1) {
     var scaledLoot = Math.ceil(total_loot_1 * GetCarry());
     raidCount = countOverride > 0 ? countOverride : Math.max(1, Math.floor(home_loot_ / scaledLoot));
     if(home_loot_>scaledLoot){
-            var option_numbers=Math.floor(home_loot_/scaledLoot);
-            if(option_numbers<count){
-                $("#WCcomcount").val(option_numbers);
-            }
-            else{$("#WCcomcount").val(count);}
-            for(var i in km_){
-                if(count===1){
-                    if(km_[i]!==0){
-                        $("#rval"+i).val(km_[i]);
-                    }
-                }
-                else{
-                    if(km_[i]!==0){
-                        if(option_numbers<count){
-                            km_[i]=Math.floor(km_[i]/option_numbers);
-                            $("#rval"+i).val(km_[i]);
-                            if(km_[14]){$("#rval14").val("0");}
-                        }else{
-                            km_[i]=Math.floor(km_[i]/count);
-                            $("#rval"+i).val(km_[i]);
-                            if(km_[14]){$("#rval14").val("0");}
-                        }
-                    }}
-            }
+        var option_numbers=Math.floor(home_loot_/scaledLoot);
+        if(option_numbers<count_2){
+            $("#WCcomcount").val(option_numbers);
         }
-    carry_percentage_2(total_loot_1);
+        else{$("#WCcomcount").val(count_2);}
+        for(var i in km_){
+            if(count_2===1){
+                if(km_[i]!==0){
+                    $("#rval"+i).val(km_[i]);
+                }
+            }
+            else{
+                if(km_[i]!==0){
+                    if(option_numbers<count_2){
+                        km_[i]=Math.floor(km_[i]/option_numbers);
+                        $("#rval"+i).val(km_[i]);
+                        if(km_[14]){$("#rval14").val("0");}
+                    }else{
+                        km_[i]=Math.floor(km_[i]/count_2);
+                        $("#rval"+i).val(km_[i]);
+                        if(km_[14]){$("#rval14").val("0");}
+                    }
+                }}
+        }
+    }
+carry_percentage_2(total_loot_1);
 }
+function carry_percentage_3(total_loot_1) {
+        var count_;
+        var countz_ = AsNumber($(".splitRaid").children("option").length);//
+        if (countz_ > 1) {
+            count_=countz_-1;
+        }
+        else {
+            count_ =countz_;
+        }
+        var home_loot_ = 0;
+        var km_ = [];
+        let _city = GetCity();
+        for (let x_77 in _city.th) {
+            var home_ = AsNumber(_city.th[x_77]);
+            home_loot_ = home_loot_ + home_ * ttloot_[x_77];
+            km_.push(home_);
+        }
+        var scaledLoot = Math.ceil(total_loot_1 * GetCarry());
+        raidCount = countOverride > 0 ? countOverride : Math.max(1, Math.floor(home_loot_ / scaledLoot));
+    if(home_loot_>scaledLoot){
+        var option_numbers_=Math.floor(home_loot_/scaledLoot);
+        if(option_numbers_<count_){
+            $("#WCcomcount").val(option_numbers_);
+        }
+        else{$("#WCcomcount").val(count_);}
+            var templ1_=((home_loot_/scaledLoot)*100)/option_numbers_;
+        var templ2_=((templ1_-100)/templ1_)*100;
+            for(var i in km_){
+                if(km_[i]!==0){
+                var templ3_=km_[i]/option_numbers_;
+                km_[i]=Math.floor(templ3_*(1-(templ2_/100)));
+                $("#rval"+i).val(km_[i]);
+                if(km_[14]){$("#rval14").val("0");}
+            }
+            }
+            carry_percentage_2(total_loot_1);
+        }
+}           
 function carry_percentage_2(total_loot_1) {
     var troop_loot_ = 0;
     $(".tninput").each(function () {
@@ -72296,18 +72334,18 @@ function getDugRows_() {
             }
             var total_loot_1 = Math.ceil(loot1_[AsNumber(dunglvl_) - 1] * (2 - AsNumber(progress_) / 100) * 1.02);
             $("#dungloctab").find(".addraiwc td:nth-child(4)").html("<button id='raid115' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>115%</button><button id='raid108' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>108%</button>");
-            $("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>100%</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
+            $("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>Use all</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
             $("#raid125").click(() => {
                 localStorage['carry'] = 1.25;
-                carry_percentage_(total_loot_1);
+                carry_percentage_3(total_loot_1);
             });
             $("#raid115").click(() => {
                 localStorage['carry'] = 1.15;
-                carry_percentage_(total_loot_1);
+                carry_percentage_3(total_loot_1);
             });
             $("#raid108").click(() => {
                 localStorage['carry'] = 1.08;
-                carry_percentage_(total_loot_1);
+                carry_percentage_3(total_loot_1);
             });
             $("#raid100").click(() => {
                 localStorage['carry'] = 0.95;
