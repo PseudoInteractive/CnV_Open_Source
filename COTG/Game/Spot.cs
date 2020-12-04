@@ -158,16 +158,12 @@ namespace COTG.Game
 		public bool isAttackTypeSenatorFake => attackType == AttackType.senatorFake;
 		public bool isAttackTypeSE => attackType == AttackType.se;
 		public bool isAttackTypeSEFake => attackType == AttackType.seFake;
-		public bool isAttackTypeReal => !isAttackTypeFake;
+		public bool isAttackTypeReal => attackType == AttackType.se || attackType == AttackType.senator;
 		public bool isAttackTypeFake => attackType == AttackType.seFake || attackType == AttackType.senatorFake;
 
 		public const int attackClusterNone = -1;
-		public const int attackClusterSEStart = 0;
-		public const int attackClusterSennyStart = 10000;
-		public const int attackClusterSEEnd = attackClusterSennyStart;
-
-		public bool isAttackClusterSenny => attackCluster >= attackClusterSennyStart;
-		public bool isAttackClusterSE => attackCluster >= attackClusterSEStart && attackCluster < attackClusterSEEnd;
+	
+	
 		public bool isAttackClusterNone => attackCluster == attackClusterNone;
 		
 		public enum Classification : byte
@@ -304,7 +300,7 @@ namespace COTG.Game
 				sb.Append('\t');
 				sb.Append(s.cont);
 				sb.Append('\t');
-				sb.Append(s.xy);
+				sb.Append(s.cid.CidToCoords());
 				sb.Append('\t');
 				sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatTimeDefault() ?? "??");
 				sb.Append('\t');
@@ -349,7 +345,7 @@ namespace COTG.Game
 
 		public static void ProcessPointerPress(UserTab tab,object sender, PointerRoutedEventArgs e)
 		{
-			tab.FocusOn(sender as DependencyObject);
+			(sender as RadDataGrid).Focus();
 			e.KeyModifiers.UpdateKeyModifiers();
 
 			var hit = Spot.HitTest(sender, e);
@@ -1384,7 +1380,8 @@ namespace COTG.Game
                     if (AttackTab.instance.isActive)
                     {
                         App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid, false));
-                        App.AddItem(flyout, "Add as Fake", (_, _) => AttackTab.AddTarget(cid, true));
+						App.AddItem(flyout, "Add as Real", (_, _) => AttackTab.AddTarget(cid, false));
+						App.AddItem(flyout, "Add as Fake", (_, _) => AttackTab.AddTarget(cid, true));
                     }
                     App.AddItem(flyout, "Add to Attack Sender", async (_, _) =>
                     {

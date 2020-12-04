@@ -24,6 +24,11 @@
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
+	<Style TargetType="tk:WrapPanel">
+		 <Setter Property="Margin" Value="4"/>
+         <Setter Property="HorizontalSpacing" Value="4"/>
+          <Setter Property="VerticalSpacing" Value="4"/>
+	</Style>
     <Style TargetType="winui:NumberBox">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>

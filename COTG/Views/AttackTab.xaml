@@ -25,12 +25,12 @@
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal">
 			<ToggleButton x:Name="includeSEAttack" Content="SE Demo" IsEnabled="True" />
-			<ToggleButton x:Name="includeSennySiege" Content="Senny Siege" IsEnabled="False" />
+			<ToggleButton x:Name="includeSennySiege" Content="Senny Siege" IsEnabled="True" />
             <winui:NumberBox x:Name="maxTravelHours"
                              Header="Max travel hours"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="12"
-                             ToolTipService.ToolTip="Attacks that would take longer than this to arrive are removed"
+                             ToolTipService.ToolTip="SE Attacks that would take longer than this to arrive are removed"
                              NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
             <winui:NumberBox x:Name="maxFakes"
@@ -42,7 +42,7 @@
                              SmallChange="1" />
             <winui:NumberBox x:Name="minAssaults"
                              Header="Min Assaults"
-                             ToolTipService.ToolTip="For Demos only - if assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
+                             ToolTipService.ToolTip="For SE only - if assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="4"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
@@ -94,12 +94,7 @@
                             Style="{StaticResource ButtonSmall}"
                            ToolTipService.ToolTip="Time at which attacks arrive." />
         </tk:WrapPanel>
-        <tk:WrapPanel Orientation="Horizontal"
-                      Margin="4"
-                      HorizontalSpacing="4"
-                      VerticalSpacing="4"
-					  
-                      Grid.Row="1">
+        <tk:WrapPanel Grid.Row="1">
 
             <Border 
                     Style="{StaticResource BorderReveal}">
@@ -159,9 +154,9 @@
             <tk:DataGrid.Columns>
                 <tk:DataGridTextColumn Header="Player"
                                        Binding="{Binding player, Mode=OneTime}" />
-                <tk:DataGridTemplateColumn Header="Source">
+                <tk:DataGridTemplateColumn Header="XY">
                     <tk:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="game:Attack">
+                        <DataTemplate x:DataType="game:Spot">
                             <HyperlinkButton Content="{x:Bind xy}"
                                              Tapped="AttackSourceCoord_Tapped"
                                              HorizontalAlignment="Center"
@@ -172,18 +167,18 @@
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTemplateColumn Header="Target">
                     <tk:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="game:Attack">
+                        <DataTemplate x:DataType="game:Spot">
                             <HyperlinkButton Content="{x:Bind attackCluster}"
                                              Tapped="AttackTargetCoord_Tapped"
                                              HorizontalAlignment="Center"
                                              HorizontalContentAlignment="Center"
-                                             ToolTipService.ToolTip="The target to attack" />
+                                             ToolTipService.ToolTip="The cluster to attack" />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridComboBoxColumn  Header="Type"
-                                            Binding="{Binding type,Mode=OneTime}"
-                                            ItemsSource="{x:Bind game:AttackType.types , Mode=OneTime}"
+                                            Binding="{Binding type,Mode=TwoWay}"
+                                            ItemsSource="{x:Bind game:AttackComboType.sourceTypes , Mode=OneTime}"
                                             DisplayMemberPath="name" />
                 <tk:DataGridCheckBoxColumn Header="Fake"
                                            Binding="{Binding fake, Mode=OneTime}" />
@@ -193,7 +188,7 @@
                                        Binding="{Binding ts, Mode=OneTime}" />
                 <tk:DataGridTemplateColumn Header="Remove">
                     <tk:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:DataType="game:Attack">
+                        <DataTemplate x:DataType="game:Spot">
                             <HyperlinkButton Content="Remove"
                                              Tapped="AttackRemove_Tapped"
                                              HorizontalAlignment="Center"

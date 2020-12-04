@@ -491,7 +491,7 @@ namespace COTG.Game
         public static float ApproxTravelTime(this byte tt,int cid0, int cid1)
         {
             var dist = cid0.DistanceToCid(cid0);
-            var hours = ttTravel[tt] / (60f * ttSpeedBonus[tt]);
+            var hours = dist*ttTravel[tt] / (60f * ttSpeedBonus[tt]);
             if (ttNavy[tt])
                 hours += 1.0f;
             return hours;

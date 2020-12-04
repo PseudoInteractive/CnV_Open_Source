@@ -141,8 +141,26 @@ namespace COTG
             System.Diagnostics.Trace.WriteLine(str);
             System.Diagnostics.Trace.Assert(v);
         }
+		public static void Verify(bool v
+#if TRACE
+			,
+			[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0
+#endif
 
-        public static void Fatal()
+			)
+		{
+			if (v)
+				return;
+#if TRACE
+			DumpStack(new StackTrace(1, true));
+			var str = $"{Tick.MSS()}:{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Assert";
+			System.Diagnostics.Trace.WriteLine(str);
+			System.Diagnostics.Trace.Assert(v);
+#endif
+		}
+		public static void Fatal()
         {
             DumpStack(new StackTrace(1, true)); 
             App.DispatchOnUIThread(async () =>

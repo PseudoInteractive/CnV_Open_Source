@@ -869,13 +869,10 @@ namespace COTG.Game
         }
         public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles, bool onlyOnWater)
         {
+			using var scope = new ShellPage.WorkScope("Export Castles...");
             var sb = new StringBuilder();
-            if(!Alliance.PartNameToId(allianceName, out var allianceId) )
-             {
-                Note.Show("Invalid alliance name");
-                return;
-            }
-            sb.Append("Coords\tplayer\tclassification\tWater\tBig\tCastle\tPoints\tTemple\n");
+			allianceName = allianceName.ToLower();
+			sb.Append("Coords\tplayer\tclassification\tWater\tBig\tCastle\tTemple\nalliance\n");
             int counter = 0;
             for (int x=x0;x<x1;++x)
                 for(int y=y0;y<y1;++y)
@@ -890,12 +887,12 @@ namespace COTG.Game
 					if (dat.player == 0) // lawless
                         continue;
                     var player = Player.Get(dat.player);
-                    if (player.alliance != allianceId)
+                    if (player.allianceName.ToLower().Contains(allianceName) )
                         continue;
                     var cid = (x, y).WorldToCid();
                     var spot = Spot.GetOrAdd(cid);
                     await spot.ClassifyIfNeeded();
-                    sb.Append($"{spot.xy}\t{player.name}\t{spot.classificationString}\t{dat.isWater}\t{dat.isBig}\t{dat.isCastle}\t{spot.points}\t{dat.isTemple}\n");
+                    sb.Append($"{spot.cid.CidToCoords()}\t{player.name}\t{spot.classificationString}\t{dat.isWater}\t{dat.isBig}\t{dat.isCastle}\t{dat.isTemple}\t{spot.alliance}\n");
                     ++counter;
                     if( (counter&63)==0)
                         Note.Show($"Progress: {counter}");

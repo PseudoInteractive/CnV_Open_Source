@@ -918,8 +918,15 @@ namespace COTG
 				Log(ex);
 			}
 		}
-     
-    }
+		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
+		{
+			if (ob != null)
+			{
+				Verify(ob.ScrollViewer.Focus(FocusState.Programmatic));
+				Verify(ob.Focus(FocusState.Programmatic));
+			}
+		}
+	}
 
 
 }

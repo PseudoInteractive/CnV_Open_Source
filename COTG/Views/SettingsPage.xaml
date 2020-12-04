@@ -18,6 +18,7 @@
 			   UseSystemFocusVisuals="True"
 			   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
 			   Margin="4">
+	<ScrollViewer>
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<TextBlock Text="{x:Bind appInfo}"
 					   FontSize="12" />
@@ -242,5 +243,5 @@
 				</StackPanel>
 			</StackPanel>
 		</StackPanel>
-
+	</ScrollViewer>
 </ContentDialog>
