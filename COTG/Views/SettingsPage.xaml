@@ -90,6 +90,11 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
+			<ToggleSwitch  Header="test"
+							   IsOn="{x:Bind ar, Mode=TwoWay}"
+							   Margin="4"
+							   OnContent="test"
+							   OffContent="Drop connection on Idle" />
 
 			</wct:WrapPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">

@@ -1607,11 +1607,11 @@ namespace COTG
 					   //   }), 30*1000 );
 					   //    }
 					   //}
-					   if (Discord.isValid)
+					   if (Discord.isValid && SettingsPage.test )
 					   {
 						   App.DispatchOnUIThreadSneaky(() =>
-						   {
-							   if (CoreWindow.GetForCurrentThread().GetAsyncKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down)) MainPage.instance.autoRaid.Visibility = Visibility.Visible;
+						   { 
+							   MainPage.instance.autoRaid.Visibility =  Visibility.Visible;
 						   }
 					   );
 
