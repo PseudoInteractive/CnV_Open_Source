@@ -164,10 +164,8 @@
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Resets all with raid carry less than 90% or idle troops greater than 25%" />
 				<Button x:Name="autoRaid"
-						x:FieldModifier="public"
 					    Content="Raid Selected"
 						Click="AutoRaid"
-						Visibility="Collapsed"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="For all selected castles, raids are sent to the closest appriate dungeon.  Use with care." />
 				<Border Style="{StaticResource BorderReveal}">

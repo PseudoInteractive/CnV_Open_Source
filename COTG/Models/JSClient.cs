@@ -1607,15 +1607,9 @@ namespace COTG
 					   //   }), 30*1000 );
 					   //    }
 					   //}
-					   if (Discord.isValid && SettingsPage.test )
-					   {
-						   App.DispatchOnUIThreadSneaky(() =>
-						   { 
-							   MainPage.instance.autoRaid.Visibility =  Visibility.Visible;
-						   }
-					   );
+					  
 
-					   }
+					  // }
 					   //var cookie = httpClient.DefaultRequestHeaders.Cookie;
 					   //cookie.Clear();
 					   //foreach (var c in jsVars.cookie.Split(";"))

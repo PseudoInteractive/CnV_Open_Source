@@ -48,8 +48,8 @@ namespace COTG.Views
         public float eventTimeOffset;
         public float eventTimeOffsetLag;
         public float eventTimeEnd;
-        static public CanvasSolidColorBrush raidBrush, shadowBrush, desaturateBrush;
-        static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
+        static public CanvasSolidColorBrush desaturateBrush;
+        static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,shadowColor;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
         static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap };
@@ -70,8 +70,8 @@ namespace COTG.Views
         static readonly Color incomingHistoryColor = Colors.White;// (0xFF8B008B);// Colors.DarkMagenta;
         static readonly Color raidColor = Colors.Yellow;
         //        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
-        static readonly Color selectColor = Colors.DarkMagenta;
-        static readonly Color buildColor = Colors.DarkRed;
+        static readonly Color selectColor = Color.FromArgb(255, 20, 255, 192);
+		static readonly Color buildColor = Colors.DarkRed;
         static readonly Color hoverColor = Colors.Purple;
         static readonly Color focusColor = Colors.Magenta;
         static readonly Color pinnedColor = Colors.Teal;
@@ -90,6 +90,7 @@ namespace COTG.Views
         const int cotgPopupTopLong = 300+95;
         const float actionStopDistance = 48.0f;
         static public CanvasAnimatedControl canvas;
+		public static float animationT; // approximate animation time in seconds
 
         public static void NotifyCotgPopup(int cotgPopupOpen)
         {
@@ -331,6 +332,7 @@ namespace COTG.Views
         const float srcImageSpan = 2400;
         const float bSizeGain3 = bSizeGain* bSizeGain / bSizeGain2;
         public static float pixelScale = 1;
+		public static float circleRadiusBase = 1.0f;
         public static float shapeSizeGain = 1.0f;
         public static float pixelScaleInverse = 1;
         const float dashLength = (dashD0 + dashD1) * lineThickness;
@@ -360,7 +362,8 @@ namespace COTG.Views
         }
 
         public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
-        public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
+		public static Vector2 halfShadowOffset = new Vector2(lineThickness * 0.375f, lineThickness * 0.375f);
+		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
         static DateTimeOffset lastDrawTime;
         public static bool tileSetsPending;
         private const float smallRectSpan = 4;
@@ -389,28 +392,33 @@ namespace COTG.Views
 
                 var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
 
-                float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000);
+				// not too high or we lose float precision
+				// not too low or people will see when when wraps
+				animationT = ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+
+				float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000); // wraps every 3 seconds, 0..1
+//				float accentAngle = animT * MathF.PI * 2;
                 int tick = (Environment.TickCount >> 3) & 0xfffff;
                 var animTLoop = animT.Wave();
                 int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
                 var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
                 //   ShellPage.T("Draw");
-                if (shadowBrush == null)
+                if (desaturateBrush == null)
                 {
 
-                    desaturateBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 60, B = 90, R = 60 }) { Opacity = 0.8f };
-                    raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
-                    shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
+					desaturateBrush = CanvasSolidColorBrush.CreateHdr(canvas, new Vector4(2, 0, 0, 0.75f));
+					//  raidBrush = new CanvasSolidColorBrush(canvas, Colors.BlueViolet);
+               //     shadowBrush = new CanvasSolidColorBrush(canvas, new Color() { A = 255, G = 64, B = 64, R = 64 }) { Opacity = 0.675f };
                     tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
-                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } })
+                        new CanvasGradientStop() { Position = 1.0f, Color = Colors.Black } },CanvasEdgeBehavior.Clamp,CanvasAlphaMode.Premultiplied)
                     { Opacity = 0.675f };
                     tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
                     {
                         new CanvasGradientStop() { Position = 0.0f, Color = Colors.White },
                         new CanvasGradientStop() { Position = 1.0f, Color = Colors.Blue }
-                    });
+                    }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
                     ;
 
                 }
@@ -510,9 +518,9 @@ namespace COTG.Views
                             nameColorSiegedHover = new Color() { A = intAlpha, G = 220, B = 140, R = 255 };
                             myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
                             myNameColorSieged = new Color() { A = intAlpha, G = 240, B = 120, R = 255 };
+							shadowColor = new Color() { A = 192 };
 
-
-                            var td = TileData.instance;
+							var td = TileData.instance;
                             var halfTiles = (clientSpan * (0.5f / cameraZoomLag)).CeildToInt();
                             var ccBase = cameraCLag.RoundToInt();
                             cx0 = (-halfTiles.x + ccBase.x).Max(0);
@@ -595,7 +603,7 @@ namespace COTG.Views
                     }
                     //    ds.Antialiasing = CanvasAntialiasing.Antialiased;
                 }
-                var circleRadBase = circleRadMin * shapeSizeGain*6.5f;
+                circleRadiusBase = circleRadMin * shapeSizeGain*8.5f;
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * shapeSizeGain * 6.5f;
                 //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
@@ -773,9 +781,11 @@ namespace COTG.Views
                                         foreach (var target in cluster.targets)
                                         {
                                             var c = target.CidToCC();
-                                            var t = (tick * target.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                                            var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                                            ds.DrawRoundedSquareWithShadow(c, r, Colors.White);
+											var rnd = target.CidToRandom();
+
+											var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+                                            var r = t.Wave().Lerp(circleRadiusBase, circleRadiusBase * 1.325f);
+                                            ds.DrawAccent(target,0.2f, Colors.White);
                                         }
 
                                     }
@@ -979,20 +989,30 @@ namespace COTG.Views
                             }
                         }
                     }
-
-                    foreach (var city in Spot.GetSelectedIncludingHover())
-                    {
-                        var c = city.CidToCC();
-                        var t = (tick * city.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-                        var r = t.Wave().Lerp(circleRadBase, circleRadBase * 1.325f);
-                        ds.DrawRoundedSquareWithShadow(c, r, City.IsBuild(city) ? buildColor :
-                                                            Spot.IsSelected(city) ? selectColor :
-															City.IsFocus(city) ? focusColor :
-                                                            Spot.TryGet(city,out var spot)&&spot.pinned ? pinnedColor:
-                                                           hoverColor 
-                                                            );
-
-                    }
+					
+					foreach(var cid in Spot.selected)
+					{
+						ds.DrawAccent(cid,1.0f, selectColor);
+					}
+					foreach (var cid in SettingsPage.pinned)
+					{
+						ds.DrawAccent(cid, 1.0625f, pinnedColor);
+					}
+					if (Spot.focus!=0)
+					{
+						var cid = Spot.focus;
+						ds.DrawAccent(cid, 1.125f, focusColor);
+					}
+					if (Spot.viewHover != 0)
+					{
+						var cid = Spot.viewHover;
+						ds.DrawAccent(cid, 1.25f , hoverColor);
+					}
+					if (City.build != 0)
+					{
+						var cid = City.build;
+						ds.DrawAccent(cid, 0.875f, buildColor);
+					}
                 }
 
                 if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
@@ -1136,7 +1156,7 @@ namespace COTG.Views
             bounds.Width += expand * 2;
             bounds.Height += expand * 2;
             if (drawBackground)
-                ds.FillRoundedRectangle(bounds, 3, 3, shadowBrush);
+                ds.FillRoundedRectangle(bounds, 3, 3, shadowColor);
             ds.DrawTextLayout(textLayout, at.X, at.Y, color);
         }
 
@@ -1230,25 +1250,54 @@ namespace COTG.Views
     }
     public static class CanvasHelpers
     {
-        public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
-        {
-            ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
-        }
-        public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
-        {
-            DrawRoundedSquareShadow(ds, c, circleRadius, brush.GetShadowColor(), thickness);
-            DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
-        }
-        public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
-        {
-            DrawRoundedSquare(ds, c, circleRadius, color, thickness);
-        }
-        public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
-        {
-            DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
-        }
+        //public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
+        //{
+        //    ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
+        //}
 
-        public static Vector2 WToC(this Vector2 c)
+		public static void DrawAccentBase(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
+		{
+			var dx0 = radius * MathF.Cos(angle);
+			var dy0 = radius * MathF.Sin(angle);
+			var angle1 = angle + MathF.PI * 0.1875f;
+			var dx1 = radius * MathF.Cos(angle1);
+			var dy1 = radius * MathF.Sin(angle1);
+			ds.DrawLine(cX+dx0, cY + dy0, cX + dx1, cY + dy1, color);
+			// rotated by 180
+			ds.DrawLine(cX -dx0, cY - dy0, cX - dx1, cY - dy1, color);
+		}
+
+		public static void DrawAccent(this CanvasDrawingSession ds, Vector2 c, float radius, float angularSpeed, Color brush)
+		{
+			var angle = angularSpeed * ShellPage.animationT;
+			DrawAccentBase(ds, c.X+ ShellPage.halfShadowOffset.X, c.Y+ ShellPage.halfShadowOffset.Y, radius, angle, brush.GetShadowColorDark());
+			DrawAccentBase(ds, c.X - ShellPage.halfShadowOffset.X, c.Y - ShellPage.halfShadowOffset.Y, radius, angle, brush);
+		}
+		public static void DrawAccent(this CanvasDrawingSession ds, int cid, float angularSpeedBase, Color brush)
+		{
+			var c = cid.CidToCC();
+			var rnd = cid.CidToRandom();
+
+			var angularSpeed = angularSpeedBase + rnd * 0.5f;
+			var t = (ShellPage.animationT * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+			var r = t.Wave().Lerp(ShellPage.circleRadiusBase, ShellPage.circleRadiusBase * 1.325f);
+			ds.DrawAccent(c, r,angularSpeed, brush);
+		}
+		//public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquareShadow(ds, c, circleRadius, brush.GetShadowColor(), thickness);
+		//          DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
+		//      }
+		//public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquare(ds, c, circleRadius, color, thickness);
+		//      }
+		//      public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
+		//      }
+
+		public static Vector2 WToC(this Vector2 c)
         {
             return (c - ShellPage.cameraCLag) * ShellPage.pixelScale + ShellPage.halfSpan;
         }
@@ -1284,10 +1333,16 @@ namespace COTG.Views
         }
         public static Color GetShadowColor(this Color c)
         {
-            return Color.FromArgb(192, (byte)(c.R*3/4), (byte)(c.G*3/4), (byte)(c.B*3/4));
+            return Color.FromArgb(192, (byte)(c.R*2/4), (byte)(c.G*2/4), (byte)(c.B*2/4));
             //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
             //            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
         }
-    }
+		public static Color GetShadowColorDark(this Color c)
+		{
+			return Color.FromArgb(192, (byte)(c.R * 1 / 4), (byte)(c.G * 1 / 4), (byte)(c.B * 1 / 4));
+			//            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
+			//            (0.625f).Lerp(c, Color.FromArgb(128, 0, 0, 0));
+		}
+	}
 }
 
