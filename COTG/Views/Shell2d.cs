@@ -22,6 +22,8 @@ using Microsoft.Graphics.Canvas.Text;
 using COTG.JSON;
 using Microsoft.Graphics.Canvas.Effects;
 using static COTG.Game.Enum;
+using Windows.UI.Text;
+
 namespace COTG.Views
 {
     public partial class ShellPage
@@ -51,15 +53,18 @@ namespace COTG.Views
         static public CanvasSolidColorBrush desaturateBrush;
         static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,shadowColor;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
-        static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap };
-        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap };
+		static FontStretch fontStretch = FontStretch.Condensed;
+		static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap,FontStretch=fontStretch };
+        static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch=fontStretch };
         static CanvasTextFormat nameTextFormat = new CanvasTextFormat()
         {
             FontSize = 10,
             HorizontalAlignment = CanvasHorizontalAlignment.Center,
             VerticalAlignment = CanvasVerticalAlignment.Center,
-            WordWrapping = CanvasWordWrapping.NoWrap,
-            Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap
+			FontStretch=fontStretch,
+
+			WordWrapping = CanvasWordWrapping.NoWrap,
+         //   Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap
         };
         //        static readonly Color attackColor = Colors.DarkRed;
         static readonly Color attackColor = Colors.White;
@@ -78,7 +83,24 @@ namespace COTG.Views
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
         static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
         static Vector2 troopImageOriginOffset;
-        static Dictionary<string, CanvasTextLayout> nameLayoutCache = new Dictionary<string, CanvasTextLayout>();
+
+		const int maxTextLayouts = 1024;
+
+        static Dictionary<int, CanvasTextLayout> nameLayoutCache = new Dictionary<int, CanvasTextLayout>();
+		static public CanvasTextLayout GetTextLayout(CanvasDrawingSession ds, string name, CanvasTextFormat format, float width = 0, float height = 0)
+		{
+			var hash = name.GetHashCode(StringComparison.Ordinal);
+			if (nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal), out var rv))
+				return rv;
+			rv = new CanvasTextLayout(ds, name, format, width, height);
+			if (nameLayoutCache.Count >= maxTextLayouts)
+				nameLayoutCache.Remove(nameLayoutCache.First().Key);
+			nameLayoutCache.Add(hash, rv);
+			
+			return rv;
+
+		}
+
         const int bottomMargin = 0;
         const int cotgPopupWidth = 550;
         const int cotgPopupLeft = 438;
@@ -372,7 +394,7 @@ namespace COTG.Views
         {
             underMouse = null;
             bestUnderMouseScore = 32 * 32;
-            if (!(IsWorldView()))
+            if (!(IsWorldView()) || (TileData.state<TileData.State.loadingImages))
                 return;
 
 
@@ -396,6 +418,13 @@ namespace COTG.Views
 				// not too low or people will see when when wraps
 				animationT = ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
 
+				//{
+				//	var i = (int)(animationT / 4.0f);
+				//	var stretchCount = FontStretch.UltraExpanded - FontStretch.UltraCondensed+1;
+				//	fontStretch = FontStretch.UltraCondensed + (i % stretchCount);
+				//	tipTextFormat.FontStretch = fontStretch;
+				//	tipTextFormatCentered.FontStretch = fontStretch;
+				//}
 				float animT = ((uint)Environment.TickCount % 3000) * (1.0f / 3000); // wraps every 3 seconds, 0..1
 //				float accentAngle = animT * MathF.PI * 2;
                 int tick = (Environment.TickCount >> 3) & 0xfffff;
@@ -425,10 +454,12 @@ namespace COTG.Views
                 var notFaded = true;
                 defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
-                var ds = args.DrawingSession;
+			
                 //                ds.Blend = ( (int)(serverNow.Second / 15) switch { 0 => CanvasBlend.Add, 1 => CanvasBlend.Copy, 2 => CanvasBlend.Add, _ => CanvasBlend.SourceOver } );
+				
 
-                ds.Antialiasing = CanvasAntialiasing.Aliased;
+
+              
                 //ds.TextRenderingParameters = new CanvasTextRenderingParameters(!App.IsKeyPressedControl() ? CanvasTextRenderingMode.Outline : CanvasTextRenderingMode.Default, CanvasTextGridFit.Default);
 
                 //              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
@@ -440,7 +471,7 @@ namespace COTG.Views
                 var wantDetails = deltaZoom > 0;
                 var wantImage = deltaZoom < detailsZoomFade;
 
-                {
+                
                     var srcP0 = new Point((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
                                               (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 * pixelScaleInverse,
@@ -472,7 +503,13 @@ namespace COTG.Views
                     }
 
                     var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
-                    if (worldBackground != null && IsWorldView() && wantImage)
+					var wantDesaturate = attacksVisible;
+
+					CanvasCommandList commands = wantDesaturate ? new CanvasCommandList(canvas) : null;
+					var ds = wantDesaturate ? commands.CreateDrawingSession() :  args.DrawingSession;
+
+					ds.Antialiasing = CanvasAntialiasing.Aliased;
+					if (worldBackground != null &&  wantImage)
                     {
 
                         if (wantImage)
@@ -499,7 +536,6 @@ namespace COTG.Views
                     //            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
                     //           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
                     // if (IsPageDefense())
-                    if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
                     {
                         if (wantDetails)
                         {
@@ -582,19 +618,31 @@ namespace COTG.Views
 
 
                         }
-                        //else
-                        {
+                        
 
                             // fade out background
-                            if (attacksVisible)
-                            {
-                                ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
-                                notFaded=false;
-                            }
-                        }
+                            //if (attacksVisible)
+                            //{
+                            //    ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+                            //    notFaded=false;
+                            //}
+                        if(commands!= null)
+						{
+							var _ds = args.DrawingSession;
+							var emboss = new EmbossEffect() { Source = commands, Amount = 6 + MathF.Sin(animationT * 0.25f) * 4, Angle =(1+ MathF.Sin(animationT * .32f)) * MathF.PI,CacheOutput=false };
 
-                        // overlay
-                        if (worldChanges != null)
+						var r = new Rect(new Point(), clientSpan.ToSize());
+							
+					
+							_ds.DrawImage( emboss,r,r,0.5f);
+							ds = _ds;
+							commands.Dispose();
+							
+
+						}
+
+						// overlay
+						if (worldChanges != null)
                             ds.DrawImage(worldChanges,
                                 new Rect(destP0, destP1),
                                 new Rect(srcP0, srcP1), 1.0f,
@@ -602,14 +650,13 @@ namespace COTG.Views
 
                     }
                     //    ds.Antialiasing = CanvasAntialiasing.Antialiased;
-                }
-                circleRadiusBase = circleRadMin * shapeSizeGain*8.5f;
+                
+                circleRadiusBase = circleRadMin * shapeSizeGain*7.9f;
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * shapeSizeGain * 6.5f;
                 //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
 
 
-                if (!IsCityView())
                 {
                     var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible();
                     var outgoingVisible = OutgoingTab.IsVisible();
@@ -992,7 +1039,7 @@ namespace COTG.Views
 					
 					foreach(var cid in Spot.selected)
 					{
-						ds.DrawAccent(cid,1.0f, selectColor);
+						ds.DrawAccent(cid,-1.0f, selectColor);
 					}
 					foreach (var cid in SettingsPage.pinned)
 					{
@@ -1001,7 +1048,7 @@ namespace COTG.Views
 					if (Spot.focus!=0)
 					{
 						var cid = Spot.focus;
-						ds.DrawAccent(cid, 1.125f, focusColor);
+						ds.DrawAccent(cid, -1.125f, focusColor);
 					}
 					if (Spot.viewHover != 0)
 					{
@@ -1015,7 +1062,6 @@ namespace COTG.Views
 					}
                 }
 
-                if (!IsCityView() && TileData.state >= TileData.State.loadingImages)
                 {
                     if (wantDetails)
                     {
@@ -1031,16 +1077,12 @@ namespace COTG.Views
                                     (var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
                                     if (name != null)
                                     {
-                                        if (!nameLayoutCache.TryGetValue(name, out var layout))
-                                        {
-                                            layout = new CanvasTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
-                                            nameLayoutCache.Add(name, layout);
-                                        }
+                                        var layout = GetTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
 
                                         var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
 
-                                        ds.DrawTextLayout(layout, new Vector2((float)(rect.Left + rect.Right) * 0.5f,
-                                            (float)rect.Top + (float)rect.Height * 7.25f / 8.0f),
+                                        ds.DrawTextLayout(layout, (float)(rect.Left + rect.Right) * 0.5f,
+                                            (float)rect.Top + (float)rect.Height * 7.25f / 8.0f,
                                             isMine ?
                                                 (hasIncoming ?
                                                     (spot.underSiege ? myNameColorSieged
@@ -1077,9 +1119,9 @@ namespace COTG.Views
                     //         Spot.viewHover = 0; // clear
                     _toolTip = underMouse.GetToopTip(serverNow);
                 }
-                if (_toolTip != null && IsWorldView())
+                if (_toolTip != null )
                 {
-                    CanvasTextLayout textLayout = new CanvasTextLayout(ds, _toolTip, tipTextFormat, 0.0f, 0.0f);
+                    CanvasTextLayout textLayout = GetTextLayout(ds, _toolTip, tipTextFormat, 0.0f, 0.0f);
                     var bounds = textLayout.DrawBounds;
                     Vector2 c = mousePosition + new Vector2(16, 16);
                     const float expand = 7;
@@ -1099,9 +1141,9 @@ namespace COTG.Views
                     ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
                 }
                 var _contTip = contToolTip;
-                if (_contTip != null && IsWorldView())
+                if (_contTip != null )
                 {
-                    CanvasTextLayout textLayout = new CanvasTextLayout(ds, _contTip, tipTextFormat, 0.0f, 0.0f);
+                    CanvasTextLayout textLayout = GetTextLayout(ds, _contTip, tipTextFormat, 0.0f, 0.0f);
                     var bounds = textLayout.DrawBounds;
                     Vector2 c = new Vector2(16, 16);
                     const float expand = 7;
@@ -1148,7 +1190,7 @@ namespace COTG.Views
         {
             float xLoc = at.X;
             float yLoc = at.Y;
-            CanvasTextLayout textLayout = new CanvasTextLayout(ds, text, format, 0.0f, 0.0f);
+            CanvasTextLayout textLayout = GetTextLayout(ds, text, format, 0.0f, 0.0f);
             var bounds = textLayout.DrawBounds;
             const float expand = 4;
             bounds.X += at.X -expand;
@@ -1157,7 +1199,7 @@ namespace COTG.Views
             bounds.Height += expand * 2;
             if (drawBackground)
                 ds.FillRoundedRectangle(bounds, 3, 3, shadowColor);
-            ds.DrawTextLayout(textLayout, at.X, at.Y, color);
+            ds.DrawTextLayout(textLayout, at, color);
         }
 
         //      private void DrawAction( CanvasDrawingSession ds, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1,Color color)
@@ -1255,7 +1297,8 @@ namespace COTG.Views
         //    ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
         //}
 
-		public static void DrawAccentBase(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
+
+		public static void DrawAccentBaseI(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
 		{
 			var dx0 = radius * MathF.Cos(angle);
 			var dy0 = radius * MathF.Sin(angle);
@@ -1265,6 +1308,11 @@ namespace COTG.Views
 			ds.DrawLine(cX+dx0, cY + dy0, cX + dx1, cY + dy1, color);
 			// rotated by 180
 			ds.DrawLine(cX -dx0, cY - dy0, cX - dx1, cY - dy1, color);
+		}
+		public static void DrawAccentBase(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
+		{
+			DrawAccentBaseI(ds, cX, cY, radius, angle, color);
+			DrawAccentBaseI(ds, cX, cY, radius*0.875f, angle+angle.SignOr0()*MathF.PI*0.0625f, color);
 		}
 
 		public static void DrawAccent(this CanvasDrawingSession ds, Vector2 c, float radius, float angularSpeed, Color brush)

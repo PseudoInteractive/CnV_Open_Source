@@ -398,8 +398,10 @@ namespace COTG.Services
 		}
         public static async Task Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
-            //   Log(_cid.CidToString());
-            if (getCityFirst)
+			MainPage.ClearDungeonList();
+			Dungeon.raidDungeons.Clear();
+			//   Log(_cid.CidToString());
+			if (getCityFirst)
                 await GetCity.Post(_cid);
             //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();

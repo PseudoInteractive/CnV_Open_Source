@@ -108,16 +108,19 @@ namespace COTG.Game
         }
         public static float desiredCarry = 1.125f;
         public static bool raidOnce;
-        public static (int reps,float averageCarry) ComputeIdealReps(Dungeon d, City city)
+        public static (int reps,float averageCarry, float fractionalReps) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
             var carry = city.CarryCapacity(d.isWater); // this should be on demand
             if (carry <= 0)
-                return (0, 0);
-         //   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
-            int ideal = (int)( carry / (loot * desiredCarry) + 0.5f);
-            ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
-            return (ideal, carry /(ideal*loot) );
+                return (0, 0,0);
+			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
+			var  idealf = (carry / (loot * desiredCarry) );
+			int ideal = (int)(idealf+0.375f);
+		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
+			if (idealf < ideal || !SettingsPage.raidSendExact)
+				idealf = ideal;
+            return (ideal, carry /(idealf*loot),idealf );
         }
 
 
@@ -153,7 +156,7 @@ namespace COTG.Game
                 if (!IsRaider(ttc.type) || !Raid.includeRaiders[ttc.type])
                     continue;
                 if(IsWaterRaider(ttc.type) == d.isWater)
-                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count* troopFraction / r.reps).ToString() });
+                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count* troopFraction / r.fractionalReps).ToString() });
 
             }
             var trs = JsonSerializer.Serialize(tr);

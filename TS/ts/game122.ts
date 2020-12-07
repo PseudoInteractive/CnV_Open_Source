@@ -7568,7 +7568,7 @@ i011.J55 = function() {
                 case 6:
                   n0q = n0q.h5SS('%@');
                   var c0q = 0;
-                  var B0q = function(Y0q) {
+                  var B0q = function(Y0q): string {
                     var O55 = 2;
                     for (; O55 !==
                       20;) {
@@ -14055,7 +14055,7 @@ var cotgsubscribe = amplify;
     function ProcessBuildQueue() {
       if (D6.bq)
         if (D6.bq[0]) {
-          let callDelay = 2000;
+          let callDelay = 1000;
           var n1g = Number(D6.bq[0].bid);
           var Y1g = Number(D6.bq[0].btype);
           var J1g =
@@ -14079,12 +14079,12 @@ var cotgsubscribe = amplify;
               B1g * (100));
             var Z1g = Number(h1g) - Number(f1g);
             var g1g = Q2(Number(Z1g));
-            if (Z1g > 200) {
+            if (Z1g > 100) {
               if (Z1g + 100 < callDelay)
                 callDelay = Z1g + 100;
               if (D6["itu"] && D6["itu"][6] && D6["itu"][6] > 0) {
                 DoPoll2(500);
-                callDelay = 600;
+               // callDelay = 600;
               }
               UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
               //   console.log("progress " + callDelay);
@@ -14092,24 +14092,25 @@ var cotgsubscribe = amplify;
             else {
               // this building is complete
               //    console.log("done!");
-              D6.bd[J1g].bid = V1g;
+              D6.bd[J1g].bid = V1g;  // insert thebuilding into the map
               D6.bd[J1g].bl = P1g;
-              $(__s[6875])
+              $(__s[6875]) // remove from queue
                 .first()
                 .remove();
               D6.bq.splice(0, 1);
               h9(J1g, n1g);
               V8();
               N2();
-              DoPoll2(500);
-              callDelay = 200;
+            //  DoPoll2(500);
+            //  callDelay = 200;
+            callDelay=0;
             }
 
           }
           else {
             // This happens when items are queued but we are out of resources or something
             //  console.log("pa?");
-            DoPoll2(500);
+          //  DoPoll2(500);
 
 
           }
@@ -17117,8 +17118,8 @@ var cotgsubscribe = amplify;
       try {
         //        var g3g = arguments.callee.caller.name;
         var K3g = '';
-        $(__s[Z8R >> 1640553792])
-          .html(K3g);
+        $(__s[Z8R])
+          .html('');
         $(__s[Z8R & 2147483647])
           .removeClass(__s[6769]);
         for (var f3g in V2) {
@@ -18567,7 +18568,7 @@ var cotgsubscribe = amplify;
               ppdt = y9T;
               $(__s[R2p * 1] + d9T)
                 .val("");
-              var B9T = m6[d9T]["r"];
+              let B9T = m6[d9T]["r"] as [];
               for (var Z9T in B9T) {
                 var U9T = B9T[
                   Z9T] * b9T;

@@ -14,6 +14,7 @@
       x:Name="shellPage"
       Loaded="OnLoaded"
       mc:Ignorable="d"
+	  IsTabStop="True"
 >
     <Page.Resources>
         

@@ -192,7 +192,7 @@ namespace COTG.Game
             }
         }
 
-        internal string Format(char delimiter = ' ')
+        internal string Format(string delimiter = " ")
         {
 
             var rv = type == reportPending ? miscInfo : string.Empty;
@@ -227,9 +227,9 @@ namespace COTG.Game
             count = _count;
         }
 
-        internal string Format(char delimiter)
+        internal string Format(string delimiter)
         {
-            return count > 0?  $"{delimiter}{count:N0} {Enum.ttNameWithCaps[type]}" : (" " + Enum.ttNameWithCaps[type]);
+            return count > 0?  $"{delimiter}{count:N0} {Enum.ttNameWithCaps[type]}" : (delimiter + Enum.ttNameWithCaps[type]);
         }
         [JsonIgnore]
         public bool isSenator => type == Enum.ttSenator;
@@ -427,7 +427,19 @@ namespace COTG.Game
             }
             return rv;
         }
-        public static List<TroopTypeCount> GetTroopTypeCount(this JsonElement tt, Func<int, bool> filter = null)
+
+		public static string Format(this IEnumerable<TroopTypeCount> l, string separator)
+		{
+			string rv = string.Empty;
+			string sep = string.Empty;
+			foreach (var ttc in l)
+			{
+				rv += ttc.Format(sep);
+				sep = separator;
+			}
+			return rv;
+		}
+		public static List<TroopTypeCount> GetTroopTypeCount(this JsonElement tt, Func<int, bool> filter = null)
         {
             var tc = new List<TroopTypeCount>();
             if (tt.ValueKind == JsonValueKind.Object)

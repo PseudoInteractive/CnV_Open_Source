@@ -41,7 +41,7 @@ namespace COTG.Views
     {
         static float[] raidSteps;
         public static MainPage instance;
-        public string lastTip;
+     
         public float troopPercent = 1;
         //        public static City showingRowDetails;
 
@@ -79,13 +79,14 @@ namespace COTG.Views
 			//cityMenuFlyout.Items.Add(c);
 
 			cityGrid.OnKey = Spot.OnKeyDown;
-			
+
 			//cityGrid.ContextFlyout = cityMenuFlyout;
 
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
 			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-			cityGrid.PointerMoved+=CityGrid_PointerMoved;
-            
+			cityGrid.ProcessTooltips();
+			dungeonGrid.ProcessTooltips();
+			
         }
 
         private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
@@ -93,7 +94,7 @@ namespace COTG.Views
 //            Log("Current item " + sender.ToString());
         }
 
-  
+		public static City expandedCity; // city with dungeon list visible if any 
         private void ColumnHeaderTap()
         {
 
@@ -125,18 +126,7 @@ namespace COTG.Views
            // newSel.SetFocus(true,false,true);
         }
 
-        private void CityGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-           
-
-            var info = Spot.HitTest(sender, e);
-            var str = info.column?.Column?.Tip ?? string.Empty;
-            if (str!=lastTip)
-            {
-                lastTip = str;
-                TabPage.mainTabs.tip.Text = str; // Todo:  use the correct tabPage
-            }
-        }
+        
         private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
         {
 			
@@ -145,11 +135,11 @@ namespace COTG.Views
         private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             Spot.ProcessPointerExited();
-            if (string.Empty!=lastTip)
-            {
-                lastTip = string.Empty;
-                TabPage.mainTabs.tip.Text = string.Empty;
-            }
+            //if (string.Empty!=lastTip)
+            //{
+            //    lastTip = string.Empty;
+            //    TabPage.mainTabs.tip.Text = string.Empty;
+            //}
         }
 
 
@@ -257,22 +247,22 @@ namespace COTG.Views
         {
             if (instance == null)
                 return;
+		
             //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
-
-            instance.Dispatcher.DispatchOnUIThread( () =>
-            {
+			
+          
                 instance.dungeonGrid.ItemsSource = dungeons;
-            });
+           
         }
         public static void UpdateRaidPlans()
         {
-            instance.Dispatcher.DispatchOnUIThread(() =>
+           // instance.Dispatcher.DispatchOnUIThread(() =>
             {
                 // trick it
                 var temp = instance.dungeonGrid.ItemsSource;
                 instance.dungeonGrid.ItemsSource = null;
                 instance.dungeonGrid.ItemsSource = temp;
-            });
+            }
             // tell UI that list data has changed
            
         }

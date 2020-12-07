@@ -14,7 +14,8 @@
 			  mc:Ignorable="d"
 			  Tag="Raid"
 			  TabNavigation="Once"
-			  IsTabStop="True">
+			  IsTabStop="True"
+			  FontFamily="Tw Cen MT Condensed">
 
 	<Grid x:Name="cityBaseGrid">
 		<Grid.RowDefinitions>
@@ -34,6 +35,7 @@
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="2"
+							
 							AllowFocusOnInteraction="True"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
@@ -50,8 +52,52 @@
 							FontSize="{StaticResource MediumFontSize}"
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
-							SelectionUnit="Row">
-
+							SelectionUnit="Row"
+							RowDetailsDisplayMode="Single"
+							
+							>
+<tg:RadDataGrid.RowDetailsTemplate>
+        <DataTemplate>
+            <tg:RadDataGrid ItemsSource="{Binding dungeons}"
+                              UserGroupMode="Disabled"
+							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+							ColumnDataOperationsMode="Flyout"
+							IsTabStop="True"
+							CanUserChooseColumns="True"
+							UserFilterMode="Auto"
+							IsTextScaleFactorEnabled="False"
+							SelectionUnit="Row"
+							AlternationStep="2"
+							PointerMoved="{x:Bind cotg:AApp.ProcessPointerMoved }"
+                              AutoGenerateColumns="False">
+                <tg:RadDataGrid.Columns>
+                   <tg:DataGridNumericalColumn PropertyName="dist"
+												CellContentStyle="{StaticResource RightAlign}"
+											   Width="32"
+											   SizeMode="Fixed"
+												Tip="Distance to dungeon" />
+					<tg:DataGridTextColumn PropertyName="plan"
+										   CellContentStyle="{StaticResource RightAlignLink}"
+											   SizeMode="Auto"
+										   Tip="Click here to send raids" />
+					<tg:DataGridNumericalColumn PropertyName="level"
+												  SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}" />
+					<tg:DataGridNumericalColumn PropertyName="completion"
+												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+												CellContentFormat="{}{0,6:N1}"
+												  SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}" />
+					<tg:DataGridTextColumn PropertyName="kind"
+										     SizeMode="Auto"
+										   CellContentStyle="{StaticResource RightAlign}" />
+					<tg:DataGridTextColumn PropertyName="xy"
+										     SizeMode="Auto"
+										   CellContentStyle="{StaticResource CenterAlignLink}" />
+                </tg:RadDataGrid.Columns>
+            </tg:RadDataGrid>
+        </DataTemplate>
+    </tg:RadDataGrid.RowDetailsTemplate>
 				<tg:RadDataGrid.Commands>
 					<view:CustomDataBindingCompleteCommand />
 					<model:CityGridToggleColumnVisibilityCommand />
@@ -70,87 +116,96 @@
 				</tg:RadDataGrid.AggregateDescriptors>
 
 				<tg:RadDataGrid.Columns>
+
+					<tg:DataGridTextColumn Header= "+" 
+										   PropertyName="dungeonsToggle"
+										   CellContentStyle="{StaticResource RightAlignLink}"
+										   Tip="Tap to expend or collapse dungeons" />
 					<tg:DataGridImageColumn PropertyName="icon"
 											Header="I"
 											SizeMode="Fixed"
+											Width="32"
 											HeaderTip="Click to switch to this city"
 											Tip="Click to switch to this city"
-											Width="34" />
+											 />
 					<tg:DataGridTextColumn PropertyName="nameAndRemarks"
 										   Tip="Click to raid from this city without switching cities (fast)"
 										   Header="Name"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
-										   Width="100" />
+										    />
 					<tg:DataGridTextColumn PropertyName="xy"
 										   HeaderTip="City Coordinates"
 										   Tip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
-										   Width="80" />
+										    />
 					<tg:DataGridNumericalColumn PropertyName="cont"
-												SizeMode="Fixed"
+												
 												CellContentStyle="{StaticResource CenterAlign}"
-												Width="42" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
-												Width="80" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="tsRaid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
-												Width="80"
+												
 												Tip="TS of Troops at home that can raid" />
 					<tg:DataGridNumericalColumn PropertyName="tsHome"
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS of Troops at home (including non raiding troops)"
 												CellContentFormat="{}{0,7:N0}"
-												Width="80"
+												
 												IsVisible="False" />
 					<tg:DataGridNumericalColumn PropertyName="raidReturn"
 												Tip="Click here to bring troops home asap"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,6:N0}"
-												Width="50" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="raidCarry"
 												Tip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,5:N1}"
-												Width="80" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="points"
 												Tip="City score"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
-												Width="80" />
+												 />
 					<tg:DataGridTextColumn PropertyName="remarks"
 										   CellContentStyle="{StaticResource LeftAlign}"
-										   Width="60"
+										   
 										   IsVisible="False" />
 					<tg:DataGridTextColumn PropertyName="senny"
 										   CellContentStyle="{StaticResource LeftAlign}"
-										   Width="40"
+										   
 										   IsVisible="False" />
 					<tg:DataGridBooleanColumn PropertyName="isCastle"
 											  IsVisible="False"
-											  Width="40" />
+											   />
 					<tg:DataGridBooleanColumn PropertyName="isOnWater"
 											  IsVisible="False"
-											  Width="40" />
+											   />
 					<tg:DataGridNumericalColumn PropertyName="carryCapacity"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,8:N0}"
 												IsVisible="False"
-												Width="80" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="activeCommands"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,2:N0}"
 												IsVisible="False"
-												Width="40" />
+												 />
 					<tg:DataGridNumericalColumn PropertyName="commandSlots"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,2:N0}"
 												IsVisible="False"
-												Width="40" />
+												 />
+					<tg:DataGridTextColumn PropertyName="troopsString"
+										   IsCellFlyoutEnabled="True"
+                                             />
 				</tg:RadDataGrid.Columns>
 
 			</tg:RadDataGrid>
@@ -254,7 +309,7 @@
 				<ComboBox x:Name="raidCarryBox"
 						  Header="Carry%"
 						  SelectionChanged="RaidCarrySelChanged"
-						  Width="200"
+						  
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
@@ -281,6 +336,12 @@
 								  IsOn="{x:Bind view:SettingsPage.raidOffDungeons,Mode=TwoWay}"
 								  OnContent="Include"
 								  OffContent="Exclude"
+								  Margin="6,2,6,2" />
+				<ToggleSwitch     Header="# to Send"
+								  FontSize="{StaticResource MediumFontSize}"
+								  IsOn="{x:Bind view:SettingsPage.raidSendExact,Mode=TwoWay}"
+								  OnContent="Enough"
+								  OffContent="All"
 								  Margin="6,2,6,2" />
 
 			</tk:WrapPanel>

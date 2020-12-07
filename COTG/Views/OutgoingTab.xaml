@@ -47,63 +47,64 @@
                 <tg:DataGridImageColumn PropertyName="icon"
                                         Header="I"
                                         SizeMode="Fixed"
-                                        Width="32" />
+                                        Width="32"
+                                         />
                 <tg:DataGridTextColumn PropertyName="Claim"
-                                            SizeMode="Fixed"
+                                            
                                        
                                        CellContentStyle="{StaticResource CenterAlign}"
-                                            Width="30" />
+                                             />
                 <tg:DataGridTextColumn PropertyName="xy"
-                                       SizeMode="Fixed"
+                                       
                                        
                                        CellContentStyle="{StaticResource CenterAlignLink}"
-                                       Width="44" />
+                                        />
                 <tg:DataGridNumericalColumn PropertyName="incomingAttacks"
                                             Header="inA"
-                                            SizeMode="Fixed"
+                                            
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}"
-                                            Width="30" />
+                                             />
                 <tg:DataGridNumericalColumn PropertyName="incTotal"
                                             Header="incTS"
-                                            SizeMode="Fixed"
+                                            
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            Width="55" />
+                                             />
                 
                 <tg:DataGridNumericalColumn PropertyName="tsHome"
                                             Header="Def"
-                                            SizeMode="Fixed"
+                                            
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            Width="55" />
+                                             />
                 <tg:DataGridTextColumn PropertyName="player"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       SizeMode="Stretch"
-                                       Width="50" />
+                                       
+                                        />
                 
                 <tg:DataGridTextColumn PropertyName="cityName"
-                                       SizeMode="Stretch"
+                                       
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       Width="60" IsVisible="False" />
+                                        IsVisible="False" />
                 <tg:DataGridTextColumn Header="Alliance"
                                        PropertyName="alliance"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       SizeMode="Stretch"
-                                       Width="50" IsVisible="False" />
+                                       
+                                        IsVisible="False" />
                 <tg:DataGridTextColumn PropertyName="attackers"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       SizeMode="Stretch"
-                                       Width="50" />
+                                       
+                                        />
                 <tg:DataGridNumericalColumn PropertyName="cont"
                                             CellContentStyle="{StaticResource CenterAlign}"
-                                            SizeMode="Fixed"
-                                            Width="40" />
+                                            
+                                             />
                 <tg:DataGridTextColumn PropertyName="classificationString"
                                        Header="intel"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       SizeMode="Stretch"
-                                       Width="50" />
+                                       
+                                        />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tg:RadDataGrid x:Name="armyGrid"
@@ -124,48 +125,48 @@ IsTabStop="True"
                                     AlternationStep="2"
                                     AutoGenerateColumns="False">
             <tg:RadDataGrid.Columns>
-                <tg:DataGridTimeColumn Width="80"
+                <tg:DataGridTimeColumn 
                                                    PropertyName="time"
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-                                                   SizeMode="Fixed"
+                                                   
                                                    CellContentStyle="{StaticResource CenterAlign}" />
                 <tg:DataGridTextColumn PropertyName="sXY"
-                                                   Width="45"
-                                                   SizeMode="Fixed"
+                                                   
+                                                   
                                                    CellContentStyle="{StaticResource CenterAlignLink}" />
                 <tg:DataGridTextColumn PropertyName="Type"
-                                                   Width="50"
-                                                   SizeMode="Fixed"
+                                                   
+                                                   
                                                    CellContentStyle="{StaticResource CenterAlign}" />
 
                 <tg:DataGridNumericalColumn PropertyName="ts"
-                                            SizeMode="Fixed"
+                                            
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            Width="50" />
+                                             />
                 <tg:DataGridTextColumn PropertyName="sPlayer"
                                                    Header="Player"
-                                                   Width="70"
-                                                   SizeMode="Stretch"
+                                                   
+                                                   
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                 <tg:DataGridNumericalColumn PropertyName="dist"
-                                            SizeMode="Fixed"
+                                            
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,3:N0}"
-                                            Width="32" />
+                                             />
                 <tg:DataGridTextColumn PropertyName="sourceCN"
                                                    Header="City"
-                                                   Width="70"
-                                                   SizeMode="Stretch"
+                                                   
+                                                   
                                                    CellContentStyle="{StaticResource LeftAlign}" />
                 <tg:DataGridNumericalColumn PropertyName="dTS"
-                                            SizeMode="Fixed"
+                                            
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            Width="50" />
+                                             />
                 <tg:DataGridTextColumn PropertyName="troopInfo"
-                                                   Width="70"
-                                                   SizeMode="Stretch"
+                                                   IsCellFlyoutEnabled="True"
+                                                   
                                                    CellContentStyle="{StaticResource LeftAlign}" />
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>

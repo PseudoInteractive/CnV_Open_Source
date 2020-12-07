@@ -14,7 +14,6 @@
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
-      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
@@ -26,10 +25,9 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-        <telerikGrid:RadDataGrid x:Name="selectedGrid" x:FieldModifier="public"
+        <tg:RadDataGrid x:Name="selectedGrid" x:FieldModifier="public"
                         Grid.Row="1"
-                        Margin="0,14,0,0"
-                        AutoGenerateColumns="False"
+						AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
 								 IsTabStop="True"
 								 TabFocusNavigation="Once"
@@ -37,58 +35,57 @@
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
-                        FontSize="{StaticResource MediumFontSize}"
-                                 AllowFocusOnInteraction="True"
+						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-                        >
-            <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridImageColumn PropertyName="icon"
+						FontFamily="Tw Cen MT Condensed"
+						ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <tg:RadDataGrid.Columns>
+                <tg:DataGridImageColumn PropertyName="icon"
                                         Header="I"
                                         SizeMode="Fixed"
-                                        Width="34" />
-                <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
-                                       SizeMode="Auto"
-                                       Width="100" />
-                <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                       SizeMode="Fixed"
+                                        Width="32" />
+                <tg:DataGridTextColumn PropertyName="nameAndRemarks"
+                                     
+                                       />
+                <tg:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
-                                       Width="80" />
+                                       />
                <tg:DataGridBooleanColumn PropertyName="pinned"
                                          IsVisible="True"
-                                         
-                                         CanUserEdit="True"
-                                          Width="20" />
+                                         Tip="Hold down shift to toggle pinned status for all selected spots"
+                                      SizeMode="Fixed"
+                                          Width="28" />
 
-                <telerikGrid:DataGridNumericalColumn PropertyName="cont"
+                <tg:DataGridNumericalColumn PropertyName="cont"
                                        SizeMode="Fixed"
                                        CellContentStyle="{StaticResource CenterAlign}"
-                                       Width="38" />
-                <telerikGrid:DataGridTextColumn PropertyName="player"
-                                       SizeMode="Auto"
-                                       Width="80" />
-                <telerikGrid:DataGridTextColumn PropertyName="alliance"
-                                       SizeMode="Auto"
-                                       Width="80" />
-                <telerikGrid:DataGridNumericalColumn PropertyName="points"
-                                       SizeMode="Auto"
-                                            Width="80" />
+                                       Width="34" />
+                <tg:DataGridTextColumn PropertyName="player"
+                                     />
+                <tg:DataGridTextColumn PropertyName="alliance"
+                                      />
+                <tg:DataGridNumericalColumn PropertyName="points"
+                                     
+                                      />
                                 <tg:DataGridTextColumn PropertyName="remarks"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       Width="60"
                                        IsVisible="False" />
                                 <tg:DataGridBooleanColumn PropertyName="isCastle"
                                           IsVisible="True"
-                                          Width="20" />
+                                           />
                 <tg:DataGridBooleanColumn PropertyName="isOnWater"
                                           IsVisible="True"
-                                          Width="20" />
-            </telerikGrid:RadDataGrid.Columns>
-        </telerikGrid:RadDataGrid>
+                                          />
+				<tg:DataGridTextColumn PropertyName="troopsString"
+                                       IsCellFlyoutEnabled="True"
+                                             />
+            </tg:RadDataGrid.Columns>
+        </tg:RadDataGrid>
 
     </Grid>
 </local:UserTab>

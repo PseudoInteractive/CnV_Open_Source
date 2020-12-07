@@ -45,6 +45,7 @@ using Windows.Foundation.Collections;
 using System.Threading;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 namespace COTG
 {
@@ -244,7 +245,8 @@ namespace COTG
         }
         public static void SetupCoreWindowInputHooks()
         {
-            foreach(var view in CoreApplication.Views)
+			
+			foreach (var view in CoreApplication.Views)
             {
                 Log($"{view.TitleBar.ToString()} {view.IsMain} ");
                 var window = view.CoreWindow;
@@ -830,120 +832,120 @@ namespace COTG
 		}
 	}
 
-    public static class Note 
-    {
-        static Note()
-        {
-            ShellPage.inAppNote.Closed +=InAppNote_Closed;
-        }
+	public static class Note
+	{
+		static Note()
+		{
+			ShellPage.inAppNote.Closed +=InAppNote_Closed;
+		}
 
-        private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
-        {
-           if(e.DismissKind==InAppNotificationDismissKind.User)
-            {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource = new CancellationTokenSource();
-            }
-        }
+		private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
+		{
+			if (e.DismissKind==InAppNotificationDismissKind.User)
+			{
+				cancellationTokenSource.Cancel();
+				cancellationTokenSource = new CancellationTokenSource();
+			}
+		}
 
-        // [Conditional("TRACE")]
-        public static void L(string s)
-        {
-            ChatTab.L(s);
-        }
-        static DateTime nextInAppNote=new DateTime(0);
-        static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        public static async void Show(string s,bool lowPriority=false, int timeout = 5000)
-        {
-            const int noteDelay=2;
-            if (ShellPage.instance != null)
-            {
-                
-                var now = DateTime.UtcNow;
-                var next = nextInAppNote;
-                if(now >= next)
-                {
-                    // all clear
-                    nextInAppNote = now + TimeSpan.FromSeconds(noteDelay);
-                }
-                else
-                {
+		// [Conditional("TRACE")]
+		public static void L(string s)
+		{
+			ChatTab.L(s);
+		}
+		static DateTime nextInAppNote = new DateTime(0);
+		static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+		public static async void Show(string s, bool lowPriority = false, int timeout = 5000)
+		{
+			const int noteDelay = 2;
+			if (ShellPage.instance != null)
+			{
+
+				var now = DateTime.UtcNow;
+				var next = nextInAppNote;
+				if (now >= next)
+				{
+					// all clear
+					nextInAppNote = now + TimeSpan.FromSeconds(noteDelay);
+				}
+				else
+				{
 					if (lowPriority)
 						return;
-                    var wait = (next - now);
+					var wait = (next - now);
 					if (wait.TotalSeconds >= 20.0f)
 						return;
 
-                    nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
+					nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
 
-                    try
-                    {
-                        await Task.Delay(wait, cancellationTokenSource.Token);
+					try
+					{
+						await Task.Delay(wait, cancellationTokenSource.Token);
 
-                    }
-                    catch (Exception _exception)
-                    {
-                        Log(_exception.Message);
-                        return;
-                    }
+					}
+					catch (Exception _exception)
+					{
+						Log(_exception.Message);
+						return;
+					}
 
-                }
-                
-                App.DispatchOnUIThreadLow(() =>
-                {
-                    ChatTab.L(s);
-                    var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-                    textBlock.LinkClicked += MarkDownLinkClicked;
-                    ShellPage.inAppNote.Show(textBlock, timeout);
-                });
+				}
 
-             
-            }
-        }
+				App.DispatchOnUIThreadLow(() =>
+				{
+					ChatTab.L(s);
+					var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+					textBlock.LinkClicked += MarkDownLinkClicked;
+					ShellPage.inAppNote.Show(textBlock, timeout);
+				});
 
-        static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
-        static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
-        static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
-        static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
-        public static string TranslateCOTGChatToMarkdown(string s)
-        {
-            
-            s = regexCoordsTag.Replace(s, @"[$1](/c/$1)");
-            s = regexPlayer.Replace(s, @"[$1](/p/$1)");
-            s = regexAlliance.Replace(s, @"[$1](/a/$1)");
-            s = regexReport.Replace(s, @"[Report:$1](/r/$1)");
-            return s;
-        }
-        public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
+
+			}
+		}
+
+		static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		public static string TranslateCOTGChatToMarkdown(string s)
 		{
-            
+
+			s = regexCoordsTag.Replace(s, @"[$1](/c/$1)");
+			s = regexPlayer.Replace(s, @"[$1](/p/$1)");
+			s = regexAlliance.Replace(s, @"[$1](/a/$1)");
+			s = regexReport.Replace(s, @"[Report:$1](/r/$1)");
+			return s;
+		}
+		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)
+		{
+
 			try
 			{
-                if (e.Link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                {
-                    Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
-                }
-                else
-                {
-                    var paths = e.Link.Split('/');
-                    Assert(paths[0].Length == 0);
-                    switch (paths[1])
-                    {
-                        case "c":
-                            Spot.ProcessCoordClick(paths[2].FromCoordinate(), false,App.keyModifiers);
-                            break;
-                        case "p": // player
-                            JSClient.ShowPlayer(paths[2]);
-                            break;
-                        case "a": // Alliance
-                            JSClient.ShowAlliance(paths[2]);
-                            break;
-                        case "r": // Report
-                            JSClient.ShowReport(paths[2]);
-                            break;
-                    }
-                }
-            }
+				if (e.Link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+				{
+					Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
+				}
+				else
+				{
+					var paths = e.Link.Split('/');
+					Assert(paths[0].Length == 0);
+					switch (paths[1])
+					{
+						case "c":
+							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, App.keyModifiers);
+							break;
+						case "p": // player
+							JSClient.ShowPlayer(paths[2]);
+							break;
+						case "a": // Alliance
+							JSClient.ShowAlliance(paths[2]);
+							break;
+						case "r": // Report
+							JSClient.ShowReport(paths[2]);
+							break;
+					}
+				}
+			}
 			catch (Exception ex)
 			{
 				Log(ex);
@@ -957,7 +959,24 @@ namespace COTG
 				Verify(ob.Focus(FocusState.Programmatic));
 			}
 		}
-	}
+		static string lastTip;
+		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
+		{
 
+
+			var info = Spot.HitTest(sender, e);
+			var str = info.column?.Column?.Tip ?? string.Empty;
+			if (str!=lastTip)
+			{
+				lastTip = str;
+				TabPage.mainTabs.tip.Text = str; // Todo:  use the correct tabPage
+			}
+		}
+		public static void ProcessTooltips(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid grid)
+		{
+			grid.PointerMoved   -=ProcessTooltipsOnPointerMoved;
+			grid.PointerMoved   +=ProcessTooltipsOnPointerMoved;
+		}
+	}
 
 }

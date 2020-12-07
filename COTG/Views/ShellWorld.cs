@@ -33,23 +33,25 @@ namespace COTG.Views
         private void SetupCoreInput()
         {
             coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
-            coreInputSource.PointerMoved += Canvas_PointerMoved;
+            
+			coreInputSource.PointerMoved += Canvas_PointerMoved;
             coreInputSource.PointerPressed += Canvas_PointerPressed;
             coreInputSource.PointerReleased += Canvas_PointerReleased;
-            coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
+         //   coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
             coreInputSource.PointerExited += Canvas_PointerExited;
+			
 
-            coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
           //  coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
             coreInputSource.IsInputEnabled = true;
 
 
         }
 
-        private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
-        {
-            App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
-        }
+        //private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
+        //{
+        // //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
+        //}
 
         static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
         {
@@ -107,7 +109,8 @@ namespace COTG.Views
                                 //else
                               //  {
                                     var spot = Spot.GetOrAdd(cid);
-                                    
+									if (!e.KeyModifiers.IsShift())
+										spot.SetFocus(true, true,false);
                                     spot.ShowContextMenu(canvas, position);
                                // }
                                 
@@ -386,7 +389,7 @@ namespace COTG.Views
 									{
 										if (i.isAttack)
 										{
-											toolTip = toolTip + '\n' + i.Format('\n');
+											toolTip = toolTip + '\n' + i.Format("\n");
 										}
 									}
 									var def = Array.Empty<TroopTypeCount>();

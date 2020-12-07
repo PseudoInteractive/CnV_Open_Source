@@ -8,19 +8,21 @@
     xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
     >
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
-    <x:Double x:Key="ContentDialogMaxHeight">1024</x:Double>
-    <Style x:Key="PageStyle" TargetType="Page">
-		<Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
+    <x:Double x:Key="ContentDialogMaxHeight">512</x:Double>
+    <Style TargetType="Page">
+	
+        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+	
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
     </Style>
     <Style TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
+        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
@@ -32,6 +34,7 @@
     <Style TargetType="winui:NumberBox">
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
     </Style>
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
@@ -55,17 +58,23 @@
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
         
     </Style>
     <Style x:Key="TextBoxSmall" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Segoe UI Emoji"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		 <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
+	    <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
         <Setter Property="Margin" Value="4"/>
     </Style>

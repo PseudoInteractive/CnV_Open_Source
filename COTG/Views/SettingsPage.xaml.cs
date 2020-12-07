@@ -66,7 +66,7 @@ namespace COTG.Views
 		public static bool spatialOn=true;
 		public static bool stayAlive;
 		public static bool raidOffDungeons = true;
-	
+		public static bool raidSendExact;
 		public static DateTimeOffset attackPlayerTime;
 
 		bool uiStayAlive

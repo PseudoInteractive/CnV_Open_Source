@@ -15219,7 +15219,7 @@ var cotgsubscribe = amplify;
         function ProcessBuildQueue() {
             if (D6.bq)
                 if (D6.bq[0]) {
-                    let callDelay = 2000;
+                    let callDelay = 1000;
                     var n1g = Number(D6.bq[0].bid);
                     var Y1g = Number(D6.bq[0].btype);
                     var J1g = Number(D6.bq[0].bspot);
@@ -15239,12 +15239,11 @@ var cotgsubscribe = amplify;
                             B1g * (100));
                         var Z1g = Number(h1g) - Number(f1g);
                         var g1g = Q2(Number(Z1g));
-                        if (Z1g > 200) {
+                        if (Z1g > 100) {
                             if (Z1g + 100 < callDelay)
                                 callDelay = Z1g + 100;
                             if (D6["itu"] && D6["itu"][6] && D6["itu"][6] > 0) {
                                 DoPoll2(500);
-                                callDelay = 600;
                             }
                             UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
                         }
@@ -15258,12 +15257,10 @@ var cotgsubscribe = amplify;
                             h9(J1g, n1g);
                             V8();
                             N2();
-                            DoPoll2(500);
-                            callDelay = 200;
+                            callDelay = 0;
                         }
                     }
                     else {
-                        DoPoll2(500);
                     }
                     if (callDelay != 0) {
                         clearTimeout(i8);
@@ -18392,8 +18389,8 @@ var cotgsubscribe = amplify;
             E6k.R6();
             try {
                 var K3g = '';
-                $(__s[Z8R >> 1640553792])
-                    .html(K3g);
+                $(__s[Z8R])
+                    .html('');
                 $(__s[Z8R & 2147483647])
                     .removeClass(__s[6769]);
                 for (var f3g in V2) {
@@ -19763,7 +19760,7 @@ var cotgsubscribe = amplify;
                             ppdt = y9T;
                             $(__s[R2p * 1] + d9T)
                                 .val("");
-                            var B9T = m6[d9T]["r"];
+                            let B9T = m6[d9T]["r"];
                             for (var Z9T in B9T) {
                                 var U9T = B9T[Z9T] * b9T;
                                 if (Z9T == 1)
@@ -72204,19 +72201,11 @@ function carrycheck_() {
     }
 }
 function GetCarry() {
-    return LocalStoreAsFloat('carry', 0.95);
+    return LocalStoreAsFloat('carry', 1.02);
 }
 var countOverride = 0;
 var raidCount = 1;
 function carry_percentage_(total_loot_1) {
-    var count_2;
-    var countz_2 = AsNumber($(".splitRaid").children("option").length);
-    if (countz_2 > 1) {
-       count_2=countz_2-1;
-    }
-    else {
-        count_2 =countz_2;
-    }
     var home_loot_ = 0;
     var km_ = [];
     let _city = GetCity();
@@ -72227,72 +72216,18 @@ function carry_percentage_(total_loot_1) {
     }
     var scaledLoot = Math.ceil(total_loot_1 * GetCarry());
     raidCount = countOverride > 0 ? countOverride : Math.max(1, Math.floor(home_loot_ / scaledLoot));
-    if(home_loot_>scaledLoot){
-        var option_numbers=Math.floor(home_loot_/scaledLoot);
-        if(option_numbers<count_2){
-            $("#WCcomcount").val(option_numbers);
-        }
-        else{$("#WCcomcount").val(count_2);}
-        for(var i in km_){
-            if(count_2===1){
-                if(km_[i]!==0){
-                    $("#rval"+i).val(km_[i]);
-                }
+    $("#WCcomcount").val(raidCount);
+    for (let i_23 in km_) {
+        if (km_[i_23] !== 0) {
+            km_[i_23] = Math.floor(km_[i_23] / raidCount);
+            $(`#rval${i_23}`).val(km_[i_23]);
+            if (km_[14]) {
+                $("#rval14").val("0");
             }
-            else{
-                if(km_[i]!==0){
-                    if(option_numbers<count_2){
-                        km_[i]=Math.floor(km_[i]/option_numbers);
-                        $("#rval"+i).val(km_[i]);
-                        if(km_[14]){$("#rval14").val("0");}
-                    }else{
-                        km_[i]=Math.floor(km_[i]/count_2);
-                        $("#rval"+i).val(km_[i]);
-                        if(km_[14]){$("#rval14").val("0");}
-                    }
-                }}
         }
     }
-carry_percentage_2(total_loot_1);
+    carry_percentage_2(total_loot_1);
 }
-function carry_percentage_3(total_loot_1) {
-        var count_;
-        var countz_ = AsNumber($(".splitRaid").children("option").length);//
-        if (countz_ > 1) {
-            count_=countz_-1;
-        }
-        else {
-            count_ =countz_;
-        }
-        var home_loot_ = 0;
-        var km_ = [];
-        let _city = GetCity();
-        for (let x_77 in _city.th) {
-            var home_ = AsNumber(_city.th[x_77]);
-            home_loot_ = home_loot_ + home_ * ttloot_[x_77];
-            km_.push(home_);
-        }
-        var scaledLoot = Math.ceil(total_loot_1 * GetCarry());
-        raidCount = countOverride > 0 ? countOverride : Math.max(1, Math.floor(home_loot_ / scaledLoot));
-    if(home_loot_>scaledLoot){
-        var option_numbers_=Math.floor(home_loot_/scaledLoot);
-        if(option_numbers_<count_){
-            $("#WCcomcount").val(option_numbers_);
-        }
-        else{$("#WCcomcount").val(count_);}
-            var templ1_=((home_loot_/scaledLoot)*100)/option_numbers_;
-        var templ2_=((templ1_-100)/templ1_)*100;
-            for(var i in km_){
-                if(km_[i]!==0){
-                var templ3_=km_[i]/option_numbers_;
-                km_[i]=Math.floor(templ3_*(1-(templ2_/100)));
-                $("#rval"+i).val(km_[i]);
-                if(km_[14]){$("#rval14").val("0");}
-            }
-            }
-            carry_percentage_2(total_loot_1);
-        }
-}           
 function carry_percentage_2(total_loot_1) {
     var troop_loot_ = 0;
     $(".tninput").each(function () {
@@ -72322,7 +72257,12 @@ function getDugRows_() {
             buttont_.attr("type", tempz1_);
         }
         $(buttont_).click(function () {
-            var loot1_;      
+            var loot1_;
+            var countz_ = AsNumber($(".splitRaid").children("option").length);
+            if (countz_ > 1) {
+            }
+            else {
+            }
             var dunglvl_ = $(this).attr("lvl");
             var progress_ = $(this).attr("prog");
             var type_dung_ = $(this).attr("type");
@@ -72334,18 +72274,18 @@ function getDugRows_() {
             }
             var total_loot_1 = Math.ceil(loot1_[AsNumber(dunglvl_) - 1] * (2 - AsNumber(progress_) / 100) * 1.02);
             $("#dungloctab").find(".addraiwc td:nth-child(4)").html("<button id='raid115' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>115%</button><button id='raid108' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>108%</button>");
-            $("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>Use all</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
+            $("#dungloctab").find(".addraiwc td:nth-child(2)").html("<button id='raid100' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>100%</button><button id='raid125' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr'>125%</button>");
             $("#raid125").click(() => {
                 localStorage['carry'] = 1.25;
-                carry_percentage_3(total_loot_1);
+                carry_percentage_(total_loot_1);
             });
             $("#raid115").click(() => {
                 localStorage['carry'] = 1.15;
-                carry_percentage_3(total_loot_1);
+                carry_percentage_(total_loot_1);
             });
             $("#raid108").click(() => {
                 localStorage['carry'] = 1.08;
-                carry_percentage_3(total_loot_1);
+                carry_percentage_(total_loot_1);
             });
             $("#raid100").click(() => {
                 localStorage['carry'] = 0.95;

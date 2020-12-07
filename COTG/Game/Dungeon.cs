@@ -12,7 +12,9 @@ namespace COTG.Game
 {
     public class Dungeon 
     {
-        public City city; // city to raid this, where distance is calculated from 
+		public static DumbCollection<Dungeon> raidDungeons = new DumbCollection<Dungeon>(); // for row details, global as there is only 1 row detail open at a time
+
+		public City city; // city to raid this, where distance is calculated from 
         public int cid; // dungeon id
         public string xy => cid.CidToString();
         //          [JsonProperty("t")]
@@ -61,7 +63,8 @@ namespace COTG.Game
         }
 		public static async Task ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
-			var rv = new List<Dungeon>();
+			var rv = raidDungeons;
+			rv.Clear();
 			var idealType = city.GetIdealDungeonType();
 			foreach (var dung in jse.EnumerateArray())
 			{
@@ -93,9 +96,8 @@ namespace COTG.Game
 			else
 			{
 				// dont wait on this 
-				COTG.Views.MainPage.UpdateDungeonList(rv);
+				//COTG.Views.MainPage.UpdateDungeonList(rv);
 			}
         }
-
-    }
+	}
 }

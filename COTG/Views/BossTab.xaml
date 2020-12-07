@@ -41,28 +41,24 @@
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridImageColumn PropertyName="icon" Header="I"
                                         SizeMode="Fixed"
-                                        Width="34" />
+												 Width="32"
+                                         />
                 <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
-                                       SizeMode="Auto"
                                                 CellContentStyle="{StaticResource LeftAlign}"
-                                       Width="45" />
+                                        />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
-                                       SizeMode="Fixed"
-                                       Width="45" />
+                                        />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
-                                                      SizeMode="Fixed"
+                                          
                                                       CellContentStyle="{StaticResource CenterAlign}"
-                                            Width="42" />
-                <telerikGrid:DataGridNumericalColumn PropertyName="homeTroopsAttack"
-                                                     Header="Attack"
-                                                      SizeMode="Auto"
-                                                CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,8:N1}"
-                                            Width="60" />
+                                             />
+                <telerikGrid:DataGridTextColumn PropertyName="troopsString"
+                                                     Header="troops"
+                                             />
                 <telerikGrid:DataGridNumericalColumn PropertyName="points"
                                                      IsVisible="False"
-                                            Width="80" />
+                                             />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
         <telerikGrid:RadDataGrid x:Name="bossGrid" x:FieldModifier="public"
@@ -91,25 +87,25 @@
                 <telerikGrid:DataGridNumericalColumn  PropertyName="type"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
-                                            Width="40" />
+                                             />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="level"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
-                                            Width="40" />
+                                             />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
                                                       Header="Hours"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,4:N2}"
-                                            Width="40" />
+                                             />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                                       SizeMode="Fixed"
                                                       CellContentStyle="{StaticResource CenterAlign}"
-                                            Width="40" />
+                                             />
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 SizeMode="Fixed"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
-                                       Width="48" />
+                                        />
             </telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
         <tk:GridSplitter Grid.Row="1"

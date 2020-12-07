@@ -405,7 +405,7 @@ namespace COTG.Game
 
 
 				// If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-				var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
+			//	var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
 				var wantRaidScan = isFocus;
 				//                var needCityData = 
 
@@ -415,7 +415,7 @@ namespace COTG.Game
 						ProcessCoordClick(cid, false, modifiers);
 						wantRaidScan = false;
 						break;
-					case "I":
+					case nameof(icon):
 						if (City.IsMine(cid))
 						{
 							var wasBuild = City.IsBuild(cid);
@@ -433,6 +433,24 @@ namespace COTG.Game
 						}
 						wantRaidScan = false;
 						break;
+					case nameof(City.dungeonsToggle):
+						{
+							if (MainPage.expandedCity == this)
+							{
+								(uie as RadDataGrid).HideRowDetailsForItem(this);
+								MainPage.expandedCity=null;
+							}
+							else
+							{
+								MainPage.expandedCity=this as City;
+								ScanDungeons.Post(cid, true, false);
+
+								(uie as RadDataGrid).ShowRowDetailsForItem(this);
+
+							}
+							wantRaidScan=false;
+							break;
+						}
 					case nameof(City.tsTotal):
 						if (City.IsMine(cid) && MainPage.IsVisible())
 						{
@@ -456,8 +474,11 @@ namespace COTG.Game
 						wantRaidScan = false;
 						break;
 					case nameof(pinned):
-						SetPinned(!pinned);
-
+						var newSetting = !pinned;
+						foreach(var cid in Spot.GetSelectedForContextMenu(cid) )
+						{
+							Spot.GetOrAdd(cid).SetPinned(newSetting);
+						}
 						return;
 					case nameof(City.raidCarry):
 						if (City.IsMine(cid) && MainPage.IsVisible())
@@ -472,17 +493,19 @@ namespace COTG.Game
 				}
 
 
-				if (MainPage.IsVisible() && isMine && wantRaidScan)
-				{
-					//                MainPage.SetRaidCity(cid,true);
-					ScanDungeons.Post(cid, true, false);
-				}
+				//if (MainPage.IsVisible() && isMine && wantRaidScan)
+				//{
+				//	//                MainPage.SetRaidCity(cid,true);
+				//	ScanDungeons.Post(cid, true, false);
+				//}
 				SetFocus(false);
 				NavStack.Push(cid);
 
 			}
 			else if (pt.Properties.IsRightButtonPressed)
 			{
+				if (!modifiers.IsShift())
+					SetFocus(false, true,true);
 				ShowContextMenu(uie, pt.Position);
 
 			}
@@ -767,6 +790,7 @@ namespace COTG.Game
 				return rv;
 			}
 		}
+		public virtual string troopsString => classificationString;
 		public bool underSiege
 		{
 			get
@@ -998,11 +1022,11 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool selectInUI, bool select=true)
+		public void SetFocus(bool selectInUI, bool select=true, bool bringIntoWorldView = true)
 		{
-			SetFocus(cid, selectInUI,select);
+			SetFocus(cid, selectInUI,select, bringIntoWorldView);
 		}
-		public static void SetFocus(int cid, bool selectInUI, bool select=true)
+		public static void SetFocus(int cid, bool selectInUI, bool select=true, bool bringIntoWorldView=true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
@@ -1022,7 +1046,8 @@ namespace COTG.Game
 
 				);
 			}
-			cid.BringCidIntoWorldView(true);
+			if(bringIntoWorldView)
+				cid.BringCidIntoWorldView(true);
 		}
 		public void ReturnSlowClick()
 		{
@@ -1653,6 +1678,6 @@ namespace COTG.Game
     }
     public static class SpotHelper
     {
-        public static string CellText(this DataGridCellInfo cell) => cell?.Column.Header?.ToString() ?? string.Empty;
+        public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
     }
 }

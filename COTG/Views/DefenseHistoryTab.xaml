@@ -162,101 +162,101 @@ AllowFocusOnInteraction="True"
                 <model:DefenseTapCommand   />
             </telerikGrid:RadDataGrid.Commands>
             <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridDateColumn Width="80"
+                <telerikGrid:DataGridDateColumn 
                                        PropertyName="time"
                                        Header="Time"
                                        CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-                                       SizeMode="Fixed"
+                                       
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn Width="80"
+                <telerikGrid:DataGridTextColumn 
                                        PropertyName="Type"
                                        SizeMode="Auto"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn Width="80"
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="dPlyr"
                                         PropertyName="tPlayer"        />
-                <telerikGrid:DataGridTextColumn Width="80"
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="aPlyr"
                                        PropertyName="sPlayer"         />
-                <telerikGrid:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn 
                                        Header="dXY"
                                                 PropertyName="tXY"
                                        CellContentStyle="{StaticResource CenterAlignLink}"
-                                       SizeMode="Fixed" />
-                <telerikGrid:DataGridTextColumn Width="60"
+                                        />
+                <telerikGrid:DataGridTextColumn 
                                        Header="aXY"
                                                 PropertyName="sXY"
                                        CellContentStyle="{StaticResource CenterAlignLink}"
-                                       SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                        />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="dTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                             />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="aTS"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                             />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="dTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                             />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="aTsKill"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridTextColumn Width="50"
+                                             />
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="defCN"
                                        PropertyName="targetCN"         />
-                <telerikGrid:DataGridTextColumn Width="50"
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="atkCN"
                                        PropertyName="sourceCN"         />
-                <telerikGrid:DataGridNumericalColumn Width="32"
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="claim"
                                             CellContentFormat="{}{0,3:N0}"
                                             CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="34"
+                                             />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="Cont"
                                             CellContentStyle="{StaticResource CenterAlign}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridBooleanColumn Width="30"
+                                             />
+                <telerikGrid:DataGridBooleanColumn 
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           Header="Sen"
                                           PropertyName="hasSenator"
-                                          SizeMode="Fixed" />
-                <telerikGrid:DataGridBooleanColumn Width="30"
+                                           />
+                <telerikGrid:DataGridBooleanColumn 
                                           CellContentStyle="{StaticResource CenterAlign}"
                                           Header="Nav"
                                                    PropertyName="hasNaval"
-                                          SizeMode="Fixed" />
-                <telerikGrid:DataGridBooleanColumn Width="30"
+                                           />
+                <telerikGrid:DataGridBooleanColumn 
                                           Header="SE"
                                            PropertyName="hasArt"
                                           CellContentStyle="{StaticResource CenterAlign}"
-                                          SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                           />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="dTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridNumericalColumn Width="50"
+                                             />
+                <telerikGrid:DataGridNumericalColumn 
                                             PropertyName="aTsLeft"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
-                                            SizeMode="Fixed" />
-                <telerikGrid:DataGridTextColumn Width="60"
+                                             />
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="atkAli"
                                                 PropertyName="sourceAllianceName" />
-                <telerikGrid:DataGridTextColumn Width="60"
+                <telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="defAli"
                                                 PropertyName="targetAllianceName"

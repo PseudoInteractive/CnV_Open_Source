@@ -92,6 +92,7 @@
 							   OffContent="Drop connection on Idle" />
 
 
+
 			</wct:WrapPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock Text="Set Nearest Hub Settings"

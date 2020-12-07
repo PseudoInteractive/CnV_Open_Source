@@ -47,7 +47,8 @@ namespace COTG.Views
             this.InitializeComponent();
             selectedGrid.SelectionChanged += SpotTabSelectionChanged;
 			selectedGrid.OnKey = Spot.OnKeyDown;
-        }
+			selectedGrid.ProcessTooltips();
+		}
         public static bool IsVisible() => instance.isVisible;
 
         public static int silenceSelectionChanges;

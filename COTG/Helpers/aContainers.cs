@@ -3,6 +3,7 @@ using COTG.Views;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -43,23 +44,35 @@ namespace COTG.Helpers
 
         public void NotifyReset()
         {
-            Assert(App.IsOnUIThread());
+          //  Assert(App.IsOnUIThread());
             if (CollectionChanged != null)
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void Set(IEnumerable<T> src)
         {
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                // catch for thread safety
-                base.Clear();
-                if (src != null)
-                    {
-					base.AddRange(src);
+			if (Count>0)
+				base.Clear();
+			else
+			{
+
+				if (src==null)
+				{
+					return;
 				}
+			}
+			
+			if (src != null)
+			{
+				base.AddRange(src);
+			}
+			//App.DispatchOnUIThreadSneaky(() =>
+   //         {
+   //             // catch for thread safety
+               
                 NotifyReset();
-            });
+			//   });
+			
         }
         public new void Clear()
         {

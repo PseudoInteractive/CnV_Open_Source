@@ -49,8 +49,22 @@ namespace COTG.Game
             }
             return false;
         }
-        
-        public DateTimeOffset GetRaidReturnTime()
+		public override string troopsString
+		{
+			get
+			{
+				string rv = string.Empty;
+				string sep = string.Empty;
+				foreach (var ttc in troopsTotal)
+				{
+					rv += $"{sep}{troopsHome.Count(ttc.type):N0}/{ttc.count:N0} {Enum.ttNameWithCaps[type]}";
+					sep = ", ";
+				}
+				return rv;
+			}
+		}
+
+		public DateTimeOffset GetRaidReturnTime()
         {
             var rv = AUtil.dateTimeZero;
             foreach(var r in raids)
@@ -614,8 +628,16 @@ namespace COTG.Game
                 return true;
             }
         }
-
-    }
+		//static City lastDugeonScanCity;
+		public DumbCollection<Dungeon> dungeons
+		{
+			get
+			{
+				return Dungeon.raidDungeons;
+			}
+		}
+		public string dungeonsToggle => MainPage.expandedCity==this ? "-" : "+";
+	}
     public class SenatorInfo
     {
         public enum Type : byte
