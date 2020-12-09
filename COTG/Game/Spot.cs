@@ -515,7 +515,7 @@ namespace COTG.Game
 			SpotTab.TouchSpot(cid, modifiers);
 		}
 
-		public void ToggleDungeons(RadDataGrid uie, bool forceClose, bool forceOpen)
+		public async void ToggleDungeons(RadDataGrid uie, bool forceClose=false, bool forceOpen=false)
 		{
 			if ((forceClose || MainPage.expandedCity == this)&&!forceOpen)
 			{
@@ -526,8 +526,7 @@ namespace COTG.Game
 			else
 			{
 				MainPage.expandedCity=this as City;
-				ScanDungeons.Post(cid, true, false);
-
+				await ScanDungeons  .Post(cid, true, false);
 				(uie).ShowRowDetailsForItem(this);
 
 			}
@@ -906,17 +905,17 @@ namespace COTG.Game
 			return rv;
 
 		}
-		public void SelectMe(bool showClick, VirtualKeyModifiers mod)
+		public void SelectMe(bool showClick, VirtualKeyModifiers mod,bool scrollIntoView=true)
 		{
 			NavStack.Push(cid);
-			SpotTab.AddToGrid(this, mod, true);
+			SpotTab.AddToGrid(this, mod, true, scrollIntoView);
 			if (showClick)
 			{
 				JSClient.ShowCity(cid, true);
 			}
 		}
 
-		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false)
+		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView=true)
 		{
 			++SpotTab.silenceSelectionChanges;
 
@@ -979,7 +978,7 @@ namespace COTG.Game
 						}
 						//                   SpotTab.SelectOne(this);
 					}
-					if (wantUISync)
+					if (wantUISync && scrollIntoView)
 						SelectInUI(true);
 				}
 				catch (Exception e)
@@ -1060,16 +1059,16 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool selectInUI, bool select=true, bool bringIntoWorldView = true)
+		public void SetFocus(bool scrollIntoView, bool select=true, bool bringIntoWorldView = true)
 		{
-			SetFocus(cid, selectInUI,select, bringIntoWorldView);
+			SetFocus(cid, scrollIntoView,select, bringIntoWorldView);
 		}
-		public static void SetFocus(int cid, bool selectInUI, bool select=true, bool bringIntoWorldView=true)
+		public static void SetFocus(int cid, bool scrollintoView, bool select=true, bool bringIntoWorldView=true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
 			if(select)
-				spot.SelectMe(false,App.keyModifiers);
+				spot.SelectMe(false,App.keyModifiers, scrollintoView);
 			if (changed)
 			{
 				focus = cid;
@@ -1077,7 +1076,7 @@ namespace COTG.Game
 				{
 					ShellPage.instance.focus.Content = spot.nameAndRemarks;
 					ShellPage.instance.coords.Text = cid.CidToString();
-					if (selectInUI)
+					if (scrollintoView)
 						spot.SelectInUI(true);
 
 				}
@@ -1229,15 +1228,24 @@ namespace COTG.Game
 					return true;
 					break;
 				case VirtualKey.Left:
-					if (spot is City city)
-						city.SetBuild(false);
-					else
-						spot.SetFocus(false);
-					return true;
+					{
+						if (spot is City city)
+							city.SetBuild(false);
+						else
+							spot.SetFocus(false);
+						return true;
+					}
 				case VirtualKey.Right:
 					return true;
-				case VirtualKey.Application:
-					break;
+				case VirtualKey.Space:
+					{
+						if (spot is City city)
+							city.ToggleDungeons(MainPage.CityGrid);
+						else
+							spot.SetFocus(false);
+						return true;
+						break;
+					}
 				case VirtualKey.Sleep:
 					break;
 				case VirtualKey.NumberPad0:

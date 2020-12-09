@@ -17,19 +17,19 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>COTG_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>
+    </PackageCertificateKeyFile>
     <LangVersion>preview</LangVersion>
-    <PackageCertificateThumbprint>
-    </PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Never</AppxBundle>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -576,6 +576,7 @@
     <Content Include="images\troops9.png" />
     <Content Include="images\windmill.png" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -613,25 +614,23 @@
     <Folder Include="EventHandlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Telerik.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.Core.dll</HintPath>
+    <Reference Include="Telerik.Core">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Data, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.Data.dll</HintPath>
+    <Reference Include="Telerik.Data">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Grid.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Grid.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Controls.Data.UWP">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Controls.Data.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Input.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Grid.UWP">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Grid.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\UI-For-UWP2\Binaries\x64\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Input.UWP">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Input.UWP.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.UI.Xaml.Primitives.UWP">
+      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
@@ -677,6 +676,41 @@
     <LangVersion>preview</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FileAlignment>2048</FileAlignment>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>preview</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>COTGRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <WarningLevel>3</WarningLevel>
+    <FileAlignment>4096</FileAlignment>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <LangVersion>preview</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

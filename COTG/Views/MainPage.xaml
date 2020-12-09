@@ -36,7 +36,7 @@
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="2"
 							
-							AllowFocusOnInteraction="True"
+						
 							IsTabStop="True"
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
@@ -51,38 +51,41 @@
 							PointerExited="cityGrid_PointerExited"
 							FontSize="{StaticResource MediumFontSize}"
 							IsTextScaleFactorEnabled="False"
-							GroupPanelPosition="Bottom"
+							GroupPanelPosition="Left"
 							SelectionUnit="Row"
 							RowDetailsDisplayMode="Single"
-							
+							Tag="Raid"
 							>
 <tg:RadDataGrid.RowDetailsTemplate>
         <DataTemplate>
             <tg:RadDataGrid ItemsSource="{Binding dungeons}"
                               UserGroupMode="Disabled"
-							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-							ColumnDataOperationsMode="Flyout"
+							ColumnResizeHandleDisplayMode="Always"
+							ColumnDataOperationsMode="Inline"
 							IsTabStop="True"
-							CanUserChooseColumns="True"
-							UserFilterMode="Auto"
+							CanUserChooseColumns="False"
+							UserFilterMode="Disabled"
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							AlternationStep="2"
-						
+							FontSize="{StaticResource MediumFontSize}"
+							RowHeight="{StaticResource GridRowHeight}"
+							Tag="Dungeons"
                               AutoGenerateColumns="False">
 				<tg:RadDataGrid.Commands>
 					<model:DungeonTapCommand />
 				</tg:RadDataGrid.Commands>
                 <tg:RadDataGrid.Columns>
-                   <tg:DataGridNumericalColumn PropertyName="dist"
-												CellContentStyle="{StaticResource RightAlign}"
-											   Width="32"
-											   SizeMode="Fixed"
-												Tip="Distance to dungeon" />
+                   
 					<tg:DataGridTextColumn PropertyName="plan"
 										   CellContentStyle="{StaticResource RightAlignLink}"
 											   SizeMode="Auto"
 										   Tip="Click here to send raids" />
+					<tg:DataGridNumericalColumn PropertyName="dist"
+												CellContentStyle="{StaticResource RightAlign}"
+											   Width="36"
+											   SizeMode="Fixed"
+												Tip="Distance to dungeon" />
 					<tg:DataGridNumericalColumn PropertyName="level"
 												  SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}" />
@@ -348,46 +351,7 @@
 								  Margin="6,2,6,2" />
 
 			</tk:WrapPanel>
-			<tg:RadDataGrid x:Name="dungeonGrid"
-							AlternationStep="3"
-							UserGroupMode="Disabled"
-							AutoGenerateColumns="False"
-							SelectionMode="Single"
-							IsTabStop="True"
-							TabFocusNavigation="Once"
-							RowHeight="{StaticResource GridRowHeight}"
-							FontSize="{StaticResource MediumFontSize}"
-							IsTextScaleFactorEnabled="False"
-							Grid.Row="2"
-							AllowFocusOnInteraction="True"
-							CanUserChooseColumns="True"
-							UserSortMode="Single"
-							SelectionUnit="Row"
-							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-							ColumnDataOperationsMode="Flyout">
-
-				<tg:RadDataGrid.Commands>
-					<model:DungeonTapCommand />
-				</tg:RadDataGrid.Commands>
-				<tg:RadDataGrid.Columns>
-					<tg:DataGridNumericalColumn PropertyName="dist"
-												CellContentStyle="{StaticResource RightAlign}"
-												Tip="Distance to dungeon" />
-					<tg:DataGridTextColumn PropertyName="plan"
-										   CellContentStyle="{StaticResource RightAlignLink}"
-										   Tip="Click here to send raids" />
-					<tg:DataGridNumericalColumn PropertyName="level"
-												CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridNumericalColumn PropertyName="completion"
-												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
-												CellContentFormat="{}{0,6:N1}"
-												CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridTextColumn PropertyName="kind"
-										   CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridTextColumn PropertyName="xy"
-										   CellContentStyle="{StaticResource CenterAlignLink}" />
-				</tg:RadDataGrid.Columns>
-			</tg:RadDataGrid>
+		
 		</Grid>
 		<tk:GridSplitter Grid.Row="1"
 						 ResizeDirection="Rows"
@@ -420,7 +384,7 @@
 						   Title="Dungeons 101"
 						   CloseButtonContent="Success"
 						   PreferredPlacement="LeftTop"
-						   Target="{x:Bind dungeonGrid}"
+						   Target="{x:Bind cityGrid}"
 						   Subtitle="Click on a dungeon that you would like to send raids to.">
 			<TextBlock  TextWrapping="Wrap">                    
                 Click the 'plan' cell to dispatch raids

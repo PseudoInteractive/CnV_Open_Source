@@ -1265,9 +1265,9 @@ namespace COTG
 						   }
 					   case "shcit":
 						   {
-							//   var jso = jsp.Value;
-							//   var cid = jso.GetAsInt();
-							 //  Spot.ProcessCoordClick(cid, false, App.keyModifiers,true); // then normal click
+							   var jso = jsp.Value;
+							   var cid = jso.GetAsInt();
+							   Spot.ProcessCoordClick(cid, false, App.keyModifiers,true); // then normal click
 								break;
 						   }
 					   case "keyDown":

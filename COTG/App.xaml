@@ -29,7 +29,7 @@
                             <ResourceDictionary>
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CC800840</Color>
                                 <Color x:Key="SystemChromeAltHighColor">#DD4D4B8A</Color>
-                                <Color x:Key="SystemAccentColor">#CC5802A2</Color>
+                                <Color x:Key="SystemAccentColor">#CC5802F2</Color>
                             <!-- Override system shape defaults -->
                                 <!-- Override system borders -->
                                 <!-- Override system generated accent colors -->
@@ -41,7 +41,7 @@
                             <ResourceDictionary>
                                 
                                 <Color x:Key="SystemChromeAltMediumHighColor">#CCD6FAEB</Color>
-                                <Color x:Key="SystemChromeAltHighColor">#FFF4ACCC</Color>
+                                <Color x:Key="SystemChromeAltHighColor">#CC5802F2</Color>
                                 <!-- Override system shape defaults -->
                    
                                 <!-- Override system borders -->

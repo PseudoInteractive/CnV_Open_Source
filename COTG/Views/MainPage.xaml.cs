@@ -31,6 +31,7 @@ using static COTG.Game.Enum;
 using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
+using Telerik.UI.Xaml.Controls.Grid.Primitives;
 
 namespace COTG.Views
 {
@@ -85,7 +86,7 @@ namespace COTG.Views
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
 			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 			cityGrid.ProcessTooltips();
-			dungeonGrid.ProcessTooltips();
+			//dungeonGrid.ProcessTooltips();
 			
         }
 
@@ -100,41 +101,38 @@ namespace COTG.Views
 
         }
 
-        private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-        {
-            //foreach(var i in e.AddedItems  )
-            //{
-            //    Log("Added: " + (i)); 
-            //}
-            //foreach (var i in e.RemovedItems)
-            //{
-            //    Log("Removed: " + (i));
-            //}
-
-        //    var it = e.AddedItems.FirstOrDefault();
-            
-        //    //foreach( var i in cityGrid.SelectedItems)
-        //    //{
-        //    //    Log("Selected: " + i.ToString());
-        //    //}
-        //    var newSel = it as Spot;
-        ////    Assert(newSel != null);
-        //    if (newSel is null)
-        //        return;
-        //    if (newSel == City.focus)
-        //        return;
-           // newSel.SetFocus(true,false,true);
-        }
-
-        
+      
+		static RadDataGrid GetGrid(PointerRoutedEventArgs e)
+		{
+			var a = e.OriginalSource as FrameworkElement;
+			while(a != null)
+			{
+				if (a is DataGridCellsPanel panel)
+					return panel.Owner;
+				if (a is DataGridRootPanel root)
+					return root.Owner;
+				a = a.Parent as FrameworkElement; 
+			}
+			return null;
+		}
+		static bool IsFromDungeonGrid(PointerRoutedEventArgs e)
+		{
+			var a = GetGrid(e);
+			if (a==null)
+				return false;
+			return a.Tag  as String == "Dungeons";
+		}
         private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
         {
-			
+				if (IsFromDungeonGrid(e)) 
+					return;
             Spot.ProcessPointerPress(this,sender,e);
         }
         private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            Spot.ProcessPointerExited();
+			if (IsFromDungeonGrid(e))
+				return;
+			Spot.ProcessPointerExited();
             //if (string.Empty!=lastTip)
             //{
             //    lastTip = string.Empty;
@@ -268,12 +266,7 @@ namespace COTG.Views
 			Dungeon.raidDungeons.NotifyReset();
 		}
 
-        public static void ClearDungeonList()
-        {
-            UpdateDungeonList(null);
-        }
-
-
+   
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 

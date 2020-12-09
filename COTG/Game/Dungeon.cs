@@ -12,7 +12,7 @@ namespace COTG.Game
 {
     public class Dungeon 
     {
-		public static DumbCollection<Dungeon> raidDungeons = new DumbCollection<Dungeon>(); // for row details, global as there is only 1 row detail open at a time
+		public static ResetableCollection<Dungeon> raidDungeons = new ResetableCollection<Dungeon>(); // for row details, global as there is only 1 row detail open at a time
 
 		public City city; // city to raid this, where distance is calculated from 
         public int cid; // dungeon id
@@ -63,7 +63,7 @@ namespace COTG.Game
         }
 		public static async Task ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
-			var rv = autoRaid ? new DumbCollection<Dungeon>(): raidDungeons;
+			var rv = autoRaid ? new ResetableCollection<Dungeon>(): raidDungeons;
 			rv.Clear();
 			var idealType = city.GetIdealDungeonType();
 			foreach (var dung in jse.EnumerateArray())
@@ -86,6 +86,8 @@ namespace COTG.Game
 			}
 
 			rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType)));
+			rv.NotifyReset();
+				
 			if (autoRaid)
 			{
 				if(rv.Count>0)
@@ -96,7 +98,7 @@ namespace COTG.Game
 			else
 			{
 				// dont wait on this 
-				COTG.Views.MainPage.UpdateDungeonList(rv);
+				//COTG.Views.MainPage.UpdateDungeonList(rv);
 			}
         }
 	}

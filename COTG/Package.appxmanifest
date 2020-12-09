@@ -12,15 +12,15 @@
   IgnorableNamespaces="uap mp genTemplate uap5 uap3 desktop4 iot2">
 
   <Identity
-    Name="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C"
-    Publisher="CN=dwu"
-    Version="1.0.92.0" />
+    Name="33626dsw.15864FAB9E7D2"
+    Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
+    Version="1.0.100.0" />
 
-  <mp:PhoneIdentity PhoneProductId="FF7EA7B4-22D9-4ED9-9872-78817DD21E3C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="a38820ed-0899-4fce-a2fb-0cd2af3bc26c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>COTG</DisplayName>
-    <PublisherDisplayName>dwu</PublisherDisplayName>
+    <DisplayName>Conquest and Virtue</DisplayName>
+    <PublisherDisplayName>Alliances</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -39,7 +39,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="COTG.App">
       <uap:VisualElements
-        DisplayName="ms-resource:AppDisplayName"
+        DisplayName="COTGA"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="ms-resource:AppDescription"

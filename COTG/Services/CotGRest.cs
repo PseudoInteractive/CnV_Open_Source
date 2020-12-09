@@ -343,18 +343,20 @@ namespace COTG.Services
             if (action != null)
                 action(root, city);
         }
-        public static Task Post(int _cid, Action<JsonElement, City> _action = null)
+        public static Task Post(int _cid, Action<JsonElement, City> _action = null,bool onlyIdNeeded=false)
         {
-            Assert(_cid > 65536);
+            Assert(_cid > 1);
+			if (onlyIdNeeded)
+			{
+				var c = City.GetOrAddCity(_cid);
+				var tick = Environment.TickCount;
+				if ((tick-c.lastUpdateTick) < 10*1000) // once per 10 seconds
+					return Task.CompletedTask;
+			}
             return (new GetCity(_cid, _action, Player.myId)).Post();
 
         }
-        public static Task Post(int _cid, int _playerId, Action<JsonElement, City> _action = null)
-        {
-            Assert(_cid > 65536);
-            return (new GetCity(_cid, _action, _playerId)).Post();
-
-        }
+     
 
     }
 
@@ -398,12 +400,10 @@ namespace COTG.Services
 		}
         public static async Task Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
-			if(!_autoRaid)
-				MainPage.ClearDungeonList();
-			
+		
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
-                await GetCity.Post(_cid);
+                await GetCity.Post(_cid,null,true);
             //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();
             if(secret != null)

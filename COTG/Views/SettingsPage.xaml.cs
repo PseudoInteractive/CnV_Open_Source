@@ -67,7 +67,7 @@ namespace COTG.Views
 		public static bool stayAlive;
 		public static bool raidOffDungeons = true;
 		public static bool raidSendExact;
-		public static DateTimeOffset attackPlayerTime;
+		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
 
 		bool uiStayAlive
 		{

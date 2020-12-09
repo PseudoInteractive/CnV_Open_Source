@@ -22,8 +22,9 @@ namespace COTG.Game
     {
 
         public City() { type = typeCity; }
-       
 
+		public long lastUpdateTick;
+			
         public Raid[] raids = Array.Empty<Raid>();
 
         public static int build; // city that has Build selection.  I.e. in city view, the city you are in
@@ -40,7 +41,8 @@ namespace COTG.Game
 			Assert(rv.cid == cid);
 			return rv;
         }
-        public bool AreRaidsRepeating()
+		
+		public bool AreRaidsRepeating()
         {
             foreach (var r in raids)
             {
@@ -225,12 +227,16 @@ namespace COTG.Game
                 if (jse.TryGetProperty("tc", out var tc))
                 {
                     troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
-                }
+				tsTotal = troopsTotal.TS();
+			}
             if (jse.TryGetProperty("th", out var th))
             {
                 troopsHome = th.GetTroopTypeCount().ToArray(); ;
-            }
-            if (jse.TryGetProperty("trintr", out var trintr))
+				tsRaid = troopsHome.TSRaid();
+				tsHome = troopsHome.TS();
+
+			}
+			if (jse.TryGetProperty("trintr", out var trintr))
             {
                 var l = new List<Reinforcement>();
                 foreach (var rein in trintr.EnumerateArray())
@@ -259,9 +265,7 @@ namespace COTG.Game
             }
 
 
-            tsRaid = troopsHome.TSRaid();
-            tsHome = troopsHome.TS();
-            tsTotal = troopsTotal.TS();
+			lastUpdateTick = Environment.TickCount;
           
             //            if(COTG.Views.MainPage.cache.cities.Count!=0)
             // one off change
@@ -629,7 +633,7 @@ namespace COTG.Game
             }
         }
 		//static City lastDugeonScanCity;
-		public DumbCollection<Dungeon> dungeons
+		public ResetableCollection<Dungeon> dungeons
 		{
 			get
 			{

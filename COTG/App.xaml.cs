@@ -834,9 +834,10 @@ namespace COTG
 
 	public static class Note
 	{
+		static bool initialized = false;
 		static Note()
 		{
-			ShellPage.inAppNote.Closed +=InAppNote_Closed;
+			
 		}
 
 		private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
@@ -860,6 +861,11 @@ namespace COTG
 			const int noteDelay = 2;
 			if (ShellPage.instance != null)
 			{
+				if(!initialized)
+				{
+					initialized = true;
+					ShellPage.inAppNote.Closed += InAppNote_Closed;
+				}
 
 				var now = DateTime.UtcNow;
 				var next = nextInAppNote;

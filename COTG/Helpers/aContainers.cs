@@ -111,16 +111,22 @@ namespace COTG.Helpers
             }
         }
 
-        // Use Reset if you are clearning first
-        //public void AddRange(IList<T> src)
-        //{
-        //    var id = Count;
-        //    base.AddRange(src);
-        //    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,src ,id ));
-        //}
-
     }
-    public static class DumbHelpers
+
+	// A List that allows manual reset notifications to be sent for large scale changes
+	// does not support find grained changes, any changes should be promoted to a reset
+	public class ResetableCollection<T> : List<T>, INotifyCollectionChanged
+	{
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+		public void NotifyReset()
+		{
+			//  Assert(App.IsOnUIThread());
+			if (CollectionChanged != null)
+				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+		}
+	}
+	public static class DumbHelpers
     {
         public static void NotifyChange(this HashSet<City> items, params string[] memberName)
         {

@@ -201,7 +201,7 @@ namespace COTG.Views
         //}
 
 
-        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true)
+        public static void AddToGrid(Spot spot, VirtualKeyModifiers mod, bool updateSelection = true, bool scrollIntoView=true)
         {
             // Toggle Selected
             if (disableSelection == 0)
@@ -236,7 +236,7 @@ namespace COTG.Views
                }
 
                if (updateSelection)
-                   spot.ProcessSelection(mod);
+                   spot.ProcessSelection(mod,false,scrollIntoView);
            });
             }
 
