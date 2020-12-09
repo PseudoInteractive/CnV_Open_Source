@@ -81,7 +81,7 @@ namespace COTG.Views
                 {
                     case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
                         {
-                            Spot.ProcessCoordClick(cid, true,e.KeyModifiers);
+                            Spot.ProcessCoordClick(cid, true,e.KeyModifiers,true);
                             e.Handled = true;
                             break;
                         }

@@ -80,7 +80,7 @@
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
                       Margin="4" />
-                    <ComboBox x:Name="cityBox" x:FieldModifier="public" FontFamily="Segoe UI Emoji"
+                    <ComboBox x:Name="cityBox" x:FieldModifier="public" 
                       Width="200"
 							  IsEditable="True"
 					TextSubmitted="CitySubmitted"
@@ -108,7 +108,7 @@
                     </Button>
                     <TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
                     <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Segoe UI Emoji"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
                     <winui:ProgressRing x:Name="progress" IsActive="False" />
                     <TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />

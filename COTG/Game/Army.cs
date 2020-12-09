@@ -95,7 +95,7 @@ namespace COTG.Game
             switch (column)
             {
                 case "city":
-                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, VirtualKeyModifiers.None); break;
+                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, App.keyModifiers,false); break;
                 case nameof(sPlayer):JSClient.ShowPlayer(sPlayer); break;
                 case nameof(tPlayer): JSClient.ShowPlayer(tPlayer); break;
                 case "Troops":
@@ -266,7 +266,7 @@ namespace COTG.Game
 				if (i.type == tt.type)
 				{
 					var sum = i.count + tt.count;
-					if (i.count == 0)
+					if (sum == 0)
 					{
 						return me.ArrayRemove(counter); // 0 == remove
 					}
@@ -407,7 +407,7 @@ namespace COTG.Game
                 if (ts > bestTS)
                 {
                     bestTS = ts;
-                    best = (byte)ttc.type;
+                    best = (byte)type;
                 }
 
             }

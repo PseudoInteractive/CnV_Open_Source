@@ -23,6 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Remove="ts\gfunky3.user.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ts\gfunky3.user.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.2.0-beta-20201206-1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

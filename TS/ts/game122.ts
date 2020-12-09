@@ -16008,7 +16008,7 @@ var cotgsubscribe = amplify;
             'height': _s(+
               I9R),
             'background-color': '',
-            'zoom': __s[p9R * 1],
+            'zoom': "1",
             '-moz-transform': __s[+z9R]
           });
         $(__s[P0R << 1996206944] + C8[K0g])
@@ -16830,9 +16830,9 @@ var cotgsubscribe = amplify;
             $(__s[+y6R])
               .val(0);
             $(__s['340' | 272])
-              .text(__s[+G6R]);
+              .text("0");
             $(__s['963' | 833])
-              .text(__s[+G6R]);
+              .text("0");
           }
         });
       }
@@ -24893,10 +24893,10 @@ var cotgsubscribe = amplify;
         var l56;
         var s56 = 0;
         if ($(o2[
-          E06]["r"][__s[+p9R]])
+          E06]["r"]["1"])
           .length) {
-          s56 = s56 + __s[1288] + o2[E06]["r"][__s[+p9R]] + __s[K5y | 9];
-          v56 = o2[E06]["r"][__s[+p9R]];
+          s56 = s56 + __s[1288] + o2[E06]["r"]["1"] + __s[K5y | 9];
+          v56 = o2[E06]["r"]["1"];
         } else v56 = 0;
         if ($(o2[E06]["r"][_s(
           F1R | B9s)])
@@ -25903,10 +25903,9 @@ var cotgsubscribe = amplify;
         $(__s[4055])
           .click(function(c6l) {
             c6l.stopPropagation();
-            var N6l, F6l, q6l = {
-              0: __s[G6R | 8],
-              445: _s(+
-                "139"),
+            var   q6l = {
+              0: "0",
+              445: __s[139],
               446: __s[3961],
               447: __s[+a4p],
               448: __s[F1R - 0],
@@ -25916,7 +25915,7 @@ var cotgsubscribe = amplify;
               453: __s[6821],
               454: _s(
                 2446),
-              455: __s[+G6R],
+              455: "0",
               460: __s[6829],
               461: __s[C7R * 1],
               462: _s(+
@@ -25928,7 +25927,7 @@ var cotgsubscribe = amplify;
                 4649),
               467: __s['4953' | 336],
               477: __s[+p54],
-              479: __s[+p9R],
+              479: "1",
               481: __s[5621],
               482: __s[6764],
               483: __s[4134],
@@ -25940,22 +25939,20 @@ var cotgsubscribe = amplify;
               498: __s[2203],
               500: __s[4632],
               502: __s[6989],
-              504: _s(+
-                "5798")
+              504: __s[+"5798"]
             };
-            var Y6l = __s[5300];
-            if (D6.w === __s[p9R & 2147483647]) Y6l = Y6l + _s(+
-              "6764");
-            else Y6l = Y6l + __s[520];
-            for (N6l = F8y >> 398417792; N6l < (A7R ^ 0); N6l += +
-              '1') {
-              F6l = Number(D6.bd[N6l].bid);
-              if (d4F(N6l))
-                if (q6l[F6l] !== undefined) Y6l = Y6l + q6l[F6l];
-                else Y6l = Y6l + __s[+G6R];
+              var cityUrl = "http://cotgopt.com/?map=";
+              // on water or on lang?
+            if (D6.w === "1") cityUrl = cityUrl + "W";
+            else cityUrl = cityUrl + "L";
+            for (let iterator = 23; iterator < 417; iterator += 1) {
+              let spotType = Number(D6.bd[iterator].bid);
+              if (d4F(iterator))
+                  if (q6l[spotType] !== undefined) cityUrl = cityUrl + q6l[spotType];
+                else cityUrl = cityUrl + "0";
             }
             E6k.R6();
-            window.open(Y6l, __s[266]);
+              window.open(cityUrl, "_blank");
           });
         E6k.y6();
         $(__s[5940])
@@ -31195,7 +31192,7 @@ var cotgsubscribe = amplify;
           $(__s[6132])
             .css("display", "none");
           $(__s[3121])
-            .text(__s[G6R | 170]);
+            .text("0");
         }
       } else {
         var U4w = '';
@@ -38495,7 +38492,7 @@ var cotgsubscribe = amplify;
             'height': _s(I9R |
               4144),
             'background-color': '',
-            'zoom': __s[p9R | 196],
+            'zoom': "1",
             '-moz-transform': _s(z9R |
               300)
           });
@@ -38600,7 +38597,7 @@ var cotgsubscribe = amplify;
           'height': _s(+
             I9R),
           'background-color': "",
-          'zoom': __s[p9R & 2147483647],
+          'zoom': "1",
           '-moz-transform': _s(
             z9R - 0)
         });
@@ -42031,7 +42028,7 @@ var cotgsubscribe = amplify;
           }
           var e72 = m52[c52][__s[x9y >> 672051872]][_s(O6y *
             1)];
-          if (e72 < (10)) e72 = __s[+G6R] + e72;
+          if (e72 < (10)) e72 = "0" + e72;
           a52 = a52 + __s[513] + e72 + k72 + __s[1757] + m52[c52]['c'][__s[+X4m]] +
             __s[3465] + m52[c52][__s[x9y - 0]][__s[+O6y]] + __s[2375] + m52[c52][_s(
               x9y ^ 0)][__s[+X4m]] + __s[g3y | 3008] + m52[c52]['c'][__s[+M8R]] + _s(+
@@ -45154,7 +45151,7 @@ var cotgsubscribe = amplify;
         E6k.R6();
         for (G19 = 0; G19 <= 3; G19++) {
           C19 = W19 >>> G19 * 8 & (P4p ^ 0);
-          M19 = __s[G6R * 1] + C19.toString(16);
+          M19 = "0" + C19.toString(16);
           z19 = z19 + M19.substr(M19.length - 2, 2);
         }
         return z19;
@@ -45637,8 +45634,8 @@ var cotgsubscribe = amplify;
       var v8n = l8n - (1);
       if (H8n > v8n) $(j8n)
         .removeClass(k8n)
-        .addClass(__s[+p7p] + s8n + e8n + u8n + __s[+G6R])
-        .attr('a', __s[+p7p] + s8n + e8n + u8n + __s[G6R << 571290016]);
+        .addClass(__s[+p7p] + s8n + e8n + u8n + "0")
+        .attr('a', __s[+p7p] + s8n + e8n + u8n + "0");
       else $(j8n)
         .removeClass(k8n)
         .addClass(__s[p7p ^ 0] + s8n + e8n + u8n + H8n)
@@ -46651,7 +46648,7 @@ var cotgsubscribe = amplify;
       //console.log(g7l);
       if (Number(g7l) > (0) || g7l == __s[1679]) {
         $(__s[i7R ^ 0] + K7l)
-          .css(__s[n5R * 1], __s[G6R >> 457832480]);
+          .css(__s[n5R * 1], "0");
         $(__s[i7R & 2147483647] + K7l)
           .css("display", "none");
       } else {
@@ -49965,9 +49962,9 @@ var cotgsubscribe = amplify;
         .val(0);
       E6k.y6();
       $(__s[340])
-        .text(__s[G6R >> 1766228992]);
+        .text("0");
       $(__s[963])
-        .text(__s[G6R >> 883731456]);
+        .text("0");
     }
 
     function y3F(H7g, j7g) {
@@ -50712,7 +50709,7 @@ var cotgsubscribe = amplify;
         C9D = Number(f9D[G9D]) + Number(
           J9D) + "";
         J9D = C9D;
-        W9D.push(__s[p9R - 0] + C9D);
+        W9D.push("1" + C9D);
       }
       for (var G9D = 0; G9D < R9D; G9D++) {
         C9D = Number(K9D[G9D]) + Number(
@@ -50989,7 +50986,7 @@ var cotgsubscribe = amplify;
       var K1V = new Date(g1V);
       var d1V = formatTimehrs(K1V);
       E6k.R6();
-      if (r1V.a == __s[G6R ^ 0]) {
+      if (r1V.a == "0") {
         window.onbeforeunload = null;
         window.location.replace(__s[6029]);
       }
@@ -61372,8 +61369,8 @@ var cotgsubscribe = amplify;
       E6k.R6();
       if (B6D instanceof Array) {
         this
-          ._generate_encoding(B6D[0], R6D + __s[+G6R]);
-        this._generate_encoding(B6D[1], R6D + __s[p9R >> 548261376]);
+          ._generate_encoding(B6D[0], R6D + "0");
+        this._generate_encoding(B6D[1], R6D + "1");
       } else this.encoding[B6D] = R6D;
     };
     f7F.prototype.inspect_encoding = function() {

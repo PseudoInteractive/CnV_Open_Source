@@ -442,6 +442,7 @@ namespace COTG
 		//            ShowCity(cityId, false);
 		//        }
 
+
 		//    }
 		//    catch (Exception e)
 		//    {
@@ -449,13 +450,13 @@ namespace COTG
 		//    }
 		//}
 
-		public static void ChangeCity(int cityId, bool lazyMove, bool select = true)
+		public static void ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI=true)
         {
             try
             {
                 if (City.IsMine(cityId))
                 {
-                    var city = City.StBuild(cityId,true,select);
+                    var city = City.StBuild(cityId, scrollIntoUI, select);
                     if(!lazyMove)
                         cityId.BringCidIntoWorldView(lazyMove);
                     App.DispatchOnUIThreadSneaky(() =>
@@ -463,7 +464,7 @@ namespace COTG
                 }
                 else
                 {
-                    ShowCity(cityId, lazyMove);
+                    ShowCity(cityId, lazyMove, scrollIntoUI);
                 }
 
             }
@@ -613,14 +614,14 @@ namespace COTG
         //    }
         //}
 
-        public static void ShowCity(int cityId, bool lazyMove, bool select=true)
+        public static void ShowCity(int cityId, bool lazyMove, bool select=true, bool scrollToInUI=true)
         {
 			try
 			{
                 SetViewModeWorld();
                // if (City.IsMine(cityId))
                 {
-                    Spot.SetFocus(cityId,true, select);
+                    Spot.SetFocus(cityId, scrollToInUI, select);
                 }
 
                 // if (JSClient.IsWorldView())
@@ -1264,9 +1265,9 @@ namespace COTG
 						   }
 					   case "shcit":
 						   {
-							   var jso = jsp.Value;
-							   var cid = jso.GetAsInt();
-							   Spot.ProcessCoordClick(cid, false, App.keyModifiers); // then normal click
+							//   var jso = jsp.Value;
+							//   var cid = jso.GetAsInt();
+							 //  Spot.ProcessCoordClick(cid, false, App.keyModifiers,true); // then normal click
 								break;
 						   }
 					   case "keyDown":

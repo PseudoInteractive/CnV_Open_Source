@@ -17,109 +17,148 @@ using Telerik.Data.Core;
 
 namespace COTG.Models
 {
-    //public class CityTapCommand : DataGridCommand
-    //{
-    //    public CityTapCommand()
-    //    {
-    //        this.Id = CommandId.CellTap;
+	public class CityTextFiler : IFilter
+	{
+		private string matchString;
 
-    //    }
+		private string propertyName;
 
-    //    public override bool CanExecute(object parameter)
-    //    {
-    //        var context = parameter as DataGridCellInfo;
-    //        // put your custom logic here
-    //        Log("CanExecute");
-    //        return true;
-    //    }
+		public CityTextFiler(string match, string propterty)
+		{
+			this.matchString = match;
+			this.propertyName = propterty;
+		}
 
-    //    //public override void Execute(object parameter)
-    //    //{
-    //    //    var context = parameter as DataGridCellInfo;
-    //    //    var grid = Views.MainPage.CityGrid;
-    //    //    // put your custom logic here
-    //    //    Assert(MainPage.hoverTarget != null);
-    //    //  //  var i = MainPage.hoverTarget;
+		public bool PassesFilter(object item)
+		{
+			var model = item as Spot;
 
-    //    //    try
-    //    //    {
+			if (propertyName == null)
+			{
+				return false;
+			}
 
+			switch (propertyName)
+			{
+				case nameof(Spot.nameAndRemarks):
+					return model.nameAndRemarks.Contains(this.matchString, StringComparison.OrdinalIgnoreCase);
+				case nameof(Spot.xy):
+					return model.xy.Contains(this.matchString, StringComparison.OrdinalIgnoreCase);
+				case nameof(Spot.cont):
+					return model.cont.ToString().Contains(this.matchString, StringComparison.OrdinalIgnoreCase);
+			
+				default:
+					break;
+			}
 
-    //    //        var i = context.Item as COTG.Game.Spot;
-    //    //        var cid = i.cid;
-
-    //    //        var isSelected = grid.SelectedItem == i;
-    //    //        if (isSelected)
-    //    //            grid.DeselectCell(context);
-    //    //        else
-    //    //            grid.SelectCell(context);
-
-    //    //        Log(context.Item.GetType());
-    //    //        Log(context.Item.ToString());
-    //    //        Log(context.Value);
-
-    //    //        Log(context.Column.Name);
-    //    //        Log(base.CanExecute(parameter));
-    //    //        //   grid.BeginEdit(context);
-    //    //        if (context.Column.Header != null)
-    //    //        {
-    //    //            Log(context.Column.Header);
-    //    //            switch (context.Column.Header.ToString())
-    //    //            {
-    //    //                case "xy": JSClient.ShowCity(cid); break;
-    //    //                case "icon": JSClient.ChangeCity(cid); break;
-    //    //                case "tsHome":
-    //    //                    {
-    //    //                        ScanDungeons.Post(cid); break;
-    //    //                    }
-    //    //            }
-    //    //        }
-    //    //    }
-    //    //    catch (Exception ex)
-    //    //    {
-    //    //        Log(ex);
-    //    //    }
+			return false;
+		}
+	}
 
 
-    //    //    //   grid.CommitEdit();
+	//public class CityTapCommand : DataGridCommand
+	//{
+	//    public CityTapCommand()
+	//    {
+	//        this.Id = CommandId.CellTap;
 
-    //    //    //            if (base.CanExecute(parameter))
-    //    //    base.Execute(parameter);
+	//    }
 
-    //    //}
+	//    public override bool CanExecute(object parameter)
+	//    {
+	//        var context = parameter as DataGridCellInfo;
+	//        // put your custom logic here
+	//        Log("CanExecute");
+	//        return true;
+	//    }
 
-    //}
-    //public class CustomFilterButtonTapCommand : DataGridCommand
-    //{
-    //    public CustomFilterButtonTapCommand()
-    //    {
-    //        this.Id = CommandId.FilterButtonTap;
-    //    }
+	//    //public override void Execute(object parameter)
+	//    //{
+	//    //    var context = parameter as DataGridCellInfo;
+	//    //    var grid = Views.MainPage.CityGrid;
+	//    //    // put your custom logic here
+	//    //    Assert(MainPage.hoverTarget != null);
+	//    //  //  var i = MainPage.hoverTarget;
 
-    //    public override bool CanExecute(object parameter)
-    //    {
-    //        return true;
-    //    }
+	//    //    try
+	//    //    {
 
-    //    public override void Execute(object parameter)
-    //    {
-    //        var context = parameter as FilterButtonTapContext;
-    //        if ( (context.Column.Header?. == "Name" )
-    //        {
-    //            context.FirstFilterControl = new TextFilterDescriptor() {  IsCaseSensitive=false,Operator=TextOperator.Contains,PropertyName= };
-    //            {
-    //                PropertyName = "EyeColor",
-    //                DataContext = context.AssociatedDescriptor
-    //            };
 
-    //            context.SecondFilterControl = null;
-    //        }
-    //        this.Owner.CommandService.ExecuteDefaultCommand(CommandId.FilterButtonTap, context);
-    //    }
-   // }
-   //
+	//    //        var i = context.Item as COTG.Game.Spot;
+	//    //        var cid = i.cid;
 
-    public class DefenseTapCommand : DataGridCommand
+	//    //        var isSelected = grid.SelectedItem == i;
+	//    //        if (isSelected)
+	//    //            grid.DeselectCell(context);
+	//    //        else
+	//    //            grid.SelectCell(context);
+
+	//    //        Log(context.Item.GetType());
+	//    //        Log(context.Item.ToString());
+	//    //        Log(context.Value);
+
+	//    //        Log(context.Column.Name);
+	//    //        Log(base.CanExecute(parameter));
+	//    //        //   grid.BeginEdit(context);
+	//    //        if (context.Column.Header != null)
+	//    //        {
+	//    //            Log(context.Column.Header);
+	//    //            switch (context.Column.Header.ToString())
+	//    //            {
+	//    //                case "xy": JSClient.ShowCity(cid); break;
+	//    //                case "icon": JSClient.ChangeCity(cid); break;
+	//    //                case "tsHome":
+	//    //                    {
+	//    //                        ScanDungeons.Post(cid); break;
+	//    //                    }
+	//    //            }
+	//    //        }
+	//    //    }
+	//    //    catch (Exception ex)
+	//    //    {
+	//    //        Log(ex);
+	//    //    }
+
+
+	//    //    //   grid.CommitEdit();
+
+	//    //    //            if (base.CanExecute(parameter))
+	//    //    base.Execute(parameter);
+
+	//    //}
+
+	//}
+	//public class CustomFilterButtonTapCommand : DataGridCommand
+	//{
+	//    public CustomFilterButtonTapCommand()
+	//    {
+	//        this.Id = CommandId.FilterButtonTap;
+	//    }
+
+	//    public override bool CanExecute(object parameter)
+	//    {
+	//        return true;
+	//    }
+
+	//    public override void Execute(object parameter)
+	//    {
+	//        var context = parameter as FilterButtonTapContext;
+	//        if ( (context.Column.Header?. == "Name" )
+	//        {
+	//            context.FirstFilterControl = new TextFilterDescriptor() {  IsCaseSensitive=false,Operator=TextOperator.Contains,PropertyName= };
+	//            {
+	//                PropertyName = "EyeColor",
+	//                DataContext = context.AssociatedDescriptor
+	//            };
+
+	//            context.SecondFilterControl = null;
+	//        }
+	//        this.Owner.CommandService.ExecuteDefaultCommand(CommandId.FilterButtonTap, context);
+	//    }
+	// }
+	//
+
+	public class DefenseTapCommand : DataGridCommand
     {
         public DefenseTapCommand()
         {
@@ -173,8 +212,8 @@ namespace COTG.Models
                             else
                                 Note.Show("This attack is in the future, there is no report yet");
                             break;
-                        case "dXY": Spot.ProcessCoordClick(i.targetCid, false, App.keyModifiers); break;
-                        case "aXY": Spot.ProcessCoordClick(i.sourceCid, false, App.keyModifiers); break;
+                        case "dXY": Spot.ProcessCoordClick(i.targetCid, false, App.keyModifiers,false); break;
+                        case "aXY": Spot.ProcessCoordClick(i.sourceCid, false, App.keyModifiers,false); break;
                         case "aPlyr": JSClient.ShowPlayer(i.sPlayer); break;
                         case "dPlyr": JSClient.ShowPlayer(i.tPlayer); break;
                             //case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
@@ -397,7 +436,7 @@ namespace COTG.Models
                 switch (context.Column.Header.ToString())
                 {
                     case nameof(Dungeon.xy):
-                        Spot.ProcessCoordClick(cid,false, App.keyModifiers);
+                        Spot.ProcessCoordClick(cid,false, App.keyModifiers,false);
                         break;
                     case nameof(Dungeon.plan):
                         Raiding.SendRaids(i,true);

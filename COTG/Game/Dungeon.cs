@@ -63,7 +63,7 @@ namespace COTG.Game
         }
 		public static async Task ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
-			var rv = raidDungeons;
+			var rv = autoRaid ? new DumbCollection<Dungeon>(): raidDungeons;
 			rv.Clear();
 			var idealType = city.GetIdealDungeonType();
 			foreach (var dung in jse.EnumerateArray())
@@ -96,7 +96,7 @@ namespace COTG.Game
 			else
 			{
 				// dont wait on this 
-				//COTG.Views.MainPage.UpdateDungeonList(rv);
+				COTG.Views.MainPage.UpdateDungeonList(rv);
 			}
         }
 	}

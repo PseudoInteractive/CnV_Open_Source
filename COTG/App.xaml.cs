@@ -932,7 +932,7 @@ namespace COTG
 					switch (paths[1])
 					{
 						case "c":
-							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, App.keyModifiers);
+							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, App.keyModifiers,false);
 							break;
 						case "p": // player
 							JSClient.ShowPlayer(paths[2]);

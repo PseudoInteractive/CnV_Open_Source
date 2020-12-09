@@ -81,7 +81,7 @@ namespace COTG.Views
         static readonly Color focusColor = Colors.Magenta;
         static readonly Color pinnedColor = Colors.Teal;
         static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
-        static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
+        public static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
         static Vector2 troopImageOriginOffset;
 
 		const int maxTextLayouts = 1024;
@@ -1312,7 +1312,8 @@ namespace COTG.Views
 		public static void DrawAccentBase(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
 		{
 			DrawAccentBaseI(ds, cX, cY, radius, angle, color);
-			DrawAccentBaseI(ds, cX, cY, radius*0.875f, angle+angle.SignOr0()*MathF.PI*0.0625f, color);
+			DrawAccentBaseI(ds, cX, cY, radius*0.75f, angle+angle.SignOr0()*0.125f, color);
+			DrawAccentBaseI(ds, cX, cY, radius*0.50f, angle+angle.SignOr0()*0.25f, color);
 		}
 
 		public static void DrawAccent(this CanvasDrawingSession ds, Vector2 c, float radius, float angularSpeed, Color brush)

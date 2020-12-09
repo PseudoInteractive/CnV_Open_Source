@@ -247,25 +247,26 @@ namespace COTG.Views
         {
             if (instance == null)
                 return;
-		
-            //  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
-			
-          
-                instance.dungeonGrid.ItemsSource = dungeons;
-           
-        }
+			if(dungeons==null)
+				Dungeon.raidDungeons.Clear();
+			//  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+
+			Dungeon.raidDungeons.NotifyReset();
+			//    instance.dungeonGrid.ItemsSource = dungeons;
+
+		}
         public static void UpdateRaidPlans()
         {
-           // instance.Dispatcher.DispatchOnUIThread(() =>
-            {
-                // trick it
-                var temp = instance.dungeonGrid.ItemsSource;
-                instance.dungeonGrid.ItemsSource = null;
-                instance.dungeonGrid.ItemsSource = temp;
-            }
-            // tell UI that list data has changed
-           
-        }
+			//// instance.Dispatcher.DispatchOnUIThread(() =>
+			// {
+			//     // trick it
+			//     var temp = instance.dungeonGrid.ItemsSource;
+			//     instance.dungeonGrid.ItemsSource = null;
+			//     instance.dungeonGrid.ItemsSource = temp;
+			// }
+			// // tell UI that list data has changed
+			Dungeon.raidDungeons.NotifyReset();
+		}
 
         public static void ClearDungeonList()
         {

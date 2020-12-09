@@ -151,7 +151,7 @@ namespace COTG.Game
 		//public DateTimeOffset lastAccessed { get; set; } // lass user access
 		public int attackCluster { get; set; } // For attackTab, 
 
-		
+
 		public AttackType attackType { get; set; }
 		public bool isAttackTypeAssault => attackType == AttackType.assault;
 		public bool isAttackTypeSenator => attackType == AttackType.senator;
@@ -162,10 +162,10 @@ namespace COTG.Game
 		public bool isAttackTypeFake => attackType == AttackType.seFake || attackType == AttackType.senatorFake;
 
 		public const int attackClusterNone = -1;
-	
-	
+
+
 		public bool isAttackClusterNone => attackCluster == attackClusterNone;
-		
+
 		public enum Classification : byte
 		{
 			unknown,
@@ -232,8 +232,8 @@ namespace COTG.Game
 			ttSenator,
 			ttWarship,
 			ttGuard,
-			ttBallista,
-			ttBallista
+			ttGuard,
+			ttGuard
 		};
 		public string classificationString => classifications[(int)classification];
 		public int classificationTT => classificationTTs[(int)classification];
@@ -256,6 +256,23 @@ namespace COTG.Game
 					return string.Join(',', rv);
 			}
 		}
+		public string firstIncoming
+		{
+			get
+			{
+
+
+				foreach (var atk in incoming)
+				{
+					if (atk.isAttack)
+					{
+						return atk.time.FormatDefault();
+					}
+				}
+				return "??";
+			}
+		}
+
 		public bool isCastle { get; set; }
 		public bool isOnWater { get; set; }
 		public bool isTemple { get; set; }
@@ -308,7 +325,7 @@ namespace COTG.Game
 					sb.Append('\t');
 					sb.Append(s.cid.CidToCoords());
 					sb.Append('\t');
-					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatTimeDefault() ?? "??");
+					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatSkipDateIfToday() ?? "??");
 					sb.Append('\t');
 					sb.Append(s.incTT);
 					sb.Append('\t');
@@ -316,6 +333,8 @@ namespace COTG.Game
 					sb.Append('\t');
 					var ts = s.tsDefMax;
 					sb.Append(ts);
+					sb.Append('\n');
+					sb.Append(incomingAttacks);
 					sb.Append('\n');
 				}
 			}
@@ -350,7 +369,7 @@ namespace COTG.Game
 
 
 
-		public static void ProcessPointerPress(UserTab tab,object sender, PointerRoutedEventArgs e)
+		public static void ProcessPointerPress(UserTab tab, object sender, PointerRoutedEventArgs e)
 		{
 			(sender as RadDataGrid).Focus();
 			e.KeyModifiers.UpdateKeyModifiers();
@@ -376,23 +395,9 @@ namespace COTG.Game
 		}
 
 		public byte primaryTroopType => GetPrimaryTroopType();
-		public virtual byte GetPrimaryTroopType(bool onlyHomeTroops=false)
+		public virtual byte GetPrimaryTroopType(bool onlyHomeTroops = false)
 		{
-			return classification switch
-			{
-				Classification.unknown => ttGuard,
-				Classification.vanqs => ttVanquisher,
-				Classification.rt => ttTriari,
-				Classification.sorcs => ttSorcerer,
-				Classification.druids => ttDruid,
-				Classification.academy => ttPraetor,
-				Classification.horses => ttHorseman,
-				Classification.arbs => ttArbalist,
-				Classification.se => ttScorpion,
-				Classification.hub => ttBallista,
-				Classification.navy => ttWarship,
-				_ => ttBallista
-			};
+			return (byte)classificationTT;
 		}
 
 		public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
@@ -405,21 +410,21 @@ namespace COTG.Game
 
 
 				// If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-			//	var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
+				//	var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
 				var wantRaidScan = isFocus;
 				//                var needCityData = 
-
+				var wantSelect = true;
 				switch (column)
 				{
 					case nameof(xy):
-						ProcessCoordClick(cid, false, modifiers);
+						ProcessCoordClick(cid, false, modifiers, false);
 						wantRaidScan = false;
 						break;
 					case nameof(icon):
 						if (City.IsMine(cid))
 						{
 							var wasBuild = City.IsBuild(cid);
-							JSClient.ChangeCity(cid, false);
+							JSClient.ChangeCity(cid, false, true, false);
 							if (wasBuild)
 							{
 								JSClient.ChangeView(!JSClient.IsCityView());
@@ -429,26 +434,16 @@ namespace COTG.Game
 						}
 						else
 						{
-							JSClient.ShowCity(cid, false);
+							JSClient.ShowCity(cid, false, true, false);
 						}
+						wantSelect=false;
 						wantRaidScan = false;
 						break;
 					case nameof(City.dungeonsToggle):
 						{
-							if (MainPage.expandedCity == this)
-							{
-								(uie as RadDataGrid).HideRowDetailsForItem(this);
-								MainPage.expandedCity=null;
-							}
-							else
-							{
-								MainPage.expandedCity=this as City;
-								ScanDungeons.Post(cid, true, false);
-
-								(uie as RadDataGrid).ShowRowDetailsForItem(this);
-
-							}
+							ToggleDungeons(uie as RadDataGrid, false, false);
 							wantRaidScan=false;
+							wantSelect=false;
 							break;
 						}
 					case nameof(City.tsTotal):
@@ -475,7 +470,7 @@ namespace COTG.Game
 						break;
 					case nameof(pinned):
 						var newSetting = !pinned;
-						foreach(var cid in Spot.GetSelectedForContextMenu(cid) )
+						foreach (var cid in Spot.GetSelectedForContextMenu(cid))
 						{
 							Spot.GetOrAdd(cid).SetPinned(newSetting);
 						}
@@ -498,14 +493,15 @@ namespace COTG.Game
 				//	//                MainPage.SetRaidCity(cid,true);
 				//	ScanDungeons.Post(cid, true, false);
 				//}
-				SetFocus(false);
+				if (wantSelect)
+					SetFocus(false);
 				NavStack.Push(cid);
 
 			}
 			else if (pt.Properties.IsRightButtonPressed)
 			{
 				if (!modifiers.IsShift())
-					SetFocus(false, true,true);
+					SetFocus(false, true, true);
 				ShowContextMenu(uie, pt.Position);
 
 			}
@@ -519,15 +515,33 @@ namespace COTG.Game
 			SpotTab.TouchSpot(cid, modifiers);
 		}
 
+		public void ToggleDungeons(RadDataGrid uie, bool forceClose, bool forceOpen)
+		{
+			if ((forceClose || MainPage.expandedCity == this)&&!forceOpen)
+			{
+				if (MainPage.expandedCity!=null)
+					(uie).HideRowDetailsForItem(MainPage.expandedCity);
+				MainPage.expandedCity=null;
+			}
+			else
+			{
+				MainPage.expandedCity=this as City;
+				ScanDungeons.Post(cid, true, false);
+
+				(uie).ShowRowDetailsForItem(this);
+
+			}
+		}
+
 		public string ToTsv()
 		{
 			return $"{cid.CidToCoords()}\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
 		}
 
-		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod)
+		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
 		{
 			mod.UpdateKeyModifiers();
-			
+
 			if (City.IsMine(cid) && !mod.IsShiftOrControl())
 			{
 				if (City.IsBuild(cid))
@@ -538,20 +552,20 @@ namespace COTG.Game
 				}
 				else
 				{
-					JSClient.ChangeCity(cid, lazyMove,false); // keep current view, switch to city
+					JSClient.ChangeCity(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
 				}
 				NavStack.Push(cid);
 
 			}
 			else
 			{
-				JSClient.ShowCity(cid, lazyMove,false);
+				JSClient.ShowCity(cid, lazyMove, false, scrollIntoUI);
 				NavStack.Push(cid);
 
 
 			}
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
-			SpotTab.TouchSpot(cid, mod,true);
+			SpotTab.TouchSpot(cid, mod, true);
 
 			if (mod.IsShiftAndControl() && Player.isAvatar)
 			{
@@ -604,8 +618,10 @@ namespace COTG.Game
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
 			if (!Discord.isValid)
-				return new ClassificationExtended() { classification = Classification.missing };
-
+			{
+				classification = Classification.missing;
+				return new ClassificationExtended() { classification = classification };
+			}
 			classification = Classification.pending;
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
 			ClassificationExtended rv = new ClassificationExtended(); ;
@@ -722,6 +738,18 @@ namespace COTG.Game
 				return rv;
 			}
 		}
+		public TroopTypeCount[] combinedIncoming { get
+			{
+				TroopTypeCount[] rv = null;
+				foreach (var i in incoming)
+				{
+					if (i.isAttack)
+						rv = rv!=null ? rv.Sum(i.troops) : i.troops;
+				}
+				return rv;
+			}
+		}
+	
 
 		public int incomingDefTS
 		{
@@ -900,6 +928,7 @@ namespace COTG.Game
 					var sel1 = MainPage.instance.cityGrid.SelectedItems;
 					var sel = selected;
 					var present = sel.Contains(cid);
+					var wantUISync = false;
 					if (mod.IsShift() || mod.IsControl() || forceSelect)
 					{
 						if (present)
@@ -909,6 +938,11 @@ namespace COTG.Game
 								selected = new HashSet<int>(sel.Where(a => a != cid));
 								sel0.Remove(this);
 								sel1.Remove(this);
+								
+							}
+							else
+							{
+								wantUISync=true;
 							}
 						}
 						else
@@ -919,6 +953,7 @@ namespace COTG.Game
 
 							sel0.Add(this);
 							sel1.Add(this);
+							wantUISync=true;
 
 						}
 						//                 SpotTab.SelectedToGrid();
@@ -926,6 +961,7 @@ namespace COTG.Game
 
 					else
 					{
+						wantUISync=true;
 						// clear selection and select this
 						if (present && selected.Count == 1)
 						{
@@ -943,6 +979,8 @@ namespace COTG.Game
 						}
 						//                   SpotTab.SelectOne(this);
 					}
+					if (wantUISync)
+						SelectInUI(true);
 				}
 				catch (Exception e)
 				{
@@ -1166,14 +1204,20 @@ namespace COTG.Game
 			var dist = cid.DistanceToCid(_cid);
 			StringBuilder sb = new StringBuilder();
 			sb.Append(dist.ToString("0.00"));
+			
+			sb.Append($"\nCarts: {TimeSpan.FromMinutes(dist*cartTravel).ToString(AUtil.defaultTimeFormat)}, ");
+			if (isOnWater && Spot.GetOrAdd(_cid).isOnWater)
+			{
+				sb.Append($"\nShips: {TimeSpan.FromMinutes(dist*shipTravel+60).ToString(AUtil.defaultTimeFormat)}");
+			}
 			for (int i = 1; i < ttCount; ++i)
 			{
 				var dt = TimeSpan.FromMinutes(dist * TTTravel(i));
-				sb.Append($"\n{ttName[i]}: {dt.ToString()}");
+				sb.Append($"\n{ttName[i]}: {dt.ToString(AUtil.defaultTimeFormat)}");
 			}
 			var str = sb.ToString();
 			App.CopyTextToClipboard(str);
-			Note.Show(str);
+			Note.Show(str,false,20*1000);
 		}
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
@@ -1638,7 +1682,7 @@ namespace COTG.Game
             //         await Task.Delay(2000);
             //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             //           {
-            await Task.Delay(200);
+         //   await Task.Delay(200);
             App.DispatchOnUIThreadSneaky(() =>
             {
                 if (this is City)

@@ -68,8 +68,11 @@
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							AlternationStep="2"
-							PointerMoved="{x:Bind cotg:AApp.ProcessPointerMoved }"
+						
                               AutoGenerateColumns="False">
+				<tg:RadDataGrid.Commands>
+					<model:DungeonTapCommand />
+				</tg:RadDataGrid.Commands>
                 <tg:RadDataGrid.Columns>
                    <tg:DataGridNumericalColumn PropertyName="dist"
 												CellContentStyle="{StaticResource RightAlign}"

@@ -171,8 +171,11 @@ namespace COTG.Game
             city.tsRaid = 0;
 
              city.NotifyChange(nameof(city.tsRaid));
-			if(clearDungeonList)
-	            MainPage.ClearDungeonList();
+			if (clearDungeonList)
+			{
+				if (MainPage.expandedCity!= null)
+					MainPage.expandedCity.ToggleDungeons(MainPage.instance.cityGrid,true,false);
+			}
             if( (shiftPressed&&controlPressed) ^ Player.isAvatar)
             {
                 await Task.Delay(3000);

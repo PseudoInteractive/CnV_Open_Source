@@ -148,7 +148,7 @@ namespace COTG.Views
             if (spot.cid != 0)
             {
 
-                Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers);
+                Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers,false);
             }
         }
         static bool loaded = false;
@@ -321,7 +321,7 @@ namespace COTG.Views
             var i = sender as FrameworkElement;
 
             var spot = i.DataContext as Spot;
-            Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers);
+            Spot.ProcessCoordClick(spot.cid, false, App.keyModifiers,false);
             //foreach (var t in attacks)
             //{
             //    // take any one

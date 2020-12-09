@@ -46,7 +46,7 @@ namespace COTG.Services
 		{
 			Assert(JSClient.world != 0);
 			// Create a new instance of the Cosmos Client
-			var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct, LimitToEndpoint = true };
+			var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct };
 			clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
 			clientOptions.Diagnostics.IsLoggingContentEnabled = false;
 			clientOptions.Diagnostics.IsTelemetryEnabled = false;
@@ -232,15 +232,22 @@ namespace COTG.Services
             {
 				
 			   var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
-
+			
             }
-            catch (CosmosException ex)
-            {
-                if (ex.Status == (int)HttpStatusCode.Conflict)
-                    return false;
+			catch (CosmosException ex)
+			{
+				if (ex.Status == (int)HttpStatusCode.Conflict)
+					return false;
 				Log(ex);
 
+			}
+			catch (Exception ex)
+            {
+              
+				Log(ex);
+				return false;
             }
+			
 			finally
 			{
 				throttle.Release();

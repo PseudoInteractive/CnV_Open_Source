@@ -186,7 +186,7 @@ namespace COTG.Views
             var image = sender as FrameworkElement;
             
             var supporter = image.DataContext as Supporter;
-            Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers);
+            Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers,false);
 
         }
 

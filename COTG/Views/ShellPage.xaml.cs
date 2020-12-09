@@ -977,7 +977,7 @@ namespace COTG.Views
             {
                 return;
             }
-            Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers); // then normal click
+            Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers,true); // then normal click
 
         }
 
@@ -994,7 +994,7 @@ namespace COTG.Views
             if (City.build == 0)
                 return;
 
-            Spot.ProcessCoordClick(City.build, false, App.keyModifiers); // then normal click
+            Spot.ProcessCoordClick(City.build, false, App.keyModifiers,true); // then normal click
         }
 
         private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)
