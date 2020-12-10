@@ -18,13 +18,9 @@
 			  FontFamily="Tw Cen MT Condensed">
 
 	<Grid x:Name="cityBaseGrid">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="3*" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-
-		<Grid>
+		
 			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="*" />
@@ -34,7 +30,7 @@
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
-							Grid.Row="2"
+							Grid.Row="3"
 							
 						
 							IsTabStop="True"
@@ -299,17 +295,9 @@
 				</Border>
 
 			</tk:WrapPanel>
-		</Grid>
-
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="11" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
-
+		
 			<tk:WrapPanel Orientation="Horizontal"
-						  Grid.Row="1"
+						  Grid.Row="2"
 						  VerticalAlignment="Center"
 						  TabFocusNavigation="Once">
 				<ComboBox x:Name="raidCarryBox"
@@ -352,19 +340,7 @@
 
 			</tk:WrapPanel>
 		
-		</Grid>
-		<tk:GridSplitter Grid.Row="1"
-						 ResizeDirection="Rows"
-						 Height="11"
-						 HorizontalAlignment="Stretch"
-						 VerticalAlignment="Top"
-						 Background="Transparent">
-			<tk:GridSplitter.Element>
-				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-						  Glyph="&#xE76F;"
-						  IsHitTestVisible="False" />
-			</tk:GridSplitter.Element>
-		</tk:GridSplitter>
+
 		<winui:TeachingTip x:Name="TipRaiding101"
 						   x:FieldModifier="public"
 						   Title="Raiding 101"

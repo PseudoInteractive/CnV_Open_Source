@@ -119,18 +119,23 @@ namespace COTG.Game
 		public int x => cid % 65536;
 		public int y => cid >> 16;
 
-		public int tsRaid { get; set; }
-		public int tsHome { get; set; }
-		public int tsDefHome => (this is City city ? city.troopsHome.TSDef() : tsHome);
-		public int tsDefTotal => (this is City city ? city.troopsTotal.TSDef() : tsTotal);
+
+
+		public int _tsHome; // cache for when tsHome is missing
+		public int _tsTotal;
+		public int tsRaid => (this is City city && city.troopsHome.Any() ? city.troopsHome.TSRaid() : _tsHome);
+		public int tsHome => (this is City city && city.troopsHome.Any() ? city.troopsHome.TS() : _tsHome);
+		public int tsDefHome => (this is City city && city.troopsHome.Any() ? city.troopsHome.TSDef() : _tsHome);
+		public int tsDefTotal => (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TSDef() : _tsTotal);
+
+		public int tsTotal=> (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TS() : _tsTotal);
+		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
+		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
 
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
 		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
 
-		public int _tsTotal;
-		public int tsTotal { get => _tsTotal > 0 ? _tsTotal : tsHome; set => _tsTotal = value; }
-		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
-		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
+		
 		public int pid { get; set; }
 		public string player => Player.Get(pid).name;
 		public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -470,10 +475,9 @@ namespace COTG.Game
 						break;
 					case nameof(pinned):
 						var newSetting = !pinned;
-						foreach (var cid in Spot.GetSelectedForContextMenu(cid))
-						{
-							Spot.GetOrAdd(cid).SetPinned(newSetting);
-						}
+					
+							SetPinned(newSetting);
+						
 						return;
 					case nameof(City.raidCarry):
 						if (City.IsMine(cid) && MainPage.IsVisible())

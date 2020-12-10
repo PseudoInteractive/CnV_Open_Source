@@ -26,9 +26,6 @@ namespace COTG.Views
     {
     public sealed partial class CityRename : ContentDialog
         {
-		public static bool applyTags;
-		public static bool setHub;
-		public static bool useSuggested=true;
 		public CityRename()
             {
             this.InitializeComponent();
@@ -103,47 +100,52 @@ namespace COTG.Views
 				}
 				nameDialog.name.Text = city._cityName;
 				nameDialog.suggested.Text = name;
-			//	ElementSoundPlayer.Play(ElementSoundKind.Show);
+				//	ElementSoundPlayer.Play(ElementSoundKind.Show);
 
 				var result = await nameDialog.ShowAsync2();
 				if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
 				{
-					if (!useSuggested)
+					if (!SettingsPage.useSuggested)
 						lastName = nameDialog.name.Text;
 					else
 						lastName = nameDialog.suggested.Text;
 					city._cityName = lastName;
 					Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
-					if (applyTags)
+					if (SettingsPage.applyTags)
 					{
 						await GetCity.Post(cid); // need to fetch notes
 						string tags = city.remarks;
-						
-							tags = SetTag(tags,"Hub", nameDialog.hub.IsChecked);
-							tags = SetTag(tags,"Vanq", nameDialog.vanqs.IsChecked);
-							tags = SetTag(tags,"RT", nameDialog.rt.IsChecked);
-							tags = SetTag(tags,"Priestess", nameDialog.priestess.IsChecked);
-							tags = SetTag(tags,"Praetor", nameDialog.prae.IsChecked);
-							tags = SetTag(tags,"Horse", nameDialog.horse.IsChecked);
-							tags = SetTag(tags,"Arb", nameDialog.arb.IsChecked);
-							tags = SetTag(tags,"Sorc", nameDialog.sorc.IsChecked);
-							tags = SetTag(tags,"Druid", nameDialog.druid.IsChecked);
-							tags = SetTag(tags,"Scorp", nameDialog.scorp.IsChecked);
-							tags = SetTag(tags,"Shipping", nameDialog.shipping.IsChecked);
-							tags = SetTag(tags,"Stinger", nameDialog.stinger.IsChecked);
-							tags = SetTag(tags,"Galley", nameDialog.galley.IsChecked);
-							tags = SetTag(tags,"Warship", nameDialog.warship.IsChecked);
+
+						tags = SetTag(tags, "Hub", nameDialog.hub.IsChecked);
+						tags = SetTag(tags, "Vanq", nameDialog.vanqs.IsChecked);
+						tags = SetTag(tags, "RT", nameDialog.rt.IsChecked);
+						tags = SetTag(tags, "Priestess", nameDialog.priestess.IsChecked);
+						tags = SetTag(tags, "Praetor", nameDialog.prae.IsChecked);
+						tags = SetTag(tags, "Horse", nameDialog.horse.IsChecked);
+						tags = SetTag(tags, "Arb", nameDialog.arb.IsChecked);
+						tags = SetTag(tags, "Sorc", nameDialog.sorc.IsChecked);
+						tags = SetTag(tags, "Druid", nameDialog.druid.IsChecked);
+						tags = SetTag(tags, "Scorp", nameDialog.scorp.IsChecked);
+						tags = SetTag(tags, "Shipping", nameDialog.shipping.IsChecked);
+						tags = SetTag(tags, "Stinger", nameDialog.stinger.IsChecked);
+						tags = SetTag(tags, "Galley", nameDialog.galley.IsChecked);
+						tags = SetTag(tags, "Warship", nameDialog.warship.IsChecked);
 
 						city.remarks = tags;
 						//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
 						Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}");
 					}
 					Note.Show($"Set name to {lastName}");
+					if (SettingsPage.setHub)
+					{
+						HubSettings.Show(cid);
+					}
+					if (SettingsPage.clearRes)
+					{
+						JSClient.ClearCenter(cid);
+					}
 				}
-				if(setHub)
-				{
-					HubSettings.Show(cid);
-				}
+				
 			}
 			catch (Exception e)
 			{

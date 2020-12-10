@@ -125,10 +125,7 @@ namespace COTG.JSON
                                         if (defTS > 0)
                                         {
                                             army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttGuard, defTS) };
-                                            if (!spot.isMine)
-                                            {
-                                                spot.tsHome = defTS;
-                                            }
+                                            spot._tsHome = defTS;
                                         }
                                     //                            army.sumDef = Array.Empty<TroopTypeCount>();
                                     spot.incoming = spot.incoming.ArrayAppend(army);

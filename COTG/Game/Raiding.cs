@@ -155,8 +155,12 @@ namespace COTG.Game
             {
                 if (!IsRaider(ttc.type) || !Raid.includeRaiders[ttc.type])
                     continue;
-                if(IsWaterRaider(ttc.type) == d.isWater)
-                    tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = (ttc.count* troopFraction / r.fractionalReps).ToString() });
+				if (IsWaterRaider(ttc.type) == d.isWater)
+				{
+					var count = (int)(ttc.count * troopFraction / r.fractionalReps);
+					tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv =count.ToString() });
+					ttc.count -= count;
+				}
 
             }
             var trs = JsonSerializer.Serialize(tr);
@@ -168,7 +172,7 @@ namespace COTG.Game
             await snd.Post();
  //           await Task.Delay(500);
 //            UpdateTS(true);
-            city.tsRaid = 0;
+       
 
              city.NotifyChange(nameof(city.tsRaid));
 			if (clearDungeonList)

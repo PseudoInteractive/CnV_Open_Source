@@ -227,13 +227,13 @@ namespace COTG.Game
                 if (jse.TryGetProperty("tc", out var tc))
                 {
                     troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
-				tsTotal = troopsTotal.TS();
+				_tsTotal = troopsTotal.TS();
 			}
             if (jse.TryGetProperty("th", out var th))
             {
                 troopsHome = th.GetTroopTypeCount().ToArray(); ;
-				tsRaid = troopsHome.TSRaid();
-				tsHome = troopsHome.TS();
+	
+				_tsHome = troopsHome.TS();
 
 			}
 			if (jse.TryGetProperty("trintr", out var trintr))

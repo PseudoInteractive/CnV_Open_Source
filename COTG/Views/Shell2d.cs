@@ -383,8 +383,8 @@ namespace COTG.Views
                     y1 + pad <= 0 | y0-pad >= clientSpan.Y;
         }
 
-        public static Vector2 shadowOffset = new Vector2(lineThickness*0.75f, lineThickness*0.75f);
-		public static Vector2 halfShadowOffset = new Vector2(lineThickness * 0.375f, lineThickness * 0.375f);
+        public static Vector2 shadowOffset = new Vector2(lineThickness*1.0f, lineThickness*1.0f);
+		public static Vector2 halfShadowOffset = new Vector2(lineThickness * 0.75f, lineThickness * 0.7f);
 		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
         static DateTimeOffset lastDrawTime;
         public static bool tileSetsPending;
@@ -1312,8 +1312,8 @@ namespace COTG.Views
 		public static void DrawAccentBase(this CanvasDrawingSession ds, float cX, float cY, float radius, float angle, Color color)
 		{
 			DrawAccentBaseI(ds, cX, cY, radius, angle, color);
-			DrawAccentBaseI(ds, cX, cY, radius*0.75f, angle+angle.SignOr0()*0.125f, color);
-			DrawAccentBaseI(ds, cX, cY, radius*0.50f, angle+angle.SignOr0()*0.25f, color);
+			DrawAccentBaseI(ds, cX, cY, radius*0.875f, angle+angle.SignOr0()*0.125f, color);
+			//DrawAccentBaseI(ds, cX, cY, radius*0.655f, angle+angle.SignOr0()*0.25f, color);
 		}
 
 		public static void DrawAccent(this CanvasDrawingSession ds, Vector2 c, float radius, float angularSpeed, Color brush)
@@ -1328,8 +1328,8 @@ namespace COTG.Views
 			var rnd = cid.CidToRandom();
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
-			var t = (ShellPage.animationT * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-			var r = t.Wave().Lerp(ShellPage.circleRadiusBase, ShellPage.circleRadiusBase * 1.325f);
+			var t = (ShellPage.animationT * rnd.Lerp(1.25f / 256.0f, 1.75f / 256f));
+			var r = t.Wave().Lerp(ShellPage.circleRadiusBase, ShellPage.circleRadiusBase * 1.375f);
 			ds.DrawAccent(c, r,angularSpeed, brush);
 		}
 		//public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)

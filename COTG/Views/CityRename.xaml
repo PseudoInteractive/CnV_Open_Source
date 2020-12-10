@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
         <TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
-		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:CityRename.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
+		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
 		<controls:WrapPanel Grid.Row="3">
 			<ToggleButton x:Name="hub" Content="Hub"/> 
 			<ToggleButton x:Name="vanqs" Content="Vanq"/> 
@@ -42,8 +42,9 @@
 			<ToggleButton x:Name="shipping" Content="Shipping"/> 
 		</controls:WrapPanel>
 		<controls:WrapPanel Grid.Row="4">
-		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:CityRename.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
-		<ToggleSwitch Header="Hub" IsOn="{x:Bind local:CityRename.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
+		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:SettingsPage.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
+		<ToggleSwitch Header="Hub" IsOn="{x:Bind local:SettingsPage.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
+		<ToggleSwitch Header="Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave"/>
 		</controls:WrapPanel>
     </Grid>
 </ContentDialog>

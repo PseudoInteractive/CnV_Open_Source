@@ -55,7 +55,13 @@ namespace COTG.Views
         public static bool sendStone = true;
         public static bool sendIron = true;
         public static bool sendFood = true;
-        public static bool cartsAreForRequests = false;
+
+		public static bool applyTags;
+		public static bool setHub;
+		public static bool useSuggested = true;
+		public static bool clearRes;
+
+		public static bool cartsAreForRequests = false;
         public static string[] incomingWatch = Array.Empty<string>();
         public static int mruSize = 32;
         public static int[] pinned = Array.Empty<int>();

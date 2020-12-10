@@ -16,6 +16,7 @@ namespace COTG
     /// </summary>
     public static class Debug
     {
+		public static string timeStamp => DateTimeOffset.UtcNow.FormatTimePrecise();
         // {1D7815D0-4DCD-4655-8798-D18196D4DE0F}
         static Guid CotgDebug= new Guid( 0x1d7815d0, 0x4dcd, 0x4655,  0x87, 0x98, 0xd1, 0x81, 0x96, 0xd4, 0xde, 0xf  );
     //    static LoggingChannel channel;
@@ -71,48 +72,48 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            DumpStack(new StackTrace(1,true));
-            System.Diagnostics.Debug.WriteLine( $"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} {s}");
-        //    System.Diagnostics.Debug.WriteLine(new StackTrace());
+            System.Diagnostics.Debug.WriteLine( $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+			DumpStack(new StackTrace(1, true));
+			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
-        }
-        [Conditional("TRACE")]
+		}
+		[Conditional("TRACE")]
         public static void Trace(string s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            DumpStack(new StackTrace(1, true));
 
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} {s}");
-            //    System.Diagnostics.Debug.WriteLine(new StackTrace());
+            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+			DumpStack(new StackTrace(1, true));
+			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 
-        }
-        
-        [Conditional("DEBUG")]
+		}
+
+		[Conditional("DEBUG")]
         public static void Log<T>(T s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            DumpStack(new StackTrace(1, true));
 
-            System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} {s}");
-            //  System.Diagnostics.Debug.WriteLine(new StackTrace());
+            System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+			DumpStack(new StackTrace(1, true));
+			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 
-        }
-        [Conditional("TRACE")]
+		}
+		[Conditional("TRACE")]
         public static void Log(Exception e,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
         {
-            DumpStack(new StackTrace(e, true));
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Exception: {e.Message} {e.StackTrace}");
-            Note.Show(e.Message);
+            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {e.Message} {e.StackTrace}");
+			DumpStack(new StackTrace(e, true));
+			Note.Show(e.Message);
 
         }
         [Conditional("TRACE")]
@@ -121,11 +122,11 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            DumpStack(new StackTrace(1, true)); 
             //
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Exception: {s}");
-            //            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
-            Note.Show(s);
+            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}");
+			DumpStack(new StackTrace(1, true));
+			//            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+			Note.Show(s);
         }
 
         [Conditional("TRACE")]
@@ -136,10 +137,10 @@ namespace COTG
         {
             if (v)
                 return;
-            DumpStack(new StackTrace(1, true)); 
-            var str = $"{Tick.MSS()}:{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Assert";
+            var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
             System.Diagnostics.Trace.WriteLine(str);
-            System.Diagnostics.Trace.Assert(v);
+			DumpStack(new StackTrace(1, true));
+			System.Diagnostics.Trace.Assert(v);
         }
 		public static void Verify(bool v
 #if TRACE
@@ -155,7 +156,7 @@ namespace COTG
 				return;
 #if TRACE
 			DumpStack(new StackTrace(1, true));
-			var str = $"{Tick.MSS()}:{sourceFilePath}({sourceLineNumber}): {Tick.MSS()}: {memberName} : Assert";
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
 			System.Diagnostics.Trace.WriteLine(str);
 			System.Diagnostics.Trace.Assert(v);
 #endif

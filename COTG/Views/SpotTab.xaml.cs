@@ -248,12 +248,27 @@ namespace COTG.Views
               var spot=  TouchSpot(m, VirtualKeyModifiers.None, false,true);
             }
         }
-        //      public static void ToggleSelected(Spot rv)
-        //      {
-        //          var isSelected = rv.ToggleSelected();
-        ////          SelectSilent(rv, isSelected);
-        //      }
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			bool first = true;
+			var pinned = false;
+			foreach (var cid in Spot.GetSelectedForContextMenu(0,false))
+			{
+				if(first)
+				{
+					pinned = !Spot.GetOrAdd(cid).pinned;
+					first=false;
+				}
+				Spot.GetOrAdd(cid).SetPinned(pinned);
+			}
+		}
+		//      public static void ToggleSelected(Spot rv)
+		//      {
+		//          var isSelected = rv.ToggleSelected();
+		////          SelectSilent(rv, isSelected);
+		//      }
 
 
-    }
+	}
 }

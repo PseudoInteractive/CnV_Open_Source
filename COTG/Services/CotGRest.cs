@@ -497,7 +497,8 @@ namespace COTG.Services
                         tsTotal.Add(ttc);
                     hasAny = true;
                 }
-                if (hasAny)
+				var tsh = v.troopsHome.TS();
+				if (hasAny)
                 {
                     v.troopsHome = tsHome.ToArray();
                     v.troopsTotal = tsTotal.ToArray();
@@ -506,16 +507,9 @@ namespace COTG.Services
                 {
                     v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
                 }
-                var tsh = v.troopsHome.TS();
-                var tst = v.troopsTotal.TS();
-                var tsr = v.troopsHome.TSRaid();
-                if ((tsh - v.tsHome).Abs().Max((tsr - v.tsRaid).Abs().Max((tst - v.tsTotal).Abs())) > 16)
+                if ((tsh - v.troopsHome.TS()).Abs() > 16)
                 {
-                    v.tsTotal = tst;
-                    v.tsHome = tsh;
-                    v.tsRaid = tsr;
                     changed.Add(v);
-
                     //v.OnPropertyChanged(nameof(v.tsTotal));
                 }
 
