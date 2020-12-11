@@ -203,7 +203,14 @@ namespace COTG
 			}
 
             CoreApplication.EnablePrelaunch(false);
-			await ActivationService.ActivateAsync(args);
+
+			if (args.Kind == ActivationKind.Launch)
+			{
+				// do this asynchronously
+				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
+			}
+
+				await ActivationService.ActivateAsync(args);
 			// if (!args.PrelaunchActivated)
 
 			OnLaunchedOrActivated(args);

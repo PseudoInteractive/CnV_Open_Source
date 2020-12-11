@@ -159,7 +159,7 @@ namespace COTG.Game
 				{
 					var count = (int)(ttc.count * troopFraction / r.fractionalReps);
 					tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv =count.ToString() });
-					ttc.count -= count;
+					ttc.count -= r.reps*count;
 				}
 
             }

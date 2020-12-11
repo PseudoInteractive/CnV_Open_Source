@@ -28,8 +28,8 @@ namespace COTG.Game
         public const byte ttStinger = 15;
         public const byte ttWarship = 16;
         public const byte ttSenator = 17;
-
-        public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
+		public const byte ttPending = 0;
+		public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
         public static bool IsLandRaider(int type) => ttBestDungeonType[type] < (byte)DungeonType.water; // also exludes in valid
         public static bool IsWaterRaider(int type) => ttBestDungeonType[type] == (byte)DungeonType.water;
 

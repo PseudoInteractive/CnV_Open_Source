@@ -236,9 +236,9 @@ namespace COTG.Game
 			ttScorpion,
 			ttSenator,
 			ttWarship,
-			ttGuard,
-			ttGuard,
-			ttGuard
+			ttBallista,
+			ttPending,
+			ttPending
 		};
 		public string classificationString => classifications[(int)classification];
 		public int classificationTT => classificationTTs[(int)classification];

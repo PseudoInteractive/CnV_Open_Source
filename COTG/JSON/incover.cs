@@ -369,24 +369,23 @@ namespace COTG.JSON
 											  {
 												  if (reused)
 												  {
-													  if (army.type == reportPending)
+
+													  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
 													  {
-														  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttBallista)
-															  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
+														  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
 													  }
 												  }
 												  else
 												  {
 
 													  source.QueueClassify();
-													  if (army.type == reportPending)
+
+													  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
+													  if (source.classification == Spot.Classification.pending)
 													  {
-														  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
-														  if (source.classification == Spot.Classification.pending)
-														  {
-															  army.miscInfo = "pending " + army.miscInfo;
-														  }
+														  army.miscInfo = "pending " + army.miscInfo;
 													  }
+
 												  }
 											  }
 											  else
@@ -408,7 +407,7 @@ namespace COTG.JSON
 												  else
 												  {
 													  // intel ready now
-													  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttBallista)
+													  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
 													  {
 														  COTG.Game.IncomingEstimate.Get(army);
 

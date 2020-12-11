@@ -82,8 +82,16 @@ namespace COTG.Views
            });
             return desc;
         }
+		// Todo:  Queue updates with tasks
+		public static void WorkUpdate(string desc)
+		{
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				instance.work.Text = desc;
 
-        public static void WorkEnd(string desc)
+			});
+		}
+		public static void WorkEnd(string desc)
         {
             App.DispatchOnUIThreadSneaky(() =>
             {

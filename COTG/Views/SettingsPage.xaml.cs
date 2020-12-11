@@ -55,7 +55,7 @@ namespace COTG.Views
         public static bool sendStone = true;
         public static bool sendIron = true;
         public static bool sendFood = true;
-
+		public static bool showDungeonsInRegionView = false;
 		public static bool applyTags;
 		public static bool setHub;
 		public static bool useSuggested = true;

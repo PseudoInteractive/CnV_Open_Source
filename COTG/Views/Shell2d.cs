@@ -31,10 +31,11 @@ namespace COTG.Views
         const float detailsZoomThreshold = 36;
         const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
-        public static TintEffect worldBackgroundDark;
+    //    public static TintEffect worldBackgroundDark;
         public static CanvasBitmap worldObjects;
-        //     public static TintEffect worldObjectsDark;
-        public static CanvasBitmap worldChanges;
+		public static CanvasBitmap worldObjectsWithoutDungeons;
+		//     public static TintEffect worldObjectsDark;
+		public static CanvasBitmap worldChanges;
         public static Vector2 clientTL;
         public static Vector2 cameraC = new Vector2(300, 300);
         public static Vector2 cameraCLag = cameraC; // for smoothing
@@ -283,7 +284,7 @@ namespace COTG.Views
             }
 
             worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri("ms-appx:///Assets/world.dds"));
-            worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+           // worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
             for (int i = 0; i < ttCount; ++i)
             {
@@ -629,12 +630,20 @@ namespace COTG.Views
                         if(commands!= null)
 						{
 							var _ds = args.DrawingSession;
-							var emboss = new EmbossEffect() { Source = commands, Amount = 6 + MathF.Sin(animationT * 0.25f) * 4, Angle =(1+ MathF.Sin(animationT * .32f)) * MathF.PI,CacheOutput=false };
+							var ddpx = (float)destP1.X - (float)destP0.X;
+							var ddpy = (float)destP1.Y - (float)destP0.Y;
+						var dspx = (float)srcP1.X - (float)srcP0.X;
+						var dspy = (float)srcP1.Y - (float)srcP0.Y;
+						var scaleX = ddpx / dspx;
+						var scaleY = ddpy / dspy;
 
-						var r = new Rect(new Point(), clientSpan.ToSize());
-							
+						
+							var emboss = new EmbossEffect() { Source = commands, Amount = 8 + MathF.Sin(animationT * 0.25f) * 2, Angle =(1+ MathF.Sin(animationT * .32f)) * MathF.PI,CacheOutput=false };
+							var transform = new Transform2DEffect() { TransformMatrix= new Matrix3x2(scaleX,0,0,scaleY,((float)destP0.X- (float)srcP0.X)*scaleX,((float)destP0.Y- (float)srcP0.Y)*scaleY) , Source= worldObjects };
+						var r = new Rect(destP0,destP1);
+						var blend = new BlendEffect() { Foreground = emboss, Background = transform };
 					
-							_ds.DrawImage( emboss,r,r,0.5f);
+							_ds.DrawImage( blend,r,r,1.0f);
 							ds = _ds;
 							commands.Dispose();
 							

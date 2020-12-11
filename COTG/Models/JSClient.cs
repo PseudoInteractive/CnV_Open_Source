@@ -454,6 +454,7 @@ namespace COTG
         {
             try
             {
+
                 if (City.IsMine(cityId))
                 {
                     var city = City.StBuild(cityId, scrollIntoUI, select);
@@ -614,12 +615,18 @@ namespace COTG
         //    }
         //}
 
-        public static void ShowCity(int cityId, bool lazyMove, bool select=true, bool scrollToInUI=true)
+        public static async void ShowCity(int cityId, bool lazyMove, bool select=true, bool scrollToInUI=true)
         {
 			try
 			{
                 SetViewModeWorld();
-               // if (City.IsMine(cityId))
+				using (var jso = await Post.SendForJson("includes/gStbl.php", $"a={cityId}"))
+				{
+					Log(jso.RootElement.ToString());
+					Note.Show(jso.RootElement.ToString());
+				}
+               
+					// if (City.IsMine(cityId))
                 {
                     Spot.SetFocus(cityId, scrollToInUI, select);
                 }
@@ -634,7 +641,7 @@ namespace COTG
                 //int y = cityId/65536;
                 //var spotInfo = TileData.instance.GetSpotType(x, y);
                 //Note.Show($"{x}:{y},{spotInfo.x}:{spotInfo.y} {spotInfo.type}");
-                //    view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() });
+                   
                 });
                 //             if( City.IsMine(cityId)  )
                 //                 Raiding.UpdateTSHome();

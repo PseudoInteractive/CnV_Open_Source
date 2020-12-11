@@ -111,7 +111,7 @@
                 <tg:DataGridTextColumn PropertyName="firstIncoming"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                         IsVisible="False" />
+                                        />
        
                 <tg:DataGridTextColumn PropertyName="cityName"
                                        SizeMode="Stretch"
@@ -145,13 +145,13 @@
                                  IsCellFlyoutEnabled="True"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                           IsVisible="False"
+                                   
                                         />
                    <tg:DataGridTextColumn PropertyName="attackers"
                                  IsCellFlyoutEnabled="True"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                          IsVisible="False"
+                                      
                                         />
 				
 				                
