@@ -861,7 +861,18 @@ function avactor() {
 	window['infoPlay'] = gspotfunct.infoPlay;
 	window['shCit'] = gspotfunct.shCit;
 	window['chcity'] = gspotfunct.chcity;
-
+	{
+		let cont = document.getElementById("mainMapDiv");
+		cont.oncontextmenu = null;
+		(cont.children[0] as HTMLBaseElement).oncontextmenu = null;
+		(cont.children[0] as HTMLBaseElement).style.background = "rgba(0,0,0,0)";
+		let cc = cont.children[0].childElementCount;
+		for (let i = 0; i < cc; ++i) {
+			(cont.children[0].children[i] as HTMLElement).oncontextmenu = null;
+			(cont.children[0].children[i] as HTMLElement).style.background = "rgba(0,0,0,0)";
+		}
+	}
+	
 	let date = new Date(ServerDate.getTime());
 	console.log( date );
 	console.log(date.getUTCHours());

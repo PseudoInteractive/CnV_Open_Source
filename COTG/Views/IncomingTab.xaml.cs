@@ -202,7 +202,12 @@ namespace COTG.Views
                 armyGrid.ItemsSource = (sel.First() as Spot).incoming;
             }
         }
-    }
+
+		private void onlyMe_Click(object sender, RoutedEventArgs e)
+		{
+			instance.Refresh();
+		}
+	}
 
    
 

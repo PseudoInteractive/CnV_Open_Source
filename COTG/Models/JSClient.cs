@@ -63,6 +63,7 @@ namespace COTG
         //        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
+		public static WebViewBrush webViewBrush; 
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 6;
         public static ConcurrentBag<HttpClient> clientPool;
@@ -164,12 +165,13 @@ namespace COTG
 
             try
             {
-                view = new WebView(WebViewExecutionMode.SeparateThread)
-                {
-                    //HorizontalAlignment = HorizontalAlignment.Stretch,
-                    //VerticalAlignment = VerticalAlignment.Stretch,
-                    //CacheMode=new BitmapCache()
-                    DefaultBackgroundColor = Windows.UI.Colors.Transparent
+				view = new WebView(WebViewExecutionMode.SeparateProcess)
+				{
+					//HorizontalAlignment = HorizontalAlignment.Stretch,
+					//VerticalAlignment = VerticalAlignment.Stretch,
+					//CacheMode=new BitmapCache()
+					DefaultBackgroundColor = new Windows.UI.Color() { R = 0, A = 0 },
+					Opacity=0.0,
                 };
                 view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
                 view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
@@ -184,14 +186,15 @@ namespace COTG
                 view.NavigationCompleted += View_NavigationCompletedAsync;
                 view.PermissionRequested += View_PermissionRequested;
                 view.NewWindowRequested += View_NewWindowRequested;
-                //  view.WebResourceRequested += View_WebResourceRequested1;
-
-                //   view.CacheMode = CacheMode.
-                //Grid.Se SetAlignLeftWithPanel(view, true);
-                //RelativePanel.SetAlignRightWithPanel(view, true);
-                ///	RelativePanel.SetAlignTopWithPanel(view, true);
-                //		RelativePanel.SetAlignBottomWithPanel(view, true);
-                if (subId != 0)
+				//  view.WebResourceRequested += View_WebResourceRequested1;
+				webViewBrush = new webViewBrush();
+				webViewBrush.SetSource(view);
+				//   view.CacheMode = CacheMode.
+				//Grid.Se SetAlignLeftWithPanel(view, true);
+				//RelativePanel.SetAlignRightWithPanel(view, true);
+				///	RelativePanel.SetAlignTopWithPanel(view, true);
+				//		RelativePanel.SetAlignBottomWithPanel(view, true);
+				if (subId != 0)
                 {
                     httpsHost = new Uri($"https://w{world}.crownofthegods.com");
              //       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
@@ -620,12 +623,7 @@ namespace COTG
 			try
 			{
                 SetViewModeWorld();
-				using (var jso = await Post.SendForJson("includes/gStbl.php", $"a={cityId}"))
-				{
-					Log(jso.RootElement.ToString());
-					Note.Show(jso.RootElement.ToString());
-				}
-               
+				
 					// if (City.IsMine(cityId))
                 {
                     Spot.SetFocus(cityId, scrollToInUI, select);

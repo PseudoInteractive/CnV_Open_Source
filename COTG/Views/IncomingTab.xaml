@@ -23,7 +23,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 <tk:WrapPanel>
-	<ToggleButton x:Name="onlyMe" Content="Only Me"  />
+	<ToggleButton x:Name="onlyMe" Content="Only Me" Click="onlyMe_Click" />
 </tk:WrapPanel>
         <tg:RadDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
@@ -385,6 +385,9 @@
                     Grid.Row="1"
                     Background="Transparent"
                         VerticalAlignment="Top"
+									 				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeNorthSouth"
                     Canvas.ZIndex="22"
                         Height="11"
                         HorizontalAlignment="Stretch"

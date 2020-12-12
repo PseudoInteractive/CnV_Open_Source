@@ -76,7 +76,11 @@ namespace COTG.Game
 
         }
 
-        public static int WorldToCid( this (int x, int y) a )
+		public static int Translate(this int cid, (int dx, int dy) d )
+		{
+			return cid+d.dx + d.dy*65536;
+		}
+		public static int WorldToCid( this (int x, int y) a )
         {
             return a.x +  (a.y<<16);
         }
@@ -178,7 +182,8 @@ namespace COTG.Game
         public const int typeCityFlagWater = 0x4000000;
         public const int typeCityFlagBig = 0x8000000;
 
-        public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
+		public static byte[] worldOwnerPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
+		public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
         public static byte[] changePixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
         public static uint[] raw = new uint[worldDim*worldDim]; // reference with CID, stores playerID
@@ -350,10 +355,21 @@ namespace COTG.Game
         public static async void  Decode(JsonDocument jsd)
         {
             var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-            
+			var ownerPixels = new byte[worldDim * worldDim*8];
+			for (int i = 0; i < worldDim * worldDim ; i++)
+			{
+				ownerPixels[i * 8 + 0] = WorldHelper.RGB16B0(0xc0, 0xc0, 0xc0);
+				ownerPixels[i * 8 + 1] = WorldHelper.RGB16B1(0xc0, 0xc0, 0xc0); // w
+				ownerPixels[i * 8 + 2] = (byte)(WorldHelper.RGB16B0(0xc0, 0xc0, 0xc0)- 1); ; // white, identity for multiply
+				ownerPixels[i * 8 + 3] = (byte)(WorldHelper.RGB16B1(0xc0, 0xc0, 0xc0)- 1); ;
+				ownerPixels[i * 8 + 4] = 0x0; // indexes can be either
+				ownerPixels[i * 8 + 5] = 0x0;
+				ownerPixels[i * 8 + 6] = 0x0;
+				ownerPixels[i * 8 + 7] = 0x0;
+			}
 
-            // fill with Alpha=clear
-            for (int i = 0; i < outSize / 4 * outSize / 4; i++)
+			// fill with Alpha=clear
+			for (int i = 0; i < outSize / 4 * outSize / 4; i++)
             {
                 pixels[i * 8 + 0] = 0;
                 pixels[i * 8 + 1] = 0; // w
@@ -526,7 +542,7 @@ namespace COTG.Game
                 {
                     x = (ushort)(_t.SubStrAsInt(5, 3) - 100),
                     y = (ushort)(_t.SubStrAsInt(2, 3) - 100),
-                    type = _t.SubStrAsByte(1, 1)// (byte)(_t.SubStrAsInt(0, 1) == 1 ? 255 : _t.SubStrAsByte(1, 1))
+                    type =  (byte)(_t.SubStrAsInt(0, 1) == 1 ? 255 : _t.SubStrAsByte(1, 1))
                 };
                 //  LogJS(b);
                 shrines.Add(b);
@@ -534,13 +550,20 @@ namespace COTG.Game
                 if (b.type == 255)
                 {
                     pixels.SetColor(index, 0xC0, 0xD0, 0xC0);
-                }
+					ownerPixels.SetColor(index, 0xC0, 0xD0, 0xC0);
+				}
                 else
                 {
                     pixels.SetColor(index, WorldHelper.FaithColor16(b.type),2);
+					ownerPixels.SetColor(index, WorldHelper.FaithColor16(b.type), 2);
 
-                }
-                pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+				}
+				ownerPixels[index * 8 + 4] = 0 | (1 << 2) | (1 << 4) | (1 << 6);
+				ownerPixels[index * 8 + 5] = 0 | (1 << 2) | (2 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+
+				pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
                 pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
@@ -567,16 +590,24 @@ namespace COTG.Game
                 if (b.active)
                 {
                     pixels.SetColor(index, 0xFA, 0xFA, 0xA1);
-                }
-                else
+					ownerPixels.SetColor(index, 0xFA, 0xFA, 0xA1);
+					pixels[index * 8 + 0] = 31;
+				}
+				else
                 {
                     pixels.SetColor(index, 0xBA, 0xBA, 0xA0);
-                }
+					ownerPixels.SetColor(index, 0xBA, 0xBA, 0xA0);
+				}
                 pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
                 pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
                 pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-                raw[index] = (b.active ? 1u : 0) | typePortal;
+
+				ownerPixels[index * 8 + 4] = 0 | (1 << 2) | (1 << 4) | (1 << 6);
+				ownerPixels[index * 8 + 5] = 0 | (1 << 2) | (2 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+				raw[index] = (b.active ? 1u : 0) | typePortal;
             }
 
             for (int isLL = 0; isLL < 2; ++isLL)
@@ -724,36 +755,53 @@ namespace COTG.Game
                     if (isTemple)
                         pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
 
-                    if (pid == 0)
-                    {
-                        pixels.SetColor(index, 0xA0, 0x00, 0xB0);
-                    }
-                    else if (pid == Player.myId)
-                        pixels.SetColor(index, 0x60, 0xd0, 0x40);
-                    else if (alliance == Alliance.my.id)
-                        pixels.SetColor(index, 0x30, 0xa0, 0x30);
-                    else
-                    {
-                        switch (Alliance.GetDiplomacy((int)alliance))
-                        {
-                            case Diplomacy.none:
-                                pixels.SetColor(index, 0x80, 0x80, 0x80);
-                                break;
-                            case Diplomacy.allied:
-                                pixels.SetColor(index, 0x20, 0xA0, 0x00);
-                                break;
-                            case Diplomacy.nap:
-                                pixels.SetColor(index, 0x40, 0x80, 0x40);
-                                break;
-                            case Diplomacy.enemy:
-                                pixels.SetColor(index, 0xB0, 0x30, 0x20);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
+					if (pid == 0)
+					{
+						// lawless
+						pixels.SetColor(index, 0xA0, 0x00, 0xB0);
+						ownerPixels.SetColor(index, 0xC0, 0x90, 0xC0);
+					}
+					else if (pid == Player.myId)
+					{
+						pixels.SetColor(index, 0x60, 0xd0, 0x40);
+						ownerPixels.SetColor(index, 0xe0, 0xb0, 0xb0);
 
-                    if (type == 3 || type == 4) // 3,4 is on/off water
+					}
+					else if (alliance == Alliance.my.id)
+					{
+						pixels.SetColor(index, 0x30, 0xa0, 0x30);
+						ownerPixels.SetColor(index, 0xa0, 0xd0, 0xa0);
+					}
+					else
+					{
+						switch (Alliance.GetDiplomacy((int)alliance))
+						{
+							case Diplomacy.none:
+								pixels.SetColor(index, 0x80, 0x80, 0x80);
+								ownerPixels.SetColor(index, 0xC0, 0xC0, 0xC0);
+								break;
+							case Diplomacy.allied:
+								pixels.SetColor(index, 0x20, 0xA0, 0x00);
+								ownerPixels.SetColor(index, 0x90, 0xc0, 0x90);
+								break;
+							case Diplomacy.nap:
+								pixels.SetColor(index, 0x40, 0x80, 0x40);
+								ownerPixels.SetColor(index, 0xa0, 0xc0, 0xa0);
+								break;
+							case Diplomacy.enemy:
+								pixels.SetColor(index, 0xB0, 0x30, 0x20);
+								ownerPixels.SetColor(index, 0xc0, 0x60, 0x60);
+								break;
+							default:
+								break;
+						}
+					}
+					ownerPixels[index * 8 + 4] = 0 | (3 << 2) | (2 << 4) | (3 << 6);
+					ownerPixels[index * 8 + 5] = 0 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
+					ownerPixels[index * 8 + 6] = 0 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
+					ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+
+					if (type == 3 || type == 4) // 3,4 is on/off water
                     {
                         pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
                         pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
@@ -793,8 +841,9 @@ namespace COTG.Game
             rv.shrines = shrines.ToArray();
             Boss.all = bosses.ToArray();
             bitmapPixels = pixels;
+			worldOwnerPixels = ownerPixels;
 
-            {
+			{
                 var contData = jsd.RootElement.GetProperty("b");//.ToString();
 				var shot = new ContinentsSnapshot();
 				shot.continents = new ContinentsSnapshot.ContinentSnapshot[Continent.count];

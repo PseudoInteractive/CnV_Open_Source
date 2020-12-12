@@ -23,17 +23,20 @@ using COTG.JSON;
 using Microsoft.Graphics.Canvas.Effects;
 using static COTG.Game.Enum;
 using Windows.UI.Text;
+using Windows.UI.Xaml.Documents;
 
 namespace COTG.Views
 {
     public partial class ShellPage
     {
-        const float detailsZoomThreshold = 36;
+		public static SwapChainPanel canvasHitTest;
+
+		const float detailsZoomThreshold = 36;
         const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
     //    public static TintEffect worldBackgroundDark;
         public static CanvasBitmap worldObjects;
-		public static CanvasBitmap worldObjectsWithoutDungeons;
+		public static CanvasBitmap worldOwners;
 		//     public static TintEffect worldObjectsDark;
 		public static CanvasBitmap worldChanges;
         public static Vector2 clientTL;
@@ -54,7 +57,7 @@ namespace COTG.Views
         static public CanvasSolidColorBrush desaturateBrush;
         static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,shadowColor;
         static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
-		static FontStretch fontStretch = FontStretch.Condensed;
+		static FontStretch fontStretch = FontStretch.Normal;
 		static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap,FontStretch=fontStretch };
         static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch=fontStretch };
         static CanvasTextFormat nameTextFormat = new CanvasTextFormat()
@@ -63,17 +66,18 @@ namespace COTG.Views
             HorizontalAlignment = CanvasHorizontalAlignment.Center,
             VerticalAlignment = CanvasVerticalAlignment.Center,
 			FontStretch=fontStretch,
+			FontWeight= FontWeights.Bold,
 
 			WordWrapping = CanvasWordWrapping.NoWrap,
          //   Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap
         };
         //        static readonly Color attackColor = Colors.DarkRed;
         static readonly Color attackColor = Colors.White;
-        static readonly Color defenseColor = Color.FromArgb(255, 20, 200, 200);
-        static readonly Color defenseArrivedColor = Color.FromArgb(255, 20, 255, 192);
+        static readonly Color defenseColor = Color.FromArgb(255, 20, 160, 160);
+        static readonly Color defenseArrivedColor = Color.FromArgb(255, 20, 255, 160);
         static readonly Color artColor = Colors.DarkOrange;
         static readonly Color senatorColor = Colors.OrangeRed;
-        static readonly Color incomingHistoryColor = Colors.White;// (0xFF8B008B);// Colors.DarkMagenta;
+        static readonly Color defaultAttackColor = Colors.Maroon;// (0xFF8B008B);// Colors.DarkMagenta;
         static readonly Color raidColor = Colors.Yellow;
         //        static readonly Color shadowColor = Color.FromArgb(128, 0, 0, 0);
         static readonly Color selectColor = Color.FromArgb(255, 20, 255, 192);
@@ -126,10 +130,11 @@ namespace COTG.Views
                 return;
             cachedTopOffset = topOffset;
             cachedXOffset = leftOffset;
-            var _grid = canvas;
+            var _grid = canvasHitTest;
+			var _in = canvasHitTest;
 
 
-            App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(hasPopup ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight) : 0, topOffset, 0, bottomMargin));
+            App.DispatchOnUIThreadLow(() => canvasHitTest.Margin=_grid.Margin = new Thickness(hasPopup ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight) : 0, topOffset, 0, bottomMargin));
             //            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             //            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
             //          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
@@ -150,37 +155,44 @@ namespace COTG.Views
             StartCap = CanvasCapStyle.Flat,
             //           TransformBehavior=CanvasStrokeTransformBehavior.Hairline
         };
-        public CanvasAnimatedControl CreateCanvasControl()
+        public (CanvasAnimatedControl canvas, SwapChainPanel hitTest) CreateCanvasControl()
         {
-            //Assert((0.5f).CeilToInt() == 1);
-            //Assert((-1.0f).CeilToInt() == -1);
-            //Assert((0.0f).CeilToInt() == 0);
-            //Assert((-0.5f).CeilToInt() == 0);
-            //Assert((0.5f).FloorToInt() == 0);
-            //Assert((-1.0f).FloorToInt() == -1);
-            //Assert((0.0f).FloorToInt() == 0);
-            //Assert((-0.5f).FloorToInt() == -1);
-
-            canvas = new CanvasAnimatedControl()
+			//Assert((0.5f).CeilToInt() == 1);
+			//Assert((-1.0f).CeilToInt() == -1);
+			//Assert((0.0f).CeilToInt() == 0);
+			//Assert((-0.5f).CeilToInt() == 0);
+			//Assert((0.5f).FloorToInt() == 0);
+			//Assert((-1.0f).FloorToInt() == -1);
+			//Assert((0.0f).FloorToInt() == 0);
+			//Assert((-0.5f).FloorToInt() == -1);
+			
+			canvas = new CanvasAnimatedControl()
             {
                 IsHitTestVisible = false,
-                IsTabStop=true,
+//                IsTabStop=true,
                 UseSharedDevice = true,
                 TargetElapsedTime =TimeSpan.FromSeconds(1.0f/60.0f),
 
                 IsFixedTimeStep = false
             };
-            canvas.Draw += Canvas_Draw;
+			canvasHitTest = new SwapChainPanel()
+			{
+				IsHitTestVisible = true,
+				 Opacity = 0
+			};
+			
+			canvas.Draw += Canvas_Draw;
             canvas.Update += Canvas_Update;
             canvas.Unloaded += Canvas_Unloaded;
             canvas.LayoutUpdated += Canvas_LayoutUpdated;
             canvas.SizeChanged += Canvas_SizeChanged;
             canvas.CreateResources += Canvas_CreateResources;
-            canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
+			canvasHitTest.Margin=canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
             //  SetupCoreInput();
-            return canvas;
+            return (canvas,canvasHitTest);
 
         }
+
 
         bool inputSetup;
         private void Canvas_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args)
@@ -195,21 +207,30 @@ namespace COTG.Views
             {
                 // canvas.Paused = true;
                 var pixels = World.bitmapPixels;
-                World.bitmapPixels = null;
-                if (worldObjects != null)
+				var ownerPixels = World.worldOwnerPixels;
+				World.bitmapPixels = null;
+				World.worldOwnerPixels = null;
+				if (worldObjects != null)
                 {
                     var w = worldObjects;
                     worldObjects = null;
                     w.Dispose();
                 }
-                worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
-                //canvas.Paused = false;
-                //if (worldObjectsDark != null)
-                //    worldObjectsDark.Dispose();
-                //worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+				if (worldOwners != null)
+				{
+					var w = worldOwners;
+					worldOwners = null;
+					w.Dispose();
+				}
+				worldObjects = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+				worldOwners = CanvasBitmap.CreateFromBytes(canvas, ownerPixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
+				//canvas.Paused = false;
+				//if (worldObjectsDark != null)
+				//    worldObjectsDark.Dispose();
+				//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
-            }
-            if (World.changePixels != null)
+			}
+			if (World.changePixels != null)
             {
                 var pixels = World.changePixels;
                 ClearHeatmapImage();
@@ -235,21 +256,21 @@ namespace COTG.Views
             ClearHeatmapImage();
             World.rawPrior = null;
         }
-        public static void SetCanvasVisibility(bool visible)
-        {
-            if (canvas.Visibility == Visibility.Visible)
-            {
-                if (!visible)
-                    canvas.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                if (visible)
-                    canvas.Visibility = Visibility.Visible;
-            }
+        //public static void SetCanvasVisibility(bool visible)
+        //{
+        //    if (canvas.Visibility == Visibility.Visible)
+        //    {
+        //        if (!visible)
+        //            canvas.Visibility = Visibility.Collapsed;
+        //    }
+        //    else
+        //    {
+        //        if (visible)
+        //            canvas.Visibility = Visibility.Visible;
+        //    }
 
 
-        }
+        //}
 
         private static void SetClientSpan(Vector2 span)
         {
@@ -518,11 +539,11 @@ namespace COTG.Views
 
                             ds.DrawImage(attacksVisible ? worldBackground : worldBackground,
                                 new Rect(destP0, destP1),
-                                new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Linear);
+                                new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Cubic);
                             if (worldObjects != null)
                                 ds.DrawImage(attacksVisible ? worldObjects : worldObjects,
                                     new Rect(destP0, destP1),
-                                    new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Linear);
+                                    new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Cubic);
 
                         }
 
@@ -546,15 +567,30 @@ namespace COTG.Views
                             Vector4 tint = new Vector4(rgb, rgb, rgb, alpha);
                             var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
-                            nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
-                            nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 185 };
-                            myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
-                            nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
-                            nameColorSieged = new Color() { A = intAlpha, G = 220, B = 190, R = 255 };
-                            nameColorIncomingHover = new Color() { A = intAlpha, G = 220, B = 160, R = 255 };
-                            nameColorSiegedHover = new Color() { A = intAlpha, G = 220, B = 140, R = 255 };
-                            myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
-                            myNameColorSieged = new Color() { A = intAlpha, G = 240, B = 120, R = 255 };
+						if (wantDesaturate)
+						{
+							nameColor = new Color() { A = intAlpha, G = 0, B = 32, R = 0 };
+							nameColorHover = new Color() { A = intAlpha, G = 80, R = 80 ,B=160 };
+							myNameColor = new Color() { A = intAlpha, G = 255 / 3, B = 190 / 3, R = 210 / 3 };
+							nameColorIncoming = new Color() { A = intAlpha, G = 220 / 3, B = 220 / 3, R = 255 / 3 };
+							nameColorSieged = new Color() { A = intAlpha, G = 220 / 3, B = 190 / 3, R = 255 / 3 };
+							nameColorIncomingHover = new Color() { A = intAlpha, G = 220 / 3, B = 160 / 3, R = 255 / 3 };
+							nameColorSiegedHover = new Color() { A = intAlpha, G = 220 / 3, B = 140 / 3, R = 255 / 3 };
+							myNameColorIncoming = new Color() { A = intAlpha, G = 240 / 3, B = 150 / 3, R = 255 / 3 };
+							myNameColorSieged = new Color() { A = intAlpha, G = 240 / 3, B = 120 / 3, R = 255 / 3 };
+						}
+						else
+						{
+							nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
+							nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 185 };
+							myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
+							nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
+							nameColorSieged = new Color() { A = intAlpha, G = 220, B = 190, R = 255 };
+							nameColorIncomingHover = new Color() { A = intAlpha, G = 220, B = 160, R = 255 };
+							nameColorSiegedHover = new Color() { A = intAlpha, G = 220, B = 140, R = 255 };
+							myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
+							myNameColorSieged = new Color() { A = intAlpha, G = 240, B = 120, R = 255 };
+						}
 							shadowColor = new Color() { A = 192 };
 
 							var td = TileData.instance;
@@ -636,14 +672,16 @@ namespace COTG.Views
 						var dspy = (float)srcP1.Y - (float)srcP0.Y;
 						var scaleX = ddpx / dspx;
 						var scaleY = ddpy / dspy;
-
+						
 						
 							var emboss = new EmbossEffect() { Source = commands, Amount = 8 + MathF.Sin(animationT * 0.25f) * 2, Angle =(1+ MathF.Sin(animationT * .32f)) * MathF.PI,CacheOutput=false };
-							var transform = new Transform2DEffect() { TransformMatrix= new Matrix3x2(scaleX,0,0,scaleY,((float)destP0.X- (float)srcP0.X)*scaleX,((float)destP0.Y- (float)srcP0.Y)*scaleY) , Source= worldObjects };
-						var r = new Rect(destP0,destP1);
-						var blend = new BlendEffect() { Foreground = emboss, Background = transform };
-					
-							_ds.DrawImage( blend,r,r,1.0f);
+							var transform = new Transform2DEffect() { TransformMatrix= new Matrix3x2(scaleX,0,0,scaleY,((float)destP0.X- (float)srcP0.X-0.5f)*scaleX,((float)destP0.Y- (float)srcP0.Y-0.5f)*scaleY) , Source= worldOwners, InterpolationMode = CanvasImageInterpolation.NearestNeighbor };
+						var r = new Rect(destP0, destP1);
+						var crop = new CropEffect() { Source = transform, SourceRectangle = r };
+						var blend = new ArithmeticCompositeEffect() { Source1 = emboss, Source2 = crop, Source1Amount=0.0f,MultiplyAmount=1.25f };
+//						var blend = new BlendEffect() { Foreground = emboss, Background = crop, Mode=BlendEffectMode.Multiply };
+
+						_ds.DrawImage( blend,r,r,1.0f);
 							ds = _ds;
 							commands.Dispose();
 							
@@ -662,7 +700,10 @@ namespace COTG.Views
                 
                 circleRadiusBase = circleRadMin * shapeSizeGain*7.9f;
                 var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * shapeSizeGain * 6.5f;
-                //    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
+				//    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
+
+			//	ds.FillRectangle(new Rect(0, 0, clientSpan.X, clientSpan.Y), JSClient.webViewBrush);
+
                 ds.Antialiasing = CanvasAntialiasing.Antialiased;
 
 
@@ -786,7 +827,7 @@ namespace COTG.Views
                                         var cid = i.Key;
                                         var count = i.Value;
                                         var c = cid.CidToCC();
-                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.White, notFaded);
+                                        DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.DarkOrange, notFaded);
 
 
                                     }
@@ -819,7 +860,7 @@ namespace COTG.Views
                                     {
                                         var c0 = cluster.topLeft.WToC();
                                         var c1 = cluster.bottomRight.WToC();
-                                        ds.DrawRoundedRectangle(c0.X, c0.Y, c1.X-c0.X, c1.Y-c0.Y, 4.0f, 4.0f, selected ? Colors.White : Colors.Maroon);
+                                        ds.DrawRoundedRectangle(c0.X, c0.Y, c1.X-c0.X, c1.Y-c0.Y, 4.0f, 4.0f, selected ? Colors.Black : Colors.Maroon);
                                     }
 
                                     if (selected)
@@ -1185,13 +1226,13 @@ namespace COTG.Views
         {
             return attack.type switch
             {
-                reportAssault => Color.FromArgb(255, 0x7e, 0x3e, 0xd4),
-                reportSiege => Color.FromArgb(255, 0xcf, 0x50, 0x07),
-                reportSieging => Color.FromArgb(255, 0xc5, 0x7f, 0x4a),
-                reportPlunder => Color.FromArgb(255, 0x28, 0x86, 0xc0),
-                reportScout => Color.FromArgb(255, 0xc8, 0x2d, 0xbf),
+                reportAssault => Color.FromArgb(255/2, 0x7e / 2, 0x3e / 2, 0xd4 / 2),
+                reportSiege => Color.FromArgb(255 / 2, 0xcf / 2, 0x50 / 2, 0x07 / 2),
+                reportSieging => Color.FromArgb(192, 0xc5 / 2, 0x7f / 2, 0x4a / 2),
+                reportPlunder => Color.FromArgb(255 / 2, 0x28 / 2, 0x86 / 2, 0xc0 / 2),
+                reportScout => Color.FromArgb(255 / 2, 0xc8 / 2, 0x2d / 2, 0xbf / 2),
 
-                _ => incomingHistoryColor
+                _ => defaultAttackColor
             };
         }
 
@@ -1376,8 +1417,8 @@ namespace COTG.Views
             var dc = newC - ShellPage.cameraC;
             // only move if needed
             if (!lazy||
-                dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X*0.675f  ||
-                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y*0.675f)
+                dc.X.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.X*0.875f  ||
+                dc.Y.Abs() * ShellPage.pixelScale > ShellPage.halfSpan.Y*0.875f)
             {
                 if (Vector2.DistanceSquared(ShellPage.cameraC, newC) >= 0.875f)
                 {

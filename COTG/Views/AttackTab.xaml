@@ -271,6 +271,9 @@
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"
                          Height="11"
+						 				IsTabStop="True"
+							CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeNorthSouth"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
                          Background="Transparent">

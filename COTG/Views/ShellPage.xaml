@@ -226,6 +226,9 @@
             <Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  />
             <Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
             <tk:GridSplitter
+				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeWestEast"
                         Background="Transparent"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
@@ -269,6 +272,9 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
             <tk:GridSplitter
                         Background="Transparent"
                     Grid.Row="1"
+										 				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeWestEast"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch"
@@ -282,6 +288,9 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
             <tk:GridSplitter
                     Grid.Row="1"
                     Background="Transparent"
+										 				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeAll"
                     Grid.Column="1"
                         VerticalAlignment="Top"
                     Canvas.ZIndex="22"
@@ -310,6 +319,9 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
         <tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"
+									 				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeWestEast"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"

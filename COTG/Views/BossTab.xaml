@@ -110,7 +110,10 @@
         </telerikGrid:RadDataGrid>
         <tk:GridSplitter Grid.Row="1"
                          ResizeDirection="Rows"
-                                                 Height="11"
+                                     						 				IsTabStop="True"
+								CursorBehavior="ChangeOnSplitterHover"
+				
+				GripperCursor="SizeNorthSouth"            Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
                            Background="Transparent"

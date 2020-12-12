@@ -32,34 +32,63 @@ namespace COTG.Views
 
         private void SetupCoreInput()
         {
-            coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
-            
+            coreInputSource = canvasHitTest.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
+			canvasHitTest.KeyDown += CanvasHitTest_KeyDown;
 			coreInputSource.PointerMoved += Canvas_PointerMoved;
             coreInputSource.PointerPressed += Canvas_PointerPressed;
             coreInputSource.PointerReleased += Canvas_PointerReleased;
          //   coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
             coreInputSource.PointerExited += Canvas_PointerExited;
 			
-
+			
 			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
           //  coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-            coreInputSource.IsInputEnabled = true;
+       //     coreInputSource.IsInputEnabled = true;
 
 
         }
 
-        //private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
-        //{
-        // //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
-        //}
+		private void CanvasHitTest_KeyDown(object sender, KeyRoutedEventArgs e)
+		{
+			switch (e.Key)
+			{
+			
+				case Windows.System.VirtualKey.Space:
+					Spot.GetFocus().SelectMe(true, Windows.System.VirtualKeyModifiers.Control, true);
+					break;
 
-        static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
+				case Windows.System.VirtualKey.Left:
+						Spot.SetFocus(Spot.focus.Translate((-1,0)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Up:
+					Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Right:
+					Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Down:
+					Spot.SetFocus(Spot.focus.Translate((0,1)), true, true, true);
+					break;
+			
+					break;
+				default:
+					break;
+			}
+		}
+
+		//private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
+		//{
+		// //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
+		//}
+
+		static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
         {
             var point = screenC.Position;
             return new Vector2((float)point.X , (float)point.Y );
         }
         private void Canvas_PointerReleased(object sender, PointerEventArgs e)
         {
+			Log($"pointer released {e.CurrentPoint.Position}");
             if (JSClient.IsCityView())
             {
                 e.Handled = false;
@@ -247,7 +276,7 @@ namespace COTG.Views
             //              }
             //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
             ClearHover();
-            e.Handled = false;
+          //  e.Handled = false;
 
         }
         static void ClearHover()

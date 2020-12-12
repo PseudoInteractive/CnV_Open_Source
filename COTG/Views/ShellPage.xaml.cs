@@ -35,6 +35,7 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Input;
 using Windows.Graphics.Display;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 
 namespace COTG.Views
 {
@@ -216,48 +217,59 @@ namespace COTG.Views
 
        
 
-            var canvas = CreateCanvasControl();
+            var c = CreateCanvasControl();
           //  canvas.ContextFlyout = CityFlyout;
-            grid.Children.Add(canvas);
-            Grid.SetColumn(canvas, 1);
-            Grid.SetRow(canvas, 1);
-            Grid.SetRowSpan(canvas, 4);
-            Grid.SetColumnSpan(canvas, 1);
-            canvas.BorderThickness = new Thickness(0, 0, 0, 0);
-            canvas.Margin = new Thickness(0, 0, 0, 36);
-            Canvas.SetZIndex(canvas, 11);
-            //           Task.Run(SetupCanvasInput);
+            grid.Children.Add(c.canvas);
+			grid.Children.Add(c.hitTest);
+			Grid.SetColumn(c.canvas, 1);
+			Grid.SetColumn(c.hitTest, 1);
+            Grid.SetRow(c.canvas, 1);
+			Grid.SetRow(c.hitTest, 1);
+            Grid.SetRowSpan(c.canvas, 4);
+			Grid.SetRowSpan(c.hitTest, 4);
+			Grid.SetColumnSpan(c.canvas, 1);
+			Grid.SetColumnSpan(c.hitTest, 1);
+			c.canvas.BorderThickness = new Thickness(0, 0, 0, 0);
+			c.hitTest.BorderThickness = new Thickness(0, 0, 0, 0);
+		    Canvas.SetZIndex(c.canvas, 12);
+			Canvas.SetZIndex(c.hitTest, 13);
+			//           Task.Run(SetupCanvasInput);//           Task.Run(SetupCanvasInput);
 
-            //   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
+			//   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
 
-            //   grid.Children.Add(img);
+			//   grid.Children.Add(img);
 
-            //   Grid.SetRowSpan(img, 4);
-            //   Grid.SetColumnSpan(img, 4);
-            //   Canvas.SetZIndex(img, 12);
-            var webView = JSClient.Initialize(grid);
+			//   Grid.SetRowSpan(img, 4);
+			//   Grid.SetColumnSpan(img, 4);
+			//   Canvas.SetZIndex(img, 12);
+			var webView = JSClient.Initialize(grid);
             //           foreach (var i in webView.KeyboardAccelerators)
             //              i.IsEnabled = false;
             //            webView.AllowFocusOnInteraction = false;
             webView.Margin = new Thickness(0, 0, 11, 0);
             grid.Children.Add(webView);
 
-            grid.Background = null;
+			var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
+			var sprite = visual.Compositor.CreateSpriteVisual();
+
+			sprite.Brush = JSClient.webViewBrush;
+			ElementCompositionPreview.SetElementChildVisual(visual,sprite);
+//            grid.Background = null;
 
 
-            //          grid.Children.Add(shellFrame);
-            //           Grid.SetColumn(shellFrame, 2);
-            //           Grid.SetRow(shellFrame, 0);
-            //           Grid.SetRowSpan(shellFrame, 6);
-            //          shellFrame.Margin = new Thickness(13, 0, 0, 0);
-            //          Canvas.SetZIndex(shellFrame, 3);
+			//          grid.Children.Add(shellFrame);
+			//           Grid.SetColumn(shellFrame, 2);
+			//           Grid.SetRow(shellFrame, 0);
+			//           Grid.SetRowSpan(shellFrame, 6);
+			//          shellFrame.Margin = new Thickness(13, 0, 0, 0);
+			//          Canvas.SetZIndex(shellFrame, 3);
 
 
-            Grid.SetColumn(webView, 0);
+			Grid.SetColumn(webView, 0);
             Grid.SetRow(webView, 1);
             Grid.SetRowSpan(webView, 5);
             Grid.SetColumnSpan(webView, 2);
-            Canvas.SetZIndex(webView, 0);
+            Canvas.SetZIndex(webView, 11);
 
             //var splitter = new GridSplitter();
             //grid.Children.Add(splitter);

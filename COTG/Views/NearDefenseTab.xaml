@@ -148,6 +148,9 @@
         </tk:DataGrid>
         <tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
+						 						 				IsTabStop="True"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeNorthSouth"
                                                  Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"

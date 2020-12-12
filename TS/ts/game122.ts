@@ -21323,7 +21323,7 @@ var cotgsubscribe = amplify;
           });
       });
     var b8;
-    var F8 = 0;
+    var F8 = [];
 
     function P7F(e8B, s8B) {
       $(__s[5815])
@@ -23308,13 +23308,13 @@ var cotgsubscribe = amplify;
     var Q9 = __s[2004];
 
     function t5V() {
-      if (F8 == (0)) {
+      if (F8.length==0) {
         N6();
         var y0U = $.post(q6 + __s[1393]);
         F6();
         y0U.done(function(D0U) {
           E6k.y6();
-          if (D0U == 0) F8 = 0;
+          if (D0U == 0) F8 = [];
           else {
             F8 = JSON.parse(D0U);
             d5V();
@@ -35770,9 +35770,9 @@ var cotgsubscribe = amplify;
 
     function d5V() {
       E6k.R6();
-      if (F8 != 0) {
+      if (F8.length != 0) {
         var q0U = __s[3250];
-        for (var c0U in F8) q0U +=
+        for (let c0U in F8) q0U +=
           __s[3185] + c0U + __s[+g3y] + F8[c0U][0] + __s[P8p << 591286336];
         $(__s[+U5y])
           .html(q0U);
@@ -68167,9 +68167,9 @@ var cotgsubscribe = amplify;
             var C3i = O3i;
             var G3i = 0;
             var x3i = "";
-            if (D6["itu"])
-              if (D6["itu"][8])
-                for (var t3i in D6["itu"][8]) {
+            if (D6.itu)
+              if (D6.itu[8])
+                for (let t3i in D6.itu[8]) {
                   var M3i = currentTime();
                   var L3i = D6["itu"][+
                     '8'][t3i][1];
