@@ -1,6 +1,8 @@
 ﻿using COTG.Game;
 using COTG.Helpers;
 using COTG.Services;
+
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -32,8 +34,8 @@ namespace COTG.Views
 
         private void SetupCoreInput()
         {
-            coreInputSource = canvasHitTest.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
-			canvasHitTest.KeyDown += CanvasHitTest_KeyDown;
+            coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
+			canvas.KeyDown += CanvasHitTest_KeyDown;
 			coreInputSource.PointerMoved += Canvas_PointerMoved;
             coreInputSource.PointerPressed += Canvas_PointerPressed;
             coreInputSource.PointerReleased += Canvas_PointerReleased;
@@ -231,7 +233,14 @@ namespace COTG.Views
                         e.Handled = true;
                         NavStack.Forward(true);
                         return;
-                }
+					case Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed:
+						++blendMod;
+						if (blendMod > CanvasComposite.MaskInvert)
+							blendMod = 0;
+						Note.Show(blendMod.ToString());
+						break;
+
+				}
             //    e.Handled = false;
             //    return;
             }

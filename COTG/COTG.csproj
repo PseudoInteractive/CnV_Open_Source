@@ -90,10 +90,16 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>6.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.DeveloperTools">
+      <Version>6.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
@@ -127,7 +133,6 @@
   <ItemGroup>
     <EmbeddedResource Include="JS\funky" />
     <EmbeddedResource Include="JS\J0EE" />
-    <EmbeddedResource Include="JS\jquery" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
@@ -576,6 +581,8 @@
     <Content Include="images\windmill.png" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Package.StoreAssociation.xml" />
+    <EmbeddedResource Include="JS\jquery" />
+    <EmbeddedResource Include="JS\alasstylesheet.css" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

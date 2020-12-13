@@ -18,7 +18,7 @@ let cachedIncoming = -1;
     $("#incomingsSpan").append("<span id='jscript_incattackfilter'>(0)</span>");
 
 
-    let content = `<div id="jscript_incattackfilter_players" style="display:none; z-index: 4003;width: 300px;height: 500px;position: absolute;top: 98px;left: 425px;background-color: rgba(0, 0, 0, 0.8);color: white;font-size: 21px;box-shadow: 2px 2px 4px #000000;/* overflow-y: auto; */">
+    let content = `<div id="jscript_incattackfilter_players" style="display:none; z-index: 4003;width: 300px;height: 500px;position: absolute;top: 98px;left: 425px;background-color: rgba(0, 0, 0, 0.8);color: white;font-size: 21px;box-shadow: 2px 2px 4px #ee000000;/* overflow-y: auto; */">
         <div style="width:100%;height: 40px;background-color: #ff000080;/* padding: 20px 10px; */"><span style="
         padding: 0px 10px;
         cursor: grab;

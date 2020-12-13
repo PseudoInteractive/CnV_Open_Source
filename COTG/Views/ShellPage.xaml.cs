@@ -220,19 +220,19 @@ namespace COTG.Views
             var c = CreateCanvasControl();
           //  canvas.ContextFlyout = CityFlyout;
             grid.Children.Add(c.canvas);
-			grid.Children.Add(c.hitTest);
+	//		grid.Children.Add(c.hitTest);
 			Grid.SetColumn(c.canvas, 1);
-			Grid.SetColumn(c.hitTest, 1);
+			//Grid.SetColumn(c.hitTest, 0);
             Grid.SetRow(c.canvas, 1);
-			Grid.SetRow(c.hitTest, 1);
+			//Grid.SetRow(c.hitTest, 1);
             Grid.SetRowSpan(c.canvas, 4);
-			Grid.SetRowSpan(c.hitTest, 4);
+			//Grid.SetRowSpan(c.hitTest, 5);
 			Grid.SetColumnSpan(c.canvas, 1);
-			Grid.SetColumnSpan(c.hitTest, 1);
+			//Grid.SetColumnSpan(c.hitTest, 2);
 			c.canvas.BorderThickness = new Thickness(0, 0, 0, 0);
-			c.hitTest.BorderThickness = new Thickness(0, 0, 0, 0);
+	//		c.hitTest.BorderThickness = new Thickness(0, 0, 0, 0);
 		    Canvas.SetZIndex(c.canvas, 12);
-			Canvas.SetZIndex(c.hitTest, 13);
+		//	Canvas.SetZIndex(c.hitTest, 13);
 			//           Task.Run(SetupCanvasInput);//           Task.Run(SetupCanvasInput);
 
 			//   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
@@ -246,15 +246,17 @@ namespace COTG.Views
             //           foreach (var i in webView.KeyboardAccelerators)
             //              i.IsEnabled = false;
             //            webView.AllowFocusOnInteraction = false;
-            webView.Margin = new Thickness(0, 0, 11, 0);
+         //  c.hitTest.Margin= webView.Margin = new Thickness(0, 0, 11, 0);
             grid.Children.Add(webView);
 
-			var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
-			var sprite = visual.Compositor.CreateSpriteVisual();
+			//c.hitTest.Fill = JSClient.webViewBrush;
+//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
+//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
+			//	var sprite = visual.Compositor.CreateSpriteVisual();//	var sprite = visual.Compositor.CreateSpriteVisual();
 
-			sprite.Brush = JSClient.webViewBrush;
-			ElementCompositionPreview.SetElementChildVisual(visual,sprite);
-//            grid.Background = null;
+			//	sprite.Brush = 
+			//		ElementCompositionPreview.SetElementChildVisual(visual,sprite);
+			//            grid.Background = null;
 
 
 			//          grid.Children.Add(shellFrame);
@@ -269,7 +271,7 @@ namespace COTG.Views
             Grid.SetRow(webView, 1);
             Grid.SetRowSpan(webView, 5);
             Grid.SetColumnSpan(webView, 2);
-            Canvas.SetZIndex(webView, 11);
+            Canvas.SetZIndex(webView, 10);
 
             //var splitter = new GridSplitter();
             //grid.Children.Add(splitter);

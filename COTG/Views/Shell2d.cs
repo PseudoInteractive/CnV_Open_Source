@@ -24,18 +24,21 @@ using Microsoft.Graphics.Canvas.Effects;
 using static COTG.Game.Enum;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media;
 
 namespace COTG.Views
 {
     public partial class ShellPage
     {
-		public static SwapChainPanel canvasHitTest;
+	//	public static Rectangle canvasHitTest;
 
 		const float detailsZoomThreshold = 36;
         const float detailsZoomFade = 8;
         public static CanvasBitmap worldBackground;
-    //    public static TintEffect worldBackgroundDark;
-        public static CanvasBitmap worldObjects;
+		public static CanvasBitmap webMask;
+		//    public static TintEffect worldBackgroundDark;
+		public static CanvasBitmap worldObjects;
 		public static CanvasBitmap worldOwners;
 		//     public static TintEffect worldObjectsDark;
 		public static CanvasBitmap worldChanges;
@@ -111,6 +114,7 @@ namespace COTG.Views
         const int cotgPopupLeft = 438;
         const int cotgPopupRight = cotgPopupLeft+cotgPopupWidth;
         const int cotgPanelRight = 410;
+
         public static int cachedXOffset = cotgPanelRight;
         public static int cachedTopOffset = 0;
         const int cotgPopupTopDefault = 95;
@@ -119,9 +123,11 @@ namespace COTG.Views
         static public CanvasAnimatedControl canvas;
 		public static float animationT; // approximate animation time in seconds
 
-        public static void NotifyCotgPopup(int cotgPopupOpen)
+        public static async void NotifyCotgPopup(int cotgPopupOpen)
         {
-            var hasPopup = (cotgPopupOpen&127) != 0;
+			JSClient.CaptureWebPage(canvas);
+			cotgPopupOpen = 0;
+			var hasPopup = (cotgPopupOpen&127) != 0;
             var hasLongWindow = cotgPopupOpen >= 128;
             var leftOffset = hasPopup ? cotgPopupRight : cotgPanelRight;
             var topOffset = hasLongWindow ? webclientSpan.y*65/100 : cotgPopupTopDefault;
@@ -130,22 +136,23 @@ namespace COTG.Views
                 return;
             cachedTopOffset = topOffset;
             cachedXOffset = leftOffset;
-            var _grid = canvasHitTest;
-			var _in = canvasHitTest;
+            var _grid = canvas;
+		//	var _in = canvasHitTest;
+			
 
+          //  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
+			App.DispatchOnUIThreadLow(() => _grid.Margin = _grid.Margin = new Thickness(hasPopup ? cotgPopupWidth + (cotgPopupLeft - cotgPanelRight) : 0, topOffset, 0, bottomMargin));
+			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+			//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
+			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
 
-            App.DispatchOnUIThreadLow(() => canvasHitTest.Margin=_grid.Margin = new Thickness(hasPopup ? cotgPopupWidth+(cotgPopupLeft-cotgPanelRight) : 0, topOffset, 0, bottomMargin));
-            //            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            //            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
-            //          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
+		}
 
-        }
-
-        //CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
-        //    DashCap=CanvasCapStyle.Triangle,
-        //    EndCap=CanvasCapStyle.Triangle,
-        //    StartCap=CanvasCapStyle.Triangle};
-        const float dashD0 = 6.0f;
+		//CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
+		//    DashCap=CanvasCapStyle.Triangle,
+		//    EndCap=CanvasCapStyle.Triangle,
+		//    StartCap=CanvasCapStyle.Triangle};
+		const float dashD0 = 6.0f;
         const float dashD1 = 6f;
         CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle()
         {
@@ -155,7 +162,7 @@ namespace COTG.Views
             StartCap = CanvasCapStyle.Flat,
             //           TransformBehavior=CanvasStrokeTransformBehavior.Hairline
         };
-        public (CanvasAnimatedControl canvas, SwapChainPanel hitTest) CreateCanvasControl()
+        public (CanvasAnimatedControl canvas, Rectangle hitTest) CreateCanvasControl()
         {
 			//Assert((0.5f).CeilToInt() == 1);
 			//Assert((-1.0f).CeilToInt() == -1);
@@ -168,6 +175,7 @@ namespace COTG.Views
 			
 			canvas = new CanvasAnimatedControl()
             {
+				Name="Region",
                 IsHitTestVisible = false,
 //                IsTabStop=true,
                 UseSharedDevice = true,
@@ -175,11 +183,14 @@ namespace COTG.Views
 
                 IsFixedTimeStep = false
             };
-			canvasHitTest = new SwapChainPanel()
-			{
-				IsHitTestVisible = true,
-				 Opacity = 0
-			};
+			//canvasHitTest = new Rectangle()
+			//{
+			//	Name="webDrawer",
+			//	IsHitTestVisible = true,
+			//	 Opacity = 1,
+			//	 Stretch=Stretch.Fill,
+
+			//};
 			
 			canvas.Draw += Canvas_Draw;
             canvas.Update += Canvas_Update;
@@ -187,9 +198,11 @@ namespace COTG.Views
             canvas.LayoutUpdated += Canvas_LayoutUpdated;
             canvas.SizeChanged += Canvas_SizeChanged;
             canvas.CreateResources += Canvas_CreateResources;
-			canvasHitTest.Margin=canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
-            //  SetupCoreInput();
-            return (canvas,canvasHitTest);
+			//			canvasHitTest.Margin=canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
+			//canvasHitTest.Stretch = Stretch.Fill;
+			//  SetupCoreInput();
+			
+			return (canvas,null);
 
         }
 
@@ -237,6 +250,15 @@ namespace COTG.Views
                 worldChanges = CanvasBitmap.CreateFromBytes(canvas, pixels, World.outSize, World.outSize, Windows.Graphics.DirectX.DirectXPixelFormat.BC1UIntNormalized);
 
             }
+			//if(JSClient.webViewBrush!=null)
+			//	App.DispatchOnUIThread(
+			//		() =>
+			//		{
+			//			JSClient.webViewBrush.SourceName = "cotgView";
+			//			JSClient.webViewBrush.SetSource(JSClient.view);
+			//			JSClient.webViewBrush.Redraw();
+			//			ShellPage.canvasHitTest.Fill = JSClient.webViewBrush;
+			//		});
 
         }
         public static void ClearHeatmapImage()
@@ -285,7 +307,6 @@ namespace COTG.Views
 
             clientC = new Vector2(c.X, c.Y);
             SetClientSpan(canvas.ActualSize);
-
             clientCScreen = canvas.TransformToVisual(Window.Current.Content)
                 .TransformPoint(new Point(0, 0)).ToVector2();
         }
@@ -410,7 +431,8 @@ namespace COTG.Views
 		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
         static DateTimeOffset lastDrawTime;
         public static bool tileSetsPending;
-        private const float smallRectSpan = 4;
+		private CanvasComposite blendMod;
+		private const float smallRectSpan = 4;
 
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
@@ -494,6 +516,7 @@ namespace COTG.Views
                 var wantImage = deltaZoom < detailsZoomFade;
 
                 
+				// workd space coords
                     var srcP0 = new Point((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
                                               (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
                     var srcP1 = new Point(srcP0.X + clientSpan.X * bSizeGain2 * pixelScaleInverse,
@@ -655,39 +678,50 @@ namespace COTG.Views
 
 
                         }
-                        
 
-                            // fade out background
-                            //if (attacksVisible)
-                            //{
-                            //    ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
-                            //    notFaded=false;
-                            //}
-                        if(commands!= null)
-						{
-							var _ds = args.DrawingSession;
-							var ddpx = (float)destP1.X - (float)destP0.X;
-							var ddpy = (float)destP1.Y - (float)destP0.Y;
+
+					// fade out background
+					//if (attacksVisible)
+					//{
+					//    ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+					//    notFaded=false;
+					//}
+					if (commands != null)
+					{
+						var _ds = args.DrawingSession;
+						var ddpx = (float)destP1.X - (float)destP0.X;
+						var ddpy = (float)destP1.Y - (float)destP0.Y;
 						var dspx = (float)srcP1.X - (float)srcP0.X;
 						var dspy = (float)srcP1.Y - (float)srcP0.Y;
 						var scaleX = ddpx / dspx;
 						var scaleY = ddpy / dspy;
-						
-						
-							var emboss = new EmbossEffect() { Source = commands, Amount = 8 + MathF.Sin(animationT * 0.25f) * 2, Angle =(1+ MathF.Sin(animationT * .32f)) * MathF.PI,CacheOutput=false };
-							var transform = new Transform2DEffect() { TransformMatrix= new Matrix3x2(scaleX,0,0,scaleY,((float)destP0.X- (float)srcP0.X-0.5f)*scaleX,((float)destP0.Y- (float)srcP0.Y-0.5f)*scaleY) , Source= worldOwners, InterpolationMode = CanvasImageInterpolation.NearestNeighbor };
-						var r = new Rect(destP0, destP1);
-						var crop = new CropEffect() { Source = transform, SourceRectangle = r };
-						var blend = new ArithmeticCompositeEffect() { Source1 = emboss, Source2 = crop, Source1Amount=0.0f,MultiplyAmount=1.25f };
-//						var blend = new BlendEffect() { Foreground = emboss, Background = crop, Mode=BlendEffectMode.Multiply };
+						if (webMask != null)
+						{
 
-						_ds.DrawImage( blend,r,r,1.0f);
+							var emboss = new EmbossEffect() { Source = commands, Amount = 8 + MathF.Sin(animationT * 0.25f) * 2, Angle = (1 + MathF.Sin(animationT * .32f)) * MathF.PI, CacheOutput = false };
+							var transform = new Transform2DEffect() 
+							{
+								TransformMatrix = new Matrix3x2(scaleX, 0, 0, scaleY,
+								(float)destP0.X - ((float)srcP0.X - 0.5f) * scaleX,
+								(float)destP0.Y - ((float)srcP0.Y - 0.5f) * scaleY), Source = worldOwners, InterpolationMode = CanvasImageInterpolation.NearestNeighbor };
+
+							var r = new Rect(destP0, destP1);
+							var crop = new CropEffect() { Source = transform, SourceRectangle = r };
+							var blend = new ArithmeticCompositeEffect() { Source1 = emboss, Source2 = crop, Source1Amount = 0.0f, MultiplyAmount = 1.25f };
+							//						var blend = new BlendEffect() { Foreground = emboss, Background = crop, Mode=BlendEffectMode.Multiply };
+							
+							var	TransformMatrix2 = new Matrix3x2(4f, 0, 0, 4f, -cachedXOffset , -cachedTopOffset );
+							var transform2 = new Transform2DEffect() { TransformMatrix = TransformMatrix2, Source = webMask };
+
+//							var dis = new AlphaMaskEffect() { Source = blend, AlphaMask = transform2 };
+							var dis = new CompositeEffect() { Sources = { transform2,blend }, Mode=blendMod   };
+							_ds.DrawImage(dis, r, r, 1.0f);
 							ds = _ds;
 							commands.Dispose();
-							
+						
 
 						}
-
+					}
 						// overlay
 						if (worldChanges != null)
                             ds.DrawImage(worldChanges,

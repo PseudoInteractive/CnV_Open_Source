@@ -14,7 +14,7 @@ function openreturnwin_(data_33) {
 		style: "width:40%;height:28px;font-size:11;border-radius:6px;margin:7px"
 	});
 	/** @type {string} */
-	var returnwin_="<div id='returnAll' style='width:300px;height:320px;background-color: #E2CBAC;-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;border: 4px ridge #DAA520;position:absolute;right:100px;top:100px; z-index:1000000;'><div class=\"popUpBar\"> <span class=\"ppspan\">Return all troops in all cities</span>";
+	var returnwin_="<div id='returnAll' style='width:300px;height:320px;background-color: #eeE2CBAC;-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;border: 4px ridge #eeDAA520;position:absolute;right:100px;top:100px; z-index:1000000;'><div class=\"popUpBar\"> <span class=\"ppspan\">Return all troops in all cities</span>";
 	/** @type {string} */
 	returnwin_=`${returnwin_}<button id="cfunkyX" onclick="$('#returnAll').remove();" class="xbutton greenb"><div id="xbuttondiv"><div><div id="centxbuttondiv"></div></div></div></button></div><div id='returnbody' class="popUpWindow">`;
 	/** @type {string} */
@@ -1186,7 +1186,7 @@ function updatesupport_(data_43) {
 					break;
 				case 0:
 					/** @type {string} */
-					supporttab_=`${supporttab_}<tr style='color: #00858E;'><td></td>`;
+					supporttab_=`${supporttab_}<tr style='color: #ee00858E;'><td></td>`;
 					/** @type {string} */
 					status_="returning";
 					break;
@@ -1308,7 +1308,7 @@ function updateraids_(data_44,turnc_) {
 				raidtab_=`${raidtab_}<tr style='color:green;'>`;
 			} else {
 				if(2<this[2]&&this[2]<=5) {
-					raidtab_=`${raidtab_}<tr style='color:#CF6A00;'>`;
+					raidtab_=`${raidtab_}<tr style='color:#eeCF6A00;'>`;
 				} else {
 					if(this[2]>5) {
 						raidtab_=`${raidtab_}<tr style='color:red;'>`;
@@ -1388,7 +1388,7 @@ function updateres_(data_45) {
 			} else {
 				if(res_2/sto_<1&&res_2/sto_>=0.9) {
 					/** @type {string} */
-					restabb_=`${restabb_}<td style='color:#CF6A00;'>${res_2.toLocaleString()}</td><td>${sto_.toLocaleString()}</td>`;
+					restabb_=`${restabb_}<td style='color:#eeCF6A00;'>${res_2.toLocaleString()}</td><td>${sto_.toLocaleString()}</td>`;
 				} else {
 					if(res_2==sto_) {
 						/** @type {string} */
@@ -1528,7 +1528,7 @@ function DistanceCC(__a: Coord,__b: Coord): number{
 //		}
 //		if(closest===null)
 //			return;
-//		restabb_=`${restabb_}<tr data='${cid_3}'><td><button id='donate_rcid' data='${closest[10]}' class='ava' style='color:white;background-color: #3f0896;font-weight:800' >${closest[0]}</button></td>`
+//		restabb_=`${restabb_}<tr data='${cid_3}'><td><button id='donate_rcid' data='${closest[10]}' class='ava' style='color:white;background-color: #ee3f0896;font-weight:800' >${closest[0]}</button></td>`
 //			+`<td id='donate_cid' class='chcity ava' data='${cid_3}'>${this.city}</td>`
 //			+`<td>${this.reference}</td><td class='coordblink' data='${cid_3}'>${__x}:${__y}</td>`
 //			+`<td class='shcitt ava' data='${closest[10]}' >${closest[10]}</td>`

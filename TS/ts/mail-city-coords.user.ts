@@ -17,7 +17,7 @@ function mailcitycoordsInit() {
             var mailElement = $("#mailrMess");
             var mailData = mailElement.html();
 
-            var withCoords = mailData.replace(/\d{1,3}\s?:\s?\d{1,3}/gm, '<span class="cityblink shcitt" style="color:#0645ad;"><coords>$&</coords></span><sup>s</sup>');
+            var withCoords = mailData.replace(/\d{1,3}\s?:\s?\d{1,3}/gm, '<span class="cityblink shcitt" style="color:#ee0645ad;"><coords>$&</coords></span><sup>s</sup>');
 
             setTimeout(function(){
                 document.getElementById("mailrMess").innerHTML = withCoords;

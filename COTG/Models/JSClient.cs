@@ -38,6 +38,8 @@ using Windows.UI.Core;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Graphics.Canvas;
+using Windows.Graphics.Imaging;
 
 namespace COTG
 {
@@ -63,7 +65,7 @@ namespace COTG
         //        public static JsonDocument ppdt;
         public static JSClient instance = new JSClient();
         public static WebView view;
-		public static WebViewBrush webViewBrush; 
+//public static WebViewBrush webViewBrush; 
         static HttpBaseProtocolFilter httpFilter;
         const int clientCount = 6;
         public static ConcurrentBag<HttpClient> clientPool;
@@ -171,7 +173,8 @@ namespace COTG
 					//VerticalAlignment = VerticalAlignment.Stretch,
 					//CacheMode=new BitmapCache()
 					DefaultBackgroundColor = new Windows.UI.Color() { R = 0, A = 0 },
-					Opacity=0.0,
+					Name="cotgView",
+					Opacity=1,
                 };
                 view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
                 view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
@@ -187,8 +190,8 @@ namespace COTG
                 view.PermissionRequested += View_PermissionRequested;
                 view.NewWindowRequested += View_NewWindowRequested;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
-				webViewBrush = new webViewBrush();
-				webViewBrush.SetSource(view);
+			//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
+				
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -205,7 +208,7 @@ namespace COTG
                 {
                     Task.Delay(1000).ContinueWith(_ =>
                     {
-                        App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}"));
+                        App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
                     });
                 }
                 App.SetupCoreWindowInputHooks();
@@ -220,7 +223,47 @@ namespace COTG
 
 		}
 
-		
+		public static async void CaptureWebPage(ICanvasResourceCreator canvas)
+		{
+			App.DispatchOnUIThread( async () =>
+		 {
+			 var stream = new InMemoryRandomAccessStream();
+			 await view.CapturePreviewToStreamAsync(stream);
+			 ShellPage.webMask = await CanvasBitmap.LoadAsync(canvas,stream);
+//			 ShellPage.webMask= await CreateAplhaMaskFromBitmap(stream, canvas);
+
+		 });
+		}
+		static async Task<CanvasBitmap> CreateAplhaMaskFromBitmap(IRandomAccessStream source, ICanvasResourceCreator canvas)
+		{
+			
+			BitmapDecoder decoder = await BitmapDecoder.CreateAsync(source);
+			var transform = new BitmapTransform();
+			transform.ScaledHeight = decoder.PixelHeight/4;
+			transform.ScaledWidth = decoder.PixelWidth/4;
+			PixelDataProvider pixelData = await decoder.GetPixelDataAsync(
+				BitmapPixelFormat.Bgra8,
+				BitmapAlphaMode.Straight,
+				transform,
+				ExifOrientationMode.IgnoreExifOrientation,
+				ColorManagementMode.DoNotColorManage);
+			Log(decoder, decoder.BitmapPixelFormat.ToString());
+			Log(decoder, decoder.BitmapAlphaMode.ToString());
+			// no extract alpha
+			var pixels = pixelData.DetachPixelData();
+			var size = transform.ScaledWidth * transform.ScaledHeight;
+			var alphas = new byte[size];
+			int other = 0;
+			for(int i=0;i<size;++i)
+			{
+				if (pixels[i*4+3] != 0)
+					++other;
+			pixels[i*4+3] = (byte)(255-pixels[i*4+3]);
+			}
+			Log(other);
+			return CanvasBitmap.CreateFromBytes(canvas, pixels, (int)transform.ScaledWidth, (int)transform.ScaledHeight,Windows.Graphics.DirectX.DirectXPixelFormat.R8G8B8A8UIntNormalized);
+			
+		}
 
 		private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
         {
@@ -277,27 +320,27 @@ namespace COTG
                     args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
                 }
-                else if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
-                {
-                    var js = GetJsString("jquery");
+				//else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
+				//{
+				//	var js = GetJsString("alasstylesheet.css");
 
-                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+				//	var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
 
-                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+				//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                }
-                //else if (req.RequestUri.ToString().Contains("index.html"))
-                //{
-                //    Assert(false);
-                //    var js = GetJsString("jquery");
-                //    args.de
+				//}
+				//else if (req.RequestUri.ToString().Contains("index.html"))
+				//{
+				//    Assert(false);
+				//    var js = GetJsString("jquery");
+				//    args.de
 
-                //    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+				//    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-                //    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+				//    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                //}
-                else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
+				//}
+				else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
                 {
                  //   var js = GetJsString("phaser");
 
@@ -1052,7 +1095,7 @@ namespace COTG
                             // httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
                             //    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
                             httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", subId.ToString());
+                            httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
 
                             httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
                             //   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
@@ -1267,7 +1310,8 @@ namespace COTG
 						   }
 					   case "sub":
 						   {
-							   App.DispatchOnUIThread(() => Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s=1&n=1")));
+								   var i = jsp.Value.GetAsInt();
+							   App.DispatchOnUIThread(() => Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1")));
 							   break;
 						   }
 					   case "shcit":
@@ -1279,7 +1323,7 @@ namespace COTG
 						   }
 					   case "keyDown":
 						   {
-							   Log($"Keydown: {jsp.Value.ToString()}");
+							//   Log($"Keydown: {jsp.Value.ToString()}");
 							   VirtualKey key = default;
 							   switch (jsp.Value.GetString("key"))
 							   {
