@@ -358,10 +358,10 @@ namespace COTG.Game
 			var ownerPixels = new byte[worldDim * worldDim*8];
 			for (int i = 0; i < worldDim * worldDim ; i++)
 			{
-				ownerPixels[i * 8 + 0] = WorldHelper.RGB16B0(0xc0, 0xc0, 0xc0);
-				ownerPixels[i * 8 + 1] = WorldHelper.RGB16B1(0xc0, 0xc0, 0xc0); // w
-				ownerPixels[i * 8 + 2] = (byte)(WorldHelper.RGB16B0(0xc0, 0xc0, 0xc0)- 1); ; // white, identity for multiply
-				ownerPixels[i * 8 + 3] = (byte)(WorldHelper.RGB16B1(0xc0, 0xc0, 0xc0)- 1); ;
+				ownerPixels[i * 8 + 0] = WorldHelper.RGB16B0(0xcf, 0xcf, 0xcf);
+				ownerPixels[i * 8 + 1] = WorldHelper.RGB16B1(0xcf, 0xcf, 0xcf); // w
+				ownerPixels[i * 8 + 2] = (byte)(WorldHelper.RGB16B0(0xc0, 0xc0, 0xc0)); ; // white, identity for multiply
+				ownerPixels[i * 8 + 3] = (byte)(WorldHelper.RGB16B1(0xc0, 0xc0, 0xc0)); ;
 				ownerPixels[i * 8 + 4] = 0x0; // indexes can be either
 				ownerPixels[i * 8 + 5] = 0x0;
 				ownerPixels[i * 8 + 6] = 0x0;
@@ -550,7 +550,7 @@ namespace COTG.Game
                 if (b.type == 255)
                 {
                     pixels.SetColor(index, 0xC0, 0xD0, 0xC0);
-					ownerPixels.SetColor(index, 0xC0, 0xD0, 0xC0);
+					ownerPixels.SetColor(index, 0xC0, 0xB0, 0xC0);
 				}
                 else
                 {
@@ -558,9 +558,9 @@ namespace COTG.Game
 					ownerPixels.SetColor(index, WorldHelper.FaithColor16(b.type), 2);
 
 				}
-				ownerPixels[index * 8 + 4] = 0 | (1 << 2) | (1 << 4) | (1 << 6);
-				ownerPixels[index * 8 + 5] = 0 | (1 << 2) | (2 << 4) | (1 << 6); // color index 0
-				ownerPixels[index * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 4] = 0 | (0 << 2) | (1 << 4) | (1 << 6);
+				ownerPixels[index * 8 + 5] = 0 | (3 << 2) | (1 << 4) | (1 << 6); // color index 0
+				ownerPixels[index * 8 + 6] = 0 | (2 << 2) | (3 << 4) | (0 << 6); // color index 0
 				ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
 
 				pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
@@ -589,8 +589,8 @@ namespace COTG.Game
                 var index = (int)(b.x + b.y * worldDim);
                 if (b.active)
                 {
-                    pixels.SetColor(index, 0xFA, 0xFA, 0xA1);
-					ownerPixels.SetColor(index, 0xFA, 0xFA, 0xA1);
+                    pixels.SetColor(index, 0xA, 0xFA, 0xA1);
+					ownerPixels.SetColor(index, 0xaA, 0xFA, 0xFF);
 					pixels[index * 8 + 0] = 31;
 				}
 				else
@@ -759,12 +759,12 @@ namespace COTG.Game
 					{
 						// lawless
 						pixels.SetColor(index, 0xA0, 0x00, 0xB0);
-						ownerPixels.SetColor(index, 0xC0, 0x90, 0xC0);
+						ownerPixels.SetColor(index, 0xb0, 0x90, 0xC0);
 					}
 					else if (pid == Player.myId)
 					{
 						pixels.SetColor(index, 0x60, 0xd0, 0x40);
-						ownerPixels.SetColor(index, 0xe0, 0xb0, 0xb0);
+						ownerPixels.SetColor(index, 0x30, 0xb0, 0xb0);
 
 					}
 					else if (alliance == Alliance.my.id)
@@ -776,9 +776,9 @@ namespace COTG.Game
 					{
 						switch (Alliance.GetDiplomacy((int)alliance))
 						{
-							case Diplomacy.none:
+							default:
 								pixels.SetColor(index, 0x80, 0x80, 0x80);
-								ownerPixels.SetColor(index, 0xC0, 0xC0, 0xC0);
+								ownerPixels.SetColor(index, 0xb0, 0xb0, 0xb0);
 								break;
 							case Diplomacy.allied:
 								pixels.SetColor(index, 0x20, 0xA0, 0x00);
@@ -792,13 +792,13 @@ namespace COTG.Game
 								pixels.SetColor(index, 0xB0, 0x30, 0x20);
 								ownerPixels.SetColor(index, 0xc0, 0x60, 0x60);
 								break;
-							default:
-								break;
+							
+								
 						}
 					}
-					ownerPixels[index * 8 + 4] = 0 | (3 << 2) | (2 << 4) | (3 << 6);
-					ownerPixels[index * 8 + 5] = 0 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
-					ownerPixels[index * 8 + 6] = 0 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
+					ownerPixels[index * 8 + 4] = 0 | (0 << 2) | (1 << 4) | (1 << 6);
+					ownerPixels[index * 8 + 5] = 0 | (3 << 2) | (1 << 4) | (1 << 6); // color index 0
+					ownerPixels[index * 8 + 6] = 0 | (3 << 2) | (3 << 4) | (0 << 6); // color index 0
 					ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
 
 					if (type == 3 || type == 4) // 3,4 is on/off water

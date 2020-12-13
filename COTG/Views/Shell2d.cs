@@ -26,7 +26,7 @@ using Windows.UI.Text;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media;
-
+using static COTG.Views.CanvasHelpers;
 namespace COTG.Views
 {
     public partial class ShellPage
@@ -123,10 +123,10 @@ namespace COTG.Views
         static public CanvasAnimatedControl canvas;
 		public static float animationT; // approximate animation time in seconds
 
-        public static async void NotifyCotgPopup(int cotgPopupOpen)
+        public static  void NotifyCotgPopup(int cotgPopupOpen)
         {
 			JSClient.CaptureWebPage(canvas);
-			cotgPopupOpen = 0;
+		//	cotgPopupOpen = 0;
 			var hasPopup = (cotgPopupOpen&127) != 0;
             var hasLongWindow = cotgPopupOpen >= 128;
             var leftOffset = hasPopup ? cotgPopupRight : cotgPanelRight;
@@ -141,7 +141,7 @@ namespace COTG.Views
 			
 
           //  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
-			App.DispatchOnUIThreadLow(() => _grid.Margin = _grid.Margin = new Thickness(hasPopup ? cotgPopupWidth + (cotgPopupLeft - cotgPanelRight) : 0, topOffset, 0, bottomMargin));
+			App.DispatchOnUIThreadLow(() => _grid.Margin = _grid.Margin = new Thickness(leftOffset- cotgPanelRight, topOffset, 0, bottomMargin));
 			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
 			//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
 			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
@@ -177,7 +177,7 @@ namespace COTG.Views
             {
 				Name="Region",
                 IsHitTestVisible = false,
-//                IsTabStop=true,
+                IsTabStop=true,
                 UseSharedDevice = true,
                 TargetElapsedTime =TimeSpan.FromSeconds(1.0f/60.0f),
 
@@ -433,7 +433,7 @@ namespace COTG.Views
         public static bool tileSetsPending;
 		private CanvasComposite blendMod;
 		private const float smallRectSpan = 4;
-
+		const float lightZ0 = 16.0f;
         private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
             underMouse = null;
@@ -442,9 +442,10 @@ namespace COTG.Views
                 return;
 
 
+			parralaxZ0 = 1024 * 64.0f / cameraZoomLag;
 
 
-            try
+			try
             {
                 var _serverNow = JSClient.ServerTime();
                 var dt = (float)(_serverNow - lastDrawTime).TotalSeconds;
@@ -565,7 +566,7 @@ namespace COTG.Views
                                 new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Cubic);
                             if (worldObjects != null)
                                 ds.DrawImage(attacksVisible ? worldObjects : worldObjects,
-                                    new Rect(destP0, destP1),
+                                    new Rect(destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities)),
                                     new Rect(srcP0, srcP1), 1.0f, CanvasImageInterpolation.Cubic);
 
                         }
@@ -588,7 +589,9 @@ namespace COTG.Views
                             var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
                             var rgb = attacksVisible ? 1.0f : 1.0f;
                             Vector4 tint = new Vector4(rgb, rgb, rgb, alpha);
-                            var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
+						Vector4 tintShadow = new Vector4(0, 0, .125f, alpha*0.5f);	
+						var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
+					//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
 						if (wantDesaturate)
 						{
@@ -623,54 +626,72 @@ namespace COTG.Views
                             cy0 = (-halfTiles.y + ccBase.y).Max(0);
                             cx1 = (halfTiles.x + 1 + ccBase.x).Min(World.worldDim);
                             cy1 = (halfTiles.y + 1 + ccBase.y).Min(World.worldDim);
-                            const bool isShift = true;// App.IsKeyPressedShift();
+                            const bool isShift = false;// App.IsKeyPressedShift();
                             const float tcOff = isShift ? 0.0f : 0.5f;
                             const float tzOff = isShift ? 0.0f : 1.0f;
 
-                            using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None, CanvasImageInterpolation.Linear, isShift ? CanvasSpriteOptions.ClampToSourceRect : CanvasSpriteOptions.None))
-                            {
-                                foreach (var layer in td.layers)
-                                {
-                                    var layerDat = layer.data;
-                                    for (var cy = cy0; cy < cy1; ++cy)
-                                    {
-                                        for (var cx = cx0; cx < cx1; ++cx)
-                                        {
-                                            var ccid = cx + cy * World.worldDim;
-                                            var imageId = layerDat[ccid];
-                                            if (imageId == 0)
-                                                continue;
-                                            {
-                                                var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
-                                                //   var layerData = TileData.packedLayers[ccid];
-                                                //  while (layerData != 0)
-                                                {
-                                                    //    var imageId = ((uint)layerData & 0xffffu);
-                                                    //     layerData >>= 16;
-                                                    var tileId = imageId >> 13;
-                                                    var off = imageId & ((1 << 13) - 1);
-                                                    var tile = td.tilesets[tileId];
+						using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.None, CanvasImageInterpolation.Linear, isShift ? CanvasSpriteOptions.ClampToSourceRect : CanvasSpriteOptions.None))
+						{
+							// 0 == land
+							// 1 == shadows
+							// 2 == features
+							for (int pass = 0; pass < 3; ++pass)
+							{
+								foreach (var layer in td.layers)
+								{
+									var layerDat = layer.data;
 
-                                                    if (tile.bitmap == null)
-                                                        continue;
-                                                    var sy = off / tile.columns;
-                                                    var sx = off - sy * tile.columns;
-                                                    if (wantFade || attacksVisible)
-                                                        batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                            new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)), tint);
-                                                    else
-                                                        batch.DrawFromSpriteSheet(tile.bitmap, rect,
-                                                        new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)));
+									for (var cy = cy0; cy < cy1; ++cy)
+									{
+										for (var cx = cx0; cx < cx1; ++cx)
+										{
+											var ccid = cx + cy * World.worldDim;
+											var imageId = layerDat[ccid];
+											if (imageId == 0)
+												continue;
+
+											{
+												//   var layerData = TileData.packedLayers[ccid];
+												//  while (layerData != 0)
+												{
+													//    var imageId = ((uint)layerData & 0xffffu);
+													//     layerData >>= 16;
+													var tileId = imageId >> 13;
+													var off = imageId & ((1 << 13) - 1);
+													var tile = td.tilesets[tileId];
+
+													if (tile.bitmap == null)
+														continue;
+													if (tile.isBase != (pass == 0))
+													{
+														continue;
+													}
+													if ((pass == 1) && !tile.wantShadow )
+													{
+														continue;
+													}
+													var _tint = (pass == 1) ? tintShadow : tint;
+
+													var dz = (pass == 1) ? 0.0f : tile.z; // shadows draw at terrain level 
+
+													var scale = CanvasHelpers.ParalaxScale(dz);
+													var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToCp(dz)).ToPoint(), new Size(pixelScale * scale, pixelScale * scale));
+
+													var sy = off / tile.columns;
+													var sx = off - sy * tile.columns;
+													batch.DrawFromSpriteSheet(tile.bitmap, rect,
+														new Rect(new Point(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff), new Size(tile.tilewidth - tzOff, tile.tileheight - tzOff)), _tint);
 
 
 
-                                                }
+												}
 
 
-                                            }
-                                        }
-                                    }
-                                }
+											}
+										}
+									}
+								}
+							}
                             }// sprite batch
                              //
                              //   if (attacksVisible)
@@ -695,37 +716,48 @@ namespace COTG.Views
 						var dspy = (float)srcP1.Y - (float)srcP0.Y;
 						var scaleX = ddpx / dspx;
 						var scaleY = ddpy / dspy;
-						if (webMask != null)
+						//	if (webMask != null)
 						{
 
-							var emboss = new EmbossEffect() { Source = commands, Amount = 8 + MathF.Sin(animationT * 0.25f) * 2, Angle = (1 + MathF.Sin(animationT * .32f)) * MathF.PI, CacheOutput = false };
-							var transform = new Transform2DEffect() 
+							using (var emboss = new EmbossEffect() { Source = commands, Amount = 7 + MathF.Sin(animationT * 0.125f) * 2, Angle = (1 + MathF.Sin(animationT * .132f)) * MathF.PI, CacheOutput = false })
 							{
-								TransformMatrix = new Matrix3x2(scaleX, 0, 0, scaleY,
-								(float)destP0.X - ((float)srcP0.X - 0.5f) * scaleX,
-								(float)destP0.Y - ((float)srcP0.Y - 0.5f) * scaleY), Source = worldOwners, InterpolationMode = CanvasImageInterpolation.NearestNeighbor };
+								using (var transform = new Transform2DEffect()
+								{
+									TransformMatrix = new Matrix3x2(scaleX, 0, 0, scaleY,
+(float)destP0.X - ((float)srcP0.X + 0.5f) * scaleX,
+(float)destP0.Y - ((float)srcP0.Y + 0.5f) * scaleY),
+									Source = worldOwners,
+									InterpolationMode = CanvasImageInterpolation.NearestNeighbor
+								})
+								{
+									var r = new Rect(destP0, destP1);
+									using (var crop = new CropEffect() { Source = transform, SourceRectangle = r })
+									{
+										using (var blend = new ArithmeticCompositeEffect() { Source1 = emboss, Source2 = crop, Source1Amount = 0.0f, MultiplyAmount = 1.25f })
+										{
+											//						var blend = new BlendEffect() { Foreground = emboss, Background = crop, Mode=BlendEffectMode.Multiply };
 
-							var r = new Rect(destP0, destP1);
-							var crop = new CropEffect() { Source = transform, SourceRectangle = r };
-							var blend = new ArithmeticCompositeEffect() { Source1 = emboss, Source2 = crop, Source1Amount = 0.0f, MultiplyAmount = 1.25f };
-							//						var blend = new BlendEffect() { Foreground = emboss, Background = crop, Mode=BlendEffectMode.Multiply };
-							
-							var	TransformMatrix2 = new Matrix3x2(4f, 0, 0, 4f, -cachedXOffset , -cachedTopOffset );
-							var transform2 = new Transform2DEffect() { TransformMatrix = TransformMatrix2, Source = webMask };
+											//					var	TransformMatrix2 = new Matrix3x2(4f, 0, 0, 4f, -cachedXOffset , -cachedTopOffset );
+											//					var transform2 = new Transform2DEffect() { TransformMatrix = TransformMatrix2, Source = webMask };
 
-//							var dis = new AlphaMaskEffect() { Source = blend, AlphaMask = transform2 };
-							var dis = new CompositeEffect() { Sources = { transform2,blend }, Mode=blendMod   };
-							_ds.DrawImage(dis, r, r, 1.0f);
+											//							var dis = new AlphaMaskEffect() { Source = blend, AlphaMask = transform2 };
+											//							var dis = new CompositeEffect() { Sources = { transform2,blend }, Mode=blendMod   };
+											_ds.DrawImage(blend, r, r, 1.0f);
+										}
+									}
+								}
+							}
+
 							ds = _ds;
 							commands.Dispose();
-						
+
 
 						}
 					}
 						// overlay
 						if (worldChanges != null)
                             ds.DrawImage(worldChanges,
-                                new Rect(destP0, destP1),
+                                new Rect(destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities)),
                                 new Rect(srcP0, srcP1), 1.0f,
                                 CanvasImageInterpolation.Linear, CanvasComposite.Add);
 
@@ -790,8 +822,8 @@ namespace COTG.Views
                                         }
                                         var targetCid = attack.targetCid;
                                         var sourceCid = attack.sourceCid;
-                                        var c1 = targetCid.CidToCC();
-                                        var c0 = sourceCid.CidToCC();
+                                        var c1 = targetCid.CidToCp(TileData.zLabels);
+                                        var c0 = sourceCid.CidToCp(TileData.zLabels);
                                         // cull (should do this pre-transform as that would be more efficient
                                         if (c0.X.Min(c1.X) >= clientSpan.X)
                                             continue;
@@ -860,7 +892,7 @@ namespace COTG.Views
                                     {
                                         var cid = i.Key;
                                         var count = i.Value;
-                                        var c = cid.CidToCC();
+                                        var c = cid.CidToCp(TileData.zLabels);
                                         DrawTextBox(ds, $"{count.prior}`{count.incoming}", c, tipTextFormatCentered, Colors.DarkOrange, notFaded);
 
 
@@ -892,26 +924,26 @@ namespace COTG.Views
                                         }
                                     }
                                     {
-                                        var c0 = cluster.topLeft.WToC();
-                                        var c1 = cluster.bottomRight.WToC();
+                                        var c0 = cluster.topLeft.WToCp(TileData.zLabels);
+                                        var c1 = cluster.bottomRight.WToCp(TileData.zLabels);
                                         ds.DrawRoundedRectangle(c0.X, c0.Y, c1.X-c0.X, c1.Y-c0.Y, 4.0f, 4.0f, selected ? Colors.Black : Colors.Maroon);
                                     }
 
                                     if (selected)
                                     {
                                         var real = cluster.real;
-                                        var c0 = real.CidToCC();
+                                        var c0 = real.CidToCp(TileData.zLabels);
                                         foreach (var a in cluster.attacks)
                                         {
                                             var t = (tick * a.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                                             var r = t.Ramp();
-                                            var c1 = a.CidToCC();
+                                            var c1 = a.CidToCp(TileData.zLabels);
                                             var spot = Spot.GetOrAdd(a);
                                             DrawAction(ds, batch, 0.5f, 1.0f, r, c1, c0, Colors.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
                                         }
                                         foreach (var target in cluster.targets)
                                         {
-                                            var c = target.CidToCC();
+                                            var c = target.CidToCp(TileData.zLabels);
 											var rnd = target.CidToRandom();
 
 											var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -969,14 +1001,14 @@ namespace COTG.Views
                                     {
 
                                         var targetCid = city.cid;
-                                        var c1 = targetCid.CidToCC();
+                                        var c1 = targetCid.CidToCp(TileData.zLabels);
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
                                         var incAttacks = 0;
                                         var incTs = 0;
                                         foreach (var i in city.incoming)
                                         {
-                                            var c0 = i.sourceCid.CidToCC();
+                                            var c0 = i.sourceCid.CidToCp(TileData.zLabels);
                                             if (IsCulled(c0, c1))
                                                 continue;
                                             Color c;
@@ -1054,7 +1086,7 @@ namespace COTG.Views
                                     if (!city.incoming.Any())
                                     {
                                         var targetCid = city.cid;
-                                        var c1 = targetCid.CidToCC();
+                                        var c1 = targetCid.CidToCp(TileData.zLabels);
                                         if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
                                             continue;
                                         if (wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
@@ -1072,7 +1104,7 @@ namespace COTG.Views
                             // Todo: clip thi
                             if (city.senatorInfo.Length != 0 && !defenderVisible)
                             {
-                                var c = city.cid.CidToCC();
+                                var c = city.cid.CidToCp(TileData.zLabels);
                                 var idle = 0;
                                 var active = 0;
                                 var recruiting = 0;
@@ -1086,7 +1118,7 @@ namespace COTG.Views
                                         active += sen.count;
                                     if (sen.target != 0)
                                     {
-                                        var c1 = sen.target.CidToCC();
+                                        var c1 = sen.target.CidToCp(TileData.zLabels);
 
                                         var dist = city.cid.DistanceToCid(sen.target) * cartTravel; // todo: ship travel?
                                         var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1102,7 +1134,7 @@ namespace COTG.Views
 
                             if (MainPage.IsVisible())
                             {
-                                var c = city.cid.CidToCC();
+                                var c = city.cid.CidToCp(TileData.zLabels);
                                 if (IsCulled(c, raidCullSlopSpace))
                                     continue;
                                 var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
@@ -1110,7 +1142,7 @@ namespace COTG.Views
                                 //ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
                                 foreach (var raid in city.raids)
                                 {
-                                    var ct = raid.target.CidToCC();
+                                    var ct = raid.target.CidToCp(TileData.zLabels);
                                     (var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
                                     DrawAction(ds, batch, (float)(raid.time - serverNow).TotalSeconds,
                                         raid.GetOneWayTripTimeMinutes(city) * 60.0f,
@@ -1159,12 +1191,14 @@ namespace COTG.Views
                                 for (var cx = cx0; cx < cx1; ++cx)
                                 {
                                     (var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
-                                    if (name != null)
+									var zScale = CanvasHelpers.ParalaxScale(TileData.zCities);
+
+									if (name != null)
                                     {
                                         var layout = GetTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
-
-                                        var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToC()).ToPoint(), new Size(pixelScale, pixelScale));
-
+									
+										var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToCp(TileData.zCities)).ToPoint(), new Size(pixelScale* zScale, pixelScale* zScale));
+									
                                         ds.DrawTextLayout(layout, (float)(rect.Left + rect.Right) * 0.5f,
                                             (float)rect.Top + (float)rect.Height * 7.25f / 8.0f,
                                             isMine ?
@@ -1181,11 +1215,11 @@ namespace COTG.Views
                                     }
                                     if (spot != null &&  spot.isClassified)
                                     {
-                                        var c1 = (cx, cy).WToC();
+                                        var c1 = (cx, cy).WToCp(TileData.zLabels);
                                         var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
                                         var r = t.Ramp();
                                         var alpha = (t*1.21f).Wave()*0.75f + 0.25f;
-                                        const float spriteSize = 16;
+                                         float spriteSize = 16*zScale;
                                    
                                         batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X-spriteSize, c1.Y-spriteSize, spriteSize*2, spriteSize*2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f));
                                     }
@@ -1373,7 +1407,8 @@ namespace COTG.Views
         {
             return JSClient.IsCityView();
         }
-    }
+	}
+
     public static class CanvasHelpers
     {
         //public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
@@ -1408,7 +1443,7 @@ namespace COTG.Views
 		}
 		public static void DrawAccent(this CanvasDrawingSession ds, int cid, float angularSpeedBase, Color brush)
 		{
-			var c = cid.CidToCC();
+			var c = cid.CidToCp(TileData.zLabels);
 			var rnd = cid.CidToRandom();
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
@@ -1429,22 +1464,49 @@ namespace COTG.Views
 		//      {
 		//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
 		//      }
+		public static float parralaxZ0 = 1024;
+		public static float ParalaxScale(float dz)		=> parralaxZ0 / (parralaxZ0 - dz);
 
-		public static Vector2 WToC(this Vector2 c)
-        {
-            return (c - ShellPage.cameraCLag) * ShellPage.pixelScale + ShellPage.halfSpan;
-        }
-        public static Vector2 WToC(this (int x, int y) c)
-        {
-            return new Vector2(c.x, c.y).WToC();
-        }
-        public static Vector2 CidToCC(this int c)
-        {
-            return c.ToWorldC().WToC();
-        }
+		public static Vector2 WToCp(this Vector2 c,float dz)
+		{
+			var paralaxGain = ParalaxScale(dz);
+			return (c - ShellPage.cameraCLag)* paralaxGain * ShellPage.pixelScale + ShellPage.halfSpan;
+		}
+		// camera space to camera space with parallax
+		public static Vector2 CToCp(this Vector2 c, float dz)
+		{
+			var paralaxGain = ParalaxScale(dz);
+			return (c - ShellPage.halfSpan)*paralaxGain + ShellPage.halfSpan;
+		}
+		public static Point CToCp(this Point c, float dz)
+		{
+			var paralaxGain = ParalaxScale(dz);
+			return ((c.ToVector2() - ShellPage.halfSpan) * paralaxGain + ShellPage.halfSpan).ToPoint();
 
+		}
 
-        public static bool BringCidIntoWorldView(this int cid, bool lazy)
+		//public static Vector2 WToC(this Vector2 c)
+		//      {
+		//          return (c - ShellPage.cameraCLag) * ShellPage.pixelScale + ShellPage.halfSpan;
+		//      }
+		//public static Vector2 WToC(this (int x, int y) c)
+		//{
+		//    return new Vector2(c.x, c.y).WToC();
+		//}
+		public static Vector2 WToCp(this (int x, int y) c,float z)
+		{
+			return new Vector2(c.x, c.y).WToCp(z);
+		}
+		//public static Vector2 CidToCC(this int c)
+  //      {
+  //          return c.ToWorldC().WToC();
+  //      }
+		public static Vector2 CidToCp(this int c,float z)
+		{
+			return c.ToWorldC().WToCp(z);
+		}
+
+		public static bool BringCidIntoWorldView(this int cid, bool lazy)
         {
             var v = cid.CidToWorldV();
             var newC = v;

@@ -229,7 +229,7 @@ namespace COTG
 		 {
 			 var stream = new InMemoryRandomAccessStream();
 			 await view.CapturePreviewToStreamAsync(stream);
-			 ShellPage.webMask = await CanvasBitmap.LoadAsync(canvas,stream);
+			 ShellPage.webMask = await CanvasBitmap.LoadAsync(canvas,stream,96, CanvasAlphaMode.Premultiplied);
 //			 ShellPage.webMask= await CreateAplhaMaskFromBitmap(stream, canvas);
 
 		 });

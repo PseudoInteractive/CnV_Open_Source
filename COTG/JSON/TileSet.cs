@@ -22,10 +22,18 @@ namespace COTG.JSON
     //    var root = Root.FromJson(jsonString);
 
     using System;
+	using System.Text.Json.Serialization;
 
-    public sealed class TileData
+	public sealed class TileData
     {
-        public enum State
+		public const float zBase = 0;
+		public const float zLand = 0;
+		public const float zWater = 10;
+		public const float zTerrain = 40;
+		public const float zCities = 80;
+		public const float zLabels = 90;
+
+		public enum State
         {
             preInit,
             loadedData,
@@ -68,7 +76,32 @@ namespace COTG.JSON
                 foreach (var tileSet in instance.tilesets)
                 {
                     tileSet.Load();
-                }
+					switch(tileSet.name)
+					{
+						case "land":
+							tileSet.z = zLand;
+							tileSet.wantShadow = false;
+							tileSet.isBase = true;
+							break;
+						case "water":
+							tileSet.z = zWater;
+							tileSet.isBase = true;
+							break;
+						case "terrainfeatures":
+							tileSet.z = zTerrain;
+							tileSet.wantShadow = true;
+							break;
+						case "city":
+							tileSet.z = zCities;
+							tileSet.wantShadow = true;
+							break;
+						case "toplevel":
+							tileSet.z = zLabels;
+
+							break;
+
+					}
+				}
             }
 
 
@@ -242,7 +275,9 @@ namespace COTG.JSON
 
     public sealed class Layer
     {
-        public ushort[] data { get; set; }
+		
+
+		public ushort[] data { get; set; }
         public int height { get; set; }
         public int id { get; set; }
         public string name { get; set; }
@@ -259,7 +294,15 @@ namespace COTG.JSON
 
     public sealed class Tileset
     {
-        public CanvasBitmap bitmap;
+		[JsonIgnore]
+		public float z;
+		[JsonIgnore]
+		public bool wantShadow;
+		[JsonIgnore]
+		public bool isBase; // shadows draw onto this, this are drawn first 
+
+
+		public CanvasBitmap bitmap;
         public int columns { get; set; }
         public int firstgid { get; set; }
         public string image { get; set; }
