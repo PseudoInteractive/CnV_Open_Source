@@ -67,7 +67,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.15.0" />
+    <PackageReference Include="Azure.Core" Version="1.7.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.15.2-preview" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
     <PackageReference Include="Microsoft.Toolkit" Version="6.1.1" />

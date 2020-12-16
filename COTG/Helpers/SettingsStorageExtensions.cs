@@ -9,6 +9,7 @@ using Windows.Storage.Streams;
 using System.Text.Json;
 using Windows.Foundation;
 using Windows.Storage.Compression;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace COTG.Helpers
 {
@@ -31,7 +32,7 @@ namespace COTG.Helpers
             await FileIO.WriteTextAsync(file, fileContent);
         }
 
-	
+		
 
 		public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name, T _default)
         {
@@ -224,5 +225,14 @@ namespace COTG {
             else
                 return appData.LocalSettings;
         }
-    }
+
+		public static async Task<byte[]> GetContent(string filename)
+		{
+			var uri = new Uri("ms-appx:///" + filename);
+			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+			var buffer = await FileIO.ReadBufferAsync(file);
+
+			return buffer.ToArray();
+		}
+	}
 }

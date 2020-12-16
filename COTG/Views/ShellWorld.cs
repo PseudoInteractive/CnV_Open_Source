@@ -35,7 +35,6 @@ namespace COTG.Views
         private void SetupCoreInput()
         {
             coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
-			canvas.KeyDown += CanvasHitTest_KeyDown;
 			coreInputSource.PointerMoved += Canvas_PointerMoved;
             coreInputSource.PointerPressed += Canvas_PointerPressed;
             coreInputSource.PointerReleased += Canvas_PointerReleased;
@@ -50,9 +49,9 @@ namespace COTG.Views
 
         }
 
-		private void CanvasHitTest_KeyDown(object sender, KeyRoutedEventArgs e)
+		public static void Canvas_KeyDown(Windows.System.VirtualKey key)
 		{
-			switch (e.Key)
+			switch (key)
 			{
 			
 				case Windows.System.VirtualKey.Space:
@@ -72,7 +71,6 @@ namespace COTG.Views
 					Spot.SetFocus(Spot.focus.Translate((0,1)), true, true, true);
 					break;
 			
-					break;
 				default:
 					break;
 			}
@@ -103,9 +101,9 @@ namespace COTG.Views
             e.Handled = false;
 
             //            mousePosition = point.Position.ToVector2();
-            if ((lastMousePressPosition - mousePosition).Length() < 12.0f)
+            if ((lastMousePressPosition - mousePosition).Length() < 8)
             {
-                var worldC = MousePointToWorld(mousePosition);
+                var worldC = ScreenToWorld(mousePosition);
                 var cid = worldC.WorldToCid();
 
                 switch (pointerPoint.Properties.PointerUpdateKind)
@@ -337,33 +335,32 @@ namespace COTG.Views
             ClearHover();
             //    ChatTab.L("CWheel " + wheel);
         }
-        static (int x,int y) MousePointToWorld(Vector2 c1)
+        static (int x,int y) ScreenToWorld(Vector2 c1)
         {
-            var dc1 = (c1 );
-            dc1 -= ShellPage.halfSpan;
-            dc1 *= (1.0f / cameraZoomLag);
-            dc1 += ShellPage.cameraC;
-
-            int x = (dc1.X).RoundToInt();
-            int y = (dc1.Y).RoundToInt();
-            return (x, y);
+			return (((c1.X - halfSpan.X) / cameraZoomLag + cameraC.X).RoundToInt(),((c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y).RoundToInt() );
         }
 
-     
+		static Vector2 CameraToWorld(Vector2 c1)
+		{
+			return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
+		}
 
-        int lastCanvasC;
+		int lastCanvasC;
         private void Canvas_PointerMoved(object sender, PointerEventArgs e)
         {
             e.KeyModifiers.UpdateKeyModifiers();
-           //if(JSClient.IsCityView() )
-           // {
-           //     e.Handled = false;
-           //     return;
-           // }
-            var point = e.CurrentPoint;
+			var pos = e.CurrentPoint.Position;
+			cameraLightC = new Vector2((float)pos.X,(float)pos.Y);
+			 
+			//if(JSClient.IsCityView() )
+			// {
+			//     e.Handled = false;
+			//     return;
+			// }
+			var point = e.CurrentPoint;
             var c1 = GetCanvasPosition(point);
             
-            var c = MousePointToWorld(c1);
+            var c = ScreenToWorld(c1);
             var props = point.Properties;
             if ((props.IsLeftButtonPressed|props.IsRightButtonPressed) ==false)
             {
@@ -391,7 +388,7 @@ namespace COTG.Views
                         case World.typeCity:
                             {
                                 Spot.viewHover = cid;
-								Spot.TryGet(c.WorldToCid(), out var spot);
+								Spot.TryGet(cid, out var spot);
 
 								if (data.player == 0)
                                 {

@@ -572,7 +572,7 @@ namespace COTG.Views
         {
 			using var work = new WorkScope("Refresh..");
             GetWorldInfo.Send();
-            await TileData.Ctor();
+            await TileData.Ctor(false);
         }
         private void RefreshX(object sender, RightTappedRoutedEventArgs e)
         {

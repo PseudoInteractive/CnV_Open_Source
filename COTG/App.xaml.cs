@@ -161,6 +161,7 @@ namespace COTG
                     }
                     break;
             }
+			ShellPage.Canvas_KeyDown(key);
             App.DispatchOnUIThreadSneaky(ResetIdleTimer);
         }
 

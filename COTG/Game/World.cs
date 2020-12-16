@@ -225,8 +225,53 @@ namespace COTG.Game
             var y = c.y;
             return (x >= 0 & x < worldDim & y >= 0 & y < worldDim) ? x + y * worldDim : 0;
         }
+		public static Vector4 GetTint(int packedId)
+		{
+		//	var packedId = GetPackedId(xy);
+			uint rv = raw[packedId];
+			switch(rv&typeMask)
+			{
+				case typeCity:
+					{
+						var pid = rv & playerMask;
+						// lawless
+						if (pid == 0)
+							return new Vector4(1, .875f, 1.0f, 1.0f);
+						if(pid == Player.myId)
+							return new Vector4(0.875f, 1.125f, 0.95f, 1.0f);
+						var alliance = Player.Get((int)pid).alliance;
 
-        public static (uint type, uint data) RawLookup((int x, int y) c)
+						if (alliance == Alliance.my.id)
+						{
+							return new Vector4(0.95f, 1.06f, 0.95f, 1.0f);
+						}
+						else
+						{
+							switch (Alliance.GetDiplomacy((int)alliance))
+							{
+								default:
+									return new Vector4(1f, 1f, 1f, 1f);
+									break;
+								case Diplomacy.allied:
+									return new Vector4(0.875f, 1.0f, 0.875f, 1.0f);
+									break;
+								case Diplomacy.nap:
+									return new Vector4(0.955f, 1.0625f, 1.0f, 1.0f);
+									break;
+								case Diplomacy.enemy:
+									return new Vector4(1.125f, 0.875f, 0.875f, 1.0f);
+
+
+							}
+						}
+
+					}
+				default:
+					return new Vector4(1, 1, 1, 1); 
+			}
+
+		}
+		public static (uint type, uint data) RawLookup((int x, int y) c)
         {
             var x = c.x;
             var y = c.y;

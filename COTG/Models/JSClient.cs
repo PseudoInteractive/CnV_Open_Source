@@ -1634,8 +1634,8 @@ namespace COTG
 
 					   ///                   await GetCitylistOverview();
 					   City.UpdateSenatorInfo();  // no async
-					  
-					   TileData.Ctor();
+
+					   TileData.Ctor(false);
 					   //if (TipsSeen.instance.refresh == false
 					   //||TipsSeen.instance.chat0==false
 					   //|| TipsSeen.instance.chat1 == false

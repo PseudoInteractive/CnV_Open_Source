@@ -29,14 +29,17 @@ namespace COTG.Views
     // TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
     public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
     {
-        //      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
+		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
-        //       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
+		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 
 
-        //private static bool _isLoggedIn;
-        //private static bool _isBusy;
+		//private static bool _isLoggedIn;
+		//private static bool _isBusy;
+		public static float dpiScale;
+		public static bool wantParallax = true;
+		public static bool wantLight=true;
         //        private static UserData _user;
         public static bool fetchFullHistory = true;
         public static bool? autoBuildOn = null;

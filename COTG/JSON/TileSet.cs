@@ -29,14 +29,18 @@ namespace COTG.JSON
 		public const float zBase = 0;
 		public const float zLand = 0;
 		public const float zWater = 10;
-		public const float zTerrain = 40;
-		public const float zCities = 80;
-		public const float zLabels = 90;
+		public const float zTerrain = 20;
+		public const float zTopLevel = 36;
+		public const float zCities = 32;
+		public const float zLabels = 40;
 
 		public enum State
         {
             preInit,
-            loadedData,
+			lostDevice,
+			wantRefresh,
+			loadStart,
+			loadedData,
             loadingImages,
             loadedImages,
             ready = loadedImages
@@ -44,11 +48,27 @@ namespace COTG.JSON
         public static State state = State.preInit;
 
         public static TileData instance;
-        public static async Task Ctor()
+		
+
+		public static async Task Ctor(bool deviceLost)
         {
-            state = State.preInit; // reset if necessary
-            var prior = instance?.tilesets;  // if called previously save the images to reuse
-            instance = await TileMapFetch.Get();
+			// if we are still loading the last data, wait
+			while(state >= State.loadStart && state != State.ready)
+			{
+				await Task.Delay(1000);
+			}
+			if(state == State.ready)
+			{
+				if (deviceLost)
+					state = State.lostDevice;
+				else
+					state = State.wantRefresh;
+			}
+            var prior = (state == State.wantRefresh) ? instance?.tilesets : null;  // if called previously save the images to reuse
+			Assert(state == State.preInit || state == State.lostDevice || state == State.wantRefresh); // reset if necessary
+
+			state = State.loadStart; 
+			instance = await TileMapFetch.Get();
             //            Note.Show("TilesFetched");
             state = State.loadedData;
 
@@ -89,26 +109,57 @@ namespace COTG.JSON
 							break;
 						case "terrainfeatures":
 							tileSet.z = zTerrain;
-							tileSet.wantShadow = true;
+						//	tileSet.wantShadow = true;
 							break;
 						case "city":
 							tileSet.z = zCities;
 							tileSet.wantShadow = true;
 							break;
 						case "toplevel":
-							tileSet.z = zLabels;
-
+							tileSet.z = zTopLevel;
+							tileSet.wantShadow = true;
 							break;
 
 					}
 				}
             }
+			foreach (var layer in instance.layers)
+			{
+				switch(layer.name)
+				{
+					case "land":
+						{
+							layer.isBase = true;
+							break;
+						}
+					case "water":
+						{
+							layer.isBase = true;
+							break;
+						}
+					case "cities":
+						{
+							layer.wantShadow = true;
+							break;
+						}
+					case "numbers":
+						{
+							layer.wantShadow = true;
+							break;
+						}
+					case "labels":
+						{
+							layer.wantShadow = false;
+							break;
+						}
+				}
+			}
 
-
-            for (var i = 0; i < World.worldDim * World.worldDim; ++i)
+				for (var i = 0; i < World.worldDim * World.worldDim; ++i)
             {
                 foreach (var layer in instance.layers)
                 {
+				
                     var tile = layer.data[i];
                     if (tile == 0)
                         continue;
@@ -275,7 +326,12 @@ namespace COTG.JSON
 
     public sealed class Layer
     {
-		
+		[JsonIgnore]
+		public float z;
+		[JsonIgnore]
+		public bool wantShadow;
+		[JsonIgnore]
+		public bool isBase; // shadows draw onto this, this are drawn first
 
 		public ushort[] data { get; set; }
         public int height { get; set; }
