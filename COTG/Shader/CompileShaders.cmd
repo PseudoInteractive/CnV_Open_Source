@@ -1,7 +1,7 @@
 @echo off
 setlocal
 pushd "%~dp0"
-
+set WindowsSDKVersion=10.0.20257.0
 where /q fxc >nul
 if %errorlevel% neq 0 ( 
     echo fxc not found.
@@ -13,7 +13,7 @@ if "%WindowsSdkDir%" == "" (
 )
 
 set INCLUDEPATH="%WindowsSdkDir%\Include\%WindowsSDKVersion%\um"
-
+echo %INCLUDEPATH%
 if not exist %INCLUDEPATH%\d2d1effecthelpers.hlsli ( 
     echo d2d1effecthelpers.hlsli not found.
     goto WRONG_COMMAND_PROMPT

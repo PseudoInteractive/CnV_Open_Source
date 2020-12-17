@@ -17,21 +17,13 @@
 
 
 
-// How should the sketch effect respond to changes of brightness in the input color?
-float SketchThreshold = 0.2;
-float SketchBrightness = 0.35;
-float SketchColorLevel = 3;
-
 // Settings controlling the edge detection filter.
-float EdgeThreshold = 1;
-float EdgeIntensity = 0.5;
-float EdgeOffset = 1;
 
 // Randomly offsets the sketch overlay pattern to create a hand-drawn animation effect.
 float3 lightPosition;
 float3 cameraPosition;
 
-float normalGain=4;
+float normalGain=1;
 
 
 D2D_PS_ENTRY(main)
@@ -42,7 +34,7 @@ D2D_PS_ENTRY(main)
 	float height = dot(color.rgb, float3(0.3333333, 0.3333333, 0.3333333));
 	float dHdx = ddx(height) * normalGain;
 	float dHdy = ddy(height) * normalGain;
-	float3 normal = float3(dHdx, dHdy, sqrt(max(0, 1.0 - dHdx * dHdx - dHdy * dHdy)));
+	float3 normal = normalize( float3(dHdx, dHdy, 1) );
 	
 	float3 dL = positionInPixels.xyz - lightPosition.xyz;
 	float3 lightDir = normalize(dL);
@@ -54,7 +46,7 @@ D2D_PS_ENTRY(main)
 	spec = spec * saturate(height * height * 4.0 - 0.25);
 	float3 rgb = diff * color.rgb + spec;
 	//rgb = 2 * rgb / (1 + rgb);
-	return float4(rgb  , color.a);
+	return float4(rgb*color.a  , color.a);
 }
 
 //// The MIT License

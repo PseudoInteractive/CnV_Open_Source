@@ -71,7 +71,7 @@ namespace COTG.Views
 			HorizontalAlignment = CanvasHorizontalAlignment.Center,
 			VerticalAlignment = CanvasVerticalAlignment.Center,
 			FontStretch = fontStretch,
-			FontWeight= FontWeights.Bold,
+		//	FontWeight= FontWeights.Bold,
 
 			WordWrapping = CanvasWordWrapping.NoWrap,
 			//   Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap
@@ -356,8 +356,8 @@ namespace COTG.Views
 		{
 			if (renderTarget != null)
 				renderTarget.Dispose();
-			var margin = new Thickness(cachedXOffset - cotgPanelRight, cachedTopOffset, 0, bottomMargin);
-			renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X-margin.Left-margin.Right), (float)(clientSpan.Y-margin.Top-margin.Bottom), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
+			//var margin = new Thickness(cachedXOffset - cotgPanelRight, cachedTopOffset, 0, bottomMargin);
+			renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
 		}
 		async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -511,6 +511,9 @@ namespace COTG.Views
 		public static Vector2 cameraLightC;
 		public static Vector2 worldLightC;
 		public static CanvasRenderTarget renderTarget;
+		private float cameraZ = 260;
+		static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
+		static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric,CanvasTextGridFit.Disable);
 		private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
 		{
 			underMouse = null;
@@ -614,11 +617,13 @@ namespace COTG.Views
 				var wantParallax = SettingsPage.wantParallax;
 
 				var ds = wantLight ? renderTarget.CreateDrawingSession() : args.DrawingSession;
+		//		ds.Blend = CanvasBlend.Copy;
 				
 				// funky logic
-				if(wantLight)
+				if(wantLight)	
 					ds.Clear(new Color()); // black transparent
-
+				ds.TextAntialiasing = canvasTextAntialiasing;
+				ds.TextRenderingParameters = canvasTextRenderingParameters;
 				// prevent MSAA gaps
 				ds.Antialiasing = CanvasAntialiasing.Aliased;
 				if (worldBackground != null && wantImage)
@@ -1259,6 +1264,7 @@ namespace COTG.Views
 					ds.Dispose();
 					//						ds.Dispose(); // end the frawing session
 					ds = args.DrawingSession;
+					ds.Blend = CanvasBlend.Copy;
 					var ddpx = (float)destP1.X - (float)destP0.X;
 					var ddpy = (float)destP1.Y - (float)destP0.Y;
 					var dspx = (float)srcP1.X - (float)srcP0.X;
@@ -1266,15 +1272,16 @@ namespace COTG.Views
 					var scaleX = ddpx / dspx;
 					var scaleY = ddpy / dspy;
 					//	if (webMask != null)
-					if (wantLight)
+					if (wantLight && lighteffect!=null)
 					{
-						using (var heights = new LuminanceToAlphaEffect() { Source = renderTarget, CacheOutput = true })
+						lighteffect.Source1 = renderTarget;
+						lighteffect.Properties["cameraPosition"] = new Vector3(halfSpan, cameraZ);
+						var light3 = new Vector3(cameraLightC, lightZ0);
+
+
+						lighteffect.Properties["lightPosition"] = light3;
 						{
-							var light3 = new Vector3(cameraLightC, lightZ0);
-							var spec = new PointSpecularEffect() { Source = heights, HeightMapScale = 1, SpecularExponent = 4, SpecularAmount = 0.75f, LightPosition = light3 };
-							var diff = new PointDiffuseEffect() { Source = heights, HeightMapScale = 1, LightPosition = light3 };
-							var light = new ArithmeticCompositeEffect() { Source1 = renderTarget, Source2 = diff, Source1Amount = 0.125f, MultiplyAmount = 0.75f };
-							var light2 = new ArithmeticCompositeEffect() { Source1 = light, Source2 = spec, Source1Amount = 1, Source2Amount = 0.25f, MultiplyAmount = 0.5f };
+						
 							//							var transform = new Transform2DEffect()
 							//							{
 							//								TransformMatrix = new Matrix3x2(scaleX, 0, 0, scaleY,
@@ -1296,7 +1303,7 @@ namespace COTG.Views
 
 									//							var dis = new AlphaMaskEffect() { Source = blend, AlphaMask = transform2 };
 									//							var dis = new CompositeEffect() { Sources = { transform2,blend }, Mode=blendMod   };
-									ds.DrawImage(light2, r, r, 1.0f);
+									ds.DrawImage(lighteffect,r,r);
 								}
 							}
 

@@ -81,10 +81,10 @@ namespace COTG.Views
 		// //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
 		//}
 
-		static Vector2 GetCanvasPosition(Windows.UI.Input.PointerPoint screenC)
+		static Vector2 GetCanvasPosition(Vector2 screenC)
         {
-            var point = screenC.Position;
-            return new Vector2((float)point.X , (float)point.Y );
+            var point = screenC;
+            return new Vector2(point.X , point.Y );
         }
         private void Canvas_PointerReleased(object sender, PointerEventArgs e)
         {
@@ -97,7 +97,7 @@ namespace COTG.Views
             e.KeyModifiers.UpdateKeyModifiers();
             var pointerPoint = e.CurrentPoint;
             var position = pointerPoint.Position;
-            mousePosition = GetCanvasPosition(pointerPoint);
+            mousePosition = GetCanvasPosition(position.ToVector2());
             e.Handled = false;
 
             //            mousePosition = point.Position.ToVector2();
@@ -244,7 +244,7 @@ namespace COTG.Views
             }
 
 
-            mousePosition = GetCanvasPosition(point);
+            mousePosition = GetCanvasPosition(point.Position.ToVector2());
             var prior = lastMousePressTime;
             lastMousePressTime = DateTimeOffset.UtcNow;
             lastMousePressPosition = mousePosition;
@@ -325,7 +325,7 @@ namespace COTG.Views
             var wheel = pt.Properties.MouseWheelDelta;
             var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
             var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,128.0f);
-            var cBase = GetCanvasPosition(pt) - halfSpan;
+            var cBase = GetCanvasPosition(pt.Position.ToVector2()) - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
             cameraC =  cameraC + c0 - c1;
@@ -349,8 +349,9 @@ namespace COTG.Views
         private void Canvas_PointerMoved(object sender, PointerEventArgs e)
         {
             e.KeyModifiers.UpdateKeyModifiers();
-			var pos = e.CurrentPoint.Position;
-			cameraLightC = new Vector2((float)pos.X,(float)pos.Y);
+			var priorMouseC = mousePosition;
+			mousePosition = GetCanvasPosition(e.CurrentPoint.Position.ToVector2());
+			cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			 
 			//if(JSClient.IsCityView() )
 			// {
@@ -358,9 +359,9 @@ namespace COTG.Views
 			//     return;
 			// }
 			var point = e.CurrentPoint;
-            var c1 = GetCanvasPosition(point);
+           
             
-            var c = ScreenToWorld(c1);
+            var c = ScreenToWorld(mousePosition);
             var props = point.Properties;
             if ((props.IsLeftButtonPressed|props.IsRightButtonPressed) ==false)
             {
@@ -541,8 +542,7 @@ namespace COTG.Views
                 // TODO:  mouse should be hooked.
                // if (point.IsInContact)
                 {
-                    var dr = c1;
-                    dr -= mousePosition;
+                    var dr = mousePosition- priorMouseC;
                     dr *= 1.0f/cameraZoomLag;
                     cameraC -= dr;
                     // instant
@@ -552,7 +552,7 @@ namespace COTG.Views
                 }
             }
 
-            mousePosition = c1;
+            
         }
         private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
