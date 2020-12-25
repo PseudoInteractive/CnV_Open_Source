@@ -19,14 +19,14 @@
 
 	<Grid x:Name="cityBaseGrid">
 		
-			<Grid.RowDefinitions>
+		<Grid.RowDefinitions>
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
-
-			<tg:RadDataGrid x:Name="cityGrid"
+		<MediaPlayerElement Source="ms-appx:/Audio/UXOMainTheme.ogg" x:Name="music" />
+		<tg:RadDataGrid x:Name="cityGrid"
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"

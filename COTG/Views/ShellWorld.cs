@@ -324,7 +324,7 @@ namespace COTG.Views
             var pt = e.CurrentPoint;
             var wheel = pt.Properties.MouseWheelDelta;
             var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
-            var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,128.0f);
+            var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,256.0f);
             var cBase = GetCanvasPosition(pt.Position.ToVector2()) - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;

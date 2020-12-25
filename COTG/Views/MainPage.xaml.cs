@@ -87,10 +87,12 @@ namespace COTG.Views
 			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 			cityGrid.ProcessTooltips();
 			//dungeonGrid.ProcessTooltips();
-			
-        }
+			this.music.AutoPlay = true;
 
-        private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
+
+		}
+
+		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
 //            Log("Current item " + sender.ToString());
         }

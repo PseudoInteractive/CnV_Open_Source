@@ -9,6 +9,10 @@ using COTG.Core.Services;
 using COTG.Services;
 using COTG.Views;
 using Windows.ApplicationModel.Activation;
+using Windows.Media.Core;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -18,7 +22,8 @@ namespace COTG.Services
     // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/activation.md
     internal class ActivationService
     {
-        private readonly App _app;
+		private const string UriString = "ms-appx:///audio/UXOMainTheme.ogg";
+		private readonly App _app;
         private readonly Type _defaultNavItem;
         private Lazy<UIElement> _shell;
 
@@ -59,21 +64,27 @@ namespace COTG.Services
             await HandleActivationAsync(activationArgs);
             _lastActivationArgs = activationArgs;
 
-            if (IsInteractive(activationArgs))
-            {
-                var activation = activationArgs as IActivatedEventArgs;
-                if (activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-            //        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
-                }
+			if (IsInteractive(activationArgs))
+			{
+				var activation = activationArgs as IActivatedEventArgs;
+				if (activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
+				{
+					//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
+				}
 
-                // Ensure the current window is active
-                Window.Current.Activate();
+				// Ensure the current window is active
+				Window.Current.Activate();
 
-                // Tasks after activation
-                await StartupAsync();
-            }
-        }
+				// Tasks after activation
+				await StartupAsync();
+
+				//MediaPlayer mediaPlayer = new MediaPlayer();
+
+				//mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(UriString));
+				//mediaPlayer.Play();
+
+			}
+		}
 
         private async Task InitializeAsync()
         {

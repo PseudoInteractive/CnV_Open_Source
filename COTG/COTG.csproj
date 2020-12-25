@@ -84,35 +84,51 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Services">
-      <Version>6.1.1</Version>
+    <PackageReference Include="Microsoft.SourceLink.Common">
+      <Version>1.1.0-beta-20204-02</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>6.1.1</Version>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <Version>1.1.0-beta-20204-02</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Services">
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.DeveloperTools">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
-      <Version>6.1.1</Version>
+      <Version>7.0.0-preview4</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
+      <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.WebSockets.WebSocketProtocol">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reflection.Context">
+      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>5.0.0</Version>
@@ -131,7 +147,9 @@
     <PRIResource Include="Strings\en-us\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="JS\funky" />
+    <EmbeddedResource Include="JS\funky">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="JS\J0EE" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +187,7 @@
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
+    <Compile Include="Helpers\SDFText.cs" />
     <Compile Include="Helpers\SmallTime.cs" />
     <Compile Include="Helpers\Span2d.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
@@ -464,15 +483,14 @@
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\cities-only.dds" />
-    <Content Include="Assets\DefaultIcon.png" />
     <Content Include="Assets\land.dds" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
-    <Content Include="Assets\Logo.png" />
     <Content Include="Assets\numberedthings.dds" />
     <Content Include="Assets\protocolImage.png" />
+    <Content Include="Assets\sky.dds" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
     <Content Include="Assets\SmallTile.scale-150.png" />
@@ -504,12 +522,16 @@
     <Content Include="Assets\StoreLogo.scale-125.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\terrainfeatures3.dds" />
     <Content Include="Assets\terrainfeatures.dds" />
     <Content Include="Assets\watertiles.dds" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\world.dds" />
+    <Content Include="Audio\UXOMainTheme.ogg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\barracks.png" />
     <Content Include="images\blacksmith.png" />
     <Content Include="images\blessed.png" />
@@ -539,6 +561,7 @@
     <Content Include="images\farmhouse.png" />
     <Content Include="images\forester.png" />
     <Content Include="images\hideaway.png" />
+    <Content Include="images\lineDraw.dds" />
     <Content Include="images\mage_tower.png" />
     <Content Include="images\marketplace.png" />
     <Content Include="images\mine.png" />
@@ -593,6 +616,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="Shader\CompileShaders.cmd" />
     <Content Include="Shader\light.bin" />
+    <None Include="SignatureKey.snk" />
+    <None Include="SignaturePubKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -649,11 +674,10 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">

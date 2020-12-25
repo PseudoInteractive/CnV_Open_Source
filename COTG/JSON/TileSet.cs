@@ -168,7 +168,7 @@ namespace COTG.JSON
                     {
                         var ts = instance.tilesets[tileId];
                         var off = tile - ts.firstgid;
-                        Assert(ts.tilewidth==64);
+                    //    Assert(ts.tilewidth==64);
                         var offX = off%ts.columns;
                         if ((off >= 0) && off < ts.tilecount)
                         {
@@ -356,9 +356,17 @@ namespace COTG.JSON
 		public bool wantShadow;
 		[JsonIgnore]
 		public bool isBase; // shadows draw onto this, this are drawn first 
-
+		[JsonIgnore]
+		float scaleX;
+		[JsonIgnore]
+		float scaleY;
 
 		public CanvasBitmap bitmap;
+		public (int u,int v) ScaleUV( (int u, int v) uv)
+		{
+			return ((int)(uv.u * bitmap.SizeInPixels.Width + imagewidth / 2) / imagewidth, (int)(uv.v * bitmap.SizeInPixels.Height + imageheight / 2) / imageheight);
+
+		}
         public int columns { get; set; }
         public int firstgid { get; set; }
         public string image { get; set; }
@@ -380,8 +388,11 @@ namespace COTG.JSON
                 temp.bitmap = await CanvasBitmap.LoadAsync(ShellPage.canvas.Device, uri);
                 // etc.
                 Assert(temp.bitmap != null);
-            }
-            catch (Exception e)
+				
+				tilewidth = (int)temp.bitmap.SizeInPixels.Width / columns;
+				tileheight = tilewidth;
+			}
+			catch (Exception e)
             {
                 Log(e);
 

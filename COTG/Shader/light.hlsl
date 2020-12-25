@@ -10,10 +10,10 @@
 //  - Second is an overlay containing a pencil sketch texture. This combines
 //    three different patterns of strokes in the red, green and blue channels.
 
-#define D2D_INPUT_COUNT 1
-#define D2D_REQUIRES_SCENE_POSITION 
+#define D2D_INPUT_COUNT 2
+#define D2D_REQUIRES_SCENE_POSITION
 
-#include "d2d1effecthelpers.hlsli"
+# include "d2d1effecthelpers.hlsli"
 
 
 
@@ -22,31 +22,65 @@
 // Randomly offsets the sketch overlay pattern to create a hand-drawn animation effect.
 float3 lightPosition;
 float3 cameraPosition;
+float specularGain = 0.5;
 
-float normalGain=1;
 
+float normalGain = 1;
+float GetHeight(float4 pixel)
+{
+	return (pixel.r + pixel.g + pixel.b)*pixel.a;
+}
+
+float4 ComputeLight(float4  color, float3 viewDir, float3 lightDir,float3 pos )
+{
+	float height = GetHeight(color);
+	float dHdx00 = ddx(height) * normalGain;
+	float dHdy00 = ddy(height) * normalGain;
+	float3 normal = normalize(float3(dHdx00, dHdy00, 1.5));
+	float3 specDir = (viewDir - dot(viewDir, normal) * 2 * normal);
+	
+	float2 specUv = 0.5 -0.25 / specDir.z * specDir.xy;
+
+//	float3 spec =  D2DSampleInput(1, specUv).rgb;
+	float specAO = saturate(height * height * 4.0 - 0.5);
+	float3 spec = specularGain*specAO * saturate(-dot(specDir, lightDir)) * D2DSampleInput(1,specUv).rgb;
+
+	float diff = -dot(lightDir, normal);
+	float3 base = diff * color.rgb;
+	
+	float3 rgb = diff * color.rgb + spec;
+	//rgb = 2 * rgb / (1 + rgb);
+	return float4(rgb ,color.a);
+}
 
 D2D_PS_ENTRY(main)
 {
 	float4 positionInPixels = D2DGetScenePosition();
-    // Look up the original color from the source image.
-	float4 color = D2DSampleInputAtOffset(0, float2(0,0)).rgba;
-	float height = dot(color.rgb, float3(0.3333333, 0.3333333, 0.3333333));
-	float dHdx = ddx(height) * normalGain;
-	float dHdy = ddy(height) * normalGain;
-	float3 normal = normalize( float3(dHdx, dHdy, 1) );
+	// Look up the original color from the source image.
 	
-	float3 dL = positionInPixels.xyz - lightPosition.xyz;
-	float3 lightDir = normalize(dL);
-	float3 viewDir = positionInPixels.xyz - cameraPosition;
-	float3 specDir = normalize(viewDir - dot(viewDir, normal) * 2 * normal);
-	float spec = pow(saturate(-dot(specDir, lightDir)), 8);
-	float diff = -dot(lightDir, normal);
-	float3 base = diff * color.rgb;
-	spec = spec * saturate(height * height * 4.0 - 0.25);
-	float3 rgb = diff * color.rgb + spec;
-	//rgb = 2 * rgb / (1 + rgb);
-	return float4(rgb*color.a  , color.a);
+	//float4 color00 = (0, float2(-0.5,-0.5));
+	//float4 color01 = D2DSampleInputAtOffset(0, float2(-0.5, 0.5));
+	//float4 color10 = D2DSampleInputAtOffset(0, float2( 0.5, 0.0));
+	float4 color11 = D2DGetInput(0);
+
+	//float height00 = GetHeight(color00);
+	//float height01 = GetHeight(color01);
+	//float height10 = GetHeight(color10);
+	//float height11 = GetHeight(color11);
+	
+
+	float3 lightDir = normalize(positionInPixels.xyz - lightPosition.xyz);
+	float3 viewDir = normalize(positionInPixels.xyz - cameraPosition);
+
+	//float4 color = (ComputeLight(color00, viewDir, lightDir) +
+	//	ComputeLight(color01, viewDir, lightDir) +
+	//		ComputeLight(color10, viewDir, lightDir) +
+	//			ComputeLight(color11, viewDir, lightDir)*2)*0.2;
+
+	float4 color = 
+		ComputeLight(color11, viewDir, lightDir,positionInPixels.xyz );
+
+	return color;
 }
 
 //// The MIT License
@@ -75,14 +109,14 @@ D2D_PS_ENTRY(main)
 //{
 //	float3 dpdx = dFdx(pos);
 //	float3 dpdy = dFdy(pos);
-    
+
 //	float dbdx = dFdx(signal);
 //	float dbdy = dFdy(signal);
 
 //	float3 u = cross(dpdy, nor);
 //	float3 v = cross(nor, dpdx);
 //	float d = dot(dpdx, u);
-	
+
 //	float3 surfGrad = dbdx * u + dbdy * v;
 //	return normalize(abs(d) * nor - scale * surfGrad);
 //}
@@ -109,7 +143,7 @@ D2D_PS_ENTRY(main)
 //void calcRayForPixel(in float2 pix, out float3 resRo, out float3 resRd)
 //{
 //	float2 p = (2.0 * pix - iResolution.xy) / iResolution.y;
-	
+
 //     // camera movement	
 //	float3 ro, ta;
 //	calcCamera(ro, ta);
@@ -119,7 +153,7 @@ D2D_PS_ENTRY(main)
 //	float3 vv = normalize(cross(uu, ww));
 //	// create view ray
 //	float3 rd = normalize(p.x * uu + p.y * vv + 1.5 * ww);
-	
+
 //	resRo = ro;
 //	resRd = rd;
 //}
@@ -133,18 +167,18 @@ D2D_PS_ENTRY(main)
 //	calcRayForPixel(fragCoord + float2(1.0, 0.0), ddx_ro, ddx_rd);
 //	calcRayForPixel(fragCoord + float2(0.0, 1.0), ddy_ro, ddy_rd);
 
-    
+
 //    // sphere center	
 //	float3 sc = float3(0.0, 1.0, 0.0);
 
 //	float3 mate = float3(0.0);
-	
+
 //    // raytrace
 //	float tmin = 10000.0;
 //	float3 nor = float3(0.0);
 //	float occ = 1.0;
 //	float3 pos = float3(0.0);
-	
+
 //	// raytrace-plane
 //	float h = (0.0 - ro.y) / rd.y;
 //	if (h > 0.0)
@@ -152,35 +186,35 @@ D2D_PS_ENTRY(main)
 //		tmin = h;
 //		nor = float3(0.0, 1.0, 0.0);
 //		pos = ro + h * rd;
-		
+
 //		float3 di = sc - pos;
 //		float l = length(di);
-		
-     
+
+
 //		mate = texture(iChannel0, 0.25 * pos.zx, .1 * l).xyz;
 //		float signal = dot(mate, float3(0.33));
 //		nor = doBump(pos, nor, signal, 0.15 * bump);
-  
+
 
 //		occ = 1.0; // - dot(nor,di/l)*1.0*1.0/(l*l); 
 //	}
 
-	
+
 //    // shading/lighting	
 //	float3 col = float3(0.9);
 //	if (tmin < 100.0)
 //	{
 //		pos = ro + tmin * rd;
-		
+
 //		float sh = 1.5;
 //		float3 lin = float3(0.8, 0.7, 0.6) * sh * clamp(dot(nor, float3(0.57703)), 0.0, 1.0);
-		  
+
 //		lin += sh * 1.0 * pow(clamp(dot(reflect(rd, nor), float3(0.57703)), 0.0, 1.0), 12.0);
 //		col = mate * lin;
 //	//	col = mix( col, float3(0.9), 1.0-exp( -0.003*tmin*tmin ) );
 //	}
-	
 
-	
+
+
 //	fragColor = float4(col, 1.0);
 //}

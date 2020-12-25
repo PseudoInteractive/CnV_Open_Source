@@ -230,8 +230,8 @@ namespace COTG
 #else
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
-			if(args!=null)
-				SystemInformation.TrackAppUse(args);
+			//if(args!=null)
+			//	SystemInformation.TrackAppUse(args);
 			if (idleTimer == null)
 			{
 

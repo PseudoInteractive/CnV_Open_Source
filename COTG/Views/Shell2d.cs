@@ -38,6 +38,7 @@ namespace COTG.Views
 		const float detailsZoomThreshold = 36;
 		const float detailsZoomFade = 8;
 		public static CanvasBitmap worldBackground;
+		public static CanvasBitmap lineDraw; public static CanvasBitmap sky;
 		public static CanvasBitmap webMask;
 		//    public static TintEffect worldBackgroundDark;
 		public static CanvasBitmap worldObjects;
@@ -71,10 +72,11 @@ namespace COTG.Views
 			HorizontalAlignment = CanvasHorizontalAlignment.Center,
 			VerticalAlignment = CanvasVerticalAlignment.Center,
 			FontStretch = fontStretch,
-		//	FontWeight= FontWeights.Bold,
+	//		FontWeight= FontWeights.Bold,
 
 			WordWrapping = CanvasWordWrapping.NoWrap,
-			//   Options=CanvasDrawTextOptions.EnableColorFont | CanvasDrawTextOptions.NoPixelSnap
+		//	 Options= CanvasDrawTextOptions.NoPixelSnap,
+
 		};
 		//        static readonly Color attackColor = Colors.DarkRed;
 		static readonly Color attackColor = Colors.White;
@@ -94,6 +96,7 @@ namespace COTG.Views
 		public static CanvasBitmap[] troopImages = new CanvasBitmap[Game.Enum.ttCount];
 		static Vector2 troopImageOriginOffset;
 		static PixelShaderEffect lighteffect;
+		static PixelShaderEffect lighteffect2;
 		const int maxTextLayouts = 1024;
 
 		static Dictionary<int, CanvasTextLayout> nameLayoutCache = new Dictionary<int, CanvasTextLayout>();
@@ -185,6 +188,7 @@ namespace COTG.Views
 				DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
 				Name = "Region",
 				IsHitTestVisible = false,
+				
 				IsTabStop = true,
 				UseSharedDevice = true,
 				//	TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f),
@@ -358,7 +362,7 @@ namespace COTG.Views
 				renderTarget.Dispose();
 			//var margin = new Thickness(cachedXOffset - cotgPanelRight, cachedTopOffset, 0, bottomMargin);
 			renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
-
+			
 		}
 		async private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
 		{
@@ -367,7 +371,12 @@ namespace COTG.Views
 
 			worldBackground = await CanvasBitmap.LoadAsync(canvas.Device, new Uri("ms-appx:///Assets/world.dds"));
 			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
-		
+			disposer.Add(ref lineDraw);
+			lineDraw = await CanvasBitmap.LoadAsync(canvas.Device, new Uri("ms-appx:///images/lineDraw.dds"));
+			//lineDraw2 = new PixelShaderEffect(
+			disposer.Add(ref sky);
+			sky = await CanvasBitmap.LoadAsync(canvas.Device, new Uri("ms-appx:///assets/sky.dds"));
+
 			for (int i = 0; i < ttCount; ++i)
 			{
 				disposer.Add(ref troopImages[i]);
@@ -404,11 +413,31 @@ namespace COTG.Views
 			lighteffect = new PixelShaderEffect(await App.GetContent("shader/light.bin"))
 			{
 
+				Source2=sky,
+				Source2Mapping=SamplerCoordinateMapping.Unknown,
+				Source2Interpolation=CanvasImageInterpolation.Linear,
+				Source2BorderMode=EffectBorderMode.Soft,
 				CacheOutput=false,
 				Source1BorderMode = EffectBorderMode.Soft,
 				Source1Mapping = SamplerCoordinateMapping.Offset,
 				MaxSamplerOffset = 4,
 				Name="SSLighting"
+
+				//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
+				//   Source2Mapping = SamplerCoordinateMapping.Unknown
+			};
+			lighteffect2 = new PixelShaderEffect(await App.GetContent("shader/light.bin"))
+			{
+
+				Source2 = sky,
+				Source2Mapping = SamplerCoordinateMapping.Unknown,
+				Source2Interpolation = CanvasImageInterpolation.Linear,
+				Source2BorderMode = EffectBorderMode.Soft,
+				CacheOutput = false,
+				Source1BorderMode = EffectBorderMode.Soft,
+				Source1Mapping = SamplerCoordinateMapping.Offset,
+				MaxSamplerOffset = 4,
+				Name = "SSLighting"
 
 				//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
 				//   Source2Mapping = SamplerCoordinateMapping.Unknown
@@ -507,7 +536,7 @@ namespace COTG.Views
 		public static bool tileSetsPending;
 		private CanvasComposite blendMod;
 		private const float smallRectSpan = 4;
-		public const float lightZ0 = 260f;
+		public const float lightZ0 = 460f;
 		public static Vector2 cameraLightC;
 		public static Vector2 worldLightC;
 		public static CanvasRenderTarget renderTarget;
@@ -535,6 +564,7 @@ namespace COTG.Views
 				cameraCLag += (cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 				eventTimeOffsetLag += (eventTimeOffset - eventTimeOffsetLag) * gain;
+				cameraLightC += (mousePosition - cameraLightC) * gain;
 				//                cameraZoomLag += (cameraZoom
 
 				var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
@@ -622,8 +652,8 @@ namespace COTG.Views
 				// funky logic
 				if(wantLight)	
 					ds.Clear(new Color()); // black transparent
-				ds.TextAntialiasing = canvasTextAntialiasing;
-				ds.TextRenderingParameters = canvasTextRenderingParameters;
+				//ds.TextAntialiasing = canvasTextAntialiasing;
+				//ds.TextRenderingParameters = canvasTextRenderingParameters;
 				// prevent MSAA gaps
 				ds.Antialiasing = CanvasAntialiasing.Aliased;
 				if (worldBackground != null && wantImage)
@@ -1208,56 +1238,7 @@ namespace COTG.Views
 					}
 				}
 			
-				{
-					if (wantDetails)
-					{
-						//
-						// Text names
-						using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
-						{
-							// Labels last
-							for (var cy = cy0; cy < cy1; ++cy)
-							{
-								for (var cx = cx0; cx < cx1; ++cx)
-								{
-									(var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
-									var zScale = CanvasHelpers.ParalaxScale(TileData.zCities);
-
-									if (name != null)
-									{
-										var layout = GetTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
-
-										var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToCp(TileData.zCities)).ToPoint(), new Size(pixelScale * zScale, pixelScale * zScale));
-
-										ds.DrawTextLayout(layout, (float)(rect.Left + rect.Right) * 0.5f,
-											(float)rect.Top + (float)rect.Height * 7.25f / 8.0f,
-											isMine ?
-												(hasIncoming ?
-													(spot.underSiege ? myNameColorSieged
-																	: myNameColorIncoming)
-																		: myNameColor) :
-											(hasIncoming ?
-												(hovered ?
-													(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
-												   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
-												   : hovered ? nameColorHover : nameColor));
-
-									}
-									if (spot != null && spot.isClassified)
-									{
-										var c1 = (cx, cy).WToCp(TileData.zLabels);
-										var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-										var r = t.Ramp();
-										var alpha = (t * 1.21f).Wave() * 0.75f + 0.25f;
-										float spriteSize = 16 * zScale;
-
-										batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X - spriteSize, c1.Y - spriteSize, spriteSize * 2, spriteSize * 2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f));
-									}
-								}
-							}
-						}
-					}
-				}
+				
 				if (wantLight)
 				{
 					// finished first pass
@@ -1314,6 +1295,56 @@ namespace COTG.Views
 
 
 
+				}
+				{
+					if (wantDetails)
+					{
+						//
+						// Text names
+						using (var batch = ds.CreateSpriteBatch(CanvasSpriteSortMode.Bitmap))
+						{
+							// Labels last
+							for (var cy = cy0; cy < cy1; ++cy)
+							{
+								for (var cx = cx0; cx < cx1; ++cx)
+								{
+									(var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
+									var zScale = CanvasHelpers.ParalaxScale(TileData.zCities);
+
+									if (name != null)
+									{
+										var layout = GetTextLayout(ds, name, nameTextFormat, 0.0f, 0.0f);
+
+										var rect = new Rect(((new Vector2(cx - .5f, cy - 0.5f)).WToCp(TileData.zCities)).ToPoint(), new Size(pixelScale * zScale, pixelScale * zScale));
+
+										ds.DrawTextLayout(layout, (float)(rect.Left + rect.Right) * 0.5f,
+											(float)rect.Top + (float)rect.Height * 7.25f / 8.0f,
+											isMine ?
+												(hasIncoming ?
+													(spot.underSiege ? myNameColorSieged
+																	: myNameColorIncoming)
+																		: myNameColor) :
+											(hasIncoming ?
+												(hovered ?
+													(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
+												   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
+												   : hovered ? nameColorHover : nameColor));
+
+									}
+									if (spot != null && spot.isClassified)
+									{
+										var c1 = (cx, cy).WToCp(TileData.zLabels);
+										var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+										var r = t.Ramp();
+										var alpha = (t * 1.21f).Wave() * 0.75f + 0.25f;
+										float spriteSize = 16 * zScale;
+
+										batch.Draw(troopImages[spot.classificationTT], new Rect(c1.X - spriteSize, c1.Y - spriteSize, spriteSize * 2, spriteSize * 2), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f));
+									}
+								}
+							}
+						}
+					}
 				}
 				// show selected
 				var _toolTip = toolTip;
@@ -1433,7 +1464,7 @@ namespace COTG.Views
 		//          ds.DrawLine(c0 - shadowOffset, midS, color, lineThickness, defaultStrokeStyle);
 		//          ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
 		//      }
-		private void DrawAction(CanvasDrawingSession ds, CanvasSpriteBatch batch, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
+		private void DrawAction(CanvasDrawingSession ds, CanvasSpriteBatch batch,  float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
 			CanvasBitmap bitmap, bool applyStopDistance, Army army, float spriteSize, float alpha = 1)
 		{
 			if (IsCulled(c0, c1))
@@ -1495,8 +1526,20 @@ namespace COTG.Views
 		}
 	}
 
+
 	public static class CanvasHelpers
 	{
+		public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);
+		public static void DrawLine(this CanvasSpriteBatch b,Vector2 c0, Vector2 c1, Vector4 c, float thickness, CanvasStrokeStyle style)
+		{
+			var dl = c1 - c0;
+			var dllg = dl.Length();
+			var dllgInv = 1 / dllg;
+			var de = new Vector2(dl.Y* dllgInv*thickness, dl.X* dllgInv*thickness);
+			float xoffset = ShellPage.animationT*4%256;
+			b.DrawFromSpriteSheet(ShellPage.lineDraw, new Matrix3x2(dl.X, dl.Y, de.X, de.Y, c0.X - de.X * 0.5f, c0.X - de.X * 0.5f),new Rect(xoffset, 0, dllg*16+ xoffset,128),c) ;
+		} 
+		
 		//public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
 		//{
 		//    ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
