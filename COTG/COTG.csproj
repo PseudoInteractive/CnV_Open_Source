@@ -121,11 +121,20 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0</Version>
     </PackageReference>
+    <PackageReference Include="MonoGame.Content.Builder.Task">
+      <Version>3.8.0.1641</Version>
+    </PackageReference>
+    <PackageReference Include="MonoGame.Extended">
+      <Version>3.8.0</Version>
+    </PackageReference>
+    <PackageReference Include="MonoGame.Extended.Content.Pipeline">
+      <Version>3.8.0</Version>
+    </PackageReference>
+    <PackageReference Include="MonoGame.Framework.WindowsUniversal">
+      <Version>3.8.0.1641</Version>
+    </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="System.Net.WebSockets.WebSocketProtocol">
-      <Version>5.0.0</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.Context">
       <Version>5.0.0</Version>
@@ -162,6 +171,8 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
+    <Compile Include="Draw\VertexBatch.cs" />
+    <Compile Include="Game\AGame.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
     <Compile Include="Game\Attack.cs" />
@@ -482,7 +493,9 @@
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <Content Include="Assets\cities-only.dds" />
+    <Content Include="Assets\cities-only.dds">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\land.dds" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
@@ -522,8 +535,7 @@
     <Content Include="Assets\StoreLogo.scale-125.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Assets\terrainfeatures3.dds" />
-    <Content Include="Assets\terrainfeatures.dds" />
+    <Content Include="Assets\terrainFeatures.dds" />
     <Content Include="Assets\watertiles.dds" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
@@ -604,6 +616,9 @@
     <Content Include="images\windmill.png" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
+    <None Include="Content\cotg.mgcb" />
+    <None Include="Content\File.spritefont" />
+    <Content Include="Content\PERTILI.TTF" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />
@@ -643,6 +658,7 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Art\Tiles\" />
     <Folder Include="EventHandlers\" />
   </ItemGroup>
   <ItemGroup>

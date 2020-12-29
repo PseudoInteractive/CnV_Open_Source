@@ -2,6 +2,8 @@
 using COTG.Services;
 using COTG.Views;
 
+using Microsoft.Xna.Framework;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,10 +90,10 @@ namespace COTG.Game
         {
             return (c&65535,c>>16);
         }
-        public static Vector2 CidToWorldV(this int c)
+        public static System.Numerics.Vector2 CidToWorldV(this int c)
         {
             var c2 = CidToWorld(c);
-            return new Vector2((float)c2.x, (float)c2.y);
+            return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
         }
         public static int WorldToContinent(this (int x, int y) c) =>   (c.y/100)* 10 + (c.x/100);
 //        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
@@ -225,7 +227,7 @@ namespace COTG.Game
             var y = c.y;
             return (x >= 0 & x < worldDim & y >= 0 & y < worldDim) ? x + y * worldDim : 0;
         }
-		public static Vector4 GetTint(int packedId)
+		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
 		//	var packedId = GetPackedId(xy);
 			uint rv = raw[packedId];
@@ -236,30 +238,30 @@ namespace COTG.Game
 						var pid = rv & playerMask;
 						// lawless
 						if (pid == 0)
-							return new Vector4(1, .875f, 1.0f, 1.0f);
+							return new Color(1, .875f, 1.0f, 1.0f);
 						if(pid == Player.myId)
-							return new Vector4(0.875f, 1.125f, 0.95f, 1.0f);
+							return new Color(0.875f, 1.125f, 0.95f, 1.0f);
 						var alliance = Player.Get((int)pid).alliance;
 
 						if (alliance == Alliance.my.id)
 						{
-							return new Vector4(0.95f, 1.06f, 0.95f, 1.0f);
+							return new Color(0.95f, 1.06f, 0.95f, 1.0f);
 						}
 						else
 						{
 							switch (Alliance.GetDiplomacy((int)alliance))
 							{
 								default:
-									return new Vector4(1f, 1f, 1f, 1f);
+									return new Color(1f, 1f, 1f, 1f);
 									break;
 								case Diplomacy.allied:
-									return new Vector4(0.875f, 1.0f, 0.875f, 1.0f);
+									return new Color(0.875f, 1.0f, 0.875f, 1.0f);
 									break;
 								case Diplomacy.nap:
-									return new Vector4(0.955f, 1.0625f, 1.0f, 1.0f);
+									return new Color(0.955f, 1.0625f, 1.0f, 1.0f);
 									break;
 								case Diplomacy.enemy:
-									return new Vector4(1.125f, 0.875f, 0.875f, 1.0f);
+									return new Color(1.125f, 0.875f, 0.875f, 1.0f);
 
 
 							}
@@ -267,7 +269,7 @@ namespace COTG.Game
 
 					}
 				default:
-					return new Vector4(1, 1, 1, 1); 
+					return new Color(1, 1, 1, 1); 
 			}
 
 		}

@@ -689,6 +689,12 @@ var raidSecret: string;
 
 function onKeyDown(ev: KeyboardEvent) {
 
+	if (ev.keyCode == 9) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		window.departFocus('up', { originLeft: 0, originTop: 0, originWidth: 0, originHeight: 0 });
+	}
+
 	if (ev.key !== "Control" && ev.key !== "Shift")
 		return;
 

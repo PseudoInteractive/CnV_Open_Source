@@ -10,7 +10,7 @@
 			  xmlns:model="using:COTG.Models"
 			  xmlns:game="using:COTG.Game"
 			  xmlns:cotg="using:COTG"
-			  xmlns:view="using:COTG.Views"
+			  xmlns:view="using:COTG.Views" xmlns:playback="using:Windows.Media.Playback"
 			  mc:Ignorable="d"
 			  Tag="Raid"
 			  TabNavigation="Once"
@@ -25,7 +25,8 @@
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
-		<MediaPlayerElement Source="ms-appx:/Audio/UXOMainTheme.ogg" x:Name="music" />
+	
+		<MediaElement Source="ms-appx:/Audio/UXOMainTheme.ogg" x:Name="music" AutoPlay="True"  AreTransportControlsEnabled="True" />
 		<tg:RadDataGrid x:Name="cityGrid"
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

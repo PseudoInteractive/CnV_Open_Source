@@ -292,7 +292,7 @@ namespace COTG.Views
 
         }
 
-		void Refresh()
+		void DoRefresh()
 		{
 			attacks.NotifyReset();
 			targets.NotifyReset();
@@ -300,13 +300,14 @@ namespace COTG.Views
 				i.OnPropertyChanged("");
 			foreach (var i in targets)
 				i.OnPropertyChanged("");
+
 		}
         public async override void VisibilityChanged(bool visible)
         {
             if (visible)
             {
                 await TouchLists();
-				Refresh();
+				DoRefresh();
 				
 
 			}
@@ -1255,7 +1256,7 @@ namespace COTG.Views
 				//           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
 
 				Note.Show($"Attack plan done, {ignoredTargets.Count} culled real targets, {attacks.Count(a => a.isAttackClusterNone)} culled attacks, {clusterCount} value targets, SE Distance max: {maxDistanceToSE} av: {averageDistanceToSE}  Assault distance max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
-				Refresh();
+				DoRefresh();
 				//StringBuilder sb = new StringBuilder();
 				//foreach (var a in attacks)
 				//{

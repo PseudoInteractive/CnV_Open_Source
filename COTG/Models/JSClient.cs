@@ -172,7 +172,7 @@ namespace COTG
 					//HorizontalAlignment = HorizontalAlignment.Stretch,
 					//VerticalAlignment = VerticalAlignment.Stretch,
 					//CacheMode=new BitmapCache()
-					DefaultBackgroundColor = new Windows.UI.Color() { R = 0, A = 0 },
+					DefaultBackgroundColor = new Windows.UI.Color() { G=0, B=0,R = 0, A = 0 },
 					Name="cotgView",
 					Opacity=1,
                 };

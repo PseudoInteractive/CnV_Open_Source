@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using static COTG.Debug;
+using static COTG.AGame;
+
 namespace COTG.Views
 {
 
@@ -32,7 +34,7 @@ namespace COTG.Views
         public static string contToolTip;
         public static int lastCont;
 
-        private void SetupCoreInput()
+        public  static void SetupCoreInput()
         {
             coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
 			coreInputSource.PointerMoved += Canvas_PointerMoved;
@@ -231,12 +233,7 @@ namespace COTG.Views
                         e.Handled = true;
                         NavStack.Forward(true);
                         return;
-					case Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed:
-						++blendMod;
-						if (blendMod > CanvasComposite.MaskInvert)
-							blendMod = 0;
-						Note.Show(blendMod.ToString());
-						break;
+					
 
 				}
             //    e.Handled = false;
@@ -335,12 +332,12 @@ namespace COTG.Views
             ClearHover();
             //    ChatTab.L("CWheel " + wheel);
         }
-        static (int x,int y) ScreenToWorld(Vector2 c1)
+        static public (int x,int y) ScreenToWorld(Vector2 c1)
         {
 			return (((c1.X - halfSpan.X) / cameraZoomLag + cameraC.X).RoundToInt(),((c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y).RoundToInt() );
         }
 
-		static Vector2 CameraToWorld(Vector2 c1)
+		static public Vector2 CameraToWorld(Vector2 c1)
 		{
 			return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
 		}

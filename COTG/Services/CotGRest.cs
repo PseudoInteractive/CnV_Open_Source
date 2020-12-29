@@ -988,22 +988,7 @@ namespace COTG.Services
 
         }
 
-        async static public Task<CanvasBitmap> Load(Uri uri)
-        {
-
-            try
-            {
-                var buff = await JSClient.downloadImageClient.GetBufferAsync(uri);
-                return await CanvasBitmap.LoadAsync(ShellPage.canvas, buff.AsStream().AsRandomAccessStream());
-
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-            return null;
-
-        }
+     
 
     }
 
