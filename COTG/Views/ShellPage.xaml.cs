@@ -218,6 +218,7 @@ namespace COTG.Views
        
 
             var c = CreateCanvasControl();
+			
           //  canvas.ContextFlyout = CityFlyout;
             grid.Children.Add(c.canvas);
 	//		grid.Children.Add(c.hitTest);
@@ -353,21 +354,29 @@ namespace COTG.Views
                                       displayInformation.ScreenHeightInRawPixels);
             ShellPage.webclientSpan.x = (screenSize.Width*.715625f).RoundToInt();
             ShellPage.webclientSpan.y = (screenSize.Height*0.89236111111111116f).RoundToInt();
-        }
 
-        //private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
-        //{
-        //    // Get the size of the caption controls area and back button 
-        //    // (returned in logical pixels), and move your content around as necessary.
-        //    LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
-        //    RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
-        //   // TitleBarButton.Margin = new Thickness(0, 0, coreTitleBar.SystemOverlayRightInset, 0);
+			AGame.Create(canvas);
+			Task.Delay(500).ContinueWith( (_)=>App.DispatchOnUIThreadLow( ()=>
+			{
+				ShellPage.canvas.IsHitTestVisible = false;
+				ShellPage.canvas.Visibility = Visibility.Collapsed;
+			}));
+			
+		}
 
-        //    // Update title bar control size as needed to account for system size changes.
-        //    AppTitleBar.Height = coreTitleBar.Height;
-        //}
+		//private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
+		//{
+		//    // Get the size of the caption controls area and back button 
+		//    // (returned in logical pixels), and move your content around as necessary.
+		//    LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
+		//    RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
+		//   // TitleBarButton.Margin = new Thickness(0, 0, coreTitleBar.SystemOverlayRightInset, 0);
 
-        private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
+		//    // Update title bar control size as needed to account for system size changes.
+		//    AppTitleBar.Height = coreTitleBar.Height;
+		//}
+
+		private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
         {
             var prop = e.GetCurrentPoint(this).Properties;
             switch(prop.PointerUpdateKind)

@@ -167,9 +167,10 @@ namespace COTG
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
-            Trace("LeavingBackground");
-            if (ShellPage.canvas != null)
-                ShellPage.canvas.Paused = false;
+        //    Trace("LeavingBackground");
+			
+            //if (ShellPage.canvas != null)
+            //    ShellPage.canvas.Paused = false;
         }
 
         private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -489,8 +490,8 @@ namespace COTG
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             Trace("Enter Background");
-            if (ShellPage.canvas != null)
-                ShellPage.canvas.Paused = true;
+         //   if (ShellPage.canvas != null)
+          //      ShellPage.canvas.Paused = true;
             SettingsPage.SaveAll();
             //            var deferral = e.GetDeferral();
             //            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
@@ -613,6 +614,7 @@ namespace COTG
                 return rv;
             }
         }
+		public static VirtualKeyModifiers canvasKeyModifiers;
 	}
 
 

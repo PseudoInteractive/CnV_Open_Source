@@ -30,9 +30,7 @@
         <DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
             <TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
         </DataTemplate>
-        <converters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility"
-                                              FalseValue="Visible"
-                                              TrueValue="Collapsed" />
+      
        
         <SolidColorBrush x:Key="LogBufferForeground"
                          Color="#900238" />

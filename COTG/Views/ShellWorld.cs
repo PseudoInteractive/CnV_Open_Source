@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using static COTG.Debug;
 using static COTG.AGame;
+using Microsoft.Xna.Framework.Input;
 
 namespace COTG.Views
 {
@@ -29,22 +30,22 @@ namespace COTG.Views
         public static Vector2 lastMousePressPosition;
         public static DateTimeOffset lastMousePressTime;
 
-
-        public static string toolTip;
+		public float eventTimeOffset;
+		public static string toolTip;
         public static string contToolTip;
         public static int lastCont;
 
         public  static void SetupCoreInput()
         {
-            coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
-			coreInputSource.PointerMoved += Canvas_PointerMoved;
-            coreInputSource.PointerPressed += Canvas_PointerPressed;
-            coreInputSource.PointerReleased += Canvas_PointerReleased;
+        //    coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
+		//	coreInputSource.PointerMoved += Canvas_PointerMoved;
+        //    coreInputSource.PointerPressed += Canvas_PointerPressed;
+         //   coreInputSource.PointerReleased += Canvas_PointerReleased;
          //   coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
-            coreInputSource.PointerExited += Canvas_PointerExited;
+        //    coreInputSource.PointerExited += Canvas_PointerExited;
 			
 			
-			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+		//	coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
           //  coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
        //     coreInputSource.IsInputEnabled = true;
 
@@ -88,101 +89,96 @@ namespace COTG.Views
             var point = screenC;
             return new Vector2(point.X , point.Y );
         }
-        private void Canvas_PointerReleased(object sender, PointerEventArgs e)
-        {
-			Log($"pointer released {e.CurrentPoint.Position}");
-            if (JSClient.IsCityView())
-            {
-                e.Handled = false;
-                return;
-            }
-            e.KeyModifiers.UpdateKeyModifiers();
-            var pointerPoint = e.CurrentPoint;
-            var position = pointerPoint.Position;
-            mousePosition = GetCanvasPosition(position.ToVector2());
-            e.Handled = false;
+       // private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
+       // {
+		
+       //     e.KeyModifiers.UpdateKeyModifiers();
+       //     var pointerPoint = e.CurrentPoint;
+       //     var position = pointerPoint.Position;
+       //     mousePosition = GetCanvasPosition(position.ToVector2());
+       //     e.Handled = false;
 
-            //            mousePosition = point.Position.ToVector2();
-            if ((lastMousePressPosition - mousePosition).Length() < 8)
-            {
-                var worldC = ScreenToWorld(mousePosition);
-                var cid = worldC.WorldToCid();
+       //     //            mousePosition = point.Position.ToVector2();
+       //     if ((lastMousePressPosition - mousePosition).Length() < 8)
+       //     {
+       //         var worldC = ScreenToWorld(mousePosition);
+       //         var cid = worldC.WorldToCid();
 
-                switch (pointerPoint.Properties.PointerUpdateKind)
-                {
-                    case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
-                        {
-                            Spot.ProcessCoordClick(cid, true,e.KeyModifiers,true);
-                            e.Handled = true;
-                            break;
-                        }
+       //         switch (pointerPoint.Properties.PointerUpdateKind)
+       //         {
+       //             case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
+       //                 {
+       //                     Spot.ProcessCoordClick(cid, true,e.KeyModifiers,true);
+       //                     e.Handled = true;
+       //                     break;
+       //                 }
 
-                    case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
-                        {
+       //             case Windows.UI.Input.PointerUpdateKind.RightButtonReleased:
+       //                 {
                             
-							App.DispatchOnUIThreadSneaky(() =>
-							{
-                             //   var _underMouse = underMouse;
-                                //if (_underMouse!=null)
-                                //{
-                                //    var flyout = new MenuFlyout();
+							//App.DispatchOnUIThreadSneaky(() =>
+							//{
+       //                      //   var _underMouse = underMouse;
+       //                         //if (_underMouse!=null)
+       //                         //{
+       //                         //    var flyout = new MenuFlyout();
 
-                                //    var target = Spot.GetOrAdd(_underMouse.targetCid);
-                                //    var source = Spot.GetOrAdd(_underMouse.sourceCid);
-                                //    void ShowContextContext(object sender, RoutedEventArgs args)
-                                //    {
-                                //        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
-                                //    }
-                                //    AApp.AddItem(flyout, "Source", ShowContextContext, source );
-                                //    AApp.AddItem(flyout, "Target", ShowContextContext, target);
-                                //    flyout.ShowAt(canvas, pointerPoint.Position);
-                                //}
-                                //else
-                              //  {
-                                    var spot = Spot.GetOrAdd(cid);
-									if (!e.KeyModifiers.IsShift())
-										spot.SetFocus(true, true,false);
-                                    spot.ShowContextMenu(canvas, position);
-                               // }
+       //                         //    var target = Spot.GetOrAdd(_underMouse.targetCid);
+       //                         //    var source = Spot.GetOrAdd(_underMouse.sourceCid);
+       //                         //    void ShowContextContext(object sender, RoutedEventArgs args)
+       //                         //    {
+       //                         //        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
+       //                         //    }
+       //                         //    AApp.AddItem(flyout, "Source", ShowContextContext, source );
+       //                         //    AApp.AddItem(flyout, "Target", ShowContextContext, target);
+       //                         //    flyout.ShowAt(canvas, pointerPoint.Position);
+       //                         //}
+       //                         //else
+       //                       //  {
+       //                             var spot = Spot.GetOrAdd(cid);
+							//		if (!e.KeyModifiers.IsShift())
+							//			spot.SetFocus(true, true,false);
+       //                             spot.ShowContextMenu(canvas, position);
+       //                        // }
                                 
-							});
-                            break;
-                        }
-                    case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
-                        {
-                            App.DispatchOnUIThreadSneaky(() =>
-                            {
+							//});
+       //                     break;
+       //                 }
+       //             case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
+       //                 {
+       //                     App.DispatchOnUIThreadSneaky(() =>
+       //                     {
 
-                                var spot = Spot.GetOrAdd(cid);
+       //                         var spot = Spot.GetOrAdd(cid);
 
-                                var text = spot.ToTsv();
-                                Note.Show($"Copied to clipboard: {text}");
-                                App.CopyTextToClipboard(text);
-                                spot.SelectMe(true,App.keyModifiers);
+       //                         var text = spot.ToTsv();
+       //                         Note.Show($"Copied to clipboard: {text}");
+       //                         App.CopyTextToClipboard(text);
+       //                         spot.SelectMe(true,App.keyModifiers);
 
-                            });
-                            break;
-                        }
-                    //case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-                    //    {
-                    //        NavStack.Back();
-                    //    }
-                    //    break;
-                    //case Windows.UI.Input.PointerUpdateKind.XButton2Released:
-                    //    {
-                    //        NavStack.Forward();
+       //                     });
+       //                     break;
+       //                 }
+       //             //case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+       //             //    {
+       //             //        NavStack.Back();
+       //             //    }
+       //             //    break;
+       //             //case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+       //             //    {
+       //             //        NavStack.Forward();
 
-                    //        break;
-                    //    }
-                    default:
-                        break;
-                }
+       //             //        break;
+       //             //    }
+       //             default:
+       //                 break;
+       //         }
 
-            }
-            else
-            {
-            }
-        }
+       //     }
+       //     else
+       //     {
+       //     }
+       // }
 
 
 
@@ -212,39 +208,111 @@ namespace COTG.Views
         //    JSClient.SetJSCamera(regionC);
         }
 
-        private void Canvas_PointerPressed(object sender, PointerEventArgs e)
+        public static void Canvas_PointerPressed(MouseState current, MouseState priorState)
         {
-            e.KeyModifiers.UpdateKeyModifiers();
-
-
-            //            canvas.CapturePointer(e.Pointer);
-            var point = e.CurrentPoint;
+			var leftChanged = current.LeftButton != priorState.LeftButton;
+			var rightChanged = current.RightButton != priorState.RightButton;
+			var x1Changed = current.XButton1 != priorState.XButton1;
+			var x2Changed = current.XButton2 != priorState.XButton2;
+			if (!(leftChanged | rightChanged | x1Changed | x2Changed))
+				return;
+	
            
-            var properties = point.Properties;
           //  if (JSClient.IsCityView())
-            {
-                switch (properties.PointerUpdateKind)
-                {
-                    case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
-                        e.Handled = true;
-                        NavStack.Back(true);
-                        return;
-                    case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
-                        e.Handled = true;
-                        NavStack.Forward(true);
-                        return;
+            if(x1Changed && current.XButton1 == ButtonState.Pressed)
+			{ 
+                NavStack.Back(true);
+                return;
+			}
+
+			if (x2Changed && current.XButton2 == ButtonState.Pressed)
+			{
+				NavStack.Forward(true);
+				return;
+			}
+
+			if (leftChanged || rightChanged)
+			{
+				if (current.LeftButton == ButtonState.Pressed || current.RightButton == ButtonState.Pressed)
+				{
+					lastMousePressTime = DateTimeOffset.UtcNow;
+					lastMousePressPosition = mousePosition;
 					
-
 				}
-            //    e.Handled = false;
-            //    return;
-            }
+				else
+				{
 
+					if ((lastMousePressPosition - mousePosition).Length() < 8)
+					{
+						var worldC = ScreenToWorld(mousePosition);
+						var cid = worldC.WorldToCid();
 
-            mousePosition = GetCanvasPosition(point.Position.ToVector2());
-            var prior = lastMousePressTime;
-            lastMousePressTime = DateTimeOffset.UtcNow;
-            lastMousePressPosition = mousePosition;
+						{
+							if (priorState.LeftButton == ButtonState.Pressed)
+							{
+								Spot.ProcessCoordClick(cid, true, App.canvasKeyModifiers, true);
+
+							}
+							if (priorState.RightButton == ButtonState.Pressed)
+							{
+								App.DispatchOnUIThreadSneaky(() =>
+								{
+									//   var _underMouse = underMouse;
+									//if (_underMouse!=null)
+									//{
+									//    var flyout = new MenuFlyout();
+
+									//    var target = Spot.GetOrAdd(_underMouse.targetCid);
+									//    var source = Spot.GetOrAdd(_underMouse.sourceCid);
+									//    void ShowContextContext(object sender, RoutedEventArgs args)
+									//    {
+									//        ((sender as MenuFlyoutItem).DataContext as Spot).ShowContextMenu(canvas, position);
+									//    }
+									//    AApp.AddItem(flyout, "Source", ShowContextContext, source );
+									//    AApp.AddItem(flyout, "Target", ShowContextContext, target);
+									//    flyout.ShowAt(canvas, pointerPoint.Position);
+									//}
+									//else
+									//  {
+									var spot = Spot.GetOrAdd(cid);
+									if (!App.canvasKeyModifiers.IsShift())
+										spot.SetFocus(true, true, false);
+									spot.ShowContextMenu(canvas, new Windows.Foundation.Point( mouseState.Position.X,mouseState.Position.Y));
+									// }
+
+								});
+							}
+							//case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
+							//	{
+							//		App.DispatchOnUIThreadSneaky(() =>
+							//		{
+
+							//			var spot = Spot.GetOrAdd(cid);
+
+							//			var text = spot.ToTsv();
+							//			Note.Show($"Copied to clipboard: {text}");
+							//			App.CopyTextToClipboard(text);
+							//			spot.SelectMe(true, App.keyModifiers);
+
+							//		});
+							//		break;
+							//	}
+							//case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+							//    {
+							//        NavStack.Back();
+							//    }
+							//    break;
+							//case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+							//    {
+							//        NavStack.Forward();
+
+							//        break;
+							//    }
+						}
+					}
+				}
+				ClearHover();
+			}
             //          if ((lastMousePressTime - prior).TotalSeconds < 2.5f)
             //          {
             //              // double click
@@ -279,7 +347,7 @@ namespace COTG.Views
             //              }
             //              }
             //    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
-            ClearHover();
+        
           //  e.Handled = false;
 
         }
@@ -293,7 +361,7 @@ namespace COTG.Views
 
 
         }
-        private void Canvas_PointerExited(object sender, PointerEventArgs e)
+        private static void Canvas_PointerExited(object sender, PointerEventArgs e)
         {
             //if (JSClient.IsCityView())
             //{
@@ -304,31 +372,33 @@ namespace COTG.Views
            
             ClearHover();
         }
-        //private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
-        //{
-        //    mouseButtons = 0;
-        //    Spot.viewHover = 0;
-        //}
+		//private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
+		//{
+		//    mouseButtons = 0;
+		//    Spot.viewHover = 0;
+		//}
 
-        private void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
+		public static  void Canvas_PointerWheelChanged(MouseState current, MouseState prior)
         {
-            //if (JSClient.IsCityView())
-            //{
-            //    e.Handled = false;
-            //    return;
-            //}
+			var delta = current.ScrollWheelValue - prior.ScrollWheelValue;
+			if (delta == 0)
+				return;
+			//if (JSClient.IsCityView())
+			//{
+			//    e.Handled = false;
+			//    return;
+			//}
 
-            var pt = e.CurrentPoint;
-            var wheel = pt.Properties.MouseWheelDelta;
-            var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
+			
+            var dZoom = delta.SignOr0() * 0.0625f + delta * (1.0f / 1024.0f);
             var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,256.0f);
-            var cBase = GetCanvasPosition(pt.Position.ToVector2()) - halfSpan;
+            var cBase = mousePosition - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
             cameraC =  cameraC + c0 - c1;
 
             cameraZoom = newZoom;
-            e.Handled = true;
+            
             ClearHover();
             //    ChatTab.L("CWheel " + wheel);
         }
@@ -342,12 +412,13 @@ namespace COTG.Views
 			return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
 		}
 
-		int lastCanvasC;
-        private void Canvas_PointerMoved(object sender, PointerEventArgs e)
+		static int lastCanvasC;
+        public static void Canvas_PointerMoved(MouseState current, MouseState prior)
         {
-            e.KeyModifiers.UpdateKeyModifiers();
+			if (current.X == prior.X && current.Y == prior.Y)
+				return;
 			var priorMouseC = mousePosition;
-			mousePosition = GetCanvasPosition(e.CurrentPoint.Position.ToVector2());
+			mousePosition = GetCanvasPosition(current.Position.ToV2());
 			cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			 
 			//if(JSClient.IsCityView() )
@@ -355,12 +426,9 @@ namespace COTG.Views
 			//     e.Handled = false;
 			//     return;
 			// }
-			var point = e.CurrentPoint;
            
-            
             var c = ScreenToWorld(mousePosition);
-            var props = point.Properties;
-            if ((props.IsLeftButtonPressed|props.IsRightButtonPressed) ==false)
+            if ((current.LeftButton == ButtonState.Pressed | current.RightButton == ButtonState.Pressed) ==false)
             {
                 var cont = Continent.GetPackedIdFromC(c);
                 if (cont != lastCont)
@@ -530,7 +598,7 @@ namespace COTG.Views
                         }
                     }
                 }
-                e.Handled = false;
+               
 
             }
             else
@@ -544,7 +612,7 @@ namespace COTG.Views
                     cameraC -= dr;
                     // instant
                     cameraCLag = cameraC;
-                    e.Handled = true;
+               
 
                 }
             }

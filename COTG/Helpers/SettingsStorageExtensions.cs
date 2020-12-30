@@ -45,6 +45,8 @@ namespace COTG.Helpers
 
             var file = await folder.GetFileAsync(fileName);
             var fileContent = await FileIO.ReadTextAsync(file);
+			if (fileContent.IsNullOrEmpty())
+				return _default;
 
             return JsonSerializer.Deserialize<T>(fileContent);
         }

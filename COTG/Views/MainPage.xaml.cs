@@ -87,8 +87,7 @@ namespace COTG.Views
 			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 			cityGrid.ProcessTooltips();
 			//dungeonGrid.ProcessTooltips();
-			this.music.AutoPlay = true;
-
+			
 
 		}
 

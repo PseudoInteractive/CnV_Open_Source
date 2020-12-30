@@ -30,7 +30,7 @@ namespace COTG.Views
         private void Now_Click(object sender, RoutedEventArgs e)
         {
             date.SelectedDates.Clear();
-            ShellPage.ClearHeatmap();
+			AGame.ClearHeatmap();
         }
 
         private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
@@ -41,7 +41,7 @@ namespace COTG.Views
             }
             else
             {
-                ShellPage.ClearHeatmap();
+				AGame.ClearHeatmap();
             }
         }
 

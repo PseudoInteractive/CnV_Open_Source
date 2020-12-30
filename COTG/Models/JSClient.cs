@@ -53,7 +53,8 @@ namespace COTG
             {
             city = 0,
             region=1,
-            world=2
+            world=2,
+			invalid=3
             };
 
         public static ViewMode viewMode;
@@ -167,7 +168,7 @@ namespace COTG
 
             try
             {
-				view = new WebView(WebViewExecutionMode.SeparateProcess)
+				view = new WebView(WebViewExecutionMode.SeparateThread)
 				{
 					//HorizontalAlignment = HorizontalAlignment.Stretch,
 					//VerticalAlignment = VerticalAlignment.Stretch,
@@ -223,17 +224,17 @@ namespace COTG
 
 		}
 
-		public static async void CaptureWebPage(ICanvasResourceCreator canvas)
-		{
-			App.DispatchOnUIThread( async () =>
-		 {
-			 var stream = new InMemoryRandomAccessStream();
-			 await view.CapturePreviewToStreamAsync(stream);
-			 ShellPage.webMask = await CanvasBitmap.LoadAsync(canvas,stream,96, CanvasAlphaMode.Premultiplied);
-//			 ShellPage.webMask= await CreateAplhaMaskFromBitmap(stream, canvas);
+//		public static async void CaptureWebPage(ICanvasResourceCreator canvas)
+//		{
+//			App.DispatchOnUIThread( async () =>
+//		 {
+//			 var stream = new InMemoryRandomAccessStream();
+//			 await view.CapturePreviewToStreamAsync(stream);
+//			 ShellPage.webMask = await CanvasBitmap.LoadAsync(canvas,stream,96, CanvasAlphaMode.Premultiplied);
+////			 ShellPage.webMask= await CreateAplhaMaskFromBitmap(stream, canvas);
 
-		 });
-		}
+//		 });
+//		}
 		static async Task<CanvasBitmap> CreateAplhaMaskFromBitmap(IRandomAccessStream source, ICanvasResourceCreator canvas)
 		{
 			
@@ -1275,15 +1276,15 @@ namespace COTG
 							   City.build = City.focus = cid;
 							   NavStack.Push(cid);
 							   App.DispatchOnUIThreadLow(() => ShellPage.instance.coords.Text = cid.CidToString());
-							   ShellPage.cameraC = cid.CidToWorldV();
+							   AGame.cameraC = cid.CidToWorldV();
 								//Note.L("cid=" + cid.CidToString());
 								jsVars.gameMSAtStart = jso.GetAsInt64("time");
 							   jsVars.launchTime = DateTimeOffset.UtcNow;
 								//    Log(jsVars.ToString());
 
-								ShellPage.clientTL.X = jso.GetAsFloat("left");
-							   ShellPage.clientTL.Y = jso.GetAsFloat("top");
-							   Log($"WebClient:{ShellPage.clientTL} {ShellPage.webclientSpan.y}");
+								AGame.clientTL.X = jso.GetAsFloat("left");
+							   AGame.clientTL.Y = jso.GetAsFloat("top");
+							   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
 								//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
 								gotCreds = true;
 								//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
@@ -1515,7 +1516,7 @@ namespace COTG
 								// var priorCid = cid;
 								var cid = jse.GetInt("cid");
 							   if (!IsWorldView())
-								   ShellPage.cameraC = cid.CidToWorldV();
+									   AGame.cameraC = cid.CidToWorldV();
 							   var isFromTs = jse.TryGetProperty("ts", out _);
 								//Note.L("citydata=" + cid.CidToString());
 								var city = City.GetOrAddCity(cid);
@@ -1692,8 +1693,10 @@ namespace COTG
                 App.DispatchOnUIThreadLow(() =>
                 {
                     ShellPage.canvas.IsHitTestVisible = isWorld;
+					ShellPage.canvas.Visibility = isWorld ? Visibility.Visible : Visibility.Collapsed;
 
-                });
+
+				});
             }
         }
 

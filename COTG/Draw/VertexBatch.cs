@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
 using MonoGame.Extended.BitmapFonts;
-using MonoGame.Extended.Graphics;
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 using Vector2 = System.Numerics.Vector2;
 // Based on default Monogame's Spritebatch by maintainy bois.
 // https://github.com/MonoGame/MonoGame/blob/master/MonoGame.Framework/Graphics/SpriteBatch.cs
-
+using static COTG.Debug;
 
 namespace COTG.Draw
 {
@@ -101,41 +100,36 @@ namespace COTG.Draw
 		}
 		RasterizerState _rasterizerState;
 
-		public Effect Effect
-		{
-			get => _effect;
-			set
-			{
-				if (value != _effect)
-				{
-					FlushBatch();
-					_effect = value;
-				}
-			}
-		}
+	
 		Effect _effect;
 
 
 		public void SetTextureAndEffect(Texture2D texture,Effect effect)
 		{
 			{
+				if (effect == null)
+					effect = _defaultEffect;
 				if (effect!=_effect || texture != _texture)
 				{
 					FlushBatch();
-
-					_texture = texture;
-					_effect = effect;
-
-					if (_texture != null)
+					if (_effect != effect)
 					{
-						_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["TexturePremultiplied"];
+						_effect = effect;
+						_texture = texture;
+						_effect.CurrentTechnique = _effect.Techniques["PositionColorTexture"];
+						_effectPass = _effect.CurrentTechnique.Passes[0];
+						_effectPass.Apply();
+
+						GraphicsDevice.Textures[0] = _texture;
+						GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 					}
-					else
+					else if (_texture != texture)
 					{
-						_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["Basic"];
+						_texture = texture;
+						GraphicsDevice.Textures[0] = _texture;
+						GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 					}
 
-					_defaultEffectPass = _defaultEffect.CurrentTechnique.Passes[0];
 				}
 
 			}
@@ -176,7 +170,7 @@ namespace COTG.Draw
 		private short _vertexPoolCount = 0;
 		private const short _vertexPoolCapacity = short.MaxValue;
 
-		private EffectPass _defaultEffectPass;
+		private EffectPass _effectPass;
 
 		public Matrix World
 		{
@@ -241,55 +235,54 @@ namespace COTG.Draw
 		PrimitiveType _primitiveType = PrimitiveType.TriangleList;
 
 
-		public Effect DefaultEffect
-		{
-			get => _defaultEffect;
-			set
-			{
-				// TODO: Revisit.
-				if (value != _defaultEffect)
-				{
-					FlushBatch();
+		//public Effect DefaultEffect
+		//{
+		//	get => _defaultEffect;
+		//	set
+		//	{
+		//		// TODO: Revisit.
+		//		if (value != _defaultEffect)
+		//		{
+		//			FlushBatch();
 
-					if (value == null)
-					{
-						_defaultEffect = _alphaBlendEffect;
-					}
-					else
-					{
-						_defaultEffect = value;
-					}
+		//			if (value == null)
+		//			{
+		//				_defaultEffect = _alphaBlendEffect;
+		//			}
+		//			else
+		//			{
+		//				_defaultEffect = value;
+		//			}
 
-					if (_texture != null)
-					{
-						// TODO: Move to the separate method.
-						_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["TexturePremultiplied"];
-					}
-					else
-					{
-						_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["Basic"];
-					}
+		//			if (_texture != null)
+		//			{
+		//				// TODO: Move to the separate method.
+		//				_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["TexturePremultiplied"];
+		//			}
+		//			else
+		//			{
+		//				_defaultEffect.CurrentTechnique = _defaultEffect.Techniques["Basic"];
+		//			}
 
-					_defaultEffectPass = _defaultEffect.CurrentTechnique.Passes[0];
-				}
-			}
-		}
-		private Effect _defaultEffect;
+		//			_defaultEffectPass = _defaultEffect.CurrentTechnique.Passes[0];
+		//		}
+		//	}
+		//}
+		public static Effect _defaultEffect;
 
 
 		/// <summary>
 		/// Default shader with proper alpha blending. 
 		/// Replaces BasicEffect. Applied, when CurrentEffect and DefaulrEffect are null.
 		/// </summary>
-		private static Effect _alphaBlendEffect;
+		//public static Effect _alphaBlendEffect;
 
 		public VertexBatch(
 			GraphicsDevice graphicsDevice,
 			BlendState blendState = null,
 			SamplerState samplerState = null,
 			DepthStencilState depthStencilState = null,
-			RasterizerState rasterizerState = null,
-			Effect defaultEFfect=null
+			RasterizerState rasterizerState = null
 		)
 		{
 			GraphicsDevice = graphicsDevice ?? throw new ArgumentNullException("graphicsDevice");
@@ -304,40 +297,11 @@ namespace COTG.Draw
 
 
 			
-			DefaultEffect = defaultEFfect;
 		}
 
 
 
-		void ApplyDefaultShader()
-		{
-
-			// The default shader is used for the transform matrix.
-
-			_defaultEffect.Parameters["World"].SetValue(_world);
-			_defaultEffect.Parameters["View"].SetValue(_view);
-			if (UsesHalfPixelOffset)
-			{
-				_defaultEffect.Parameters["Projection"].SetValue(Matrix.CreateTranslation(-0.5f, -0.5f, 0) * _projection);
-			}
-			else
-			{
-				_defaultEffect.Parameters["Projection"].SetValue(_projection);
-			}
-
-			// We can use vertex shader from the default effect if the custom effect doesn't have one. 
-			// Pixel shader get completely overwritten by the custom effect, though. 
-			var gd = GraphicsDevice;
-			gd.BlendState = _blendState;
-			gd.DepthStencilState = _depthStencilState;
-			gd.RasterizerState = _rasterizerState;
-			gd.SamplerStates[0] = _samplerState;
-			gd.ScissorRectangle = _scissorRectangle;
-
-			_defaultEffectPass.Apply();
-
-			GraphicsDevice.Textures[0] = _texture;
-		}
+		
 
 		private bool FlushIfOverflow(int newVerticesCount, int newIndicesCount)
 		{
@@ -361,42 +325,13 @@ namespace COTG.Draw
 				return;
 			}
 
-			if (_effect != null && _effect.IsDisposed)
-				throw new ObjectDisposedException("effect");
-
-			ApplyDefaultShader();
 
 			int primitivesCount;
-
-			if (_primitiveType == PrimitiveType.TriangleList || _primitiveType == PrimitiveType.TriangleStrip)
-			{
-				primitivesCount = _indexPoolCount / 3;
-			}
-			else
-			{
-				primitivesCount = _indexPoolCount / 2;
-			}
-
-			if (_effect == null)
-			{
-				GraphicsDevice.DrawUserIndexedPrimitives(
-					_primitiveType,
-					_vertexPool,
-					0,
-					_vertexPoolCount,
-					_indexPool,
-					0,
-					primitivesCount,
-					VertexPositionColorTexture.VertexDeclaration
-				);
-			}
-			else
+			Debug.Assert(_primitiveType == PrimitiveType.TriangleList);
+			primitivesCount = _indexPoolCount / 3;
 			{
 
-				var passes = _effect.CurrentTechnique.Passes;
-				foreach (var pass in passes)
-				{
-					pass.Apply();
+				
 
 					// Whatever happens in pass.Apply, make sure the texture being drawn
 					// ends up in Textures[0].
@@ -413,7 +348,7 @@ namespace COTG.Draw
 						VertexPositionColorTexture.VertexDeclaration
 					);
 
-				}
+				
 
 			}
 
@@ -432,8 +367,7 @@ namespace COTG.Draw
 
 		public void AddQuad(TextureSection textureSection, Vector2 c0,Vector2 c1, Color color, Effect effect = null)
 		{
-			if (effect == null)
-				effect = _alphaBlendEffect;
+			
 			SetTextureAndEffect(textureSection.texture, effect);
 
 	
@@ -453,11 +387,17 @@ namespace COTG.Draw
 		}
 		public void AddQuad(Texture2D texture, Vector2 c0, Vector2 c1,Vector2 uv0, Vector2 uv1, Color color, Effect effect = null)
 		{
-			if (effect == null)
-				effect = _alphaBlendEffect;
 			SetTextureAndEffect(texture, effect);
 
 
+			//Assert(uv0.X >= 0.0f);
+			//Assert(uv0.Y >= 0.0f);
+			//Assert(uv1.X >= 0.0f);
+			//Assert(uv1.Y >= 0.0f);
+			//Assert(uv0.X <= 1.0f);
+			//Assert(uv0.Y <= 1.0f);
+			//Assert(uv1.X <= 1.0f);
+			//Assert(uv1.Y <= 1.0f);
 			SetQuad(
 				c0.X,
 				c0.Y,
@@ -474,8 +414,7 @@ namespace COTG.Draw
 		}
 		public void AddQuad(Texture2D texture, Vector2 c0, Vector2 c1, Color color, Effect effect = null)
 		{
-			if (effect == null)
-				effect = _alphaBlendEffect;
+		
 			SetTextureAndEffect(texture, effect);
 
 
@@ -496,11 +435,7 @@ namespace COTG.Draw
 
 		public unsafe void AddLine(Texture2D texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color, Effect effect = null)
 		{
-			if (effect == null)
-				effect = _alphaBlendEffect;
 			SetTextureAndEffect(texture, effect);
-
-
 		
 			var dc0 = c1 - c0;
 			var dc1 =new Vector2( dc0.Y,-dc0.X );
@@ -827,7 +762,7 @@ namespace COTG.Draw
 				throw new ArgumentNullException(nameof(text));
 
 			var lineSpacing = bitmapFont.LineHeight;
-			var offset = new Vector2(0, 0);
+			var offset = c0;
 
 			BitmapFontRegion lastGlyph = null;
 			for (var i = 0; i < text.Length;)
@@ -855,7 +790,7 @@ namespace COTG.Draw
 					case '\r':
 						continue;
 					case '\n':
-						offset.X = 0;
+						offset.X = c0.X;
 						offset.Y += lineSpacing;
 						lastGlyph = null;
 						continue;
@@ -991,6 +926,11 @@ namespace COTG.Draw
 
 		#endregion
 
+	}
+
+	public enum FlipFlags
+	{
+		None
 	}
 }
 

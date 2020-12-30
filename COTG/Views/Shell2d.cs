@@ -108,8 +108,8 @@ namespace COTG.Views
 			{
 				//	DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
 				Name = "Region",
-				IsHitTestVisible = false,
-
+				IsHitTestVisible = true,
+				Visibility = Visibility.Visible,
 				//	IsTabStop = true,
 				//	UseSharedDevice = true,
 				//	TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f),
@@ -135,7 +135,6 @@ namespace COTG.Views
 			//canvasHitTest.Stretch = Stretch.Fill;
 			//  SetupCoreInput();
 
-			AGame.Create(canvas);
 			return (canvas, null);
 
 		}

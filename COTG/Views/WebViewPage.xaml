@@ -96,7 +96,7 @@
             <HyperlinkButton Click="OnRetry" x:Uid="WebView_Retry" HorizontalAlignment="Center" />
         </StackPanel>
 
-        <Grid VerticalAlignment="Bottom" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush }">
+        <Grid VerticalAlignment="Bottom" >
             <StackPanel Orientation="Horizontal">
                 <Button IsEnabled="{x:Bind IsBackEnabled, Mode=OneWay}" Style="{StaticResource BrowserButtonStyle}" Click="OnGoBack" x:Uid="WebView_BrowserBackButton">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72B;" />

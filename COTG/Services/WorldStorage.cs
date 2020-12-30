@@ -68,6 +68,7 @@ namespace COTG.Services
         public static string ArchiveName(int entryId) => entryId.ToString("D6");
         public static async void SaveWorldData(uint[] data)
         {
+			try
             { 
                 var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 
@@ -137,6 +138,19 @@ namespace COTG.Services
                     }
                 }
             }
+			catch(InvalidDataException invalidData)
+			{
+				var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting) ;
+				await file.DeleteAsync();
+
+
+				Log(invalidData);
+
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
 
         }
 
@@ -146,7 +160,7 @@ namespace COTG.Services
         {
             if (World.changeMapInProgress)
                 return;
-            COTG.Views.ShellPage.ClearHeatmap();
+            COTG.AGame.ClearHeatmap();
             if (date >= JSClient.ServerTime() )
             {
                 return;

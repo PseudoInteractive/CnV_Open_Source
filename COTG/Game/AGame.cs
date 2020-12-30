@@ -27,6 +27,10 @@ using static COTG.CanvasHelpers;
 
 using UWindows = Windows;
 using Vector2 = System.Numerics.Vector2;
+using MonoGame.Extended.BitmapFonts;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
 namespace COTG
 {
 	public static partial class Helper
@@ -41,13 +45,14 @@ namespace COTG
 
 		public static GraphicsDeviceManager _graphics;
 		public static SpriteBatch spriteBatch;
-
+		public static BitmapFont font;
 		const float detailsZoomThreshold = 36;
 		const float detailsZoomFade = 8;
 		public static Texture2D worldBackground;
 		public static Effect imageEffect;
 		public static Texture2D lineDraw;
 		public static Texture2D quadTexture;
+		public static Texture2D roundedRect;
 		public static Texture2D sky;
 		public static Texture2D webMask;
 		//    public static TintEffect worldBackgroundDark;
@@ -67,7 +72,7 @@ namespace COTG
 		//   public static Vector2 cameraMid;
 		public static float cameraZoom = 64;
 		public static float cameraZoomLag = 64;
-		public float eventTimeOffset;
+		
 		public float eventTimeOffsetLag;
 		public float eventTimeEnd;
 		static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged, shadowColor;
@@ -104,7 +109,7 @@ namespace COTG
 		public static Texture2D[] troopImages = new Texture2D[Game.Enum.ttCount];
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
-
+		public static bool initialized => canvas != null;
 		static Dictionary<int, TextLayout> nameLayoutCache = new Dictionary<int, TextLayout>();
 		static public TextLayout GetTextLayout( string name,TextFormat format, float width = 0, float height = 0)
 		{
@@ -112,6 +117,7 @@ namespace COTG
 			if (nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal), out var rv))
 				return rv;
 			rv = new TextLayout( name, format, width, height);
+
 			if (nameLayoutCache.Count >= maxTextLayouts)
 				nameLayoutCache.Remove(nameLayoutCache.First().Key);
 			nameLayoutCache.Add(hash, rv);
@@ -121,23 +127,46 @@ namespace COTG
 		}
 		public AGame()
 		{
-			_graphics = new GraphicsDeviceManager(this);
+			_graphics = new GraphicsDeviceManager(this)
+			{
+				PreferredBackBufferFormat = SurfaceFormat.Color,
+				PreferMultiSampling = false,
+				PreferredDepthStencilFormat = DepthFormat.None,
+			
+			};
+			IsFixedTimeStep = false;
+			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
 			Content.RootDirectory = "Content";
 			IsMouseVisible = true;
 		}
 
+		private void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+		{
+			var inf = e.GraphicsDeviceInformation;
+			inf.GraphicsProfile = GraphicsProfile.HiDef;
+			inf.PresentationParameters.SwapChainPanel = canvas;
+			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
+			/*var size = canvas.ActualSize;
+			if (size.X > 0 && size.Y > 0)
+			{
+				inf.PresentationParameters.BackBufferHeight = (int)size.Y;
+				inf.PresentationParameters.BackBufferWidth = (int)size.X;
+			}*/
+		}
+
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
-
-			instance = MonoGame.Framework.XamlGame<AGame>.Create("", Helper.CoreWindow, swapChainPanel);
 			canvas = swapChainPanel;
+			instance = MonoGame.Framework.XamlGame<AGame>.Create( ()=> new AGame() { },"", Helper.CoreWindow, swapChainPanel);
 		}
 
 		protected override void Initialize()
 		{
-			// TODO: Add your initialization logic here
-
+			instance = this;
 			base.Initialize();
+
+		
+
 		}
 
 	
@@ -150,63 +179,100 @@ namespace COTG
 		}
 		public static Texture2D LoadTexture(string filename)
 		{
-			var rv = Texture2D.FromFile(instance.GraphicsDevice,filename);
+			var rv = instance.Content.Load<Texture2D>(filename);
 			return rv;
 		}
-
+		public static MouseState mouseState;
+		public static MouseState priorMouseState;
+		public static KeyboardState keyboardState;
+		public static KeyboardState priorKeyboardState;
 		protected override void Update(GameTime gameTime)
 		{
-			worldLightC = ShellPage.CameraToWorld(cameraLightC);
-
-			if (!inputSetup)
+			try
 			{
-				inputSetup = true;
-				ShellPage.SetupCoreInput();
-			}
 
-			if (World.bitmapPixels != null)
-			{
-				// canvas.Paused = true;
-				var pixels = World.bitmapPixels;
-				var ownerPixels = World.worldOwnerPixels;
-				World.bitmapPixels = null;
-				World.worldOwnerPixels = null;
-				if (worldObjects != null)
+				worldLightC = ShellPage.CameraToWorld(cameraLightC);
+				priorMouseState = mouseState;
+				priorKeyboardState = keyboardState;
+				keyboardState = Keyboard.GetState();
+				App.canvasKeyModifiers = UWindows.System.VirtualKeyModifiers.None;
+				if ((keyboardState.IsKeyDown(Keys.LeftShift) | keyboardState.IsKeyDown(Keys.RightShift)))
+					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
+				if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
+					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
+
+				//if (resolutionDirty)
+				//{
+				//	resolutionDirty = false;
+				//	if (clientSpan.X > 0 && clientSpan.Y > 0)
+				//	{
+				//		_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
+				//		_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
+				////		_graphics.ApplyChanges();
+				//	}
+				//}
+
+				mouseState = Mouse.GetState();
+				ShellPage.Canvas_PointerMoved(mouseState, priorMouseState);
+				ShellPage.Canvas_PointerWheelChanged(mouseState, priorMouseState);
+				ShellPage.Canvas_PointerPressed(mouseState, priorMouseState);
+
+				if (!inputSetup && IsActive)
 				{
-					var w = worldObjects;
-					worldObjects = null;
-					w.Dispose();
+					inputSetup = true;
+					ShellPage.SetupCoreInput();
 				}
-				if (worldOwners != null)
+
+				if (World.bitmapPixels != null)
 				{
-					var w = worldOwners;
-					worldOwners = null;
-					w.Dispose();
+					// canvas.Paused = true;
+					var pixels = World.bitmapPixels;
+					var ownerPixels = World.worldOwnerPixels;
+					World.bitmapPixels = null;
+					World.worldOwnerPixels = null;
+					if (worldObjects != null)
+					{
+						var w = worldObjects;
+						worldObjects = null;
+						w.Dispose();
+					}
+					if (worldOwners != null)
+					{
+						var w = worldOwners;
+						worldOwners = null;
+						w.Dispose();
+					}
+					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
+					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
+					//canvas.Paused = false;
+					//if (worldObjectsDark != null)
+					//    worldObjectsDark.Dispose();
+					//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+
 				}
-				worldObjects = CreateFromBytes(pixels,World.outSize, World.outSize,SurfaceFormat.Dxt1a);
-				worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a); 
-				//canvas.Paused = false;
-				//if (worldObjectsDark != null)
-				//    worldObjectsDark.Dispose();
-				//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+				if (World.changePixels != null)
+				{
+					var pixels = World.changePixels;
+					ClearHeatmapImage();
+					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
 
+				}
+				//if(JSClient.webViewBrush!=null)
+				//	App.DispatchOnUIThread(
+				//		() =>
+				//		{
+				//			JSClient.webViewBrush.SourceName = "cotgView";
+				//			JSClient.webViewBrush.SetSource(JSClient.view);
+				//			JSClient.webViewBrush.Redraw();
+				//			ShellPage.canvasHitTest.Fill = JSClient.webViewBrush;
+				//		});
 			}
-			if (World.changePixels != null)
+			catch (Exception _exception)
 			{
-				var pixels = World.changePixels;
-				ClearHeatmapImage();
-				worldChanges = CreateFromBytes( pixels, World.outSize, World.outSize,SurfaceFormat.Dxt1a);
-
+				COTG.Debug.Log(_exception);
 			}
-			//if(JSClient.webViewBrush!=null)
-			//	App.DispatchOnUIThread(
-			//		() =>
-			//		{
-			//			JSClient.webViewBrush.SourceName = "cotgView";
-			//			JSClient.webViewBrush.SetSource(JSClient.view);
-			//			JSClient.webViewBrush.Redraw();
-			//			ShellPage.canvasHitTest.Fill = JSClient.webViewBrush;
-			//		});
+
+
 
 		}
 	
@@ -253,69 +319,114 @@ namespace COTG
 		clientSpan.Y = span.Y - (span.Y % 8);
 		halfSpan = clientSpan * 0.5f;
 	}
+		public static bool resolutionDirty;
 
 	public static void Canvas_LayoutUpdated(object sender, object e)
 	{
+			// not yet initialized?
+			if(!initialized)
+			{
+				return;
+			}
 		var c = canvas.ActualOffset;
 
 		clientC = new Vector2(c.X, c.Y);
 		SetClientSpan(canvas.ActualSize);
 		clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
+			resolutionDirty = true;
 	}
 	public static void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
 	{
-		SetClientSpan(new Vector2((float)e.NewSize.Width, (float)e.NewSize.Height) );
+			if (!initialized)
+			{
+				return;
+			}
+			SetClientSpan(new Vector2((float)e.NewSize.Width, (float)e.NewSize.Height) );
 		clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
-		//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
-	}
+			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
+			resolutionDirty = true;
+			if (clientSpan.X > 0 && clientSpan.Y > 0)
+			{
+				_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
+				_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
+				_graphics.ApplyChanges();
+			}
+		}
 
-	//class Disposer
-	//{
-	//	List<IDisposable> disposables = new List<IDisposable>();
-	//	public Disposer Add<T>(ref T d) where T : IDisposable
-	//	{
-	//		if (d != null)
-	//		{
-	//			disposables.Add(d);
-	//			d = default;
-	//		}
-	//		return this;
-	//	}
-	//	public void DoDispose()
-	//	{
-	//		var l = disposables;
-	//		disposables = null;
-	//		foreach (var d in l)
-	//		{
-	//			d.Dispose();
-	//		}
-	//	}
-	//}
-	//static void RemakeRenderTarget()
-	//{
-	//	if (renderTarget != null)
-	//		renderTarget.Dispose();
-	//	//var margin = new Thickness(cachedXOffset - cotgPanelRight, cachedTopOffset, 0, bottomMargin);
-	//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
+		//class Disposer
+		//{
+		//	List<IDisposable> disposables = new List<IDisposable>();
+		//	public Disposer Add<T>(ref T d) where T : IDisposable
+		//	{
+		//		if (d != null)
+		//		{
+		//			disposables.Add(d);
+		//			d = default;
+		//		}
+		//		return this;
+		//	}
+		//	public void DoDispose()
+		//	{
+		//		var l = disposables;
+		//		disposables = null;
+		//		foreach (var d in l)
+		//		{
+		//			d.Dispose();
+		//		}
+		//	}
+		//}
+		//static void RemakeRenderTarget()
+		//{
+		//	if (renderTarget != null)
+		//		renderTarget.Dispose();
+		//	//var margin = new Thickness(cachedXOffset - cotgPanelRight, cachedTopOffset, 0, bottomMargin);
+		//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
-	//}
-	protected override async void LoadContent()
-	{
-		draw = new VertexBatch(GraphicsDevice);
-
-			worldBackground = LoadTexture(("ms-appx:///Assets/world.dds"));
-			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
-		
-			lineDraw = LoadTexture("ms-appx:///images/lineDraw.dds");
-		//lineDraw2 = new PixelShaderEffect(
-		sky = LoadTexture("ms-appx:///assets/sky.dds");
-
-		for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
+		//}
+		public static bool readyToLoad;
+		public static Song music;
+		public static void UpdateMusic()
 		{
 
-			troopImages[i] = LoadTexture($"ms-appx:///images/troops{i}.png");
+			if (SettingsPage.musicVolume > 0)
+			{
+				if (music == null  )
+				{
+					if (!readyToLoad)
+						return;
+					music = instance.Content.Load<Song>("Audio/UXOMainTheme");
+				}
+
+				MediaPlayer.Volume = SettingsPage.musicVolume;
+				MediaPlayer.Play(music);
+			}
+			else
+			{
+				if(MediaPlayer.State!=MediaState.Stopped)
+					MediaPlayer.Stop();
+			}
+		}
+	protected override async void LoadContent()
+	{
+			readyToLoad = true;
+		draw = new VertexBatch(GraphicsDevice);
+			font = Content.Load<BitmapFont>("Fonts/perpetua");
+			worldBackground = LoadTexture(("Art/world"));
+			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+
+			VertexBatch._defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
+
+			lineDraw = LoadTexture("Art/lineDraw");
+		//lineDraw2 = new PixelShaderEffect(
+		sky = LoadTexture("Art/sky");
+			roundedRect = Content.Load<Texture2D>("Art/Icons/roundedRect");
+			quadTexture = Content.Load<Texture2D>("Art/Icons/roundedRect");
+			for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
+		{
+
+			troopImages[i] = LoadTexture($"Art/icons/troops{i}");
 			if (i == 0)
 			{
 				troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
@@ -339,28 +450,30 @@ namespace COTG
 
 		//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
 		{
-			TileData.Ctor(true);
+		//	TileData.Ctor(true);
 		}
 
 
-		var lightEffectBytes = await App.GetContent("shader/light.bin");
-			var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
-		{
+			//var lightEffectBytes = await App.GetContent("shader/light.bin");
+			//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
+			//{
 
-			//Source2 = sky,
-			//Source2Mapping = SamplerCoordinateMapping.Unknown,
-			//Source2Interpolation = CanvasImageInterpolation.Linear,
-			//Source2BorderMode = EffectBorderMode.Soft,
-			//CacheOutput = false,
-			//Source1BorderMode = EffectBorderMode.Soft,
-			//Source1Mapping = SamplerCoordinateMapping.Offset,
-			//MaxSamplerOffset = 4,
-			Name = "SSLighting"
+			//	//Source2 = sky,
+			//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
+			//	//Source2Interpolation = CanvasImageInterpolation.Linear,
+			//	//Source2BorderMode = EffectBorderMode.Soft,
+			//	//CacheOutput = false,
+			//	//Source1BorderMode = EffectBorderMode.Soft,
+			//	//Source1Mapping = SamplerCoordinateMapping.Offset,
+			//	//MaxSamplerOffset = 4,
+			//	Name = "SSLighting"
 
-			//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
-			//   Source2Mapping = SamplerCoordinateMapping.Unknown
-		};
+			//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
+			//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
+			//};
 
+
+			UpdateMusic();
 	}
 
 
@@ -458,6 +571,7 @@ namespace COTG
 		private TextFormat tipTextFormatCentered;
 		private TextFormat tipTextFormat;
 		private TextFormat nameTextFormat;
+		
 		const float lineTileGain = 1.0f/32.0f;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
@@ -470,7 +584,7 @@ namespace COTG
 			return;
 
 
-		CanvasHelpers.parralaxZ0 = 1024 * 64.0f / cameraZoomLag;
+		parralaxZ0 = 1024 * 64.0f / cameraZoomLag;
 
 
 		try
@@ -482,7 +596,7 @@ namespace COTG
 			var gain = (1 - MathF.Exp(-4 * dt));
 			cameraCLag += (cameraC - cameraCLag) * gain;
 			cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
-			eventTimeOffsetLag += (eventTimeOffset - eventTimeOffsetLag) * gain;
+			eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
 			cameraLightC += (ShellPage.mousePosition - cameraLightC) * gain;
 			//                cameraZoomLag += (cameraZoom
 
@@ -572,11 +686,22 @@ namespace COTG
 			// funky logic
 			//if (wantLight)
 				GraphicsDevice.Clear(new Color()); // black transparent
-									   //ds.TextAntialiasing = canvasTextAntialiasing;
-									   //ds.TextRenderingParameters = canvasTextRenderingParameters;
-									   // prevent MSAA gaps
-		//	ds.Antialiasing = CanvasAntialiasing.Aliased;
-			if (worldBackground != null && wantImage)
+												   //ds.TextAntialiasing = canvasTextAntialiasing;
+												   //ds.TextRenderingParameters = canvasTextRenderingParameters;
+												   // prevent MSAA gaps
+				GraphicsDevice.BlendState = BlendState.Opaque;
+				GraphicsDevice.DepthStencilState = DepthStencilState.None;
+				
+				GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+				{
+					var viewport = GraphicsDevice.Viewport;
+					var proj = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, -1);
+					VertexBatch._defaultEffect.Parameters["WorldViewProjection"].SetValue(proj);
+					VertexBatch._defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
+				}
+
+				//	ds.Antialiasing = CanvasAntialiasing.Aliased;
+				if (worldBackground != null && wantImage)
 			{
 
 				if (wantImage)
@@ -595,17 +720,20 @@ namespace COTG
 
 
 			}
-			//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
-			// ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
+				draw.FlushBatch();
+				GraphicsDevice.BlendState = BlendState.NonPremultiplied;
 
-			//           dxy.X = (float)sender.Width;
-			//            dxy.Y = (float)sender.ActualHeight;
+				//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
+				// ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
 
-			//            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
-			//           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
-			// if (IsPageDefense())
+				//           dxy.X = (float)sender.Width;
+				//            dxy.Y = (float)sender.ActualHeight;
 
-			if (wantDetails)
+				//            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
+				//           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
+				// if (IsPageDefense())
+
+				if (wantDetails)
 			{
 				var wantFade = wantImage;
 				var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
@@ -650,8 +778,8 @@ namespace COTG
 				cx1 = (halfTiles.x + 1 + ccBase.x).Min(World.worldDim);
 				cy1 = (halfTiles.y + 1 + ccBase.y).Min(World.worldDim);
 				const bool isShift = false;// App.IsKeyPressedShift();
-				const float tcOff = isShift ? 0.0f : 0.5f;
-				const float tzOff = isShift ? 0.0f : 1.0f;
+				const float tcOff = isShift ? 0.0f : 0.0f;
+				const float tzOff = isShift ? 0.0f : 0.0f;
 				float parallaxGain = wantParallax ? 1.0f : 0.0f;
 				{
 					// 0 == land
@@ -661,7 +789,6 @@ namespace COTG
 					{
 						if (pass == 1 && (!wantParallax || !wantLight))
 							continue;
-
 						foreach (var layer in td.layers)
 						{
 							var layerDat = layer.data;
@@ -696,21 +823,23 @@ namespace COTG
 												continue;
 											}
 											var _tint = (pass == 1) ? tintShadow : (pass == 2) ? World.GetTint(ccid) : tint;
-
-										_tint.A = intAlpha;;
+											if((pass == 2))
+												_tint.A = intAlpha;;
 											var dz = tile.z * parallaxGain; // shadows draw at terrain level 
 
 											var scale = (pass == 1) ? CanvasHelpers.ParalaxScaleShadow(dz) : CanvasHelpers.ParalaxScale(dz);
 											var wc = new Vector2(cx - .5f, cy - 0.5f);
-											var cc = wc.WToCp(dz);
-											if (pass == 1)
-												cc = cc.CToCShadow(dz);
+											var cc = (pass == 1) ?  wc.WToC(): wc.WToCp(dz);
+										
 
 											var sy = off / tile.columns;
 											var sx = off - sy * tile.columns;
+												var uv0 = new Vector2((sx) * tile.scaleXToU + tile.halfTexelU , (sy ) * tile.scaleYToV+tile.halfTexelV );
+												var uv1 = new Vector2((sx + 1) * tile.scaleXToU+tile.halfTexelU , (sy + 1) * tile.scaleYToV  - tile.halfTexelV );
+												
 												draw.AddQuad(tile.bitmap, cc, cc + new Vector2(pixelScale * scale, pixelScale * scale),
-													 new Vector2(sx * tile.tilewidth + tcOff, sy * tile.tileheight + tcOff),
-													new Vector2((sx+1) * tile.tilewidth + tzOff, (sy+1) * tile.tileheight + tzOff), _tint);
+													uv0,
+													uv1 , _tint);
 
 
 
@@ -720,6 +849,7 @@ namespace COTG
 									}
 								}
 							}
+								draw.FlushBatch();
 						}
 					}
 				}// sprite batch
@@ -1276,35 +1406,28 @@ namespace COTG
 			if (_toolTip != null)
 			{
 				TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat, 0.0f, 0.0f);
-				var bounds = textLayout.DrawBounds;
+				var bounds = textLayout.span;
 				Vector2 c = ShellPage.mousePosition + new Vector2(16, 16);
-				const float expand = 7;
-				bounds.X += c.X - expand;
-				bounds.Y += c.Y - expand;
-				bounds.Width += expand * 2;
-				bounds.Height += expand * 2;
-
+				var expand = new Vector2(7);
+				
 				//  var rectD = new Vector2(32*4, 24*5);
 				// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 				//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
 				//tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right, (float)bounds.Bottom);
-			//	FillRoundedRectangle(bounds, 8, 8, tipBackgroundBrush);
+				FillRoundedRectangle(c- expand,c+bounds+expand,new Color(64,64,64,96));
 					//                    target.X+= 12;
 					//                  target.Y += 8;
 
-		//		textLayout.Draw( c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
+				textLayout.Draw( c, Color.White);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 			}
 			var _contTip = ShellPage.contToolTip;
 			if (_contTip != null)
 			{
 				TextLayout textLayout = GetTextLayout( _contTip, tipTextFormat, 0.0f, 0.0f);
-				var bounds = textLayout.DrawBounds;
+				var bounds = textLayout.span;
 				Vector2 c = new Vector2(16, 16);
 				const float expand = 7;
-				bounds.X += c.X - expand;
-				bounds.Y += c.Y - expand;
-				bounds.Width += expand * 2;
-				bounds.Height += expand * 2;
+				
 
 				//  var rectD = new Vector2(32*4, 24*5);
 				// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
@@ -1316,7 +1439,8 @@ namespace COTG
 
 			//	ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 			}
-		}
+			draw.FlushBatch();
+			}
 		catch (Exception ex)
 		{
 			Log(ex);
@@ -1326,9 +1450,10 @@ namespace COTG
 
 	}
 
-		private static void FillRoundedRectangle(RectangleF bounds, int v1, int v2, object tipBackgroundBrush)
+		private static void FillRoundedRectangle(Vector2 c0, Vector2 c1,Color background)
 		{
-			throw new NotImplementedException();
+			//	throw new NotImplementedException();
+			draw.AddQuad(roundedRect, c0, c1, background);
 		}
 
 		private static Color GetAttackColor(Army attack)
@@ -1349,15 +1474,14 @@ namespace COTG
 	{
 		float xLoc = at.X;
 		float yLoc = at.Y;
+			
 		TextLayout textLayout = GetTextLayout( text, format, 0.0f, 0.0f);
-		var bounds = textLayout.DrawBounds;
-		const float expand = 4;
-		bounds.X += at.X - expand;
-		bounds.Y += at.Y - expand;
-		bounds.Width += expand * 2;
-		bounds.Height += expand * 2;
-		if (drawBackground)
-			FillRoundedRectangle(bounds, 3, 3, shadowColor);
+		var bounds = textLayout.span;
+		var expand = new Vector2(4);
+			if (drawBackground)
+			{
+				FillRoundedRectangle(at - expand, at + textLayout.span + bounds, shadowColor);
+			}
 		textLayout.Draw( at, color);
 	}
 
@@ -1440,6 +1564,8 @@ namespace COTG
 			if (bitmap != null)
 				draw.AddQuad(TextureSection.FromAll(bitmap), new Vector2(mid.X - spriteSize, mid.Y - spriteSize), new Vector2(mid.X + spriteSize, mid.Y + spriteSize), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
+		
+	
 		}
 
 		private static void DrawSquare(Vector2 c0, Color color)
@@ -1523,40 +1649,43 @@ namespace COTG
 	public static Color AlphaToColor(this int alpha) { return new Color(255, 255, 255, alpha); }
 
 	public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
-	//public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);
-	//public static void DrawLine(this CanvasSpriteBatch b, Vector2 c0, Vector2 c1, Vector4 c, float thickness, CanvasStrokeStyle style)
-	//{
-	//	var dl = c1 - c0;
-	//	var dllg = dl.Length();
-	//	var dllgInv = 1 / dllg;
-	//	var de = new Vector2(dl.Y * dllgInv * thickness, dl.X * dllgInv * thickness);
-	//	float xoffset = ShellPage.animationT * 4 % 256;
-	//	b.DrawFromSpriteSheet(ShellPage.lineDraw, new Matrix3x2(dl.X, dl.Y, de.X, de.Y, c0.X - de.X * 0.5f, c0.X - de.X * 0.5f), new Rect(xoffset, 0, dllg * 16 + xoffset, 128), c);
-	//}
+	public static Vector2 ToV2(this Point me) => new Vector2(me.X, me.Y);
+	public static Vector2 ToV2(this Microsoft.Xna.Framework.Vector2 me) => new Vector2(me.X, me.Y);
 
-	//public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
-	//{
-	//    ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
-	//}
+		//public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);
+		//public static void DrawLine(this CanvasSpriteBatch b, Vector2 c0, Vector2 c1, Vector4 c, float thickness, CanvasStrokeStyle style)
+		//{
+		//	var dl = c1 - c0;
+		//	var dllg = dl.Length();
+		//	var dllgInv = 1 / dllg;
+		//	var de = new Vector2(dl.Y * dllgInv * thickness, dl.X * dllgInv * thickness);
+		//	float xoffset = ShellPage.animationT * 4 % 256;
+		//	b.DrawFromSpriteSheet(ShellPage.lineDraw, new Matrix3x2(dl.X, dl.Y, de.X, de.Y, c0.X - de.X * 0.5f, c0.X - de.X * 0.5f), new Rect(xoffset, 0, dllg * 16 + xoffset, 128), c);
+		//}
+
+		//public static void DrawRoundedSquare(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
+		//{
+		//    ds.DrawRoundedRectangle(c.X - circleRadius, c.Y - circleRadius, circleRadius*2, circleRadius*2, circleRadius*0.25f, circleRadius*0.25f, color, thickness);
+		//}
 
 
-	//public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
-	//      {
-	//          DrawRoundedSquareShadow(ds, c, circleRadius, brush.GetShadowColor(), thickness);
-	//          DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
-	//      }
-	//public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
-	//      {
-	//          DrawRoundedSquare(ds, c, circleRadius, color, thickness);
-	//      }
-	//      public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
-	//      {
-	//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
-	//      }
-	public static float parralaxZ0 = 1024;
+		//public static void DrawRoundedSquareWithShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquareShadow(ds, c, circleRadius, brush.GetShadowColor(), thickness);
+		//          DrawRoundedSquareBase(ds, c, circleRadius, brush, thickness);
+		//      }
+		//public static void DrawRoundedSquareShadow(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color color, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquare(ds, c, circleRadius, color, thickness);
+		//      }
+		//      public static void DrawRoundedSquareBase(this CanvasDrawingSession ds, Vector2 c, float circleRadius, Color brush, float thickness = 1.5f)
+		//      {
+		//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
+		//      }
+		public static float parralaxZ0 = 1024;
 	public static float ParalaxScale(float dz) => parralaxZ0 / (parralaxZ0 - dz);
-	// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
-	public static float ParalaxScaleShadow(float dz) => parralaxZ0 / (parralaxZ0 - dz);
+		// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
+		public static float ParalaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
 
 	public static Vector2 WToCp(this Vector2 c, float dz)
 	{
@@ -1570,8 +1699,8 @@ namespace COTG
 	}
 	public static Vector2 CToCShadow(this Vector2 c, float dz)
 	{
-		var paralaxGain = ParalaxScaleShadow(dz);
-		return (c - AGame.cameraLightC) * paralaxGain + AGame.cameraLightC;
+		//var paralaxGain = ParalaxScaleShadow(dz);
+		return c;//(c - AGame.cameraLightC) * paralaxGain + AGame.cameraLightC;
 	}
 	// camera space to camera space with parallax
 	public static Vector2 CToCp(this Vector2 c, float dz)
@@ -1586,14 +1715,14 @@ namespace COTG
 
 	//}
 
-	//public static Vector2 WToC(this Vector2 c)
-	//      {
-	//          return (c - AGame.cameraCLag) * AGame.pixelScale + AGame.halfSpan;
-	//      }
-	//public static Vector2 WToC(this (int x, int y) c)
-	//{
-	//    return new Vector2(c.x, c.y).WToC();
-	//}
+	public static Vector2 WToC(this Vector2 c)
+	      {
+	          return (c - AGame.cameraCLag) * AGame.pixelScale + AGame.halfSpan;
+	      }
+	public static Vector2 WToC(this (int x, int y) c)
+	{
+	    return new Vector2(c.x, c.y).WToC();
+	}
 	public static Vector2 WToCp(this (int x, int y) c, float z)
 	{
 		return new Vector2(c.x, c.y).WToCp(z);
@@ -1647,22 +1776,25 @@ namespace COTG
 	public class TextLayout
 	{
 		public TextFormat format;
-		internal RectangleF DrawBounds;
-		private string name;
+		internal Vector2 span;
+		private string text;
 		private float width;
 		private float height;
 
-		public TextLayout(string name, TextFormat format, float width, float height)
+		public TextLayout(string text, TextFormat format, float width, float height)
 		{
-			this.name = name;
+			this.text = text;
 			this.format = format;
 			this.width = width;
 			this.height = height;
+			var size = AGame.font.MeasureString(text);
+			span.X = size.Width;
+			span.Y = size.Height;
 		}
 
 		internal void Draw(Vector2 c,Color color)
 		{
-			throw new NotImplementedException();
+			AGame.draw.DrawString(AGame.font, text, c, new Vector2(1, 1), color);
 		}
 	}
 }

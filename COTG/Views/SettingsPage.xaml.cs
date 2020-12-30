@@ -63,6 +63,7 @@ namespace COTG.Views
 		public static bool setHub;
 		public static bool useSuggested = true;
 		public static bool clearRes;
+		public static float musicVolume = 0.5f;
 
 		public static bool cartsAreForRequests = false;
         public static string[] incomingWatch = Array.Empty<string>();
