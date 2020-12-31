@@ -69,7 +69,9 @@ namespace COTG.Views
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
 			App.DispatchOnUIThreadLow(() =>
 			{
-				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
+		//		_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
+				//Canvas.SetLeft(_canvas, leftOffset);
+				//Canvas.SetTop(_canvas, topOffset);
 				//RemakeRenderTarget();
 			});
 			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
@@ -134,11 +136,15 @@ namespace COTG.Views
 			//			canvasHitTest.Margin=canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
 			//canvasHitTest.Stretch = Stretch.Fill;
 			//  SetupCoreInput();
-
+			canvas.CompositionScaleChanged += Canvas_CompositionScaleChanged;
 			return (canvas, null);
 
 		}
 
+		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
+		{
+			Log(canvas.CompositionScaleX);
+		}
 	}
 }
 

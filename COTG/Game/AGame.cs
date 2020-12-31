@@ -145,12 +145,11 @@ namespace COTG
 			inf.GraphicsProfile = GraphicsProfile.HiDef;
 			inf.PresentationParameters.SwapChainPanel = canvas;
 			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
-			/*var size = canvas.ActualSize;
-			if (size.X > 0 && size.Y > 0)
+			if (clientSpan.X > 0 && clientSpan.Y > 0)
 			{
-				inf.PresentationParameters.BackBufferHeight = (int)size.Y;
-				inf.PresentationParameters.BackBufferWidth = (int)size.X;
-			}*/
+				inf.PresentationParameters.BackBufferHeight = (int)clientSpan.X;
+				inf.PresentationParameters.BackBufferWidth = (int)clientSpan.Y;
+			}
 		}
 
 		static public void Create(SwapChainPanel swapChainPanel)
@@ -197,9 +196,9 @@ namespace COTG
 					{
 						if (--resolutionDirtyCounter == 0)
 						{
-									_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
-									_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
-							_graphics.ApplyChanges();
+//									_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
+	//								_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
+		//					_graphics.ApplyChanges();
 							var pre = new PresentationParameters()
 							{
 								BackBufferFormat = SurfaceFormat.Color,
@@ -338,7 +337,7 @@ namespace COTG
 
 	//}
 
-	private static void SetClientSpan(Vector2 span)
+	public static void SetClientSpan(Vector2 span)
 	{
 		clientSpan.X = span.X - (span.X % 8);
 		clientSpan.Y = span.Y - (span.Y % 8);
@@ -371,6 +370,8 @@ namespace COTG
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			//	.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
+
+			Log(canvas.CompositionScaleX);
 
 			var bounds = Helper.CoreWindow.Bounds;
 			windowSpan = new Vector2((float)bounds.Width,(float)bounds.Height);
@@ -720,9 +721,10 @@ namespace COTG
 				GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 				{
 					var viewport = GraphicsDevice.Viewport;
-					
-//					var proj = Matrix.CreateOrthographicOffCenter(0f, windowSpan.X, windowSpan.Y,0, 0, -1);
-					var proj = Matrix.CreateOrthographicOffCenter(0, 2048, 1680, 0, 0, -1);
+
+
+					var proj = Matrix.CreateOrthographicOffCenter(0f, windowSpan.X, windowSpan.Y,0, 0, -1);
+//					var proj = Matrix.CreateOrthographicOffCenter(0, 2048, 1680, 0, 0, -1);
 					VertexBatch._defaultEffect.Parameters["WorldViewProjection"].SetValue(proj);
 					VertexBatch._defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 				}

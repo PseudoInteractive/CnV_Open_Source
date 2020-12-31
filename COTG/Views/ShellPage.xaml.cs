@@ -36,6 +36,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Input;
 using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using System.Numerics;
 
 namespace COTG.Views
 {
@@ -218,26 +219,26 @@ namespace COTG.Views
        
 
             var c = CreateCanvasControl();
-			
-          //  canvas.ContextFlyout = CityFlyout;
-            grid.Children.Add(c.canvas);
-	//		grid.Children.Add(c.hitTest);
+
+			//  canvas.ContextFlyout = CityFlyout;
+			grid.Children.Add(c.canvas);
+			//		grid.Children.Add(c.hitTest);
 			Grid.SetColumn(c.canvas, 1);
 			//Grid.SetColumn(c.hitTest, 0);
-            Grid.SetRow(c.canvas, 1);
+			Grid.SetRow(c.canvas, 1);
 			//Grid.SetRow(c.hitTest, 1);
-            Grid.SetRowSpan(c.canvas, 4);
+			Grid.SetRowSpan(c.canvas, 4);
 			//Grid.SetRowSpan(c.hitTest, 5);
 			Grid.SetColumnSpan(c.canvas, 1);
 			//Grid.SetColumnSpan(c.hitTest, 2);
 			c.canvas.BorderThickness = new Thickness(0, 0, 0, 0);
 	//		c.hitTest.BorderThickness = new Thickness(0, 0, 0, 0);
 		    Canvas.SetZIndex(c.canvas, 12);
-		//	Canvas.SetZIndex(c.hitTest, 13);
+			//	Canvas.SetZIndex(c.hitTest, 13);
 			//           Task.Run(SetupCanvasInput);//           Task.Run(SetupCanvasInput);
-
+		//	Placement.SizeChanged += Placement_SizeChanged;
 			//   var img = new Image() { Opacity=0.5f, Source = new SvgImageSource(new Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
-
+	//		Placement.LayoutUpdated += Placement_LayoutUpdated;
 			//   grid.Children.Add(img);
 
 			//   Grid.SetRowSpan(img, 4);
@@ -363,6 +364,51 @@ namespace COTG.Views
 			}));
 			
 		}
+
+		//void GetPlacement()
+		//{
+		//	var g = grid;
+		//	var columns = grid.ColumnDefinitions;
+		//	var rows = grid.RowDefinitions;
+		//	Point offset = new Point();
+		//	Size size = new Size();
+		//	offset.X = columns[0].ActualWidth;
+		//	offset.Y = rows[0].ActualHeight;
+		//	for (int i = 1; i < 1 + 4; ++i)
+		//		size.Width += columns[i].ActualWidth;
+		//	for (int i = 1; i < 1 + 4; ++i)
+		//		size.Height += rows[i].ActualHeight;
+		//	Canvas.SetLeft(canvas, offset.X);
+		//	Canvas.SetTop(canvas, offset.Y);
+
+		//	canvas.Width= size.Width;
+		//	canvas.Height = size.Height;
+
+		//}
+		//private void Placement_LayoutUpdated(object sender, object e)
+		//{
+			
+		//	var sz = new Vector2((float)Placement.ActualWidth, (float)Placement.ActualHeight) - new Vector2((float)Canvas.GetLeft(canvas), (float)Canvas.GetTop(canvas));
+		//	// measure
+			
+		//	Log("layout");
+		//	AGame.SetClientSpan(sz);
+
+		//	canvas.Width = sz.X;
+		//	canvas.Height = sz.Y;
+		//}
+
+		//private void Placement_SizeChanged(object sender, SizeChangedEventArgs e)
+		//{
+		//	var sz = new Vector2((float)e.NewSize.Width, (float)e.NewSize.Height) -new Vector2((float)Canvas.GetLeft(canvas), (float)Canvas.GetTop(canvas) );
+
+		//	Log("Size");
+		//	AGame.SetClientSpan(sz);
+
+		//	canvas.Width = sz.X;
+		//	canvas.Height = sz.Y;
+
+		//}
 
 		//private void UpdateTitleBarLayout(CoreApplicationViewTitleBar coreTitleBar)
 		//{
