@@ -22,7 +22,7 @@ namespace COTG.Services
     // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/activation.md
     internal class ActivationService
     {
-		private const string UriString = "ms-appx:///audio/UXOMainTheme.ogg";
+		
 		private readonly App _app;
         private readonly Type _defaultNavItem;
         private Lazy<UIElement> _shell;

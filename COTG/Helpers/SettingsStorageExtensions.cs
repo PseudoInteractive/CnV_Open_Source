@@ -232,6 +232,7 @@ namespace COTG {
 		{
 			var uri = new Uri("ms-appx:///" + filename);
 			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+	
 			var buffer = await FileIO.ReadBufferAsync(file);
 
 			return buffer.ToArray();

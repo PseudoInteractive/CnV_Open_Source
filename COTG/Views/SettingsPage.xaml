@@ -25,6 +25,26 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
+				<CheckBox Content="Fetch Full Defense History"
+						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
+						  Margin="8" />
+				<controls:NumberBox  Header="Spot MRU count"
+									 Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<ToggleSwitch  Header="Stay Alive"
+							   IsOn="{x:Bind uiStayAlive, Mode=TwoWay}"
+							   Margin="4"
+							   OnContent="Keep COTG Alive"
+							   OffContent="Drop connection on Idle" />
+
+			<ToggleSwitch Header="Parallax" IsOn="{x:Bind views:SettingsPage.wantParallax, Mode=TwoWay}" />
+
+			</wct:WrapPanel>
+			<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+
 				<Button Content="Shrine Finder"
 						Click="ShrineFinder"
 						Style="{ThemeResource ButtonRevealStyle}"
@@ -74,26 +94,7 @@
 						MinWidth="120" />
 
 			</wct:WrapPanel>
-			<wct:WrapPanel Orientation="Horizontal"
-						   Margin="4">
-
-				<CheckBox Content="Fetch Full Defense History"
-						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
-						  Margin="8" />
-				<controls:NumberBox  Header="Spot MRU count"
-									 Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}"
-									 SmallChange="1"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-				<ToggleSwitch  Header="Stay Alive"
-							   IsOn="{x:Bind uiStayAlive, Mode=TwoWay}"
-							   Margin="4"
-							   OnContent="Keep COTG Alive"
-							   OffContent="Drop connection on Idle" />
-
-
-
-			</wct:WrapPanel>
+			
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock Text="Set Nearest Hub Settings"
 						   Style="{ThemeResource SubtitleTextBlockStyle}"

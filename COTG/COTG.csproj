@@ -4,6 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
     <ProjectGuid>{813F59C4-EC96-48EF-83E4-E3C7E671E368}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -34,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -121,10 +122,13 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.5.0</Version>
     </PackageReference>
+    <PackageReference Include="MonoGame.Content.Builder.Task">
+      <Version>3.8.1.1825-develop</Version>
+    </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
     </PackageReference>
-    <PackageReference Include="SharpDX.D3DCompiler">
+    <PackageReference Include="SharpDX">
       <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="SharpDX.Direct2D1">
@@ -133,7 +137,13 @@
     <PackageReference Include="SharpDX.Direct3D11">
       <Version>4.2.0</Version>
     </PackageReference>
+    <PackageReference Include="SharpDX.DXGI">
+      <Version>4.2.0</Version>
+    </PackageReference>
     <PackageReference Include="SharpDX.MediaFoundation">
+      <Version>4.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="SharpDX.XAudio2">
       <Version>4.2.0</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.Context">
@@ -198,7 +208,6 @@
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\NavStack.cs" />
-    <Compile Include="Helpers\SDFText.cs" />
     <Compile Include="Helpers\SmallTime.cs" />
     <Compile Include="Helpers\Span2d.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
@@ -494,12 +503,18 @@
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\terrainfeatures.dds" />
+    <Content Include="web\images\city128\walls_water2.png" />
+    <Content Include="web\images\city128\water_water.png" />
+    <EmbeddedResource Include="JS\alasstylesheet.css" />
+    <Content Include="web\images\city128\building_set5.png" />
     <Content Include="Content\Art\Icons\roundedRect.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\protocolImage.png" />
+    <Content Include="web\images\city128\city_walls.png" />
+    <Content Include="web\images\city128\land.jpg" />
     <None Include="Content\Art\sky.dds" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
@@ -538,8 +553,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <None Include="Content\Art\Tiles\watertiles.png" />
     <None Include="Content\Art\world.dds" />
-    <Content Include="Content\Audio\UXOMainTheme.ogg">
-    </Content>
+    <None Include="Content\Audio\UXOMainTheme.ogg" />
     <Content Include="Content\Art\Icons\barracks.png" />
     <Content Include="Content\Art\Icons\blacksmith.png" />
     <Content Include="Content\Art\Icons\blessed.png" />
@@ -617,7 +631,6 @@
     <None Include="Content\Effects\Structures.fxh" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />
-    <EmbeddedResource Include="JS\alasstylesheet.css" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

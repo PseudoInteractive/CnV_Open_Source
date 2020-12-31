@@ -221,7 +221,7 @@ namespace COTG.Helpers
         {
             return (RoundToInt(v.X), RoundToInt(v.Y));
         }
-        public static (int x, int y) CeildToInt(this Vector2 v)
+        public static (int x, int y) CeilToInt(this Vector2 v)
         {
             return (CeilToInt(v.X), CeilToInt(v.Y));
         }

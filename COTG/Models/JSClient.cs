@@ -174,9 +174,11 @@ namespace COTG
 					//VerticalAlignment = VerticalAlignment.Stretch,
 					//CacheMode=new BitmapCache()
 					DefaultBackgroundColor = new Windows.UI.Color() { G=0, B=0,R = 0, A = 0 },
+					
 					Name="cotgView",
 					Opacity=1,
                 };
+				
                 view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
                 view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
                 view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
@@ -312,24 +314,25 @@ namespace COTG
                 var req = args.Request;
 
                 Log(req.RequestUri.ToString());
-                if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
-                {
-                    var js = GetJsString("jquery");
+				if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
+				{
+					var js = GetJsString("jquery");
 
-                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                }
-				//else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
-				//{
-				//	var js = GetJsString("alasstylesheet.css");
+				}
+				else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
+				{
+					
+					var js = GetJsString("alasstylesheet.css");
 
-				//	var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
+					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
 
-				//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-				//}
+				}
 				//else if (req.RequestUri.ToString().Contains("index.html"))
 				//{
 				//    Assert(false);
@@ -342,59 +345,67 @@ namespace COTG
 
 				//}
 				else if (req.RequestUri.ToString().Contains("/jsfunctions/phaser.js"))
-                {
-                 //   var js = GetJsString("phaser");
+				{
+					//   var js = GetJsString("phaser");
 
-                     var newContent = new Windows.Web.Http.HttpStringContent("", Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					var newContent = new Windows.Web.Http.HttpStringContent("", Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                }
-                else if (req.RequestUri.ToString().Contains("/jsfunctions/pack.js"))
-                {
-                    var js = GetJsString("pack");
+				}
+				else if (req.RequestUri.ToString().Contains("/jsfunctions/pack.js"))
+				{
+					var js = GetJsString("pack");
 
-                    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-                    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
-                }
+				}
+				//else if (req.RequestUri.LocalPath.Contains("building_set5"))
+				//{
+				//	int q = 0;
+				//	var data = TitleContainer.OpenStream("Art/buildingset5");
 
-                else if ( req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
-                {
-                    try
-                    {
-                       
-                        view.WebResourceRequested -= View_WebResourceRequested1;
-                        string host = args.Request.RequestUri.Host;
-                        string uri = args.Request.RequestUri.AbsoluteUri;
+				//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = new HttpBufferContent( data) };
 
-                         //   var reqMsg = args.Request;
-                         //   var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
+				//}
 
-                        var asm = typeof(JSClient).Assembly;
+				else if (req.RequestUri.LocalPath.Contains("jsfunctions/game.js"))
+				{
+					try
+					{
 
-                        var js = GetJsString("funky")
-                            + GetJsString("DHRUVCC.js")
-                               + GetJsString("J0EE");
-                                var newContent = new Windows.Web.Http.HttpStringContent(js,Windows.Storage.Streams.UnicodeEncoding.Utf8,"text/json");
+						view.WebResourceRequested -= View_WebResourceRequested1;
+						string host = args.Request.RequestUri.Host;
+						string uri = args.Request.RequestUri.AbsoluteUri;
 
-                        args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-                               // args.Response = resp;
-                                //var response = await client.SendRequestAsync(reqMsg).AsTask();
-                               // resp.Content = newContent;
-                        //    }
-                        
+						//   var reqMsg = args.Request;
+						//   var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
+
+						var asm = typeof(JSClient).Assembly;
+
+						var js = GetJsString("funky")
+							+ GetJsString("DHRUVCC.js")
+							   + GetJsString("J0EE");
+						var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+
+						args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+						// args.Response = resp;
+						//var response = await client.SendRequestAsync(reqMsg).AsTask();
+						// resp.Content = newContent;
+						//    }
 
 
 
-                    }
-                    catch (Exception e)
-                    {
-                        Log(e);
-                    }
 
-                }
+					}
+					catch (Exception e)
+					{
+						Log(e);
+					}
+
+				}
 
                // if (req.Method.Method == HttpMethod.Post.Method && !req.RequestUri.LocalPath.EndsWith("poll2.php") )
                // {
@@ -1282,9 +1293,9 @@ namespace COTG
 							   jsVars.launchTime = DateTimeOffset.UtcNow;
 								//    Log(jsVars.ToString());
 
-								AGame.clientTL.X = jso.GetAsFloat("left");
-							   AGame.clientTL.Y = jso.GetAsFloat("top");
-							   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+						//		AGame.clientTL.X = jso.GetAsFloat("left");
+							 //  AGame.clientTL.Y = jso.GetAsFloat("top");
+							//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
 								//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
 								gotCreds = true;
 								//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");

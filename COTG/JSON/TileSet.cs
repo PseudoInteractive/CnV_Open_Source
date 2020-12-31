@@ -30,10 +30,10 @@ namespace COTG.JSON
 		public const float zBase = 0;
 		public const float zLand = 0;
 		public const float zWater = 10;
-		public const float zTerrain = 20;
-		public const float zTopLevel = 26;
-		public const float zCities = 32;
-		public const float zLabels = 40;
+		public const float zTerrain = 18;
+		public const float zTopLevel = 24;
+		public const float zCities = 28;
+		public const float zLabels = 28;
 
 		public enum State
         {
@@ -113,7 +113,7 @@ namespace COTG.JSON
 							break;
 						case "terrainfeatures":
 							tileSet.z = zTerrain;
-						//	tileSet.wantShadow = true;
+							tileSet.wantShadow = true;
 							break;
 						case "city":
 							tileSet.z = zCities;

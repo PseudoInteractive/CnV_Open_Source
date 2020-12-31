@@ -10,7 +10,6 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\..\tools\MonoGameContent\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -992,12 +991,17 @@
 #begin Effects/Structures.fxh
 /copy:Effects/Structures.fxh
 
-#begin Fonts/perpetua.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:Fonts/perpetua.fnt
+#begin Fonts/File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/File.spritefont;Fonts/perp.spritefont
 
-#begin Fonts/perpetua_0.png
+#begin Fonts/perpb.fnt
+/copy:Fonts/perpb.fnt
+
+#begin Fonts/perpb_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1006,6 +1010,6 @@
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=Compressed
-/build:Fonts/perpetua_0.png
+/processorParam:TextureFormat=Color
+/build:Fonts/perpb_0.png
 

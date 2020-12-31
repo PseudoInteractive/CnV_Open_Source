@@ -42,7 +42,7 @@ namespace COTG.Views
 		const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
 		const int cotgPanelRight = 410;
 
-		public static int cachedXOffset = cotgPanelRight;
+		public static int cachedXOffset = 0;
 		public static int cachedTopOffset = 0;
 		const int cotgPopupTopDefault = 95;
 		const int cotgPopupTopLong = 300 + 95;
@@ -55,21 +55,21 @@ namespace COTG.Views
 			//	cotgPopupOpen = 0;
 			var hasPopup = (cotgPopupOpen & 127) != 0;
 			var hasLongWindow = cotgPopupOpen >= 128;
-			var leftOffset = hasPopup ? cotgPopupRight : cotgPanelRight;
+			var leftOffset = hasPopup ? cotgPopupRight - cotgPanelRight : 0;
 			var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : cotgPopupTopDefault;
-			var delta = leftOffset - cachedXOffset;
-			if (delta == 0 && cachedTopOffset == topOffset)
+	
+			if (leftOffset == cachedXOffset && cachedTopOffset == topOffset)
 				return;
 			cachedTopOffset = topOffset;
 			cachedXOffset = leftOffset;
-			var _grid = canvas;
+			var _canvas = canvas;
 			//	var _in = canvasHitTest;
 
 
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
 			App.DispatchOnUIThreadLow(() =>
 			{
-				_grid.Margin = _grid.Margin = new Thickness(leftOffset - cotgPanelRight, topOffset, 0, bottomMargin);
+				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
 				//RemakeRenderTarget();
 			});
 			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>

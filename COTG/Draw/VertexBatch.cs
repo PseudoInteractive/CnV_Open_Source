@@ -750,82 +750,69 @@ namespace COTG.Draw
 			}
 		}
 
-		public void DrawString(BitmapFont bitmapFont, string text, Vector2 c0, Vector2 scale,
-		 Color ?color, FlipFlags flags = FlipFlags.None, float depth = 0f)
+		public unsafe void DrawString(SpriteFont spriteFont, string text, Vector2 position, Vector2 scale,
+		 Color color, FlipFlags flags = FlipFlags.None, float depth = 0f)
 		{
-		
 
-			if (bitmapFont == null)
-				throw new ArgumentNullException(nameof(bitmapFont));
+			var offset = Vector2.Zero;
+			var firstGlyphOfLine = true;
 
-			if (text == null)
-				throw new ArgumentNullException(nameof(text));
-
-			var lineSpacing = bitmapFont.LineHeight;
-			var offset = c0;
-
-			BitmapFontRegion lastGlyph = null;
-			for (var i = 0; i < text.Length;)
-			{
-				int character;
-				if (char.IsLowSurrogate(text[i]))
+			fixed (SpriteFont.Glyph* pGlyphs = spriteFont.Glyphs)
+				for (var i = 0; i < text.Length; ++i)
 				{
-					character = char.ConvertToUtf32(text[i - 1], text[i]);
-					i += 2;
-				}
-				else if (char.IsHighSurrogate(text[i]))
-				{
-					character = char.ConvertToUtf32(text[i], text[i - 1]);
-					i += 2;
-				}
-				else
-				{
-					character = text[i];
-					i += 1;
-				}
+					var c = text[i];
 
-				// ReSharper disable once SwitchStatementMissingSomeCases
-				switch (character)
-				{
-					case '\r':
+					if (c == '\r')
 						continue;
-					case '\n':
-						offset.X = c0.X;
-						offset.Y += lineSpacing;
-						lastGlyph = null;
-						continue;
-				}
 
-				var fontRegion = bitmapFont.GetCharacterRegion(character);
-				if (fontRegion == null)
-					continue;
-
-
-				var _offset = new Vector2(offset.X + fontRegion.XOffset, offset.Y + fontRegion.YOffset);
-
-				var textureRegion = fontRegion.TextureRegion;
-				var bounds = textureRegion.Bounds.GetBounds();
-				AddQuad(TextureSection.FromTexels(textureRegion.Texture, bounds.c0,bounds.c1), _offset,_offset + (bounds.c1-bounds.c0)*scale ,color.GetValueOrDefault());
-
-				var advance = fontRegion.XAdvance + bitmapFont.LetterSpacing;
-				if (BitmapFont.UseKernings && lastGlyph != null)
-				{
-					int amount;
-					if (lastGlyph.Kernings.TryGetValue(character, out amount))
+					if (c == '\n')
 					{
-						advance += amount;
+						offset.X = 0;
+						offset.Y += spriteFont.LineSpacing;
+						firstGlyphOfLine = true;
+						continue;
 					}
+
+					var currentGlyphIndex = spriteFont.GetGlyphIndexOrDefault(c);
+					var pCurrentGlyph = pGlyphs + currentGlyphIndex;
+
+					// The first character on a line might have a negative left side bearing.
+					// In this scenario, SpriteBatch/SpriteFont normally offset the text to the right,
+					//  so that text does not hang off the left side of its rectangle.
+					if (firstGlyphOfLine)
+					{
+						offset.X = Math.Max(pCurrentGlyph->LeftSideBearing, 0);
+						firstGlyphOfLine = false;
+					}
+					else
+					{
+						offset.X += spriteFont.Spacing + pCurrentGlyph->LeftSideBearing;
+					}
+
+					var p = offset;
+					p.X += pCurrentGlyph->Cropping.X;
+					p.Y += pCurrentGlyph->Cropping.Y;
+					p += position;
+					Vector2 _texCoordTL;
+					Vector2 _texCoordBR;
+
+					 _texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * spriteFont.Texture.TexelWidth;
+					 _texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * spriteFont.Texture.TexelHeight;
+					 _texCoordBR.X = (pCurrentGlyph->BoundsInTexture.X + pCurrentGlyph->BoundsInTexture.Width) * spriteFont.Texture.TexelWidth;
+					 _texCoordBR.Y = (pCurrentGlyph->BoundsInTexture.Y + pCurrentGlyph->BoundsInTexture.Height) * spriteFont.Texture.TexelHeight;
+
+					AddQuad(spriteFont.Texture,p,p+new Vector2(pCurrentGlyph->BoundsInTexture.Width,
+							 pCurrentGlyph->BoundsInTexture.Height),
+							
+							 _texCoordTL,
+							 _texCoordBR,
+							  color
+							 );
+
+					offset.X += pCurrentGlyph->Width + pCurrentGlyph->RightSideBearing;
 				}
 
-				offset.X += i != text.Length - 1
-					? advance
-					: fontRegion.XOffset + fontRegion.Width;
-
-				lastGlyph = fontRegion;
-			}
-
-		
-	}
+		}
 		private void SetPrimitiveType(PrimitiveType primitiveType)
 		{
 			if (_primitiveType != primitiveType)
