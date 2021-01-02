@@ -69,7 +69,7 @@ namespace COTG.Views
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
 			App.DispatchOnUIThreadLow(() =>
 			{
-		//		_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
+				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
 				//Canvas.SetLeft(_canvas, leftOffset);
 				//Canvas.SetTop(_canvas, topOffset);
 				//RemakeRenderTarget();

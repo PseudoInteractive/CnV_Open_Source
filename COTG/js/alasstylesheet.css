@@ -4332,7 +4332,7 @@ select option {
 }
 
 .temdom>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -384px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -384px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4342,7 +4342,7 @@ select option {
 }
 
 .temcyn>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -576px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -576px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4352,7 +4352,7 @@ select option {
 }
 
 .temeva>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -0px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -0px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4362,7 +4362,7 @@ select option {
 }
 
 .temibr>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -1152px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -1152px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4372,7 +4372,7 @@ select option {
 }
 
 .temmer>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -768px;
+    background: url('images/city128/tem_sprite4.png') no-repeat -1728px -768px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4382,7 +4382,7 @@ select option {
 }
 
 .temyla>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -960px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -960px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4392,7 +4392,7 @@ select option {
 }
 
 .temnae>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -1344px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -1344px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -4402,7 +4402,7 @@ select option {
 }
 
 .temvex>.bldgmnudv {
-    background: url('ms-appx-web:///web/images/city128/tem_sprite4.png') no-repeat -1728px -192px;
+    background: url('/images/city128/tem_sprite4.png') no-repeat -1728px -192px;
     width: 192px;
     height: 192px;
     transform: scale(0.34);
@@ -17004,7 +17004,7 @@ table.thrcomm td {
 .miniwalls {
     width: 90%;
     height: 90%;
-    background: url(ms-appx-web:///web/images/city128/city_walls.png),#d7cbb1;
+    background: url(/images/city128/city_walls.png),#d7cbb1;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border-spacing: 0 10px;
@@ -27073,7 +27073,7 @@ body {
 }
 
 .landwalls {
-    background: url(ms-appx-web:///web/images/city128/city_walls.png) !important;
+    background: url(/images/city128/city_walls.png) !important;
     background-size: 100% 100% !important;
     border: none !important;
     color: #000 !important;
@@ -27093,7 +27093,7 @@ body {
 }
 
 .watwalls {
-    background: url(ms-appx-web:///web/images/city128/walls_water2.png) !important;
+    background: url(/images/city128/walls_water2.png) !important;
     background-size: 100% 100% !important;
     border: none !important;
     color: #000 !important;

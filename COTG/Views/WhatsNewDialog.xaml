@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Whats New"
     CloseButtonText="Okay"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
    BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
     mc:Ignorable="d">
    
@@ -18,26 +19,21 @@
                 <TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="16"
                            TextAlignment="Left"
-                        ><Run Text="We now support incoming attack discord notifications. " /><LineBreak /><Run Text="There should be at least one player that has the app open at all times. " /><LineBreak /><Run Text="If its not you, you're not playing correctly." /></TextBlock>
-            </Border>
-            <Border BorderThickness="1"
-					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}">
-                <TextBlock TextWrapping="WrapWholeWords" Margin="6"
-                           FontSize="16"
-                           TextAlignment="Left"
-                           ><Run Text="There is now a Shrine Finder that will scan new continents for false forest spots that will become shrines." /><LineBreak /><Run Text="If you are online when the continent opens, please run the Shrine Finder (in settings) and share the results with the team." /></TextBlock>
+                        ><Run Text="Best wishes for 2021" /><LineBreak /></TextBlock>
             </Border>
 			<Border BorderThickness="1"
 					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
-					>
-				<TextBlock TextWrapping="WrapWholeWords"
-						   Margin="6"
-						   FontSize="16"
-						   TextAlignment="Left"
-						   Text="Fixed multiple discord notifications for attacks and redundant notifications for in progress sieges." />
-			</Border>
+					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+			<TextBlock TextWrapping="WrapWholeWords" Margin="6"
+                           FontSize="16"
+                           TextAlignment="Justify"
+                           ><Run Text="The infamous LOU winter theme is a gift - Kick off 2021 with a refreshing new COTG look, created for you (inadvertently) by the good people at EA Phenomic, or at least the people who where there eight years ago." /><LineBreak/>
+				<Run Text="It may be that redistributing EA's intellectual property is not the wisest legal move, but that music is just too good to keep locked away." />
+				<LineBreak/>
+				<Run Text="Besides, when has EA ever taken legal action against an indedpendant developer..." />
+				<LineBreak/><Run Text="Anyway, have a great Year!" />
+				<LineBreak/><LineBreak/><Run Text="     - Avatar"/><LineBreak/>
+			</TextBlock>
 
 		</StackPanel>
     </ScrollViewer>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <ProjectGuid>{813F59C4-EC96-48EF-83E4-E3C7E671E368}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -64,7 +64,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>false</Prefer32Bit>
-    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
     <DocumentationFile>
@@ -84,16 +84,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.Common">
-      <Version>1.1.0-beta-20204-02</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub">
-      <Version>1.1.0-beta-20204-02</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Services">
       <Version>7.0.0-preview4</Version>
@@ -146,9 +136,6 @@
     <PackageReference Include="SharpDX.XAudio2">
       <Version>4.2.0</Version>
     </PackageReference>
-    <PackageReference Include="System.Reflection.Context">
-      <Version>5.0.0</Version>
-    </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>5.0.0</Version>
     </PackageReference>
@@ -181,7 +168,11 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
-    <Compile Include="Draw\VertexBatch.cs" />
+    <Compile Include="Draw\SpriteAnim.cs" />
+    <Compile Include="Draw\SpriteBatch.cs" />
+    <Compile Include="Draw\SpriteBatcher.cs" />
+    <Compile Include="Draw\SpriteBatchItem.cs" />
+    <Compile Include="Draw\VertexBatcher.cs" />
     <Compile Include="Game\AGame.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
@@ -498,6 +489,7 @@
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\background_welcome.jpg" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
@@ -507,7 +499,6 @@
     <Content Include="web\images\city128\water_water.png" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />
     <Content Include="web\images\city128\building_set5.png" />
-    <Content Include="Content\Art\Icons\roundedRect.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
