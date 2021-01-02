@@ -21,18 +21,19 @@ namespace COTG.Draw
 		public const int tileBase=16;
 		public const int tileShadow = 32;
 		public const int tiles = 48;
+		public const int tileText = tiles+32;
 
-		
-		public const int effects = 65;
+		public const int effects = 128;
 		public const int action = effects+8;
+		public const int labelText = maxLayer - 30;
 		public const int overlay = maxLayer-20;
-		public const int text = maxLayer-10;
-		public const int maxLayer = (1 << 12) - 1; // 4095
+		public const int overlayText = maxLayer-10;
+		public const int maxLayer = (1 << 16) - 1; // 4095
 	
 
 		internal static float GetDepth(int layer)
 		{
-			return layer / 16384.0f;
+			return 0;
 		}
 		public static int SortKey(int layer, Texture2D texture) => texture.SortingKey + (layer << 24);
 	}

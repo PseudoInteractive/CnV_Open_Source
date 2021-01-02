@@ -27,13 +27,14 @@ namespace COTG.JSON
 
 	public sealed class TileData
     {
+		const float parallaxZGain = 1.0f / 1024.0f;
 		public const float zBase = 0;
 		public const float zLand = 0;
-		public const float zWater = 10;
-		public const float zTerrain = 18;
-		public const float zTopLevel = 24;
-		public const float zCities = 28;
-		public const float zLabels = 28;
+		public const float zWater = 10* parallaxZGain;
+		public const float zTerrain = 18* parallaxZGain;
+		public const float zTopLevel = 24* parallaxZGain;
+		public const float zCities = 28* parallaxZGain;
+		public const float zLabels = 28* parallaxZGain;
 
 		public enum State
         {

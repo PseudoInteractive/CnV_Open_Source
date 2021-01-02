@@ -5,7 +5,7 @@ DECLARE_TEXTURE(Texture, 0);
 
 BEGIN_CONSTANTS
 
-float4 DiffuseColor = float4(1, 1, 1, 1);
+
 
 MATRIX_CONSTANTS
 
@@ -22,7 +22,7 @@ VertexShaderOutputPosition VertexShaderFunctionPosition(VertexShaderInputPositio
 
 float4 PixelShaderFunctionPosition(VertexShaderOutputPosition input) : SV_Target0
 {
-	return DiffuseColor;
+	return float4(1,1,1,1);
 }
 
 VertexShaderOutputPositionTexture VertexShaderFunctionPositionTexture(VertexShaderInputPositionTexture input)
@@ -35,7 +35,7 @@ VertexShaderOutputPositionTexture VertexShaderFunctionPositionTexture(VertexShad
 
 float4 PixelShaderFunctionPositionTexture(VertexShaderOutputPositionTexture input) : SV_Target0
 {
-	return SAMPLE_TEXTURE(Texture, input.TextureCoordinate) * DiffuseColor;
+	return SAMPLE_TEXTURE(Texture, input.TextureCoordinate) ;
 }
 
 VertexShaderOutputPositionColor VertexShaderFunctionPositionColor(VertexShaderInputPositionColor input)
@@ -48,7 +48,7 @@ VertexShaderOutputPositionColor VertexShaderFunctionPositionColor(VertexShaderIn
 
 float4 PixelShaderFunctionPositionColor(VertexShaderOutputPositionColor input) : SV_Target0
 {
-	return input.Color * DiffuseColor;
+	return input.Color ;
 }
 
 VertexShaderOutputPositionColorTexture VertexShaderFunctionPositionColorTexture(VertexShaderInputPositionColorTexture input)
@@ -63,7 +63,7 @@ VertexShaderOutputPositionColorTexture VertexShaderFunctionPositionColorTexture(
 float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputPositionColorTexture input) : SV_Target0
 {
 	float4 textureColor = SAMPLE_TEXTURE(Texture, input.TextureCoordinate);
-	return textureColor * input.Color * DiffuseColor;
+	return textureColor * input.Color ;
 }
 
 TECHNIQUE(PositionColorTexture, VertexShaderFunctionPositionColorTexture, PixelShaderFunctionPositionColorTexture);

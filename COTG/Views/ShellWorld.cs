@@ -27,7 +27,9 @@ namespace COTG.Views
         public static CoreIndependentInputSource coreInputSource;
 
         public static Vector2 mousePosition;
-        public static Vector2 lastMousePressPosition;
+		public static Vector2 mousePositionC; // in camera space
+		public static Vector3 mousePositionW; // in world space
+		public static Vector2 lastMousePressPosition;
         public static DateTimeOffset lastMousePressTime;
 
 		public float eventTimeOffset;
@@ -244,7 +246,7 @@ namespace COTG.Views
 
 					if ((lastMousePressPosition - mousePosition).Length() < 8)
 					{
-						var worldC = ScreenToWorld(mousePosition);
+						var worldC = ScreenToWorld(mousePositionW);
 						var cid = worldC.WorldToCid();
 
 						{
@@ -391,7 +393,7 @@ namespace COTG.Views
 
 			
             var dZoom = delta.SignOr0() * 0.0625f + delta * (1.0f / 1024.0f);
-            var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,256.0f);
+            var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1,160.0f);
             var cBase = mousePosition - halfSpan;
             var c0 = cBase/cameraZoom;
             var c1 = cBase / newZoom;
@@ -402,9 +404,9 @@ namespace COTG.Views
             ClearHover();
             //    ChatTab.L("CWheel " + wheel);
         }
-        static public (int x,int y) ScreenToWorld(Vector2 c1)
+        static public (int x,int y) ScreenToWorld(Vector3 c1)
         {
-			return (((c1.X - halfSpan.X) / cameraZoomLag + cameraC.X).RoundToInt(),((c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y).RoundToInt() );
+			return (((c1.X ) / cameraZoomLag + cameraC.X).RoundToInt(),((c1.Y ) / cameraZoomLag + cameraC.Y).RoundToInt() );
         }
 
 		static public Vector2 CameraToWorld(Vector2 c1)
@@ -419,15 +421,16 @@ namespace COTG.Views
 				return;
 			var priorMouseC = mousePosition;
 			mousePosition = GetCanvasPosition(current.Position.ToV2());
+			mousePositionC = mousePosition.SToC();
 			cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
-			 
-			//if(JSClient.IsCityView() )
-			// {
-			//     e.Handled = false;
-			//     return;
-			// }
-           
-            var c = ScreenToWorld(mousePosition);
+			mousePositionW = mousePositionC.InverseProject();
+		   //if(JSClient.IsCityView() )
+		   // {
+		   //     e.Handled = false;
+		   //     return;
+		   // }
+
+		   var c = ScreenToWorld(mousePositionW);
             if ((current.LeftButton == ButtonState.Pressed | current.RightButton == ButtonState.Pressed) ==false)
             {
                 var cont = Continent.GetPackedIdFromC(c);

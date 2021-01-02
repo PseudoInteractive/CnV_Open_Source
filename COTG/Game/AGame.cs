@@ -26,6 +26,7 @@ using static COTG.CanvasHelpers;
 
 using UWindows = Windows;
 using Vector2 = System.Numerics.Vector2;
+using Vector3 = System.Numerics.Vector3;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
@@ -39,6 +40,7 @@ namespace COTG
 	}
 	public class AGame : Microsoft.Xna.Framework.Game
 	{
+		public const float cameraZ = 1.0f;
 		public static SwapChainPanel canvas;
 		public static AGame instance;
 		public static GraphicsDevice device=>instance.GraphicsDevice;
@@ -374,7 +376,7 @@ namespace COTG
 			//	.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
 
-			Log(canvas.CompositionScaleX);
+		//	Log(canvas.CompositionScaleX);
 
 			var bounds = Helper.CoreWindow.Bounds;
 			windowSpan = new Vector2((float)bounds.Width,(float)bounds.Height);
@@ -451,7 +453,7 @@ namespace COTG
 
 			
 
-			lineDraw = LoadTexture("Art/lineDraw");
+			lineDraw = LoadTexture("Art/circlegradient");
 		//lineDraw2 = new PixelShaderEffect(
 		sky = LoadTexture("Art/sky");
 			roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
@@ -559,6 +561,7 @@ namespace COTG
 	public static float pixelScale = 1;
 	public static float circleRadiusBase = 1.0f;
 	public static float shapeSizeGain = 1.0f;
+		public static float bulgeGain = 0;
 	public static float pixelScaleInverse = 1;
 		//	const float dashLength = (dashD0 + dashD1) * lineThickness;
  public	static Draw.SpriteBatch draw;
@@ -598,7 +601,7 @@ namespace COTG
 	public const float lightZ0 = 460f;
 	public static Vector2 cameraLightC;
 	public static Vector2 worldLightC;
-	private float cameraZ = 260;
+	private float cameraParallaxZ = 260;
 	public static float animationTWrap; // wraps every 3 seconds
 	public static float animationT; // approximate animation time in seconds
 		private TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
@@ -607,7 +610,7 @@ namespace COTG
 		private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
 
 
-		const float lineTileGain = 1.0f/32.0f;
+		const float lineTileGain = 1.0f/256.0f;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
@@ -619,7 +622,7 @@ namespace COTG
 			return;
 
 
-		parralaxZ0 = 1024 * 64.0f / cameraZoomLag;
+		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
 
 
 		try
@@ -675,15 +678,15 @@ namespace COTG
 			var deltaZoom = cameraZoomLag - detailsZoomThreshold;
 			var wantDetails = deltaZoom > 0;
 			var wantImage = deltaZoom < detailsZoomFade;
-
+			bulgeGain = ( 0.5f * (MathF.Log(MathF.Max(1.0f,cameraZoomLag/detailsZoomThreshold) ))).Min(0.25f);
 
 			// workd space coords
 			var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
 									  (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
 			var srcP1 = new Vector2(srcP0.X + clientSpan.X * bSizeGain2 * pixelScaleInverse,
 								   srcP0.Y + clientSpan.Y * bSizeGain2 * pixelScaleInverse);
-			var destP0 = new Vector2(0,0);
-			var destP1 = clientSpan;
+			var destP0=-halfSpan;
+			var destP1 = halfSpan;
 
 			if (srcP0.X < 0)
 			{
@@ -734,10 +737,10 @@ namespace COTG
 					var viewport = GraphicsDevice.Viewport;
 
 
-					var proj = Matrix.CreateOrthographicOffCenter(0f, viewport.Width, viewport.Height,0, 0, -1);
+					var proj = Matrix.CreateLookAt(new Microsoft.Xna.Framework.Vector3(0,0,cameraZ), Microsoft.Xna.Framework.Vector3.Zero,Microsoft.Xna.Framework.Vector3.Up)* Matrix.CreatePerspective(viewport.Width*0.5f,-viewport.Height*0.5f,0.5f, 1.5f);
 //					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 					defaultEffect.Parameters["WorldViewProjection"].SetValue(proj);
-					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
+//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 					
 					draw.Begin();
 					
@@ -756,7 +759,7 @@ namespace COTG
 
 					if (worldObjects != null)
 						draw.AddQuad(COTG.Draw.Layer.background+1,worldObjects,
-							destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities), srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor());
+							destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor(), TileData.zCities);
 
 
 				}
@@ -783,7 +786,7 @@ namespace COTG
 					
 				var rgb = attacksVisible ? 255 : 255;
 				var tint = new Color(rgb, rgb, rgb, intAlpha);
-				var tintShadow = new Color(0, 0,32, intAlpha/2);
+				var tintShadow = new Color(0, 0,32, intAlpha*3/4);
 				//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
 				if (wantDesaturate)
@@ -868,21 +871,22 @@ namespace COTG
 											var _tint = (pass == 1) ? tintShadow : (pass == 2) ? World.GetTint(ccid) : tint;
 											if((pass == 2))
 												_tint.A = intAlpha;;
-											var dz = tile.z * parallaxGain; // shadows draw at terrain level 
+											var dz = (pass == 1) ? 0.0f : tile.z * parallaxGain; // shadows draw at terrain level 
 
-											var scale = (pass == 1) ? CanvasHelpers.ParalaxScaleShadow(dz) : CanvasHelpers.ParalaxScale(dz);
+//											var scale = (pass == 1) ? CanvasHelpers.ParallaxScaleShadow(dz) : CanvasHelpers.ParallaxScale(dz);
 											var wc = new Vector2(cx - .5f, cy - 0.5f);
-											var cc = (pass == 1) ?  wc.WToC(): wc.WToCp(dz);
-										
+											var cc = wc.WToC();
+												var cc1 = cc + new Vector2(pixelScale, pixelScale);
 
 											var sy = off / tile.columns;
 											var sx = off - sy * tile.columns;
 												var uv0 = new Vector2((sx) * tile.scaleXToU + tile.halfTexelU , (sy ) * tile.scaleYToV+tile.halfTexelV );
 												var uv1 = new Vector2((sx + 1) * tile.scaleXToU+tile.halfTexelU , (sy + 1) * tile.scaleYToV  - tile.halfTexelV );
 												
-												draw.AddQuad(pass switch { 0=>Layer.tileBase+layer.id, 1=> Layer.tileShadow,2=>Layer.tiles+layer.id }, tile.bitmap, cc, cc + new Vector2(pixelScale * scale, pixelScale * scale),
+												draw.AddQuad(pass switch { 0=>Layer.tileBase+layer.id, 1=> Layer.tileShadow,_=>Layer.tiles+layer.id }, tile.bitmap, cc, cc1,
 													uv0,
-													uv1 , _tint);
+													uv1 , _tint,
+													(cc,cc1).RectDepth( dz) );
 
 
 
@@ -914,8 +918,8 @@ namespace COTG
 			//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
 			if (worldChanges != null)
 				draw.AddQuad(Layer.effects-1, worldChanges,
-					destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities),
-					srcP0, srcP1,255.AlphaToColor() );
+					destP0, destP1,
+					srcP0, srcP1,255.AlphaToColor(), TileData.zCities);
 
 
 			circleRadiusBase = circleRadMin * shapeSizeGain * 7.9f;
@@ -974,8 +978,8 @@ namespace COTG
 									}
 									var targetCid = attack.targetCid;
 									var sourceCid = attack.sourceCid;
-									var c1 = targetCid.CidToCp(TileData.zLabels);
-									var c0 = sourceCid.CidToCp(TileData.zLabels);
+									var c1 = targetCid.CidToC();
+									var c0 = sourceCid.CidToC();
 									// cull (should do this pre-transform as that would be more efficient
 									if (c0.X.Min(c1.X) >= clientSpan.X)
 										continue;
@@ -1044,8 +1048,8 @@ namespace COTG
 								{
 									var cid = i.Key;
 									var count = i.Value;
-									var c = cid.CidToCp(TileData.zLabels);
-									DrawTextBox( $"{count.prior}`{count.incoming}", c,textformatLabel, Color.DarkOrange, notFaded);
+									var c = cid.CidToC();
+									DrawTextBox( $"{count.prior}`{count.incoming}", c,textformatLabel, Color.DarkOrange, notFaded,Layer.tileText);
 
 
 								}
@@ -1076,26 +1080,26 @@ namespace COTG
 									}
 								}
 								{
-									var c0 = cluster.topLeft.WToCp(TileData.zLabels);
-									var c1 = cluster.bottomRight.WToCp(TileData.zLabels);
+									var c0 = cluster.topLeft.WToC();
+									var c1 = cluster.bottomRight.WToC();
 									DrawRect(Layer.effects, c0, c1,  selected ? Color.Black : Color.Maroon);
 								}
 
 								if (selected)
 								{
 									var real = cluster.real;
-									var c0 = real.CidToCp(TileData.zLabels);
+									var c0 = real.CidToC();
 									foreach (var a in cluster.attacks)
 									{
 										var t = (tick * a.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 										var r = t.Ramp();
-										var c1 = a.CidToCp(TileData.zLabels);
+										var c1 = a.CidToC();
 										var spot = Spot.GetOrAdd(a);
 										DrawAction( 0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
 									}
 									foreach (var target in cluster.targets)
 									{
-										var c = target.CidToCp(TileData.zLabels);
+										var c = target.CidToC();
 										var rnd = target.CidToRandom();
 
 										var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1153,14 +1157,14 @@ namespace COTG
 								{
 
 									var targetCid = city.cid;
-									var c1 = targetCid.CidToCp(TileData.zLabels);
+									var c1 = targetCid.CidToC();
 									if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 										continue;
 									var incAttacks = 0;
 									var incTs = 0;
 									foreach (var i in city.incoming)
 									{
-										var c0 = i.sourceCid.CidToCp(TileData.zLabels);
+										var c0 = i.sourceCid.CidToC();
 										if (IsCulled(c0, c1))
 											continue;
 										Color c;
@@ -1224,7 +1228,8 @@ namespace COTG
 										}
 									}
 									if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
-										DrawTextBox( $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, notFaded);
+										DrawTextBox( $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", 
+											c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, notFaded, Layer.tileText);
 								}
 							}
 						}
@@ -1238,11 +1243,11 @@ namespace COTG
 								if (!city.incoming.Any())
 								{
 									var targetCid = city.cid;
-									var c1 = targetCid.CidToCp(TileData.zLabels);
+									var c1 = targetCid.CidToC();
 									if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 										continue;
 									if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
-										DrawTextBox( $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, notFaded);
+										DrawTextBox( $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, notFaded, Layer.tileText);
 
 								}
 							}
@@ -1256,7 +1261,7 @@ namespace COTG
 						// Todo: clip thi
 						if (city.senatorInfo.Length != 0 && !defenderVisible)
 						{
-							var c = city.cid.CidToCp(TileData.zLabels);
+							var c = city.cid.CidToC();
 							var idle = 0;
 							var active = 0;
 							var recruiting = 0;
@@ -1270,7 +1275,7 @@ namespace COTG
 									active += sen.count;
 								if (sen.target != 0)
 								{
-									var c1 = sen.target.CidToCp(TileData.zLabels);
+									var c1 = sen.target.CidToC();
 
 									var dist = city.cid.DistanceToCid(sen.target) * cartTravel; // todo: ship travel?
 									var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1280,7 +1285,7 @@ namespace COTG
 										troopImages[ttSenator], false, null, 20);
 								}
 							}
-							DrawTextBox( $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, notFaded);
+							DrawTextBox( $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, notFaded, Layer.tileText);
 
 						}
 							{
@@ -1288,7 +1293,7 @@ namespace COTG
 							}
 							if (MainPage.IsVisible())
 						{
-							var c = city.cid.CidToCp(TileData.zLabels);
+							var c = city.cid.CidToC();
 							if (IsCulled(c, raidCullSlopSpace))
 								continue;
 							var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
@@ -1296,7 +1301,7 @@ namespace COTG
 							//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
 							foreach (var raid in city.raids)
 							{
-								var ct = raid.target.CidToCp(TileData.zLabels);
+								var ct = raid.target.CidToC();
 								(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
 								DrawAction( (float)(raid.time - serverNow).TotalSeconds,
 									raid.GetOneWayTripTimeMinutes(city) * 60.0f,
@@ -1404,15 +1409,15 @@ namespace COTG
 							for (var cx = cx0; cx < cx1; ++cx)
 							{
 								(var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
-								var zScale = CanvasHelpers.ParalaxScale(TileData.zCities);
+								//var zScale = CanvasHelpers.ParallaxScale(TileData.zCities);
 
 								if (name != null)
 								{
 									var layout = GetTextLayout( name, nameTextFormat);
-									var span= pixelScale*zScale;
-									var drawC = (new Vector2(cx, cy).WToCp(TileData.zCities));
+									var span= pixelScale;
+									var drawC = (new Vector2(cx, cy).WToC());
 										drawC.Y += span * 8.75f / 16.0f;
-
+									drawC = drawC.Project(TileData.zLabels);
 									layout.Draw(drawC,
 										isMine ?
 											(hasIncoming ?
@@ -1423,18 +1428,19 @@ namespace COTG
 											(hovered ?
 												(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
 											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
-											   : hovered ? nameColorHover : nameColor));
+											   : hovered ? nameColorHover : nameColor), Layer.tileText);
 
 								}
 								if (spot != null && spot.isClassified)
 								{
-									var c1 = (cx, cy).WToCp(TileData.zLabels);
+									var c1 = (cx, cy).WToC();
 									var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 									var r = t.Ramp();
 									var alpha = (t * 1.21f).Wave() * 0.75f + 0.25f;
-									var spriteSize = new Vector2( 16 * zScale );
-
-									draw.AddQuad(Layer.effects, troopImages[spot.classificationTT], c1 - spriteSize, c1+ spriteSize, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f));
+									var spriteSize = new Vector2( 16  );
+										var _c0 = c1 - spriteSize;
+										var _c1 = c1 + spriteSize;
+									draw.AddQuad(Layer.effects, troopImages[spot.classificationTT], _c0,_c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f),(_c0,_c1).RectDepth(TileData.zLabels));
 								}
 							}
 						}
@@ -1451,38 +1457,39 @@ namespace COTG
 			}
 			if (_toolTip != null)
 			{
-				TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
-				var bounds = textLayout.span;
-				Vector2 c = ShellPage.mousePosition + new Vector2(16, 16);
-				var expand = new Vector2(7);
+			//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
+			//	var bounds = textLayout.span;
+				Vector2 c = ShellPage.mousePositionW.ToV2() + new Vector2(16, 16);
+					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, true,Layer.overlay, 9);
+				//	var expand = new Vector2(7);
 				
 				//  var rectD = new Vector2(32*4, 24*5);
 				// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 				//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
 				//tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right, (float)bounds.Bottom);
-				FillRoundedRectangle(Layer.overlay,c- expand,c+bounds+expand,new Color(255,255,255,255));
+			//	FillRoundedRectangle(Layer.overlay,c- expand,c+bounds+expand,new Color(255,255,255,255));
 					//                    target.X+= 12;
 					//                  target.Y += 8;
 
-				textLayout.Draw( c, Color.Black);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
+			//	textLayout.Draw( c, Color.Black, Layer.overlayText);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 			}
 			var _contTip = ShellPage.contToolTip;
 			if (_contTip != null)
 			{
-				TextLayout textLayout = GetTextLayout( _contTip, tipTextFormat);
-					var bounds = textLayout.span;
-					Vector2 c = new Vector2(16, 16);
-					var expand = new Vector2(7);
-
+			//	TextLayout textLayout = GetTextLayout( _contTip, tipTextFormat);
+				//	var bounds = textLayout.span;
+					Vector2 c = new Vector2(16, 16).SToC();
+					//var expand = new Vector2(7);
+					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, true, Layer.overlay, 9,0);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
 					//tipTextBrush.EndPoint = tipBackgroundBrush.EndPoint = new Vector2((float)bounds.Right, (float)bounds.Bottom);
-					FillRoundedRectangle(Layer.overlay, c - expand, c + bounds + expand, new Color(255, 255, 255, 255));
+				//	FillRoundedRectangle(Layer.overlay, c - expand, c + bounds + expand, new Color(255, 255, 255, 255));
 					//                    target.X+= 12;
 					//                  target.Y += 8;
 
-					textLayout.Draw(c, Color.Black);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
+				//	textLayout.Draw(c, Color.Black,Layer.overlayText);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 													//	ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 				}
 
@@ -1501,19 +1508,19 @@ namespace COTG
 
 		private static void DrawFlag(int cid, SpriteAnim sprite)
 		{
-			var c = cid.CidToCp(TileData.zLabels);
-			var dv = WToCpSpan(TileData.zLabels);
+			var c = cid.CidToC();
+			var dv = AGame.pixelScale;
 
 			float frameCount = sprite.frameCount;
 			var frame = (int)(((animationT + cid.CidToRandom() * 15) * 15) % frameCount);
-
-			draw.AddQuad(Layer.effects,sprite.material, new Vector2(c.X, c.Y - dv * 0.475f), new Vector2(c.X + dv * 0.5f, c.Y - dv*0.1f), new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor());
+			var c0 = new Vector2(c.X, c.Y - dv * 0.435f);
+			Vector2 c1 = new Vector2(c.X + dv * 0.5f, c.Y - dv*0.035f);
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor(), (c0,c1).RectDepth(TileData.zLabels)  );
 		}
 
-		private static void FillRoundedRectangle(int layer,Vector2 c0, Vector2 c1,Color background)
+		private static void FillRoundedRectangle(int layer,Vector2 c0, Vector2 c1,Color background, float depth)
 		{
-			//	throw new NotImplementedException();
-			draw.AddQuad(layer,roundedRect, c0, c1, background);
+			draw.AddQuad(layer, roundedRect, c0, c1, background, depth);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 		}
 
 		private static Color GetAttackColor(Army attack)
@@ -1530,28 +1537,29 @@ namespace COTG
 		};
 	}
 
-	private static void DrawTextBox( string text, Vector2 at, TextFormat format, Color color, bool drawBackground)
+	private static void DrawTextBox( string text, Vector2 at, TextFormat format, Color color, bool drawBackground, int layer = Layer.tileText,float _expand = 4.0f, float zBias = TileData.zLabels )
 	{
-		float xLoc = at.X;
-		float yLoc = at.Y;
+
 			
 		TextLayout textLayout = GetTextLayout( text, format);
-		var bounds = textLayout.span;
-		var expand = new Vector2(4);
+		var span = textLayout.span;
+			at = at.Project(zBias);
+			
+		var expand = new Vector2(_expand);
 			if (drawBackground)
 			{
 				var c0 = at;
 				if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
-					c0.X -= textLayout.span.X * 0.5f;
+					c0.X -= span.X * 0.5f;
 				if (format.horizontalAlignment == TextFormat.HorizontalAlignment.right)
-					c0.X -= textLayout.span.X ;
+					c0.X -= span.X ;
 				if (format.verticalAlignment == TextFormat.VerticalAlignment.center)
-					c0.Y -= textLayout.span.Y * 0.5f;
+					c0.Y -= span.Y * 0.5f;
 				if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
-					c0.Y -= textLayout.span.Y;
-				FillRoundedRectangle(Layer.overlay, c0 - expand, c0 + textLayout.span + bounds, 255.AlphaToColor());
+					c0.Y -= span.Y;
+				FillRoundedRectangle(layer-1, c0 - expand, c0 + expand + span, 255.AlphaToColor(),0);
 			}
-		textLayout.Draw( at, color);
+		textLayout.Draw( at, color, layer);
 	}
 
 		//      private void DrawAction( CanvasDrawingSession ds, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1,Color color)
@@ -1616,7 +1624,7 @@ namespace COTG
 			var midS = mid - shadowOffset;
 			if (army != null)
 			{
-				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePosition);
+				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionC);
 				if (d2 < bestUnderMouseScore)
 				{
 					bestUnderMouseScore = d2;
@@ -1631,7 +1639,11 @@ namespace COTG
 				DrawSquare(Layer.action+3,new Vector2(c0.X - shadowOffset.X , c0.Y - shadowOffset.Y), color);
 			var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
-				draw.AddQuad(Layer.action+4,  bitmap, new Vector2(mid.X - spriteSize, mid.Y - spriteSize), new Vector2(mid.X + spriteSize, mid.Y + spriteSize), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
+			{
+				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
+				var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
+				draw.AddQuad(Layer.action + 4, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
+			}
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 		
 	
@@ -1647,7 +1659,7 @@ namespace COTG
 		}
 		private static void DrawLine(int layer,Vector2 c0, Vector2 c1, Color color)
 		{
-			draw.AddLine(layer,lineDraw, c0, c1, lineThickness, animationTWrap, animationTWrap + (c0 - c1).Length() * lineTileGain, color);
+			draw.AddLine(layer,lineDraw, c0, c1, lineThickness, animationTWrap, animationTWrap + (c0 - c1).Length() * lineTileGain, color,(c0.CToDepth(), c1.CToDepth()));
 		}
 
 		private static bool IsWorldView()
@@ -1687,7 +1699,7 @@ namespace COTG
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
 		{
-			var c = cid.CidToCp(TileData.zLabels);
+			var c = cid.CidToC();
 			var rnd = cid.CidToRandom();
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
@@ -1732,6 +1744,7 @@ namespace COTG
 	public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
 	public static Vector2 ToV2(this Point me) => new Vector2(me.X, me.Y);
 	public static Vector2 ToV2(this Microsoft.Xna.Framework.Vector2 me) => new Vector2(me.X, me.Y);
+		public static Vector2 ToV2(this Vector3 me) => new Vector2(me.X, me.Y);
 
 		//public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);
 		//public static void DrawLine(this CanvasSpriteBatch b, Vector2 c0, Vector2 c1, Vector4 c, float thickness, CanvasStrokeStyle style)
@@ -1763,29 +1776,73 @@ namespace COTG
 		//      {
 		//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
 		//      }
-		public static float parralaxZ0 = 1024;
-	public static float ParalaxScale(float dz) => SettingsPage.wantParallax? parralaxZ0 / (parralaxZ0 - dz) : 1.0f;
+	//	public static float parallaxZ0 = 1024;
+	//public static float ParallaxScale(float dz) => SettingsPage.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
 		// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
-		public static float ParalaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
+	//	public static float ParallaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
 
-	public static Vector2 WToCp(this Vector2 c, float dz)
-	{
-		var paralaxGain = ParalaxScale(dz);
-		
-		return (c- AGame.cameraCLag)* paralaxGain*AGame.pixelScale + AGame.halfSpan;
-	}
-	public static Vector2 WToCpSpan(this Vector2 c, float dz)
-	{
-		var paralaxGain = ParalaxScale(dz);
-		
-		return (c)* paralaxGain*AGame.pixelScale ;
-	}
-		public static float WToCpSpan( float dz)
+		public static float CToDepth(this Vector2 c)
 		{
-			var paralaxGain = ParalaxScale(dz);
+			float r =( c.Length() / AGame.halfSpan.X * 0.675f).Min(1.0f);
+			return r.SLerp(AGame.bulgeGain, 0.0f);
 
-			return paralaxGain * AGame.pixelScale;
 		}
+
+		public static Vector2 Project(this Vector3 c)
+		{
+			float scale = 1.0f /(AGame.cameraZ- c.Z);
+			return new Vector2(c.X * scale, c.Y * scale);
+
+		}
+		public static Vector2 Project(this Vector2 c, float zBias)
+		{
+			float scale = 1.0f / (AGame.cameraZ - (c.CToDepth()+zBias)  );
+			return new Vector2(c.X * scale, c.Y * scale);
+
+		}
+
+		public static Vector3 InverseProject(this Vector2 c, float z)
+		{
+			float scale = (AGame.cameraZ - z);
+			return new Vector3(c.X * scale,c.Y*scale, z);
+		}
+
+		public static Vector3 InverseProject(this Vector2 c)
+		{
+			float z = CToDepth(c);
+		
+			for (int i = 0; i < 4; ++i)
+			{
+				var test = InverseProject(c, z);
+				z = new Vector2(test.X, test.Y).CToDepth();
+			}
+			return InverseProject(c,z);
+		}
+
+		public static float CToDepth(this (float x, float y) c) => CToDepth(new Vector2(c.x, c.y));
+	//	public static Vector2 WToCp(this Vector2 c, float dz)
+	//{
+	//	var paralaxGain = ParallaxScale(dz);
+		
+	//	return (c- AGame.cameraCLag)* paralaxGain*AGame.pixelScale;
+	//}
+	//	public static Vector2 WToCp(this (float x, float y) c, float dz) => WToCp(new Vector2(c.x, c.y), dz);
+		public static Vector2 SToC(this Vector2 s)
+		{
+			return s - AGame.halfSpan;
+		}
+	//	public static Vector2 WToCpSpan(this Vector2 c, float dz)
+	//{
+	//	var paralaxGain = ParallaxScale(dz);
+		
+	//	return (c)* paralaxGain*AGame.pixelScale ;
+	//}
+		//public static float WToCpSpan( float dz)
+		//{
+		//	var paralaxGain = ParallaxScale(dz);
+
+		//	return paralaxGain * AGame.pixelScale;
+		//}
 		//public static Vector2 WToCShadow(this Vector2 c, float dz)
 		//{
 		//	var paralaxGain = ParalaxScaleShadow(dz);
@@ -1797,11 +1854,11 @@ namespace COTG
 		return c;//(c - AGame.cameraLightC) * paralaxGain + AGame.cameraLightC;
 	}
 	// camera space to camera space with parallax
-	public static Vector2 CToCp(this Vector2 c, float dz)
-	{
-		var paralaxGain = ParalaxScale(dz);
-			return (c - AGame.halfSpan) * paralaxGain + AGame.halfSpan;
-	}
+	//public static Vector2 CToCp(this Vector2 c, float dz)
+	//{
+	//	var paralaxGain = ParallaxScale(dz);
+	//		return (c) * paralaxGain;
+	//}
 	//public static Point CToCp(this Vector2 c, float dz)
 	//{
 	//	var paralaxGain = ParalaxScale(dz);
@@ -1811,25 +1868,34 @@ namespace COTG
 
 	public static Vector2 WToC(this Vector2 c)
 	      {
-	          return (c - AGame.cameraCLag) * AGame.pixelScale + AGame.halfSpan;
+	          return (c - AGame.cameraCLag) * AGame.pixelScale;
 	      }
 	public static Vector2 WToC(this (int x, int y) c)
 	{
 	    return new Vector2(c.x, c.y).WToC();
 	}
-	public static Vector2 WToCp(this (int x, int y) c, float z)
-	{
-		return new Vector2(c.x, c.y).WToCp(z);
-	}
-	//public static Vector2 CidToCC(this int c)
-	//      {
-	//          return c.ToWorldC().WToC();
-	//      }
-	public static Vector2 CidToCp(this int c, float z)
-	{
-		return c.ToWorldC().WToCp(z);
-	}
+		public static Vector2 WToC(this (float x, float y) c)
+		{
+			return new Vector2(c.x, c.y).WToC();
+		}
+	//	public static Vector2 WToCp(this (int x, int y) c, float z)
+	//{
+	//	return new Vector2(c.x, c.y).WToCp(z);
+	//}
+	public static Vector2 CidToC(this int c)
+	      {
+	          return c.ToWorldC().WToC();
+	      }
+	//public static Vector2 CidToCp(this int c, float z)
+	//{
+	//	return c.ToWorldC().WToCp(z);
+	//}
 
+		public static (float v0, float v10, float v01, float v11) RectDepth(this (Vector2 c0, Vector2 c1) c, float dz)
+		{
+			return (c.c0.CToDepth() + dz, new Vector2(c.c1.X, c.c0.Y).CToDepth() + dz,
+													new Vector2(c.c0.X, c.c1.Y).CToDepth() + dz, c.c1.CToDepth() + dz);
+		}
 	public static bool BringCidIntoWorldView(this int cid, bool lazy)
 	{
 		var v = cid.CidToWorldV();
@@ -1882,8 +1948,9 @@ namespace COTG
 			span.Y = size.Y;// *0.5f;
 		}
 
-		internal void Draw(Vector2 c,Color color)
+		internal void Draw(Vector2 c,Color color, int layer = Layer.labelText)
 		{
+			float z = 0;
 			if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
 				c.X -= span.X * 0.5f;
 			else if (format.horizontalAlignment == TextFormat.HorizontalAlignment.right)
@@ -1894,8 +1961,22 @@ namespace COTG
 				c.Y -= span.Y;
 
 
-			AGame.draw.DrawString(AGame.font, text, c, color);
+			AGame.draw.DrawString(AGame.font, text, c, color, layer, z);// (c+span*0.5f).CToDepth() );
 		}
+		//internal void Draw(Vector2 c, Color color,  int layer = Layer.labelText)
+		//{
+		//	if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
+		//		c.X -= span.X * 0.5f;
+		//	else if (format.horizontalAlignment == TextFormat.HorizontalAlignment.right)
+		//		c.X -= span.X;
+		//	else if (format.verticalAlignment == TextFormat.VerticalAlignment.center)
+		//		c.Y -= span.Y * 0.5f;
+		//	else if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
+		//		c.Y -= span.Y;
+
+
+		//	AGame.draw.DrawString(AGame.font, text, c, color, layer,  (c+span*0.5f).CToDepth() );
+		//}
 	}
 }
 

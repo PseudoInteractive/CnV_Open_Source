@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:Art/Anim/flagAnimGrey.png
 
+#begin Art/circlegradient.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Compressed
+/build:Art/circlegradient.png
+
 #begin Art/Icons/barracks.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -942,11 +954,11 @@
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
+/processorParam:GenerateMipmaps=True
+/processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
+/processorParam:TextureFormat=Compressed
 /build:Art/lineDraw.dds
 
 #begin Art/sky.dds

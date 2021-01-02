@@ -39,7 +39,7 @@
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
 
-			<ToggleSwitch Header="Parallax" IsOn="{x:Bind views:SettingsPage.wantParallax, Mode=TwoWay}" />
+				<ToggleSwitch Header="Parallax" IsOn="{x:Bind views:SettingsPage.wantParallax, Mode=TwoWay}" />
 
 			</wct:WrapPanel>
 			<wct:WrapPanel Orientation="Horizontal"
