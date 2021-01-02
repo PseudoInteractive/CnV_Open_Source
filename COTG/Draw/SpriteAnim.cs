@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using COTG.Draw;
+
+using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using System.Collections.Generic;
@@ -12,9 +14,9 @@ namespace COTG
 	{
 		public int frameCount;
 		public string asset;
-		public  Texture2D texture;
+		public Material material;
 		public string assetPath => $"Art/Anim/{asset}";
-		public void Load() { texture = AGame.instance.Content.Load<Texture2D>(assetPath); }
+		public void Load() { material =new Material( AGame.instance.Content.Load<Texture2D>(assetPath)); }
 		
 		public static SpriteAnim flagHome = new SpriteAnim() { frameCount = 12, asset = "flagAnim0" };
 		public static SpriteAnim flagSelected = new SpriteAnim() { frameCount = 12, asset = "flagAnim4" };

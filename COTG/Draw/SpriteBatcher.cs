@@ -29,11 +29,12 @@ namespace COTG.Draw
 		/// <summary>
 		/// The maximum number of batch items that can be processed per iteration
 		/// </summary>
-		private const int MaxBatchSize = short.MaxValue / 6; // 6 = 4 vertices unique and 2 shared, per quad
+		public const int MaxBatchSize = short.MaxValue / 6; // 6 = 4 vertices unique and 2 shared, per quad
 		/// <summary>
 		/// Initialization size for the vertex array, in batch units.
 		/// </summary>
-		private const int InitialVertexArraySize = 256;
+		public const int VertexArraySize = MaxBatchSize*4;
+		public const int IndexArraySize = MaxBatchSize * 6;
 
 		/// <summary>
 		/// The list of batch items to process.
@@ -53,20 +54,16 @@ namespace COTG.Draw
 
 		private Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[] _vertexArray;
 
-		public SpriteBatcher(GraphicsDevice device, int capacity = 0)
+		public SpriteBatcher(GraphicsDevice device)
 		{
 			_device = device;
 
 
-			if (capacity <= 0)
-				capacity = InitialBatchSize;
-			else
-				capacity = (capacity + 63) & (~63); // ensure chunks of 64.
-
+			
 			_batchItemList = new SortedList<int, Dictionary<int, SpriteBatchItemList>>();
 
 
-			EnsureArrayCapacity(capacity);
+			EnsureArrayCapacity();
 		}
 
 		/// <summary>
@@ -95,21 +92,14 @@ namespace COTG.Draw
 		/// Resize and recreate the missing indices for the index and vertex position color buffers.
 		/// </summary>
 		/// <param name="numBatchItems"></param>
-		private unsafe void EnsureArrayCapacity(int numBatchItems)
+		private unsafe void EnsureArrayCapacity()
 		{
+			const int numBatchItems = MaxBatchSize;
 			int neededCapacity = 6 * numBatchItems;
-			if (_index != null && neededCapacity <= _index.Length)
-			{
-				// Short circuit out of here because we have enough capacity.
-				return;
-			}
+		
 			short[] newIndex = new short[6 * numBatchItems];
 			int start = 0;
-			if (_index != null)
-			{
-				_index.CopyTo(newIndex, 0);
-				start = _index.Length / 6;
-			}
+			
 			fixed (short* indexFixedPtr = newIndex)
 			{
 				var indexPtr = indexFixedPtr + (start * 6);
@@ -188,12 +178,16 @@ namespace COTG.Draw
 
 
 						}
-						FlushVertexArray(0, numBatchesToProcess * 4, list.material.effect, list.material.texture);
-
+						list.sprites.Clear();
+						FlushVertexArray(0, numBatchesToProcess * 4, list.material);
+						list.material = null;
 					}
 				}
+				layer.Value.Clear();
 				// return items to the pool.  
 			}
+			_batchItemList.Clear();
+		}
 
 			/// <summary>
 			/// Sends the triangle list to the graphics device. Here is where the actual drawing starts.
@@ -202,7 +196,7 @@ namespace COTG.Draw
 			/// <param name="end">End index of vertices to draw. Not used except to compute the count of vertices to draw.</param>
 			/// <param name="effect">The custom effect to apply to the geometry</param>
 			/// <param name="texture">The texture to draw.</param>
-			void FlushVertexArray(int start, int end, Effect effect, Texture texture)
+			void FlushVertexArray(int start, int end, Material material)
 			{
 				if (start == end)
 					return;
@@ -210,6 +204,7 @@ namespace COTG.Draw
 				var vertexCount = end - start;
 
 				// If the effect is not null, then apply each pass and render the geometry
+				var effect = material.effect;
 				if (effect != null)
 				{
 					var passes = effect.CurrentTechnique.Passes;
@@ -219,7 +214,9 @@ namespace COTG.Draw
 
 						// Whatever happens in pass.Apply, make sure the texture being drawn
 						// ends up in Textures[0].
-						_device.Textures[0] = texture;
+						_device.Textures[0] = material.texture;
+						if(material.texture1!=null)
+							_device.Textures[1] = material.texture1;
 
 						_device.DrawUserIndexedPrimitives(
 							PrimitiveType.TriangleList,
@@ -248,5 +245,5 @@ namespace COTG.Draw
 			}
 		}
 	}
-}
+
 

@@ -47,19 +47,19 @@ namespace COTG
 		public static SpriteFont font;
 		const float detailsZoomThreshold = 36;
 		const float detailsZoomFade = 8;
-		public static Texture2D worldBackground;
+		public static Material worldBackground;
 		//public static Effect imageEffect;
 		public static Effect defaultEffect;
-		public static Texture2D lineDraw;
-		public static Texture2D quadTexture;
-		public static Texture2D roundedRect;
-		public static Texture2D sky;
-		public static Texture2D webMask;
+		public static Material lineDraw;
+		public static Material quadTexture;
+		public static Material roundedRect;
+		public static Material sky;
+		public static Material webMask;
 		//    public static TintEffect worldBackgroundDark;
-		public static Texture2D worldObjects;
-		public static Texture2D worldOwners;
+		public static Material worldObjects;
+		public static Material worldOwners;
 		//     public static TintEffect worldObjectsDark;
-		public static Texture2D worldChanges;
+		public static Material worldChanges;
 	//	public static Vector2 clientTL;
 		public static Vector2 cameraC = new Vector2(300, 300);
 		public static Vector2 cameraCLag = cameraC; // for smoothing
@@ -107,7 +107,7 @@ namespace COTG
 		static readonly Color focusColor = Color.Magenta;
 		static readonly Color pinnedColor = Color.Teal;
 		static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
-		public static Texture2D[] troopImages = new Texture2D[Game.Enum.ttCount];
+		public static Material[] troopImages = new Material[Game.Enum.ttCount];
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
 		public static bool initialized => canvas != null;
@@ -172,17 +172,17 @@ namespace COTG
 	
 
 		bool inputSetup;
-		public static Texture2D CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format)
+		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format)
 		{
 			var rv = new Texture2D(instance.GraphicsDevice, x,y, false, format);
 			rv.SetData(pixels);
 			
-			return rv;
+			return new Material(rv);
 		}
-		public static Texture2D LoadTexture(string filename)
+		public static Material LoadTexture(string filename)
 		{
 			var rv = instance.Content.Load<Texture2D>(filename);
-			return rv;
+			return new Material(rv);
 		}
 		public static MouseState mouseState;
 		public static MouseState priorMouseState;
@@ -261,13 +261,13 @@ namespace COTG
 					{
 						var w = worldObjects;
 						worldObjects = null;
-						w.Dispose();
+						w.texture.Dispose();
 					}
 					if (worldOwners != null)
 					{
 						var w = worldOwners;
 						worldOwners = null;
-						w.Dispose();
+						w.texture.Dispose();
 					}
 					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
 					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
@@ -314,7 +314,7 @@ namespace COTG
 		{
 			var w = worldChanges;
 			worldChanges = null;
-			w.Dispose();
+			w.texture.Dispose();
 		}
 		World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
 
@@ -437,6 +437,7 @@ namespace COTG
 		}
 		protected override async void LoadContent()
 		{
+			defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
 			readyToLoad = true;
 
 			SpriteAnim.flagHome.Load();
@@ -445,15 +446,16 @@ namespace COTG
 			draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
 			worldBackground = LoadTexture("Art/world");
 			font = Content.Load<SpriteFont>("Fonts/perp");
+			font.defaultMaterial = new Material(font.Texture);
 			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
-			defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
+			
 
 			lineDraw = LoadTexture("Art/lineDraw");
 		//lineDraw2 = new PixelShaderEffect(
 		sky = LoadTexture("Art/sky");
-			roundedRect = Content.Load<Texture2D>("Art/Icons/roundRect");
-			quadTexture = Content.Load<Texture2D>("Art/Icons/roundRect");
+			roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
+			quadTexture = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
 			for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
 		{
 
@@ -737,7 +739,7 @@ namespace COTG
 					defaultEffect.Parameters["WorldViewProjection"].SetValue(proj);
 					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 					
-					draw.Begin(transformMatrix: proj);
+					draw.Begin();
 					
 				}
 
@@ -747,14 +749,14 @@ namespace COTG
 
 				if (wantImage)
 				{
-
-						draw.AddQuad(COTG.Draw.Layer.background, TextureSection.FromTexels(worldBackground,srcP0, srcP1),
-							destP0, destP1,
+						const float texelGain = 1.0f / srcImageSpan;
+						draw.AddQuad(COTG.Draw.Layer.background, worldBackground,
+							destP0, destP1, srcP0* texelGain, srcP1* texelGain,
 						 255.AlphaToColor() );
 
 					if (worldObjects != null)
-						draw.AddQuad(COTG.Draw.Layer.background+1,TextureSection.FromTexels(worldObjects,srcP0,srcP1),
-							destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities),255.AlphaToColor());
+						draw.AddQuad(COTG.Draw.Layer.background+1,worldObjects,
+							destP0.CToCp(TileData.zCities), destP1.CToCp(TileData.zCities), srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor());
 
 
 				}
@@ -1483,15 +1485,16 @@ namespace COTG
 					textLayout.Draw(c, Color.Black);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 													//	ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 				}
-	
 
-		
+				draw.End();
+
 			}
 		catch (Exception ex)
 		{
 			Log(ex);
-		}
-			draw.End();
+				draw._beginCalled = false;
+			}
+			
 
 
 		}
@@ -1504,7 +1507,7 @@ namespace COTG
 			float frameCount = sprite.frameCount;
 			var frame = (int)(((animationT + cid.CidToRandom() * 15) * 15) % frameCount);
 
-			draw.AddQuad(Layer.effects,sprite.texture, new Vector2(c.X, c.Y - dv * 0.475f), new Vector2(c.X + dv * 0.5f, c.Y - dv*0.1f), new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor());
+			draw.AddQuad(Layer.effects,sprite.material, new Vector2(c.X, c.Y - dv * 0.475f), new Vector2(c.X + dv * 0.5f, c.Y - dv*0.1f), new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor());
 		}
 
 		private static void FillRoundedRectangle(int layer,Vector2 c0, Vector2 c1,Color background)
@@ -1581,7 +1584,7 @@ namespace COTG
 
 		const float actionStopDistance = 48.0f;
 		private void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-		Texture2D bitmap, bool applyStopDistance, Army army, float spriteSize, float alpha = 1)
+		Material bitmap, bool applyStopDistance, Army army, float spriteSize, float alpha = 1)
 		{
 			if (IsCulled(c0, c1))
 				return;
@@ -1628,7 +1631,7 @@ namespace COTG
 				DrawSquare(Layer.action+3,new Vector2(c0.X - shadowOffset.X , c0.Y - shadowOffset.Y), color);
 			var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
-				draw.AddQuad(Layer.action+4,  TextureSection.FromAll(bitmap), new Vector2(mid.X - spriteSize, mid.Y - spriteSize), new Vector2(mid.X + spriteSize, mid.Y + spriteSize), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
+				draw.AddQuad(Layer.action+4,  bitmap, new Vector2(mid.X - spriteSize, mid.Y - spriteSize), new Vector2(mid.X + spriteSize, mid.Y + spriteSize), HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 		
 	

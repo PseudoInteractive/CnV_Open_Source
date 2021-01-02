@@ -372,7 +372,7 @@ namespace COTG.JSON
 
 
 		[JsonIgnore]
-		public Microsoft.Xna.Framework.Graphics.Texture2D bitmap;
+		public Draw.Material bitmap;
 		//public (int u,int v) ScaleUV( (int u, int v) uv)
 		//{
 		//	return ((int)(uv.u * bitmap.Width + imagewidth / 2) / imagewidth, (int)(uv.v * bitmap.Height + imageheight / 2) / imageheight);
@@ -396,20 +396,20 @@ namespace COTG.JSON
                 //var uri = new Uri($"ms-appx:///Assets/{ resName.Substring(0, resName.Length-3)}dds");
                 //var temp = this;
               //  Debug.Log(uri.ToString());
-				bitmap = AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{ resName.Substring(0, resName.Length - 4)}");
+				bitmap = new Draw.Material( AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{ resName.Substring(0, resName.Length - 4)}"));
 				// etc.
 				Assert(bitmap != null);
 				
 
 
-				tilewidth = (int)bitmap.Width / columns;
+				tilewidth = (int)bitmap.texture2d.Width / columns;
 				tileheight = tilewidth;
 				scaleXToU = 1.0f / columns;
-				scaleYToV = (float)tileheight / bitmap.Height;
+				scaleYToV = (float)tileheight / bitmap.texture2d.Height;
 				//effect = new PixelShaderEffect(ShellPage.lightEffectBytes)
 				//{
-				halfTexelU = 0.5f / bitmap.Width;
-				halfTexelV = 0.5f / bitmap.Height;
+				halfTexelU = 0.5f / bitmap.texture2d.Width;
+				halfTexelV = 0.5f / bitmap.texture2d.Height;
 				//	Source1 = temp.bitmap,
 				//	Source1Interpolation = CanvasImageInterpolation.Linear,
 				//	Source3 = temp.bitmap,

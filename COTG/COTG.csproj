@@ -189,6 +189,7 @@
     <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\Tags.cs" />
     <Compile Include="Game\World.cs" />
+    <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />

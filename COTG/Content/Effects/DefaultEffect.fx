@@ -66,7 +66,7 @@ float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputPositionColorTe
 	return textureColor * input.Color * DiffuseColor;
 }
 
+TECHNIQUE(PositionColorTexture, VertexShaderFunctionPositionColorTexture, PixelShaderFunctionPositionColorTexture);
 TECHNIQUE(Position, VertexShaderFunctionPosition, PixelShaderFunctionPosition);
 TECHNIQUE(PositionTexture, VertexShaderFunctionPositionTexture, PixelShaderFunctionPositionTexture);
 TECHNIQUE(PositionColor, VertexShaderFunctionPositionColor, PixelShaderFunctionPositionColor);
-TECHNIQUE(PositionColorTexture, VertexShaderFunctionPositionColorTexture, PixelShaderFunctionPositionColorTexture);

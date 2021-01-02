@@ -7,8 +7,8 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
-using RectangleF = System.Drawing.RectangleF; 
-
+using RectangleF = System.Drawing.RectangleF;
+using static COTG.Debug;
 namespace COTG.Draw
 {
     /// <summary>
@@ -25,12 +25,14 @@ namespace COTG.Draw
 		public Material(Texture _texture)
 		{
 			texture = _texture;
+			Assert(AGame.defaultEffect != null);
 			effect = AGame.defaultEffect;
 		}
 		public Material(Texture _texture, Effect _effect)
 		{
 			texture = _texture;
 			effect = _effect;
+			Assert(effect != null);
 
 		}
 		public Material(Texture _texture, Texture _texture1, Effect _effect)
@@ -38,8 +40,13 @@ namespace COTG.Draw
 			texture = _texture;
 			texture1 = _texture1;
 			effect = _effect;
+			Assert(effect != null);
 
 		}
+		public Texture2D texture2d => texture as Texture2D;
+
+		public int Width => texture switch { Texture2D t => t.Width, Texture3D t => t.Width, _ => 1 };
+		public int Height => texture switch { Texture2D t => t.Height, Texture3D t => t.Height, _ => 1 };
 	}
 	public class SpriteBatch : GraphicsResource
 	{
@@ -48,7 +55,7 @@ namespace COTG.Draw
 
 		public const SpriteSortMode _sortMode = SpriteSortMode.BackToFront;
 			
-	    bool _beginCalled;
+	    public bool _beginCalled;
 
 	
 		RectangleF _tempRect = new RectangleF (0,0,0,0);
@@ -61,17 +68,14 @@ namespace COTG.Draw
         /// </summary>
         /// <param name="graphicsDevice">The <see cref="GraphicsDevice"/>, which will be used for sprite rendering.</param>        
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="graphicsDevice"/> is null.</exception>
-        public SpriteBatch(GraphicsDevice graphicsDevice) : this(graphicsDevice, 0)
-        {            
-        }
-
+ 
         /// <summary>
         /// Constructs a <see cref="SpriteBatch"/>.
         /// </summary>
         /// <param name="graphicsDevice">The <see cref="GraphicsDevice"/>, which will be used for sprite rendering.</param>
         /// <param name="capacity">The initial capacity of the internal array holding batch items (the value will be rounded to the next multiple of 64).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="graphicsDevice"/> is null.</exception>
-        public SpriteBatch (GraphicsDevice graphicsDevice, int capacity)
+        public SpriteBatch (GraphicsDevice graphicsDevice)
 		{
 			if (graphicsDevice == null)
             {
@@ -80,10 +84,8 @@ namespace COTG.Draw
 
 			this.GraphicsDevice = graphicsDevice;
 
-            _spriteEffect = new SpriteEffect(graphicsDevice);
-            _spritePass = _spriteEffect.CurrentTechnique.Passes[0];
 
-            _batcher = new SpriteBatcher(graphicsDevice, capacity);
+            _batcher = new SpriteBatcher(graphicsDevice);
 
             _beginCalled = false;
 		}
@@ -125,18 +127,11 @@ namespace COTG.Draw
 			if (_sortMode != SpriteSortMode.Immediate)
 				Setup();
             
-            _batcher.DrawBatch(_sortMode, _effect);
-        }
+            _batcher.DrawBatch();
+		}
 		
 		void Setup() 
         {
-            var gd = GraphicsDevice;
-			gd.BlendState = _blendState;
-			gd.DepthStencilState = _depthStencilState;
-			gd.RasterizerState = _rasterizerState;
-			gd.SamplerStates[0] = _samplerState;
-
-            _spritePass.Apply();
 		}
 		
         void CheckValid(Texture2D texture)
@@ -384,13 +379,6 @@ namespace COTG.Draw
 		//}
 
 		// Mark the end of a draw operation for Immediate SpriteSortMode.
-		internal void FlushIfNeeded()
-		{
-			if (_sortMode == SpriteSortMode.Immediate)
-			{
-				_batcher.DrawBatch(_sortMode, _effect);
-			}
-		}
 
         /// <summary>
         /// Submit a sprite for drawing in the current batch.
@@ -481,18 +469,17 @@ namespace COTG.Draw
             
   //          FlushIfNeeded();
 		//}
-		public void AddQuad(int layer, Texture2D texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, Effect effect=null)
+		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color)
 		{
-			CheckValid(texture);
 
-			var item = _batcher.CreateBatchItem(layer,texture,effect);
+			var item = _batcher.CreateBatchItem(layer,texture);
 		
 
 
-			_texCoordTL.X = uv0.X * texture.TexelWidth;
-				_texCoordTL.Y = uv0.Y * texture.TexelHeight;
-				_texCoordBR.X = uv1.X * texture.TexelWidth;
-				_texCoordBR.Y = uv1.Y * texture.TexelHeight;
+			_texCoordTL.X = uv0.X;
+				_texCoordTL.Y = uv0.Y;
+				_texCoordBR.X = uv1.X ;
+				_texCoordBR.Y = uv1.Y ;
 	
 			item.Set(c0.X,
 					 c0.Y,
@@ -503,13 +490,11 @@ namespace COTG.Draw
 					 _texCoordBR,
 					 Layer.GetDepth(layer) );
 
-			FlushIfNeeded();
 		}
-		public void AddQuad(int layer, Texture2D texture, Vector2 c0, Vector2 c1,  Color color, Effect effect=null)
+		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1,  Color color)
 		{
-			CheckValid(texture);
 
-			var item = _batcher.CreateBatchItem(layer, texture, effect);
+			var item = _batcher.CreateBatchItem(layer, texture);
 			
 
 
@@ -527,13 +512,11 @@ namespace COTG.Draw
 					 _texCoordBR,
 					 Layer.GetDepth(layer));
 
-			FlushIfNeeded();
 		}
-		public unsafe void AddLine(int layer,Texture2D texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,float depth=0, Effect effect = null)
+		public unsafe void AddLine(int layer,Material texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,float depth=0)
 		{
-			CheckValid(texture);
 
-			var item = _batcher.CreateBatchItem(layer, texture, effect);
+			var item = _batcher.CreateBatchItem(layer, texture);
 
 			var dc0 = c1 - c0;
 			var dc1 = new Vector2(dc0.Y, -dc0.X);
@@ -647,7 +630,6 @@ namespace COTG.Draw
 		{
             CheckValid(spriteFont, text);
             
-            int sortKey = Layer.SortKey(Layer.text, spriteFont.Texture);
 
             var offset = Vector2.Zero;
             var firstGlyphOfLine = true;
@@ -689,7 +671,7 @@ namespace COTG.Draw
                 p.Y += pCurrentGlyph->Cropping.Y;
                 p += position;
 
-                var item = _batcher.CreateBatchItem(Layer.text,spriteFont.Texture);
+                var item = _batcher.CreateBatchItem(Layer.text, spriteFont.defaultMaterial as Material);
             
                 _texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * spriteFont.Texture.TexelWidth;
                 _texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * spriteFont.Texture.TexelHeight;
@@ -709,13 +691,13 @@ namespace COTG.Draw
             }
 
 			// We need to flush if we're using Immediate sort mode.
-			FlushIfNeeded();
+			
 		}
 
-		internal void AddQuad(int layer,TextureSection textureSection, Vector2 destP0, Vector2 destP1, Color color)
-		{
-			AddQuad(layer,textureSection.texture, destP0, destP1, textureSection.uv0, textureSection.uv1, color);
-		}
+		//internal void AddQuad(int layer,TextureSection textureSection, Vector2 destP0, Vector2 destP1, Color color)
+		//{
+		//	AddQuad(layer,textureSection.texture, destP0, destP1, textureSection.uv0, textureSection.uv1, color);
+		//}
 
 		/// <summary>
 		/// Submit a text string of sprites for drawing in the current batch.
@@ -730,7 +712,7 @@ namespace COTG.Draw
 		/// <param name="effects">Modificators for drawing. Can be combined.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
 		public void DrawString (
-			SpriteFont spriteFont, string text, Vector2 position, Color color,
+			SpriteFont spriteFont,  string text, Vector2 position, Color color,
             float rotation, Vector2 origin, float scale, SpriteEffects effects, int layerDepth)
 		{
 			var scaleVec = new Vector2(scale, scale);
@@ -750,7 +732,7 @@ namespace COTG.Draw
         /// <param name="effects">Modificators for drawing. Can be combined.</param>
         /// <param name="layerDepth">A depth of the layer of this string.</param>
 		public unsafe void DrawString (
-			SpriteFont spriteFont, string text, Vector2 position, Color color,
+			SpriteFont spriteFont,  string text, Vector2 position, Color color,
             float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, int layerDepth)
 		{
             CheckValid(spriteFont, text);
@@ -850,7 +832,7 @@ namespace COTG.Draw
 
                 Microsoft.Xna.Framework.Vector2.Transform(ref p, ref transformation, out p);
 
-					var item = _batcher.CreateBatchItem(Layer.text, spriteFont.Texture) ;    
+					var item = _batcher.CreateBatchItem(Layer.text, spriteFont.defaultMaterial as Material) ;    
 					
                 _texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * spriteFont.Texture.TexelWidth;
                 _texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * spriteFont.Texture.TexelHeight;
@@ -901,7 +883,6 @@ namespace COTG.Draw
             }
 
 			// We need to flush if we're using Immediate sort mode.
-			FlushIfNeeded();
 		}
 
         /// <summary>
@@ -911,7 +892,7 @@ namespace COTG.Draw
         /// <param name="text">The text which will be drawn.</param>
         /// <param name="position">The drawing location on screen.</param>
         /// <param name="color">A color mask.</param>
-		public unsafe void DrawString (SpriteFont spriteFont, StringBuilder text, Vector2 position, Color color)
+		public unsafe void DrawString (SpriteFont spriteFont,  StringBuilder text, Vector2 position, Color color)
 		{
             CheckValid(spriteFont, text);
 
@@ -957,8 +938,8 @@ namespace COTG.Draw
                 p.Y += pCurrentGlyph->Cropping.Y;
                 p += position;
                 
-                var item = _batcher.CreateBatchItem(Layer.text,spriteFont.Texture);
-            
+                var item = _batcher.CreateBatchItem(Layer.text, spriteFont.defaultMaterial as Material);
+					
                 _texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * spriteFont.Texture.TexelWidth;
                 _texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * spriteFont.Texture.TexelHeight;
                 _texCoordBR.X = (pCurrentGlyph->BoundsInTexture.X + pCurrentGlyph->BoundsInTexture.Width) * spriteFont.Texture.TexelWidth;
@@ -977,7 +958,6 @@ namespace COTG.Draw
             }
 
 			// We need to flush if we're using Immediate sort mode.
-			FlushIfNeeded();
 		}
 
         /// <summary>
@@ -1111,7 +1091,7 @@ namespace COTG.Draw
 
                 Microsoft.Xna.Framework.Vector2.Transform(ref p, ref transformation, out p);
                 
-                var item = _batcher.CreateBatchItem(Layer.text, spriteFont.Texture);               
+                var item = _batcher.CreateBatchItem(Layer.text, spriteFont.defaultMaterial as Material);               
                 
                 _texCoordTL.X = pCurrentGlyph->BoundsInTexture.X * (float)spriteFont.Texture.TexelWidth;
                 _texCoordTL.Y = pCurrentGlyph->BoundsInTexture.Y * (float)spriteFont.Texture.TexelHeight;
@@ -1161,29 +1141,9 @@ namespace COTG.Draw
                 offset.X += pCurrentGlyph->Width + pCurrentGlyph->RightSideBearing;
 			}
 
-			// We need to flush if we're using Immediate sort mode.
-			FlushIfNeeded();
+
 		}
 
-        /// <summary>
-        /// Immediately releases the unmanaged resources used by this object.
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    if (_spriteEffect != null)
-                    {
-                        _spriteEffect.Dispose();
-                        _spriteEffect = null;
-                    }
-                }
-            }
-            base.Dispose(disposing);
-        }
 	}
 }
 
