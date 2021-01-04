@@ -18,6 +18,7 @@ namespace COTG.Draw
 			sprites = new List<SpriteBatchItem>();
 		}
 	}
+	public delegate float DepthFunction(float x, float y,float zBase);
 
 	public class SpriteBatchItem 
 	{
@@ -100,6 +101,36 @@ namespace COTG.Draw
             vertexBR.TextureCoordinate.X = texCoordBR.X;
             vertexBR.TextureCoordinate.Y = texCoordBR.Y;
         }
+		public void Set(float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR,float depthBase, DepthFunction depth)
+		{
+			vertexTL.Position.X = x;
+			vertexTL.Position.Y = y;
+			vertexTL.Position.Z = depth(x,y, depthBase);
+			vertexTL.Color = color;
+			vertexTL.TextureCoordinate.X = texCoordTL.X;
+			vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+			vertexTR.Position.X = x + w;
+			vertexTR.Position.Y = y;
+			vertexTR.Position.Z = depth(x+w, y, depthBase);
+			vertexTR.Color = color;
+			vertexTR.TextureCoordinate.X = texCoordBR.X;
+			vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+			vertexBL.Position.X = x;
+			vertexBL.Position.Y = y + h;
+			vertexBL.Position.Z = depth(x,y+h, depthBase);
+			vertexBL.Color = color;
+			vertexBL.TextureCoordinate.X = texCoordTL.X;
+			vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+			vertexBR.Position.X = x + w;
+			vertexBR.Position.Y = y + h;
+			vertexBR.Position.Z = depth(x+w,y+h, depthBase);
+			vertexBR.Color = color;
+			vertexBR.TextureCoordinate.X = texCoordBR.X;
+			vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+		}
 
 		public void Set(float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depthTL,float depthTR,float depthBL, float depthBR)
 		{

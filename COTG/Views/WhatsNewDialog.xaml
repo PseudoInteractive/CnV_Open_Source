@@ -27,11 +27,8 @@
 			<TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="16"
                            TextAlignment="Justify"
-                           ><Run Text="The infamous LOU winter theme is a gift - Kick off 2021 with a refreshing new COTG look, created for you (inadvertently) by the good people at EA Phenomic, or at least the people who where there eight years ago." /><LineBreak/>
-				<Run Text="It may be that redistributing EA's intellectual property is not the wisest legal move, but that music is just too good to keep locked away." />
-				<LineBreak/>
-				<Run Text="Besides, when has EA ever taken legal action against an indedpendant developer..." />
-				<LineBreak/><Run Text="Anyway, have a great Year!" />
+                           ><Run Text="You can disable most of the rendering experiments in settings." />
+				<LineBreak/><Run Text="Have a great Year!" />
 				<LineBreak/><LineBreak/><Run Text="     - Avatar"/><LineBreak/>
 			</TextBlock>
 

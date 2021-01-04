@@ -27,15 +27,7 @@ namespace COTG.JSON
 
 	public sealed class TileData
     {
-		const float parallaxZGain = 1.0f / 1024.0f;
-		public const float zBase = 0;
-		public const float zLand = 0;
-		public const float zWater = 10* parallaxZGain;
-		public const float zTerrain = 18* parallaxZGain;
-		public const float zTopLevel = 24* parallaxZGain;
-		public const float zCities = 28* parallaxZGain;
-		public const float zLabels = 28* parallaxZGain;
-
+		
 		public enum State
         {
             preInit,
@@ -104,25 +96,27 @@ namespace COTG.JSON
 					switch(tileSet.name)
 					{
 						case "land":
-							tileSet.z = zLand;
+							tileSet.z = AGame.zLand;
 							tileSet.wantShadow = false;
 							tileSet.isBase = true;
 							break;
 						case "water":
-							tileSet.z = zWater;
+							tileSet.z = AGame.zWaterBase;
 							tileSet.isBase = true;
 							break;
 						case "terrainfeatures":
-							tileSet.z = zTerrain;
+							tileSet.z = AGame.zTerrainBase;
 							tileSet.wantShadow = true;
 							break;
 						case "city":
-							tileSet.z = zCities;
+							tileSet.z = AGame.zCitiesBase;
 							tileSet.wantShadow = true;
+							tileSet.canHover = true;
 							break;
 						case "toplevel":
-							tileSet.z = zTopLevel;
+							tileSet.z = AGame.zTopLevelBase;
 							tileSet.wantShadow = true;
+							tileSet.canHover = true;
 							break;
 
 					}
@@ -359,6 +353,8 @@ namespace COTG.JSON
 		public float z;
 		[JsonIgnore]
 		public bool wantShadow;
+		[JsonIgnore]
+		public bool canHover;
 		[JsonIgnore]
 		public bool isBase; // shadows draw onto this, this are drawn first 
 		[JsonIgnore]

@@ -38,12 +38,13 @@ namespace COTG.Views
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float dpiScale;
-		public static bool wantParallax = true;
 		public static bool wantLight=true;
         //        private static UserData _user;
         public static bool fetchFullHistory = true;
         public static bool? autoBuildOn = null;
 		public static bool setRecruit;
+		public static float planet = 0.5f;
+		public static float parallax=0.5f;
 		public static string hubCitylistName = "Hubs";
         public static int reqWood = 160000;
         public static int reqStone = 205000;

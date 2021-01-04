@@ -8,7 +8,6 @@ using COTG.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using MonoGame.Extended;
 
 using System;
 using System.Collections.Generic;
@@ -30,6 +29,7 @@ using Vector3 = System.Numerics.Vector3;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
+using BitmapFont;
 
 namespace COTG
 {
@@ -37,21 +37,54 @@ namespace COTG
 	{
 		static public CoreWindow CoreWindow => Window.Current.CoreWindow;
 		static public UIElement CoreContent => Window.Current.Content;
+		public static bool TryGetValue<T>(this List<T> l, Func<T,bool> pred, out T var)
+		{
+			foreach (var i in l)
+			{
+				if (pred(i))
+				{
+					var = i;
+					return true;
+				}
+			}
+			var = default;
+			return false;
+
+		}
 	}
 	public class AGame : Microsoft.Xna.Framework.Game
 	{
+		const float parallaxBaseGain = 2.0f / 1024.0f;
+		public const float zBase = 0;
+		public const float zLand = 0;
+		public const float zWaterBase = 10 * parallaxBaseGain;
+		public const float zTerrainBase = 18 * parallaxBaseGain;
+		public const float zTopLevelBase = 24 * parallaxBaseGain;
+		public const float zCitiesBase = 28 * parallaxBaseGain;
+		public const float zLabelsBase = 28 * parallaxBaseGain;
+		public static float zWater => zWaterBase * AGame.parallaxGain;
+		public static float zTerrain => zTerrainBase * AGame.parallaxGain;
+		public static float zTopLevel => zTopLevelBase * AGame.parallaxGain;
+		public static float zCities => zCitiesBase * AGame.parallaxGain;
+		public static float zLabels => zLabelsBase * AGame.parallaxGain;
+
 		public const float cameraZ = 1.0f;
 		public static SwapChainPanel canvas;
 		public static AGame instance;
 		public static GraphicsDevice device=>instance.GraphicsDevice;
 		public static GraphicsDeviceManager _graphics;
 		public static Draw.SpriteBatch spriteBatch;
-		public static SpriteFont font;
 		const float detailsZoomThreshold = 36;
 		const float detailsZoomFade = 8;
 		public static Material worldBackground;
 		//public static Effect imageEffect;
 		public static Effect defaultEffect;
+		public static Effect alphaAddEffect;
+		public static Effect fontEffect;
+		public static Effect darkFontEffect;
+		public static EffectParameter worldMatrixParameter;
+		public static EffectParameter worldMatrixParameter2;
+		public static EffectParameter worldMatrixParameter3, worldMatrixParameter4;
 		public static Material lineDraw;
 		public static Material quadTexture;
 		public static Material roundedRect;
@@ -78,23 +111,25 @@ namespace COTG
 		
 		public float eventTimeOffsetLag;
 		public float eventTimeEnd;
-		static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged, shadowColor;
-	//	static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
-	//	static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
-	//	static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
-	//	static CanvasTextFormat nameTextFormat = new CanvasTextFormat()
-//		{
-//			FontSize = 11,
-//			HorizontalAlignment = CanvasHorizontalAlignment.Center,
-//			VerticalAlignment = CanvasVerticalAlignment.Center,
-//			FontStretch = fontStretch,
-//			//		FontWeight= FontWeights.Bold,
-//
-//			WordWrapping = CanvasWordWrapping.NoWrap,
-			//	 Options= CanvasDrawTextOptions.NoPixelSnap,
+		static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged; //shadowColor;
+		//	static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
+		//	static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
+		//	static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
+		//	static CanvasTextFormat nameTextFormat = new CanvasTextFormat()
+		//		{
+		//			FontSize = 11,
+		//			HorizontalAlignment = CanvasHorizontalAlignment.Center,
+		//			VerticalAlignment = CanvasVerticalAlignment.Center,
+		//			FontStretch = fontStretch,
+		//			//		FontWeight= FontWeights.Bold,
+		//
+		//			WordWrapping = CanvasWordWrapping.NoWrap,
+		//	 Options= CanvasDrawTextOptions.NoPixelSnap,
 
 		//};
 		//        static readonly Color attackColor = Color.DarkRed;
+		public static float bmFontScale = 0.1875f;
+
 		static readonly Color attackColor = Color.White;
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
@@ -190,11 +225,56 @@ namespace COTG
 		public static MouseState priorMouseState;
 		public static KeyboardState keyboardState;
 		public static KeyboardState priorKeyboardState;
+		public static bool WasKeyPressed(Keys key) => keyboardState.IsKeyDown(key) && !priorKeyboardState.IsKeyDown(key);
+		const float viewHoverElevationMax=1.0f/64.0f;
+		const float viewHoverElevationKt = 24.0f;
+		public static List< (int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
+
+
 		protected override void Update(GameTime gameTime)
 		{
 			
 			try
 			{
+				float dt = ((float)gameTime.ElapsedGameTime.TotalSeconds).Min(1.0f / 16.0f);
+
+				var hover = ShellPage.lastCanvasC;
+				if (hover != 0 && World.GetInfoFromCid(hover).type != 0  )
+				{
+					if (!viewHovers.Exists( a => a.cid == ShellPage.lastCanvasC))
+					{
+						viewHovers.Add((ShellPage.lastCanvasC, 1.0f / 1024.0f,0.0f));
+					}
+				}
+				{ 
+					var removeMe = 0;
+					int count = viewHovers.Count;
+					for(int i=0;i<count;++i)
+					{
+						var cid = viewHovers[i].cid;
+
+						float z = viewHovers[i].z;
+						float vz = viewHovers[i].vz;
+						var kd = (viewHoverElevationKt);
+						var ks = AMath.CritDampingKs(kd);
+						
+						vz += (((cid == hover ? viewHoverElevationMax : 0.0f) - z)  * ks - vz * kd) * dt;
+						z += vz * (float)dt;
+						viewHovers[i] = (cid,z,vz); 
+
+
+						if (z <= 1.0f / 1024.0f)
+						{
+							removeMe = i;
+						}
+					}
+					// Hack:  Just remove one per frame, we'll get the rest next time,
+					if (removeMe != 0)
+						viewHovers.RemoveAt(removeMe);
+
+				}
+
+
 				if (clientSpan.X > 0 && clientSpan.Y > 0)
 				{
 					if (resolutionDirtyCounter > 0)
@@ -229,6 +309,12 @@ namespace COTG
 					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
 				if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
 					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
+
+			//	ShellPage.CanvasCheckKeys();
+				if ( keyboardState.GetPressedKeyCount() > priorKeyboardState.GetPressedKeyCount() )
+				{
+					App.NotIdle();
+				}
 
 				//if (resolutionDirty)
 				//{
@@ -439,76 +525,103 @@ namespace COTG
 		}
 		protected override async void LoadContent()
 		{
-			defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
-			readyToLoad = true;
-
-			SpriteAnim.flagHome.Load();
-			SpriteAnim.flagSelected.Load();
-	
-			draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
-			worldBackground = LoadTexture("Art/world");
-			font = Content.Load<SpriteFont>("Fonts/perp");
-			font.defaultMaterial = new Material(font.Texture);
-			// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
-
-			
-
-			lineDraw = LoadTexture("Art/circlegradient");
-		//lineDraw2 = new PixelShaderEffect(
-		sky = LoadTexture("Art/sky");
-			roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
-			quadTexture = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
-			for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
-		{
-
-			troopImages[i] = LoadTexture($"Art/icons/troops{i}");
-			if (i == 0)
+			try
 			{
-				troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
-				troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.625f;
+				defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
+				alphaAddEffect = Content.Load<Effect>("Effects/AlphaAdd");
+				fontEffect = Content.Load<Effect>("Effects/font");
+				darkFontEffect = Content.Load<Effect>("Effects/darkFont");
+				readyToLoad = true;
+
+				worldMatrixParameter = defaultEffect.Parameters["WorldViewProjection"];
+				worldMatrixParameter2 = fontEffect.Parameters["WorldViewProjection"];
+				worldMatrixParameter3 = darkFontEffect.Parameters["WorldViewProjection"];
+				worldMatrixParameter4 = alphaAddEffect.Parameters["WorldViewProjection"];
+
+				fontMaterial = new Material(Content.Load<Texture2D>("Fonts/tra_0"), fontEffect);
+				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
+				fontMaterial.effect = fontEffect;
+
+				bfont = new BitmapFont.BitmapFont();
+
+				var a = new System.IO.StreamReader((typeof(AGame).Assembly).GetManifestResourceStream("COTG.Content.Fonts.tra.fnt")).ReadToEnd();
+			//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
+				{
+
+					bfont.LoadXml(a);
+				}
+
+				SpriteAnim.flagHome.Load();
+				SpriteAnim.flagSelected.Load();
+
+				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
+				worldBackground = LoadTexture("Art/world");
+				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+
+
+
+				lineDraw = LoadTexture("Art/circlegradient");
+				lineDraw.effect = alphaAddEffect;
+				//lineDraw2 = new PixelShaderEffect(
+				sky = LoadTexture("Art/sky");
+				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
+				quadTexture = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
+				for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
+				{
+
+					troopImages[i] = LoadTexture($"Art/icons/troops{i}");
+					if (i == 0)
+					{
+						troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
+						troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.625f;
+					}
+				}
+				//// create a full screen rendertarget
+				//RemakeRenderTarget();
+
+				//tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+				//	   {
+				//				new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
+				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Black } }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied)
+				//{ Opacity = 0.675f };
+				//tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
+				//{
+				//				new CanvasGradientStop() { Position = 0.0f, Color = Color.White },
+				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Blue }
+				//}, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
+				//;
+
+				//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
+				{
+					//	TileData.Ctor(true);
+				}
+
+
+				//var lightEffectBytes = await App.GetContent("shader/light.bin");
+				//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
+				//{
+
+				//	//Source2 = sky,
+				//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
+				//	//Source2Interpolation = CanvasImageInterpolation.Linear,
+				//	//Source2BorderMode = EffectBorderMode.Soft,
+				//	//CacheOutput = false,
+				//	//Source1BorderMode = EffectBorderMode.Soft,
+				//	//Source1Mapping = SamplerCoordinateMapping.Offset,
+				//	//MaxSamplerOffset = 4,
+				//	Name = "SSLighting"
+
+				//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
+				//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
+				//};
+
+
+				UpdateMusic();
 			}
-		}
-		//// create a full screen rendertarget
-		//RemakeRenderTarget();
-
-		//tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
-		//	   {
-		//				new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
-		//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Black } }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied)
-		//{ Opacity = 0.675f };
-		//tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
-		//{
-		//				new CanvasGradientStop() { Position = 0.0f, Color = Color.White },
-		//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Blue }
-		//}, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
-		//;
-
-		//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
-		{
-		//	TileData.Ctor(true);
-		}
-
-
-			//var lightEffectBytes = await App.GetContent("shader/light.bin");
-			//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
-			//{
-
-			//	//Source2 = sky,
-			//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
-			//	//Source2Interpolation = CanvasImageInterpolation.Linear,
-			//	//Source2BorderMode = EffectBorderMode.Soft,
-			//	//CacheOutput = false,
-			//	//Source1BorderMode = EffectBorderMode.Soft,
-			//	//Source1Mapping = SamplerCoordinateMapping.Offset,
-			//	//MaxSamplerOffset = 4,
-			//	Name = "SSLighting"
-
-			//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
-			//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
-			//};
-
-
-			UpdateMusic();
+			catch(Exception ex)
+			{
+				Log(ex);
+			}
 	}
 
 
@@ -551,7 +664,7 @@ namespace COTG
 
 	const float circleRadMin = 3.0f;
 	const float circleRadMax = 5.5f;
-	const float lineThickness = 2.0f;
+	const float lineThickness = 4.0f;
 	const float rectSpanMin = 4.0f;
 	const float rectSpanMax = 8.0f;
 	const float bSizeGain = 4.0f;
@@ -592,8 +705,8 @@ namespace COTG
 
 
 
-	public static Vector2 shadowOffset = new Vector2(lineThickness * 1.0f, lineThickness * 1.0f);
-	public static Vector2 halfShadowOffset = new Vector2(lineThickness * 0.75f, lineThickness * 0.7f);
+	public static Vector2 shadowOffset = new Vector2(3.0f, 3.0f);
+	public static Vector2 halfShadowOffset = new Vector2(1.5f, 1.5f);
 	public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
 	static DateTimeOffset lastDrawTime;
 	public static bool tileSetsPending;
@@ -601,16 +714,19 @@ namespace COTG
 	public const float lightZ0 = 460f;
 	public static Vector2 cameraLightC;
 	public static Vector2 worldLightC;
-	private float cameraParallaxZ = 260;
+
 	public static float animationTWrap; // wraps every 3 seconds
 	public static float animationT; // approximate animation time in seconds
 		private TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
 		private TextFormat tipTextFormatCentered = new TextFormat(TextFormat.HorizontalAlignment.center);
 		private TextFormat tipTextFormat = new TextFormat(TextFormat.HorizontalAlignment.left);
 		private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
-
-
+		internal static Material fontMaterial;
+		internal static Material darkFontMaterial;
+		public static BitmapFont.BitmapFont bfont;
+		public static  float parallaxGain;
 		const float lineTileGain = 1.0f/256.0f;
+		const float lineAnimationGain = 1.0f ;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
@@ -659,7 +775,7 @@ namespace COTG
 			var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
 			//   ShellPage.T("Draw");
 
-			var notFaded = true;
+			float textBackgroundOpacity = 0.5f;
 		//	defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
 
@@ -673,15 +789,16 @@ namespace COTG
 			//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 			// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 			pixelScale = (cameraZoomLag);
+			bmFontScale = MathF.Sqrt(pixelScale/64.0f)*0.1875f;
 			pixelScaleInverse = 1.0f / cameraZoomLag;
 			shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
 			var deltaZoom = cameraZoomLag - detailsZoomThreshold;
 			var wantDetails = deltaZoom > 0;
 			var wantImage = deltaZoom < detailsZoomFade;
-			bulgeGain = ( 0.5f * (MathF.Log(MathF.Max(1.0f,cameraZoomLag/detailsZoomThreshold) ))).Min(0.25f);
-
+			bulgeGain = (  (MathF.Log(MathF.Max(1.0f,cameraZoomLag/detailsZoomThreshold) ))).Min(0.45f) * SettingsPage.planet;
+			bulgeInputGain = ( 0.675f / AGame.halfSpan.X.Max(AGame.halfSpan.Y)).Squared();
 			// workd space coords
-			var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
+				var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
 									  (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
 			var srcP1 = new Vector2(srcP0.X + clientSpan.X * bSizeGain2 * pixelScaleInverse,
 								   srcP0.Y + clientSpan.Y * bSizeGain2 * pixelScaleInverse);
@@ -712,10 +829,10 @@ namespace COTG
 			}
 
 			var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
-			var wantDesaturate = true || attacksVisible;
+				var wantDesaturate = false;// true || attacksVisible;
 
 			var wantLight = SettingsPage.wantLight;
-			var wantParallax = SettingsPage.wantParallax;
+			var wantParallax = SettingsPage.parallax > 0.1f;
 
 				//var gr = spriteBatch;// spriteBatch;// wantLight ? renderTarget.CreateDrawingSession() : args.DrawingSession;
 			
@@ -727,8 +844,8 @@ namespace COTG
 												   //ds.TextAntialiasing = canvasTextAntialiasing;
 												   //ds.TextRenderingParameters = canvasTextRenderingParameters;
 												   // prevent MSAA gaps
-				GraphicsDevice.BlendState = BlendState.NonPremultiplied;
-				GraphicsDevice.DepthStencilState = DepthStencilState.None;
+				GraphicsDevice.BlendState = BlendState.AlphaBlend;
+			//	GraphicsDevice.DepthStencilState = DepthStencilState.None;
 				
 				GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 				GraphicsDevice.RasterizerState = RasterizerState.CullNone;
@@ -739,9 +856,13 @@ namespace COTG
 
 					var proj = Matrix.CreateLookAt(new Microsoft.Xna.Framework.Vector3(0,0,cameraZ), Microsoft.Xna.Framework.Vector3.Zero,Microsoft.Xna.Framework.Vector3.Up)* Matrix.CreatePerspective(viewport.Width*0.5f,-viewport.Height*0.5f,0.5f, 1.5f);
 //					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
-					defaultEffect.Parameters["WorldViewProjection"].SetValue(proj);
-//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
-					
+					worldMatrixParameter.SetValue(proj);
+					worldMatrixParameter2.SetValue(proj);
+					worldMatrixParameter3.SetValue(proj);
+					worldMatrixParameter4.SetValue(proj);
+
+					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
+
 					draw.Begin();
 					
 				}
@@ -755,18 +876,18 @@ namespace COTG
 						const float texelGain = 1.0f / srcImageSpan;
 						draw.AddQuad(COTG.Draw.Layer.background, worldBackground,
 							destP0, destP1, srcP0* texelGain, srcP1* texelGain,
-						 255.AlphaToColor() );
+						 255.AlphaToColor(), ConstantDepth,0);
 
 					if (worldObjects != null)
 						draw.AddQuad(COTG.Draw.Layer.background+1,worldObjects,
-							destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor(), TileData.zCities);
+							destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor(),ConstantDepth, zCities);
 
 
 				}
 
 
 			}
-				
+				parallaxGain = SettingsPage.parallax * MathF.Sqrt(cameraZoomLag / 64.0f);
 
 				//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
 				// ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
@@ -786,12 +907,12 @@ namespace COTG
 					
 				var rgb = attacksVisible ? 255 : 255;
 				var tint = new Color(rgb, rgb, rgb, intAlpha);
-				var tintShadow = new Color(0, 0,32, intAlpha*3/4);
+				var tintShadow = new Color(0, 0,32, intAlpha*2/4);
 				//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
 				if (wantDesaturate)
 				{
-					nameColor = new Color() { A = intAlpha, G = 0, B = 32, R = 0 };
+					nameColor = new Color() { A = intAlpha, G = 0, B = 0, R = 0 };
 					nameColorHover = new Color() { A = intAlpha, G = 80, R = 80, B = 160 };
 					myNameColor = new Color() { A = intAlpha, G = 255 / 3, B = 190 / 3, R = 210 / 3 };
 					nameColorIncoming = new Color() { A = intAlpha, G = 220 / 3, B = 220 / 3, R = 255 / 3 };
@@ -803,7 +924,7 @@ namespace COTG
 				}
 				else
 				{
-					nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
+					nameColor = new Color() { A = intAlpha, G = 0, B = 0, R = 0 };
 					nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 185 };
 					myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
 					nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
@@ -813,7 +934,7 @@ namespace COTG
 					myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
 					myNameColorSieged = new Color() { A = intAlpha, G = 240, B = 120, R = 255 };
 				}
-				shadowColor = new Color() { A = 192 };
+	//			shadowColor = new Color() { A = 128 };
 
 				var td = TileData.instance;
 				var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
@@ -826,7 +947,7 @@ namespace COTG
 				const bool isShift = false;// App.IsKeyPressedShift();
 				const float tcOff = isShift ? 0.0f : 0.0f;
 				const float tzOff = isShift ? 0.0f : 0.0f;
-				float parallaxGain = wantParallax ? 1.0f : 0.0f;
+				
 				{
 					// 0 == land
 					// 1 == shadows
@@ -872,6 +993,11 @@ namespace COTG
 											if((pass == 2))
 												_tint.A = intAlpha;;
 											var dz = (pass == 1) ? 0.0f : tile.z * parallaxGain; // shadows draw at terrain level 
+												var cid = (cx, cy).WorldToCid();
+											if ((pass == 2) && tile.canHover && viewHovers.TryGetValue( (aa) => aa.cid == cid , out var z ))
+												{
+													dz += z.z;
+												}
 
 //											var scale = (pass == 1) ? CanvasHelpers.ParallaxScaleShadow(dz) : CanvasHelpers.ParallaxScale(dz);
 											var wc = new Vector2(cx - .5f, cy - 0.5f);
@@ -919,7 +1045,7 @@ namespace COTG
 			if (worldChanges != null)
 				draw.AddQuad(Layer.effects-1, worldChanges,
 					destP0, destP1,
-					srcP0, srcP1,255.AlphaToColor(), TileData.zCities);
+					srcP0, srcP1,255.AlphaToColor(),ConstantDepth, zCities);
 
 
 			circleRadiusBase = circleRadMin * shapeSizeGain * 7.9f;
@@ -1049,7 +1175,7 @@ namespace COTG
 									var cid = i.Key;
 									var count = i.Value;
 									var c = cid.CidToC();
-									DrawTextBox( $"{count.prior}`{count.incoming}", c,textformatLabel, Color.DarkOrange, notFaded,Layer.tileText);
+									DrawTextBox( $"{count.prior}`{count.incoming}", c, textformatLabel, Color.DarkOrange, textBackgroundOpacity,Layer.tileText);
 
 
 								}
@@ -1229,7 +1355,7 @@ namespace COTG
 									}
 									if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
 										DrawTextBox( $"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", 
-											c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, notFaded, Layer.tileText);
+											c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
 								}
 							}
 						}
@@ -1247,7 +1373,7 @@ namespace COTG
 									if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 										continue;
 									if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
-										DrawTextBox( $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, notFaded, Layer.tileText);
+										DrawTextBox( $"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
 
 								}
 							}
@@ -1285,7 +1411,7 @@ namespace COTG
 										troopImages[ttSenator], false, null, 20);
 								}
 							}
-							DrawTextBox( $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, notFaded, Layer.tileText);
+							DrawTextBox( $"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
 
 						}
 							{
@@ -1413,13 +1539,22 @@ namespace COTG
 
 								if (name != null)
 								{
-									var layout = GetTextLayout( name, nameTextFormat);
-									var span= pixelScale;
-									var drawC = (new Vector2(cx, cy).WToC());
+									
+										var span= pixelScale;
+										var cid = (cx, cy).WorldToCid();
+
+										var drawC = (new Vector2(cx, cy).WToC());
 										drawC.Y += span * 8.75f / 16.0f;
-									drawC = drawC.Project(TileData.zLabels);
-									layout.Draw(drawC,
-										isMine ?
+										var z = zLabels;
+
+
+										if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var viewHover))
+										{
+											z += viewHover.z;
+										}
+										//	drawC = drawC.Project(zLabels);
+										var layout = GetTextLayout(name, nameTextFormat);
+										var color = isMine ?
 											(hasIncoming ?
 												(spot.underSiege ? myNameColorSieged
 																: myNameColorIncoming)
@@ -1428,7 +1563,11 @@ namespace COTG
 											(hovered ?
 												(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
 											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
-											   : hovered ? nameColorHover : nameColor), Layer.tileText);
+											   : hovered ? nameColorHover : nameColor);
+
+										DrawTextBox(name, drawC, nameTextFormat, color, 0.5f, Layer.tileText, 0, PlanetDepth, z);
+//										layout.Draw(drawC,
+	//									, Layer.tileText, z,PlanetDepth);
 
 								}
 								if (spot != null && spot.isClassified)
@@ -1440,7 +1579,7 @@ namespace COTG
 									var spriteSize = new Vector2( 16  );
 										var _c0 = c1 - spriteSize;
 										var _c1 = c1 + spriteSize;
-									draw.AddQuad(Layer.effects, troopImages[spot.classificationTT], _c0,_c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f),(_c0,_c1).RectDepth(TileData.zLabels));
+									draw.AddQuad(Layer.effects, troopImages[spot.classificationTT], _c0,_c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f),(_c0,_c1).RectDepth(zCities));
 								}
 							}
 						}
@@ -1459,8 +1598,8 @@ namespace COTG
 			{
 			//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 			//	var bounds = textLayout.span;
-				Vector2 c = ShellPage.mousePositionW.ToV2() + new Vector2(16, 16);
-					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, true,Layer.overlay, 9);
+				Vector2 c = ShellPage.mousePositionC + new Vector2(16, 16);
+					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, 255,Layer.overlay, 11, ConstantDepth, 0, 0.25f);
 				//	var expand = new Vector2(7);
 				
 				//  var rectD = new Vector2(32*4, 24*5);
@@ -1480,7 +1619,7 @@ namespace COTG
 				//	var bounds = textLayout.span;
 					Vector2 c = new Vector2(16, 16).SToC();
 					//var expand = new Vector2(7);
-					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, true, Layer.overlay, 9,0);
+					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, 255, Layer.overlay, 11,ConstantDepth,0,0.25f);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
@@ -1515,12 +1654,12 @@ namespace COTG
 			var frame = (int)(((animationT + cid.CidToRandom() * 15) * 15) % frameCount);
 			var c0 = new Vector2(c.X, c.Y - dv * 0.435f);
 			Vector2 c1 = new Vector2(c.X + dv * 0.5f, c.Y - dv*0.035f);
-			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor(), (c0,c1).RectDepth(TileData.zLabels)  );
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor(), (c0,c1).RectDepth(zLabels)  );
 		}
 
-		private static void FillRoundedRectangle(int layer,Vector2 c0, Vector2 c1,Color background, float depth)
+		private static void FillRoundedRectangle(int layer,Vector2 c0, Vector2 c1,Color background,DepthFunction depth, float z)
 		{
-			draw.AddQuad(layer, roundedRect, c0, c1, background, depth);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+			draw.AddQuad(layer, roundedRect, c0, c1, background, depth,z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 		}
 
 		private static Color GetAttackColor(Army attack)
@@ -1537,16 +1676,27 @@ namespace COTG
 		};
 	}
 
-	private static void DrawTextBox( string text, Vector2 at, TextFormat format, Color color, bool drawBackground, int layer = Layer.tileText,float _expand = 4.0f, float zBias = TileData.zLabels )
+	private static void DrawTextBox( string text, Vector2 at,  TextFormat format, Color color, float backgroundOpacity, int layer = Layer.tileText,float _expand = 0.0f,DepthFunction depth=null, float zBias = -1, float scale=0 )
 	{
-
+			if (scale == 0)
+				scale = bmFontScale;
 			
 		TextLayout textLayout = GetTextLayout( text, format);
-		var span = textLayout.span;
-			at = at.Project(zBias);
-			
+			if (zBias == -1)
+				zBias = zLabels;
+		var span = textLayout.ScaledSpan(scale);
+		var constantDepth = depth== null;
+
+			// shift everything, then ignore Z
+			if (constantDepth)
+			{
+				depth = ConstantDepth;
+				at = at.Project(zBias);
+				zBias = 0;
+			}
+
 		var expand = new Vector2(_expand);
-			if (drawBackground)
+			if (backgroundOpacity > 0)
 			{
 				var c0 = at;
 				if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
@@ -1557,9 +1707,9 @@ namespace COTG
 					c0.Y -= span.Y * 0.5f;
 				if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
 					c0.Y -= span.Y;
-				FillRoundedRectangle(layer-1, c0 - expand, c0 + expand + span, 255.AlphaToColor(),0);
+				FillRoundedRectangle(layer-1, c0 - expand, c0 + expand + span,color.IsDark()? new Color(255,255,255, (int)(backgroundOpacity*color.A) ) : new Color(0,0,0, (int)(backgroundOpacity * color.A)),depth,zBias);
 			}
-		textLayout.Draw( at, color, layer);
+		textLayout.Draw( at, scale, color, layer,zBias, depth);
 	}
 
 		//      private void DrawAction( CanvasDrawingSession ds, float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1,Color color)
@@ -1631,10 +1781,10 @@ namespace COTG
 					underMouse = army;
 				}
 			}
-			DrawLine(Layer.action, c0, c1, shadowColor);
+			DrawLine(Layer.action, c0, c1, GetLineUs(c0,c1), shadowColor,zLabels);
 			if (applyStopDistance)
 				DrawSquare(Layer.action+1, c0, shadowColor);
-			DrawLine(Layer.action+2, c0 - shadowOffset, midS, color);
+			DrawLine(Layer.action+2, c0 - shadowOffset, midS, GetLineUs(c0-shadowOffset,midS), color, zLabels);
 			if (applyStopDistance)
 				DrawSquare(Layer.action+3,new Vector2(c0.X - shadowOffset.X , c0.Y - shadowOffset.Y), color);
 			var dc = new Vector2(spriteSize, spriteSize);
@@ -1651,15 +1801,23 @@ namespace COTG
 
 		private static void DrawSquare(int layer,Vector2 c0, Color color)
 		{
-			draw.AddQuad(layer,quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1,1), color);
+			draw.AddQuad(layer,quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1,1), color, PlanetDepth, zLabels);
 		}
 		private static void DrawRect(int layer,Vector2 c0,Vector2 c1, Color color)
 		{
-			draw.AddQuad(layer,quadTexture,c0,c1, new Vector2(), new Vector2(1,1), color);
+			draw.AddQuad(layer,quadTexture,c0,c1, new Vector2(), new Vector2(1,1), color, PlanetDepth, zLabels);
 		}
-		private static void DrawLine(int layer,Vector2 c0, Vector2 c1, Color color)
+
+		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
 		{
-			draw.AddLine(layer,lineDraw, c0, c1, lineThickness, animationTWrap, animationTWrap + (c0 - c1).Length() * lineTileGain, color,(c0.CToDepth(), c1.CToDepth()));
+			float offset = (lineAnimationGain * animationTWrap) % 1;
+			return (offset, offset + (c0 - c1).Length() * lineTileGain);
+
+		}
+		private static void DrawLine(int layer,Vector2 c0, Vector2 c1,(float u,float v) uv, Color color, float zBias)
+		{
+		//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
+			draw.AddLine(layer, lineDraw, c0, c1, lineThickness, uv.u,uv.v, color, (c0.CToDepth() + zBias, c1.CToDepth() + zBias));
 		}
 
 		private static bool IsWorldView()
@@ -1680,9 +1838,9 @@ namespace COTG
 			var angle1 = angle + MathF.PI * 0.1875f;
 			var dx1 = radius * MathF.Cos(angle1);
 			var dy1 = radius * MathF.Sin(angle1);
-			DrawLine(Layer.overlay-1,new Vector2(cX + dx0, cY + dy0),new Vector2( cX + dx1, cY + dy1), color);
+			DrawLine(Layer.overlay-1,new Vector2(cX + dx0, cY + dy0),new Vector2( cX + dx1, cY + dy1),(angle.SignOr0(),0), color, zTopLevel);
 			// rotated by 180
-			DrawLine(Layer.overlay - 1, new Vector2( cX - dx0, cY - dy0),new Vector2( cX - dx1, cY - dy1), color);
+			DrawLine(Layer.overlay - 1, new Vector2( cX - dx0, cY - dy0),new Vector2( cX - dx1, cY - dy1), ( angle.SignOr0(),0), color, zTopLevel);
 		}
 		public static void DrawAccentBase(float cX, float cY, float radius, float angle, Color color)
 		{
@@ -1707,9 +1865,18 @@ namespace COTG
 			var r = t.Wave().Lerp(AGame.circleRadiusBase, AGame.circleRadiusBase * 1.375f);
 			DrawAccent(c, r, angularSpeed, brush);
 		}
+		public static float PlanetDepth(float x, float y, float zBase)
+		{
+			return new Vector2(x, y).CToDepth() + zBase;
+		}
+		public static float ConstantDepth(float x, float y, float zBase)
+		{
+			return zBase;
+				
+		}
 	}
 
-	
+
 	public struct TextFormat
 	{
 		public enum VerticalAlignment
@@ -1735,13 +1902,16 @@ namespace COTG
 			scale = new Vector2(1, 1);
 
 		}
+
 	}
 
 	public static class CanvasHelpers
 {
-	public static Color AlphaToColor(this int alpha) { return new Color(255, 255, 255, alpha); }
+		public static bool IsDark( this Color color) => ((int)color.R + color.G + color.B) < 128 * 3;
 
-	public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
+		public static Color AlphaToColor(this int alpha) { return new Color(255, 255, 255, alpha); }
+
+	//public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
 	public static Vector2 ToV2(this Point me) => new Vector2(me.X, me.Y);
 	public static Vector2 ToV2(this Microsoft.Xna.Framework.Vector2 me) => new Vector2(me.X, me.Y);
 		public static Vector2 ToV2(this Vector3 me) => new Vector2(me.X, me.Y);
@@ -1776,15 +1946,18 @@ namespace COTG
 		//      {
 		//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
 		//      }
-	//	public static float parallaxZ0 = 1024;
-	//public static float ParallaxScale(float dz) => SettingsPage.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
+		//	public static float parallaxZ0 = 1024;
+		//public static float ParallaxScale(float dz) => SettingsPage.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
 		// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
-	//	public static float ParallaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
-
+		//	public static float ParallaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
+		public static float bulgeInputGain = 1;
 		public static float CToDepth(this Vector2 c)
 		{
-			float r =( c.Length() / AGame.halfSpan.X * 0.675f).Min(1.0f);
-			return r.SLerp(AGame.bulgeGain, 0.0f);
+			float r2 =( c.LengthSquared() * bulgeInputGain );
+			//			return r.SLerp(AGame.bulgeGain, 0.0f);
+			
+			return (r2).Lerp(AGame.bulgeGain,-0.25f*AGame.bulgeGain);
+					//	return Math.Acos(r.SLerp(AGame.bulgeGain, 0.0f);
 
 		}
 
@@ -1809,12 +1982,13 @@ namespace COTG
 
 		public static Vector3 InverseProject(this Vector2 c)
 		{
-			float z = CToDepth(c);
+			float zBias = AGame.zCities;
+			float z = CToDepth(c) + zBias;
 		
 			for (int i = 0; i < 4; ++i)
 			{
 				var test = InverseProject(c, z);
-				z = new Vector2(test.X, test.Y).CToDepth();
+				z = new Vector2(test.X, test.Y).CToDepth() + zBias;
 			}
 			return InverseProject(c,z);
 		}
@@ -1933,35 +2107,38 @@ namespace COTG
 			return (new Vector2(textureRegion.X, textureRegion.Y), new Vector2(textureRegion.Right, textureRegion.Bottom));
 		}
 	}
+
 	public class TextLayout
 	{
 		public TextFormat format;
-		internal Vector2 span;
+		internal Vector2 normalizedSpan;
 		private string text;
+		public Vector2 ScaledSpan(float scale) => normalizedSpan * scale;
 
 		public TextLayout(string text, TextFormat format)
 		{
 			this.text = text;
 			this.format = format;
-			var size = AGame.font.MeasureString(text);
-			span.X = size.X;// *0.5f;
-			span.Y = size.Y;// *0.5f;
+			var size = AGame.bfont.MeasureFont(text) ;
+
+			normalizedSpan.X = size.Width;// *0.5f;
+			normalizedSpan.Y = size.Height;// *0.5f;
 		}
 
-		internal void Draw(Vector2 c,Color color, int layer = Layer.labelText)
+		internal void Draw(Vector2 c,float scale, Color color, int layer,float z,DepthFunction depthFunction)
 		{
-			float z = 0;
+			var span = ScaledSpan(scale);
 			if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
 				c.X -= span.X * 0.5f;
 			else if (format.horizontalAlignment == TextFormat.HorizontalAlignment.right)
 				c.X -= span.X;
-			else if (format.verticalAlignment == TextFormat.VerticalAlignment.center)
+			if (format.verticalAlignment == TextFormat.VerticalAlignment.center)
 				c.Y -= span.Y * 0.5f;
 			else if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
 				c.Y -= span.Y;
 
 
-			AGame.draw.DrawString(AGame.font, text, c, color, layer, z);// (c+span*0.5f).CToDepth() );
+			AGame.draw.DrawString(AGame.bfont, text, c, scale, color, layer, z, depthFunction);// (c+span*0.5f).CToDepth() );
 		}
 		//internal void Draw(Vector2 c, Color color,  int layer = Layer.labelText)
 		//{

@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Input;
 using static COTG.Debug;
 using static COTG.AGame;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Concurrent;
 
 namespace COTG.Views
 {
@@ -37,7 +38,9 @@ namespace COTG.Views
         public static string contToolTip;
         public static int lastCont;
 
-        public  static void SetupCoreInput()
+
+
+		public static void SetupCoreInput()
         {
         //    coreInputSource = canvas.CreateCoreIndependentInputSource(CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch);
 		//	coreInputSource.PointerMoved += Canvas_PointerMoved;
@@ -79,6 +82,24 @@ namespace COTG.Views
 				default:
 					break;
 			}
+		}
+		public static void CanvasCheckKeys()
+		{
+
+				if( AGame.WasKeyPressed(Keys.Space))
+					Spot.GetFocus().SelectMe(true, Windows.System.VirtualKeyModifiers.Control, true);
+
+
+				if (AGame.WasKeyPressed(Keys.Left))
+					Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
+
+				if (AGame.WasKeyPressed(Keys.Up))
+					Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
+				if (AGame.WasKeyPressed(Keys.Right))
+					Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
+				if (AGame.WasKeyPressed(Keys.Down))
+					Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
+
 		}
 
 		//private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
@@ -353,16 +374,16 @@ namespace COTG.Views
           //  e.Handled = false;
 
         }
-        static void ClearHover()
+        public static void ClearHover()
         {
             contToolTip = null;
-            lastCont = -1;
+			lastCanvasC = 0;
+			lastCont = -1;
             toolTip = null;
             Spot.viewHover = 0;
-            Player.viewHover = 0;
-
-
+			Player.viewHover = 0;
         }
+
         private static void Canvas_PointerExited(object sender, PointerEventArgs e)
         {
             //if (JSClient.IsCityView())
@@ -414,7 +435,7 @@ namespace COTG.Views
 			return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
 		}
 
-		static int lastCanvasC;
+		static public int lastCanvasC;
         public static void Canvas_PointerMoved(MouseState current, MouseState prior)
         {
 			if (current.X == prior.X && current.Y == prior.Y)
@@ -444,10 +465,10 @@ namespace COTG.Views
                 var cid = c.WorldToCid();
                 if (lastCanvasC != cid)
                 {
-                    Spot.uiPress = cid;
-                    Spot.viewHover = 0;
-                    Player.viewHover = 0;
-                    toolTip = null;
+                 //   Spot.uiPress = cid;
+					Spot.viewHover = 0;
+					Player.viewHover = 0;
+					toolTip = null;
 
                     lastCanvasC = cid;
                     var packedId = World.GetPackedId(c);
@@ -457,6 +478,9 @@ namespace COTG.Views
                         case World.typeCity:
                             {
                                 Spot.viewHover = cid;
+
+								
+
 								Spot.TryGet(cid, out var spot);
 
 								if (data.player == 0)

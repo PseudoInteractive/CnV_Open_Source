@@ -11,6 +11,7 @@
 			   xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   mc:Ignorable="d"
+			   xmlns:sys="using:System"
 			   PrimaryButtonText="Done"
 			   Title="Settings"
 			   CloseButtonText="Cancel"
@@ -39,7 +40,8 @@
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
 
-				<ToggleSwitch Header="Parallax" IsOn="{x:Bind views:SettingsPage.wantParallax, Mode=TwoWay}" />
+				<Slider Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0125" SmallChange="0.0125" Width="300" Margin="8" />
+				<Slider Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" Width="300" />
 
 			</wct:WrapPanel>
 			<wct:WrapPanel Orientation="Horizontal"

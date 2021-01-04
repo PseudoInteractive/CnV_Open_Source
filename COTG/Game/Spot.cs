@@ -364,6 +364,7 @@ namespace COTG.Game
 			//}
 
 			var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
+			ClearHover();
 			viewHover = spot != null ? spot.cid : 0;
 			Player.viewHover = spot != null ? spot.pid : 0;
 
@@ -381,7 +382,7 @@ namespace COTG.Game
 
 			var hit = Spot.HitTest(sender, e);
 			var spot = hit.spot;
-			uiPress = spot != null ? spot.cid : 0;
+		//	uiPress = spot != null ? spot.cid : 0;
 			uiPressColumn = hit.column.CellText();
 			// The UIElement returned will be the RadDataGrid
 			if (spot != null)
@@ -394,9 +395,7 @@ namespace COTG.Game
 
 		public static void ClearHover()
 		{
-			viewHover = 0;
-			Player.viewHover = 0;
-			//    uiHoverColumn = string.Empty;
+			ShellPage.ClearHover();
 		}
 
 		public byte primaryTroopType => GetPrimaryTroopType();
@@ -1017,7 +1016,7 @@ namespace COTG.Game
 		public static int viewHover; // in the view menu
 
 		//        public static string uiHoverColumn = string.Empty;
-		public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
+	//	public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
 		public static string uiPressColumn = string.Empty;
 
 		readonly static int[] pointSizes = { 1000, 6000 };

@@ -78,7 +78,7 @@
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
@@ -1051,11 +1051,29 @@
 /processorParam:Quality=Best
 /build:Audio/UXOMainTheme.ogg
 
+#begin Effects/AlphaAdd.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/AlphaAdd.fx
+
+#begin Effects/darkFont.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/darkFont.fx
+
 #begin Effects/DefaultEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/DefaultEffect.fx
+
+#begin Effects/font.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/font.fx
 
 #begin Effects/Macros.fxh
 /copy:Effects/Macros.fxh
@@ -1070,18 +1088,15 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/File.spritefont;Fonts/perp.spritefont
 
-#begin Fonts/perpb.fnt
-/copy:Fonts/perpb.fnt
-
-#begin Fonts/perpb_0.png
+#begin Fonts/tra_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Fonts/perpb_0.png
+/processorParam:TextureFormat=Compressed
+/build:Fonts/tra_0.png
 

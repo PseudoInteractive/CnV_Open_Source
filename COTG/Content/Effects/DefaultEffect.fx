@@ -9,7 +9,7 @@ BEGIN_CONSTANTS
 
 MATRIX_CONSTANTS
 
-float4x4 WorldViewProjection _vs(c0) _cb(c0);
+
 
 END_CONSTANTS
 
@@ -63,7 +63,10 @@ VertexShaderOutputPositionColorTexture VertexShaderFunctionPositionColorTexture(
 float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputPositionColorTexture input) : SV_Target0
 {
 	float4 textureColor = SAMPLE_TEXTURE(Texture, input.TextureCoordinate);
-	return textureColor * input.Color ;
+	
+	textureColor *= input.Color ;
+	textureColor.rgb *= textureColor.a;// pre multiply
+	return textureColor;
 }
 
 TECHNIQUE(PositionColorTexture, VertexShaderFunctionPositionColorTexture, PixelShaderFunctionPositionColorTexture);
