@@ -12456,7 +12456,7 @@ var cotgsubscribe = amplify;
                 .removeClass(__s[5725]);
             $(__s[r5y * 1] + G9g)
                 .css({
-                'background': __s[h5y - 0] + t2 + __s[X5y >> 1623255776] + M9g + __s[P5y * 1] + W9g + E6k
+                'background': __s[h5y - 0] + cityAtlas + __s[X5y >> 1623255776] + M9g + __s[P5y * 1] + W9g + E6k
                     .S55(+I5y),
                 'width': __s[+p5y],
                 'height': __s[+p5y],
@@ -15464,7 +15464,7 @@ var cotgsubscribe = amplify;
                             var M0l = U2U + +j6y;
                             $(__s[e1R & 2147483647] + M0l)
                                 .css({
-                                'background': __s[h5y & 2147483647] + t2 + __s[+X5y] + a8U + __s[+P5y] + X9U + E6k
+                                'background': __s[h5y & 2147483647] + cityAtlas + __s[+X5y] + a8U + __s[+P5y] + X9U + E6k
                                     .S55(I5y * 1),
                                 'width': __s[p5y & 2147483647],
                                 'height': __s[+p5y],
@@ -20054,7 +20054,7 @@ var cotgsubscribe = amplify;
                             var o5g = k5g + (j6y | 0);
                             $(__s[+e1R] + o5g)
                                 .css({
-                                'background': __s[+h5y] + t2 + __s[+X5y] + s5g + __s[+P5y] + u5g + _s(+I5y),
+                                'background': __s[+h5y] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + _s(+I5y),
                                 'width': __s[+p5y],
                                 'height': __s[+p5y],
                                 'bottom': __s[1025],
@@ -20135,7 +20135,7 @@ var cotgsubscribe = amplify;
                                 u5g = u5g * (G5y << 52176992);
                                 $(__s[+e1R] + k5g)
                                     .css({
-                                    'background': __s[h5y >> 478560384] + t2 + __s[+X5y] + s5g + __s[+P5y] + u5g + E6k
+                                    'background': __s[h5y >> 478560384] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + E6k
                                         .o55(+I5y),
                                     'width': __s[p5y | 4640],
                                     'height': __s[p5y - 0],
@@ -20151,7 +20151,7 @@ var cotgsubscribe = amplify;
                             if (k5g == +E1R)
                                 $(__s[+r5y] + k5g)
                                     .css({
-                                    'background': __s[+h5y] + t2 + __s[X5y - 0] + w5g + __s[+P5y] + I5g + _s(+I5y),
+                                    'background': __s[+h5y] + cityAtlas + __s[X5y - 0] + w5g + __s[+P5y] + I5g + _s(+I5y),
                                     'width': __s[p5y * 1],
                                     'height': __s[+p5y],
                                     'zoom': _s(+'5756'),
@@ -20161,7 +20161,7 @@ var cotgsubscribe = amplify;
                             else if (L5g == 500)
                                 $(__s[+r5y] + k5g)
                                     .css({
-                                    'background': __s[h5y * 1] + t2 + __s[+X5y] + w5g + __s[P5y * 1] + I5g + _s(I5y ^ 0),
+                                    'background': __s[h5y * 1] + cityAtlas + __s[+X5y] + w5g + __s[P5y * 1] + I5g + _s(I5y ^ 0),
                                     'width': __s[p5y | 288],
                                     'height': __s[p5y & 2147483647],
                                     'zoom': _s(+p9R),
@@ -20170,7 +20170,7 @@ var cotgsubscribe = amplify;
                             else
                                 $(__s[+r5y] + k5g)
                                     .css({
-                                    'background': __s[+h5y] + t2 + __s[X5y << 534906624] + w5g + __s[P5y | 34] + I5g +
+                                    'background': __s[+h5y] + cityAtlas + __s[X5y << 534906624] + w5g + __s[P5y | 34] + I5g +
                                         __s[+I5y],
                                     'width': __s[+p5y],
                                     'height': __s[p5y ^ 0],
@@ -20235,7 +20235,7 @@ var cotgsubscribe = amplify;
             f9g = f9g * +G5y;
             $(__s[+e1R] + Z9g)
                 .css({
-                'background': __s[h5y | 8] + t2 + __s[X5y & 2147483647] + n9g + __s[+P5y] + f9g + _s(I5y >> 62196032),
+                'background': __s[h5y | 8] + cityAtlas + __s[X5y & 2147483647] + n9g + __s[+P5y] + f9g + _s(I5y >> 62196032),
                 'width': __s[p5y << 110503648],
                 'height': __s[p5y & 2147483647],
                 'bottom': E6k
@@ -20660,7 +20660,7 @@ var cotgsubscribe = amplify;
                             if (F0v == 0 || F0v == (5))
                                 topstr =
                                     __s[6576];
-                            q0v += topstr + __s[2826] + t2 + __s[+X5y] + a0v + __s[P5y & 2147483647] + k5v + _s(E5p | 2130) + p6(N0v[__s[+i5p]][c0v][__s[+Z9y]]) + __s[q5p ^ 0] + p6(N0v[_s(i5p >>
+                            q0v += topstr + __s[2826] + cityAtlas + __s[+X5y] + a0v + __s[P5y & 2147483647] + k5v + _s(E5p | 2130) + p6(N0v[__s[+i5p]][c0v][__s[+Z9y]]) + __s[q5p ^ 0] + p6(N0v[_s(i5p >>
                                 1315996864)][c0v][__s[+K9y]]) + __s[3665];
                             F0v++;
                             if (F0v == 5 || F0v == 10)
@@ -20674,7 +20674,7 @@ var cotgsubscribe = amplify;
                             if (F0v ==
                                 0 || F0v == 8)
                                 topstr = __s[3390];
-                            q0v += topstr + __s[+B5p] + padding + __s[493] + t2 + __s[X5y ^ 0] + a0v + _s(+P5y) + k5v + __s[+R5p] + p6(N0v[__s[i5p * 1]][c0v][__s[Z9y - 0]]) + _s(e5p |
+                            q0v += topstr + __s[+B5p] + padding + __s[493] + cityAtlas + __s[X5y ^ 0] + a0v + _s(+P5y) + k5v + __s[+R5p] + p6(N0v[__s[i5p * 1]][c0v][__s[Z9y - 0]]) + _s(e5p |
                                 2416) + p6(N0v[__s[+i5p]][c0v][__s[+K9y]]) + __s[+L5p];
                             F0v++;
                             if (F0v == (8) || F0v == (17 | 17))
@@ -20734,7 +20734,7 @@ var cotgsubscribe = amplify;
                             if (F0v == 0 || F0v == 5)
                                 topstr = E6k
                                     .o55(1029);
-                            q0v += topstr + __s[6745] + t2 + __s[X5y - 0] + a0v + __s[P5y | 288] + k5v + _s(+E5p) + p6(N0v[__s[+G5p]][c0v]) + __s[3665];
+                            q0v += topstr + __s[6745] + cityAtlas + __s[X5y - 0] + a0v + __s[P5y | 288] + k5v + _s(+E5p) + p6(N0v[__s[+G5p]][c0v]) + __s[3665];
                             F0v++;
                             if (F0v == 5 || F0v == 10)
                                 q0v += __s[+j5p];
@@ -20745,7 +20745,7 @@ var cotgsubscribe = amplify;
                                 padding = "";
                             if (F0v == 0 || F0v == (8))
                                 topstr = __s[3698];
-                            q0v += topstr + __s[B5p ^ 0] + padding + __s[493] + t2 + __s[+X5y] + a0v + _s(+P5y) + k5v + __s[R5p << 1127525184] + p6(N0v[__s[G5p ^ 0]][c0v]) + _s(L5p >>
+                            q0v += topstr + __s[B5p ^ 0] + padding + __s[493] + cityAtlas + __s[+X5y] + a0v + _s(+P5y) + k5v + __s[R5p << 1127525184] + p6(N0v[__s[G5p ^ 0]][c0v]) + _s(L5p >>
                                 1890125984);
                             F0v++;
                             if (F0v == 8 || F0v == +17)
@@ -22902,7 +22902,7 @@ var cotgsubscribe = amplify;
                         if (i5v <= 10) {
                             if (L5v == 0 || L5v == 5)
                                 topstr = _s(+"6576");
-                            X5v += topstr + __s[6745] + t2 + __s[+X5y] + M5v + __s[P5y >> 367395712] + C5v + E6k
+                            X5v += topstr + __s[6745] + cityAtlas + __s[+X5y] + M5v + __s[P5y >> 367395712] + C5v + E6k
                                 .S55(+E5p) + p6(o5v[__s[+i5p]][z5v][__s[+Z9y]]) + __s[q5p - 0] + p6(o5v[_s(i5p <<
                                 1703570144)][z5v][__s[K9y & 2147483647]]) + __s[3665];
                             L5v++;
@@ -22916,7 +22916,7 @@ var cotgsubscribe = amplify;
                                 padding = '';
                             if (L5v == 0 || L5v == +"8")
                                 topstr = __s[3390];
-                            X5v += topstr + __s[+B5p] + padding + __s[493] + t2 + __s[+X5y] + M5v + _s(+P5y) + C5v + __s[R5p & 2147483647] + p6(o5v[__s[i5p ^ 0]][z5v][__s[+Z9y]]) + _s(+e5p) +
+                            X5v += topstr + __s[+B5p] + padding + __s[493] + cityAtlas + __s[+X5y] + M5v + _s(+P5y) + C5v + __s[R5p & 2147483647] + p6(o5v[__s[i5p ^ 0]][z5v][__s[+Z9y]]) + _s(+e5p) +
                                 p6(o5v[__s[i5p ^ 0]][z5v][__s[K9y * 1]]) + __s[+L5p];
                             L5v++;
                             if (L5v == 8 || L5v == (17 | 17))
@@ -22978,7 +22978,7 @@ var cotgsubscribe = amplify;
                             if (L5v == 0 || L5v == 5)
                                 topstr = E6k
                                     .o55(1029);
-                            X5v += topstr + __s[6745] + t2 + __s[+X5y] + M5v + __s[+P5y] + C5v + __s[+E5p] + p6(o5v[__s[G5p | 528]][z5v]) + __s[3665];
+                            X5v += topstr + __s[6745] + cityAtlas + __s[+X5y] + M5v + __s[+P5y] + C5v + __s[+E5p] + p6(o5v[__s[G5p | 528]][z5v]) + __s[3665];
                             L5v++;
                             if (L5v == 5 || L5v == (10))
                                 X5v += _s(j5p >>
@@ -22990,7 +22990,7 @@ var cotgsubscribe = amplify;
                                 padding = _s(4867);
                             if (L5v == 0 || L5v == 8)
                                 topstr = __s[3698];
-                            X5v += topstr + __s[+B5p] + padding + __s[493] + t2 + __s[+X5y] + M5v + E6k
+                            X5v += topstr + __s[+B5p] + padding + __s[493] + cityAtlas + __s[+X5y] + M5v + E6k
                                 .o55(+P5y) + C5v + __s[R5p ^ 0] + p6(o5v[__s[+G5p]][z5v]) + __s[+L5p];
                             L5v++;
                             if (L5v == (8) || L5v == +17)
@@ -23378,7 +23378,7 @@ var cotgsubscribe = amplify;
                 var z1U = Q2(j1U);
                 $(__s[3605])
                     .css({
-                    'background': __s[h5y * 1] + t2 + __s[1139],
+                    'background': __s[h5y * 1] + cityAtlas + __s[1139],
                     'width': _s(p5y & E6k
                         .s6s),
                     'height': __s[+p5y],
@@ -23562,7 +23562,7 @@ var cotgsubscribe = amplify;
                     e1U = f1U;
                 $(__s[3605])
                     .css({
-                    'background': __s[+h5y] + t2 + __s[1139],
+                    'background': __s[+h5y] + cityAtlas + __s[1139],
                     'width': __s[+p5y],
                     'height': _s(+p5y),
                     'zoom': 1
@@ -24311,7 +24311,7 @@ var cotgsubscribe = amplify;
                         Q3U = Q3U * (G5y * 1);
                         $(__s[852])
                             .css({
-                            'background': __s[h5y << 1732933472] + t2 + __s[X5y | 1090] + v3U + _s(P5y |
+                            'background': __s[h5y << 1732933472] + cityAtlas + __s[X5y | 1090] + v3U + _s(P5y |
                                 34) + Q3U + __s[3688],
                             'width': __s[p5y >> 277504480],
                             'height': _s(+p5y),
@@ -25558,7 +25558,7 @@ var cotgsubscribe = amplify;
                 V9g = V9g * +G5y;
                 $(__s[r5y & 2147483647] + b9g)
                     .css({
-                    'background': __s[+h5y] + t2 + __s[X5y ^ 0] + J9g + __s[P5y - 0] + V9g + _s(I5y &
+                    'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + J9g + __s[P5y - 0] + V9g + _s(I5y &
                         2147483647),
                     'width': __s[+p5y],
                     'height': __s[p5y * 1],
@@ -38217,14 +38217,13 @@ var cotgsubscribe = amplify;
             function j4n() { return !I4n && s4n; }
         }(jQuery, window, document));
         function globalClassClick(evt) {
-            let that = evt.target;
-            let className = that.className;
-            if (className.indexOf("clPop") >= 0) {
-                var n61 = that.getAttribute("pl");
+            let className = evt.target.classList;
+            if (className.contains("clPop")) {
+                var n61 = evt.target.getAttribute("pl");
                 $("#" + n61).remove();
                 callSyncViewMode();
             }
-            else if ((className.indexOf("Xbutton") >= 0) || (className.indexOf("xbutton") >= 0)) {
+            else if ((className.contains("Xbutton")) || (className.contains("xbutton"))) {
                 callSyncViewMode();
             }
         }
@@ -44417,7 +44416,7 @@ var cotgsubscribe = amplify;
                         i6U = i6U * (G5y << 982480832);
                         $(__s[3605])
                             .css({
-                            'background': __s[+h5y] + t2 + __s[X5y >> 767537568] + M6U + __s[P5y & 2147483647] +
+                            'background': __s[+h5y] + cityAtlas + __s[X5y >> 767537568] + M6U + __s[P5y & 2147483647] +
                                 i6U + __s[1768],
                             'width': __s[p5y << 489421760],
                             'height': __s[+p5y],
@@ -46060,7 +46059,7 @@ var cotgsubscribe = amplify;
                                 if (Y5v == 0 || Y5v == 5)
                                     E5v = _s('1029' ^
                                         0);
-                                c5v += E5v + __s[2826] + t2 + __s[+X5y] + k7v + __s[+P5y] + e7v + _s(E5p >> 1534738176) + p6(N5v[F5v][__s[t9m >> 1893938112]][q5v][__s[O8R >> 1355061088]][m5v]) + __s[3665];
+                                c5v += E5v + __s[2826] + cityAtlas + __s[+X5y] + k7v + __s[+P5y] + e7v + _s(E5p >> 1534738176) + p6(N5v[F5v][__s[t9m >> 1893938112]][q5v][__s[O8R >> 1355061088]][m5v]) + __s[3665];
                                 Y5v++;
                                 if (Y5v == 5 || Y5v == (10))
                                     c5v += __s[j5p >> 444275136];
@@ -46072,7 +46071,7 @@ var cotgsubscribe = amplify;
                                     H7v = '';
                                 if (Y5v == 0 || Y5v == +'8')
                                     E5v = __s[2827];
-                                c5v += E5v + __s[B5p << 713829184] + H7v + __s[4646] + t2 + __s[+X5y] + k7v + _s(P5y ^ 0) + e7v + __s[+R5p] + p6(N5v[F5v][__s[+t9m]][q5v][__s[O8R | 4626]][m5v]) + E6k
+                                c5v += E5v + __s[B5p << 713829184] + H7v + __s[4646] + cityAtlas + __s[+X5y] + k7v + _s(P5y ^ 0) + e7v + __s[+R5p] + p6(N5v[F5v][__s[+t9m]][q5v][__s[O8R | 4626]][m5v]) + E6k
                                     .S55(2389);
                                 Y5v++;
                                 if (Y5v == (8) || Y5v == +17)
@@ -46132,7 +46131,7 @@ var cotgsubscribe = amplify;
                             if (I7v <= 10) {
                                 if (Y5v == 0 || Y5v == 5)
                                     E5v = __s[6576];
-                                c5v += E5v + __s[2826] + t2 + __s[+X5y] + k7v + __s[+P5y] + e7v + _s(E5p >>
+                                c5v += E5v + __s[2826] + cityAtlas + __s[+X5y] + k7v + __s[+P5y] + e7v + _s(E5p >>
                                     672641184) + p6(N5v[F5v][__s[+t9m]][q5v][__s[i5p << 1876024768]][m5v][__s[+Z9y]]) +
                                     __s[q5p ^ 0] + p6(N5v[F5v][__s[+t9m]][q5v][__s[+i5p]][m5v][__s[K9y * 1]]) + _s(3665);
                                 Y5v++;
@@ -46145,7 +46144,7 @@ var cotgsubscribe = amplify;
                                     H7v = "";
                                 if (Y5v == 0 || Y5v == 8)
                                     E5v = __s[6787];
-                                c5v += E5v + __s[B5p * 1] + H7v + __s['4646' | 34] + t2 + __s[+X5y] + k7v + _s(+P5y) + e7v + __s[349] + p6(N5v[F5v][__s[+t9m]][q5v][__s[i5p * 1]][m5v][_s(+Z9y)]) + __s[4664] + p6(N5v[F5v][__s[t9m | 513]][q5v][__s[i5p ^ 0]][m5v][E6k
+                                c5v += E5v + __s[B5p * 1] + H7v + __s['4646' | 34] + cityAtlas + __s[+X5y] + k7v + _s(+P5y) + e7v + __s[349] + p6(N5v[F5v][__s[+t9m]][q5v][__s[i5p * 1]][m5v][_s(+Z9y)]) + __s[4664] + p6(N5v[F5v][__s[t9m | 513]][q5v][__s[i5p ^ 0]][m5v][E6k
                                     .S55(+K9y)]) + __s[L5p | 2];
                                 Y5v++;
                                 if (Y5v == ('8' | 8) || Y5v == (17 | 1))
@@ -47014,7 +47013,7 @@ var cotgsubscribe = amplify;
                             var d1D = (z1D - W1D) / 4 * +G5y;
                             $(__s[5802] + X1D)
                                 .css({
-                                'background': __s[h5y & 2147483647] + t2 + __s[X5y - 0] + W1D + _s(P5y >>
+                                'background': __s[h5y & 2147483647] + cityAtlas + __s[X5y - 0] + W1D + _s(P5y >>
                                     1441929600) + d1D + __s[I5y << 1531008992],
                                 'width': __s[+p5y],
                                 'height': _s(+p5y)
@@ -47065,7 +47064,7 @@ var cotgsubscribe = amplify;
                                         var d1D = (z1D - W1D / +G5y) / (4) * +G5y;
                                         $(__s[5802] + X1D)
                                             .css({
-                                            'background': __s[+h5y] + t2 + __s[X5y ^ 0] + W1D + __s[+P5y] + d1D + E6k
+                                            'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + W1D + __s[+P5y] + d1D + E6k
                                                 .o55(I5y | 4324),
                                             'width': __s[p5y << 1375481024],
                                             'height': _s(p5y *
@@ -55006,7 +55005,6 @@ var cotgsubscribe = amplify;
             h9(U9g);
         }
         window.onerror = C9F();
-        var t2 = __s[967];
         function O3F() {
             $(__s[2277])
                 .text(D6[__s[+I5R]]);
@@ -68035,7 +68033,7 @@ var cotgsubscribe = amplify;
                                 .addClass(__s[4891]);
                             $(this)
                                 .css({
-                                'background': __s[+h5y] + t2 + __s[X5y | 2120] + a5g + __s[P5y ^ 0] + E5g + E6k
+                                'background': __s[+h5y] + cityAtlas + __s[X5y | 2120] + a5g + __s[P5y ^ 0] + E5g + E6k
                                     .o55(+I5y),
                                 'width': __s[p5y >> 1050428128],
                                 'height': _s(p5y & E6k
@@ -68068,7 +68066,7 @@ var cotgsubscribe = amplify;
                                     .addClass(__s[4891]);
                                 $(this)
                                     .css({
-                                    'background': __s[+h5y] + t2 + __s[X5y & 2147483647] + a5g + _s(P5y & E6k
+                                    'background': __s[+h5y] + cityAtlas + __s[X5y & 2147483647] + a5g + _s(P5y & E6k
                                         .s6s) + E5g + __s[I5y ^ 0],
                                     'width': __s[p5y << 125526560],
                                     'height': _s(p5y << 2058186176),
@@ -69232,7 +69230,7 @@ var cotgsubscribe = amplify;
                             i7g = i7g * +G5y;
                             $(__s[+r5y] + M7g)
                                 .css({
-                                'background': __s[h5y - 0] + t2 + __s[+X5y] + W7g + __s[+P5y] + i7g + _s(I5y &
+                                'background': __s[h5y - 0] + cityAtlas + __s[+X5y] + W7g + __s[+P5y] + i7g + _s(I5y &
                                     2147483647),
                                 'width': __s[+p5y],
                                 'height': __s[p5y & 2147483647],

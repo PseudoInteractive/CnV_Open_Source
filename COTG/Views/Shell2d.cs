@@ -84,16 +84,16 @@ namespace COTG.Views
 		//    DashCap=CanvasCapStyle.Triangle,
 		//    EndCap=CanvasCapStyle.Triangle,
 		//    StartCap=CanvasCapStyle.Triangle};
-		const float dashD0 = 6.0f;
-		const float dashD1 = 6f;
-		CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle()
-		{
-			CustomDashStyle = new float[] { dashD0, dashD1 },
-			EndCap = CanvasCapStyle.Flat,
-			DashCap = CanvasCapStyle.Triangle,
-			StartCap = CanvasCapStyle.Flat,
-			//           TransformBehavior=CanvasStrokeTransformBehavior.Hairline
-		};
+		//const float dashD0 = 6.0f;
+		//const float dashD1 = 6f;
+		//CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle()
+		//{
+		//	CustomDashStyle = new float[] { dashD0, dashD1 },
+		//	EndCap = CanvasCapStyle.Flat,
+		//	DashCap = CanvasCapStyle.Triangle,
+		//	StartCap = CanvasCapStyle.Flat,
+		//	//           TransformBehavior=CanvasStrokeTransformBehavior.Hairline
+		//};
 		public (SwapChainPanel canvas, Rectangle hitTest) CreateCanvasControl()
 		{
 			//Assert((0.5f).CeilToInt() == 1);

@@ -26,6 +26,29 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
+				<controls:RadioButtons Header="Lighting"
+                   SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
+					<x:String>Day</x:String>
+					<x:String>Night</x:String>
+					<x:String>None</x:String>
+				</controls:RadioButtons>
+				
+				<controls:RadioButtons Header="Theme"
+                   SelectedIndex="{x:Bind uiTheme, Mode=TwoWay}">
+					<x:String>COTG</x:String>
+					<x:String>Winter</x:String>
+				</controls:RadioButtons>
+
+				<Slider Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0125" SmallChange="0.0125" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
+				<Slider Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" TickPlacement="Outside" Orientation="Vertical" />
+			
+			<Slider Header="Music" Value="{x:Bind uiMusic, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" TickPlacement="Outside" Margin="8,8,8,8" Orientation="Vertical" />
+
+			</wct:WrapPanel>
+			
+			<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+
 				<CheckBox Content="Fetch Full Defense History"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  Margin="8" />
@@ -40,8 +63,7 @@
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
 
-				<Slider Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0125" SmallChange="0.0125" Width="300" Margin="8" />
-				<Slider Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" Width="300" />
+
 
 			</wct:WrapPanel>
 			<wct:WrapPanel Orientation="Horizontal"
@@ -96,7 +118,7 @@
 						MinWidth="120" />
 
 			</wct:WrapPanel>
-			
+
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock Text="Set Nearest Hub Settings"
 						   Style="{ThemeResource SubtitleTextBlockStyle}"

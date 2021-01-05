@@ -8,9 +8,9 @@ using static COTG.Debug;
 
 namespace COTG.JSON
 {
-    using COTG.Game;
-    using COTG.Services;
-    using COTG.Views;
+	using COTG.Game;
+	using COTG.Services;
+	using COTG.Views;
 
 
 	using Microsoft.Xna.Framework.Graphics;
@@ -26,74 +26,74 @@ namespace COTG.JSON
 	using System.Text.Json.Serialization;
 
 	public sealed class TileData
-    {
-		
+	{
+
 		public enum State
-        {
-            preInit,
+		{
+			preInit,
 			lostDevice,
 			wantRefresh,
 			loadStart,
 			loadedData,
-            loadingImages,
-            loadedImages,
-            ready = loadedImages
-        }
-        public static State state = State.preInit;
+			loadingImages,
+			loadedImages,
+			ready = loadedImages
+		}
+		public static State state = State.preInit;
 
-        public static TileData instance;
-		
+		public static TileData instance;
+
 
 		public static async Task Ctor(bool deviceLost)
-        {
+		{
 			// if we are still loading the last data, wait
-			while(state >= State.loadStart && state != State.ready)
+			while (state >= State.loadStart && state != State.ready)
 			{
 				await Task.Delay(1000);
 			}
-			if(state == State.ready)
+			if (state == State.ready)
 			{
 				if (deviceLost)
 					state = State.lostDevice;
 				else
 					state = State.wantRefresh;
 			}
-            var prior = (state == State.wantRefresh) ? instance?.tilesets : null;  // if called previously save the images to reuse
+			var prior = (state == State.wantRefresh) ? instance?.tilesets : null;  // if called previously save the images to reuse
 			Assert(state == State.preInit || state == State.lostDevice || state == State.wantRefresh); // reset if necessary
 
-			state = State.loadStart; 
+			state = State.loadStart;
 			instance = await TileMapFetch.Get();
-            //            Note.Show("TilesFetched");
-            state = State.loadedData;
+			//            Note.Show("TilesFetched");
+			state = State.loadedData;
 
-            //);
-            Assert(state == State.loadedData);
-            // remove numbered things
+			//);
+			Assert(state == State.loadedData);
+			// remove numbered things
 
-            state = State.loadingImages;
-            var tileCount = instance.tilesets.Length - 1;
-            // remove names layer
-            instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
-            //  await canvas.RunOnGameLoopThreadAsync( async () =>
-            if (prior != null)
-            {
+			state = State.loadingImages;
+			var tileCount = instance.tilesets.Length - 1;
+			// remove names layer
+			instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
+			//  await canvas.RunOnGameLoopThreadAsync( async () =>
+			if (prior != null)
+			{
 				Assert(false);
-                var count = prior.Length;
-                for (int i = 0; i<count; ++i)
-                {
-                    instance.tilesets[i].bitmap = prior[i].bitmap;
-					
+				var count = prior.Length;
+				for (int i = 0; i < count; ++i)
+				{
+					instance.tilesets[i].material = prior[i].material;
+
 
 				}
-                prior = null;
+				prior = null;
 
-            }
-            else
-            {
-                foreach (var tileSet in instance.tilesets)
-                {
-                    tileSet.Load();
-					switch(tileSet.name)
+			}
+			else
+			{
+				foreach (var tileSet in instance.tilesets)
+				{
+					tileSet.Load();
+					switch (tileSet.name)
 					{
 						case "land":
 							tileSet.z = AGame.zLand;
@@ -121,10 +121,10 @@ namespace COTG.JSON
 
 					}
 				}
-            }
+			}
 			foreach (var layer in instance.layers)
 			{
-				switch(layer.name)
+				switch (layer.name)
 				{
 					case "land":
 						{
@@ -154,177 +154,178 @@ namespace COTG.JSON
 				}
 			}
 
-				for (var i = 0; i < World.worldDim * World.worldDim; ++i)
-            {
-                foreach (var layer in instance.layers)
-                {
-				
-                    var tile = layer.data[i];
-                    if (tile == 0)
-                        continue;
-                          layer.data[i] =0; // 0 by default
-                    for (int tileId = 0; tileId < tileCount; ++tileId)
-                    {
-                        var ts = instance.tilesets[tileId];
-                        var off = tile - ts.firstgid;
-                    //    Assert(ts.tilewidth==64);
-                        var offX = off%ts.columns;
-                        if ((off >= 0) && off < ts.tilecount)
-                        {
-                            layer.data[i] = (ushort)(off | (tileId << 13));// << (put++ * 16);
-                            break;
-                        }
-                    }
-                }
+			for (var i = 0; i < World.worldDim * World.worldDim; ++i)
+			{
+				foreach (var layer in instance.layers)
+				{
 
-            }
+					var tile = layer.data[i];
+					if (tile == 0)
+						continue;
+					layer.data[i] = 0; // 0 by default
+					for (int tileId = 0; tileId < tileCount; ++tileId)
+					{
+						var ts = instance.tilesets[tileId];
+						var off = tile - ts.firstgid;
+						//    Assert(ts.tilewidth==64);
+						var offX = off % ts.columns;
+						if ((off >= 0) && off < ts.tilecount)
+						{
+							layer.data[i] = (ushort)(off | (tileId << 13));// << (put++ * 16);
+							break;
+						}
+					}
+				}
 
-        }
+			}
+			state = State.ready;
 
-
-
-        public int compressionlevel { get; set; }
-        public static int Height() => instance.height;
-        public int height { get; set; }
-        public bool infinite { get; set; }
-        public Layer[] layers { get; set; }
-        public int nextlayerid { get; set; }
-        public int nextobjectid { get; set; }
-        public string orientation { get; set; }
-        public string renderorder { get; set; }
-        public string tiledversion { get; set; }
-        public int tileheight { get; set; }
-        public Tileset[] tilesets { get; set; }
-        public int tilewidth { get; set; }
-        public string type { get; set; }
-        public float version { get; set; }
-        public static int Width() => instance.width;
-        public int width { get; set; }
-
-        public void ResourceGain(int x, int y, bool diagonal, ref float woodCount, ref float stoneCount, ref float ironCount, ref float plainsCount)
-        {
-            foreach (var l in layers)
-            {
-                int off = l.width*y+x;
-                var data = l.data[off];
-                var tileSet = data>>13;
-                // tileset 1 is land details
-                if (tileSet == 1)
-                {
-                    int xy = data&((1 << 13) - 1);
-                    int ty = xy/10;
-                    int tx = xy - ty*10;
-                    Assert(tx < 9);
-                    // special mountains
-                    if((tx==2 && ty==3)||(tx==8&&ty==1)||(tx==5&&ty==1)||(tx==4&&ty==6)||(tx==3&&ty==6)||
-                        (tx>=2&&tx<=4&&ty==11)||(tx>=2&&tx<=3&&ty==14) )
-                    {
-                        break;
-                    }
-                   
-                    if (ty < 7)
-                    {
-                        ironCount += diagonal ? 2 : 4;
-                    }
-                    else if (ty < 12 || (ty<15 && tx<4))
-                    {
-                        stoneCount += diagonal ? 2 : 4;
-                    }
-                    else if (  ty < 20)
-                    {
-                        woodCount += diagonal ? 2 : 4;
-                    }
-                    else
-                    {
-                        break; // fall through to plains
-                    }
-
-                    return;
-                }
-            }
-            plainsCount+=diagonal ? 0.5f : 1f;
-        }
-        public enum SpotType
-        {
-            plain,
-            forest,
-            hill,
-            mountain,
-            water,
-            portal,
-            city,
-            shrine,
-            other,
-        }
-        public (SpotType type,int x,int y) GetSpotType(int x, int y)
-        {
-            var hasPlains = false;
-            foreach (var l in layers)
-            {
-                int off = l.width*y+x;
-                var data = l.data[off];
-                if (data==0)
-                    continue;
-                var tileSet = data>>13;
-                int xy = data&((1 << 13) - 1);
-                (var tx, var ty) = xy.DecomposeXY(tilesets[tileSet].columns);
-                // tileset 1 is land details
-                if (tileSet == 0)
-                {
-               //     return (SpotType.water,tx,ty);
-                }
-                if(tileSet == 2)
-                {
-                    hasPlains=true;
-                }
-                if (tileSet == 1)
-                {
-                   
-                    
-                    Assert(tx < 9);
-                    // special mountains
-                    if ((tx==2 && ty==3)||(tx==8&&ty==1)||(tx==5&&ty==1)||(tx==4&&ty==6)||(tx==3&&ty==6)||
-                        (tx>=2&&tx<=4&&ty==11)||(tx>=2&&tx<=3&&ty==14))
-                    {
-                        continue;
-                    }
-                    
-                    if (ty < 7)
-                    {
-                        return (SpotType.mountain,tx,ty);
-                    }
-                    else if (ty < 12 || (ty<15 && tx<4))
-                    {
-                        return (SpotType.hill, tx, ty); ;
-                    }
-                    else if (  ty < 20)
-                    {
-                        return (SpotType.forest,tx,ty); ;
-                    }
-                    else if( tx==0)
-                    {
-                        return (SpotType.shrine,tx,ty); ;
-                    }
-                    else
-                    {
-                        return (SpotType.portal,tx,ty); ;
-                    }
-
-                }
-                if(tileSet==3)
-                {
-                    return (SpotType.city,tx,ty);
-                }
-            }
-            return hasPlains ? (SpotType.plain,0,0) : (SpotType.other,0,0);
-        }
-    }
+		}
 
 
 
+		public int compressionlevel { get; set; }
+		public static int Height() => instance.height;
+		public int height { get; set; }
+		public bool infinite { get; set; }
+		public Layer[] layers { get; set; }
+		public int nextlayerid { get; set; }
+		public int nextobjectid { get; set; }
+		public string orientation { get; set; }
+		public string renderorder { get; set; }
+		public string tiledversion { get; set; }
+		public int tileheight { get; set; }
+		public Tileset[] tilesets { get; set; }
+		public int tilewidth { get; set; }
+		public string type { get; set; }
+		public float version { get; set; }
+		public static int Width() => instance.width;
+		public int width { get; set; }
 
-    public sealed class Layer
-    {
+		public void ResourceGain(int x, int y, bool diagonal, ref float woodCount, ref float stoneCount, ref float ironCount, ref float plainsCount)
+		{
+			foreach (var l in layers)
+			{
+				int off = l.width * y + x;
+				var data = l.data[off];
+				var tileSet = data >> 13;
+				// tileset 1 is land details
+				if (tileSet == 1)
+				{
+					int xy = data & ((1 << 13) - 1);
+					int ty = xy / 10;
+					int tx = xy - ty * 10;
+					Assert(tx < 9);
+					// special mountains
+					if ((tx == 2 && ty == 3) || (tx == 8 && ty == 1) || (tx == 5 && ty == 1) || (tx == 4 && ty == 6) || (tx == 3 && ty == 6) ||
+						(tx >= 2 && tx <= 4 && ty == 11) || (tx >= 2 && tx <= 3 && ty == 14))
+					{
+						break;
+					}
+
+					if (ty < 7)
+					{
+						ironCount += diagonal ? 2 : 4;
+					}
+					else if (ty < 12 || (ty < 15 && tx < 4))
+					{
+						stoneCount += diagonal ? 2 : 4;
+					}
+					else if (ty < 20)
+					{
+						woodCount += diagonal ? 2 : 4;
+					}
+					else
+					{
+						break; // fall through to plains
+					}
+
+					return;
+				}
+			}
+			plainsCount += diagonal ? 0.5f : 1f;
+		}
+		public enum SpotType
+		{
+			plain,
+			forest,
+			hill,
+			mountain,
+			water,
+			portal,
+			city,
+			shrine,
+			other,
+		}
+		public (SpotType type, int x, int y) GetSpotType(int x, int y)
+		{
+			var hasPlains = false;
+			foreach (var l in layers)
+			{
+				int off = l.width * y + x;
+				var data = l.data[off];
+				if (data == 0)
+					continue;
+				var tileSet = data >> 13;
+				int xy = data & ((1 << 13) - 1);
+				(var tx, var ty) = xy.DecomposeXY(tilesets[tileSet].columns);
+				// tileset 1 is land details
+				if (tileSet == 0)
+				{
+					//     return (SpotType.water,tx,ty);
+				}
+				if (tileSet == 2)
+				{
+					hasPlains = true;
+				}
+				if (tileSet == 1)
+				{
+
+
+					Assert(tx < 9);
+					// special mountains
+					if ((tx == 2 && ty == 3) || (tx == 8 && ty == 1) || (tx == 5 && ty == 1) || (tx == 4 && ty == 6) || (tx == 3 && ty == 6) ||
+						(tx >= 2 && tx <= 4 && ty == 11) || (tx >= 2 && tx <= 3 && ty == 14))
+					{
+						continue;
+					}
+
+					if (ty < 7)
+					{
+						return (SpotType.mountain, tx, ty);
+					}
+					else if (ty < 12 || (ty < 15 && tx < 4))
+					{
+						return (SpotType.hill, tx, ty); ;
+					}
+					else if (ty < 20)
+					{
+						return (SpotType.forest, tx, ty); ;
+					}
+					else if (tx == 0)
+					{
+						return (SpotType.shrine, tx, ty); ;
+					}
+					else
+					{
+						return (SpotType.portal, tx, ty); ;
+					}
+
+				}
+				if (tileSet == 3)
+				{
+					return (SpotType.city, tx, ty);
+				}
+			}
+			return hasPlains ? (SpotType.plain, 0, 0) : (SpotType.other, 0, 0);
+		}
+	}
+
+
+
+
+	public sealed class Layer
+	{
 		[JsonIgnore]
 		public float z;
 		[JsonIgnore]
@@ -333,22 +334,22 @@ namespace COTG.JSON
 		public bool isBase; // shadows draw onto this, this are drawn first
 
 		public ushort[] data { get; set; }
-        public int height { get; set; }
-        public int id { get; set; }
-        public string name { get; set; }
-        public int width { get; set; }
-        public ushort GetData(int x, int y)
-        {
-            return data[x+y*width];
-        }
-        public int FillCount(int x, int y) // 0 or 1
-        {
-            return data[x+y*width] == 0 ? 0 : 1;
-        }
-    }
+		public int height { get; set; }
+		public int id { get; set; }
+		public string name { get; set; }
+		public int width { get; set; }
+		public ushort GetData(int x, int y)
+		{
+			return data[x + y * width];
+		}
+		public int FillCount(int x, int y) // 0 or 1
+		{
+			return data[x + y * width] == 0 ? 0 : 1;
+		}
+	}
 
-    public sealed class Tileset
-    {
+	public sealed class Tileset
+	{
 		[JsonIgnore]
 		public float z;
 		[JsonIgnore]
@@ -369,44 +370,45 @@ namespace COTG.JSON
 
 
 		[JsonIgnore]
-		public Draw.Material bitmap;
+		public Draw.Material material;
 		//public (int u,int v) ScaleUV( (int u, int v) uv)
 		//{
 		//	return ((int)(uv.u * bitmap.Width + imagewidth / 2) / imagewidth, (int)(uv.v * bitmap.Height + imageheight / 2) / imageheight);
 
 		//}
-        public int columns { get; set; }
-        public int firstgid { get; set; }
-        public string image { get; set; }
-        public int imageheight { get; set; }
-        public int imagewidth { get; set; }
-        public string name { get; set; }
-        public int tilecount { get; set; }
-        public int tileheight { get; set; }
-        public int tilewidth { get; set; }
-        public async void Load()
-        {
-            try
-            {
-                var resName = image;
+		public int columns { get; set; }
+		public int firstgid { get; set; }
+		public string image { get; set; }
+		public int imageheight { get; set; }
+		public int imagewidth { get; set; }
+		public string name { get; set; }
+		public int tilecount { get; set; }
+		public int tileheight { get; set; }
+		public int tilewidth { get; set; }
+		public async void Load()
+		{
+			try
+			{
+				var resName = image;
 
-                //var uri = new Uri($"ms-appx:///Assets/{ resName.Substring(0, resName.Length-3)}dds");
-                //var temp = this;
-              //  Debug.Log(uri.ToString());
-				bitmap = new Draw.Material( AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{ resName.Substring(0, resName.Length - 4)}"));
+				//var uri = new Uri($"ms-appx:///Assets/{ resName.Substring(0, resName.Length-3)}dds");
+				//var temp = this;
+				//  Debug.Log(uri.ToString());
+				string shortName = resName.Substring(0, resName.Length - 4);
+				string dir = SettingsPage.IsThemeWinter() ? "winter" : "cotg";
+				material = new Draw.Material(AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}"), AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n"), AGame.litEffect);
 				// etc.
-				Assert(bitmap != null);
-				
+				Assert(material != null);
 
 
-				tilewidth = (int)bitmap.texture2d.Width / columns;
+				tilewidth = (int)material.texture2d.Width / columns;
 				tileheight = tilewidth;
 				scaleXToU = 1.0f / columns;
-				scaleYToV = (float)tileheight / bitmap.texture2d.Height;
+				scaleYToV = (float)tileheight / material.texture2d.Height;
 				//effect = new PixelShaderEffect(ShellPage.lightEffectBytes)
 				//{
-				halfTexelU = 0.5f / bitmap.texture2d.Width;
-				halfTexelV = 0.5f / bitmap.texture2d.Height;
+				halfTexelU = 0.5f / material.texture2d.Width;
+				halfTexelV = 0.5f / material.texture2d.Height;
 				//	Source1 = temp.bitmap,
 				//	Source1Interpolation = CanvasImageInterpolation.Linear,
 				//	Source3 = temp.bitmap,
@@ -430,17 +432,17 @@ namespace COTG.JSON
 
 			}
 			catch (Exception e)
-            {
-                Log(e);
+			{
+				Log(e);
 
-            }
-
-
+			}
 
 
-        }
 
-    }
+
+		}
+
+	}
 }
 
 

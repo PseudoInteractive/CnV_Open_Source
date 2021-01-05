@@ -499,6 +499,7 @@
     <Content Include="Content\Effects\AlphaAdd.fx" />
     <Content Include="Content\Effects\darkFont.fx" />
     <Content Include="Content\Effects\font.fx" />
+    <Content Include="Content\Effects\lit.fx" />
     <Content Include="web\images\city128\walls_water2.png" />
     <Content Include="web\images\city128\water_water.png" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />
@@ -542,11 +543,9 @@
     <Content Include="Assets\StoreLogo.scale-125.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
-    <None Include="Content\Art\Tiles\terrainfeatures.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
-    <None Include="Content\Art\Tiles\watertiles.png" />
     <None Include="Content\Art\world.dds" />
     <None Include="Content\Audio\UXOMainTheme.ogg" />
     <Content Include="Content\Art\Icons\barracks.png" />
@@ -664,6 +663,7 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Art\Tiles\" />
     <Folder Include="EventHandlers\" />
   </ItemGroup>
   <ItemGroup>
