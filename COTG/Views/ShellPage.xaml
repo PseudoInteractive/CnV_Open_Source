@@ -300,7 +300,15 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                               
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />
-        <tk:GridSplitter
+		<winui:InfoBar x:Name="infoBar"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+					   x:FieldModifier="public"
+					   Title=":o"
+                               >
+			<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>
+		</winui:InfoBar>
+		<tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"
 									 				IsTabStop="True"

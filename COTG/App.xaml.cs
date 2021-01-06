@@ -609,7 +609,8 @@ namespace COTG
 
 
 		// HTML control messs wit this
-		public static VirtualKeyModifiers keyModifiers {
+		public static VirtualKeyModifiers keyModifiers
+		{
 			get
 			{
 				var rv = VirtualKeyModifiers.None;
@@ -872,7 +873,7 @@ namespace COTG
 		}
 		static DateTime nextInAppNote = new DateTime(0);
 		static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async void Show(string s, bool lowPriority = false, int timeout = 5000)
+		public static async void Show(string s, bool lowPriority = false, bool useInfoBar = false, int timeout = 5000)
 		{
 			const int noteDelay = 2;
 			if (ShellPage.instance != null)
@@ -880,7 +881,12 @@ namespace COTG
 				if (!initialized)
 				{
 					initialized = true;
-					ShellPage.inAppNote.Closed += InAppNote_Closed;
+					App.DispatchOnUIThreadSneaky(() =>
+					{
+						ShellPage.inAppNote.Closed += InAppNote_Closed;
+						ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
+						ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
+					});
 				}
 
 				var now = DateTime.UtcNow;
@@ -913,16 +919,46 @@ namespace COTG
 
 				}
 
-				App.DispatchOnUIThreadLow(() =>
+				App.DispatchOnUIThreadSneaky(() =>
 				{
 					ChatTab.L(s);
-					var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-					textBlock.LinkClicked += MarkDownLinkClicked;
-					ShellPage.inAppNote.Show(textBlock, timeout);
+					var wasOpen = false;
+					if (ShellPage.instance.infoBar.IsOpen)
+					{
+						wasOpen = true;
+						ShellPage.instance.infoBar.IsOpen = false;
+					}
+					if (!useInfoBar)
+					{
+						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+						textBlock.LinkClicked += MarkDownLinkClicked;
+						ShellPage.inAppNote.Show(textBlock, timeout);
+
+						ShellPage.instance.infoBar.IsOpen = true;
+					}
+					else
+					{
+						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+						ShellPage.instance.infoMD.Text = s;
+						if (wasOpen)
+						{
+							Task.Delay(500).ContinueWith((_) => ShellPage.instance.infoBar.IsOpen = true, TaskScheduler.FromCurrentSynchronizationContext());
+						}
+						else
+						{
+							ShellPage.instance.infoBar.IsOpen = true;
+						}
+					}
 				});
 
 
 			}
+		}
+
+		private static void InfoBar_CloseButtonClick(Microsoft.UI.Xaml.Controls.InfoBar sender, object args)
+		{
+			cancellationTokenSource.Cancel();
+			cancellationTokenSource = new CancellationTokenSource();
 		}
 
 		static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);

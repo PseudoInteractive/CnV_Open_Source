@@ -665,7 +665,6 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
-			Log($"pointer released {e.CurrentPoint.Position}");
 			if (JSClient.IsCityView())
 			{
 				e.Handled = false;

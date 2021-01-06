@@ -1105,17 +1105,17 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/cities-only.png
 
-#begin Art/Tiles/winter/cities-only_n.dds
+#begin Art/Tiles/winter/cities-only_n.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/Tiles/winter/cities-only_n.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/Tiles/winter/cities-only_n.png
 
 #begin Art/Tiles/winter/land.png
 /importer:TextureImporter
@@ -1129,17 +1129,17 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/land.png
 
-#begin Art/Tiles/winter/land_n.dds
+#begin Art/Tiles/winter/land_n.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/Tiles/winter/land_n.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/Tiles/winter/land_n.png
 
 #begin Art/Tiles/winter/numberedthings.png
 /importer:TextureImporter
@@ -1153,17 +1153,17 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/numberedthings.png
 
-#begin Art/Tiles/winter/numberedthings_n.dds
+#begin Art/Tiles/winter/numberedthings_n.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/Tiles/winter/numberedthings_n.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/Tiles/winter/numberedthings_n.png
 
 #begin Art/Tiles/winter/terrainfeatures.png
 /importer:TextureImporter
@@ -1177,17 +1177,17 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/terrainfeatures.png
 
-#begin Art/Tiles/winter/terrainfeatures_n.dds
+#begin Art/Tiles/winter/terrainfeatures_n.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/Tiles/winter/terrainfeatures_n.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/Tiles/winter/terrainfeatures_n.png
 
 #begin Art/Tiles/winter/watertiles.png
 /importer:TextureImporter
@@ -1201,17 +1201,17 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/watertiles.png
 
-#begin Art/Tiles/winter/watertiles_n.dds
+#begin Art/Tiles/winter/watertiles_n.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/Tiles/winter/watertiles_n.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/Tiles/winter/watertiles_n.png
 
 #begin Art/world.dds
 /importer:TextureImporter

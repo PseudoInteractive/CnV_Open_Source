@@ -11,13 +11,14 @@
 			   xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   mc:Ignorable="d"
-			   xmlns:sys="using:System"
+			   
 			   PrimaryButtonText="Done"
 			   Title="Settings"
 			   CloseButtonText="Cancel"
 			   FullSizeDesired="True"
 			   UseSystemFocusVisuals="True"
 			   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+			   Background="Black"
 			   Margin="4">
 	<ScrollViewer>
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">

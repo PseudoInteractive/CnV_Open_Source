@@ -758,7 +758,7 @@ namespace COTG
 		{
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
-			if (!(IsWorldView()) || (TileData.state < TileData.State.loadingImages) || (worldOwners == null))
+			if (!(IsWorldView()) || !IsActive || (TileData.state < TileData.State.loadingImages) || (worldOwners == null))
 				return;
 
 
@@ -799,7 +799,7 @@ namespace COTG
 				var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
 				//   ShellPage.T("Draw");
 
-				float textBackgroundOpacity = 0.5f;
+				byte textBackgroundOpacity = 128;
 				//	defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
 
@@ -853,7 +853,6 @@ namespace COTG
 				}
 				var isWinter = SettingsPage.IsThemeWinter();
 				var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
-				var wantDesaturate = false;// true || attacksVisible;
 
 
 				var wantParallax = SettingsPage.parallax > 0.1f;
@@ -898,7 +897,7 @@ namespace COTG
 						var cc = new Vector2(x, y).WToC().CToS();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
-						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.375f, 1.20f, 0.45f, 1.1875f));
+						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.45f, 1.20f, 0.4f, 1.1875f));
 					}
 					cameraPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0 * (pixelScale / 64.0f)));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
@@ -916,11 +915,11 @@ namespace COTG
 						const float texelGain = 1.0f / srcImageSpan;
 						draw.AddQuad(COTG.Draw.Layer.background, worldBackground,
 							destP0, destP1, srcP0 * texelGain, srcP1 * texelGain,
-						 255.AlphaToColor(), ConstantDepth, 0);
+						 255.AlphaToWhite(), ConstantDepth, 0);
 
 						if (worldObjects != null)
 							draw.AddQuad(COTG.Draw.Layer.background + 1, worldObjects,
-								destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToColor(), ConstantDepth, zCities);
+								destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToWhite(), ConstantDepth, zCities);
 
 
 					}
@@ -938,7 +937,7 @@ namespace COTG
 				//            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
 				//           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
 				// if (IsPageDefense())
-
+				var wantDarkText = isWinter;
 				if (wantDetails)
 				{
 					var wantFade = wantImage;
@@ -947,22 +946,22 @@ namespace COTG
 
 					var rgb = attacksVisible ? 255 : 255;
 					var tint = new Color(rgb, rgb, rgb, intAlpha);
-					var tintShadow = new Color(0, 0, 32, intAlpha * 3 / 4);
+					var tintShadow = new Color(0, 0, 32, intAlpha / 2);
 					//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
-					if (isWinter)
-					{
-						nameColor = new Color() { A = intAlpha, G = 0, B = 0, R = 0 };
-						nameColorHover = new Color() { A = intAlpha, G = 80, R = 80, B = 160 };
-						myNameColor = new Color() { A = intAlpha, G = 255 / 3, B = 190 / 3, R = 210 / 3 };
-						nameColorIncoming = new Color() { A = intAlpha, G = 220 / 3, B = 220 / 3, R = 255 / 3 };
-						nameColorSieged = new Color() { A = intAlpha, G = 220 / 3, B = 190 / 3, R = 255 / 3 };
-						nameColorIncomingHover = new Color() { A = intAlpha, G = 220 / 3, B = 160 / 3, R = 255 / 3 };
-						nameColorSiegedHover = new Color() { A = intAlpha, G = 220 / 3, B = 140 / 3, R = 255 / 3 };
-						myNameColorIncoming = new Color() { A = intAlpha, G = 240 / 3, B = 150 / 3, R = 255 / 3 };
-						myNameColorSieged = new Color() { A = intAlpha, G = 240 / 3, B = 120 / 3, R = 255 / 3 };
-					}
-					else
+					//if (isWinter)
+					//{
+					//	nameColor = new Color() { A = intAlpha, G = 0, B = 0, R = 0 };
+					//	nameColorHover = new Color() { A = intAlpha, G = 0, R = 0, B = 64 };
+					//	myNameColor = new Color() { A = intAlpha, G = 64, B = 64, R = 0 };
+					//	nameColorIncoming = new Color() { A = intAlpha, G = 220 / 3, B = 0, R = 255 / 3 };
+					//	nameColorSieged = new Color() { A = intAlpha, G = 220 / 3, B = 190 / 3, R = 255 / 3 };
+					//	nameColorIncomingHover = new Color() { A = intAlpha, G = 220 / 3, B = 160 / 3, R = 255 / 3 };
+					//	nameColorSiegedHover = new Color() { A = intAlpha, G = 220 / 3, B = 140 / 3, R = 255 / 3 };
+					//	myNameColorIncoming = new Color() { A = intAlpha, G = 240 / 3, B = 150 / 3, R = 255 / 3 };
+					//	myNameColorSieged = new Color() { A = intAlpha, G = 240 / 3, B = 120 / 3, R = 255 / 3 };
+					//}
+					//else
 					{
 						nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
 						nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 185 };
@@ -1094,7 +1093,7 @@ namespace COTG
 				if (worldChanges != null)
 					draw.AddQuad(Layer.effects - 1, worldChanges,
 						destP0, destP1,
-						srcP0, srcP1, 255.AlphaToColor(), ConstantDepth, zCities);
+						srcP0, srcP1, 255.AlphaToWhite(), ConstantDepth, zCities);
 
 
 				circleRadiusBase = circleRadMin * shapeSizeGain * 7.9f;
@@ -1558,7 +1557,10 @@ namespace COTG
 											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
 											   : hovered ? nameColorHover : nameColor);
 
-										DrawTextBox(name, drawC, nameTextFormat, color, isWinter ? 0.5f : 0.0f, Layer.tileText, 0, PlanetDepth, z);
+										DrawTextBox(name, drawC, nameTextFormat, wantDarkText ? color.A.AlphaToBlack() : color,
+
+											!isWinter ? new Color() :
+												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText, 0, PlanetDepth, z);
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
 
@@ -1647,7 +1649,7 @@ namespace COTG
 			var frame = (int)(((animationT + cid.CidToRandom() * 15) * 15) % frameCount);
 			var c0 = new Vector2(c.X, c.Y - dv * 0.435f);
 			Vector2 c1 = new Vector2(c.X + dv * 0.5f, c.Y - dv * 0.035f);
-			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToColor(), (c0, c1).RectDepth(zLabels));
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToWhite(), (c0, c1).RectDepth(zLabels));
 		}
 
 		private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
@@ -1668,8 +1670,12 @@ namespace COTG
 				_ => defaultAttackColor
 			};
 		}
+		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expand = 0.0f, DepthFunction depth = null, float zBias = -1, float scale = 0)
+		{
+			DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expand, depth, zBias, scale);
+		}
 
-		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, float backgroundOpacity, int layer = Layer.tileText, float _expand = 0.0f, DepthFunction depth = null, float zBias = -1, float scale = 0)
+		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expand = 0.0f, DepthFunction depth = null, float zBias = -1, float scale = 0)
 		{
 			if (scale == 0)
 				scale = bmFontScale;
@@ -1689,7 +1695,7 @@ namespace COTG
 			}
 
 			var expand = new Vector2(_expand);
-			if (backgroundOpacity > 0)
+			if (backgroundColor.A > 0)
 			{
 				var c0 = at;
 				if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
@@ -1700,7 +1706,8 @@ namespace COTG
 					c0.Y -= span.Y * 0.5f;
 				if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
 					c0.Y -= span.Y;
-				FillRoundedRectangle(layer - 1, c0 - expand, c0 + expand + span, color.IsDark() ? new Color(255, 255, 255, (int)(backgroundOpacity * color.A)) : new Color(0, 0, 0, (int)(backgroundOpacity * color.A)), depth, zBias);
+				backgroundColor.A = (byte)(((int)backgroundColor.A * color.A) / 255);
+				FillRoundedRectangle(layer - 1, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
 			}
 			textLayout.Draw(at, scale, color, layer, zBias, depth);
 		}
@@ -1902,7 +1909,11 @@ namespace COTG
 	{
 		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < 128 * 3;
 
-		public static Color AlphaToColor(this int alpha) { return new Color(255, 255, 255, alpha); }
+		public static Color AlphaToWhite(this int alpha) { return new Color(255, 255, 255, alpha); }
+		public static Color AlphaToBlack(this int alpha) { return new Color(0, 0, 0, alpha); }
+
+		public static Color AlphaToWhite(this byte alpha) { return new Color((byte)255, (byte)255, (byte)255, alpha); }
+		public static Color AlphaToBlack(this byte alpha) { return new Color((byte)0, (byte)0, (byte)0, alpha); }
 
 		//public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
 		public static Vector2 ToV2(this Point me) => new Vector2(me.X, me.Y);

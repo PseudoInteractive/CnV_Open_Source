@@ -2,6 +2,7 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+using Microsoft.Xna;
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
@@ -31,7 +32,7 @@ namespace COTG.Draw
 		/// <summary>
 		/// Initialization size for the vertex array, in batch units.
 		/// </summary>
-		public const int VertexArraySize = MaxBatchSize*4;
+		public const int VertexArraySize = MaxBatchSize * 4;
 		public const int IndexArraySize = MaxBatchSize * 6;
 
 
@@ -43,7 +44,7 @@ namespace COTG.Draw
 		///      then texture
 		///      then batch
 		/// </summary>
-		private SortedList<int, Dictionary<int,Dictionary<int, SpriteBatchItemList>>> _batchItemList;
+		private SortedList<int, Dictionary<int, Dictionary<int, SpriteBatchItemList>>> _batchItemList;
 
 
 		/// <summary>
@@ -77,11 +78,11 @@ namespace COTG.Draw
 		/// if there is none available grow the pool and initialize new items.
 		/// </summary>
 		/// <returns></returns>
-		public SpriteBatchItem CreateBatchItem(int layer, Material material)
+		public SpriteVertices CreateBatchItem(int layer, Material material)
 		{
 			if (!_batchItemList.TryGetValue(layer, out var batch))
 			{
-				batch = new Dictionary<int,Dictionary<int, SpriteBatchItemList> > ();
+				batch = new Dictionary<int, Dictionary<int, SpriteBatchItemList>>();
 				_batchItemList.Add(layer, batch);
 			}
 			if (!batch.TryGetValue(material.effect._sortingKey, out var perEffect))
@@ -91,11 +92,11 @@ namespace COTG.Draw
 			}
 			if (!perEffect.TryGetValue(material.texture._sortingKey, out var list))
 			{
-				list = new SpriteBatchItemList( material );
+				list = new SpriteBatchItemList(material);
 				perEffect.Add(material.texture._sortingKey, list);
 			}
 
-			var rv = new SpriteBatchItem();
+			var rv = SpriteBatchItemList.Alloc();
 			list.sprites.Add(rv);
 			return rv;
 		}
@@ -108,10 +109,10 @@ namespace COTG.Draw
 		{
 			const int numBatchItems = MaxBatchSize;
 			int neededCapacity = 6 * numBatchItems;
-		
+
 			short[] newIndex = new short[6 * numBatchItems];
 			int start = 0;
-			
+
 			fixed (short* indexFixedPtr = newIndex)
 			{
 				var indexPtr = indexFixedPtr + (start * 6);
@@ -180,20 +181,6 @@ namespace COTG.Draw
 							var vertexArrayPtr = vertexArrayFixedPtr;
 
 							// Draw the batches
-							for (int i = 0; i < numBatchesToProcess; i++, vertexArrayPtr += 4)
-							{
-								SpriteBatchItem item = list.sprites[i];
-								// if the texture changed, we need to flush and bind the new texture
-
-								// store the SpriteBatchItem data in our vertexArray
-								*(vertexArrayPtr + 0) = item.vertexTL;
-								*(vertexArrayPtr + 1) = item.vertexTR;
-								*(vertexArrayPtr + 2) = item.vertexBL;
-								*(vertexArrayPtr + 3) = item.vertexBR;
-
-
-							}
-							list.sprites.Clear();
 							if (!effectInitialized)
 							{
 								effectInitialized = true;
@@ -204,7 +191,7 @@ namespace COTG.Draw
 									pass.Apply();
 								}
 							}
-							if(!textureInitialized)
+							if (!textureInitialized)
 							{
 								textureInitialized = true;
 								_device.Textures[0] = material.texture;
@@ -214,23 +201,20 @@ namespace COTG.Draw
 
 							_device.DrawUserIndexedPrimitives(
 									PrimitiveType.TriangleList,
-									_vertexArray,
-									0,
-									numBatchesToProcess * 4,
+									list.sprites,
 									_index,
 									0,
 									(numBatchesToProcess) * 2,
 									VertexPositionColorTexture.VertexDeclaration);
 
 
-							list.material = null;
-							list.sprites.Clear();
+							list.Release();
 						}
 					}
 
 					_effect.Value.Clear();
 				}
-				
+
 				layer.Value.Clear();
 				// return items to the pool.  
 			}

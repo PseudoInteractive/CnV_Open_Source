@@ -128,14 +128,14 @@ namespace COTG.Game
 		public int tsDefHome => (this is City city && city.troopsHome.Any() ? city.troopsHome.TSDef() : _tsHome);
 		public int tsDefTotal => (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TSDef() : _tsTotal);
 
-		public int tsTotal=> (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TS() : _tsTotal);
+		public int tsTotal => (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TS() : _tsTotal);
 		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
 		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
 
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
 		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
 
-		
+
 		public int pid { get; set; }
 		public string player => Player.Get(pid).name;
 		public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
@@ -382,7 +382,7 @@ namespace COTG.Game
 
 			var hit = Spot.HitTest(sender, e);
 			var spot = hit.spot;
-		//	uiPress = spot != null ? spot.cid : 0;
+			//	uiPress = spot != null ? spot.cid : 0;
 			uiPressColumn = hit.column.CellText();
 			// The UIElement returned will be the RadDataGrid
 			if (spot != null)
@@ -440,14 +440,14 @@ namespace COTG.Game
 						{
 							JSClient.ShowCity(cid, false, true, false);
 						}
-						wantSelect=false;
+						wantSelect = false;
 						wantRaidScan = false;
 						break;
 					case nameof(City.dungeonsToggle):
 						{
 							ToggleDungeons(uie as RadDataGrid, false, false);
-							wantRaidScan=false;
-							wantSelect=false;
+							wantRaidScan = false;
+							wantSelect = false;
 							break;
 						}
 					case nameof(City.tsTotal):
@@ -474,9 +474,9 @@ namespace COTG.Game
 						break;
 					case nameof(pinned):
 						var newSetting = !pinned;
-					
-							SetPinned(newSetting);
-						
+
+						SetPinned(newSetting);
+
 						return;
 					case nameof(City.raidCarry):
 						if (City.IsMine(cid) && MainPage.IsVisible())
@@ -518,18 +518,18 @@ namespace COTG.Game
 			SpotTab.TouchSpot(cid, modifiers);
 		}
 
-		public async void ToggleDungeons(RadDataGrid uie, bool forceClose=false, bool forceOpen=false)
+		public async void ToggleDungeons(RadDataGrid uie, bool forceClose = false, bool forceOpen = false)
 		{
-			if ((forceClose || MainPage.expandedCity == this)&&!forceOpen)
+			if ((forceClose || MainPage.expandedCity == this) && !forceOpen)
 			{
-				if (MainPage.expandedCity!=null)
+				if (MainPage.expandedCity != null)
 					(uie).HideRowDetailsForItem(MainPage.expandedCity);
-				MainPage.expandedCity=null;
+				MainPage.expandedCity = null;
 			}
 			else
 			{
-				MainPage.expandedCity=this as City;
-				await ScanDungeons  .Post(cid, true, false);
+				MainPage.expandedCity = this as City;
+				await ScanDungeons.Post(cid, true, false);
 				(uie).ShowRowDetailsForItem(this);
 
 			}
@@ -740,18 +740,20 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public TroopTypeCount[] combinedIncoming { get
+		public TroopTypeCount[] combinedIncoming
+		{
+			get
 			{
 				TroopTypeCount[] rv = null;
 				foreach (var i in incoming)
 				{
 					if (i.isAttack)
-						rv = rv!=null ? rv.Sum(i.troops) : i.troops;
+						rv = rv != null ? rv.Sum(i.troops) : i.troops;
 				}
 				return rv;
 			}
 		}
-	
+
 
 		public int incomingDefTS
 		{
@@ -908,7 +910,7 @@ namespace COTG.Game
 			return rv;
 
 		}
-		public void SelectMe(bool showClick, VirtualKeyModifiers mod,bool scrollIntoView=true)
+		public void SelectMe(bool showClick, VirtualKeyModifiers mod, bool scrollIntoView = true)
 		{
 			NavStack.Push(cid);
 			SpotTab.AddToGrid(this, mod, true, scrollIntoView);
@@ -918,7 +920,7 @@ namespace COTG.Game
 			}
 		}
 
-		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView=true)
+		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView = true)
 		{
 			++SpotTab.silenceSelectionChanges;
 
@@ -940,11 +942,11 @@ namespace COTG.Game
 								selected = new HashSet<int>(sel.Where(a => a != cid));
 								sel0.Remove(this);
 								sel1.Remove(this);
-								
+
 							}
 							else
 							{
-								wantUISync=true;
+								wantUISync = true;
 							}
 						}
 						else
@@ -955,7 +957,7 @@ namespace COTG.Game
 
 							sel0.Add(this);
 							sel1.Add(this);
-							wantUISync=true;
+							wantUISync = true;
 
 						}
 						//                 SpotTab.SelectedToGrid();
@@ -963,7 +965,7 @@ namespace COTG.Game
 
 					else
 					{
-						wantUISync=true;
+						wantUISync = true;
 						// clear selection and select this
 						if (present && selected.Count == 1)
 						{
@@ -1016,7 +1018,7 @@ namespace COTG.Game
 		public static int viewHover; // in the view menu
 
 		//        public static string uiHoverColumn = string.Empty;
-	//	public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
+		//	public static int uiPress; //  set when pointerPressed is recieved, at this point a contect menu might come up, causing us to lose uiHover
 		public static string uiPressColumn = string.Empty;
 
 		readonly static int[] pointSizes = { 1000, 6000 };
@@ -1062,16 +1064,16 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool scrollIntoView, bool select=true, bool bringIntoWorldView = true)
+		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true)
 		{
-			SetFocus(cid, scrollIntoView,select, bringIntoWorldView);
+			SetFocus(cid, scrollIntoView, select, bringIntoWorldView);
 		}
-		public static void SetFocus(int cid, bool scrollintoView, bool select=true, bool bringIntoWorldView=true)
+		public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
-			if(select)
-				spot.SelectMe(false,App.keyModifiers, scrollintoView);
+			if (select)
+				spot.SelectMe(false, App.keyModifiers, scrollintoView);
 			if (changed)
 			{
 				focus = cid;
@@ -1086,7 +1088,7 @@ namespace COTG.Game
 
 				);
 			}
-			if(bringIntoWorldView)
+			if (bringIntoWorldView)
 				cid.BringCidIntoWorldView(true);
 		}
 		public void ReturnSlowClick()
@@ -1206,11 +1208,11 @@ namespace COTG.Game
 			var dist = cid.DistanceToCid(_cid);
 			StringBuilder sb = new StringBuilder();
 			sb.Append(dist.ToString("0.00"));
-			
-			sb.Append($"\nCarts: {TimeSpan.FromMinutes(dist*cartTravel).ToString(AUtil.defaultTimeFormat)}, ");
+
+			sb.Append($"\nCarts: {TimeSpan.FromMinutes(dist * cartTravel).ToString(AUtil.defaultTimeFormat)}, ");
 			if (isOnWater && Spot.GetOrAdd(_cid).isOnWater)
 			{
-				sb.Append($"\nShips: {TimeSpan.FromMinutes(dist*shipTravel+60).ToString(AUtil.defaultTimeFormat)}");
+				sb.Append($"\nShips: {TimeSpan.FromMinutes(dist * shipTravel + 60).ToString(AUtil.defaultTimeFormat)}");
 			}
 			for (int i = 1; i < ttCount; ++i)
 			{
@@ -1219,7 +1221,7 @@ namespace COTG.Game
 			}
 			var str = sb.ToString();
 			App.CopyTextToClipboard(str);
-			Note.Show(str,false,20*1000);
+			Note.Show(str, false, false, 20 * 1000);
 		}
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
@@ -1432,63 +1434,63 @@ namespace COTG.Game
 		}
 
 		public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
-        {
-         ;
-         //   SelectMe(false) ;
-            var flyout = new MenuFlyout();
+		{
+			;
+			//   SelectMe(false) ;
+			var flyout = new MenuFlyout();
 
-            if (this.isCityOrCastle)
-            {
-                // Look - its my city!
-                if (this.isMine)
-                {
-                    // This one has multi select
-                    int count = 1;
-                    if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
-                    {
-                        count = MainPage.GetContextCidCount(cid);
-                    }
-                    if (count > 1)
-                    {
-                        AApp.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-                        AApp.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
-                        AApp.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
+			if (this.isCityOrCastle)
+			{
+				// Look - its my city!
+				if (this.isMine)
+				{
+					// This one has multi select
+					int count = 1;
+					if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
+					{
+						count = MainPage.GetContextCidCount(cid);
+					}
+					if (count > 1)
+					{
+						AApp.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+						AApp.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+						AApp.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
 
-                    }
-                    else
-                    {
+					}
+					else
+					{
 
-                        AApp.AddItem(flyout, "End Raids", this.ReturnSlowClick);
-                        AApp.AddItem(flyout, "Home Please", this.ReturnFastClick);
-                        AApp.AddItem(flyout, "Return At...", this.ReturnAt);
-                    }
+						AApp.AddItem(flyout, "End Raids", this.ReturnSlowClick);
+						AApp.AddItem(flyout, "Home Please", this.ReturnFastClick);
+						AApp.AddItem(flyout, "Return At...", this.ReturnAt);
+					}
 
-                    AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid) ));
-                    AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
+					AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid)));
+					AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
-                    AApp.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
-                    //   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-                    AApp.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
+					AApp.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
+					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
+					AApp.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
 
-					AApp.AddItem(flyout, "Troops to Sheets",CopyForSheets);
+					AApp.AddItem(flyout, "Troops to Sheets", CopyForSheets);
 				}
-           
-                {
+
+				{
 					var sel = Spot.GetSelectedForContextMenu(cid, false);
 					if (AttackTab.instance.isActive)
 					{
-						var multiString = sel.Count > 1? $" _x {sel.Count} selected" : "";
+						var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 						var afly = AApp.AddSubMenu(flyout, "Attack Planner");
-					
+
 						if (this.allianceId != Alliance.myId)
 						{
-							afly.AddItem("Add as Real Cap"+ multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.senator));
+							afly.AddItem("Add as Real Cap" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.senator));
 							afly.AddItem("Add as Fake Cap" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.senatorFake));
 							afly.AddItem("Add as Real SE" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.se));
 							afly.AddItem("Add as Fake SE" + multiString, (_, _) => AttackTab.AddTarget(sel, AttackType.seFake));
 						}
-						afly.AddItem( "Add as Attacker" +multiString, (_, _) =>
+						afly.AddItem("Add as Attacker" + multiString, (_, _) =>
 						{
 							using var work = new WorkScope("Add as attackers..");
 
@@ -1504,81 +1506,81 @@ namespace COTG.Game
 					}
 					else
 					{
-						flyout.AddItem( "Add funky Attack String", async (_, _) =>
-						{
-							using var work = new WorkScope("Add to attack string..");
+						flyout.AddItem("Add funky Attack String", async (_, _) =>
+					   {
+						   using var work = new WorkScope("Add to attack string..");
 
-							foreach (var id in sel)
-							{
-								await JSClient.AddToAttackSender(id);
-							}
-						}
+						   foreach (var id in sel)
+						   {
+							   await JSClient.AddToAttackSender(id);
+						   }
+					   }
 						);
 					}
 					//AApp.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
 					//AApp.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
 					//AApp.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
-                }
-                if (cid != City.build)
-                {
-                    AApp.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
-                    //if(Player.myName == "Avatar")
-                    //    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
-                }
-                if (AttackTab.instance.isActive)
-                {
-                    
-                }
+				}
+				if (cid != City.build)
+				{
+					AApp.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
+					//if(Player.myName == "Avatar")
+					//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
+				}
+				if (AttackTab.instance.isActive)
+				{
 
-                AApp.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-                AApp.AddItem(flyout, "Near Defence", DefendMe);
-                if (incoming.Any())
-                    AApp.AddItem(flyout, "Incoming", ShowIncoming);
+				}
+
+				AApp.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
+				AApp.AddItem(flyout, "Near Defence", DefendMe);
+				if (incoming.Any())
+					AApp.AddItem(flyout, "Incoming", ShowIncoming);
 
 
-                AApp.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
-                AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-                AApp.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
-                AApp.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
-            }
-            else if (this.isDungeon || this.isBoss)
-            {
-                AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+				AApp.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
+				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+				AApp.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
+				AApp.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
+			}
+			else if (this.isDungeon || this.isBoss)
+			{
+				AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
-            }
-            else if (this.isEmpty && Discord.isValid)
-            {
-                AApp.AddItem(flyout, "Claim", this.DiscordClaim);
+			}
+			else if (this.isEmpty && Discord.isValid)
+			{
+				AApp.AddItem(flyout, "Claim", this.DiscordClaim);
 
-            }
+			}
 			AApp.AddItem(flyout, "Notify on Decay", DecayQuery);
 
 			AApp.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
-            AApp.AddItem(flyout, "Select",(_,_)=> SelectMe(true, App.keyModifiers) );
-            AApp.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
-            flyout.CopyXamlRoomFrom(uie);
+			AApp.AddItem(flyout, "Select", (_, _) => SelectMe(true, App.keyModifiers));
+			AApp.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
+			flyout.CopyXamlRoomFrom(uie);
 
-            //   flyout.XamlRoot = uie.XamlRoot;
-            flyout.ShowAt(uie, position);
-        }
-        public void DefendMe()
-        {
-            NearDefenseTab.defendant = this;
-            var tab = NearDefenseTab.instance;
-            if (!tab.isActive)
-            {
-                TabPage.mainTabs.AddTab(tab, true);
-            }
-            else
-            {
-                if (!tab.isVisible)
-                    TabPage.Show(tab);
-                else
-                    tab.Refresh();
-            }
-        }
-        public async void ShowIncoming()
-        {
+			//   flyout.XamlRoot = uie.XamlRoot;
+			flyout.ShowAt(uie, position);
+		}
+		public void DefendMe()
+		{
+			NearDefenseTab.defendant = this;
+			var tab = NearDefenseTab.instance;
+			if (!tab.isActive)
+			{
+				TabPage.mainTabs.AddTab(tab, true);
+			}
+			else
+			{
+				if (!tab.isVisible)
+					TabPage.Show(tab);
+				else
+					tab.Refresh();
+			}
+		}
+		public async void ShowIncoming()
+		{
 			if (allianceId == Alliance.myId)
 			{
 				IncomingTab tab = IncomingTab.instance;
@@ -1611,39 +1613,39 @@ namespace COTG.Game
 					tab.attackerGrid.ScrollItemIntoView(this);
 				});
 			}
-        }
-		
+		}
+
 
 
 		public async void DiscordClaim()
-        {
-            if (!Discord.isValid)
-            {
-                Log("Invalid");
-                return;
-            }
-            try
-            {
-                Note.Show($"Registering claim on {xy}");
-                var client = JSClient.genericClient;
+		{
+			if (!Discord.isValid)
+			{
+				Log("Invalid");
+				return;
+			}
+			try
+			{
+				Note.Show($"Registering claim on {xy}");
+				var client = JSClient.genericClient;
 
 
-                var message = new Discord.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
+				var message = new Discord.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
 
-                var content = new HttpStringContent(
-                          JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-                           "application/json");
+				var content = new HttpStringContent(
+						  JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+						   "application/json");
 
-                var result = await client.PostAsync(Discord.discordHook, content);
-                result.EnsureSuccessStatusCode();
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
+				var result = await client.PostAsync(Discord.discordHook, content);
+				result.EnsureSuccessStatusCode();
+			}
+			catch (Exception ex)
+			{
+				Log(ex);
+			}
 
 
-        }
+		}
 		async void CopyForSheets()
 		{
 			var sb = new StringBuilder();
@@ -1688,51 +1690,51 @@ namespace COTG.Game
 			Note.Show($"Copied {counter} castles to clipboard for sheets");
 		}
 
-        public async void SelectInUI(bool scrollIntoView)
-        {
-            //         await Task.Delay(2000);
-            //          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            //           {
-         //   await Task.Delay(200);
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                if (this is City)
-                {
-                    if (scrollIntoView && MainPage.IsVisible())
-                    {
-                        /// MainPage.CityGrid.SelectedItem = this;
-                        //                      MainPage.CityGrid.SetCurrentItem(this);
+		public async void SelectInUI(bool scrollIntoView)
+		{
+			//         await Task.Delay(2000);
+			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+			//           {
+			//   await Task.Delay(200);
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				if (this is City)
+				{
+					if (scrollIntoView && MainPage.IsVisible())
+					{
+						/// MainPage.CityGrid.SelectedItem = this;
+						//                      MainPage.CityGrid.SetCurrentItem(this);
 
-                        //     MainPage.CityGrid.SetCurrentItem(this,false);
-                        MainPage.CityGrid.ScrollItemIntoView(this);
-                        // await Task.Delay(200);
-                        //MainPage.CityGrid.SelectItem(this);
-                        //var id = gridCitySource.IndexOf(this);
-                        //if (id != -1)
-                        //{
-                        //    MainPage.CityGrid.ScrollIndexIntoView(id);
+						//     MainPage.CityGrid.SetCurrentItem(this,false);
+						MainPage.CityGrid.ScrollItemIntoView(this);
+						// await Task.Delay(200);
+						//MainPage.CityGrid.SelectItem(this);
+						//var id = gridCitySource.IndexOf(this);
+						//if (id != -1)
+						//{
+						//    MainPage.CityGrid.ScrollIndexIntoView(id);
 
-                        //}
-                    }
-                    // todo: donations page and boss hunting
-                    if (City.IsBuild(cid))
-                    {
-                        ShellPage.instance.cityBox.SelectedItem = this;
-                    }
-                }
-                // ShellPage.instance.coords.Text = cid.CidToString();
-                //            });
-            });
+						//}
+					}
+					// todo: donations page and boss hunting
+					if (City.IsBuild(cid))
+					{
+						ShellPage.instance.cityBox.SelectedItem = this;
+					}
+				}
+				// ShellPage.instance.coords.Text = cid.CidToString();
+				//            });
+			});
 
-        }
-        //public List<Dungeon> raidDungeons =>
-        //    {
+		}
+		//public List<Dungeon> raidDungeons =>
+		//    {
 
-        //    };
+		//    };
 
-    }
-    public static class SpotHelper
-    {
-        public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
-    }
+	}
+	public static class SpotHelper
+	{
+		public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
+	}
 }
