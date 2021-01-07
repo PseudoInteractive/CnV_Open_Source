@@ -487,8 +487,9 @@ namespace COTG.Services
 
                     var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
                     Assert(split.Length == 2);
-                    var tE = Game.Enum.ttNameWithCaps.IndexOf(split[0]);
-                    Assert(tE >= 0);
+                    var tE = Game.Enum.ttNameWithCapsAndGuard.IndexOf(split[0]);
+					if (tE < 0) // Guard
+						tE = 0;
                     var ttc = new TroopTypeCount(tE, count);
 
                     if (split[1] == "home")

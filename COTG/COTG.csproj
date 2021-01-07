@@ -497,9 +497,11 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\terrainfeatures.dds" />
     <Content Include="Content\Effects\AlphaAdd.fx" />
+    <Content Include="Content\Effects\Ava.fx" />
     <Content Include="Content\Effects\darkFont.fx" />
     <Content Include="Content\Effects\font.fx" />
     <Content Include="Content\Effects\lit.fx" />
+    <Content Include="Content\Effects\unlit.fx" />
     <Content Include="web\images\city128\walls_water2.png" />
     <Content Include="web\images\city128\water_water.png" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />

@@ -53,6 +53,7 @@ namespace COTG
 	public sealed partial class App : Application
 	{
 		private Lazy<ActivationService> _activationService;
+		public static bool isForeground;
 
 		private ActivationService ActivationService
 		{
@@ -89,6 +90,7 @@ namespace COTG
 			EnteredBackground += App_EnteredBackground;
 			LeavingBackground += App_LeavingBackground;
 			Resuming += App_Resuming;
+			Suspending += App_Suspending;
 
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
@@ -97,6 +99,13 @@ namespace COTG
 			UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
 
 		}
+
+		private void App_Suspending(object sender, SuspendingEventArgs e)
+		{
+			isForeground = false;
+
+		}
+
 		// these are not reliably set
 		// We set then on key up and key down events and on mouse input events
 		static public bool shiftPressed, controlPressed;
@@ -169,7 +178,7 @@ namespace COTG
 		private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
 		{
 			//    Trace("LeavingBackground");
-
+			isForeground = true;
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
 		}
@@ -406,6 +415,8 @@ namespace COTG
 			if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
 			{
 				Window.Current.Activate();
+				isForeground = true;
+
 				// Todo:  Handle arguments and stuff
 				// Ensure the current window is active
 				if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
@@ -495,6 +506,8 @@ namespace COTG
 		private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
 		{
 			Trace("Enter Background");
+			isForeground = false;
+
 			//   if (ShellPage.canvas != null)
 			//      ShellPage.canvas.Paused = true;
 			SettingsPage.SaveAll();
@@ -506,6 +519,7 @@ namespace COTG
 		private void App_Resuming(object sender, object e)
 		{
 			Trace("Resume");
+			isForeground = true;
 
 			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
 		}

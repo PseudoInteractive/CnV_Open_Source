@@ -49,3 +49,9 @@ struct VertexShaderOutputPositionColorTexture
     float4 Color : COLOR0;
 	float2 TextureCoordinate : TEXCOORD0;
 };
+struct VertexShaderOutputLit
+{
+    float4 Position : SV_Position;
+    float4 Color : COLOR0;
+    float4 uv : TEXCOORD0;
+};

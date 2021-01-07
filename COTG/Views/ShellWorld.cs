@@ -44,7 +44,7 @@ namespace COTG.Views
 		public static void SetupCoreInput()
 		{
 
-			var workItemHandler = new WorkItemHandler((action) =>
+		//	var workItemHandler = new WorkItemHandler((action) =>
 			{
 				var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
 				coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
@@ -58,11 +58,11 @@ namespace COTG.Views
 
 
 				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-				coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-				coreInputSource.IsInputEnabled = true;
+	//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+//				coreInputSource.IsInputEnabled = true;
 
-			});
-			var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
+			};
+		//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
 
 
 		}

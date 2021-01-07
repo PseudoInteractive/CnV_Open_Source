@@ -26,6 +26,11 @@ using static COTG.CanvasHelpers;
 using UWindows = Windows;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
+
+using XVector2 = Microsoft.Xna.Framework.Vector2;
+using XVector3 = Microsoft.Xna.Framework.Vector3;
+using XVector4 = Microsoft.Xna.Framework.Vector4;
+
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
@@ -63,6 +68,7 @@ namespace COTG
 		const float parallaxBaseGain = 2.0f / 1024.0f;
 		public const float zBase = 0;
 		public const float zLand = 0;
+		public const float zEffectShadowBase = 10 * parallaxBaseGain;
 		public const float zWaterBase = 10 * parallaxBaseGain;
 		public const float zTerrainBase = 18 * parallaxBaseGain;
 		public const float zTopLevelBase = 24 * parallaxBaseGain;
@@ -73,6 +79,7 @@ namespace COTG
 		public static float zTopLevel => zTopLevelBase * AGame.parallaxGain;
 		public static float zCities => zCitiesBase * AGame.parallaxGain;
 		public static float zLabels => zLabelsBase * AGame.parallaxGain;
+		public static float zEffectShadow => zEffectShadowBase * AGame.parallaxGain;
 
 		public const float cameraZ = 1.0f;
 		public static SwapChainPanel canvas;
@@ -89,12 +96,16 @@ namespace COTG
 		public static Effect fontEffect;
 		public static Effect darkFontEffect;
 		public static Effect litEffect;
+		public static Effect unlitEffect;
+		public static EffectParameter planetGainsParamater, planetGainsParamater2;
 		public static EffectParameter lightPositionParameter;
 		public static EffectParameter lightGainsParameter;
+		public static EffectParameter lightAmbientParameter;
+		public static EffectParameter lightColorParameter;
 		public static EffectParameter cameraPositionParameter;
 		public static EffectParameter worldMatrixParameter;
 		public static EffectParameter worldMatrixParameter2;
-		public static EffectParameter worldMatrixParameter3, worldMatrixParameter4, worldMatrixParameter5;
+		public static EffectParameter worldMatrixParameter3, worldMatrixParameter4, worldMatrixParameter5,worldMatrixParameter6;
 		public static Material lineDraw;
 		public static Material quadTexture;
 		public static Material roundedRect;
@@ -104,12 +115,14 @@ namespace COTG
 		public static Material worldObjects;
 		public static Material worldOwners;
 
+		public static Effect GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
+
 
 		internal static void SetLighting(Lighting value)
 		{
 			foreach (var tile in TileData.instance.tilesets)
 			{
-				tile.material.effect = (value != Lighting.none) ? litEffect : defaultEffect;
+				tile.material.effect = GetTileEffect();
 			}
 		}
 
@@ -148,7 +161,7 @@ namespace COTG
 
 		//};
 		//        static readonly Color attackColor = Color.DarkRed;
-		public static float bmFontScale = 0.15625f;
+		public static float bmFontScale = 0.125f;
 
 		static readonly Color attackColor = Color.White;
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
@@ -228,7 +241,6 @@ namespace COTG
 
 
 
-		bool inputSetup;
 		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format)
 		{
 			var rv = new Texture2D(instance.GraphicsDevice, x, y, false, format);
@@ -352,10 +364,18 @@ namespace COTG
 				//ShellPage.Canvas_PointerWheelChanged(mouseState, priorMouseState);
 				//ShellPage.Canvas_PointerPressed(mouseState, priorMouseState);
 
-				if (!inputSetup && IsActive)
+				if (App.isForeground )
 				{
-					inputSetup = true;
-					ShellPage.SetupCoreInput();
+					if (ShellPage.coreInputSource == null)
+					{
+						ShellPage.SetupCoreInput();
+
+					}
+					else
+					{
+						ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+					}
+					
 				}
 
 				if (World.bitmapPixels != null)
@@ -552,6 +572,7 @@ namespace COTG
 				fontEffect = Content.Load<Effect>("Effects/font");
 				darkFontEffect = Content.Load<Effect>("Effects/darkFont");
 				litEffect = Content.Load<Effect>("Effects/lit");
+				unlitEffect = Content.Load<Effect>("Effects/unlit");
 				readyToLoad = true;
 
 				worldMatrixParameter = defaultEffect.Parameters["WorldViewProjection"];
@@ -559,8 +580,14 @@ namespace COTG
 				worldMatrixParameter3 = darkFontEffect.Parameters["WorldViewProjection"];
 				worldMatrixParameter4 = alphaAddEffect.Parameters["WorldViewProjection"];
 				worldMatrixParameter5 = litEffect.Parameters["WorldViewProjection"];
+				worldMatrixParameter6 = unlitEffect.Parameters["WorldViewProjection"];
+
 				lightPositionParameter = litEffect.Parameters["lightPosition"];
+				planetGainsParamater = litEffect.Parameters["planetGains"];
+				planetGainsParamater2 = unlitEffect.Parameters["planetGains"];
 				lightGainsParameter = litEffect.Parameters["lightGains"];
+				lightColorParameter = litEffect.Parameters["lightColor"];
+				lightAmbientParameter = litEffect.Parameters["lightAmbient"];
 				cameraPositionParameter = litEffect.Parameters["cameraPosition"];
 				fontMaterial = new Material(Content.Load<Texture2D>("Fonts/tra_0"), fontEffect);
 				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
@@ -688,7 +715,7 @@ namespace COTG
 
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
-		const float lineThickness = 4.0f;
+		const float lineThickness = 8.0f;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
 		const float bSizeGain = 4.0f;
@@ -711,8 +738,8 @@ namespace COTG
 			var y1 = c0.Y.Max(c1.Y);
 			var y0 = c0.Y.Min(c1.Y);
 			// todo: cull on diagonals
-			return x1 <= 0 | x0 >= clientSpan.X |
-					y1 <= 0 | y0 >= clientSpan.Y;
+			return x1 <= -halfSpan.X | x0 >= halfSpan.X |
+					y1 <= -halfSpan.Y | y0 >= halfSpan.Y;
 		}
 		public static bool IsCulled(Vector2 c0, float pad)
 		{
@@ -722,15 +749,26 @@ namespace COTG
 			var y1 = c0.Y;
 			var y0 = c0.Y;
 			// todo: cull on diagonals
-			return x1 + pad <= 0 | x0 - pad >= clientSpan.X |
-					y1 + pad <= 0 | y0 - pad >= clientSpan.Y;
+			return x1 + pad <= -halfSpan.X | x0 - pad >= halfSpan.X |
+					y1 + pad <= -halfSpan.Y | y0 - pad >= halfSpan.Y;
+		}
+		public static bool IsCulled(Vector2 c0)
+		{
+			var x1 = c0.X;
+			var x0 = c0.X;
+
+			var y1 = c0.Y;
+			var y0 = c0.Y;
+			// todo: cull on diagonals
+			return x1 <= -halfSpan.X | x0  >= halfSpan.X |
+					y1  <= -halfSpan.Y | y0 >= halfSpan.Y;
 		}
 
 
 
 
-		public static Vector2 shadowOffset = new Vector2(3.0f, 3.0f);
-		public static Vector2 halfShadowOffset = new Vector2(1.5f, 1.5f);
+		//public static Vector2 shadowOffset = new Vector2(6.0f, 6.0f);
+		//public static Vector2 halfShadowOffset = new Vector2(3.0f, 3.0f);
 		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
 		static DateTimeOffset lastDrawTime;
 		public static bool tileSetsPending;
@@ -749,7 +787,7 @@ namespace COTG
 		internal static Material darkFontMaterial;
 		public static BitmapFont.BitmapFont bfont;
 		public static float parallaxGain;
-		const float lineTileGain = 1.0f / 256.0f;
+		const float lineTileGain = 1.0f / 64.0f;
 		const float lineAnimationGain = 1.0f;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
@@ -758,7 +796,7 @@ namespace COTG
 		{
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
-			if (!(IsWorldView()) || !IsActive || (TileData.state < TileData.State.loadingImages) || (worldOwners == null))
+			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldOwners == null))
 				return;
 
 
@@ -884,11 +922,14 @@ namespace COTG
 					worldMatrixParameter3.SetValue(proj);
 					worldMatrixParameter4.SetValue(proj);
 					worldMatrixParameter5.SetValue(proj);
+					worldMatrixParameter6.SetValue(proj);
 					if (SettingsPage.lighting == Lighting.night)
 					{
 						var l = ShellPage.mousePosition;//.InverseProject();
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZ0 * (pixelScale / 64.0f)));
-						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.0f, 1.25f, 0.375f, 1.0625f));
+						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.125f, 1.25f, 0.375f, 1.0625f));
+						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.25f);
+						lightColorParameter.SetValue(new XVector4(1.0f, 1.01f, 1.0f, 1.0f));
 					}
 					else
 					{
@@ -897,10 +938,16 @@ namespace COTG
 						var cc = new Vector2(x, y).WToC().CToS();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
-						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.45f, 1.20f, 0.4f, 1.1875f));
+						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.125f, 1.20f, 0.4f, 1.1875f));
+						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.375f);
+						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 1f)*1.25f);
 					}
 					cameraPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0 * (pixelScale / 64.0f)));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
+					var gain1 = bulgeInputGain * bulgeGain * 1.25f;
+					var planetGains = new XVector4(bulgeGain, -gain1, MathF.Sqrt(gain1) * 2.0f, 0);
+					planetGainsParamater.SetValue( planetGains);
+					planetGainsParamater2.SetValue(planetGains);
 
 					draw.Begin();
 
@@ -946,7 +993,7 @@ namespace COTG
 
 					var rgb = attacksVisible ? 255 : 255;
 					var tint = new Color(rgb, rgb, rgb, intAlpha);
-					var tintShadow = new Color(0, 0, 32, intAlpha / 2);
+					var tintShadow = new Color(0, 0, 32, isWinter ? intAlpha * 3 / 4 : intAlpha / 2);
 					//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
 					//if (isWinter)
@@ -1060,7 +1107,8 @@ namespace COTG
 													tile.material, cc0, cc1,
 													uv0,
 													uv1, _tint,
-													(cc0, cc1).RectDepth(dz));
+													(dz,dz,dz,dz));
+													//(cc0, cc1).RectDepth(dz));
 
 
 
@@ -1155,14 +1203,9 @@ namespace COTG
 										var c1 = targetCid.CidToC();
 										var c0 = sourceCid.CidToC();
 										// cull (should do this pre-transform as that would be more efficient
-										if (c0.X.Min(c1.X) >= clientSpan.X)
+										if (IsCulled(c0,c1) )
 											continue;
-										if (c0.X.Max(c1.X) <= 0.0f)
-											continue;
-										if (c0.Y.Min(c1.Y) >= clientSpan.Y)
-											continue;
-										if (c0.Y.Max(c1.Y) <= 0.0f)
-											continue;
+
 										var dt1 = attack.TimeToArrival(serverNow);
 
 										// before attack
@@ -1771,7 +1814,6 @@ namespace COTG
 				gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
 			var mid = progress.Lerp(c0, c1);
 			var shadowColor = color.GetShadowColor();
-			var midS = mid - shadowOffset;
 			if (army != null)
 			{
 				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionC);
@@ -1781,27 +1823,27 @@ namespace COTG
 					underMouse = army;
 				}
 			}
-			DrawLine(Layer.action, c0, c1, GetLineUs(c0, c1), shadowColor, zLabels);
+			DrawLine(Layer.effectShadow, c0, c1, GetLineUs(c0, c1), shadowColor, zEffectShadow);
 			if (applyStopDistance)
-				DrawSquare(Layer.action + 1, c0, shadowColor);
-			DrawLine(Layer.action + 2, c0 - shadowOffset, midS, GetLineUs(c0 - shadowOffset, midS), color, zLabels);
+				DrawSquare(Layer.effectShadow, c0, shadowColor,zEffectShadow);
+			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels);
 			if (applyStopDistance)
-				DrawSquare(Layer.action + 3, new Vector2(c0.X - shadowOffset.X, c0.Y - shadowOffset.Y), color);
+				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color,zLabels);
 			var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
 			{
 				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
 				var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
-				draw.AddQuad(Layer.action + 4, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f));
+				draw.AddQuad(Layer.action + 4, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f),(_c0,_c1).RectDepth(zLabels));
 			}
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 
 
 		}
 
-		private static void DrawSquare(int layer, Vector2 c0, Color color)
+		private static void DrawSquare(int layer, Vector2 c0, Color color, float zBias)
 		{
-			draw.AddQuad(layer, quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1, 1), color, PlanetDepth, zLabels);
+			draw.AddQuad(layer, quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1, 1), color, PlanetDepth, zBias);
 		}
 		private static void DrawRect(int layer, Vector2 c0, Vector2 c1, Color color)
 		{
@@ -1831,29 +1873,29 @@ namespace COTG
 		}
 
 
-		public static void DrawAccentBaseI(float cX, float cY, float radius, float angle, Color color)
+		public static void DrawAccentBaseI(float cX, float cY, float radius, float angle, Color color, int layer, float zBias)
 		{
 			var dx0 = radius * MathF.Cos(angle);
 			var dy0 = radius * MathF.Sin(angle);
 			var angle1 = angle + MathF.PI * 0.1875f;
 			var dx1 = radius * MathF.Cos(angle1);
 			var dy1 = radius * MathF.Sin(angle1);
-			DrawLine(Layer.overlay - 1, new Vector2(cX + dx0, cY + dy0), new Vector2(cX + dx1, cY + dy1), (angle.SignOr0(), 0), color, zTopLevel);
+			DrawLine(layer, new Vector2(cX + dx0, cY + dy0), new Vector2(cX + dx1, cY + dy1), (angle.SignOr0(), 0), color, zBias);
 			// rotated by 180
-			DrawLine(Layer.overlay - 1, new Vector2(cX - dx0, cY - dy0), new Vector2(cX - dx1, cY - dy1), (angle.SignOr0(), 0), color, zTopLevel);
+			DrawLine(layer, new Vector2(cX - dx0, cY - dy0), new Vector2(cX - dx1, cY - dy1), (angle.SignOr0(), 0), color, zBias);
 		}
-		public static void DrawAccentBase(float cX, float cY, float radius, float angle, Color color)
+		public static void DrawAccentBase(float cX, float cY, float radius, float angle, Color color, int layer, float zBias)
 		{
-			DrawAccentBaseI(cX, cY, radius, angle, color);
-			DrawAccentBaseI(cX, cY, radius * 0.875f, angle + angle.SignOr0() * 0.125f, color);
+			DrawAccentBaseI(cX, cY, radius, angle, color,layer,zBias);
+			DrawAccentBaseI(cX, cY, radius * 0.875f, angle + angle.SignOr0() * 0.125f, color,layer,zBias);
 			//DrawAccentBaseI(ds, cX, cY, radius*0.655f, angle+angle.SignOr0()*0.25f, color);
 		}
 
 		public static void DrawAccent(Vector2 c, float radius, float angularSpeed, Color brush)
 		{
 			var angle = angularSpeed * AGame.animationT;
-			DrawAccentBase(c.X + AGame.halfShadowOffset.X, c.Y + AGame.halfShadowOffset.Y, radius, angle, brush.GetShadowColorDark());
-			DrawAccentBase(c.X - AGame.halfShadowOffset.X, c.Y - AGame.halfShadowOffset.Y, radius, angle, brush);
+			DrawAccentBase(c.X , c.Y , radius, angle, brush.GetShadowColorDark(),Layer.tileShadow, zEffectShadow);
+			DrawAccentBase(c.X , c.Y , radius, angle, brush, Layer.overlay, zLabels);
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
 		{

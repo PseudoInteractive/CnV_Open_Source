@@ -396,7 +396,7 @@ namespace COTG.JSON
 				//  Debug.Log(uri.ToString());
 				string shortName = resName.Substring(0, resName.Length - 4);
 				string dir = SettingsPage.IsThemeWinter() ? "winter" : "cotg";
-				material = new Draw.Material(AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}"), AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n"), AGame.litEffect);
+				material = new Draw.Material(AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}"), AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n"), AGame.GetTileEffect());
 				// etc.
 				Assert(material != null);
 

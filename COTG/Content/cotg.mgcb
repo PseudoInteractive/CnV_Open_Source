@@ -1267,6 +1267,12 @@
 #begin Effects/Structures.fxh
 /copy:Effects/Structures.fxh
 
+#begin Effects/unlit.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/unlit.fx
+
 #begin Fonts/File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

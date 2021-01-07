@@ -55,12 +55,12 @@ namespace COTG.Draw
 		/// <summary>
 		/// Vertex index array. The values in this array never change.
 		/// </summary>
-		private short[] _index;
+		//	private short[] _index;
 
 		// staging area, verts are copied here first and then copied into a mapped graphics resource
 		// TODO:  remove this and skip a copy
 		//
-		private Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[] _vertexArray;
+		//		private Microsoft.Xna.Framework.Graphics.VertexPositionColorTexture[] _vertexArray;
 
 		public SpriteBatcher(GraphicsDevice device)
 		{
@@ -70,7 +70,7 @@ namespace COTG.Draw
 
 			_batchItemList = new SortedList<int, Dictionary<int, Dictionary<int, SpriteBatchItemList>>>();
 
-			EnsureArrayCapacity();
+			//			EnsureArrayCapacity();
 		}
 
 		/// <summary>
@@ -105,43 +105,43 @@ namespace COTG.Draw
 		/// Resize and recreate the missing indices for the index and vertex position color buffers.
 		/// </summary>
 		/// <param name="numBatchItems"></param>
-		private unsafe void EnsureArrayCapacity()
-		{
-			const int numBatchItems = MaxBatchSize;
-			int neededCapacity = 6 * numBatchItems;
+		//private unsafe void EnsureArrayCapacity()
+		//{
+		//	const int numBatchItems = MaxBatchSize;
+		//	int neededCapacity = 6 * numBatchItems;
 
-			short[] newIndex = new short[6 * numBatchItems];
-			int start = 0;
+		//	short[] newIndex = new short[6 * numBatchItems];
+		//	int start = 0;
 
-			fixed (short* indexFixedPtr = newIndex)
-			{
-				var indexPtr = indexFixedPtr + (start * 6);
-				for (var i = start; i < numBatchItems; i++, indexPtr += 6)
-				{
-					/*
-                     *  TL    TR
-                     *   0----1 0,1,2,3 = index offsets for vertex indices
-                     *   |   /| TL,TR,BL,BR are vertex references in SpriteBatchItem.
-                     *   |  / |
-                     *   | /  |
-                     *   |/   |
-                     *   2----3
-                     *  BL    BR
-                     */
-					// Triangle 1
-					*(indexPtr + 0) = (short)(i * 4);
-					*(indexPtr + 1) = (short)(i * 4 + 1);
-					*(indexPtr + 2) = (short)(i * 4 + 2);
-					// Triangle 2
-					*(indexPtr + 3) = (short)(i * 4 + 1);
-					*(indexPtr + 4) = (short)(i * 4 + 3);
-					*(indexPtr + 5) = (short)(i * 4 + 2);
-				}
-			}
-			_index = newIndex;
+		//	fixed (short* indexFixedPtr = newIndex)
+		//	{
+		//		var indexPtr = indexFixedPtr + (start * 6);
+		//		for (var i = start; i < numBatchItems; i++, indexPtr += 6)
+		//		{
+		//			/*
+		//                   *  TL    TR
+		//                   *   0----1 0,1,2,3 = index offsets for vertex indices
+		//                   *   |   /| TL,TR,BL,BR are vertex references in SpriteBatchItem.
+		//                   *   |  / |
+		//                   *   | /  |
+		//                   *   |/   |
+		//                   *   2----3
+		//                   *  BL    BR
+		//                   */
+		//			// Triangle 1
+		//			*(indexPtr + 0) = (short)(i * 4);
+		//			*(indexPtr + 1) = (short)(i * 4 + 1);
+		//			*(indexPtr + 2) = (short)(i * 4 + 2);
+		//			// Triangle 2
+		//			*(indexPtr + 3) = (short)(i * 4 + 1);
+		//			*(indexPtr + 4) = (short)(i * 4 + 3);
+		//			*(indexPtr + 5) = (short)(i * 4 + 2);
+		//		}
+		//	}
+		//	_index = newIndex;
 
-			_vertexArray = new VertexPositionColorTexture[4 * numBatchItems];
-		}
+		//	//_vertexArray = new VertexPositionColorTexture[4 * numBatchItems];
+		//}
 
 		/// <summary>
 		/// Sorts the batch items and then groups batch drawing into maximal allowed batch sets that do not
@@ -176,9 +176,9 @@ namespace COTG.Draw
 							numBatchesToProcess = MaxBatchSize;
 						}
 						// Avoid the array checking overhead by using pointer indexing!
-						fixed (VertexPositionColorTexture* vertexArrayFixedPtr = _vertexArray)
+						//						fixed (VertexPositionColorTexture* vertexArrayFixedPtr = _vertexArray)
 						{
-							var vertexArrayPtr = vertexArrayFixedPtr;
+							//						var vertexArrayPtr = vertexArrayFixedPtr;
 
 							// Draw the batches
 							if (!effectInitialized)
@@ -199,12 +199,8 @@ namespace COTG.Draw
 									_device.Textures[1] = material.texture1;
 							}
 
-							_device.DrawUserIndexedPrimitives(
-									PrimitiveType.TriangleList,
+							_device.DrawUserSprites(
 									list.sprites,
-									_index,
-									0,
-									(numBatchesToProcess) * 2,
 									VertexPositionColorTexture.VertexDeclaration);
 
 

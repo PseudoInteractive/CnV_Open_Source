@@ -5,6 +5,11 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
+#define __sqr(__a) ((__a)*(__a))
+static const float Epsilon = 1.0 / 4096.0;
+static const float PI = 3.141592;
+
+
 #if SM4
 
 // Macros for targetting shader model 4.0 (DX11)
@@ -62,3 +67,5 @@ float4x4 WorldViewProjection;
 
 
 #endif
+
+

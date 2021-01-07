@@ -970,7 +970,7 @@ namespace COTG
 							App.DispatchOnUIThreadSneaky(() =>
 							 view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
 
-							await Task.Delay(1000);
+							await Task.Delay(2000);
 							continue;
 
 						}
