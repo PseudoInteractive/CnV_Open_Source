@@ -105,6 +105,7 @@ namespace COTG
 		public static EffectParameter lightGainsParameter;
 		public static EffectParameter lightAmbientParameter;
 		public static EffectParameter lightColorParameter;
+		public static EffectParameter lightSpecularParameter;
 		public static EffectParameter cameraPositionParameter;
 		public static Material lineDraw;
 		public static Material quadTexture;
@@ -540,22 +541,27 @@ namespace COTG
 
 		//}
 		public static bool readyToLoad;
-		public static Song music;
+		public static Song[] music;
+		const int musicCount = 7;
+		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
-
 			if (SettingsPage.musicVolume > 0)
 			{
 				if (music == null)
 				{
 					if (!readyToLoad)
 						return;
-					music = instance.Content.Load<Song>("Audio/UXOMainTheme");
+					music = new Song[musicCount];
+					for(int i=0;i<musicCount;++i)
+						music[i] = instance.Content.Load<Song>($"Audio/music{i}");
 				}
 
 				MediaPlayer.Volume = SettingsPage.musicVolume;
-				MediaPlayer.IsRepeating = true;
-				MediaPlayer.Play(music);
+				if (MediaPlayer.State == MediaState.Stopped)
+				{
+					MediaPlayer.Play(music[AMath.random.Next(musicCount)]);
+				}
 			}
 			else
 			{
@@ -597,6 +603,7 @@ namespace COTG
 				planetGainsParamater = avaEffect.Parameters["planetGains"];
 				lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];
+				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
 				cameraPositionParameter = avaEffect.Parameters["cameraPosition"];
 
@@ -735,7 +742,7 @@ namespace COTG
 
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
-		const float lineThickness = 6.0f;
+		const float lineThickness = 4.0f;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
 		const float bSizeGain = 4.0f;
@@ -807,8 +814,8 @@ namespace COTG
 		internal static Material darkFontMaterial;
 		public static BitmapFont.BitmapFont bfont;
 		public static float parallaxGain;
-		const float lineTileGain = 1.0f / 64.0f;
-		const float lineAnimationGain = 1.0f;
+		const float lineTileGain = 1.0f / 32.0f;
+		const float lineAnimationGain = 2.0f;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
@@ -944,8 +951,9 @@ namespace COTG
 						var l = ShellPage.mousePosition;//.InverseProject();
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZ0 * (pixelScale / 64.0f)));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
-						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.375f);
-						lightColorParameter.SetValue(new XVector4(1.0f, 1.01f, 1.0f, 1.25f));
+						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.25f);
+						lightColorParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f)*1.25f);
+						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f,1.0f)*1.25f);
 					}
 					else
 					{
@@ -957,6 +965,7 @@ namespace COTG
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
 						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.5f);
 						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 1f)*1.25f);
+						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
 					}
 					cameraPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0 * (pixelScale / 64.0f)));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
@@ -1909,7 +1918,7 @@ namespace COTG
 		public static void DrawAccent(Vector2 c, float radius, float angularSpeed, Color brush)
 		{
 			var angle = angularSpeed * AGame.animationT;
-			DrawAccentBase(c.X , c.Y , radius, angle, brush.GetShadowColorDark(),Layer.tileShadow, zEffectShadow);
+			DrawAccentBase(c.X , c.Y , radius, angle, brush.GetShadowColorDark(),Layer.effectShadow, zEffectShadow);
 			DrawAccentBase(c.X , c.Y , radius, angle, brush, Layer.overlay, zLabels);
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
@@ -2157,13 +2166,13 @@ namespace COTG
 		}
 		public static Color GetShadowColor(this Color c)
 		{
-			return new Color((byte)(c.R * 2 / 4), (byte)(c.G * 2 / 4), (byte)(c.B * 2 / 4), (byte)192);
+			return new Color((byte)(c.R * 0 / 4), (byte)(c.G * 0 / 4), (byte)(c.B * 0 / 4), (byte)192);
 			//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 			//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 		}
 		public static Color GetShadowColorDark(this Color c)
 		{
-			return new Color((byte)(c.R * 1 / 4), (byte)(c.G * 1 / 4), (byte)(c.B * 1 / 4), (byte)192);
+			return new Color((byte)(c.R * 0 / 4), (byte)(c.G * 0 / 4), (byte)(c.B * 0 / 4), (byte)192);
 			//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 			//            (0.625f).Lerp(c, new Color(128, 0, 0, 0));
 		}

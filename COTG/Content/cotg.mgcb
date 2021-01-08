@@ -1237,11 +1237,47 @@
 /processorParam:TextureFormat=NoChange
 /build:Art/world.dds
 
-#begin Audio/UXOMainTheme.ogg
+#begin Audio/music0.ogg
 /importer:OggImporter
 /processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/UXOMainTheme.ogg
+/processorParam:Quality=Medium
+/build:Audio/music0.ogg
+
+#begin Audio/music1.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music1.ogg
+
+#begin Audio/music2.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music2.ogg
+
+#begin Audio/music3.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music3.ogg
+
+#begin Audio/music4.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music4.ogg
+
+#begin Audio/music5.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music5.ogg
+
+#begin Audio/music6.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Medium
+/build:Audio/music6.ogg
 
 #begin Effects/Ava.fx
 /importer:EffectImporter

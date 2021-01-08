@@ -12,6 +12,8 @@ float4x4 WorldViewProjection;
 	float4 planetGains; // emissive, diffuse speciular
 	float4 lightAmbient;
 	float4 lightColor;
+	float4 lightSpecular;
+
 };
 
 DECLARE_TEXTURE(Texture, 0);

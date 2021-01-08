@@ -1717,7 +1717,7 @@ namespace COTG
 				{
 					ShellPage.canvas.IsHitTestVisible = isWorld;
 					ShellPage.canvas.Visibility = isWorld ? Visibility.Visible : Visibility.Collapsed;
-
+					AGame.UpdateMusic();
 
 				});
 			}

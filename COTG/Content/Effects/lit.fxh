@@ -25,7 +25,7 @@ float AddSmooth(float a, float b)
 }
 float3 AddSmooth3(float3 a, float3 b)
 {
-	return a + b - a * b;
+	return a + b;//	-a * b;
 }
 float3 AddSmooth31(float3 a, float b)
 {
@@ -42,54 +42,26 @@ inline half FresnelLerp(half F0, half F90, half cosA)
 static const half smoothness = 0.25;
 static const half perceptualRoughness = (1.0 - smoothness); // .5
 static const half roughness = perceptualRoughness * perceptualRoughness; // .25
-static const float Fdielectric = 0.125;
-//static const float metalness = 0.25;
-static const float gaSchlickGGXK = __sqr(roughness + 1.0) / 8.0;
-static const float alphaSq = __sqr(__sqr(roughness));
+static const half alphaSq = __sqr(__sqr(roughness));
 
-// GGX/Towbridge-Reitz normal distribution function.
-// Uses Disney's reparametrization of alpha = roughness^2.
-float ndfGGX(float cosLh)
-{
 
-	float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
-	return alphaSq / (PI * denom * denom);
-}
-
-float BRDFSpec(half nh, half lh)
+half BRDFSpec(half nh, half lh)
 {
 	half vf =  (nh * nh) * (alphaSq - 1) + 1;
 	return alphaSq / (4 * 3*__sqr(vf) * __sqr(lh) * (roughness + 0.5));
 
 }
 
-// Single term for separable Schlick-GGX below.
-float gaSchlickG1(float cosTheta)
-{
-	return cosTheta / (cosTheta * (1.0 - gaSchlickGGXK) + gaSchlickGGXK);
-}
 
-// Schlick-GGX approximation of geometric attenuation function using Smith's method.
-float gaSchlickGGX(float cosLi, float cosLo)
+half4 PSLit(VertexShaderOutputLit input) : SV_Target0
 {
-	return gaSchlickG1(cosLi) * gaSchlickG1(cosLo);
-}
-
-// Shlick's approximation of the Fresnel factor.
-float fresnelSchlick(float F0, float cosTheta)
-{
-	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 2.0);
-}
-
-float4 PSLit(VertexShaderOutputLit input) : SV_Target0
-{
-	float4 normalTex = SAMPLE_TEXTURE(Normal, input.uv.xy);
-	float4 tex = SAMPLE_TEXTURE(Texture, input.uv.xy);
-	float3 albedo = tex.rgb ;
-	float3 positionInPixels = input.Position.xyz;
-	float3 Li = normalize(lightPosition.xyz - positionInPixels.xyz);
-	float3 Lo = normalize(cameraPosition - positionInPixels.xyz);
-	float alpha = input.Color.a * tex.a;
+	half4 normalTex = SAMPLE_TEXTURE(Normal, input.uv.xy);
+	half4 tex = SAMPLE_TEXTURE(Texture, input.uv.xy);
+	half3 albedo = tex.rgb;
+	half3 positionInPixels = input.Position.xyz;
+	half3 Li = normalize(lightPosition.xyz - positionInPixels.xyz);
+	half3 Lo = normalize(cameraPosition - positionInPixels.xyz);
+	half alpha = input.Color.a * tex.a;
 
 //	(zx, zy, 1)x(0, 1, 0) = 1,0,-zx
 //	(zx, zy, 1)x(1, 0, 0) = 0,1, -zy
@@ -99,51 +71,36 @@ float4 PSLit(VertexShaderOutputLit input) : SV_Target0
 //	float3 x = float3(1, 0, -zx);
 //	float3 y = float3(0, 1, -zy);
 //	float3 z = float3(z.x, z.y, 1);
-	float3 tN = normalTex.rgb - 0.5;
-	float3 N = float3(tN.z * input.uv.z + tN.x,
+	half3 tN = normalTex.rgb - 0.5;
+	half3 N = half3(tN.z * input.uv.z + tN.x,
 							tN.z * input.uv.w + tN.y, 
 							tN.z - tN.x*input.uv.z - tN.y*input.uv.w);
-	N = normalize(tN);
+	N = normalize(N);
 	//N.x *= -1;
 	
 
-//	float spec = pow( specDot,6) * lightGains.z* specColor;
-	float F0 = Fdielectric;
 	
-	float ao = saturate(4 *( max(max(albedo.r, albedo.g), albedo.b) - 0.125) );
+	half ao = saturate(4 *( max(max(albedo.r, albedo.g), albedo.b) - 0.125) );
                  
 		// Half-vector between Li and Lo.
-	float3 Lh = normalize(Li + Lo);
-	float cosLo = max(0.0, dot(N, Lo));
+	half3 Lh = normalize(Li + Lo);
 		// Calculate angles between surface normal and various light vectors.
-	float cosLi = max(0.0, dot(N, Li));
-	float cosLh = max(0.0, dot(N, Lh));
-
-		// Calculate Fresnel term for direct lighting. 
-	float F = fresnelSchlick(F0, max(0.0, dot(Li, N)));
-		// Calculate normal distribution for specular BRDF.
-	float D = ndfGGX(cosLh);
-		// Calculate geometric attenuation for specular BRDF.
-	float G = gaSchlickGGX(cosLi, cosLo);
-
-		// Diffuse scattering happens due to light being refracted multiple times by a dielectric medium.
-		// Metals on the other hand either reflect or absorb energy, so diffuse contribution is always zero.
-		// To be energy conserving we must scale diffuse BRDF contribution based on Fresnel factor & metalness.
-//	float kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
+	half cosLi = max(0.0, dot(N, Li));
+	half cosLh = max(0.0, dot(N, Lh));
 
 		// Lambert diffuse BRDF.
 		// We don't scale by 1/PI for lighting & material units to be more convenient.
-	float3 diffuseBRDF = albedo;
+	half3 diffuse = albedo * (cosLi * lightColor.rgb + lightAmbient.rgb);
 
 		// Cook-Torrance specular microfacet BRDF.
-	float specularBRDF = BRDFSpec(dot(N, Lh), 1)*ao;
+	half3 specular = BRDFSpec(cosLh, 1) * ao * lightSpecular.rgb;
 	//(F * D * G*ao) / max(Epsilon, 4.0 * cosLi * cosLo);
 
 		// Total contribution for this light.
-	float3 rgb = ((albedo * (cosLi) + specularBRDF) * lightColor.rgb + lightAmbient.rgb * albedo) * input.Color.rgb;
+	half3 rgb = (diffuse + specular) * input.Color.rgb;
 
 //rgb = 2 * rgb / (1 + rgb);
-	return float4(rgb* (alpha), alpha);
+	return half4(rgb * (alpha), alpha);
 
 }
 

@@ -43,7 +43,6 @@
 				<Slider Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0125" SmallChange="0.0125" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
 				<Slider Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" TickPlacement="Outside" Orientation="Vertical" />
 			
-			<Slider Header="Music" Value="{x:Bind uiMusic, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" TickPlacement="Outside" Margin="8,8,8,8" Orientation="Vertical" />
 
 			</wct:WrapPanel>
 			
@@ -252,7 +251,7 @@
 						   Style="{ThemeResource SubtitleTextBlockStyle}"
 						   Margin="4,4,4,4" />
 				<StackPanel Margin="4">
-					<ToggleSwitch  Header="Sounds"
+					<ToggleSwitch  Header="UI Sounds"
 								   IsOn="{x:Bind uiSoundOn, Mode=TwoWay}"
 								   OnContent="On"
 								   OffContent="Muted"
@@ -264,6 +263,7 @@
 							TickFrequency="1"
 							TickPlacement="Outside"
 							Value="{x:Bind uiVolume,  Mode=TwoWay}" />
+					<Slider Header="Music" Value="{x:Bind uiMusic, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125" StepFrequency="0.0125" SmallChange="0.0125" TickPlacement="Outside" Margin="8,8,8,8" Orientation="Horizontal" />
 					<ToggleSwitch  Header="Spatial"
 								   IsOn="{x:Bind uiSpatial, Mode=TwoWay}"
 								   Margin="4" />
