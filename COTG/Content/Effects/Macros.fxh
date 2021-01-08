@@ -4,6 +4,12 @@
 #define __sqr(__a) ((__a)*(__a))
 static const float Epsilon = 1.0 / 4096.0;
 static const float PI = 3.141592;
+#define half min16float
+#define half2 min16float2
+#define half3 min16float3
+#define half4 min16float4
+#define half3x3 min16float3x3
+#define half3x4 min16float3x4
 
 
 #if SM4

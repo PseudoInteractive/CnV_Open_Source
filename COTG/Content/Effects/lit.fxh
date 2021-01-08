@@ -15,6 +15,8 @@ VertexShaderOutputLit VSLit(VertexShaderInputPositionColorTexture input)
 	
 	output.uv.z = cameraPosition.x * (planetGains.z);
 	output.uv.w = cameraPosition.y * (planetGains.z);
+	
+	output.cameraC = output.Position.xyw;
 	return output;
 }
 float AddSmooth(float a, float b)
@@ -37,7 +39,7 @@ inline half FresnelLerp(half F0, half F90, half cosA)
 	return lerp(F0, F90, t);
 }
 
-static const half smoothness = 0.32;
+static const half smoothness = 0.25;
 static const half perceptualRoughness = (1.0 - smoothness); // .5
 static const half roughness = perceptualRoughness * perceptualRoughness; // .25
 static const float Fdielectric = 0.125;
@@ -54,7 +56,12 @@ float ndfGGX(float cosLh)
 	return alphaSq / (PI * denom * denom);
 }
 
+float BRDFSpec(half nh, half lh)
+{
+	half vf =  (nh * nh) * (alphaSq - 1) + 1;
+	return alphaSq / (4 * 3*__sqr(vf) * __sqr(lh) * (roughness + 0.5));
 
+}
 
 // Single term for separable Schlick-GGX below.
 float gaSchlickG1(float cosTheta)
@@ -71,7 +78,7 @@ float gaSchlickGGX(float cosLi, float cosLo)
 // Shlick's approximation of the Fresnel factor.
 float fresnelSchlick(float F0, float cosTheta)
 {
-	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 3.0);
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 2.0);
 }
 
 float4 PSLit(VertexShaderOutputLit input) : SV_Target0
@@ -96,14 +103,14 @@ float4 PSLit(VertexShaderOutputLit input) : SV_Target0
 	float3 N = float3(tN.z * input.uv.z + tN.x,
 							tN.z * input.uv.w + tN.y, 
 							tN.z - tN.x*input.uv.z - tN.y*input.uv.w);
-	N = normalize(N);
-	
+	N = normalize(tN);
+	//N.x *= -1;
 	
 
 //	float spec = pow( specDot,6) * lightGains.z* specColor;
 	float F0 = Fdielectric;
 	
-	float ao = saturate(6 * dot(albedo, albedo) - 0.125);
+	float ao = saturate(4 *( max(max(albedo.r, albedo.g), albedo.b) - 0.125) );
                  
 		// Half-vector between Li and Lo.
 	float3 Lh = normalize(Li + Lo);
@@ -113,7 +120,7 @@ float4 PSLit(VertexShaderOutputLit input) : SV_Target0
 	float cosLh = max(0.0, dot(N, Lh));
 
 		// Calculate Fresnel term for direct lighting. 
-	float F = fresnelSchlick(F0, max(0.0, dot(Lh, Lo)));
+	float F = fresnelSchlick(F0, max(0.0, dot(Li, N)));
 		// Calculate normal distribution for specular BRDF.
 	float D = ndfGGX(cosLh);
 		// Calculate geometric attenuation for specular BRDF.
@@ -129,10 +136,11 @@ float4 PSLit(VertexShaderOutputLit input) : SV_Target0
 	float3 diffuseBRDF = albedo;
 
 		// Cook-Torrance specular microfacet BRDF.
-	float specularBRDF = (F * D * G*ao) / max(Epsilon, 4.0 * cosLi * cosLo);
+	float specularBRDF = BRDFSpec(dot(N, Lh), 1)*ao;
+	//(F * D * G*ao) / max(Epsilon, 4.0 * cosLi * cosLo);
 
 		// Total contribution for this light.
-	float3 rgb = ((albedo * (1 - F) + specularBRDF) * lightColor.rgb * (cosLi) + lightAmbient.rgb * albedo) * input.Color.rgb;
+	float3 rgb = ((albedo * (cosLi) + specularBRDF) * lightColor.rgb + lightAmbient.rgb * albedo) * input.Color.rgb;
 
 //rgb = 2 * rgb / (1 + rgb);
 	return float4(rgb* (alpha), alpha);

@@ -56,5 +56,6 @@ struct VertexShaderOutputLit
     float4 Position : SV_Position;
     float4 Color : COLOR0;
     float4 uv : TEXCOORD0;
+	float3 cameraC : TEXCOORD1;
 };
 #endif

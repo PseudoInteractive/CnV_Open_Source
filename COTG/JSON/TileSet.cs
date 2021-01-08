@@ -62,8 +62,14 @@ namespace COTG.JSON
 			Assert(state == State.preInit || state == State.lostDevice || state == State.wantRefresh); // reset if necessary
 
 			state = State.loadStart;
-			instance = await TileMapFetch.Get();
-			//            Note.Show("TilesFetched");
+			for (; ; )
+			{
+				instance = await TileMapFetch.Get();
+				//            Note.Show("TilesFetched");
+				if (instance != null)
+					break;
+				await Task.Delay(2000);
+			}
 			state = State.loadedData;
 
 			//);
