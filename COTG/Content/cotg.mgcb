@@ -961,6 +961,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/lineDraw.dds
 
+#begin Art/lineDraw2.dds
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=NoChange
+/build:Art/lineDraw2.dds
+
 #begin Art/sky.dds
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1231,47 +1243,11 @@
 /processorParam:Quality=Best
 /build:Audio/UXOMainTheme.ogg
 
-#begin Effects/AlphaAdd.fx
+#begin Effects/Ava.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Effects/AlphaAdd.fx
-
-#begin Effects/darkFont.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/darkFont.fx
-
-#begin Effects/DefaultEffect.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/DefaultEffect.fx
-
-#begin Effects/font.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/font.fx
-
-#begin Effects/lit.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/lit.fx
-
-#begin Effects/Macros.fxh
-/copy:Effects/Macros.fxh
-
-#begin Effects/Structures.fxh
-/copy:Effects/Structures.fxh
-
-#begin Effects/unlit.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/unlit.fx
+/build:Effects/Ava.fx
 
 #begin Fonts/File.spritefont
 /importer:FontDescriptionImporter

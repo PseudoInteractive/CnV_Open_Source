@@ -1,28 +1,6 @@
-﻿#include "Macros.fxh"
-#include "Structures.fxh"
+﻿#include "Constants.fxh"
 
-DECLARE_TEXTURE(Texture, 0);
-DECLARE_TEXTURE(Normal, 1);
-
-BEGIN_CONSTANTS
-
-float3 lightPosition;
-float3 cameraPosition;
-float4 lightGains; // emissive, diffuse speciular
-float4 planetGains; // emissive, diffuse speciular
-float4 lightAmbient;
-float4 lightColor;
-
-
-MATRIX_CONSTANTS
-
-
-END_CONSTANTS
-
-
-
-
-VertexShaderOutputLit VertexShaderFunctionPositionColorTexture(VertexShaderInputPositionColorTexture input)
+VertexShaderOutputLit VSLit(VertexShaderInputPositionColorTexture input)
 {
 	VertexShaderOutputLit output;
 	float4 cameraPosition = input.Position;
@@ -62,7 +40,7 @@ inline half FresnelLerp(half F0, half F90, half cosA)
 static const half smoothness = 0.32;
 static const half perceptualRoughness = (1.0 - smoothness); // .5
 static const half roughness = perceptualRoughness * perceptualRoughness; // .25
-static const float3 Fdielectric = 0.04;
+static const float Fdielectric = 0.125;
 //static const float metalness = 0.25;
 static const float gaSchlickGGXK = __sqr(roughness + 1.0) / 8.0;
 static const float alphaSq = __sqr(__sqr(roughness));
@@ -91,12 +69,12 @@ float gaSchlickGGX(float cosLi, float cosLo)
 }
 
 // Shlick's approximation of the Fresnel factor.
-float3 fresnelSchlick(float3 F0, float cosTheta)
+float fresnelSchlick(float F0, float cosTheta)
 {
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 3.0);
 }
 
-float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputLit input) : SV_Target0
+float4 PSLit(VertexShaderOutputLit input) : SV_Target0
 {
 	float4 normalTex = SAMPLE_TEXTURE(Normal, input.uv.xy);
 	float4 tex = SAMPLE_TEXTURE(Texture, input.uv.xy);
@@ -121,11 +99,9 @@ float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputLit input) : SV
 	N = normalize(N);
 	
 	
-	float metalness = lightGains.x;
-
 
 //	float spec = pow( specDot,6) * lightGains.z* specColor;
-	float3 F0 = lerp(Fdielectric, tex.rgb, metalness);
+	float F0 = Fdielectric;
 	
 	float ao = saturate(6 * dot(albedo, albedo) - 0.125);
                  
@@ -137,7 +113,7 @@ float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputLit input) : SV
 	float cosLh = max(0.0, dot(N, Lh));
 
 		// Calculate Fresnel term for direct lighting. 
-	float3 F = fresnelSchlick(F0, max(0.0, dot(Lh, Lo)));
+	float F = fresnelSchlick(F0, max(0.0, dot(Lh, Lo)));
 		// Calculate normal distribution for specular BRDF.
 	float D = ndfGGX(cosLh);
 		// Calculate geometric attenuation for specular BRDF.
@@ -146,21 +122,22 @@ float4 PixelShaderFunctionPositionColorTexture(VertexShaderOutputLit input) : SV
 		// Diffuse scattering happens due to light being refracted multiple times by a dielectric medium.
 		// Metals on the other hand either reflect or absorb energy, so diffuse contribution is always zero.
 		// To be energy conserving we must scale diffuse BRDF contribution based on Fresnel factor & metalness.
-	float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
+//	float kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metalness);
 
 		// Lambert diffuse BRDF.
 		// We don't scale by 1/PI for lighting & material units to be more convenient.
-	float3 diffuseBRDF = kd * albedo;
+	float3 diffuseBRDF = albedo;
 
 		// Cook-Torrance specular microfacet BRDF.
-	float3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * cosLo)*ao;
+	float specularBRDF = (F * D * G*ao) / max(Epsilon, 4.0 * cosLi * cosLo);
 
 		// Total contribution for this light.
-	float3 rgb = ((diffuseBRDF + specularBRDF) *lightColor.rgb*cosLi + lightAmbient.rgb * albedo)  * input.Color.rgb;
+	float3 rgb = ((albedo * (1 - F) + specularBRDF) * lightColor.rgb * (cosLi) + lightAmbient.rgb * albedo) * input.Color.rgb;
 
 //rgb = 2 * rgb / (1 + rgb);
 	return float4(rgb* (alpha), alpha);
 
 }
 
-TECHNIQUE(PositionColorTexture, VertexShaderFunctionPositionColorTexture, PixelShaderFunctionPositionColorTexture);
+
+TECHNIQUE(Lit, VSLit, PSLit);

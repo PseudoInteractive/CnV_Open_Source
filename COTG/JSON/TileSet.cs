@@ -82,8 +82,7 @@ namespace COTG.JSON
 				for (int i = 0; i < count; ++i)
 				{
 					instance.tilesets[i].material = prior[i].material;
-
-
+					instance.tilesets[i].shadowMaterial = prior[i].shadowMaterial;
 				}
 				prior = null;
 
@@ -93,33 +92,37 @@ namespace COTG.JSON
 				foreach (var tileSet in instance.tilesets)
 				{
 					tileSet.Load();
-					switch (tileSet.name)
-					{
-						case "land":
-							tileSet.z = AGame.zLand;
-							tileSet.wantShadow = false;
-							tileSet.isBase = true;
-							break;
-						case "water":
-							tileSet.z = AGame.zWaterBase;
-							tileSet.isBase = true;
-							break;
-						case "terrainfeatures":
-							tileSet.z = AGame.zTerrainBase;
-							tileSet.wantShadow = true;
-							break;
-						case "city":
-							tileSet.z = AGame.zCitiesBase;
-							tileSet.wantShadow = true;
-							tileSet.canHover = true;
-							break;
-						case "toplevel":
-							tileSet.z = AGame.zTopLevelBase;
-							tileSet.wantShadow = true;
-							tileSet.canHover = true;
-							break;
+					
+				}
+			}
+			foreach (var tileSet in instance.tilesets)
+			{
+				switch (tileSet.name)
+				{
+					case "land":
+						tileSet.z = AGame.zLand;
+						tileSet.wantShadow = false;
+						tileSet.isBase = true;
+						break;
+					case "water":
+						tileSet.z = AGame.zWaterBase;
+						tileSet.isBase = true;
+						break;
+					case "terrainfeatures":
+						tileSet.z = AGame.zTerrainBase;
+						tileSet.wantShadow = true;
+						break;
+					case "city":
+						tileSet.z = AGame.zCitiesBase;
+						tileSet.wantShadow = true;
+						tileSet.canHover = true;
+						break;
+					case "toplevel":
+						tileSet.z = AGame.zTopLevelBase;
+						tileSet.wantShadow = true;
+						tileSet.canHover = true;
+						break;
 
-					}
 				}
 			}
 			foreach (var layer in instance.layers)
@@ -371,6 +374,8 @@ namespace COTG.JSON
 
 		[JsonIgnore]
 		public Draw.Material material;
+		[JsonIgnore]
+		public Draw.Material shadowMaterial;
 		//public (int u,int v) ScaleUV( (int u, int v) uv)
 		//{
 		//	return ((int)(uv.u * bitmap.Width + imagewidth / 2) / imagewidth, (int)(uv.v * bitmap.Height + imageheight / 2) / imageheight);
@@ -396,7 +401,16 @@ namespace COTG.JSON
 				//  Debug.Log(uri.ToString());
 				string shortName = resName.Substring(0, resName.Length - 4);
 				string dir = SettingsPage.IsThemeWinter() ? "winter" : "cotg";
-				material = new Draw.Material(AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}"), AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n"), AGame.GetTileEffect());
+				Texture texture;
+				using(var scope = new AGame.SRGBLoadScope() )
+				{
+					texture = AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}");
+				}
+				Texture normalMap;
+					normalMap = AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n");
+				material = new Draw.Material(texture, normalMap, AGame.GetTileEffect());
+
+				shadowMaterial = new Draw.Material(material.texture, AGame.unlitEffect);
 				// etc.
 				Assert(material != null);
 

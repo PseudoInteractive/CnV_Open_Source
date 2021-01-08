@@ -496,12 +496,13 @@
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\terrainfeatures.dds" />
-    <Content Include="Content\Effects\AlphaAdd.fx" />
+    <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Content\Effects\Ava.fx" />
-    <Content Include="Content\Effects\darkFont.fx" />
-    <Content Include="Content\Effects\font.fx" />
-    <Content Include="Content\Effects\lit.fx" />
-    <Content Include="Content\Effects\unlit.fx" />
+    <None Include="Content\Effects\darkFont.fxh" />
+    <None Include="Content\Effects\font.fxh" />
+    <None Include="Content\Effects\Constants.fxh" />
+    <None Include="Content\Effects\lit.fxh" />
+    <None Include="Content\Effects\unlit.fxh" />
     <Content Include="web\images\city128\walls_water2.png" />
     <Content Include="web\images\city128\water_water.png" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />
@@ -620,7 +621,7 @@
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
     <Content Include="Content\Art\Icons\windmill.png" />
-    <Content Include="Content\Effects\DefaultEffect.fx" />
+    <None Include="Content\Effects\DefaultEffect.fxh" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />

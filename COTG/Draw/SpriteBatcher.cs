@@ -187,7 +187,9 @@ namespace COTG.Draw
 								var effect = material.effect;
 								if (effect != null)
 								{
-									var pass = effect.CurrentTechnique.Passes[0];
+									
+									var pass = effect;
+									pass._effect.CurrentTechnique = pass.technique;
 									pass.Apply();
 								}
 							}

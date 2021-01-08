@@ -91,21 +91,21 @@ namespace COTG
 		const float detailsZoomFade = 8;
 		public static Material worldBackground;
 		//public static Effect imageEffect;
-		public static Effect defaultEffect;
-		public static Effect alphaAddEffect;
-		public static Effect fontEffect;
-		public static Effect darkFontEffect;
-		public static Effect litEffect;
-		public static Effect unlitEffect;
-		public static EffectParameter planetGainsParamater, planetGainsParamater2;
+		public static Effect avaEffect;
+
+		public static EffectPass defaultEffect;
+		public static EffectPass alphaAddEffect;
+		public static EffectPass fontEffect;
+		public static EffectPass darkFontEffect;
+		public static EffectPass litEffect;
+		public static EffectPass unlitEffect;
+		public static EffectParameter planetGainsParamater;
+		public static EffectParameter worldMatrixParameter;
 		public static EffectParameter lightPositionParameter;
 		public static EffectParameter lightGainsParameter;
 		public static EffectParameter lightAmbientParameter;
 		public static EffectParameter lightColorParameter;
 		public static EffectParameter cameraPositionParameter;
-		public static EffectParameter worldMatrixParameter;
-		public static EffectParameter worldMatrixParameter2;
-		public static EffectParameter worldMatrixParameter3, worldMatrixParameter4, worldMatrixParameter5,worldMatrixParameter6;
 		public static Material lineDraw;
 		public static Material quadTexture;
 		public static Material roundedRect;
@@ -115,7 +115,7 @@ namespace COTG
 		public static Material worldObjects;
 		public static Material worldOwners;
 
-		public static Effect GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
+		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
 
 
 		internal static void SetLighting(Lighting value)
@@ -397,8 +397,8 @@ namespace COTG
 						worldOwners = null;
 						w.texture.Dispose();
 					}
-					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
-					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
+					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+					//worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
 					//canvas.Paused = falwirse;
 					//if (worldObjectsDark != null)
 					//    worldObjectsDark.Dispose();
@@ -409,7 +409,7 @@ namespace COTG
 				{
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
+					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -563,34 +563,49 @@ namespace COTG
 					MediaPlayer.Stop();
 			}
 		}
+		public class SRGBLoadScope : IDisposable
+		{
+			public SRGBLoadScope()
+			{
+				++Microsoft.Xna.Framework.Content.ContentManager.wantSRGB;
+			}
+
+			void IDisposable.Dispose()
+			{
+				--Microsoft.Xna.Framework.Content.ContentManager.wantSRGB;
+			}
+		}
 		protected override async void LoadContent()
 		{
 			try
 			{
-				defaultEffect = Content.Load<Effect>("Effects/DefaultEffect");
-				alphaAddEffect = Content.Load<Effect>("Effects/AlphaAdd");
-				fontEffect = Content.Load<Effect>("Effects/font");
-				darkFontEffect = Content.Load<Effect>("Effects/darkFont");
-				litEffect = Content.Load<Effect>("Effects/lit");
-				unlitEffect = Content.Load<Effect>("Effects/unlit");
+				avaEffect = Content.Load<Effect>("Effects/Ava");
+				defaultEffect = EffectPass("AlphaBlend");
+				alphaAddEffect = EffectPass("AlphaAdd");
+				fontEffect = EffectPass("FontLight");
+				darkFontEffect = EffectPass("FontDark");
+				litEffect = EffectPass("Lit");
+				unlitEffect = EffectPass("Unlit");
 				readyToLoad = true;
 
-				worldMatrixParameter = defaultEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter2 = fontEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter3 = darkFontEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter4 = alphaAddEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter5 = litEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter6 = unlitEffect.Parameters["WorldViewProjection"];
+				using var srgb = new SRGBLoadScope();
 
-				lightPositionParameter = litEffect.Parameters["lightPosition"];
-				planetGainsParamater = litEffect.Parameters["planetGains"];
-				planetGainsParamater2 = unlitEffect.Parameters["planetGains"];
-				lightGainsParameter = litEffect.Parameters["lightGains"];
-				lightColorParameter = litEffect.Parameters["lightColor"];
-				lightAmbientParameter = litEffect.Parameters["lightAmbient"];
-				cameraPositionParameter = litEffect.Parameters["cameraPosition"];
+				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
+
+
+				lightPositionParameter = avaEffect.Parameters["lightPosition"];
+				planetGainsParamater = avaEffect.Parameters["planetGains"];
+				lightGainsParameter = avaEffect.Parameters["lightGains"];
+				lightColorParameter = avaEffect.Parameters["lightColor"];
+				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
+				cameraPositionParameter = avaEffect.Parameters["cameraPosition"];
+
+				
 				fontMaterial = new Material(Content.Load<Texture2D>("Fonts/tra_0"), fontEffect);
+				
 				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
+				
+				
 				fontMaterial.effect = fontEffect;
 
 				bfont = new BitmapFont.BitmapFont();
@@ -611,7 +626,7 @@ namespace COTG
 
 
 
-				lineDraw = LoadTexture("Art/circlegradient");
+				lineDraw = LoadTexture("Art/linedraw2");
 				lineDraw.effect = alphaAddEffect;
 				//lineDraw2 = new PixelShaderEffect(
 				sky = LoadTexture("Art/sky");
@@ -675,6 +690,11 @@ namespace COTG
 			}
 		}
 
+		public static EffectPass EffectPass(string name)
+		{
+			return avaEffect.Techniques[name].Passes[0];
+		}
+
 
 
 
@@ -715,7 +735,7 @@ namespace COTG
 
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
-		const float lineThickness = 8.0f;
+		const float lineThickness = 6.0f;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
 		const float bSizeGain = 4.0f;
@@ -796,7 +816,7 @@ namespace COTG
 		{
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
-			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldOwners == null))
+			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldObjects == null))
 				return;
 
 
@@ -918,18 +938,14 @@ namespace COTG
 					var proj = Matrix.CreateLookAt(new Microsoft.Xna.Framework.Vector3(0, 0, cameraZ), Microsoft.Xna.Framework.Vector3.Zero, Microsoft.Xna.Framework.Vector3.Up) * Matrix.CreatePerspective(viewport.Width * 0.5f, -viewport.Height * 0.5f, 0.5f, 1.5f);
 					//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 					worldMatrixParameter.SetValue(proj);
-					worldMatrixParameter2.SetValue(proj);
-					worldMatrixParameter3.SetValue(proj);
-					worldMatrixParameter4.SetValue(proj);
-					worldMatrixParameter5.SetValue(proj);
-					worldMatrixParameter6.SetValue(proj);
+					
 					if (SettingsPage.lighting == Lighting.night)
 					{
 						var l = ShellPage.mousePosition;//.InverseProject();
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZ0 * (pixelScale / 64.0f)));
-						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.125f, 1.25f, 0.375f, 1.0625f));
-						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.25f);
-						lightColorParameter.SetValue(new XVector4(1.0f, 1.01f, 1.0f, 1.0f));
+						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
+						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.375f);
+						lightColorParameter.SetValue(new XVector4(1.0f, 1.01f, 1.0f, 1.25f));
 					}
 					else
 					{
@@ -938,8 +954,8 @@ namespace COTG
 						var cc = new Vector2(x, y).WToC().CToS();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
-						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.125f, 1.20f, 0.4f, 1.1875f));
-						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.375f);
+						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
+						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f)*0.5f);
 						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 1f)*1.25f);
 					}
 					cameraPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0 * (pixelScale / 64.0f)));
@@ -947,8 +963,7 @@ namespace COTG
 					var gain1 = bulgeInputGain * bulgeGain * 1.25f;
 					var planetGains = new XVector4(bulgeGain, -gain1, MathF.Sqrt(gain1) * 2.0f, 0);
 					planetGainsParamater.SetValue( planetGains);
-					planetGainsParamater2.SetValue(planetGains);
-
+					
 					draw.Begin();
 
 				}
@@ -1011,14 +1026,14 @@ namespace COTG
 					//else
 					{
 						nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
-						nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 185 };
-						myNameColor = new Color() { A = intAlpha, G = 255, B = 190, R = 210 };
-						nameColorIncoming = new Color() { A = intAlpha, G = 220, B = 220, R = 255 };
-						nameColorSieged = new Color() { A = intAlpha, G = 220, B = 190, R = 255 };
-						nameColorIncomingHover = new Color() { A = intAlpha, G = 220, B = 160, R = 255 };
-						nameColorSiegedHover = new Color() { A = intAlpha, G = 220, B = 140, R = 255 };
-						myNameColorIncoming = new Color() { A = intAlpha, G = 240, B = 150, R = 255 };
-						myNameColorSieged = new Color() { A = intAlpha, G = 240, B = 120, R = 255 };
+						nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 140 };
+						myNameColor = new Color() { A = intAlpha, G = 255, B = 150, R = 170 };
+						nameColorIncoming = new Color() { A = intAlpha, G = 190, B = 190, R = 255 };
+						nameColorSieged = new Color() { A = intAlpha, G = 190, B = 160, R = 255 };
+						nameColorIncomingHover = new Color() { A = intAlpha, G = 190, B = 170, R = 255 };
+						nameColorSiegedHover = new Color() { A = intAlpha, G = 190, B = 140, R = 255 };
+						myNameColorIncoming = new Color() { A = intAlpha, G = 220, B = 120, R = 255 };
+						myNameColorSieged = new Color() { A = intAlpha, G = 200, B = 120, R = 255 };
 					}
 					//			shadowColor = new Color() { A = 128 };
 
@@ -1104,7 +1119,7 @@ namespace COTG
 												var uv1 = new Vector2((sx + 1) * tile.scaleXToU + tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
 
 												draw.AddQuad(pass switch { 0 => Layer.tileBase + layer.id, 1 => Layer.tileShadow, _ => Layer.tiles + layer.id },
-													tile.material, cc0, cc1,
+													(pass==1?tile.shadowMaterial:tile.material), cc0, cc1,
 													uv0,
 													uv1, _tint,
 													(dz,dz,dz,dz));
@@ -2156,6 +2171,32 @@ namespace COTG
 		{
 			return (new Vector2(textureRegion.X, textureRegion.Y), new Vector2(textureRegion.Right, textureRegion.Bottom));
 		}
+		
+		const float gamma = 2.2f;
+		public static (float r,float g, float b, float a) LinearToSRGB(this (float r, float g, float b, float a) c)
+		{
+			return (MathF.Pow(c.r, 1.0f / gamma), MathF.Pow(c.g, 1.0f / gamma), MathF.Pow(c.b, 1.0f / gamma), c.a);
+
+		}
+		public static XVector4 LinearToSRGB(this XVector4 c)
+		{
+			return new XVector4(MathF.Pow(c.X, 1.0f / gamma), MathF.Pow(c.Y, 1.0f / gamma), MathF.Pow(c.Z, 1.0f / gamma), c.W);
+
+		}
+		public static Color LinearToSrgb(this Color c)
+		{
+			return new Color(c.ToVector4().LinearToSRGB());
+		}
+		public static Color SRGBToLinear(this Color c)
+		{
+			return new Color( c.ToVector4().SRGBToLinear() );
+		}
+		public static XVector4 SRGBToLinear(this XVector4 c)
+		{
+			return new XVector4(MathF.Pow(c.X, gamma), MathF.Pow(c.Y, gamma), MathF.Pow(c.Z, gamma), c.W);
+
+		}
+		
 	}
 
 	public class TextLayout
@@ -2204,6 +2245,7 @@ namespace COTG
 
 		//	AGame.draw.DrawString(AGame.font, text, c, color, layer,  (c+span*0.5f).CToDepth() );
 		//}
+
 	}
 }
 

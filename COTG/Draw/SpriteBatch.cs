@@ -23,21 +23,21 @@ namespace COTG.Draw
 
 		public Texture texture;
 		public Texture texture1 = null;
-		public Effect effect;
+		public EffectPass effect;
 		public Material(Texture _texture)
 		{
 			texture = _texture;
 			Assert(AGame.defaultEffect != null);
 			effect = AGame.defaultEffect;
 		}
-		public Material(Texture _texture, Effect _effect)
+		public Material(Texture _texture, EffectPass _effect)
 		{
 			texture = _texture;
 			effect = _effect;
 			Assert(effect != null);
 
 		}
-		public Material(Texture _texture, Texture _texture1, Effect _effect)
+		public Material(Texture _texture, Texture _texture1, EffectPass _effect)
 		{
 			texture = _texture;
 			texture1 = _texture1;

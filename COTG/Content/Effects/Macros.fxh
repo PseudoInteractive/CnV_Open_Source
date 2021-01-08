@@ -1,9 +1,5 @@
-//-----------------------------------------------------------------------------
-// Macros.fxh
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
+#ifndef __Macros__
+#define __Macros__
 
 #define __sqr(__a) ((__a)*(__a))
 static const float Epsilon = 1.0 / 4096.0;
@@ -69,3 +65,4 @@ float4x4 WorldViewProjection;
 #endif
 
 
+#endif

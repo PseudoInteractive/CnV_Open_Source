@@ -1,3 +1,5 @@
+#ifndef __Structures__
+#define __Structures__
 // Vertex shader input structures.
 
 struct VertexShaderInputPosition
@@ -55,3 +57,4 @@ struct VertexShaderOutputLit
     float4 Color : COLOR0;
     float4 uv : TEXCOORD0;
 };
+#endif
