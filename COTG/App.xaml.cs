@@ -185,7 +185,8 @@ namespace COTG
 
 		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
-			Debug.Log(e.Message);
+			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
+			System.Diagnostics.Debug.WriteLine( e.Exception.StackTrace);
 			e.Handled = true;
 		}
 

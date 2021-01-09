@@ -131,7 +131,7 @@ namespace COTG.Views
 			//	canvas.Update += Canvas_Update;
 
 			canvas.SizeChanged += AGame.Canvas_SizeChanged;
-			canvas.LayoutUpdated += AGame.Canvas_LayoutUpdated;
+			//canvas.LayoutUpdated += AGame.Canvas_LayoutUpdated;
 			//canvas.CreateResources += Canvas_CreateResources;
 			//			canvasHitTest.Margin=canvas.Margin = new Thickness(0, 0, 0, bottomMargin);
 			//canvasHitTest.Stretch = Stretch.Fill;

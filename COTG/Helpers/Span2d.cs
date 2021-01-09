@@ -86,5 +86,26 @@ namespace COTG.Helpers
         // Ellipsoid like squared radius
         public float radius2 => (c1.X-c0.X).Squared()+ (c1.Y-c0.Y).Squared();
     }
+	public struct Span2i
+	{
+		// [c0..c1)  c1 itself is not included
+		(int X, int Y) c0;
+		(int X, int Y) c1;
 
+		public Span2i( (int x, int y) c0, (int x, int y) c1)
+		{
+			this.c0 = c0;
+			this.c1 = c1;
+		}
+		public bool Contains( (int X, int Y) v)
+		{
+			return c0.X <= v.X & c0.Y <= v.Y &
+				c1.X > v.X & c1.Y > v.Y;
+		}
+		public bool Overlaps((int X, int Y) v, int r)
+		{
+			return c0.X-r <= v.X & c0.Y-r <= v.Y &
+				c1.X+r > v.X & c1.Y+r > v.Y;
+		}
+	}
 }

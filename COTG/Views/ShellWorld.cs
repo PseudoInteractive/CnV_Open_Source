@@ -118,10 +118,10 @@ namespace COTG.Views
 		// //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
 		//}
 
-		static Vector2 GetCanvasPosition(Vector2 screenC)
+		static Vector2 GetCanvasPosition(Windows.Foundation.Point screenC)
 		{
 			var point = screenC;
-			return new Vector2(point.X, point.Y);
+			return new Vector2((float)(point.X*dipToNative), (float)(point.Y*dipToNative) );
 		}
 		// private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		// {
@@ -673,7 +673,7 @@ namespace COTG.Views
 			e.KeyModifiers.UpdateKeyModifiers();
 			var pointerPoint = e.CurrentPoint;
 			var position = pointerPoint.Position;
-			mousePosition = GetCanvasPosition(position.ToVector2());
+			mousePosition = GetCanvasPosition(position);
 			e.Handled = false;
 
 			//            mousePosition = point.Position.ToVector2();
@@ -807,7 +807,7 @@ namespace COTG.Views
 			}
 
 
-			mousePosition = GetCanvasPosition(point.Position.ToVector2());
+			mousePosition = GetCanvasPosition(point.Position);
 			var prior = lastMousePressTime;
 			lastMousePressTime = DateTimeOffset.UtcNow;
 			lastMousePressPosition = mousePosition;
@@ -868,7 +868,7 @@ namespace COTG.Views
 			var wheel = pt.Properties.MouseWheelDelta;
 			var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, 256.0f);
-			var cBase = GetCanvasPosition(pt.Position.ToVector2()) - halfSpan;
+			var cBase = GetCanvasPosition(pt.Position) - halfSpan;
 			var c0 = cBase / cameraZoom;
 			var c1 = cBase / newZoom;
 			cameraC = cameraC + c0 - c1;
@@ -883,7 +883,7 @@ namespace COTG.Views
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 			var priorMouseC = mousePosition;
-			mousePosition = GetCanvasPosition(e.CurrentPoint.Position.ToVector2());
+			mousePosition = GetCanvasPosition(e.CurrentPoint.Position);
 			mousePositionC = mousePosition.SToC();
 			//	//	cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			mousePositionW = mousePositionC.InverseProject();

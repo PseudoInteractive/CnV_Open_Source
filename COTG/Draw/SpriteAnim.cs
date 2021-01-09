@@ -20,6 +20,8 @@ namespace COTG
 		
 		public static SpriteAnim flagHome = new SpriteAnim() { frameCount = 12, asset = "flagAnim0" };
 		public static SpriteAnim flagSelected = new SpriteAnim() { frameCount = 12, asset = "flagAnim4" };
+		public static SpriteAnim flagPinned= new SpriteAnim() { frameCount = 12, asset = "flagAnim3" };
+		public static SpriteAnim flagRed = new SpriteAnim() { frameCount = 12, asset = "flagAnim3" };
 	}
 
 }

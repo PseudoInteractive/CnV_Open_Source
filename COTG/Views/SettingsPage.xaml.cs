@@ -71,6 +71,7 @@ namespace COTG.Views
 		public static bool setHub;
 		public static bool useSuggested = true;
 		public static bool clearRes;
+		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
 		public float uiMusic
 		{

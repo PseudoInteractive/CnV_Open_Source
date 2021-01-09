@@ -136,7 +136,6 @@ namespace COTG
 													//		public static Vector2 clientCScreen;
 		public static Vector2 clientSpan;
 		public static Vector2 halfSpan;
-		static Vector2 windowSpan = new Vector2(800, 600);
 		static Army underMouse;
 		static float bestUnderMouseScore;
 		//   public static Vector2 cameraMid;
@@ -469,44 +468,46 @@ namespace COTG
 
 		//}
 
-		public static void SetClientSpan(Vector2 span)
+		public static double dipToNative=1;
+		public static void SetClientSpan(double dx, double dy)
 		{
-			clientSpan.X = span.X - (span.X % 8);
-			clientSpan.Y = span.Y - (span.Y % 8);
+			clientSpan.X = MathF.Round( (float)(dx* dipToNative / 4))*4.0f;
+			clientSpan.Y = MathF.Round((float)(dy* dipToNative /4))*4.0f;
 			halfSpan = clientSpan * 0.5f;
 		}
 		public static int resolutionDirtyCounter;
+	
+		//public static void Canvas_LayoutUpdated(object sender, object e)
+		//{
+		//	// not yet initialized?
+		//	if (!initialized)
+		//	{
+		//		return;
+		//	}
+		//	var c = canvas.ActualOffset;
 
-		public static void Canvas_LayoutUpdated(object sender, object e)
-		{
-			// not yet initialized?
-			if (!initialized)
-			{
-				return;
-			}
-			var c = canvas.ActualOffset;
-
-			//		clientC = new Vector2(c.X, c.Y);
-			SetClientSpan(canvas.ActualSize);
-			//	clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
-			//		.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
-			resolutionDirtyCounter = 10;
-		}
+		//	//		clientC = new Vector2(c.X, c.Y);
+		//	SetClientSpan(canvas.ActualSize );
+		//	//	clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
+		//	//		.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
+		//	resolutionDirtyCounter = 10;
+		//}
 		public static void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
+			dipToNative = UWindows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 			if (!initialized)
 			{
 				return;
 			}
-			SetClientSpan(new Vector2((float)e.NewSize.Width, (float)e.NewSize.Height));
+			 
+				SetClientSpan(e.NewSize.Width, e.NewSize.Height);
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			//	.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
 
 			//	Log(canvas.CompositionScaleX);
 
-			var bounds = Helper.CoreWindow.Bounds;
-			windowSpan = new Vector2((float)bounds.Width, (float)bounds.Height);
+			
 			resolutionDirtyCounter = 10;
 		}
 
@@ -626,6 +627,8 @@ namespace COTG
 
 				SpriteAnim.flagHome.Load();
 				SpriteAnim.flagSelected.Load();
+				SpriteAnim.flagRed.Load();
+				SpriteAnim.flagPinned.Load();
 
 				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
 				worldBackground = LoadTexture("Art/world");
@@ -768,6 +771,14 @@ namespace COTG
 			return x1 <= -halfSpan.X | x0 >= halfSpan.X |
 					y1 <= -halfSpan.Y | y0 >= halfSpan.Y;
 		}
+		public static bool IsCulledWC( (int x, int y) c )
+		{
+			return !cullWC.Contains(c);
+		}
+		public static bool IsCulledWC((int x, int y) c, int slopSpace)
+		{
+			return !cullWC.Overlaps(c, slopSpace);
+		}
 		public static bool IsCulled(Vector2 c0, float pad)
 		{
 			var x1 = c0.X;
@@ -816,6 +827,13 @@ namespace COTG
 		public static float parallaxGain;
 		const float lineTileGain = 1.0f / 32.0f;
 		const float lineAnimationGain = 2.0f;
+		public static Span2i cullWC; // culling bounds in world space
+		protected override bool BeginDraw()
+		{
+			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldObjects == null))
+				return false;
+			return base.BeginDraw();
+		}
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
@@ -823,8 +841,6 @@ namespace COTG
 		{
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
-			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldObjects == null))
-				return;
 
 
 			//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
@@ -878,7 +894,7 @@ namespace COTG
 				//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 				// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 				pixelScale = (cameraZoomLag);
-				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.1875f;
+				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.25f*SettingsPage.fontScale;
 				pixelScaleInverse = 1.0f / cameraZoomLag;
 				shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
 				var deltaZoom = cameraZoomLag - detailsZoomThreshold;
@@ -1054,7 +1070,7 @@ namespace COTG
 					cy0 = (_c0.Y.FloorToInt()).Max(0);
 					cx1 = (_c1.X.CeilToInt() + 1).Min(World.worldDim);
 					cy1 = (_c1.Y.CeilToInt() + 2).Min(World.worldDim);
-
+					cullWC = new Span2i((cx0, cy0), (cx1, cy1));
 					{
 						// 0 == land
 						// 1 == shadows
@@ -1289,8 +1305,9 @@ namespace COTG
 									{
 										var cid = i.Key;
 										var count = i.Value;
-										var c = cid.CidToC();
-										DrawTextBox($"{count.prior}`{count.incoming}", c, textformatLabel, Color.DarkOrange, textBackgroundOpacity, Layer.tileText);
+										var wc = cid.CidToWorld();
+										if(!IsCulledWC(wc))
+											DrawTextBox($"{count.prior}`{count.incoming}", wc.WToC(), textformatLabel, Color.DarkOrange, textBackgroundOpacity, Layer.tileText);
 
 
 									}
@@ -1494,15 +1511,16 @@ namespace COTG
 								}
 							}
 						}
-						var raidCullSlopSpace = 8 * pixelScale;
+						const int raidCullSlopSpace = 4;
 
 
 						foreach (var city in City.allCities.Values)
 						{
+							var wc = city.cid.CidToWorld();
 							// Todo: clip thi
 							if (city.senatorInfo.Length != 0 && !defenderVisible)
 							{
-								var c = city.cid.CidToC();
+								var c = wc.WToC();
 								var idle = 0;
 								var active = 0;
 								var recruiting = 0;
@@ -1526,17 +1544,20 @@ namespace COTG
 											troopImages[ttSenator], false, null, 20);
 									}
 								}
-								DrawTextBox($"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
+								if(!IsCulledWC(wc))
+									DrawTextBox($"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
 
 							}
+							if(!IsCulledWC(wc))
 							{
-								DrawFlag(city.cid, SpriteAnim.flagHome);
+								if (!city.isSelected)
+									DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed);
 							}
 							if (MainPage.IsVisible())
 							{
-								var c = city.cid.CidToC();
-								if (IsCulled(c, raidCullSlopSpace))
+								if (IsCulledWC(wc, raidCullSlopSpace))
 									continue;
+								var c = wc.WToC();
 								var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 								var r = t.Ramp();
 								//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
@@ -1559,7 +1580,7 @@ namespace COTG
 					}
 					foreach (var cid in SettingsPage.pinned)
 					{
-						DrawAccent(cid, 1.0625f, pinnedColor);
+						DrawFlag(cid, SpriteAnim.flagPinned);
 					}
 					if (Spot.focus != 0)
 					{
@@ -1571,11 +1592,7 @@ namespace COTG
 						var cid = Spot.viewHover;
 						DrawAccent(cid, 1.25f, hoverColor);
 					}
-					if (City.build != 0)
-					{
-						var cid = City.build;
-						DrawAccent(cid, 0.875f, buildColor);
-					}
+					
 
 				}
 
@@ -1709,7 +1726,11 @@ namespace COTG
 
 		private static void DrawFlag(int cid, SpriteAnim sprite)
 		{
-			var c = cid.CidToC();
+			var wc = cid.CidToWorld();
+			if (IsCulledWC(wc))
+				return;
+
+			var c = wc.WToC();
 			var dv = AGame.pixelScale;
 
 			float frameCount = sprite.frameCount;
@@ -1923,7 +1944,13 @@ namespace COTG
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
 		{
-			var c = cid.CidToC();
+
+			var wc = cid.CidToWorld();
+			if (IsCulledWC(wc))
+				return;
+
+			var c = wc.WToC();
+
 			var rnd = cid.CidToRandom();
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
@@ -2020,12 +2047,12 @@ namespace COTG
 		//public static float ParallaxScale(float dz) => SettingsPage.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
 		// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
 		//	public static float ParallaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
-		public static float bulgeInputGain = 1;
+		public static float bulgeInputGain = 0;
 		public static float CToDepth(this Vector2 c)
 		{
 			float r2 = (c.LengthSquared() * bulgeInputGain);
 			//			return r.SLerp(AGame.bulgeGain, 0.0f);
-
+			//Assert(r2 <= 2.0f);
 			return (r2).Lerp(AGame.bulgeGain, -0.25f * AGame.bulgeGain);
 			//	return Math.Acos(r.SLerp(AGame.bulgeGain, 0.0f);
 
