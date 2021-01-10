@@ -83,7 +83,11 @@ namespace COTG.Game
             myId = my.id = element.GetAsInt("id");
             my.name = element.GetString("n");
 
-            var _all = new Dictionary<int, Alliance>();
+			 // We have enought info for login now
+			APlayfab.Login();
+
+
+			var _all = new Dictionary<int, Alliance>();
             var _nameToId = new Dictionary<string, int>();
             var _diplomacy = new SortedList<byte, byte>();
 

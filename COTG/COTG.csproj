@@ -183,6 +183,7 @@
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />
     <Compile Include="Game\Spot.cs" />

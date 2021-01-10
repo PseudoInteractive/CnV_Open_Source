@@ -992,7 +992,10 @@ namespace COTG
 					draw.Begin();
 
 				}
-
+				var wantFade = wantImage;
+				var regionAlpha = wantFade ? (deltaZoom / detailsZoomFade).Saturate() : 1.0f;
+				var intAlpha = (byte)(regionAlpha * 255.0f).RoundToInt();
+				parallaxGain = SettingsPage.parallax * MathF.Sqrt(cameraZoomLag / 64.0f)* regionAlpha;
 				//	ds.Antialiasing = CanvasAntialiasing.Aliased;
 				if (worldBackground != null && wantImage)
 				{
@@ -1013,7 +1016,6 @@ namespace COTG
 
 
 				}
-				parallaxGain = SettingsPage.parallax * MathF.Sqrt(cameraZoomLag / 64.0f);
 
 				//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
 				// ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.cameraC.X, -_gain * ShellPage.cameraC.Y );
@@ -1025,11 +1027,9 @@ namespace COTG
 				//           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
 				// if (IsPageDefense())
 				var wantDarkText = isWinter;
-				if (wantDetails)
-				{
-					var wantFade = wantImage;
-					var alpha = wantFade ? (deltaZoom / detailsZoomFade).Min(1) : 1.0f;
-					var intAlpha = (byte)(alpha * 255.0f).RoundToInt();
+				
+					
+				
 
 					var rgb = attacksVisible ? 255 : 255;
 					var tint = new Color(rgb, rgb, rgb, intAlpha);
@@ -1063,6 +1063,7 @@ namespace COTG
 					//			shadowColor = new Color() { A = 128 };
 
 					var td = TileData.instance;
+				{
 					var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
 					var _c0 = (cameraCLag - halfTiles);
 					var _c1 = cameraCLag + halfTiles;
@@ -1070,7 +1071,10 @@ namespace COTG
 					cy0 = (_c0.Y.FloorToInt()).Max(0);
 					cx1 = (_c1.X.CeilToInt() + 1).Min(World.worldDim);
 					cy1 = (_c1.Y.CeilToInt() + 2).Min(World.worldDim);
+				}
 					cullWC = new Span2i((cx0, cy0), (cx1, cy1));
+				if (wantDetails)
+				{
 					{
 						// 0 == land
 						// 1 == shadows
