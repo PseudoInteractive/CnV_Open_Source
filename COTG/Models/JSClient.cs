@@ -176,9 +176,9 @@ namespace COTG
 					//VerticalAlignment = VerticalAlignment.Stretch,
 					//CacheMode=new BitmapCache()
 					DefaultBackgroundColor = new Windows.UI.Color() { G = 0, B = 0, R = 0, A = 0 },
-
+					
 					Name = "cotgView",
-					Opacity = 1,
+					//Opacity = 0.5,
 				};
 
 				view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
@@ -315,7 +315,7 @@ namespace COTG
 			{
 				var req = args.Request;
 
-				Log(req.RequestUri.ToString());
+			//	Log(req.RequestUri.ToString());
 				if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
 					var js = GetJsString("jquery");
@@ -436,7 +436,10 @@ namespace COTG
 
 		}
 
-
+		public static void PostMouseEventToJS(int x, int y, string eventName,int button, int dx=0, int dy=0)
+		{
+			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(),dx.ToString(), dy.ToString() }));
+		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
 		//        {
@@ -1621,7 +1624,17 @@ namespace COTG
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
 								   SetViewMode((ViewMode)jso.GetInt("v"));
+								   var pop = jso.GetProperty("pop");
+								   if( pop.ValueKind != JsonValueKind.Null )
+								   {
+									   var str = pop.ToString();
 
+									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str);
+									   Log(popup.Length.ToString() );
+									   // App.DispatchOnUIThreadSneaky(() => Models.JSPopupNode.Show(popup));
+									   Models.JSPopupNode.Show(popup);
+
+								   }
 								   ShellPage.NotifyCotgPopup(popupCount);
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
 								   break;

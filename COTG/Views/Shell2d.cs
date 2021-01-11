@@ -40,12 +40,10 @@ namespace COTG.Views
 		const int cotgPopupWidth = 550;
 		const int cotgPopupLeft = 438;
 		const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
-		const int cotgPanelRight = 410;
-
+		public const int canvasBaseX = 414;
+		public const int canvasBaseY = 95;
 		public static int cachedXOffset = 0;
 		public static int cachedTopOffset = 0;
-		const int cotgPopupTopDefault = 95;
-		const int cotgPopupTopLong = 300 + 95;
 	
 		static public SwapChainPanel canvas;
 
@@ -55,16 +53,19 @@ namespace COTG.Views
 			//	cotgPopupOpen = 0;
 			var hasPopup = (cotgPopupOpen & 127) != 0;
 			var hasLongWindow = cotgPopupOpen >= 128;
-			var leftOffset = hasPopup ? cotgPopupRight - cotgPanelRight : 0;
-			var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : cotgPopupTopDefault;
-	
+			var leftOffset = hasPopup ? cotgPopupRight - canvasBaseX : 0;
+			var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : canvasBaseY;
+
+			// temp
+			leftOffset = 0;
+			topOffset = canvasBaseY;
+
 			if (leftOffset == cachedXOffset && cachedTopOffset == topOffset)
 				return;
 			cachedTopOffset = topOffset;
 			cachedXOffset = leftOffset;
 			var _canvas = canvas;
 			//	var _in = canvasHitTest;
-
 
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
 			App.DispatchOnUIThreadLow(() =>

@@ -728,7 +728,32 @@ function onKeyUp(ev: KeyboardEvent) {
 //	window['external']['notify'](JSON.stringify(wrapper));
 //}
 
+// i.e. "click"
+let underMouse : Element = null;
+function postMouseEvent(sx: string,sy:string, eventName:string,button : string, dx:string, dy:string)
+{
+	let x = parseInt(sx);
+	let y = parseInt(sy);
+	if(eventName === "mousedown")
+		underMouse = document.elementFromPoint(x,y);
 
+	if(underMouse != null)
+	{
+		let buttons = parseInt(button);
+		let evt = new MouseEvent(eventName, {
+			bubbles: true,
+			cancelable: true,
+			view: window,
+			clientX:x,
+			clientY:y,
+			button:buttons,
+			buttons:buttons,
+			movementX: dx!==null? parseInt(dx):null,
+			movementY: dy!==null? parseInt(dy):null,
+		  });
+	  let canceled = !underMouse.dispatchEvent(evt);
+	}
+}
 
 function postppdt()
 {
@@ -754,10 +779,10 @@ function postppdt()
 			cookie: document.cookie,
 			cid: ppdt.lcit,
 			time: currentTime(),
-			spanX: M8.clientWidth,
-			spanY: M8.clientHeight,
-			left: M8.clientLeft,
-			top: M8.clientTop,
+			spanX: mainMapDiv.clientWidth,
+			spanY: mainMapDiv.clientHeight,
+			left: mainMapDiv.clientLeft,
+			top: mainMapDiv.clientTop,
 			timeoffset: (ServerDate.getTime() - Date.now()),
 			agent: navigator.userAgent,
 		};
@@ -774,6 +799,7 @@ function postppdt()
 //		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
 	}
 	document.getElementById("tbbuttons").style.display = "none"; // these no longer work
+	document.getElementById("canvasborders").style.display = "none";
 	setTimeout(avactor, 3000);
 
 }

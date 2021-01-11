@@ -126,10 +126,10 @@ namespace COTG.Game
 
 					}
 					// create a character for this world
-					foreach(var ch in login.InfoResultPayload.CharacterList)
-					{
-						ch.
-					}
+					//foreach(var ch in login.InfoResultPayload.CharacterList)
+					//{
+					//	ch.
+					//}
 
 			}
 			}

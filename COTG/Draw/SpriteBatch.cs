@@ -65,7 +65,6 @@ namespace COTG.Draw
         #region Private Fields
         readonly SpriteBatcher _batcher;
 
-		public const SpriteSortMode _sortMode = SpriteSortMode.BackToFront;
 			
 	    public bool _beginCalled;
 
@@ -136,8 +135,7 @@ namespace COTG.Draw
 
 			_beginCalled = false;
 
-			if (_sortMode != SpriteSortMode.Immediate)
-				Setup();
+			Setup();
             
             _batcher.DrawBatch();
 		}

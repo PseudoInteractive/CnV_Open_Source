@@ -10,7 +10,9 @@
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
 	
     <x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
-    <Style TargetType="Page">
+	<x:Double x:Key="TeachingTipMaxHeight">800</x:Double>
+	<x:Double x:Key="TeachingTipMaxWidth">1024</x:Double>
+	<Style TargetType="Page">
 	
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 	

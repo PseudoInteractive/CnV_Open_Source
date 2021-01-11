@@ -7098,6 +7098,7 @@ let pollJ: jsonT.Poll;
 var P8 = 0;
 function SetViewMode(mode) {
 	_viewMode = mode;
+	 mainMapDiv.style.display = (_viewMode!==viewModeCity) ? "none" : null;
 	callSyncViewMode();
 }
 
@@ -7235,14 +7236,15 @@ function debounce(func: () => void, wait: number, _maxWait: number = 0, _leading
 	return debounced
 }
 
-var _zoom = 1;
-var _popupCountCache = 0;
-var _popupCount = 0;
-
+let _zoom = 1;
+let _popupCountCache = 0;
+let _popupCount = 0;
+let _lastTooltip= null;
 //let syncViewTimeout=0;
 //let viewPortDirty=true;
 
-function setupSyncView() {
+function setupSyncView
+() {
 
 	// Options for the observer (which mutations to observe)
 	const config: MutationObserverInit = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
@@ -7282,15 +7284,101 @@ function setupSyncView() {
 			observer.observe(this, config);
 		});
 
-	// Later, you can stop observing
 	//  observer.disconnect();
 }
 function RemovePopup(id: string) {
 	$(id).remove();
 	callSyncViewMode();
 }
+
+//interface PopupNode
+//{
+//	type: string;
+//	text : string;
+//	x0: number,
+//    y0: number,
+//	x1:number,
+//	y1:number,
+//	children : PopupNode[];
+//}
+
+function BuildPopup(node:Element) : any
+{
+ let rect= node.getBoundingClientRect();
+ let dest  = {
+ x0:Math.round(rect.left),
+	y0:Math.round(rect.top),
+	x1:Math.round(node.clientWidth+rect.left),
+	y1:Math.round(node.clientHeight+rect.top)};
+
+// let htmlE = node as HTMLElement;
+
+//let dest  = {
+	
+//	className: node.className,
+//	type : node.nodeName,
+//	text:null,
+//	src:node['src'],
+//	onClick:htmlE?.onclick?.toString(),
+//	x0:Math.round(rect.left),
+//	y0:Math.round(rect.top),
+//	x1:Math.round(node.clientWidth+rect.left),
+//	y1:Math.round(node.clientHeight+rect.top),
+////	style:htmlE?.style?,
+//	 id:node.id,
+	
+//	children : []
+// };
+// if(htmlE)
+// {
+//	 let style = getComputedStyle(htmlE);
+//	if(style)
+//	 {
+//		let back = style.backgroundImage;
+	
+//		if( back && back !=  "none"  )
+//		{
+//			dest.background = back.toString().replace( /"/g,"'");
+//			dest.backgroundPosition = style.backgroundPosition;
+//		}
+//	}
+//  }
+// // get child nodes of the node
+//	const children = node.childNodes;
+//	const len = children.length;
+//	for (let i = 0; i < len; i++) {
+//		let ch = children[i];
+
+//	 let style = ch['style'];
+//	 if( style!= null)
+//	 {
+//		let display = style.display;
+//		if( (display == 'hidden')||(display == "none"))
+//		 continue;
+		
+//	  }
+	
+		
+
+
+//		if(ch.nodeType == Node.ELEMENT_NODE)
+//			dest.children.push( BuildPopup(ch as Element) );
+//		else if( ch.nodeType == Node.TEXT_NODE)
+//		  {
+//			let str = (ch as Text ).data;
+//			if(str.trim() !== '')
+//				dest.text = str;
+  
+//		   }
+//	}
+   return dest;
+}
+let tooltipped = [];
+
 var callSyncViewMode = debounce(DoSyncViewMode, 200);
 function DoSyncViewMode() {
+ 
+ 
 	try {
 
 		//  clearTimeout(syncViewTimeout);
@@ -7307,82 +7395,54 @@ function DoSyncViewMode() {
 				var x0g = document.getElementById("cvs");
 				x0g.style.display = "none";
 			}
-
+		 _popupCount = 0;
+		let popups =[];
 			if (_viewMode === viewModeWorld) {
-				// let matrix = $("#content").panzoom("getMatrix");
+		
 
-				//   _x = +matrix[4]+36000;
-				//    _y = +matrix[5]+36000;
-				//  M0g =
-				//      document.getElementById('worldcanv');
-				//  if(M0g)
-				//  { 
-				//   let t0g = M0g.getBoundingClientRect();
-				//  _x = -t0g.left;// * 4 / 4.22166666666667;
-				//  _y = -t0g.top;// * 4 / 4.22166666666667;
-				//  }
-				//var r1D = document.getElementById("mainMapDiv");
-				//var P1D = r1D.clientWidth;
-				//var B1D =
-				//    r1D.clientHeight;
+			if(tooltipped!=null)
+			{
+				if(tooltipped.$tooltip==null)
+				{
+					tooltipped = null;
+				}
+				else
+				{
+					popups.push( BuildPopup(tooltipped.$tooltip[0]) );
+				
+				}
 
-				// let z0g = m5F(M0g.width * 0.0 - t0g.left, M0g.height * 0.0 - t0g.top);
-				// let d0g = (z0g.x / (+m6p * 1));
-				// let C0g = (z0g.y / (+m6p - 0));
-				// _x = d0g * 64;//- M0g.width/ (gainx);
-				// _y = C0g * 64;// - M0g.height / (gainy) ;
-				// __zoom = +matrix[0] * 4.22166666666667;
 			}
-			//              popUpBox atkpops ui - draggable
-			_popupCount = 0;
-			//         let __x = document.getElementsByClassName("atkpops longmenu popUpBox2");
-
-			//         for (let count = __x.length;--count>=0; ) {
-			//             if (__x[count].style.display !== "none" && __x[count].style.display !== "hidden")
-			//           {
-			//           _popupCount++;
-			//           break;
-			//           }
-			//         } 
-			//          __x = document.getElementsByClassName("medpopupstyle smallpopupstyle popUpBox");
-
-			//         for (let count = __x.length; --count >= 0;) {
-			//             if (__x[count].style.display === "block") {
-			//                 _popupCount++;
-			//                 break;
-			//             }
-			//         } 
-			//         if (document.getElementById("speedupusePopup")!==null)
-			//{
-
-			//             _popupCount+=128;
-
-			//}
-
-			//         __x = document.getElementsByClassName("obscuretop longwindow");
-			//         for (let count = __x.length; --count >= 0;) {
-			//         if (__x[count].style.display !== "none" && __x[count].style.display !== "hidden"){
-			//                   _popupCount+=128;
-			//                            break;
-			//             }
-			//         }
-
 			$(".atkpops,.longmenu,.popUpBox2").each(
 				function () {
 					if (this.style.display != "none" && this.style.display != "hidden")
-						_popupCount++;
+				{
+					_popupCount++;
+					popups.push( BuildPopup(this) );
+					}
+
 				}
 			);
 			$(".medpopupstyle,.smallpopupstyle,.popUpBox").each(
 				function () {
 					if (this.style.display == "block")
+	 {
 						_popupCount++;
+						popups.push( BuildPopup(this) );
+  
+   }
 				}
 			);
 
-			if (document.getElementById("speedupusePopup") !== null || document.getElementById("tspeedupusePopup") !== null) {
+			let speedupUse = document.getElementById("speedupusePopup");
+			let tSpeedupUse = document.getElementById("tspeedupusePopup") ;
+			if ( speedupUse!== null || tSpeedupUse!== null) {
 
 				_popupCount += 128;
+				if(tSpeedupUse!=null)
+					popups.push( BuildPopup(tSpeedupUse) );
+				if(speedupUse!=null)
+					popups.push( BuildPopup(speedupUse) );
 
 			}
 
@@ -7390,21 +7450,26 @@ function DoSyncViewMode() {
 			$(".obscuretop,.longwindow").each(
 				function () {
 					if (this.style.display != "none" && this.style.display != "hidden")
+					{
 						_popupCount += 128;
+	  					popups.push( BuildPopup(this) );
+
+					}
 				}
 			);
-
+		}
 			// if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
 			//         || _zoom != __zoom || _popupCountCache != _popupCount))
-			if (cid != 0 && (_viewMode !== _viewModeCache
-				|| _popupCountCache != _popupCount)) {
+			if (cid !== 0 && (_viewMode !== _viewModeCache
+				|| _popupCountCache !== _popupCount) ||(_lastTooltip !== tooltipped) ) {
 				_viewModeCache = _viewMode;
 				_cid = cid;
+				_lastTooltip = tooltipped;
 				_zoom = __zoom;
 				_cameraX = _x;
 				_cameraY = _y;
 				_popupCountCache = _popupCount;
-				const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount } };
+				const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups } };
 				window['external']['notify'](JSON.stringify(wrapper));
 			}
 		}
@@ -7434,7 +7499,7 @@ let __c =
 	showreport: function (reportId) { }
 };
 
-var M8 = document.getElementById("mainMapDiv"); // region canvas
+var mainMapDiv = document.getElementById("mainMapDiv"); // region canvas
 
 //let c6: Phaser.Game;
 
@@ -15827,7 +15892,7 @@ var cotgsubscribe = amplify;
 					.click(function () { T5F(); });
 				$(__s[5107])
 					.click(function () { P9F(); });
-				$(__s[E9R >> 74130912])
+				$("#organiser")
 					.change(function () { X8(); });
 				$(__s[3623])
 					.click(function () {
@@ -24285,7 +24350,7 @@ var cotgsubscribe = amplify;
 					k4F();
 					o3F();
 				}, z9p << 1518128128);
-				setTimeout(setupSyncView, 10000);
+				setTimeout(setupSyncView, 1000);
 				setTimeout(function () { E6k.y6() }, +D5y);
 				$(__s[5670])
 					.click(function () { j4F("1" | 1); });
@@ -26230,7 +26295,7 @@ var cotgsubscribe = amplify;
 					});
 				$(__s[5236])
 					.click(function () {
-						var p9l = $(__s[+E9R]).val() as string;
+						var p9l = $("#organiser").val() as string;
 						if (p9l == __s[+Q3p]) {
 							var R9l = ppdt['c'].length;
 							var q9l;
@@ -26282,7 +26347,7 @@ var cotgsubscribe = amplify;
 				$(__s[1017])
 					.click(function () {
 						E6k.y6();
-						var E9l = $(__s[+E9R])
+						var E9l = $("#organiser")
 							.val();
 						if (E9l == __s[Q3p & 2147483647]) {
 							var c9l = ppdt['c'].length;
@@ -38048,6 +38113,8 @@ var cotgsubscribe = amplify;
 								K4n.$tooltip = k4n(__s[6842] + K4n.options.theme + __s[6893] + y4n + E6k
 									.o55(+v6y) + D4n + " " + p4n + " " + R4n + _s(
 										6457));
+								tooltipped = K4n;
+								callSyncViewMode();
 								if (u4n()) K4n.$tooltip.addClass(B4n);
 								K4n._content_insert();
 								K4n.$tooltip.appendTo(__s[E5y ^ 0]);
@@ -38154,6 +38221,8 @@ var cotgsubscribe = amplify;
 								typeof t3n.Content == "object" && t3n.Content !== null) t3n.Content.detach();
 							t3n.$tooltip.remove();
 							t3n.$tooltip = null;
+				
+							   callSyncViewMode();
 							k4n(e4n)
 								.off(__s[+T6t] + t3n.namespace);
 							k4n(__s[+E5y])
@@ -55626,9 +55695,7 @@ var cotgsubscribe = amplify;
 			var R4Z;
 			var p4Z;
 			var y4Z = 0;
-			var Y4Z = $(E6k
-				.o55(+E9R))
-				.val();
+			var Y4Z = $("#organiser").val();
 			B4Z = B4Z + __s[1268];
 			E6k.R6();
 			var D4Z = '';
@@ -59756,8 +59823,8 @@ var cotgsubscribe = amplify;
 				}
 			cityxx = D6.x * 64 - Number(window.innerWidth) / (1.65);
 			cityyy = D6.y * 64 - (Number(window.innerHeight) / (2) - 32);
-			cityxx = D6.x * 64 - M8.clientWidth / 1.65;
-			cityyy = D6.y * 64 - M8.clientHeight / 2 - (32);
+			cityxx = D6.x * 64 - mainMapDiv.clientWidth / 1.65;
+			cityyy = D6.y * 64 - mainMapDiv.clientHeight / 2 - (32);
 		}
 		var p5V = new Object();
 
@@ -61899,7 +61966,7 @@ var cotgsubscribe = amplify;
 			E6k.R6();
 			var r6V;
 			var h6V = 0;
-			var A6V = $(__s[E9R ^ 0])
+			var A6V = $("#organiser")
 				.val();
 			J6V = J6V + __s[1268];
 			var V6V = '';
@@ -61917,7 +61984,7 @@ var cotgsubscribe = amplify;
 						h6V + __s[5074];
 				}
 			}
-			$(__s[+E9R])
+			$("#organiser")
 				.html(J6V);
 			X8();
 		}

@@ -343,16 +343,9 @@ namespace COTG.Services
             if (action != null)
                 action(root, city);
         }
-        public static Task Post(int _cid, Action<JsonElement, City> _action = null,bool onlyIdNeeded=false)
+        public static Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
             Assert(_cid > 1);
-			if (onlyIdNeeded)
-			{
-				var c = City.GetOrAddCity(_cid);
-				var tick = Environment.TickCount;
-				if ((tick-c.lastUpdateTick) < 10*1000) // once per 10 seconds
-					return Task.CompletedTask;
-			}
             return (new GetCity(_cid, _action, Player.myId)).Post();
 
         }
@@ -403,7 +396,7 @@ namespace COTG.Services
 		
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
-                await GetCity.Post(_cid,null,true);
+                await GetCity.Post(_cid,null);
             //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();
             if(secret != null)

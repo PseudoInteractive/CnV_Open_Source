@@ -92,6 +92,7 @@ namespace COTG
 		public static Material worldBackground;
 		//public static Effect imageEffect;
 		public static Effect avaEffect;
+		public static Span2i[] popups= Array.Empty<Span2i>();
 
 		public static EffectPass defaultEffect;
 		public static EffectPass alphaAddEffect;
@@ -99,6 +100,8 @@ namespace COTG
 		public static EffectPass darkFontEffect;
 		public static EffectPass litEffect;
 		public static EffectPass unlitEffect;
+		private EffectPass sdfEffect;
+		private EffectPass noTextureEffect;
 		public static EffectParameter planetGainsParamater;
 		public static EffectParameter worldMatrixParameter;
 		public static EffectParameter lightPositionParameter;
@@ -109,7 +112,7 @@ namespace COTG
 		public static EffectParameter cameraPositionParameter;
 		public static Material lineDraw;
 		public static Material quadTexture;
-		public static Material roundedRect;
+		public static Material whiteMaterial;
 		public static Material sky;
 		public static Material webMask;
 		//    public static TintEffect worldBackgroundDark;
@@ -227,6 +230,7 @@ namespace COTG
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
 			canvas = swapChainPanel;
+			canvas.CompositeMode = (UWindows.UI.Xaml.Media.ElementCompositeMode.MinBlend);// SourceOver);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "", Helper.CoreWindow, swapChainPanel);
 		}
 
@@ -593,6 +597,8 @@ namespace COTG
 				darkFontEffect = EffectPass("FontDark");
 				litEffect = EffectPass("Lit");
 				unlitEffect = EffectPass("Unlit");
+				sdfEffect = EffectPass("SDF");
+				noTextureEffect = EffectPass("NoTexture");
 				readyToLoad = true;
 
 				using var srgb = new SRGBLoadScope();
@@ -640,8 +646,10 @@ namespace COTG
 				lineDraw.effect = alphaAddEffect;
 				//lineDraw2 = new PixelShaderEffect(
 				sky = LoadTexture("Art/sky");
-				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
-				quadTexture = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"));
+//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
+//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
+				quadTexture = new Material(null, sdfEffect);
+				whiteMaterial = new Material(null, noTextureEffect);
 				for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
 				{
 
@@ -1648,7 +1656,7 @@ namespace COTG
 										DrawTextBox(name, drawC, nameTextFormat, wantDarkText ? color.A.AlphaToBlack() : color,
 
 											!isWinter ? new Color() :
-												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText, 0, PlanetDepth, z);
+												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText,2, 0, PlanetDepth, z);
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
 
@@ -1682,7 +1690,7 @@ namespace COTG
 					//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					Vector2 c = ShellPage.mousePositionC + new Vector2(16, 16);
-					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, 255, Layer.overlay, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, 255, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
 					//	var expand = new Vector2(7);
 
 					//  var rectD = new Vector2(32*4, 24*5);
@@ -1702,7 +1710,7 @@ namespace COTG
 					//	var bounds = textLayout.span;
 					Vector2 c = new Vector2(16, 16).SToC();
 					//var expand = new Vector2(7);
-					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, 255, Layer.overlay, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, 255, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
@@ -1715,6 +1723,17 @@ namespace COTG
 					//	ds.DrawTextLayout(textLayout, c, tipTextBrush);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 				}
 
+				if (popups.Length > 0)
+				{
+					foreach(var pop in popups)
+					{
+						Vector2 c0 = new Vector2(pop.c0.X,pop.c0.Y).SToC();
+						Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).SToC();
+						draw.AddQuad(Layer.webView, quadTexture, c0, c1, new Color(255,255,255,255), ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+
+					}
+
+				}
 				draw.End();
 
 			}
@@ -1746,7 +1765,7 @@ namespace COTG
 
 		private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
 		{
-			draw.AddQuad(layer, roundedRect, c0, c1, background, depth, z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+			draw.AddQuad(layer, quadTexture, c0, c1, background, depth, z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 		}
 
 		private static Color GetAttackColor(Army attack)
@@ -1762,12 +1781,12 @@ namespace COTG
 				_ => defaultAttackColor
 			};
 		}
-		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expand = 0.0f, DepthFunction depth = null, float zBias = -1, float scale = 0)
+		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expandX = 2.0f, float _expandY=0, DepthFunction depth = null, float zBias = -1, float scale = 0)
 		{
-			DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expand, depth, zBias, scale);
+			DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);
 		}
 
-		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expand = 0.0f, DepthFunction depth = null, float zBias = -1, float scale = 0)
+		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expandX = 0.0f,float _expandY=0, DepthFunction depth = null, float zBias = -1, float scale = 0)
 		{
 			if (scale == 0)
 				scale = bmFontScale;
@@ -1786,7 +1805,7 @@ namespace COTG
 				zBias = 0;
 			}
 
-			var expand = new Vector2(_expand);
+			var expand = new Vector2(_expandX,_expandY);
 			if (backgroundColor.A > 0)
 			{
 				var c0 = at;

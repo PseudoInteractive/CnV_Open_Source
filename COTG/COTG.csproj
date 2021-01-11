@@ -216,6 +216,7 @@
     <Compile Include="JSON\TileSet.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
+    <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\ChatStorage.cs" />
@@ -500,9 +501,10 @@
     <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Content\Effects\Ava.fx" />
     <None Include="Content\Effects\darkFont.fxh" />
-    <None Include="Content\Effects\font.fxh" />
     <None Include="Content\Effects\Constants.fxh" />
     <None Include="Content\Effects\lit.fxh" />
+    <None Include="Content\Effects\NoTexture.fxh" />
+    <None Include="Content\Effects\sdf.fxh" />
     <None Include="Content\Effects\unlit.fxh" />
     <Content Include="web\images\city128\walls_water2.png" />
     <Content Include="web\images\city128\water_water.png" />
@@ -622,7 +624,6 @@
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
     <Content Include="Content\Art\Icons\windmill.png" />
-    <None Include="Content\Effects\DefaultEffect.fxh" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />

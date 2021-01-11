@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace COTG.Helpers
 {
-    struct Span2
+    public struct Span2
     {
         public Vector2 c0;
         public Vector2 c1;
@@ -89,8 +89,8 @@ namespace COTG.Helpers
 	public struct Span2i
 	{
 		// [c0..c1)  c1 itself is not included
-		(int X, int Y) c0;
-		(int X, int Y) c1;
+		public (int X, int Y) c0;
+		public (int X, int Y) c1;
 
 		public Span2i( (int x, int y) c0, (int x, int y) c1)
 		{
@@ -98,6 +98,11 @@ namespace COTG.Helpers
 			this.c1 = c1;
 		}
 		public bool Contains( (int X, int Y) v)
+		{
+			return c0.X <= v.X & c0.Y <= v.Y &
+				c1.X > v.X & c1.Y > v.Y;
+		}
+		public bool Contains(Vector2 v)
 		{
 			return c0.X <= v.X & c0.Y <= v.Y &
 				c1.X > v.X & c1.Y > v.Y;

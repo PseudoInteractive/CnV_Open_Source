@@ -8571,6 +8571,7 @@ let pollJ;
 var P8 = 0;
 function SetViewMode(mode) {
     _viewMode = mode;
+    mainMapDiv.style.display = (_viewMode !== viewModeCity) ? "none" : null;
     callSyncViewMode();
 }
 function debounce(func, wait, _maxWait = 0, _leading = false, _trailing = true) {
@@ -8668,9 +8669,10 @@ function debounce(func, wait, _maxWait = 0, _leading = false, _trailing = true) 
     debounced.pending = pending;
     return debounced;
 }
-var _zoom = 1;
-var _popupCountCache = 0;
-var _popupCount = 0;
+let _zoom = 1;
+let _popupCountCache = 0;
+let _popupCount = 0;
+let _lastTooltip = null;
 function setupSyncView() {
     const config = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
     const callback = function (mutationsList, observer) {
@@ -8698,6 +8700,17 @@ function RemovePopup(id) {
     $(id).remove();
     callSyncViewMode();
 }
+function BuildPopup(node) {
+    let rect = node.getBoundingClientRect();
+    let dest = {
+        x0: Math.round(rect.left),
+        y0: Math.round(rect.top),
+        x1: Math.round(node.clientWidth + rect.left),
+        y1: Math.round(node.clientHeight + rect.top)
+    };
+    return dest;
+}
+let tooltipped = [];
 var callSyncViewMode = debounce(DoSyncViewMode, 200);
 function DoSyncViewMode() {
     try {
@@ -8710,33 +8723,55 @@ function DoSyncViewMode() {
                 var x0g = document.getElementById("cvs");
                 x0g.style.display = "none";
             }
-            if (_viewMode === viewModeWorld) {
-            }
             _popupCount = 0;
-            $(".atkpops,.longmenu,.popUpBox2").each(function () {
-                if (this.style.display != "none" && this.style.display != "hidden")
-                    _popupCount++;
-            });
-            $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
-                if (this.style.display == "block")
-                    _popupCount++;
-            });
-            if (document.getElementById("speedupusePopup") !== null || document.getElementById("tspeedupusePopup") !== null) {
-                _popupCount += 128;
-            }
-            $(".obscuretop,.longwindow").each(function () {
-                if (this.style.display != "none" && this.style.display != "hidden")
+            let popups = [];
+            if (_viewMode === viewModeWorld) {
+                if (tooltipped != null) {
+                    if (tooltipped.$tooltip == null) {
+                        tooltipped = null;
+                    }
+                    else {
+                        popups.push(BuildPopup(tooltipped.$tooltip[0]));
+                    }
+                }
+                $(".atkpops,.longmenu,.popUpBox2").each(function () {
+                    if (this.style.display != "none" && this.style.display != "hidden") {
+                        _popupCount++;
+                        popups.push(BuildPopup(this));
+                    }
+                });
+                $(".medpopupstyle,.smallpopupstyle,.popUpBox").each(function () {
+                    if (this.style.display == "block") {
+                        _popupCount++;
+                        popups.push(BuildPopup(this));
+                    }
+                });
+                let speedupUse = document.getElementById("speedupusePopup");
+                let tSpeedupUse = document.getElementById("tspeedupusePopup");
+                if (speedupUse !== null || tSpeedupUse !== null) {
                     _popupCount += 128;
-            });
-            if (cid != 0 && (_viewMode !== _viewModeCache
-                || _popupCountCache != _popupCount)) {
+                    if (tSpeedupUse != null)
+                        popups.push(BuildPopup(tSpeedupUse));
+                    if (speedupUse != null)
+                        popups.push(BuildPopup(speedupUse));
+                }
+                $(".obscuretop,.longwindow").each(function () {
+                    if (this.style.display != "none" && this.style.display != "hidden") {
+                        _popupCount += 128;
+                        popups.push(BuildPopup(this));
+                    }
+                });
+            }
+            if (cid !== 0 && (_viewMode !== _viewModeCache
+                || _popupCountCache !== _popupCount) || (_lastTooltip !== tooltipped)) {
                 _viewModeCache = _viewMode;
                 _cid = cid;
+                _lastTooltip = tooltipped;
                 _zoom = __zoom;
                 _cameraX = _x;
                 _cameraY = _y;
                 _popupCountCache = _popupCount;
-                const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount } };
+                const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop: popups } };
                 window['external']['notify'](JSON.stringify(wrapper));
             }
         }
@@ -8759,7 +8794,7 @@ let __c = {
     sendchat: function (n, m) { },
     showreport: function (reportId) { }
 };
-var M8 = document.getElementById("mainMapDiv");
+var mainMapDiv = document.getElementById("mainMapDiv");
 var gStphp;
 var gStQuery;
 var gStQueryCB;
@@ -17073,7 +17108,7 @@ var cotgsubscribe = amplify;
                 .click(function () { T5F(); });
             $(__s[5107])
                 .click(function () { P9F(); });
-            $(__s[E9R >> 74130912])
+            $("#organiser")
                 .change(function () { X8(); });
             $(__s[3623])
                 .click(function () {
@@ -24106,7 +24141,7 @@ var cotgsubscribe = amplify;
                 k4F();
                 o3F();
             }, z9p << 1518128128);
-            setTimeout(setupSyncView, 10000);
+            setTimeout(setupSyncView, 1000);
             setTimeout(function () { E6k.y6(); }, +D5y);
             $(__s[5670])
                 .click(function () { j4F("1" | 1); });
@@ -26085,7 +26120,7 @@ var cotgsubscribe = amplify;
             });
             $(__s[5236])
                 .click(function () {
-                var p9l = $(__s[+E9R]).val();
+                var p9l = $("#organiser").val();
                 if (p9l == __s[+Q3p]) {
                     var R9l = ppdt['c'].length;
                     var q9l;
@@ -26141,7 +26176,7 @@ var cotgsubscribe = amplify;
             $(__s[1017])
                 .click(function () {
                 E6k.y6();
-                var E9l = $(__s[+E9R])
+                var E9l = $("#organiser")
                     .val();
                 if (E9l == __s[Q3p & 2147483647]) {
                     var c9l = ppdt['c'].length;
@@ -37981,6 +38016,8 @@ var cotgsubscribe = amplify;
                                     .o55(+a6t) : '', p4n = K4n.options.interactive ? __s[4455] : '';
                                 K4n.$tooltip = k4n(__s[6842] + K4n.options.theme + __s[6893] + y4n + E6k
                                     .o55(+v6y) + D4n + " " + p4n + " " + R4n + _s(6457));
+                                tooltipped = K4n;
+                                callSyncViewMode();
                                 if (u4n())
                                     K4n.$tooltip.addClass(B4n);
                                 K4n._content_insert();
@@ -38091,6 +38128,7 @@ var cotgsubscribe = amplify;
                                 t3n.Content.detach();
                             t3n.$tooltip.remove();
                             t3n.$tooltip = null;
+                            callSyncViewMode();
                             k4n(e4n)
                                 .off(__s[+T6t] + t3n.namespace);
                             k4n(__s[+E5y])
@@ -54891,9 +54929,7 @@ var cotgsubscribe = amplify;
             var R4Z;
             var p4Z;
             var y4Z = 0;
-            var Y4Z = $(E6k
-                .o55(+E9R))
-                .val();
+            var Y4Z = $("#organiser").val();
             B4Z = B4Z + __s[1268];
             E6k.R6();
             var D4Z = '';
@@ -59263,8 +59299,8 @@ var cotgsubscribe = amplify;
                 }
             cityxx = D6.x * 64 - Number(window.innerWidth) / (1.65);
             cityyy = D6.y * 64 - (Number(window.innerHeight) / (2) - 32);
-            cityxx = D6.x * 64 - M8.clientWidth / 1.65;
-            cityyy = D6.y * 64 - M8.clientHeight / 2 - (32);
+            cityxx = D6.x * 64 - mainMapDiv.clientWidth / 1.65;
+            cityyy = D6.y * 64 - mainMapDiv.clientHeight / 2 - (32);
         }
         var p5V = new Object();
         function U0V(v8T) {
@@ -61451,7 +61487,7 @@ var cotgsubscribe = amplify;
             E6k.R6();
             var r6V;
             var h6V = 0;
-            var A6V = $(__s[E9R ^ 0])
+            var A6V = $("#organiser")
                 .val();
             J6V = J6V + __s[1268];
             var V6V = '';
@@ -61473,7 +61509,7 @@ var cotgsubscribe = amplify;
                         h6V + __s[5074];
                 }
             }
-            $(__s[+E9R])
+            $("#organiser")
                 .html(J6V);
             X8();
         }
@@ -69605,6 +69641,28 @@ function onKeyUp(ev) {
     let str = JSON.stringify(wrapper);
     setTimeout(() => window['external']['notify'](str), 0);
 }
+let underMouse = null;
+function postMouseEvent(sx, sy, eventName, button, dx, dy) {
+    let x = parseInt(sx);
+    let y = parseInt(sy);
+    if (eventName === "mousedown")
+        underMouse = document.elementFromPoint(x, y);
+    if (underMouse != null) {
+        let buttons = parseInt(button);
+        let evt = new MouseEvent(eventName, {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: x,
+            clientY: y,
+            button: buttons,
+            buttons: buttons,
+            movementX: dx !== null ? parseInt(dx) : null,
+            movementY: dy !== null ? parseInt(dy) : null,
+        });
+        let canceled = !underMouse.dispatchEvent(evt);
+    }
+}
 function postppdt() {
     try {
         console.log("Notify here");
@@ -69621,10 +69679,10 @@ function postppdt() {
             cookie: document.cookie,
             cid: ppdt.lcit,
             time: currentTime(),
-            spanX: M8.clientWidth,
-            spanY: M8.clientHeight,
-            left: M8.clientLeft,
-            top: M8.clientTop,
+            spanX: mainMapDiv.clientWidth,
+            spanY: mainMapDiv.clientHeight,
+            left: mainMapDiv.clientLeft,
+            top: mainMapDiv.clientTop,
             timeoffset: (ServerDate.getTime() - Date.now()),
             agent: navigator.userAgent,
         };
@@ -69635,6 +69693,7 @@ function postppdt() {
         console.log("Notify failed");
     }
     document.getElementById("tbbuttons").style.display = "none";
+    document.getElementById("canvasborders").style.display = "none";
     setTimeout(avactor, 3000);
 }
 function GetDate(jq) {

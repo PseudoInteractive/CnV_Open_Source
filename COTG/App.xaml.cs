@@ -949,7 +949,7 @@ namespace COTG
 						textBlock.LinkClicked += MarkDownLinkClicked;
 						ShellPage.inAppNote.Show(textBlock, timeout);
 
-						ShellPage.instance.infoBar.IsOpen = true;
+						ShellPage.instance.infoBar.IsOpen = false;
 					}
 					else
 					{

@@ -28,6 +28,7 @@ namespace COTG.Draw
 		public const int labelText = maxLayer - 30;
 		public const int overlay = maxLayer-20;
 		public const int overlayText = maxLayer-10;
+		public const int webView = maxLayer - 9;
 		public const int maxLayer = (1 << 16) - 1; // 4095
 	
 

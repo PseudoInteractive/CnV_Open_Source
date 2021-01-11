@@ -90,10 +90,11 @@ namespace COTG.Draw
 				perEffect = new Dictionary<int, SpriteBatchItemList>();
 				batch.Add(material.effect._sortingKey, perEffect);
 			}
-			if (!perEffect.TryGetValue(material.texture._sortingKey, out var list))
+			var textureKey = material.texture!=null ? material.texture._sortingKey : 0;
+			if (!perEffect.TryGetValue(textureKey, out var list))
 			{
 				list = new SpriteBatchItemList(material);
-				perEffect.Add(material.texture._sortingKey, list);
+				perEffect.Add(textureKey, list);
 			}
 
 			var rv = SpriteBatchItemList.Alloc();
@@ -160,6 +161,7 @@ namespace COTG.Draw
 			// Iterate through the batches, doing short.MaxValue sets of vertices only.
 			foreach (var layer in _batchItemList)
 			{
+				AGame.instance.GraphicsDevice.BlendState = (layer.Key == Layer.webView) ?  BlendState.Opaque : BlendState.AlphaBlend;
 				foreach (var _effect in layer.Value)
 				{
 					bool effectInitialized = false;

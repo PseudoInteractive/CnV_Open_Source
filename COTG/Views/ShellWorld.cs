@@ -53,7 +53,7 @@ namespace COTG.Views
 				coreInputSource.PointerMoved += Canvas_PointerMoved;
 				coreInputSource.PointerPressed += Canvas_PointerPressed;
 				coreInputSource.PointerReleased += Canvas_PointerReleased;
-				//	coreInputSource.PointerEntered += CoreInputSource_PointerEntered; ;
+				coreInputSource.PointerEntered += CoreInputSource_PointerEntered;
 				coreInputSource.PointerExited += Canvas_PointerExited;
 
 
@@ -65,6 +65,11 @@ namespace COTG.Views
 		//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
 
 
+		}
+
+		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
+		{
+			isOverPopup = false;
 		}
 
 		public static void Canvas_KeyDown(Windows.System.VirtualKey key)
@@ -397,6 +402,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
+			isOverPopup = false;
 			//if (JSClient.IsCityView())
 			//{
 			//    e.Handled = false;
@@ -674,11 +680,32 @@ namespace COTG.Views
 			var pointerPoint = e.CurrentPoint;
 			var position = pointerPoint.Position;
 			mousePosition = GetCanvasPosition(position);
-			e.Handled = false;
+
+			var wasOverPopup = isOverPopup;
+			int jsButton = 0;
+			if(isOverPopup)
+			{
+				jsButton = pointerPoint.Properties.PointerUpdateKind switch
+				{
+					Windows.UI.Input.PointerUpdateKind.LeftButtonReleased => 0,
+					Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased => 1,
+					Windows.UI.Input.PointerUpdateKind.RightButtonReleased => 2,
+				};
+
+				PostJSMouseEvent("mouseup", jsButton);
+				isOverPopup = false;
+			}
+			
 
 			//            mousePosition = point.Position.ToVector2();
 			if ((lastMousePressPosition - mousePosition).Length() < 8)
 			{
+				if(wasOverPopup)
+				{
+					PostJSMouseEvent("click", jsButton);
+					return;
+				}
+				
 				var worldC = ScreenToWorld(mousePositionW);
 				var cid = worldC.WorldToCid();
 
@@ -686,6 +713,7 @@ namespace COTG.Views
 				{
 					case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
 						{
+							// check to see if it needs to go to the webview
 							Spot.ProcessCoordClick(cid, true, e.KeyModifiers, true);
 							e.Handled = true;
 							break;
@@ -757,8 +785,27 @@ namespace COTG.Views
 			{
 			}
 		}
+		static bool isOverPopup;
+		private static bool TryPostJSMouseEvent(string eventName, int button)
+		{
+			foreach (var popup in AGame.popups)
+			{
+				// should this be in DIPS or pixels?
+				if (popup.Contains(mousePosition))
+				{
+					if(eventName!=null)
+						JSClient.PostMouseEventToJS((int)mousePosition.X + canvasBaseX, (int)mousePosition.Y + canvasBaseY, eventName, button );
+					return true;
+				}
+			}
+			return false;
+		}
 
-
+		private static void PostJSMouseEvent(string eventName, int button, int dx=0, int dy=0)
+		{
+			if (eventName != null)
+				JSClient.PostMouseEventToJS((int)mousePosition.X + canvasBaseX, (int)mousePosition.Y + canvasBaseY, eventName, button, dx, dy);
+		}
 
 
 		//public static void EnsureOnScreen( int cid,bool lazy)
@@ -782,22 +829,31 @@ namespace COTG.Views
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 
-
+			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
 			var point = e.CurrentPoint;
 
 			var properties = point.Properties;
+			mousePosition = GetCanvasPosition(point.Position);
+			var prior = lastMousePressTime;
+			lastMousePressTime = DateTimeOffset.UtcNow;
+			lastMousePressPosition = mousePosition;
+
+			
 			//  if (JSClient.IsCityView())
+			// The app pas priority over back and forward events
 			{
 				switch (properties.PointerUpdateKind)
 				{
 					case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
 						e.Handled = true;
 						NavStack.Back(true);
+						ClearHover();
 						return;
 					case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
 						e.Handled = true;
 						NavStack.Forward(true);
+						ClearHover();
 						return;
 
 
@@ -805,46 +861,23 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
+			if (TryPostJSMouseEvent("mousedown",
+				properties.PointerUpdateKind switch
+				{
+					Windows.UI.Input.PointerUpdateKind.LeftButtonPressed => 0,
+					Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed => 1,
+					Windows.UI.Input.PointerUpdateKind.RightButtonPressed => 2,
+				}))
+			{
+				isOverPopup = true;
+				e.Handled = true;
 
+			}
+			else
+			{
 
-			mousePosition = GetCanvasPosition(point.Position);
-			var prior = lastMousePressTime;
-			lastMousePressTime = DateTimeOffset.UtcNow;
-			lastMousePressPosition = mousePosition;
-			//          if ((lastMousePressTime - prior).TotalSeconds < 2.5f)
-			//          {
-			//              // double click
+			}
 
-			//              var c = MousePointToWorld(e.GetCurrentPoint(canvas).Position.ToVector2());
-			//              var data = World.CityLookup(c);
-			//              switch (data.type)
-			//              {
-			//                  case World.typeCity:
-			//                      {
-			//                          if (data.player == 0)
-			//                          {
-
-			//                              //                               toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-			//                          }
-			//                          else
-			//                          {
-			//                              var player = Player.all.GetValueOrDefault(data.player, Player._default);
-			//                              if (Player.IsMe(data.player))
-			//                              {
-			//                              //    JSClient.ViewCity(c.WorldToCid());
-			//                              }
-			//                              else
-			//                              {
-			////                                  toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-			//                              }
-
-
-			//                          }
-			//                          break;
-			//                      }
-			//              }
-			//              }
-			//    ChatTab.L("CPress " + e.GetCurrentPoint(canvas).Position.ToString());
 			ClearHover();
 			//  e.Handled = false;
 
@@ -883,7 +916,8 @@ namespace COTG.Views
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 			var priorMouseC = mousePosition;
-			mousePosition = GetCanvasPosition(e.CurrentPoint.Position);
+			var windowsPosition = e.CurrentPoint.Position;
+			mousePosition = GetCanvasPosition(windowsPosition);
 			mousePositionC = mousePosition.SToC();
 			//	//	cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			mousePositionW = mousePositionC.InverseProject();
@@ -900,170 +934,178 @@ namespace COTG.Views
 			var props = point.Properties;
 			if ((props.IsLeftButtonPressed | props.IsRightButtonPressed) == false)
 			{
-				var cont = Continent.GetPackedIdFromC(c);
-				if (cont != lastCont)
+				if (TryPostJSMouseEvent(null, 0))
 				{
-					lastCont = cont;
-					ref var cn = ref Continent.all[cont];
-					contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCites {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
-
+					// mouse over popup
 				}
-				var cid = c.WorldToCid();
-				if (lastCanvasC != cid)
+				else
 				{
 
-					Spot.viewHover = 0;
-					Player.viewHover = 0;
-					toolTip = null;
-
-					lastCanvasC = cid;
-					var packedId = World.GetPackedId(c);
-					var data = World.GetInfoFromPackedId(packedId);
-					switch (data.type)
+					var cont = Continent.GetPackedIdFromC(c);
+					if (cont != lastCont)
 					{
-						case World.typeCity:
-							{
-								Spot.viewHover = cid;
-								Spot.TryGet(cid, out var spot);
+						lastCont = cont;
+						ref var cn = ref Continent.all[cont];
+						contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCites {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
 
-								if (data.player == 0)
-								{
-									toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-								}
-								else
-								{
-									Player.viewHover = data.player;
+					}
+					var cid = c.WorldToCid();
+					if (lastCanvasC != cid)
+					{
 
-									var player = Player.all.GetValueOrDefault(data.player, Player._default);
-									if (Player.IsMe(data.player))
+						Spot.viewHover = 0;
+						Player.viewHover = 0;
+						toolTip = null;
+
+						lastCanvasC = cid;
+						var packedId = World.GetPackedId(c);
+						var data = World.GetInfoFromPackedId(packedId);
+						switch (data.type)
+						{
+							case World.typeCity:
+								{
+									Spot.viewHover = cid;
+									Spot.TryGet(cid, out var spot);
+
+									if (data.player == 0)
 									{
-										if (spot is City city)
-										{
-											var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-											toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-											//     Raiding.UpdateTS();
-										}
-
+										toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
 									}
 									else
 									{
-										var info = spot != null ?
-											$"{spot.cityName}\n{spot.points}\n"
-										 : "";
-										toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-									}
-								}
-								if (spot != null && spot.incoming != null)
-								{
-									var inc = spot.incoming;
-									foreach (var i in inc)
-									{
-										if (i.isAttack)
-										{
-											toolTip = toolTip + '\n' + i.Format("\n");
-										}
-									}
-									var def = Array.Empty<TroopTypeCount>();
-									foreach (var i in inc)
-									{
-										if (!i.isAttack)
-										{
-											def = def.Sum(i.troops);
-										}
-									}
-									if (!def.IsNullOrEmpty())
-									{
-										toolTip += def.Format("\nDef:", '\n', '\n');
-									}
+										Player.viewHover = data.player;
 
-								}
-								break;
-							}
-						case World.typeShrine:
-							toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
-							break;
-						case World.typeBoss:
-							toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-							break;
-						case World.typeDungeon:
-							toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-							break;
-						case World.typePortal:
-							toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
-							break;
-					}
-					if (World.rawPrior != null)
-					{
-						var pData = World.GetInfoPrior(packedId);
-						if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
-						{
-							// no change
-
-						}
-						else
-						{
-							switch (data.type)
-							{
-								case World.typeCity:
-									if (pData.type == World.typeCity)
-									{
-										if (pData.player != data.player)
+										var player = Player.all.GetValueOrDefault(data.player, Player._default);
+										if (Player.IsMe(data.player))
 										{
-											if (pData.player == 0)
+											if (spot is City city)
 											{
-												toolTip += "\nWas settled";
+												var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
+												toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+												//     Raiding.UpdateTS();
 											}
-											else if (data.player == 0)
+
+										}
+										else
+										{
+											var info = spot != null ?
+												$"{spot.cityName}\n{spot.points}\n"
+											 : "";
+											toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+										}
+									}
+									if (spot != null && spot.incoming != null)
+									{
+										var inc = spot.incoming;
+										foreach (var i in inc)
+										{
+											if (i.isAttack)
 											{
-												var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-												toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
+												toolTip = toolTip + '\n' + i.Format("\n");
+											}
+										}
+										var def = Array.Empty<TroopTypeCount>();
+										foreach (var i in inc)
+										{
+											if (!i.isAttack)
+											{
+												def = def.Sum(i.troops);
+											}
+										}
+										if (!def.IsNullOrEmpty())
+										{
+											toolTip += def.Format("\nDef:", '\n', '\n');
+										}
+
+									}
+									break;
+								}
+							case World.typeShrine:
+								toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
+								break;
+							case World.typeBoss:
+								toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+								break;
+							case World.typeDungeon:
+								toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+								break;
+							case World.typePortal:
+								toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
+								break;
+						}
+						if (World.rawPrior != null)
+						{
+							var pData = World.GetInfoPrior(packedId);
+							if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
+							{
+								// no change
+
+							}
+							else
+							{
+								switch (data.type)
+								{
+									case World.typeCity:
+										if (pData.type == World.typeCity)
+										{
+											if (pData.player != data.player)
+											{
+												if (pData.player == 0)
+												{
+													toolTip += "\nWas settled";
+												}
+												else if (data.player == 0)
+												{
+													var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+													toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
+												}
+												else
+												{
+													var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+													toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+												}
 											}
 											else
 											{
-												var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-												toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+												if (pData.isTemple != data.isTemple)
+												{
+													if (data.isTemple)
+														toolTip += "\nBecame a Temple";
+													else
+														toolTip += "\nBecame not a temple";
+												}
+												else if (pData.isCastle != data.isCastle)
+												{
+													toolTip += "\nWas castled";
+												}
+												else
+												{
+													toolTip += "\nWas rennovated";
+												}
 											}
 										}
 										else
 										{
-											if (pData.isTemple != data.isTemple)
-											{
-												if (data.isTemple)
-													toolTip += "\nBecame a Temple";
-												else
-													toolTip += "\nBecame not a temple";
-											}
-											else if (pData.isCastle != data.isCastle)
-											{
-												toolTip += "\nWas castled";
-											}
-											else
-											{
-												toolTip += "\nWas rennovated";
-											}
+											toolTip += "\nWas founded";
 										}
-									}
-									else
-									{
-										toolTip += "\nWas founded";
-									}
-									break;
-								case World.typeShrine:
-									toolTip += "\nWas unlit";
-									break;
-								case World.typePortal:
-									if (data.player == 0)
-										toolTip += "\nWas active";
-									else
-										toolTip += "\nWas inactive";
-									break;
-								default:
-									if (pData.player != 0)
-										toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
-									else
-										toolTip += "\nDecayed";
-									break;
+										break;
+									case World.typeShrine:
+										toolTip += "\nWas unlit";
+										break;
+									case World.typePortal:
+										if (data.player == 0)
+											toolTip += "\nWas active";
+										else
+											toolTip += "\nWas inactive";
+										break;
+									default:
+										if (pData.player != 0)
+											toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
+										else
+											toolTip += "\nDecayed";
+										break;
 
+								}
 							}
 						}
 					}
@@ -1073,17 +1115,20 @@ namespace COTG.Views
 			}
 			else
 			{
-				// If the mouse drags off the surface we will miss the mouse up
-				// TODO:  mouse should be hooked.
-				// if (point.IsInContact)
+				var dr = mousePosition - priorMouseC;
+				if (!isOverPopup)
 				{
-					var dr = mousePosition - priorMouseC;
 					dr *= 1.0f / cameraZoomLag;
 					cameraC -= dr;
 					// instant
 					cameraCLag = cameraC;
 					e.Handled = true;
 
+				}
+				else
+				{
+
+					PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
 				}
 			}
 

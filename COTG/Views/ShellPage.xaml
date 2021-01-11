@@ -36,7 +36,7 @@
                          Color="#900238" />
     </Page.Resources>
     <!--HeaderTemplate="{StaticResource headerTemplate}"-->
-	<Grid x:Name="grid" >
+	<Grid x:Name="grid"  x:FieldModifier="public" >
         <Grid.RowDefinitions>
             <RowDefinition Height="42" />
             <RowDefinition />
@@ -304,7 +304,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                                   Grid.Row="1"
                                   Grid.Column="1"
 					   x:FieldModifier="public"
-					   Title=":o"
+					   Title=":o" Canvas.ZIndex="35"
                                >
 			<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>
 		</winui:InfoBar>
