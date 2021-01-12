@@ -718,15 +718,15 @@ function onKeyUp(ev: KeyboardEvent) {
 }
 
 
-//function onMouseDown(ev: MouseEvent ) {
+function canvasMouseDown(ev: MouseEvent ) {
 
-//	let wrapper = {
-//		mouseDown: {
-//			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
-//		}
-//	}
-//	window['external']['notify'](JSON.stringify(wrapper));
-//}
+	let wrapper = {
+		mouseDown: {
+			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
+		}
+	}
+	window['external']['notify'](JSON.stringify(wrapper));
+}
 
 // i.e. "click"
 let underMouse : Element = null;
@@ -747,7 +747,6 @@ function postMouseEvent(sx: string,sy:string, eventName:string,button : string, 
 			clientX:x,
 			clientY:y,
 			button:buttons,
-			buttons:buttons,
 			movementX: dx!==null? parseInt(dx):null,
 			movementY: dy!==null? parseInt(dy):null,
 		  });
@@ -766,7 +765,8 @@ function postppdt()
 		document.addEventListener("keyup", onKeyUp, options);
 	//	window.addEventListener("click", onMouseDown, options);
 	//	document.addEventListener("mousedown", onMouseDown, options);
-		
+		document.getElementById("mainMapDiv").addEventListener("mousedown",canvasMouseDown,options);
+		 // this needs to be white in region mode 
 	
 
 		let creds = {

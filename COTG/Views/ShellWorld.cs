@@ -55,7 +55,7 @@ namespace COTG.Views
 				coreInputSource.PointerReleased += Canvas_PointerReleased;
 				coreInputSource.PointerEntered += CoreInputSource_PointerEntered;
 				coreInputSource.PointerExited += Canvas_PointerExited;
-
+				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
 	//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
@@ -65,6 +65,12 @@ namespace COTG.Views
 		//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
 
 
+		}
+
+		private static void CoreInputSource_PointerCaptureLost(object sender, PointerEventArgs args)
+		{
+			Log("pointer lost");
+		
 		}
 
 		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
@@ -402,6 +408,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
+			Log("pointer Exit " + isOverPopup);
 			isOverPopup = false;
 			//if (JSClient.IsCityView())
 			//{
@@ -671,6 +678,9 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
+			if (!isHitTestVisible)
+				return;
+
 			if (JSClient.IsCityView())
 			{
 				e.Handled = false;
@@ -683,28 +693,28 @@ namespace COTG.Views
 
 			var wasOverPopup = isOverPopup;
 			int jsButton = 0;
-			if(isOverPopup)
-			{
-				jsButton = pointerPoint.Properties.PointerUpdateKind switch
-				{
-					Windows.UI.Input.PointerUpdateKind.LeftButtonReleased => 0,
-					Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased => 1,
-					Windows.UI.Input.PointerUpdateKind.RightButtonReleased => 2,
-				};
+			//if(isOverPopup)
+			//{
+			//	jsButton = pointerPoint.Properties.PointerUpdateKind switch
+			//	{
+			//		Windows.UI.Input.PointerUpdateKind.LeftButtonReleased => 0,
+			//		Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased => 1,
+			//		Windows.UI.Input.PointerUpdateKind.RightButtonReleased => 2,
+			//	};
 
-				PostJSMouseEvent("mouseup", jsButton);
-				isOverPopup = false;
-			}
+			//	PostJSMouseEvent("mouseup", jsButton);
+			//	isOverPopup = false;
+			//}
 			
 
 			//            mousePosition = point.Position.ToVector2();
 			if ((lastMousePressPosition - mousePosition).Length() < 8)
 			{
-				if(wasOverPopup)
-				{
-					PostJSMouseEvent("click", jsButton);
-					return;
-				}
+				//if(wasOverPopup)
+				//{
+				//	PostJSMouseEvent("click", jsButton);
+				//	return;
+				//}
 				
 				var worldC = ScreenToWorld(mousePositionW);
 				var cid = worldC.WorldToCid();
@@ -785,7 +795,7 @@ namespace COTG.Views
 			{
 			}
 		}
-		static bool isOverPopup;
+		static public bool isOverPopup;
 		private static bool TryPostJSMouseEvent(string eventName, int button)
 		{
 			foreach (var popup in AGame.popups)
@@ -828,6 +838,8 @@ namespace COTG.Views
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
+			if (!isHitTestVisible)
+				return;
 
 			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
@@ -869,8 +881,9 @@ namespace COTG.Views
 					Windows.UI.Input.PointerUpdateKind.RightButtonPressed => 2,
 				}))
 			{
-				isOverPopup = true;
+//				isOverPopup = true;
 				e.Handled = true;
+				JSClient.SetWebViewHasFocus(true);
 
 			}
 			else
@@ -883,6 +896,44 @@ namespace COTG.Views
 
 		}
 
+		public static void Canvas_PointerPressedJS(int x, int y, Windows.UI.Input.PointerUpdateKind kind)
+		{
+			//e.KeyModifiers.UpdateKeyModifiers();
+
+			Assert(isOverPopup == false);
+			//            canvas.CapturePointer(e.Pointer);
+			//	var point = e.CurrentPoint;
+
+			//var properties = point.Properties;
+			mousePosition = new Vector2(x, y);
+			
+			var prior = lastMousePressTime;
+			lastMousePressTime = DateTimeOffset.UtcNow;
+			lastMousePressPosition = mousePosition;
+
+
+			//  if (JSClient.IsCityView())
+			// The app pas priority over back and forward events
+			{
+				switch (kind)
+				{
+					case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
+						ClearHover();
+						return;
+					case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
+						ClearHover();
+						return;
+
+
+				}
+				//    e.Handled = false;
+				//    return;
+			}
+			
+			ClearHover();
+			//  e.Handled = false;
+
+		}
 		//private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
 		//{
 		//    mouseButtons = 0;
@@ -915,6 +966,8 @@ namespace COTG.Views
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
+			if (!isHitTestVisible)
+				return;
 			var priorMouseC = mousePosition;
 			var windowsPosition = e.CurrentPoint.Position;
 			mousePosition = GetCanvasPosition(windowsPosition);
@@ -1116,7 +1169,6 @@ namespace COTG.Views
 			else
 			{
 				var dr = mousePosition - priorMouseC;
-				if (!isOverPopup)
 				{
 					dr *= 1.0f / cameraZoomLag;
 					cameraC -= dr;
@@ -1125,10 +1177,10 @@ namespace COTG.Views
 					e.Handled = true;
 
 				}
-				else
+				//else
 				{
 
-					PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
+			//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
 				}
 			}
 

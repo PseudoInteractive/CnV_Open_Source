@@ -211,6 +211,7 @@ namespace COTG.Views
 			//    if(instance!=null && instance.navigationView!=null)
 			//        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
 		}
+		public static bool isHitTestVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 

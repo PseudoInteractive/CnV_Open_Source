@@ -58,6 +58,7 @@ namespace COTG
 		};
 
 		public static ViewMode viewMode;
+		public static bool webviewHasFocus;
 		public static bool IsWorldView() => viewMode == ViewMode.world;
 		public static bool IsCityView() => viewMode == ViewMode.city;
 
@@ -1382,21 +1383,30 @@ namespace COTG
 							   {
 								   Log($"mouseDown: {jsp.Value.ToString()}");
 								   var but = jsp.Value.GetInt("button");
-								   // 2 is context button
-								   //if(but==2)
-								   //    Spot.GetFocus().ShowContextMenu(this,App.Current.m.GetPointer)
-								   //else
-								   App.OnPointerPressed(but switch
+								   var x = jsp.Value.GetInt("x");
+								   var y = jsp.Value.GetInt("y");
+									// 2 is context button
+									//if(but==2)
+									//    Spot.GetFocus().ShowContextMenu(this,App.Current.m.GetPointer)
+									//else
+									var kind = but switch
+									{
+										0 => PointerUpdateKind.LeftButtonPressed,
+										1 => PointerUpdateKind.MiddleButtonPressed,
+										2 => PointerUpdateKind.RightButtonPressed,
+										3 => PointerUpdateKind.XButton1Pressed,
+										4 => PointerUpdateKind.XButton2Pressed,
+										_ => PointerUpdateKind.Other };
+
+								   App.OnPointerPressed(
+								   kind);
 								   {
-									   0 => PointerUpdateKind.LeftButtonPressed,
-									   1 => PointerUpdateKind.MiddleButtonPressed,
-									   2 => PointerUpdateKind.RightButtonPressed,
-									   3 => PointerUpdateKind.XButton1Pressed,
-									   4 => PointerUpdateKind.XButton2Pressed,
-									   _ => PointerUpdateKind.Other
-								   });
-
-
+									   var _x = x - ShellPage.canvasBaseX;
+									   var _y = y - ShellPage.canvasBaseY;
+									   if (_x > 0 && _y > 0)
+										   ShellPage.Canvas_PointerPressedJS(x, y, kind);
+								   }
+								   SetWebViewHasFocus(false);
 								   break;
 							   }
 						   //case "cityinfo":
@@ -1719,25 +1729,34 @@ namespace COTG
 		   });
 		}
 
-		public static void SetViewMode(ViewMode _viewMode)
+		public static void SetViewMode(ViewMode _viewMode, bool? pwebviewHasFocus=null)
 		{
+			var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
 			var priorView = viewMode;
+			var priorWebviewHasFocus = webviewHasFocus;
 			viewMode = _viewMode;
-			if (priorView != viewMode)
+			webviewHasFocus = _webviewHasFocus;
+			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
 			{
+				ShellPage.isOverPopup = false;// reset
 				var isWorld = IsWorldView();
+				ShellPage.isHitTestVisible = isWorld && !webviewHasFocus;
 				App.DispatchOnUIThreadLow(() =>
 				{
-					ShellPage.canvas.IsHitTestVisible = isWorld;
+					ShellPage.isOverPopup = false;// reset again in case it changed
+					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible; 
 					ShellPage.canvas.Visibility = isWorld ? Visibility.Visible : Visibility.Collapsed;
 					AGame.UpdateMusic();
 
 				});
 			}
 		}
-
-		public static void SetViewModeCity() => SetViewMode(ViewMode.city);
-		public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
+		public static void SetWebViewHasFocus( bool _webviewHasFocus)
+		{
+			SetViewMode(viewMode, _webviewHasFocus);
+		}
+			public static void SetViewModeCity() => SetViewMode(ViewMode.city, webviewHasFocus);
+		public static void SetViewModeWorld() => SetViewMode(ViewMode.world, webviewHasFocus);
 
 
 		static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

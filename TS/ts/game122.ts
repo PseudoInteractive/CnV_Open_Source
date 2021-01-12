@@ -7098,7 +7098,9 @@ let pollJ: jsonT.Poll;
 var P8 = 0;
 function SetViewMode(mode) {
 	_viewMode = mode;
-	 mainMapDiv.style.display = (_viewMode!==viewModeCity) ? "none" : null;
+ // this needs to be black in city view, white in region view
+	 document.getElementById("container").style.background = (_viewMode===viewModeCity) ? "rgb(0,0,0)" : "none";
+	// mainMapDiv.style.display = (_viewMode!==viewModeCity) ? "none" : null;
 	callSyncViewMode();
 }
 
@@ -7240,52 +7242,97 @@ let _zoom = 1;
 let _popupCountCache = 0;
 let _popupCount = 0;
 let _lastTooltip= null;
+ let popupSizeDirty=false;
 //let syncViewTimeout=0;
 //let viewPortDirty=true;
 
-function setupSyncView
-() {
+function PopupOnDrag()
+{
+popupSizeDirty=true;
+callSyncViewMode();
+}
 
-	// Options for the observer (which mutations to observe)
-	const config: MutationObserverInit = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
 
-	// Callback function to execute when mutations are observed
-	const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
-		// Use traditional 'for loops' for IE 11
-		for (const mutation of mutationsList) {
+function PopupMouseMove(ev: MouseEvent ) {
+	if(ev.buttons == 1)
+	{
+			popupSizeDirty=true;
+					callSyncViewMode();
+	}
+}
 
-			if (mutation.type === 'attributes') {
-				// console.log('attr Change: ' + mutation.attributeName);
-				if (mutation.attributeName === 'style') {
+ let mouseMoveOptions: AddEventListenerOptions = {passive:true,once:false } 
+ const observer = new IntersectionObserver(function(entries) {
+
+ popupSizeDirty=true;
 					callSyncViewMode();
 					return;
-					//                        viewPortDirty=true;
-				}
-			}
-		}
-	};
+});
+
+function registerPopup( pop : Element)
+{
+	let classList= pop.classList;
+ let isPopup=false;
+ for(const a of popupClasses)
+ {
+	 if (classList.contains(a)) {
+		 isPopup = true;
+		 break;
+	 }
+ }
+
+  if(isPopup)
+  {
+	observer.observe(pop);
+    pop.addEventListener("mousemove",PopupMouseMove,mouseMoveOptions);  
+	}
+}
+function AppendPopup(  html:string)
+{
+	registerPopup( AppendHtml("body",html)[0]);
+	callSyncViewMode();
+
+}
+
+
+function setupSyncView() {
+
+	// Options for the observer (which mutations to observe)
+//	const config: MutationObserverInit = { attributeFilter: ["style"], attributes: true, childList: false, subtree: false };
+	// Callback function to execute when mutations are observed
+	//const callback = function (mutationsList: MutationRecord[], observer: MutationObserver) {
+	//	// Use traditional 'for loops' for IE 11
+	//	for (const mutation of mutationsList) {
+
+	//		if (mutation.type === 'attributes') {
+	//			// console.log('attr Change: ' + mutation.attributeName);
+	//			if (mutation.attributeName === 'style') {
+	//				callSyncViewMode();
+	//				return;
+	//				//                        viewPortDirty=true;
+	//			}
+	//		}
+	//	}
+	//};
 
 	// Create an observer instance linked to the callback function
-	const observer = new MutationObserver(callback);
+	//const observer2 = new MutationObserver(callback);
+ //const resizeObserver = new ResizeObserver(entries => {
+	//	popupSizeDirty=true;
+	//	callSyncViewMode();
+	//				return;
+ //});
 
 	// Start observing the target node for configured mutations
-	$(".atkpops,.longmenu,.popUpBox2").each(
+	$( '.' + popupClasses.join(",.") ).each(
 		function () {
-			observer.observe(this, config);
-		});
+		registerPopup(this);
+ 		});
 
-	$(".medpopupstyle,.smallpopupstyle,.popUpBox").each(
-		function () {
-			observer.observe(this, config);
-		});
-
-	$(".obscuretop,.longwindow").each(
-		function () {
-			observer.observe(this, config);
-		});
 
 	//  observer.disconnect();
 }
+
 function RemovePopup(id: string) {
 	$(id).remove();
 	callSyncViewMode();
@@ -7373,8 +7420,8 @@ function BuildPopup(node:Element) : any
 //	}
    return dest;
 }
-let tooltipped = [];
-
+let tooltipped = null;
+let popupClasses =[ "atkpops","longmenu","popUpBox2","medpopupstyle","smallpopupstyle","popUpBox","obscuretop","longwindow"];
 var callSyncViewMode = debounce(DoSyncViewMode, 200);
 function DoSyncViewMode() {
  
@@ -7460,10 +7507,11 @@ function DoSyncViewMode() {
 		}
 			// if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
 			//         || _zoom != __zoom || _popupCountCache != _popupCount))
-			if (cid !== 0 && (_viewMode !== _viewModeCache
+			if (cid !== 0 && (_viewMode !== _viewModeCache || popupSizeDirty
 				|| _popupCountCache !== _popupCount) ||(_lastTooltip !== tooltipped) ) {
 				_viewModeCache = _viewMode;
 				_cid = cid;
+				popupSizeDirty=false;
 				_lastTooltip = tooltipped;
 				_zoom = __zoom;
 				_cameraX = _x;
@@ -7515,6 +7563,14 @@ let _camera = {
 
 var _cameraX = 0;
 var _cameraY = 0;
+
+function AppendHtml(parent:string,html:string) : JQuery
+{                               
+    var target  = $(parent)                            
+    var child = $(html);                                                      
+    child.appendTo(target);                                                   
+    return child;                                                             
+};  
 
 // When we move in world view, notify Javascript
 function setCameraC(a, b) {
@@ -11273,11 +11329,10 @@ var cotgsubscribe = amplify;
 				else if (y71[__s[s5y << 319029184]] == 2) D71 += __s["6367" | 4317];
 				else if (y71[__s[s5y | 176]] == 3) D71 += __s['2754' | 514];
 				D71 += "</div>";
-				$(__s[E5y - 0])
-					.append(D71);
+				AppendPopup(D71);
+				
 				$(__s[85])
 					.draggable({ handle: __s[2633], containment: __s[+q5y], scroll: !{} });
-				callSyncViewMode();
 				setTimeout(function () { }, D5y ^ 0);
 				setTimeout(function () { }, 13000);
 			}
@@ -11292,7 +11347,7 @@ var cotgsubscribe = amplify;
 			E6k.R6();
 			var r8Z = g5F(V8Z, C8Z);
 			var i8Z = I9(Number(V8Z), Number(A8Z));
-			if ($(__s[e5y ^ 0])
+			if ($("body")
 				.val() == 1) {
 				var C8Z = currentTime();
 				var d8Z = new Date(C8Z);
@@ -11527,7 +11582,7 @@ var cotgsubscribe = amplify;
 			M06 += __s[3129] + d06 + __s[+R7y];
 			M06 += __s[1471] + z06 + __s[6884] + J06 + __s[Y7y ^ 0] + X06 + __s[+R7y];
 			M06 += __s[1471] + z06 + __s[6311] + S06 + __s[+Y7y] + X06 + __s[+R7y];
-			$(__s[+E5y])
+			$("body")
 				.append(M06);
 		}
 
@@ -19675,7 +19730,7 @@ var cotgsubscribe = amplify;
 					'4594')]) + __s[5800];
 			q0v += __s[+f7p];
 			e2(1);
-			$(__s[E5y ^ 0])
+			$("body")
 				.append(q0v);
 			$(__s[1213])
 				.off("click");
@@ -19802,8 +19857,7 @@ var cotgsubscribe = amplify;
 				J5U += __s['2104' | 24] + h5U + __s[4978];
 				J5U += __s[1479];
 				J5U += __s[R7p >> 196766752];
-				$(__s[+E5y])
-					.append(J5U);
+				AppendPopup(J5U);
 				$(__s[4899])
 					.draggable({ handle: __s[g1y >> 1028532064], containment: __s[+q5y], scroll: ![] });
 				h0F();
@@ -20614,8 +20668,7 @@ var cotgsubscribe = amplify;
 			C2n += __s[3549];
 			C2n += __s[+f7p];
 			E6k.y6();
-			$(__s[E5y | 68])
-				.append(C2n);
+			   AppendPopup(C2n);
 		}
 
 		function F2F() {
@@ -23314,8 +23367,7 @@ var cotgsubscribe = amplify;
 									.S55(+p5p)][__s[4594]]) + __s[5800];
 			X5v += __s[f7p ^ 0];
 			e2(1);
-			$(__s[E5y * 1])
-				.append(X5v);
+		  AppendPopup(X5v);
 			$(__s[1213])
 				.off("click");
 			$(__s[1213])
@@ -26427,7 +26479,7 @@ var cotgsubscribe = amplify;
 				$(__s[+Z0p])
 					.children()
 					.css(__s[1965], __s[+l44]);
-				$(__s[E5y | 192])
+				$("body")
 					.bind(__s[4423], function (I0B) {
 						var w0B = I0B.target.offsetParent.id;
 						E6k.y6();
@@ -32579,7 +32631,7 @@ var cotgsubscribe = amplify;
 						E6k.y6();
 						S2(1);
 					});
-				$(__s[e5y & 2147483647])
+				$("body")
 					.change(function () { S2(1); });
 				$(__s[2699])
 					.click(function () {
@@ -36234,7 +36286,7 @@ var cotgsubscribe = amplify;
 		//        var n29 = H29(f29),
 		//          A29 = n29[__s[3871] in H29.fn ? __s[3871] : __s[1377]]();
 		//        E6k.R6();
-		//        return A29.length || (A29 = H29(__s[E5y * 1])), parseInt(A29.css(__s[7012]), +
+		//        return A29.length || (A29 = H29("body")), parseInt(A29.css(__s[7012]), +
 		//          '10') || parseInt(n29.css(__s[7012]), 10) || 16;
 		//      },
 		//      teardown: function() {
@@ -37545,7 +37597,7 @@ var cotgsubscribe = amplify;
 				},
 				reposition: function () {
 					var d3n = this;
-					if (k4n(__s[E5y & 2147483647])
+					if (k4n("body")
 						.find(d3n.$tooltip)
 						.length !== 0) {
 						d3n.$tooltip.css(__s[O2R - 0], '');
@@ -37981,11 +38033,11 @@ var cotgsubscribe = amplify;
 					var j3n = this;
 					j3n.checkInterval = setInterval(function () {
 						E6k.R6();
-						if (k4n(__s[E5y >> 1669772768])
+						if (k4n("body")
 							.find(j3n.$el)
-							.length === 0 || k4n(__s[E5y | 642])
+							.length === 0 || k4n("body")
 								.find(j3n.$elProxy)
-								.length === 0 || j3n.Status == __s[+X2R] || k4n(__s[+E5y])
+								.length === 0 || j3n.Status == __s[+X2R] || k4n("body")
 									.find(j3n.$tooltip)
 									.length === 0) {
 							if (j3n.Status == __s[M6t - 0] || j3n.Status == __s[s6t - 0])
@@ -38093,9 +38145,9 @@ var cotgsubscribe = amplify;
 								K4n.Status =
 									__s[s6t ^ 0];
 								var U4n = K4n.options.speed;
-								K4n.bodyOverflowX = k4n(__s[+E5y])
+								K4n.bodyOverflowX = k4n("body")
 									.css(__s[4781]);
-								k4n(__s[E5y & 2147483647])
+								k4n("body")
 									.css(__s[4781], __s[X2R ^ 0]);
 								var B4n = __s[3013] + K4n
 									.options.animation,
@@ -38117,7 +38169,7 @@ var cotgsubscribe = amplify;
 								callSyncViewMode();
 								if (u4n()) K4n.$tooltip.addClass(B4n);
 								K4n._content_insert();
-								K4n.$tooltip.appendTo(__s[E5y ^ 0]);
+								K4n.$tooltip.appendTo("body");
 								K4n.reposition();
 								K4n.options.functionReady.call(K4n.$el, K4n.$el, K4n.$tooltip);
 								if (u4n()) {
@@ -38136,13 +38188,13 @@ var cotgsubscribe = amplify;
 											K4n.reposition();
 										});
 								if (K4n.options.autoClose) {
-									k4n(__s[E5y - 0])
+									k4n("body")
 										.off(__s[+T6t] + K4n.namespace);
 									if (K4n.options.trigger == __s[+o3t]) {
 										if (
 											s4n) setTimeout(function () {
 												E6k.y6();
-												k4n(__s[+E5y])
+												k4n("body")
 													.on(__s[1841] + K4n.namespace, function () { K4n.hide(); });
 											}, 0);
 										if (K4n
@@ -38176,7 +38228,7 @@ var cotgsubscribe = amplify;
 									} else if (K4n.options.trigger == "click") {
 										setTimeout(
 											function () {
-												k4n(__s[E5y | 4308])
+												k4n("body")
 													.on(__s[5118] + K4n.namespace + __s[1333] + K4n.namespace,
 														function () { K4n.hide(); });
 											}, 0);
@@ -38225,11 +38277,11 @@ var cotgsubscribe = amplify;
 							   callSyncViewMode();
 							k4n(e4n)
 								.off(__s[+T6t] + t3n.namespace);
-							k4n(__s[+E5y])
+							k4n("body")
 								.off(__s[+T6t] + t3n.namespace)
 								.css(__s[4781], t3n.bodyOverflowX);
 							E6k.y6();
-							k4n(__s[+E5y])
+							k4n("body")
 								.off(__s[+T6t] + t3n.namespace);
 							t3n.$elProxy.off(__s[T6t | 4] + t3n.namespace + __s[E6t << 1395004864]);
 							t3n.options.functionAfter.call(t3n.$el, t3n.$el);
@@ -38331,7 +38383,7 @@ var cotgsubscribe = amplify;
 				});
 				return O4n;
 			}
-			k4n(__s[+E5y])
+			k4n("body")
 				.one("mousemove", function () {
 					E6k.R6();
 					I4n = !![];
@@ -38708,8 +38760,7 @@ var cotgsubscribe = amplify;
 				}
 				k7U += __s[1479];
 				k7U += __s[R7p >> 278098464];
-				$(__s[E5y >> 64881856])
-					.append(k7U);
+				AppendPopup(k7U);
 				$(__s[1083])
 					.draggable({ handle: __s[g1y << 880602752], containment: __s[q5y & 2147483647], scroll: !{} });
 				h0F();
@@ -40357,7 +40408,7 @@ var cotgsubscribe = amplify;
 							var f8n = __s[2568];
 							if (!j0F)
 								if (P2) {
-									V8n = P2[__s[E5y ^ 0]];
+									V8n = P2["body"];
 									r8n = P2[__s[B2m - 0]];
 									A8n = P2[__s[+R2m]];
 									n8n = P2[__s[+e2m]];
@@ -40399,7 +40450,7 @@ var cotgsubscribe = amplify;
 							var f8n = __s[57];
 							if (j0F)
 								if (P2) {
-									V8n = P2[__s[+E5y]];
+									V8n = P2["body"];
 									r8n = P2[__s[B2m ^ 0]];
 									A8n = P2[__s[R2m >> 288585856]];
 									n8n = P2[__s[+e2m]];
@@ -40555,8 +40606,8 @@ var cotgsubscribe = amplify;
 													k9n = JSON.parse(k9n);
 													$(__s[900])
 														.removeClass()
-														.addClass(k9n[__s[E5y >> 760639392]])
-														.attr("a", k9n[__s[E5y ^ 0]]);
+														.addClass(k9n["body"])
+														.attr("a", k9n["body"]);
 													$(__s[J4m - 0])
 														.removeClass()
 														.addClass(k9n[__s[B2m - 0]])
@@ -40610,8 +40661,8 @@ var cotgsubscribe = amplify;
 									e9n = JSON.parse(e9n);
 									$(__s[900])
 										.removeClass()
-										.addClass(e9n[__s[E5y - 0]])
-										.attr("a", e9n[__s[+E5y]]);
+										.addClass(e9n["body"])
+										.attr("a", e9n["body"]);
 									$(__s[J4m & 2147483647])
 										.removeClass()
 										.addClass(e9n[__s[+B2m]])
@@ -40723,8 +40774,8 @@ var cotgsubscribe = amplify;
 								P2 = u9n;
 								$(__s[+y2m])
 									.removeClass()
-									.addClass(u9n[__s[+E5y]])
-									.attr('a', u9n[__s[+E5y]]);
+									.addClass(u9n["body"])
+									.attr('a', u9n["body"]);
 								$(__s[+D7R])
 									.removeClass()
 									.addClass(u9n[__s[B2m & 2147483647]])
@@ -40741,13 +40792,13 @@ var cotgsubscribe = amplify;
 									.removeClass()
 									.addClass(u9n[__s[+L2m]])
 									.attr('a', u9n[__s[L2m * 1]]);
-								var w9n = u9n[__s[+E5y]].substr(2,
+								var w9n = u9n["body"].substr(2,
 									1)
 									.toLowerCase();
 								if (w9n == __s[r2y & 2147483647]) {
 									$(__s[2052])
 										.show();
-									$(__s[m7y ^ 0] + u9n[__s[+E5y]])
+									$(__s[m7y ^ 0] + u9n["body"])
 										.addClass(__s[F2m << 941594656]);
 									$(__s[6551])
 										.hide();
@@ -40757,7 +40808,7 @@ var cotgsubscribe = amplify;
 								} else {
 									$(__s[2052])
 										.hide();
-									$(__s[m7y << 564754816] + u9n[__s[E5y - 0]])
+									$(__s[m7y << 564754816] + u9n["body"])
 										.addClass(__s[F2m * 1]);
 									$(__s[6551])
 										.show();
@@ -43018,8 +43069,7 @@ var cotgsubscribe = amplify;
 						$(__s[P8y | 34])
 							.scrollTop($(__s[P8y | 32])[0].scrollHeight);
 					}
-					$(__s[+E5y])
-						.append(v61);
+					AppendPopup(v61);
 				}
 			}
 			$(__s[1600])
@@ -43245,8 +43295,7 @@ var cotgsubscribe = amplify;
 				.S55(4304) + U3D + __s["5873" | 5761] + P3D + __s[6956] + K3D + _s(f7p & E6k
 					.s6s);
 			var m3D = __s[1996] + X4F + __s[B1y - 0] + L4F + __s[3946] + a3D + __s[+R7p];
-			$(__s[E5y - 0])
-				.append(m3D);
+			AppendPopup(m3D);
 			$(__s[2280])
 				.off("click");
 			$(__s["2280" | 232])
@@ -43934,7 +43983,7 @@ var cotgsubscribe = amplify;
 					}
 					$(__s[900])
 						.removeClass()
-						.addClass(k01[__s[+E5y]]);
+						.addClass(k01["body"]);
 					$(__s[J4m >> 1413797952])
 						.removeClass()
 						.addClass(k01[__s[+B2m]]);
@@ -45057,8 +45106,7 @@ var cotgsubscribe = amplify;
 				X7U += _s('1479' -
 					0);
 				X7U += __s[+R7p];
-				$(__s[E5y << 929979712])
-					.append(X7U);
+				AppendPopup(X7U);
 				$(__s[5979])
 					.draggable({ handle: __s[g1y >> 1594753568], containment: __s[q5y ^ 0], scroll: !!0 });
 				h0F();
@@ -54232,11 +54280,9 @@ var cotgsubscribe = amplify;
 				else if (q71[__s[+s5y]] == 4) F71 += __s[2754];
 				else if (q71[__s[s5y - 0]] == 5) F71 += __s[6367];
 				F71 += __s[1102];
-				$(__s[+E5y])
-					.append(F71);
+				AppendPopup(F71);
 				$(__s[6340])
 					.draggable({ handle: __s[3514], containment: __s[+q5y], scroll: !"1" });
-				callSyncViewMode();
 				setTimeout(function () { setTimeout(function () { E6k.R6(); }, 2000); }, +D5y);
 			}
 		}
@@ -57484,7 +57530,7 @@ var cotgsubscribe = amplify;
 			var C2Z = Math.floor(D6["r"][3]["r"]) - (1);
 			var G2Z = Math.floor(D6[E6k
 				.o55(+I6y)][4]["r"]) - 1;
-			var l2Z = $(__s[e5y & 2147483647])
+			var l2Z = $("body")
 				.val();
 			if (l2Z == 1) var u2Z = d2Z - V2Z;
 			else var u2Z = i2Z - V2Z;
@@ -57553,7 +57599,7 @@ var cotgsubscribe = amplify;
 				'4867') && g2Z == 1) p5F(Number(Q2Z), Number(L2Z));
 			if (Q2Z != "" && L2Z !=
 				'') P8F(Number(cid), Number(w2Z));
-			var l2Z = $(__s[e5y & 2147483647])
+			var l2Z = $("body")
 				.val();
 			var o2Z = $(__s[d0t | 2048])
 				.val();
@@ -59259,7 +59305,7 @@ var cotgsubscribe = amplify;
 			var q2Z = $(__s[+j1p])
 				.val();
 			var e8Z = Number(u8Z) * (R5y * 1) + Number(H8Z);
-			var F2Z = $(__s[e5y ^ 0])
+			var F2Z = $("body")
 				.val();
 			var T8Z = Number(O8Z) * +D5y;
 			var w8Z = Number(t8Z) * (1000);
@@ -61091,8 +61137,7 @@ var cotgsubscribe = amplify;
 			var R9n = E6k
 				.o55(73) + B9n + __s[3239] + P9n + __s[4201] + helparray[f9n][__s[K2y | 5440]][K9n][
 				__s[+K2y]] + __s[337] + Z9n + __s[4637];
-			$(__s[+E5y])
-				.append(R9n);
+			AppendPopup(R9n);
 			$(__s['3407' | 328])
 				.draggable({ handle: __s[5522], scroll: !{} });
 			if (helparray[f9n][__s[+K2y]][K9n][_s('6440' ^
@@ -62022,8 +62067,7 @@ var cotgsubscribe = amplify;
 				1143);
 			a9n += __s[1471] + m9n + __s[6311] + x06 + __s[Y7y * 1] + k06 + _s(
 				R7y - 0);
-			$(__s[+E5y])
-				.append(a9n);
+			AppendPopup(a9n);
 		}
 		var P5F = {};
 
@@ -69596,8 +69640,7 @@ var cotgsubscribe = amplify;
 									c6i += __s[1829] + q6i[+F8y] + __s[5555];
 									c6i += __s[609] + q6i[24] + __s[6356];
 									c6i += __s[5928];
-									$(__s[+E5y])
-										.append(c6i);
+									AppendPopup(c6i);
 									$(__s[4206])
 										.draggable({
 											handle: __s[2633],
