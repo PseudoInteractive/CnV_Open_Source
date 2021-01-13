@@ -69665,8 +69665,7 @@ let underMouse = null;
 function postMouseEvent(sx, sy, eventName, button, dx, dy) {
     let x = parseInt(sx);
     let y = parseInt(sy);
-    if (eventName === "mousedown")
-        underMouse = document.elementFromPoint(x, y);
+    underMouse = document.elementFromPoint(x, y);
     if (underMouse != null) {
         let buttons = parseInt(button);
         let evt = new MouseEvent(eventName, {
@@ -69676,6 +69675,7 @@ function postMouseEvent(sx, sy, eventName, button, dx, dy) {
             clientX: x,
             clientY: y,
             button: buttons,
+            buttons: 1,
             movementX: dx !== null ? parseInt(dx) : null,
             movementY: dy !== null ? parseInt(dy) : null,
         });

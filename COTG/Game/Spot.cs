@@ -383,7 +383,7 @@ namespace COTG.Game
 			var hit = Spot.HitTest(sender, e);
 			var spot = hit.spot;
 			//	uiPress = spot != null ? spot.cid : 0;
-			uiPressColumn = hit.column.CellText();
+			uiPressColumn = hit.column.CellText() ;
 			// The UIElement returned will be the RadDataGrid
 			if (spot != null)
 				spot.ProcessClick(uiPressColumn, hit.pt, hit.uie, e.KeyModifiers);
@@ -420,6 +420,15 @@ namespace COTG.Game
 				var wantSelect = true;
 				switch (column)
 				{
+					case nameof(nameAndRemarks):
+						// first click selects
+						// second acts as coord click
+						if (IsSelected(cid))
+						{
+							ProcessCoordClick(cid, false, modifiers, false);
+							wantRaidScan = false;
+						}
+						break;
 					case nameof(xy):
 						ProcessCoordClick(cid, false, modifiers, false);
 						wantRaidScan = false;
@@ -497,7 +506,7 @@ namespace COTG.Game
 				//	ScanDungeons.Post(cid, true, false);
 				//}
 				if (wantSelect)
-					SetFocus(false);
+					SetFocus(false,true,true,false);
 				NavStack.Push(cid);
 
 			}
@@ -1064,11 +1073,11 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true)
+		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove=true)
 		{
-			SetFocus(cid, scrollIntoView, select, bringIntoWorldView);
+			SetFocus(cid, scrollIntoView, select, bringIntoWorldView,lazyMove);
 		}
-		public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true)
+		public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true,bool lazyMove = true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
@@ -1089,7 +1098,7 @@ namespace COTG.Game
 				);
 			}
 			if (bringIntoWorldView)
-				cid.BringCidIntoWorldView(true);
+				cid.BringCidIntoWorldView(lazyMove);
 		}
 		public void ReturnSlowClick()
 		{

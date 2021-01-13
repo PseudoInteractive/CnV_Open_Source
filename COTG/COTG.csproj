@@ -168,11 +168,12 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
+    <Compile Include="Draw\CityView.cs" />
+    <Compile Include="Draw\Layer.cs" />
     <Compile Include="Draw\SpriteAnim.cs" />
     <Compile Include="Draw\SpriteBatch.cs" />
     <Compile Include="Draw\SpriteBatcher.cs" />
     <Compile Include="Draw\SpriteBatchItem.cs" />
-    <Compile Include="Draw\VertexBatcher.cs" />
     <Compile Include="Game\AGame.cs" />
     <Compile Include="Game\Alliance.cs" />
     <Compile Include="Game\Army.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Helpers\Span2d.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
+    <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
@@ -500,6 +502,7 @@
     <Content Include="Assets\terrainfeatures.dds" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Content\Effects\Ava.fx" />
+    <None Include="Content\Effects\AnimatedSprite.fxh" />
     <None Include="Content\Effects\darkFont.fxh" />
     <None Include="Content\Effects\Constants.fxh" />
     <None Include="Content\Effects\lit.fxh" />
@@ -629,6 +632,8 @@
     <None Include="Content\Effects\Macros.fxh" />
     <None Include="Content\Effects\Structures.fxh" />
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
+    <EmbeddedResource Include="JSON\buildingDef.json" />
+    <None Include="JSON\buildingSchema.json" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
@@ -790,6 +795,11 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties json_4buildings_1json__JsonSchema="https://json.schemastore.org/babelrc" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

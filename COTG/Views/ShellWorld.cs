@@ -873,7 +873,7 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
-			if (TryPostJSMouseEvent("mousedown",
+			if (TryPostJSMouseEvent("click",
 				properties.PointerUpdateKind switch
 				{
 					Windows.UI.Input.PointerUpdateKind.LeftButtonPressed => 0,

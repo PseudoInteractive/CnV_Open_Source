@@ -52,7 +52,7 @@
         </Grid.ColumnDefinitions>
 		
 		
-        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True"    >
+        <CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"    >
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ComboBox x:Name="cityListBox" x:FieldModifier="public"

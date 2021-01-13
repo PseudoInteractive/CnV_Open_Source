@@ -16,7 +16,7 @@ namespace COTG
 		public string asset;
 		public Material material;
 		public string assetPath => $"Art/Anim/{asset}";
-		public void Load() { material =new Material( AGame.instance.Content.Load<Texture2D>(assetPath)); }
+		public void Load() { material =new Material( AGame.instance.Content.Load<Texture2D>(assetPath),AGame.animatedSpriteEffect); }
 		
 		public static SpriteAnim flagHome = new SpriteAnim() { frameCount = 12, asset = "flagAnim0" };
 		public static SpriteAnim flagSelected = new SpriteAnim() { frameCount = 12, asset = "flagAnim4" };

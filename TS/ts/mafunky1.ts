@@ -734,7 +734,7 @@ function postMouseEvent(sx: string,sy:string, eventName:string,button : string, 
 {
 	let x = parseInt(sx);
 	let y = parseInt(sy);
-	if(eventName === "mousedown")
+	//if(eventName === "mousedown")
 		underMouse = document.elementFromPoint(x,y);
 
 	if(underMouse != null)
@@ -747,6 +747,7 @@ function postMouseEvent(sx: string,sy:string, eventName:string,button : string, 
 			clientX:x,
 			clientY:y,
 			button:buttons,
+			buttons:1,
 			movementX: dx!==null? parseInt(dx):null,
 			movementY: dy!==null? parseInt(dy):null,
 		  });

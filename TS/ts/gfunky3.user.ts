@@ -179,7 +179,7 @@ START OF QUICKBUILD SCRIPT
     const CLASS_AND_CSS_FIRST_BUTTON = 'style="' + CSS_FIRST_BUTTON + '" class="regButton greenb"';
     const CLASS_AND_CSS_NEXT_BUTTON = 'style="' + CSS_NEXT_BUTTON + '" class="regButton greenb"';
 
-    var QB = {
+    var QB :any = {
         _version: "0.3.0"
     };
 

@@ -1028,7 +1028,7 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				Verify(ob.ScrollViewer.Focus(FocusState.Programmatic));
+				Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
 				Verify(ob.Focus(FocusState.Programmatic));
 			}
 		}

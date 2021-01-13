@@ -1747,6 +1747,8 @@ namespace COTG
 					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible; 
 					ShellPage.canvas.Visibility = isWorld ? Visibility.Visible : Visibility.Collapsed;
 					AGame.UpdateMusic();
+					if(!webviewHasFocus && priorWebviewHasFocus)
+						Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
 
 				});
 			}

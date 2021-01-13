@@ -21,7 +21,10 @@ half4 PSSDF(VertexShaderOutputPositionColorTexture input) : SV_Target0
 //	alpha = saturate((alpha - 0.5) * 4 + 0.5);
 //	textureColor.rgb = input.Color * alpha;
 //	textureColor.a = alpha;
-	return (input.Color.rgb*alpha, alpha);
+	half4 c;
+	c.rgb = input.Color.rgb * alpha;
+	c.a = alpha;
+	return c;
 	
 
 }

@@ -84,6 +84,11 @@ namespace COTG.Models
 				//	existingPopups[put] = tt;
 				++put;
 			}
+			if( AGame.popups.Length == 0)
+			{
+				// ensure that the webview does not have focus
+				JSClient.SetWebViewHasFocus(false);
+			}
 		}
 
 		static Regex regexURl = new Regex(@"url\(([^\)]+)\)", RegexOptions.CultureInvariant | RegexOptions.Compiled);

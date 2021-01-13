@@ -52,5 +52,6 @@ using System.Threading.Tasks;
 */
 namespace COTG.JSON {
     public class ofdf {
+
     }
 }

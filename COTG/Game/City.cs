@@ -14,10 +14,18 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using COTG.Services;
 using COTG.Views;
+using COTG.JSON;
 
 namespace COTG.Game
 {
-    [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
+	//struct Building
+	//{
+	//	public byte type;
+	//	public byte level;
+	//	// bu:  time to upgrade
+	//	// bd:  time to demo?
+	//}
+
     public class City : Spot 
     {
 
@@ -179,8 +187,12 @@ namespace COTG.Game
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 
-      
+		static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+		const short bidTownHall = 455;
+		static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
+		const int citySpan = 21;
+		static JSON.Building[] buildings = Array.Empty<JSON.Building>();
         public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
@@ -200,7 +212,20 @@ namespace COTG.Game
 				notes = cn[1].GetAsString();
 				
 			}
+			if (jse.TryGetProperty("bd", out var eBd))
+			{
+				buildings = new JSON.Building[eBd.GetArrayLength()];
+				int put = 0;
+				foreach (var bdi in eBd.EnumerateArray())
+				{
+					var bid = bdi.GetAsInt("bid");
+					var bl = bdi.GetAsInt("bl");
+					var bi = bidMap.IndexOf((short)bid);
 
+					buildings[put] = new Building() { bid = (byte)bi, bl=(byte)bl };
+					++put;
+				}
+			}
 			activeCommands = jse.GetAsByte("comm");
             {
                 const int bidCastle = 467;

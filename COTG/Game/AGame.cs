@@ -100,6 +100,7 @@ namespace COTG
 		public static EffectPass darkFontEffect;
 		public static EffectPass litEffect;
 		public static EffectPass unlitEffect;
+		public static EffectPass animatedSpriteEffect;
 		private EffectPass sdfEffect;
 		private EffectPass noTextureEffect;
 		public static EffectParameter planetGainsParamater;
@@ -177,7 +178,7 @@ namespace COTG
 		static readonly Color selectColor = new Color(255, 20, 255, 192);
 		static readonly Color buildColor = Color.DarkRed;
 		static readonly Color hoverColor = Color.Purple;
-		static readonly Color focusColor = Color.Magenta;
+		static readonly Color focusColor = Color.Maroon;
 		static readonly Color pinnedColor = Color.Teal;
 		static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 		public static Material[] troopImages = new Material[Game.Enum.ttCount];
@@ -203,7 +204,7 @@ namespace COTG
 		{
 			_graphics = new GraphicsDeviceManager(this)
 			{
-				PreferredBackBufferFormat = SurfaceFormat.Color,
+				PreferredBackBufferFormat = SurfaceFormat.Bgra32,
 				PreferMultiSampling = false,
 				PreferredDepthStencilFormat = DepthFormat.None,
 
@@ -230,7 +231,7 @@ namespace COTG
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
 			canvas = swapChainPanel;
-			canvas.CompositeMode = (UWindows.UI.Xaml.Media.ElementCompositeMode.MinBlend);// SourceOver);
+			canvas.CompositeMode = (UWindows.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "", Helper.CoreWindow, swapChainPanel);
 		}
 
@@ -322,7 +323,7 @@ namespace COTG
 							//					_graphics.ApplyChanges();
 							var pre = new PresentationParameters()
 							{
-								BackBufferFormat = SurfaceFormat.Color,
+								BackBufferFormat = SurfaceFormat.Bgra32,
 								DepthStencilFormat = DepthFormat.None,
 								SwapChainPanel = canvas,
 								RenderTargetUsage = RenderTargetUsage.DiscardContents,
@@ -597,6 +598,7 @@ namespace COTG
 				darkFontEffect = EffectPass("FontDark");
 				litEffect = EffectPass("Lit");
 				unlitEffect = EffectPass("Unlit");
+				animatedSpriteEffect = EffectPass("SpriteAnim");
 				sdfEffect = EffectPass("SDF");
 				noTextureEffect = EffectPass("NoTexture");
 				readyToLoad = true;
@@ -838,8 +840,19 @@ namespace COTG
 		public static Span2i cullWC; // culling bounds in world space
 		protected override bool BeginDraw()
 		{
-			if (!(IsWorldView()) || !App.isForeground || (TileData.state < TileData.State.loadingImages) || (worldObjects == null))
+			if (!App.isForeground)
 				return false;
+			if (IsWorldView())
+			{
+				if ((TileData.state < TileData.State.loadingImages) || (worldObjects == null))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// city view
+			}
 			return base.BeginDraw();
 		}
 
@@ -852,12 +865,12 @@ namespace COTG
 
 
 			//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
-
+			var isFocused = ShellPage.isHitTestVisible;
 
 			try
 			{
 				var _serverNow = JSClient.ServerTime();
-				var dt = (float)(_serverNow - lastDrawTime).TotalSeconds;
+				var dt = ((float)(_serverNow - lastDrawTime).TotalSeconds).Saturate(); // max delta is 1s
 				lastDrawTime = _serverNow;
 
 				var gain = (1 - MathF.Exp(-4 * dt));
@@ -886,9 +899,15 @@ namespace COTG
 				var animTLoop = animationTWrap.Wave();
 				int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
 				var rectSpan = animTLoop.Lerp(rectSpanMin, rectSpanMax);
-				//   ShellPage.T("Draw");
 
-				byte textBackgroundOpacity = 128;
+				if (!IsWorldView())
+				{
+					CityView.Draw();
+					return;
+				}
+					//   ShellPage.T("Draw");
+
+					byte textBackgroundOpacity = 128;
 				//	defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
 
@@ -1690,7 +1709,7 @@ namespace COTG
 					//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					Vector2 c = ShellPage.mousePositionC + new Vector2(16, 16);
-					DrawTextBox(_toolTip, c, tipTextFormat, Color.Black, 255, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 128, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
 					//	var expand = new Vector2(7);
 
 					//  var rectD = new Vector2(32*4, 24*5);
@@ -1708,9 +1727,9 @@ namespace COTG
 				{
 					//	TextLayout textLayout = GetTextLayout( _contTip, tipTextFormat);
 					//	var bounds = textLayout.span;
-					Vector2 c = new Vector2(16, 16).SToC();
+					Vector2 c = new Vector2(20, 16).SToC();
 					//var expand = new Vector2(7);
-					DrawTextBox(_contTip, c, tipTextFormat, Color.Black, 255, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_contTip, c, tipTextFormat, Color.White, 128, Layer.overlay,11, 11, ConstantDepth, 0, 0.25f);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
@@ -1725,11 +1744,12 @@ namespace COTG
 
 				if (popups.Length > 0)
 				{
-					foreach(var pop in popups)
+					var color = isFocused ? new Color(135, 235, 255, 255) : new Color(255, 255, 255, 255);
+					foreach (var pop in popups)
 					{
 						Vector2 c0 = new Vector2(pop.c0.X,pop.c0.Y).SToC();
 						Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).SToC();
-						draw.AddQuad(Layer.webView, quadTexture, c0, c1, new Color(255,255,255,255), ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+						draw.AddQuad(Layer.webView, quadTexture, c0, c1, color, ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 
 					}
 
@@ -1755,12 +1775,21 @@ namespace COTG
 
 			var c = wc.WToC();
 			var dv = AGame.pixelScale;
+			float z = zLabels;
 
+			// hover flags
+			if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var dz))
+			{
+				c.Y -= dz.z/ viewHoverElevationMax*8; // 8 pixels up regardless of scale
+				z += dz.z;
+			}
 			float frameCount = sprite.frameCount;
-			var frame = (int)(((animationT + cid.CidToRandom() * 15) * 15) % frameCount);
+			var frameF = (((animationT + cid.CidToRandom() * 15) * 12) % frameCount);
+			var frameI = MathF.Truncate(frameF);
+			var blend = (int)((frameF - frameI) * 255.0f + 0.325f );
 			var c0 = new Vector2(c.X, c.Y - dv * 0.435f);
 			Vector2 c1 = new Vector2(c.X + dv * 0.5f, c.Y - dv * 0.035f);
-			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frame / frameCount, 0.0f), new Vector2((frame + 1) / frameCount, 1), 255.AlphaToWhite(), (c0, c1).RectDepth(zLabels));
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frameI / frameCount, 0.0f), new Vector2((frameI + 1) / frameCount, 1),new Color(blend,255,255,255), (c0, c1).RectDepth(z));
 		}
 
 		private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
