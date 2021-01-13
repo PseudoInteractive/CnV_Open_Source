@@ -1676,7 +1676,8 @@ namespace COTG
 				   if (gotCreds)
 				   {
 					   GetWorldInfo.Send();
-
+					   ShellPage.canvasVisible = true;
+					   ShellPage.isHitTestVisible = true;
 					   ///                   await GetCitylistOverview();
 					   City.UpdateSenatorInfo();  // no async
 
@@ -1739,13 +1740,13 @@ namespace COTG
 			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
 			{
 				ShellPage.isOverPopup = false;// reset
-				var isWorld = IsWorldView();
-				ShellPage.isHitTestVisible = isWorld && !webviewHasFocus;
+				//var isWorld = IsWorldView();
+				ShellPage.isHitTestVisible = !webviewHasFocus;
 				App.DispatchOnUIThreadLow(() =>
 				{
 					ShellPage.isOverPopup = false;// reset again in case it changed
 					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible; 
-					ShellPage.canvas.Visibility = isWorld ? Visibility.Visible : Visibility.Collapsed;
+					ShellPage.canvas.Visibility = !ShellPage.canvasVisible? Visibility.Collapsed: Visibility.Visible;
 					AGame.UpdateMusic();
 					if(!webviewHasFocus && priorWebviewHasFocus)
 						Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));

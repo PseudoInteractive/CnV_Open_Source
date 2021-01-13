@@ -8,7 +8,7 @@ namespace COTG.JSON
 {
 	public partial struct Building
 	{
-		public byte bid { get; set; } // this is pretranslated from the buildingDefs definitions to pack it into a byte
+		public byte id { get; set; } // this is pretranslated from the buildingDefs definitions to pack it into a byte
 
 		public byte bl { get; set; } // building level
 		//[J("bu")] public long Bu { get; set; }

@@ -7099,8 +7099,6 @@ var P8 = 0;
 function SetViewMode(mode) {
 	_viewMode = mode;
  // this needs to be black in city view, white in region view
-	 document.getElementById("container").style.background = (_viewMode===viewModeCity) ? "rgb(0,0,0)" : "none";
-	// mainMapDiv.style.display = (_viewMode!==viewModeCity) ? "none" : null;
 	callSyncViewMode();
 }
 
@@ -7444,7 +7442,7 @@ function DoSyncViewMode() {
 			}
 		 _popupCount = 0;
 		let popups =[];
-			if (_viewMode === viewModeWorld) {
+			 {
 		
 
 			if(tooltipped!=null)
@@ -13876,7 +13874,7 @@ var cotgsubscribe = amplify;
 				.val());
 			ppdt.opt[+F8y] = Number(O5F);
 			ppdt.opt[+A8y] = $(__s[2779])
-				.slider(__s[a4R ^ 0]);
+				.slider("value");
 			N6();
 			var t49 = $.post(q6 + __s[3964], { a: JSON.stringify(ppdt.opt) });
 			E9();
@@ -14183,7 +14181,7 @@ var cotgsubscribe = amplify;
 					var P1g = Number(D6.bq[0].elvl);
 					var p1g = Number(D6.bq[0].slvl);
 					var K1g = Number(D6.bq[0].pa);
-					var D1g = bam["buildings"][V1g][__s[+C5y]];
+					var D1g = bam["buildings"][V1g]["bn"];
 					var
 						y1g = bam["buildings"][V1g][__s[+c1R]];
 					var B1g = h1g - r1g;
@@ -14394,7 +14392,7 @@ var cotgsubscribe = amplify;
 			var
 				h0l = 0;
 			var e5l = [];
-			var p8U = D6["bd"][E1R ^ 0][__s[+i1R]];
+			var p8U = D6["bd"][E1R ^ 0]["bl"];
 			var S0l = bam[_s(Q5y <<
 				1718611616)][+q1R][__s[j1R >> 917628256]][p8U];
 			var b0l = p8U * 10;
@@ -14414,15 +14412,15 @@ var cotgsubscribe = amplify;
 				},
 				42: { "rt": +o8y, "rh": S0l, "ruh": L9U, "rdh": S9U }
 			};
-			D6["bd"][+E1R][__s[D1R ^ 0]] = d0l;
+			D6["bd"][+E1R]["rbb"] = d0l;
 			var P2U;
 			var D2U;
 			var f9U;
 			var V9U = -("1" |
 				0);
 			for (var U2U in D6["bd"]) {
-				P2U = D6["bd"][U2U][__s[m1R & 2147483647]];
-				D2U = D6["bd"][U2U][__s[+i1R]];
+				P2U = D6["bd"][U2U]["bid"];
+				D2U = D6["bd"][U2U]["bl"];
 				U2U = Number(U2U);
 				f9U = $(__s[+B1R] + U2U)
 					.data("data");
@@ -14476,20 +14474,19 @@ var cotgsubscribe = amplify;
 					.o55(i1R * 1)] = 0;
 				if (D2U > 10) {
 					D2U = 10;
-					D6["bd"][U2U][__s[+i1R]] = 10;
+					D6["bd"][U2U]["bl"] = 10;
 				}
 				if (L2(P2U)) {
 					P2U = L2(P2U);
-					D6["bd"][U2U][__s[m1R << 781563136]] = P2U;
+					D6["bd"][U2U]["bid"] = P2U;
 				}
 				if (P2U == +r6y & U2U != (0)) {
-					D6[_s(
-						N1R * 1)][U2U][__s[+m1R]] = 0;
-					D6["bd"][U2U][__s[+i1R]] = 0;
-					D6["bd"][U2U][__s[+h1R]] = 0;
+					D6["bd"][U2U]["bid"] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[+X1R]] = 0;
-					D6["bd"][U2U][__s[P1R - 0]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != (n4y & 2147483647) && P2U != +
 					l4y && P2U != o4y - 0 && P2U != I1R << 1609086048 && P2U != +t1y && P2U != T1y * 1 && P2U != g1y - 0 &&
@@ -14497,13 +14494,12 @@ var cotgsubscribe = amplify;
 					P2U != N1y << 248221984 && P2U != +i1y && P2U != q1y * 1 && P2U != D1y * 1 && P2U != (B1y | 36) && P2U != +
 					e1y && P2U != y1y << 156907264 && (U2U == p1R >> 1467943232 || U2U == +z1R || U2U == +n1R || U2U == (d1R |
 						256) || U2U == 323 || U2U == (l1R | 322) || U2U == +k1R || U2U == +o1R)) {
-					D6["bd"][U2U]
-					[__s[m1R | 2629]] = 0;
-					D6["bd"][U2U][__s[+i1R]] = 0;
-					D6["bd"][U2U][__s[+h1R]] = 0;
+					D6["bd"][U2U]["bid"] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[+X1R]] = 0;
-					D6["bd"][U2U][__s[P1R << 882964352]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if ((P2U == (n4y | 547) || P2U == +
 					l4y || P2U == o4y - 0 || P2U == +I1R || P2U == t1y >> 51875552 || P2U == T1y * 1 || P2U == +g1y || P2U ==
@@ -14515,12 +14511,12 @@ var cotgsubscribe = amplify;
 					737845088 && U2U != N0R << 1837042752 && U2U != (p1R | 80) && U2U != (z1R & 2147483647) && U2U != +n1R &&
 					U2U != (d1R | 1) && U2U != 323 && U2U != (l1R ^ 0) && U2U != k1R * 1 && U2U != +o1R) {
 					D6[_s(N1R |
-						4186)][U2U][__s[+m1R]] = 0;
-					D6["bd"][U2U][__s[+i1R]] = 0;
-					D6["bd"][U2U][__s[h1R ^ 0]] = 0;
+						4186)][U2U]["bid"] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[+X1R]] = 0;
-					D6["bd"][U2U][__s[+P1R]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != n4y * 1 && P2U != l4y - 0 && P2U != +o4y &&
 					P2U != +I1R && P2U != t1y << 1105644064 && P2U != +T1y && P2U != +g1y && P2U != (f1y & 2147483647) && P2U != (
@@ -14536,12 +14532,12 @@ var cotgsubscribe = amplify;
 							.s6s) || U2U == +U5R || U2U == +N0R || U2U == +p1R || U2U == +z1R || U2U == +n1R || U2U == +d1R ||
 						U2U == 323 || U2U == l1R >> 1123097632 || U2U == (k1R | 33) || U2U == +o1R)) {
 					D6["bd"][U2U][
-						__s[+m1R]] = 0;
-					D6["bd"][U2U][__s[i1R >> 1603456864]] = 0;
-					D6["bd"][U2U][__s[+h1R]] = 0;
+						"bid"] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[+X1R]] = 0;
-					D6["bd"][U2U][__s[+P1R]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if ((P2U == O1y * 1 || P2U == w1y >> 1332491136 || P2U ==
 					+H1y || P2U == G1y << 1922023968 || P2U == +b1y || P2U == X1y * 1 || P2U == (I1y ^ 0) || P2U == +z1y ||
@@ -14553,11 +14549,11 @@ var cotgsubscribe = amplify;
 						0) && U2U != (l1R & 2147483647) && U2U != +k1R && U2U != o1R << 1327847936) {
 					D6["bd"][U2U][E6k
 						.o55(m1R ^ 0)] = 0;
-					D6["bd"][U2U][__s[i1R | 2090]] = 0;
-					D6["bd"][U2U][__s[+h1R]] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[X1R * 1]] = 0;
-					D6["bd"][U2U][__s[+P1R]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != (0) && P2U != G1R <<
 					1028360640 && P2U != +C6y && P2U != (r1R | 260) && P2U != b1R * 1)
@@ -14575,40 +14571,40 @@ var cotgsubscribe = amplify;
 						} if (P2U >= (A4y | 73) && P2U <= I4y *
 							1 && U2U != +V5R && U2U != c5R << 1275326496 && U2U != +u8y && U2U != +M5R && U2U != +s5R && U2U != +Q5R &&
 							U2U != +C5R && U2U != Z5R * 1 && D6[__s[+K5R]] == 1) {
-					D6["bd"][U2U][__s[+m1R]] = +
+					D6["bd"][U2U]["bid"] = +
 						"0";
-					D6["bd"][U2U][__s[+i1R]] = 0;
-					D6["bd"][U2U][__s[h1R << 1862115520]] = 0;
+					D6["bd"][U2U]["bl"] = 0;
+					D6["bd"][U2U]["bu"] = 0;
 					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U][__s[+X1R]] = 0;
-					D6["bd"][U2U][__s[P1R * 1]] = 0;
+					D6["bd"][U2U]["rt"] = 0;
+					D6["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U == (d2y | 266)) {
 					var b9U = bam[_s(
-						Q5y | 5128)][P2U][__s[u5R & 2147483647]][D2U];
+						Q5y | 5128)][P2U]["cs"][D2U];
 					l0l = l0l + b9U;
 					if (D2U == 1) { var P8U = 0; var O9U = 0; } else {
 						var P8U = D2U - ("1" & E6k
 							.s6s);
-						var O9U = bam["buildings"][P2U][__s[u5R >> 1484073856]][P8U];
+						var O9U = bam["buildings"][P2U]["cs"][P8U];
 					}
 					if (D2U == 10) {
 						var U8U =
 							10;
-						var E8U = bam["buildings"][P2U][__s[u5R | 16]][D2U];
+						var E8U = bam["buildings"][P2U]["cs"][D2U];
 					} else {
 						var U8U = D2U + 1;
 						var
-							E8U = bam["buildings"][P2U][__s[u5R << 152843936]][U8U];
+							E8U = bam["buildings"][P2U]["cs"][U8U];
 					}
 					D6["bd"][U2U][_s(
 						+X1R)] = +A5y;
-					D6["bd"][U2U][__s[+P1R]] = b9U;
-					D6["bd"][U2U][__s[+a5R]] = E8U;
-					D6["bd"][U2U][__s[N5R - 0]] = O9U;
+					D6["bd"][U2U]["rh"] = b9U;
+					D6["bd"][U2U]["ruh"] = E8U;
+					D6["bd"][U2U]["rdh"] = O9U;
 					bontxt = +A5y;
 					var g0l = { 21: { "rt": +A5y, "rh": b9U, "rdh": O9U, "ruh": E8U } };
-					D6["bd"][U2U][__s[D1R - 0]] = g0l;
+					D6["bd"][U2U]["rbb"] = g0l;
 				}
 				var w8U = "";
 				var e8U = "";
@@ -14646,10 +14642,10 @@ var cotgsubscribe = amplify;
 						var B2U = Number(t8U[O8U]);
 						if (D6["bd"][B2U]) {
 							var
-								y2U = D6["bd"][B2U][__s[+m1R]];
+								y2U = D6["bd"][B2U]["bid"];
 							if (y2U == A8U) {
 								var N2U = D6[_s(N1R ^
-									0)][B2U][__s[i1R << 565347648]];
+									0)][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
 								if (
 									N2U >= 2) var u8U = N2U - (1);
@@ -14680,11 +14676,11 @@ var cotgsubscribe = amplify;
 					else var T8U = 0;
 					if (I8U != 0) var Q8U = I8U + I8U * (H8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = p0y >> 844304704;
-					D6["bd"][U2U][__s[P1R - 0]] = z8U;
-					D6["bd"][U2U][__s[+a5R]] = T8U;
-					D6["bd"][U2U][__s[N5R << 836475808]] = Q8U;
-					D6["bd"][U2U][__s[q5R >> 987170528]] = j8U;
+					D6["bd"][U2U]["rt"] = p0y >> 844304704;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						1: {
 							rh: z8U,
@@ -14694,7 +14690,7 @@ var cotgsubscribe = amplify;
 						}
 					};
 					var m9U = 1;
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					R9U = R9U + z8U;
 				}
 				if (D2U >= 2) var m2U = D2U - (1);
@@ -14711,80 +14707,80 @@ var cotgsubscribe = amplify;
 					else var c2U = 0;
 					var p2U = {};
 					p2U[X8y ^ 0] = { rt: +X8y, ruh: c2U, rdh: q2U, rh: o8U };
-					D6["bd"][U2U][__s[D1R | 288]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == +n4y || P2U == +
 					l4y || P2U == o4y * 1 || P2U == +I1R)) {
-					U0l += bam["buildings"][P2U][__s[+j5R]][D2U];
+					U0l += bam["buildings"][P2U]["trcap"][D2U];
 					F0l += D2U;
 					J0l += bam["buildings"][P2U][__s[51]][D2U];
 					var o8U = bam["buildings"][P2U][_s(
 						+j5R)][D2U];
-					if (m2U != 0) var q2U = bam["buildings"][P2U][__s[+j5R]][m2U];
+					if (m2U != 0) var q2U = bam["buildings"][P2U]["trcap"][m2U];
 					else var q2U = 0;
-					if (a2U != 0) var c2U = bam["buildings"][P2U][__s[j5R << 915028640]][a2U];
+					if (a2U != 0) var c2U = bam["buildings"][P2U]["trcap"][a2U];
 					else var c2U = 0;
 					var p2U = {};
 					p2U[S8y >> 921303424] = { rt: S8y << 1169108096, ruh: c2U, rh: o8U, rdh: q2U };
-					D6["bd"][U2U][__s[D1R | 295]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +t1y || P2U == (T1y & E6k
 					.s6s) || P2U == g1y - 0 || P2U == +f1y)) {
-					p0l += bam["buildings"][P2U][__s[j5R ^ 0]][D2U];
+					p0l += bam["buildings"][P2U]["trcap"][D2U];
 					y0l += D2U;
-					var o8U = bam["buildings"][P2U][__s[j5R & 2147483647]][D2U];
+					var o8U = bam["buildings"][P2U]["trcap"][D2U];
 					if (m2U != 0) var q2U =
-						bam["buildings"][P2U][__s[j5R | J5s]][m2U];
+						bam["buildings"][P2U]["trcap"][m2U];
 					else var q2U = 0;
 					if (a2U != (0)) var c2U = bam["buildings"][P2U][E6k
 						.o55(+j5R)][a2U];
 					else var c2U = 0;
 					var p2U = {};
 					p2U[P8y << 267513056] = { rdh: q2U, rh: o8U, rt: P8y >> 2096014976, ruh: c2U };
-					D6["bd"][U2U][__s[D1R | 263]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == V1y - 0 || P2U == (
 					M1y ^ 0) || P2U == +Q1y || P2U == +Z1y)) {
-					Y0l += bam["buildings"][P2U][__s[j5R ^ 0]][D2U];
+					Y0l += bam["buildings"][P2U]["trcap"][D2U];
 					R0l += D2U;
-					var o8U = bam["buildings"][P2U][__s[j5R >> 938884992]][D2U];
+					var o8U = bam["buildings"][P2U]["trcap"][D2U];
 					if (m2U != '0' >>
-						1669660064) var q2U = bam["buildings"][P2U][__s[+j5R]][m2U];
+						1669660064) var q2U = bam["buildings"][P2U]["trcap"][m2U];
 					else var q2U = 0;
 					if (a2U != (0)) var c2U = bam["buildings"][P2U][_s(j5R >>
 						1092430400)][a2U];
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+I8y] = { rt: I8y >> 223461888, rdh: q2U, ruh: c2U, rh: o8U };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +u1y || P2U == +N1y || P2U == (
 					i1y ^ 0) || P2U == +q1y)) {
-					N0l += bam["buildings"][P2U][__s[+j5R]][D2U];
+					N0l += bam["buildings"][P2U]["trcap"][D2U];
 					B0l += D2U;
-					var o8U = bam["buildings"][P2U][__s[+j5R]][D2U];
+					var o8U = bam["buildings"][P2U]["trcap"][D2U];
 					if (m2U != 0) var q2U = bam[E6k
-						.o55(+Q5y)][P2U][__s[j5R - 0]][m2U];
+						.o55(+Q5y)][P2U]["trcap"][m2U];
 					else var q2U = 0;
-					if (a2U != 0) var c2U = bam["buildings"][P2U][__s[j5R - 0]][a2U];
+					if (a2U != 0) var c2U = bam["buildings"][P2U]["trcap"][a2U];
 					else var c2U = 0;
 					var p2U = {};
 					p2U[36] = { rdh: q2U, rh: o8U, ruh: c2U, rt: 36 };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +D1y || P2U == B1y - 0 || P2U ==
 					e1y * 1 || P2U == +y1y)) {
-					q0l += bam["buildings"][P2U][__s[+j5R]][D2U];
+					q0l += bam["buildings"][P2U]["trcap"][D2U];
 					P0l += D2U;
-					var o8U = bam["buildings"][P2U][__s[j5R ^ 0]][D2U];
+					var o8U = bam["buildings"][P2U]["trcap"][D2U];
 					if (m2U != 0) var q2U = bam[E6k
-						.o55(Q5y >> 1983727424)][P2U][__s[+j5R]][m2U];
+						.o55(Q5y >> 1983727424)][P2U]["trcap"][m2U];
 					else var q2U = 0;
-					if (a2U != 0) var c2U = bam["buildings"][P2U][__s[j5R - 0]][a2U];
+					if (a2U != 0) var c2U = bam["buildings"][P2U]["trcap"][a2U];
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+z8y] = { rdh: q2U, rt: z8y ^ 0, ruh: c2U, rh: o8U };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == +O1y || P2U == +
 					w1y || P2U == (H1y ^ 0) || P2U == (G1y & 2147483647))) {
@@ -14799,7 +14795,7 @@ var cotgsubscribe = amplify;
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+d8y] = { ruh: c2U, rdh: q2U, rt: d8y | 4, rh: o8U };
-					D6["bd"][U2U][__s[D1R - 0]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == b1y >> 107859680 ||
 					P2U == +X1y || P2U == I1y - 0 || P2U == z1y << 1340905088)) {
@@ -14814,7 +14810,7 @@ var cotgsubscribe = amplify;
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+l8y] = { ruh: c2U, rdh: q2U, rh: o8U, rt: +l8y };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && (P2U == d1y >> 1758159904 ||
 					P2U == +k1y || P2U == +S1y || P2U == (J5y ^ 0))) {
@@ -14830,7 +14826,7 @@ var cotgsubscribe = amplify;
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+c8y] = { rh: o8U, rdh: q2U, ruh: c2U, rt: +c8y };
-					D6["bd"][U2U][__s[D1R << 817584832]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == (x5y & E6k
 					.s6s) || P2U == +W5y || P2U == +U5y || P2U == +c5y)) {
@@ -14845,11 +14841,11 @@ var cotgsubscribe = amplify;
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+k8y] = { rdh: q2U, ruh: c2U, rh: o8U, rt: +k8y };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == +K4y) {
 					var
-						Y2U = D6["bd"][U2U][__s[i1R & 2147483647]];
+						Y2U = D6["bd"][U2U]["bl"];
 					var W9U = bam["buildings"][P2U][_s(+
 						'860')][Y2U];
 					Z0l = 1;
@@ -14860,12 +14856,12 @@ var cotgsubscribe = amplify;
 					else var G9U = 0;
 					var p2U = {};
 					p2U[+F8y] = { rt: F8y & 2147483647, ruh: G9U, rdh: M9U, rh: W9U };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == +C4y) {
 					var K8U = bam[
 						"buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][__s[+i1R]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					x9U = x9U + s8U;
@@ -14876,11 +14872,11 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 26: { rt: A8y ^ 0, ruh: E2U, rh: s8U, rdh: k8U } };
-					D6["bd"][U2U][__s[D1R | 325]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == +S2y) {
 					var Y2U = D6[E6k
-						.S55(+N1R)][U2U][__s[i1R * 1]];
+						.S55(+N1R)][U2U]["bl"];
 					var s8U = bam["buildings"][P2U][__s[B5R - 0]][Y2U];
 					I0l = I0l + s8U;
 					if (m2U != 0) var k8U = bam["buildings"][P2U][__s[+B5R]][m2U];
@@ -14889,11 +14885,11 @@ var cotgsubscribe = amplify;
 						a2U];
 					else var E2U = 0;
 					var p2U = { 31: { ruh: E2U, rh: s8U, rt: b8y | 18, rdh: k8U } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == F4y - 0 || P2U ==
 					A4y * 1 || P2U == +r4y)) {
-					var Y2U = D6["bd"][U2U][__s[+i1R]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var s8U = bam[_s(+
 						Q5y)][P2U][__s[+B5R]][Y2U];
 					v0l = v0l + s8U;
@@ -14903,12 +14899,12 @@ var cotgsubscribe = amplify;
 						a2U];
 					else var E2U = 0;
 					var p2U = { 32: { rdh: k8U, ruh: E2U, rt: +h8y, rh: s8U } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == 483) {
 					var K8U = bam[E6k
 						.o55(+Q5y)][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][__s[+i1R]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var s8U =
 						bam["buildings"][P2U][__s[t1R & 2147483647]][Y2U];
 					t9U = t9U + s8U;
@@ -14919,12 +14915,12 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 25: { rdh: k8U, rh: s8U, rt: 25, ruh: E2U } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == 482) {
 					var K8U = bam[
 						"buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][__s[+i1R]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					Q9U = Q9U + s8U;
@@ -14935,13 +14931,13 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 28: { rdh: k8U, ruh: E2U, rt: R2y << 598198208, rh: s8U } };
-					D6["bd"][U2U][__s[D1R ^ 0]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == h4y - 0 ||
 					P2U == +P4y || P2U == +p4y)) {
 					var K8U = bam["buildings"][P2U][__s[6626]];
 					var Y2U = D6[E6k
-						.S55(+N1R)][U2U][__s[+i1R]];
+						.S55(+N1R)][U2U]["bl"];
 					var s8U = bam["buildings"][P2U][__s[t1R * 1]][Y2U];
 					v9U = v9U + s8U;
 					if (Y2U > u9U) u9U = Y2U;
@@ -14952,12 +14948,12 @@ var cotgsubscribe = amplify;
 						a2U];
 					else var E2U = 0;
 					var p2U = { 30: { rt: r8y << 664044736, rdh: k8U, rh: s8U, ruh: E2U } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == 500) {
 					var K8U =
 						bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][__s[i1R | 2220]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					T9U = T9U + s8U;
@@ -14968,7 +14964,7 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 27: { rdh: k8U, ruh: E2U, rh: s8U, rt: +e2y } };
-					D6["bd"][U2U][__s[D1R - 0]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == 502) {
 					var
@@ -14984,12 +14980,12 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 29: { rt: +G8y, ruh: E2U, rdh: k8U, rh: s8U } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == (504)) {
 					var K8U =
 						bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][__s[+i1R]];
+					var Y2U = D6["bd"][U2U]["bl"];
 					var s8U = bam[
 						"buildings"][P2U][__s[+t1R]][Y2U];
 					B9U = B9U + s8U;
@@ -15000,7 +14996,7 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 24: { rdh: k8U, ruh: E2U, rh: s8U, rt: 24 } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					D6["bd"][U2U][__s[i5R >> 1722621024]] = {};
 				}
 				if (D2U >= 1 && P2U == 445) {
@@ -15028,18 +15024,18 @@ var cotgsubscribe = amplify;
 					if (a2U != 0) var h9U = bam["buildings"][P2U][__s[+s8y]][a2U];
 					else var h9U = 0;
 					var p2U = { 22: { ruh: h9U, rdh: J9U, rh: L0l, rt: +j6y } };
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
 						if (B2U > 0 &&
 							D6["bd"][B2U]) {
-							var y2U = D6["bd"][B2U][__s[+m1R]];
+							var y2U = D6["bd"][B2U]["bid"];
 							if (y2U == 483 || y2U == +
 								C4y || y2U == (482) || y2U == +h4y || y2U == (P4y ^ 0) || y2U == +p4y || y2U == ('500' & E6k
 									.s6s) || y2U == 502) {
 								var K8U = bam["buildings"][y2U][__s[6626]];
 								var Y2U =
-									D6["bd"][B2U][__s[i1R | 2094]];
+									D6["bd"][B2U]["bl"];
 								var s8U = 0;
 								switch (K8U) {
 									case 0:
@@ -15171,10 +15167,10 @@ var cotgsubscribe = amplify;
 						var B2U = t8U[O8U];
 						if (D6[E6k
 							.S55(+N1R)][B2U]) {
-							var y2U = D6["bd"][B2U][__s[+m1R]];
+							var y2U = D6["bd"][B2U]["bid"];
 							if (y2U == G0l || y2U ==
 								C0l || y2U == W0l || y2U == i0l) {
-								var N2U = D6["bd"][B2U][__s[+i1R]];
+								var N2U = D6["bd"][B2U]["bl"];
 								var R2U = bam[
 									"buildings"][y2U][__s[j1R | 2053]][N2U];
 								var j9U = bam["buildings"][y2U][E6k
@@ -15195,7 +15191,7 @@ var cotgsubscribe = amplify;
 								if (!D6[_s(
 									N1R << 696067392)][B2U][__s[i5R ^ 0]]) D6["bd"][B2U][__s[+i5R]] = {};
 								D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-								D6["bd"][B2U][__s[X1R ^ 0]] = g8U;
+								D6["bd"][B2U]["rt"] = g8U;
 							}
 						}
 					}
@@ -15248,14 +15244,14 @@ var cotgsubscribe = amplify;
 						}
 					};
 					var c0l = { 14: { "rt": '14' ^ 0, "rh": d9U, "rdh": e0l, "ruh": F9U } };
-					D6["bd"][U2U][__s[+q5R]] = j8U;
-					D6["bd"][U2U][__s[+X1R]] = 0;
+					D6["bd"][U2U]["rb"] = j8U;
+					D6["bd"][U2U]["rt"] = 0;
 					D6["bd"][U2U][__s[4429]] = { 0: N9U, 1: Y9U, 2: p9U, 3: D9U };
-					D6["bd"][U2U][__s[+D1R]] = [];
-					D6["bd"][U2U][__s[D1R >> 236302464]][11] = N9U;
-					D6["bd"][U2U][__s[+D1R]][12] = Y9U;
-					D6["bd"][U2U][__s[+D1R]][+m2y] = p9U;
-					D6["bd"][U2U][__s[+D1R]][+'14'] = D9U;
+					D6["bd"][U2U]["rbb"] = [];
+					D6["bd"][U2U]["rbb"][11] = N9U;
+					D6["bd"][U2U]["rbb"][12] = Y9U;
+					D6["bd"][U2U]["rbb"][+m2y] = p9U;
+					D6["bd"][U2U]["rbb"][+'14'] = D9U;
 					Q0l = Q0l + o9U;
 					T0l = T0l + z9U;
 					x0l = x0l + i9U;
@@ -15299,10 +15295,10 @@ var cotgsubscribe = amplify;
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
 						var y2U = D6["bd"]
-						[B2U][__s[m1R * 1]];
+						[B2U]["bid"];
 						if (y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
 							var N2U = D6[E6k
-								.S55(N1R - 0)][B2U][__s[i1R >> 1403575968]];
+								.S55(N1R - 0)][B2U]["bl"];
 							var R2U = bam["buildings"][y2U][__s[+E5R]][
 								N2U];
 							if (N2U >= 2) var u8U = N2U - (1);
@@ -15341,11 +15337,11 @@ var cotgsubscribe = amplify;
 					if (I8U != 0) var Q8U = I8U * ((1) + H8U / ("100" >>
 						706311584)) * ((1) + x8U / (100)) * (1 + L8U / ("100" | 64));
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = 1;
-					D6["bd"][U2U][__s[P1R & 2147483647]] = z8U;
-					D6["bd"][U2U][__s[+a5R]] = T8U;
-					D6["bd"][U2U][__s[N5R * 1]] = Q8U;
-					D6["bd"][U2U][__s[q5R ^ 0]] = j8U;
+					D6["bd"][U2U]["rt"] = 1;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						1: {
 							rt: 1,
@@ -15355,7 +15351,7 @@ var cotgsubscribe = amplify;
 						}
 					};
 					var m9U = 1;
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					H0l = H0l + z8U;
 				}
 				w8U = "";
@@ -15400,7 +15396,7 @@ var cotgsubscribe = amplify;
 						var B2U = t8U[O8U];
 						if (D6["bd"][B2U]) {
 							var y2U =
-								D6["bd"][B2U][__s[m1R << 1941530848]];
+								D6["bd"][B2U]["bid"];
 							if (y2U == 0 && B2U != 0 &&
 								B2U != 1 && B2U != 2 && B2U != (3) && B2U != 4 && B2U != 5 && B2U !=
 								6 && B2U != 7 && B2U != 8 && B2U != 9 && B2U != 10 && B2U != 11 && B2U !=
@@ -15438,7 +15434,7 @@ var cotgsubscribe = amplify;
 										var N2U = 0;
 										g9U = 1;
 									} else var N2U = 1;
-								else var N2U = D6["bd"][B2U][__s[i1R | 136]];
+								else var N2U = D6["bd"][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][E6k
 									.o55(+E5R)][N2U];
 								if (N2U >= 2) var u8U = N2U - (1);
@@ -15484,11 +15480,11 @@ var cotgsubscribe = amplify;
 					if (I8U != 0) var Q8U = I8U * (1 + H8U / (100)) * ((1) +
 						x8U / 100) * (1 + L8U / (100)) * ((1) + c8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = 4;
-					D6["bd"][U2U][__s[P1R >> 2043650400]] = z8U;
-					D6["bd"][U2U][__s[+a5R]] = T8U;
-					D6["bd"][U2U][__s[+N5R]] = Q8U;
-					D6["bd"][U2U][__s[+q5R]] = j8U;
+					D6["bd"][U2U]["rt"] = 4;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						4: {
 							rdh: Q8U,
@@ -15497,7 +15493,7 @@ var cotgsubscribe = amplify;
 							rt: 4
 						}
 					};
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					K9U = K9U + z8U;
 				}
 				w8U = "";
@@ -15542,7 +15538,7 @@ var cotgsubscribe = amplify;
 								m1R | 2148)];
 							if (y2U == M8U || y2U == D0l || y2U == n8U || y2U == A8U) {
 								var N2U = D6[_s(N1R *
-									1)][B2U][__s[+i1R]];
+									1)][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
 								if (N2U >= ("2" |
 									0)) var u8U = N2U - 1;
@@ -15584,13 +15580,13 @@ var cotgsubscribe = amplify;
 					if (I8U != 0) var Q8U = I8U * ((1) + H8U / 100) * (("1" >>
 						835127904) + x8U / 100) * ((1) + L8U / ("100" | 68));
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = 10;
-					D6["bd"][U2U][__s[P1R | 2667]] = z8U;
-					D6["bd"][U2U][__s[+a5R]] = T8U;
-					D6["bd"][U2U][__s[+N5R]] = Q8U;
-					D6["bd"][U2U][__s[+q5R]] = j8U;
+					D6["bd"][U2U]["rt"] = 10;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = { 10: { rdh: Q8U, rh: z8U, rt: 10, ruh: T8U } };
-					D6["bd"][U2U][__s[D1R & 2147483647]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					P9U = P9U + z8U;
 				}
 				w8U = '';
@@ -15633,10 +15629,10 @@ var cotgsubscribe = amplify;
 						var B2U = t8U[O8U];
 						if (D6["bd"][B2U]) {
 							var y2U = D6["bd"][
-								B2U][__s[m1R | 2564]];
+								B2U]["bid"];
 							if (y2U == M8U && G8U == 0 || y2U == n8U || y2U ==
 								A8U) {
-								var N2U = D6["bd"][B2U][__s[+i1R]];
+								var N2U = D6["bd"][B2U]["bl"];
 								var R2U = bam["buildings"]
 								[y2U][__s[+E5R]][N2U];
 								if (N2U >= 2) var u8U = N2U - 1;
@@ -15679,11 +15675,11 @@ var cotgsubscribe = amplify;
 					if (I8U != (0)) var Q8U = I8U * ((1) + H8U / 100) * (1 + x8U / (
 						100)) * ((1) + L8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = 3;
-					D6["bd"][U2U][__s[P1R >> 973929984]] = z8U;
-					D6["bd"][U2U][__s[+a5R]] = T8U;
-					D6["bd"][U2U][__s[N5R | 1929]] = Q8U;
-					D6["bd"][U2U][__s[+q5R]] = j8U;
+					D6["bd"][U2U]["rt"] = 3;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						3: {
 							rh: z8U,
@@ -15692,7 +15688,7 @@ var cotgsubscribe = amplify;
 							ruh: T8U
 						}
 					};
-					D6["bd"][U2U][__s[+D1R]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					n9U = n9U + z8U;
 				}
 				w8U = '';
@@ -15733,7 +15729,7 @@ var cotgsubscribe = amplify;
 						var
 							B2U = t8U[O8U];
 						if (D6["bd"][B2U]) {
-							var y2U = D6["bd"][B2U][__s[+m1R]];
+							var y2U = D6["bd"][B2U]["bid"];
 							if (
 								y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
 								var N2U = D6["bd"][B2U][_s(+
@@ -15779,13 +15775,13 @@ var cotgsubscribe = amplify;
 					if (I8U != (0)) var Q8U = I8U * (1 + H8U / (100)) * (1 + x8U /
 						100) * (1 + L8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U][__s[+X1R]] = 2;
-					D6["bd"][U2U][__s[+P1R]] = z8U;
-					D6["bd"][U2U][__s[a5R & 2147483647]] = T8U;
-					D6["bd"][U2U][__s[+N5R]] = Q8U;
-					D6["bd"][U2U][__s[+q5R]] = j8U;
+					D6["bd"][U2U]["rt"] = 2;
+					D6["bd"][U2U]["rh"] = z8U;
+					D6["bd"][U2U]["ruh"] = T8U;
+					D6["bd"][U2U]["rdh"] = Q8U;
+					D6["bd"][U2U]["rb"] = j8U;
 					var p2U = { 2: { ruh: T8U, rh: z8U, rt: 2, rdh: Q8U } };
-					D6["bd"][U2U][__s[D1R * 1]] = p2U;
+					D6["bd"][U2U]["rbb"] = p2U;
 					A9U = A9U + z8U;
 				}
 			}
@@ -16590,12 +16586,12 @@ var cotgsubscribe = amplify;
 				else if (D1T == 4) {
 					var p1T = Z1T % +A5y;
 					var Y1T = (Z1T - p1T) / (A5y >> 225832320);
-					D6["bd"][Z1T][__s[+m1R]] = 0;
-					D6["bd"][Z1T][__s[+i1R]] = 0;
-					D6["bd"][Z1T][__s[h1R * 1]] = 0;
+					D6["bd"][Z1T]["bid"] = 0;
+					D6["bd"][Z1T]["bl"] = 0;
+					D6["bd"][Z1T]["bu"] = 0;
 					D6["bd"][Z1T]["bd"] = 0;
-					D6["bd"][Z1T][__s[X1R >> 99225856]] = 0;
-					D6["bd"][Z1T][__s[+P1R]] = 0;
+					D6["bd"][Z1T]["rt"] = 0;
+					D6["bd"][Z1T]["rh"] = 0;
 					I8(Z1T);
 					N4F(Z1T);
 					a1F();
@@ -16961,7 +16957,7 @@ var cotgsubscribe = amplify;
 				var l4w = D6.bd[c7w].bl;
 				if (I4w == d2y << 584242976) {
 					var Q4w = bam["buildings"][Number(I4w)][
-						__s[u5R << 1499503456]][Number(l4w)];
+						"cs"][Number(l4w)];
 					u4w = u4w + Q4w;
 				}
 			}
@@ -16982,7 +16978,7 @@ var cotgsubscribe = amplify;
 								1042045696)][Number(m7w)])
 								if (bam["buildings"][Number(m7w)][__s[+h6R]][Number(e4w)]) {
 									var H4w = bam["buildings"][
-										Number(m7w)][__s[C5y << 1679485440]];
+										Number(m7w)]["bn"];
 									var k4w = Math.ceil(bam["buildings"][Number(m7w)][E6k
 										.S55(+h6R)][Number(e4w)][__s[X6R << 1544008512]] / (Number(u4w) / (100)));
 									if (k4w <
@@ -17010,7 +17006,7 @@ var cotgsubscribe = amplify;
 							if (bam["buildings"][Number(m7w)])
 								if (bam["buildings"][Number(m7w)][__s[h6R & 2147483647]][Number(e4w)]) {
 									H4w = bam[_s(Q5y -
-										0)][Number(m7w)][__s[C5y << 371883424]];
+										0)][Number(m7w)]["bn"];
 									k4w = Math.ceil(bam["buildings"][Number(m7w)][__s[+h6R]][Number(e4w)][__s[+X6R]] / (
 										Number(u4w) / (100)));
 									if (k4w < Number(ppdt.mibt)) k4w = Number(ppdt.mibt);
@@ -18744,11 +18740,11 @@ var cotgsubscribe = amplify;
 								}
 								if (Z9T == 12) {
 									var E9T = D6[_s(+
-										N1R)][E1R ^ 0][__s[i1R | 2088]];
+										N1R)][E1R ^ 0]["bl"];
 									var Y9T = m6[d9T]["r"][12];
 									if (Number(E9T) <=
 										Number(Y9T)) {
-										D6["bd"][+E1R][__s[+i1R]] = Number(Y9T);
+										D6["bd"][+E1R]["bl"] = Number(Y9T);
 										var a9T = Y8(Number(
 											Y9T));
 										var F9T = 10;
@@ -18934,7 +18930,7 @@ var cotgsubscribe = amplify;
 			if (D6.w == 1) {
 				$(__s[6405])
 					.show();
-				if (D6["bd"][0][__s[+i1R]] >= 1) $(__s[f1p - 0])
+				if (D6["bd"][0]["bl"] >= 1) $(__s[f1p - 0])
 					.removeClass()
 					.addClass(__s[2247]);
 				else $(__s[f1p << 170377888])
@@ -18943,7 +18939,7 @@ var cotgsubscribe = amplify;
 			} else {
 				$(__s["6405" | 256])
 					.hide();
-				if (D6["bd"][0][__s[+i1R]] >= ("1" | 1)) $(__s[+f1p])
+				if (D6["bd"][0]["bl"] >= ("1" | 1)) $(__s[+f1p])
 					.removeClass()
 					.addClass(__s[1492]);
 				else $(__s[+f1p])
@@ -18962,9 +18958,9 @@ var cotgsubscribe = amplify;
 			var Q5g = new Array(+r1R, 523, 524);
 			for (var k5g = +
 				"0"; k5g < D6["bd"].length; k5g++) {
-				var e5g = D6["bd"][k5g][__s[+m1R]];
+				var e5g = D6["bd"][k5g]["bid"];
 				var j5g =
-					D6["bd"][k5g][__s[i1R - 0]];
+					D6["bd"][k5g]["bl"];
 				$(__s[B1R << 1102389152] + k5g)
 					.data("data", { "bl": j5g, "bid": e5g });
 				if (e5g != 0)
@@ -19150,7 +19146,7 @@ var cotgsubscribe = amplify;
 
 		function z1F(Z9g, K9g) {
 			if (typeof K9g === "undefined") K9g = D6["bd"][Number(Z9g)][
-				__s[+i1R]];
+				"bl"];
 			var g9g = Y8(K9g) - 443;
 			var n9g = g9g % (4);
 			var f9g = (g9g - n9g) / 4;
@@ -19196,10 +19192,10 @@ var cotgsubscribe = amplify;
 						var d7Z =
 							new Object();
 						for (var g7Z in D6.bd) {
-							C7Z = D6.bd[g7Z][__s[+i1R]];
+							C7Z = D6.bd[g7Z]["bl"];
 							if (C7Z >= 1 && C7Z < +
 								'10') {
-								h7Z = D6.bd[g7Z][__s[+m1R]];
+								h7Z = D6.bd[g7Z]["bid"];
 								if (bam["buildings"][Number(h7Z)]) {
 									b7Z = bam[_s(+
 										Q5y)][Number(h7Z)][__s[6112]];
@@ -19219,21 +19215,21 @@ var cotgsubscribe = amplify;
 										if (a7Z >= R7Z && c7Z >= B7Z) {
 											J7Z[Number(b7Z)] = new Object();
 											if (Number(
-												J7Z[Number(b7Z)][__s[+i1R]]) === undefined) {
+												J7Z[Number(b7Z)]["bl"]) === undefined) {
 												J7Z[Number(b7Z)][_s(i1R <<
 													891717120)] = 10;
-												d7Z[__s[i1R << 1911457952]] = 10;
+												d7Z["bl"] = 10;
 											}
 											if (U7Z > Number(C7Z)) {
 												J7Z[Number(b7Z)][_s(+
 													m1R)] = Number(h7Z);
-												J7Z[Number(b7Z)][__s[+i1R]] = Number(C7Z);
+												J7Z[Number(b7Z)]["bl"] = Number(C7Z);
 												J7Z[Number(b7Z)][__s[+R1p]] = Number(g7Z);
 												U7Z = Number(C7Z);
 											}
 											if (y7Z > Number(C7Z)) {
-												d7Z[__s[m1R << 2130838176]] = Number(h7Z);
-												d7Z[__s[+i1R]] = Number(C7Z);
+												d7Z["bid"] = Number(h7Z);
+												d7Z["bl"] = Number(C7Z);
 												d7Z[__s[+R1p]] = Number(g7Z);
 												y7Z = Number(C7Z);
 											}
@@ -19242,7 +19238,7 @@ var cotgsubscribe = amplify;
 								}
 							}
 						}
-						if (d7Z[__s[m1R << 1315908768]] !== undefined) Y2(d7Z[E6k
+						if (d7Z["bid"] !== undefined) Y2(d7Z[E6k
 							.S55(m1R & 2147483647)], Number(d7Z[__s[R1p << 2140165632]]), 4);
 					}
 					if ((D6.mo[+A8y] == ("1" |
@@ -19259,10 +19255,10 @@ var cotgsubscribe = amplify;
 						var d7Z = new Object();
 						for (
 							var g7Z in D6.bd) {
-							C7Z = D6.bd[g7Z][__s[i1R >> 169062464]];
+							C7Z = D6.bd[g7Z]["bl"];
 							if (C7Z >= 1 && C7Z < 10) {
 								h7Z =
-									D6.bd[g7Z][__s[m1R ^ 0]];
+									D6.bd[g7Z]["bid"];
 								if (bam["buildings"][Number(h7Z)]) {
 									b7Z = bam["buildings"][
 										Number(h7Z)][__s[6112]];
@@ -19285,21 +19281,21 @@ var cotgsubscribe = amplify;
 											if (a7Z >= R7Z && c7Z >= B7Z) {
 												J7Z[Number(b7Z)] = new Object();
 												if (Number(J7Z[
-													Number(b7Z)][__s[+i1R]]) === undefined) {
-													J7Z[Number(b7Z)][__s[i1R | 2190]] = +
+													Number(b7Z)]["bl"]) === undefined) {
+													J7Z[Number(b7Z)]["bl"] = +
 														'10';
-													d7Z[__s[i1R << 697825568]] = 10;
+													d7Z["bl"] = 10;
 												}
 												if (U7Z > Number(C7Z)) {
 													J7Z[Number(b7Z)][_s(
 														m1R ^ 0)] = Number(h7Z);
-													J7Z[Number(b7Z)][__s[+i1R]] = Number(C7Z);
+													J7Z[Number(b7Z)]["bl"] = Number(C7Z);
 													J7Z[Number(b7Z)][__s[R1p ^ 0]] = Number(g7Z);
 													U7Z = Number(C7Z);
 												}
 												if (y7Z > Number(C7Z)) {
-													d7Z[__s[m1R >> 1422580480]] = Number(h7Z);
-													d7Z[__s[+i1R]] = Number(C7Z);
+													d7Z["bid"] = Number(h7Z);
+													d7Z["bl"] = Number(C7Z);
 													d7Z[__s[R1p | 6144]] = Number(g7Z);
 													y7Z = Number(C7Z);
 												}
@@ -19309,7 +19305,7 @@ var cotgsubscribe = amplify;
 								}
 							}
 						}
-						if (d7Z[__s[+m1R]] !== undefined) Y2(d7Z[_s(+
+						if (d7Z["bid"] !== undefined) Y2(d7Z[_s(+
 							m1R)], Number(d7Z[__s[+R1p]]), 4);
 					}
 					if (D6.mo[9] >= 0 && D6.tq.length == 0) {
@@ -23647,7 +23643,7 @@ var cotgsubscribe = amplify;
 			var P04 = '3079';
 			E6k.R6();
 			var e1U = +r6y;
-			var s1U = D6.bd[0][__s[i1R - 0]];
+			var s1U = D6.bd[0]["bl"];
 			var s6U = D6.bd[0][_s(i1R ^
 				0)];
 			var X1U = +r6y;
@@ -23684,7 +23680,7 @@ var cotgsubscribe = amplify;
 			if (s1U == (0)) {
 				var U1U = bam[_s(+
 					Q5y)][Number(X1U)]["ds"];
-				var Z1U = bam["buildings"][Number(X1U)][__s[+C5y]];
+				var Z1U = bam["buildings"][Number(X1U)]["bn"];
 				var j1U = bam[
 					"buildings"][Number(X1U)][__s[h6R & 2147483647]][1][__s[+X6R]];
 				w2();
@@ -23897,7 +23893,7 @@ var cotgsubscribe = amplify;
 					var I1U = _s("3230" >>
 						585947168);
 					var M1U = __s[m24 << 1395490784] + s1U + " " + bam["buildings"][
-						e1U][__s[+C5y]];
+						e1U]["bn"];
 					$(__s[6700])
 						.css("display", "none");
 					$(__s[2866])
@@ -23923,7 +23919,7 @@ var cotgsubscribe = amplify;
 					$(__s[1080])
 						.show();
 					var M1U = __s[m24 >> 555216384] + s1U + " " + bam["buildings"][e1U][
-						__s[C5y >> 477757696]];
+						"bn"];
 					var z1U = Q2(j1U);
 					if (u1U <= (10)) {
 						if (bam["buildings"][Number(
@@ -24538,11 +24534,11 @@ var cotgsubscribe = amplify;
 						$(__s[D44 | 6])
 							.css("display", "none");
 						var j3U = $(this)
-							.attr(__s[+a4R]);
+							.attr("value");
 						//            if (j3U != 0 && j3U != undefined) {
 						if (j3U && j3U != 0) {
 							var V3U = bam["buildings"][Number(j3U)]["ds"];
-							var J3U = bam["buildings"][Number(j3U)][__s[C5y << 593651392]];
+							var J3U = bam["buildings"][Number(j3U)]["bn"];
 							var o3U = Math.ceil(
 								bam["buildings"][Number(j3U)][__s[+h6R]][1][__s[+X6R]] / (Number(D6.cs) / 100)
 							);
@@ -25375,7 +25371,7 @@ var cotgsubscribe = amplify;
 			var j5l = "";
 			if (l5l == undefined) {
 				var o5l = bam["buildings"][
-					Number(x5l)][__s[+C5y]];
+					Number(x5l)]["bn"];
 				var j5l = __s[975] + o5l + __s[l14 - 0];
 				$(__s[+b24])
 					.html(j5l);
@@ -25388,8 +25384,8 @@ var cotgsubscribe = amplify;
 				var V5l;
 				for (
 					var L5l in l5l) {
-					o5l = bam["buildings"][Number(l5l[L5l][__s[+g4p]])][__s[+C5y]];
-					i5l = D6.bd[Number(l5l[L5l][__s[B9y << 1344283840]])][__s[+i1R]];
+					o5l = bam["buildings"][Number(l5l[L5l][__s[+g4p]])]["bn"];
+					i5l = D6.bd[Number(l5l[L5l][__s[B9y << 1344283840]])]["bl"];
 					G5l = l5l[L5l]['a'];
 					M5l += Number(G5l);
 					if (i5l != 0) j5l += __s[5719] + i5l + " " + o5l +
@@ -25416,14 +25412,14 @@ var cotgsubscribe = amplify;
 				var O5l = D6.bd[Number(t5l)].rtt;
 				for (var X5l in O5l) {
 					v5l += __s[+g54] +
-						btxt[Number(O5l[Number(X5l)][__s[+X1R]])] + __s[c2y * 1] + p6(Math.floor(Number(O5l[Number(X5l)][
-							__s[P1R | 611]]))) + __s[K5y - 0];
-					T5l += __s[g54 ^ 0] + bdowntxt[Number(O5l[Number(X5l)][__s[X1R | 2200]])] + __s[+c2y] + p6(Math
-						.floor(Number(O5l[Number(X5l)][__s[N5R & 2147483647]]))) + __s[+K5y];
-					Q5l += __s[+g54] + buptxt[Number(O5l[Number(X5l)][__s[X1R * 1]])] + __s[c2y ^ 0] + p6(Math
-						.floor(Number(O5l[Number(X5l)][__s[a5R >> 656485600]]))) + __s[K5y * 1];
-					I5l += __s[+g54] + bdemotxt[Number(O5l[Number(X5l)][__s[X1R * 1]])] + __s[c2y ^ 0] + p6(Math
-						.floor((0) - Number(O5l[Number(X5l)][__s[+P1R]]))) + __s[+K5y];
+						btxt[Number(O5l[Number(X5l)]["rt"])] + __s[c2y * 1] + p6(Math.floor(Number(O5l[Number(X5l)][
+							"rh"]))) + __s[K5y - 0];
+					T5l += __s[g54 ^ 0] + bdowntxt[Number(O5l[Number(X5l)]["rt"])] + __s[+c2y] + p6(Math
+						.floor(Number(O5l[Number(X5l)]["rdh"]))) + __s[+K5y];
+					Q5l += __s[+g54] + buptxt[Number(O5l[Number(X5l)]["rt"])] + __s[c2y ^ 0] + p6(Math
+						.floor(Number(O5l[Number(X5l)]["ruh"]))) + __s[K5y * 1];
+					I5l += __s[+g54] + bdemotxt[Number(O5l[Number(X5l)]["rt"])] + __s[c2y ^ 0] + p6(Math
+						.floor((0) - Number(O5l[Number(X5l)]["rh"]))) + __s[+K5y];
 				}
 				$(__s[2964])
 					.prepend(Q5l);
@@ -25452,11 +25448,11 @@ var cotgsubscribe = amplify;
 				var b5l = z5l - +
 					'1';
 				var d5l = z5l + 1;
-				var W5l = bam["buildings"][Number(x5l)][__s[+u5R]][Number(
+				var W5l = bam["buildings"][Number(x5l)]["cs"][Number(
 					z5l)];
-				var Q5l = bam["buildings"][Number(x5l)][__s[+u5R]][Number(d5l)];
+				var Q5l = bam["buildings"][Number(x5l)]["cs"][Number(d5l)];
 				var T5l = bam[_s(Q5y & E6k
-					.s6s)][Number(x5l)][__s[u5R | 1040]][Number(b5l)];
+					.s6s)][Number(x5l)]["cs"][Number(b5l)];
 				var I5l = 0 - Number(W5l);
 				var v5l = _s(Z5y *
 					1) + btxt[w5l] + __s[+c2y] + Math.floor(W5l) + __s[t54 * 1];
@@ -25543,8 +25539,8 @@ var cotgsubscribe = amplify;
 				var V5l;
 				for (var L5l in l5l) {
 					o5l = bam["buildings"][Number(l5l[L5l][_s(+
-						g4p)])][__s[C5y & 2147483647]];
-					i5l = D6.bd[Number(L5l)][__s[i1R | 2048]];
+						g4p)])]["bn"];
+					i5l = D6.bd[Number(L5l)]["bl"];
 					G5l = l5l[L5l]["a"];
 					M5l += Number(G5l);
 					j5l += __s['228' | 4] + i5l + " " + o5l + __s[3996] + Math.floor(G5l) + E6k
@@ -25834,11 +25830,11 @@ var cotgsubscribe = amplify;
 				h9g = h9g * +G5y;
 				r9g = r9g * +G5y;
 				$(__s[B1R * 1] + b9g)
-					.data("data", { "bid": S9g, "bl": D6["bd"][b9g][__s[+i1R]] });
+					.data("data", { "bid": S9g, "bl": D6["bd"][b9g]["bl"] });
 				var
 					J9g = S9g % 4;
 				var V9g = (S9g - J9g) / 4;
-				D6["bd"][b9g][__s[m1R | 865]] = A9g;
+				D6["bd"][b9g]["bid"] = A9g;
 				J9g = J9g * (G5y * 1);
 				V9g = V9g * +G5y;
 				$(__s[r5y & 2147483647] + b9g)
@@ -27662,10 +27658,10 @@ var cotgsubscribe = amplify;
 					f6w || D6w == f6w || g6w == f6w || p6w == f6w || y6w == f6w || R6w == f6w || B6w == f6w || P6w == f6w ||
 					U6w == f6w) Z6w = 1;
 			}
-			if (D6.bd[n6w][__s[+m1R]] != (0) || D6.bd[D6w][__s[+m1R]] != 0 ||
-				D6.bd[g6w][__s[m1R << 1891276288]] != 0 || D6.bd[p6w][__s[+m1R]] != (0) || D6.bd[y6w][E6k
-					.o55(m1R | 97)] != 0 || D6.bd[R6w][__s[+m1R]] != 0 || D6.bd[B6w][_s(m1R |
-						2404)] != 0 || D6.bd[P6w][__s[+m1R]] != (0) || D6.bd[U6w][__s[m1R << 322693344]] != +
+			if (D6.bd[n6w]["bid"] != (0) || D6.bd[D6w]["bid"] != 0 ||
+				D6.bd[g6w]["bid"] != 0 || D6.bd[p6w]["bid"] != (0) || D6.bd[y6w][E6k
+					.o55(m1R | 97)] != 0 || D6.bd[R6w]["bid"] != 0 || D6.bd[B6w][_s(m1R |
+						2404)] != 0 || D6.bd[P6w]["bid"] != (0) || D6.bd[U6w]["bid"] != +
 						"0" || !Z2(n6w) || !Z2(D6w) || !Z2(g6w) || !Z2(p6w) || !Z2(y6w) || !Z2(R6w) || !Z2(B6w) || !Z2(P6w) || !Z2(
 							U6w)) Z6w = 1;
 			if (Z6w == (1)) Y6(__s[3774]);
@@ -29672,7 +29668,7 @@ var cotgsubscribe = amplify;
 								} else if (bam["buildings"][g7v][E6k
 									.o55(c1R ^ 0)]) var B7v = bam["buildings"][g7v][__s[+c1R]];
 								var L4v = bam["buildings"]
-								[g7v][__s[+C5y]];
+								[g7v]["bn"];
 								var t4v = f7v["bd"][g7v];
 								if (y4v <= ('6' | 4)) {
 									c7v = c7v + E6k
@@ -30382,7 +30378,7 @@ var cotgsubscribe = amplify;
 								var G4v = __s[l64 << 668950560];
 								for (var g7v in f7v[__s[G5p * 1]]) {
 									var L4v = bam[
-										"buildings"][g7v][__s[C5y & 2147483647]];
+										"buildings"][g7v]["bn"];
 									var t4v = f7v[__s[+G5p]][g7v];
 									if (g7v ==
 										R1R * 1 && f7v[__s[j84 << 1684529504]]) var B7v = shrinesarr[Number(f7v[_s(j84 -
@@ -30652,7 +30648,7 @@ var cotgsubscribe = amplify;
 										shrinesarr[Number(f7v[__s[+j84]])][__s[+c1R]];
 									else var B7v = bam["buildings"][g7v][__s[+c1R]];
 									var L4v = bam["buildings"][g7v][
-										__s[C5y * 1]];
+										"bn"];
 									var V3v = f7v[__s[i5p - 0]][g7v];
 									var t4v = f7v["bd"]
 									[g7v];
@@ -31279,7 +31275,7 @@ var cotgsubscribe = amplify;
 				w3w = "<br>Speedup time: " + Q2(x3w);
 			}
 			$(__s[i7y - 0])
-				.html(__s[5359] + p6(D6[__s[+u5R]]) + __s[5227] + w3w);
+				.html(__s[5359] + p6(D6["cs"]) + __s[5227] + w3w);
 			var H3w = Math.floor(D6
 				.r[1].r / 1000);
 			var s3w = Math.floor(D6.r[2].r / (1000));
@@ -31449,7 +31445,7 @@ var cotgsubscribe = amplify;
 						.addClass(__s[5200] + z3w);
 					bam["buildings"][+R1R][__s[c1R & 2147483647]] = shrinesarr[Number(D6.ble[2])][_s(+
 						c1R)];
-					bam["buildings"][R1R ^ 0][__s[+C5y]] = __s[930] + c4w;
+					bam["buildings"][R1R ^ 0]["bn"] = __s[930] + c4w;
 					bam["buildings"][+R1R]["ds"] = shrinesarr[Number(D6.ble[2])]["d"];
 					if (Math.floor(D6
 						.ble[10]) == 0 && Math.floor(D6.ble[11]) == 0) {
@@ -31517,7 +31513,7 @@ var cotgsubscribe = amplify;
 				$(__s[g0t | 5121])
 					.attr(__s[p9y * 1], !!{});
 				bam["buildings"][+R1R][__s[c1R >> 996830272]] = shrinesarr[Number(D6.ble[4])][__s[c1R * 1]];
-				bam["buildings"][R1R << 418261952][__s[C5y * 1]] = __s[930] + c4w;
+				bam["buildings"][R1R << 418261952]["bn"] = __s[930] + c4w;
 				bam["buildings"][R1R ^ 0]["ds"] = shrinesarr[Number(D6.ble[4])]["d"];
 				if (D6.ble[+
 					"5"] == 10) $(__s[s0t ^ 0])
@@ -32709,7 +32705,7 @@ var cotgsubscribe = amplify;
 
 		function N9F(o7g) {
 			E6k.y6();
-			var L7g = Number(D6.bd[+E1R][__s[i1R & 2147483647]]);
+			var L7g = Number(D6.bd[+E1R]["bl"]);
 			var X7g = Number(bam[_s(
 				Q5y ^ 0)][o7g][__s["5812" | 5264]]);
 			if (Number(o7g) == r1R << 545553696 || Number(o7g) == +C6y || Number(
@@ -33141,8 +33137,8 @@ var cotgsubscribe = amplify;
 			var S9n = 0;
 			for (var b9n = 0; b9n < J9n; b9n++) {
 				n9n = b9n;
-				h9n = Number(D6.bd[b9n][__s[+m1R]]);
-				V9n = Number(D6.bd[b9n][__s[i1R >> 1538816480]]);
+				h9n = Number(D6.bd[b9n]["bid"]);
+				V9n = Number(D6.bd[b9n]["bl"]);
 				if (r9n == h9n) S9n += V9n;
 			}
 			if (S9n >= A9n) return !
@@ -34974,7 +34970,7 @@ var cotgsubscribe = amplify;
 
 		function r5V() {
 			l1F.push({
-				bid: h2[0][__s[+m1R]],
+				bid: h2[0]["bid"],
 				btype: h2[0].btype,
 				bspot: h2[0].bspot,
 				slvl: h2[0].slvl,
@@ -40898,9 +40894,9 @@ var cotgsubscribe = amplify;
 						0)];
 					if (bid == (G1R | 385) || bid == +C6y || bid == +r1R || bid == (b1R ^ 0)) {
 						I8(qtopleft[t1D]);
-						D6["bd"][qtopleft[t1D]][__s[m1R | 2048]] = 0;
-						D6["bd"][qtopleft[t1D]][__s[i1R - 0]] = 0;
-						D6["bd"][qtopleft[t1D]][__s[+h1R]] = 0;
+						D6["bd"][qtopleft[t1D]]["bid"] = 0;
+						D6["bd"][qtopleft[t1D]]["bl"] = 0;
+						D6["bd"][qtopleft[t1D]]["bu"] = 0;
 						D6["bd"][qtopleft[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == 2)
@@ -40909,9 +40905,9 @@ var cotgsubscribe = amplify;
 						m1R)];
 					if (bid == +G1R || bid == C6y - 0 || bid == r1R >> 671390368 || bid == +b1R) {
 						I8(qtopright[t1D]);
-						D6["bd"][qtopright[t1D]][__s[+m1R]] = 0;
-						D6["bd"][qtopright[t1D]][__s[i1R - 0]] = 0;
-						D6["bd"][qtopright[t1D]][__s[h1R | 2690]] = 0;
+						D6["bd"][qtopright[t1D]]["bid"] = 0;
+						D6["bd"][qtopright[t1D]]["bl"] = 0;
+						D6["bd"][qtopright[t1D]]["bu"] = 0;
 						D6["bd"][qtopright[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == 3)
@@ -40921,9 +40917,9 @@ var cotgsubscribe = amplify;
 					if (bid == +G1R || bid == +C6y || bid == r1R - 0 || bid == b1R * 1) {
 						I8(qbotleft[
 							t1D]);
-						D6["bd"][qbotleft[t1D]][__s[+m1R]] = 0;
-						D6["bd"][qbotleft[t1D]][__s[+i1R]] = 0;
-						D6["bd"][qbotleft[t1D]][__s[h1R & 2147483647]] = 0;
+						D6["bd"][qbotleft[t1D]]["bid"] = 0;
+						D6["bd"][qbotleft[t1D]]["bl"] = 0;
+						D6["bd"][qbotleft[t1D]]["bu"] = 0;
 						D6["bd"][qbotleft[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == "4" >>
@@ -40934,9 +40930,9 @@ var cotgsubscribe = amplify;
 					if (bid == +G1R || bid == C6y << 914288736 || bid == +r1R || bid == +
 						b1R) {
 						I8(qbotright[t1D]);
-						D6["bd"][qbotright[t1D]][__s[+m1R]] = 0;
-						D6["bd"][qbotright[t1D]][__s[i1R | 36]] = 0;
-						D6["bd"][qbotright[t1D]][__s[+h1R]] = 0;
+						D6["bd"][qbotright[t1D]]["bid"] = 0;
+						D6["bd"][qbotright[t1D]]["bl"] = 0;
+						D6["bd"][qbotright[t1D]]["bu"] = 0;
 						D6["bd"][qbotright[t1D]]["bd"] = 0;
 					}
 				} else if (o1D ==
@@ -40947,9 +40943,9 @@ var cotgsubscribe = amplify;
 					if (bid == (G1R & 2147483647) || bid == (C6y ^ 0) || bid == +r1R || bid == b1R <<
 						600757344) {
 						I8(qcenter[t1D]);
-						D6["bd"][qcenter[t1D]][__s[+m1R]] = 0;
-						D6["bd"][qcenter[t1D]][__s[i1R >> 1797034592]] = 0;
-						D6["bd"][qcenter[t1D]][__s[h1R << 1122507552]] = 0;
+						D6["bd"][qcenter[t1D]]["bid"] = 0;
+						D6["bd"][qcenter[t1D]]["bl"] = 0;
+						D6["bd"][qcenter[t1D]]["bu"] = 0;
 						D6["bd"][qcenter[t1D]]["bd"] = 0;
 					}
 				}
@@ -41105,7 +41101,7 @@ var cotgsubscribe = amplify;
 			if (i2U == undefined && d2U == undefined) {
 				if (bam["buildings"][
 					Number(S2U)]) {
-					var C2U = bam["buildings"][Number(S2U)][__s[C5y | 28]];
+					var C2U = bam["buildings"][Number(S2U)]["bn"];
 					var X2U = _s('975' <<
 						1828104672) + C2U + __s[+l14];
 					$(__s[+b24])
@@ -41122,8 +41118,8 @@ var cotgsubscribe = amplify;
 				if (i2U != undefined) {
 					for (var G2U in i2U) {
 						C2U = bam["buildings"][Number(i2U[G2U][_s(+
-							g4p)])][__s[+C5y]];
-						b2U = D6.bd[Number(i2U[G2U][__s[+B9y]])][__s[i1R - 0]];
+							g4p)])]["bn"];
+						b2U = D6.bd[Number(i2U[G2U][__s[+B9y]])]["bl"];
 						W2U = i2U[G2U]["a"];
 						V2U += Number(W2U);
 						if (b2U != 0) X2U += __s[5719] + b2U + " " + C2U + _s(
@@ -41138,8 +41134,8 @@ var cotgsubscribe = amplify;
 				if (d2U != undefined) {
 					for (var G2U in d2U) {
 						C2U = bam["buildings"][Number(d2U[
-							G2U][__s[g4p & 2147483647]])][__s[C5y & 2147483647]];
-						b2U = D6.bd[Number(d2U[G2U][__s[B9y | 41]])][__s[+i1R]];
+							G2U][__s[g4p & 2147483647]])]["bn"];
+						b2U = D6.bd[Number(d2U[G2U][__s[B9y | 41]])]["bl"];
 						W2U = d2U[G2U]['a'];
 						V2U += Number(W2U);
 						if (b2U != 0) X2U += __s[228] + b2U + " " + C2U + _s(
@@ -41167,14 +41163,14 @@ var cotgsubscribe = amplify;
 				var z2U = J2U;
 				for (var M2U in z2U) {
 					A2U += __s[+g54] + btxt[
-						Number(z2U[Number(M2U)][__s[+X1R]])] + __s[c2y << 1468897792] + p6(Math.floor(Number(z2U[Number(
-							M2U)][__s[P1R | 601]]))) + __s[K5y << 439730016];
-					n2U += __s[+g54] + bdowntxt[Number(z2U[Number(M2U)][__s[X1R * 1]])] + __s[c2y & 2147483647] + p6(
-						Math.floor(Number(z2U[Number(M2U)][__s[N5R - 0]]))) + __s[+K5y];
-					f2U += __s[+g54] + buptxt[Number(z2U[Number(M2U)][__s[X1R * 1]])] + __s[c2y ^ 0] + p6(Math
-						.floor(Number(z2U[Number(M2U)][__s[+a5R]]))) + __s[+K5y];
-					K2U += __s[g54 * 1] + bdemotxt[Number(z2U[Number(M2U)][__s[+X1R]])] + __s[c2y | 2048] + p6(Math
-						.floor((0) - Number(z2U[Number(M2U)][__s[P1R & 2147483647]]))) + __s[+K5y];
+						Number(z2U[Number(M2U)]["rt"])] + __s[c2y << 1468897792] + p6(Math.floor(Number(z2U[Number(
+							M2U)]["rh"]))) + __s[K5y << 439730016];
+					n2U += __s[+g54] + bdowntxt[Number(z2U[Number(M2U)]["rt"])] + __s[c2y & 2147483647] + p6(
+						Math.floor(Number(z2U[Number(M2U)]["rdh"]))) + __s[+K5y];
+					f2U += __s[+g54] + buptxt[Number(z2U[Number(M2U)]["rt"])] + __s[c2y ^ 0] + p6(Math
+						.floor(Number(z2U[Number(M2U)]["ruh"]))) + __s[+K5y];
+					K2U += __s[g54 * 1] + bdemotxt[Number(z2U[Number(M2U)]["rt"])] + __s[c2y | 2048] + p6(Math
+						.floor((0) - Number(z2U[Number(M2U)]["rh"]))) + __s[+K5y];
 				}
 				$(_s(
 					2964))
@@ -42201,7 +42197,7 @@ var cotgsubscribe = amplify;
 		function J5V() {
 			var s2w = [];
 			s2w.push({
-				bid: q2[0][__s[m1R | 2112]],
+				bid: q2[0]["bid"],
 				btype: r6y | 801,
 				bspot: q2[0].bspot,
 				slvl: q2["0" >>
@@ -42257,15 +42253,15 @@ var cotgsubscribe = amplify;
 						var T2w = e2w + (A5y >>
 							272862560);
 						var x2w = e2w + +j6y;
-						D6["bd"][e2w][__s[+m1R]] = R1R | 32;
-						D6["bd"][Q2w][__s[m1R ^ 0]] = 891;
-						D6["bd"][t2w][__s[+m1R]] = z9R ^ 0;
-						D6["bd"][o2w][__s[m1R & 2147483647]] = 893;
-						D6["bd"][L2w][__s[m1R - 0]] = 894;
-						D6["bd"][X2w][__s[+m1R]] = D7t ^ 0;
-						D6["bd"][z2w][__s[m1R - 0]] = 896;
-						D6["bd"][T2w][__s[m1R - 0]] = +Y1R;
-						D6["bd"][x2w][__s[m1R - 0]] = '898' | 130;
+						D6["bd"][e2w]["bid"] = R1R | 32;
+						D6["bd"][Q2w]["bid"] = 891;
+						D6["bd"][t2w]["bid"] = z9R ^ 0;
+						D6["bd"][o2w]["bid"] = 893;
+						D6["bd"][L2w]["bid"] = 894;
+						D6["bd"][X2w]["bid"] = D7t ^ 0;
+						D6["bd"][z2w]["bid"] = 896;
+						D6["bd"][T2w]["bid"] = +Y1R;
+						D6["bd"][x2w]["bid"] = '898' | 130;
 					}
 			});
 		}
@@ -43235,7 +43231,7 @@ var cotgsubscribe = amplify;
 				J3D = 0;
 			for (var h3D = 0; h3D < qtopleft.length; h3D++) {
 				J3D = D6["bd"][qtopleft[
-					h3D]][__s[m1R & 2147483647]];
+					h3D]]["bid"];
 				if (J3D == G1R - 0 || J3D == +C6y || J3D == +r1R || J3D == +b1R) f3D += +
 					'1';
 			}
@@ -43247,19 +43243,19 @@ var cotgsubscribe = amplify;
 			}
 			for (var h3D = 0; h3D < qbotleft.length; h3D++) {
 				J3D = D6["bd"][
-					qbotleft[h3D]][__s[+m1R]];
+					qbotleft[h3D]]["bid"];
 				if (J3D == +G1R || J3D == (C6y | 192) || J3D == (r1R & 2147483647) || J3D == (
 					b1R & 2147483647)) V3D += 1;
 			}
 			for (var h3D = 0; h3D < qbotright.length; h3D++) {
 				J3D = D6[_s(
-					N1R ^ 0)][qbotright[h3D]][__s[m1R | 837]];
+					N1R ^ 0)][qbotright[h3D]]["bid"];
 				if (J3D == +G1R || J3D == +C6y || J3D == r1R * 1 || J3D == +
 					b1R) r3D += 1;
 			}
 			for (var h3D = 0; h3D < qcenter.length; h3D++) {
 				J3D = D6["bd"][
-					qcenter[h3D]][__s[+m1R]];
+					qcenter[h3D]]["bid"];
 				if (J3D == +G1R || J3D == (C6y & 2147483647) || J3D == +r1R || J3D == +b1R)
 					A3D += 1;
 			}
@@ -44734,7 +44730,7 @@ var cotgsubscribe = amplify;
 				} else if (T6U >= 1 && O6U == 0 && t6U == 0 && s2U == 0) {
 					var o6U = _s(+
 						"3230");
-					var h6U = __s[+m24] + T6U + " " + bam["buildings"][l6U][__s[+C5y]];
+					var h6U = __s[+m24] + T6U + " " + bam["buildings"][l6U]["bn"];
 					$(__s[990])
 						.css("display", "none");
 					$(__s[2067])
@@ -47525,7 +47521,7 @@ var cotgsubscribe = amplify;
 			E6k.R6();
 			for (var Q6g = 0; Q6g < D6.bq.length; Q6g++) {
 				var o6g = bam[_s(Q5y >>
-					413132960)][D6.bq[Q6g].brep][__s[C5y ^ 0]];
+					413132960)][D6.bq[Q6g].brep]["bn"];
 				var T6g = Number(D6.bq[Q6g].bid);
 				var C6g = Number(D6.bq[
 					Q6g].brep);
@@ -47711,7 +47707,7 @@ var cotgsubscribe = amplify;
 						var J1D = X1D % +A5y;
 						var h1D = (X1D - J1D) / +A5y;
 						z1D = 0;
-						if (M1D == "-" && D6.bd[X1D][__s[+m1R]] != 0) {
+						if (M1D == "-" && D6.bd[X1D]["bid"] != 0) {
 							z1D = 475;
 							z1D = z1D - 443;
 							var W1D = z1D % 4 * (G5y >> 2112323712);
@@ -47724,12 +47720,12 @@ var cotgsubscribe = amplify;
 									'height': _s(+
 										p5y)
 								});
-						} else if (!(M1D == "-" && D6.bd[X1D][__s[+m1R]] == 0))
+						} else if (!(M1D == "-" && D6.bd[X1D]["bid"] == 0))
 							if (layarray[M1D])
-								if (D6.bd[X1D][__s[m1R & 2147483647]] != layarray[M1D]) {
+								if (D6.bd[X1D]["bid"] != layarray[M1D]) {
 									if (M1D == __s[4632] && D6.bd[X1D][
-										__s[m1R | 356]] != (F4y | 256) && D6.bd[X1D][__s[+m1R]] != (A4y & 2147483647) && D6.bd[X1D]
-										[__s[+m1R]] != +r4y)
+										"bid"] != (F4y | 256) && D6.bd[X1D]["bid"] != (A4y & 2147483647) && D6.bd[X1D]
+										["bid"] != +r4y)
 										if (X1D == +V5R || X1D == +c5R || X1D == u8y >> 1281648832 || X1D == +M5R) {
 											z1D = t0R ^ 0;
 											C1D = J0R - 0;
@@ -47739,8 +47735,8 @@ var cotgsubscribe = amplify;
 										} else {
 											z1D = 50;
 											C1D = x0R << 1412177632;
-										} else if (M1D == __s[6989] && D6.bd[X1D][__s[m1R ^ 0]] !=
-											(h4y & 2147483647) && D6.bd[X1D][__s[m1R & 2147483647]] != +P4y && D6.bd[X1D][__s[+m1R]] !=
+										} else if (M1D == __s[6989] && D6.bd[X1D]["bid"] !=
+											(h4y & 2147483647) && D6.bd[X1D]["bid"] != +P4y && D6.bd[X1D]["bid"] !=
 											p4y * 1)
 										if (X1D == (V5R ^ 0) || X1D == c5R >> 1614424704 || X1D == +u8y || X1D == +M5R) {
 											z1D = 51;
@@ -48389,7 +48385,7 @@ var cotgsubscribe = amplify;
 				}
 				$(__s[1328])
 					.show();
-				if (D6["bd"][E1R >> 1672468448][__s[+i1R]] == (1)) {
+				if (D6["bd"][E1R >> 1672468448]["bl"] == (1)) {
 					if (m7g == _s(+
 						'4867')) $(__s[1328])
 							.show();
@@ -50125,8 +50121,8 @@ var cotgsubscribe = amplify;
 			else if ((H7g == O1y * 1 || H7g == +w1y || H7g == (H1y ^ 0) || H7g == +G1y || H7g == +b1y || H7g == +X1y ||
 				H7g == +I1y || H7g == z1y << 2136267392 || H7g == +d1y || H7g == (k1y ^ 0) || H7g == S1y << 551109280 ||
 				H7g == (J5y ^ 0) || H7g == +x5y || H7g == W5y >> 1862552512 || H7g == U5y << 1218540256 || H7g == c5y - 0
-			) && D6.bd[0][__s[i1R * 1]] == 0) return ![];
-			else if (D6.bd[j7g][__s[m1R - 0]] != (0)) return !"1";
+			) && D6.bd[0]["bl"] == 0) return ![];
+			else if (D6.bd[j7g]["bid"] != (0)) return !"1";
 			else return !!1;
 		}
 
@@ -50459,7 +50455,7 @@ var cotgsubscribe = amplify;
 				4)) {
 				var M0w = 0;
 				for (var p9g = 0; p9g < C8.length; p9g++)
-					if (D6["bd"][p9g][__s[i1R * 1]] >= 1 && D6["bd"][p9g][__s[m1R | 2560]] !=
+					if (D6["bd"][p9g]["bl"] >= 1 && D6["bd"][p9g]["bid"] !=
 						r6y >> 1266285600) M0w = 1;
 				if (M0w == 0) {
 					var Q0w = $(__s[+x24])
@@ -52852,7 +52848,7 @@ var cotgsubscribe = amplify;
 					p3g = Number(D6.bq[D3g].elvl);
 					c3g = Number(D6.bq[D3g].slvl);
 					m3g = Number(D6.bq[D3g].pa);
-					var H1g = bam["buildings"][N3g][__s[C5y * 1]];
+					var H1g = bam["buildings"][N3g]["bn"];
 					var L1g = bam[_s(
 						Q5y ^ 0)][N3g][__s[3584]];
 					var k1g = q3g - a3g;
@@ -53365,7 +53361,7 @@ var cotgsubscribe = amplify;
 						O5w = 1;
 						Y6(__s[6755]);
 					}
-					if (D6.bd[s5w][__s[+m1R]] != 0 && D6.bd[s5w][__s[m1R ^ 0]] !=
+					if (D6.bd[s5w]["bid"] != 0 && D6.bd[s5w]["bid"] !=
 						u5w) {
 						O5w = 1;
 						Y6(__s[3957]);
@@ -53586,7 +53582,7 @@ var cotgsubscribe = amplify;
 									else if (n5w < M5w && o5w == 0) Y6(__s[+g8y]);
 									else {
 										a5V();
-										var f5w = D6.bd[s5w][__s[+i1R]];
+										var f5w = D6.bd[s5w]["bl"];
 										for (var H5w = 0; H5w < D6.bq
 											.length; H5w++) {
 											var c5w = D6.bq[H5w][__s[m54 >> 1189872704]];
@@ -55722,9 +55718,9 @@ var cotgsubscribe = amplify;
 		//      gCPosted();
 		//    if ($("#citySpotMenu")
 		//      .is(":visible")) {
-		//      var c3U = D6["bd"][Number(d2)][__s[m1R * 1]];
+		//      var c3U = D6["bd"][Number(d2)]["bid"];
 		//      var m3U =
-		//        D6["bd"][Number(d2)][__s[+i1R]];
+		//        D6["bd"][Number(d2)]["bl"];
 		//      var a3U = Math.ceil(bam["buildings"][c3U][E6k
 		//        .o55(h6R | 2049)][m3U][__s[X6R << 1836304064]] / (Number(D6.cs) / 100));
 		//      var E3U = Math.ceil(bam[
@@ -55801,7 +55797,7 @@ var cotgsubscribe = amplify;
 			if (D6.w == 1) {
 				$(__s[6405])
 					.show();
-				if (D6["bd"][0][__s[i1R & 2147483647]] >= 1) $(__s[+f1p])
+				if (D6["bd"][0]["bl"] >= 1) $(__s[+f1p])
 					.removeClass()
 					.addClass(__s[2247]);
 				else $(__s[+f1p])
@@ -55810,7 +55806,7 @@ var cotgsubscribe = amplify;
 			} else {
 				$(__s[6405])
 					.hide();
-				if (D6["bd"][0][__s[+i1R]] >= 1) $(__s[f1p << 1798645888])
+				if (D6["bd"][0]["bl"] >= 1) $(__s[f1p << 1798645888])
 					.removeClass()
 					.addClass(__s[1492]);
 				else $(__s[f1p ^ 0])
@@ -56618,7 +56614,7 @@ var cotgsubscribe = amplify;
 							var P1w = D6.bq[g1w][__s[+T1m]];
 							var B1w =
 								D6.bq[g1w][__s[1381]];
-							var Z1w = D6.bq[g1w][__s[m1R << 1538292704]];
+							var Z1w = D6.bq[g1w]["bid"];
 							var Q6w = Math.floor(
 								bam["buildings"][Number(P1w)][__s[+h6R]][Number(B1w)][__s[m1p * 1]]);
 							var I6w =
@@ -57850,9 +57846,9 @@ var cotgsubscribe = amplify;
 			//    1646923488)) === null) var y11 = 50;
 			//else var y11 = localStorage.getItem(__s[O4p * 1]);
 			//$(__s[5705])
-			//  .slider(__s[+Q7y], __s[a4R << 1390935520], y11);
+			//  .slider(__s[+Q7y], "value", y11);
 			//$(__s[5452])
-			//  .slider(__s[Q7y & 2147483647], __s[a4R | 4105], R11);
+			//  .slider(__s[Q7y & 2147483647], "value", R11);
 			//w9.volume = Number(R11) / (100);
 			//V9.volume(Number(y11) / (100));
 			//o1F(R11, y11);
@@ -58433,8 +58429,8 @@ var cotgsubscribe = amplify;
 			var i8w = D6.bd.length;
 			for (var G8w = 0; G8w < i8w; G8w++) {
 				W8w = D6
-					.bd[G8w][__s[+m1R]];
-				if (W8w == +K4y) C8w = D6.bd[G8w][__s[+i1R]];
+					.bd[G8w]["bid"];
+				if (W8w == +K4y) C8w = D6.bd[G8w]["bl"];
 			}
 			var d8w = 5 + C8w;
 			var b8w =
@@ -59677,11 +59673,11 @@ var cotgsubscribe = amplify;
 			var Z2g = __s[+m8y] + O2g + __s[m8y | 1452];
 			var g2g = O2g;
 			var P2g = D6
-				.bd[0][__s[i1R - 0]];
+				.bd[0]["bl"];
 			var T2g = D5F(Number(O2g));
 			var f2g = D6["bd"][O2g][_s(+
 				m1R)];
-			if (n2 == "none" && (T2g == __s[K5R * 1] || D6["bd"][0][__s[+i1R]] ==
+			if (n2 == "none" && (T2g == __s[K5R * 1] || D6["bd"][0]["bl"] ==
 				(0) && (T2g == __s[g4p >> 799281920] || T2g == __s[G2k - 0]))) {
 				r0V();
 				d2 = 0;
@@ -60538,7 +60534,7 @@ var cotgsubscribe = amplify;
 				.val());
 			ppdt.opt[+F8y] = Number(O5F);
 			ppdt.opt[+A8y] = $(__s[2779])
-				.slider(__s[a4R * 1]);
+				.slider("value");
 			N6();
 			var L49 = $.post(q6 + __s[3964], { a: JSON.stringify(ppdt.opt) });
 			E9();
@@ -62321,7 +62317,7 @@ var cotgsubscribe = amplify;
 							.panzoom("getMatrix");
 						var F9D = Number(m9D[3]) * 100;
 						$(__s[1593])
-							.slider(__s[+Q7y], __s[+a4R], F9D);
+							.slider(__s[+Q7y], "value", F9D);
 					});
 				$(__s[1593])
 					.slider({
@@ -68599,13 +68595,13 @@ var cotgsubscribe = amplify;
 					.prop(__s[286], !![]);
 				if (ppdt.opt[F8y - 0]) {
 					$(__s[330])
-						.slider(__s[+Q7y], __s[a4R ^ 0], Number(ppdt.opt[+F8y]));
+						.slider(__s[+Q7y], "value", Number(ppdt.opt[+F8y]));
 					$(__s[1970])
 						.text(Number(ppdt.opt[F8y ^ 0]) + __s[o9y * 1]);
 				}
 				if (ppdt.opt[+A8y]) {
 					$(__s[2779])
-						.slider(__s[+Q7y], __s[a4R ^ 0], Number(ppdt.opt[A8y * 1]));
+						.slider(__s[+Q7y], "value", Number(ppdt.opt[A8y * 1]));
 					$(__s[5989])
 						.text(Number(ppdt.opt[A8y | 10]) + __s[o9y & 2147483647]);
 				}
@@ -68824,7 +68820,7 @@ var cotgsubscribe = amplify;
 					var K5g = Number(Z5g[3]) / +"1.6" * (160);
 					localStorage.setItem(__s['92' | 28], K5g);
 					$(__s[5058])
-						.slider(__s[+Q7y], __s[+a4R], K5g);
+						.slider(__s[+Q7y], "value", K5g);
 				}
 			});
 			V5g.on(__s[3052], function (q5g, c5g, P5g, F5g) {
@@ -68866,7 +68862,7 @@ var cotgsubscribe = amplify;
 						});
 					$(__s[4591])
 						.removeClass(__s[4891]);
-					if (D6["bd"][0][__s[+i1R]] > 0 &&
+					if (D6["bd"][0]["bl"] > 0 &&
 						e7g == __s[g4p >> 510267584] || e7g == __s[G2k ^ 0] || e7g == __s[L9y >> 1004387488]) {
 						n2 =
 							$("#quickBuildMenu")
@@ -69150,8 +69146,8 @@ var cotgsubscribe = amplify;
 			var z8w = D6.bd.length;
 			for (var o8w = 0; o8w < z8w; o8w++) {
 				X8w
-					= D6.bd[o8w][__s[m1R & 2147483647]];
-				if (X8w == +K4y) L8w = D6.bd[o8w][__s[i1R | 12]];
+					= D6.bd[o8w]["bid"];
+				if (X8w == +K4y) L8w = D6.bd[o8w]["bl"];
 			}
 			var M8w = +
 				'5' + L8w;
@@ -70089,7 +70085,7 @@ var cotgsubscribe = amplify;
 							17);
 						d7g = d7g * +G5y;
 						J7g = J7g * (G5y << 1119893856);
-						var n7g = D6["bd"][Number(M7g)][__s[+m1R]];
+						var n7g = D6["bd"][Number(M7g)]["bid"];
 						var f7g = D5F(
 							Number(M7g));
 						if (n7g == 0 && f7g == __s[+L9y]) {

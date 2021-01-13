@@ -12,7 +12,8 @@ namespace COTG.JSON
 		public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions() { AllowTrailingCommas = true, IgnoreNullValues = true, NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString };
 		public static T FromResources<T>(string asm)
 		{
-			return JsonSerializer.Deserialize<T>(new System.IO.StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JSON.{asm}.json")).ReadToEnd(), jsonSerializerOptions);
+			var str = new System.IO.StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JSON.{asm}.json")).ReadToEnd();
+			return JsonSerializer.Deserialize<T>(str, jsonSerializerOptions);
 
 		}
 	}

@@ -187,12 +187,12 @@ namespace COTG.Game
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 
-		static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
-		const short bidTownHall = 455;
-		static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
+		//static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+		//const short bidTownHall = 455;
+		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
-		const int citySpan = 21;
-		static JSON.Building[] buildings = Array.Empty<JSON.Building>();
+		public const int citySpan = 21;
+		public static JSON.Building[] buildings = Array.Empty<JSON.Building>();
         public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
@@ -214,46 +214,42 @@ namespace COTG.Game
 			}
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				buildings = new JSON.Building[eBd.GetArrayLength()];
+				buildings = null;
+				const int bidCastle = 467;
+				commandSlots = 5;
+				isCastle = false;
+				var _buildings = new JSON.Building[eBd.GetArrayLength()];
 				int put = 0;
 				foreach (var bdi in eBd.EnumerateArray())
 				{
 					var bid = bdi.GetAsInt("bid");
 					var bl = bdi.GetAsInt("bl");
-					var bi = bidMap.IndexOf((short)bid);
+					var bi = BuildingDef.BidToId(bid);
 
-					buildings[put] = new Building() { bid = (byte)bi, bl=(byte)bl };
+					_buildings[put] = new Building() { id = bi, bl=(byte)bl };
+					if(bid == bidCastle)
+					{
+						commandSlots = (byte)((bl + 5));
+						isCastle = true;
+					}
 					++put;
 				}
+				buildings = _buildings;
 			}
 			activeCommands = jse.GetAsByte("comm");
-            {
-                const int bidCastle = 467;
-                if (jse.TryGetProperty("bd", out var bd))
-                {
-                        commandSlots = 5;
-                        isCastle = false;
-                        foreach (var b in bd.EnumerateArray())
-                        {
-                            if (b.GetAsInt("bid") == bidCastle)
-                            {
-                                commandSlots= (byte)( (b.GetInt("bl") + 5));
-                                isCastle = true;
-                            }
-                        }
-                    }
-                }
+            
 
             troopsHome = TroopTypeCount.empty;
             troopsTotal = TroopTypeCount.empty;
 
 
 
-                if (jse.TryGetProperty("tc", out var tc))
-                {
-                    troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
+			if (jse.TryGetProperty("tc", out var tc))
+			{
+				troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
 				_tsTotal = troopsTotal.TS();
 			}
+
             if (jse.TryGetProperty("th", out var th))
             {
                 troopsHome = th.GetTroopTypeCount().ToArray(); ;

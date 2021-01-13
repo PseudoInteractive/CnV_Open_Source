@@ -801,6 +801,9 @@ function postppdt()
 	}
 	document.getElementById("tbbuttons").style.display = "none"; // these no longer work
 	document.getElementById("canvasborders").style.display = "none";
+	 document.getElementById("container").style.background =  "none";
+	 mainMapDiv.style.display = "none";//(_viewMode!==viewModeCity) ? "none" : null;
+	
 	setTimeout(avactor, 3000);
 
 }

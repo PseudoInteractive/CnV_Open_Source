@@ -159,16 +159,7 @@ namespace COTG
 					controlPressed = true;
 					break;
 				case VirtualKey.Scroll:
-					if (webViewInFront)
-					{
-						webViewInFront = false;
-						Canvas.SetZIndex(ShellPage.canvas, ShellPage.canvasZDefault);
-					}
-					else
-					{
-						webViewInFront = true;
-						Canvas.SetZIndex(ShellPage.canvas, ShellPage.canvasZBack);
-					}
+					ShellPage.canvasVisible = !ShellPage.canvasVisible;
 					break;
 			}
 			ShellPage.Canvas_KeyDown(key);

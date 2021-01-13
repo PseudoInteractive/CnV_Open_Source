@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/circlegradient.png
 
+#begin Art/City/building_set5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Compressed
+/build:Art/City/building_set5.png
+
 #begin Art/Icons/barracks.png
 /importer:TextureImporter
 /processor:TextureProcessor

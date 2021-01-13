@@ -17,6 +17,8 @@ declare var cityyy;
 declare var cityxTx;
 declare var cityyTy;
 
+declare var cityAtlas: string;
+
 declare var aldt;// = 0;
 // setTimeout(function() {
 //pD();

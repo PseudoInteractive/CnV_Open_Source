@@ -212,6 +212,7 @@ namespace COTG.Views
 			//        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
 		}
 		public static bool isHitTestVisible;
+		public static bool canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 
@@ -358,11 +359,11 @@ namespace COTG.Views
 			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f).RoundToInt();
 
 			AGame.Create(canvas);
-			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
-			{
-				ShellPage.canvas.IsHitTestVisible = false;
-				ShellPage.canvas.Visibility = Visibility.Collapsed;
-			}));
+			//Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+			//{
+			//	//ShellPage.canvas.IsHitTestVisible = false;
+			//	//ShellPage.canvas.Visibility = Visibility.Collapsed;
+			//}));
 
 		}
 
