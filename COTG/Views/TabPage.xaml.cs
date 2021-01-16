@@ -44,11 +44,7 @@ namespace COTG.Views
         };
             }
 		// workaround for webview
-		public void FocusOn(Control ob)
-		{
-			Verify(TabPage.Get(this).page.Focus(FocusState.Programmatic));
-			Verify(ob.Focus(FocusState.Programmatic));
-		}
+		
 		
 
 		public virtual void VisibilityChanged(bool visible)

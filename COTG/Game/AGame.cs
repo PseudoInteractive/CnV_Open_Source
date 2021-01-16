@@ -886,8 +886,6 @@ namespace COTG
 				return false;
 			if (!ShellPage.canvasVisible)
 				return false;
-			if (City.buildings.Length== 0)
-				return false;
 			return base.BeginDraw();
 		}
 		static KeyF[] bulgeKeys = new[] { new KeyF(0.0f, 0.0f), new KeyF(0.44f, 0.44f), new KeyF(1.5f,0.44f), new KeyF(2.5f, 0.0f) };
@@ -896,6 +894,8 @@ namespace COTG
 		{
 			return (TileData.state >= TileData.State.ready);
 		}
+
+		private const int textBoxCullSlop = 80;
 
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
@@ -944,7 +944,7 @@ namespace COTG
 
 				//   ShellPage.T("Draw");
 
-				byte textBackgroundOpacity = 128;
+				byte textBackgroundOpacity = 192;
 				//	defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
 
@@ -1586,9 +1586,11 @@ namespace COTG
 												Assert(false);
 											}
 										}
-										if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
-											DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k",
-												c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
+											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
+											{
+												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k",
+														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
+											}
 									}
 								}
 							}
@@ -1605,8 +1607,10 @@ namespace COTG
 										var c1 = targetCid.CidToC();
 										if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 											continue;
-										if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
-											DrawTextBox($"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
+											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
+											{
+													DrawTextBox($"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
+											}
 
 									}
 								}
@@ -1887,6 +1891,10 @@ namespace COTG
 
 		private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expandX = 0.0f,float _expandY=0, DepthFunction depth = null, float zBias = -1, float scale = 0)
 		{
+			if (IsCulled(at, textBoxCullSlop))
+			{
+				return;
+			}
 			if (scale == 0)
 				scale = bmFontScale;
 
@@ -2020,7 +2028,7 @@ namespace COTG
 		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
 		{
 			float offset = (lineAnimationGain * animationTWrap) % 1;
-			return (offset, offset + (c0 - c1).Length() * lineTileGain);
+			return (offset + (c0 - c1).Length() * lineTileGain, offset);
 
 		}
 		private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias)

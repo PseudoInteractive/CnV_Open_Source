@@ -30,6 +30,7 @@ using Windows.Graphics.Display;
 
 namespace COTG.Views
 {
+	
 	public partial class ShellPage
 	{
 		//	public static Rectangle canvasHitTest;
@@ -46,6 +47,7 @@ namespace COTG.Views
 		public static int cachedTopOffset = 0;
 	
 		static public SwapChainPanel canvas;
+		public static KeyboardProxy keyboardProxy;
 
 		public static void NotifyCotgPopup(int cotgPopupOpen)
 		{
@@ -119,6 +121,13 @@ namespace COTG.Views
 				Margin = new Thickness(0, canvasBaseY, 0, 0),
 			//			IsFixedTimeStep = false
 		};
+			keyboardProxy = new KeyboardProxy()
+			{
+				Background = null,
+				IsTabStop = true
+			};
+			keyboardProxy.KeyDown += KeyboardProxy_KeyDown;
+			canvas.Children.Add(keyboardProxy);
 			//canvasHitTest = new Rectangle()
 			//{
 			//	Name="webDrawer",
@@ -140,6 +149,34 @@ namespace COTG.Views
 			canvas.CompositionScaleChanged += Canvas_CompositionScaleChanged;
 			return (canvas, null);
 
+		}
+
+		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			var key = e.Key;
+			switch (key)
+			{
+
+				case Windows.System.VirtualKey.Space:
+					Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); 
+					break;
+
+				case Windows.System.VirtualKey.Left:
+					Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Up:
+					Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Right:
+					Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
+					break;
+				case Windows.System.VirtualKey.Down:
+					Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
+					break;
+
+				default:
+					break;
+			}
 		}
 
 		public enum ViewMode
@@ -188,13 +225,16 @@ namespace COTG.Views
 				ShellPage.isHitTestVisible = !webviewHasFocus;
 				App.DispatchOnUIThreadLow(() =>
 				{
+					instance.webFocus.IsChecked = webviewHasFocus;
+
 					ShellPage.isOverPopup = false;// reset again in case it changed
 					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible;
 					ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
 					AGame.UpdateMusic();
 					if (!webviewHasFocus && priorWebviewHasFocus)
-						Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
-
+					{
+						Verify(ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
+					}
 				});
 			}
 		}
@@ -213,6 +253,10 @@ namespace COTG.Views
 		{
 			Log(canvas.CompositionScaleX);
 		}
+	}
+	public class KeyboardProxy : Control
+	{
+
 	}
 }
 

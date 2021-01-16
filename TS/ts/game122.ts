@@ -7553,6 +7553,7 @@ var gStphp; // gSt post call
 var gStQuery; // query GST, issue callback for shrines
 var gStQueryCB; // query GST, issue generic callback
 let stayAlive = false;
+let lastBqSize = 0;
 
 let _camera = {
 	x: 0,
@@ -18028,7 +18029,7 @@ var cotgsubscribe = amplify;
 			D6.bq = [];
 			D6.tq = [];
 			b9 = 0;
-			b5F = 0;
+	//		b5F = 0;
 			g2 = 0;
 			$("#city_map")
 				.css(__s[+H2p], __s[+A2p]);
@@ -18741,8 +18742,7 @@ var cotgsubscribe = amplify;
 									J2();
 								}
 								if (Z9T == 12) {
-									var E9T = D6[_s(+
-										N1R)][E1R ^ 0]["bl"];
+									var E9T = D6['bd'][E1R ^ 0]["bl"];
 									var Y9T = m6[d9T]["r"][12];
 									if (Number(E9T) <=
 										Number(Y9T)) {
@@ -23609,8 +23609,7 @@ var cotgsubscribe = amplify;
 				N6();
 				var q2g = $.post(q6 + __s[3771], { id: p2g, cid: cid });
 			}
-			b5F =
-				0;
+//			b5F =0;
 			if (Y2g == 1) {
 				anstart = 0;
 				M7F = 1;
@@ -43251,8 +43250,7 @@ var cotgsubscribe = amplify;
 					b1R & 2147483647)) V3D += 1;
 			}
 			for (var h3D = 0; h3D < qbotright.length; h3D++) {
-				J3D = D6[_s(
-					N1R ^ 0)][qbotright[h3D]]["bid"];
+				J3D = D6['bd'][qbotright[h3D]]["bid"];
 				if (J3D == +G1R || J3D == +C6y || J3D == r1R * 1 || J3D == +
 					b1R) r3D += 1;
 			}
@@ -44164,7 +44162,7 @@ var cotgsubscribe = amplify;
 			if (y0w == p0w) Y6(__s[6910]);
 			else if (y0w == (0)) Y6(__s[4507]);
 			else if (ppdt[__s[V9y | 4148]][1] * 1000 < currentTime()) Y6(__s[5593]);
-			else if (b5F != R0w) {
+			else {
 				var a0w = { bspot: R0w, endlvl: p0w, cid: cid };
 				var E0w = __s[1833] + b2() + E6k
 					.o55(3483);
@@ -44172,10 +44170,11 @@ var cotgsubscribe = amplify;
 				N6();
 				var Y0w = $.post(q6 + "nBUu.php", { a: q0w, cid: cid });
 				F6();
+				// nBUu returns 0 on success
 				Y0w.done(function (e5w) {
 					E6k.y6();
 					if (e5w == 0) {
-						b5F = R0w;
+						
 						X2(7);
 					} else if (e5w == 1) Y6(__s[6910]);
 					else if (e5w == 2) Y6(__s[4507]);
@@ -57890,14 +57889,31 @@ var cotgsubscribe = amplify;
 
 		let lastAllianceIncoming = 0;
 		let lastIncoming = 0;
+		
 
 		function K6F(G71: string) {
 			if (G71.length > 1) {
 				pollJ = JSON.parse(G71);
+				let wrapper : any = {};  // for string notify
+
 				if (pollJ.hasOwnProperty("city")) {
 					var t71 = pollJ["city"];
 					d3F(t71);
 
+					let bqSize = D6.bq.length;
+					if(bqSize !== lastBqSize)
+					{
+						 if(!wrapper.citydata )
+						{
+							wrapper.citydata = { cid: D6.cid };
+						}
+						lastBqSize = bqSize;
+						wrapper.citydata.bq = D6.bq;
+						if( D6.bd )
+							wrapper.citydata.bd = D6.bd;
+					}
+
+			
 					let troopsHome = 0;
 					for (let it = 0; it < 17; ++it) {
 						troopsHome += D6['th'][it];
@@ -57911,17 +57927,16 @@ var cotgsubscribe = amplify;
 					if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
 						//  if (troopsHome > lastTroopsHome) 
 						{
-							setTimeout(() => {
-								let wrapper = {
-									citydata:
-									{
-										cid: D6.cid,
-										comm: D6.comm,
-										th: D6.th,
-										tc: D6.tc,
-										ts: 1
-									}
-								};
+								if(!wrapper.citydata )
+								{
+									wrapper.citydata = { cid: D6.cid };
+								}
+								wrapper.citydata.comm= D6.comm;
+								wrapper.citydata.th= D6.th;
+								wrapper.citydata.tc= D6.tc;
+								wrapper.citydata.ts= 1;
+									
+								
 								if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
 									wrapper.citydata.trin = D6.trin;
 								}
@@ -57931,8 +57946,8 @@ var cotgsubscribe = amplify;
 								if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
 									wrapper.citydata.triin = D6.triin;
 								}
-								window['external']['notify'](JSON.stringify(wrapper));
-							}, 0);
+		
+							
 						}
 						lastTroopsHome = troopsHome
 					}
@@ -58035,12 +58050,9 @@ var cotgsubscribe = amplify;
 
 					Q5V(AIC);
 					L5V(IC);
-					const wrapper = { incoming: { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC } }
+					wrapper.incoming=  { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC };
 					lastAllianceIncoming = AIC;
 					lastIncoming = IC;
-					window['external']['notify'](JSON.stringify(wrapper));
-
-
 				}
 				if (pollJ["iNt"]) {
 					var d71 = pollJ["iNt"];
@@ -58076,7 +58088,13 @@ var cotgsubscribe = amplify;
 						ctims = C71.getTime();
 					}
 				}
+	//
+	// Notify native host of results from poll
+	// 
+				if(Object.keys(wrapper).length>0)
+					window['external']['notify'](JSON.stringify(wrapper));
 			}
+
 		}
 
 		function y5F() {
@@ -59172,7 +59190,7 @@ var cotgsubscribe = amplify;
 				.css("display", "none");
 			reportAway();
 		}
-		var b5F;
+		//var b5F;
 		var x4F = 0;
 		var K1F = 0;
 		setInterval(function () {
@@ -68791,178 +68809,178 @@ var cotgsubscribe = amplify;
   $("#city_map")
 				.panzoom({ maxScale: +"1.6", minScale: +"0.25" });
   return;
-			var h5g = __s[814];
-			var A5g = __s[2618];
-			var S5g;
-			var J5g;
-			for (var b5g = '0' & E6k
-				.s6s; b5g <= t9R << 1436409568; b5g++) {
-				S5g = b5g % (A5y * 1);
-				J5g = (b5g - S5g) / +A5y;
-				S5g = S5g * (G5y & 2147483647);
-				J5g = J5g * (96);
-				h5g += __s[287] + b5g + __s[6249] + b5g + __s[5920] + S5g + _s(+
-					B1y) + J5g + __s[6439] + b5g + __s[1585] + b5g + _s("3821" <<
-						654144800) +
-					b5g + __s[3853] + b5g + __s[2317] + b5g + __s['4099' | 3] +
-					b5g + __s['2313' | 264];
-				A5g += __s['6500' | 68] + b5g + __s[3] + S5g + __s[+B1y] + J5g + __s[5108];
-			}
-			h5g +=
-				A5g + "</div>";
-			$("#city_map")
-				.html(h5g);
-			var V5g = $("#city_map")
-				.panzoom({ maxScale: +"1.6", minScale: +"0.25" });
-			V5g.on(__s[3159], function (n5g) {
-				n5g.preventDefault();
-				if ($("#city_map")
-					.css("display") != "none") {
-					var f5g = n5g.delta || n5g.originalEvent
-						.wheelDelta;
-					var g5g = f5g ? f5g < 0 : n5g.originalEvent.deltaY > 0;
-					V5g.panzoom("zoom", g5g, {
-						increment: '0.1' - 0,
-						animate: !"1",
-						cursor: __s[5291],
-						focal: n5g
-					});
-					var Z5g = $("#city_map")
-						.panzoom("getMatrix");
-					var K5g = Number(Z5g[3]) / +"1.6" * (160);
-					localStorage.setItem(__s['92' | 28], K5g);
-					$(__s[5058])
-						.slider(__s[+Q7y], "value", K5g);
-				}
-			});
-			V5g.on(__s[3052], function (q5g, c5g, P5g, F5g) {
-				if (F5g) {
-					var B5g = P5g.input.split(E6k
-						.o55(+m8y));
-					var R5g = B5g[4];
-					var U5g = B5g[5];
-					var N5g = P5g['4' >>
-						989550016];
-					var p5g = P5g[5];
-					U5g = U5g.substring(0, U5g.length - 1);
-					var y5g = Number(R5g) + Number(U5g);
-					var D5g = Number(
-						N5g) + Number(p5g);
-					var Y5g = Math.abs(y5g - D5g);
-					if (Y5g <= 10) x1F();
-				} else
-					x1F();
-			});
-			$("#city_map")
-				.panzoom("zoom", a9y * 1);
-			$(__s[Z8R << 1232783360])
-				.hover(function () {
-					var k7g = Number($(this)
-						.attr("data"));
-					var e7g = D5F(k7g);
-					E6k.R6();
-					$(__s[4591])
-						.css({
-							'background': '',
-							'filter': "",
-							'height': _s(I9R >>
-								733912960),
-							'background-color': '',
-							'-moz-transform': __s[+z9R],
-							'zoom': E6k
-								.o55(+p9R)
-						});
-					$(__s[4591])
-						.removeClass(__s[4891]);
-					if (D6["bd"][0]["bl"] > 0 &&
-						e7g == __s[g4p >> 510267584] || e7g == __s[G2k ^ 0] || e7g == __s[L9y >> 1004387488]) {
-						n2 =
-							$("#quickBuildMenu")
-								.css("display");
-						if (g2 == (1) && E6 != '') {
-							var m5g =
-								E6;
-							if (E6 == +n4y || E6 == (l4y | 32) || E6 == (o4y | 513) || E6 == I1R >> 455527648 || E6 == +t1y ||
-								E6 == T1y - 0 || E6 == g1y - 0 || E6 == f1y * 1 || E6 == +V1y || E6 == (M1y ^ 0) || E6 == +Q1y ||
-								E6 == (Z1y ^ 0) || E6 == +u1y || E6 == +N1y || E6 == +i1y || E6 == q1y - 0 || E6 == +D1y || E6 == +
-								B1y || E6 == (e1y | 549) || E6 == (y1y | 546) || E6 == (O1y | 37) || E6 == +w1y || E6 == (H1y ^
-									0) || E6 == (G1y ^ 0) || E6 == +b1y || E6 == (X1y ^ 0) || E6 == +I1y || E6 == (z1y ^ 0) || E6 == +
-									d1y || E6 == +k1y || E6 == S1y << 1553753248 || E6 == J5y - 0 || E6 == x5y >> 1941476064 || E6 == (
-										W5y & 2147483647) || E6 == (U5y ^ 0) || E6 == +c5y)
-								if (e7g == __s[g4p ^ 0] || e7g == __s[+G2k]) m5g = R3F(E6, k7g);
-							m5g = m5g - (443);
-							if (y3F(E6, k7g)) {
-								var a5g = m5g % (4);
-								var E5g = (m5g -
-									a5g) / (4);
-								a5g = a5g * +G5y;
-								E5g = E5g * +G5y;
-								$(this)
-									.addClass(__s[4891]);
-								$(this)
-									.css({
-										'background': __s[+h5y] + cityAtlas + __s[X5y | 2120] + a5g + __s[P5y ^ 0] + E5g + E6k
-											.o55(+I5y),
-										'width': __s[p5y >> 1050428128],
-										'height': _s(p5y & E6k
-											.s6s),
-										'-moz-transform': __s[Y1R | 128],
-										'zoom': __s[5927],
-										'left': _s(+
-											A1R)
-									});
-							}
-						} else if (n2 != "none" && E6 != "") {
-							var
-								m5g = E6;
-							if (E6 == (n4y & 2147483647) || E6 == +l4y || E6 == (o4y | 36) || E6 == I1R << 234472608 ||
-								E6 == +t1y || E6 == +T1y || E6 == (g1y ^ 0) || E6 == +f1y || E6 == +V1y || E6 == +M1y || E6 == +
-								Q1y || E6 == +Z1y || E6 == u1y >> 1307431040 || E6 == N1y >> 2095692000 || E6 == +i1y || E6 == q1y -
-								0 || E6 == +D1y || E6 == B1y << 838458912 || E6 == (e1y | 549) || E6 == y1y - 0 || E6 == +O1y ||
-								E6 == +w1y || E6 == +H1y || E6 == +G1y || E6 == +b1y || E6 == +X1y || E6 == (I1y | 528) || E6 == +
-								z1y || E6 == +d1y || E6 == +k1y || E6 == +S1y || E6 == +J5y || E6 == +x5y || E6 == (W5y & E6k
-									.s6s) || E6 == +U5y || E6 == +c5y)
-								if (e7g == __s[+g4p] || e7g == __s[+G2k]) m5g = R3F(E6, k7g);
-							m5g = m5g - ('443' | 395);
-							if (y3F(E6, k7g))
-								if ($(this)
-									.css(__s[+d4y]) === __s[p1R - 0]) {
-									var a5g = m5g % 4;
-									var E5g = (m5g - a5g) / ("4" |
-										0);
-									a5g = a5g * (G5y & 2147483647);
-									E5g = E5g * +G5y;
-									$(this)
-										.addClass(__s[4891]);
-									$(this)
-										.css({
-											'background': __s[+h5y] + cityAtlas + __s[X5y & 2147483647] + a5g + _s(P5y & E6k
-												.s6s) + E5g + __s[I5y ^ 0],
-											'width': __s[p5y << 125526560],
-											'height': _s(
-												p5y << 2058186176),
-											'zoom': __s[5927],
-											'-moz-transform': _s(Y1R >>
-												1887656576),
-											'left': __s[A1R & 2147483647],
-											'filter': __s[661]
-										});
-								}
-						} else {
-							E6
-								= '';
-							$(__s[+B1R] + k7g)
-								.css({ 'background-color': __s[2181] });
-							$(__s[+B1R] + k7g)
-								.addClass(__s[4891]);
-						}
-					}
-				});
-			if (localStorage.getItem(__s[92]) === null) var r5g = +
-				"90";
-			else var r5g = localStorage.getItem(__s["92" | 12]);
-			R4F(r5g);
-			e5F(E1R * 1);
+		//	var h5g = __s[814];
+		//	var A5g = __s[2618];
+		//	var S5g;
+		//	var J5g;
+		//	for (var b5g = '0' & E6k
+		//		.s6s; b5g <= t9R << 1436409568; b5g++) {
+		//		S5g = b5g % (A5y * 1);
+		//		J5g = (b5g - S5g) / +A5y;
+		//		S5g = S5g * (G5y & 2147483647);
+		//		J5g = J5g * (96);
+		//		h5g += __s[287] + b5g + __s[6249] + b5g + __s[5920] + S5g + _s(+
+		//			B1y) + J5g + __s[6439] + b5g + __s[1585] + b5g + _s("3821" <<
+		//				654144800) +
+		//			b5g + __s[3853] + b5g + __s[2317] + b5g + __s['4099' | 3] +
+		//			b5g + __s['2313' | 264];
+		//		A5g += __s['6500' | 68] + b5g + __s[3] + S5g + __s[+B1y] + J5g + __s[5108];
+		//	}
+		//	h5g +=
+		//		A5g + "</div>";
+		//	$("#city_map")
+		//		.html(h5g);
+		//	var V5g = $("#city_map")
+		//		.panzoom({ maxScale: +"1.6", minScale: +"0.25" });
+		//	V5g.on(__s[3159], function (n5g) {
+		//		n5g.preventDefault();
+		//		if ($("#city_map")
+		//			.css("display") != "none") {
+		//			var f5g = n5g.delta || n5g.originalEvent
+		//				.wheelDelta;
+		//			var g5g = f5g ? f5g < 0 : n5g.originalEvent.deltaY > 0;
+		//			V5g.panzoom("zoom", g5g, {
+		//				increment: '0.1' - 0,
+		//				animate: !"1",
+		//				cursor: __s[5291],
+		//				focal: n5g
+		//			});
+		//			var Z5g = $("#city_map")
+		//				.panzoom("getMatrix");
+		//			var K5g = Number(Z5g[3]) / +"1.6" * (160);
+		//			localStorage.setItem(__s['92' | 28], K5g);
+		//			$(__s[5058])
+		//				.slider(__s[+Q7y], "value", K5g);
+		//		}
+		//	});
+		//	V5g.on(__s[3052], function (q5g, c5g, P5g, F5g) {
+		//		if (F5g) {
+		//			var B5g = P5g.input.split(E6k
+		//				.o55(+m8y));
+		//			var R5g = B5g[4];
+		//			var U5g = B5g[5];
+		//			var N5g = P5g['4' >>
+		//				989550016];
+		//			var p5g = P5g[5];
+		//			U5g = U5g.substring(0, U5g.length - 1);
+		//			var y5g = Number(R5g) + Number(U5g);
+		//			var D5g = Number(
+		//				N5g) + Number(p5g);
+		//			var Y5g = Math.abs(y5g - D5g);
+		//			if (Y5g <= 10) x1F();
+		//		} else
+		//			x1F();
+		//	});
+		//	$("#city_map")
+		//		.panzoom("zoom", a9y * 1);
+		//	$(__s[Z8R << 1232783360])
+		//		.hover(function () {
+		//			var k7g = Number($(this)
+		//				.attr("data"));
+		//			var e7g = D5F(k7g);
+		//			E6k.R6();
+		//			$(__s[4591])
+		//				.css({
+		//					'background': '',
+		//					'filter': "",
+		//					'height': _s(I9R >>
+		//						733912960),
+		//					'background-color': '',
+		//					'-moz-transform': __s[+z9R],
+		//					'zoom': E6k
+		//						.o55(+p9R)
+		//				});
+		//			$(__s[4591])
+		//				.removeClass(__s[4891]);
+		//			if (D6["bd"][0]["bl"] > 0 &&
+		//				e7g == __s[g4p >> 510267584] || e7g == __s[G2k ^ 0] || e7g == __s[L9y >> 1004387488]) {
+		//				n2 =
+		//					$("#quickBuildMenu")
+		//						.css("display");
+		//				if (g2 == (1) && E6 != '') {
+		//					var m5g =
+		//						E6;
+		//					if (E6 == +n4y || E6 == (l4y | 32) || E6 == (o4y | 513) || E6 == I1R >> 455527648 || E6 == +t1y ||
+		//						E6 == T1y - 0 || E6 == g1y - 0 || E6 == f1y * 1 || E6 == +V1y || E6 == (M1y ^ 0) || E6 == +Q1y ||
+		//						E6 == (Z1y ^ 0) || E6 == +u1y || E6 == +N1y || E6 == +i1y || E6 == q1y - 0 || E6 == +D1y || E6 == +
+		//						B1y || E6 == (e1y | 549) || E6 == (y1y | 546) || E6 == (O1y | 37) || E6 == +w1y || E6 == (H1y ^
+		//							0) || E6 == (G1y ^ 0) || E6 == +b1y || E6 == (X1y ^ 0) || E6 == +I1y || E6 == (z1y ^ 0) || E6 == +
+		//							d1y || E6 == +k1y || E6 == S1y << 1553753248 || E6 == J5y - 0 || E6 == x5y >> 1941476064 || E6 == (
+		//								W5y & 2147483647) || E6 == (U5y ^ 0) || E6 == +c5y)
+		//						if (e7g == __s[g4p ^ 0] || e7g == __s[+G2k]) m5g = R3F(E6, k7g);
+		//					m5g = m5g - (443);
+		//					if (y3F(E6, k7g)) {
+		//						var a5g = m5g % (4);
+		//						var E5g = (m5g -
+		//							a5g) / (4);
+		//						a5g = a5g * +G5y;
+		//						E5g = E5g * +G5y;
+		//						$(this)
+		//							.addClass(__s[4891]);
+		//						$(this)
+		//							.css({
+		//								'background': __s[+h5y] + cityAtlas + __s[X5y | 2120] + a5g + __s[P5y ^ 0] + E5g + E6k
+		//									.o55(+I5y),
+		//								'width': __s[p5y >> 1050428128],
+		//								'height': _s(p5y & E6k
+		//									.s6s),
+		//								'-moz-transform': __s[Y1R | 128],
+		//								'zoom': __s[5927],
+		//								'left': _s(+
+		//									A1R)
+		//							});
+		//					}
+		//				} else if (n2 != "none" && E6 != "") {
+		//					var
+		//						m5g = E6;
+		//					if (E6 == (n4y & 2147483647) || E6 == +l4y || E6 == (o4y | 36) || E6 == I1R << 234472608 ||
+		//						E6 == +t1y || E6 == +T1y || E6 == (g1y ^ 0) || E6 == +f1y || E6 == +V1y || E6 == +M1y || E6 == +
+		//						Q1y || E6 == +Z1y || E6 == u1y >> 1307431040 || E6 == N1y >> 2095692000 || E6 == +i1y || E6 == q1y -
+		//						0 || E6 == +D1y || E6 == B1y << 838458912 || E6 == (e1y | 549) || E6 == y1y - 0 || E6 == +O1y ||
+		//						E6 == +w1y || E6 == +H1y || E6 == +G1y || E6 == +b1y || E6 == +X1y || E6 == (I1y | 528) || E6 == +
+		//						z1y || E6 == +d1y || E6 == +k1y || E6 == +S1y || E6 == +J5y || E6 == +x5y || E6 == (W5y & E6k
+		//							.s6s) || E6 == +U5y || E6 == +c5y)
+		//						if (e7g == __s[+g4p] || e7g == __s[+G2k]) m5g = R3F(E6, k7g);
+		//					m5g = m5g - ('443' | 395);
+		//					if (y3F(E6, k7g))
+		//						if ($(this)
+		//							.css(__s[+d4y]) === __s[p1R - 0]) {
+		//							var a5g = m5g % 4;
+		//							var E5g = (m5g - a5g) / ("4" |
+		//								0);
+		//							a5g = a5g * (G5y & 2147483647);
+		//							E5g = E5g * +G5y;
+		//							$(this)
+		//								.addClass(__s[4891]);
+		//							$(this)
+		//								.css({
+		//									'background': __s[+h5y] + cityAtlas + __s[X5y & 2147483647] + a5g + _s(P5y & E6k
+		//										.s6s) + E5g + __s[I5y ^ 0],
+		//									'width': __s[p5y << 125526560],
+		//									'height': _s(
+		//										p5y << 2058186176),
+		//									'zoom': __s[5927],
+		//									'-moz-transform': _s(Y1R >>
+		//										1887656576),
+		//									'left': __s[A1R & 2147483647],
+		//									'filter': __s[661]
+		//								});
+		//						}
+		//				} else {
+		//					E6
+		//						= '';
+		//					$(__s[+B1R] + k7g)
+		//						.css({ 'background-color': __s[2181] });
+		//					$(__s[+B1R] + k7g)
+		//						.addClass(__s[4891]);
+		//				}
+		//			}
+		//		});
+		//	if (localStorage.getItem(__s[92]) === null) var r5g = +
+		//		"90";
+		//	else var r5g = localStorage.getItem(__s["92" | 12]);
+		//	R4F(r5g);
+		//	e5F(E1R * 1);
 		}
 
 		function y0F(z0D) {

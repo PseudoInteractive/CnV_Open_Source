@@ -62,6 +62,7 @@ namespace COTG.Draw
 	
 		}
 		public static JSON.Building[] buildingsCache;
+		public static Building GetBuilding( int id) => buildingsCache[id];
 		public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
 		static Vector2 waterC =new Vector2( 1.0f - 768.0f* cityTileGainX / 128,
 										1.0f - 704.0f*cityTileGainY / 128 );
@@ -70,12 +71,13 @@ namespace COTG.Draw
 
 		public static void Draw(float alpha)
 		{
-			int iAlpha = (int)(alpha * 255f);
-			buildingsCache = buildings;
-			if (buildingsCache.IsNullOrEmpty())
+			var build = City.GetBuild();
+			if (build == null)
 				return;
-			if (City.build != 0)
-				buildCityOrigin = City.GetBuild().cid.CidToWorldV();
+			int iAlpha = (int)(alpha * 255f);
+			buildingsCache = build.buildings;
+			
+			buildCityOrigin = build.cid.CidToWorldV();
 			// draw each building tile
 			var city = City.GetBuild();
 
@@ -148,14 +150,14 @@ namespace COTG.Draw
 					if (bid.id == 0)
 						continue;
 					var bd = BuildingDef.FromId(bid.id);
-					var big = bd.bid;
-					var iconId = big - 443;
+					
+					var iconId = bd.bid - 443;
 
 					var u0 = (iconId%atlasColumns)* duDt;
 					var v0 = (int)(iconId / atlasColumns) * dvDt;
 					var cs = CityPointToQuad(cx, cy);
 					
-					draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), PlanetDepth, zBase);
+					draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase) ); // shader does the z transform
 					var textColor = new Color(0xf1, 0xd1, 0x1b, iAlpha);
 					if (bid.bl!=0)
 						DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0,cs.c1) , textformatBuilding, textColor,(byte) iAlpha, Layer.tileText, scale: fontScale,zBias:0);
@@ -170,15 +172,19 @@ namespace COTG.Draw
 		}
 		public static void LoadContent()
 		{
-			buildingAtlas = Helper.LoadLitMaterial("Art/City/building_set5");
-			cityWallsLand = Helper.LoadLitMaterial("Art/City/baseland");
-			cityWallsWater = Helper.LoadLitMaterial("Art/City/basewater");
-			//cityWater = new Material(LoadTexture("Art/City/water_water"), alphaAddEffect);
+			LoadTheme();
 			decalBuildingInvalid = LoadMaterial("Art/City/decal_building_invalid");
 			decalBuildingValid = LoadMaterial("Art/City/decal_building_valid");
 			decalBuildingValidMulti = LoadMaterial("Art/City/decal_building_valid_multi");
 			decalMoveBuilding = LoadMaterial("Art/City/decal_move_building");
 			decalSelectBuilding = LoadMaterial("Art/City/decal_select_building");
+		}
+		public static void LoadTheme()
+		{
+			var cityBase = SettingsPage.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
+			buildingAtlas = Helper.LoadLitMaterial(cityBase + "building_set5");
+			cityWallsLand = Helper.LoadLitMaterial(cityBase + "baseland");
+			cityWallsWater = Helper.LoadLitMaterial(cityBase + "basewater");
 		}
 		public static void UpdateLighting(Lighting value)
 		{
@@ -196,7 +202,7 @@ namespace COTG.Draw
 				App.DispatchOnUIThreadSneaky(() =>
 				{
 					var i = Views.CityBuild.instance;
-					i.image.Source = null;
+					i.rect.Fill = null;
 					i.Building.Text = string.Empty;
 					i.Description.Text = string.Empty;
 					i.Upgrade.IsEnabled = false;

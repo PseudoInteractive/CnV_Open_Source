@@ -28,11 +28,11 @@ namespace COTG.Helpers
         static Dictionary<string, BitmapImage> assetsCache = new Dictionary<string, BitmapImage>();
         static Dictionary<string, BitmapImage> imagesCache = new Dictionary<string, BitmapImage>();
         
-        public static BitmapImage FromImages(string fileName)
+        public static BitmapImage FromImages(string fileName )
         {
             if (imagesCache.TryGetValue(fileName, out var o))
                 return o;
-            var image = new BitmapImage(new Uri($"ms-appx:///Content/Art/Icons/{fileName}"));
+            var image = new BitmapImage(new Uri($"ms-appx:///Content/Art/{fileName}"));
             imagesCache.Add(fileName, image);
             return image;
         }

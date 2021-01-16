@@ -324,9 +324,11 @@ function sendCityData(delayInMs) {
 				comm: D6.comm,
 				th: D6.th,
 				tc: D6.tc,
-				bd: D6.bd
+				bd: D6.bd,
+				bq: D6.bq
 			}
 		};
+		lastBqSize = D6.bq.length;
 		if (D6.hasOwnProperty('trin') && D6.trin.length > 0)
 		{
 			wrapper.citydata['trin'] = D6.trin;

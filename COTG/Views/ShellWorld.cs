@@ -79,32 +79,7 @@ namespace COTG.Views
 			isOverPopup = false;
 		}
 
-		public static void Canvas_KeyDown(Windows.System.VirtualKey key)
-		{
-			switch (key)
-			{
-
-				case Windows.System.VirtualKey.Space:
-					Spot.GetFocus().SelectMe(true, Windows.System.VirtualKeyModifiers.Control, true);
-					break;
-
-				case Windows.System.VirtualKey.Left:
-					Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Up:
-					Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Right:
-					Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Down:
-					Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
-					break;
-
-				default:
-					break;
-			}
-		}
+		
 		/*
 		public static void CanvasCheckKeys()
 		{
@@ -738,15 +713,17 @@ namespace COTG.Views
 								CityView.selected = cc;
 								App.DispatchOnUIThreadSneaky(() =>
 								{
-									var b = City.GetBuiding(cc);
+									var b = City.GetBuild().GetBuiding(cc);
 									var d = b.def;
 									var i = CityBuild.instance;
-									i.image.Source = ImageHelper.FromImages(d.Dimg);
 									i.Building.Text = d.Bn;
 									i.Description.Text = d.Ds;
 									i.Upgrade.IsEnabled = d.Bc.Count() > b.bl && b.bl != 0;
 									i.Downgrade.IsEnabled = b.bl > 1;
-									
+									i.rect.Fill = CityBuild.BuildingBrush(d.bid);
+
+
+
 								});
 							}
 							else
@@ -917,7 +894,7 @@ namespace COTG.Views
 			}
 			else
 			{
-
+				App.DispatchOnUIThreadLow(() => ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
 			}
 
 			ClearHover();
@@ -958,7 +935,7 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
-			
+			App.DispatchOnUIThreadLow(() => ShellPage.keyboardProxy.Focus(FocusState.Programmatic) );
 			ClearHover();
 			//  e.Handled = false;
 
@@ -1034,7 +1011,7 @@ namespace COTG.Views
 					var cid = c.WorldToCid();
 					if (IsCityView())
 					{
-						var b = City.GetBuiding(cc);
+						var b = City.GetBuild().GetBuiding(cc);
 						var d = b.def;
 						contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 						Spot.viewHover = 0;

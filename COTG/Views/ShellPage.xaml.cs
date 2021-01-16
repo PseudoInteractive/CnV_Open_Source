@@ -150,6 +150,7 @@ namespace COTG.Views
 
 		public static InAppNotification inAppNote => instance.InAppNote;
 
+
 		public bool IsBackEnabled
 		{
 			get { return _isBackEnabled; }
@@ -748,7 +749,7 @@ namespace COTG.Views
 					{
 						bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
 					}
-					bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("townhall.png") });
+					bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("Icons/townhall.png") });
 
 					//         
 
@@ -914,18 +915,15 @@ namespace COTG.Views
 		private void ShowSettings(object sender, RoutedEventArgs e)
 		{
 			App.DispatchOnUIThread(async () =>
-						   {
-							   ElementSoundPlayer.Play(ElementSoundKind.Show);
+			{
+				ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-							   //shown = true;
-							   var dialog = new SettingsPage() { FullSizeDesired = false };
-							   var result = await dialog.ShowAsync2();
-							   SettingsPage.SaveAll();
-							   //   dialog.auto
-						   });
-
-
-
+				//shown = true;
+				var dialog = new SettingsPage() { FullSizeDesired = false };
+				var result = await dialog.ShowAsync2();
+				SettingsPage.SaveAll();
+				//   dialog.auto
+			});
 		}
 
 
@@ -1160,6 +1158,16 @@ namespace COTG.Views
 				}
 			}
 			// todo!
+		}
+
+		private void webFocus_Click(object sender, RoutedEventArgs e)
+		{
+			var hasFocus = !webviewHasFocus;
+			
+			canvasVisible = !hasFocus;
+			isHitTestVisible = !hasFocus;
+			SetWebViewHasFocus(hasFocus);
+
 		}
 	}
 }

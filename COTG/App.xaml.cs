@@ -110,13 +110,29 @@ namespace COTG
 		// We set then on key up and key down events and on mouse input events
 		static public bool shiftPressed, controlPressed;
 
+		private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
+		{
+			var window = CoreWindow.GetForCurrentThread();
+			if (window == null)
+			{
+				return CoreVirtualKeyStates.None;
+			}
+
+			return window.GetAsyncKeyState(key);
+		}
+		public static bool IsModifierKeyDown(VirtualKey key)
+		{
+			var state = GetKeyState(key);
+			return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+		}
+
 		public static bool IsKeyPressedControl()
 		{
-			return controlPressed;
+			return IsModifierKeyDown(VirtualKey.Control); // controlPressed;
 		}
 		public static bool IsKeyPressedShift()
 		{
-			return shiftPressed;
+			return IsModifierKeyDown(VirtualKey.Shift);// shiftPressed;
 		}
 		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
 		{
@@ -158,11 +174,9 @@ namespace COTG
 				case VirtualKey.Control:
 					controlPressed = true;
 					break;
-				case VirtualKey.Scroll:
-					ShellPage.canvasVisible = !ShellPage.canvasVisible;
-					break;
+
 			}
-			ShellPage.Canvas_KeyDown(key);
+			
 			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
 		}
 
@@ -627,7 +641,6 @@ namespace COTG
 				return rv;
 			}
 		}
-		public static VirtualKeyModifiers canvasKeyModifiers;
 	}
 
 
@@ -1019,7 +1032,7 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
+				Verify(ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
 				Verify(ob.Focus(FocusState.Programmatic));
 			}
 		}

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace COTG.JSON
 {
-	public partial struct Building
+	public struct Building
 	{
-		public byte id { get; set; } // this is pretranslated from the buildingDefs definitions to pack it into a byte
-
-		public byte bl { get; set; } // building level
+		public byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
+		public byte bl; // building level
 
 		public BuildingDef def => BuildingDef.FromId(id);
 		//[J("bu")] public long Bu { get; set; }
@@ -25,23 +25,23 @@ namespace COTG.JSON
 	//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
 	}
 
-	//public partial class Rb
-	//{
-	//	[J("b")] public long B { get; set; }
-	//	[J("i")] public long I { get; set; }
-	//	[J("a")] public long A { get; set; }
-	//	[J("bl")] public long Bl { get; set; }
-	//	[J("au")] public long Au { get; set; }
-	//	[J("ad")] public long Ad { get; set; }
-	//	[J("add")] public long Add { get; set; }
-	//	[J("bt", NullValueHandling = N.Ignore)] public long? Bt { get; set; }
-	//}
+		//public partial class Rb
+		//{
+		//	[J("b")] public long B { get; set; }
+		//	[J("i")] public long I { get; set; }
+		//	[J("a")] public long A { get; set; }
+		//	[J("bl")] public long Bl { get; set; }
+		//	[J("au")] public long Au { get; set; }
+		//	[J("ad")] public long Ad { get; set; }
+		//	[J("add")] public long Add { get; set; }
+		//	[J("bt", NullValueHandling = N.Ignore)] public long? Bt { get; set; }
+		//}
 
-	//public partial class Rbb
-	//{
-	//	[J("rt")] public long Rt { get; set; }
-	//	[J("rh")] public long Rh { get; set; }
-	//	[J("ruh")] public long Ruh { get; set; }
-	//	[J("rdh")] public long Rdh { get; set; }
-	//}
-}
+		//public partial class Rbb
+		//{
+		//	[J("rt")] public long Rt { get; set; }
+		//	[J("rh")] public long Rh { get; set; }
+		//	[J("ruh")] public long Ruh { get; set; }
+		//	[J("rdh")] public long Rdh { get; set; }
+		//}
+	}

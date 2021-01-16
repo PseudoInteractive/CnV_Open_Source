@@ -72,7 +72,7 @@ namespace COTG.Game
         public Supporter supporter;
         public int type;
 
-        public BitmapImage icon => ImageHelper.FromImages($"troops{type}.png");
+        public BitmapImage icon => ImageHelper.FromImages($"Icons/troops{type}.png");
         public string troopType => Enum.ttNameWithCaps[type];
         public int send { get => supporter.tSend.Count(type); set => supporter.tSend = supporter.tSend.SetOrAdd(type,value); }
         public int home { get => supporter.city.troopsHome.Count(type); }

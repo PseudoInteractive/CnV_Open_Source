@@ -39,8 +39,22 @@ namespace COTG.Game
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		public const int citySpan = 21;
-		public static Building[] buildings = Array.Empty<JSON.Building>();
-		public static Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
+		public static Building[] Emptybuildings = new Building[citySpan*citySpan];
+
+		public Building[] buildings = Emptybuildings;
+		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
+		public static List<BuildQueueItem> buildQueue = new List<BuildQueueItem>(20);
+
+		public static void CitySwitching()
+		{
+			//	buildings = Emptybuildings;
+			buildQueue.Clear();
+		}
+		public static void CitySwitched()
+		{
+			CitySwitching();
+			Draw.CityView.ClearSelectedBuilding();
+		}
 
 		public City() { type = typeCity; }
 
@@ -219,35 +233,69 @@ namespace COTG.Game
 				notes = cn[1].GetAsString();
 				
 			}
+			if (jse.TryGetProperty("bq", out var bq))
+			{
+				int count = bq.GetArrayLength();
+				buildQueue.Clear();
+				for(int i=0;i<count;++i)
+				{
+					var js = bq[i];
+					buildQueue.Add( new BuildQueueItem()
+					{
+						ds = js.GetAsInt64("ds"),
+						de = js.GetAsInt64("de"),
+						btime = js.GetAsInt64("btime"),
+						bid = js.GetAsInt("bid"),
+						btype = js.GetAsUShort("btype"),
+						bspot = js.GetAsUShort("bspot"),
+						brep = js.GetAsUShort("brep"),
+						slvl = js.GetAsByte("slvl"),
+						elvl = js.GetAsByte("elvl"),
+						pa = js.GetAsByte("pa")
+
+					});
+				}
+
+			}
+
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
 				
 				const int bidCastle = 467;
 				commandSlots = 5;
 				isCastle = false;
-				var _buildings = new JSON.Building[eBd.GetArrayLength()];
-				int put = 0;
-				foreach (var bdi in eBd.EnumerateArray())
+				if (eBd.GetArrayLength() == citySpan * citySpan)
 				{
-					var bid = bdi.GetAsInt("bid");
-					var bl = bdi.GetAsInt("bl");
-					var bi = BuildingDef.BidToId(bid);
-
-					_buildings[put] = new Building() { id = bi, bl=(byte)bl };
-					if(bid == bidCastle)
+					if (buildings == Emptybuildings)
+						buildings = new JSON.Building[citySpan * citySpan];
+					int put = 0;
+					foreach (var bdi in eBd.EnumerateArray())
 					{
-						commandSlots = (byte)((bl + 5));
-						isCastle = true;
-					}
-					++put;
-				}
-				buildings = _buildings;
-			}
-			activeCommands = jse.GetAsByte("comm");
-            
+						var bid = bdi.GetAsInt("bid");
+						var bl = bdi.GetAsInt("bl");
+						var bi = BuildingDef.BidToId(bid);
 
-            troopsHome = TroopTypeCount.empty;
-            troopsTotal = TroopTypeCount.empty;
+						buildings[put] = new Building() { id = bi, bl = (byte)bl };
+						if (bid == bidCastle)
+						{
+							commandSlots = (byte)((bl + 5));
+							isCastle = true;
+						}
+						++put;
+					}
+				}
+				else
+				{
+					Log("error BD bad");
+				}
+			}
+			if (jse.TryGetProperty("comm", out var comm))
+			{
+				activeCommands = comm.GetByte();
+			}
+
+          //  troopsHome = TroopTypeCount.empty;
+          //  troopsTotal = TroopTypeCount.empty;
 
 
 
@@ -537,8 +585,10 @@ namespace COTG.Game
         {
             var changed = cid != build;
             City.build = cid;
-			Draw.CityView.ClearSelectedBuilding();
-
+			if (changed)
+			{
+				City.CitySwitched();
+			}
 			SetFocus(scrollIntoView, select);
             return changed;
             //if (!noRaidScan)

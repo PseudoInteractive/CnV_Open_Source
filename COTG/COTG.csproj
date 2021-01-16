@@ -211,7 +211,9 @@
     <Compile Include="Helpers\UMath.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
+    <Compile Include="JSON\BuildQueue.cs" />
     <Compile Include="JSON\CitySettings.cs" />
+    <Compile Include="JSON\Errors.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\IncomingEstimate.cs" />
@@ -221,6 +223,7 @@
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\SpotJson.cs" />
     <Compile Include="JSON\TileSet.cs" />
+    <Compile Include="JSON\Troops.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
@@ -332,6 +335,9 @@
     </Compile>
     <Compile Include="Views\PlayerGroup.xaml.cs">
       <DependentUpon>PlayerGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuickBuild.xaml.cs">
+      <DependentUpon>QuickBuild.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SchemeActivationSamplePage.xaml.cs">
       <DependentUpon>SchemeActivationSamplePage.xaml</DependentUpon>
@@ -464,6 +470,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\QuickBuild.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SchemeActivationSamplePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -513,6 +523,8 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\terrainfeatures.dds" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
+    <Content Include="Content\Art\City\building_set5.png" />
+    <Content Include="Content\Art\City\Winter\building_set5.png" />
     <Content Include="Content\Effects\Ava.fx" />
     <None Include="Content\Effects\AnimatedSprite.fxh" />
     <None Include="Content\Effects\darkFont.fxh" />
@@ -521,17 +533,12 @@
     <None Include="Content\Effects\NoTexture.fxh" />
     <None Include="Content\Effects\sdf.fxh" />
     <None Include="Content\Effects\unlit.fxh" />
-    <Content Include="web\images\city128\walls_water2.png" />
-    <Content Include="web\images\city128\water_water.png" />
     <EmbeddedResource Include="JS\alasstylesheet.css" />
-    <Content Include="web\images\city128\building_set5.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\protocolImage.png" />
-    <Content Include="web\images\city128\city_walls.png" />
-    <Content Include="web\images\city128\land.jpg" />
     <None Include="Content\Art\sky.dds" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
@@ -645,6 +652,7 @@
     <None Include="Content\Effects\Structures.fxh" />
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="JSON\buildingDef.json" />
+    <None Include="JSON\Troops.json" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
@@ -684,6 +692,7 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Art\City\COTG\" />
     <Folder Include="Content\Art\Tiles\" />
     <Folder Include="EventHandlers\" />
   </ItemGroup>

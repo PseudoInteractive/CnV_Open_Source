@@ -110,7 +110,7 @@ namespace COTG.Game
             }
         }
         public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
-        public static BitmapImage iN(TroopTypeCount[] troops, int n) => troops.Length > n ? ImageHelper.FromImages($"troops{troops[n].type}.png") : null;
+        public static BitmapImage iN(TroopTypeCount[] troops, int n) => troops.Length > n ? ImageHelper.FromImages($"Icons/troops{troops[n].type}.png") : null;
 
         public string c0        => cN(troops,0);
         public BitmapImage i0   => iN(troops, 0);
@@ -213,7 +213,7 @@ namespace COTG.Game
         [JsonIgnore]
         public string Count => count.ToString(" N0 ");
         [JsonIgnore]
-        public BitmapImage Type => ImageHelper.FromImages($"troops{type}.png");
+        public BitmapImage Type => ImageHelper.FromImages($"Icons/troops{type}.png");
 
         public TroopTypeCount() { }
         public TroopTypeCount(TroopTypeCount b)

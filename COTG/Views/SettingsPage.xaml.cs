@@ -90,6 +90,7 @@ namespace COTG.Views
 			{
 				theme = (Theme)value;
 				ShellPage.RefreshAndReloadWorldData();
+				Draw.CityView.LoadTheme();
 				Note.Show("City theme will not update until you restart the app");
 			}
 		}
