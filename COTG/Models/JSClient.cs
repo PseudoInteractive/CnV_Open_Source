@@ -49,18 +49,6 @@ namespace COTG
 	public class JSClient
 	{
 
-		public enum ViewMode
-		{
-			city = 0,
-			region = 1,
-			world = 2,
-			invalid = 3
-		};
-
-		public static ViewMode viewMode;
-		public static bool webviewHasFocus;
-		public static bool IsWorldView() => viewMode == ViewMode.world;
-		public static bool IsCityView() => viewMode == ViewMode.city;
 
 		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
 
@@ -602,9 +590,9 @@ namespace COTG
 			try
 			{
 				if (cityView)
-					SetViewModeCity();
+					ShellPage.SetViewModeCity();
 				else
-					SetViewModeWorld();
+					ShellPage.SetViewModeWorld();
 				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" }));
 
 			}
@@ -690,7 +678,7 @@ namespace COTG
 		{
 			try
 			{
-				SetViewModeWorld();
+				ShellPage.SetViewModeWorld();
 
 				// if (City.IsMine(cityId))
 				{
@@ -1252,7 +1240,10 @@ namespace COTG
 								   ScanDungeons.secret = jso.GetString("raid");
 								   var agent = jso.GetString("agent");
 								   jsVars.cookie = jso.GetString("cookie");
-
+								   Log(jsVars.cookie);
+								   Log(jsVars.token);
+								   Log(jsVars.s);
+								   Log(jsVars.ToString());
 								   for (int i = 0; i < clientCount; ++i)
 								   {
 									   await clientPoolSema.WaitAsync();
@@ -1406,7 +1397,7 @@ namespace COTG
 									   if (_x > 0 && _y > 0)
 										   ShellPage.Canvas_PointerPressedJS(x, y, kind);
 								   }
-								   SetWebViewHasFocus(false);
+								   ShellPage.SetWebViewHasFocus(false);
 								   break;
 							   }
 						   //case "cityinfo":
@@ -1549,7 +1540,7 @@ namespace COTG
 								   var jse = jsp.Value;
 								   // var priorCid = cid;
 								   var cid = jse.GetInt("cid");
-								   if (!IsWorldView())
+								   if (!ShellPage.IsWorldView())
 									   AGame.cameraC = cid.CidToWorldV();
 								   var isFromTs = jse.TryGetProperty("ts", out _);
 								   //Note.L("citydata=" + cid.CidToString());
@@ -1633,7 +1624,7 @@ namespace COTG
 								   //City.StBuild(cid);
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
-								   SetViewMode((ViewMode)jso.GetInt("v"));
+								   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
 								   var pop = jso.GetProperty("pop");
 								   if( pop.ValueKind != JsonValueKind.Null )
 								   {
@@ -1675,6 +1666,7 @@ namespace COTG
 
 				   if (gotCreds)
 				   {
+					   ShellPage.SetViewModeCity();
 					   GetWorldInfo.Send();
 					   ShellPage.canvasVisible = true;
 					   ShellPage.isHitTestVisible = true;
@@ -1730,38 +1722,7 @@ namespace COTG
 		   });
 		}
 
-		public static void SetViewMode(ViewMode _viewMode, bool? pwebviewHasFocus=null)
-		{
-			var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
-			var priorView = viewMode;
-			var priorWebviewHasFocus = webviewHasFocus;
-			viewMode = _viewMode;
-			webviewHasFocus = _webviewHasFocus;
-			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
-			{
-				ShellPage.isOverPopup = false;// reset
-				//var isWorld = IsWorldView();
-				ShellPage.isHitTestVisible = !webviewHasFocus;
-				App.DispatchOnUIThreadLow(() =>
-				{
-					ShellPage.isOverPopup = false;// reset again in case it changed
-					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible; 
-					ShellPage.canvas.Visibility = !ShellPage.canvasVisible? Visibility.Collapsed: Visibility.Visible;
-					AGame.UpdateMusic();
-					if(!webviewHasFocus && priorWebviewHasFocus)
-						Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
-
-				});
-			}
-		}
-		public static void SetWebViewHasFocus( bool _webviewHasFocus)
-		{
-			SetViewMode(viewMode, _webviewHasFocus);
-		}
-			public static void SetViewModeCity() => SetViewMode(ViewMode.city, webviewHasFocus);
-		public static void SetViewModeWorld() => SetViewMode(ViewMode.world, webviewHasFocus);
-
-
+		
 		static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
 		{
 			if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))

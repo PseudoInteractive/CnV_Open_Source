@@ -58,6 +58,8 @@
         <telerikGrid:RadDataGrid x:Name="donationGrid"
                                  x:FieldModifier="public"
                         Grid.Row="2"
+								 							Margin="4,4,8,16"
+
                                  AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
             CanUserChooseColumns="True"
@@ -132,7 +134,8 @@
             </telerikGrid:RadDataGrid>
         <telerikGrid:RadDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
-                        Margin="0,14,0,0"
+								 							Margin="4,4,14,16"
+
                         AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"

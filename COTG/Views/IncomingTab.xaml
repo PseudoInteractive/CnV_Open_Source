@@ -27,6 +27,8 @@
 </tk:WrapPanel>
         <tg:RadDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
+													Margin="4,4,8,16"
+
                         x:FieldModifier="public"
 						IsTabStop="True"
                AllowFocusOnInteraction="True"
@@ -165,6 +167,7 @@
 						TabFocusNavigation="Once"
                                     ItemsSource="{x:Bind game:Army.empty}"
                                     CanUserChooseColumns="True"
+							Margin="4,4,8,16"
 
 						GridLinesThickness="1"
                                     FontSize="{StaticResource MediumFontSize}"

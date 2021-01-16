@@ -199,13 +199,16 @@
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\DiscordIds.cs" />
+    <Compile Include="Helpers\FloatN.cs" />
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\JSON.cs" />
+    <Compile Include="Helpers\KeyFrame.cs" />
     <Compile Include="Helpers\NavStack.cs" />
     <Compile Include="Helpers\SmallTime.cs" />
     <Compile Include="Helpers\Span2d.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
+    <Compile Include="Helpers\UMath.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
@@ -284,6 +287,9 @@
     </Compile>
     <Compile Include="Views\ChatTab.xaml.cs">
       <DependentUpon>ChatTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CityBuild.xaml.cs">
+      <DependentUpon>CityBuild.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CityRename.xaml.cs">
       <DependentUpon>CityRename.xaml</DependentUpon>
@@ -395,6 +401,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ChatTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CityBuild.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

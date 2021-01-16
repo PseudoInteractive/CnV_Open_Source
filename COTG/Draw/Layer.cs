@@ -16,6 +16,7 @@ namespace COTG.Draw
 		public const int tileBase=16;
 		public const int tileShadow = 32;
 		public const int tiles = 48;
+		public const int tileCity = tiles+16;
 		public const int tileText = tiles+32;
 		public const int effectShadow = tileText-1;
 

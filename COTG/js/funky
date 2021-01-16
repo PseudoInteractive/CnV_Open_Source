@@ -15502,1479 +15502,6 @@ var cotgsubscribe = amplify;
             var f9U;
             var V9U = -("1" |
                 0);
-            for (var U2U in D6["bd"]) {
-                P2U = D6["bd"][U2U]["bid"];
-                D2U = D6["bd"][U2U]["bl"];
-                U2U = Number(U2U);
-                f9U = $(__s[+B1R] + U2U)
-                    .data("data");
-                if (f9U.bid != P2U || D2U != f9U.bl) {
-                    if (U2U == 0)
-                        t9F();
-                    if (P2U == R1R *
-                        1) {
-                        if (D2U != 0 && U2U != 0) {
-                            var Z9U = Y8(D2U) - 443;
-                            var a8U = Z9U % 4;
-                            var X9U = (Z9U - a8U) / (4);
-                            a8U = a8U * +G5y;
-                            X9U = X9U * (G5y << 643212096);
-                            var M0l = U2U + +j6y;
-                            $(__s[e1R & 2147483647] + M0l)
-                                .css({
-                                'background': __s[h5y & 2147483647] + cityAtlas + __s[+X5y] + a8U + __s[+P5y] + X9U + E6k
-                                    .S55(I5y * 1),
-                                'width': __s[p5y & 2147483647],
-                                'height': __s[+p5y],
-                                'bottom': _s(1025),
-                                'zoom': __s[4025],
-                                '-moz-transform': _s(+Y1R),
-                                'left': __s[1123]
-                            });
-                        }
-                        if (D6.ble[2] == 0)
-                            var C9U = D6.ble["4" *
-                                1];
-                        else
-                            var C9U = D6.ble[2];
-                        var z0l = D2U * +v1R - (v1R << 2044777600);
-                        var X0l = C9U * +v1R - (v1R <<
-                            538650016);
-                        $(__s[r5y & 2147483647] + (U2U + (u6y << 1388849792)))
-                            .css({
-                            'background': __s[h5y ^ 0] + R9 + __s[+X5y] + z0l + __s[P5y >> 314165696] + X0l + E6k
-                                .S55(+I5y),
-                            'width': __s[w1R * 1],
-                            'height': __s[w1R >> 116578400],
-                            'zoom': _s(+F1R),
-                            '-moz-transform': __s[1798],
-                            'left': __s[+A1R]
-                        });
-                    }
-                    else if (!(P2U > +R1R))
-                        X1F(P2U, U2U);
-                }
-                if (P2U == +G1R || P2U == +C6y || P2U == (r1R | 192) || P2U == +b1R)
-                    D6["bd"][U2U][E6k
-                        .o55(i1R * 1)] = 0;
-                if (D2U > 10) {
-                    D2U = 10;
-                    D6["bd"][U2U]["bl"] = 10;
-                }
-                if (L2(P2U)) {
-                    P2U = L2(P2U);
-                    D6["bd"][U2U]["bid"] = P2U;
-                }
-                if (P2U == +r6y & U2U != (0)) {
-                    D6["bd"][U2U]["bid"] = 0;
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if (P2U != (n4y & 2147483647) && P2U != +l4y && P2U != o4y - 0 && P2U != I1R << 1609086048 && P2U != +t1y && P2U != T1y * 1 && P2U != g1y - 0 &&
-                    P2U != f1y * 1 && P2U != (V1y & 2147483647) && P2U != M1y - 0 && P2U != +Q1y && P2U != +Z1y && P2U != +u1y &&
-                    P2U != N1y << 248221984 && P2U != +i1y && P2U != q1y * 1 && P2U != D1y * 1 && P2U != (B1y | 36) && P2U != +e1y && P2U != y1y << 156907264 && (U2U == p1R >> 1467943232 || U2U == +z1R || U2U == +n1R || U2U == (d1R |
-                    256) || U2U == 323 || U2U == (l1R | 322) || U2U == +k1R || U2U == +o1R)) {
-                    D6["bd"][U2U]["bid"] = 0;
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if ((P2U == (n4y | 547) || P2U == +l4y || P2U == o4y - 0 || P2U == +I1R || P2U == t1y >> 51875552 || P2U == T1y * 1 || P2U == +g1y || P2U ==
-                    f1y - 0 || P2U == +V1y || P2U == +M1y || P2U == Q1y << 225587520 || P2U == +Z1y || P2U == +u1y || P2U == +N1y || P2U == +i1y || P2U == (q1y ^ 0) || P2U == +D1y || P2U == B1y * 1 || P2U == (e1y ^ 0) || P2U == +y1y) && U2U != 3 && U2U != (7) && U2U != m2y - 0 && U2U != +17 && U2U != D8y >> 126614880 &&
-                    U2U != (S1R & 2147483647) && U2U != +t5R && U2U != (J5R & 2147483647) && U2U != +T5R && U2U != 433 && U2U !=
-                    x5R << 1896147136 && U2U != (g5R & 2147483647) && U2U != W5R * 1 && U2U != f5R >> 1551032608 && U2U != U5R <<
-                    737845088 && U2U != N0R << 1837042752 && U2U != (p1R | 80) && U2U != (z1R & 2147483647) && U2U != +n1R &&
-                    U2U != (d1R | 1) && U2U != 323 && U2U != (l1R ^ 0) && U2U != k1R * 1 && U2U != +o1R) {
-                    D6[_s(N1R |
-                        4186)][U2U]["bid"] = 0;
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if (P2U != n4y * 1 && P2U != l4y - 0 && P2U != +o4y &&
-                    P2U != +I1R && P2U != t1y << 1105644064 && P2U != +T1y && P2U != +g1y && P2U != (f1y & 2147483647) && P2U != (V1y & 2147483647) && P2U != (M1y | 528) && P2U != (Q1y ^ 0) && P2U != Z1y >> 809083616 && P2U != (u1y ^ 0) &&
-                    P2U != +N1y && P2U != +i1y && P2U != +q1y && P2U != D1y >> 330094848 && P2U != +B1y && P2U != +e1y && P2U !=
-                    y1y * 1 && P2U != +O1y && P2U != +w1y && P2U != H1y >> 611549632 && P2U != +G1y && P2U != (b1y & 2147483647) &&
-                    P2U != +X1y && P2U != +I1y && P2U != +z1y && P2U != d1y * 1 && P2U != k1y << 496658432 && P2U != +S1y &&
-                    P2U != J5y >> 1172436896 && P2U != x5y >> 2039266656 && P2U != +W5y && P2U != +U5y && P2U != (c5y ^ 0) && (U2U == (p1R & 2147483647) || U2U == (z1R ^ 0) || U2U == n1R << 1135504608 || U2U == d1R * 1 || U2U == (323) || U2U == (l1R ^ 0) || U2U == +k1R || U2U == o1R << 503237888 || U2U == 3 || U2U == +'7' || U2U == +m2y || U2U == 17 * 1 || U2U == +D8y || U2U == S1R - 0 || U2U == t5R - 0 || U2U == +J5R ||
-                    U2U == T5R - 0 || U2U == 433 || U2U == +x5R || U2U == g5R - 0 || U2U == W5R * 1 || U2U == (f5R & E6k
-                    .s6s) || U2U == +U5R || U2U == +N0R || U2U == +p1R || U2U == +z1R || U2U == +n1R || U2U == +d1R ||
-                    U2U == 323 || U2U == l1R >> 1123097632 || U2U == (k1R | 33) || U2U == +o1R)) {
-                    D6["bd"][U2U]["bid"] = 0;
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if ((P2U == O1y * 1 || P2U == w1y >> 1332491136 || P2U ==
-                    +H1y || P2U == G1y << 1922023968 || P2U == +b1y || P2U == X1y * 1 || P2U == (I1y ^ 0) || P2U == +z1y ||
-                    P2U == +d1y || P2U == (k1y ^ 0) || P2U == +S1y || P2U == +J5y || P2U == +x5y || P2U == (W5y ^ 0) || P2U ==
-                    +U5y || P2U == +c5y) && U2U != 3 && U2U != (7) && U2U != +m2y && U2U != +17 && U2U != +D8y &&
-                    U2U != S1R >> 438385120 && U2U != +t5R && U2U != J5R - 0 && U2U != T5R << 945891840 && U2U != 433 &&
-                    U2U != x5R << 2130842048 && U2U != g5R - 0 && U2U != W5R << 796786560 && U2U != +f5R && U2U != +U5R &&
-                    U2U != N0R - 0 && U2U != (p1R | 32) && U2U != z1R - 0 && U2U != (n1R | 12) && U2U != +d1R && U2U != ('323' ^
-                    0) && U2U != (l1R & 2147483647) && U2U != +k1R && U2U != o1R << 1327847936) {
-                    D6["bd"][U2U][E6k
-                        .o55(m1R ^ 0)] = 0;
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if (P2U != (0) && P2U != G1R <<
-                    1028360640 && P2U != +C6y && P2U != (r1R | 260) && P2U != b1R * 1)
-                    if (bam["buildings"][P2U])
-                        if (bam["buildings"][P2U]["sc"][D2U]) {
-                            t0l = t0l + bam["buildings"][P2U][_s(l9y >>
-                                850231456)][D2U];
-                            V9U++;
-                            if (P2U != (r6y & 2147483647) && U2U != 0 && U2U != +E1R && U2U != 3 && U2U !=
-                                7 && U2U != (m2y & 2147483647) && U2U != +17 && U2U != (D8y | 16) && U2U != +S1R && U2U != +t5R &&
-                                U2U != +J5R && U2U != +T5R && U2U != (433) && U2U != +x5R && U2U != g5R - 0 && U2U != W5R <<
-                                381473376 && U2U != +f5R && U2U != +U5R && U2U != N0R >> 344509536 && U2U != (p1R | 0) && U2U !=
-                                z1R << 2092871584 && U2U != n1R << 1900915552 && U2U != (d1R & 2147483647) && U2U != '323' >>
-                                330549504 && U2U != +l1R && U2U != +k1R && U2U != +o1R)
-                                r9U++;
-                        }
-                if (P2U >= (A4y | 73) && P2U <= I4y *
-                    1 && U2U != +V5R && U2U != c5R << 1275326496 && U2U != +u8y && U2U != +M5R && U2U != +s5R && U2U != +Q5R &&
-                    U2U != +C5R && U2U != Z5R * 1 && D6[__s[+K5R]] == 1) {
-                    D6["bd"][U2U]["bid"] = +"0";
-                    D6["bd"][U2U]["bl"] = 0;
-                    D6["bd"][U2U]["bu"] = 0;
-                    D6["bd"][U2U]["bd"] = 0;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U]["rh"] = 0;
-                }
-                if (P2U == (d2y | 266)) {
-                    var b9U = bam[_s(Q5y | 5128)][P2U]["cs"][D2U];
-                    l0l = l0l + b9U;
-                    if (D2U == 1) {
-                        var P8U = 0;
-                        var O9U = 0;
-                    }
-                    else {
-                        var P8U = D2U - ("1" & E6k
-                            .s6s);
-                        var O9U = bam["buildings"][P2U]["cs"][P8U];
-                    }
-                    if (D2U == 10) {
-                        var U8U = 10;
-                        var E8U = bam["buildings"][P2U]["cs"][D2U];
-                    }
-                    else {
-                        var U8U = D2U + 1;
-                        var E8U = bam["buildings"][P2U]["cs"][U8U];
-                    }
-                    D6["bd"][U2U][_s(+X1R)] = +A5y;
-                    D6["bd"][U2U]["rh"] = b9U;
-                    D6["bd"][U2U]["ruh"] = E8U;
-                    D6["bd"][U2U]["rdh"] = O9U;
-                    bontxt = +A5y;
-                    var g0l = { 21: { "rt": +A5y, "rh": b9U, "rdh": O9U, "ruh": E8U } };
-                    D6["bd"][U2U]["rbb"] = g0l;
-                }
-                var w8U = "";
-                var e8U = "";
-                var l8U = '';
-                if (D2U >= 1 && P2U == 479) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U + (1);
-                    var S8U = U2U - +A5y;
-                    var V8U = U2U + +A5y;
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U + (u6y ^
-                        0);
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + (j6y - 0);
-                    var C8U = D2U - 1;
-                    var r8U = D2U + ('1' & E6k
-                        .s6s);
-                    var f8U = bam["buildings"][P2U][__s[j1R * 1]][D2U];
-                    if (r8U > 10)
-                        var v8U = +"0";
-                    else
-                        var v8U = bam["buildings"][P2U][__s[+j1R]][r8U];
-                    if (C8U == 0)
-                        var I8U = 0;
-                    else
-                        var I8U = bam["buildings"][P2U][__s[+j1R]][C8U];
-                    var H8U = 0;
-                    var G8U = 0;
-                    var n8U = d2y & 2147483647;
-                    var A8U = +b1R;
-                    var M8U = "460" | 4;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U,
-                        b8U, d8U, i8U, W8U];
-                    for (var O8U in t8U) {
-                        var B2U = Number(t8U[O8U]);
-                        if (D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == A8U) {
-                                var N2U = D6[_s(N1R ^
-                                    0)][B2U]["bl"];
-                                var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
-                                if (N2U >= 2)
-                                    var u8U = N2U - (1);
-                                else
-                                    var u8U = 1;
-                                var X8U = N2U + 1;
-                                if (X8U > (10)) {
-                                    X8U = 0;
-                                    var w8U = +'0';
-                                }
-                                else
-                                    var w8U = bam["buildings"][y2U][__s[E5R << 536418304]][X8U];
-                                if (u8U == +"0") {
-                                    u8U = 0;
-                                    var e8U = 0;
-                                    var l8U = R2U;
-                                }
-                                else {
-                                    var e8U = bam["buildings"][y2U][E6k
-                                        .o55(E5R * 1)][u8U];
-                                    var l8U = R2U - e8U;
-                                }
-                                H8U = H8U + R2U;
-                                j8U.push({ au: w8U, b: B2U, i: y2U, ad: e8U, a: R2U, add: l8U, bl: N2U });
-                                var F2U = {};
-                                F2U[U2U] = { a: R2U, i: P2U, au: w8U, bt: p0y << 930651296, b: U2U, bl: N2U, ad: e8U, add: l8U };
-                                D6["bd"][B2U][__s[i5R & 2147483647]] = F2U;
-                            }
-                        }
-                    }
-                    var z8U = f8U + f8U * (H8U / ("100" & E6k
-                        .s6s));
-                    if (v8U != 0)
-                        var T8U = v8U + v8U * (H8U / (100));
-                    else
-                        var T8U = 0;
-                    if (I8U != 0)
-                        var Q8U = I8U + I8U * (H8U / 100);
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = p0y >> 844304704;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = {
-                        1: {
-                            rh: z8U,
-                            rt: +p0y,
-                            rdh: Q8U,
-                            ruh: T8U
-                        }
-                    };
-                    var m9U = 1;
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    R9U = R9U + z8U;
-                }
-                if (D2U >= 2)
-                    var m2U = D2U - (1);
-                else
-                    var m2U = 0;
-                if (D2U <= 9)
-                    var a2U = D2U + 1;
-                else
-                    var a2U = 0;
-                if (D2U >= 1 && P2U == +r6y) {
-                    var q9U = D2U * 10;
-                    var o8U = D2U * (10);
-                    if (m2U != 0)
-                        var q2U = m2U * 10;
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = a2U * ('10' | 2);
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[X8y ^ 0] = { rt: +X8y, ruh: c2U, rdh: q2U, rh: o8U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= ('1' | 1) && (P2U == +n4y || P2U == +l4y || P2U == o4y * 1 || P2U == +I1R)) {
-                    U0l += bam["buildings"][P2U]["trcap"][D2U];
-                    F0l += D2U;
-                    J0l += bam["buildings"][P2U][__s[51]][D2U];
-                    var o8U = bam["buildings"][P2U][_s(+j5R)][D2U];
-                    if (m2U != 0)
-                        var q2U = bam["buildings"][P2U]["trcap"][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != 0)
-                        var c2U = bam["buildings"][P2U]["trcap"][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[S8y >> 921303424] = { rt: S8y << 1169108096, ruh: c2U, rh: o8U, rdh: q2U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == +t1y || P2U == (T1y & E6k
-                    .s6s) || P2U == g1y - 0 || P2U == +f1y)) {
-                    p0l += bam["buildings"][P2U]["trcap"][D2U];
-                    y0l += D2U;
-                    var o8U = bam["buildings"][P2U]["trcap"][D2U];
-                    if (m2U != 0)
-                        var q2U = bam["buildings"][P2U]["trcap"][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = bam["buildings"][P2U][E6k
-                            .o55(+j5R)][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[P8y << 267513056] = { rdh: q2U, rh: o8U, rt: P8y >> 2096014976, ruh: c2U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == V1y - 0 || P2U == (M1y ^ 0) || P2U == +Q1y || P2U == +Z1y)) {
-                    Y0l += bam["buildings"][P2U]["trcap"][D2U];
-                    R0l += D2U;
-                    var o8U = bam["buildings"][P2U]["trcap"][D2U];
-                    if (m2U != '0' >>
-                        1669660064)
-                        var q2U = bam["buildings"][P2U]["trcap"][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = bam["buildings"][P2U][_s(j5R >>
-                            1092430400)][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+I8y] = { rt: I8y >> 223461888, rdh: q2U, ruh: c2U, rh: o8U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == +u1y || P2U == +N1y || P2U == (i1y ^ 0) || P2U == +q1y)) {
-                    N0l += bam["buildings"][P2U]["trcap"][D2U];
-                    B0l += D2U;
-                    var o8U = bam["buildings"][P2U]["trcap"][D2U];
-                    if (m2U != 0)
-                        var q2U = bam[E6k
-                            .o55(+Q5y)][P2U]["trcap"][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != 0)
-                        var c2U = bam["buildings"][P2U]["trcap"][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[36] = { rdh: q2U, rh: o8U, ruh: c2U, rt: 36 };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == +D1y || P2U == B1y - 0 || P2U ==
-                    e1y * 1 || P2U == +y1y)) {
-                    q0l += bam["buildings"][P2U]["trcap"][D2U];
-                    P0l += D2U;
-                    var o8U = bam["buildings"][P2U]["trcap"][D2U];
-                    if (m2U != 0)
-                        var q2U = bam[E6k
-                            .o55(Q5y >> 1983727424)][P2U]["trcap"][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != 0)
-                        var c2U = bam["buildings"][P2U]["trcap"][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+z8y] = { rdh: q2U, rt: z8y ^ 0, ruh: c2U, rh: o8U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= ('1' | 1) && (P2U == +O1y || P2U == +w1y || P2U == (H1y ^ 0) || P2U == (G1y & 2147483647))) {
-                    o0l += bam["buildings"][P2U][__s[+D5R]][D2U];
-                    A0l += D2U;
-                    var o8U = bam["buildings"][P2U][__s[D5R & 2147483647]][D2U];
-                    if (m2U != 0)
-                        var q2U = bam["buildings"][P2U][__s[+D5R]][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = bam["buildings"][P2U][_s(D5R >>
-                            684947296)][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+d8y] = { ruh: c2U, rdh: q2U, rt: d8y | 4, rh: o8U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= ('1' | 1) && (P2U == b1y >> 107859680 ||
-                    P2U == +X1y || P2U == I1y - 0 || P2U == z1y << 1340905088)) {
-                    K0l += bam["buildings"][P2U][_s(D5R << 164463264)][D2U];
-                    r0l += D2U;
-                    var o8U = bam["buildings"][P2U][__s[D5R >> 1528210080]][D2U];
-                    if (m2U !=
-                        0)
-                        var q2U = bam["buildings"][P2U][__s[+D5R]][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = bam["buildings"][P2U][__s[+D5R]][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+l8y] = { ruh: c2U, rdh: q2U, rh: o8U, rt: +l8y };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= (1) && (P2U == d1y >> 1758159904 ||
-                    P2U == +k1y || P2U == +S1y || P2U == (J5y ^ 0))) {
-                    f0l += bam["buildings"][P2U][_s(+D5R)][D2U];
-                    V0l += D2U;
-                    var o8U = bam["buildings"][P2U][__s[+D5R]][D2U];
-                    if (m2U != (0))
-                        var q2U = bam[E6k
-                            .o55(Q5y * 1)][P2U][__s[D5R & 2147483647]][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != (0))
-                        var c2U = bam["buildings"][P2U][_s(D5R - 0)][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+c8y] = { rh: o8U, rdh: q2U, ruh: c2U, rt: +c8y };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == (x5y & E6k
-                    .s6s) || P2U == +W5y || P2U == +U5y || P2U == +c5y)) {
-                    n0l += bam["buildings"][P2U][E6k
-                        .o55(D5R << 193106400)][D2U];
-                    h0l += D2U;
-                    var o8U = bam["buildings"][P2U][__s[+D5R]][D2U];
-                    if (m2U != 0)
-                        var q2U = bam["buildings"][P2U][__s[D5R - 0]][m2U];
-                    else
-                        var q2U = 0;
-                    if (a2U != 0)
-                        var c2U = bam["buildings"][P2U][__s[D5R - 0]][a2U];
-                    else
-                        var c2U = 0;
-                    var p2U = {};
-                    p2U[+k8y] = { rdh: q2U, ruh: c2U, rh: o8U, rt: +k8y };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= (1) && P2U == +K4y) {
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var W9U = bam["buildings"][P2U][_s(+'860')][Y2U];
-                    Z0l = 1;
-                    if (m2U != 0)
-                        var M9U = bam["buildings"][P2U][__s[860]][m2U];
-                    else
-                        var M9U = 0;
-                    if (a2U != 0)
-                        var G9U = bam["buildings"][P2U][__s['860' | 264]][a2U];
-                    else
-                        var G9U = 0;
-                    var p2U = {};
-                    p2U[+F8y] = { rt: F8y & 2147483647, ruh: G9U, rdh: M9U, rh: W9U };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && P2U == +C4y) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
-                    x9U = x9U + s8U;
-                    if (Y2U > w9U)
-                        w9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][_s(t1R &
-                            2147483647)][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 26: { rt: A8y ^ 0, ruh: E2U, rh: s8U, rdh: k8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && P2U == +S2y) {
-                    var Y2U = D6[E6k
-                        .S55(+N1R)][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[B5R - 0]][Y2U];
-                    I0l = I0l + s8U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][__s[+B5R]][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != (0))
-                        var E2U = bam["buildings"][P2U][__s[+B5R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 31: { ruh: E2U, rh: s8U, rt: b8y | 18, rdh: k8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == F4y - 0 || P2U ==
-                    A4y * 1 || P2U == +r4y)) {
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam[_s(+Q5y)][P2U][__s[+B5R]][Y2U];
-                    v0l = v0l + s8U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][__s[+B5R]][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[B5R | 2608]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 32: { rdh: k8U, ruh: E2U, rt: +h8y, rh: s8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && P2U == 483) {
-                    var K8U = bam[E6k
-                        .o55(+Q5y)][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[t1R & 2147483647]][Y2U];
-                    t9U = t9U + s8U;
-                    if (Y2U > I9U)
-                        I9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][_s(t1R <<
-                            1637383424)][m2U];
-                    else
-                        k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 25: { rdh: k8U, rh: s8U, rt: 25, ruh: E2U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && P2U == 482) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
-                    Q9U = Q9U + s8U;
-                    if (Y2U > k9U)
-                        k9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][_s(t1R << 2130564480)][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 28: { rdh: k8U, ruh: E2U, rt: R2y << 598198208, rh: s8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && (P2U == h4y - 0 ||
-                    P2U == +P4y || P2U == +p4y)) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6[E6k
-                        .S55(+N1R)][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[t1R * 1]][Y2U];
-                    v9U = v9U + s8U;
-                    if (Y2U > u9U)
-                        u9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][_s(t1R - 0)][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 30: { rt: r8y << 664044736, rdh: k8U, rh: s8U, ruh: E2U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= (1) && P2U == 500) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
-                    T9U = T9U + s8U;
-                    if (Y2U > m8U)
-                        m8U = Y2U;
-                    if (m2U != (0))
-                        var k8U = bam["buildings"][P2U][_s(t1R << 1236940000)][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 27: { rdh: k8U, ruh: E2U, rh: s8U, rt: +e2y } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= (1) && P2U == 502) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U][E6k
-                        .o55(+i1R)];
-                    var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
-                    l9U = l9U + s8U;
-                    if (Y2U > H9U)
-                        H9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][__s[+t1R]][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 29: { rt: +G8y, ruh: E2U, rdh: k8U, rh: s8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                }
-                if (D2U >= 1 && P2U == (504)) {
-                    var K8U = bam["buildings"][P2U][__s[6626]];
-                    var Y2U = D6["bd"][U2U]["bl"];
-                    var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
-                    B9U = B9U + s8U;
-                    if (Y2U > a9U)
-                        a9U = Y2U;
-                    if (m2U != 0)
-                        var k8U = bam["buildings"][P2U][__s[+t1R]][m2U];
-                    else
-                        var k8U = 0;
-                    if (a2U != 0)
-                        var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
-                    else
-                        var E2U = 0;
-                    var p2U = { 24: { rdh: k8U, ruh: E2U, rh: s8U, rt: 24 } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    D6["bd"][U2U][__s[i5R >> 1722621024]] = {};
-                }
-                if (D2U >= 1 && P2U == 445) {
-                    var D8U = bam["buildings"][445][__s[+t1R]][D2U];
-                    var h8U = U2U - ('1' | 1);
-                    var J8U = U2U + (1);
-                    var S8U = U2U - A5y * 1;
-                    var V8U = U2U + (A5y ^ 0);
-                    var b8U = U2U - (u6y | 0);
-                    var d8U = U2U + (u6y | 16);
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + +j6y;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U,
-                        b8U, d8U, i8U, W8U];
-                    y9U = y9U + bam["buildings"][445][__s[+s8y]][D2U];
-                    var L0l = bam["buildings"][445][E6k
-                        .o55(s8y * 1)][D2U];
-                    if (m2U != (0))
-                        var J9U = bam["buildings"][P2U][__s[s8y >> 1702006560]][m2U];
-                    else
-                        var J9U = 0;
-                    if (a2U != 0)
-                        var h9U = bam["buildings"][P2U][__s[+s8y]][a2U];
-                    else
-                        var h9U = 0;
-                    var p2U = { 22: { ruh: h9U, rdh: J9U, rh: L0l, rt: +j6y } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (B2U > 0 &&
-                            D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == 483 || y2U == +C4y || y2U == (482) || y2U == +h4y || y2U == (P4y ^ 0) || y2U == +p4y || y2U == ('500' & E6k
-                                .s6s) || y2U == 502) {
-                                var K8U = bam["buildings"][y2U][__s[6626]];
-                                var Y2U = D6["bd"][B2U]["bl"];
-                                var s8U = 0;
-                                switch (K8U) {
-                                    case 0:
-                                        break;
-                                    case 1:
-                                        t9U = t9U + s8U + D8U;
-                                        if (Y2U > I9U)
-                                            I9U = Y2U;
-                                        var R2U = bam["buildings"][y2U][_s(t1R - 0)][Y2U];
-                                        j8U.push({ a: R2U, i: y2U, add: R2U, bl: Y2U, ad: R2U, b: B2U, au: R2U });
-                                        var F2U = {};
-                                        F2U = { bt: 25, i: P2U, add: R2U, ad: R2U, a: R2U, b: U2U, bl: Y2U, au: R2U };
-                                        if (!D6[_s(N1R * 1)][B2U][__s[+i5R]])
-                                            D6["bd"][B2U][__s[i5R >> 1669123072]] = {};
-                                        D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                        break;
-                                    case 2:
-                                        x9U = x9U + s8U + D8U;
-                                        if (Y2U > w9U)
-                                            w9U = Y2U;
-                                        var R2U = bam["buildings"][y2U][__s[+t1R]][Y2U];
-                                        j8U.push({ au: R2U, i: y2U, add: R2U, bl: Y2U, ad: R2U, a: R2U, b: B2U });
-                                        var F2U = {};
-                                        F2U = { add: R2U, bt: +A8y, au: R2U, ad: R2U, a: R2U, b: U2U, bl: Y2U, i: P2U };
-                                        if (!D6[_s(+N1R)][B2U][__s[+i5R]])
-                                            D6["bd"][B2U][__s[+i5R]] = {};
-                                        D6["bd"][B2U][__s[i5R | 4362]][U2U] = F2U;
-                                        break;
-                                    case 3:
-                                        T9U = T9U + s8U + D8U;
-                                        if (Y2U > m8U)
-                                            m8U = Y2U;
-                                        var R2U = bam["buildings"][y2U][_s(+t1R)][Y2U];
-                                        j8U.push({ ad: R2U, b: B2U, a: R2U, au: R2U, bl: Y2U, add: R2U, i: y2U });
-                                        var F2U = {};
-                                        F2U = { ad: R2U, i: P2U, add: R2U, bl: Y2U, b: U2U, bt: +e2y, au: R2U, a: R2U };
-                                        if (!D6[_s(N1R & 2147483647)][B2U][__s[i5R ^ 0]])
-                                            D6["bd"][B2U][_s(i5R <<
-                                                1824760192)] = {};
-                                        D6["bd"][B2U][__s[i5R >> 1469972512]][U2U] = F2U;
-                                        break;
-                                    case 4:
-                                        Q9U = Q9U + s8U + D8U;
-                                        if (Y2U > k9U)
-                                            k9U = Y2U;
-                                        var R2U = bam["buildings"][y2U][__s[+t1R]][Y2U];
-                                        j8U.push({ a: R2U, ad: R2U, au: R2U, i: y2U, bl: Y2U, b: B2U, add: R2U });
-                                        var F2U = {};
-                                        F2U = { i: P2U, add: R2U, au: R2U, bt: R2y & 2147483647, b: U2U, a: R2U, ad: R2U, bl: Y2U };
-                                        if (!D6["bd"][B2U][__s[+i5R]])
-                                            D6["bd"][B2U][__s[i5R - 0]] = {};
-                                        D6["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
-                                        break;
-                                    case 5:
-                                        l9U = l9U + s8U + D8U;
-                                        if (Y2U > H9U)
-                                            H9U = Y2U;
-                                        var R2U = bam["buildings"][y2U][_s(t1R <<
-                                            508045792)][Y2U];
-                                        j8U.push({ au: R2U, add: R2U, b: B2U, ad: R2U, i: y2U, bl: Y2U, a: R2U });
-                                        var F2U = {};
-                                        F2U = { add: R2U, a: R2U, ad: R2U, au: R2U, bl: Y2U, i: P2U, bt: G8y - 0, b: U2U };
-                                        if (!D6[E6k
-                                            .S55(N1R - 0)][B2U][__s[+i5R]])
-                                            D6["bd"][B2U][__s[+i5R]] = {};
-                                        D6["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
-                                        break;
-                                    case 6:
-                                        v9U = v9U + s8U + D8U;
-                                        if (Y2U > u9U)
-                                            u9U = Y2U;
-                                        var R2U = bam["buildings"][y2U][_s(+t1R)][Y2U];
-                                        j8U.push({ a: R2U, ad: R2U, add: R2U, au: R2U, i: y2U, b: B2U, bl: Y2U });
-                                        var F2U = {};
-                                        F2U = { i: P2U, b: U2U, ad: R2U, au: R2U, bl: Y2U, add: R2U, a: R2U, bt: +r8y };
-                                        if (!D6[_s(+N1R)][B2U][__s[+i5R]])
-                                            D6["bd"][B2U][__s[i5R >> 640062016]] = {};
-                                        D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    D6["bd"][U2U][E6k
-                        .S55(q5R >> 486276576)] = j8U;
-                }
-                if (D2U >= 1 && P2U == +c4y) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U + +"1";
-                    var S8U = U2U - +A5y;
-                    var V8U = U2U + +A5y;
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U + (u6y - 0);
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + (j6y & 2147483647);
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U, b8U, d8U,
-                        i8U, W8U];
-                    var R8U = bam["buildings"][P2U][__s[+j1R]][D2U];
-                    if (D2U == 1) {
-                        var P8U = +"0";
-                        var Z8U = 0;
-                    }
-                    else {
-                        var P8U = D2U - (1);
-                        var Z8U = bam["buildings"][P2U][__s[j1R * 1]][P8U];
-                    }
-                    if (D2U == 10) {
-                        var U8U = 10;
-                        $basestore3 = bam["buildings"][P2U][__s[j1R & 2147483647]][U8U];
-                    }
-                    else {
-                        var U8U = D2U + ('1' ^
-                            0);
-                        var B8U = bam["buildings"][P2U][__s[j1R & 2147483647]][U8U];
-                    }
-                    var F8U = 0;
-                    var Y8U = '0' >>
-                        1808823136;
-                    var N8U = 0;
-                    var q8U = 0;
-                    var G0l = 460;
-                    var C0l = '462' | 330;
-                    var W0l = a4y & E6k
-                        .s6s;
-                    var i0l = 463;
-                    var j8U = [];
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (D6[E6k
-                            .S55(+N1R)][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == G0l || y2U ==
-                                C0l || y2U == W0l || y2U == i0l) {
-                                var N2U = D6["bd"][B2U]["bl"];
-                                var R2U = bam["buildings"][y2U][__s[j1R | 2053]][N2U];
-                                var j9U = bam["buildings"][y2U][E6k
-                                    .o55(X1R * 1)];
-                                var g8U = +'15';
-                                if (j9U == 7) {
-                                    var g8U = +'15';
-                                    var F8U = F8U + R2U;
-                                }
-                                if (j9U ==
-                                    8) {
-                                    var Y8U = Y8U + R2U;
-                                    var g8U = 16;
-                                }
-                                if (j9U == 9) {
-                                    var q8U = q8U + R2U;
-                                    var g8U = 17 ^ 0;
-                                }
-                                if (j9U == (10)) {
-                                    var N8U = N8U + R2U;
-                                    var g8U = +u7y;
-                                }
-                                j8U
-                                    .push({ au: w8U, add: 0, b: B2U, bl: N2U, a: R2U, i: y2U, ad: e8U });
-                                var F2U = {};
-                                F2U = { bt: g8U, b: U2U, a: R2U, au: w8U, ad: e8U, add: 0, i: P2U, bl: N2U };
-                                if (!D6[_s(N1R << 696067392)][B2U][__s[i5R ^ 0]])
-                                    D6["bd"][B2U][__s[+i5R]] = {};
-                                D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                D6["bd"][B2U]["rt"] = g8U;
-                            }
-                        }
-                    }
-                    var o9U = R8U + R8U * (F8U / ("100" ^
-                        0));
-                    var z9U = R8U + R8U * (Y8U / 100);
-                    var i9U = R8U + R8U * (q8U / 100);
-                    var d9U = R8U + R8U * (N8U /
-                        100);
-                    var j0l = Z8U + Z8U * (F8U / (100));
-                    var u0l = Z8U + Z8U * (Y8U / (100));
-                    var s0l = Z8U + Z8U * (q8U / 100);
-                    var e0l = Z8U + Z8U * (N8U / (100));
-                    var k0l = B8U + B8U * (F8U / +"100");
-                    var E9U = B8U + B8U * (Y8U / 100);
-                    var c9U = B8U + B8U * (q8U / (100));
-                    var F9U = B8U + B8U * (N8U / (100));
-                    var N9U = { "rt": 11, "rdh": j0l, "ruh": k0l, "rh": o9U };
-                    var Y9U = { "rdh": u0l, "ruh": E9U, "rh": z9U, "rt": 12 };
-                    var p9U = {
-                        "rt": m2y ^
-                            0,
-                        "rdh": s0l,
-                        "rh": i9U,
-                        "ruh": c9U
-                    };
-                    var D9U = { "rdh": e0l, "ruh": F9U, "rh": d9U, "rt": '14' ^ 0 };
-                    var E0l = { 11: { "rdh": j0l, "rh": o9U, "ruh": k0l, "rt": 11 } };
-                    var a0l = {
-                        12: {
-                            "rh": z9U,
-                            "rt": +'12',
-                            "rdh": u0l,
-                            "ruh": E9U
-                        }
-                    };
-                    var m0l = {
-                        13: {
-                            "rdh": s0l,
-                            "rh": i9U,
-                            "ruh": c9U,
-                            "rt": m2y & E6k
-                                .s6s
-                        }
-                    };
-                    var c0l = { 14: { "rt": '14' ^ 0, "rh": d9U, "rdh": e0l, "ruh": F9U } };
-                    D6["bd"][U2U]["rb"] = j8U;
-                    D6["bd"][U2U]["rt"] = 0;
-                    D6["bd"][U2U][__s[4429]] = { 0: N9U, 1: Y9U, 2: p9U, 3: D9U };
-                    D6["bd"][U2U]["rbb"] = [];
-                    D6["bd"][U2U]["rbb"][11] = N9U;
-                    D6["bd"][U2U]["rbb"][12] = Y9U;
-                    D6["bd"][U2U]["rbb"][+m2y] = p9U;
-                    D6["bd"][U2U]["rbb"][+'14'] = D9U;
-                    Q0l = Q0l + o9U;
-                    T0l = T0l + z9U;
-                    x0l = x0l + i9U;
-                    O0l = O0l + d9U;
-                }
-                var w8U = "";
-                var e8U = '';
-                var l8U = "";
-                if (D2U >= (1) && P2U == (N4y | 320)) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U + +'1';
-                    var S8U = U2U - (A5y | 5);
-                    var V8U = U2U + (A5y << 208439968);
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U + (u6y ^ 0);
-                    var i8U = U2U - (j6y ^ 0);
-                    var W8U = U2U + +j6y;
-                    var C8U = D2U - 1;
-                    var r8U = D2U + ('1' >>
-                        1929758368);
-                    var f8U = bam["buildings"][P2U]["r"][D2U];
-                    if (r8U > 10)
-                        var v8U = 0;
-                    else
-                        var v8U = bam["buildings"][P2U]["r"][r8U];
-                    if (C8U == 0)
-                        var I8U = '0' &
-                            2147483647;
-                    else
-                        var I8U = bam["buildings"][P2U]["r"][C8U];
-                    var H8U = 0;
-                    var L8U = 0;
-                    var x8U = 0;
-                    var G8U = 0;
-                    var n8U = +d2y;
-                    var A8U = +b1R;
-                    var M8U = 460;
-                    var j8U = [];
-                    var t8U = [h8U,
-                        J8U, S8U, V8U, b8U, d8U, i8U, W8U];
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        var y2U = D6["bd"][B2U]["bid"];
-                        if (y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
-                            var N2U = D6[E6k
-                                .S55(N1R - 0)][B2U]["bl"];
-                            var R2U = bam["buildings"][y2U][__s[+E5R]][N2U];
-                            if (N2U >= 2)
-                                var u8U = N2U - (1);
-                            else
-                                var u8U = 1;
-                            var X8U = N2U + 1;
-                            if (X8U > 10) {
-                                X8U = '0' >>
-                                    1370342400;
-                                var w8U = 0;
-                            }
-                            else
-                                var w8U = bam["buildings"][y2U][__s[E5R >> 1330756992]][X8U];
-                            if (u8U == 0) {
-                                u8U = 0;
-                                var e8U = 0;
-                                var l8U = R2U;
-                            }
-                            else {
-                                var e8U = bam[E6k
-                                    .S55(Q5y >> 922647072)][y2U][__s[E5R ^ 0]][u8U];
-                                var l8U = R2U - e8U;
-                            }
-                            if (y2U == M8U && G8U ==
-                                0)
-                                var L8U = R2U;
-                            if (y2U == n8U)
-                                x8U = x8U + R2U;
-                            if (y2U == A8U)
-                                H8U = H8U + R2U;
-                            j8U.push({ b: B2U, add: l8U, a: R2U, au: w8U, i: y2U, ad: e8U, bl: N2U });
-                            var F2U = {};
-                            F2U = { ad: e8U, bl: N2U, a: R2U, au: w8U, bt: 6, i: P2U, add: l8U, b: U2U };
-                            if (!D6["bd"][B2U][__s[+i5R]])
-                                D6["bd"][B2U][__s[+i5R]] = {};
-                            D6["bd"][B2U][__s[i5R | 6282]][U2U] = F2U;
-                            if (y2U == M8U)
-                                G8U = 1;
-                        }
-                    }
-                    var z8U = f8U * ((1) + H8U / 100) * ((1) + x8U / 100) * (1 + L8U / (100));
-                    if (v8U != 0)
-                        var T8U = v8U * (1 + H8U / 100) * ((1) + x8U / (100)) *
-                            (1 + L8U / 100);
-                    else
-                        var T8U = 0;
-                    if (I8U != 0)
-                        var Q8U = I8U * ((1) + H8U / ("100" >>
-                            706311584)) * ((1) + x8U / (100)) * (1 + L8U / ("100" | 64));
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = 1;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = {
-                        1: {
-                            rt: 1,
-                            ruh: T8U,
-                            rdh: Q8U,
-                            rh: z8U
-                        }
-                    };
-                    var m9U = 1;
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    H0l = H0l + z8U;
-                }
-                w8U = "";
-                e8U = '';
-                l8U = '';
-                if (D2U >= 1 && P2U == 447) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U + (1);
-                    var S8U = U2U - +A5y;
-                    var V8U = U2U + (A5y << 466600896);
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U + (u6y | 16);
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + (j6y - 0);
-                    var C8U = D2U - ("1" >>
-                        1908782624);
-                    var r8U = D2U + 1;
-                    var f8U = bam["buildings"][P2U]["r"][D2U];
-                    if (r8U > (10))
-                        var v8U = 0;
-                    else
-                        var v8U = bam["buildings"][P2U]["r"][r8U];
-                    if (C8U == 0)
-                        var I8U = 0;
-                    else
-                        var I8U = bam["buildings"][P2U]["r"][C8U];
-                    var H8U = 0;
-                    var L8U = 0;
-                    var x8U = 0;
-                    var c8U = 0;
-                    var G8U = 0;
-                    var n8U = d2y >> 27466848;
-                    var A8U = r1R >> 591033152;
-                    var M8U = "463" | 261;
-                    var U9U = R5R & 2147483647;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U, b8U, d8U, i8U,
-                        W8U];
-                    var g9U = 0;
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == 0 && B2U != 0 &&
-                                B2U != 1 && B2U != 2 && B2U != (3) && B2U != 4 && B2U != 5 && B2U !=
-                                6 && B2U != 7 && B2U != 8 && B2U != 9 && B2U != 10 && B2U != 11 && B2U !=
-                                12 && B2U != '14' << 1704664960 && B2U != ('15' & 2147483647) && B2U != (16) && B2U != 17 >>
-                                1595429632 && B2U != +u7y && B2U != p0y << 1789523232 && B2U != u6y << 1875970880 && B2U != +A5y &&
-                                B2U != +j6y && B2U != F8y >> 945958272 && B2U != b8y * 1 && B2U != +l8y && B2U != +c8y && B2U !=
-                                k8y << 642430048 && B2U != +o8y && B2U != +S8y && B2U != (V0R | 20) && B2U != ('61' | 53) && B2U != +a0R && B2U != 73 && B2U != 84 && B2U != 94 && B2U != +L5R && B2U != (105) && B2U !=
-                                +y5R && B2U != 114 && B2U != 115 && B2U != U6y * 1 && B2U != 118 && B2U != 125 &&
-                                B2U != +w5R && B2U != 132 && B2U != 133 && B2U != 139 && B2U != 140 && B2U != 146 &&
-                                B2U != 152 && B2U != 153 && B2U != 161 && B2U != +f9y && B2U != 168 && B2U != 188 &&
-                                B2U != +I5R && B2U != (194) && B2U != 204 && B2U != +n5R && B2U != 210 &&
-                                B2U != 211 && B2U != +k5R && B2U != 213 && B2U != +S5R && B2U != +N5y && B2U != ('225' | 224) && B2U != +G7y && B2U != 227 && B2U != 228 && B2U != 229 && B2U != X4R * 1 &&
-                                B2U != 231 && B2U != 236 && B2U != +f7R && B2U != (251) && B2U != ('252' | 44) && B2U !=
-                                272 && B2U != (M7R ^ 0) && B2U != s7R << 63206816 && B2U != 287 && B2U != +C7R &&
-                                B2U != (294) && B2U != M1R * 1 && B2U != 301 && B2U != (307) && B2U != ("308" ^
-                                0) && B2U != 314 && B2U != 315 && B2U != (i7R ^ 0) && B2U != 324 && B2U != (j7R ^ 0) &&
-                                B2U != +D7R && B2U != 328 && B2U != 335 && B2U != 336 && B2U !=
-                                346 && B2U != 356 && B2U != 367 && B2U != +a5R && B2U != +Y7R && B2U != (388) && B2U != 397 && B2U != 398 && B2U != +n5y && B2U != i4R - 0 && B2U != "401" -
-                                0 && B2U != 409 && B2U != (A7R ^ 0) && B2U != ("418" | 34) && B2U != 419 && B2U != 420 &&
-                                B2U != +h7R && B2U != 422 && B2U != 424 && B2U != (I7R & 2147483647) && B2U != ("426" | 2) &&
-                                B2U != 428 && B2U != +q5R && B2U != z7R >> 1682434016 && B2U != (431) && B2U !=
-                                432 && B2U != 434 && B2U != +k7R && B2U != 436 && B2U != '438' >>
-                                2009160032 && B2U != (439) && B2U != +t9R)
-                                if (B2U != (V5R & 2147483647) && B2U != (c5R ^ 0) && B2U != +u8y && B2U != +M5R && B2U != s5R * 1 &&
-                                    B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && D6[__s[K5R - 0]] == 1)
-                                    y2U = R5R >>
-                                        914982432;
-                                else if (D6[__s[K5R | 1285]] == 0)
-                                    y2U = R5R << 1535435136;
-                            if (y2U == M8U && G8U == 0 ||
-                                y2U == n8U || y2U == A8U || y2U == U9U) {
-                                if (y2U == R5R - 0)
-                                    if (g9U == (0)) {
-                                        var N2U = 0;
-                                        g9U = 1;
-                                    }
-                                    else
-                                        var N2U = 1;
-                                else
-                                    var N2U = D6["bd"][B2U]["bl"];
-                                var R2U = bam["buildings"][y2U][E6k
-                                    .o55(+E5R)][N2U];
-                                if (N2U >= 2)
-                                    var u8U = N2U - (1);
-                                else
-                                    var u8U = 1;
-                                var X8U = N2U + (1);
-                                if (X8U > 10) {
-                                    var X8U = 0;
-                                    w8U = 0;
-                                }
-                                else
-                                    w8U = bam["buildings"][y2U][__s[+E5R]][X8U];
-                                if (u8U == ('0' |
-                                    0)) {
-                                    u8U = 0;
-                                    e8U = 0;
-                                    l8U = R2U;
-                                }
-                                else {
-                                    e8U = bam["buildings"][y2U][__s[E5R >> 922708032]][u8U];
-                                    l8U = R2U - e8U;
-                                }
-                                if (y2U == M8U && G8U == 0)
-                                    L8U = R2U;
-                                if (y2U == n8U)
-                                    x8U = x8U + R2U;
-                                if (y2U == U9U)
-                                    c8U = c8U + R2U;
-                                if (y2U == A8U)
-                                    H8U = H8U + R2U;
-                                j8U.push({ i: y2U, ad: e8U, au: w8U, bl: N2U, a: R2U, b: B2U, add: l8U });
-                                var F2U = {};
-                                F2U = { au: w8U, i: P2U, b: U2U, a: R2U, ad: e8U, add: l8U, bl: N2U, bt: 6 };
-                                if (y2U != (R5R | 144)) {
-                                    if (!D6["bd"][B2U][__s[+i5R]])
-                                        D6["bd"][B2U][_s(i5R | 4352)] = {};
-                                    D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                }
-                                if (y2U == M8U)
-                                    G8U = 1;
-                            }
-                        }
-                    }
-                    var z8U = f8U * (1 + H8U / 100) * (1 + x8U / 100) * (1 + L8U / (100)) * (1 + c8U / 100);
-                    if (v8U != 0)
-                        var T8U = v8U * ((1) + H8U / (100)) * ((1) + x8U /
-                            (100)) * (1 + L8U / (100)) * ((1) + c8U / 100);
-                    else
-                        var T8U = 0;
-                    if (I8U != 0)
-                        var Q8U = I8U * (1 + H8U / (100)) * ((1) +
-                            x8U / 100) * (1 + L8U / (100)) * ((1) + c8U / 100);
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = 4;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = {
-                        4: {
-                            rdh: Q8U,
-                            ruh: T8U,
-                            rh: z8U,
-                            rt: 4
-                        }
-                    };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    K9U = K9U + z8U;
-                }
-                w8U = "";
-                e8U = '';
-                l8U = "";
-                if (D2U >= 1 && P2U == 481) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U + ("1" &
-                        2147483647);
-                    var S8U = U2U - +A5y;
-                    var V8U = U2U + (A5y >> 120159584);
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U +
-                        +u6y;
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + (j6y ^ 0);
-                    var C8U = D2U - 1;
-                    var r8U = D2U + 1;
-                    var f8U = bam["buildings"][P2U]["r"][D2U];
-                    if (r8U > 10)
-                        var v8U = 0;
-                    else
-                        var v8U = bam["buildings"][P2U]["r"][r8U];
-                    if (C8U == 0)
-                        var I8U = 0;
-                    else
-                        var I8U = bam["buildings"][P2U]["r"][C8U];
-                    var H8U = 0;
-                    var L8U = 0;
-                    var x8U = 0;
-                    var G8U = 0;
-                    var n8U = S2y - 0;
-                    var A8U = +F4y;
-                    var M8U = A4y << 1370247264;
-                    var D0l = r4y ^ 0;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U, b8U, d8U, i8U, W8U];
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U][_s(m1R | 2148)];
-                            if (y2U == M8U || y2U == D0l || y2U == n8U || y2U == A8U) {
-                                var N2U = D6[_s(N1R *
-                                    1)][B2U]["bl"];
-                                var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
-                                if (N2U >= ("2" |
-                                    0))
-                                    var u8U = N2U - 1;
-                                else
-                                    var u8U = 1;
-                                var X8U = N2U + 1;
-                                if (X8U > (10)) {
-                                    X8U = 0;
-                                    w8U = 0;
-                                }
-                                else
-                                    w8U = bam["buildings"][y2U][__s[+E5R]][X8U];
-                                if (u8U == 0) {
-                                    u8U = +'0';
-                                    e8U = 0;
-                                    l8U = R2U;
-                                }
-                                else {
-                                    e8U = bam["buildings"][y2U][__s[+E5R]][u8U];
-                                    l8U = R2U - e8U;
-                                }
-                                if (y2U == M8U && G8U == 0)
-                                    L8U = R2U;
-                                if (y2U == n8U)
-                                    x8U = x8U + R2U;
-                                if (y2U == A8U)
-                                    H8U = H8U + R2U;
-                                j8U.push({ b: B2U, i: y2U, bl: N2U, au: w8U, a: R2U, add: l8U, ad: e8U });
-                                var F2U = {};
-                                F2U = { ad: e8U, a: R2U, bl: N2U, b: U2U, add: l8U, i: P2U, au: w8U, bt: 6 };
-                                if (!D6[_s(N1R -
-                                    0)][B2U][__s[+i5R]])
-                                    D6["bd"][B2U][__s[i5R - 0]] = {};
-                                D6["bd"][B2U][__s[i5R >> 349000384]][U2U] = F2U;
-                                if (y2U == M8U)
-                                    G8U = +"1";
-                            }
-                        }
-                    }
-                    var z8U = f8U * (1 + H8U / (100)) * (1 + x8U / (100)) *
-                        (1 + L8U / (100));
-                    if (v8U != 0)
-                        var T8U = v8U * ((1) + H8U / 100) * ((1) + x8U / (100)) * ((1) + L8U / (100));
-                    else
-                        var T8U = 0;
-                    if (I8U != 0)
-                        var Q8U = I8U * ((1) + H8U / 100) * (("1" >>
-                            835127904) + x8U / 100) * ((1) + L8U / ("100" | 68));
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = 10;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = { 10: { rdh: Q8U, rh: z8U, rt: 10, ruh: T8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    P9U = P9U + z8U;
-                }
-                w8U = '';
-                e8U = "";
-                l8U = "";
-                if (D2U >= (1) && P2U == (465)) {
-                    var h8U = U2U - ('1' <<
-                        157306528);
-                    var J8U = U2U + 1;
-                    var S8U = U2U - (A5y - 0);
-                    var V8U = U2U + +A5y;
-                    var b8U = U2U - +u6y;
-                    var d8U = U2U + u6y * 1;
-                    var i8U = U2U - +j6y;
-                    var W8U = U2U + +j6y;
-                    var C8U = D2U - 1;
-                    var r8U = D2U + 1;
-                    var f8U = bam["buildings"][P2U]["r"][D2U];
-                    if (r8U > (10))
-                        var v8U = '0' *
-                            1;
-                    else
-                        var v8U = bam["buildings"][P2U]["r"][r8U];
-                    if (C8U == 0)
-                        var I8U = 0;
-                    else
-                        var I8U = bam["buildings"][P2U]["r"][C8U];
-                    var H8U = 0;
-                    var L8U = +"0";
-                    var x8U = 0;
-                    var G8U = 0;
-                    var n8U = d2y << 2058335392;
-                    var A8U = C6y >>
-                        891944384;
-                    var M8U = +a4y;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U, b8U, d8U, i8U, W8U];
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == M8U && G8U == 0 || y2U == n8U || y2U ==
-                                A8U) {
-                                var N2U = D6["bd"][B2U]["bl"];
-                                var R2U = bam["buildings"][y2U][__s[+E5R]][N2U];
-                                if (N2U >= 2)
-                                    var u8U = N2U - 1;
-                                else
-                                    var u8U = 1;
-                                var X8U = N2U + 1;
-                                if (X8U > (10)) {
-                                    X8U = 0;
-                                    w8U = 0;
-                                }
-                                else
-                                    w8U = bam["buildings"][y2U][__s[E5R << 890802816]][X8U];
-                                if (u8U == +"0") {
-                                    u8U = 0;
-                                    e8U = 0;
-                                    l8U = $bo;
-                                }
-                                else {
-                                    e8U = bam["buildings"][y2U][__s[E5R | 1056]][u8U];
-                                    l8U = R2U - e8U;
-                                }
-                                if (y2U == M8U && G8U == 0)
-                                    L8U = R2U;
-                                if (y2U == n8U)
-                                    x8U = x8U + R2U;
-                                if (y2U == A8U)
-                                    H8U = H8U + R2U;
-                                j8U.push({ ad: e8U, i: y2U, b: B2U, bl: N2U, au: w8U, add: l8U, a: R2U });
-                                var F2U = {};
-                                F2U = { b: U2U, au: w8U, add: l8U, a: R2U, i: P2U, ad: e8U, bt: 6, bl: N2U };
-                                if (!D6[E6k
-                                    .S55(N1R & 2147483647)][B2U][__s[i5R << 501509312]])
-                                    D6["bd"][B2U][_s(+i5R)] = {};
-                                D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                if (y2U == M8U)
-                                    G8U = 1;
-                            }
-                        }
-                    }
-                    var z8U = f8U *
-                        (1 + H8U / 100) * (1 + x8U / (100)) * ((1) + L8U / (100));
-                    if (v8U !=
-                        0)
-                        var T8U = v8U * (1 + H8U / (100)) * (1 + x8U / (100)) *
-                            (1 + L8U / (100));
-                    else
-                        var T8U = 0;
-                    if (I8U != (0))
-                        var Q8U = I8U * ((1) + H8U / 100) * (1 + x8U / (100)) * ((1) + L8U / 100);
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = 3;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = {
-                        3: {
-                            rh: z8U,
-                            rt: 3,
-                            rdh: Q8U,
-                            ruh: T8U
-                        }
-                    };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    n9U = n9U + z8U;
-                }
-                w8U = '';
-                e8U = '';
-                l8U = "";
-                if (D2U >= (1) && P2U == +x4y) {
-                    var h8U = U2U - 1;
-                    var J8U = U2U +
-                        1;
-                    var S8U = U2U - +A5y;
-                    var V8U = U2U + (A5y >> 149739776);
-                    var b8U = U2U - u6y * 1;
-                    var d8U = U2U + (u6y & 2147483647);
-                    var i8U = U2U - (j6y | 22);
-                    var W8U = U2U + +j6y;
-                    var C8U = D2U - 1;
-                    var r8U = D2U + (1);
-                    var f8U = bam["buildings"][P2U]["r"][D2U];
-                    if (r8U > 10)
-                        var v8U = 0;
-                    else
-                        var v8U = bam["buildings"][P2U]["r"][r8U];
-                    if (C8U == 0)
-                        var I8U = 0;
-                    else
-                        var I8U = bam["buildings"][P2U]["r"][C8U];
-                    var H8U = 0;
-                    var L8U = 0;
-                    var x8U = 0;
-                    var G8U = 0;
-                    var n8U = d2y & 2147483647;
-                    var A8U = G1R & 2147483647;
-                    var M8U = "462" >>
-                        2096331520;
-                    var j8U = [];
-                    var t8U = [h8U, J8U, S8U, V8U, b8U, d8U, i8U, W8U];
-                    for (var O8U in t8U) {
-                        var B2U = t8U[O8U];
-                        if (D6["bd"][B2U]) {
-                            var y2U = D6["bd"][B2U]["bid"];
-                            if (y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
-                                var N2U = D6["bd"][B2U][_s(+i1R)];
-                                var R2U = bam["buildings"][y2U][__s[E5R | 5408]][N2U];
-                                if (N2U >= ('2' &
-                                    2147483647))
-                                    var u8U = N2U - 1;
-                                else
-                                    var u8U = 1;
-                                var X8U = N2U + 1;
-                                if (X8U > 10) {
-                                    X8U = 0;
-                                    w8U = 0;
-                                }
-                                else
-                                    w8U = bam["buildings"][y2U][__s[+E5R]][X8U];
-                                if (u8U == +"0") {
-                                    u8U = 0;
-                                    e8U = 0;
-                                    l8U = R2U;
-                                }
-                                else {
-                                    e8U = bam["buildings"][y2U][__s[E5R ^ 0]][u8U];
-                                    l8U = R2U - e8U;
-                                }
-                                if (y2U == M8U && G8U == 0)
-                                    L8U = R2U;
-                                if (y2U == n8U)
-                                    x8U = x8U +
-                                        R2U;
-                                if (y2U == A8U)
-                                    H8U = H8U + R2U;
-                                j8U.push({ add: l8U, a: R2U, ad: e8U, b: B2U, bl: N2U, i: y2U, au: w8U });
-                                var F2U = {};
-                                F2U = { b: U2U, au: w8U, bt: 6, add: l8U, a: R2U, bl: N2U, i: P2U, ad: e8U };
-                                if (!D6["bd"][B2U][__s[i5R ^ 0]])
-                                    D6["bd"][B2U][__s[i5R ^ 0]] = {};
-                                D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-                                if (y2U == M8U)
-                                    G8U = 1;
-                            }
-                        }
-                    }
-                    var z8U = f8U *
-                        (1 + H8U / ("100" | 100)) * ((1) + x8U / (100)) * (1 + L8U / +"100");
-                    if (v8U != 0)
-                        var T8U = v8U * (1 + H8U / (100)) * (1 + x8U / (100)) * (('1' >>
-                            991036352) + L8U / 100);
-                    else
-                        var T8U = 0;
-                    if (I8U != (0))
-                        var Q8U = I8U * (1 + H8U / (100)) * (1 + x8U /
-                            100) * (1 + L8U / 100);
-                    else
-                        var Q8U = 0;
-                    D6["bd"][U2U]["rt"] = 2;
-                    D6["bd"][U2U]["rh"] = z8U;
-                    D6["bd"][U2U]["ruh"] = T8U;
-                    D6["bd"][U2U]["rdh"] = Q8U;
-                    D6["bd"][U2U]["rb"] = j8U;
-                    var p2U = { 2: { ruh: T8U, rh: z8U, rt: 2, rdh: Q8U } };
-                    D6["bd"][U2U]["rbb"] = p2U;
-                    A9U = A9U + z8U;
-                }
-            }
             var e9U = D6.bq.length;
             if (e9U < (0))
                 e9U = 0;
@@ -19251,7 +17778,7 @@ var cotgsubscribe = amplify;
             W9();
             $(__s[+b2p])
                 .show();
-            $(__s[+h2p])
+            $("#citnamq")
                 .show();
             $("#quickBuildMenu")
                 .css("display", "none");
@@ -24725,7 +23252,7 @@ var cotgsubscribe = amplify;
                 $(__s[b2p ^ 0])
                     .show()
                     .scrollTop(0);
-                $(__s[h2p | 2600])
+                $("#citnamq")
                     .show();
             }
             else if (E06 == m2y << 527579136)
@@ -24735,7 +23262,7 @@ var cotgsubscribe = amplify;
                 $(__s[+b2p])
                     .show()
                     .scrollTop(0);
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
             }
             else if (E06 == 16)
@@ -24745,7 +23272,7 @@ var cotgsubscribe = amplify;
                 $(__s[b2p * 1])
                     .show()
                     .scrollTop(0);
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
             }
             else if (E06 == ("36" | 32)) {
@@ -40904,7 +39431,7 @@ var cotgsubscribe = amplify;
                 w2();
                 $(__s[+b2p])
                     .show();
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
                 I9n = 0;
                 x7F = 0;
@@ -40915,7 +39442,7 @@ var cotgsubscribe = amplify;
                 w2();
                 $(__s[+b2p])
                     .show();
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
                 $(__s[+b3R])
                     .html("");
@@ -40929,7 +39456,7 @@ var cotgsubscribe = amplify;
                     .html('');
                 $(__s[+b2p])
                     .show();
-                $(__s[h2p ^ 0])
+                $("#citnamq")
                     .show();
             });
             $(__s[4186])
@@ -40937,7 +39464,7 @@ var cotgsubscribe = amplify;
                 w2();
                 $(__s[b2p >> 578626752])
                     .show();
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
             });
             $(__s[6852])
@@ -40950,7 +39477,7 @@ var cotgsubscribe = amplify;
                 w2();
                 $(__s[+b2p])
                     .show();
-                $(__s[h2p - 0])
+                $("#citnamq")
                     .show();
             });
             $(__s[3600])
@@ -40959,7 +39486,7 @@ var cotgsubscribe = amplify;
                 w2();
                 $(__s[+b2p])
                     .show();
-                $(__s[h2p >> 1515386592])
+                $("#citnamq")
                     .show();
             });
             $(__s[3838])
@@ -40969,7 +39496,7 @@ var cotgsubscribe = amplify;
                     .css("display", "none");
                 $(__s[b2p & 2147483647])
                     .show();
-                $(__s[h2p >> 1709875360])
+                $("#citnamq")
                     .show();
             });
             $(__s[3307])
@@ -40984,7 +39511,7 @@ var cotgsubscribe = amplify;
                 C0F();
                 $(__s[b2p ^ 0])
                     .show();
-                $(__s[+h2p])
+                $("#citnamq")
                     .show();
             });
             $(__s[758])
@@ -40993,7 +39520,7 @@ var cotgsubscribe = amplify;
                 C0F();
                 $(__s[+b2p])
                     .show();
-                $(__s[h2p * 1])
+                $("#citnamq")
                     .show();
             });
             $(__s[2587])
@@ -41003,7 +39530,7 @@ var cotgsubscribe = amplify;
                 C0F();
                 $(__s[+b2p])
                     .show();
-                $(__s[h2p ^ 0])
+                $("#citnamq")
                     .show();
             });
         });
@@ -44069,6 +42596,11 @@ var cotgsubscribe = amplify;
             Z9 = 1;
             b3F();
         }
+        window["upgradeBuilding"] = function (x, y, l) {
+            h8 = parseInt(x);
+            S8 = parseInt(y);
+            W1F(parseInt(l));
+        };
         function l2F() {
             var D9B = s9();
             E6k.y6();
@@ -45682,7 +44214,7 @@ var cotgsubscribe = amplify;
             $(__s[b2p - 0])
                 .show();
             E6k.R6();
-            $(__s[+h2p])
+            $("#citnamq")
                 .show();
             clearTimeout(a8);
             Y9 = 0;
@@ -45787,7 +44319,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[b2p << 744260736])
                 .show();
-            $(__s[h2p & 2147483647])
+            $("#citnamq")
                 .show();
             Y9 = 0;
         });
@@ -45797,7 +44329,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[+b2p])
                 .show();
-            $(__s[h2p ^ 0])
+            $("#citnamq")
                 .show();
             Y9 = 0;
         });
@@ -45876,7 +44408,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[b2p | 3127])
                 .show();
-            $(__s[+h2p])
+            $("#citnamq")
                 .show();
             Y9 = 0;
         });
@@ -45908,7 +44440,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[+b2p])
                 .show();
-            $(__s[h2p & 2147483647])
+            $("#citnamq")
                 .show();
             Y9 = 0;
         });
@@ -47458,7 +45990,7 @@ var cotgsubscribe = amplify;
                 .show();
             $(__s[+b2p])
                 .show();
-            $(__s[+h2p])
+            $("#citnamq")
                 .show();
             $(__s[D44 * 1])
                 .css("display", "none");
@@ -47502,7 +46034,7 @@ var cotgsubscribe = amplify;
                 .show();
             $(__s[b2p << 51177376])
                 .show();
-            $(__s[+h2p])
+            $("#citnamq")
                 .show();
             $(__s[+D44])
                 .css("display", "none");
@@ -53070,7 +51602,7 @@ var cotgsubscribe = amplify;
                         .css("display", "none");
                     $(__s[+b2p])
                         .show();
-                    $(__s[+h2p])
+                    $("#citnamq")
                         .show();
                 }
             }
@@ -54214,7 +52746,7 @@ var cotgsubscribe = amplify;
                 .css("display", "none");
             $(__s[+b2p])
                 .show();
-            $(__s[h2p - 0])
+            $("#citnamq")
                 .show();
             reportAway();
         }
@@ -54899,7 +53431,7 @@ var cotgsubscribe = amplify;
         function w2() {
             $(__s[+b2p])
                 .css("display", "none");
-            $(__s[+h2p])
+            $("#citnamq")
                 .css("display", "none");
             $(__s[5349])
                 .css("display", "none");
@@ -57853,7 +56385,7 @@ var cotgsubscribe = amplify;
                         W9();
                         $(__s[+b2p])
                             .show();
-                        $(__s[h2p | 2988])
+                        $("#citnamq")
                             .show();
                         $("#quickBuildMenu")
                             .css("display", "none");
@@ -67974,6 +66506,9 @@ var cotgsubscribe = amplify;
             items_name: function (r1i) { return m6[r1i]["n"]; }
         };
         function n9F() {
+            $("#city_map")
+                .panzoom({ maxScale: +"1.6", minScale: +"0.25" });
+            return;
             var h5g = __s[814];
             var A5g = __s[2618];
             var S5g;
@@ -69714,7 +68249,10 @@ function postppdt() {
     document.getElementById("tbbuttons").style.display = "none";
     document.getElementById("canvasborders").style.display = "none";
     document.getElementById("container").style.background = "none";
-    mainMapDiv.style.display = "none";
+    let cityMap = document.getElementById("city_map");
+    cityMap.className = "";
+    cityMap.style.background = "rgba(255,255,255,1)";
+    cityMap.style.pointerEvents = "none";
     setTimeout(avactor, 3000);
 }
 function GetDate(jq) {
@@ -69745,6 +68283,8 @@ function avactor() {
     var l9p = 0xffff;
     var k9p = 0x100000000;
     console.log("here");
+    popupSizeDirty = true;
+    callSyncViewMode();
     window['alliancelink'] = gspotfunct.alliancelink;
     window['infoPlay'] = gspotfunct.infoPlay;
     window['shCit'] = gspotfunct.shCit;

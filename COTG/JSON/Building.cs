@@ -11,6 +11,8 @@ namespace COTG.JSON
 		public byte id { get; set; } // this is pretranslated from the buildingDefs definitions to pack it into a byte
 
 		public byte bl { get; set; } // building level
+
+		public BuildingDef def => BuildingDef.FromId(id);
 		//[J("bu")] public long Bu { get; set; }
 	//	[J("bd")] public long Bd { get; set; }
 	//	[J("rt")] public long Rt { get; set; }

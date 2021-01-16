@@ -144,6 +144,8 @@
         <telerikGrid:RadDataGrid x:Name="historyGrid"
 IsTabStop="True"
                       AllowFocusOnInteraction="True"
+								 							Margin="4,4,8,16"
+
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

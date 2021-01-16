@@ -20,6 +20,7 @@ using static COTG.AGame;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Concurrent;
 using Windows.System.Threading;
+using COTG.Draw;
 
 namespace COTG.Views
 {
@@ -250,7 +251,7 @@ namespace COTG.Views
 			//var c0 = cBase / cameraZoom;
 			//var c1 = cBase / 64.0f;
 			//var regionC = (cameraC + c0 - c1) * 64.0f;
-			//    JSClient.SetJSCamera(regionC);
+			//    ShellPage.SetJSCamera(regionC);
 		}
 
 		//public static void Canvas_PointerPressed(MouseState current, MouseState priorState)
@@ -263,7 +264,7 @@ namespace COTG.Views
 		//		return;
 
 
-		//	//  if (JSClient.IsCityView())
+		//	//  if (ShellPage.IsCityView())
 		//	if (x1Changed && current.XButton1 == ButtonState.Pressed)
 		//	{
 		//		NavStack.Back(true);
@@ -378,7 +379,7 @@ namespace COTG.Views
 		//	//                              var player = Player.all.GetValueOrDefault(data.player, Player._default);
 		//	//                              if (Player.IsMe(data.player))
 		//	//                              {
-		//	//                              //    JSClient.ViewCity(c.WorldToCid());
+		//	//                              //    ShellPage.ViewCity(c.WorldToCid());
 		//	//                              }
 		//	//                              else
 		//	//                              {
@@ -402,6 +403,7 @@ namespace COTG.Views
 			lastCanvasC = 0;
 			lastCont = -1;
 			toolTip = null;
+			CityView.hovered = CanvasHelpers.invalidXY;
 			Spot.viewHover = 0;
 			Player.viewHover = 0;
 		}
@@ -410,7 +412,7 @@ namespace COTG.Views
 		{
 			Log("pointer Exit " + isOverPopup);
 			isOverPopup = false;
-			//if (JSClient.IsCityView())
+			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;
 			//    return;
@@ -430,7 +432,7 @@ namespace COTG.Views
 		//	var delta = current.ScrollWheelValue - prior.ScrollWheelValue;
 		//	if (delta == 0)
 		//		return;
-		//	//if (JSClient.IsCityView())
+		//	//if (ShellPage.IsCityView())
 		//	//{
 		//	//    e.Handled = false;
 		//	//    return;
@@ -449,9 +451,17 @@ namespace COTG.Views
 		//	ClearHover();
 		//	//    ChatTab.L("CWheel " + wheel);
 		//}
-		static public (int x, int y) ScreenToWorld(Vector3 c1)
+		static public (int x, int y) ScreenToWorldC(Vector3 c1)
 		{
 			return (((c1.X) / cameraZoomLag + cameraC.X).RoundToInt(), ((c1.Y) / cameraZoomLag + cameraC.Y).RoundToInt());
+		}
+		static public ((int x, int y) wc, (int x, int y) cc) ScreenToWorldAndCityC(Vector3 c1)
+		{
+			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
+			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
+			(int x, int y) bi = (((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0,City.span1), ((w.Y - wi.y) * City.citySpan/CityView.yScale).RoundToInt().Clamp(City.span0, City.span1));
+
+			return (wi, bi);
 		}
 
 		//static public Vector2 CameraToWorld(Vector2 c1)
@@ -469,7 +479,7 @@ namespace COTG.Views
 		//	mousePositionC = mousePosition.SToC();
 		//	//	cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 		//	mousePositionW = mousePositionC.InverseProject();
-		//	//if(JSClient.IsCityView() )
+		//	//if(ShellPage.IsCityView() )
 		//	// {
 		//	//     e.Handled = false;
 		//	//     return;
@@ -681,11 +691,11 @@ namespace COTG.Views
 			if (!isHitTestVisible)
 				return;
 
-			if (JSClient.IsCityView())
-			{
-				e.Handled = false;
-				return;
-			}
+			//if (JSClient.IsCityView())
+			//{
+			//	e.Handled = false;
+			//	return;
+			//}
 			e.KeyModifiers.UpdateKeyModifiers();
 			var pointerPoint = e.CurrentPoint;
 			var position = pointerPoint.Position;
@@ -716,16 +726,35 @@ namespace COTG.Views
 				//	return;
 				//}
 				
-				var worldC = ScreenToWorld(mousePositionW);
+				(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
 				var cid = worldC.WorldToCid();
 
 				switch (pointerPoint.Properties.PointerUpdateKind)
 				{
 					case Windows.UI.Input.PointerUpdateKind.LeftButtonReleased:
 						{
-							// check to see if it needs to go to the webview
-							Spot.ProcessCoordClick(cid, true, e.KeyModifiers, true);
-							e.Handled = true;
+							if (IsCityView() && (cid == City.build))
+							{
+								CityView.selected = cc;
+								App.DispatchOnUIThreadSneaky(() =>
+								{
+									var b = City.GetBuiding(cc);
+									var d = b.def;
+									var i = CityBuild.instance;
+									i.image.Source = ImageHelper.FromImages(d.Dimg);
+									i.Building.Text = d.Bn;
+									i.Description.Text = d.Ds;
+									i.Upgrade.IsEnabled = d.Bc.Count() > b.bl && b.bl != 0;
+									i.Downgrade.IsEnabled = b.bl > 1;
+									
+								});
+							}
+							else
+							{
+								// check to see if it needs to go to the webview
+								Spot.ProcessCoordClick(cid, cid != City.build, e.KeyModifiers, true); ;
+								e.Handled = true;
+							}
 							break;
 						}
 
@@ -883,7 +912,7 @@ namespace COTG.Views
 			{
 //				isOverPopup = true;
 				e.Handled = true;
-				JSClient.SetWebViewHasFocus(true);
+				ShellPage.SetWebViewHasFocus(true);
 
 			}
 			else
@@ -912,7 +941,7 @@ namespace COTG.Views
 			lastMousePressPosition = mousePosition;
 
 
-			//  if (JSClient.IsCityView())
+			//  if (ShellPage.IsCityView())
 			// The app pas priority over back and forward events
 			{
 				switch (kind)
@@ -939,10 +968,11 @@ namespace COTG.Views
 		//    mouseButtons = 0;
 		//    Spot.viewHover = 0;
 		//}
+		
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
-			//if (JSClient.IsCityView())
+			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;
 			//    return;
@@ -951,11 +981,17 @@ namespace COTG.Views
 			var pt = e.CurrentPoint;
 			var wheel = pt.Properties.MouseWheelDelta;
 			var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
-			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, 256.0f);
+			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
 			var cBase = GetCanvasPosition(pt.Position) - halfSpan;
 			var c0 = cBase / cameraZoom;
 			var c1 = cBase / newZoom;
 			cameraC = cameraC + c0 - c1;
+
+			var _viewMode =  newZoom >= cityZoomThreshold ? ViewMode.city: ViewMode.world;
+			if(_viewMode !=viewMode)
+			{
+				ShellPage.SetViewMode(_viewMode);
+			}
 
 			cameraZoom = newZoom;
 			e.Handled = true;
@@ -975,7 +1011,7 @@ namespace COTG.Views
 			//	//	cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			mousePositionW = mousePositionC.InverseProject();
 
-			//if(JSClient.IsCityView() )
+			//if(ShellPage.IsCityView() )
 			// {
 			//     e.Handled = false;
 			//     return;
@@ -983,7 +1019,7 @@ namespace COTG.Views
 			var point = e.CurrentPoint;
 
 
-			var c = ScreenToWorld(mousePositionW);
+			(var c,var cc) = ScreenToWorldAndCityC(mousePositionW);
 			var props = point.Properties;
 			if ((props.IsLeftButtonPressed | props.IsRightButtonPressed) == false)
 			{
@@ -995,169 +1031,189 @@ namespace COTG.Views
 				{
 
 					var cont = Continent.GetPackedIdFromC(c);
-					if (cont != lastCont)
-					{
-						lastCont = cont;
-						ref var cn = ref Continent.all[cont];
-						contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCites {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
-
-					}
 					var cid = c.WorldToCid();
-					if (lastCanvasC != cid)
+					if (IsCityView())
 					{
+						var b = City.GetBuiding(cc);
+						var d = b.def;
+						contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
+						Spot.viewHover = 0;
+						Player.viewHover = 0;
+						toolTip = null;
+						CityView.hovered = cc;
+					}
+					else
+					{ 
+
+						if (cont != lastCont)
+						{
+							lastCont = cont;
+							if (!IsCityView())
+							{
+								ref var cn = ref Continent.all[cont];
+								contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCites {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
+
+							}
+						}
+
+
+						if (lastCanvasC != cid)
+						{
 
 						Spot.viewHover = 0;
 						Player.viewHover = 0;
 						toolTip = null;
 
 						lastCanvasC = cid;
-						var packedId = World.GetPackedId(c);
-						var data = World.GetInfoFromPackedId(packedId);
-						switch (data.type)
-						{
-							case World.typeCity:
-								{
-									Spot.viewHover = cid;
-									Spot.TryGet(cid, out var spot);
-
-									if (data.player == 0)
+							var packedId = World.GetPackedId(c);
+							var data = World.GetInfoFromPackedId(packedId);
+							switch (data.type)
+							{
+								case World.typeCity:
 									{
-										toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-									}
-									else
-									{
-										Player.viewHover = data.player;
+										Spot.viewHover = cid;
+										Spot.TryGet(cid, out var spot);
 
-										var player = Player.all.GetValueOrDefault(data.player, Player._default);
-										if (Player.IsMe(data.player))
+										if (data.player == 0)
 										{
-											if (spot is City city)
-											{
-												var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-												toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-												//     Raiding.UpdateTS();
-											}
-
+											toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
 										}
 										else
 										{
-											var info = spot != null ?
-												$"{spot.cityName}\n{spot.points}\n"
-											 : "";
-											toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
-										}
-									}
-									if (spot != null && spot.incoming != null)
-									{
-										var inc = spot.incoming;
-										foreach (var i in inc)
-										{
-											if (i.isAttack)
-											{
-												toolTip = toolTip + '\n' + i.Format("\n");
-											}
-										}
-										var def = Array.Empty<TroopTypeCount>();
-										foreach (var i in inc)
-										{
-											if (!i.isAttack)
-											{
-												def = def.Sum(i.troops);
-											}
-										}
-										if (!def.IsNullOrEmpty())
-										{
-											toolTip += def.Format("\nDef:", '\n', '\n');
-										}
+											Player.viewHover = data.player;
 
-									}
-									break;
-								}
-							case World.typeShrine:
-								toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
-								break;
-							case World.typeBoss:
-								toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-								break;
-							case World.typeDungeon:
-								toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
-								break;
-							case World.typePortal:
-								toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
-								break;
-						}
-						if (World.rawPrior != null)
-						{
-							var pData = World.GetInfoPrior(packedId);
-							if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
-							{
-								// no change
-
-							}
-							else
-							{
-								switch (data.type)
-								{
-									case World.typeCity:
-										if (pData.type == World.typeCity)
-										{
-											if (pData.player != data.player)
+											var player = Player.all.GetValueOrDefault(data.player, Player._default);
+											if (Player.IsMe(data.player))
 											{
-												if (pData.player == 0)
+												if (spot is City city)
 												{
-													toolTip += "\nWas settled";
+													var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
+													toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+													//     Raiding.UpdateTS();
 												}
-												else if (data.player == 0)
+
+											}
+											else
+											{
+												var info = spot != null ?
+													$"{spot.cityName}\n{spot.points}\n"
+												 : "";
+												toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+											}
+										}
+										if (spot != null && spot.incoming != null)
+										{
+											var inc = spot.incoming;
+											foreach (var i in inc)
+											{
+												if (i.isAttack)
 												{
-													var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-													toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
+													toolTip = toolTip + '\n' + i.Format("\n");
+												}
+											}
+											var def = Array.Empty<TroopTypeCount>();
+											foreach (var i in inc)
+											{
+												if (!i.isAttack)
+												{
+													def = def.Sum(i.troops);
+												}
+											}
+											if (!def.IsNullOrEmpty())
+											{
+												toolTip += def.Format("\nDef:", '\n', '\n');
+											}
+
+										}
+										break;
+									}
+								case World.typeShrine:
+									toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
+									break;
+								case World.typeBoss:
+									toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+									break;
+								case World.typeDungeon:
+									toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+									break;
+								case World.typePortal:
+									toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
+									break;
+							}
+
+							if (World.rawPrior != null)
+							{
+								var pData = World.GetInfoPrior(packedId);
+								if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
+								{
+									// no change
+
+								}
+								else
+								{
+									switch (data.type)
+									{
+										case World.typeCity:
+											if (pData.type == World.typeCity)
+											{
+												if (pData.player != data.player)
+												{
+													if (pData.player == 0)
+													{
+														toolTip += "\nWas settled";
+													}
+													else if (data.player == 0)
+													{
+														var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+														toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
+													}
+													else
+													{
+														var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+														toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+													}
 												}
 												else
 												{
-													var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-													toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+													if (pData.isTemple != data.isTemple)
+													{
+														if (data.isTemple)
+															toolTip += "\nBecame a Temple";
+														else
+															toolTip += "\nBecame not a temple";
+													}
+													else if (pData.isCastle != data.isCastle)
+													{
+														toolTip += "\nWas castled";
+													}
+													else
+													{
+														toolTip += "\nWas rennovated";
+													}
 												}
 											}
 											else
 											{
-												if (pData.isTemple != data.isTemple)
-												{
-													if (data.isTemple)
-														toolTip += "\nBecame a Temple";
-													else
-														toolTip += "\nBecame not a temple";
-												}
-												else if (pData.isCastle != data.isCastle)
-												{
-													toolTip += "\nWas castled";
-												}
-												else
-												{
-													toolTip += "\nWas rennovated";
-												}
+												toolTip += "\nWas founded";
 											}
-										}
-										else
-										{
-											toolTip += "\nWas founded";
-										}
-										break;
-									case World.typeShrine:
-										toolTip += "\nWas unlit";
-										break;
-									case World.typePortal:
-										if (data.player == 0)
-											toolTip += "\nWas active";
-										else
-											toolTip += "\nWas inactive";
-										break;
-									default:
-										if (pData.player != 0)
-											toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
-										else
-											toolTip += "\nDecayed";
-										break;
+											break;
+										case World.typeShrine:
+											toolTip += "\nWas unlit";
+											break;
+										case World.typePortal:
+											if (data.player == 0)
+												toolTip += "\nWas active";
+											else
+												toolTip += "\nWas inactive";
+											break;
+										default:
+											if (pData.player != 0)
+												toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
+											else
+												toolTip += "\nDecayed";
+											break;
 
+									}
 								}
 							}
 						}

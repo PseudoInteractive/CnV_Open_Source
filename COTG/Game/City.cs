@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using COTG.Services;
 using COTG.Views;
 using COTG.JSON;
+using static COTG.Game.City;
 
 namespace COTG.Game
 {
@@ -29,7 +30,19 @@ namespace COTG.Game
     public class City : Spot 
     {
 
-        public City() { type = typeCity; }
+		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
+		public const int span1 = (citySpan - 1) / 2; // inclusive
+		public const int span0 = -span1; // inclusive
+
+		//static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+		//const short bidTownHall = 455;
+		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
+
+		public const int citySpan = 21;
+		public static Building[] buildings = Array.Empty<JSON.Building>();
+		public static Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
+
+		public City() { type = typeCity; }
 
 		public long lastUpdateTick;
 			
@@ -171,7 +184,7 @@ namespace COTG.Game
                     JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
     
                 }
-                if(!JSClient.IsWorldView())
+                if(!ShellPage.IsWorldView())
                     JSClient.ChangeView(false);// toggle between city/region view
 
                 NavStack.Push(cid);
@@ -186,14 +199,8 @@ namespace COTG.Game
         public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
-
-		//static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
-		//const short bidTownHall = 455;
-		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
-
-		public const int citySpan = 21;
-		public static JSON.Building[] buildings = Array.Empty<JSON.Building>();
-        public void LoadFromJson(JsonElement jse)
+	
+		public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
             if (jse.TryGetProperty("citn", out var citn))
@@ -214,7 +221,7 @@ namespace COTG.Game
 			}
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				buildings = null;
+				
 				const int bidCastle = 467;
 				commandSlots = 5;
 				isCastle = false;
@@ -530,8 +537,9 @@ namespace COTG.Game
         {
             var changed = cid != build;
             City.build = cid;
+			Draw.CityView.ClearSelectedBuilding();
 
-            SetFocus(scrollIntoView, select);
+			SetFocus(scrollIntoView, select);
             return changed;
             //if (!noRaidScan)
            // {
@@ -663,6 +671,7 @@ namespace COTG.Game
 		}
 		public string dungeonsToggle => MainPage.expandedCity==this ? "-" : "+";
 	}
+
     public class SenatorInfo
     {
         public enum Type : byte

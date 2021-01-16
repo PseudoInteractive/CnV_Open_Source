@@ -14418,6 +14418,7 @@ var cotgsubscribe = amplify;
 			var f9U;
 			var V9U = -("1" |
 				0);
+	/*
 			for (var U2U in D6["bd"]) {
 				P2U = D6["bd"][U2U]["bid"];
 				D2U = D6["bd"][U2U]["bl"];
@@ -15785,6 +15786,7 @@ var cotgsubscribe = amplify;
 					A9U = A9U + z8U;
 				}
 			}
+	*/
 			var e9U = D6.bq.length;
 			if (e9U < (0)) e9U = 0;
 			for (var O8U = "0" >>
@@ -18040,7 +18042,7 @@ var cotgsubscribe = amplify;
 			W9();
 			$(__s[+b2p])
 				.show();
-			$(__s[+h2p])
+			$("#citnamq")
 				.show();
 			$("#quickBuildMenu")
 				.css("display", "none");
@@ -24944,7 +24946,7 @@ var cotgsubscribe = amplify;
 				$(__s[b2p ^ 0])
 					.show()
 					.scrollTop(0);
-				$(__s[h2p | 2600])
+				$("#citnamq")
 					.show();
 			} else if (E06 == m2y << 527579136) K2();
 			else if (E06 == +'15') {
@@ -24952,7 +24954,7 @@ var cotgsubscribe = amplify;
 				$(__s[+b2p])
 					.show()
 					.scrollTop(0);
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 			} else if (E06 == 16) K2();
 			else if (E06 == +u7y) {
@@ -24960,7 +24962,7 @@ var cotgsubscribe = amplify;
 				$(__s[b2p * 1])
 					.show()
 					.scrollTop(0);
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 			} else if (E06 == ("36" | 32)) {
 				G3F();
@@ -25309,6 +25311,7 @@ var cotgsubscribe = amplify;
 				});
 		}
 
+  // this reports all injected scripts
 		function X4V() {
 			var P14 = "5976";
 			var s49 = document.getElementsByTagName(__s[1132]);
@@ -40973,7 +40976,7 @@ var cotgsubscribe = amplify;
 						w2();
 						$(__s[+b2p])
 							.show();
-						$(__s[+h2p])
+						$("#citnamq")
 							.show();
 						I9n = 0;
 						x7F = 0;
@@ -40984,7 +40987,7 @@ var cotgsubscribe = amplify;
 						w2();
 						$(__s[+b2p])
 							.show();
-						$(__s[+h2p])
+						$("#citnamq")
 							.show();
 						$(__s[+b3R])
 							.html("");
@@ -40998,7 +41001,7 @@ var cotgsubscribe = amplify;
 							.html('');
 						$(__s[+b2p])
 							.show();
-						$(__s[h2p ^ 0])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[4186])
@@ -41006,7 +41009,7 @@ var cotgsubscribe = amplify;
 						w2();
 						$(__s[b2p >> 578626752])
 							.show();
-						$(__s[+h2p])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[6852])
@@ -41019,7 +41022,7 @@ var cotgsubscribe = amplify;
 						w2();
 						$(__s[+b2p])
 							.show();
-						$(__s[h2p - 0])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[3600])
@@ -41028,7 +41031,7 @@ var cotgsubscribe = amplify;
 						w2();
 						$(__s[+b2p])
 							.show();
-						$(__s[h2p >> 1515386592])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[3838])
@@ -41038,7 +41041,7 @@ var cotgsubscribe = amplify;
 							.css("display", "none");
 						$(__s[b2p & 2147483647])
 							.show();
-						$(__s[h2p >> 1709875360])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[3307])
@@ -41053,7 +41056,7 @@ var cotgsubscribe = amplify;
 						C0F();
 						$(__s[b2p ^ 0])
 							.show();
-						$(__s[+h2p])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[758])
@@ -41062,7 +41065,7 @@ var cotgsubscribe = amplify;
 						C0F();
 						$(__s[+b2p])
 							.show();
-						$(__s[h2p * 1])
+						$("#citnamq")
 							.show();
 					});
 				$(__s[2587])
@@ -41072,7 +41075,7 @@ var cotgsubscribe = amplify;
 						C0F();
 						$(__s[+b2p])
 							.show();
-						$(__s[h2p ^ 0])
+						$("#citnamq")
 							.show();
 					});
 			});
@@ -42297,7 +42300,7 @@ var cotgsubscribe = amplify;
 					.css("display", "none");
 				// $(__s[1509]).show();
 				// $(__s[b2p * 1]).show();
-				// $(__s[+h2p]).show();
+				// $("#citnamq").show();
 				$(__s[+D44])
 					.css("display", "none");
 				$(__s[+T24])
@@ -44182,6 +44185,12 @@ var cotgsubscribe = amplify;
 			Z9 = 1;
 			b3F();
 		}
+		window["upgradeBuilding"] = function(x,y,l)
+		{
+			h8 = parseInt(x);
+			S8 = parseInt(y);
+		    W1F(parseInt(l));
+		}
 
 		function l2F() {
 			var D9B = s9();
@@ -45975,7 +45984,7 @@ var cotgsubscribe = amplify;
 				$(__s[b2p - 0])
 					.show();
 				E6k.R6();
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 				clearTimeout(a8);
 				Y9 = 0;
@@ -46085,7 +46094,7 @@ var cotgsubscribe = amplify;
 					.css("display", "none");
 				$(__s[b2p << 744260736])
 					.show();
-				$(__s[h2p & 2147483647])
+				$("#citnamq")
 					.show();
 				Y9 = 0;
 			});
@@ -46095,7 +46104,7 @@ var cotgsubscribe = amplify;
 					.css("display", "none");
 				$(__s[+b2p])
 					.show();
-				$(__s[h2p ^ 0])
+				$("#citnamq")
 					.show();
 				Y9 = 0;
 			});
@@ -46171,7 +46180,7 @@ var cotgsubscribe = amplify;
 					.css("display", "none");
 				$(__s[b2p | 3127])
 					.show();
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 				Y9 = 0;
 			});
@@ -46204,7 +46213,7 @@ var cotgsubscribe = amplify;
 					.css("display", "none");
 				$(__s[+b2p])
 					.show();
-				$(__s[h2p & 2147483647])
+				$("#citnamq")
 					.show();
 				Y9 = 0;
 			});
@@ -48101,7 +48110,7 @@ var cotgsubscribe = amplify;
 					.show();
 				$(__s[+b2p])
 					.show();
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 				$(__s[D44 * 1])
 					.css("display", "none");
@@ -48161,7 +48170,7 @@ var cotgsubscribe = amplify;
 					.show();
 				$(__s[b2p << 51177376])
 					.show();
-				$(__s[+h2p])
+				$("#citnamq")
 					.show();
 				$(__s[+D44])
 					.css("display", "none");
@@ -53839,7 +53848,7 @@ var cotgsubscribe = amplify;
 						.css("display", "none");
 					$(__s[+b2p])
 						.show();
-					$(__s[+h2p])
+					$("#citnamq")
 						.show();
 				}
 			} else if (!(j11 == 1)) {
@@ -54991,7 +55000,7 @@ var cotgsubscribe = amplify;
 				.css("display", "none");
 			$(__s[+b2p])
 				.show();
-			$(__s[h2p - 0])
+			$("#citnamq")
 				.show();
 			reportAway();
 		}
@@ -55666,7 +55675,7 @@ var cotgsubscribe = amplify;
 		function w2() {
 			$(__s[+b2p])
 				.css("display", "none");
-			$(__s[+h2p])
+			$("#citnamq")
 				.css("display", "none");
 			$(__s[5349])
 				.css("display", "none");
@@ -58537,7 +58546,7 @@ var cotgsubscribe = amplify;
 							W9();
 							$(__s[+b2p])
 								.show();
-							$(__s[h2p | 2988])
+							$("#citnamq")
 								.show();
 							$("#quickBuildMenu")
 								.css("display", "none");
@@ -68779,6 +68788,9 @@ var cotgsubscribe = amplify;
 		};
 
 		function n9F() {
+  $("#city_map")
+				.panzoom({ maxScale: +"1.6", minScale: +"0.25" });
+  return;
 			var h5g = __s[814];
 			var A5g = __s[2618];
 			var S5g;

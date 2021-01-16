@@ -440,7 +440,7 @@ namespace COTG.Game
 							JSClient.ChangeCity(cid, false, true, false);
 							if (wasBuild)
 							{
-								JSClient.ChangeView(!JSClient.IsCityView());
+								JSClient.ChangeView(!ShellPage.IsCityView());
 
 							}
 
@@ -557,7 +557,7 @@ namespace COTG.Game
 			{
 				if (City.IsBuild(cid))
 				{
-					JSClient.ChangeView(!JSClient.IsCityView());// toggle between city/region view
+					JSClient.ChangeView(!ShellPage.IsCityView());// toggle between city/region view
 
 					cid.BringCidIntoWorldView(lazyMove);
 				}

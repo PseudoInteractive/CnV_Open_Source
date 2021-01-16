@@ -407,14 +407,7 @@ namespace COTG.JSON
 				//  Debug.Log(uri.ToString());
 				string shortName = resName.Substring(0, resName.Length - 4);
 				string dir = SettingsPage.IsThemeWinter() ? "winter" : "cotg";
-				Texture texture;
-				using(var scope = new AGame.SRGBLoadScope() )
-				{
-					texture = AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}");
-				}
-				Texture normalMap;
-					normalMap = AGame.instance.Content.Load<Texture2D>($"Art/Tiles/{dir}/{ shortName}_n");
-				material = new Draw.Material(texture, normalMap, AGame.GetTileEffect());
+				material= Helper.LoadLitMaterial($"Art/Tiles/{dir}/{shortName}");
 
 				shadowMaterial = new Draw.Material(material.texture, AGame.unlitEffect);
 				// etc.
@@ -462,6 +455,7 @@ namespace COTG.JSON
 
 		}
 
+		
 	}
 }
 

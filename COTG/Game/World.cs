@@ -87,6 +87,7 @@ namespace COTG.Game
 		{
 			return a.x + (a.y << 16);
 		}
+	
 		public static (int x, int y) CidToWorld(this int c)
 		{
 			return (c & 65535, c >> 16);

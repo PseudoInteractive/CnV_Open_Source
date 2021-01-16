@@ -27,32 +27,16 @@ namespace COTG.Helpers
         }
         static Dictionary<string, BitmapImage> assetsCache = new Dictionary<string, BitmapImage>();
         static Dictionary<string, BitmapImage> imagesCache = new Dictionary<string, BitmapImage>();
-        public static BitmapImage ImageFromAssetsFile(string fileName)
-        {
-            if (assetsCache.TryGetValue(fileName, out var o))
-                return o;
-            var image = new BitmapImage(new Uri($"ms-appx:///Assets/{fileName}"));
-            assetsCache.Add(fileName, image);
-            return image;
-        }
+        
         public static BitmapImage FromImages(string fileName)
         {
             if (imagesCache.TryGetValue(fileName, out var o))
                 return o;
-            var image = new BitmapImage(new Uri($"ms-appx:///images/{fileName}"));
+            var image = new BitmapImage(new Uri($"ms-appx:///Content/Art/Icons/{fileName}"));
             imagesCache.Add(fileName, image);
             return image;
         }
-        public static BitmapImage FromImages(string fileName,int top, int left, int width, int height)
-        {
-            if (imagesCache.TryGetValue(fileName, out var o))
-                return o;
-            var image = new BitmapImage(new Uri($"ms-appx:///images/{fileName}"));
-      
-            imagesCache.Add(fileName, image);
-            return image;
-        }
-
+        
         public static async Task<StorageFile> LoadImageFileAsync()
         {
             var openPicker = new FileOpenPicker

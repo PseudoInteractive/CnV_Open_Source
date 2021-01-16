@@ -70,7 +70,7 @@ namespace COTG.Views
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
 			App.DispatchOnUIThreadLow(() =>
 			{
-				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, bottomMargin);
+				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, 0);
 				//Canvas.SetLeft(_canvas, leftOffset);
 				//Canvas.SetTop(_canvas, topOffset);
 				//RemakeRenderTarget();
@@ -116,9 +116,9 @@ namespace COTG.Views
 				//	IsTabStop = true,
 				//	UseSharedDevice = true,
 				//	TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f),
-
-				//			IsFixedTimeStep = false
-			};
+				Margin = new Thickness(0, canvasBaseY, 0, 0),
+			//			IsFixedTimeStep = false
+		};
 			//canvasHitTest = new Rectangle()
 			//{
 			//	Name="webDrawer",
@@ -141,6 +141,73 @@ namespace COTG.Views
 			return (canvas, null);
 
 		}
+
+		public enum ViewMode
+		{
+			city = 0,
+			region = 1,
+			world = 2,
+			invalid = 3
+		};
+
+		public static ViewMode viewMode;
+		public static bool IsWorldView() => viewMode == ViewMode.world;
+		public static bool IsCityView() => viewMode == ViewMode.city;
+
+		public static bool webviewHasFocus;
+
+		public static void SetViewMode(ViewMode _viewMode, bool? pwebviewHasFocus = null, bool leaveZoom = false)
+		{
+			var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
+			var priorView = viewMode;
+			var priorWebviewHasFocus = webviewHasFocus;
+			viewMode = _viewMode;
+			webviewHasFocus = _webviewHasFocus;
+
+
+			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
+			{
+				if (!leaveZoom && priorView != viewMode)
+				{
+					if (viewMode == ViewMode.world)
+					{
+						if (AGame.cameraZoom > AGame.cityZoomThreshold)
+							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
+					}
+					else
+					{
+						if (AGame.cameraZoom < AGame.cityZoomThreshold)
+							AGame.cameraZoom = AGame.cityZoomDefault;
+
+					}
+
+				}
+
+				ShellPage.isOverPopup = false;// reset
+											  //var isWorld = IsWorldView();
+				ShellPage.isHitTestVisible = !webviewHasFocus;
+				App.DispatchOnUIThreadLow(() =>
+				{
+					ShellPage.isOverPopup = false;// reset again in case it changed
+					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible;
+					ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
+					AGame.UpdateMusic();
+					if (!webviewHasFocus && priorWebviewHasFocus)
+						Verify(ShellPage.instance.commandBar.Focus(FocusState.Programmatic));
+
+				});
+			}
+		}
+		public static void SetWebViewHasFocus(bool _webviewHasFocus)
+		{
+			SetViewMode(viewMode, _webviewHasFocus);
+		}
+		public static void SetViewModeCity()
+		{
+			SetViewMode(ViewMode.city, webviewHasFocus);
+		}
+		public static void SetViewModeWorld() => SetViewMode(ViewMode.world, webviewHasFocus);
+
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
 		{

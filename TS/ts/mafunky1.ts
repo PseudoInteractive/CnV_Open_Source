@@ -802,8 +802,11 @@ function postppdt()
 	document.getElementById("tbbuttons").style.display = "none"; // these no longer work
 	document.getElementById("canvasborders").style.display = "none";
 	 document.getElementById("container").style.background =  "none";
-	 mainMapDiv.style.display = "none";//(_viewMode!==viewModeCity) ? "none" : null;
-	
+	let cityMap = document.getElementById("city_map");
+	cityMap.className = ""; // remove backgroud
+	cityMap.style.background = "rgba(255,255,255,1)";
+	cityMap.style.pointerEvents = "none";
+//	 mainMapDiv.style.display = "none";//(_viewMode!==viewModeCity) ? "none" : null;
 	setTimeout(avactor, 3000);
 
 }
@@ -893,6 +896,10 @@ function avactor() {
 	var k9p = 0x100000000;
 	console.log("here");
 	
+	popupSizeDirty=true;
+	callSyncViewMode();
+
+
 	window['alliancelink'] = gspotfunct.alliancelink;
 	window['infoPlay'] = gspotfunct.infoPlay;
 	window['shCit'] = gspotfunct.shCit;

@@ -43,6 +43,8 @@
                         PointerPressed="gridPointerPress"
 						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
+													Margin="4,4,8,16"
+
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"

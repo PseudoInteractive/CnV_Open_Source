@@ -25,22 +25,32 @@ namespace COTG.JSON
 		{
 			all= Json.FromResources<Dictionary<int, BuildingDef>>("buildingDef");
 			byte counter = 0;
-			idToBid = new Dictionary<byte, BuildingDef>();
+			idToBid = new BuildingDef[byte.MaxValue];
 			foreach (var i in all)
 			{
 				var b = all[i.Key];
 				b.bid = i.Key;
 				b.id = counter;
-				idToBid.Add(counter, i.Value);
+				idToBid[counter]= i.Value;
 				++counter;
+			}
+			// all extra buildings are assigned to "None" this may not be needed
+			for(; ; )
+			{
+				idToBid[counter] = idToBid[0]; // The first building is null
+				if (++counter == byte.MaxValue)
+					break;
 			}
 		}
 		public static BuildingDef FromId(byte id) => idToBid[id];
-		public static Dictionary<byte, BuildingDef> idToBid;
+		public static BuildingDef[] idToBid;
 		public static Dictionary<int, BuildingDef> all;
 
+		// Not persisted
 			public byte id; // packed id
+		// not persisted
 			public int bid; // building id
+
 			[J("bn")] public string Bn { get; set; }
 			[J("proto")] public int Proto { get; set; }
 			[J("ds")] public string Ds { get; set; }

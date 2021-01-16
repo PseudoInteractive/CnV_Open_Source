@@ -28,6 +28,7 @@
                         CanUserChooseColumns="True"
 						IsTabStop="True"
 						TabFocusNavigation="Once"
+							Margin="4,4,8,16"
 
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
@@ -113,6 +114,8 @@
                                     GridLinesThickness="1"
 IsTabStop="True"
 						TabFocusNavigation="Once"
+													Margin="4,4,8,16"
+
                                     Grid.Row="1"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"

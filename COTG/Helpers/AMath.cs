@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,60 @@ namespace COTG
     {
         public static Random random = new Random();
 
+		public static float Dot(this Vector3 v0, Vector3 v1)
+		{
+			return Vector3.Dot(v0, v1);
+		}
+		public static float Dot(this Vector2 v0, Vector2 v1)
+		{
+			return Vector2.Dot(v0, v1);
+		}
+
+
+		public static int RoundToInt(this float f)
+		{
+			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
+		}
+		public static int FloorToInt(this float f)
+		{
+			return (int)MathF.Floor(f);
+		}
+		public static int CeilToInt(this float f)
+		{
+			return (int)MathF.Ceiling(f);
+		}
+		public static (int x, int y) RoundToInt(this Vector2 v)
+		{
+			return (RoundToInt(v.X), RoundToInt(v.Y));
+		}
+		public static (int x, int y) CeilToInt(this Vector2 v)
+		{
+			return (CeilToInt(v.X), CeilToInt(v.Y));
+		}
+		public static (int x, int y) FloorToInt(this Vector2 v)
+		{
+			return (FloorToInt(v.X), FloorToInt(v.Y));
+		}
+		public static (int x, int y) Add(this (int x, int y) a, (int x, int y) b)
+		{
+			return (a.x + b.x, a.y + b.y);
+		}
+		public static (int x, int y) Div(this (int x, int y) a, int b)
+		{
+			return (a.x / b, a.y / b);
+		}
+		public static (int x, int y) Mul(this (int x, int y) a, int b)
+		{
+			return (a.x * b, a.y * b);
+		}
+		public static (int x, int y) Sub(this (int x, int y) a, (int x, int y) b)
+		{
+			return (a.x - b.x, a.y - b.y);
+		}
+		public static int RoundToInt(this double f)
+		{
+			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
+		}
 		#region Dynamics
 
 		public static float CritDampingKd( float ks)
@@ -72,7 +127,39 @@ namespace COTG
         {
             return (f <=min ? f : min);
         }
-        public static int Abs(this int f)
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Min(this float a, float b, float c)
+		{
+			return Min(Min(a, b), c);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Min(this float a, float b, float c, float d)
+		{
+			return Min(Min(a, b), Min(c, d));
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Min(this float a, float b, float c, float d, float e)
+		{
+			return Min(e, Min(Min(a, b), Min(c, d)));
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Max(this float a, float b, float c)
+		{
+			return Max(Max(a, b), c);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Max(this float a, float b, float c, float d)
+		{
+			return Max(Max(a, b), Max(c, d));
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Max(this float a, float b, float c, float d, float e)
+		{
+			return Max(e, Max(Max(a, b), Max(c, d)));
+		}
+
+		public static int Abs(this int f)
         {
             return (f >= 0 ? f : -f);
         }
@@ -104,11 +191,14 @@ namespace COTG
             return c0 + (c1 - c0) * STerm(t);
         }
 
-        public static float Lerp(this float t, float c0, float c1)
-        {
-            return c0 + (c1 - c0) * t;
-        }
-        public static float Wave(this float t)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Lerp(this float t, float from, float to)
+		{
+			return from + t * (to - from);
+		}
+	
+
+		public static float Wave(this float t)
         {
             return 0.5f+ 0.5f*MathF.Sin(t * (2 * MathF.PI));
         }
@@ -294,5 +384,10 @@ namespace COTG
 			}
 		}
 		public static ParticleRandomSeedGenerator randomF = new ParticleRandomSeedGenerator((uint)Environment.TickCount);
+
+		public static Vector3 Normalized(this Vector3 me) => Vector3.Normalize(me);
+		public static Vector2 Normalized(this Vector2 me) => Vector2.Normalize(me);
+		public static Vector4 Normalized(this Vector4 me) => Vector4.Normalize(me);
+
 	}
 }

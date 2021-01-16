@@ -211,15 +211,19 @@ namespace COTG.Views
 			//    if(instance!=null && instance.navigationView!=null)
 			//        instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.status.Label=text );
 		}
-		public static bool isHitTestVisible;
+		public static bool isHitTestVisible=true;
 		public static bool canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 
 
 
-
-
+			grid.Children.Add(CityBuild.instance);
+		//	Grid.SetColumn(webView, 0);
+			Grid.SetRow(CityBuild.instance, 1);
+			Grid.SetRowSpan(CityBuild.instance, 5);
+			Grid.SetColumnSpan(CityBuild.instance, 1);
+			Canvas.SetZIndex(CityBuild.instance, 13);
 			var c = CreateCanvasControl();
 
 			//  canvas.ContextFlyout = CityFlyout;
@@ -359,11 +363,13 @@ namespace COTG.Views
 			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f).RoundToInt();
 
 			AGame.Create(canvas);
-			//Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
-			//{
-			//	//ShellPage.canvas.IsHitTestVisible = false;
-			//	//ShellPage.canvas.Visibility = Visibility.Collapsed;
-			//}));
+			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+			{
+				var sz = canvas.ActualSize;
+				AGame. SetClientSpan(sz.X,sz.Y);
+				//ShellPage.canvas.IsHitTestVisible = false;
+				//ShellPage.canvas.Visibility = Visibility.Collapsed;
+			}));
 
 		}
 
