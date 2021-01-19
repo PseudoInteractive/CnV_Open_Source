@@ -39,6 +39,8 @@ using BitmapFont;
 namespace COTG
 {
 	using KeyF = KeyFrame<float>;
+	using Vector4 = System.Numerics.Vector4;
+
 	public static partial class Helper
 	{
 		static public CoreWindow CoreWindow => Window.Current.CoreWindow;
@@ -166,7 +168,7 @@ namespace COTG
 		public const float cameraZoomRegionDefault = 64;
 		public const float cityZoomThreshold = 256f;
 		public const float cityZoomFocusThreshold = 512;
-		public const float cityZoomDefault = 1024;
+		public const float cityZoomDefault = 1280;
 		public float eventTimeOffsetLag;
 		public float eventTimeEnd;
 		static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged; //shadowColor;
@@ -187,7 +189,7 @@ namespace COTG
 		//};
 		//        static readonly Color attackColor = Color.DarkRed;
 		public static float bmFontScale = 0.125f;
-
+		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
@@ -281,6 +283,11 @@ namespace COTG
 		{
 			var rv = instance.Content.Load<Texture2D>(filename);
 			return new Material(rv);
+		}
+		public static Material LoadMaterialAdditive(string filename)
+		{
+			var rv = instance.Content.Load<Texture2D>(filename);
+			return new Material(rv,alphaAddEffect);
 		}
 		public static Texture2D LoadTexture(string filename)
 		{
@@ -658,8 +665,8 @@ namespace COTG
 				cameraPositionParameter = avaEffect.Parameters["cameraPosition"];
 
 				
-				fontMaterial = new Material(Content.Load<Texture2D>("Fonts/tra_0"), fontEffect);
-				
+				fontMaterial = new Material(null, fontEffect);
+				fontTexture=Content.Load<Texture2D>("Fonts/tra_0"); // font is always set to register 7
 				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
 				
 				
@@ -935,7 +942,10 @@ namespace COTG
 				//	tipTextFormatCentered.FontStretch = fontStretch;
 				//}
 				animationTWrap = ((uint)Environment.TickCount % 3000) * (1.0f / 3000); // wraps every 3 seconds, 0..1
-																					   //				float accentAngle = animT * MathF.PI * 2;
+
+				device.Textures[7] = fontTexture;
+					
+					//				float accentAngle = animT * MathF.PI * 2;
 				int tick = (Environment.TickCount >> 3) & 0xfffff;
 				var animTLoop = animationTWrap.Wave();
 				int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
@@ -958,7 +968,7 @@ namespace COTG
 				//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 				// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 				pixelScale = (cameraZoomLag);
-				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.25f * SettingsPage.fontScale;
+				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.5f * SettingsPage.fontScale;
 				pixelScaleInverse = 1.0f / cameraZoomLag;
 				shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
 				var deltaZoom = cameraZoomLag - detailsZoomThreshold;
@@ -1704,7 +1714,7 @@ namespace COTG
 
 
 				{
-					if (wantDetails && !focusOnCity)
+					if (wantDetails)
 					{
 						//
 						// Text names
@@ -1754,7 +1764,7 @@ namespace COTG
 										//									, Layer.tileText, z,PlanetDepth);
 
 									}
-									if (spot != null && spot.isClassified)
+									if (spot != null && spot.isClassified && !focusOnCity)
 									{
 										var c1 = (cx, cy).WToC();
 										var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1783,7 +1793,7 @@ namespace COTG
 					//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					Vector2 c = ShellPage.mousePositionC + new Vector2(16, 16);
-					DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					//	var expand = new Vector2(7);
 
 					//  var rectD = new Vector2(32*4, 24*5);
@@ -1803,7 +1813,7 @@ namespace COTG
 					//	var bounds = textLayout.span;
 					Vector2 c = new Vector2(20, 16).SToC();
 					//var expand = new Vector2(7);
-					DrawTextBox(_contTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.25f);
+					DrawTextBox(_contTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
@@ -1854,16 +1864,16 @@ namespace COTG
 			// hover flags
 			if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var dz))
 			{
-				c.Y -= dz.z/ viewHoverElevationMax*8; // 8 pixels up regardless of scale
+				c.Y -= dz.z*(5.0f/ viewHoverElevationMax* shapeSizeGain); // 8 pixels up regardless of scale
 				z += dz.z;
 			}
 			float frameCount = sprite.frameCount;
 			var frameF = (((animationT + cid.CidToRandom() * 15) * 12) % frameCount);
 			var frameI = MathF.Truncate(frameF);
 			var blend = (int)((frameF - frameI) * 255.0f + 0.325f );
-			var c0 = new Vector2(c.X, c.Y - dv * 0.435f);
-			Vector2 c1 = new Vector2(c.X + dv * 0.5f, c.Y - dv * 0.035f);
-			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frameI / frameCount, 0.0f), new Vector2((frameI + 1) / frameCount, 1),new Color(blend,255,255,255), (c0, c1).RectDepth(z));
+			var c0 = new Vector2(c.X, c.Y - dv * 0.435f*0.75f);
+			Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f, c.Y - dv * 0.035f * 0.75f);
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frameI / frameCount, 0.0f), new Vector2((frameI + 1) / frameCount, 1),new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB,255), (c0, c1).RectDepth(z));
 		}
 
 		private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
@@ -2124,11 +2134,23 @@ namespace COTG
 		public static bool IsValid(this (int x, int y) c) => c.x != int.MinValue || c.y != int.MinValue;
 		public static (int x, int y) invalidXY = (int.MinValue, int.MinValue);
 
+		
 		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < 128 * 3;
 
 		public static Color AlphaToWhite(this int alpha) { return new Color(255, 255, 255, alpha); }
 		public static Color AlphaToAll (this int alpha) { return new Color(alpha, alpha, alpha, alpha); }
 		public static Color AlphaToBlack(this int alpha) { return new Color(0, 0, 0, alpha); }
+
+		public static Color Scale(this Color value, Vector4 scale )
+		{
+			return new Color((int)((float)(int)value.R * scale.X), (int)((float)(int)value.G * scale.Y), (int)((float)(int)value.B * scale.Z), (int)((float)(int)value.A * scale.W));
+
+		}
+		public static Color Scale(this Color value, Vector2 scale)
+		{
+			return new Color((int)((float)(int)value.R * scale.X), (int)((float)(int)value.G * scale.X), (int)((float)(int)value.B * scale.X), (int)((float)(int)value.A * scale.Y));
+
+		}
 
 		public static Color AlphaToWhite(this byte alpha) { return new Color((byte)255, (byte)255, (byte)255, alpha); }
 		public static Color AlphaToBlack(this byte alpha) { return new Color((byte)0, (byte)0, (byte)0, alpha); }
@@ -2205,7 +2227,7 @@ namespace COTG
 
 		public static Vector3 InverseProject(this Vector2 c)
 		{
-			float zBias = 0;// AGame.zCities;
+			float zBias = AGame.zCities*0.5f;
 			float z = CToDepth(c) + zBias;
 
 			for (int i = 0; i < 4; ++i)
@@ -2290,7 +2312,7 @@ namespace COTG
 		//public static Vector2 CidToCp(this int c, float z)
 		//{
 		//	return c.ToWorldC().WToCp(z);
-		//}
+		//}a
 
 		public static (float v0, float v10, float v01, float v11) RectDepth(this (Vector2 c0, Vector2 c1) c, float dz)
 		{
@@ -2305,12 +2327,13 @@ namespace COTG
 			if (ShellPage.IsCityView())
 				lazy = false;
 
-			// only move if needed
+			// only move if needed, heuristic is if any part is off screen
 			if (!lazy ||
-				dc.X.Abs() * AGame.pixelScale > AGame.halfSpan.X * 0.875f ||
-				dc.Y.Abs() * AGame.pixelScale > AGame.halfSpan.Y * 0.875f)
+				(dc.X.Abs()+0.5f) * AGame.pixelScale >= AGame.halfSpan.X  ||
+				(dc.Y.Abs()+0.5f) * AGame.pixelScale >= AGame.halfSpan.Y )
 			{
-				if (Vector2.DistanceSquared(AGame.cameraC, newC) >= 0.875f)
+				// only move if moving more than about 64 pixels?
+				if (Vector2.Distance(AGame.cameraC, newC)*AGame.cameraZoomLag >= 64.0f)
 				{
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();

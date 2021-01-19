@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace COTG.JSON
 {
-	public class BuildQueueItem
+	public struct BuildQueueItem
 	{
 		public long ds;
 		public long de;
 		public long btime;
-		public int bid;
-		public ushort btype;
-		public ushort bspot;
-		public ushort brep;
+		public int bidHash; // building id hash, generated for each building in the commnad queue
+		public int btype; // This is the "proto" member of buildingDef associated with brep
+		public int bspot; // location
+		public int brep; // building id type
 		public byte slvl;
 		public byte elvl;
-		public byte pa;
+		public byte pa; // pa=1 is queued normally, pa=0 is not paid
 /*	"bq": [
             {
                 "bid": 83072020,

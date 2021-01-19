@@ -19,4 +19,14 @@ float4x4 WorldViewProjection;
 DECLARE_TEXTURE(Texture, 0);
 DECLARE_TEXTURE(Normal, 1);
 
+Texture2D<float4> Font : register(t7);
+SamplerState FontSampler 
+{
+	Filter = Linear;
+	MipLODBias = -1;
+	AddressU = Border;
+	AddressV = Border;
+};
+
+
 #endif

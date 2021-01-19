@@ -686,7 +686,7 @@ namespace COTG.Draw
 		{
 			var isDark = color.IsDark();
 			var material = isDark ? AGame.darkFontMaterial: AGame.fontMaterial;
-			var texture = material.texture2d;
+			var texture = AGame.fontTexture;
 			float texelWidth = texture.TexelWidth;
 			float texelHeight = texture.TexelHeight;
 			var drawY = 0f;

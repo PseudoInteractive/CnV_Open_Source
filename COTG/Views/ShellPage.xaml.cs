@@ -37,6 +37,7 @@ using Windows.UI.Input;
 using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System.Numerics;
+using Telerik.UI.Xaml.Controls.Primitives;
 
 namespace COTG.Views
 {
@@ -217,7 +218,22 @@ namespace COTG.Views
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 
+			CityBuild.instance = new CityBuild();
 
+			{
+				buildMenu.Items.Add(new RadialMenuItem() { Header = "Move", GroupName = "actions" });
+				buildMenu.Items.Add(new RadialMenuItem() { Header = "Demo", GroupName = "actions" });
+				buildMenu.Items.Add(new RadialMenuItem() { Header = "Overlay", GroupName = "actions" });
+				var ch = new RadialMenuItem() { Header = "Common", GroupName = "actions" };
+				buildMenu.Items.Add(ch);
+				{
+					ch.ChildItems.Add(new BuildMenuItem(446));
+					ch.ChildItems.Add(new BuildMenuItem(445));
+					ch.ChildItems.Add(new BuildMenuItem(447));
+					ch.ChildItems.Add(new BuildMenuItem(448));
+
+				}
+			}
 
 			grid.Children.Add(CityBuild.instance);
 		//	Grid.SetColumn(webView, 0);
@@ -702,9 +718,9 @@ namespace COTG.Views
 		//    await JSClient.GetCitylistOverview();
 		//}
 
-		static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
-		const short bidTownHall = 455;
-		static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
+		//static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
+		
+		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 
 		static DateTimeOffset flyoutCreatedTime;
@@ -714,42 +730,74 @@ namespace COTG.Views
 		{
 			try
 			{
-				if (City.build == 0)
-					return;
-				// Assert(false);
-				await GetCity.Post(City.build, (jse, city) =>
+				var build = City.GetBuild();
+				int bCount = 0;
+				var bdd = new Dictionary<int, int>();
+				
+				void ProcessBuilding(BuildingDef bd, bool add = true)
 				{
-
-					List<BuildingCount> bd = new List<BuildingCount>();
-					int bCount = 0;
-					var bdd = new Dictionary<string, int>();
-
-					if (jse.TryGetProperty("bd", out var eBd))
+					if (bd.bid == City.bidTownHall || bd.bid == City.bidWall)
+						return;
+					if (bd.isTower)
+						return;
+					var id = bd.Proto;
+					if (!bdd.TryGetValue(id, out var counter))
 					{
-						foreach (var bdi in eBd.EnumerateArray())
-						{
-							var bid = bdi.GetAsInt("bid");
-							if (bid == bidTownHall)
-								continue;
-							var bi = bidMap.IndexOf((short)bid);
-							if (bi == -1)
-								continue;
+						bdd.Add(id, 0);
+						counter = 0;
+					}
+					if (add)
+					{
+						bdd[id] = counter + 1;
+						++bCount;
+					}
+					else
+					{
+						bdd[id] = counter - 1;
+						--bCount;
+					}
+				}
 
-							var s = buildings[bi];
-							if (!bdd.TryGetValue(s, out var counter))
-							{
-								bdd.Add(s, 0);
-								counter = 0;
-							}
-							bdd[s] = counter + 1;
-							++bCount;
+				foreach (var bdi in build.buildings)
+				{
+					var id = bdi.id;
+					if (id == 0 || bdi.bl == 0)
+						continue;
+					var bd = bdi.def;
+					ProcessBuilding(bd);
+				}
+				try
+				{
+					for (var it = City.buildQueue.iterate;it.Next();)
+					{
+						// new building
+						if(it.r.slvl==0 )
+						{
+							ProcessBuilding(BuildingDef.all[it.r.brep]);
+						}
+						// demo
+						if (it.r.elvl == 0)
+						{
+							ProcessBuilding(BuildingDef.all[it.r.brep],false);
 						}
 					}
+				}
+				catch( Exception _)
+				{
+					// build queue changes asynchrously, if we get a bad read, we just ignore it
+				}
+
+				{
+					var bd = new List<BuildingCount>();
 					foreach (var i in bdd)
 					{
-						bd.Add(new BuildingCount() { count = i.Value, image = JSClient.GetImage("images/city/buildings/icons/", $"{i.Key}.png") });
+						if (i.Value > 0)
+						{
+							var bdf = BuildingDef.prototypes[i.Key];
+							bd.Add(new BuildingCount() { count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
+						}
 					}
-					bd.Add(new BuildingCount() { count = bCount, image = ImageHelper.FromImages("Icons/townhall.png") });
+					bd.Add(new BuildingCount() { count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					//         
 
@@ -764,7 +812,8 @@ namespace COTG.Views
 						buildingList.ItemsSource = bd;
 						buildingList.UpdateLayout();
 					});
-				});
+				}
+			}
 				//   var flyout = FlyoutBase.GetAttachedFlyout(button);
 				//  flyout.OverlayInputPassThroughElement = shellPage;
 				//    flyout.XamlRoot = shellFrame.XamlRoot;
@@ -792,7 +841,7 @@ namespace COTG.Views
 				//  var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y + spawn);
 				//  button.Flyout.ShowAt(button, new FlyoutShowOptions() { Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); // ,ExclusionRect=avoid });
 
-			}
+			
 			catch (Exception ex)
 			{
 				Log(ex);
@@ -1163,7 +1212,8 @@ namespace COTG.Views
 		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{
 			var hasFocus = !webviewHasFocus;
-			
+
+			CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
 			canvasVisible = !hasFocus;
 			isHitTestVisible = !hasFocus;
 			SetWebViewHasFocus(hasFocus);

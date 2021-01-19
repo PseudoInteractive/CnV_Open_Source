@@ -1726,10 +1726,7 @@ namespace COTG.Game
 						//}
 					}
 					// todo: donations page and boss hunting
-					if (City.IsBuild(cid))
-					{
-						ShellPage.instance.cityBox.SelectedItem = this;
-					}
+					
 				}
 				// ShellPage.instance.coords.Text = cid.CidToString();
 				//            });

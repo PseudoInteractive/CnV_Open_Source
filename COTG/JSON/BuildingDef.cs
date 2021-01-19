@@ -21,31 +21,79 @@ namespace COTG.JSON
 			Log("Bad building! " + bid);
 			return 0;
 		}
+		public const int sharestringOffset = 444;
+		public static Dictionary<byte, byte> sharestringToBuldings;
 		static BuildingDef()
 		{
-			all= Json.FromResources<Dictionary<int, BuildingDef>>("buildingDef");
+			all = Json.FromResources<Dictionary<int, BuildingDef>>("buildingDef");
 			byte counter = 0;
 			idToBid = new BuildingDef[byte.MaxValue];
+			prototypes = new Dictionary<int, BuildingDef>();
 			foreach (var i in all)
 			{
 				var b = all[i.Key];
 				b.bid = i.Key;
 				b.id = counter;
-				idToBid[counter]= i.Value;
+				idToBid[counter] = i.Value;
+				prototypes[b.Proto] = b;
 				++counter;
 			}
 			// all extra buildings are assigned to "None" this may not be needed
-			for(; ; )
+			for (; ; )
 			{
 				idToBid[counter] = idToBid[0]; // The first building is null
 				if (++counter == byte.MaxValue)
 					break;
 			}
+			//}
+			sharestringToBuldings = new Dictionary<byte, byte>();
+			var ix = new byte[] {
+				 (byte)'-',(byte)(0),
+				 (byte)',',(byte)(452 - sharestringOffset),
+				 (byte)'.',(byte)(454 - sharestringOffset),
+				 (byte)'1',(byte)(447 - sharestringOffset),
+				 (byte)'2',(byte)(448 - sharestringOffset),
+				 (byte)'3',(byte)(461 - sharestringOffset),
+				 (byte)'4',(byte)(465 - sharestringOffset),
+				 (byte)':',(byte)(451 - sharestringOffset),
+				 (byte)';',(byte)(453 - sharestringOffset),
+				 (byte)'A',(byte)(462 - sharestringOffset),
+				 (byte)'B',(byte)(445 - sharestringOffset),
+				 (byte)'C',(byte)(446 - sharestringOffset),
+				 (byte)'D',(byte)(477 - sharestringOffset),
+				 (byte)'E',(byte)(466 - sharestringOffset),
+				 (byte)'G',(byte)(483 - sharestringOffset),
+				 (byte)'H',(byte)(479 - sharestringOffset),
+				 (byte)'J',(byte)(500 - sharestringOffset),
+				 (byte)'K',(byte)(504 - sharestringOffset),
+				 (byte)'L',(byte)(460 - sharestringOffset),
+				 (byte)'M',(byte)(463 - sharestringOffset),
+				 (byte)'P',(byte)(449 - sharestringOffset),
+				 (byte)'R',(byte)(490 - sharestringOffset),
+				 (byte)'S',(byte)(464 - sharestringOffset),
+				 (byte)'T',(byte)(455 - sharestringOffset),
+				 (byte)'U',(byte)(481 - sharestringOffset),
+				 (byte)'V',(byte)(498 - sharestringOffset),
+				 (byte)'X',(byte)(467 - sharestringOffset),
+				 (byte)'Y',(byte)(502 - sharestringOffset),
+				 (byte)'Z',(byte)(482 - sharestringOffset),
+			};
+			for(int p=0;p<ix.Length; p+=2)
+			{
+				sharestringToBuldings.Add(ix[p], ix[p + 1]);
+			}
+
+
 		}
+					
 		public static BuildingDef FromId(byte id) => idToBid[id];
 		public static BuildingDef[] idToBid;
 		public static Dictionary<int, BuildingDef> all;
+		public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
 
+		public bool isPost => Trcap!=null;
+		public bool isBarricade => Trrep!=null;
+		public bool isTower => isPost || isBarricade;
 		// Not persisted
 			public byte id; // packed id
 		// not persisted

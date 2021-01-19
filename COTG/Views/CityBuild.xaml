@@ -4,41 +4,91 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
+	
 	mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
+			<RowDefinition Height="160"/>
 			<RowDefinition/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<GridView x:Name="quickBuild" Grid.Row="1">
-			<GridView.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Margin="20">
-						<TextBlock Text="{Binding name}" />
-						<Rectangle Fill="{Binding brush}" Width="128" Height="128" />
-					</StackPanel>
-				</DataTemplate>
-			</GridView.ItemTemplate>
-			<GridView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<ItemsWrapGrid MaximumRowsOrColumns="3"/>
-				</ItemsPanelTemplate>
-			</GridView.ItemsPanel>
-		</GridView>
+		<controls:Expander Grid.Row="1"  x:Name="expander" VerticalAlignment="Top" Margin="0,0,0,10"
+                           Header="Quick Build"
+                           HorizontalContentAlignment="Stretch"
+                           IsExpanded="False"
+                           ExpandDirection="Down">
+			<GridView x:Name="quickBuild" SelectionMode="Single" IsItemClickEnabled="False" x:FieldModifier="public" 
+					  SelectionChanged="quickBuild_SelectionChanged" >
+				<GridView.ItemTemplate>
+					<DataTemplate x:DataType="local:QuickBuildItem" >
+						<StackPanel>
+
+							<Rectangle Fill="{x:Bind brush}" Width="64" Height="64" />
+							<TextBlock Text="{x:Bind name}" HorizontalAlignment="Center" />
+						</StackPanel>
+					</DataTemplate>
+				</GridView.ItemTemplate>
+				<GridView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<ItemsWrapGrid MaximumRowsOrColumns="3" Orientation="Horizontal" />
+
+					</ItemsPanelTemplate>
+				</GridView.ItemsPanel>
+			</GridView>
+		</controls:Expander>
 		<StackPanel Grid.Row="2">
 			<Rectangle x:Name="rect"  x:FieldModifier="public" Width="128" Height="128" HorizontalAlignment="Center" />
 
-
-			<TextBlock x:Name="Building" Text="Castle" x:FieldModifier="public" FontSize="14" />
-			<TextBlock x:Name="Description" x:FieldModifier="public" TextWrapping="WrapWholeWords" FontSize="12" />
-			<Button x:Name="Upgrade" Content="Upgrade"  x:FieldModifier="public" Click="Upgrade_Click" />
-			<Button x:Name="Downgrade" Content="DownGrade"  x:FieldModifier="public" Click="Downgrade_Click" />
-			<Button x:Name="Destroy" Content="Destroy"  x:FieldModifier="public" Click="Destroy_Click" />
+			<Button Content="Context">
+			<telerikPrimitives:RadRadialContextMenu.Behavior>
+				<telerikPrimitives:RadialMenuTriggerBehavior AttachTriggers="Focused" />
+			</telerikPrimitives:RadRadialContextMenu.Behavior>
+			<telerikPrimitives:RadRadialContextMenu.Menu>
+					<telerikPrimitives:RadRadialMenu ShowToolTip="True">
+						<telerikPrimitives:RadialMenuItem Header="Demo">
+							<telerikPrimitives:RadialMenuItem.ToolTipContent>
+								<TextBlock Text="" FontFamily="Segoe UI Symbol" Foreground="Pink"/>
+							</telerikPrimitives:RadialMenuItem.ToolTipContent>
+						</telerikPrimitives:RadialMenuItem>
+						<telerikPrimitives:RadialMenuItem Header="Layout">
+							<telerikPrimitives:RadialMenuItem.ToolTipContent>
+								<TextBlock Text="" FontFamily="Segoe UI Symbol" Foreground="Pink"/>
+							</telerikPrimitives:RadialMenuItem.ToolTipContent>
+						</telerikPrimitives:RadialMenuItem>
+						<telerikPrimitives:RadialMenuItem Header="Move">
+							<telerikPrimitives:RadialMenuItem.ToolTipContent>
+								<TextBlock Text="" FontFamily="Segoe UI Symbol" Foreground="Pink"/>
+							</telerikPrimitives:RadialMenuItem.ToolTipContent>
+						</telerikPrimitives:RadialMenuItem>
+						<telerikPrimitives:RadialMenuItem Header="Basic">
+							<telerikPrimitives:RadialMenuItem.ChildItems>
+								<telerikPrimitives:RadialMenuItem Header="Cabin">
+									<telerikPrimitives:RadialMenuItem.IconContent>
+										<local:BuildingButton  Width="48" Height="48" bid="446" Content="Cabin" />
+									</telerikPrimitives:RadialMenuItem.IconContent>
+								</telerikPrimitives:RadialMenuItem>
+								<telerikPrimitives:RadialMenuItem Header="Storage">
+									<telerikPrimitives:RadialMenuItem.IconContent>
+										<local:BuildingButton Width="32" Height="32" bid="445" />
+									</telerikPrimitives:RadialMenuItem.IconContent>
+								</telerikPrimitives:RadialMenuItem>
+							</telerikPrimitives:RadialMenuItem.ChildItems>
+						</telerikPrimitives:RadialMenuItem>
+					</telerikPrimitives:RadRadialMenu>
+				</telerikPrimitives:RadRadialContextMenu.Menu>
+			</Button>
+			
+			<TextBlock x:Name="building" Text="Castle" x:FieldModifier="public" FontSize="14" />
+			<TextBlock x:Name="description" x:FieldModifier="public" TextWrapping="WrapWholeWords" FontSize="12" />
+			<Button x:Name="upgrade" Content="Upgrade"  x:FieldModifier="public" Click="Upgrade_Click" />
+			<Button x:Name="downgrade" Content="DownGrade"  x:FieldModifier="public" Click="Downgrade_Click" />
+			<Button x:Name="destroy" Content="Destroy"  x:FieldModifier="public" Click="Destroy_Click" />
 
 
 

@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using static COTG.Debug;
+
+using Vector2 = System.Numerics.Vector2;
+
 namespace COTG
 {
     public static class AMath
@@ -196,13 +199,24 @@ namespace COTG
 		{
 			return from + t * (to - from);
 		}
-	
+
+		// signed from -1 .. 1
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float LerpS(this float t, float from, float to)
+		{
+			return from + (t*0.5f+0.5f) * (to - from);
+		}
+
 
 		public static float Wave(this float t)
         {
             return 0.5f+ 0.5f*MathF.Sin(t * (2 * MathF.PI));
         }
-        public static float RampSym(this float t) // -0.5 .. 0.5
+		public static float WaveC(this float t)
+		{
+			return 0.5f + 0.5f * MathF.Cos(t * (2 * MathF.PI));
+		}
+		public static float RampSym(this float t) // -0.5 .. 0.5
         {
             return t - MathF.Round(t);
         }
@@ -304,18 +318,28 @@ namespace COTG
             return result * (1.0f / 0x10000);
 
         }
-        //public static float CidToRandom(this int cid,int offset)
-        //{
-        //    var x = cid % 65536;
-        //    var y = cid / 65536;
-        //    const uint c1 = 0xcc9e2d51;
-        //    const uint c2 = 0x1b873593;
-        //    var result = ((((int)(x * c1 + y * c2) >> 8)+offset ) & 0xffff);
-        //    return result * (1.0f / 0x10000);
+		// not very random at all, but good enough
+		public static float BSpotToRandom(this int bspot)
+		{
+			const uint c1 = 0xcc9e2d51;
+			const uint c2 = 0x1b873593;
+			
+			var result = (((int)(bspot * c1 + c2) >> 8) & 0xffff);
+			return result * (1.0f / 0x10000);
 
-        //}
-        // adds an offset (i.e. time)
-      
+		}
+		//public static float CidToRandom(this int cid,int offset)
+		//{
+		//    var x = cid % 65536;
+		//    var y = cid / 65536;
+		//    const uint c1 = 0xcc9e2d51;
+		//    const uint c2 = 0x1b873593;
+		//    var result = ((((int)(x * c1 + y * c2) >> 8)+offset ) & 0xffff);
+		//    return result * (1.0f / 0x10000);
+
+		//}
+		// adds an offset (i.e. time)
+
 
 		/// <summary>
 		/// The <see cref="RandomSeed"/> is a structure for deterministically acquiring random values.

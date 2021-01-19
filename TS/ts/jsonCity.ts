@@ -108,6 +108,7 @@ namespace jsonT {
 		foodwarning?: string;
 		bmq?: any[];
 		testbmini?: string;
+		sts?:string;
 	}
 
 	export interface Bd {

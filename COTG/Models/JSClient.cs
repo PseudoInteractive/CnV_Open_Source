@@ -314,17 +314,17 @@ namespace COTG
 					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
 				}
-				else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
-				{
-					if (SettingsPage.IsThemeWinter())
-					{
-						var js = GetJsString("alasstylesheet.css");
+				//else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
+				//{
+				//	if (SettingsPage.IsThemeWinter())
+				//	{
+				//		var js = GetJsString("alasstylesheet.css");
 
-						var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
+				//		var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
 
-						args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-					}
-				}
+				//		args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+				//	}
+				//}
 				//else if (req.RequestUri.ToString().Contains("index.html"))
 				//{
 				//    Assert(false);
@@ -1540,8 +1540,8 @@ namespace COTG
 								   var jse = jsp.Value;
 								   // var priorCid = cid;
 								   var cid = jse.GetInt("cid");
-								   if (!ShellPage.IsWorldView())
-									   AGame.cameraC = cid.CidToWorldV();
+								   //if (!ShellPage.IsWorldView())
+									  // AGame.cameraC = cid.CidToWorldV();
 								   var isFromTs = jse.TryGetProperty("ts", out _);
 								   //Note.L("citydata=" + cid.CidToString());
 								   var city = City.GetOrAddCity(cid);
@@ -1551,8 +1551,10 @@ namespace COTG
 								   // Otherwise is is from a change in TS
 
 								   if (!isFromTs)
-									   city.SetBuild(true);
-
+								   {
+										if (cid != City.build)
+										   city.SetBuild(false);
+								   }
 								   if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
 								   {
 									   //   if (jse.TryGetProperty("ts", out _))

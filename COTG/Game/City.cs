@@ -31,6 +31,13 @@ namespace COTG.Game
     {
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
+		
+		public static (int x, int y) IdToXY(int id)
+		{
+			var y = id / citySpan;
+			return (id - y * citySpan+ span0, y+ span0);
+		}
+
 		public const int span1 = (citySpan - 1) / 2; // inclusive
 		public const int span0 = -span1; // inclusive
 
@@ -42,8 +49,19 @@ namespace COTG.Game
 		public static Building[] Emptybuildings = new Building[citySpan*citySpan];
 
 		public Building[] buildings = Emptybuildings;
+		
+		public const short bidTownHall = 455;
+		public const short bidWall = 809;
+
 		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
-		public static List<BuildQueueItem> buildQueue = new List<BuildQueueItem>(20);
+		public Building GetBuiding( int bspot) => buildings[bspot];
+		
+		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(20);// fixed size to improve threading behaviour and performance
+		
+		public const int buildQMax = 16; // this should depend on ministers
+		public static bool buildQueueFull => buildQueue.count >= buildQMax;
+
+
 
 		public static void CitySwitching()
 		{
@@ -54,6 +72,7 @@ namespace COTG.Game
 		{
 			CitySwitching();
 			Draw.CityView.ClearSelectedBuilding();
+			CityBuild.ClearAction();
 		}
 
 		public City() { type = typeCity; }
@@ -205,12 +224,23 @@ namespace COTG.Game
 
         }
 
-        // Abusing invalid jsE by returning it when we want to return null
-        //  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
-        //  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
+		// Abusing invalid jsE by returning it when we want to return null
+		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
+		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
+		public byte[] layout; // for building
+		
+		public int BidFromOverlay( int id) => layout[id]!=0? layout[id] + BuildingDef.sharestringOffset : 0;
+		
+		public int BidFromOverlay((int x, int y) c) => BidFromOverlay( (c.x-span0) + (c.y-span0) * citySpan);
+		
+		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c) 
+		{
+			var bid = BidFromOverlay(c);
+			return (bid, BuildingDef.all[bid]);
+		}
 
 
-        public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
+		public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
         public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
         public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
 	
@@ -233,6 +263,33 @@ namespace COTG.Game
 				notes = cn[1].GetAsString();
 				
 			}
+			if (jse.TryGetProperty("sts", out var sts))
+			{
+				var s = sts.GetString();
+				if (!s.IsNullOrEmpty())
+				{
+
+					layout = new byte[441];
+
+					const int offset = 18;
+					const int count = citySpan * citySpan;
+					// translate sharestring to building ids
+					// anything that is not a building gets 0
+					for (int i = 0; i < count; ++i)
+					{
+						if(!BuildingDef.sharestringToBuldings.TryGetValue( (byte)s[i + offset], out var b))
+						{
+							b = 0;
+						}
+						layout[i] = b;
+					}
+				}
+				else
+				{
+					layout = null;
+				}
+
+			}
 			if (jse.TryGetProperty("bq", out var bq))
 			{
 				int count = bq.GetArrayLength();
@@ -245,10 +302,10 @@ namespace COTG.Game
 						ds = js.GetAsInt64("ds"),
 						de = js.GetAsInt64("de"),
 						btime = js.GetAsInt64("btime"),
-						bid = js.GetAsInt("bid"),
-						btype = js.GetAsUShort("btype"),
-						bspot = js.GetAsUShort("bspot"),
-						brep = js.GetAsUShort("brep"),
+						bidHash = js.GetAsInt("bid"),
+						btype = js.GetAsInt("btype"),
+						bspot = js.GetAsInt("bspot"),
+						brep = js.GetAsInt("brep"),
 						slvl = js.GetAsByte("slvl"),
 						elvl = js.GetAsByte("elvl"),
 						pa = js.GetAsByte("pa")
@@ -588,6 +645,11 @@ namespace COTG.Game
 			if (changed)
 			{
 				City.CitySwitched();
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					if (ShellPage.instance.cityBox.SelectedItem != this)
+						ShellPage.instance.cityBox.SelectedItem = this;
+				});
 			}
 			SetFocus(scrollIntoView, select);
             return changed;
@@ -738,7 +800,7 @@ namespace COTG.Game
     }
     public class BuildingCount
     {
-        public BitmapImage image { get; set; }
+        public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
         public int count { get; set; }
 
     }

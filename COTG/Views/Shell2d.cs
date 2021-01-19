@@ -22,11 +22,13 @@ using Microsoft.Graphics.Canvas.Text;
 using COTG.JSON;
 using Microsoft.Graphics.Canvas.Effects;
 using static COTG.Game.Enum;
+using Windows.System;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
+using COTG.Draw;
 
 namespace COTG.Views
 {
@@ -127,6 +129,7 @@ namespace COTG.Views
 				IsTabStop = true
 			};
 			keyboardProxy.KeyDown += KeyboardProxy_KeyDown;
+			keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			canvas.Children.Add(keyboardProxy);
 			//canvasHitTest = new Rectangle()
 			//{
@@ -151,11 +154,17 @@ namespace COTG.Views
 
 		}
 
+		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
+		{
+//			CityBuild.ClearAction();
+		}
+
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			var key = e.Key;
 			switch (key)
 			{
+				// todo: handle differently for city view
 
 				case Windows.System.VirtualKey.Space:
 					Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); 
@@ -173,6 +182,20 @@ namespace COTG.Views
 				case Windows.System.VirtualKey.Down:
 					Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
 					break;
+				case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2); break;
+				case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3); break;
+				case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4); break;
+				case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5); break;
+				case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6); break;
+				case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7); break;
+				case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8); break;
+				case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9); break;
+				case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10); break;
+				case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1); break;
+				case Windows.System.VirtualKey.Q: CityBuild.Demolish(CityView.selected); break;
+				case Windows.System.VirtualKey.D: CityBuild.SetAction(CityBuild.Action.destroy); break;
+				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
+				case (VirtualKey)192: CityBuild.SetAction(CityBuild.Action.move); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 
 				default:
 					break;

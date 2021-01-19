@@ -221,7 +221,13 @@ namespace COTG.JSON
                 result += "\nSet recruit Gallys";
                 split[23] = "480";
             }
-            return result;
+			if (rem.Contains("scorp"))
+			{
+				result += "\nSet recruit Scorps + Rams";
+				split[22] = "20000";
+				split[21] = "2000";
+			}
+			return result;
         }
 
         public static void SetTargetHub(int cid, int targetHub)

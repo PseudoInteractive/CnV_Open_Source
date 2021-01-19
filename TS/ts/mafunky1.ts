@@ -325,7 +325,8 @@ function sendCityData(delayInMs) {
 				th: D6.th,
 				tc: D6.tc,
 				bd: D6.bd,
-				bq: D6.bq
+				bq: D6.bq,
+				sts: D6.sts,
 			}
 		};
 		lastBqSize = D6.bq.length;
@@ -350,7 +351,20 @@ function sendCityData(delayInMs) {
 	}, delayInMs);
 }
 
+function sendBuildingData() {
 
+
+		const wrapper = {
+			citydata:
+			{
+				cid: D6.cid,
+				bd: D6.bd,
+				bq: D6.bq
+			}
+		};
+		lastBqSize = D6.bq.length;
+		window['external']['notify'](JSON.stringify(wrapper));
+}
 function sendchat(channel:string,message:string)
 {
 	__c.sendchat(+channel,message)
