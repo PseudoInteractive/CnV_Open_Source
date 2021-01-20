@@ -822,7 +822,7 @@ function postppdt()
 	cityMap.className = ""; // remove backgroud
 	cityMap.style.background = "rgba(255,255,255,1)";
 	cityMap.style.pointerEvents = "none";
-//	 mainMapDiv.style.display = "none";//(_viewMode!==viewModeCity) ? "none" : null;
+	document.getElementById("wmapcoords").style.display = "none";
 	setTimeout(avactor, 3000);
 
 }

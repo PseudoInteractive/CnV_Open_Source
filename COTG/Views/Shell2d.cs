@@ -161,6 +161,13 @@ namespace COTG.Views
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			if(CityBuild.menuOpen)
+			{
+				// todo:  Handle naviation menu items and selection
+				ShellPage.instance.buildMenu.IsOpen = false;
+				return;
+
+			}
 			var key = e.Key;
 			switch (key)
 			{

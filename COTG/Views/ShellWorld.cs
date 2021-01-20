@@ -339,8 +339,15 @@ namespace COTG.Views
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
+			if (CityBuild.menuOpen)
+			{
+				App.DispatchOnUIThreadSneaky(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
+				return;
+			}
+
 			if (!isHitTestVisible)
 				return;
+
 
 			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);

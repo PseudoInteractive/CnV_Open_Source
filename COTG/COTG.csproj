@@ -517,15 +517,16 @@
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\background_welcome.jpg" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <Content Include="Assets\terrainfeatures.dds" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
+    <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Content\Art\City\building_set5.png" />
     <Content Include="Content\Art\City\decal_building_invalid.png" />
+    <Content Include="Content\Art\City\decal_building_valid.png" />
+    <Content Include="Content\Art\City\decal_building_valid_multi.png" />
     <Content Include="Content\Art\City\decal_move_building.png" />
     <Content Include="Content\Art\City\decal_select_building.png" />
     <Content Include="Content\Art\City\Winter\building_set5.png" />
@@ -544,7 +545,6 @@
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\protocolImage.png" />
-    <None Include="Content\Art\sky.dds" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
     <Content Include="Assets\SmallTile.scale-150.png" />
@@ -580,7 +580,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <None Include="Content\Art\world.dds" />
-    <None Include="Content\Audio\UXOMainTheme.ogg" />
     <Content Include="Content\Art\Icons\barracks.png" />
     <Content Include="Content\Art\Icons\blacksmith.png" />
     <Content Include="Content\Art\Icons\blessed.png" />
@@ -604,24 +603,7 @@
     <Content Include="Content\Art\Icons\cityll0.png" />
     <Content Include="Content\Art\Icons\cityll1.png" />
     <Content Include="Content\Art\Icons\cityll2.png" />
-    <Content Include="Content\Art\Icons\cottage.png" />
-    <Content Include="Content\Art\Icons\defender.png" />
-    <Content Include="Content\Art\Icons\defense.png" />
-    <Content Include="Content\Art\Icons\farmhouse.png" />
-    <Content Include="Content\Art\Icons\forester.png" />
-    <Content Include="Content\Art\Icons\hideaway.png" />
     <None Include="Content\Art\lineDraw.dds" />
-    <Content Include="Content\Art\Icons\mage_tower.png" />
-    <Content Include="Content\Art\Icons\marketplace.png" />
-    <Content Include="Content\Art\Icons\mine.png" />
-    <Content Include="Content\Art\Icons\port.png" />
-    <Content Include="Content\Art\Icons\quarry.png" />
-    <Content Include="Content\Art\Icons\sawmill.png" />
-    <Content Include="Content\Art\Icons\shipyard.png" />
-    <Content Include="Content\Art\Icons\smelter.png" />
-    <Content Include="Content\Art\Icons\stable.png" />
-    <Content Include="Content\Art\Icons\stonemason.png" />
-    <Content Include="Content\Art\Icons\storehouse.png" />
     <Content Include="Content\Art\Icons\temple.png" />
     <Content Include="Content\Art\Icons\temple0.png" />
     <Content Include="Content\Art\Icons\temple0w.png" />
@@ -629,9 +611,6 @@
     <Content Include="Content\Art\Icons\temple1w.png" />
     <Content Include="Content\Art\Icons\temple2.png" />
     <Content Include="Content\Art\Icons\temple2w.png" />
-    <Content Include="Content\Art\Icons\townhall.png" />
-    <Content Include="Content\Art\Icons\townhouse.png" />
-    <Content Include="Content\Art\Icons\trainingground.png" />
     <Content Include="Content\Art\Icons\troops0.png" />
     <Content Include="Content\Art\Icons\troops1.png" />
     <Content Include="Content\Art\Icons\troops10.png" />
@@ -650,7 +629,6 @@
     <Content Include="Content\Art\Icons\troops7.png" />
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
-    <Content Include="Content\Art\Icons\windmill.png" />
     <Content Include="Content\Fonts\tra_0.dds" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
@@ -700,6 +678,7 @@
   <ItemGroup>
     <Folder Include="Content\Art\City\COTG\" />
     <Folder Include="Content\Art\Tiles\" />
+    <Folder Include="Content\Audio\" />
     <Folder Include="EventHandlers\" />
   </ItemGroup>
   <ItemGroup>

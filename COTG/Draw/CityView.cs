@@ -173,7 +173,7 @@ namespace COTG.Draw
 
 				if (mat != null)
 				{
-					var off = (animationT * 0.56f);
+					var off = (animationT * 0.256f);
 					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 					var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
 					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
@@ -200,7 +200,7 @@ namespace COTG.Draw
 
 				if (mat != null)
 				{
-					var off = (animationT * 0.57f);
+					var off = (animationT * 0.257f);
 					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 					var cs = CityPointToQuad(hovered.x, hovered.y, 1.2f);
 					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha/2).Scale(cScale), PlanetDepth, zHover);
@@ -218,9 +218,9 @@ namespace COTG.Draw
 						var v0 = iconId.y* dvDt;
 						var cs = CityPointToQuad(hovered.x, hovered.y);
 
-						var off = (animationT * 0.61f);
+						var off = (animationT * 0.261f);
 						var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-						draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), 212.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+						draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
 
 					}
 				}
@@ -235,7 +235,7 @@ namespace COTG.Draw
 					continue;
 				var cc = IdToXY(bspot);
 				var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
-				var off = (bspot.BSpotToRandom() + animationT*0.5f);
+				var off = (bspot.BSpotToRandom() + animationT*0.25f);
 				var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 				if (r.elvl == 0)
 				{

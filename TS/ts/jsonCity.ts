@@ -8,8 +8,8 @@ namespace jsonT {
 		ds: number;
 		de: number;
 		brep: number;
-		btime: number;
-		pa: number;
+		btime?: number;
+		pa?: number;
 	}
 
 	export interface Tq {

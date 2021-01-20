@@ -221,18 +221,39 @@ namespace COTG.Views
 			CityBuild.instance = new CityBuild();
 
 			{
-				buildMenu.Items.Add(new RadialMenuItem() { Header = "Move", GroupName = "actions" });
-				buildMenu.Items.Add(new RadialMenuItem() { Header = "Demo", GroupName = "actions" });
-				buildMenu.Items.Add(new RadialMenuItem() { Header = "Overlay", GroupName = "actions" });
-				var ch = new RadialMenuItem() { Header = "Common", GroupName = "actions" };
-				buildMenu.Items.Add(ch);
-				{
-					ch.ChildItems.Add(new BuildMenuItem(446));
-					ch.ChildItems.Add(new BuildMenuItem(445));
-					ch.ChildItems.Add(new BuildMenuItem(447));
-					ch.ChildItems.Add(new BuildMenuItem(448));
 
-				}
+				var qb = new RadialMenuItem() { Header = "QuickBuild" };
+				buildMenu.Items.Add(new BuildMenuAction("Select", CityBuild.Action.none, "City/decal_select_building.png"));
+				buildMenu.Items.Add(new BuildMenuAction("Move", CityBuild.Action.move, "City/decal_move_building.png"));
+				buildMenu.Items.Add(new BuildMenuAction("Demo", CityBuild.Action.destroy, "City/decal_building_invalid.png"));
+				buildMenu.Items.Add(new BuildMenuAction("Layout", CityBuild.Action.layout, "City/decal_building_valid_multi.png"));
+				// Mru
+				buildMenu.Items.Add(new BuildMenuItem(446));
+				buildMenu.Items.Add(new BuildMenuItem(464));
+				buildMenu.Items.Add(new BuildMenuItem(449));
+				buildMenu.Items.Add(new BuildMenuItem(500));
+				buildMenu.Items.Add(qb);
+				// quick build
+				qb.ChildItems.Add(new BuildMenuGroup("Misc", 446, 464, 449, 481, 467, 488, 479) );
+				qb.ChildItems.Add(new BuildMenuGroup("Military", 445,500, 483, 466, 491, 482, 502,504));
+				qb.ChildItems.Add(new BuildMenuGroup("Posts", 547, 539, 543, 551, 555));
+				qb.ChildItems.Add(new BuildMenuGroup("Barricade",  559, 563, 567, 571));
+				qb.ChildItems.Add(new BuildMenuGroup("Res", 447, 448,  460, 461, 462, 463, 465, 477));
+
+				buildMenu.isOpenChanged = async (open) =>
+					{
+						if (!open)
+						{
+							await Task.Delay(350).ConfigureAwait(true);
+							buildMenuCanvas.Visibility = Visibility.Collapsed;
+							CityBuild.menuOpen = false;
+						}
+						else
+						{
+							buildMenuCanvas.Visibility = Visibility.Visible;
+							CityBuild.menuOpen = true;
+						}
+					};
 			}
 
 			grid.Children.Add(CityBuild.instance);
@@ -1217,6 +1238,20 @@ namespace COTG.Views
 			canvasVisible = !hasFocus;
 			isHitTestVisible = !hasFocus;
 			SetWebViewHasFocus(hasFocus);
+
+		}
+
+		private void buildMenu_LostFocus(object sender, RoutedEventArgs e)
+		{
+		//	var menu = sender as RadRadialMenu;
+		//	menu.IsOpen = false;
+
+		}
+
+		private void buildMenuCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+		{
+			if(!e.Handled && e.OriginalSource == buildMenuCanvas)
+				buildMenu.IsOpen = false;
 
 		}
 	}

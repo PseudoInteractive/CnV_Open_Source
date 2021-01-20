@@ -12897,13 +12897,14 @@ var cotgsubscribe = amplify;
 								$(__s[+z6y])
 									.html(__s[800]);
 								D6 = JSON.parse(J9B);
-							  sendBuildingData();
+							 
 
 								L0F(3, I9B, j9B);
 								J2();
 								m9();
 								t0F();
 								U7F();
+							 sendBuildingData();
 							}
 					const wrapper = { snd: "{}" }
 					window['external']['notify'](JSON.stringify(wrapper));
@@ -34987,7 +34988,7 @@ var cotgsubscribe = amplify;
 			});
 			N6();
 			E6k.y6();
-			var V2w = $.post(q6 + __s[5792], {
+			var V2w = $.post(q6 + __s[5792], { // "nCb.php"
 				type: h2[0].brep,
 				spot: h2[0].bspot,
 				bt: h2[0].ds,
@@ -34999,7 +35000,7 @@ var cotgsubscribe = amplify;
 				if (r2w == 11) Y6(__s[E8y - 0]);
 				else if (r2w != (0)) {
 					D6 = JSON.parse(r2w);
-	 							  sendBuildingData();
+	 				
 
 					J2();
 					X2(7);
@@ -35007,6 +35008,7 @@ var cotgsubscribe = amplify;
 					k8();
 					v9(h2[0].btype, h2[0].elvl, 72000000, +x7t, h2[0]
 						.bspot);
+				  sendBuildingData();
 				}
 			});
 		}
@@ -44533,10 +44535,9 @@ var cotgsubscribe = amplify;
 		function v9(l6U, T6U, O6U, t6U, L6U) {
 			var s2U = 0;
 			var D6U = 0;
-			var L6U = d2;
+			//var L6U = d2;
 			var V6U = d2;
-			var T6U = E6k
-				.o55(4867);
+			//var T6U = E6k.o55(4867);
 			var P6U = "";
 			var g6U = '';
 			$(__s[2970])
@@ -48001,8 +48002,7 @@ var cotgsubscribe = amplify;
 					//c6.time.fpsMax = 5;
 					//c6.raf.start();
 					P9();
-					$(__s[+S6p])
-						.css("display", "none");
+					
 					$(__s[g04 - 0])
 						.css("display", "none");
 					$(__s[S4m | 16])
@@ -48042,8 +48042,7 @@ var cotgsubscribe = amplify;
 				//   c6.time.fpsMax = 5;
 				//  c6.raf.start();
 				P9();
-				$(__s[+S6p])
-					.css("display", "none");
+			
 				$(__s[g04 - 0])
 					.css("display", "none");
 				$(__s[S4m | J5s])
@@ -48084,8 +48083,7 @@ var cotgsubscribe = amplify;
 				//      c6.time.fpsMax = 5;
 				//      c6.raf.start();
 				P9();
-				$(__s[+S6p])
-					.css("display", "none");
+				
 				$(__s[+g04])
 					.css("display", "none");
 				$(__s[+S4m])
@@ -48195,8 +48193,7 @@ var cotgsubscribe = amplify;
 				//  d7F();
 				// $(__s[2267])
 				//    .show();
-				$(__s[+S6p])
-					.show();
+				
 				$(__s[g04 << 1148008608])
 					.show();
 				$(__s[+S4m])
@@ -50284,6 +50281,7 @@ var cotgsubscribe = amplify;
 								//   var d0w = y9g % (A5y & 2147483647);
 								//   var b0w = (y9g - d0w) / (A5y & 2147483647);
 								ProcessBuuPoll();
+		 sendBuildingData();
 							}
 						});
 					}
@@ -54430,8 +54428,8 @@ var cotgsubscribe = amplify;
 				});
 			return q6g;
 		}
-		var d2;
-		var P7V;
+		let d2=0;
+		//var P7V;
 
 		function e8F() {
 			E6k.R6();
@@ -54457,7 +54455,7 @@ var cotgsubscribe = amplify;
 		}
 
 		function a7F() {
-			if (ppdt[__s[x9y * 1]].length == 0) {
+			if (ppdt['c'].length == 0) {
 				console.log("exit a7F");
 
 				window.onbeforeunload = null;
@@ -55988,17 +55986,20 @@ var cotgsubscribe = amplify;
 			if (D31.cid == cid) {
 				var Y31 = D6.bq;
 				var F31 = D6.tq;
+				// build speedup
 				if (D31.hasOwnProperty(_s(
 					2092))) R6F(D31[__s[2092]]);
+				// troop speedup
 				if (D31.hasOwnProperty(__s[111])) s2F(D31[E6k
 					.S55(111)]);
 				var N31 = {};
+				// merge and overwrite
 				for (var p31 in D6) N31[p31] = D6[p31];
-				for (var p31 in D31) N31[
-					p31] = D31[p31];
+				for (var p31 in D31) N31[p31] = D31[p31];
 				D6 = N31;
 				if (D6.pid != ppdt.pid)
-					if (ppdt.pid != 2 && ppdt.pn != __s[2473]) a7F();
+					if (ppdt.pid != 2 && ppdt.pn != __s[2473]) 
+							a7F();
 				if (D6.bq.length > 0) {
 					if (JSON
 						.stringify(D6.bq) != JSON.stringify(Y31)) {
@@ -57908,7 +57909,28 @@ var cotgsubscribe = amplify;
 
 		let lastAllianceIncoming = 0;
 		let lastIncoming = 0;
+		function compareBD(b0 : jsonT.Bd[], b1 :jsonT.Bd[]) : boolean
+		{
+			  try {
+				let lg = b0.length;
+				for(let i=0;i<lg;++i)
+				{
+					if(b0[i].bid !== b1[i].bid)
+						return true;
+	  				if(b0[i].bl !== b1[i].bl)
+						return true;
 		
+
+				}
+				return false;
+
+	          }
+				catch(ee)
+			  {
+				 return true;
+
+			  }
+		}
 
 		function K6F(G71: string) {
 			if (G71.length > 1) {
@@ -57916,223 +57938,218 @@ var cotgsubscribe = amplify;
 				let wrapper : any = {};  // for string notify
 
 				if (pollJ.hasOwnProperty("city")) {
+
 					var t71 : jsonT.City = pollJ["city"];
-					d3F(t71);
+					if(t71.cid == cid)
+					 {
 
-					if(t71.hasOwnProperty("sts"))
-					{
-						console.log("sts");
-						 if(!wrapper.citydata )
+						if(t71.hasOwnProperty("bd"))
 						{
-							wrapper.citydata = { cid: D6.cid };
-							
-						}
-					  wrapper.citydata.sts = t71.sts;
-
-					}
-					let bqSize = D6.bq.length;
-					
-					if(buildQueueDirty)
-					{
-						 if(!wrapper.citydata )
-						{
-							wrapper.citydata = { cid: D6.cid };
-						}
-						lastBqSize = bqSize;
-						wrapper.citydata.bq = D6.bq;
-					
-					}
-					if(t71.hasOwnProperty("bd"))
-					{
-						if(!wrapper.citydata )
-						{
-							wrapper.citydata = { cid: D6.cid };
-						}
-						wrapper.citydata.bd = t71.bd;
-					}
-
-			
-					let troopsHome = 0;
-					for (let it = 0; it < 17; ++it) {
-						troopsHome += D6['th'][it];
-					}
-					// only if raids have come home
-					if (lastCid != cid) {
-						//   lastTroopsHome = troopsHome; // only trigger on 0
-						lastCid = cid;
-						lastTroopsHome = -1; // always update on switch.  This is a perf hit
-					}
-					if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
-						//  if (troopsHome > lastTroopsHome) 
-						{
+							if(compareBD(t71.bd,D6.bd))
+							{
 								if(!wrapper.citydata )
 								{
-									wrapper.citydata = { cid: D6.cid };
+									wrapper.citydata = { cid: t71.cid };
 								}
-								wrapper.citydata.comm= D6.comm;
-								wrapper.citydata.th= D6.th;
-								wrapper.citydata.tc= D6.tc;
-								wrapper.citydata.ts= 1;
+								wrapper.citydata.bd = t71.bd;
+								if(t71.hasOwnProperty("sts") && t71.sts.length > 0 && ((!D6.sts)||(t71.sts != D6.sts)) )
+									 wrapper.citydata.sts = t71.sts;
+							}
+						}
+						d3F(t71);
+					
+						if(buildQueueDirty)
+						{
+							 if(!wrapper.citydata )
+							{
+								wrapper.citydata = { cid: D6.cid };
+							}
+							wrapper.citydata.bq = D6.bq;
+					
+						}
+					
+			
+						let troopsHome = 0;
+						for (let it = 0; it < 17; ++it) {
+							troopsHome += D6['th'][it];
+						}
+						// only if raids have come home
+						if (lastCid != cid) {
+							//   lastTroopsHome = troopsHome; // only trigger on 0
+							lastCid = cid;
+							lastTroopsHome = -1; // always update on switch.  This is a perf hit
+						}
+						if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
+							//  if (troopsHome > lastTroopsHome) 
+							{
+									if(!wrapper.citydata )
+									{
+										wrapper.citydata = { cid: D6.cid };
+									}
+									wrapper.citydata.comm= D6.comm;
+									wrapper.citydata.th= D6.th;
+									wrapper.citydata.tc= D6.tc;
+									wrapper.citydata.ts= 1;
 									
 								
-								if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
-									wrapper.citydata.trin = D6.trin;
-								}
-								if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
-									wrapper.citydata.trintr = D6.trintr;
-								}
-								if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
-									wrapper.citydata.triin = D6.triin;
-								}
+									if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
+										wrapper.citydata.trin = D6.trin;
+									}
+									if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
+										wrapper.citydata.trintr = D6.trintr;
+									}
+									if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
+										wrapper.citydata.triin = D6.triin;
+									}
 		
 							
+							}
+							lastTroopsHome = troopsHome
 						}
-						lastTroopsHome = troopsHome
+						//  const wrapper = { OGA: o71 }
+						//  window['external']['notify'](JSON.stringify(wrapper));
+						// }
 					}
-					//  const wrapper = { OGA: o71 }
-					//  window['external']['notify'](JSON.stringify(wrapper));
-					// }
-				}
-				if (pollJ.hasOwnProperty("resregion"))
-					if (pollJ["resregion"] == 1) n2F();
-				var w71 = pollJ["player"];
-				if (w71 != "" && w71 != "undefined" && w71 != undefined) u7V(w71);
-				let Q1F = pollJ[__s[6286]];
-				if (!(Q1F == 1)) {
-					console.log("exit K6F");
+					if (pollJ.hasOwnProperty("resregion"))
+						if (pollJ["resregion"] == 1) n2F();
+					var w71 = pollJ["player"];
+					if (w71 != "" && w71 != "undefined" && w71 != undefined) u7V(w71);
+					let Q1F = pollJ[__s[6286]];
+					if (!(Q1F == 1)) {
+						console.log("exit K6F");
 
-					Q0V();
-					setTimeout(function () {
-						d8(0);
-						window.onbeforeunload = null;
-						window.location.replace(__s[C2R & 2147483647]);
-					}, 1000);
-				}
-				var W71 = pollJ[__s[3271]];
-				t1F(W71);
-				var n71 = pollJ[__s[3383]];
-				if (n71 >= 1) R2(cid);
-				var x71 = pollJ[E6k
-					.o55(1076)];
-				if (x71 >= 1) a7F();
-				var O71 = pollJ[__s[1203]];
-				Z6F(O71);
-				if (pollJ[__s["631" | 624]]) {
-					var v71 = pollJ[__s[631]];
-					if (n9(v71) == 1) y6F(
-						v71);
-				}
-				if (pollJ.hasOwnProperty("OGA")) {
-					OGA = pollJ["OGA"];
-					//            console.log(OGA);
-					//  if OGA is empty it will sometimes fire repeatedly
-					m6F(OGA);
-
-				}
-				if (pollJ.hasOwnProperty("OGT")) {
-					var L71 = pollJ["OGT"];
-					N6F(L71);
-					//if(L71.length > 0)
-					//{
-					//    const wrapper = { OGT: L71 }
-					//    window['external']['notify'](JSON.stringify(wrapper));
-					//    }
-				}
-				if (pollJ.hasOwnProperty('OGR')) {
-					var X71 = pollJ['OGR'];
-					F6F(X71);
-					//if(X71.length > 0)
-					//{
-					//  const wrapper = { OGR: X71 }
-					//  window['external']['notify'](JSON.stringify(wrapper));
-					// }
-				}
-				var z71 = pollJ["rep"];
-				U6F(z71);
-				if (pollJ.hasOwnProperty("alliance")) {
-					var M71 = pollJ["alliance"];
-					s7V(M71);
-				}
-				if (pollJ["nmw"]) {
-					var I71 = pollJ["nmw"];
-					//   console.log(JSON.stringify(I71));
-
-					if (n9(I71) == +
-						'1') i2F(I71);
-				}
-				if (pollJ["RI"]) {
-					var l71 = pollJ["RI"];
-					if (n9(l71) == '1' <<
-						1707281792) G0V(l71);
-				}
-				if (pollJ["aiv"]) {
-					var Q71 = pollJ["aiv"];
-					// remove
-					//  console.log(JSON.stringify(Q71));
-					if (n9(
-						Q71) == 1) c5V(Q71);
-				}
-				if (pollJ["aic"]) {
-					//  console.log(JSON.stringify(j71["aic"]));
-					if ($(__s[4935])
-						.text() != __s[2397] + pollJ["aic"] + ")") $(__s[4935])
-							.text(__s["2397" | 2052] + pollJ["aic"] + ")");
-				} else if ($(E6k
-					.S55(4935))
-					.text() != '') $(__s[4935])
-						.text("");
-				let AIC = pollJ.AIC;// alliance incoming
-				let IC = pollJ.IC; // my incoming
-
-				if (lastAllianceIncoming != AIC || lastIncoming != IC) {
-
-					Q5V(AIC);
-					L5V(IC);
-					wrapper.incoming=  { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC };
-					lastAllianceIncoming = AIC;
-					lastIncoming = IC;
-				}
-				if (pollJ["iNt"]) {
-					var d71 = pollJ["iNt"];
-					//   console.log(JSON.stringify(d71));
-					d9F(d71);
-				}
-				var b71 = pollJ[__s[6935]];
-				T5V(b71);
-				var S71 = pollJ[__s[845]];
-				K5V(S71);
-				var J71 = pollJ[__s[677]];
-				R5V(J71);
-				var h71 = pollJ[__s[3058]];
-				Y5V(h71);
-				if (pollJ["ICC"]) {
-					var r71 = pollJ["ICC"];
-					g0V(r71);
-				}
-				if (pollJ.hasOwnProperty("cstr")) var f71 = pollJ["cstr"];
-				if (n9(pollJ["world"]) == 1) {
-					var T71 = W0V(pollJ["world"]);
-					if (T71) {
-						$.extend(worldd, T71);
-						F1F();
+						Q0V();
+						setTimeout(function () {
+							d8(0);
+							window.onbeforeunload = null;
+							window.location.replace(__s[C2R & 2147483647]);
+						}, 1000);
 					}
-				}
-				if (pollJ[__s[b6m * 1]]) {
-					var A71 = pollJ[__s[+b6m]];
-					if (n9(A71) == ("1" & E6k
-						.s6s)) {
-						ctim = pollJ[__s[b6m >> 1862421376]];
-						var C71 = new Date();
-						ctims = C71.getTime();
+					var W71 = pollJ[__s[3271]];
+					t1F(W71);
+					var n71 = pollJ[__s[3383]];
+					if (n71 >= 1) R2(cid);
+					var x71 = pollJ[E6k
+						.o55(1076)];
+					if (x71 >= 1) a7F();
+					var O71 = pollJ[__s[1203]];
+					Z6F(O71);
+					if (pollJ[__s["631" | 624]]) {
+						var v71 = pollJ[__s[631]];
+						if (n9(v71) == 1) y6F(
+							v71);
 					}
+					if (pollJ.hasOwnProperty("OGA")) {
+						OGA = pollJ["OGA"];
+						//            console.log(OGA);
+						//  if OGA is empty it will sometimes fire repeatedly
+						m6F(OGA);
+
+					}
+					if (pollJ.hasOwnProperty("OGT")) {
+						var L71 = pollJ["OGT"];
+						N6F(L71);
+						//if(L71.length > 0)
+						//{
+						//    const wrapper = { OGT: L71 }
+						//    window['external']['notify'](JSON.stringify(wrapper));
+						//    }
+					}
+					if (pollJ.hasOwnProperty('OGR')) {
+						var X71 = pollJ['OGR'];
+						F6F(X71);
+						//if(X71.length > 0)
+						//{
+						//  const wrapper = { OGR: X71 }
+						//  window['external']['notify'](JSON.stringify(wrapper));
+						// }
+					}
+					var z71 = pollJ["rep"];
+					U6F(z71);
+					if (pollJ.hasOwnProperty("alliance")) {
+						var M71 = pollJ["alliance"];
+						s7V(M71);
+					}
+					if (pollJ["nmw"]) {
+						var I71 = pollJ["nmw"];
+						//   console.log(JSON.stringify(I71));
+
+						if (n9(I71) == +
+							'1') i2F(I71);
+					}
+					if (pollJ["RI"]) {
+						var l71 = pollJ["RI"];
+						if (n9(l71) == '1' <<
+							1707281792) G0V(l71);
+					}
+					if (pollJ["aiv"]) {
+						var Q71 = pollJ["aiv"];
+						// remove
+						//  console.log(JSON.stringify(Q71));
+						if (n9(
+							Q71) == 1) c5V(Q71);
+					}
+					if (pollJ["aic"]) {
+						//  console.log(JSON.stringify(j71["aic"]));
+						if ($(__s[4935])
+							.text() != __s[2397] + pollJ["aic"] + ")") $(__s[4935])
+								.text(__s["2397" | 2052] + pollJ["aic"] + ")");
+					} else if ($(E6k
+						.S55(4935))
+						.text() != '') $(__s[4935])
+							.text("");
+					let AIC = pollJ.AIC;// alliance incoming
+					let IC = pollJ.IC; // my incoming
+
+					if (lastAllianceIncoming != AIC || lastIncoming != IC) {
+
+						Q5V(AIC);
+						L5V(IC);
+						wrapper.incoming=  { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC };
+						lastAllianceIncoming = AIC;
+						lastIncoming = IC;
+					}
+					if (pollJ["iNt"]) {
+						var d71 = pollJ["iNt"];
+						//   console.log(JSON.stringify(d71));
+						d9F(d71);
+					}
+					var b71 = pollJ[__s[6935]];
+					T5V(b71);
+					var S71 = pollJ[__s[845]];
+					K5V(S71);
+					var J71 = pollJ[__s[677]];
+					R5V(J71);
+					var h71 = pollJ[__s[3058]];
+					Y5V(h71);
+					if (pollJ["ICC"]) {
+						var r71 = pollJ["ICC"];
+						g0V(r71);
+					}
+					if (pollJ.hasOwnProperty("cstr")) var f71 = pollJ["cstr"];
+					if (n9(pollJ["world"]) == 1) {
+						var T71 = W0V(pollJ["world"]);
+						if (T71) {
+							$.extend(worldd, T71);
+							F1F();
+						}
+					}
+					if (pollJ[__s[b6m * 1]]) {
+						var A71 = pollJ[__s[+b6m]];
+						if (n9(A71) == ("1" & E6k
+							.s6s)) {
+							ctim = pollJ[__s[b6m >> 1862421376]];
+							var C71 = new Date();
+							ctims = C71.getTime();
+						}
+					}
+		//
+		// Notify native host of results from poll
+		// 
+					if(Object.keys(wrapper).length>0)
+						window['external']['notify'](JSON.stringify(wrapper));
 				}
-	//
-	// Notify native host of results from poll
-	// 
-				if(Object.keys(wrapper).length>0)
-					window['external']['notify'](JSON.stringify(wrapper));
 			}
-
 		}
 
 		function y5F() {
@@ -59337,7 +59354,7 @@ var cotgsubscribe = amplify;
 			$(__s[+g7y])
 				.hide();
 		}
-		var h2 = new Array();
+		var h2:jsonT.Bq[] = [];
 
 		function U8F() {
 			var M8Z = D6.crt;

@@ -18,43 +18,43 @@
       mc:Ignorable="d"
 	  IsTabStop="True"
 >
-    <Page.Resources>
-        
-        <Style x:Key="TimeFlyoutStyle"
-               TargetType="FlyoutPresenter">
-            <Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-            <Setter Property="VerticalContentAlignment"
-                    Value="Stretch" />
-            <Setter Property="MaxWidth"
-                    Value="1900" />
-        </Style>
-        <DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
-            <TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
-        </DataTemplate>
-      
-       
-        <SolidColorBrush x:Key="LogBufferForeground"
-                         Color="#900238" />
-    </Page.Resources>
-    <!--HeaderTemplate="{StaticResource headerTemplate}"-->
-	<Grid x:Name="grid"  x:FieldModifier="public" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="42" />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="42"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="410" />
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
+	<Page.Resources>
 
-		<Canvas x:Name="buildMenuCanvas" x:FieldModifier="public"  Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="14">
-			<telerikPrimitives:RadRadialMenu x:Name="buildMenu" ShowToolTip="True" x:FieldModifier="public" Width="384" Height="384" >
+		<Style x:Key="TimeFlyoutStyle"
+               TargetType="FlyoutPresenter">
+			<Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+			<Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+			<Setter Property="MaxWidth"
+                    Value="1900" />
+		</Style>
+		<DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
+			<TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
+		</DataTemplate>
+
+
+		<SolidColorBrush x:Key="LogBufferForeground"
+                         Color="#900238" />
+	</Page.Resources>
+	<!--HeaderTemplate="{StaticResource headerTemplate}"-->
+	<Grid x:Name="grid"  x:FieldModifier="public" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="42" />
+			<RowDefinition />
+			<RowDefinition />
+			<RowDefinition />
+			<RowDefinition />
+			<RowDefinition Height="42"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="410" />
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="1*" />
+		</Grid.ColumnDefinitions>
+
+		<Canvas x:Name="buildMenuCanvas" x:FieldModifier="public"  Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="14" >
+			<telerikPrimitives:RadRadialMenu x:Name="buildMenu" ShowToolTip="True" x:FieldModifier="public" Width="448" Height="448" IsTabStop="False" IsOpen="False" >
 				<telerikPrimitives:RadRadialMenu.Resources>
 					<Style TargetType="telerikPrimitivesMenu:MenuToolTip">
 						<Setter Property="Transitions">
@@ -67,16 +67,16 @@
 						<Setter Property="Template">
 							<Setter.Value>
 								<ControlTemplate TargetType="telerikPrimitivesMenu:MenuToolTip">
-									<StackPanel Orientation="Horizontal" Margin="3">
-										<Ellipse Width="2" Height="2" Fill="LightSalmon" Margin="1"/>
-										<Ellipse Width="3" Height="3" Fill="LightSalmon" Margin="1"/>
-										<Ellipse Width="4" Height="4" Fill="LightSalmon" Margin="1"/>
-										<TextBlock Text="{TemplateBinding Content}" 
+									<StackPanel Orientation="Horizontal" Margin="3" Background="Black" >
+										<Ellipse Width="2" Height="2" Fill="Red" Margin="1"/>
+										<Ellipse Width="3" Height="3" Fill="Red" Margin="1"/>
+										<Ellipse Width="4" Height="4" Fill="Red" Margin="1"/>
+										<TextBlock Text="{TemplateBinding Content}" Foreground="White"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="256" 
-                                       Foreground="LightSalmon" Margin="4,0,4,0"/>
-										<Ellipse Width="4" Height="4" Fill="LightSalmon" Margin="1"/>
-										<Ellipse Width="3" Height="3" Fill="LightSalmon" Margin="1"/>
-										<Ellipse Width="2" Height="2" Fill="LightSalmon" Margin="1"/>
+                                        Margin="4,0,4,0"/>
+										<Ellipse Width="4" Height="4" Fill="Red" Margin="1"/>
+										<Ellipse Width="3" Height="3" Fill="Red" Margin="1"/>
+										<Ellipse Width="2" Height="2" Fill="Red" Margin="1"/>
 									</StackPanel>
 								</ControlTemplate>
 							</Setter.Value>
@@ -86,9 +86,9 @@
 			</telerikPrimitives:RadRadialMenu>
 		</Canvas>
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
-            <CommandBar.Content>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ComboBox x:Name="cityListBox" x:FieldModifier="public"
+			<CommandBar.Content>
+				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
 					TextSubmitted="CityListSubmitted"
                       Width="120"
@@ -97,7 +97,7 @@
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
                       Margin="4" />
-                    <ComboBox x:Name="cityBox" x:FieldModifier="public" 
+					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
                       Width="200"
 							  IsEditable="True"
 					TextSubmitted="CitySubmitted"
@@ -105,37 +105,37 @@
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
                       Margin="4" />
-                    <Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
-                        <Button.Resources>
-                            <winui:TeachingTip x:Name="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
+						<Button.Resources>
+							<winui:TeachingTip x:Name="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" Target="{x:Bind HomeButton}"
                                     Subtitle="Click to toggle between city and world view, and to focus on the current city" />
-                        </Button.Resources>
-                        <SymbolIcon Symbol="Home"/>
-                        
-                    </Button>
-                    <Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+						</Button.Resources>
+						<SymbolIcon Symbol="Home"/>
+
+					</Button>
+					<Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="Switch to prior city in the current city list" >
 						<SymbolIcon Symbol="Previous"/>
 					</Button>
-                    <Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					<Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="Switch to next city in the current city list" >
-                        <SymbolIcon Symbol="Next"/>
-                    </Button>
-                    <TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-                    <Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
+						<SymbolIcon Symbol="Next"/>
+					</Button>
+					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+					<Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
-                    <winui:ProgressRing x:Name="progress" IsActive="False" />
-                    <TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-                </StackPanel>
-            </CommandBar.Content>
-            <AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+					<winui:ProgressRing x:Name="progress" IsActive="False" />
+					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
+				</StackPanel>
+			</CommandBar.Content>
+			<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />
-            <AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+			<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
-            <AppBarSeparator/>
+			<AppBarSeparator/>
 			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 			<AppBarSeparator/>
@@ -146,79 +146,79 @@
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
-                <AppBarButton.Resources>
-                    <winui:TeachingTip x:Name="RefreshTip"
+				<AppBarButton.Resources>
+					<winui:TeachingTip x:Name="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
                            x:FieldModifier="public"
                                 Target="{x:Bind Fresh}"
                                 Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
-                        <TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
-                    </winui:TeachingTip>
-                </AppBarButton.Resources>
-            </AppBarButton>
-            <AppBarSeparator/>
-            <AppBarButton  x:Name="buildingsButton"
+						<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
+					</winui:TeachingTip>
+				</AppBarButton.Resources>
+			</AppBarButton>
+			<AppBarSeparator/>
+			<AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
                            Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
-                <Button.Flyout>
-                    <Flyout Closing="FlyoutClosing"
+				<Button.Flyout>
+					<Flyout Closing="FlyoutClosing"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ShowMode="Auto">
-                        <GridView x:Name="buildingList"
+						<GridView x:Name="buildingList"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="game:BuildingCount">
-                                    <Grid >
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition  />
-                                        </Grid.RowDefinitions>
-                                        <Rectangle Fill="{x:Bind brush, Mode=OneTime}"
+							<GridView.ItemTemplate>
+								<DataTemplate x:DataType="game:BuildingCount">
+									<Grid >
+										<Grid.RowDefinitions>
+											<RowDefinition Height="auto" />
+											<RowDefinition  />
+										</Grid.RowDefinitions>
+										<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
                                                    Width="64" Height="64" />
-                                        <TextBlock Grid.Row="1"
+										<TextBlock Grid.Row="1"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
                                                        Text="{x:Bind count, Mode=OneTime}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsWrapGrid MaximumRowsOrColumns="6"
+									</Grid>
+								</DataTemplate>
+							</GridView.ItemTemplate>
+							<GridView.ItemsPanel>
+								<ItemsPanelTemplate>
+									<ItemsWrapGrid MaximumRowsOrColumns="6"
                                                        Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                        </GridView>
-                    </Flyout>
-                </Button.Flyout>
-            </AppBarButton>
-            <AppBarSeparator/>
-            <AppBarButton Label="Heatmap"
+								</ItemsPanelTemplate>
+							</GridView.ItemsPanel>
+						</GridView>
+					</Flyout>
+				</Button.Flyout>
+			</AppBarButton>
+			<AppBarSeparator/>
+			<AppBarButton Label="Heatmap"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="View city changes on the world map">
 				<AppBarButton.Icon>
 					<FontIcon Glyph="&#xF738;"/>
 				</AppBarButton.Icon>
 				<Button.Flyout>
-                    <Flyout x:Name="heatMapFlyout">
-                    </Flyout>
-                </Button.Flyout>
-            </AppBarButton>
-            <AppBarButton Label="Time"
+					<Flyout x:Name="heatMapFlyout">
+					</Flyout>
+				</Button.Flyout>
+			</AppBarButton>
+			<AppBarButton Label="Time"
                               Icon="Shuffle"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
-                <Button.Flyout>
-                    <Flyout Placement="Right"
+				<Button.Flyout>
+					<Flyout Placement="Right"
                                 FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
-                        <StackPanel Width="1840">
-                            <TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
-                            <Slider x:Name="eventTimeTravelSlider"
+						<StackPanel Width="1840">
+							<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
+							<Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
                                     AllowFocusOnInteraction="True"
@@ -230,21 +230,21 @@
                                     Maximum="1430.0"
                                         Minimum="-1430.0"
                                         Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
-            </AppBarButton>
-            <AppBarSeparator/>
-            <AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
-        </CommandBar>
-        <Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  />
-            <Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
-            <tk:GridSplitter
+						</StackPanel>
+					</Flyout>
+				</Button.Flyout>
+			</AppBarButton>
+			<AppBarSeparator/>
+			<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
+		</CommandBar>
+		<Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="3*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  />
+			<Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
+			<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
@@ -254,41 +254,41 @@
                         Height="11"
                         Grid.Row="1"
                         Canvas.ZIndex="22">
-                <tk:GridSplitter.Element>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+				<tk:GridSplitter.Element>
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
                     Foreground="White"  IsHitTestVisible="False"    />
-                </tk:GridSplitter.Element>
-            </tk:GridSplitter>
-        </Grid>
-        <Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Once" >
-                <Frame.Resources>
-                <winui:TeachingTip x:Name="ChatTip0"
+				</tk:GridSplitter.Element>
+			</tk:GridSplitter>
+		</Grid>
+		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Once" >
+				<Frame.Resources>
+					<winui:TeachingTip x:Name="ChatTip0"
                                 Title="Chat Window"
                                    IsLightDismissEnabled="True"
                               
 Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up to view chat"></winui:TeachingTip>
-                <winui:TeachingTip x:Name="ChatTip1"
+					<winui:TeachingTip x:Name="ChatTip1"
                                    IsLightDismissEnabled="True"
                                 Title="Translate Incoming"
                               Target="{x:Bind chatTabFrame}" 
                                 Subtitle="Right click on a message and select a language to translate"></winui:TeachingTip>
-                <winui:TeachingTip x:Name="ChatTip2"
+					<winui:TeachingTip x:Name="ChatTip2"
                                 Title="Translate Outgoing"
                                    IsLightDismissEnabled="True"
                                Target="{x:Bind chatTabFrame}"
                                 Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
-                </Frame.Resources>
-            </Frame>
-            <tk:GridSplitter
+				</Frame.Resources>
+			</Frame>
+			<tk:GridSplitter
                         Background="Transparent"
                     Grid.Row="1"
 										 				IsTabStop="True"
@@ -299,12 +299,12 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                         VerticalAlignment="Stretch"
                         Width="11"
                         Canvas.ZIndex="22">
-                <tk:GridSplitter.Element>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+				<tk:GridSplitter.Element>
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
                     Foreground="White"  IsHitTestVisible="False"    />
-                </tk:GridSplitter.Element>
-            </tk:GridSplitter>
-            <tk:GridSplitter
+				</tk:GridSplitter.Element>
+			</tk:GridSplitter>
+			<tk:GridSplitter
                     Grid.Row="1"
                     Background="Transparent"
 										 				IsTabStop="True"
@@ -316,13 +316,13 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                         Height="11"
                         HorizontalAlignment="Stretch"
                     >
-                <tk:GridSplitter.Element>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+				<tk:GridSplitter.Element>
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
                     Foreground="White"  IsHitTestVisible="False"    />
-                </tk:GridSplitter.Element>
-            </tk:GridSplitter>
-        </Grid>
-        <tk:InAppNotification x:Name="InAppNote"
+				</tk:GridSplitter.Element>
+			</tk:GridSplitter>
+		</Grid>
+		<tk:InAppNotification x:Name="InAppNote"
                                   Grid.Row="1"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
@@ -354,10 +354,10 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                         VerticalAlignment="Stretch"
                         Width="11"
                         Canvas.ZIndex="33">
-            <tk:GridSplitter.Element>
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+			<tk:GridSplitter.Element>
+				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
                     Foreground="White"  IsHitTestVisible="False"    />
-            </tk:GridSplitter.Element>
-        </tk:GridSplitter>
-    </Grid>
+			</tk:GridSplitter.Element>
+		</tk:GridSplitter>
+	</Grid>
 </Page>

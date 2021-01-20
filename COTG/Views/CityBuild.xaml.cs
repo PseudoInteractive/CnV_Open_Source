@@ -22,6 +22,9 @@ using Windows.UI.Xaml.Navigation;
 using static COTG.Draw.CityView;
 using static COTG.Game.City;
 using Telerik.UI.Xaml.Controls.Primitives;
+using Telerik.UI.Xaml.Controls.Primitives.Menu;
+using System.Windows.Input;
+using static COTG.Debug;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -37,6 +40,7 @@ namespace COTG.Views
 			move,
 			destroy,
 			build,
+			layout,
 			count,
 
 		};
@@ -45,14 +49,20 @@ namespace COTG.Views
 		{
 			SetAction( Action.none);
 		}
-		public static void SetAction(Action _action)
+		public static void SetAction(Action _action )
 		{
 			action = _action;
-			App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+		//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+		}
+		public static void SetQuickBuild( int quickBuildItemBid )
+		{
+			action = Action.build;
+			quickBuildId = quickBuildItemBid;
+			//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 
-		
 		static List<QuickBuildItem> items;
+		internal static bool menuOpen;
 
 		public CityBuild()
 		{
@@ -210,30 +220,30 @@ namespace COTG.Views
 
 		private void quickBuild_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var sel = quickBuild.SelectedItem  as QuickBuildItem;
-			if (sel != null )
-			{
-				var bid = sel.bid;
-				quickBuildId = bid;
-				// clear selection on tool change
-				if (bid <  (int)Action.count)
-				{
-					action = (Action)bid;
-				}
-				else
-				{
-					action = Action.build;
-				}
-				if(action != Action.move)
-					selected = CanvasHelpers.invalidXY;
+			//var sel = quickBuild.SelectedItem  as QuickBuildItem;
+			//if (sel != null )
+			//{
+			//	var bid = sel.bid;
+			//	quickBuildId = bid;
+			//	// clear selection on tool change
+			//	if (bid <  (int)Action.count)
+			//	{
+			//		action = (Action)bid;
+			//	}
+			//	else
+			//	{
+			//		action = Action.build;
+			//	}
+			//	if(action != Action.move)
+			//		selected = CanvasHelpers.invalidXY;
 
-			}
-			else
-			{
-				// this is an invalid setting
-				action = Action.none; // is this an appropriate action to take?
-				quickBuildId = 0;
-			}
+			//}
+			//else
+			//{
+			//	// this is an invalid setting
+			//	action = Action.none; // is this an appropriate action to take?
+			//	quickBuildId = 0;
+			//}
 		}
 		public static void Click((int x, int y) cc)
 		{
@@ -316,42 +326,78 @@ namespace COTG.Views
 
 			}
 		}
-		public const int buildToolSpan = 380;
+		public const int buildToolSpan = 448;
 		public static void RightClick((int x, int y) cc)
 		{
 			// toggle visibility
-			if (ShellPage.instance.buildMenuCanvas.Visibility == Visibility.Visible)
+			if (ShellPage.instance.buildMenu.IsOpen)
 			{
-				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
+				ShellPage.instance.buildMenu.IsOpen = false;
+//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
 			}
 			else
 			{
+//				ShellPage.instance.buildMenu.IsOpen = true;
 				var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
 				var b = ShellPage.instance.buildMenu;
-				Canvas.SetLeft(b, sc.X - buildToolSpan / 2);
-				Canvas.SetTop(b, sc.Y - buildToolSpan / 2);
-				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
-			}			
+				Canvas.SetLeft(b, sc.X - buildToolSpan / 2-2);
+				Canvas.SetTop(b, sc.Y - buildToolSpan / 2+42);
+		//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
+				b.IsOpen = true;
+				
+			}
 		}
+		public const int buildMenuMruCount = 4;
 	}
-
+	
 	public class BuildMenuItem : RadialMenuItem
 	{
 		public int bid;
+		public float cacheScore;
 		public BuildMenuItem(int _bid)
+		{
+//			GroupName = "actions";
+			Command = BuildMenuItemCommand.instance;
+			SetBid(_bid);
+		}
+		public void SetBid(int _bid)
 		{
 			bid = _bid;
 			var def = BuildingDef.all[_bid];
 			Header = def.Bn;
 			ToolTipContent = def.Ds;
 			IconContent = new BuildingRect() { Width = 64, Height = 64, bid = _bid };
-			GroupName = "actions";
 		}
 	}
+	public class BuildMenuGroup : RadialMenuItem
+	{
+		public BuildMenuGroup(string name, params int[] ids )
+		{
+			Header = name;
+			//		GroupName = "actions";
+			IconContent = new BuildingRect() { Width = 64, Height = 64, bid = ids[0] };
+			foreach (var i in ids)
+				ChildItems.Add(new BuildMenuItem(i));
+		}
+	}
+	public class BuildMenuAction : RadialMenuItem
+	{
+		public CityBuild.Action action;
+		public BuildMenuAction(string name, CityBuild.Action action, string icon)
+		{
+			Header = name;
+			GroupName = "actions";
+			this.action = action;
+			IconContent = new Image() { Width = 64,Height=64, Source = ImageHelper.FromImages(icon) };
+			Command = BuildMenuItemCommand.instance;
+		}
+	}
+
 	// nested types not supported
 	public class QuickBuildItem
 	{
 		public int bid;
+		public float cacheScore;  // for recently used eviction/replacenment
 		public string name { get; set; }
 		public ImageBrush brush { get; set; }
 		public QuickBuildItem(int _id)
@@ -421,5 +467,82 @@ namespace COTG.Views
 			Width = 64;
 			Height = 64;
 		}
+	}
+	public class BuildMenuItemCommand : ICommand
+	{
+		public static BuildMenuItemCommand instance = new BuildMenuItemCommand();
+		public bool CanExecute(object parameter)
+		{
+			var item = parameter as RadialMenuItemContext;
+
+			// perform custom logic here
+
+			return true;
+		}
+
+		public void Execute(object parameter)
+		{
+			var context = parameter as RadialMenuItemContext;
+			var target = context.TargetElement;
+			const int i0 = (8 - CityBuild.buildMenuMruCount);
+			const int i1 = 8;
+			if ( context.MenuItem is BuildMenuItem bi)
+			{
+				CityBuild.SetQuickBuild(bi.bid);
+				
+				BuildMenuItem found = null;
+				float bestScore = float.MaxValue;
+				BuildMenuItem best=null;
+				for (int i = 0; i < i0; ++i)
+				{
+					var item = ShellPage.instance.buildMenu.Items[i];
+					item.IsSelected = false;
+				}
+				for (int i=i0;i<i1;++i)
+				{
+					var item = ShellPage.instance.buildMenu.Items[i] as BuildMenuItem;
+					item.cacheScore *= 0.75f;
+					if (item.bid == bi.bid)
+						found = item;
+					else
+						item.IsSelected = false;
+					if( item.cacheScore<bestScore)
+					{
+						bestScore = item.cacheScore;
+						best = item;
+					}
+				}
+				if( found == null)
+				{
+					found = best;
+					best.SetBid(bi.bid);
+				}
+				found.cacheScore += 1.0f;
+				found.IsSelected = true;
+				
+
+
+			}
+			else if( context.MenuItem is BuildMenuAction a)
+			{
+				for (int i = 0; i < i1; ++i)
+				{
+					var item = ShellPage.instance.buildMenu.Items[i];
+					item.IsSelected = (item == context.MenuItem);
+				}
+					CityBuild.SetAction(a.action);
+			}
+			else
+			{
+				Assert(false);
+			}
+			//		var def = context.CommandParameter as BuildingDef;
+
+			// perform custom logic here
+			context.MenuItem.Owner.Owner.IsOpen = false;
+
+		}
+
+		public event EventHandler CanExecuteChanged;
 	}
 }
