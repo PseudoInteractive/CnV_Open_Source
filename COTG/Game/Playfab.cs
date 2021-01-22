@@ -26,9 +26,9 @@ namespace COTG.Game
 			return Player.myName;
 		}
 		public static void OnError(PlayFabError error)
-			{
+		{
 			Log($"{error.Error}, {error.ErrorMessage}");
-			}
+		}
 
 		public static async Task Login()
 		{
@@ -53,7 +53,7 @@ namespace COTG.Game
 							// And make sure that both AvatarUrl and LastLogin are included.
 							ShowAvatarUrl = true,
 							ShowLastLogin = true,
-							ShowDisplayName=true
+							ShowDisplayName = true
 						}
 
 					}
@@ -68,38 +68,38 @@ namespace COTG.Game
 				login = loginResult.Result;
 
 				authenticationContext = login.AuthenticationContext;
-				if (login.InfoResultPayload.AccountInfo.Username==null)
+				if (login.InfoResultPayload.AccountInfo.Username == null)
 				{
-					
-						var hr = await PlayFabClientAPI.AddUsernamePasswordAsync(new AddUsernamePasswordRequest()
-						{
-							AuthenticationContext = authenticationContext,
-							Username = GetPlayerName(),
-							Password = GetClientId(),
-							Email = $"{GetPlayerName()}@conquestandvirtue.com"
-						}
-						
-					);
-						if (hr.Error != null)
-						{
-							Log($"!!! Failed AddUsernamePasswordAsync PlayFab: {hr.Error.ErrorMessage}");
-							//return;
-						}
+
+					var hr = await PlayFabClientAPI.AddUsernamePasswordAsync(new AddUsernamePasswordRequest()
+					{
+						AuthenticationContext = authenticationContext,
+						Username = GetPlayerName(),
+						Password = GetClientId(),
+						Email = $"{GetPlayerName()}@conquestandvirtue.com"
+					}
+
+				);
+					if (hr.Error != null)
+					{
+						Log($"!!! Failed AddUsernamePasswordAsync PlayFab: {hr.Error.ErrorMessage}");
+						//return;
+					}
 
 				}
-					if (login.InfoResultPayload.AccountInfo.TitleInfo.DisplayName == null)
-					{   // Set user data
-						var hr = await PlayFabClientAPI.UpdateUserTitleDisplayNameAsync(new UpdateUserTitleDisplayNameRequest()
-						{
-							AuthenticationContext = authenticationContext,
-							DisplayName = GetPlayerName()
-						});
-						if (hr.Error != null)
-						{
-							Log($"!!! Failed to UpdateUserTitleDisplayNameAsync PlayFab: {hr.Error.ErrorMessage}");
-							//return;
-						}
+				if (login.InfoResultPayload.AccountInfo.TitleInfo.DisplayName == null)
+				{   // Set user data
+					var hr = await PlayFabClientAPI.UpdateUserTitleDisplayNameAsync(new UpdateUserTitleDisplayNameRequest()
+					{
+						AuthenticationContext = authenticationContext,
+						DisplayName = GetPlayerName()
+					});
+					if (hr.Error != null)
+					{
+						Log($"!!! Failed to UpdateUserTitleDisplayNameAsync PlayFab: {hr.Error.ErrorMessage}");
+						//return;
 					}
+				}
 				{
 					var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
 					if (group.Error != null)
@@ -107,15 +107,15 @@ namespace COTG.Game
 						Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
 						// group does not exist?
 						var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-						if(hr.Error!=null)
+						if (hr.Error != null)
 						{
 							Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
 
 						}
 						else
 						{
-						//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
-						//   hr.Result.
+							//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+							//   hr.Result.
 						}
 
 
@@ -131,7 +131,51 @@ namespace COTG.Game
 					//	ch.
 					//}
 
-			}
+				}
+				{
+					var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, 
+						GroupName = $"W{JSClient.world}" });
+					if (group.Error != null)
+					{
+						Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
+						// group does not exist?
+						var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+						if (hr.Error != null)
+						{
+							Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
+
+						}
+						else
+						{
+							//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+							//   hr.Result.
+						}
+
+
+					}
+					else
+					{
+						//var hr = await PlayFabGroupsAPI.ListGroupMembersAsync(new PlayFab.GroupsModels.ListGroupMembersRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
+						//if(hr.Error!=null)
+						//{
+						//	Log(hr.Error);
+						//}
+						//else
+						//{
+						//	foreach(var r in hr.Result.Members)
+						//	{
+
+						//	}
+						//}
+
+					}
+					// create a character for this world
+					//foreach(var ch in login.InfoResultPayload.CharacterList)
+					//{
+					//	ch.
+					//}
+
+				}
 			}
 			catch (Exception _exception)
 			{

@@ -117,8 +117,12 @@ namespace COTG.Game
 		public const int count = spanX * spanY + 1; // 56 is summary of the workd
 		public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x / 100, c.y / 100));
 		public static int GetPackedIdFromCont((int x, int y) c) => c.x.Clamp(0, 5) + c.y.Clamp(0, 5) * spanX;
-		public static int GetPackedIdFromCont(int cont) => GetPackedIdFromCont((cont % 10, cont / 10));
-		public static int GetPackedIdFromContUnpacked(int cont) => cont == 56 ? count - 1 : GetPackedIdFromCont((cont % 10, cont / 10));
+		public static int GetPackedIdFromCont(int cont)
+		{
+			var y = cont / 10;
+			return GetPackedIdFromCont((cont - y*10,y));
+		}
+		public static int GetPackedIdFromContUnpacked(int cont) => cont == 56 ? count - 1 : GetPackedIdFromCont(GetPackedIdFromCont(cont));
 		public static Continent[] all = new Continent[count]; // 56 is a summary for world
 
 	};
@@ -225,6 +229,7 @@ namespace COTG.Game
 				rv);
 
 		}
+		public static int CidToPlayer( int _cid) => World.GetInfo(_cid.CidToWorld()).player;
 		public static int GetPackedId((int x, int y) c)
 		{
 			var x = c.x;
@@ -952,19 +957,14 @@ namespace COTG.Game
 						}
 						else
 						{
-							var isMine = false;
-							var player = Player.all.GetValueOrDefault(data.player, Player._default);
-							if (Player.IsMe(data.player))
+							var spot = Spot.GetOrAdd(c.WorldToCid());
 							{
-								isMine = true;
-								if (City.allCities.TryGetValue(c.WorldToCid(), out var city))
-								{
-									return (city.cityName, true, city.incoming.Any(), false, city);
-								}
-
+								var isMine = spot.isMine;
+								var player = Player.all.GetValueOrDefault(data.player, Player._default);
+								return (isMine ? spot.cityName : player.name, isMine, spot.incoming.Any(), !isMine && (data.player == Player.viewHover), spot);
 							}
-							return (player.name, isMine, Spot.TryGet(c.WorldToCid(), out var spot) ? spot.incoming.Any() : false, data.player == Player.viewHover, spot);
 						}
+						
 					}
 				default:
 					return (null, false, false, false, null);

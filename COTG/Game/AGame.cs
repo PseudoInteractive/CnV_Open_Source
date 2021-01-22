@@ -272,12 +272,14 @@ namespace COTG
 
 
 
-		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format)
+		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format, EffectPass effect=null)
 		{
+			if (effect == null)
+				effect = AGame.defaultEffect;
 			var rv = new Texture2D(instance.GraphicsDevice, x, y, false, format);
 			rv.SetData(pixels);
 
-			return new Material(rv);
+			return new Material(rv, effect);
 		}
 		public static Material LoadMaterial(string filename)
 		{
@@ -295,9 +297,9 @@ namespace COTG
 		}
 		//		public static MouseState mouseState;
 		//		public static MouseState priorMouseState;
-		//		public static KeyboardState keyboardState;
-		//		public static KeyboardState priorKeyboardState;
-		//	public static bool WasKeyPressed(Keys key) => keyboardState.IsKeyDown(key) && !priorKeyboardState.IsKeyDown(key);
+				public static KeyboardState keyboardState;
+				public static KeyboardState priorKeyboardState;
+			public static bool WasKeyPressed(Keys key) => keyboardState.IsKeyDown(key) && !priorKeyboardState.IsKeyDown(key);
 		const float viewHoverElevationMax = 1.0f / 64.0f;
 		const float viewHoverElevationKt = 24.0f;
 		public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
@@ -374,13 +376,13 @@ namespace COTG
 
 
 				//	priorMouseState = mouseState;
-				//	priorKeyboardState = keyboardState;
-				//	keyboardState = Keyboard.GetState();
-				//	App.canvasKeyModifiers = UWindows.System.VirtualKeyModifiers.None;
-				//	if ((keyboardState.IsKeyDown(Keys.LeftShift) | keyboardState.IsKeyDown(Keys.RightShift)))
-				//		App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
-				//	if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
-				//		App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
+					priorKeyboardState = keyboardState;
+					keyboardState = Keyboard._nextKeyboardState;
+					App.canvasKeyModifiers = UWindows.System.VirtualKeyModifiers.None;
+					if ((keyboardState.IsKeyDown(Keys.LeftShift) | keyboardState.IsKeyDown(Keys.RightShift)))
+						App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
+					if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
+						App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
 
 				////	ShellPage.CanvasCheckKeys();
 				//	if ( keyboardState.GetPressedKeyCount() > priorKeyboardState.GetPressedKeyCount() )
@@ -449,7 +451,7 @@ namespace COTG
 				{
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, alphaAddEffect);
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -650,7 +652,7 @@ namespace COTG
 				sdfEffect = EffectPass("SDF");
 				noTextureEffect = EffectPass("NoTexture");
 				readyToLoad = true;
-
+				
 				using var srgb = new SRGBLoadScope();
 
 				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
@@ -873,6 +875,14 @@ namespace COTG
 		public const float lightZ0 = 460f;
 		public const float lightZDay = 1500;
 		public static Vector2 cameraLightC;
+		static SamplerState fontFilter= new SamplerState() { Filter = TextureFilter.Linear, MipMapLevelOfDetailBias = -1.5f,
+						BorderColor = new Color(0,0,0,0),
+						MaxAnisotropy=2,
+						AddressW=TextureAddressMode.Border,
+						AddressU = TextureAddressMode.Border,
+						AddressV = TextureAddressMode.Border,
+		};
+		static int filterCounter;
 
 		public static float animationTWrap; // wraps every 3 seconds
 		public static float animationT; // approximate animation time in seconds
@@ -925,7 +935,7 @@ namespace COTG
 				cameraCLag += (cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
-				cameraLightC = (ShellPage.mousePositionW.ToV2());
+				cameraLightC = (ShellPage.mousePositionW);
 				//                cameraZoomLag += (cameraZoom
 
 				var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
@@ -944,8 +954,7 @@ namespace COTG
 				animationTWrap = ((uint)Environment.TickCount % 3000) * (1.0f / 3000); // wraps every 3 seconds, 0..1
 
 				device.Textures[7] = fontTexture;
-					
-					//				float accentAngle = animT * MathF.PI * 2;
+				//				float accentAngle = animT * MathF.PI * 2;
 				int tick = (Environment.TickCount >> 3) & 0xfffff;
 				var animTLoop = animationTWrap.Wave();
 				int cx0 = 0, cy0 = 0, cx1 = 0, cy1 = 0;
@@ -987,10 +996,10 @@ namespace COTG
 				var zoomT = cameraZoomLag / detailsZoomThreshold;
 				bulgeGain = (((MathF.Log(MathF.Max(1.0f, zoomT)))));
 				bulgeGain = bulgeGain.Min(0.4f);// Eval(bulgeGain);
-				
+
 
 				bulgeGain *= SettingsPage.planet * (1.0f - cityAlpha);
-				bulgeInputGain = 0.75f.Squared() / (AGame.halfSpan.X.Squared() + AGame.halfSpan.Y.Squared() );
+				bulgeInputGain = 0.75f.Squared() / (AGame.halfSpan.X.Squared() + AGame.halfSpan.Y.Squared());
 				// workd space coords
 				var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
 									  (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
@@ -1040,8 +1049,33 @@ namespace COTG
 				GraphicsDevice.BlendState = BlendState.AlphaBlend;
 				//	GraphicsDevice.DepthStencilState = DepthStencilState.None;
 
-				GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+	//			GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+	//			GraphicsDevice.SamplerStates[1] = SamplerState.LinearWrap;
+				if(fontFilter!=null)
+					GraphicsDevice.SamplerStates[7] = fontFilter;
 				GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+				if (WasKeyPressed(Keys.F))
+				{
+					++filterCounter;
+					fontFilter = new SamplerState()
+					{
+						Filter = ((filterCounter & 1)==0) ? TextureFilter.Linear : TextureFilter.Anisotropic,
+						
+						MipMapLevelOfDetailBias =-((((filterCounter/2)%4))*0.5f),
+						MaxMipLevel=8
+						,BorderColor = new Color(255,0,0,255),
+						MaxAnisotropy=2,
+
+					};
+					Log($"{fontFilter.Filter} {fontFilter.MipMapLevelOfDetailBias}");
+				}
+				//if (fontEffect._pixelShader != null)
+				//{
+				//	for (int i = 0; i < fontEffect._pixelShader.Samplers.Length; ++i)
+				//	{
+				//		fontEffect._pixelShader.Samplers[i].state = fontFilter;
+				//	}
+				//}
 
 				{
 					var viewport = GraphicsDevice.Viewport;
@@ -1275,19 +1309,22 @@ namespace COTG
 				}
 
 
-				// fade out background
-				//if (attacksVisible)
-				//{
-				//    ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
-				//    notFaded=false;
-				//}
+					// fade out background
+					//if (attacksVisible)
+					//{
+					//    ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+					//    notFaded=false;
+					//}
 
-				//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
-				if (worldChanges != null && !focusOnCity)
-					draw.AddQuad(Layer.effects - 1, worldChanges,
-						destP0, destP1,
-						srcP0, srcP1, 255.AlphaToWhite(), ConstantDepth, zCities);
-
+					//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
+					if (worldChanges != null && !focusOnCity)
+					{
+						var t2d = worldChanges.texture2d;
+						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
+						draw.AddQuad(Layer.tileCity-1, worldChanges,
+							destP0, destP1,
+							srcP0 * scale, srcP1* scale, new Color(128,128,128,0), ConstantDepth, zTerrain);
+					}
 				if (wantCity)
 				{
 					// this could use refactoring
@@ -1606,10 +1643,9 @@ namespace COTG
 							}
 							if (defenderVisible)
 							{
-								foreach (var _city in City.allCities)
+								foreach (var city in City.myCities)
 								{
 
-									var city = _city.Value;
 									Assert(city is City);
 									if (!city.incoming.Any())
 									{
@@ -1629,7 +1665,7 @@ namespace COTG
 						const int raidCullSlopSpace = 4;
 
 
-						foreach (var city in City.allCities.Values)
+						foreach (var city in City.friendCities)
 						{
 							var wc = city.cid.CidToWorld();
 							// Todo: clip thi
@@ -1663,29 +1699,32 @@ namespace COTG
 									DrawTextBox($"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
 
 							}
-							if (!IsCulledWC(wc))
-							{
-								if (!city.isSelected)
-									DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed);
-							}
-							if (MainPage.IsVisible())
-							{
-								if (IsCulledWC(wc, raidCullSlopSpace))
-									continue;
-								var c = wc.WToC();
-								var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-								var r = t.Ramp();
-								//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
-								foreach (var raid in city.raids)
+								if (city.isMine)
 								{
-									var ct = raid.target.CidToC();
-									(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-									DrawAction((float)(raid.time - serverNow).TotalSeconds,
-										raid.GetOneWayTripTimeMinutes(city) * 60.0f,
-										r, c0, c1, raidColor, troopImages[raid.troopType], false, null, 20);
+									if (!IsCulledWC(wc))
+									{
+										if (!city.isSelected)
+											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed);
+									}
+									if (MainPage.IsVisible())
+									{
+										if (IsCulledWC(wc, raidCullSlopSpace))
+											continue;
+										var c = wc.WToC();
+										var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+										var r = t.Ramp();
+										//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+										foreach (var raid in city.raids)
+										{
+											var ct = raid.target.CidToC();
+											(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
+											DrawAction((float)(raid.time - serverNow).TotalSeconds,
+												raid.GetOneWayTripTimeMinutes(city) * 60.0f,
+												r, c0, c1, raidColor, troopImages[raid.troopType], false, null, 20);
 
+										}
+									}
 								}
-							}
 						}
 					}
 
@@ -1918,7 +1957,9 @@ namespace COTG
 			if (constantDepth)
 			{
 				depth = ConstantDepth;
-				at = at.Project(zBias);
+				var atScale = at.Project(zBias);
+				at = atScale.c;
+				scale *= atScale.scale;
 				zBias = 0;
 			}
 
@@ -2001,7 +2042,7 @@ namespace COTG
 			var shadowColor = color.GetShadowColor();
 			if (army != null)
 			{
-				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionC);
+				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionW);
 				if (d2 < bestUnderMouseScore)
 				{
 					bestUnderMouseScore = d2;
@@ -2198,7 +2239,7 @@ namespace COTG
 		public static float bulgeNegativeRange = 0.875f;
 		public static float CToDepth(this Vector2 c)
 		{
-			float r2 = (c.LengthSquared() * bulgeInputGain);
+			float r2 = (c.LengthSquared() * bulgeInputGain).Min(1.0f);
 			//			return r.SLerp(AGame.bulgeGain, 0.0f);
 			//Assert(r2 <= 2.0f);
 			return (r2).Lerp(1, -bulgeNegativeRange )*AGame.bulgeGain;
@@ -2212,20 +2253,20 @@ namespace COTG
 			return new Vector2(c.X * scale, c.Y * scale);
 
 		}
-		public static Vector2 Project(this Vector2 c, float zBias)
+		public static (Vector2 c, float scale) Project(this Vector2 c, float zBias)
 		{
 			float scale = 1.0f / (AGame.cameraZ - (c.CToDepth() + zBias));
-			return new Vector2(c.X * scale, c.Y * scale);
+			return (new Vector2(c.X * scale, c.Y * scale),scale);
 
 		}
 
-		public static Vector3 InverseProject(this Vector2 c, float z)
+		public static Vector2 InverseProject(this Vector2 c, float z)
 		{
 			float scale = (AGame.cameraZ - z);
-			return new Vector3(c.X * scale, c.Y * scale, z);
+			return new Vector2(c.X * scale, c.Y * scale);
 		}
 
-		public static Vector3 InverseProject(this Vector2 c)
+		public static Vector2 InverseProject(this Vector2 c)
 		{
 			float zBias = AGame.zCities*0.5f;
 			float z = CToDepth(c) + zBias;

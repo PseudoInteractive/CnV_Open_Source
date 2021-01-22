@@ -802,10 +802,11 @@ function postppdt()
 			top: mainMapDiv.clientTop,
 			timeoffset: (ServerDate.getTime() - Date.now()),
 			agent: navigator.userAgent,
+			ppdt:ppdt
 		};
 
 		
-		let wrapper = { jsvars: creds, ppdt:ppdt }
+		let wrapper = { jsvars: creds }
 //		if (D6 != null)
 //			wrapper['citydata'] = D6;
 

@@ -36,28 +36,30 @@ namespace COTG.Game
 	//  public  void Ctor(int id);
 	//}
 	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-	public class Spot : IEquatable<Spot>, INotifyPropertyChanged
+	public abstract class Spot : IEquatable<Spot>, INotifyPropertyChanged
 	{
-		public static ConcurrentDictionary<int, Spot> allSpots = new ConcurrentDictionary<int, Spot>(); // keyed by cid
+		public static ConcurrentDictionary<int, City> allSpots = new ConcurrentDictionary<int, City>(); // keyed by cid
 		public static HashSet<int> selected = new HashSet<int>();
-		public static Spot[] defendersI = Array.Empty<Spot>();
-		public static Spot[] defendersO = Array.Empty<Spot>();
+		public static City[] defendersI = Array.Empty<City>();
+		public static City[] defendersO = Array.Empty<City>();
 
-		public static bool TryGet(int cid, out Spot spot) => allSpots.TryGetValue(cid, out spot);
+		public static bool TryGet(int cid, out City spot) => allSpots.TryGetValue(cid, out spot);
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		
+		public bool isFriend; // this is set if it is one of our cities or our ally cities that we can visit
 
-		internal static Spot GetFocus()
+		internal static City GetFocus()
 		{
 			return focus == 0 ? null : GetOrAdd(focus);
 		}
 
-		public static Spot invalid = new Spot() { _cityName = "?" };
-		public static Spot pending = new Spot() { _cityName = "pending" };
+		public static City invalid = new City() { _cityName = "?" };
+		public static City pending = new City() { _cityName = "pending" };
 
-		public static Spot[] emptySpotSource = new[] { pending };
+		public static City[] emptySpotSource = new[] { pending };
 
 		public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 		public string remarks { get; set; } = string.Empty; // only for city
@@ -67,7 +69,7 @@ namespace COTG.Game
 		{
 			return focus == cid;
 		}
-		public static Spot GetOrAdd(int cid, string cityName = null)
+		public static City GetOrAdd(int cid, string cityName = null)
 		{
 			if (cid <= 0)
 			{
@@ -75,15 +77,13 @@ namespace COTG.Game
 			}
 			if (!Spot.TryGet(cid, out var rv))
 			{
-				Assert(City.allCities.ContainsKey(cid) == false);
 				var worldC = cid.CidToWorld();
 				var info = World.GetInfo(worldC);
-
 				//    Assert(info.type == World.typeCity);
-				if (info.player == Player.myId)
-					rv = City.GetOrAddCity(cid);
-				else
-					rv = new Spot() { cid = cid, pid = info.player };
+				if (Player.myId == info.player)
+					City.CitiesChanged();
+
+				rv = new City() { cid = cid, pid = info.player };
 
 				//       Assert( info.player != 0);
 				rv.type = (byte)(info.type >> 28);
@@ -123,14 +123,14 @@ namespace COTG.Game
 
 		public int _tsHome; // cache for when tsHome is missing
 		public int _tsTotal;
-		public int tsRaid => (this is City city && city.troopsHome.Any() ? city.troopsHome.TSRaid() : _tsHome);
-		public int tsHome => (this is City city && city.troopsHome.Any() ? city.troopsHome.TS() : _tsHome);
-		public int tsDefHome => (this is City city && city.troopsHome.Any() ? city.troopsHome.TSDef() : _tsHome);
-		public int tsDefTotal => (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TSDef() : _tsTotal);
+		public int tsRaid => (troopsHome.Any() ? troopsHome.TSRaid() : _tsHome);
+		public int tsHome => (troopsHome.Any() ? troopsHome.TS() : _tsHome);
+		public int tsDefHome => (troopsHome.Any() ? troopsHome.TSDef() : _tsHome);
+		public int tsDefTotal => (troopsTotal.Any() ? troopsTotal.TSDef() : _tsTotal);
 
-		public int tsTotal => (this is City city && city.troopsTotal.Any() ? city.troopsTotal.TS() : _tsTotal);
-		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + ((this is City city) ? city.troopsHome.TSDef() : tsHome)); } }
-		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : (this is City city) ? city.troopsHome.TSOff() : 0; } }
+		public int tsTotal => (troopsTotal.Any() ? troopsTotal.TS() : _tsTotal);
+		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + (troopsHome.Any()?troopsHome.TSDef() :_tsHome)); } }
+		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : troopsHome.TSOff(); } }
 
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
 		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
@@ -399,10 +399,31 @@ namespace COTG.Game
 		}
 
 		public byte primaryTroopType => GetPrimaryTroopType();
-		public virtual byte GetPrimaryTroopType(bool onlyHomeTroops = false)
+		public byte GetPrimaryTroopType(bool onlyHomeTroops = false)
 		{
-			return (byte)classificationTT;
+			var troops= (onlyHomeTroops ? troopsHome : troopsTotal);
+			if(troops.IsNullOrEmpty())
+				return (byte)classificationTT;
+			
+			byte best = 0; // if no raiding troops we return guards 
+			var bestTS = 0;
+			foreach (var ttc in troops)
+			{
+				var type = ttc.type;
+				var ts = ttc.ts;
+				if (ts > bestTS)
+				{
+					bestTS = ts;
+					best = (byte)type;
+				}
+
+			}
+			if (best == 0)
+				return (byte)classificationTT;
+			else
+				return best;
 		}
+
 
 		public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
 		{
@@ -414,7 +435,7 @@ namespace COTG.Game
 
 
 				// If we are already selected and we get clicked, there will be no selection chagne to raids are not scanned automatically
-				//	var wantRaidingScan = (City.IsMine(cid) && MainPage.IsVisible());
+				//	var wantRaidingScan = (City.CanVisit(cid) && MainPage.IsVisible());
 				var wantRaidScan = isFocus;
 				//                var needCityData = 
 				var wantSelect = true;
@@ -434,7 +455,7 @@ namespace COTG.Game
 						wantRaidScan = false;
 						break;
 					case nameof(icon):
-						if (City.IsMine(cid))
+						if (City.CanVisit(cid))
 						{
 							var wasBuild = City.IsBuild(cid);
 							JSClient.ChangeCity(cid, false, true, false);
@@ -460,7 +481,7 @@ namespace COTG.Game
 							break;
 						}
 					case nameof(City.tsTotal):
-						if (City.IsMine(cid) && MainPage.IsVisible())
+						if (City.CanVisit(cid) && MainPage.IsVisible())
 						{
 							Raiding.UpdateTS(true, true);
 						}
@@ -468,14 +489,14 @@ namespace COTG.Game
 						break;
 					case nameof(tsHome):
 					case nameof(tsRaid):
-						if (City.IsMine(cid) && MainPage.IsVisible())
+						if (City.CanVisit(cid) && MainPage.IsVisible())
 						{
 							Raiding.UpdateTS(true, true);
 						}
 						wantRaidScan = false;
 						break;
 					case nameof(City.raidReturn):
-						if (City.IsMine(cid) && MainPage.IsVisible())
+						if (City.CanVisit(cid) && MainPage.IsVisible())
 						{
 							Raiding.ReturnFast(cid, true);
 						}
@@ -488,7 +509,7 @@ namespace COTG.Game
 
 						return;
 					case nameof(City.raidCarry):
-						if (City.IsMine(cid) && MainPage.IsVisible())
+						if (City.CanVisit(cid) && MainPage.IsVisible())
 						{
 							Raiding.ReturnSlow(cid, true);
 						}
@@ -553,7 +574,7 @@ namespace COTG.Game
 		{
 			mod.UpdateKeyModifiers();
 
-			if (City.IsMine(cid) && !mod.IsShiftOrControl())
+			if (City.CanVisit(cid) && !mod.IsShiftOrControl())
 			{
 				if (City.IsBuild(cid))
 				{
@@ -722,7 +743,8 @@ namespace COTG.Game
 
 		// Incoming attacks
 		public Army[] incoming { get; set; } = Army.empty;
-
+		public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
+		public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
 		public int incomingAttacks
 		{
 			get
@@ -831,7 +853,24 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public virtual string troopsString => classificationString;
+		public string troopsString
+		{
+			get
+			{
+				if(troopsTotal.IsNullOrEmpty())
+					return classificationString;
+
+				string rv = string.Empty;
+				string sep = string.Empty;
+				foreach (var ttc in troopsTotal)
+				{
+					rv += $"{sep}{troopsHome.Count(ttc.type):N0}/{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
+					sep = ", ";
+				}
+				return rv;
+			}
+		}
+		
 		public bool underSiege
 		{
 			get
@@ -1100,6 +1139,40 @@ namespace COTG.Game
 			if (bringIntoWorldView)
 				cid.BringCidIntoWorldView(lazyMove);
 		}
+		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
+
+		public bool isBuild => cid == build;
+		public static bool IsBuild(int cid)
+		{
+			return build == cid;
+		}
+		public static (City city, bool changed) StBuild(int cid, bool scrollIntoView, bool select = true)
+		{
+			var city = City.GetOrAddCity(cid);
+			return (city, city.SetBuild(scrollIntoView, select));
+		}
+		public bool SetBuild(bool scrollIntoView, bool select = true)
+		{
+			var changed = cid != build;
+			City.build = cid;
+			if (changed)
+			{
+				City.CitySwitched();
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					if (ShellPage.instance.cityBox.SelectedItem != this)
+						ShellPage.instance.cityBox.SelectedItem = this;
+				});
+			}
+			SetFocus(scrollIntoView, select);
+			return changed;
+			//if (!noRaidScan)
+			// {
+			//      if (changed)
+			//          ScanDungeons.Post(cid, getCityData);
+			//  }
+		}
+
 		public void ReturnSlowClick()
 		{
 			Raiding.ReturnSlow(cid, true);
@@ -1232,6 +1305,8 @@ namespace COTG.Game
 			App.CopyTextToClipboard(str);
 			Note.Show(str, false, false, 20 * 1000);
 		}
+		public bool canVisit => isFriend;
+		
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
 			var spot = _spot as Spot;
@@ -1243,8 +1318,8 @@ namespace COTG.Game
 					break;
 				case VirtualKey.Left:
 					{
-						if (spot is City city)
-							city.SetBuild(false);
+						if (spot.canVisit)
+							spot.SetBuild(false);
 						else
 							spot.SetFocus(false);
 						return true;
@@ -1253,189 +1328,14 @@ namespace COTG.Game
 					return true;
 				case VirtualKey.Space:
 					{
-						if (spot is City city)
-							city.ToggleDungeons(MainPage.CityGrid);
+						if (spot.canVisit)
+							spot.ToggleDungeons(MainPage.CityGrid);
 						else
 							spot.SetFocus(false);
 						return true;
 						break;
 					}
-				case VirtualKey.Sleep:
-					break;
-				case VirtualKey.NumberPad0:
-					break;
-				case VirtualKey.NumberPad1:
-					break;
-				case VirtualKey.NumberPad2:
-					break;
-				case VirtualKey.NumberPad3:
-					break;
-				case VirtualKey.NumberPad4:
-					break;
-				case VirtualKey.NumberPad5:
-					break;
-				case VirtualKey.NumberPad6:
-					break;
-				case VirtualKey.NumberPad7:
-					break;
-				case VirtualKey.NumberPad8:
-					break;
-				case VirtualKey.NumberPad9:
-					break;
-				case VirtualKey.Multiply:
-					break;
-				case VirtualKey.Add:
-					break;
-				case VirtualKey.Separator:
-					break;
-				case VirtualKey.Subtract:
-					break;
-				case VirtualKey.Decimal:
-					break;
-				case VirtualKey.Divide:
-					break;
-				case VirtualKey.F1:
-					break;
-				case VirtualKey.F2:
-					break;
-				case VirtualKey.F3:
-					break;
-				case VirtualKey.F4:
-					break;
-				case VirtualKey.F5:
-					break;
-				case VirtualKey.F6:
-					break;
-				case VirtualKey.F7:
-					break;
-				case VirtualKey.F8:
-					break;
-				case VirtualKey.F9:
-					break;
-				case VirtualKey.F10:
-					break;
-				case VirtualKey.F11:
-					break;
-				case VirtualKey.F12:
-					break;
-				case VirtualKey.F13:
-					break;
-				case VirtualKey.F14:
-					break;
-				case VirtualKey.F15:
-					break;
-				case VirtualKey.F16:
-					break;
-				case VirtualKey.F17:
-					break;
-				case VirtualKey.F18:
-					break;
-				case VirtualKey.F19:
-					break;
-				case VirtualKey.F20:
-					break;
-				case VirtualKey.F21:
-					break;
-				case VirtualKey.F22:
-					break;
-				case VirtualKey.F23:
-					break;
-				case VirtualKey.F24:
-					break;
-				case VirtualKey.NavigationView:
-					break;
-				case VirtualKey.NavigationMenu:
-					break;
-				case VirtualKey.NavigationUp:
-					break;
-				case VirtualKey.NavigationDown:
-					break;
-				case VirtualKey.NavigationLeft:
-					break;
-				case VirtualKey.NavigationRight:
-					break;
-				case VirtualKey.NavigationAccept:
-					break;
-				case VirtualKey.NavigationCancel:
-					break;
-				case VirtualKey.NumberKeyLock:
-					break;
-				case VirtualKey.Scroll:
-					break;
-				case VirtualKey.LeftShift:
-					break;
-				case VirtualKey.RightShift:
-					break;
-				case VirtualKey.LeftControl:
-					break;
-				case VirtualKey.RightControl:
-					break;
-				case VirtualKey.LeftMenu:
-					break;
-				case VirtualKey.RightMenu:
-					break;
-				case VirtualKey.GoBack:
-					break;
-				case VirtualKey.GoForward:
-					break;
-				case VirtualKey.Refresh:
-					break;
-				case VirtualKey.Stop:
-					break;
-				case VirtualKey.Search:
-					break;
-				case VirtualKey.Favorites:
-					break;
-				case VirtualKey.GoHome:
-					break;
-				case VirtualKey.GamepadA:
-					break;
-				case VirtualKey.GamepadB:
-					break;
-				case VirtualKey.GamepadX:
-					break;
-				case VirtualKey.GamepadY:
-					break;
-				case VirtualKey.GamepadRightShoulder:
-					break;
-				case VirtualKey.GamepadLeftShoulder:
-					break;
-				case VirtualKey.GamepadLeftTrigger:
-					break;
-				case VirtualKey.GamepadRightTrigger:
-					break;
-				case VirtualKey.GamepadDPadUp:
-					break;
-				case VirtualKey.GamepadDPadDown:
-					break;
-				case VirtualKey.GamepadDPadLeft:
-					break;
-				case VirtualKey.GamepadDPadRight:
-					break;
-				case VirtualKey.GamepadMenu:
-					break;
-				case VirtualKey.GamepadView:
-					break;
-				case VirtualKey.GamepadLeftThumbstickButton:
-					break;
-				case VirtualKey.GamepadRightThumbstickButton:
-					break;
-				case VirtualKey.GamepadLeftThumbstickUp:
-					break;
-				case VirtualKey.GamepadLeftThumbstickDown:
-					break;
-				case VirtualKey.GamepadLeftThumbstickRight:
-					break;
-				case VirtualKey.GamepadLeftThumbstickLeft:
-					break;
-				case VirtualKey.GamepadRightThumbstickUp:
-					break;
-				case VirtualKey.GamepadRightThumbstickDown:
-					break;
-				case VirtualKey.GamepadRightThumbstickRight:
-					break;
-				case VirtualKey.GamepadRightThumbstickLeft:
-					break;
+				
 				default:
 					break;
 			}
@@ -1707,8 +1607,7 @@ namespace COTG.Game
 			//   await Task.Delay(200);
 			App.DispatchOnUIThreadSneaky(() =>
 			{
-				if (this is City)
-				{
+				
 					if (scrollIntoView && MainPage.IsVisible())
 					{
 						/// MainPage.CityGrid.SelectedItem = this;
@@ -1727,7 +1626,7 @@ namespace COTG.Game
 					}
 					// todo: donations page and boss hunting
 					
-				}
+				
 				// ShellPage.instance.coords.Text = cid.CidToString();
 				//            });
 			});

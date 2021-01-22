@@ -37,8 +37,12 @@ namespace COTG.Services
             //  all.Add(this);
         }
 
+		public virtual int pid
+		{
+			get => -1;
+		}
 
-        public virtual async Task Accept(HttpResponseMessage resp)
+		public virtual async Task Accept(HttpResponseMessage resp)
         {
 
             try
@@ -162,7 +166,7 @@ namespace COTG.Services
 
         async public Task Post()
         {
-            while( JSClient.jsVars.token == null)
+            while( JSClient.jsVars == null)
             {
                 await Task.Delay(400);
             }
@@ -180,7 +184,7 @@ namespace COTG.Services
         }
 
         public const string nullPost = "a=0";
-        async public Task<HttpResponseMessage> Send(string postContent= nullPost)
+        async public Task<HttpResponseMessage> Send(string postContent= nullPost, int pid = -1)
         {
             HttpClient client = null;
 			await JSClient.clientPoolSema.WaitAsync();
@@ -203,17 +207,16 @@ namespace COTG.Services
                     req.Content = new HttpStringContent(postContent,
                                 Windows.Storage.Streams.UnicodeEncoding.Utf8,
                                 "application/x-www-form-urlencoded");
-                    //req.TransportInformation.
+					//req.TransportInformation.
+                    req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
+					
 
-                    req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.jsVars.token);
+					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
+					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
+					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 
-                    //                req.Headers.Append("Sec-Fetch-Site", "same-origin");
-                    //    req.Headers.Append("Sec-Fetch-Mode", "cors");
-                    //    req.Headers.Append("Sec-Fetch-Dest", "empty");
-
-
-                    resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
+					resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
                     //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
                     //     Log($"req: {resp.RequestMessage.ToString()}");
                     //   if (resp.ExtendedError != null)
@@ -283,7 +286,9 @@ namespace COTG.Services
 
     public class GetWorldInfo : RestAPI
     {
-        public GetWorldInfo() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
+		public override int pid => Player.myId;
+
+		public GetWorldInfo() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
         {
         }
 
@@ -318,17 +323,18 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
-        int playerId;
+        int _pid;
+		public override int pid => _pid;
         Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action, int _playerId) : base("includes/gC.php")
+        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php")
         {
             cid = _cid;
             action = _action;
-            playerId = _playerId;
+            _pid = World.GetInfo( _cid.CidToWorld()).player;
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{playerId}ccJx1e2");
+            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{_pid}ccJx1e2");
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -346,7 +352,7 @@ namespace COTG.Services
         public static Task Post(int _cid, Action<JsonElement, City> _action = null)
         {
             Assert(_cid > 1);
-            return (new GetCity(_cid, _action, Player.myId)).Post();
+            return (new GetCity(_cid, _action)).Post();
 
         }
      
@@ -367,7 +373,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(json, $"XTR977sW{Player.myId}sss2x2");
+            var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
             var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -384,7 +390,7 @@ namespace COTG.Services
         int cid;
 		bool autoRaid;
         //                       Xs4b22320360lme55s
-        public static string secret;// = "Xs4b2261f55dlme55s";
+        public static string secret=>JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
         public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php")
         {
             cid = _cid;
@@ -435,7 +441,7 @@ namespace COTG.Services
 
                     var jse = json.RootElement;
                     jse = jse[0];
-                    var city = City.allCities[cid];
+                    City.TryGet(cid, out var city);
                     await Dungeon.ShowDungeonList(city, jse,autoRaid);
                 }
             }
@@ -463,7 +469,7 @@ namespace COTG.Services
             foreach (var item in json.RootElement.EnumerateArray())
             {
                 var cid = item.GetAsInt("id");
-                if (!City.allCities.TryGetValue(cid, out var v))
+                if (!City.TryGet(cid, out var v))
                     continue;
                 List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
                 List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
@@ -668,7 +674,7 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument jsd)
         {
             // reset all to start
-            foreach (var city in City.allCities.Values)
+            foreach (var city in City.myCities)
             {
                 city.raids = Array.Empty<Raid>();
                 city.raidCarry = 0;
@@ -872,7 +878,7 @@ namespace COTG.Services
                 sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
             }
             var post = JsonSerializer.Serialize(sr);
-            var secret = $"XTR977sW{Player.myId}sss2x2";
+            var secret = $"XTR977sW{World.CidToPlayer(cid)}sss2x2";
             var city = City.GetOrAddCity(cid);
             for(var i = 0; ; )
             {

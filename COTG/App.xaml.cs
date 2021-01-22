@@ -628,19 +628,20 @@ namespace COTG
 		}
 
 
+		public static VirtualKeyModifiers canvasKeyModifiers;
 		// HTML control messs wit this
-		public static VirtualKeyModifiers keyModifiers
-		{
-			get
-			{
-				var rv = VirtualKeyModifiers.None;
-				if (IsKeyPressedShift())
-					rv |= VirtualKeyModifiers.Shift;
-				if (IsKeyPressedControl())
-					rv |= VirtualKeyModifiers.Control;
-				return rv;
-			}
-		}
+		public static VirtualKeyModifiers keyModifiers => canvasKeyModifiers;
+		//{
+		//	get
+		//	{
+		//		var rv = VirtualKeyModifiers.None;
+		//		if (IsKeyPressedShift())
+		//			rv |= VirtualKeyModifiers.Shift;
+		//		if (IsKeyPressedControl())
+		//			rv |= VirtualKeyModifiers.Control;
+		//		return rv;
+		//	}
+		//}
 	}
 
 

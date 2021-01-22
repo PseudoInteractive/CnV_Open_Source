@@ -26,6 +26,10 @@ namespace COTG
 			return Vector2.Dot(v0, v1);
 		}
 
+		public static Vector2 ToVector(this (float x, float y) me) => new Vector2(me.x, me.y);
+		public static (float x, float y) ToTuple(this Vector2 me) => (me.X, me.Y);
+		public static Vector3 ToVector(this (float x, float y, float z) me) => new Vector3(me.x, me.y, me.z);
+
 
 		public static int RoundToInt(this float f)
 		{
@@ -282,12 +286,13 @@ namespace COTG
         }
         public static uint ToCompactCid(this (int x,int y) c)
         {
-            return (uint)c.x | (uint)c.y * 1024u;
+            return (uint)c.x | (uint)c.y * World.worldDim;
         }
         public static (int x,int y) FromCompactCid(this uint c)
         {
+			var y = c / World.worldDim;
 
-            return ( (int)(c&1023u),(int)(c/1024u) );
+			return ( (int)(c -y* World.worldDim),(int) y );
         }
         static public bool IsNullOrEmpty<T>(this T[] a)
         {

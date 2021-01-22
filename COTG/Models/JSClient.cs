@@ -40,6 +40,7 @@ using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Imaging;
+using System.Text.Json.Serialization;
 
 namespace COTG
 {
@@ -113,36 +114,61 @@ namespace COTG
 		public static string httpsHostString;
 
 		// IHttpContent content;
-		public struct JSVars
+		public  class JSVars
 		{
-			public string token { get; set; }
-			public int ppss { get; set; }
-			public string s { get; set; }
-			public string cookie { get; set; }
-			public DateTimeOffset launchTime;
-			public long gameMSAtStart;
-			public TimeSpan gameTOffset;
+			[JsonInclude]
+			public int pid;
+			[JsonInclude]
+			public string pn; // redundant player name
+			[JsonInclude]
+			public  string token;
+	//	Do we need this	[JsonInclude]
+	//		public  string s ;
+			[JsonInclude]
+			public string raidSecret;
+	//		[JsonInclude]
+//			public  string cookie; // not used
+			
+			[JsonInclude]
+			public string ppdt;
 
-			public override string ToString()
-			{
-				return $"{{{nameof(token)}={token}, {nameof(ppss)}={ppss.ToString()},   {nameof(s)}={s}, {nameof(cookie)}={cookie}}}";
-			}
-		};
+			public int[] allowedAlliances;
+			public int[] allowedPlayers;
+			public int[] deniedPlayers;
 
-
+		
+			
+		}
+		public static JSVars[] jsVarsByPlayer = Array.Empty<JSVars>();
 		public static JSVars jsVars;
+		public static JSVars baseVars;
+		public static JSVars PlayerVars(int pid)
+		{
+			if (pid == -1)
+				return jsVars;
+			for(int i=0;i<jsVarsByPlayer.Length;++i)
+			{
+				var p = jsVarsByPlayer[i];
+				if (p.pid == pid)
+					return  p;
+			}
+			return jsVars;
+		}
+		public static string PlayerToken(int pid) => PlayerVars(pid).token;
+
+		public static int ppss;
 
 		public static long GameTimeMs()
 		{
-			return (long)((DateTimeOffset.UtcNow - jsVars.launchTime).TotalMilliseconds) + jsVars.gameMSAtStart;
+			return (long)((DateTimeOffset.UtcNow - launchTime).TotalMilliseconds) + gameMSAtStart;
 		}
 		public static DateTimeOffset ServerTime()
 		{
-			return (DateTimeOffset.UtcNow + jsVars.gameTOffset);
+			return (DateTimeOffset.UtcNow + gameTOffset);
 		}
 		public static DateTimeOffset ToServerTime(DateTime time)
 		{
-			return (time.ToUniversalTime() + jsVars.gameTOffset);
+			return (time.ToUniversalTime() + gameTOffset);
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JSClient"/> class.
@@ -151,7 +177,44 @@ namespace COTG
 		{
 		}
 
+		public static void AddPlayer(string token)
+		{
+			view.InvokeScriptAsync("setPlayerGlobals", new[] { token });
+		}
+		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid, string ppdt)
+		{
+			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt,raidSecret=raid }; // todo: need raidSecret
+			//
+			// add if necessary
+			//
+			bool present = false;
+			for(int i=0;i< jsVarsByPlayer.Length;++i)
+			{
+				if(jsVarsByPlayer[i].pid == pid )
+				{
+					jsVarsByPlayer[i] = jsv;
+					present = true;
+				}
+			}
+			if (!present)
+			{
+				jsVarsByPlayer = jsVarsByPlayer.ArrayAppend(jsv);
+				Player.myIds.Add(pid);
+			}
 
+			if(isMe)
+			{
+				baseVars = jsv;
+				jsVars = jsv;
+			}
+			else if(setCurrent)
+			{
+				Player.myName = pn;
+				Player.myId = pid;
+
+			}
+			
+		}
 
 
 		internal static WebView Initialize(Grid panel)
@@ -514,7 +577,7 @@ namespace COTG
 			try
 			{
 
-				if (City.IsMine(cityId))
+				if (City.CanVisit(cityId))
 				{
 					var city = City.StBuild(cityId, scrollIntoUI, select);
 					if (!lazyMove)
@@ -811,7 +874,8 @@ namespace COTG
 		static private int[] lastCln = null;
 		public static async void UpdatePPDT(JsonElement jse)
 		{
-
+			// Todo:  should we update out local PPDT to the server?
+			
 			int clChanged = 0;
 			// City lists
 			try
@@ -970,6 +1034,7 @@ namespace COTG
 
 
 					var city = City.GetOrAddCity(cid);
+					city.isFriend = true;
 					var name = jsCity.GetProperty("2").GetString();
 					int i = name.LastIndexOf('-');
 					if (i != -1)
@@ -995,7 +1060,9 @@ namespace COTG
 
 				}
 				if (!ppdtInitialized)
+				{
 					Raiding.UpdateTS(true, true);
+				}
 				ppdtInitialized = true;
 				//    Log(City.all.ToString());
 				//   Log(City.all.Count());
@@ -1108,7 +1175,7 @@ namespace COTG
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
 							httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-							httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", jsVars.ppss.ToString());
+							httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", ppss.ToString());
 
 							httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 							//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
@@ -1146,6 +1213,8 @@ namespace COTG
 		}
 
 		static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
+		private static long gameMSAtStart;
+		private static DateTimeOffset launchTime;
 
 		public static BitmapImage GetImage(string dir, string name)
 		{
@@ -1235,15 +1304,15 @@ namespace COTG
 						   case "jsvars":
 							   {
 								   var jso = jsp.Value;
-								   jsVars.s = jso.GetString("s");
-								   jsVars.token = jso.GetString("token");
-								   ScanDungeons.secret = jso.GetString("raid");
+
+								   var s = jso.GetString("s");
+								   var token = jso.GetString("token");
+								   var raidSecret = jso.GetString("raid");
 								   var agent = jso.GetString("agent");
-								   jsVars.cookie = jso.GetString("cookie");
-								   Log(jsVars.cookie);
-								   Log(jsVars.token);
-								   Log(jsVars.s);
-								   Log(jsVars.ToString());
+//								   jsVars.cookie = jso.GetString("cookie");
+								//   Log(jsVars.cookie);
+								   Log(token);
+								   Log(s);
 								   for (int i = 0; i < clientCount; ++i)
 								   {
 									   await clientPoolSema.WaitAsync();
@@ -1259,7 +1328,7 @@ namespace COTG
 
 												   httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
 												   if (subId == 0)
-													   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + jsVars.s);
+													   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
 											   }
 										   }
 									   }
@@ -1276,25 +1345,24 @@ namespace COTG
 
 								   var timeOffset = jso.GetAsInt64("timeoffset");
 								   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
-								   jsVars.gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
+								   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
 								   var str = timeOffsetRounded >= 0 ? " +" : " ";
-								   str += $"{jsVars.gameTOffset.Hours:D2}:{jsVars.gameTOffset.Minutes:D2}";
+								   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 								   Helpers.JSON.timeZoneString = str;
 								   //   Log(JSONHelper.timeZoneString);
-								   Log($"TOffset {jsVars.gameTOffset}");
+								   Log($"TOffset {gameTOffset}");
 								   Log(ServerTime().ToString());
-								   jsVars.ppss = jso.GetAsInt("ppss");
+								   ppss = jso.GetAsInt("ppss");
 								   Player.myName = jso.GetString("player");
-								   Player.myId = jso.GetAsInt("pid");
-
+								   Player.myId = jso.GetAsInt("pid"); ;
 								   var cid = jso.GetAsInt("cid");
 								   City.build = City.focus = cid;
 								   NavStack.Push(cid);
 								   App.DispatchOnUIThreadLow(() => ShellPage.instance.coords.Text = cid.CidToString());
 								   AGame.cameraC = cid.CidToWorldV();
 								   //Note.L("cid=" + cid.CidToString());
-								   jsVars.gameMSAtStart = jso.GetAsInt64("time");
-								   jsVars.launchTime = DateTimeOffset.UtcNow;
+								   gameMSAtStart = jso.GetAsInt64("time");
+								   launchTime = DateTimeOffset.UtcNow;
 								   //    Log(jsVars.ToString());
 
 								   //		AGame.clientTL.X = jso.GetAsFloat("left");
@@ -1305,7 +1373,12 @@ namespace COTG
 								   //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
 								   //   UpdatePPDT(jso.GetProperty("ppdt"));
+								   var ppdt = jso.GetProperty("ppdt");
+								    // todo: utf
+								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, ppdt.ToString());
 
+
+								   UpdatePPDT(ppdt);
 
 								   break;
 							   }
@@ -1619,6 +1692,19 @@ namespace COTG
 								   App.CopyTextToClipboard(jsp.Value.GetAsString());
 								   break;
 							   }
+						   case "setglobals":
+							   {
+								   var jso = jsp.Value;
+								   var raidSecret = jso.GetString("secret");
+								   var pid = jso.GetInt("pid");
+								   var pn = jso.GetString("pn");
+								   var ppdt = jso.GetProperty("ppdt");
+								   var token = jso.GetString("token");
+								   AddPlayer(false, true, pid, pn, token, raidSecret, ppdt.ToString());
+								   City.CitiesChanged();
+								   UpdatePPDT(ppdt);
+								   break;
+							   }
 						   case "c":
 							   {
 								   var jso = jsp.Value;
@@ -1626,7 +1712,7 @@ namespace COTG
 								   //City.StBuild(cid);
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
-								   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
+								//   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
 								   var pop = jso.GetProperty("pop");
 								   if( pop.ValueKind != JsonValueKind.Null )
 								   {
@@ -1746,6 +1832,8 @@ namespace COTG
 		{
 			Exception("Unsafe");
 		}
+
+		public static TimeSpan gameTOffset;
 
 		//        public static async void TestGet()
 		//        {

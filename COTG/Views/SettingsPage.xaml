@@ -62,6 +62,7 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
+				<TextBox Header="Visit" Text="{x:Bind visitToken}" />
 
 
 

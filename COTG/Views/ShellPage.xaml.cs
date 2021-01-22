@@ -218,45 +218,9 @@ namespace COTG.Views
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 
-			CityBuild.instance = new CityBuild();
+			
 
-			{
-
-				var qb = new RadialMenuItem() { Header = "QuickBuild" };
-				buildMenu.Items.Add(new BuildMenuAction("Select", CityBuild.Action.none, "City/decal_select_building.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Move", CityBuild.Action.move, "City/decal_move_building.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Demo", CityBuild.Action.destroy, "City/decal_building_invalid.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Layout", CityBuild.Action.layout, "City/decal_building_valid_multi.png"));
-				// Mru
-				buildMenu.Items.Add(new BuildMenuItem(446));
-				buildMenu.Items.Add(new BuildMenuItem(464));
-				buildMenu.Items.Add(new BuildMenuItem(449));
-				buildMenu.Items.Add(new BuildMenuItem(500));
-				buildMenu.Items.Add(qb);
-				// quick build
-				qb.ChildItems.Add(new BuildMenuGroup("Misc", 446, 464, 449, 481, 467, 488, 479) );
-				qb.ChildItems.Add(new BuildMenuGroup("Military", 445,500, 483, 466, 491, 482, 502,504));
-				qb.ChildItems.Add(new BuildMenuGroup("Posts", 547, 539, 543, 551, 555));
-				qb.ChildItems.Add(new BuildMenuGroup("Barricade",  559, 563, 567, 571));
-				qb.ChildItems.Add(new BuildMenuGroup("Res", 447, 448,  460, 461, 462, 463, 465, 477));
-
-				buildMenu.isOpenChanged = async (open) =>
-					{
-						if (!open)
-						{
-							await Task.Delay(350).ConfigureAwait(true);
-							buildMenuCanvas.Visibility = Visibility.Collapsed;
-							CityBuild.menuOpen = false;
-						}
-						else
-						{
-							buildMenuCanvas.Visibility = Visibility.Visible;
-							CityBuild.menuOpen = true;
-						}
-					};
-			}
-
-			grid.Children.Add(CityBuild.instance);
+			grid.Children.Add(CityBuild.Initialize(buildMenu,buildMenuCanvas));
 		//	Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
 			Grid.SetRowSpan(CityBuild.instance, 5);
@@ -782,7 +746,7 @@ namespace COTG.Views
 				foreach (var bdi in build.buildings)
 				{
 					var id = bdi.id;
-					if (id == 0 || bdi.bl == 0)
+					if (id == 0 || !bdi.isBuilding )
 						continue;
 					var bd = bdi.def;
 					ProcessBuilding(bd);
@@ -981,17 +945,23 @@ namespace COTG.Views
 		{
 			ShowTipRefresh();
 		}
+		public static SettingsPage instance;
 
 		private void ShowSettings(object sender, RoutedEventArgs e)
 		{
 			App.DispatchOnUIThread(async () =>
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Show);
-
+				if (instance == null)
+					instance = new SettingsPage();
 				//shown = true;
-				var dialog = new SettingsPage() { FullSizeDesired = false };
-				var result = await dialog.ShowAsync2();
-				SettingsPage.SaveAll();
+				var result = await instance.ShowAsync2();
+				if(result.visitToken)
+				{
+					JSClient.AddPlayer(token);
+				}
+	
+					SettingsPage.SaveAll();
 				//   dialog.auto
 			});
 		}
@@ -1241,18 +1211,5 @@ namespace COTG.Views
 
 		}
 
-		private void buildMenu_LostFocus(object sender, RoutedEventArgs e)
-		{
-		//	var menu = sender as RadRadialMenu;
-		//	menu.IsOpen = false;
-
-		}
-
-		private void buildMenuCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
-		{
-			if(!e.Handled && e.OriginalSource == buildMenuCanvas)
-				buildMenu.IsOpen = false;
-
-		}
 	}
 }

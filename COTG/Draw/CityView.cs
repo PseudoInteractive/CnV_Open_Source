@@ -131,7 +131,7 @@ namespace COTG.Draw
 						{
 							(var bid,var bd) = build.BFromOverlay((cx, cy));
 							var current =  GetBuilding((cx, cy));
-							var currentBid = current.bl > 0 ? current.def.bid : 0;
+							var currentBid = current.isBuilding ? current.def.bid : 0;
 							if (currentBid == bid)
 								continue;
 							if(bid==0)
@@ -213,18 +213,19 @@ namespace COTG.Draw
 					var sel = CityBuild.quickBuildId;
 					if (sel != 0)
 					{
-						var iconId = BidToAtlas(sel);
-						var u0 = iconId.x* duDt;
-						var v0 = iconId.y* dvDt;
-						var cs = CityPointToQuad(hovered.x, hovered.y);
-
-						var off = (animationT * 0.261f);
-						var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-						draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+						DrawBuilding(hovered,iAlpha, sel, animationT * 0.247f);
 
 					}
 				}
+				else if (CityBuild.action == CityBuild.Action.move && bd.id == 0 && selected.IsValid())
+				{
+
+					
 				
+						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.249f);
+
+					
+				}
 			}
 			var processed = new HashSet<int>();
 			for (var it = buildQueue.iterate; it.Next();)
@@ -245,16 +246,12 @@ namespace COTG.Draw
 				else if (r.slvl == 0)
 				{
 					// new building
-
-					var iconId = BidToAtlas(r.brep);
-					var u0 = iconId.x * duDt;
-					var v0 = iconId.y * dvDt;
-					var csb = CityPointToQuad(cc.x, cc.y);
-					draw.AddQuad(Layer.tileCity, buildingAtlas, csb.c0, csb.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+					DrawBuilding(cc, iAlpha, r.brep, off);
+					
 					var off2 = off * 1.07f;
-					var cScale2 = new Vector2(off2.Wave().Lerp(0.8f, 1.1f), off2.WaveC().Lerp(0.8f, 1.1f));
+					var cScale2 = new Vector2(off2.Wave().Lerp(0.8f, 1.1f), off2.WaveC().Lerp(0.8f, 1.0f));
 					// now the overlay
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha*3/4, iAlpha*3/4, iAlpha*3/4, iAlpha*3 / 8).Scale(cScale2), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha/2).Scale(cScale2), PlanetDepth, zHover);
 				}
 				else if (r.slvl < r.elvl)
 				{
@@ -269,6 +266,20 @@ namespace COTG.Draw
 				}
 			}
 		}
+
+		private static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue)
+		{
+			const float zBase = 0.0f;
+			var iconId = BidToAtlas(bid);
+			var u0 = iconId.x * duDt;
+			var v0 = iconId.y * dvDt;
+			var cs = CityPointToQuad(cc.x, cc.y);
+
+			var off = randomValue;
+			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+		}
+
 		public static void LoadContent()
 		{
 			LoadTheme();

@@ -64,7 +64,7 @@ namespace COTG.JSON
 
 
 
-			using (var defenders = new ConcurrentHashSet<Spot>())
+			using (var defenders = new ConcurrentHashSet<City>())
 			{
 
 				//				defenders.Add(Spot.pending);
@@ -621,7 +621,7 @@ namespace COTG.JSON
 
 											};
 											parts[part].Add(report);
-											await Cosmos.AddBattleRecord(report);
+								//			await Cosmos.AddBattleRecord(report);
 
 
 										}
@@ -765,7 +765,7 @@ namespace COTG.JSON
 																	};
 																	parts[part].Add(rep);
 
-																	await Cosmos.AddBattleRecord(rep);
+															//		await Cosmos.AddBattleRecord(rep);
 																}
 																else
 																{

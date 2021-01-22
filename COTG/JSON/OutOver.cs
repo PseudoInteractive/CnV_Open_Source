@@ -62,7 +62,7 @@ namespace COTG.JSON
             var reportsOutgoing = new List<Army>();
             try
             {
-                using (var defenders = new ConcurrentHashSet<Spot>())
+                using (var defenders = new ConcurrentHashSet<City>())
                 {
                     var task0 = Task.Run(async () =>
                     {
@@ -264,7 +264,7 @@ namespace COTG.JSON
                                                     report.sumDef = new[] { new TroopTypeCount(ttGuard, dts) };
                                                 }
                                                 parts[part].Add(report);
-                                                await Cosmos.AddBattleRecord(report);
+                                   //             await Cosmos.AddBattleRecord(report);
 
                                             }
                                             else
@@ -366,7 +366,7 @@ namespace COTG.JSON
 
                                                                 };
                                                                     parts[part].Add(rep);
-                                                                    await Cosmos.AddBattleRecord(rep);
+                                                                //    await Cosmos.AddBattleRecord(rep);
 
                                                                 }
                                                                 else

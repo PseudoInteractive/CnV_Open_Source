@@ -495,7 +495,7 @@ namespace COTG.Views
             await RaidOverview.Send();
             await RestAPI.troopsOverview.Post();
             var ret = new List<int>();
-            foreach(var c in City.allCities.Values)
+            foreach(var c in City.myCities)
             {
                 if(c.raidCarry != 0 && (c.raidCarry <= 90 || c.tsRaid >= c.tsTotal/4) )
                 {

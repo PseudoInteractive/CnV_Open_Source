@@ -139,6 +139,8 @@ namespace COTG.Views
 			get => CityList.Find(hubCitylistName);
 			set => hubCitylistName = value.name;
 		}
+
+		public string visitToken;
 		public static async void BoostVolume()
 		{
 			if (volume == 1 || !soundOn)
@@ -494,7 +496,7 @@ namespace COTG.Views
 						   }
 					   }
 				   }
-				   foreach (var city in City.allCities.Values)
+				   foreach (var city in City.myCities)
 				   {
 					   COTG.Debug.Assert(city is City);
 
@@ -664,17 +666,17 @@ namespace COTG.Views
 
 
 		}
-		public async void FixupReserve(object sender, RoutedEventArgs e)
-		{
-			var counter = 0;
-			foreach (var a in City.allCities)
-			{
-				++counter;
-				COTG.Debug.Log(counter);
-				await CitySettings.FixupReserve(a.Value.cid);
-			}
-			Note.Show("Fixup reserve cmoplete");
-		}
+		//public async void FixupReserve(object sender, RoutedEventArgs e)
+		//{
+		//	var counter = 0;
+		//	foreach (var a in City.myCities)
+		//	{
+		//		++counter;
+		//		COTG.Debug.Log(counter);
+		//		await CitySettings.FixupReserve(a.Value.cid);
+		//	}
+		//	Note.Show("Fixup reserve cmoplete");
+		//}
 		string appInfo
 		{
 			get

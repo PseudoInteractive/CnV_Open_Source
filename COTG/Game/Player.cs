@@ -18,7 +18,8 @@ namespace COTG.Game
         public ushort cities;
         public byte title;
         public static int myId;
-        public static string myName;
+		public static HashSet<int> myIds = new HashSet<int>();
+		public static string myName;
 
         public static int viewHover; // in the view menu
 
@@ -41,7 +42,11 @@ namespace COTG.Game
         {
             return Player.myId == playerId;
         }
-        public static Player _default = new Player() { name = "!Zut!" };
+		public static bool IsFriend(int playerId)
+		{
+			return Player.myIds.Contains(playerId);
+		}
+		public static Player _default = new Player() { name = "!Zut!" };
         public static Player Get(int id) => all.GetValueOrDefault(id, _default);
         public static void Ctor(JsonElement json)
         {

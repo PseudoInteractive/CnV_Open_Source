@@ -93,7 +93,7 @@ namespace COTG.Views
 					for (; ; )
 					{
 						name = start + number.ToString();
-						if (!City.allCities.Any((v) => v.Value._cityName == name && v.Value != city))
+						if (!City.myCities.Any((v) => v._cityName == name && v != city))
 							break;
 						++number;
 					}

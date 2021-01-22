@@ -235,7 +235,7 @@ namespace COTG.Game
                 nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
                 await RestAPI.troopsOverview.Post();
 
-                if(updateRaids && MainPage.IsVisible() && City.IsMine(Spot.focus))
+                if(updateRaids && MainPage.IsVisible() && City.CanVisit(Spot.focus))
                    await ScanDungeons.Post(Spot.focus, true, false);
 
             }

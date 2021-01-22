@@ -27,7 +27,7 @@ namespace COTG.Game
 	//	// bd:  time to demo?
 	//}
 
-    public class City : Spot 
+    public sealed class City : Spot 
     {
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
@@ -81,19 +81,11 @@ namespace COTG.Game
 			
         public Raid[] raids = Array.Empty<Raid>();
 
-        public static int build; // city that has Build selection.  I.e. in city view, the city you are in
 
-        public bool isBuild => cid == build;
-        public static bool IsBuild( int cid )
-        {
-            return build == cid;
-        }
         public static City GetOrAddCity(int cid)
         {
             Assert(cid > 65536);
-           var rv = allCities.GetOrAdd(cid, City.Factory );
-			Assert(rv.cid == cid);
-			return rv;
+			return Spot.GetOrAdd(cid);
         }
 		
 		public bool AreRaidsRepeating()
@@ -105,20 +97,8 @@ namespace COTG.Game
             }
             return false;
         }
-		public override string troopsString
-		{
-			get
-			{
-				string rv = string.Empty;
-				string sep = string.Empty;
-				foreach (var ttc in troopsTotal)
-				{
-					rv += $"{sep}{troopsHome.Count(ttc.type):N0}/{ttc.count:N0} {Enum.ttNameWithCaps[type]}";
-					sep = ", ";
-				}
-				return rv;
-			}
-		}
+
+	
 
 		public DateTimeOffset GetRaidReturnTime()
         {
@@ -142,11 +122,12 @@ namespace COTG.Game
             }
             return rv;
         }
-        public static bool IsMine(int cid)
-        {
-            return allCities.ContainsKey(cid);
-        }
-        public byte commandSlots { get; set; }
+   
+		public static bool CanVisit(int cid)
+		{
+			return Spot.TryGet(cid, out var s) ? s.isFriend : false;
+		}
+		public byte commandSlots { get; set; }
 
         public byte activeCommands { get; set; }
 
@@ -240,10 +221,36 @@ namespace COTG.Game
 		}
 
 
-		public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
-        public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
-        public static ConcurrentDictionary<int, City> allCities = new ConcurrentDictionary<int, City>(); // keyed by cid
-	
+		public static City[] myCitiesCache;
+		public static City[] friendCitiesCache;
+
+
+		public static City[] myCities
+		{
+			get
+			{
+				if(myCitiesCache == null)
+				{
+					// Todo: should this be Any of my cities?  Determine case by case
+			
+					myCitiesCache = Spot.allSpots.Values.Where(s => s.pid == Player.myId).ToArray();
+				}
+				return myCitiesCache;
+			}
+		}
+		public static City[] friendCities
+		{
+			get
+			{
+				if (friendCitiesCache == null)
+				{
+					// Todo: should this be Any of my cities?  Determine case by case
+					friendCitiesCache = Spot.allSpots.Values.Where(s => Player.myIds.Contains(s.pid) ).ToArray();
+				}
+				return friendCitiesCache;
+			}
+		}
+
 		public void LoadFromJson(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
@@ -413,7 +420,7 @@ namespace COTG.Game
 
         internal static City GetBuild()
         {
-            if (build!=0 && allCities.TryGetValue(build, out var city))
+            if (build!=0 && Spot.TryGet(build, out var city))
                 return city;
             return null;
         }
@@ -540,13 +547,14 @@ namespace COTG.Game
         }
         public async static void UpdateSenatorInfo()
         {
+			// Todo:  Do overviews use secsessionid?
 
             try
             {
                 var a = await Post.SendForJson("overview/senfind.php", "a=0");
                 var empty = Array.Empty<SenatorInfo>();
                 var changed = new HashSet<City>();
-                foreach (var city in City.allCities.Values)
+                foreach (var city in City.myCities)
                 {
                     if (city.senatorInfo != empty)
                     {
@@ -562,7 +570,7 @@ namespace COTG.Game
                 {
                     var cid = cit[0].GetInt32();
                     //  Log(cid.ToString());
-                    if (!City.allCities.TryGetValue(cid, out var city))
+                    if (!City.TryGet(cid, out var city))
                         continue;
                     List<SenatorInfo> sens = new List<SenatorInfo>();
                     foreach (var target in cit[7].EnumerateArray())
@@ -632,33 +640,6 @@ namespace COTG.Game
 			return !(left == right);
 		}
        
-       
-        public static (City city,bool changed) StBuild(int cid,bool scrollIntoView, bool select=true)
-        {
-            var city = City.GetOrAddCity(cid);
-            return (city, city.SetBuild(scrollIntoView,select));
-        }
-        public bool SetBuild(bool scrollIntoView, bool select=true)
-        {
-            var changed = cid != build;
-            City.build = cid;
-			if (changed)
-			{
-				City.CitySwitched();
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-					if (ShellPage.instance.cityBox.SelectedItem != this)
-						ShellPage.instance.cityBox.SelectedItem = this;
-				});
-			}
-			SetFocus(scrollIntoView, select);
-            return changed;
-            //if (!noRaidScan)
-           // {
-          //      if (changed)
-          //          ScanDungeons.Post(cid, getCityData);
-          //  }
-        }
 
         private string GetDebuggerDisplay()
         {
@@ -683,26 +664,7 @@ namespace COTG.Game
             }
             return best;
         }
-        public override byte GetPrimaryTroopType(bool onlyHomeTroops) // troop type with most TS
-        {
-            byte best = 0; // if no raiding troops we return guards 
-            var bestTS = 0;
-            foreach (var ttc in (onlyHomeTroops?troopsHome:troopsTotal))
-            {
-                var type = ttc.type;
-                var ts = ttc.ts;
-                if (ts > bestTS)
-                {
-                    bestTS = ts;
-                    best = (byte)type;
-                }
-
-            }
-            if (best==0)
-                return base.GetPrimaryTroopType(onlyHomeTroops);
-            else
-                return best;
-        }
+        
 
         public byte GetIdealDungeonType()
         {
@@ -782,6 +744,12 @@ namespace COTG.Game
 			}
 		}
 		public string dungeonsToggle => MainPage.expandedCity==this ? "-" : "+";
+
+		internal static void CitiesChanged()
+		{
+			friendCitiesCache = null;
+			myCitiesCache = null;
+		}
 	}
 
     public class SenatorInfo
@@ -861,7 +829,7 @@ namespace COTG.Game
                 IEnumerable<City> l;
                 if (selectedCityList == null || selectedCityList.id == -1) // "all"
                 {
-                    l = City.allCities.Values;
+                    l = City.myCities;
                 }
                 else
                 {
@@ -869,7 +837,7 @@ namespace COTG.Game
                     var filtered = new List<City>();
                     foreach (var cid in cityList.cities)
                     {
-                        if (City.allCities.TryGetValue(cid, out var c))
+                        if (City.TryGet(cid, out var c))
                         {
                             filtered.Add(c);
                         }

@@ -85,6 +85,8 @@
 				</telerikPrimitives:RadRadialMenu.Resources>
 			</telerikPrimitives:RadRadialMenu>
 		</Canvas>
+		
+		
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content>
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">

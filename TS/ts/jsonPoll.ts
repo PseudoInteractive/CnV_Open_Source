@@ -115,11 +115,11 @@
 
 
     export interface Player {
-        _id?: number;
-        pn?: string;
-        pid?: number;
+        _id?: number; // ?
+        pn?: string; // name
+        pid?: number; // player id
         lcit?: string;
-        r?: number;
+        r?: number; // Rank, 11 is Caesar
         t?: string;
         sc?: number;
         g?: G;
@@ -142,20 +142,20 @@
         npp?: number;
         clc?: { [key: string]: number[] };
         ft?: number[];
-        opt?: { [key: string]: Lc };
-        hlp?: number[];
+        opt?: { [key: string]: Lc }; // options, including security options and token
+        hlp?: number[]; // help strings seen
         arc?: number;
         lock?: number;
         nppf?: string;
-        planame?: string;
+        planame?: string;  // alliance
         cb?: number;
         prot?: PlayerProt;
         fa?: { [key: string]: number };
-        paid?: number;
+        paid?: number; // has ministers?  Or paid at least once?
         fwc?: number;
         sco?: number;
         mibt?: number;
-        alatitties?: number;
+        alatitties?: number; // tities?
         td?: Mvb;
         mvb?: Mvb;
         mats?: number;
@@ -165,7 +165,7 @@
         pccount?: number;
         gr?: number;
         fec?: number;
-        specse?: number;
+        specse?: number; // 1 == tournament
         gra?: Gra;
         itc?: { [key: string]: number };
         tcps?: any[];

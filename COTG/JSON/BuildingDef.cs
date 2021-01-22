@@ -23,6 +23,7 @@ namespace COTG.JSON
 		}
 		public const int sharestringOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
+
 		static BuildingDef()
 		{
 			all = Json.FromResources<Dictionary<int, BuildingDef>>("buildingDef");

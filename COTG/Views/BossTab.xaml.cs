@@ -33,7 +33,7 @@ namespace COTG.Views
             {
                 bossGrid.ItemsSource = null;
                 bossGrid.ItemsSource = Boss.all;
-                cityGrid.ItemsSource = City.allCities.Values.Where(c => c.homeTroopsAttack > 50 * 10000.0f).
+                cityGrid.ItemsSource = City.myCities.Where(c => c.homeTroopsAttack > 50 * 10000.0f).
                     OrderBy((c) => -c.homeTroopsAttack). ToArray();
             }
             else

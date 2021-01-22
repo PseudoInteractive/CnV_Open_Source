@@ -20,10 +20,10 @@ DECLARE_TEXTURE(Texture, 0);
 DECLARE_TEXTURE(Normal, 1);
 
 Texture2D<float4> Font : register(t7);
-SamplerState FontSampler 
+SamplerState FontSampler : register(s7)
 {
 	Filter = Linear;
-	MipLODBias = -1;
+	MipLODBias = -1.5;
 	AddressU = Border;
 	AddressV = Border;
 };

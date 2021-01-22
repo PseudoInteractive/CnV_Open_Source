@@ -31,7 +31,7 @@ namespace COTG.Views
 
 		public static Vector2 mousePosition;
 		public static Vector2 mousePositionC; // in camera space
-		public static Vector3 mousePositionW; // in warped space
+		public static Vector2 mousePositionW; // in warped space
 		public static Vector2 lastMousePressPosition;
 		public static DateTimeOffset lastMousePressTime;
 
@@ -153,7 +153,7 @@ namespace COTG.Views
 		{
 			return (((c1.X) / cameraZoomLag + cameraC.X).RoundToInt(), ((c1.Y) / cameraZoomLag + cameraC.Y).RoundToInt());
 		}
-		static public ((int x, int y) wc, (int x, int y) cc) ScreenToWorldAndCityC(Vector3 c1)
+		static public ((int x, int y) wc, (int x, int y) cc) ScreenToWorldAndCityC(Vector2 c1)
 		{
 			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
 			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
@@ -227,7 +227,7 @@ namespace COTG.Views
 							{
 								App.DispatchOnUIThreadSneaky(() =>
 								{
-									CityBuild.Click(cc);
+									CityBuild.Click(cc,false);
 
 								});
 							}
@@ -247,7 +247,7 @@ namespace COTG.Views
 							{
 								if (IsCityView() && (cid == City.build))
 								{
-									CityBuild.RightClick(cc);
+									CityBuild.Click(cc,true);
 								}
 								else
 								{
@@ -462,9 +462,27 @@ namespace COTG.Views
 			var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
 			var cBase = GetCanvasPosition(pt.Position) - halfSpan;
+			if (IsCityView() && wheel > 0)
+			{
+				cBase = (City.build.CidToWorldV() - cameraC)*cameraZoom;
+
+			}
+			// when zooming in in city mode, constrain to city
 			var c0 = cBase / cameraZoom;
 			var c1 = cBase / newZoom;
-			cameraC = cameraC + c0 - c1;
+			cameraC += c0 - c1;
+
+			if ( IsCityView() && wheel > 0 )
+			{
+				var dr = City.build.CidToWorldV() - cameraC;
+				
+				var drl = dr.Length();
+				if(drl > 0.5f )
+				{
+					cameraC += dr * 0.5f;
+				}
+			}
+
 
 			var _viewMode =  newZoom >= cityZoomThreshold ? ViewMode.city: ViewMode.world;
 			if(_viewMode !=viewMode)

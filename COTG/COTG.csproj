@@ -361,6 +361,9 @@
     <Compile Include="Views\TabPage.xaml.cs">
       <DependentUpon>TabPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TroopBox.xaml.cs">
+      <DependentUpon>TroopBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>
     </Compile>
@@ -499,6 +502,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\TroopBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WebViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -521,6 +528,7 @@
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Content\Art\City\building_set5.png" />
@@ -629,7 +637,6 @@
     <Content Include="Content\Art\Icons\troops7.png" />
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
-    <Content Include="Content\Fonts\tra_0.dds" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />

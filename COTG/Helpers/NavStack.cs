@@ -111,7 +111,7 @@ namespace COTG.Helpers
 			public bool cityView; // only valid for My Cities, not for other cities or Misc Spots 
 			public void Go()
 			{
-				if (City.IsMine(cid))
+				if (City.CanVisit(cid))
 				{
 					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameAndRemarks} {position} {NavStack.backStack.Count}");
 					if (!City.IsBuild(cid) || !City.IsFocus(cid))

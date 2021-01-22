@@ -227,7 +227,7 @@ namespace COTG.Services
 		/// 
 		public static async Task<bool> TryAddOrder(long orderId)
         {
-			Assert(used.Add(orderId) == true);
+	//		Assert(used.Add(orderId) == true);
             if (ordersContainer==null)
                 return false;
             var order = new Order() { id = orderId.ToString() };
