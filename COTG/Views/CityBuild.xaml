@@ -32,7 +32,7 @@
 			<Button x:Name="upgrade" Content="Upgrade"  x:FieldModifier="public" Click="Upgrade_Click" />
 			<Button x:Name="downgrade" Content="DownGrade"  x:FieldModifier="public" Click="Downgrade_Click" />
 			<Button x:Name="destroy" Content="Destroy"  x:FieldModifier="public" Click="Destroy_Click" />
-
+			<Button x:Name="abandon" Content="Abandon"  x:FieldModifier="public" Click="Abandon_Click" />
 
 
 		</StackPanel>

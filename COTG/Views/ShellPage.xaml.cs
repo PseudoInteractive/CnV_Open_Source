@@ -945,25 +945,11 @@ namespace COTG.Views
 		{
 			ShowTipRefresh();
 		}
-		public static SettingsPage instance;
+		
 
 		private void ShowSettings(object sender, RoutedEventArgs e)
 		{
-			App.DispatchOnUIThread(async () =>
-			{
-				ElementSoundPlayer.Play(ElementSoundKind.Show);
-				if (instance == null)
-					instance = new SettingsPage();
-				//shown = true;
-				var result = await instance.ShowAsync2();
-				if(result.visitToken)
-				{
-					JSClient.AddPlayer(token);
-				}
-	
-					SettingsPage.SaveAll();
-				//   dialog.auto
-			});
+			SettingsPage.Show();
 		}
 
 
@@ -1211,5 +1197,20 @@ namespace COTG.Views
 
 		}
 
+		private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		{
+
+		}
+
+		private void friendListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if(e.AddedItems.Any())
+			{
+				var s = e.AddedItems[0] as string;
+				var friend = JSClient.playerPresence.Find(f => f.name == s);
+				JSClient.SetPlayer(friend.tk, friend.ck);
+
+			}
+		}
 	}
 }

@@ -48,15 +48,17 @@ namespace COTG.Services
             try
             {
                 var buff = await resp.Content.ReadAsBufferAsync();
+				if (buff.Length > 0)
+				{
+					var temp = new byte[buff.Length];
 
-                var temp = new byte[buff.Length];
-
-                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-                {
-                    dataReader.ReadBytes(temp);
-                }
-                //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
-                ProcessJsonRaw(temp);
+					using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+					{
+						dataReader.ReadBytes(temp);
+					}
+					//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+					ProcessJsonRaw(temp);
+				}
             }
             catch (Exception e)
             {

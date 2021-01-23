@@ -1155,6 +1155,9 @@ namespace COTG.Game
 		{
 			var changed = cid != build;
 			City.build = cid;
+
+			Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.s); // broadcast change
+
 			if (changed)
 			{
 				City.CitySwitched();

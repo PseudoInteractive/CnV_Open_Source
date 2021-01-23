@@ -36,6 +36,7 @@ namespace COTG.Views
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 	public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
 	{
+		private static SettingsPage instance;
 		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
@@ -141,6 +142,7 @@ namespace COTG.Views
 		}
 
 		public string visitToken;
+		public string visitCookie;
 		public static async void BoostVolume()
 		{
 			if (volume == 1 || !soundOn)
@@ -687,6 +689,24 @@ namespace COTG.Views
 
 				return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
 			}
+		}
+		public static void Show()
+		{
+			App.DispatchOnUIThread(async () =>
+			{
+				ElementSoundPlayer.Play(ElementSoundKind.Show);
+				if (instance == null)
+					instance = new SettingsPage();
+				//shown = true;
+				var result = await instance.ShowAsync2();
+				if (!instance.visitToken.IsNullOrEmpty())
+				{
+					Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
+				}
+
+				SettingsPage.SaveAll();
+				//   dialog.auto
+			});
 		}
 
 	}

@@ -429,8 +429,13 @@ namespace COTG.Views
 		public const int buildToolSpan = 448;
 	
 		public const int buildMenuMruCount = 4;
+
+		private void Abandon_Click(object sender, RoutedEventArgs e)
+		{
+			JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity" });
+		}
 	}
-	
+
 	public class BuildMenuItem : RadialMenuItem
 	{
 		public int bid;

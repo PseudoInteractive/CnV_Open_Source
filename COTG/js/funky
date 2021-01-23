@@ -2440,7 +2440,7 @@ const __s = [".shRinf",
     "Good luck!",
     "Rare Oar",
     "#aportpen",
-    "ms-appx-web:///web/images/city128/building_set5.png",
+    "/images/city128/building_set5.png",
     "#fefefe",
     "#mailSButton",
     "<option id=\"sf",
@@ -8779,17 +8779,16 @@ function DoSyncViewMode() {
                     }
                 });
             }
-            if (cid !== 0 && (_viewMode !== _viewModeCache || popupSizeDirty
+            if ((_viewMode !== _viewModeCache || popupSizeDirty
                 || _popupCountCache !== _popupCount) || (_lastTooltip !== tooltipped)) {
                 _viewModeCache = _viewMode;
-                _cid = cid;
                 popupSizeDirty = false;
                 _lastTooltip = tooltipped;
                 _zoom = __zoom;
                 _cameraX = _x;
                 _cameraY = _y;
                 _popupCountCache = _popupCount;
-                const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop: popups } };
+                const wrapper = { c: { x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop: popups } };
                 window['external']['notify'](JSON.stringify(wrapper));
             }
         }
@@ -10691,8 +10690,11 @@ var gspotfunct = {
 var setcitybind;
 let wantFa = true;
 let wantRs = true;
-function ppdtChanged(__ppdt) {
+function truncateToken() {
     ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+}
+function ppdtChanged(__ppdt) {
+    truncateToken();
     let wrapper = { ppdt: {} };
     let wantUpdate = false;
     if (__ppdt.hasOwnProperty("clc")) {
@@ -12897,6 +12899,7 @@ var cotgsubscribe = amplify;
             for (let v11 in T11)
                 t11[v11] = T11[v11];
             ppdt = t11;
+            truncateToken();
             var G11;
             var L11;
             if (T11["clditm"])
@@ -17663,17 +17666,22 @@ var cotgsubscribe = amplify;
                 }
             });
         }
-        window['setPlayerGlobals'] = function (token) {
+        window['setPlayerGlobals'] = function (token, cookie) {
             ppdt['opt'][67] = token;
-            var B9Z = $.post("/includes/unblock.php", { a: "" });
-            B9Z.done(function (R9Z) {
-                ppdt = JSON.parse(R9Z);
-                ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+            s = cookie;
+            let t0 = $.post("/includes/block.php", { a: 10 });
+            t0.done(function (xxxx) {
+                ppdt = JSON.parse(xxxx);
+                truncateToken();
                 H2 = ppdt['pn'];
                 P8 = ppdt.pid;
                 raidSecret = Q3F();
-                let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token } };
+                let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie } };
                 window['external']['notify'](JSON.stringify(wrapper));
+                let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
+                B9Z.done(function (R9Z) {
+                    console.log("Unblock " + R9Z);
+                });
             });
         };
         function Y6F() {
@@ -17684,7 +17692,7 @@ var cotgsubscribe = amplify;
                 var o5U = JSON.parse(M5U);
                 var L5U = o5U["wmo"][+o8y];
                 ppdt = o5U;
-                ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+                truncateToken();
                 jQuery.ajaxPrefilter(function (C5U, W5U, G5U) {
                     if (!G5U.crossDomain)
                         G5U.setRequestHeader(_s(+'3885'), ppdt['opt'][67]);
@@ -24372,10 +24380,9 @@ var cotgsubscribe = amplify;
                 window.open(cityUrl, "_blank");
             });
             E6k.y6();
-            $(__s[5940])
+            $("#overviews")
                 .click(function () {
-                var m6l = __s[3773] + ppss;
-                var a6l = window.open(m6l, __s[266]);
+                var a6l = window.open("/overview/overview.php?s=" + ppss, "_blank");
                 E6k.y6();
             });
             $(__s[6292])
@@ -34303,6 +34310,7 @@ var cotgsubscribe = amplify;
             $(__s[6966])
                 .show();
         }
+        window['misccommand'] = t7F;
         $(document)
             .ready(function () {
             $(__s["2513" | 2049])
@@ -39146,15 +39154,14 @@ var cotgsubscribe = amplify;
         var P2 = 0;
         function L5V(a31) {
             if (ppdt.specse == 1) {
-                var m31 = __s[6294] + worldidnumid + __s[6899];
+                var m31 = "Tour " + worldidnumid + " | CotG";
                 if (ppss == (1))
-                    m31 = ppdt.pn + __s[3592] + worldidnumid + _s("6899" >>
-                        1648125632);
+                    m31 = ppdt.pn + " | T" + worldidnumid + " | CotG";
             }
             else {
-                var m31 = __s[1413] + worldidnumid + __s[6899];
+                var m31 = "World " + worldidnumid + " | CotG";
                 if (ppss == 1)
-                    m31 = ppdt.pn + __s[2802] + worldidnumid + __s['6899' | 2627];
+                    m31 = ppdt.pn + " | W" + worldidnumid + " | CotG";
             }
             if (a31 >= 1) {
                 $(__s[5270])
@@ -47237,7 +47244,7 @@ var cotgsubscribe = amplify;
                                 }
                             }
                             if (ppdt.specse == (1)) {
-                                var g36 = $.post("/includes/" + _s(+'7054'), { a: rcid });
+                                var g36 = $.post("/includes/gSptbl.php", { a: rcid });
                                 g36.done(function (s66) {
                                     s66 = JSON.parse(s66);
                                     if (s66 == ('1' | 1))

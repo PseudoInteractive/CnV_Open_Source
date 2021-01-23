@@ -10,6 +10,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:views="using:COTG.Views"
+      xmlns:models="using:COTG.Models"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	  xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
 	  xmlns:telerikPrimitivesMenu="using:Telerik.UI.Xaml.Controls.Primitives.Menu"
@@ -90,6 +91,12 @@
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content>
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
+                     SelectionChanged="friendListBox_SelectionChanged"
+                      Width="120"
+                     
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
+                      Margin="4" />
 					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
 					TextSubmitted="CityListSubmitted"

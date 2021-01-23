@@ -62,8 +62,8 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
-				<TextBox Header="Visit" Text="{x:Bind visitToken}" />
-
+				<TextBox Header="Visit" Text="{x:Bind visitToken, Mode=TwoWay}" />
+				<TextBox Header="VisitCookie" Text="{x:Bind visitCookie, Mode=TwoWay}" />
 
 
 			</wct:WrapPanel>

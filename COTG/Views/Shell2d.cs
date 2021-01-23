@@ -72,13 +72,13 @@ namespace COTG.Views
 			//	var _in = canvasHitTest;
 
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
-			App.DispatchOnUIThreadLow(() =>
-			{
-				_canvas.Margin = new Thickness(leftOffset , topOffset, 0, 0);
-				//Canvas.SetLeft(_canvas, leftOffset);
-				//Canvas.SetTop(_canvas, topOffset);
-				//RemakeRenderTarget();
-			});
+			//App.DispatchOnUIThreadLow(() =>
+			//{
+			//	_canvas.Margin = new Thickness(leftOffset , topOffset, 0, 0);
+			//	//Canvas.SetLeft(_canvas, leftOffset);
+			//	//Canvas.SetTop(_canvas, topOffset);
+			//	//RemakeRenderTarget();
+			//});
 			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
 			//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
 			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));

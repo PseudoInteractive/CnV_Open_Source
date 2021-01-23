@@ -41,6 +41,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
+using COTG.DB;
 
 namespace COTG
 {
@@ -51,13 +52,14 @@ namespace COTG
 	{
 
 
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
-
+		//	public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36 Edg/88.0.705.49";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
 		//public static WebViewBrush webViewBrush; 
 		static HttpBaseProtocolFilter httpFilter;
+		static HttpCookieManager cookieManager;
 		const int clientCount = 6;
 		public static ConcurrentBag<HttpClient> clientPool;
 		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
@@ -122,8 +124,8 @@ namespace COTG
 			public string pn; // redundant player name
 			[JsonInclude]
 			public  string token;
-	//	Do we need this	[JsonInclude]
-	//		public  string s ;
+			[JsonInclude]
+			public  string s ;
 			[JsonInclude]
 			public string raidSecret;
 	//		[JsonInclude]
@@ -141,7 +143,7 @@ namespace COTG
 		}
 		public static JSVars[] jsVarsByPlayer = Array.Empty<JSVars>();
 		public static JSVars jsVars;
-		public static JSVars baseVars;
+		public static JSVars jsBase;
 		public static JSVars PlayerVars(int pid)
 		{
 			if (pid == -1)
@@ -177,13 +179,34 @@ namespace COTG
 		{
 		}
 
-		public static void AddPlayer(string token)
+		public static void SetPlayer(string token, string cookie)
 		{
-			view.InvokeScriptAsync("setPlayerGlobals", new[] { token });
+			// already set
+			if (jsVars.token == token)
+				return;
+		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
+			var session = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
+	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
+		
+			session.Secure = true;
+			session.HttpOnly = true;
+//			remember.Secure = true;
+//			remember.HttpOnly = true;
+//			remember.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(2);
+			session.Value = cookie;
+			//if(!rememberme.IsNullOrEmpty())
+			//	remember.Value = rememberme;
+			cookieManager.DeleteCookie(session);
+			//if (!rememberme.IsNullOrEmpty())
+			//	cookieManager.DeleteCookie(remember);
+			cookieManager.SetCookie(session);
+			//if (!rememberme.IsNullOrEmpty())
+			//	cookieManager.SetCookie(remember);
+			view.InvokeScriptAsync("setPlayerGlobals", new[] { token, cookie });
 		}
-		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid, string ppdt)
+		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string s, string ppdt)
 		{
-			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt,raidSecret=raid }; // todo: need raidSecret
+			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt,s=s,raidSecret=raid }; // todo: need raidSecret
 			//
 			// add if necessary
 			//
@@ -204,7 +227,7 @@ namespace COTG
 
 			if(isMe)
 			{
-				baseVars = jsv;
+				jsBase = jsv;
 				jsVars = jsv;
 			}
 			else if(setCurrent)
@@ -1132,11 +1155,12 @@ namespace COTG
 						httpFilter = new HttpBaseProtocolFilter();// HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 																  //   httpFilter.AllowAutoRedirect = true;
 																  //                        httpFilter.ServerCredential =
+						cookieManager = httpFilter.CookieManager;
 																  //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 						httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 						httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
-						if (subId == 0)
-							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
+//						if (subId == 0)
+//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
 						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
 						//                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
 						//                      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
@@ -1285,6 +1309,9 @@ namespace COTG
 			//    await AddJSPluginAsync();
 			//}
 		}
+
+		static DispatcherTimer presenceTimer;
+
 		static private void View_ScriptNotify(object sender, NotifyEventArgs __e)
 		{
 			var eValue = __e.Value;
@@ -1327,8 +1354,8 @@ namespace COTG
 											   {
 
 												   httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-												   if (subId == 0)
-													   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
+											//	   if (subId == 0)
+											//		   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
 											   }
 										   }
 									   }
@@ -1375,11 +1402,11 @@ namespace COTG
 								   //   UpdatePPDT(jso.GetProperty("ppdt"));
 								   var ppdt = jso.GetProperty("ppdt");
 								    // todo: utf
-								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, ppdt.ToString());
+								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,s, ppdt.ToString());
 
 
 								   UpdatePPDT(ppdt);
-
+								   
 								   break;
 							   }
 						   case "aexp":
@@ -1625,8 +1652,8 @@ namespace COTG
 
 								   if (!isFromTs)
 								   {
-										if (cid != City.build)
-										   city.SetBuild(false);
+								//		if (cid != City.build)
+								//		   city.SetBuild(false);
 								   }
 								   if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
 								   {
@@ -1663,13 +1690,27 @@ namespace COTG
 							   {
 								   Log("Aldt");
 								   Alliance.Ctor(jsDoc);
+								   
+								   // now we can update player info
+								   Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.s);
 
-
+								  
 								   break;
 							   }
 						   case "gPlA":
 							   {
 								   Player.Ctor(jsp.Value);
+								   App.DispatchOnUIThreadSneaky(() =>
+								   {
+									   // create a timer for precense updates
+									   presenceTimer = new DispatcherTimer();
+									   presenceTimer.Interval = TimeSpan.FromSeconds(16);
+									   presenceTimer.Tick += PresenceTimer_Tick; ;
+									   presenceTimer.Start();
+									   // Seed it off
+
+								   });
+								   PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
 								   break;
 							   }
 						   // city lists
@@ -1700,7 +1741,8 @@ namespace COTG
 								   var pn = jso.GetString("pn");
 								   var ppdt = jso.GetProperty("ppdt");
 								   var token = jso.GetString("token");
-								   AddPlayer(false, true, pid, pn, token, raidSecret, ppdt.ToString());
+								   var s = jso.GetString("s");
+								   AddPlayer(false, true, pid, pn, token, raidSecret,s, ppdt.ToString());
 								   City.CitiesChanged();
 								   UpdatePPDT(ppdt);
 								   break;
@@ -1708,7 +1750,7 @@ namespace COTG
 						   case "c":
 							   {
 								   var jso = jsp.Value;
-								   var cid = jso.GetInt("c");
+								 //  var cid = jso.GetInt("c");
 								   //City.StBuild(cid);
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
@@ -1809,8 +1851,59 @@ namespace COTG
 			   }
 		   });
 		}
+		public static List<PlayerPresence> playerPresence = new List<PlayerPresence>();
 
-		
+		private static async void PresenceTimer_Tick(object sender, object e)
+		{
+			var players = await Cosmos.GetPlayersInfo();
+			var changed = false;
+			foreach (var p in players)
+			{
+				int priorCid;
+				var priorP = playerPresence.Find(a => a.id == p.id);
+				if (priorP == null)
+				{
+					changed = true;
+					priorCid = 0;
+				}
+				else
+				{
+					if (priorP.tk != p.tk)
+						changed = true; // need to refresh token
+					priorCid = priorP.cid;
+				}
+				if (p.cid != priorCid && p.pid != jsBase.pid)
+				{
+					if (p.cid == City.build && priorCid != City.build)
+						Note.Show($"{p.name } has joined you in {p.cid.CidToStringMD()}");
+					if (p.cid != City.build && priorCid == City.build)
+						Note.Show($"{p.name } has left {p.cid.CidToStringMD()}");
+
+				}
+			}
+			playerPresence = players;
+			if(changed)
+			{
+				App.DispatchOnUIThreadLow(() =>
+				{
+					// Update menu
+					ShellPage.instance.friendListBox.SelectedIndex = -1;
+					ShellPage.instance.friendListBox.Items.Clear();
+					int counter = 0;
+					int sel = -1;
+					foreach (var p in playerPresence)
+					{
+						ShellPage.instance.friendListBox.Items.Add(p.name);
+						if (p.pid == jsVars.pid)
+							sel = counter;
+						++counter;
+						// reset menu, TOTO:  Keep track of active selection
+					}
+					ShellPage.instance.friendListBox.SelectedIndex = sel;
+				});
+			}
+		}
+
 		static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
 		{
 			if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))

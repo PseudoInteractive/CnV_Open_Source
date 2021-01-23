@@ -5,7 +5,23 @@ using System.Linq;
 
 namespace COTG.DB
 {
-    public sealed class Spot
+	public sealed class PlayerPresence
+	{
+		[JsonPropertyName("id")]
+		public string id { get; set; } // playerId is actually an int
+		public int cid { get; set; } // where they are located
+		public int t { get; set; } // time last seen
+// todo: last action
+		public string tk { get; set; } // token
+		public string ck { get; set; } // cookie
+		[JsonIgnore]
+		internal  string name => Game.Player.IdToName(pid);
+		[JsonIgnore]
+		internal  int pid => int.Parse(id);
+
+	}
+
+	public sealed class SpotDB
     {
         public const byte typeEmpty = 0;
         public const byte typeCity = 1;

@@ -83,7 +83,7 @@ namespace COTG.JSON
 			//  await canvas.RunOnGameLoopThreadAsync( async () =>
 			if (prior != null)
 			{
-				Assert(false);
+				//Assert(false);
 				var count = prior.Length;
 				for (int i = 0; i < count; ++i)
 				{

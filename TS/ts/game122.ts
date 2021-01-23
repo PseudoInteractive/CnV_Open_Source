@@ -965,7 +965,7 @@ const __s = [".shRinf",
 	"Good luck!",
 	"Rare Oar",
 	"#aportpen",
-	"ms-appx-web:///web/images/city128/building_set5.png",
+	"/images/city128/building_set5.png",
 	"#fefefe",
 	"#mailSButton",
 	"<option id=\"sf",
@@ -7505,17 +7505,16 @@ function DoSyncViewMode() {
 		}
 			// if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
 			//         || _zoom != __zoom || _popupCountCache != _popupCount))
-			if (cid !== 0 && (_viewMode !== _viewModeCache || popupSizeDirty
+			if ( (_viewMode !== _viewModeCache || popupSizeDirty
 				|| _popupCountCache !== _popupCount) ||(_lastTooltip !== tooltipped) ) {
 				_viewModeCache = _viewMode;
-				_cid = cid;
 				popupSizeDirty=false;
 				_lastTooltip = tooltipped;
 				_zoom = __zoom;
 				_cameraX = _x;
 				_cameraY = _y;
 				_popupCountCache = _popupCount;
-				const wrapper = { c: { c: cid, x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups } };
+				const wrapper = { c: {  x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups } };
 				window['external']['notify'](JSON.stringify(wrapper));
 			}
 		}
@@ -9448,9 +9447,15 @@ var setcitybind;
 let wantFa = true;
 let wantRs = true;
 
+function truncateToken()
+{
+			 ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+}
+
 function ppdtChanged(__ppdt) {
 	
-	ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+	truncateToken();
+			
 
 	let wrapper = { ppdt: {} };
 	let wantUpdate = false;
@@ -11791,6 +11796,7 @@ var cotgsubscribe = amplify;
 			for (let v11 in
 				T11) t11[v11] = T11[v11];
 			ppdt = t11;
+			truncateToken();
 			var G11;
 			var L11;
 			//let z11;
@@ -17927,29 +17933,41 @@ var cotgsubscribe = amplify;
 				}
 			});
 		}
+		
 
-		window['setPlayerGlobals'] = function(token:string)
+		window['setPlayerGlobals'] = function(token:string, cookie:string)
 		{
 //			ppdt = _ppdt;
 			ppdt['opt'][67] = token;
-			
+			s= cookie;
+		//	document.cookie = "sec_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		//	document.cookie = "sec_session_id="+cookie+"; expires=Thu, 01 Jan 9999 00:00:00 GMT";
 
-	//	send back the raid secret and ppdt
-		 var B9Z = $.post("/includes/unblock.php", { a: "" });
-				
-				B9Z.done(function (R9Z) {
-					ppdt = JSON.parse(R9Z);
-					ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+// this is a dummy block, we do it to get a latest ppdt
+	   	 let  t0 = $.post("/includes/block.php", { a: 10 });
+		 t0.done(function (xxxx) {
+
+					ppdt = JSON.parse(xxxx);
+					truncateToken()
 					H2 = ppdt['pn'];
 					P8 = ppdt.pid;
 					
 					raidSecret = Q3F();
 
-	 				let wrapper = { setglobals: {secret:raidSecret,pid:P8,pn:H2,ppdt:ppdt,token:token } };
+	 				let wrapper = { setglobals: {secret:raidSecret,pid:P8,pn:H2,ppdt:ppdt,token:token,s:cookie } };
+  //	send back the raid secret and ppdt
 	
 					window['external']['notify'](JSON.stringify(wrapper));
+	
+ // I am not sure if this unblock even works
+ 
+			 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
+				
+				B9Z.done(function (R9Z) {
+					console.log("Unblock " + R9Z);
 			
 				});
+			});
 		}
 
 		function Y6F() {
@@ -17962,7 +17980,8 @@ var cotgsubscribe = amplify;
 				var L5U = o5U["wmo"][+o8y];
 				
 				ppdt = o5U;
-				ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+				truncateToken();
+			
 				
 				jQuery.ajaxPrefilter(function (C5U, W5U, G5U) {
 					if (!G5U.crossDomain) G5U.setRequestHeader(_s(+
@@ -35837,6 +35856,8 @@ var cotgsubscribe = amplify;
 			$(__s[6966])
 				.show();
 		}
+		window['misccommand'] = t7F;
+
 		$(document)
 			.ready(function () {
 				$(__s["2513" | 2049])
