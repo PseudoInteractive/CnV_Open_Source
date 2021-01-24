@@ -19,14 +19,14 @@ namespace COTG.JSON
 
 		using System.Globalization;
 		using System.Text.Json;
-		using J = using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+		using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 	
 		public sealed class PPDT
 		{
 			[J("_id")] public long Id { get; set; }
 			[J("pn")] public string Pn { get; set; }
 			[J("pid")] public long Pid { get; set; }
-			[J("lcit")] [JsonConverter(typeof(ParseStringConverter))] public long Lcit { get; set; }
+			[J("lcit")] public long Lcit { get; set; }
 			[J("r")] public long R { get; set; }
 			[J("t")] public string T { get; set; }
 			[J("sc")] public long Sc { get; set; }
@@ -274,6 +274,3 @@ namespace COTG.JSON
 
 		//	public static readonly ParseStringConverter Singleton = new ParseStringConverter();
 		}
-	
-
-}

@@ -152,14 +152,16 @@
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
+												DefaultSortOrder="Descending"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsRaid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
-												
+												DefaultSortOrder="Descending"
 												Tip="TS of Troops at home that can raid" />
 					<tg:DataGridNumericalColumn PropertyName="tsHome"
 												CellContentStyle="{StaticResource RightAlign}"
+												DefaultSortOrder="Descending"
 												Tip="TS of Troops at home (including non raiding troops)"
 												CellContentFormat="{}{0,7:N0}"
 												
@@ -176,6 +178,7 @@
 												 />
 					<tg:DataGridNumericalColumn PropertyName="points"
 												Tip="City score"
+												
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
 												 />

@@ -39,7 +39,7 @@ namespace COTG.Views
 		public static string toolTip;
 		public static string contToolTip;
 		public static int lastCont;
-
+		
 
 
 		public static void SetupCoreInput()
@@ -68,6 +68,8 @@ namespace COTG.Views
 
 		}
 
+
+
 		private static void CoreInputSource_PointerCaptureLost(object sender, PointerEventArgs args)
 		{
 			Log("pointer lost");
@@ -77,6 +79,7 @@ namespace COTG.Views
 		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
 		{
 			isOverPopup = false;
+			ShellPage.TakeKeyboardFocus();
 		}
 
 
@@ -359,7 +362,9 @@ namespace COTG.Views
 			lastMousePressTime = DateTimeOffset.UtcNow;
 			lastMousePressPosition = mousePosition;
 
-			
+			mousePositionW = mousePositionC.InverseProject();
+			(var c, var cc) = ScreenToWorldAndCityC(mousePositionW);
+
 			//  if (JSClient.IsCityView())
 			// The app pas priority over back and forward events
 			{
@@ -396,7 +401,13 @@ namespace COTG.Views
 			}
 			else
 			{
-				App.DispatchOnUIThreadLow(() => ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
+				// only needs for pen and touch
+				if (IsCityView())
+				{
+					CityBuild.PointerDown(cc, properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed);
+				}
+				
+				TakeKeyboardFocus();
 			}
 
 			ClearHover();
@@ -447,7 +458,41 @@ namespace COTG.Views
 		//    mouseButtons = 0;
 		//    Spot.viewHover = 0;
 		//}
-		
+		private static bool AutoSwitchCityView()
+		{
+			var wc = cameraC.RoundToInt();
+			var target = wc;
+			float bestScore = float.MaxValue;
+			// Try a different city
+			
+			
+			
+				for (int x = 0; x <= 0; ++x)
+					for (int y = 0; y <= 0; ++y)
+					{
+						var dxy = (x, y);
+						float lg = dxy.Length();
+						if (lg > bestScore )
+							continue;
+
+						var probe = wc.Sum(dxy);
+
+						if (City.CanVisit(probe.WorldToCid()))
+						{
+							target = probe;
+							bestScore = dxy.Length();
+							
+						}
+					}
+				if (bestScore < float.MaxValue)
+				{
+					var cid = target.WorldToCid();
+					if (cid != City.build)
+						JSClient.ChangeCity(target.WorldToCid(), true);
+					return true;
+				}
+				return false;
+		}
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
@@ -462,28 +507,30 @@ namespace COTG.Views
 			var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
 			var cBase = GetCanvasPosition(pt.Position) - halfSpan;
-			if (IsCityView() && wheel > 0)
-			{
-				cBase = (City.build.CidToWorldV() - cameraC)*cameraZoom;
 
-			}
-			// when zooming in in city mode, constrain to city
-			var c0 = cBase / cameraZoom;
-			var c1 = cBase / newZoom;
-			cameraC += c0 - c1;
+			var skipMove = false;
 
-			if ( IsCityView() && wheel > 0 )
+			if ( IsCityView()  )
 			{
-				var dr = City.build.CidToWorldV() - cameraC;
-				
-				var drl = dr.Length();
-				if(drl > 0.5f )
+				if (AutoSwitchCityView())
 				{
-					cameraC += dr * 0.5f;
+					cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
+					cameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
 				}
 			}
+			else
+			{
+				skipMove = true;
+			}
 
 
+			if (!skipMove)
+			{
+				// when zooming in in city mode, constrain to city
+				var c0 = cBase / cameraZoom;
+				var c1 = cBase / newZoom;
+				cameraC += c0 - c1;
+			}
 			var _viewMode =  newZoom >= cityZoomThreshold ? ViewMode.city: ViewMode.world;
 			if(_viewMode !=viewMode)
 			{
@@ -507,16 +554,8 @@ namespace COTG.Views
 			mousePositionC = mousePosition.SToC();
 			//	//	cameraLightC = new Vector2((float)mousePosition.X,(float)mousePosition.Y);
 			mousePositionW = mousePositionC.InverseProject();
-
-			//if(ShellPage.IsCityView() )
-			// {
-			//     e.Handled = false;
-			//     return;
-			// }
-			var point = e.CurrentPoint;
-
-
 			(var c,var cc) = ScreenToWorldAndCityC(mousePositionW);
+			var point = e.CurrentPoint;
 			var props = point.Properties;
 			if ((props.IsLeftButtonPressed | props.IsRightButtonPressed) == false)
 			{
@@ -584,7 +623,7 @@ namespace COTG.Views
 											Player.viewHover = data.player;
 
 											var player = Player.all.GetValueOrDefault(data.player, Player._default);
-											if (Player.IsMe(data.player))
+											if (Player.IsFriend(data.player))
 											{
 												if (spot is City city)
 												{
@@ -732,7 +771,10 @@ namespace COTG.Views
 					// instant
 					cameraCLag = cameraC;
 					e.Handled = true;
-
+					if (IsCityView())
+					{
+						AutoSwitchCityView();
+					}
 				}
 				//else
 				{

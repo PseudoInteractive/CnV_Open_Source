@@ -105,6 +105,9 @@ namespace COTG.Services
 
 		public static async Task PublishPlayerInfo(int pid,int cid, string token, string cookie)
 		{
+			// don't send for subs
+			if (JSClient.ppss != 0)
+				return;
 			if (!await Touch())
 				return;
 
@@ -112,8 +115,8 @@ namespace COTG.Services
 			await throttle.WaitAsync();
 			try
 			{
-				var pp = new PlayerPresence() { id = pid.ToString(),cid=cid,t=lastSeen, ck = cookie, tk = token };
-				await presenceContainer.UpsertItemAsync<PlayerPresence>(pp, new PartitionKey(pp.id), itemRequesDefault);
+				var pp = new PlayerPresenceDB() { id = pid.ToString(),cid=cid,t=lastSeen, ck = cookie, tk = token };
+				await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(pp.id), itemRequesDefault);
 
 			}
 			finally
@@ -122,14 +125,14 @@ namespace COTG.Services
 			}
 		}
 
-		public static async Task< List<PlayerPresence> > GetPlayersInfo()
+		public static async Task< List<PlayerPresenceDB> > GetPlayersInfo()
 		{
 			QueryDefinition queryDefinition = new QueryDefinition("select * from c");
-			List<PlayerPresence> rv = new List<PlayerPresence>();
+			List<PlayerPresenceDB> rv = new List<PlayerPresenceDB>();
 			if (!await Touch())
 				return rv;
 
-			using (FeedIterator<PlayerPresence> feedIterator = presenceContainer.GetItemQueryIterator<PlayerPresence>(
+			using (FeedIterator<PlayerPresenceDB> feedIterator = presenceContainer.GetItemQueryIterator<PlayerPresenceDB>(
 				queryDefinition,
 				null))
 			{

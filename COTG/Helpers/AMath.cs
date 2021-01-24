@@ -55,7 +55,7 @@ namespace COTG
 		{
 			return (FloorToInt(v.X), FloorToInt(v.Y));
 		}
-		public static (int x, int y) Add(this (int x, int y) a, (int x, int y) b)
+		public static (int x, int y) Sum(this (int x, int y) a, (int x, int y) b)
 		{
 			return (a.x + b.x, a.y + b.y);
 		}
@@ -71,6 +71,28 @@ namespace COTG
 		{
 			return (a.x - b.x, a.y - b.y);
 		}
+		public static float Distance(this (int x, int y) a, (int x, int y) b)
+		{
+			var dx = (a.x - b.x);
+			var dy = (a.y - b.y);
+			Assert(dx.Abs() < 32767);
+			Assert(dy.Abs() < 32767);
+			return MathF.Sqrt((float)(dx * dx + dy * dy));
+		}
+
+		
+		public static (int x, int y) Negate(this (int x, int y) a)
+		{
+			return (-a.x, -a.y);
+		}
+		public static float Length(this (int x, int y) a)
+		{
+			var x = ((float)a.x);
+			var y = ((float)a.y);
+			return MathF.Sqrt(x * x + y * y);
+
+		}
+
 		public static int RoundToInt(this double f)
 		{
 			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
@@ -267,14 +289,6 @@ namespace COTG
         }
         
 
-        public static float Distance(this (int x,int y) a,(int x, int y) b)
-        {
-            var dx = (a.x - b.x);
-            var dy = (a.y - b.y);
-            Assert(dx.Abs() < 32767 );
-            Assert(dy.Abs() < 32767);
-            return MathF.Sqrt( (float)(dx*dx+dy*dy));
-        }
         public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
         public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
         public static uint ToCompactCid(this int c)

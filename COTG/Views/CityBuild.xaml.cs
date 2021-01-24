@@ -178,12 +178,13 @@ namespace COTG.Views
 		}
 		public static void UpgradeToLevel(int level)
 		{
-			if(!selected.IsValid())
+			var target = hovered;
+			if(!target.IsValid())
 			{
 				Note.Show("Please select a building");
 				return;
 			}
-			var id = XYToId(selected);
+			var id = XYToId(target);
 			var sel = GetBuilding(id);
 			var lvl = sel.bl;
 			if (level == 1)
@@ -193,7 +194,7 @@ namespace COTG.Views
 				if (it.r.bspot == id)
 					lvl = it.r.elvl;
 			}
-			JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (selected.x - span0).ToString(), (selected.y - span0).ToString(), (level).ToString() });
+			JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (target.x - span0).ToString(), (target.y - span0).ToString(), (level).ToString() });
 			for (; lvl < level; ++lvl)
 				buildQueue.Add(new JSON.BuildQueueItem() { bspot = id, slvl = (byte)(lvl), elvl = (byte)(lvl + 1) });
 		}
@@ -263,6 +264,15 @@ namespace COTG.Views
 			"City/building_set5.png";
 			return BrushFromAtlas(uri, u0, v0, scale);
 		}
+
+		internal static void MoveHovered()
+		{
+			selected = hovered;
+			singleClickAction = Action.pending;
+			action = Action.move;
+
+		}
+
 		public static void MoveBuilding(int idFrom, int idTo)
 		{
 			Services.Post.Send("includes/mBu.php", $"a={idFrom}&b={idTo}&c={Spot.build}");
@@ -376,6 +386,19 @@ namespace COTG.Views
 					}
 			}
 		}
+
+		internal static void ShortBuild(short bid)
+		{
+			PerformAction(CityBuild.Action.build, hovered, bid);
+
+		}
+
+		public static void PointerDown((int x, int y) cc, bool isRight)
+		{
+			//  called before pointer release, pointer release is a click or drag/swaipe
+			hovered = cc;
+
+		}
 		public static void Click((int x, int y) cc, bool isRight)
 		{
 			if (ShellPage.instance.buildMenu.IsOpen)
@@ -414,13 +437,14 @@ namespace COTG.Views
 					singleClickAction = Action.pending;
 				{
 					selected = cc;
-
+					
 					//				ShellPage.instance.buildMenu.IsOpen = true;
 					var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
 					var bm = ShellPage.instance.buildMenu;
 					Canvas.SetLeft(bm, sc.X - buildToolSpan / 2 - 1);
 					Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 					//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
+					//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
 					bm.IsOpen = true;
 
 				}
@@ -575,12 +599,12 @@ namespace COTG.Views
 			{
 				if (singleClickAction == CityBuild.Action.pending)
 				{
-					PerformAction(CityBuild.Action.build,selected, bi.bid);
+					PerformAction(CityBuild.Action.build, selected, bi.bid);
 				}
 				else
 				{
 					SetQuickBuild(bi.bid);
-
+				}
 					BuildMenuItem found = null;
 					float bestScore = float.MaxValue;
 					BuildMenuItem best = null;
@@ -610,7 +634,7 @@ namespace COTG.Views
 					}
 					found.cacheScore += 1.0f;
 					found.IsSelected = true;
-				}
+				
 
 
 			}

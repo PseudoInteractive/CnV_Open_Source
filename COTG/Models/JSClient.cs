@@ -179,12 +179,41 @@ namespace COTG
 		{
 		}
 
-		public static void SetPlayer(string token, string cookie)
+		public static void SetPlayer(int pid, int cid)
+		{
+			foreach(var p in PlayerPresence.all)
+			{
+				if(p.pid ==pid)
+				{
+
+					SetPlayer(p.token, p.cookie, cid, p.name);
+					return;
+				}
+			}
+			Debug.Log("Missing player");
+		}
+		
+		public static string GetSecSessionId()
+		{
+			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
+			foreach(var cookie in cookies)
+			{
+				if (cookie.Name == "sec_session_id")
+					return cookie.Value;
+
+
+			}
+			return ""; // error!
+		}
+		public static void SetPlayer(string token, string cookie, int cid,string name)
 		{
 			// already set
 			if (jsVars.token == token)
 				return;
-		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
+
+			Note.Show($"Entering {name}'s City");
+			Log($"ChangePlayer:{name}");
+			//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
 			var session = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
 	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
 		
@@ -202,7 +231,8 @@ namespace COTG
 			cookieManager.SetCookie(session);
 			//if (!rememberme.IsNullOrEmpty())
 			//	cookieManager.SetCookie(remember);
-			view.InvokeScriptAsync("setPlayerGlobals", new[] { token, cookie });
+		//	ppss ^=1;
+			App.DispatchOnUIThreadSneaky( ()=>view.InvokeScriptAsync("setPlayerGlobals", new[] { token, cookie,cid.ToString() }) );
 		}
 		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string s, string ppdt)
 		{
@@ -225,15 +255,19 @@ namespace COTG
 				Player.myIds.Add(pid);
 			}
 
-			if(isMe)
+			if (isMe)
 			{
 				jsBase = jsv;
 				jsVars = jsv;
+				Player.activeId = pid;
 			}
-			else if(setCurrent)
+			else if (setCurrent)
 			{
-				Player.myName = pn;
-				Player.myId = pid;
+				//	Player.myName = pn;
+				Player.activeId = pid;
+				jsVars = jsv;
+
+				App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = pn);
 
 			}
 			
@@ -602,11 +636,20 @@ namespace COTG
 
 				if (City.CanVisit(cityId))
 				{
-					var city = City.StBuild(cityId, scrollIntoUI, select);
 					if (!lazyMove)
 						cityId.BringCidIntoWorldView(lazyMove);
-					App.DispatchOnUIThreadSneaky(() =>
-						view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
+					var city = City.GetOrAddCity(cityId);
+					if (city.pid != Player.activeId)
+					{
+						// need to switch player
+						JSClient.SetPlayer(city.pid, cityId);
+					}
+					else
+					{
+						city.SetBuild(scrollIntoUI);
+						App.DispatchOnUIThreadSneaky(() =>
+							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
+					}
 				}
 				else
 				{
@@ -895,7 +938,7 @@ namespace COTG
 		}
 		static bool ppdtInitialized;
 		static private int[] lastCln = null;
-		public static async void UpdatePPDT(JsonElement jse)
+		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
 		{
 			// Todo:  should we update out local PPDT to the server?
 			
@@ -1043,7 +1086,7 @@ namespace COTG
 					if (!ppdtInitialized)
 					{
 						var info = World.GetInfoFromCid(cid);
-						if (info.player != Player.myId)
+						if (info.player != Player.activeId)
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							App.DispatchOnUIThreadSneaky(() =>
@@ -1057,7 +1100,7 @@ namespace COTG
 
 
 					var city = City.GetOrAddCity(cid);
-					city.isFriend = true;
+					
 					var name = jsCity.GetProperty("2").GetString();
 					int i = name.LastIndexOf('-');
 					if (i != -1)
@@ -1077,19 +1120,30 @@ namespace COTG
 
 					city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 					city.isTemple = jsCity.GetAsInt("15") > 0;
-					city.pid = Player.myId;
+				//	city.pid = Player.activeId;
 					//  Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
 
 
 				}
+				if(updateBuildCity)
+				{
+					if (jse.TryGetProperty("lcit", out var lcit))
+					{
+						var cid = lcit.GetAsInt();
+						ChangeCity(cid, true);
+					}
+				}
+				CityList.SelectedChange();
+				
 				if (!ppdtInitialized)
 				{
+					
+
 					Raiding.UpdateTS(true, true);
 				}
 				ppdtInitialized = true;
 				//    Log(City.all.ToString());
 				//   Log(City.all.Count());
-				CityList.SelectedChange();
 
 			}
 			City.CheckTipRaiding();
@@ -1332,7 +1386,7 @@ namespace COTG
 							   {
 								   var jso = jsp.Value;
 
-								   var s = jso.GetString("s");
+								   var s = jso.GetString("s");// GetSecSessionId();
 								   var token = jso.GetString("token");
 								   var raidSecret = jso.GetString("raid");
 								   var agent = jso.GetString("agent");
@@ -1369,7 +1423,7 @@ namespace COTG
 								   }
 
 								   clientPoolSema.Release(clientCount);
-
+								   
 								   var timeOffset = jso.GetAsInt64("timeoffset");
 								   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
 								   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
@@ -1381,7 +1435,7 @@ namespace COTG
 								   Log(ServerTime().ToString());
 								   ppss = jso.GetAsInt("ppss");
 								   Player.myName = jso.GetString("player");
-								   Player.myId = jso.GetAsInt("pid"); ;
+								   Player.activeId =Player.myId = jso.GetAsInt("pid"); ;
 								   var cid = jso.GetAsInt("cid");
 								   City.build = City.focus = cid;
 								   NavStack.Push(cid);
@@ -1405,7 +1459,7 @@ namespace COTG
 								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,s, ppdt.ToString());
 
 
-								   UpdatePPDT(ppdt);
+								   UpdatePPDT(ppdt,true);
 								   
 								   break;
 							   }
@@ -1716,7 +1770,7 @@ namespace COTG
 						   // city lists
 						   case "ppdt":
 							   {
-								   UpdatePPDT(jsp.Value);
+								   UpdatePPDT(jsp.Value,false);
 								   break;
 							   }
 						   case "chat":
@@ -1742,16 +1796,25 @@ namespace COTG
 								   var ppdt = jso.GetProperty("ppdt");
 								   var token = jso.GetString("token");
 								   var s = jso.GetString("s");
-								   AddPlayer(false, true, pid, pn, token, raidSecret,s, ppdt.ToString());
+								   var cid = jso.GetAsInt("cid");
+								   AddPlayer(false, true, pid, pn, token, raidSecret, s, ppdt.ToString());
+
+								   var city = City.GetOrAdd(cid);
+								   // If they are visiting somene elses city we don't want to be directed there
+								   // so we go to the default city
+								   UpdatePPDT(ppdt,(city.pid != pid) ); 
+								   
+								   if (city.pid == pid) // we want ot visit a specific city
+								   {
+									  ChangeCity(cid,true);
+								   }
 								   City.CitiesChanged();
-								   UpdatePPDT(ppdt);
 								   break;
 							   }
 						   case "c":
 							   {
 								   var jso = jsp.Value;
-								 //  var cid = jso.GetInt("c");
-								   //City.StBuild(cid);
+								   var cid = jso.GetInt("c");
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
 								//   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
@@ -1768,6 +1831,9 @@ namespace COTG
 								   }
 								   ShellPage.NotifyCotgPopup(popupCount);
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
+								  if(cid != 0)
+									   City.StBuild(cid,true);
+
 								   break;
 							   }
 
@@ -1851,37 +1917,50 @@ namespace COTG
 			   }
 		   });
 		}
-		public static List<PlayerPresence> playerPresence = new List<PlayerPresence>();
+		
 
 		private static async void PresenceTimer_Tick(object sender, object e)
 		{
 			var players = await Cosmos.GetPlayersInfo();
 			var changed = false;
-			foreach (var p in players)
+			var presence = new PlayerPresence[players.Count];
+			int put = 0;
+			foreach (var _p in players)
 			{
+				var p = new PlayerPresence(_p);
 				int priorCid;
-				var priorP = playerPresence.Find(a => a.id == p.id);
-				if (priorP == null)
+				var pid = p.pid;
+				
+				var priorIndex = PlayerPresence.all.IndexOf( ( a) => a.pid == pid );
+				if (priorIndex == -1)
 				{
 					changed = true;
 					priorCid = 0;
 				}
 				else
 				{
-					if (priorP.tk != p.tk)
+					if (PlayerPresence.all[priorIndex].token != p.token)
 						changed = true; // need to refresh token
-					priorCid = priorP.cid;
+					priorCid = PlayerPresence.all[priorIndex].cid;
 				}
-				if (p.cid != priorCid && p.pid != jsBase.pid)
+				
+				Player.myIds.Add(pid);
+				if (pid != Player.myId)
 				{
-					if (p.cid == City.build && priorCid != City.build)
-						Note.Show($"{p.name } has joined you in {p.cid.CidToStringMD()}");
-					if (p.cid != City.build && priorCid == City.build)
-						Note.Show($"{p.name } has left {p.cid.CidToStringMD()}");
+					if (p.cid != priorCid)
+					{
+						if (p.cid == City.build && priorCid != City.build)
+							Note.Show($"{p.name } has joined you in {p.cid.CidToStringMD()}");
+						if (p.cid != City.build && priorCid == City.build)
+							Note.Show($"{p.name } has left {p.cid.CidToStringMD()}");
 
+					}
 				}
+				presence[put++] = p;
+
 			}
-			playerPresence = players;
+			PlayerPresence.all = presence;
+
 			if(changed)
 			{
 				App.DispatchOnUIThreadLow(() =>
@@ -1891,7 +1970,7 @@ namespace COTG
 					ShellPage.instance.friendListBox.Items.Clear();
 					int counter = 0;
 					int sel = -1;
-					foreach (var p in playerPresence)
+					foreach (var p in PlayerPresence.all)
 					{
 						ShellPage.instance.friendListBox.Items.Add(p.name);
 						if (p.pid == jsVars.pid)
@@ -1899,9 +1978,11 @@ namespace COTG
 						++counter;
 						// reset menu, TOTO:  Keep track of active selection
 					}
-					ShellPage.instance.friendListBox.SelectedIndex = sel;
+
+					ShellPage.instance.friendListBox.SelectedItem = sel;
 				});
 			}
+
 		}
 
 		static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

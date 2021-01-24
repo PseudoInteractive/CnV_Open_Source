@@ -32,7 +32,7 @@ using COTG.Draw;
 
 namespace COTG.Views
 {
-	
+
 	public partial class ShellPage
 	{
 		//	public static Rectangle canvasHitTest;
@@ -47,10 +47,10 @@ namespace COTG.Views
 		public const int canvasBaseY = 95;
 		public static int cachedXOffset = 0;
 		public static int cachedTopOffset = 0;
-	
+
 		static public SwapChainPanel canvas;
 		public static KeyboardProxy keyboardProxy;
-
+		public static bool hasKeyboardFocus;
 		public static void NotifyCotgPopup(int cotgPopupOpen)
 		{
 			//JSClient.CaptureWebPage(canvas);
@@ -121,8 +121,8 @@ namespace COTG.Views
 				//	UseSharedDevice = true,
 				//	TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f),
 				Margin = new Thickness(0, canvasBaseY, 0, 0),
-			//			IsFixedTimeStep = false
-		};
+				//			IsFixedTimeStep = false
+			};
 			keyboardProxy = new KeyboardProxy()
 			{
 				Background = null,
@@ -154,14 +154,33 @@ namespace COTG.Views
 
 		}
 
+		public static void TakeKeyboardFocus()
+		{
+			if (hasKeyboardFocus)
+				return;
+			// Set this early, it gets set again once the asyn executes
+			hasKeyboardFocus = true;
+			App.DispatchOnUIThreadLow(()=>
+			{
+				instance.commandBar.Focus(FocusState.Programmatic);// set switch away and back because webview reacts poorly otherwise
+				keyboardProxy.Focus(FocusState.Programmatic);
+			});
+		}
+		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
+		{
+			Log("Get focus");
+			hasKeyboardFocus =  true;
+		}
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
 		{
-//			CityBuild.ClearAction();
+			Log("Lost focus");
+			hasKeyboardFocus = false;
+			//			CityBuild.ClearAction();
 		}
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			if(CityBuild.menuOpen)
+			if (CityBuild.menuOpen)
 			{
 				// todo:  Handle naviation menu items and selection
 				ShellPage.instance.buildMenu.IsOpen = false;
@@ -169,43 +188,80 @@ namespace COTG.Views
 
 			}
 			var key = e.Key;
-			switch (key)
+			if (IsWorldView())
 			{
-				// todo: handle differently for city view
+				switch (key)
+				{
+					// todo: handle differently for city view
 
-				case Windows.System.VirtualKey.Space:
-					Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); 
-					break;
+					case Windows.System.VirtualKey.Space:
+						Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true);
+						break;
 
-				case Windows.System.VirtualKey.Left:
-					Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Up:
-					Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Right:
-					Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Down:
-					Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
-					break;
-				case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2); break;
-				case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3); break;
-				case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4); break;
-				case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5); break;
-				case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6); break;
-				case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7); break;
-				case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8); break;
-				case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9); break;
-				case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10); break;
-				case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1); break;
-				case Windows.System.VirtualKey.Q: CityBuild.Demolish(CityView.selected); break;
-				case Windows.System.VirtualKey.D: CityBuild.SetAction(CityBuild.Action.destroy); break;
-				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
-				case (VirtualKey)192: CityBuild.SetAction(CityBuild.Action.move); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+					case Windows.System.VirtualKey.Left:
+						Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
+						break;
+					case Windows.System.VirtualKey.Up:
+						Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
+						break;
+					case Windows.System.VirtualKey.Right:
+						Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
+						break;
+					case Windows.System.VirtualKey.Down:
+						Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
+						break;
+				}
+			}
+			else
+			{
+				switch (key)
+				{
+					case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
+					case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
 
-				default:
-					break;
+					case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2); break;
+					case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3); break;
+					case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4); break;
+					case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5); break;
+					case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6); break;
+					case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7); break;
+					case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8); break;
+					case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9); break;
+					case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10); break;
+					case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1); break;
+					case Windows.System.VirtualKey.Q: CityBuild.Demolish(CityView.hovered); break;
+					case Windows.System.VirtualKey.D: CityBuild.SetAction(CityBuild.Action.destroy); break;
+					case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
+					case (VirtualKey)192: CityBuild.MoveHovered(); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+
+					// short keys
+					case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
+					case Windows.System.VirtualKey.C: CityBuild.ShortBuild(City.bidCottage); return; //  446;
+					case Windows.System.VirtualKey.R: CityBuild.ShortBuild(City.bidStorehouse); return; //  464;
+					case Windows.System.VirtualKey.S: CityBuild.ShortBuild(City.bidQuarry); return; //  461;
+																									//		case Windows.System.VirtualKey.Q  :  CityBuild.ShortBuild(City.bidHideaway ); return; //  479;
+					case Windows.System.VirtualKey.A: CityBuild.ShortBuild(City.bidFarmhouse); return; //  447;
+																									   //	case Windows.System.VirtualKey.U  :  CityBuild.ShortBuild(City.bidCityguardhouse ); return; //  504;
+					case Windows.System.VirtualKey.B: CityBuild.ShortBuild(City.bidBarracks); return; //  445;
+					case Windows.System.VirtualKey.I: CityBuild.ShortBuild(City.bidMine); return; //  465;
+					case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingground); return; //  483;
+					case Windows.System.VirtualKey.M: CityBuild.ShortBuild(City.bidMarketplace); return; //  449;
+					case Windows.System.VirtualKey.V: CityBuild.ShortBuild(City.bidTownhouse); return; //  481;
+					case Windows.System.VirtualKey.L: CityBuild.ShortBuild(City.bidSawmill); return; //  460;
+					case Windows.System.VirtualKey.E: CityBuild.ShortBuild(City.bidStable); return; //  466;
+					case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
+					case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidMage_tower); return; //  500;
+					case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
+					case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidTemple); return; //  482;
+					case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
+					case Windows.System.VirtualKey.K: CityBuild.ShortBuild(City.bidBlacksmith); return; //  502;
+					case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
+					case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
+					case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
+
+					default:
+						break;
+				}
 			}
 		}
 

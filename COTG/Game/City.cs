@@ -29,6 +29,36 @@ namespace COTG.Game
 
     public sealed class City : Spot 
     {
+		
+		public const short bidTownHall = 455;
+		public const short bidWall = 809;
+		 public const short bidForester= 448;
+		 public const short bidCottage= 446;
+		 public const short bidStorehouse= 464;
+		 public const short bidQuarry= 461;
+		 public const short bidHideaway= 479;
+		 public const short bidFarmhouse= 447;
+		 public const short bidCityguardhouse= 504;
+		 public const short bidBarracks= 445;
+		 public const short bidMine= 465;
+		 public const short bidTrainingground= 483;
+		 public const short bidMarketplace= 449;
+		 public const short bidTownhouse= 481;
+		 public const short bidSawmill= 460;
+		 public const short bidStable= 466;
+		 public const short bidStonemason= 462;
+		 public const short bidMage_tower= 500;
+		 public const short bidWindmill= 463;
+		 public const short bidTemple= 482;
+		 public const short bidSmelter= 477;
+		 public const short bidBlacksmith= 502;
+		 public const short bidCastle= 467;
+		 public const short bidPort= 488;
+		 public const short bidShipyard= 491;
+		public const short bidTriariPost = 539;
+		public const short bidRangerPost = 543;
+		public const short bidSentinelPost = 547;
+
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
 		
@@ -50,8 +80,7 @@ namespace COTG.Game
 
 		public Building[] buildings = Emptybuildings;
 		
-		public const short bidTownHall = 455;
-		public const short bidWall = 809;
+		
 
 		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		public Building GetBuiding( int bspot) => buildings[bspot];
@@ -233,7 +262,7 @@ namespace COTG.Game
 				{
 					// Todo: should this be Any of my cities?  Determine case by case
 			
-					myCitiesCache = Spot.allSpots.Values.Where(s => s.pid == Player.myId).ToArray();
+					myCitiesCache = Spot.allSpots.Values.Where(s => s.pid == Player.activeId).ToArray();
 				}
 				return myCitiesCache;
 			}
@@ -325,7 +354,6 @@ namespace COTG.Game
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
 				
-				const int bidCastle = 467;
 				commandSlots = 5;
 				isCastle = false;
 				if (eBd.GetArrayLength() == citySpan * citySpan)
@@ -488,12 +516,12 @@ namespace COTG.Game
        
    
         public byte raidCarry { get; set; }
-        public static City Factory(int cid)
-        {
-            var rv = new City() { cid = cid, pid=Player.myId };
-            allSpots[cid]= rv;
-            return rv;
-        }
+        //public static City Factory(int cid)
+        //{
+        //    var rv = new City() { cid = cid, pid=Player.myId };
+        //    allSpots[cid]= rv;
+        //    return rv;
+        //}
 
         public SenatorInfo[] senatorInfo = Array.Empty<SenatorInfo>();
         public string senny

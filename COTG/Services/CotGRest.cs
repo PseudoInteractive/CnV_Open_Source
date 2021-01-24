@@ -401,11 +401,20 @@ namespace COTG.Services
 		}
         public static async Task Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
-		
+
+			if (City.TryGet(_cid, out var city) && (city.pid != Player.activeId))
+			{
+				int q = 0;
+				return;
+			}
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
-                await GetCity.Post(_cid,null);
-            //   await Task.Delay(2000);
+			{
+				{
+					await GetCity.Post(_cid, null);
+				}
+
+			}            //   await Task.Delay(2000);
             //   COTG.Views.MainPage.CityListUpdateAll();
             if(secret != null)
                 await new ScanDungeons(_cid, _autoRaid).Post();
@@ -449,7 +458,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                Log(e);
+                Log(e.Message);
             }
 
         }

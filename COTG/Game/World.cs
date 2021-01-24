@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Media.Imaging;
 
 using static COTG.Debug;
 
+using Vector2 = System.Numerics.Vector2;
+
 namespace COTG.Game
 {
 	static class WorldHelper
@@ -87,7 +89,11 @@ namespace COTG.Game
 		{
 			return a.x + (a.y << 16);
 		}
-	
+
+		public static Vector2 ToVector(this (int x, int y) a)
+		{
+			return new Vector2(a.x, a.y);
+		}
 		public static (int x, int y) CidToWorld(this int c)
 		{
 			return (c & 65535, c >> 16);
@@ -122,7 +128,7 @@ namespace COTG.Game
 			var y = cont / 10;
 			return GetPackedIdFromCont((cont - y*10,y));
 		}
-		public static int GetPackedIdFromContUnpacked(int cont) => cont == 56 ? count - 1 : GetPackedIdFromCont(GetPackedIdFromCont(cont));
+		public static int GetPackedIdFromContUnpacked(int cont) => cont == 56 ? count - 1 : (GetPackedIdFromCont(cont));
 		public static Continent[] all = new Continent[count]; // 56 is a summary for world
 
 	};

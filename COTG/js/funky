@@ -8779,7 +8779,7 @@ function DoSyncViewMode() {
                     }
                 });
             }
-            if ((_viewMode !== _viewModeCache || popupSizeDirty
+            if (_cid !== 0 || (_viewMode !== _viewModeCache || popupSizeDirty
                 || _popupCountCache !== _popupCount) || (_lastTooltip !== tooltipped)) {
                 _viewModeCache = _viewMode;
                 popupSizeDirty = false;
@@ -8788,7 +8788,8 @@ function DoSyncViewMode() {
                 _cameraX = _x;
                 _cameraY = _y;
                 _popupCountCache = _popupCount;
-                const wrapper = { c: { x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop: popups } };
+                const wrapper = { c: { x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop: popups, _cid } };
+                _cid = 0;
                 window['external']['notify'](JSON.stringify(wrapper));
             }
         }
@@ -13760,7 +13761,10 @@ var cotgsubscribe = amplify;
                 $(__s[1739])
                     .click(function () {
                     E6k.R6();
-                    w7V(Q72);
+                    R2(Q72);
+                    setTimeout(function () {
+                        r7F();
+                    }, 500);
                 });
                 $(__s[1884])
                     .html(l72);
@@ -13807,6 +13811,7 @@ var cotgsubscribe = amplify;
         function x7V() {
             N6();
             var b4w = $.post("/includes/" + __s[2447], { usrid: P8, usr: H2, sc: D6.s });
+            "pS.php";
             F6();
             b4w.done(function (S4w) {
                 E6k.R6();
@@ -16638,7 +16643,6 @@ var cotgsubscribe = amplify;
         gspotfunct.chcity = function (__cid) {
             _cid = cid = Number(__cid);
             R2(__cid);
-            DoPoll2(300);
         };
         window['chcity'] = gspotfunct.chcity;
         gspotfunct.infoPlay = function (q9V) {
@@ -17215,13 +17219,13 @@ var cotgsubscribe = amplify;
                     setTimeout(function () {
                         E6k.R6();
                         getCity(R0g);
-                    }, 2000);
+                    }, 200);
                 else if (!(Y0g == 0)) {
                     D6 = JSON.parse(Y0g);
+                    cid = D6.cid;
                     gCPosted();
                     Y0g = "";
                     cit_type = D6.w;
-                    cid = D6.cid;
                     var N0g = D6.x;
                     var F0g = D6.y;
                     $(__s[+l8R])
@@ -17666,7 +17670,7 @@ var cotgsubscribe = amplify;
                 }
             });
         }
-        window['setPlayerGlobals'] = function (token, cookie) {
+        window['setPlayerGlobals'] = function (token, cookie, _cid) {
             ppdt['opt'][67] = token;
             s = cookie;
             let t0 = $.post("/includes/block.php", { a: 10 });
@@ -17675,12 +17679,12 @@ var cotgsubscribe = amplify;
                 truncateToken();
                 H2 = ppdt['pn'];
                 P8 = ppdt.pid;
+                cid = parseInt(_cid);
                 raidSecret = Q3F();
-                let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie } };
+                let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie, cid: _cid } };
                 window['external']['notify'](JSON.stringify(wrapper));
                 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
                 B9Z.done(function (R9Z) {
-                    console.log("Unblock " + R9Z);
                 });
             });
         };
@@ -18307,16 +18311,13 @@ var cotgsubscribe = amplify;
             };
         }(window.String.fromCharCode, parseInt);
         function R2(d9l) {
-            if (U9 == 0) {
-                U9 = 1;
-                ClearCity();
-                cid = Number(d9l);
-                getCity(Number(d9l));
-                X8();
-                {
-                    setTimeout(function () { U9 = 0; }, 100);
-                }
-            }
+            ClearCity();
+            cid = Number(d9l);
+            _cid = cid;
+            callSyncViewMode();
+            getCity(Number(d9l));
+            X8();
+            DoPoll2(300);
         }
         function W3F(d9T) {
             var g9T = artifacts[d9T]["n"];
@@ -21929,7 +21930,6 @@ var cotgsubscribe = amplify;
             $(__s[3142])
                 .html(__s[362] + G8 + ":" + l8 + ")");
         }
-        var U9 = 0;
         function n8() {
             var P04 = '3079';
             E6k.R6();
@@ -22471,6 +22471,7 @@ var cotgsubscribe = amplify;
                             regrender = 0;
                             worldrender = 0;
                             citrender = 1;
+                            console.log("R2: 0");
                             R2(Q46);
                         }
                     }
@@ -24705,6 +24706,7 @@ var cotgsubscribe = amplify;
                                     y9l = ppdt['c'][D9l][1];
                                 }
                         }
+                        console.log("R2: 1");
                         R2(y9l);
                     }
                 }
@@ -24730,6 +24732,7 @@ var cotgsubscribe = amplify;
                                     y9l = ppdt.clc[p9l][D9l];
                                 }
                         }
+                        console.log("R2: 3");
                         R2(y9l);
                         X8();
                     }
@@ -52190,6 +52193,7 @@ var cotgsubscribe = amplify;
                 window.location.replace(__s[C2R >> 625599200]);
             }
             else {
+                console.log("R2: 4");
                 var i9l = ppdt['c'][0][1];
                 R2(i9l);
             }
@@ -53715,9 +53719,6 @@ var cotgsubscribe = amplify;
                 for (var p31 in D31)
                     N31[p31] = D31[p31];
                 D6 = N31;
-                if (D6.pid != ppdt.pid)
-                    if (ppdt.pid != 2 && ppdt.pn != __s[2473])
-                        a7F();
                 if (D6.bq.length > 0) {
                     if (JSON
                         .stringify(D6.bq) != JSON.stringify(Y31)) {
@@ -55074,17 +55075,9 @@ var cotgsubscribe = amplify;
         }
         function w7V(S9l) {
             E6k.R6();
-            if (U9 == 0) {
-                U9 = 1;
-                ClearCity();
-                getCity(Number(S9l));
-                cid = Number(S9l);
-                setTimeout(function () {
-                    E6k.R6();
-                    r7F();
-                }, 500);
-                c3F();
-            }
+            ClearCity();
+            getCity(Number(S9l));
+            cid = Number(S9l);
         }
         function W5V(n59, f59) {
             E6k.R6();
@@ -55130,7 +55123,6 @@ var cotgsubscribe = amplify;
         }
         function f6F() {
         }
-        function c3F() { setTimeout(function () { U9 = 0; }, 1000); }
         var l1F = new Array();
         $(__s[k04 - 0])
             .click(function (e8g) {
@@ -55799,8 +55791,10 @@ var cotgsubscribe = amplify;
                     var W71 = pollJ[__s[3271]];
                     t1F(W71);
                     var n71 = pollJ[__s[3383]];
-                    if (n71 >= 1)
+                    if (n71 >= 1) {
+                        console.log("R2: 7");
                         R2(cid);
+                    }
                     var x71 = pollJ[E6k
                         .o55(1076)];
                     if (x71 >= 1)
@@ -65436,8 +65430,7 @@ var cotgsubscribe = amplify;
                     .alatitties;
                 var X5i = Number(j5i) - Number(ppdt[__s[+h6R]]);
                 if (E0i == undefined) {
-                    j5i = E6k
-                        .o55(r9y * 1);
+                    j5i = "-";
                     E0i = "-";
                     G5i = "-";
                     X5i = "-";
@@ -65448,11 +65441,10 @@ var cotgsubscribe = amplify;
                 if (!x5i)
                     x5i = "-";
                 if (!Q5i)
-                    Q5i = _s(r9y - 0);
+                    Q5i = "-";
                 $(__s[5420])
-                    .tooltipster("content", $(__s[3738] + ppdt.pn + __s[5923] + Q5i + _s("3204" |
-                    2176) + ppdt.c.length + __s[5043] + ppdt.cac + __s[3630] + g5i + _s(+'743') + x5i + __s[4556] + f5i + __s[629] + G5i + __s[536] + X5i + E6k
-                    .o55(1356)));
+                    .tooltipster("content", $(__s[3738] + ppdt.pn + __s[5923] + Q5i + _s("3204" | 2176) + ppdt.c.length + __s[5043] + ppdt.cac + __s[3630] + g5i + _s(+'743') +
+                    x5i + __s[4556] + f5i + __s[629] + G5i + __s[536] + X5i + E6k.o55(1356)));
             });
             $(__s[+M9y])
                 .hover(function () {

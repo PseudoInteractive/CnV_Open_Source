@@ -190,6 +190,7 @@
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\PlayerAvatar.cs" />
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />
@@ -537,7 +538,14 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <None Include="ClassDiagram2.cd" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
+    <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\SmallTile.scale-400.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Content\Art\City\building_set5.png" />
     <Content Include="Content\Art\City\decal_building_invalid.png" />
     <Content Include="Content\Art\City\decal_building_valid.png" />

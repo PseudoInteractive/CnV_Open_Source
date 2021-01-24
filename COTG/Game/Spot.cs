@@ -49,7 +49,7 @@ namespace COTG.Game
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		
-		public bool isFriend; // this is set if it is one of our cities or our ally cities that we can visit
+		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 
 		internal static City GetFocus()
 		{
@@ -80,11 +80,10 @@ namespace COTG.Game
 				var worldC = cid.CidToWorld();
 				var info = World.GetInfo(worldC);
 				//    Assert(info.type == World.typeCity);
-				if (Player.myId == info.player)
-					City.CitiesChanged();
+				
 
 				rv = new City() { cid = cid, pid = info.player };
-
+				
 				//       Assert( info.player != 0);
 				rv.type = (byte)(info.type >> 28);
 				if (info.type == 0)
@@ -97,6 +96,8 @@ namespace COTG.Game
 				rv.points = (ushort)(info.isBig ? 8000 : 1500);
 
 				Spot.allSpots.TryAdd(cid, rv);
+				if (Player.IsFriend(info.player))
+					City.CitiesChanged();
 			}
 			if (cityName != null)
 				rv._cityName = cityName;
@@ -1154,17 +1155,25 @@ namespace COTG.Game
 		public bool SetBuild(bool scrollIntoView, bool select = true)
 		{
 			var changed = cid != build;
-			City.build = cid;
-
-			Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.s); // broadcast change
-
 			if (changed)
 			{
+				City.build = cid;
+				Assert(pid == Player.activeId);
+				Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.s); // broadcast change
+
+				foreach (var p in PlayerPresence.all)
+				{
+					if (p.pid != Player.myId && p.cid == cid)
+					{
+						Note.Show($"You have joined {p.name } in {p.cid.CidToStringMD()}");
+					}
+				}
+
 				City.CitySwitched();
 				App.DispatchOnUIThreadSneaky(() =>
 				{
-					if (ShellPage.instance.cityBox.SelectedItem != this)
-						ShellPage.instance.cityBox.SelectedItem = this;
+						if (ShellPage.instance.cityBox.SelectedItem != this)
+							ShellPage.instance.cityBox.SelectedItem = this;
 				});
 			}
 			SetFocus(scrollIntoView, select);
@@ -1354,7 +1363,7 @@ namespace COTG.Game
 			if (this.isCityOrCastle)
 			{
 				// Look - its my city!
-				if (this.isMine)
+				if (this.isFriend)
 				{
 					// This one has multi select
 					int count = 1;

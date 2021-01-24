@@ -117,7 +117,16 @@ namespace COTG.Game
                     return i;
             return -1;
         }
-        public static int IndexOf(this string[] a, string b)
+
+		public static int IndexOf<T>(this T[] a, Func<T,bool> predicate)
+		{
+			for (int i = 0; i < a.Length; ++i)
+				if (predicate(a[i]) )
+					return i;
+			return -1;
+		}
+
+		public static int IndexOf(this string[] a, string b)
         {
             for (int i = 0; i < a.Length; ++i)
                 if (a[i] == b)

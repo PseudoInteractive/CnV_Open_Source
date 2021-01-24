@@ -7505,7 +7505,7 @@ function DoSyncViewMode() {
 		}
 			// if (cid != 0 &&(  _cid !== cid || _viewMode !== _viewModeCache 
 			//         || _zoom != __zoom || _popupCountCache != _popupCount))
-			if ( (_viewMode !== _viewModeCache || popupSizeDirty
+			if ( _cid!==0||(_viewMode !== _viewModeCache || popupSizeDirty
 				|| _popupCountCache !== _popupCount) ||(_lastTooltip !== tooltipped) ) {
 				_viewModeCache = _viewMode;
 				popupSizeDirty=false;
@@ -7514,7 +7514,8 @@ function DoSyncViewMode() {
 				_cameraX = _x;
 				_cameraY = _y;
 				_popupCountCache = _popupCount;
-				const wrapper = { c: {  x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups } };
+				const wrapper = { c: {  x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups, _cid } };
+				_cid=0;
 				window['external']['notify'](JSON.stringify(wrapper));
 			}
 		}
@@ -8650,7 +8651,7 @@ i011.B6 = function () {
 								V6[57] = {};
 								V6[57].l0 = ['f0'];
 								V6[57].b0 = function () {
-									var D3 = function () { return 'aaaa'.padEnd(5, 'a'); };
+									var D3 = function () { return 'aaaaa'; };
 									var u3 =
 										/\x61\x61\u0061\u0061\x61/.f0rr(D3 + []);
 									return u3;
@@ -12699,7 +12700,10 @@ var cotgsubscribe = amplify;
 				$(__s[1739])
 					.click(function () {
 						E6k.R6();
-						w7V(Q72);
+						R2(Q72);
+	  setTimeout(function () {
+					r7F();
+				}, 500);
 					});
 				$(__s[1884])
 					.html(l72);
@@ -12745,7 +12749,7 @@ var cotgsubscribe = amplify;
 
 		function x7V() {
 			N6();
-			var b4w = $.post("/includes/" + __s[2447], { usrid: P8, usr: H2, sc: D6.s });
+			var b4w = $.post("/includes/" + __s[2447], { usrid: P8, usr: H2, sc: D6.s }); "pS.php"
 			F6();
 			b4w.done(function (S4w) {
 				E6k.R6();
@@ -16907,7 +16911,7 @@ var cotgsubscribe = amplify;
 		gspotfunct.chcity = function (__cid) {
 			_cid = cid = Number(__cid);
 			R2(__cid);
-			DoPoll2(300);
+		
 		};
 		window['chcity'] = gspotfunct.chcity;
 		gspotfunct.infoPlay = function (q9V) {
@@ -17485,14 +17489,14 @@ var cotgsubscribe = amplify;
 				if (!Y0g) setTimeout(function () {
 					E6k.R6();
 					getCity(R0g);
-				}, 2000);
+				}, 200);
 				else if (!(Y0g == 0)) {
 					D6 = JSON.parse(Y0g);
-
+				    cid = D6.cid;
 					gCPosted();
 					Y0g = "";
 					cit_type = D6.w;
-					cid = D6.cid;
+					
 					var N0g = D6.x;
 					var F0g = D6.y;
 					$(__s[+l8R])
@@ -17935,11 +17939,12 @@ var cotgsubscribe = amplify;
 		}
 		
 
-		window['setPlayerGlobals'] = function(token:string, cookie:string)
+		window['setPlayerGlobals'] = function(token:string, cookie:string, _cid:string)
 		{
 //			ppdt = _ppdt;
 			ppdt['opt'][67] = token;
 			s= cookie;
+			//ppss^=1; // hack!!
 		//	document.cookie = "sec_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 		//	document.cookie = "sec_session_id="+cookie+"; expires=Thu, 01 Jan 9999 00:00:00 GMT";
 
@@ -17951,10 +17956,10 @@ var cotgsubscribe = amplify;
 					truncateToken()
 					H2 = ppdt['pn'];
 					P8 = ppdt.pid;
-					
+					cid = parseInt(_cid);
 					raidSecret = Q3F();
 
-	 				let wrapper = { setglobals: {secret:raidSecret,pid:P8,pn:H2,ppdt:ppdt,token:token,s:cookie } };
+	 				let wrapper = { setglobals: {secret:raidSecret,pid:P8,pn:H2,ppdt:ppdt,token:token,s:cookie,cid:_cid } };
   //	send back the raid secret and ppdt
 	
 					window['external']['notify'](JSON.stringify(wrapper));
@@ -17964,9 +17969,9 @@ var cotgsubscribe = amplify;
 			 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
 				
 				B9Z.done(function (R9Z) {
-					console.log("Unblock " + R9Z);
 			
 				});
+	
 			});
 		}
 
@@ -18681,14 +18686,18 @@ var cotgsubscribe = amplify;
 		function R2(d9l) {
 			// E6k.R6();
 			// var b9l = arguments.callee.caller.name;
-			if (U9 == 0) {
-				U9 = 1;
+			//if (U9 == 0) {
+			//	U9 = 1;
 				ClearCity();
 				cid = Number(d9l);
+				_cid = cid;
+				callSyncViewMode();
 				getCity(Number(d9l));
 				X8();
-				{ setTimeout(function () { U9 = 0; }, 100); }
-			}
+				DoPoll2(300);
+	
+	//			{ setTimeout(function () { U9 = 0; }, 100); }
+	//		}
 		}
 
 		function W3F(d9T) {
@@ -18732,7 +18741,7 @@ var cotgsubscribe = amplify;
 							ppdt = y9T;
 							$(__s[R2p * 1] + d9T)
 								.val("");
-							let B9T = artifacts[d9T]["r"] as [];
+							let B9T = artifacts[d9T].r;
 							for (var Z9T in B9T) {
 								var U9T = B9T[
 									Z9T] * b9T;
@@ -23688,7 +23697,7 @@ var cotgsubscribe = amplify;
 			$(__s[3142])
 				.html(__s[362] + G8 + ":" + l8 + ")");
 		}
-		var U9 = 0;
+//		var U9 = 0;
 
 		function n8() {
 			var P04 = '3079';
@@ -24213,6 +24222,7 @@ var cotgsubscribe = amplify;
 							//c6.time.desiredFps = 1;
 							//c6.time.fpsMax = 1;
 							//c6.raf.stop();
+							console.log("R2: 0");
 							R2(Q46);
 						}
 					}
@@ -26417,6 +26427,7 @@ var cotgsubscribe = amplify;
 											y9l = ppdt['c'][D9l][1];
 										}
 								}
+		console.log("R2: 1");
 								R2(y9l);
 							}
 						} else {
@@ -26439,7 +26450,8 @@ var cotgsubscribe = amplify;
 											y9l = ppdt.clc[p9l][D9l];
 										}
 								}
-								R2(y9l);
+							console.log("R2: 3");
+							R2(y9l);
 								X8();
 							}
 						}
@@ -42523,7 +42535,7 @@ var cotgsubscribe = amplify;
 				Y8w.e));
 			if (o9w == 0) var q8w = Math.min(x9w, T9w, j9w, e9w);
 			else var q8w = Math.min(x9w, T9w, j9w, e9w, G9w);
-			if (o9w == 17 >> 488312480 & q8w >= ppdt.b) q8w = ppdt
+			if (o9w == 17 >> 488312480 && q8w >= ppdt.b) q8w = ppdt
 				.b;
 			return q8w;
 		}
@@ -54503,6 +54515,7 @@ var cotgsubscribe = amplify;
 				window.onbeforeunload = null;
 				window.location.replace(__s[C2R >> 625599200]);
 			} else {
+		   console.log("R2: 4");
 				var i9l = ppdt['c'][0][1];
 				R2(i9l);
 			}
@@ -56039,9 +56052,9 @@ var cotgsubscribe = amplify;
 				for (var p31 in D6) N31[p31] = D6[p31];
 				for (var p31 in D31) N31[p31] = D31[p31];
 				D6 = N31;
-				if (D6.pid != ppdt.pid)
-					if (ppdt.pid != 2 && ppdt.pn != __s[2473]) 
-							a7F();
+				//if (D6.pid != ppdt.pid)
+				//	if (ppdt.pid != 2 && ppdt.pn != __s[2473]) 
+				//			a7F();
 				if (D6.bq.length > 0) {
 					if (JSON
 						.stringify(D6.bq) != JSON.stringify(Y31)) {
@@ -57331,17 +57344,14 @@ var cotgsubscribe = amplify;
 		function w7V(S9l) {
 			//   var J9l = arguments.callee.caller.name;
 			E6k.R6();
-			if (U9 == 0) {
-				U9 = 1;
+	//		if (U9 == 0) {
+	//			U9 = 1;
 				ClearCity();
 				getCity(Number(S9l));
 				cid = Number(S9l);
-				setTimeout(function () {
-					E6k.R6();
-					r7F();
-				}, 500);
-				c3F();
-			}
+				
+			//	c3F();
+			//}
 		}
 
 		function W5V(n59, f59) {
@@ -57391,7 +57401,7 @@ var cotgsubscribe = amplify;
 			//V9.volume(Number(q11) / 100);
 		}
 
-		function c3F() { setTimeout(function () { U9 = 0; }, 1000); }
+//		function c3F() { setTimeout(function () { U9 = 0; }, 1000); }
 		var l1F = new Array();
 		$(__s[k04 - 0]) // upgrade
 			.click(function (e8g) {
@@ -58069,7 +58079,10 @@ var cotgsubscribe = amplify;
 					var W71 = pollJ[__s[3271]];
 					t1F(W71);
 					var n71 = pollJ[__s[3383]];
-					if (n71 >= 1) R2(cid);
+					 if (n71 >= 1){
+						console.log("R2: 7");
+							R2(cid);
+					  }
 					var x71 = pollJ[E6k
 						.o55(1076)];
 					if (x71 >= 1) a7F();
@@ -67846,8 +67859,7 @@ var cotgsubscribe = amplify;
 							.alatitties;
 						var X5i = Number(j5i) - Number(ppdt[__s[+h6R]]);
 						if (E0i == undefined) {
-							j5i = E6k
-								.o55(r9y * 1);
+							j5i = "-";
 							E0i = "-";
 							G5i = "-";
 							X5i = "-";
@@ -67856,14 +67868,11 @@ var cotgsubscribe = amplify;
 						var g5i = p6(Number(ppdt["sco"]));
 						var x5i = ppdt.gr;
 						if (!x5i) x5i = "-";
-						if (!Q5i) Q5i = _s(
-							r9y - 0);
+						if (!Q5i) Q5i = "-";
 						$(__s[5420])
-							.tooltipster("content", $(__s[3738] + ppdt.pn + __s[5923] + Q5i + _s("3204" |
-								2176) + ppdt.c.length + __s[5043] + ppdt.cac + __s[3630] + g5i + _s(+
-									'743') + x5i + __s[4556] + f5i + __s[629] + G5i + __s[536] + X5i + E6k
-										.o55(
-											1356)));
+							.tooltipster("content", 
+	   $(__s[3738] + ppdt.pn + __s[5923] + Q5i + _s("3204" |2176) + ppdt.c.length + __s[5043] + ppdt.cac + __s[3630] + g5i + _s(+'743') + 
+			x5i + __s[4556] + f5i + __s[629] + G5i + __s[536] + X5i + E6k.o55(1356)));
 					});
 				$(__s[+M9y])
 					.hover(function () {
@@ -68391,10 +68400,9 @@ var cotgsubscribe = amplify;
 						var x3i = "";
 						if (D6.itu)
 							if (D6.itu[8])
-								for (let t3i in D6.itu[8]) {
+								for (let t3i   in D6.itu[8]) {
 									var M3i = currentTime();
-									var L3i = D6["itu"][+
-										'8'][t3i][1];
+									var L3i = D6["itu"][8][t3i][1];
 									if (L3i < M3i) D6["itu"][8].splice(t3i, 1);
 									else {
 										var z3i = new Date(L3i);

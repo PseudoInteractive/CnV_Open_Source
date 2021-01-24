@@ -189,23 +189,10 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			Initialize();
-
-			//var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-			//coreTitleBar.ExtendViewIntoTitleBar = true;
-			//UpdateTitleBarLayout(coreTitleBar);
-
-			//// Set XAML element as a draggable region.
-			//Window.Current.SetTitleBar(AppTitleBar);
 		}
 
 		private void Initialize()
 		{
-			//        NavigationService.NavigationFailed += Frame_NavigationFailed;
-			//        NavigationService.Navigated += Frame_Navigated;
-			//        NavigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
-			//       navigationView.BackRequested += OnBackRequested;
-			//  IdentityService.LoggedIn += OnLoggedIn;
-			//   IdentityService.LoggedOut += OnLoggedOut;
 		}
 
 		public static void SetHeaderText(string text)
@@ -708,7 +695,6 @@ namespace COTG.Views
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 
-		static DateTimeOffset flyoutCreatedTime;
 		public static (int x, int y) webclientSpan;
 
 		private async void ShowBuildings(object sender, RoutedEventArgs e)
@@ -785,9 +771,6 @@ namespace COTG.Views
 					bd.Add(new BuildingCount() { count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					//         
-
-					flyoutCreatedTime = DateTimeOffset.Now;
-
 					//                    var button = sender as Button;
 					// button.Focus(FocusState.Programmatic);
 					App.DispatchOnUIThread(() =>
@@ -1207,8 +1190,8 @@ namespace COTG.Views
 			if(e.AddedItems.Any())
 			{
 				var s = e.AddedItems[0] as string;
-				var friend = JSClient.playerPresence.Find(f => f.name == s);
-				JSClient.SetPlayer(friend.tk, friend.ck);
+				var friend = Array.Find(PlayerPresence.all,f => f.name == s);
+				JSClient.SetPlayer(friend.token, friend.cookie,friend.cid, friend.name);
 
 			}
 		}

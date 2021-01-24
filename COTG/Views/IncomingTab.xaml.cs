@@ -138,7 +138,7 @@ namespace COTG.Views
                 try
                 {
                     var sel = defenderGrid.SelectedItem as Spot;
-                    defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.myId).ToArray() : Spot.defendersI;
+                    defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.activeId).ToArray() : Spot.defendersI;
                     if (sel!=null)
                     {
                        

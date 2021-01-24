@@ -18,6 +18,7 @@ namespace COTG.Game
         public ushort cities;
         public byte title;
         public static int myId;
+		public static int activeId;
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
 

@@ -464,6 +464,11 @@ namespace COTG
 				//			ShellPage.canvasHitTest.Fill = JSClient.webViewBrush;
 				//		});
 			}
+			catch (SharpDX.SharpDXException sex)
+			{
+				COTG.Debug.Log(sex);
+				COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+			}
 			catch (Exception _exception)
 			{
 				COTG.Debug.Log(_exception);
@@ -1319,11 +1324,12 @@ namespace COTG
 					//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
 					if (worldChanges != null && !focusOnCity)
 					{
+						var tOffset = new Vector2(0.75f, 0.0f);
 						var t2d = worldChanges.texture2d;
 						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
 						draw.AddQuad(Layer.tileCity-1, worldChanges,
 							destP0, destP1,
-							srcP0 * scale, srcP1* scale, new Color(128,128,128,0), ConstantDepth, zTerrain);
+							(srcP0-tOffset) * scale, (srcP1-tOffset)* scale, new Color(128,128,128,0), ConstantDepth, zTerrain);
 					}
 				if (wantCity)
 				{
@@ -1422,23 +1428,9 @@ namespace COTG
 										{
 											var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 											var r = t.Ramp();
-											int iType = 0;
-											float alpha = 1;
 											var nSprite = attack.troops.Length;
 
-											if (nSprite > 1)
-											{
-												Assert(t > 0);
-												var rtype = t % nSprite;
-												iType = (int)rtype;
-												var frac = rtype - iType;
-												iType = iType.Min(nSprite - 1);
-												if (frac < 0.25f)
-													alpha = AMath.STerm(frac * 4.0f);
-												else if (frac > 0.75f)
-													alpha = AMath.STerm((1 - frac) * 4.0f);
-
-											}
+											(int iType, float alpha)=	GetTroopBlend(t,nSprite);
 											DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, 28, alpha);
 										}
 										//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
@@ -1605,30 +1597,16 @@ namespace COTG
 												//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 											}
 											if (i.troops.Any())
-											{
-												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
-												var r = t.Ramp();
-												int iType = 0;
-												float alpha = 1;
-												var nSprite = i.troops.Length;
-
-												if (nSprite > 1)
 												{
-													Assert(t > 0);
-													var rtype = t % nSprite;
-													iType = (int)rtype;
-													var frac = rtype - iType;
-													iType = iType.Min(nSprite - 1);
-													if (frac < 0.25f)
-														alpha = AMath.STerm(frac * 4.0f);
-													else if (frac > 0.75f)
-														alpha = AMath.STerm((1 - frac) * 4.0f);
+													var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
+													var r = t.Ramp();
+													var nSprite = i.troops.Length;
 
+													(int iType, float alpha) = GetTroopBlend(t, nSprite);
+
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, 28, alpha);
 												}
-
-												DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, 28, alpha);
-											}
-											else
+												else
 											{
 												Assert(false);
 											}
@@ -1819,6 +1797,23 @@ namespace COTG
 						}
 					}
 				}
+					if(!ShellPage.IsCityView())
+					{
+						var avatars = PlayerPresence.all;
+						foreach(var a in avatars)
+						{
+							var cid = a.cid;
+							var pid = a.pid;
+							if (Player.myId == pid) // don't show me
+								continue;
+
+							var wc = cid.CidToWorld();
+							if (!IsCulledWC(wc))
+							{
+								DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToC(), tipTextFormatCentered, Color.Red, 255, Layer.tileText,3,3,null,-1, 0.75f * SettingsPage.fontScale);
+							}
+						}
+					}
 				// show selected
 				var _toolTip = ShellPage.toolTip;
 
@@ -1886,8 +1881,25 @@ namespace COTG
 				draw._beginCalled = false;
 			}
 
+			static (int iType,float alpha) GetTroopBlend(float t,  int nSprite)
+			{
+				int iType = 0;
+				float alpha = 1;
+				if (nSprite > 1)
+				{
+					Assert(t > 0);
+					var rtype = t % nSprite;
+					iType = (int)rtype;
+					var frac = rtype - iType;
+					iType = iType.Min(nSprite - 1);
+					if (frac < 0.25f)
+						alpha = AMath.STerm(frac * 4.0f);
+					else if (frac > 0.75f)
+						alpha = AMath.STerm((1 - frac) * 4.0f);
 
-
+				}
+				return (iType, alpha);
+			}
 		}
 
 		private static void DrawFlag(int cid, SpriteAnim sprite)
@@ -1950,7 +1962,7 @@ namespace COTG
 			TextLayout textLayout = GetTextLayout(text, format);
 			if (zBias == -1)
 				zBias = zLabels;
-			var span = textLayout.ScaledSpan(scale);
+			
 			var constantDepth = depth == null;
 
 			// shift everything, then ignore Z
@@ -1962,7 +1974,7 @@ namespace COTG
 				scale *= atScale.scale;
 				zBias = 0;
 			}
-
+			var span = textLayout.ScaledSpan(scale);
 			var expand = new Vector2(_expandX,_expandY);
 			if (backgroundColor.A > 0)
 			{
@@ -2365,16 +2377,16 @@ namespace COTG
 			var v = cid.CidToWorldV();
 			var newC = v;
 			var dc = newC - AGame.cameraC;
-			if (ShellPage.IsCityView())
-				lazy = false;
+		//	if (ShellPage.IsCityView())
+		//		lazy = false;
 
 			// only move if needed, heuristic is if any part is off screen
 			if (!lazy ||
 				(dc.X.Abs()+0.5f) * AGame.pixelScale >= AGame.halfSpan.X  ||
 				(dc.Y.Abs()+0.5f) * AGame.pixelScale >= AGame.halfSpan.Y )
 			{
-				// only move if moving more than about 64 pixels?
-				if (Vector2.Distance(AGame.cameraC, newC)*AGame.cameraZoomLag >= 64.0f)
+				// only move if moving more than about 1 city span
+				if (Vector2.Distance(AGame.cameraC, newC) >= 0.75f )
 				{
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
