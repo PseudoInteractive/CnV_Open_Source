@@ -1040,14 +1040,17 @@ namespace COTG
 		static string lastTip;
 		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
 		{
-
-
 			var info = Spot.HitTest(sender, e);
 			var str = info.column?.Column?.Tip ?? string.Empty;
+			ShowTip(str);
+		}
+		public static void ShowTip(string str)
+		{
 			if (str != lastTip)
 			{
 				lastTip = str;
-				TabPage.mainTabs.tip.Text = str; // Todo:  use the correct tabPage
+				App.DispatchOnUIThreadSneaky(() =>
+			   TabPage.mainTabs.tip.Text = str); // Todo:  use the correct tabPage
 			}
 		}
 		public static void ProcessTooltips(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid grid)

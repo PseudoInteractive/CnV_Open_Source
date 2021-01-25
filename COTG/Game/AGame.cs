@@ -300,7 +300,7 @@ namespace COTG
 				public static KeyboardState keyboardState;
 				public static KeyboardState priorKeyboardState;
 			public static bool WasKeyPressed(Keys key) => keyboardState.IsKeyDown(key) && !priorKeyboardState.IsKeyDown(key);
-		const float viewHoverElevationMax = 1.0f / 64.0f;
+		const float viewHoverZGain = 1.0f / 64.0f;
 		const float viewHoverElevationKt = 24.0f;
 		public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
 
@@ -332,12 +332,12 @@ namespace COTG
 						var kd = (viewHoverElevationKt);
 						var ks = AMath.CritDampingKs(kd);
 
-						vz += (((cid == hover ? viewHoverElevationMax : 0.0f) - z) * ks - vz * kd) * dt;
+						vz += (((cid == hover ? 1.0f : 0.0f) - z) * ks - vz * kd) * dt;
 						z += vz * (float)dt;
 						viewHovers[i] = (cid, z, vz);
 
 
-						if (z <= 1.0f / 1024.0f)
+						if (z <= 1.0f / 32.0f)
 						{
 							removeMe = i;
 						}
@@ -1265,10 +1265,10 @@ namespace COTG
 
 												if (tile.canHover && pass > 0 && viewHovers.TryGetValue((aa) => aa.cid == cid, out var z))
 												{
-													dz += z.z;
+													dz += z.z* viewHoverZGain;
 												}
 
-												//											var scale = (pass == 1) ? CanvasHelpers.ParallaxScaleShadow(dz) : CanvasHelpers.ParallaxScale(dz);
+												
 												var wc = new Vector2(cx, cy);
 												var cc = wc.WToC();
 												if (pass == 1)
@@ -1754,11 +1754,13 @@ namespace COTG
 										var drawC = (new Vector2(cx, cy).WToC());
 										drawC.Y += span * (isWinter ? 8.675f / 16.0f : 7.125f / 16.0f);
 										var z = zCities;
+											var scale = bmFontScale;
 
 
-										if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var viewHover))
+											if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var viewHover))
 										{
-											z += viewHover.z;
+											z += viewHover.z* viewHoverZGain;
+											scale *= viewHover.z.Lerp(1.0f, 1.25f);
 										}
 										//	drawC = drawC.Project(zLabels);
 										var layout = GetTextLayout(name, nameTextFormat);
@@ -1772,11 +1774,11 @@ namespace COTG
 												(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
 											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
 											   : hovered ? nameColorHover : nameColor);
-
+										
 										DrawTextBox(name, drawC, nameTextFormat, wantDarkText ? color.A.AlphaToBlack() : color,
 
 											!isWinter ? new Color() :
-												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText, 2, 0, PlanetDepth, z);
+												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText, 2, 0, PlanetDepth, z,scale);
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
 
@@ -1915,8 +1917,8 @@ namespace COTG
 			// hover flags
 			if (viewHovers.TryGetValue((aa) => aa.cid == cid, out var dz))
 			{
-				c.Y -= dz.z*(5.0f/ viewHoverElevationMax* shapeSizeGain); // 8 pixels up regardless of scale
-				z += dz.z;
+				c.Y -= dz.z*(5.0f* shapeSizeGain); // 8 pixels up regardless of scale
+				z += dz.z*viewHoverZGain;
 			}
 			float frameCount = sprite.frameCount;
 			var frameF = (((animationT + cid.CidToRandom() * 15) * 12) % frameCount);

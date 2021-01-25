@@ -319,6 +319,7 @@ function sendCityData(delayInMs) {
 		const wrapper = {
 			citydata:
 			{
+				pid: D6.pid,
 				cid: D6.cid,
 				citn:D6.citn,
 				comm: D6.comm,
@@ -357,6 +358,7 @@ function sendBuildingData() {
 		const wrapper = {
 			citydata:
 			{
+				pid:D6.pid,
 				cid: D6.cid,
 				bd: D6.bd,
 				bq: D6.bq

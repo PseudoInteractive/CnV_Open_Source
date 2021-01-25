@@ -410,7 +410,7 @@ namespace COTG.Views
 				TakeKeyboardFocus();
 			}
 
-			ClearHover();
+		//	ClearHover();
 			//  e.Handled = false;
 
 		}

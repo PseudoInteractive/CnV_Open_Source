@@ -936,12 +936,12 @@ namespace COTG
 			ttCombatBonus[16] = 1 + (faith.cyndros) * 0.5f / 100 + (researchRamp[research[45]]) / 100;
 			ttCombatBonus[17] = 1; // no combat research for senator
 		}
-		static bool ppdtInitialized;
+		public static bool ppdtInitialized;
 		static private int[] lastCln = null;
 		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
 		{
 			// Todo:  should we update out local PPDT to the server?
-			
+			var thisPid = jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : 0;
 			int clChanged = 0;
 			// City lists
 			try
@@ -1083,10 +1083,11 @@ namespace COTG
 				{
 					//                    Log(jsCity.ToString());
 					var cid = jsCity.GetProperty("1").GetInt32();
+					Assert(thisPid != 0);
 					if (!ppdtInitialized)
 					{
-						var info = World.GetInfoFromCid(cid);
-						if (info.player != Player.activeId)
+						var pid = thisPid != 0 ? thisPid : World.GetInfoFromCid(cid).player;
+						if (pid != Player.activeId)
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							App.DispatchOnUIThreadSneaky(() =>
@@ -1100,7 +1101,8 @@ namespace COTG
 
 
 					var city = City.GetOrAddCity(cid);
-					
+					if (thisPid != 0)
+						city.pid = thisPid;
 					var name = jsCity.GetProperty("2").GetString();
 					int i = name.LastIndexOf('-');
 					if (i != -1)
@@ -1699,7 +1701,7 @@ namespace COTG
 								   var isFromTs = jse.TryGetProperty("ts", out _);
 								   //Note.L("citydata=" + cid.CidToString());
 								   var city = City.GetOrAddCity(cid);
-								   city.LoadFromJson(jse);
+								   city.LoadCityData(jse);
 
 								   // If it does not include TS it is from a call to chcity
 								   // Otherwise is is from a change in TS

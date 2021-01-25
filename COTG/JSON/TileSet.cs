@@ -121,7 +121,7 @@ namespace COTG.JSON
 					case "city":
 						tileSet.z = AGame.zCitiesBase;
 						tileSet.wantShadow = true;
-						tileSet.canHover = true;
+						tileSet.canHover = false;
 						break;
 					case "toplevel":
 						tileSet.z = AGame.zTopLevelBase;

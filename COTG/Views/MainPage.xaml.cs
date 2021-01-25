@@ -387,11 +387,13 @@ namespace COTG.Views
 
             if (visible)
             {
-                Raiding.UpdateTS(true,true);
-                RaidOverview.Send();
-                if(City.build!=0)
-                    GetCity.Post(City.build);
-         
+				if (JSClient.ppdtInitialized)
+				{
+					Raiding.UpdateTS(true, true);
+					RaidOverview.Send();
+					if (City.build != 0)
+						GetCity.Post(City.build);
+				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;
             }
@@ -476,7 +478,8 @@ namespace COTG.Views
 
         private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-            Raiding.UpdateTS(true,true);
+			if(JSClient.ppdtInitialized)
+	            Raiding.UpdateTS(true,true);
 
 		}
 

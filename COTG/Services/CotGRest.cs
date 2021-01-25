@@ -347,7 +347,7 @@ namespace COTG.Services
             //   Log("Got JS " + cid);
             var city = City.GetOrAddCity(cid);
             var root = json.RootElement;
-            city.LoadFromJson(root);
+            city.LoadCityData(root);
             if (action != null)
                 action(root, city);
         }
@@ -933,7 +933,7 @@ namespace COTG.Services
                             }
                             break;
                         }
-                        city.LoadFromJson(jsd.RootElement);
+                        city.LoadCityData(jsd.RootElement);
                         Note.Show("Sent Reinforcements");
                     }
                     else

@@ -27,6 +27,7 @@ using System.Windows.Input;
 using static COTG.Debug;
 using System.Threading.Tasks;
 using static COTG.Views.CityBuild;
+using Action = COTG.Views.CityBuild.Action;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -43,22 +44,26 @@ namespace COTG.Views
 			build,
 			layout,
 			pending,
-			count,
+			upgrade,
+			downgrade,
+			abandon,
+			invalid,
+			count = invalid,
 
 		};
 		public static Action action;
 		public static Action singleClickAction; // set on left click tool select
-		public static void ClearAction() 
+		public static void ClearAction()
 		{
-			SetAction( Action.none);
+			SetAction(Action.none);
 			singleClickAction = Action.none;
 		}
-		public static void SetAction(Action _action )
+		public static void SetAction(Action _action)
 		{
 			action = _action;
-		//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
-		public static void SetQuickBuild( int quickBuildItemBid )
+		public static void SetQuickBuild(int quickBuildItemBid)
 		{
 			action = Action.build;
 			quickBuildId = quickBuildItemBid;
@@ -67,31 +72,143 @@ namespace COTG.Views
 
 		//static List<QuickBuildItem> items;
 		internal static bool menuOpen;
-	
 
-		public static CityBuild Initialize(RadRadialMenu buildMenu,Canvas buildMenuCanvas)
+		// build menu cache
+		public const int maxMRUSize = 7;
+		public const int qbMRUSize = 4;
+		public const int defaultMRUSize = 7;
+		const int maxActionCount = 6;
+		const int emptyActionCount = 6;
+		const int resActionCount = 1;
+		public enum MenuType
+		{
+			quickBuild,
+			buliding,
+			townhall,
+			empty,
+			res,
+			invalid
+		}
+		public static MenuType menuType = MenuType.invalid;
+		public class BuildingMRU
+		{
+			public int bid;
+			public float cacheScore;
+
+			public BuildingMRU(int bid)
+			{
+				this.bid = bid;
+			}
+		}
+		public readonly struct ActionInfo
+		{
+			public readonly string name;
+			public readonly CityBuild.Action action;
+			public readonly string icon;
+
+			public ActionInfo(string name, Action action, string icon)
+			{
+				this.name = name;
+				this.action = action;
+				this.icon = icon;
+			}
+		}
+		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
+
+		static ActionInfo actionSelect = new ActionInfo("Select", Action.none, "City/decal_select_building.png");
+		static ActionInfo actionMove = new ActionInfo("Move", Action.move, "City/decal_move_building.png");
+		static ActionInfo actionDemo = new ActionInfo("Demo", Action.destroy, "City/decal_building_invalid.png");
+		static ActionInfo actionLayout = new ActionInfo("Layout", Action.layout, "City/decal_building_valid_multi.png");
+		static ActionInfo actionUpgrade = new ActionInfo("Upgrade", Action.upgrade, "City/decal_building_valid.png");
+		static ActionInfo actionDowngrade = new ActionInfo("Downgrade", Action.downgrade, "City/decal_building_invalid.png");
+		static ActionInfo actionAbandon = new ActionInfo("Abandon", Action.abandon, "City/decal_building_invalid.png");
+		static RadialMenuItem itemQB;
+
+
+		public static BuildMenuItem Item(RadRadialMenu buildMenu, int id) => (BuildMenuItem)buildMenu.Items[id];
+		public static void UpdateBuildMenuType(MenuType _menuType)
+		{
+			if (menuType == _menuType)
+				return;
+			menuType = _menuType;
+			var buildMenu = ShellPage.instance.buildMenu;
+
+
+			switch (menuType)
+			{
+				case MenuType.quickBuild:
+					Item(buildMenu, 0).SetAction(actionSelect);
+					Item(buildMenu, 1).SetAction(actionMove);
+					Item(buildMenu, 2).SetAction(actionDemo);
+					Item(buildMenu, 3).SetAction(actionLayout);
+					for (int i = 0; i < qbMRUSize; ++i)
+					{
+						Item(buildMenu, 4 + i).SetBid(buildingMru[i].bid);
+					}
+
+
+
+					break;
+				case MenuType.buliding:
+				case MenuType.townhall:
+					Item(buildMenu, 1).SetAction(actionMove);
+					Item(buildMenu, 2).SetAction(menuType == MenuType.buliding ? actionDemo : actionAbandon);
+					Item(buildMenu, 3).SetAction(actionLayout);
+					Item(buildMenu, 4).SetAction(actionUpgrade);
+					Item(buildMenu, 5).SetAction(actionDowngrade);
+					Item(buildMenu, 6).Clear();
+					Item(buildMenu, 7).Clear();
+					Item(buildMenu, 0).Clear();
+
+					break;
+				case MenuType.empty:
+					Item(buildMenu, 0).SetAction(actionLayout);
+					for (int i = 0; i < 7; ++i)
+						Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
+
+
+
+					break;
+				case MenuType.res:
+					Item(buildMenu, 0).SetAction(actionDemo);
+					for (int i = 0; i < 7; ++i)
+						Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
+
+
+					break;
+
+			}
+
+		}
+
+
+		public static CityBuild Initialize(RadRadialMenu buildMenu, Canvas buildMenuCanvas)
 		{
 			instance = new CityBuild();
 
 			{
 
-				var qb = new RadialMenuItem() { Header = "QuickBuild" };
-				buildMenu.Items.Add(new BuildMenuAction("Select", Action.none, "City/decal_select_building.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Move", Action.move, "City/decal_move_building.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Demo", Action.destroy, "City/decal_building_invalid.png"));
-				buildMenu.Items.Add(new BuildMenuAction("Layout", Action.layout, "City/decal_building_valid_multi.png"));
+				itemQB = new RadialMenuItem() { Header = "QuickBuild" };
+
+				for (int i = 0; i < 8; ++i)
+					buildMenu.Items.Add(new BuildMenuItem());
+				buildMenu.Items.Add(itemQB);
 				// Mru
-				buildMenu.Items.Add(new BuildMenuItem(446));
-				buildMenu.Items.Add(new BuildMenuItem(464));
-				buildMenu.Items.Add(new BuildMenuItem(449));
-				buildMenu.Items.Add(new BuildMenuItem(500));
-				buildMenu.Items.Add(qb);
+
+				buildingMru[0] = new BuildingMRU(bidCottage);
+				buildingMru[1] = new BuildingMRU(bidStorehouse);
+				buildingMru[2] = new BuildingMRU(bidMarketplace);
+				buildingMru[3] = new BuildingMRU(bidMage_tower);
+				buildingMru[4] = new BuildingMRU(bidCastle);
+				buildingMru[5] = new BuildingMRU(bidBarracks);
+				buildingMru[6] = new BuildingMRU(bidTrainingground);
 				// quick build
-				qb.ChildItems.Add(new BuildMenuGroup("Misc", 446, 464, 449, 481, 467, 488, 479));
-				qb.ChildItems.Add(new BuildMenuGroup("Military", 445, 500, 483, 466, 491, 482, 502, 504));
-				qb.ChildItems.Add(new BuildMenuGroup("Posts", 547, 539, 543, 551, 555));
-				qb.ChildItems.Add(new BuildMenuGroup("Barricade", 559, 563, 567, 571));
-				qb.ChildItems.Add(new BuildMenuGroup("Res", 447, 448, 460, 461, 462, 463, 465, 477));
+				itemQB.ChildItems.Add(new BuildMenuGroup("Misc", 446, 464, 449, 481, 467, 488, 479, bidTemple));
+				itemQB.ChildItems.Add(new BuildMenuGroup("Military", 445, 500, 483, 466, 491, 482, 502, 504));
+				itemQB.ChildItems.Add(new BuildMenuGroup("Posts", 547, 539, 543, 551, 555));
+				itemQB.ChildItems.Add(new BuildMenuGroup("Barricade", 559, 563, 567, 571));
+				itemQB.ChildItems.Add(new BuildMenuGroup("Res", 447, 448, 460, 461, 462, 463, 465, 477));
+
 
 				buildMenu.isOpenChanged = async (open) =>
 				{
@@ -121,43 +238,43 @@ namespace COTG.Views
 		{
 			instance = this;
 			this.InitializeComponent();
-		//	items = new List<QuickBuildItem>();
-		//	ushort[] buildingIds = {
-		//	448, //Forester's Hut"),
-		//	446, //Cabin"),
-		//	464, //Storehouse"),
-		//	461, //Stone Mine"),
-		//	547, //Sentinel Post"),
-		//	479, //Hideaway"),
-		//	447, //Farm Estate"),
-		//	504, //Guardhouse"),
-		//	543, //Ranger Post"),
-		//	445, //Barracks"),
-		//	465, //Iron Mine"),
-		//	483, //Training Arena"),
-		//	449, //Forum"),
-		//	481, //Villa"),
-		//	567, //Snag Barricade"),
-		//	460, //Sawmill"),
-		//	466, //Stable"),
-		//	539, //Triari Post"),
-		//	462, //Mason's Hut"),
-		//	500, //Sorcerer's Tower"),
-		//	559, //Equine Barricade"),
-		//	463,482,467,551,563,890,477,502,555,571,490,498
-		//};
-		//	// Add commands as "Pseudo" buildings for selection
-		//	items.Add(new QuickBuildItem(Action.none, "Select", "City/decal_select_building.png"));
-		//	items.Add(new QuickBuildItem(Action.move, "Move", "City/decal_move_building.png"));
-		//	items.Add(new QuickBuildItem(Action.destroy, "Demo", "City/decal_building_invalid.png"));
+			//	items = new List<QuickBuildItem>();
+			//	ushort[] buildingIds = {
+			//	448, //Forester's Hut"),
+			//	446, //Cabin"),
+			//	464, //Storehouse"),
+			//	461, //Stone Mine"),
+			//	547, //Sentinel Post"),
+			//	479, //Hideaway"),
+			//	447, //Farm Estate"),
+			//	504, //Guardhouse"),
+			//	543, //Ranger Post"),
+			//	445, //Barracks"),
+			//	465, //Iron Mine"),
+			//	483, //Training Arena"),
+			//	449, //Forum"),
+			//	481, //Villa"),
+			//	567, //Snag Barricade"),
+			//	460, //Sawmill"),
+			//	466, //Stable"),
+			//	539, //Triari Post"),
+			//	462, //Mason's Hut"),
+			//	500, //Sorcerer's Tower"),
+			//	559, //Equine Barricade"),
+			//	463,482,467,551,563,890,477,502,555,571,490,498
+			//};
+			//	// Add commands as "Pseudo" buildings for selection
+			//	items.Add(new QuickBuildItem(Action.none, "Select", "City/decal_select_building.png"));
+			//	items.Add(new QuickBuildItem(Action.move, "Move", "City/decal_move_building.png"));
+			//	items.Add(new QuickBuildItem(Action.destroy, "Demo", "City/decal_building_invalid.png"));
 
-		//	foreach (var i in buildingIds)
-		//	{
-		//		items.Add(new QuickBuildItem(i));
-		//	}
+			//	foreach (var i in buildingIds)
+			//	{
+			//		items.Add(new QuickBuildItem(i));
+			//	}
 
 
-		//	quickBuild.ItemsSource = items;
+			//	quickBuild.ItemsSource = items;
 		}
 
 		private void Upgrade_Click(object sender, RoutedEventArgs e)
@@ -168,7 +285,7 @@ namespace COTG.Views
 			var lvl = sel.bl;
 			var def = sel.def;
 			// check for queued upgrades
-			for(var it = buildQueue.iterate;it.Next();)
+			for (var it = buildQueue.iterate; it.Next();)
 			{
 				if (it.r.bspot == id)
 					lvl = it.r.elvl;
@@ -179,7 +296,7 @@ namespace COTG.Views
 		public static void UpgradeToLevel(int level)
 		{
 			var target = hovered;
-			if(!target.IsValid())
+			if (!target.IsValid())
 			{
 				Note.Show("Please select a building");
 				return;
@@ -265,20 +382,60 @@ namespace COTG.Views
 			return BrushFromAtlas(uri, u0, v0, scale);
 		}
 
-		internal static void MoveHovered()
+		public static void MoveBuilding(int a, int b)
 		{
-			selected = hovered;
-			singleClickAction = Action.pending;
-			action = Action.move;
+			var build = City.GetBuild();
+			Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}");
+			ref var b1 = ref build.buildings[a];
+			ref var b0 = ref build.buildings[b];
+			// I hope that these operations are what I expect with references
+			var temp = b0;
+			b0 = b1;
+			b1 = temp;
+		}
+		internal static void MoveHovered(bool isSingleAction)
+		{
+			int bspot = XYToId(hovered);
+			var build = GetBuild();
+			var b = build.buildings[bspot];
+			if (CanvasHelpers.IsValid(selected) && b.bl < 1)
+			{
+				if (b.id != 0)
+				{
+					Note.Show("Please select an empty spot");
+				}
+				else
+				{
+					var source = XYToId(selected);
 
+					if (isSingleAction)
+					{
+						singleClickAction = Action.none;
+						action = Action.none;
+					}
+					MoveBuilding(source, bspot);
+					selected = CanvasHelpers.invalidXY;
+				}
+			}
+			else
+			{
+				if (b.bl <= 0)
+				{
+					Note.Show("Please select a building");
+				}
+				else
+				{
+					selected = hovered;
+					if (isSingleAction)
+					{
+						singleClickAction = Action.pending;
+						action = Action.move;
+					}
+				}
+			}
 		}
 
-		public static void MoveBuilding(int idFrom, int idTo)
-		{
-			Services.Post.Send("includes/mBu.php", $"a={idFrom}&b={idTo}&c={Spot.build}");
 
-
-		}
 
 
 		private void quickBuild_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -308,7 +465,7 @@ namespace COTG.Views
 			//	quickBuildId = 0;
 			//}
 		}
-		public static void PerformAction(Action action,(int x, int y) cc , int _quickBuildId)
+		public static void PerformAction(Action action, (int x, int y) cc, int _quickBuildId)
 		{
 			int bspot = XYToId(cc);
 			var build = GetBuild();
@@ -316,6 +473,154 @@ namespace COTG.Views
 
 			switch (action)
 			{
+				case Action.layout:
+					{
+						var layout = build.layout;
+						if (build.layout == null)
+						{
+							Note.Show("Please assign a layout");
+						}
+						else
+						{
+							var desBid = build.BidFromOverlay(bspot);
+							var desName = BuildingDef.all[desBid].Bn;
+							var curBid = b.def.bid;
+							var takeFrom = -1;
+							var takeScore = 0;
+							var putTo = -1;
+							var putScore = 0;
+							// See if there are spare buildings that we can take
+							for (int xy = 0; xy < City.citySpotCount; ++xy)
+							{
+								var overlayBid = build.BidFromOverlay(xy);
+								var xyBuilding = build.buildings[xy].def.bid;
+
+								if (overlayBid != xyBuilding)
+								{
+									// do they have what we need?
+									if (xyBuilding == desBid)
+									{
+										// two points for ourbuilding is also needed there
+										var score = (overlayBid == curBid) ? 2 : 1;
+										if (score > takeScore)
+										{
+											takeScore = score;
+											takeScore = xy;
+										}
+									}
+									//do they want what we have?
+									if (overlayBid == curBid)
+									{
+										var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : build.buildings[xy].isBuilding ? 2 : 1;
+										if (score > putScore)
+										{
+											putScore = score;
+											putTo = xy;
+										}
+
+									}
+								}
+							}
+
+
+							// case 1:  nothing here, add building
+							if (b.id == 0)
+							{
+
+								// see if we can re-use one
+								if (desBid != 0)
+								{
+									if (takeScore > 0)
+									{
+										Note.ShowTip($"Found and unneeded {desName}, moving it here");
+										MoveBuilding(takeFrom, bspot);
+										break;
+									}
+								}
+								{
+									if (buildQueueFull)
+									{
+										Note.Show("Build Queue full");
+										break;
+									}
+									Note.ShowTip($"Building {desName}");
+									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" }); // 0 is build
+								}
+							}
+							else if (b.isRes)
+							{
+								if (desBid != 0)
+								{
+									if (buildQueueFull)
+									{
+										Note.Show("Build Queue full");
+										break;
+									}
+
+									Note.ShowTip($"Destorying {b.def.Bn} to make way for {desName}");
+
+									Demolish(cc);
+									// Test!
+									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
+								}
+							}
+							else
+							{
+								// building is here
+								// a building
+								// Try to move it to some place where one is needed
+								var buildingWanted = false;
+								if (desBid != curBid)
+								{
+									if (putScore > 0)
+									{
+										var name = b.def.Bn;
+										buildingWanted = true;
+										switch (putScore)
+										{
+											case 4:
+												{
+													Note.Show($"Swaping {b.def.Bn} and {desName} as they are mixed up");
+
+													MoveBuilding(bspot, cityScratchSpot);
+													MoveBuilding(takeFrom, bspot);
+													MoveBuilding(cityScratchSpot, takeFrom);
+													// two way swap 
+													break;
+												}
+											case 3:
+												Note.Show($"Moved {name} to where it is wanted");
+												MoveBuilding(bspot, putTo);
+												break;
+											case 2:
+												Note.Show($"{name} is wanted elsewhere but there is a building in the way");
+												break;
+											case 1:
+												Note.ShowTip($"{name} is wanted elsewhere but there are reources in the way");
+												break;
+
+
+										}
+
+
+									}
+
+									if (!buildingWanted)
+									{
+										Note.ShowTip($"{b.def.Bn} is not wanted, destroying it");
+										Demolish(cc);
+									}
+								}
+								else
+								{
+									Note.Show($"{desName} is in the right spot, no changed needed");
+
+								}
+							}
+
+						}
+						break;
+					}
 				case Action.build:
 					{
 						if ((b.id != 0) || buildQueue.Any(a => a.bspot == bspot))
@@ -355,33 +660,22 @@ namespace COTG.Views
 					}
 				case Action.move:
 					{
-						if (CanvasHelpers.IsValid(selected))
-						{
-							if (b.id == 0)
-							{
-
-								MoveBuilding(XYToId(selected), bspot);
-								ref var b1 = ref build.buildings[bspot];
-								ref var b0 = ref build.buildings[XYToId(selected)];
-								// I hope that these operations are what I expect with references
-								var temp = b0;
-								b0 = b1;
-								b1 = temp;
-								selected = CanvasHelpers.invalidXY;
-							}
-							else
-							{
-								Note.Show("Please select an empty spot");
-
-							}
-						}
-						else
-						{
-							if (b.isBuilding)
-								selected = cc;
-							else
-								Note.Show("Please select a building to move");
-						}
+						MoveHovered(singleClickAction == Action.pending);
+						break;
+					}
+				case Action.downgrade:
+					{
+						Downgrade(cc);
+						break;
+					}
+				case Action.upgrade:
+					{
+						UpgradeToLevel(1);
+						break;
+					}
+				case Action.abandon:
+					{
+						instance.Abandon_Click(null, null);
 						break;
 					}
 			}
@@ -411,10 +705,10 @@ namespace COTG.Views
 			int bspot = XYToId(cc);
 			var build = GetBuild();
 			var b = build.buildings[bspot];
-			
+
 			if (!isRight && action != Action.none)
 			{
-				PerformAction(action, cc,quickBuildId);
+				PerformAction(action, cc, quickBuildId);
 				if (singleClickAction == Action.pending)
 				{
 					action = Action.none;
@@ -425,7 +719,7 @@ namespace COTG.Views
 			else
 			{
 				singleClickAction = Action.none; // default
-				// toggle visibility
+												 // toggle visibility
 				var d = b.def;
 				var i = instance;
 				i.building.Text = d.Bn;
@@ -437,7 +731,13 @@ namespace COTG.Views
 					singleClickAction = Action.pending;
 				{
 					selected = cc;
-					
+					var type = isRight ? MenuType.quickBuild :
+						b.id == 0 ? MenuType.empty :
+						b.bl == 0 ? MenuType.res :
+						d.bid == bidTownHall ? MenuType.townhall :
+						MenuType.buliding;
+					UpdateBuildMenuType(type);
+
 					//				ShellPage.instance.buildMenu.IsOpen = true;
 					var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
 					var bm = ShellPage.instance.buildMenu;
@@ -451,8 +751,8 @@ namespace COTG.Views
 			}
 		}
 		public const int buildToolSpan = 448;
-	
-		public const int buildMenuMruCount = 4;
+
+
 
 		private void Abandon_Click(object sender, RoutedEventArgs e)
 		{
@@ -463,45 +763,57 @@ namespace COTG.Views
 	public class BuildMenuItem : RadialMenuItem
 	{
 		public int bid;
-		public float cacheScore;
-		public BuildMenuItem(int _bid)
+		public bool isAction => action != Action.invalid;
+		public bool isBuilding => bid != 0;
+		public BuildMenuItem SetBid(int _bid)
 		{
-//			GroupName = "actions";
-			Command = BuildMenuItemCommand.instance;
-			SetBid(_bid);
+			if (bid != _bid)
+			{
+				bid = _bid;
+				var def = BuildingDef.all[_bid];
+				Header = def.Bn;
+				ToolTipContent = def.Ds;
+				IconContent = new BuildingRect() { Width = 64, Height = 64, bid = _bid };
+				action = Action.invalid;
+				Command = BuildMenuItemCommand.instance;
+			}
+			return this;
 		}
-		public void SetBid(int _bid)
+		public CityBuild.Action action = Action.invalid;
+		public void SetAction(ActionInfo action)
 		{
-			bid = _bid;
-			var def = BuildingDef.all[_bid];
-			Header = def.Bn;
-			ToolTipContent = def.Ds;
-			IconContent = new BuildingRect() { Width = 64, Height = 64, bid = _bid };
+
+			if (!(Header is string s && s == action.name))
+			{
+				bid = 0;
+				Header = action.name;
+				this.action = action.action;
+				IconContent = new Image() { Width = 64, Height = 64, Source = ImageHelper.FromImages(action.icon) };
+				Command = BuildMenuItemCommand.instance;
+			}
+		}
+		public void Clear()
+		{
+			action = Action.invalid;
+			bid = 0;
+			Header = null;
+			IconContent = null;
+			Command = null;
+
 		}
 	}
 	public class BuildMenuGroup : RadialMenuItem
 	{
-		public BuildMenuGroup(string name, params int[] ids )
+		public BuildMenuGroup(string name, params int[] ids)
 		{
 			Header = name;
 			//		GroupName = "actions";
 			IconContent = new BuildingRect() { Width = 64, Height = 64, bid = ids[0] };
 			foreach (var i in ids)
-				ChildItems.Add(new BuildMenuItem(i));
+				ChildItems.Add(new BuildMenuItem().SetBid(i));
 		}
 	}
-	public class BuildMenuAction : RadialMenuItem
-	{
-		public CityBuild.Action action;
-		public BuildMenuAction(string name, CityBuild.Action action, string icon)
-		{
-			Header = name;
-			GroupName = "actions";
-			this.action = action;
-			IconContent = new Image() { Width = 64,Height=64, Source = ImageHelper.FromImages(icon) };
-			Command = BuildMenuItemCommand.instance;
-		}
-	}
+
 
 	//// nested types not supported
 	//public class QuickBuildItem
@@ -540,7 +852,7 @@ namespace COTG.Views
 			set
 			{
 				this.SetValue(bidProperty, value);
-				Background = BuildingBrush(bid,(float)Width/128.0f);
+				Background = BuildingBrush(bid, (float)Width / 128.0f);
 			}
 		}
 
@@ -593,76 +905,125 @@ namespace COTG.Views
 		{
 			var context = parameter as RadialMenuItemContext;
 			var target = context.TargetElement;
-			const int i0 = (8 - buildMenuMruCount);
-			const int i1 = 8;
-			if ( context.MenuItem is BuildMenuItem bi)
+			var bi = context.MenuItem as BuildMenuItem;
+			if (bi != null)
 			{
-				if (singleClickAction == CityBuild.Action.pending)
+				if (bi.isBuilding)
 				{
-					PerformAction(CityBuild.Action.build, selected, bi.bid);
-				}
-				else
-				{
-					SetQuickBuild(bi.bid);
-				}
-					BuildMenuItem found = null;
-					float bestScore = float.MaxValue;
-					BuildMenuItem best = null;
-					for (int i = 0; i < i0; ++i)
+					if (singleClickAction == CityBuild.Action.pending)
 					{
-						var item = ShellPage.instance.buildMenu.Items[i];
+						PerformAction(CityBuild.Action.build, selected, bi.bid);
+					}
+					else
+					{
+						SetQuickBuild(bi.bid);
+					}
+					var items = ShellPage.instance.buildMenu.Items;
+					BuildingMRU found = null;
+					BuildingMRU lowest = null;
+					float lowestScore = float.MaxValue;
+					for (int i = 0; i < items.Count; ++i)
+					{
+						var item = items[i];
 						item.IsSelected = false;
 					}
-					for (int i = i0; i < i1; ++i)
+					for (int i = 0; i < buildingMru.Length; ++i)
 					{
-						var item = ShellPage.instance.buildMenu.Items[i] as BuildMenuItem;
+						var item = buildingMru[i];
 						item.cacheScore *= 0.75f;
 						if (item.bid == bi.bid)
-							found = item;
-						else
-							item.IsSelected = false;
-						if (item.cacheScore < bestScore)
 						{
-							bestScore = item.cacheScore;
-							best = item;
+							found = item;
+						}
+						else
+						{
+							if (item.cacheScore < lowestScore)
+							{
+								lowestScore = item.cacheScore;
+								lowest = item;
+							}
 						}
 					}
 					if (found == null)
 					{
-						found = best;
-						best.SetBid(bi.bid);
+						found = lowest;
+						found.bid = (bi.bid);
+
 					}
-					found.cacheScore += 1.0f;
-					found.IsSelected = true;
-				
-
-
-			}
-			else if( context.MenuItem is BuildMenuAction a)
-			{
-				for (int i = 0; i < i1; ++i)
-				{
-					var item = ShellPage.instance.buildMenu.Items[i];
-					item.IsSelected = (item == context.MenuItem);
-				}
-				if (singleClickAction == CityBuild.Action.pending)
-				{
-					if (a.action == CityBuild.Action.move)
+					//Array.Sort(buildingMru, (a, b) => a.cacheScore.CompareTo(b.cacheScore) );
+					//if (menuType == MenuType.quickBuild)
 					{
 
-						SetAction(CityBuild.Action.move); 
-						// leave action pending
+						int lowestId = -1;
+						lowestScore = float.MaxValue;
+						for (int put = 0; put < items.Count; ++put)
+						{
+							var i = items[put] as BuildMenuItem;
+							i.IsSelected = false;
+							if (i == null || !i.isBuilding)
+								continue;
+							if (i.bid == found.bid)
+							{
+								i.IsSelected = true;
+								lowestId = -1;
+								lowestScore = -float.MaxValue;
+							}
+							var entry = (from a in buildingMru where a.bid == bi.bid select a.cacheScore).FirstOrDefault();
+							if (entry < lowestScore)
+							{
+								lowestScore = entry;
+								lowestId = put;
+
+							}
+						}
+						if (lowestId != -1)
+						{
+							(items[lowestId] as BuildMenuItem).SetBid(bi.bid);
+						}
+						ClearSelectedBuilding();
+
+
+					}
+				}
+				else if (bi.isAction)
+				{
+					var items = ShellPage.instance.buildMenu.Items;
+					if (bi.action == Action.layout && City.GetBuild().layout == null)
+					{
+						Note.Show("Please assign a layout");
 					}
 					else
 					{
-						PerformAction(a.action, selected, 0);
-						singleClickAction = CityBuild.Action.none;
+						for (int i = 0; i < items.Count; ++i)
+						{
+							var item = items[i];
+							item.IsSelected = (item == context.MenuItem);
+						}
+						if (singleClickAction == CityBuild.Action.pending)
+						{
+							if (bi.action == CityBuild.Action.move)
+							{
 
+								SetAction(CityBuild.Action.move);
+								// leave action pending
+							}
+							else
+							{
+								PerformAction(bi.action, selected, 0);
+								singleClickAction = CityBuild.Action.none;
+
+							}
+						}
+						else
+						{
+							SetAction(bi.action);
+							ClearSelectedBuilding();
+						}
 					}
 				}
 				else
 				{
-					SetAction(a.action);
+					Assert(false);
 				}
 			}
 			else

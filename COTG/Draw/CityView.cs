@@ -41,6 +41,7 @@ namespace COTG.Draw
 		const float cityTileGainY= yScale * cityTileGainX;
 		public const float yScale = 96.0f / 128.0f; // aspect ratio
 		public static Material buildingAtlas;
+		public static Material buildingShadows;
 		public static Material cityWallsLand;
 		public static Material cityWallsWater;
 		public static Material cityWater;
@@ -146,8 +147,11 @@ namespace COTG.Draw
 							var u0 = iconId.x * duDt;
 							var v0 = iconId.y * dvDt;
 							var cs = CityPointToQuad(cx, cy);
+							var cm = 0.5f.Lerp(cs.c0, cs.c1);
+							var shadowOffset = new Vector2(4.0f, 4.0f);
+							draw.AddQuad(Layer.tileCity + 1, buildingShadows, cs.c0+shadowOffset,cm+shadowOffset, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), new Color(0,0,0,iAlpha*3/4), (zBase, zBase, zBase, zBase)); // shader does the z transform
 
-							draw.AddQuad(Layer.tileCity+1, buildingAtlas, cs.c0,0.5f.Lerp(cs.c0,cs.c1), new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+							draw.AddQuad(Layer.tileCity+2, buildingAtlas, cs.c0, cm, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
 							
 						}
 					}
@@ -294,6 +298,7 @@ namespace COTG.Draw
 		{
 			var cityBase = SettingsPage.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
 			buildingAtlas = Helper.LoadLitMaterial(cityBase + "building_set5");
+			buildingShadows = new Draw.Material(buildingAtlas.texture, AGame.unlitEffect);
 			cityWallsLand = Helper.LoadLitMaterial(cityBase + "baseland");
 			cityWallsWater = Helper.LoadLitMaterial(cityBase + "basewater");
 		}

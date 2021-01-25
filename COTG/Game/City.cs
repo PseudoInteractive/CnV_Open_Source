@@ -32,6 +32,7 @@ namespace COTG.Game
 		
 		public const short bidTownHall = 455;
 		public const short bidWall = 809;
+		public const short bidTemple = 890;
 		 public const short bidForester= 448;
 		 public const short bidCottage= 446;
 		 public const short bidStorehouse= 464;
@@ -49,7 +50,7 @@ namespace COTG.Game
 		 public const short bidStonemason= 462;
 		 public const short bidMage_tower= 500;
 		 public const short bidWindmill= 463;
-		 public const short bidTemple= 482;
+		 public const short bidAcademy= 482;
 		 public const short bidSmelter= 477;
 		 public const short bidBlacksmith= 502;
 		 public const short bidCastle= 467;
@@ -76,7 +77,9 @@ namespace COTG.Game
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		public const int citySpan = 21;
-		public static Building[] Emptybuildings = new Building[citySpan*citySpan];
+		public const int citySpotCount = citySpan* citySpan;
+		public const int cityScratchSpot = citySpotCount - 1;
+		public static Building[] Emptybuildings = new Building[citySpotCount];
 
 		public Building[] buildings = Emptybuildings;
 		
@@ -280,11 +283,17 @@ namespace COTG.Game
 			}
 		}
 
-		public void LoadFromJson(JsonElement jse)
+		public void LoadCityData(JsonElement jse)
         {
             Debug.Assert(cid == jse.GetInt("cid"));
             if (jse.TryGetProperty("citn", out var citn))
                 _cityName = citn.GetString();
+			
+			// In rare cases, this changes
+			pid = jse.GetAsInt("pid");
+			Assert(pid != 0);
+
+
             if (jse.TryGetProperty("w", out var isOnWataer))
             {
                 var i = isOnWataer.GetAsInt();

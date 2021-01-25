@@ -9484,7 +9484,10 @@ function ppdtChanged(__ppdt) {
 		return;
 	// console.log("Update ppdt");
 	setTimeout(() => {
-
+	 if (__ppdt.hasOwnProperty("pid")) {
+			wrapper.ppdt['pid'] = __ppdt['pid'];
+			wantUpdate = true;
+		}
 		window['external']['notify'](JSON.stringify(wrapper));
 	}
 		, 300);
@@ -57986,7 +57989,7 @@ var cotgsubscribe = amplify;
 		function K6F(G71: string) {
 			if (G71.length > 1) {
 				pollJ = JSON.parse(G71);
-				let wrapper : any = {};  // for string notify
+				let wrapper : any = {};  // Anythign set here will be sent via notify
 
 				if (pollJ.hasOwnProperty("city")) {
 
@@ -58000,7 +58003,7 @@ var cotgsubscribe = amplify;
 							{
 								if(!wrapper.citydata )
 								{
-									wrapper.citydata = { cid: t71.cid };
+									wrapper.citydata = {};
 								}
 								wrapper.citydata.bd = t71.bd;
 								if(t71.hasOwnProperty("sts") && t71.sts.length > 0 && ((!D6.sts)||(t71.sts != D6.sts)) )
@@ -58013,7 +58016,7 @@ var cotgsubscribe = amplify;
 						{
 							 if(!wrapper.citydata )
 							{
-								wrapper.citydata = { cid: D6.cid };
+								wrapper.citydata = {};
 							}
 							wrapper.citydata.bq = D6.bq;
 					
@@ -58035,7 +58038,7 @@ var cotgsubscribe = amplify;
 							{
 									if(!wrapper.citydata )
 									{
-										wrapper.citydata = { cid: D6.cid };
+										wrapper.citydata = {};
 									}
 									wrapper.citydata.comm= D6.comm;
 									wrapper.citydata.th= D6.th;
@@ -58201,7 +58204,14 @@ var cotgsubscribe = amplify;
 		// Notify native host of results from poll
 		// 
 					if(Object.keys(wrapper).length>0)
+					{
+						if(wrapper.hasOwnProperty("citydata"))
+						{
+							wrapper.citydata.cid = cid;
+							wrapper.citydata.pid = D6.pid; // in some cases this is not ours
+						}
 						window['external']['notify'](JSON.stringify(wrapper));
+					}
 				}
 			}
 		}

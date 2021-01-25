@@ -13,7 +13,8 @@ namespace COTG.JSON
 		public byte bl; // building level
 
 		public bool isBuilding => bl > 0;
-
+		public bool isEmpty => id == 0;
+		public bool isRes => id != 0 && bl == 0;
 		public BuildingDef def => BuildingDef.FromId(id);
 		//[J("bu")] public long Bu { get; set; }
 	//	[J("bd")] public long Bd { get; set; }

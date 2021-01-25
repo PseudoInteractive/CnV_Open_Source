@@ -229,10 +229,10 @@ namespace COTG.Views
 					case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9); break;
 					case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10); break;
 					case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1); break;
-					case Windows.System.VirtualKey.Q: CityBuild.Demolish(CityView.hovered); break;
-					case Windows.System.VirtualKey.D: CityBuild.SetAction(CityBuild.Action.destroy); break;
+					case Windows.System.VirtualKey.Q: CityBuild.SetAction(CityBuild.Action.destroy); break;
+					case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered); break;
 					case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
-					case (VirtualKey)192: CityBuild.MoveHovered(); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+					case (VirtualKey)192: CityBuild.MoveHovered(true); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 
 					// short keys
 					case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
@@ -252,7 +252,7 @@ namespace COTG.Views
 					case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
 					case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidMage_tower); return; //  500;
 					case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
-					case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidTemple); return; //  482;
+					case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidAcademy); return; //  482;
 					case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
 					case Windows.System.VirtualKey.K: CityBuild.ShortBuild(City.bidBlacksmith); return; //  502;
 					case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;

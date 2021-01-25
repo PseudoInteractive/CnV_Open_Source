@@ -9899,7 +9899,7 @@ i011.B6 = function () {
                                 V6[57] = {};
                                 V6[57].l0 = ['f0'];
                                 V6[57].b0 = function () {
-                                    var D3 = function () { return 'aaaa'.padEnd(5, 'a'); };
+                                    var D3 = function () { return 'aaaaa'; };
                                     var u3 = /\x61\x61\u0061\u0061\x61/.f0rr(D3 + []);
                                     return u3;
                                 };
@@ -10721,6 +10721,10 @@ function ppdtChanged(__ppdt) {
     if (!wantUpdate)
         return;
     setTimeout(() => {
+        if (__ppdt.hasOwnProperty("pid")) {
+            wrapper.ppdt['pid'] = __ppdt['pid'];
+            wantUpdate = true;
+        }
         window['external']['notify'](JSON.stringify(wrapper));
     }, 300);
 }
@@ -18367,7 +18371,7 @@ var cotgsubscribe = amplify;
                             ppdt = y9T;
                             $(__s[R2p * 1] + d9T)
                                 .val("");
-                            let B9T = artifacts[d9T]["r"];
+                            let B9T = artifacts[d9T].r;
                             for (var Z9T in B9T) {
                                 var U9T = B9T[Z9T] * b9T;
                                 if (Z9T == 1)
@@ -40903,7 +40907,7 @@ var cotgsubscribe = amplify;
                 var q8w = Math.min(x9w, T9w, j9w, e9w);
             else
                 var q8w = Math.min(x9w, T9w, j9w, e9w, G9w);
-            if (o9w == 17 >> 488312480 & q8w >= ppdt.b)
+            if (o9w == 17 >> 488312480 && q8w >= ppdt.b)
                 q8w = ppdt
                     .b;
             return q8w;
@@ -55728,7 +55732,7 @@ var cotgsubscribe = amplify;
                         if (t71.hasOwnProperty("bd")) {
                             if (compareBD(t71.bd, D6.bd)) {
                                 if (!wrapper.citydata) {
-                                    wrapper.citydata = { cid: t71.cid };
+                                    wrapper.citydata = {};
                                 }
                                 wrapper.citydata.bd = t71.bd;
                                 if (t71.hasOwnProperty("sts") && t71.sts.length > 0 && ((!D6.sts) || (t71.sts != D6.sts)))
@@ -55738,7 +55742,7 @@ var cotgsubscribe = amplify;
                         d3F(t71);
                         if (buildQueueDirty) {
                             if (!wrapper.citydata) {
-                                wrapper.citydata = { cid: D6.cid };
+                                wrapper.citydata = {};
                             }
                             wrapper.citydata.bq = D6.bq;
                         }
@@ -55753,7 +55757,7 @@ var cotgsubscribe = amplify;
                         if ((troopsHome >> 7) != (lastTroopsHome >> 7)) {
                             {
                                 if (!wrapper.citydata) {
-                                    wrapper.citydata = { cid: D6.cid };
+                                    wrapper.citydata = {};
                                 }
                                 wrapper.citydata.comm = D6.comm;
                                 wrapper.citydata.th = D6.th;
@@ -55894,8 +55898,13 @@ var cotgsubscribe = amplify;
                             ctims = C71.getTime();
                         }
                     }
-                    if (Object.keys(wrapper).length > 0)
+                    if (Object.keys(wrapper).length > 0) {
+                        if (wrapper.hasOwnProperty("citydata")) {
+                            wrapper.citydata.cid = cid;
+                            wrapper.citydata.pid = D6.pid;
+                        }
                         window['external']['notify'](JSON.stringify(wrapper));
+                    }
                 }
             }
         }
@@ -66014,7 +66023,7 @@ var cotgsubscribe = amplify;
                     if (D6.itu[8])
                         for (let t3i in D6.itu[8]) {
                             var M3i = currentTime();
-                            var L3i = D6["itu"][+'8'][t3i][1];
+                            var L3i = D6["itu"][8][t3i][1];
                             if (L3i < M3i)
                                 D6["itu"][8].splice(t3i, 1);
                             else {
@@ -67824,6 +67833,7 @@ function sendCityData(delayInMs) {
     updateTimeout = setTimeout(() => {
         const wrapper = {
             citydata: {
+                pid: D6.pid,
                 cid: D6.cid,
                 citn: D6.citn,
                 comm: D6.comm,
@@ -67856,6 +67866,7 @@ function sendCityData(delayInMs) {
 function sendBuildingData() {
     const wrapper = {
         citydata: {
+            pid: D6.pid,
             cid: D6.cid,
             bd: D6.bd,
             bq: D6.bq

@@ -17,13 +17,13 @@
 			<RowDefinition/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<controls:Expander Grid.Row="1"  x:Name="expander" VerticalAlignment="Top" Margin="0,0,0,10"
+		<!--<controls:Expander Grid.Row="1"  x:Name="expander" VerticalAlignment="Top" Margin="0,0,0,10"
                            Header="Quick Build"
                            HorizontalContentAlignment="Stretch"
                            IsExpanded="False"
                            ExpandDirection="Down">
 			<TextBlock Text="TBD" />
-		</controls:Expander>
+		</controls:Expander>-->
 		<StackPanel Grid.Row="2">
 			<Rectangle x:Name="rect"  x:FieldModifier="public" Width="128" Height="128" HorizontalAlignment="Center" />
 			
