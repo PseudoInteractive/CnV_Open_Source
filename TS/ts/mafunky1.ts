@@ -1035,6 +1035,14 @@ function avactor() {
 		it.cid = _cid;
 		it.name = clickInfo.info.name;
 		it.player = clickInfo.info.player;
+
+	//			public const byte typeCity = 0x1;
+	//	public const byte typeShrine = 0x2;
+	//	public const byte typePortal = 0x3;
+	//	public const byte typeBoss = 0x4;
+	//	public const byte typeDungeon = 0x5;
+	//	public const byte typeNone = 0x0;
+
 	//	console.log(clickInfo);
 		UpdateResearchAndFaith();
 
@@ -1048,6 +1056,7 @@ function avactor() {
 			if ($("#cityplayerInfo div table tbody tr").length === 11) {
 				bossele_();
 			}
+			it.type =5;
 			
 			let home_loot_2 = 0;
 
@@ -1166,6 +1175,7 @@ function avactor() {
 
 		}
 		else if (dtype_ === "boss") {
+			it.type = 4;
 			//	let type_113 = clickInfo.info.type;
 			let lvl_ = clickInfo.info.lvl as number;
 			let bossname_ = clickInfo.info.name;
@@ -1572,6 +1582,7 @@ function avactor() {
 		else if (dtype_ === "portal" || dtype_ === "shrine")
 		{
 			it.score = clickInfo.info.active;
+			it.type = 3;
 		}
 		else{
 			$("#cityplayerInfo div table tbody tr:gt(6)").remove();
@@ -1603,6 +1614,7 @@ function avactor() {
 			
 
 		if (isCity || isLawless) {
+				it.type = 1; 
 				it.water = clickInfo.info.water;
 				if (isCity) {
 					it.notes = clickInfo.info.remarks;

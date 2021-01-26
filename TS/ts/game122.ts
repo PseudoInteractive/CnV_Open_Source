@@ -7530,6 +7530,7 @@ function DoSyncViewMode() {
 }
 var cid: number = 0;
 var gStCid: number = 0; // coord last clicked via gSt
+let  buildingInfo : (l6U:number, T6U:number, O6U:number, t6U:number, L6U:number)=>void = null;
 
 var a6 =
 {
@@ -7562,7 +7563,7 @@ let _camera = {
 
 var _cameraX = 0;
 var _cameraY = 0;
-const bdHall = 220;
+const bspotHall = 220;
 function AppendHtml(parent:string,html:string) : JQuery
 {                               
     var target  = $(parent)                            
@@ -9878,7 +9879,7 @@ function gaFrep(E7c) {
 }
 
 var cotgsubscribe = amplify;
-(function outer() {
+function outer() {
 	var E6k = i011;
 	const S1y = '565';
 	const F8y = '23';
@@ -10144,7 +10145,6 @@ var cotgsubscribe = amplify;
 	const m6p = '4.22166666666667';
 	var
 		q4t = "3284";
-	const Y1R = '897';
 	const I6t = "4257";
 	const M1y = "540";
 	const P2k = '2101';
@@ -10268,7 +10268,7 @@ var cotgsubscribe = amplify;
 	const B8y = "5592";
 	const J9p = "0x3f";
 	const Q5y = "5643";
-	const K4y = "467";
+	const bidCASTLE = 467;
 	var
 		L2m = "3459";
 	const Y2m = "3502";
@@ -10663,7 +10663,6 @@ var cotgsubscribe = amplify;
 	const G5m = "6186";
 	const T5R = "437";
 	const F1R = "4360";
-	const z9R = "892";
 	const k8y = "41";
 	const Z2p = "3913";
 	var
@@ -10900,7 +10899,6 @@ var cotgsubscribe = amplify;
 	const s7p = "1625";
 	const R5R = "722";
 	const i7y = "3113";
-	const D7t = 895;
 	const g0k =
 		'5786';
 	const X2R = "4506";
@@ -11004,7 +11002,7 @@ var cotgsubscribe = amplify;
 	const I1t = "4097";
 	const o3p = '1401';
 	const A1R = "3464";
-	const r6y = '809';
+	const bidWALL = 809;
 	const l94 =
 		"2574";
 	const b24 = "138";
@@ -11211,7 +11209,7 @@ var cotgsubscribe = amplify;
 				case 474:
 					return +C4y;
 				case 475:
-					return +K4y;
+					return +bidCASTLE;
 				case 478:
 					return +a4y;
 				case 443:
@@ -11698,7 +11696,7 @@ var cotgsubscribe = amplify;
 					if (l7B == 1) {
 						var x7B = $(this)
 							.closest(__s[622]);
-						var t7B = x7B.find(__s[n7y - 0]);
+						var t7B = x7B.find("td");
 						var O7B = t7B.find(_s(d7y *
 							1));
 						O7B.removeClass(__s[4617]);
@@ -11709,7 +11707,7 @@ var cotgsubscribe = amplify;
 					if (l7B == 2) {
 						var x7B = $(this)
 							.closest(__s[622]);
-						var t7B = x7B.find(__s[n7y * 1]);
+						var t7B = x7B.find("td");
 						var O7B = t7B.find(_s(+
 							d7y));
 						O7B.removeClass(__s["2854" | 2598]);
@@ -11731,7 +11729,7 @@ var cotgsubscribe = amplify;
 					if (l7B == 1) {
 						var o7B = $(this)
 							.closest(__s[622]);
-						var X7B = o7B.find(__s[n7y << 1054176576]);
+						var X7B = o7B.find("td");
 						var L7B = X7B
 							.find(__s[+d7y]);
 						L7B.removeClass(__s[4617]);
@@ -11742,7 +11740,7 @@ var cotgsubscribe = amplify;
 					if (l7B == 2) {
 						var o7B = $(this)
 							.closest(__s[622]);
-						var X7B = o7B.find(__s[n7y ^ 0]);
+						var X7B = o7B.find("td");
 						var L7B = X7B.find(E6k
 							.S55(d7y | 267));
 						L7B.removeClass(__s[2854]);
@@ -12693,7 +12691,7 @@ var cotgsubscribe = amplify;
 							1043888224) + I72[v72]['c'] + __s[F6y ^ 0] + T72 + __s[+c2y] + Math.floor(Number(
 								I72[v72]['p'])) + __s['6205' | 1] + I72[v72][__s[x9y | 6696]] + __s[F6y ^ 0] +
 						I72[v72][__s[H6y ^ 0]] + ":" + I72[v72][__s[+G6y]] + __s[c2y - 0] + I72[v72][E6k
-							.S55(+T9y)] + __s[+r6y] + I72[v72][__s[x9y | 256]] + __s[6144] + I72[v72][_s(
+							.S55(+T9y)] + __s[+809] + I72[v72][__s[x9y | 256]] + __s[6144] + I72[v72][_s(
 								+x9y)] + __s[5434];
 				}
 				l72 = l72 + __s[+u3y];
@@ -13370,7 +13368,7 @@ var cotgsubscribe = amplify;
 
 		function e6F(a1V) {
 			E6k.R6();
-			if (H2 != __s[x2R >> 754723616] && H2 != __s[2473]) {
+			if (H2 != "TestDummy" && H2 != "MrLongTongue") {
 				var q1V = a1V;
 				E1V();
 
@@ -14234,7 +14232,7 @@ var cotgsubscribe = amplify;
 						    
 							h9(J1g, n1g);
 							V8();
-							N2();
+							redrawCity();
 							//  DoPoll2(500);
 							//  callDelay = 200;
 							callDelay = 0;
@@ -14339,80 +14337,9 @@ var cotgsubscribe = amplify;
 			return b62;
 		}
 
-		let N2 = debounce(RedrawCity, 500);
+		let redrawCity = debounce(RedrawCity, 500);
 		function RedrawCity() {
-			var D5R = '5723';
-			var B5R = '3767';
-			var i5R = '6570';
-			var j5R = "5658";
-			var H0l = +M1R;
-			var A9U =
-				0;
-			var n9U = 0;
-			var K9U = 0;
-			var P9U = 0;
-			var B9U = 0;
-			var t9U = '0' <<
-				1398271744;
-			var x9U = 0;
-			var T9U = 0;
-			var Q9U = 0;
-			var l9U = 0;
-			var v9U = +
-				'0';
-			var a9U = 0;
-			var I9U = 0;
-			var w9U = 0;
-			var m8U = 0;
-			var
-				k9U = 0;
-			var H9U = 0;
-			var u9U = 0;
-			var y9U = 0;
-			var W9U = 0;
-			var o8U =
-				0;
-			var I0l = 0;
-			var v0l = 0;
-			var l0l = "100" | 36;
-			var Q0l = 0;
-			var T0l = +
-				"0";
-			var x0l = 0;
-			var O0l = 0;
-			var t0l = 0;
-			var s5l = 0;
-			var J0l = '0' >>
-				1759911488;
-			var U0l = 0;
-			var p0l = 0;
-			var Y0l = 0;
-			var N0l = 0;
-			var q0l = 0;
-			var R9U = '0' ^
-				0;
-			var F0l = 0;
-			var y0l = 0;
-			var R0l = 0;
-			var B0l = 0;
-			var P0l = 0;
-			var k5l = '0' >>
-				649444608;
-			var q9U = 0;
-			var Z0l = 0;
-			var r9U = 0;
-			var o0l = 0;
-			var K0l = '0' >>
-				1986041632;
-			var f0l = 0;
-			var n0l = 0;
-			var A0l = 0;
-			var r0l = 0;
-			var V0l = 0;
-			var
-				h0l = 0;
-			var e5l = [];
-			var p8U = D6["bd"][bdHall ^ 0]["bl"];
+			var p8U = D6["bd"][bspotHall ^ 0]["bl"];
 			var S0l = bam[_s(Q5y <<
 				1718611616)][+BAL]["st"][p8U];
 			var b0l = p8U * 10;
@@ -14432,12 +14359,8 @@ var cotgsubscribe = amplify;
 				},
 				42: { "rt": +o8y, "rh": S0l, "ruh": L9U, "rdh": S9U }
 			};
-			D6["bd"][+bdHall]["rbb"] = d0l;
-			var P2U;
-			var D2U;
-			var f9U;
-			var V9U = -("1" |
-				0);
+			D6["bd"][+bspotHall]["rbb"] = d0l;
+		
 	/*
 			for (var U2U in D6["bd"]) {
 				P2U = D6["bd"][U2U]["bid"];
@@ -15807,38 +15730,37 @@ var cotgsubscribe = amplify;
 				}
 			}
 	*/
-			var e9U = D6.bq.length;
-			if (e9U < (0)) e9U = 0;
-			for (var O8U = "0" >>
-				408287168; O8U < D6.bq.length; O8U++)
-				if (D6.bq[O8U])
-					if (D6.bq[O8U].brep) {
-						var y8U = D6.bq[O8U].brep;
-						var U2U = D6.bq[O8U].bspot;
-						if (y8U != G1R - 0 && y8U !=
-							C6y << 904681344 && y8U != +r1R && y8U != (b1R | 130) && y8U != BAL << 124155232 && y8U <= +TPL && d4F(
-								O8U))
-							if (D6.bq[O8U].sl == 0) {
-								V9U = V9U + (1);
-								if (y8U != +r6y && U2U != 0 && U2U != (
-									bdHall ^ 0) && U2U != 3 && U2U != 7 && U2U != (m2y | 12) && U2U != +17 && U2U != (D8y ^ 0) &&
-									U2U != +S1R && U2U != +t5R && U2U != +J5R && U2U != +T5R && U2U != 433 && U2U != +x5R &&
-									U2U != (g5R | 262) && U2U != +W5R && U2U != +f5R && U2U != +U5R && U2U != N0R >> 1881296832 &&
-									U2U != +p1R && U2U != +z1R && U2U != n1R >> 854822336 && U2U != +d1R && U2U != 323 && U2U != +
-									l1R && U2U != +k1R && U2U != +o1R) r9U++;
-							}
-					} if (ppdt[__s[V9y << 435861440]][1] * ("1000" >>
-						1087604480) >= currentTime()) var s9U = 16;
-			else var s9U = 6;
-			var w0l = b0l - r9U;
-			$(__s[+J9R])
-				.html(w0l);
-			$(__s[2606])
-				.text(w0l);
-			$(__s[3925])
-				.text(e9U + __s[+g9R] + s9U);
-			$(__s[4699])
-				.html(e9U + __s[+g9R] + s9U);
+			//for (var O8U = "0" >>
+			//	408287168; O8U < D6.bq.length; O8U++)
+			//	if (D6.bq[O8U])
+			//		if (D6.bq[O8U].brep) {
+			//			var y8U = D6.bq[O8U].brep;
+			//			var U2U = D6.bq[O8U].bspot;
+			//			if (y8U != G1R - 0 && y8U !=
+			//				C6y << 904681344 && y8U != +r1R && y8U != (b1R | 130) && y8U != BAL << 124155232 && y8U <= +TPL && d4F(
+			//					O8U))
+			//				if (D6.bq[O8U].slvl == 0) {
+			//					V9U = V9U + (1);
+			//					if (y8U != +r6y && U2U != 0 && U2U != (
+			//						bdHall ^ 0) && U2U != 3 && U2U != 7 && U2U != (m2y | 12) && U2U != +17 && U2U != (D8y ^ 0) &&
+			//						U2U != +S1R && U2U != +t5R && U2U != +J5R && U2U != +T5R && U2U != 433 && U2U != +x5R &&
+			//						U2U != (g5R | 262) && U2U != +W5R && U2U != +f5R && U2U != +U5R && U2U != N0R >> 1881296832 &&
+			//						U2U != +p1R && U2U != +z1R && U2U != n1R >> 854822336 && U2U != +d1R && U2U != 323 && U2U != +
+			//						l1R && U2U != +k1R && U2U != +o1R) r9U++;
+			//				}
+			//		}
+	 
+			//if (ppdt[__s[V9y << 435861440]][1] * ("1000" >>
+			//			1087604480) >= currentTime()) var s9U = 16;
+			//else var s9U = 6;
+			//var w0l = b0l - r9U;
+			//$(__s[+J9R])	.html(w0l);
+			//$(__s[2606])			.text(w0l);
+			//$(__s[3925])
+			//	.text(e9U + __s[+g9R] + s9U);
+			//$(__s[4699])
+			//	.html(e9U + __s[+g9R] + s9U);
+			UpdateBuildingCounts();
 		}
 		var J8;
 
@@ -16142,7 +16064,7 @@ var cotgsubscribe = amplify;
 							I9R),
 						'background-color': '',
 						'zoom': "1",
-						'-moz-transform': __s[+z9R]
+						'-moz-transform': __s[+892]
 					});
 				$(__s[P0R << 1996206944] + C8[K0g])
 					.removeClass(__s[C4y << 1023546688]);
@@ -16998,11 +16920,11 @@ var cotgsubscribe = amplify;
 		//					var e4w = D6.bq[c7w].elvl;
 		//					if (bam[_s(Q5y <<
 		//						1042045696)][Number(m7w)])
-		//						if (bam["buildings"][Number(m7w)][__s[+h6R]][Number(e4w)]) {
+		//						if (bam["buildings"][Number(m7w)]["bc"][Number(e4w)]) {
 		//							var H4w = bam["buildings"][
 		//								Number(m7w)]["bn"];
 		//							var k4w = Math.ceil(bam["buildings"][Number(m7w)][E6k
-		//								.S55(+h6R)][Number(e4w)][__s[X6R << 1544008512]] / (Number(u4w) / (100)));
+		//								.S55(+h6R)][Number(e4w)]["tu"] / (Number(u4w) / (100)));
 		//							if (k4w <
 		//								Number(ppdt.mibt)) k4w = Number(ppdt.mibt);
 		//							var E7w = Number(j4w) + Number(k4w);
@@ -17027,10 +16949,10 @@ var cotgsubscribe = amplify;
 		//					m7w = D6.bq[c7w].brep;
 		//					e4w = D6.bq[c7w].elvl;
 		//					if (bam["buildings"][Number(m7w)])
-		//						if (bam["buildings"][Number(m7w)][__s[h6R & 2147483647]][Number(e4w)]) {
+		//						if (bam["buildings"][Number(m7w)]["bc"][Number(e4w)]) {
 		//							H4w = bam[_s(Q5y -
 		//								0)][Number(m7w)]["bn"];
-		//							k4w = Math.ceil(bam["buildings"][Number(m7w)][__s[+h6R]][Number(e4w)][__s[+X6R]] / (
+		//							k4w = Math.ceil(bam["buildings"][Number(m7w)]["bc"][Number(e4w)]["tu"] / (
 		//								Number(u4w) / (100)));
 		//							if (k4w < Number(ppdt.mibt)) k4w = Number(ppdt.mibt);
 		//							E7w = Number(v4w) + Number(k4w);
@@ -17487,7 +17409,7 @@ var cotgsubscribe = amplify;
 				p8R >> 1382085920) + P8 + __s[z8R >> 1673143072];
 			var D0g = a6.ccazzx.encrypt(R0g, y0g, +256);
 			N6();
-			var p0g = $.post("/includes/" + "gC.php", { a: D0g });
+			var p0g = $.post("/includes/gC.php", { a: D0g });
 			F6();
 			p0g.done(function (Y0g) {
 				if (!Y0g) setTimeout(function () {
@@ -17556,7 +17478,7 @@ var cotgsubscribe = amplify;
 					Y7F();
 				}
 			});
-			if (H2 == __s[+x2R] || H2 == __s[2848] ||
+			if (H2 == "TestDummy" || H2 == __s[2848] ||
 				H2 == __s[1801] || H2 == __s[4085] || H2 == __s[3815] || H2 == _s(+
 					"6587") || H2 == __s[2426]);
 		}
@@ -18185,7 +18107,7 @@ var cotgsubscribe = amplify;
 				var k02 = new Date(aldt["oi"][m9Z][__s[+w6y]] * ("1000" ^
 					0));
 				if (aldt["oi"][m9Z][__s[+g4p]]) var a9Z = aldt["oi"][m9Z][__s[+g4p]];
-				else var a9Z = __s[+x2R];
+				else var a9Z = "TestDummy";
 				E9Z = E9Z + __s[4533] + aldt["oi"][m9Z]["pid"] + __s[5833] + aldt[E6k
 					.S55(+x4p)][m9Z]['pn'] + __s[+g3y] + aldt["oi"][m9Z]['pn'] +
 					__s[6307] + a9Z + __s[g3y << 379048160] + a9Z + __s[3264] + formatTimenostyle(
@@ -18809,15 +18731,15 @@ var cotgsubscribe = amplify;
 									J2();
 								}
 								if (Z9T == 12) {
-									var E9T = D6['bd'][bdHall ^ 0]["bl"];
+									var E9T = D6['bd'][bspotHall ^ 0]["bl"];
 									var Y9T = artifacts[d9T]["r"][12];
 									if (Number(E9T) <=
 										Number(Y9T)) {
-										D6["bd"][+bdHall]["bl"] = Number(Y9T);
+										D6["bd"][+bspotHall]["bl"] = Number(Y9T);
 										var a9T = Y8(Number(
 											Y9T));
 										var F9T = 10;
-										var m9T = (bdHall - 0 - F9T) / +A5y;
+										var m9T = (bspotHall - 0 - F9T) / +A5y;
 										// W2.putTile(a9T, z2.getTileX(F9T * +64), z2.getTileY(m9T * (64 << 696037408)), r2);
 									}
 									J2();
@@ -19051,7 +18973,7 @@ var cotgsubscribe = amplify;
 									'bottom': __s[1025],
 									'zoom': E6k
 										.S55(4025),
-									'-moz-transform': __s[+Y1R],
+									'-moz-transform': __s[+897],
 									'left': __s[1123]
 								});
 						}
@@ -19127,13 +19049,13 @@ var cotgsubscribe = amplify;
 										'bottom': _s('1025' ^
 											0),
 										'zoom': __s[4025],
-										'-moz-transform': _s(Y1R >>
+										'-moz-transform': _s(897 >>
 											1972843808),
 										'left': __s[1123],
 										"opacity": __s[4499]
 									});
 							}
-							if (k5g == +bdHall) $(
+							if (k5g == +bspotHall) $(
 								__s[+r5y] + k5g)
 								.css({
 									'background': __s[+h5y] + cityAtlas + __s[X5y - 0] + w5g + __s[+P5y] + I5g + _s(+
@@ -19153,7 +19075,7 @@ var cotgsubscribe = amplify;
 									'height': __s[p5y & 2147483647],
 									'zoom': _s(+
 										p9R),
-									'-moz-transform': __s[+z9R]
+									'-moz-transform': __s[+892]
 								});
 							else $(__s[+r5y] + k5g)
 								.css({
@@ -19163,7 +19085,7 @@ var cotgsubscribe = amplify;
 									'height': __s[p5y ^ 0],
 									'zoom': _s('5927' |
 										4897),
-									'-moz-transform': __s[Y1R - 0]
+									'-moz-transform': __s[897 - 0]
 								});
 						}
 					}
@@ -19230,7 +19152,7 @@ var cotgsubscribe = amplify;
 					'bottom': E6k
 						.S55(1025),
 					'zoom': __s[4025],
-					'-moz-transform': __s[+Y1R],
+					'-moz-transform': __s[+897],
 					'left': __s[1123]
 				});
 		}
@@ -19242,328 +19164,328 @@ var cotgsubscribe = amplify;
 			S2(1);
 		}
 
-		function w8F() {
-			console.log("!!!!!");
-			var R1p = "6192";
-			E6k.R6();
-			if (D6 !== undefined)
-				if (D6.mo !== undefined) {
-					if (D6.mo[0] == (1) && D6.bq.length == 0) {
-						var h7Z;
-						var C7Z;
-						var
-							b7Z;
-						var U7Z = 10;
-						var y7Z = 10;
-						var i4Z;
-						var u4Z;
-						var J7Z = new Object();
-						var d7Z =
-							new Object();
-						for (var g7Z in D6.bd) {
-							C7Z = D6.bd[g7Z]["bl"];
-							if (C7Z >= 1 && C7Z < +
-								'10') {
-								h7Z = D6.bd[g7Z]["bid"];
-								if (bam["buildings"][Number(h7Z)]) {
-									b7Z = bam[_s(+
-										Q5y)][Number(h7Z)][__s[6112]];
-									u4Z = D6.mo[Number(b7Z)];
-									if (u4Z == 1) {
-										var R7Z = bam["buildings"][Number(h7Z)][_s(+
-											h6R)][Number(C7Z) + (1)][__s[m1p << 965772928]];
-										var B7Z = bam["buildings"][Number(
-											h7Z)][__s[h6R >> 1602005344]][Number(C7Z) + 1][__s[B1p ^ 0]];
-										var a7Z = D6.r["1" &
-											2147483647].r;
-										var c7Z = D6.r[2].r;
-										if (H2 == __s[+x2R]) {
-											R7Z = 0;
-											B7Z = 0;
-										}
-										if (a7Z >= R7Z && c7Z >= B7Z) {
-											J7Z[Number(b7Z)] = new Object();
-											if (Number(
-												J7Z[Number(b7Z)]["bl"]) === undefined) {
-												J7Z[Number(b7Z)][_s(i1R <<
-													891717120)] = 10;
-												d7Z["bl"] = 10;
-											}
-											if (U7Z > Number(C7Z)) {
-												J7Z[Number(b7Z)][_s(+
-													m1R)] = Number(h7Z);
-												J7Z[Number(b7Z)]["bl"] = Number(C7Z);
-												J7Z[Number(b7Z)][__s[+R1p]] = Number(g7Z);
-												U7Z = Number(C7Z);
-											}
-											if (y7Z > Number(C7Z)) {
-												d7Z["bid"] = Number(h7Z);
-												d7Z["bl"] = Number(C7Z);
-												d7Z[__s[+R1p]] = Number(g7Z);
-												y7Z = Number(C7Z);
-											}
-										}
-									}
-								}
-							}
-						}
-						if (d7Z["bid"] !== undefined) Y2(d7Z[E6k
-							.S55(m1R & 2147483647)], Number(d7Z[__s[R1p << 2140165632]]), 4);
-					}
-					if ((D6.mo[+A8y] == ("1" |
-						0) || D6.mo[e2y - 0] == 1) && D6.bq.length == 0) {
-						var h7Z;
-						var C7Z;
-						var b7Z;
-						var U7Z = +
-							'10';
-						var y7Z = 10;
-						var i4Z;
-						var u4Z;
-						var J7Z = new Object();
-						var d7Z = new Object();
-						for (
-							var g7Z in D6.bd) {
-							C7Z = D6.bd[g7Z]["bl"];
-							if (C7Z >= 1 && C7Z < 10) {
-								h7Z =
-									D6.bd[g7Z]["bid"];
-								if (bam["buildings"][Number(h7Z)]) {
-									b7Z = bam["buildings"][
-										Number(h7Z)][__s[6112]];
-									if (b7Z == +A8y && D6.mo[A8y * 1] == (1) || b7Z == +
-										e2y && D6.mo[+e2y] == 1) {
-										u4Z = D6.mo[Number(b7Z)];
-										if (u4Z == 1) {
-											var R7Z = bam[_s(
-												Q5y & 2147483647)][Number(h7Z)][__s[h6R & 2147483647]][Number(C7Z) + (1)][_s(m1p *
-													1)];
-											var B7Z = bam["buildings"][Number(h7Z)][__s[+h6R]][Number(C7Z) + ("1" <<
-												2034640768)][__s[+B1p]];
-											var a7Z = D6.r[1].r;
-											var c7Z = D6.r[2].r;
-											if (H2 == E6k
-												.o55(x2R << 1933649440)) {
-												R7Z = 0;
-												B7Z = 0;
-											}
-											if (a7Z >= R7Z && c7Z >= B7Z) {
-												J7Z[Number(b7Z)] = new Object();
-												if (Number(J7Z[
-													Number(b7Z)]["bl"]) === undefined) {
-													J7Z[Number(b7Z)]["bl"] = +
-														'10';
-													d7Z["bl"] = 10;
-												}
-												if (U7Z > Number(C7Z)) {
-													J7Z[Number(b7Z)][_s(
-														m1R ^ 0)] = Number(h7Z);
-													J7Z[Number(b7Z)]["bl"] = Number(C7Z);
-													J7Z[Number(b7Z)][__s[R1p ^ 0]] = Number(g7Z);
-													U7Z = Number(C7Z);
-												}
-												if (y7Z > Number(C7Z)) {
-													d7Z["bid"] = Number(h7Z);
-													d7Z["bl"] = Number(C7Z);
-													d7Z[__s[R1p | 6144]] = Number(g7Z);
-													y7Z = Number(C7Z);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-						if (d7Z["bid"] !== undefined) Y2(d7Z[_s(+
-							m1R)], Number(d7Z[__s[+R1p]]), 4);
-					}
-					if (D6.mo[9] >= 0 && D6.tq.length == 0) {
-						var
-							n7Z = new Object();
-						for (var P7Z = 0; P7Z < D6.tc.length; P7Z++) {
-							var p7Z = Number(P7Z) + ("9" -
-								0);
-							if (D6.mo[p7Z] > 0) {
-								var Z7Z = D6.tc[P7Z];
-								var S7Z = P7Z;
-								var x4Z = y0F(P7Z);
-								var e4Z = bam[
-									"troops"][S7Z][__s[e1p << 948436384]] * Z7Z;
-								var H4Z = bam["troops"][S7Z][
-									__s[+L1p]] * Z7Z;
-								var j4Z = bam["troops"][S7Z]["sc"] * Z7Z;
-								var s4Z = bam[
-									"troops"][S7Z][__s[y1p ^ 0]] * Z7Z;
-								var W4Z = bam["troops"][S7Z][
-									__s[+t1R]] * Z7Z;
-								var A7Z = bam["troops"][S7Z][__s[4926]] * ("1000" -
-									0);
-								if (S7Z == ('14' ^ 0)) {
-									var V7Z = ppdt["rs"][A5y ^ 0]["n"];
-									if (V7Z != +
-										'0') {
-										var K7Z = qam["techTreeSteps"][V7Z][__s[r2y | 432]][0]["v"];
-										A7Z = A7Z / ((100 - K7Z) / (100));
-									}
-								}
-								if (S7Z == '15' * 1) {
-									var V7Z = ppdt["rs"][u6y * 1]["n"];
-									if (V7Z != 0) {
-										var K7Z = qam["techTreeSteps"][V7Z][E6k
-											.S55(+r2y)][0]["v"];
-										A7Z = A7Z / ((100 - K7Z) / 100);
-									}
-								}
-								if (S7Z == (16)) {
-									var V7Z = ppdt["rs"][+j6y]
-									["n"];
-									if (V7Z != (0)) {
-										var K7Z = qam["techTreeSteps"][V7Z][_s(
-											+r2y)][0]["v"];
-										A7Z = A7Z / ((100 - K7Z) / (100));
-									}
-								}
-								if (S7Z == +17) {
-									var V7Z = ppdt["rs"][F8y | 3]["n"];
-									if (V7Z != 0) {
-										var K7Z = qam["techTreeSteps"][V7Z][E6k
-											.o55(+r2y)][0]["v"];
-										A7Z = A7Z / ((100 - K7Z) / 100);
-									}
-								}
-								A7Z = A7Z / ((1) + D6[__s[+O1p]][x4Z][
-									"s"] / 100);
-								if (A7Z <= 1) A7Z = 1;
-								var r7Z = 0;
-								var m7Z =
-									D6.tc.length;
-								var D7Z = D6.tq.length;
-								for (var G7Z = 0; G7Z < m7Z; G7Z++) {
-									var f7Z = D6.tc[
-										G7Z] * bam["troops"][G7Z][__s[t1R & 2147483647]];
-									r7Z += f7Z;
-								}
-								if (D7Z >= 1)
-									for (var G7Z = 0; G7Z < D7Z; G7Z++) {
-										var E7Z = D6.tq[G7Z].ttype;
-										var k4Z = D6.tq[G7Z].tc;
-										var
-											f7Z = k4Z * bam["troops"][E7Z][__s[t1R - 0]];
-										r7Z += f7Z;
-									}
-								r7Z = D6[__s[6626]] - r7Z;
-								var C4Z = O2();
-								var q7Z = D6["r"][1][
-									"r"];
-								var F7Z = D6["r"][2]["r"];
-								var N7Z = D6[_s(
-									+I6y)][3]["r"];
-								var Y7Z = ppdt['g'][_s(w6y >>
-									1284272544)];
-								var l4Z = 0;
-								if (S7Z == 17 >> 2013312832) l4Z = Z7Z;
-								var z4Z = Number(
-									ppdt["b"]);
-								var X4Z = Number(ppdt[__s[h6R & 2147483647]]);
-								var L4Z = Number(ppdt[_s(
-									+h6R)]) + Number(l4Z);
-								if (P5V(S7Z))
-									if (D6.mo[p7Z] > Z7Z) {
-										if (Z7Z == 0) {
-											var w4Z = 1;
-											var I4Z = D6.mo[
-												p7Z];
-										} else { var w4Z = Z7Z / D6.mo[p7Z]; var I4Z = D6.mo[p7Z] - Z7Z; } n7Z[S7Z] =
-											new Object();
-										n7Z[S7Z][__s[+w6y]] = Number(S7Z);
-										n7Z[S7Z][__s[R8y >> 964727360]] = Number(A7Z);
-										n7Z[S7Z]["r"] = Number(w4Z);
-										n7Z[S7Z]['l'] = Number(I4Z);
-									}
-							}
-						}
-						if (n7Z.length != (0) && n7Z) {
-							var d7Z = +
-								'0';
-							var W7Z;
-							for (var Q4Z in n7Z) {
-								var T4Z = n7Z[Q4Z]["r"];
-								if (T4Z > d7Z) W7Z =
-									Q4Z;
-							}
-							if (W7Z) {
-								var o4Z = new Array();
-								var M4Z = n7Z[W7Z];
-								var G4Z = n7Z[W7Z]["r"];
-								var
-									v4Z = n7Z[W7Z]['l'];
-								var O4Z = n7Z[W7Z][__s[+R8y]] / 5;
-								var i7Z = Math
-									.floor(300000 / Number(O4Z));
-								var r7Z = 0;
-								var m7Z = D6.tc.length;
-								var D7Z = D6.tq
-									.length;
-								for (var G7Z = 0; G7Z < m7Z; G7Z++) {
-									var f7Z = D6.tc[G7Z] * bam["troops"][G7Z][
-										__s[+t1R]];
-									r7Z += f7Z;
-								}
-								if (D7Z >= 1)
-									for (var G7Z = 0; G7Z < D7Z; G7Z++) {
-										var E7Z = D6.tq[G7Z].ttype;
-										var k4Z = D6.tq[G7Z].tc;
-										var
-											f7Z = k4Z * bam["troops"][E7Z][__s[t1R >> 1473671840]];
-										r7Z += f7Z;
-									}
-								r7Z = D6[__s[6626]] - r7Z;
-								var q7Z = D6["r"]["1" | 1][_s(+
-									I6y)];
-								var F7Z = D6["r"][2]["r"];
-								var N7Z = D6["r"][
-									"3" | 1]["r"];
-								var Y7Z = ppdt['g'][__s[w6y ^ 0]];
-								var e4Z = bam[_s(
-									4619)][W7Z][__s[+e1p]] * i7Z;
-								if (e4Z > q7Z && e4Z > 0)
-									if (q7Z / bam["troops"][W7Z][__s[e1p << 1551957536]] >= 1) i7Z = Math
-										.floor(q7Z / bam["troops"][W7Z][__s[+e1p]]);
-									else i7Z = 0;
-								var H4Z = bam["troops"][W7Z][__s[L1p - 0]] * i7Z;
-								if (H4Z > N7Z &&
-									H4Z > 0)
-									if (N7Z / bam["troops"][W7Z][__s[L1p ^ 0]] >= ("1" | 1)) i7Z = Math.floor(N7Z / bam[E6k
-										.S55(4619)][W7Z][__s[L1p >> 614323424]]);
-									else i7Z = 0;
-								var j4Z = bam["troops"][W7Z]["sc"] * i7Z;
-								if (j4Z >
-									F7Z && j4Z > 0)
-									if (F7Z / bam["troops"][W7Z]["sc"] >= 1) i7Z = Math.floor(F7Z /
-										bam["troops"][W7Z]["sc"]);
-									else i7Z = 0;
-								var s4Z = bam["troops"][W7Z][__s[y1p << 1855399968]] * i7Z;
-								if (
-									s4Z > Y7Z && s4Z > 0)
-									if (Y7Z / bam["troops"][W7Z][__s[+y1p]] >= 1) i7Z = Math.floor(Y7Z /
-										bam["troops"][W7Z][__s[+y1p]]);
-									else i7Z = 0;
-								if (i7Z * bam["troops"][W7Z][__s[t1R * 1]] >= r7Z)
-									i7Z = Math.floor(r7Z / bam["troops"][W7Z][__s[t1R - 0]]);
-								if (i7Z >= v4Z) i7Z =
-									v4Z;
-								if (i7Z != 0 && r7Z > 0 && r7Z >= i7Z) {
-									var t4Z = y0F(Number(W7Z));
-									o4Z.push({ a: Number(i7Z), i: Number(W7Z), c: Number(t4Z) });
-								}
-							}
-						}
-					}
-				} setTimeout(function () {
-					w8F
-						();
-				}, 5500);
-		}
+		//function w8F() {
+		//	console.log("!!!!!");
+		//	var R1p = "6192";
+		//	E6k.R6();
+		//	if (D6 !== undefined)
+		//		if (D6.mo !== undefined) {
+		//			if (D6.mo[0] == (1) && D6.bq.length == 0) {
+		//				var h7Z;
+		//				var C7Z;
+		//				var
+		//					b7Z;
+		//				var U7Z = 10;
+		//				var y7Z = 10;
+		//				var i4Z;
+		//				var u4Z;
+		//				var J7Z = new Object();
+		//				var d7Z =
+		//					new Object();
+		//				for (var g7Z in D6.bd) {
+		//					C7Z = D6.bd[g7Z]["bl"];
+		//					if (C7Z >= 1 && C7Z < +
+		//						'10') {
+		//						h7Z = D6.bd[g7Z]["bid"];
+		//						if (bam["buildings"][Number(h7Z)]) {
+		//							b7Z = bam[_s(+
+		//								Q5y)][Number(h7Z)][__s[6112]];
+		//							u4Z = D6.mo[Number(b7Z)];
+		//							if (u4Z == 1) {
+		//								var R7Z = bam["buildings"][Number(h7Z)][_s(+
+		//									h6R)][Number(C7Z) + (1)][__s[m1p << 965772928]];
+		//								var B7Z = bam["buildings"][Number(
+		//									h7Z)]["bc"][Number(C7Z) + 1][__s[B1p ^ 0]];
+		//								var a7Z = D6.r["1" &
+		//									2147483647].r;
+		//								var c7Z = D6.r[2].r;
+		//								if (H2 == "TestDummy") {
+		//									R7Z = 0;
+		//									B7Z = 0;
+		//								}
+		//								if (a7Z >= R7Z && c7Z >= B7Z) {
+		//									J7Z[Number(b7Z)] = new Object();
+		//									if (Number(
+		//										J7Z[Number(b7Z)]["bl"]) === undefined) {
+		//										J7Z[Number(b7Z)][_s(i1R <<
+		//											891717120)] = 10;
+		//										d7Z["bl"] = 10;
+		//									}
+		//									if (U7Z > Number(C7Z)) {
+		//										J7Z[Number(b7Z)][_s(+
+		//											m1R)] = Number(h7Z);
+		//										J7Z[Number(b7Z)]["bl"] = Number(C7Z);
+		//										J7Z[Number(b7Z)][__s[+R1p]] = Number(g7Z);
+		//										U7Z = Number(C7Z);
+		//									}
+		//									if (y7Z > Number(C7Z)) {
+		//										d7Z["bid"] = Number(h7Z);
+		//										d7Z["bl"] = Number(C7Z);
+		//										d7Z[__s[+R1p]] = Number(g7Z);
+		//										y7Z = Number(C7Z);
+		//									}
+		//								}
+		//							}
+		//						}
+		//					}
+		//				}
+		//				if (d7Z["bid"] !== undefined) Y2(d7Z[E6k
+		//					.S55(m1R & 2147483647)], Number(d7Z[__s[R1p << 2140165632]]), 4);
+		//			}
+		//			if ((D6.mo[+A8y] == ("1" |
+		//				0) || D6.mo[e2y - 0] == 1) && D6.bq.length == 0) {
+		//				var h7Z;
+		//				var C7Z;
+		//				var b7Z;
+		//				var U7Z = +
+		//					'10';
+		//				var y7Z = 10;
+		//				var i4Z;
+		//				var u4Z;
+		//				var J7Z = new Object();
+		//				var d7Z = new Object();
+		//				for (
+		//					var g7Z in D6.bd) {
+		//					C7Z = D6.bd[g7Z]["bl"];
+		//					if (C7Z >= 1 && C7Z < 10) {
+		//						h7Z =
+		//							D6.bd[g7Z]["bid"];
+		//						if (bam["buildings"][Number(h7Z)]) {
+		//							b7Z = bam["buildings"][
+		//								Number(h7Z)][__s[6112]];
+		//							if (b7Z == +A8y && D6.mo[A8y * 1] == (1) || b7Z == +
+		//								e2y && D6.mo[+e2y] == 1) {
+		//								u4Z = D6.mo[Number(b7Z)];
+		//								if (u4Z == 1) {
+		//									var R7Z = bam[_s(
+		//										Q5y & 2147483647)][Number(h7Z)]["bc"][Number(C7Z) + (1)][_s(m1p *
+		//											1)];
+		//									var B7Z = bam["buildings"][Number(h7Z)]["bc"][Number(C7Z) + ("1" <<
+		//										2034640768)][__s[+B1p]];
+		//									var a7Z = D6.r[1].r;
+		//									var c7Z = D6.r[2].r;
+		//									if (H2 == E6k
+		//										.o55(x2R << 1933649440)) {
+		//										R7Z = 0;
+		//										B7Z = 0;
+		//									}
+		//									if (a7Z >= R7Z && c7Z >= B7Z) {
+		//										J7Z[Number(b7Z)] = new Object();
+		//										if (Number(J7Z[
+		//											Number(b7Z)]["bl"]) === undefined) {
+		//											J7Z[Number(b7Z)]["bl"] = +
+		//												'10';
+		//											d7Z["bl"] = 10;
+		//										}
+		//										if (U7Z > Number(C7Z)) {
+		//											J7Z[Number(b7Z)][_s(
+		//												m1R ^ 0)] = Number(h7Z);
+		//											J7Z[Number(b7Z)]["bl"] = Number(C7Z);
+		//											J7Z[Number(b7Z)][__s[R1p ^ 0]] = Number(g7Z);
+		//											U7Z = Number(C7Z);
+		//										}
+		//										if (y7Z > Number(C7Z)) {
+		//											d7Z["bid"] = Number(h7Z);
+		//											d7Z["bl"] = Number(C7Z);
+		//											d7Z[__s[R1p | 6144]] = Number(g7Z);
+		//											y7Z = Number(C7Z);
+		//										}
+		//									}
+		//								}
+		//							}
+		//						}
+		//					}
+		//				}
+		//				if (d7Z["bid"] !== undefined) Y2(d7Z[_s(+
+		//					m1R)], Number(d7Z[__s[+R1p]]), 4);
+		//			}
+		//			if (D6.mo[9] >= 0 && D6.tq.length == 0) {
+		//				var
+		//					n7Z = new Object();
+		//				for (var P7Z = 0; P7Z < D6.tc.length; P7Z++) {
+		//					var p7Z = Number(P7Z) + ("9" -
+		//						0);
+		//					if (D6.mo[p7Z] > 0) {
+		//						var Z7Z = D6.tc[P7Z];
+		//						var S7Z = P7Z;
+		//						var x4Z = y0F(P7Z);
+		//						var e4Z = bam[
+		//							"troops"][S7Z][__s[e1p << 948436384]] * Z7Z;
+		//						var H4Z = bam["troops"][S7Z][
+		//							__s[+L1p]] * Z7Z;
+		//						var j4Z = bam["troops"][S7Z]["sc"] * Z7Z;
+		//						var s4Z = bam[
+		//							"troops"][S7Z][__s[y1p ^ 0]] * Z7Z;
+		//						var W4Z = bam["troops"][S7Z][
+		//							__s[+t1R]] * Z7Z;
+		//						var A7Z = bam["troops"][S7Z][__s[4926]] * ("1000" -
+		//							0);
+		//						if (S7Z == ('14' ^ 0)) {
+		//							var V7Z = ppdt["rs"][A5y ^ 0]["n"];
+		//							if (V7Z != +
+		//								'0') {
+		//								var K7Z = qam["techTreeSteps"][V7Z][__s[r2y | 432]][0]["v"];
+		//								A7Z = A7Z / ((100 - K7Z) / (100));
+		//							}
+		//						}
+		//						if (S7Z == '15' * 1) {
+		//							var V7Z = ppdt["rs"][u6y * 1]["n"];
+		//							if (V7Z != 0) {
+		//								var K7Z = qam["techTreeSteps"][V7Z][E6k
+		//									.S55(+r2y)][0]["v"];
+		//								A7Z = A7Z / ((100 - K7Z) / 100);
+		//							}
+		//						}
+		//						if (S7Z == (16)) {
+		//							var V7Z = ppdt["rs"][+j6y]
+		//							["n"];
+		//							if (V7Z != (0)) {
+		//								var K7Z = qam["techTreeSteps"][V7Z][_s(
+		//									+r2y)][0]["v"];
+		//								A7Z = A7Z / ((100 - K7Z) / (100));
+		//							}
+		//						}
+		//						if (S7Z == +17) {
+		//							var V7Z = ppdt["rs"][F8y | 3]["n"];
+		//							if (V7Z != 0) {
+		//								var K7Z = qam["techTreeSteps"][V7Z][E6k
+		//									.o55(+r2y)][0]["v"];
+		//								A7Z = A7Z / ((100 - K7Z) / 100);
+		//							}
+		//						}
+		//						A7Z = A7Z / ((1) + D6[__s[+O1p]][x4Z][
+		//							"s"] / 100);
+		//						if (A7Z <= 1) A7Z = 1;
+		//						var r7Z = 0;
+		//						var m7Z =
+		//							D6.tc.length;
+		//						var D7Z = D6.tq.length;
+		//						for (var G7Z = 0; G7Z < m7Z; G7Z++) {
+		//							var f7Z = D6.tc[
+		//								G7Z] * bam["troops"][G7Z][__s[t1R & 2147483647]];
+		//							r7Z += f7Z;
+		//						}
+		//						if (D7Z >= 1)
+		//							for (var G7Z = 0; G7Z < D7Z; G7Z++) {
+		//								var E7Z = D6.tq[G7Z].ttype;
+		//								var k4Z = D6.tq[G7Z].tc;
+		//								var
+		//									f7Z = k4Z * bam["troops"][E7Z][__s[t1R - 0]];
+		//								r7Z += f7Z;
+		//							}
+		//						r7Z = D6[__s[6626]] - r7Z;
+		//						var C4Z = O2();
+		//						var q7Z = D6["r"][1][
+		//							"r"];
+		//						var F7Z = D6["r"][2]["r"];
+		//						var N7Z = D6[_s(
+		//							+I6y)][3]["r"];
+		//						var Y7Z = ppdt['g'][_s(w6y >>
+		//							1284272544)];
+		//						var l4Z = 0;
+		//						if (S7Z == 17 >> 2013312832) l4Z = Z7Z;
+		//						var z4Z = Number(
+		//							ppdt["b"]);
+		//						var X4Z = Number(ppdt["bc"]);
+		//						var L4Z = Number(ppdt[_s(
+		//							+h6R)]) + Number(l4Z);
+		//						if (P5V(S7Z))
+		//							if (D6.mo[p7Z] > Z7Z) {
+		//								if (Z7Z == 0) {
+		//									var w4Z = 1;
+		//									var I4Z = D6.mo[
+		//										p7Z];
+		//								} else { var w4Z = Z7Z / D6.mo[p7Z]; var I4Z = D6.mo[p7Z] - Z7Z; } n7Z[S7Z] =
+		//									new Object();
+		//								n7Z[S7Z][__s[+w6y]] = Number(S7Z);
+		//								n7Z[S7Z][__s[R8y >> 964727360]] = Number(A7Z);
+		//								n7Z[S7Z]["r"] = Number(w4Z);
+		//								n7Z[S7Z]['l'] = Number(I4Z);
+		//							}
+		//					}
+		//				}
+		//				if (n7Z.length != (0) && n7Z) {
+		//					var d7Z = +
+		//						'0';
+		//					var W7Z;
+		//					for (var Q4Z in n7Z) {
+		//						var T4Z = n7Z[Q4Z]["r"];
+		//						if (T4Z > d7Z) W7Z =
+		//							Q4Z;
+		//					}
+		//					if (W7Z) {
+		//						var o4Z = new Array();
+		//						var M4Z = n7Z[W7Z];
+		//						var G4Z = n7Z[W7Z]["r"];
+		//						var
+		//							v4Z = n7Z[W7Z]['l'];
+		//						var O4Z = n7Z[W7Z][__s[+R8y]] / 5;
+		//						var i7Z = Math
+		//							.floor(300000 / Number(O4Z));
+		//						var r7Z = 0;
+		//						var m7Z = D6.tc.length;
+		//						var D7Z = D6.tq
+		//							.length;
+		//						for (var G7Z = 0; G7Z < m7Z; G7Z++) {
+		//							var f7Z = D6.tc[G7Z] * bam["troops"][G7Z][
+		//								__s[+t1R]];
+		//							r7Z += f7Z;
+		//						}
+		//						if (D7Z >= 1)
+		//							for (var G7Z = 0; G7Z < D7Z; G7Z++) {
+		//								var E7Z = D6.tq[G7Z].ttype;
+		//								var k4Z = D6.tq[G7Z].tc;
+		//								var
+		//									f7Z = k4Z * bam["troops"][E7Z][__s[t1R >> 1473671840]];
+		//								r7Z += f7Z;
+		//							}
+		//						r7Z = D6[__s[6626]] - r7Z;
+		//						var q7Z = D6["r"]["1" | 1][_s(+
+		//							I6y)];
+		//						var F7Z = D6["r"][2]["r"];
+		//						var N7Z = D6["r"][
+		//							"3" | 1]["r"];
+		//						var Y7Z = ppdt['g'][__s[w6y ^ 0]];
+		//						var e4Z = bam[_s(
+		//							4619)][W7Z][__s[+e1p]] * i7Z;
+		//						if (e4Z > q7Z && e4Z > 0)
+		//							if (q7Z / bam["troops"][W7Z][__s[e1p << 1551957536]] >= 1) i7Z = Math
+		//								.floor(q7Z / bam["troops"][W7Z][__s[+e1p]]);
+		//							else i7Z = 0;
+		//						var H4Z = bam["troops"][W7Z][__s[L1p - 0]] * i7Z;
+		//						if (H4Z > N7Z &&
+		//							H4Z > 0)
+		//							if (N7Z / bam["troops"][W7Z][__s[L1p ^ 0]] >= ("1" | 1)) i7Z = Math.floor(N7Z / bam[E6k
+		//								.S55(4619)][W7Z][__s[L1p >> 614323424]]);
+		//							else i7Z = 0;
+		//						var j4Z = bam["troops"][W7Z]["sc"] * i7Z;
+		//						if (j4Z >
+		//							F7Z && j4Z > 0)
+		//							if (F7Z / bam["troops"][W7Z]["sc"] >= 1) i7Z = Math.floor(F7Z /
+		//								bam["troops"][W7Z]["sc"]);
+		//							else i7Z = 0;
+		//						var s4Z = bam["troops"][W7Z][__s[y1p << 1855399968]] * i7Z;
+		//						if (
+		//							s4Z > Y7Z && s4Z > 0)
+		//							if (Y7Z / bam["troops"][W7Z][__s[+y1p]] >= 1) i7Z = Math.floor(Y7Z /
+		//								bam["troops"][W7Z][__s[+y1p]]);
+		//							else i7Z = 0;
+		//						if (i7Z * bam["troops"][W7Z][__s[t1R * 1]] >= r7Z)
+		//							i7Z = Math.floor(r7Z / bam["troops"][W7Z][__s[t1R - 0]]);
+		//						if (i7Z >= v4Z) i7Z =
+		//							v4Z;
+		//						if (i7Z != 0 && r7Z > 0 && r7Z >= i7Z) {
+		//							var t4Z = y0F(Number(W7Z));
+		//							o4Z.push({ a: Number(i7Z), i: Number(W7Z), c: Number(t4Z) });
+		//						}
+		//					}
+		//				}
+		//			}
+		//		} setTimeout(function () {
+		//			w8F
+		//				();
+		//		}, 5500);
+		//}
 		a6.rotWord = function (D6v) {
 			var Y6v = D6v[0];
 			for (var p6v = 0; p6v < 3; p6v++)
@@ -19724,7 +19646,7 @@ var cotgsubscribe = amplify;
 					var F0v = 0;
 					for (var c0v in N0v.sbd) {
 						topstr = '';
-						if (c0v != +r6y) {
+						if (c0v != +bidWALL) {
 							var
 								E0v = c0v - (443);
 							var a0v = E0v % (4) * +G5y;
@@ -20005,7 +19927,7 @@ var cotgsubscribe = amplify;
 					.removeClass(__s[+w7p])
 					.addClass(__s[+F7p]);
 			} else {
-				var W6w = D6.bd[bdHall].bl;
+				var W6w = D6.bd[bspotHall].bl;
 				if (W6w >= 2) {
 					$(E6k
 						.S55(v7p & 2147483647))
@@ -20947,7 +20869,7 @@ var cotgsubscribe = amplify;
 					.removeClass(__s[w7p & 2147483647])
 					.addClass(__s[+F7p]);
 			} else {
-				var C6w = D6.bd[bdHall].bl;
+				var C6w = D6.bd[bspotHall].bl;
 				if (C6w >= ('2' | 2)) {
 					$(_s(+
 						v7p))
@@ -21724,7 +21646,7 @@ var cotgsubscribe = amplify;
 				H0D = 1;
 			} else $(__s[2556])
 				.css(__s[+S2y], __s[+s6p]);
-			if (H0D == 1 && H2 != __s[x2R - 0]) {
+			if (H0D == 1 && H2 != "TestDummy") {
 				$(__s[+a6p])
 					.attr("disabled", !!1);
 				$(__s[a6p & 2147483647])
@@ -23290,7 +23212,7 @@ var cotgsubscribe = amplify;
 					var L5v = 0;
 					for (var z5v in o5v.bdmg) {
 						topstr = "";
-						if (z5v != +r6y) {
+						if (z5v != +bidWALL) {
 							var
 								W5v = z5v - 443;
 							var M5v = W5v % (4) * (G5y - 0);
@@ -23359,7 +23281,7 @@ var cotgsubscribe = amplify;
 					var L5v = 0;
 					for (var z5v in o5v.sbd) {
 						topstr = '';
-						if (z5v != +r6y) {
+						if (z5v != +bidWALL) {
 							var
 								W5v = z5v - (443);
 							var M5v = W5v % (4) * (G5y & 2147483647);
@@ -23710,11 +23632,11 @@ var cotgsubscribe = amplify;
 		function n8() {
 			var P04 = '3079';
 			E6k.R6();
-			var e1U = +r6y;
+			var e1U = +bidWALL;
 			var s1U = D6.bd[0]["bl"];
 			var s6U = D6.bd[0][_s(i1R ^
 				0)];
-			var X1U = +r6y;
+			var X1U = +bidWALL;
 			var T1U = 0;
 			var V1U = '';
 			var A1U = '';
@@ -23750,7 +23672,7 @@ var cotgsubscribe = amplify;
 					Q5y)][Number(X1U)]["ds"];
 				var Z1U = bam["buildings"][Number(X1U)]["bn"];
 				var j1U = bam[
-					"buildings"][Number(X1U)][__s[h6R & 2147483647]][1][__s[+X6R]];
+					"buildings"][Number(X1U)]["bc"][1]["tu"];
 				w2();
 				var z1U = Q2(j1U);
 				$(__s[3605])
@@ -23762,11 +23684,11 @@ var cotgsubscribe = amplify;
 						'zoom': 1
 					});
 				var l1U = bam["buildings"][Number(X1U)]
-				[__s[+h6R]][1][__s[m1p & 2147483647]];
+				["bc"][1][__s[m1p & 2147483647]];
 				if (l1U >= (1)) var O1U = __s[+n04] + p6(
 					l1U) + __s[+d04];
 				else var O1U = '';
-				var v1U = bam["buildings"][Number(X1U)][__s[h6R | 2305]][Number('1' |
+				var v1U = bam["buildings"][Number(X1U)]["bc"][Number('1' |
 					0)][__s[+B1p]];
 				if (v1U >= (1)) var Q1U = __s[l04 - 0] + p6(v1U) + __s[d04 & 2147483647];
 				else var Q1U = "";
@@ -23774,7 +23696,7 @@ var cotgsubscribe = amplify;
 				var i1U = D6.r[2].r;
 				var
 					R1U = D6.bq.length;
-				var y1U = D6.bd[bdHall].bl;
+				var y1U = D6.bd[bspotHall].bl;
 				var k6U = D6.bq.length;
 				var e6U = y1U * 10;
 				if (
@@ -23822,7 +23744,7 @@ var cotgsubscribe = amplify;
 				var b1U = +
 					'0';
 				var s1U = '';
-				var e1U = r6y >> 1942317024;
+				var e1U = bidWALL >> 1942317024;
 				var E1U = $(__s[+x24])
 					.css("display");
 				for (var H1U = 0; H1U < D6.bq.length; H1U++)
@@ -23841,11 +23763,11 @@ var cotgsubscribe = amplify;
 					var u1U = Number(s1U) + ("1" | 1);
 					if (bam[
 						"buildings"][Number(e1U)])
-						if (bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)]) {
+						if (bam["buildings"][Number(e1U)]["bc"][Number(u1U)]) {
 							var j1U = Math.ceil(bam[_s(Q5y |
-								1035)][Number(e1U)][__s[h6R * 1]][Number(u1U)][__s[+X6R]] / (Number(D6.cs) / (100)));
+								1035)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(D6.cs) / (100)));
 							var
-								w1U = Math.ceil(bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)][__s[+n7y]] / (Number(
+								w1U = Math.ceil(bam["buildings"][Number(e1U)]["bc"][Number(u1U)]["td"] / (Number(
 									D6.cs) / (100)));
 						} else { var j1U = +D5y; var w1U = +D5y; }
 					else {
@@ -23856,11 +23778,11 @@ var cotgsubscribe = amplify;
 				} else {
 					var u1U = s1U;
 					if (bam["buildings"][Number(e1U)])
-						if (bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)]) {
+						if (bam["buildings"][Number(e1U)]["bc"][Number(u1U)]) {
 							var j1U = Math.ceil(bam[_s(Q5y <<
-								627088640)][Number(e1U)][__s[h6R << 344031008]][Number(u1U)][__s[X6R * 1]] / (Number(D6
+								627088640)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(D6
 									.cs) / 100));
-							var w1U = Math.ceil(bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)][E6k
+							var w1U = Math.ceil(bam["buildings"][Number(e1U)]["bc"][Number(u1U)][E6k
 								.o55(+n7y)] / (Number(D6.cs) / (100)));
 						} else {
 							var j1U = +D5y;
@@ -23889,13 +23811,13 @@ var cotgsubscribe = amplify;
 				$(__s[+k04])
 					.attr("s", T1U);
 				$(__s[n3R & 2147483647])
-					.attr(__s[+w6y], +r6y);
+					.attr(__s[+w6y], +bidWALL);
 				$(__s[+f24])
 					.css("display", "none");
 				$(__s[4072])
 					.remove();
 				if (s1U > 0) {
-					var D1U = __s[1441] + bam["buildings"][+r6y][E6k
+					var D1U = __s[1441] + bam["buildings"][+bidWALL][E6k
 						.S55(1515)][Number(s1U)] + __s[+t0R];
 					$(__s[+X04])
 						.show();
@@ -23903,13 +23825,13 @@ var cotgsubscribe = amplify;
 						.html(D1U);
 				}
 				if (s1U > 1) {
-					var p1U = __s['1441' | 1] + bam["buildings"][r6y * 1][_s(
+					var p1U = __s['1441' | 1] + bam["buildings"][bidWALL * 1][_s(
 						1515)][Number(s1U) - (1)] + __s[+t0R];
 					$(__s[6031])
 						.prepend(p1U);
 				}
 				if (s1U < 10) {
-					var a1U = __s[1441] + bam["buildings"][r6y & E6k
+					var a1U = __s[1441] + bam["buildings"][bidWALL & E6k
 						.s6s][__s[1515]][Number(s1U) + 1] + __s[+t0R];
 					$(__s[2964])
 						.prepend(a1U);
@@ -23992,11 +23914,11 @@ var cotgsubscribe = amplify;
 					if (u1U <= (10)) {
 						if (bam["buildings"][Number(
 							e1U)])
-							if (bam["buildings"][Number(e1U)][__s[h6R >> 1674052736]][Number(u1U)]) {
+							if (bam["buildings"][Number(e1U)]["bc"][Number(u1U)]) {
 								var l1U = Math
-									.floor(bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)][__s[m1p * 1]]);
+									.floor(bam["buildings"][Number(e1U)]["bc"][Number(u1U)][__s[m1p * 1]]);
 								var v1U =
-									Math.floor(bam["buildings"][Number(e1U)][__s[+h6R]][Number(u1U)][_s(+
+									Math.floor(bam["buildings"][Number(e1U)]["bc"][Number(u1U)][_s(+
 										B1p)]);
 							}
 					} else { var l1U = 0; var v1U = 0; }
@@ -24011,7 +23933,7 @@ var cotgsubscribe = amplify;
 					if (s1U >= 2) {
 						var g1U = s1U - (1);
 						var N1U = Math.floor(Number(bam[_s(
-							Q5y ^ 0)][Number(e1U)][__s[h6R ^ 0]][Number(g1U)][__s[m1p - 0]]) / (3));
+							Q5y ^ 0)][Number(e1U)]["bc"][Number(g1U)][__s[m1p - 0]]) / (3));
 						if (N1U >=
 							1) S1U = __s[+n04] + p6(l1U) + __s[d04 & 2147483647];
 						else S1U = "";
@@ -24062,7 +23984,7 @@ var cotgsubscribe = amplify;
 							.css("display", "none");
 						$(__s[+f24])
 							.css("display", "none");
-					} else if (Number(s1U) == 1 && e1U == K4y * 1) {
+					} else if (Number(s1U) == 1 && e1U == bidCASTLE * 1) {
 						$(_s(
 							Y24 | 2))
 							.css("display", "none");
@@ -24070,7 +23992,7 @@ var cotgsubscribe = amplify;
 							.css("display", "none");
 					} else if (Number(s1U) == 1) $(__s[+Y24])
 						.css("display", "none");
-					if (e1U == +BAL || e1U == +K4y) $(__s[j24 >> 453068544])
+					if (e1U == +BAL || e1U == +bidCASTLE) $(__s[j24 >> 453068544])
 						.css("display", "none");
 					else {
 						var L1U = 0;
@@ -24079,17 +24001,17 @@ var cotgsubscribe = amplify;
 						if (s1U > 1)
 							for (var H1U = s1U; H1U > 1; H1U--) {
 								I1U = I1U + Math.ceil(bam["buildings"][Number(e1U)][E6k
-									.o55(+h6R)][Number(H1U)][__s[n7y | 4097]] / (Number(D6.cs) / ("100" | 68)));
-								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)][__s[h6R & 2147483647]][Number(H1U - (
+									.o55(+h6R)][Number(H1U)]["td"] / (Number(D6.cs) / ("100" | 68)));
+								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(H1U - (
 									1))][__s[B1p | 532]]) / 3);
-								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)][__s[h6R - 0]][Number(H1U - ("1" ^
+								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(H1U - ("1" ^
 									0))][__s[+m1p]]) / 3);
 							} else if (s1U >= (1)) {
 								I1U = I1U + Math.ceil(bam[E6k
-									.o55(+Q5y)][Number(e1U)][__s[+h6R]][Number(s1U)][__s[+n7y]] / (Number(D6.cs) / 100));
-								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)][__s[h6R | 3072]][Number(s1U)][E6k
+									.o55(+Q5y)][Number(e1U)]["bc"][Number(s1U)]["td"] / (Number(D6.cs) / 100));
+								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(s1U)][E6k
 									.o55(+B1p)]) / (3));
-								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)][__s[+h6R]][Number(s1U)][_s(
+								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(s1U)][_s(
 									m1p * 1)]) / 3);
 							} if (I1U < Number(ppdt.mibt)) I1U = Number(ppdt.mibt);
 						if (L1U >= 1)
@@ -24207,8 +24129,8 @@ var cotgsubscribe = amplify;
 						var h46 = z46
 							.indexOf(__s[+n24], b46 + 1);
 						var J46 = N5F(C46);
-						if (H2 == J46 || H2 == __s[+x2R] ||
-							H2 == __s[5453] || H2 == __s[2473]) {
+						if (H2 == J46 || H2 == "TestDummy" ||
+							H2 == __s[5453] || H2 == "MrLongTongue") {
 							var S46 = document.getElementById(
 								"cvs");
 							var W46 = document.getElementById("content");
@@ -24609,7 +24531,7 @@ var cotgsubscribe = amplify;
 							var V3U = bam["buildings"][Number(j3U)]["ds"];
 							var J3U = bam["buildings"][Number(j3U)]["bn"];
 							var o3U = Math.ceil(
-								bam["buildings"][Number(j3U)][__s[+h6R]][1][__s[+X6R]] / (Number(D6.cs) / 100)
+								bam["buildings"][Number(j3U)]["bc"][1]["tu"] / (Number(D6.cs) / 100)
 							);
 							if (o3U < Number(ppdt.mibt)) o3U = Number(ppdt.mibt);
 							var h3U = Q2(o3U);
@@ -24684,7 +24606,7 @@ var cotgsubscribe = amplify;
 							var H3U = Number(
 								j3U);
 							var u3U = Number(d2);
-							if (u3U == +bdHall) $(__s[r04 - 0])
+							if (u3U == +bspotHall) $(__s[r04 - 0])
 								.show();
 							else $(__s[r04 >> 79298272])
 								.css("display", "none");
@@ -24766,7 +24688,7 @@ var cotgsubscribe = amplify;
 										u3U == +f5R || u3U == +U5R || u3U == +N0R || u3U == p1R - 0 || u3U == z1R - 0 || u3U == +n1R ||
 										u3U == +d1R || u3U == 323 || u3U == +l1R || u3U == (k1R & 2147483647) || u3U == o1R * 1))
 								t3U = 1;
-							var C3U = bam["buildings"][Number(j3U)][__s[h6R & 2147483647]][1][_s(m1p |
+							var C3U = bam["buildings"][Number(j3U)]["bc"][1][_s(m1p |
 								1194)];
 							if (C3U >= 1) var G3U = __s[+n04] + p6(C3U) + __s[+d04];
 							else var G3U = '';
@@ -24783,7 +24705,7 @@ var cotgsubscribe = amplify;
 								W3U = W3U + D6.ble[+m2y];
 							}
 							var r3U = D6.bq.length;
-							var A3U = D6.bd[bdHall].bl;
+							var A3U = D6.bd[bspotHall].bl;
 							var K3U =
 								D6.bq.length;
 							var S3U = A3U * 10;
@@ -24837,7 +24759,6 @@ var cotgsubscribe = amplify;
 						}
 					});
 			});
-		var B8F;
 
 		function J0V() {
 			E6k.R6();
@@ -24879,7 +24800,6 @@ var cotgsubscribe = amplify;
 					return 517;
 			}
 		}
-		var Y8F;
 
 		function d4V(y2Z) {
 			$(__s[X44 << 160852576])
@@ -24888,9 +24808,7 @@ var cotgsubscribe = amplify;
 		}
 
 		function H4F(e2g, s2g, u2g) { }
-		var N8F;
-		var e9F;
-
+		
 		function S7F(D12) {
 			$(__s[5826])
 				.attr("data", D12);
@@ -25553,7 +25471,7 @@ var cotgsubscribe = amplify;
 					var Q5l = M1R >> 1638837472;
 					var T5l = +M1R;
 					var C5l = +M1R;
-					var S5l = D6.bd[+bdHall][E6k
+					var S5l = D6.bd[+bspotHall][E6k
 						.S55(i1R - 0)];
 					var r5l = Number(S5l) * (10);
 					var A5l = bam["buildings"][+BAL]["st"][
@@ -25915,7 +25833,7 @@ var cotgsubscribe = amplify;
 						'height': __s[p5y * 1],
 						'zoom': _s('5927' -
 							0),
-						'-moz-transform': __s[Y1R - 0],
+						'-moz-transform': __s[897 - 0],
 						'left': __s[A1R | 256]
 					});
 				z1F(b9g);
@@ -26883,7 +26801,7 @@ var cotgsubscribe = amplify;
 						$(__s[k8R >> 379378464])
 							.val(D6.y);
 						if ($("#city_map")
-							.css("display") != "none") e5F(+bdHall);
+							.css("display") != "none") e5F(+bspotHall);
 						else if ($("#cvs")
 							.css("display") != "none") O8(cid);
 						else if ($("#content")
@@ -27453,8 +27371,8 @@ var cotgsubscribe = amplify;
 			var g34 = "4737";
 			var B3U = D6.w;
 			var
-				y3U = D6.bd[bdHall].bl;
-			if (P3U == (bdHall ^ 0)) $(__s[+r04])
+				y3U = D6.bd[bspotHall].bl;
+			if (P3U == (bspotHall ^ 0)) $(__s[+r04])
 				.show();
 			else $(__s[+r04])
 				.css("display", "none");
@@ -29735,7 +29653,7 @@ var cotgsubscribe = amplify;
 							for (var g7v in f7v["bd"]) {
 								if (g7v == +TPL) {
 									var P3v = f7v[_s(+
-										bdHall)];
+										bspotHall)];
 									var B7v = shrinesarr[P3v][__s[c1R ^ 0]];
 								} else if (bam["buildings"][g7v][E6k
 									.o55(c1R ^ 0)]) var B7v = bam["buildings"][g7v][__s[+c1R]];
@@ -32775,7 +32693,7 @@ var cotgsubscribe = amplify;
 
 		function N9F(o7g) {
 			E6k.y6();
-			var L7g = Number(D6.bd[+bdHall]["bl"]);
+			var L7g = Number(D6.bd[+bspotHall]["bl"]);
 			var X7g = Number(bam[_s(
 				Q5y ^ 0)][o7g][__s["5812" | 5264]]);
 			if (Number(o7g) == r1R << 545553696 || Number(o7g) == +C6y || Number(
@@ -33479,7 +33397,7 @@ var cotgsubscribe = amplify;
 							.S55(1488))
 							.html(e52);
 					}
-					if (E02.e[5].length == 0) $(__s[+K4y])
+					if (E02.e[5].length == 0) $(__s[+bidCASTLE])
 						.html(__s[i4t << 1207871680]);
 					else {
 						e52 = "";
@@ -33491,7 +33409,7 @@ var cotgsubscribe = amplify;
 							e52 = e52 + __s[+v4t] + s52 + __s[w4t << 1677996800] + E02.e[5][k52][__s[+F4t]] + E6k
 								.S55(+H4t) + j52 + __s[+q4t] + w52 + __s[+K5y];
 						}
-						$(__s[+K4y])
+						$(__s[+bidCASTLE])
 							.html(e52);
 					}
 					if (E02.e[6].length == 0) $(__s['4708' | B9s])
@@ -34321,7 +34239,7 @@ var cotgsubscribe = amplify;
 							w6y >> 1623657248)] * (1000));
 						if (aldt["oi"][L1v][__s[g4p | 4612]]) var z1v = aldt[
 							"oi"][L1v][__s[g4p << 446131360]];
-						else var z1v = __s[x2R >> 1944667616];
+						else var z1v = "TestDummy";
 						G1v = G1v + __s[4533] + aldt["oi"][L1v]["pid"] + __s[5833] +
 							aldt["oi"][L1v]['pn'] + __s[+g3y] + aldt["oi"][L1v][_s(+
 								E3y)] + __s['6307' | 1] + z1v + __s[g3y >> 1790555744] + z1v + __s[3264] +
@@ -35069,8 +34987,8 @@ var cotgsubscribe = amplify;
 					J2();
 					X2(7);
 					V8();
-					k8();
-					v9(h2[0].btype, h2[0].elvl, 72000000, +x7t, h2[0]
+					UpdateBuildingCounts();
+					buildingInfo(h2[0].btype, h2[0].elvl, 72000000, +x7t, h2[0]
 						.bspot);
 				  sendBuildingData();
 				}
@@ -35360,7 +35278,7 @@ var cotgsubscribe = amplify;
 			if (H6U == ('891' | 56)) {
 				H6U = +TPL;
 				u6U = u6U + +o8y;
-			} else if (H6U == +z9R) {
+			} else if (H6U == +892) {
 				H6U = TPL | 274;
 				u6U = u6U + +k8y;
 			} else if (H6U == 893) {
@@ -35372,13 +35290,13 @@ var cotgsubscribe = amplify;
 			} else if (H6U == +TPL) {
 				H6U = +TPL;
 				u6U = u6U + (u6y - 0);
-			} else if (H6U == D7t * 1) {
+			} else if (H6U == 895 * 1) {
 				H6U = +TPL;
 				u6U = u6U + (p0y & 2147483647);
 			} else if (H6U == (896)) {
 				H6U = +TPL;
 				u6U = u6U;
-			} else if (H6U == +Y1R) {
+			} else if (H6U == +897) {
 				H6U = +TPL;
 				u6U = u6U - 1;
 			} else if (H6U == 898) {
@@ -38676,7 +38594,7 @@ var cotgsubscribe = amplify;
 							4144),
 						'background-color': '',
 						'zoom': "1",
-						'-moz-transform': _s(z9R |
+						'-moz-transform': _s(892 |
 							300)
 					});
 				$(__s[+P0R] + e9[f0g])
@@ -38782,7 +38700,7 @@ var cotgsubscribe = amplify;
 					'background-color': "",
 					'zoom': "1",
 					'-moz-transform': _s(
-						z9R - 0)
+						892 - 0)
 				});
 			$(__s[1665])
 				.removeClass(__s[+C4y]);
@@ -39424,7 +39342,7 @@ var cotgsubscribe = amplify;
 					.click(function () { E6k.y6(); var J2n = window.open(__s[577], __s[266]); });
 				$(__s[5181])
 					.click(function () {
-						$(__s[D7t - 0])
+						$(__s[895 - 0])
 							.show();
 					});
 				$(__s[2713])
@@ -39456,7 +39374,7 @@ var cotgsubscribe = amplify;
 					});
 				$(__s[830])
 					.click(function () {
-						$(__s[D7t * 1])
+						$(__s[895 * 1])
 							.css("display", "none");
 					});
 				$(__s[5004])
@@ -41158,7 +41076,7 @@ var cotgsubscribe = amplify;
 		}
 
 		function e3F(h2U) {
-			N2();
+			redrawCity();
 			var J2U = D6.bd[Number(h2U)].rbb;
 			var i2U = D6.bd[Number(h2U)].rb;
 			var d2U = D6.bd[
@@ -42271,14 +42189,14 @@ var cotgsubscribe = amplify;
 			var s2w = [];
 			s2w.push({
 				bid: q2[0]["bid"],
-				btype: r6y | 801,
+				btype: bidWALL | 801,
 				bspot: q2[0].bspot,
 				slvl: q2["0" >>
 					2097057952].slvl,
 				elvl: q2[0].elvl,
 				ds: q2[0].ds,
 				de: q2[0].de,
-				brep: r6y | 553
+				brep: bidWALL | 553
 			});
 			var
 				e2w = q2[0].bspot;
@@ -42328,12 +42246,12 @@ var cotgsubscribe = amplify;
 						var x2w = e2w + +j6y;
 						D6["bd"][e2w]["bid"] = TPL | 32;
 						D6["bd"][Q2w]["bid"] = 891;
-						D6["bd"][t2w]["bid"] = z9R ^ 0;
+						D6["bd"][t2w]["bid"] = 892 ^ 0;
 						D6["bd"][o2w]["bid"] = 893;
 						D6["bd"][L2w]["bid"] = 894;
-						D6["bd"][X2w]["bid"] = D7t ^ 0;
+						D6["bd"][X2w]["bid"] = 895 ^ 0;
 						D6["bd"][z2w]["bid"] = 896;
-						D6["bd"][T2w]["bid"] = +Y1R;
+						D6["bd"][T2w]["bid"] = +897;
 						D6["bd"][x2w]["bid"] = '898' | 130;
 					}
 			});
@@ -42563,7 +42481,7 @@ var cotgsubscribe = amplify;
 			var
 				K6g = 0;
 			if (U6g <= R6g && g6g <= P6g) {
-				var y6g = D6.bd[bdHall].bl;
+				var y6g = D6.bd[bspotHall].bl;
 				var p6g = Number(y6g) * ('10' >>
 					1146069344);
 				if (r6g == 1 && (S6g == 3 || S6g == 7 || S6g == +m2y ||
@@ -42583,8 +42501,7 @@ var cotgsubscribe = amplify;
 					var n6g = D6.bd[h6g].bl;
 					var V6g = D6.bd[h6g]
 						.bid;
-					if (n6g >= (1) && Z2(h6g) && V6g != +TPL && V6g != 891 && V6g != +z9R && V6g != ('893' &
-						2147483647) && V6g != 894 && V6g != +D7t && V6g != D7t * 1 && V6g != 896 && V6g != +Y1R)
+					if (n6g >= (1) && Z2(h6g) && V6g != +TPL && V6g != 891 && V6g != +892 && V6g != (893) && V6g != 894 && V6g != +895 && V6g != 895 * 1 && V6g != 896 && V6g != +897)
 						F2 = F2 + 1;
 				}
 				for (var h6g = 0; h6g < D6.bq.length; h6g++) {
@@ -43172,11 +43089,11 @@ var cotgsubscribe = amplify;
 			if (R7w > 1) var g7w = P7w - 1;
 			else var g7w = 1;
 			if (bam["buildings"][Number(f7w)])
-				if (bam["buildings"][Number(f7w)][__s[h6R * 1]][Number(g7w)]) {
+				if (bam["buildings"][Number(f7w)]["bc"][Number(g7w)]) {
 					var N7w = bam["buildings"][
-						Number(f7w)][__s[h6R - 0]][Number(g7w)][__s[m1p - 0]];
+						Number(f7w)]["bc"][Number(g7w)][__s[m1p - 0]];
 					var F7w = bam["buildings"][
-						Number(f7w)][__s[h6R << 133716928]][Number(g7w)][__s[+B1p]];
+						Number(f7w)]["bc"][Number(g7w)][__s[+B1p]];
 				} E6k.R6();
 			if (R7w > P7w);
 			var p7w =
@@ -44599,7 +44516,15 @@ var cotgsubscribe = amplify;
 			});
 		}
 
-		function v9(l6U, T6U, O6U, t6U, L6U) {
+		window['exBuildingInfo'] = function (_bid: string, bl: string, _xy:string) {
+				let xy = Number(_xy);		
+				let bId = Number(_bid);
+				let uptime = Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(D6.cs) / (100)));
+				let dtime = Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(D6.cs) / (100)));
+				buildingInfo(bId, Number(bl), uptime, dtime, xy);
+		}
+
+		buildingInfo = function(l6U:number, T6U : number, O6U:number, t6U:number, L6U:number) {
 			var s2U = 0;
 			var D6U = 0;
 			//var L6U = d2;
@@ -44611,9 +44536,9 @@ var cotgsubscribe = amplify;
 				.show();
 			$(__s[+U9y])
 				.css("display", "none");
-			if (l6U == +r6y) n8();
+			if (l6U == +bidWALL) n8();
 			else {
-				if (L6U == +bdHall) {
+				if (L6U == +bspotHall) {
 					if (ppdt[__s[5636]] == 0) {
 						$(__s[4336])
 							.css("display", "none");
@@ -44683,11 +44608,11 @@ var cotgsubscribe = amplify;
 						var
 							x6U = Number(T6U) + 1;
 						if (bam["buildings"][Number(l6U)])
-							if (bam["buildings"][Number(l6U)][__s[+h6R]][Number(x6U)]) {
+							if (bam["buildings"][Number(l6U)]["bc"][Number(x6U)]) {
 								var O6U = Math.ceil(bam[_s(+
-									Q5y)][Number(l6U)][__s[+h6R]][Number(x6U)][__s[X6R - 0]] / (Number(D6.cs) / (100)));
+									Q5y)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(D6.cs) / (100)));
 								var
-									t6U = Math.ceil(bam["buildings"][Number(l6U)][__s[+h6R]][Number(x6U)][_s(n7y <<
+									t6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][Number(x6U)][_s(n7y <<
 										414904256)] / (Number(D6.cs) / 100));
 							} else { var O6U = +D5y; var t6U = D5y ^ 0; }
 						else {
@@ -44698,11 +44623,11 @@ var cotgsubscribe = amplify;
 					} else {
 					var x6U = T6U;
 					if (bam["buildings"][Number(l6U)])
-						if (bam["buildings"][Number(l6U)][__s[h6R | 257]][Number(x6U)]) {
+						if (bam["buildings"][Number(l6U)]["bc"][Number(x6U)]) {
 							var O6U = Math.ceil(bam[_s(
-								Q5y ^ 0)][Number(l6U)][__s[h6R << 1534066944]][Number(x6U)][__s[+X6R]] / (Number(D6.cs) /
+								Q5y ^ 0)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(D6.cs) /
 									100));
-							var t6U = Math.ceil(bam["buildings"][Number(l6U)][__s[+h6R]][Number(x6U)][_s(n7y *
+							var t6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][Number(x6U)][_s(n7y *
 								1)] / (Number(D6.cs) / (100)));
 						} else {
 							var O6U = D5y * 1;
@@ -44833,13 +44758,13 @@ var cotgsubscribe = amplify;
 					var h6U = __s[m24 | 2064] + T6U + " " + bam["buildings"][l6U][_s(+
 						C5y)];
 					if (x6U <= 10 && x6U > 0) {
-						var O6U = Math.ceil(bam["buildings"][Number(l6U)][__s[+h6R]][
-							Number(x6U)][__s[X6R ^ 0]] / (Number(D6.cs) / (100)));
+						var O6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][
+							Number(x6U)]["tu"] / (Number(D6.cs) / (100)));
 						var U6U = Q2(O6U);
 						var W6U = Math.floor(
-							bam["buildings"][Number(l6U)][__s[+h6R]][Number(x6U)][__s[+m1p]]);
+							bam["buildings"][Number(l6U)]["bc"][Number(x6U)][__s[+m1p]]);
 						var C6U = Math
-							.floor(bam["buildings"][Number(l6U)][__s[h6R >> 793737344]][Number(x6U)][_s(+
+							.floor(bam["buildings"][Number(l6U)]["bc"][Number(x6U)][_s(+
 								B1p)]);
 					} else { var W6U = 0; var C6U = 0; }
 					if (W6U >= 1) var B6U = __s[+n04] + p6(
@@ -44853,7 +44778,7 @@ var cotgsubscribe = amplify;
 					if (T6U >= ("2" ^
 						0)) {
 						var c6U = T6U;
-						var m6U = Math.floor(Number(bam["buildings"][Number(l6U)][__s[h6R ^ 0]][
+						var m6U = Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][
 							Number(c6U)][__s[+m1p]]) / (2));
 						if (m6U >= 1) y6U = __s[n04 - 0] + p6(m6U) + E6k
 							.o55(+d04);
@@ -44901,7 +44826,7 @@ var cotgsubscribe = amplify;
 							.css("display", "none");
 						$(__s[+f24])
 							.css("display", "none");
-					} else if (Number(T6U) == 1 && l6U == K4y - 0) {
+					} else if (Number(T6U) == 1 && l6U == bidCASTLE - 0) {
 						$
 							(__s[+Y24])
 							.css("display", "none");
@@ -44915,7 +44840,7 @@ var cotgsubscribe = amplify;
 							.css("display", "none");
 					} else if (Number(T6U) == (1)) $(__s[+Y24])
 						.css("display", "none");
-					if (l6U == (BAL & 2147483647) || l6U == +K4y || l6U >= TPL <<
+					if (l6U == (BAL & 2147483647) || l6U == +bidCASTLE || l6U >= TPL <<
 						261016096) $(__s[j24 * 1])
 							.css("display", "none");
 					else {
@@ -44925,18 +44850,18 @@ var cotgsubscribe = amplify;
 						if (T6U > ('1' | 1))
 							for (var Q6U = T6U; Q6U > 1; Q6U--) {
 								o6U = o6U + Math.ceil(bam["buildings"][Number(
-									l6U)][__s[+h6R]][Number(Q6U)][__s[n7y - 0]] / (Number(D6.cs) / (100)));
-								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)][__s[h6R - 0]][Number(Q6U - 1)][
+									l6U)]["bc"][Number(Q6U)]["td"] / (Number(D6.cs) / (100)));
+								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(Q6U - 1)][
 									__s[+B1p]]) / 3);
-								b6U = b6U + Math.floor(Number(bam["buildings"][Number(l6U)][__s[+h6R]][Number(Q6U -
+								b6U = b6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(Q6U -
 									(1))][__s[m1p ^ 0]]) / 3);
 							} else if (T6U >= 1) {
 								o6U = o6U + Math.ceil(bam[_s(
-									Q5y ^ 0)][Number(l6U)][__s[h6R >> 114697184]][Number(T6U)][__s[+n7y]] / (Number(D6.cs) /
+									Q5y ^ 0)][Number(l6U)]["bc"][Number(T6U)]["td"] / (Number(D6.cs) /
 										(100)));
-								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)][__s[h6R << 988473728]][Number(T6U)][
+								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(T6U)][
 									__s[B1p & 2147483647]]) / (3));
-								b6U = b6U + Math.floor(Number(bam["buildings"][Number(l6U)][__s[h6R | 2049]][Number(T6U)][
+								b6U = b6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(T6U)][
 									__s[+m1p]]) / (3));
 							} if (o6U < Number(ppdt.mibt)) o6U = Number(ppdt.mibt);
 						if (
@@ -45031,11 +44956,6 @@ var cotgsubscribe = amplify;
 					.html(Z6U);
 				$(__s[5496])
 					.html(o6U);
-				var O2U = L6U;
-				var t2U = T6U;
-				var o2U = O6U;
-				var L2U = t6U;
-				var Q2U = l6U;
 			}
 		}
 
@@ -46658,7 +46578,7 @@ var cotgsubscribe = amplify;
 						Y5v = 0;
 						for (var m5v in N5v[F5v][__s[+t9m]][q5v][__s[+O8R]]) {
 							E5v = "";
-							if (m5v != +r6y) {
+							if (m5v != +bidWALL) {
 								var s7v = m5v - 443;
 								var k7v = s7v % 4 * +G5y;
 								var e7v = (s7v -
@@ -46726,7 +46646,7 @@ var cotgsubscribe = amplify;
 						for (var m5v in N5v[F5v][__s[t9m | 4678]][q5v][__s[i5p * 1]]) {
 							E5v = _s(+
 								'4867');
-							if (m5v != r6y << 295893952) {
+							if (m5v != bidWALL << 295893952) {
 								var s7v = m5v - 443;
 								var k7v = s7v % 4 * +G5y;
 								var e7v = (
@@ -48312,7 +48232,7 @@ var cotgsubscribe = amplify;
 					.val(D6.x);
 				$(__s[k8R * 1])
 					.val(D6.y);
-				e5F(+bdHall);
+				e5F(+bspotHall);
 			});
 
 		function P4F() {
@@ -48461,7 +48381,7 @@ var cotgsubscribe = amplify;
 				}
 				$(__s[1328])
 					.show();
-				if (D6["bd"][bdHall >> 1672468448]["bl"] == (1)) {
+				if (D6["bd"][bspotHall >> 1672468448]["bl"] == (1)) {
 					if (m7g == _s(+
 						'4867')) $(__s[1328])
 							.show();
@@ -49221,8 +49141,8 @@ var cotgsubscribe = amplify;
 											.text(Q36);
 										var n36 = __s[5787];
 										$(__s[1088])
-											.closest(__s[+n7y])
-											.prev(__s[n7y & 2147483647])
+											.closest("td")
+											.prev("td")
 											.html(n36);
 									} else {
 										$(__s[5097])
@@ -49231,8 +49151,8 @@ var cotgsubscribe = amplify;
 											.text(Q36);
 										var n36 = __s["4702" | 4172];
 										$(__s[1088])
-											.closest(__s[+n7y])
-											.prev(__s[n7y - 0])
+											.closest("td")
+											.prev("td")
 											.html(n36);
 									}
 									$(__s[+n9m])
@@ -50243,17 +50163,17 @@ var cotgsubscribe = amplify;
 		}
 
 		function ProcessBuuPoll() {
-			//if (D6.bq.length<=2)
-			//    DoPoll2(500);
-			//        else
-		 
-			DoPoll2(1000);
-
+			if (D6.bq.length<=1)
+			    DoPoll2(300);
+			if (D6.bq.length<=2)
+			    DoPoll2(500);
+			 else
+				DoPoll2(1600);
 		}
 
 		function C5F(v0w) {
 			J9();
-			var Y9g = r6y >> 790423264;
+			var Y9g = bidWALL >> 790423264;
 			var y9g = 0;
 			v0w = Number(v0w);
 			var X0w = new Array();
@@ -50265,7 +50185,7 @@ var cotgsubscribe = amplify;
 					.css("display");
 				var R9g = 1;
 				var P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)][E6k
-					.o55(h6R * 1)][Number(R9g)][__s[X6R >> 727944640]]) / (Number(D6.cs) / ("100" | 64)));
+					.o55(h6R * 1)][Number(R9g)]["tu"]) / (Number(D6.cs) / ("100" | 64)));
 				if (P9g < Number(
 					ppdt.mibt)) P9g = Number(ppdt.mibt);
 				var N9g = O2();
@@ -50291,7 +50211,7 @@ var cotgsubscribe = amplify;
 						Number(P9g);
 				}
 				var a9g = D6.bq.length;
-				var w0w = D6.bd[bdHall].bl;
+				var w0w = D6.bd[bspotHall].bl;
 				//  var L0w = D6.bq.length;
 				var
 					O0w = Number(w0w) * (10);
@@ -50303,7 +50223,7 @@ var cotgsubscribe = amplify;
 				if (a9g < x0w)
 					if (v0w == 1 && l0w >= c9g && I0w >= m9g && G0w == 0) {
 						var q9g = 1;
-						var F9g = +r6y;
+						var F9g = +bidWALL;
 						X0w = {
 							bspot: y9g,
 							de: D9g,
@@ -50339,7 +50259,7 @@ var cotgsubscribe = amplify;
 								D6 = i0w;
 
 								V8();
-								k8();
+								UpdateBuildingCounts();
 								g3F();
 								n8();
 								X2(7);
@@ -50365,7 +50285,7 @@ var cotgsubscribe = amplify;
 					if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) + (1);
 				}
 				var P9g = Math.ceil(Number(
-					bam["buildings"][Number(Y9g)][__s[h6R << 941978272]][Number(R9g)][__s[+X6R]]) / (Number(D6
+					bam["buildings"][Number(Y9g)]["bc"][Number(R9g)]["tu"]) / (Number(D6
 						.cs) / 100));
 				if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt.mibt);
 				var N9g = O2();
@@ -50375,9 +50295,9 @@ var cotgsubscribe = amplify;
 				var o0w = Number(u0w) + Number(P9g);
 				var j0w = D6.bq.length;
 				var c9g = Number(bam[E6k
-					.S55(+Q5y)][Number(Y9g)][__s[h6R << 1700358240]][Number(R9g)][__s[m1p - 0]]);
+					.S55(+Q5y)][Number(Y9g)]["bc"][Number(R9g)][__s[m1p - 0]]);
 				var m9g = Number(bam[
-					"buildings"][Number(Y9g)][__s[h6R << 634246144]][Number(R9g)][__s[B1p | 16]]);
+					"buildings"][Number(Y9g)]["bc"][Number(R9g)][__s[B1p | 16]]);
 				var l0w = Number(D6
 					.r[1].r);
 				var I0w = Number(D6.r[2].r);
@@ -50391,7 +50311,7 @@ var cotgsubscribe = amplify;
 					var D9g = Number(B9g) + Number(P9g);
 				}
 				var a9g = D6.bq.length;
-				var w0w = D6.bd[bdHall]
+				var w0w = D6.bd[bspotHall]
 					.bl;
 				var L0w = D6.bq.length;
 				var O0w = Number(w0w) * 10;
@@ -50399,7 +50319,7 @@ var cotgsubscribe = amplify;
 					if (v0w == 2 && l0w >= c9g && I0w >= m9g) {
 						var E9g = R9g - 1;
 						var q9g = R9g;
-						var F9g = +r6y;
+						var F9g = +bidWALL;
 						X0w = { btype: F9g, ds: B9g, elvl: q9g, bspot: y9g, de: D9g, brep: Y9g, bid: N9g, slvl: E9g };
 						var C0w =
 							y9g % +A5y;
@@ -50431,9 +50351,9 @@ var cotgsubscribe = amplify;
 									  sendBuildingData();
 
 								V8();
-								k8();
+								//UpdateBuildingCounts();
 								J2();
-								N2();
+								redrawCity();
 								n8();
 								X2(7);
 								var J0w = y9g % +A5y;
@@ -50456,8 +50376,8 @@ var cotgsubscribe = amplify;
 					if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) -
 						1;
 				}
-				var P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)][__s[+h6R]][Number(
-					R9g)][__s[n7y * 1]]) / (Number(D6.cs) / 100));
+				var P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)]["bc"][Number(
+					R9g)]["td"]) / (Number(D6.cs) / 100));
 				if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt
 					.mibt);
 				var N9g = O2();
@@ -50466,9 +50386,9 @@ var cotgsubscribe = amplify;
 				var o0w = Number(u0w) + Number(P9g);
 				var j0w = D6
 					.bq.length;
-				var c9g = Number(bam["buildings"][Number(Y9g)][__s[+h6R]][Number(R9g)][E6k
+				var c9g = Number(bam["buildings"][Number(Y9g)]["bc"][Number(R9g)][E6k
 					.o55(m1p >> 1039925760)]);
-				var m9g = Number(bam["buildings"][Number(Y9g)][__s[+h6R]][Number(
+				var m9g = Number(bam["buildings"][Number(Y9g)]["bc"][Number(
 					R9g)][__s[+B1p]]);
 				var l0w = Number(D6.r[1].r);
 				var I0w = Number(D6.r[2].r);
@@ -50480,7 +50400,7 @@ var cotgsubscribe = amplify;
 				}
 				var a9g =
 					D6.bq.length;
-				var w0w = D6.bd[bdHall].bl;
+				var w0w = D6.bd[bspotHall].bl;
 				var L0w = D6.bq.length;
 				var O0w = Number(w0w) * 10;
 				if (
@@ -50488,7 +50408,7 @@ var cotgsubscribe = amplify;
 					if (v0w == 3) {
 						var E9g = R9g + ("1" | 1);
 						var q9g = R9g;
-						var F9g = r6y & 2147483647;
+						var F9g = bidWALL & 2147483647;
 						X0w = { de: D9g, slvl: E9g, bspot: y9g, elvl: q9g, btype: F9g, bid: N9g, brep: Y9g, ds: B9g };
 						var
 							s0w = {
@@ -50518,8 +50438,8 @@ var cotgsubscribe = amplify;
 									  sendBuildingData();
 
 								V8();
-								k8();
-								N2();
+							//	UpdateBuildingCounts();
+								redrawCity();
 								n8();
 								X2(7);
 								var r0w = y9g % +A5y;
@@ -50535,7 +50455,7 @@ var cotgsubscribe = amplify;
 				var M0w = 0;
 				for (var p9g = 0; p9g < C8.length; p9g++)
 					if (D6["bd"][p9g]["bl"] >= 1 && D6["bd"][p9g]["bid"] !=
-						r6y >> 1266285600) M0w = 1;
+						bidWALL >> 1266285600) M0w = 1;
 				if (M0w == 0) {
 					var Q0w = $(__s[+x24])
 						.css("display");
@@ -50544,7 +50464,7 @@ var cotgsubscribe = amplify;
 					for (var
 						p9g in D6.bq) { var T0w = D6.bq[p9g].bspot; if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) - 1; }
 					var
-						P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)][__s[h6R - 0]][Number(R9g)][__s[+n7y]]) / (
+						P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)]["bc"][Number(R9g)]["td"]) / (
 							Number(D6.cs) / 100));
 					if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt.mibt);
 					var N9g = O2();
@@ -50566,7 +50486,7 @@ var cotgsubscribe = amplify;
 					}
 					var a9g = D6.bq
 						.length;
-					var w0w = D6.bd[bdHall].bl;
+					var w0w = D6.bd[bspotHall].bl;
 					var L0w = D6.bq.length;
 					var O0w = Number(w0w) * 10;
 					if (a9g <
@@ -50575,7 +50495,7 @@ var cotgsubscribe = amplify;
 							var E9g = R9g;
 							var q9g = 0;
 							var
-								F9g = r6y >> 307699904;
+								F9g = bidWALL >> 307699904;
 							X0w = { elvl: q9g, slvl: E9g, ds: B9g, brep: Y9g, bid: N9g, bspot: y9g, de: D9g, btype: F9g };
 							var
 								s0w = {
@@ -50604,8 +50524,8 @@ var cotgsubscribe = amplify;
 		 							  sendBuildingData();
 
 									V8();
-									k8();
-									N2();
+									//UpdateBuildingCounts();
+									redrawCity();
 									X2("7" | 5);
 									n8();
 									var f0w = y9g % +A5y;
@@ -52851,9 +52771,9 @@ var cotgsubscribe = amplify;
 					if (S9w == 17 >> 1289249504 && J9w >= ('1' & E6k
 						.s6s)) {
 						var B9w = Number(ppdt["b"]);
-						var Y9w = Number(ppdt[__s[+h6R]]);
+						var Y9w = Number(ppdt["bc"]);
 						var
-							R9w = Number(ppdt[__s[+h6R]]) + Number(J9w);
+							R9w = Number(ppdt["bc"]) + Number(J9w);
 						if (R9w > B9w) {
 							$(__s[+a6p])
 								.attr("disabled", !![]);
@@ -52971,7 +52891,7 @@ var cotgsubscribe = amplify;
 									}
 								if (m3g == 1) {
 									if (c3g == 0 && p3g == 1 && N3g ==
-										K4y * 1 || u1g == +TPL) var e1g = '';
+										bidCASTLE * 1 || u1g == +TPL) var e1g = '';
 									else var e1g = __s[6014] + y3g + __s[3566];
 									E3g = __s[4983] + w1g;
 									var O1g = "<span class = 'btimetdsp'>Build time: " + w1g + _s("6021" &
@@ -52992,9 +52912,9 @@ var cotgsubscribe = amplify;
 									k0F[y3g] = 1;
 								} else if (m3g == 0) {
 									var t1g = Number(bam["buildings"][
-										Number(N3g)][__s[h6R * 1]][Number(p3g)][__s[+m1p]]);
+										Number(N3g)]["bc"][Number(p3g)][__s[+m1p]]);
 									var o1g = Number(bam["buildings"][
-										Number(N3g)][__s[h6R * 1]][Number(p3g)][__s[+B1p]]);
+										Number(N3g)]["bc"][Number(p3g)][__s[+B1p]]);
 									if (t1g < D6["r"]["1" | 1]["r"] && o1g < D6["r"][2]["r"])
 										var I1g = __s[6342] + y3g + __s[6929] + y3g + _s('5400' *
 											1);
@@ -53367,14 +53287,14 @@ var cotgsubscribe = amplify;
 					}
 					if (bId == (F4y | 72) && D6.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +
 						u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && H2 !=
-						__s[x2R - 0]) {
+						"TestDummy") {
 						O5w = 1;
 						Y6(__s[655]);
 					}
 					if (bId != +p4y && bId != (r4y & 2147483647) && bId != h4y - 0 && bId != F4y - 0 &&
 						bId != (A4y & 2147483647) && bId != (P4y & 2147483647) && (bXY == +V5R || bXY == (c5R & 2147483647) || bXY == u8y -
 							0 || bXY == (M5R ^ 0) || bXY == (s5R | 67) || bXY == Q5R << 1330269856 || bXY == +C5R || bXY == Z5R <<
-							1362508416) && D6.w == 1 && H2 != __s[x2R << 58720736]) {
+							1362508416) && D6.w == 1 && H2 != "TestDummy") {
 						O5w = '1' | 1;
 						Y6(__s[1405]);
 					}
@@ -53395,7 +53315,7 @@ var cotgsubscribe = amplify;
 						bId != +Q1y && bId != Z1y << 518286752 && bId != u1y - 0 && bId != +N1y && bId != +i1y && bId != +q1y &&
 						bId != D1y * 1 && bId != B1y * 1 && bId != +e1y && bId != (y1y ^ 0) && (bXY == p1R * 1 || bXY == z1R <<
 							575091360 || bXY == (n1R ^ 0) || bXY == +d1R || bXY == (323) || bXY == +l1R || bXY == k1R *
-							1 || bXY == o1R * 1 && H2 != __s[+x2R])) {
+							1 || bXY == o1R * 1 && H2 != "TestDummy")) {
 						O5w = 1;
 						Y6(__s[863]);
 					}
@@ -53407,7 +53327,7 @@ var cotgsubscribe = amplify;
 						S1R | 130) && bXY != +t5R && bXY != +J5R && bXY != (T5R & 2147483647) && bXY != ('433' | 176) && bXY !=
 						x5R - 0 && bXY != +g5R && bXY != W5R << 920500128 && bXY != f5R << 752539296 && bXY != U5R - 0 && bXY != +
 						N0R && bXY != (p1R ^ 0) && bXY != +z1R && bXY != +n1R && bXY != d1R * 1 && bXY != 323 && bXY != +l1R &&
-						bXY != +k1R && bXY != o1R << 1600765280 && H2 != __s[x2R - 0]) {
+						bXY != +k1R && bXY != o1R << 1600765280 && H2 != "TestDummy") {
 						O5w = 1;
 						Y6(__s[4062]);
 					}
@@ -53424,7 +53344,7 @@ var cotgsubscribe = amplify;
 									.s6s) || bXY == +T5R || bXY == ('433' | 177) || bXY == x5R << 679735904 || bXY == +g5R || bXY == (
 										W5R & 2147483647) || bXY == f5R >> 1279393504 || bXY == +U5R || bXY == +N0R || bXY == +p1R || bXY ==
 								z1R * 1 || bXY == +n1R || bXY == (d1R | 256) || bXY == (323) || bXY == +l1R || bXY == +k1R ||
-								bXY == o1R >> 119232160 && H2 != __s[+x2R])) {
+								bXY == o1R >> 119232160 && H2 != "TestDummy")) {
 						O5w = 1;
 						Y6(__s[1664]);
 					}
@@ -53435,7 +53355,7 @@ var cotgsubscribe = amplify;
 						bXY != (S1R | 2) && bXY != +t5R && bXY != (J5R ^ 0) && bXY != T5R * 1 && bXY != 433 && bXY != +x5R &&
 						bXY != +g5R && bXY != +W5R && bXY != +f5R && bXY != +U5R && bXY != N0R - 0 && bXY != p1R * 1 && bXY !=
 						z1R - 0 && bXY != +n1R && bXY != (d1R & 2147483647) && bXY != 323 && bXY != l1R <<
-						611117984 && bXY != +k1R && bXY != o1R << 449644192 && H2 != __s[+x2R]) {
+						611117984 && bXY != +k1R && bXY != o1R << 449644192 && H2 != "TestDummy") {
 						O5w = 1;
 						Y6(__s[6755]);
 					}
@@ -53509,20 +53429,20 @@ var cotgsubscribe = amplify;
 						if (dragDown == dragUp || n2 == "none") {
 							if (op < 2) {
 								var v5w =
-									Math.ceil(Number(bam["buildings"][Number(bId)][__s[h6R - 0]][Number(I5w)][__s[+X6R]]) /
+									Math.ceil(Number(bam["buildings"][Number(bId)]["bc"][Number(I5w)]["tu"]) /
 										(Number(D6.cs) / 100));
 								if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 							}
 							if (op == '4' -
 								0) {
-								var v5w = Math.ceil(Number(bam["buildings"][Number(bId)][__s[h6R & 2147483647]][Number(I5w)][
-									__s[X6R ^ 0]]) / (Number(D6.cs) / (100)));
+								var v5w = Math.ceil(Number(bam["buildings"][Number(bId)]["bc"][Number(I5w)][
+									"tu"]) / (Number(D6.cs) / (100)));
 								if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt
 									.mibt);
 							}
 							if (op == (2)) {
 								var v5w = Math.ceil(Number(bam["buildings"][Number(
-									bId)][__s[+h6R]][Number(I5w)][__s[n7y >> 1826986464]]) / (Number(D6.cs) / 100));
+									bId)]["bc"][Number(I5w)]["td"]) / (Number(D6.cs) / 100));
 								if (v5w <
 									Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 							}
@@ -53532,7 +53452,7 @@ var cotgsubscribe = amplify;
 									+r1R || Number(bId) == (C6y & 2147483647) || Number(bId) == +G1R || Number(bId) == +b1R) v5w = +I2y;
 								else {
 									for (var H5w = I5w; H5w >= (1); H5w--) v5w = Number(v5w) + Math.ceil(Number(bam[E6k
-										.S55(Q5y << 62540672)][Number(bId)][__s[+h6R]][Number(I5w)][__s[n7y >> 610065184]]) /
+										.S55(Q5y << 62540672)][Number(bId)]["bc"][Number(I5w)]["td"]) /
 										(Number(D6.cs) / (100)));
 									if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 								}
@@ -53540,7 +53460,7 @@ var cotgsubscribe = amplify;
 							if (x9 ==
 								("1" | 1)) v5w = 500;
 							var i5w = O2();
-							var W5w = new Date();
+							//var W5w = new Date();
 							var p5w = v5w;
 							var e7w = Number(p5w) +
 								Number(v5w);
@@ -53548,7 +53468,7 @@ var cotgsubscribe = amplify;
 							var z5w = Number(bam["buildings"][Number(bId)][E6k
 								.o55(+h6R)][Number(I5w)][__s[m1p >> 1407551456]]);
 							var M5w = Number(bam["buildings"][Number(
-								bId)][__s[h6R >> 706740160]][Number(I5w)][__s[B1p * 1]]);
+								bId)]["bc"][Number(I5w)][__s[B1p * 1]]);
 							var A5w = Number(D6.r[1].r);
 							var
 								n5w = Number(D6.r[2].r);
@@ -53577,8 +53497,8 @@ var cotgsubscribe = amplify;
 									.bl;
 								var G5w = D6.bd[H5w].bid;
 								if (r5w >= 1 && Z2(H5w) && G5w != +TPL && G5w != 891 && G5w != +
-									z9R && G5w != 893 && G5w != 894 && G5w != +D7t && G5w != +D7t && G5w != 896 &&
-									G5w != +Y1R) F2 = F2 + (1);
+									892 && G5w != 893 && G5w != 894 && G5w != +895 && G5w != +895 && G5w != 896 &&
+									G5w != +897) F2 = F2 + (1);
 							}
 							for (var H5w = 0; H5w < D6.bq.length; H5w++)
 								if (D6.bq[H5w]) {
@@ -53609,7 +53529,7 @@ var cotgsubscribe = amplify;
 										var w5w = 1;
 										if (x9 == (1)) w5w = 10;
 										var a5w = b1F(bId, bXY);
-										if (bId == +K4y) V5V(
+										if (bId == +bidCASTLE) V5V(
 											i5w, t5w, bXY, 0, "1" | 1, L5w, X5w, bId);
 										else if (a5w == !![]) {
 											var T5w = {
@@ -53646,8 +53566,8 @@ var cotgsubscribe = amplify;
 														V5F(bXY);
 													}
 													V8();
-													k8();
-													N2();
+												//	UpdateBuildingCounts();
+													redrawCity();
 													X2(7);
 													var H7w = bXY % (A5y - 0);
 													var j7w = (bXY - H7w) / (A5y |
@@ -53674,9 +53594,9 @@ var cotgsubscribe = amplify;
 										}
 										var w5w = Number(f5w + 1);
 										var d5w = Math.ceil(bam[_s(Q5y *
-											1)][bId][__s[h6R - 0]][w5w][__s[X6R >> 1397305888]] / (Number(D6.cs) / 100));
+											1)][bId]["bc"][w5w]["tu"] / (Number(D6.cs) / 100));
 										var W5w =
-											Math.ceil(bam["buildings"][bId][__s[+h6R]][w5w][__s[n7y * 1]] / (Number(D6.cs) / +
+											Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(D6.cs) / +
 												"100"));
 										var C5w = 0;
 										if (x9 == ("1" | 1)) w5w = 10;
@@ -53690,7 +53610,7 @@ var cotgsubscribe = amplify;
 											else C5w = 0;
 										}
 										if (C5w == (0)) {
-											v9(bId, w5w, d5w, W5w, bXY);
+											buildingInfo(bId, w5w, d5w, W5w, bXY);
 											var T5w = {
 												bt: Number(
 													op),
@@ -53720,8 +53640,8 @@ var cotgsubscribe = amplify;
 			 							  sendBuildingData();
 
 													V8();
-													k8();
-													N2();
+													//UpdateBuildingCounts();
+													redrawCity();
 													X2(7);
 													var I7w = bXY % (A5y * 1);
 													var v7w = (bXY - I7w) / (A5y *
@@ -53736,10 +53656,8 @@ var cotgsubscribe = amplify;
 									if (!(A5w < z5w && o5w == 0))
 										if (!(n5w < M5w && o5w == 0)) {
 											var w5w = Number(I5w);
-											var d5w = Math.ceil(bam["buildings"][
-												bId][__s[+h6R]][w5w][__s[+X6R]] / (Number(D6.cs) / (100)));
-											var W5w = Math.ceil(
-												bam["buildings"][bId][__s[+h6R]][w5w][__s[+n7y]] / (Number(D6.cs) / 100));
+											var d5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["tu"] / (Number(D6.cs) / (100)));
+											var W5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(D6.cs) / 100));
 											var
 												C5w = 0;
 											if (x9 == 1) w5w = 10;
@@ -53780,8 +53698,8 @@ var cotgsubscribe = amplify;
 
 														if (o5w == 0) s8(z5w, M5w, 0, 0, 0);
 														V8();
-														k8();
-														N2();
+													//	UpdateBuildingCounts();
+														redrawCity();
 														X2(7);
 														var Q7w = bXY % +A5y;
 														var T7w = (bXY - Q7w) / (A5y - 0);
@@ -53795,13 +53713,11 @@ var cotgsubscribe = amplify;
 									var w5w = Number(I5w) - 1;
 									if (bId == +BAL && w5w == (0)) Y6(_s('4265' |
 										1));
-									else if (bId == +K4y && w5w == 0) Y6(__s[6957]);
+									else if (bId == +bidCASTLE && w5w == 0) Y6(__s[6957]);
 									else {
-										var d5w = Math.ceil(bam["buildings"][bId][__s[+h6R]][I5w][_s(X6R <<
-											536577120)] / (Number(D6.cs) / (100)));
-										var W5w = Math.ceil(bam["buildings"][bId][
-											__s[h6R ^ 0]][I5w][__s[+n7y]] / (Number(D6.cs) / (100)));
-										v9(bId, w5w, d5w, W5w, bXY);
+										var d5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["tu"] / (Number(D6.cs) / (100)));
+										var W5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["td"] / (Number(D6.cs) / (100)));
+										buildingInfo(bId, w5w, d5w, W5w, bXY);
 										z5w = Number(z5w) / (3);
 										M5w = Number(M5w) / 3;
 										var T5w = {
@@ -53832,10 +53748,10 @@ var cotgsubscribe = amplify;
 
 												X2(7);
 												V8();
-												k8();
+												//UpdateBuildingCounts();
 												var O7w = bXY % (A5y * 1);
 												var t7w = (bXY - O7w) / (A5y & 2147483647);
-												N2();
+												redrawCity();
 												ProcessBuuPoll();
 
 											}
@@ -53870,10 +53786,10 @@ var cotgsubscribe = amplify;
 
 											X2(7);
 											V8();
-											k8();
+											//UpdateBuildingCounts();
 											var L7w = bXY % +A5y;
 											var X7w = (bXY - L7w) / +A5y;
-											N2();
+											redrawCity();
 											ProcessBuuPoll();
 
 										}
@@ -54024,7 +53940,7 @@ var cotgsubscribe = amplify;
 			var H0k = "6519";
 			var w0k = "4465";
 			var j0k = '3006';
-			var i6w = D6.bd[bdHall]
+			var i6w = D6.bd[bspotHall]
 				.bl;
 			var d6w = 0;
 			if (i6w >= (1) && d6w == 0) {
@@ -54514,7 +54430,7 @@ var cotgsubscribe = amplify;
 						J5Z = Number(D6.bq[V5Z].brep);
 					}
 				}
-				if (J5Z != +BAL && J5Z != (K4y & 2147483647) && J5Z != +TPL) Y2(J5Z, h5Z,
+				if (J5Z != +BAL && J5Z != (bidCASTLE & 2147483647) && J5Z != +TPL) Y2(J5Z, h5Z,
 					3);
 			}
 		}
@@ -54535,7 +54451,7 @@ var cotgsubscribe = amplify;
 		function I5V() {
 			var J4w, h4w;
 			v5V();
-			N2();
+			redrawCity();
 			E9();
 		}
 		var i8;
@@ -54923,16 +54839,16 @@ var cotgsubscribe = amplify;
 				if (x5D == (17 | 17)) i5D = L5D;
 				var R5D = Number(ppdt["b"]);
 				var
-					Y5D = Number(ppdt[__s[h6R - 0]]);
-				var D5D = Number(ppdt[__s[h6R & 2147483647]]) + Number(i5D);
+					Y5D = Number(ppdt["bc"]);
+				var D5D = Number(ppdt["bc"]) + Number(i5D);
 				if (
-					J5D > D6["r"][1]["r"] && H2 != __s[+x2R]) Y6(__s[+x8y]);
-				else if (h5D > D6["r"][3]["r"] && H2 != __s[x2R << 999799904]) Y6(_s(W8y |
+					J5D > D6["r"][1]["r"] && H2 != "TestDummy") Y6(__s[+x8y]);
+				else if (h5D > D6["r"][3]["r"] && H2 != "TestDummy") Y6(_s(W8y |
 					622));
-				else if (b5D <= 0 && x5D != 0 && H2 != __s[x2R * 1]) Y6(__s[F4R & 2147483647]);
-				else if (V5D > ppdt['g'][__s[+w6y]] && H2 != __s[x2R * 1]) Y6(__s[805]);
-				else if (S5D > D6["r"][2]["r"] && H2 != __s[x2R * 1]) Y6(__s[+g8y]);
-				else if (b5D > G5D && x5D != 0 && H2 != __s[x2R & 2147483647]) Y6(__s[6335]);
+				else if (b5D <= 0 && x5D != 0 && H2 != "TestDummy") Y6(__s[F4R & 2147483647]);
+				else if (V5D > ppdt['g'][__s[+w6y]] && H2 != "TestDummy") Y6(__s[805]);
+				else if (S5D > D6["r"][2]["r"] && H2 != "TestDummy") Y6(__s[+g8y]);
+				else if (b5D > G5D && x5D != 0 && H2 != "TestDummy") Y6(__s[6335]);
 				else if (i5D > 0 && Number(D5D) > Number(R5D)) Y6(__s['2994' | 2832]);
 				else {
 					var A5D = D6["tq"].length;
@@ -54945,7 +54861,7 @@ var cotgsubscribe = amplify;
 						var r5D = M5D +
 							z5D;
 					}
-					D6[__s[+X6R]] = D6[__s[X6R << 1563705184]] + b5D;
+					D6["tu"] = D6["tu"] + b5D;
 					var n5D = {
 						tid: Number(p5D),
 						ttype: Number(x5D),
@@ -54958,7 +54874,7 @@ var cotgsubscribe = amplify;
 						tbt: Number(K5D),
 						pa: 1
 					};
-					if (x5D == +17) ppdt[__s[+h6R]] = ppdt[_s(+
+					if (x5D == +17) ppdt["bc"] = ppdt[_s(+
 						h6R)] + i5D;
 					var Z5D = __s[5491];
 					var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
@@ -55813,9 +55729,9 @@ var cotgsubscribe = amplify;
 		//      var m3U =
 		//        D6["bd"][Number(d2)]["bl"];
 		//      var a3U = Math.ceil(bam["buildings"][c3U][E6k
-		//        .o55(h6R | 2049)][m3U][__s[X6R << 1836304064]] / (Number(D6.cs) / 100));
+		//        .o55(h6R | 2049)][m3U]["tu"] / (Number(D6.cs) / 100));
 		//      var E3U = Math.ceil(bam[
-		//        "buildings"][c3U][__s[h6R - 0]][m3U][__s[n7y ^ 0]] / (Number(D6.cs) / 100));
+		//        "buildings"][c3U]["bc"][m3U]["td"] / (Number(D6.cs) / 100));
 		//      v9(c3U, m3U, a3U, E3U, d2);
 		//      e3F(d2);
 		//    }
@@ -55871,7 +55787,7 @@ var cotgsubscribe = amplify;
 			E6k.y6();
 			A5V();
 			B0F();
-			N2();
+			redrawCity();
 			a9F();
 			UpdateTroopQueue();
 		}
@@ -56713,9 +56629,9 @@ var cotgsubscribe = amplify;
 								D6.bq[g1w][__s[1381]];
 							var Z1w = D6.bq[g1w]["bid"];
 							var Q6w = Math.floor(
-								bam["buildings"][Number(P1w)][__s[+h6R]][Number(B1w)][__s[m1p * 1]]);
+								bam["buildings"][Number(P1w)]["bc"][Number(B1w)][__s[m1p * 1]]);
 							var I6w =
-								Math.floor(bam["buildings"][Number(P1w)][__s[+h6R]][Number(B1w)][__s[B1p | 1280]]);
+								Math.floor(bam["buildings"][Number(P1w)]["bc"][Number(B1w)][__s[B1p | 1280]]);
 							if (
 								Q6w > S1w || I6w > J1w) {
 								if ($(__s[3903] + Z1w)
@@ -56780,7 +56696,7 @@ var cotgsubscribe = amplify;
 				if ($("#citySpotMenu").css("display") != "none")
 					if ($(__s[+k04])
 						.attr("s") == 0) wallspot();
-					else v9(B8F, Y8F, N8F, e9F, H9F);
+					//else buildingInfo(selectedBSpot, Y8F, N8F, e9F, H9F);
 			} catch (T6w) { } finally {
 				clearTimeout(U1FTimeout);
 				U1FTimeout = setTimeout(U1F, 3000);
@@ -57431,7 +57347,7 @@ var cotgsubscribe = amplify;
 								k8g == E2g) m2g = D6.bq[a2g][__s[+T1m]];
 						}
 					if (L2(m2g) != (0)) m2g = L2(m2g);
-					if (m2g == r6y - 0) C5F(2); // upgrade
+					if (m2g == bidWALL - 0) C5F(2); // upgrade
 					else if (m2g == +TPL) D1F();
 					else Y2(m2g, E2g, 1);
 				}
@@ -57530,7 +57446,7 @@ var cotgsubscribe = amplify;
 					var W8g = D6.bd[i8g].bid;
 					if (L2(W8g) != (0)) W8g = L2(W8g);
 					if (W8g == (
-						r6y ^ 0)) C5F(3); // downgrade
+						bidWALL ^ 0)) C5F(3); // downgrade
 					else Y2(W8g, i8g, 2);
 				}
 			});
@@ -57967,7 +57883,7 @@ var cotgsubscribe = amplify;
 					var b8g = D6.bd[S8g].bid;
 					if (L2(b8g) != (0)) b8g = L2(b8g);
 					if (b8g ==
-						r6y >> 1938472320) C5F(4); // demo
+						bidWALL >> 1938472320) C5F(4); // demo
 					else Y2(b8g, S8g, 3);
 				}
 			});
@@ -58578,7 +58494,7 @@ var cotgsubscribe = amplify;
 			for (var G8w = 0; G8w < i8w; G8w++) {
 				W8w = D6
 					.bd[G8w]["bid"];
-				if (W8w == +K4y) C8w = D6.bd[G8w]["bl"];
+				if (W8w == +bidCASTLE) C8w = D6.bd[G8w]["bl"];
 			}
 			var d8w = 5 + C8w;
 			var b8w =
@@ -58940,15 +58856,15 @@ var cotgsubscribe = amplify;
 					.attr("s");
 				if (L2(o9g) != 0) o9g = L2(o9g);
 				var X9g = bam["buildings"][Number(o9g)][E6k
-					.o55(+h6R)][1][__s[+X6R]];
-				var z9g = bam["buildings"][Number(o9g)][__s[+h6R]][1][_s(+
+					.o55(+h6R)][1]["tu"];
+				var z9g = bam["buildings"][Number(o9g)]["bc"][1][_s(+
 					n7y)];
-				if (o9g == +r6y) {
+				if (o9g == +bidWALL) {
 					C5F(1); // build
 					n8();
 				} else {
 					Y2(o9g, L9g, 0);
-					v9(o9g, 1, X9g, z9g, L9g);
+					buildingInfo(o9g, 1, X9g, z9g, L9g);
 				}
 			});
 
@@ -59023,7 +58939,7 @@ var cotgsubscribe = amplify;
 					if (z7B == (1)) {
 						var G7B = $(this)
 							.closest(__s[622]);
-						var W7B = G7B.find(__s[+n7y]);
+						var W7B = G7B.find("td");
 						var C7B = W7B.find(__s[d7y * 1]);
 						C7B.removeClass(__s[4617]);
 						C7B.addClass(__s['2854' | 2820]);
@@ -59033,7 +58949,7 @@ var cotgsubscribe = amplify;
 					if (z7B == 2) {
 						var G7B = $(this)
 							.closest(__s[622]);
-						var W7B = G7B.find(__s[+n7y]);
+						var W7B = G7B.find("td");
 						var C7B = W7B.find(_s(d7y >>
 							547924288));
 						C7B.removeClass(__s[2854]);
@@ -59870,7 +59786,7 @@ var cotgsubscribe = amplify;
 						} else if (t2g != "0" <<
 							435412160) Q2g = L2(Q2g);
 					//      console.log(__s[4416] + I2g + __s[+w54] + Q2g);
-					v9(Q2g, t2g, J2g, h2g, I2g);
+					buildingInfo(Q2g, t2g, J2g, h2g, I2g);
 				} else {
 					var I2g = X2g * (A5y - 0) + L2g;
 					E6 = $(__s[4118])
@@ -60170,10 +60086,10 @@ var cotgsubscribe = amplify;
 					if (J8w == +17) {
 						var A8w = Number(ppdt["b"]);
 						var P8w = Number(
-							ppdt[__s[h6R - 0]]);
-						var B8w = Number(ppdt[__s[h6R - 0]]);
+							ppdt["bc"]);
+						var B8w = Number(ppdt["bc"]);
 						var V8w = Number(A8w) - Number(ppdt[
-							__s[h6R ^ 0]]);
+							"bc"]);
 						if (V8w < h8w) h8w = V8w;
 						if (h8w <= 0) h8w = 0;
 					}
@@ -61221,7 +61137,7 @@ var cotgsubscribe = amplify;
 						530040544)]["de"] + +e2R;
 					var a0D = q0D + F0D;
 				}
-				D6[__s[X6R * 1]] = D6[_s(X6R <<
+				D6["tu"] = D6[_s(X6R <<
 					516914176)] + w5D;
 				var e5D = {
 					tid: (H5D),
@@ -63572,8 +63488,8 @@ var cotgsubscribe = amplify;
 			}
 		}
 
-		function k8() {
-			var W4w = D6.bd[bdHall].bl;
+		function UpdateBuildingCounts() {
+			var W4w = D6.bd[bspotHall].bl;
 			var d4w = W4w * (10);
 			var z4w = D6
 				.bq.length;
@@ -63583,8 +63499,7 @@ var cotgsubscribe = amplify;
 				.length; o4w++) {
 				var i4w = D6.bd[o4w].bl;
 				var G4w = D6.bd[o4w].bid;
-				if (i4w >= 1 && G4w != (BAL & E6k
-					.s6s) && b4F.indexOf(__s[m8y ^ 0] + o4w + __s[m8y ^ 0]) < 0 && K0F.indexOf(Number(o4w)) < +
+				if (i4w >= 1 && G4w != (BAL) && b4F.indexOf(__s[m8y ^ 0] + o4w + __s[m8y ^ 0]) < 0 && K0F.indexOf(Number(o4w)) < +
 					'0' && e9.indexOf(Number(o4w)) < 0 && G4w <= +TPL) X4w = X4w + 1;
 			}
 			E6k.y6();
@@ -63595,8 +63510,9 @@ var cotgsubscribe = amplify;
 						var L4w = D6.bq[o4w].brep;
 						if (L4w != (G1R ^ 0) && L4w != +C6y && L4w != +r1R &&
 							L4w != (b1R ^ 0) && L4w != +BAL && L4w <= +TPL && d4F(o4w))
-							if (D6.bq[o4w].sl == (0)) X4w = X4w + (1);
-					} var C4w = d4w - X4w;
+							if (D6.bq[o4w].slvl == (0)) X4w = X4w + (1);
+					} 
+			var C4w = d4w - X4w;
 			$(__s[J9R << 1208171296])
 				.html(C4w);
 			$(__s[2606])
@@ -63881,14 +63797,14 @@ var cotgsubscribe = amplify;
 			if ($(__s[D44 - 0])
 				.css("display") != "none" || $("#quickBuildMenu")
 					.css("display") != "none") {
-				var t6w = D6.bd[bdHall].bl;
+				var t6w = D6.bd[bspotHall].bl;
 				var L6w = D6.bq
 					.length;
-				var t6w = D6.bd[bdHall].bl;
+				var t6w = D6.bd[bspotHall].bl;
 				var X6w = D6.bq.length;
 				var z6w = Number(t6w) * ('10' ^
 					0);
-				var M6w = k8();
+				var M6w = UpdateBuildingCounts();
 				var G6w = 0;
 				X5V();
 				if ($(__s[D44 >> 1051610016])
@@ -64650,7 +64566,7 @@ var cotgsubscribe = amplify;
 						'height': _s(+
 							I9R),
 						'background-color': '',
-						'-moz-transform': __s[z9R | 592],
+						'-moz-transform': __s[892 | 592],
 						'zoom': _s(p9R -
 							0)
 					});
@@ -64877,7 +64793,7 @@ var cotgsubscribe = amplify;
 				"den": M9R * 1,
 				"sy": s0R &
 					2147483647,
-				"r": { "10": bdHall ^ 0, "11": +X7k },
+				"r": { "10": bspotHall ^ 0, "11": +X7k },
 				"w": 1
 			},
 			"89": {
@@ -67254,7 +67170,7 @@ var cotgsubscribe = amplify;
 					2368),
 				"den": +M9R,
 				"sy": 0,
-				"r": { "8": bdHall << 603599136, "9": 345600000 },
+				"r": { "8": bspotHall << 603599136, "9": 345600000 },
 				"c": +O7p,
 				"sw": '2' &
 					2147483647,
@@ -67868,7 +67784,7 @@ var cotgsubscribe = amplify;
 						var f5i = F0i.n + __s['2495' | 386] + c0i;
 						var G5i = ppdt
 							.alatitties;
-						var X5i = Number(j5i) - Number(ppdt[__s[+h6R]]);
+						var X5i = Number(j5i) - Number(ppdt["bc"]);
 						if (E0i == undefined) {
 							j5i = "-";
 							E0i = "-";
@@ -67975,7 +67891,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[6397]), position: __s[M64 - 0] });
 				$(__s[2641])
 					.hover(function () {
-						var x7i = D6.bd[bdHall].bl;
+						var x7i = D6.bd[bspotHall].bl;
 						var O7i = 0;
 						if (x7i >= 1 &&
 							O7i == 0) var T7i = __s[s8R * 1];
@@ -67987,7 +67903,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[6945]), position: __s[M64 >> 142354976] });
 				$(__s[2660])
 					.hover(function () {
-						var o7i = D6.bd[bdHall].bl;
+						var o7i = D6.bd[bspotHall].bl;
 						var L7i = 0;
 						if (o7i >= 1 && L7i ==
 							0) var t7i = __s[+s8R];
@@ -67999,7 +67915,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[3834]), position: __s[+M64] });
 				$(__s[5216])
 					.hover(function () {
-						var z7i = D6.bd[bdHall].bl;
+						var z7i = D6.bd[bspotHall].bl;
 						var M7i = 0;
 						E6k.R6();
 						if (z7i >= 1 && M7i == 0) var X7i = __s[+s8R];
@@ -68011,7 +67927,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[2815]), position: __s[+M64] });
 				$(__s[6671])
 					.hover(function () {
-						var C7i = D6.bd[bdHall].bl;
+						var C7i = D6.bd[bspotHall].bl;
 						var W7i = 0;
 						if (C7i >= (2) && W7i == +
 							'0') var G7i = __s[+s8R];
@@ -68023,7 +67939,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[1812]), position: __s[+M64] });
 				$(__s[+v7p])
 					.hover(function () {
-						var d7i = D6.bd[bdHall].bl;
+						var d7i = D6.bd[bspotHall].bl;
 						var b7i = 0;
 						if (d7i >= 2 && b7i == +
 							"0") var i7i = __s[s8R << 280250624];
@@ -68036,7 +67952,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[1733]), position: __s[+M64] });
 				$(__s[3541])
 					.hover(function () {
-						var J7i = D6.bd[bdHall].bl;
+						var J7i = D6.bd[bspotHall].bl;
 						var h7i = 0;
 						if (J7i >= 2 && h7i == 0)
 							var S7i = __s[+s8R];
@@ -68048,7 +67964,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s['1189' | 1184]), position: __s[+M64] });
 				$(__s["1985" | 320])
 					.hover(function () {
-						var r7i = D6.bd[bdHall].bl;
+						var r7i = D6.bd[bspotHall].bl;
 						var A7i = 0;
 						E6k.R6();
 						if (r7i >= 3 && A7i == 0) var V7i = __s[+s8R];
@@ -68060,7 +67976,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[4920]), position: __s[+M64] });
 				$(__s['1649' | 1105])
 					.hover(function () {
-						var f7i = D6.bd[bdHall].bl;
+						var f7i = D6.bd[bspotHall].bl;
 						E6k.R6();
 						var K7i = 0;
 						if (f7i >= (3) && K7i == 0) var n7i = _s(
@@ -68073,7 +67989,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s["7029" | 4720]), position: __s[M64 - 0] });
 				$(__s[H7p & 2147483647])
 					.hover(function () {
-						var Z7i = D6.bd[bdHall].bl;
+						var Z7i = D6.bd[bspotHall].bl;
 						var U7i = 0;
 						if (Z7i >= 3 && U7i == 0)
 							var g7i = __s[s8R * 1];
@@ -68085,7 +68001,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[5121]), position: __s[M64 << 1820768704] });
 				$(__s[6352])
 					.hover(function () {
-						var B7i = D6.bd[bdHall].bl;
+						var B7i = D6.bd[bspotHall].bl;
 						var R7i = 0;
 						if (B7i >= 4 && R7i == 0)
 							var P7i = __s[+s8R];
@@ -68097,7 +68013,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[3803]), position: __s[M64 ^ 0] });
 				$(__s[5664])
 					.hover(function () {
-						var D7i = D6.bd[bdHall].bl;
+						var D7i = D6.bd[bspotHall].bl;
 						var p7i = 0;
 						E6k.R6();
 						if (D7i >= 4 && p7i == (0)) var y7i = __s[+s8R];
@@ -68110,7 +68026,7 @@ var cotgsubscribe = amplify;
 				$(__s[4697])
 					.hover(function () {
 						E6k.R6();
-						var N7i = D6.bd[bdHall].bl;
+						var N7i = D6.bd[bspotHall].bl;
 						var F7i = 0;
 						if (N7i >= +
 							'4' && F7i == 0) var Y7i = __s[s8R | 1040];
@@ -68122,7 +68038,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[2958]), position: __s[M64 * 1] });
 				$(__s[6216])
 					.hover(function () {
-						var c7i = D6.bd[bdHall].bl;
+						var c7i = D6.bd[bspotHall].bl;
 						E6k.R6();
 						var m7i = 0;
 						if (c7i >= ("5" | 5) && m7i == (0)) var q7i = _s(s8R >>
@@ -68135,7 +68051,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[1709]), position: __s[M64 * 1] });
 				$(__s[2162])
 					.hover(function () {
-						var E7i = D6.bd[bdHall].bl;
+						var E7i = D6.bd[bspotHall].bl;
 						var k4i = 0;
 						if (E7i >= 5 && k4i == ("0" |
 							0)) var a7i = __s[s8R ^ 0];
@@ -68147,7 +68063,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[2258]), position: __s[+M64] });
 				$(__s[A7p << 1056132768])
 					.hover(function () {
-						var s4i = D6.bd[bdHall].bl;
+						var s4i = D6.bd[bspotHall].bl;
 						var u4i = 0;
 						if (s4i >= "5" >>
 							1423545504 && u4i == 0) var e4i = __s[+s8R];
@@ -68159,7 +68075,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[4627]), position: __s[M64 >> 813750432] });
 				$(__s[1714])
 					.hover(function () {
-						var j4i = D6.bd[bdHall].bl;
+						var j4i = D6.bd[bspotHall].bl;
 						var w4i = 0;
 						if (j4i >= +
 							"6" && w4i == 0) var H4i = __s[+s8R];
@@ -68172,7 +68088,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[6213]), position: __s[M64 - 0] });
 				$(__s[6876])
 					.hover(function () {
-						var v4i = D6.bd[bdHall].bl;
+						var v4i = D6.bd[bspotHall].bl;
 						var l4i = 0;
 						if (v4i >= 6 &&
 							l4i == 0) var I4i = __s[+s8R];
@@ -68185,7 +68101,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[5709]), position: __s[+M64] });
 				$(__s[+G7p])
 					.hover(function () {
-						var T4i = D6.bd[bdHall].bl;
+						var T4i = D6.bd[bspotHall].bl;
 						var x4i = 0;
 						if (T4i >= 6 && x4i == 0) var
 							Q4i = __s[+s8R];
@@ -68198,7 +68114,7 @@ var cotgsubscribe = amplify;
 				$(__s[4067])
 					.hover(function () {
 						E6k.R6();
-						var t4i = D6.bd[bdHall].bl;
+						var t4i = D6.bd[bspotHall].bl;
 						var o4i = 0;
 						if (t4i >= "7" <<
 							444915104 && o4i == 0) var O4i = __s[+s8R];
@@ -68210,7 +68126,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[1465]), position: __s[M64 & 2147483647] });
 				$(__s[1332])
 					.hover(function () {
-						var X4i = D6.bd[bdHall].bl;
+						var X4i = D6.bd[bspotHall].bl;
 						var z4i = 0;
 						if (X4i >= (7) && z4i == +
 							"0") var L4i = __s[+s8R];
@@ -68223,7 +68139,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[6663]), position: __s[M64 << 2075087520] });
 				$(__s[r7p - 0])
 					.hover(function () {
-						var G4i = D6.bd[bdHall].bl;
+						var G4i = D6.bd[bspotHall].bl;
 						var C4i = 0;
 						if (G4i >= 7 && C4i == 0)
 							var M4i = __s[+s8R];
@@ -68236,7 +68152,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[2752]), position: __s[M64 | 17] });
 				$(__s[709])
 					.hover(function () {
-						var i4i = D6.bd[bdHall].bl;
+						var i4i = D6.bd[bspotHall].bl;
 						var d4i = 0;
 						E6k.R6();
 						if (i4i >= 8 && d4i == 0) var W4i = __s[+s8R];
@@ -68248,7 +68164,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[907]), position: __s[+M64] });
 				$(__s[2365])
 					.hover(function () {
-						var S4i = D6.bd[bdHall].bl;
+						var S4i = D6.bd[bspotHall].bl;
 						var J4i = 0;
 						if (S4i >= "8" <<
 							777226080 && J4i == 0) var b4i = __s[s8R << 262880832];
@@ -68260,7 +68176,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s["1848" | 8]), position: __s[M64 | 1] });
 				$(__s[h0k | 0])
 					.hover(function () {
-						var V4i = D6.bd[bdHall].bl;
+						var V4i = D6.bd[bspotHall].bl;
 						var r4i = 0;
 						E6k.y6();
 						if (V4i >= 8 && r4i == 0) var h4i = __s[s8R >> 173134048];
@@ -68272,7 +68188,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[635]), position: __s[M64 - 0] });
 				$(__s[+h7p])
 					.hover(function () {
-						var n4i = D6.bd[bdHall].bl;
+						var n4i = D6.bd[bspotHall].bl;
 						var f4i = 0;
 						if (n4i >= 8 && f4i == 0)
 							var A4i = __s[+s8R];
@@ -68284,7 +68200,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[1409]), position: __s[M64 | 4104] });
 				$(__s[b7p ^ 0])
 					.hover(function () {
-						var g4i = D6.bd[bdHall].bl;
+						var g4i = D6.bd[bspotHall].bl;
 						var Z4i = 0;
 						E6k.R6();
 						if (g4i >= (8) && Z4i == 0) var K4i = __s[s8R - 0];
@@ -68298,7 +68214,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s["3381" | 1077]), position: __s[+M64] });
 				$(__s[+G1R])
 					.hover(function () {
-						var P4i = D6.bd[bdHall].bl;
+						var P4i = D6.bd[bspotHall].bl;
 						var B4i = 0;
 						if (P4i >= ("9" |
 							0) && B4i == 0) var U4i = __s[+s8R];
@@ -68311,7 +68227,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s["4642" | 4128]), position: __s[M64 & 2147483647] });
 				$(__s[1716])
 					.hover(function () {
-						var y4i = D6.bd[bdHall].bl;
+						var y4i = D6.bd[bspotHall].bl;
 						var D4i = 0;
 						if (y4i >= "9" >>
 							2138196064 && D4i == 0) var R4i = __s[s8R ^ 0];
@@ -68324,7 +68240,7 @@ var cotgsubscribe = amplify;
 				$(__s[+X7p])
 					.hover(function () {
 						E6k.R6();
-						var Y4i = D6.bd[bdHall].bl;
+						var Y4i = D6.bd[bspotHall].bl;
 						var N4i = 0;
 						if (Y4i >= (9) &&
 							N4i == 0) var p4i = __s[s8R * 1];
@@ -68337,7 +68253,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[4473]) });
 				$(__s[P7p - 0])
 					.hover(function () {
-						var q4i = D6.bd[bdHall].bl;
+						var q4i = D6.bd[bspotHall].bl;
 						var c4i = 0;
 						if (q4i >= 10 && c4i == ("0" |
 							0)) var F4i = __s[s8R * 1];
@@ -68349,7 +68265,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s['3746' | 3202]) });
 				$(__s[7033])
 					.hover(function () {
-						var a4i = D6.bd[bdHall].bl;
+						var a4i = D6.bd[bspotHall].bl;
 						var E4i = 0;
 						if (a4i >= 10 &&
 							E4i == 0) var m4i = __s[+s8R];
@@ -68362,7 +68278,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[5676]) });
 				$(__s[3149])
 					.hover(function () {
-						var e3i = D6.bd[bdHall].bl;
+						var e3i = D6.bd[bspotHall].bl;
 						E6k.y6();
 						var s3i = 0;
 						if (e3i >= (10) && s3i == 0) var k3i = _s(
@@ -68375,7 +68291,7 @@ var cotgsubscribe = amplify;
 					.tooltipster({ content: $(__s[6710]), position: __s[M64 >> 618086112] });
 				$(__s[2572])
 					.hover(function () {
-						var I3i = D6.bd[bdHall].bl;
+						var I3i = D6.bd[bspotHall].bl;
 						var j3i = I3i * 10;
 						var u3i = D6.bq.length;
 						if (
@@ -69292,7 +69208,7 @@ var cotgsubscribe = amplify;
 			for (var o8w = 0; o8w < z8w; o8w++) {
 				X8w
 					= D6.bd[o8w]["bid"];
-				if (X8w == +K4y) L8w = D6.bd[o8w]["bl"];
+				if (X8w == +bidCASTLE) L8w = D6.bd[o8w]["bl"];
 			}
 			var M8w = +
 				'5' + L8w;
@@ -70280,6 +70196,8 @@ var cotgsubscribe = amplify;
 //				}
 //	}
 	}
-}());
+};
+outer();
+
 i011.R6();
 

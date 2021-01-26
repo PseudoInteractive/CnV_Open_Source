@@ -291,12 +291,15 @@ namespace COTG.Views
             }
             var departAt = AUtil.dateTimeZero;
             var _arriveAt = arriveAt;
-            if(waitReturn)
+            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
             {
-                if(city.AreRaidsRepeating())
+				RaidOverview.SendMaybe();
+
+				if (city.AreRaidsRepeating())
                 {
                     await Raiding.ReturnFast(city.cid, false);
                 }
+
                 departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
                 var canArriveAt = departAt+ TimeSpan.FromHours(supporter.travel );
                 if (_arriveAt > JSClient.ServerTime() && _arriveAt < canArriveAt)

@@ -225,16 +225,16 @@ namespace COTG.Views
 						case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
 						case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
 
-						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2); break;
-						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3); break;
-						case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4); break;
-						case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5); break;
-						case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6); break;
-						case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7); break;
-						case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8); break;
-						case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9); break;
-						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10); break;
-						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1); break;
+						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2,CityView.hovered); break;
+						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
+						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered); break;
 						case Windows.System.VirtualKey.Q: CityBuild.SetAction(CityBuild.Action.destroy); break;
 						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;

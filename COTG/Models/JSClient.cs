@@ -1114,6 +1114,7 @@ namespace COTG
 					{
 						city._cityName = name;
 					}
+					city.type = City.typeCity;
 					city._tsTotal = jsCity.GetAsInt("8");
 					city._tsHome = jsCity.GetAsInt("17");
 					//   city.tsRaid = city.tsHome;
@@ -1653,6 +1654,7 @@ namespace COTG
 									   var city = Spot.GetOrAdd(cid);
 									   var name = jso.GetString("name");
 									   city.pid = pid; // todo: this shoule be an int playerId
+									   city.type = jso.GetAsByte("type");
 									   city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
 									   city.points = (ushort)jso.GetAsInt("score");
 									   //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id

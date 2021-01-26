@@ -36,6 +36,11 @@ namespace COTG.Views
 	{
 		public static int quickBuildId;
 		public static CityBuild instance;
+
+		public static ushort[] outerTowerSpots = {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63};
+		public static ushort[] innerTowerSpots = { 113, 117, 173, 257, 323, 327, 183, 267 };
+		public static ushort[] wallSpots = { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 };
+
 		public enum Action
 		{
 			none,
@@ -88,6 +93,7 @@ namespace COTG.Views
 			townhall,
 			empty,
 			res,
+
 			invalid
 		}
 		public static MenuType menuType = MenuType.invalid;
@@ -296,9 +302,9 @@ namespace COTG.Views
 			JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (selected.x - span0).ToString(), (selected.y - span0).ToString(), (lvl + 1).ToString() });
 			buildQueue.Add(new JSON.BuildQueueItem() { bspot = (ushort)id, slvl = (byte)(lvl), elvl = (byte)(lvl + 1) });
 		}
-		public static void UpgradeToLevel(int level)
+		public static void UpgradeToLevel(int level, (int x, int y) target)
 		{
-			var target = hovered;
+			//var target = hovered;
 			if (!target.IsValid())
 			{
 				Note.Show("Please select a building");
@@ -690,7 +696,7 @@ namespace COTG.Views
 					}
 				case Action.upgrade:
 					{
-						UpgradeToLevel(1);
+						UpgradeToLevel(1,cc);
 						break;
 					}
 				case Action.abandon:
@@ -741,12 +747,14 @@ namespace COTG.Views
 				singleClickAction = Action.none; // default
 												 // toggle visibility
 				var d = b.def;
-				var i = instance;
-				i.building.Text = d.Bn;
-				i.description.Text = d.Ds;
-				i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;
-				i.downgrade.IsEnabled = b.bl > 1;
-				i.rect.Fill = BuildingBrush(d.bid, 1.0f);
+			//	var i = instance;
+
+				JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
+				//i.building.Text = d.Bn;
+				//i.description.Text = d.Ds;
+				//i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;
+				//i.downgrade.IsEnabled = b.bl > 1;
+				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
 				if (!isRight)
 					singleClickAction = Action.pending;
 				{

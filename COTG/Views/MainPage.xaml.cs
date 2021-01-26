@@ -497,7 +497,8 @@ namespace COTG.Views
         {
             await RaidOverview.Send();
             await RestAPI.troopsOverview.Post();
-            var ret = new List<int>();
+			await RaidOverview.Send();
+			var ret = new List<int>();
             foreach(var c in City.myCities)
             {
                 if(c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid >= (c.tsTotal* SettingsPage.resetRaidsIdle)/100) )

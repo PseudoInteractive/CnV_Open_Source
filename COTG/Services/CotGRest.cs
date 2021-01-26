@@ -681,11 +681,24 @@ namespace COTG.Services
     {
         public static RaidOverview inst = new RaidOverview();
         public static Task Send() => inst.Post();
-        public RaidOverview() : base("overview/graid.php") { }
+
+		public static Task SendMaybe()
+		{
+			var t = DateTimeOffset.UtcNow;
+			if (t - lastFetched <= TimeSpan.FromMinutes(5) )
+			{
+				lastFetched = t;
+				return inst.Post();
+			}
+			return Task.CompletedTask;
+		}
+		public RaidOverview() : base("overview/graid.php") { }
+		public static DateTimeOffset lastFetched = AUtil.dateTimeZero;
         public override void ProcessJson(JsonDocument jsd)
         {
-            // reset all to start
-            foreach (var city in City.myCities)
+			lastFetched = DateTimeOffset.UtcNow;
+			// reset all to start
+			foreach (var city in City.myCities)
             {
                 city.raids = Array.Empty<Raid>();
                 city.raidCarry = 0;
@@ -908,29 +921,36 @@ namespace COTG.Services
                         Log("Sent last");
                         if( jsd.RootElement.ValueKind != JsonValueKind.Object)
                         {
-                            if (!arrival.IsZero())
-                            {
-                                var content = new ContentDialog()
-                                {
-                                    Title="Not enought Troops home or troops cannot make scheduled time",
-                                    Content="Send now or when they return from raiding?",
-                                    PrimaryButtonText="Yes",
-                                    CloseButtonText="Cancel"
-                                };
-								//ElementSoundPlayer.Play(ElementSoundKind.Show);
+							if (jsd.RootElement.ValueKind == JsonValueKind.Number)
+							{
+								Note.Show("Scheduled Reinforcements");
+							}
+							else
+							{
+								if (!arrival.IsZero())
+								{
+									var content = new ContentDialog()
+									{
+										Title = "Not enought Troops home or troops cannot make scheduled time",
+										Content = "Send now or when they return from raiding?",
+										PrimaryButtonText = "Yes",
+										CloseButtonText = "Cancel"
+									};
+									//ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-								content.CopyXamlRoomFrom(uie);
-                                if (await content.ShowAsync2() == ContentDialogResult.Primary)
-                                {
-                                    SendRein(cid,rcid,tsSend,departAt,AUtil.dateTimeZero,travelTime,splits,uie);
-                                    return;
-                                }
-                                
-                            }
-                            else
-                            {
-                                Note.Show("Something went wrong, maybe not enough troops home");
-                            }
+									content.CopyXamlRoomFrom(uie);
+									if (await content.ShowAsync2() == ContentDialogResult.Primary)
+									{
+										SendRein(cid, rcid, tsSend, departAt, AUtil.dateTimeZero, travelTime, splits, uie);
+										return;
+									}
+
+								}
+								else
+								{
+									Note.Show("Something went wrong, maybe not enough troops home");
+								}
+							}
                             break;
                         }
                         city.LoadCityData(jsd.RootElement);

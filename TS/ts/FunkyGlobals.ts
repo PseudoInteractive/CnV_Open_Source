@@ -1318,7 +1318,8 @@ let defaultMru = {
 		score:0,
 		castle:0,
 		water:0,
-		bless:0
+		bless:0,
+		type:0
 	};
 let mru = [];
 	/**

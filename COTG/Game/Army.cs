@@ -286,6 +286,17 @@ namespace COTG.Game
 	}
     public static class TroopTypeCountHelper
     {
+		public static bool IsSuperSetOf(this TroopTypeCount[] me,TroopTypeCount[] other)
+		{
+			foreach(var t in other)
+			{
+				if(me.Count(t.type) < t.count)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
         public static int Count(this TroopTypeCount[] me, int type)
         {
             foreach (var i in me)

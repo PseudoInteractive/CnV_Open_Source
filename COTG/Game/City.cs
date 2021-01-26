@@ -288,7 +288,8 @@ namespace COTG.Game
             Debug.Assert(cid == jse.GetInt("cid"));
             if (jse.TryGetProperty("citn", out var citn))
                 _cityName = citn.GetString();
-			
+
+			type = typeCity;
 			// In rare cases, this changes
 			pid = jse.GetAsInt("pid");
 			Assert(pid != 0);
