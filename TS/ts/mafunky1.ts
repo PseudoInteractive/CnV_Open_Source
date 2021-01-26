@@ -310,27 +310,87 @@ function Contains(a:string,b:string) {
 }
 
 let updateTimeout=0;
+let lastSentBq=0;
+let lastSentSts:string="";
+let  lastSentBD=0;
+	function compareSts() : boolean
+	{
+		var prior = lastSentSts;
+		lastSentSts = D6.sts || "";
+		return (prior != lastSentSts );
 
+	}
+
+	function bdChecksum(bd:jsonT.Bd[] ) : number
+	{
+		let lg = bd.length;
+		let result = 0;
+		for(let i=0;i<lg;++i)
+		{
+			result += bd[i].bid + bd[i].bl;
+		}
+		return result;
+	}
+function bqChecksum(bd:jsonT.Bq[] ) : number
+	{
+		let lg = bd.length;
+		let result = lg*511;
+		for(let i=0;i<lg;++i)
+		{
+			result += Number(bd[i].bid); // bid is unique
+		}
+		return result;
+	}
+
+	function compareBD() : boolean
+	{
+			let b0 = bdChecksum(D6.bd);
+			var b1 = lastSentBD;
+			lastSentBD = b0;
+			return b0!==b1;
+	}
+function compareBq() : boolean
+	{
+			let b0 = bqChecksum(D6.bq);
+			var b1 = lastSentBq;
+			lastSentBq = b0;
+			if(b0===b1)
+				return false;
+			V8();
+			return true;
+	}
 function sendCityData(delayInMs) {
 
 	clearTimeout(updateTimeout);
 	updateTimeout=setTimeout(() => {
 
 		const wrapper = {
-			citydata:
+			citydata  :
 			{
 				pid: D6.pid,
 				cid: D6.cid,
 				citn:D6.citn,
 				comm: D6.comm,
 				th: D6.th,
-				tc: D6.tc,
-				bd: D6.bd,
-				bq: D6.bq,
-				sts: D6.sts,
-			}
+				tc: D6.tc
+				
+			
+			} as jsonT.City
 		};
-		lastBqSize = D6.bq.length;
+		if(compareBD())
+		{
+			wrapper.citydata.bd = D6.bd;
+		}
+		if(compareBq())
+		{
+			wrapper.citydata.bq = D6.bq;
+		}
+		if(compareSts() )
+		{
+			 wrapper.citydata.sts = D6.sts;
+		}
+			
+
 		if (D6.hasOwnProperty('trin') && D6.trin.length > 0)
 		{
 			wrapper.citydata['trin'] = D6.trin;
@@ -360,11 +420,17 @@ function sendBuildingData() {
 			{
 				pid:D6.pid,
 				cid: D6.cid,
-				bd: D6.bd,
-				bq: D6.bq
-			}
+				
+			} as jsonT.City
 		};
-		lastBqSize = D6.bq.length;
+		if(compareBq())
+		{
+			wrapper.citydata.bq = D6.bq;
+		}
+		if(compareBD())
+		{
+			wrapper.citydata.bd = D6.bd;
+		}
 		window['external']['notify'](JSON.stringify(wrapper));
 }
 function sendchat(channel:string,message:string)

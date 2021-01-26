@@ -193,6 +193,7 @@ namespace COTG.Draw
 
 				Material mat = CityBuild.action switch
 				{
+					CityBuild.Action.layout => decalBuildingValidMulti,
 					CityBuild.Action.build => (bd.id == 0) ? decalBuildingValid : decalSelectEmpty,
 					CityBuild.Action.destroy => (bd.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
 					CityBuild.Action.move => selected.IsValid() ?

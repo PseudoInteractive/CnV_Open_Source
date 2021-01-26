@@ -427,8 +427,8 @@ namespace COTG
 			//	Log(req.RequestUri.ToString());
 				if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
-					var js = GetJsString("jquery");
-
+				//	var js = GetJsString("jquery");
+					var js = GetJsString("jquery1_12_4") + GetJsString("jquery-migrate1_4_1");
 					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
 					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };

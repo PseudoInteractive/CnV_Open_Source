@@ -500,7 +500,7 @@ namespace COTG.Views
             var ret = new List<int>();
             foreach(var c in City.myCities)
             {
-                if(c.raidCarry != 0 && (c.raidCarry <= 90 || c.tsRaid >= c.tsTotal/4) )
+                if(c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid >= (c.tsTotal* SettingsPage.resetRaidsIdle)/100) )
                 {
                     ret.Add(c.cid);
                 }

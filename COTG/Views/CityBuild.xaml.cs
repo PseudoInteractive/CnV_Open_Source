@@ -74,6 +74,7 @@ namespace COTG.Views
 		internal static bool menuOpen;
 
 		// build menu cache
+		public const int buildMenuRootItems = 8;
 		public const int maxMRUSize = 7;
 		public const int qbMRUSize = 4;
 		public const int defaultMRUSize = 7;
@@ -105,23 +106,25 @@ namespace COTG.Views
 			public readonly string name;
 			public readonly CityBuild.Action action;
 			public readonly string icon;
+			public readonly string toolTip;
 
-			public ActionInfo(string name, Action action, string icon)
+			public ActionInfo(string name, Action action, string icon, string toolTip)
 			{
 				this.name = name;
 				this.action = action;
 				this.icon = icon;
+				this.toolTip = toolTip;
 			}
 		}
 		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
 
-		static ActionInfo actionSelect = new ActionInfo("Select", Action.none, "City/decal_select_building.png");
-		static ActionInfo actionMove = new ActionInfo("Move", Action.move, "City/decal_move_building.png");
-		static ActionInfo actionDemo = new ActionInfo("Demo", Action.destroy, "City/decal_building_invalid.png");
-		static ActionInfo actionLayout = new ActionInfo("Layout", Action.layout, "City/decal_building_valid_multi.png");
-		static ActionInfo actionUpgrade = new ActionInfo("Upgrade", Action.upgrade, "City/decal_building_valid.png");
-		static ActionInfo actionDowngrade = new ActionInfo("Downgrade", Action.downgrade, "City/decal_building_invalid.png");
-		static ActionInfo actionAbandon = new ActionInfo("Abandon", Action.abandon, "City/decal_building_invalid.png");
+		static ActionInfo actionSelect = new ActionInfo("None", Action.none, "City/decal_select_building.png", "Left click opens a menu");
+		static ActionInfo actionMove = new ActionInfo("Move", Action.move, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
+		static ActionInfo actionDemo = new ActionInfo("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
+		static ActionInfo actionLayout = new ActionInfo("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
+		static ActionInfo actionUpgrade = new ActionInfo("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
+		static ActionInfo actionDowngrade = new ActionInfo("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
+		static ActionInfo actionAbandon = new ActionInfo("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
 		static RadialMenuItem itemQB;
 
 
@@ -214,8 +217,8 @@ namespace COTG.Views
 				{
 					if (!open)
 					{
-						await Task.Delay(350).ConfigureAwait(true);
-						buildMenuCanvas.Visibility = Visibility.Collapsed;
+						await Task.Delay(350);
+						App.DispatchOnUIThreadSneaky( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
 						menuOpen = false;
 					}
 					else
@@ -321,12 +324,14 @@ namespace COTG.Views
 			var id = XYToId(building);
 			var sel = GetBuilding(id);
 			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
+			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
 		}
 		public static void Downgrade((int x, int y) building)
 		{
 			var id = XYToId(building);
 			var sel = GetBuilding(id);
 			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
+			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
 		}
 
 		private void Downgrade_Click(object sender, RoutedEventArgs e)
@@ -393,6 +398,20 @@ namespace COTG.Views
 			b0 = b1;
 			b1 = temp;
 		}
+		public static async void SwapBuilding(int a, int b)
+		{
+			var build = City.GetBuild();
+			// I hope that these operations are what I expect with references
+			var temp = build.buildings[b];
+			build.buildings[b] = build.buildings[a];
+			build.buildings[a] = temp;
+
+			await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}");
+			await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}");
+			await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}");
+
+		}
+
 		internal static void MoveHovered(bool isSingleAction)
 		{
 			int bspot = XYToId(hovered);
@@ -414,7 +433,7 @@ namespace COTG.Views
 						action = Action.none;
 					}
 					MoveBuilding(source, bspot);
-					selected = CanvasHelpers.invalidXY;
+					ClearSelectedBuilding();
 				}
 			}
 			else
@@ -505,7 +524,7 @@ namespace COTG.Views
 										if (score > takeScore)
 										{
 											takeScore = score;
-											takeScore = xy;
+											takeFrom = xy;
 										}
 									}
 									//do they want what we have?
@@ -532,7 +551,7 @@ namespace COTG.Views
 								{
 									if (takeScore > 0)
 									{
-										Note.ShowTip($"Found and unneeded {desName}, moving it here");
+										Note.Show($"Found and unneeded {desName}, moving it here");
 										MoveBuilding(takeFrom, bspot);
 										break;
 									}
@@ -543,7 +562,11 @@ namespace COTG.Views
 										Note.Show("Build Queue full");
 										break;
 									}
-									Note.ShowTip($"Building {desName}");
+									if(desBid == 0)
+										Note.Show($"No building is wanted here, how about a cottage instead?");
+									else
+										Note.Show($"Building {desName}");
+
 									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" }); // 0 is build
 								}
 							}
@@ -557,7 +580,7 @@ namespace COTG.Views
 										break;
 									}
 
-									Note.ShowTip($"Destorying {b.def.Bn} to make way for {desName}");
+									Note.Show($"Destorying {b.def.Bn} to make way for {desName}");
 
 									Demolish(cc);
 									// Test!
@@ -582,9 +605,7 @@ namespace COTG.Views
 												{
 													Note.Show($"Swaping {b.def.Bn} and {desName} as they are mixed up");
 
-													MoveBuilding(bspot, cityScratchSpot);
-													MoveBuilding(takeFrom, bspot);
-													MoveBuilding(cityScratchSpot, takeFrom);
+													SwapBuilding(bspot, putTo);
 													// two way swap 
 													break;
 												}
@@ -596,7 +617,7 @@ namespace COTG.Views
 												Note.Show($"{name} is wanted elsewhere but there is a building in the way");
 												break;
 											case 1:
-												Note.ShowTip($"{name} is wanted elsewhere but there are reources in the way");
+												Note.Show($"{name} is wanted elsewhere but there are reources in the way");
 												break;
 
 
@@ -607,7 +628,7 @@ namespace COTG.Views
 
 									if (!buildingWanted)
 									{
-										Note.ShowTip($"{b.def.Bn} is not wanted, destroying it");
+										Note.Show($"{b.def.Bn} is not wanted, destroying it");
 										Demolish(cc);
 									}
 								}
@@ -623,10 +644,9 @@ namespace COTG.Views
 					}
 				case Action.build:
 					{
-						if ((b.id != 0) || buildQueue.Any(a => a.bspot == bspot))
+						if(b.isRes && !buildQueue.Any(a => a.bspot == bspot))
 						{
-							Note.Show("There is already someting here");
-							break;
+							Demolish(cc);
 						}
 						if (buildQueueFull)
 						{
@@ -655,7 +675,7 @@ namespace COTG.Views
 						}
 						Demolish(cc);
 
-						buildQueue.Add(new BuildQueueItem() { bspot = bspot, brep = b.def.bid, slvl = b.bl, elvl = 0 });
+						
 						break;
 					}
 				case Action.move:
@@ -765,6 +785,11 @@ namespace COTG.Views
 		public int bid;
 		public bool isAction => action != Action.invalid;
 		public bool isBuilding => bid != 0;
+		public BuildMenuItem() {
+			IconContent = new BuildingRect() { Width = 64, Height = 64, image = ("sphere64.png") }; ;
+			Command = BuildMenuItemCommand.instance;
+			Clear();
+		} 
 		public BuildMenuItem SetBid(int _bid)
 		{
 			if (bid != _bid)
@@ -773,9 +798,10 @@ namespace COTG.Views
 				var def = BuildingDef.all[_bid];
 				Header = def.Bn;
 				ToolTipContent = def.Ds;
-				IconContent = new BuildingRect() { Width = 64, Height = 64, bid = _bid };
+				((BuildingRect)IconContent).bid = _bid;
 				action = Action.invalid;
-				Command = BuildMenuItemCommand.instance;
+				IsSelected = false;
+			//	Command = BuildMenuItemCommand.instance;
 			}
 			return this;
 		}
@@ -786,19 +812,24 @@ namespace COTG.Views
 			if (!(Header is string s && s == action.name))
 			{
 				bid = 0;
+				ToolTipContent = action.toolTip;
 				Header = action.name;
 				this.action = action.action;
-				IconContent = new Image() { Width = 64, Height = 64, Source = ImageHelper.FromImages(action.icon) };
-				Command = BuildMenuItemCommand.instance;
+				((BuildingRect)IconContent).image=(action.icon);
+				IsSelected = false;
+				//	Command = BuildMenuItemCommand.instance;
 			}
 		}
 		public void Clear()
 		{
 			action = Action.invalid;
 			bid = 0;
-			Header = null;
-			IconContent = null;
-			Command = null;
+			Header = "~";
+			ToolTipContent = "This space is intentionally blank.";
+			((BuildingRect)IconContent).image = "sphere64.png";
+			IsSelected = false;
+
+
 
 		}
 	}
@@ -882,7 +913,13 @@ namespace COTG.Views
 				Background = BuildingBrush(bid, (float)Width / 128.0f);
 			}
 		}
-
+		public string image
+		{
+			set
+			{
+				Background = BrushFromImage(value);
+			}
+		}
 		public BuildingRect()
 		{
 			Width = 64;
@@ -922,7 +959,7 @@ namespace COTG.Views
 					BuildingMRU found = null;
 					BuildingMRU lowest = null;
 					float lowestScore = float.MaxValue;
-					for (int i = 0; i < items.Count; ++i)
+					for (int i = 0; i < buildMenuRootItems; ++i)
 					{
 						var item = items[i];
 						item.IsSelected = false;
@@ -956,7 +993,7 @@ namespace COTG.Views
 
 						int lowestId = -1;
 						lowestScore = float.MaxValue;
-						for (int put = 0; put < items.Count; ++put)
+						for (int put = 0; put < buildMenuRootItems; ++put)
 						{
 							var i = items[put] as BuildMenuItem;
 							i.IsSelected = false;
@@ -994,7 +1031,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						for (int i = 0; i < items.Count; ++i)
+						for (int i = 0; i < buildMenuRootItems; ++i)
 						{
 							var item = items[i];
 							item.IsSelected = (item == context.MenuItem);
@@ -1011,7 +1048,7 @@ namespace COTG.Views
 							{
 								PerformAction(bi.action, selected, 0);
 								singleClickAction = CityBuild.Action.none;
-
+								ClearSelectedBuilding();
 							}
 						}
 						else
@@ -1023,7 +1060,7 @@ namespace COTG.Views
 				}
 				else
 				{
-					Assert(false);
+					ClearSelectedBuilding();
 				}
 			}
 			else

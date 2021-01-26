@@ -1,6 +1,6 @@
 namespace jsonT {
 	export interface Bq {
-		bid: number | string;
+		bid: number ;
 		btype: number;
 		bspot: number;
 		slvl: number;
@@ -24,7 +24,9 @@ namespace jsonT {
 		pa: number;
 	}
 
-
+	export interface CityWrapper {
+		citydata : City;
+		};
 	export interface City {
 		_id?: number;
 		cid?: number;
@@ -112,7 +114,7 @@ namespace jsonT {
 	}
 
 	export interface Bd {
-		bid?: Bid;
+		bid?: number;
 		bl?: number;
 		bu?: number;
 		bd?: number;

@@ -553,6 +553,7 @@
     <Content Include="Content\Art\City\decal_move_building.png" />
     <Content Include="Content\Art\City\decal_select_building.png" />
     <Content Include="Content\Art\City\Winter\building_set5.png" />
+    <Content Include="Content\Art\Sphere64.png" />
     <Content Include="Content\Effects\Ava.fx" />
     <None Include="Content\Effects\AnimatedSprite.fxh" />
     <None Include="Content\Effects\darkFont.fxh" />
@@ -652,6 +653,8 @@
     <Content Include="Content\Art\Icons\troops7.png" />
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
+    <EmbeddedResource Include="JS\jquery1_12_4" />
+    <EmbeddedResource Include="JS\jquery-migrate1_4_1" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />

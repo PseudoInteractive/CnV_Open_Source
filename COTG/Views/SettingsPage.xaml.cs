@@ -108,6 +108,8 @@ namespace COTG.Views
 		public static bool stayAlive;
 		public static bool raidOffDungeons = true;
 		public static bool raidSendExact;
+		public static int resetRaidsCarry = 90;
+		public static int resetRaidsIdle = 25;
 		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
 
 		int uiLighting
@@ -317,6 +319,7 @@ namespace COTG.Views
 		}
 
 		private static string _versionDescription;
+
 
 		public string VersionDescription
 		{

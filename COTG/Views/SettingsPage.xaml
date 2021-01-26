@@ -62,6 +62,19 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
+
+				<controls:NumberBox Header="Reset Raids Carry %"
+									 Value="{x:Bind views:SettingsPage.resetRaidsCarry,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="5"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<controls:NumberBox Header="Reset Raids Idle %"
+									 Value="{x:Bind views:SettingsPage.resetRaidsIdle,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="5"
+									 Style="{StaticResource NumberBoxSmall}" />
+		
+				
 				<TextBox Header="Visit" Text="{x:Bind visitToken, Mode=TwoWay}" />
 				<TextBox Header="VisitCookie" Text="{x:Bind visitCookie, Mode=TwoWay}" />
 
