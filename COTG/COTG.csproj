@@ -710,8 +710,9 @@
     <Folder Include="EventHandlers\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Cyotek.Drawing.BitmapFont">
-      <HintPath>S:\source\Cyotek.Drawing.BitmapFont\src\bin\netstandard2.0\Cyotek.Drawing.BitmapFont.dll</HintPath>
+    <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
