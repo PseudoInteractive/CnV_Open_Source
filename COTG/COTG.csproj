@@ -713,27 +713,33 @@
     <Reference Include="Cyotek.Drawing.BitmapFont">
       <HintPath>S:\source\Cyotek.Drawing.BitmapFont\src\bin\netstandard2.0\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.8.1.1823, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonoGame.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>S:\source\MonoGame\MonoGame.Framework\obj\WindowsUniversal\Debug\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\ext\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Core">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.Core.dll</HintPath>
+    <Reference Include="Telerik.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Data">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.Data.dll</HintPath>
+    <Reference Include="Telerik.Data, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Controls.Data.UWP">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Controls.Data.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Controls.Data.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.UI.Xaml.Controls.Data.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Grid.UWP">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Grid.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Grid.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.UI.Xaml.Grid.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Input.UWP">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Input.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Input.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.UI.Xaml.Input.UWP.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.UI.Xaml.Primitives.UWP">
-      <HintPath>S:\source\UI-For-UWP2\Binaries\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
+    <Reference Include="Telerik.UI.Xaml.Primitives.UWP, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Telerik.UI.Xaml.Primitives.UWP.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
