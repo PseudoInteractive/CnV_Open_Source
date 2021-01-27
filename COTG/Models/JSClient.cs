@@ -34,7 +34,6 @@ using COTG.JSON;
 using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
-using Windows.UI.Core;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.Helpers;

@@ -40,7 +40,7 @@ namespace COTG.Services
 		// The name of the database and container we will create
 		private static string databaseId => $"w{JSClient.world}";
         private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
-		private static string presenceContainerId => $"p{151 + (Alliance.myId == 131 || Alliance.myId == 132 ? 131 : Alliance.myId) }";
+		private static string presenceContainerId => $"p{151 + (Alliance.myId == 131 || Alliance.myId == 132 || Alliance.myId==212 ? 131 : Alliance.myId) }";
 		private static string sessionContainerId => $"s{151 + (Alliance.myId == 131 || Alliance.myId == 132 ? 131 : Alliance.myId) }";
 		private static string ordersContainerId => "seenOrders";
         private static string blobContainerId => $"c{JSClient.world}";

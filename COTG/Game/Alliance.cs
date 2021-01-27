@@ -33,7 +33,18 @@ namespace COTG.Game
 
         public static Alliance my = new Alliance();
         public static int myId;
-        public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
+
+		// Ass an assert
+		public static int MyId
+		{
+			get
+			{
+				Assert(myId != 0);
+				return myId;
+			}
+		}
+
+		public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static bool diplomacyFetched;
         public static bool PartNameToId(string name, out int id)
