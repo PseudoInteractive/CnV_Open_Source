@@ -190,7 +190,7 @@
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\PlayerAvatar.cs" />
+    <Compile Include="Game\PlayerPresence.cs" />
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />
@@ -655,6 +655,8 @@
     <Content Include="Content\Art\Icons\troops9.png" />
     <EmbeddedResource Include="JS\jquery1_12_4" />
     <EmbeddedResource Include="JS\jquery-migrate1_4_1" />
+    <EmbeddedResource Include="JS\jquery3_5_1" />
+    <EmbeddedResource Include="JS\jquerymigrate" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />
@@ -662,6 +664,7 @@
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="JSON\buildingDef.json" />
     <None Include="JSON\Troops.json" />
+    <EmbeddedResource Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
@@ -683,7 +686,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="COTG_TemporaryKey.pfx" />
-    <EmbeddedResource Include="JS\pack" />
+    <EmbeddedResource Include="JS\pack.js" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

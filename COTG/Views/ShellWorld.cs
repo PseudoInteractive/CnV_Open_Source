@@ -115,7 +115,7 @@ namespace COTG.Views
 		}
 		public static Windows.Foundation.Point CanvasToScreen(Vector2 point)
 		{
-			return new Windows.Foundation.Point((point.X/dipToNative)+ canvasBaseX, (point.Y/dipToNative)+ canvasBaseY);
+			return new Windows.Foundation.Point((point.X*nativeToDip)+ canvasBaseX, (point.Y*nativeToDip)+ canvasBaseY);
 		}
 
 
@@ -308,18 +308,18 @@ namespace COTG.Views
 				if (popup.Contains(mousePosition))
 				{
 					if(eventName!=null)
-						JSClient.PostMouseEventToJS((int)mousePosition.X + canvasBaseX, (int)mousePosition.Y + canvasBaseY, eventName, button );
+						JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip * mousePosition.Y) + canvasBaseY, eventName, button );
 					return true;
 				}
 			}
 			return false;
 		}
 
-		private static void PostJSMouseEvent(string eventName, int button, int dx=0, int dy=0)
-		{
-			if (eventName != null)
-				JSClient.PostMouseEventToJS((int)mousePosition.X + canvasBaseX, (int)mousePosition.Y + canvasBaseY, eventName, button, dx, dy);
-		}
+		//private static void PostJSMouseEvent(string eventName, int button, int dx=0, int dy=0)
+		//{
+		//	if (eventName != null)
+		//		JSClient.PostMouseEventToJS((int)mousePosition.X + canvasBaseX, (int)mousePosition.Y + canvasBaseY, eventName, button, dx, dy);
+		//}
 
 
 		//public static void EnsureOnScreen( int cid,bool lazy)

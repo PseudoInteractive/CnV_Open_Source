@@ -11,6 +11,8 @@ using System.Text.Json;
 using System.Text;
 using Microsoft.Azure.Cosmos;
 using System.Net;
+using Microsoft.Azure.Cosmos.Linq;
+using System.Linq;
 
 namespace COTG.Services
 {
@@ -47,14 +49,20 @@ namespace COTG.Services
         const int concurrentRequestCount = 1;
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
-		static async Task<Container> GetContainer( string id)
+		static async Task<Container> GetContainer( string id, string parition = "/id")
 		{
-			var props = new ContainerProperties(id, "/id");
+			var props = new ContainerProperties(id, parition);
 			props.IndexingPolicy = new IndexingPolicy()
 			{
 				Automatic = false,
+			
+				IndexingMode= IndexingMode.None,
 				
+				
+
+
 			};
+		
 			var c = await database.CreateContainerIfNotExistsAsync(props);
 			return c.Container;
 		}
@@ -66,6 +74,10 @@ namespace COTG.Services
 				return database != null;
 			if (!Discord.isValid)
 				return false;
+			while(Alliance.diplomacyFetched==false)
+			{
+				await Task.Delay(300);
+			}
 
 			await throttle.WaitAsync();
 			try
@@ -88,7 +100,7 @@ namespace COTG.Services
 						container = await GetContainer(containerId);
 						ordersContainer = await GetContainer(ordersContainerId);
 	//					sessionContainer = await GetContainer(sessionContainerId);
-						presenceContainer = await GetContainer(presenceContainerId);
+						presenceContainer = await GetContainer(presenceContainerId, "/p");
 					}
 					// write back 
 					cosmosClient = _cosmosClient;
@@ -102,7 +114,7 @@ namespace COTG.Services
             //            await ScaleContainerAsync();
             //	await AddItemsToContainerAsync();
         }
-
+		
 		public static async Task PublishPlayerInfo(int pid,int cid, string token, string cookie)
 		{
 			// don't send for subs
@@ -116,8 +128,8 @@ namespace COTG.Services
 			try
 			{
 				var pp = new PlayerPresenceDB() { id = pid.ToString(),cid=cid,t=lastSeen, ck = cookie, tk = token };
-				await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(pp.id), itemRequesDefault);
-
+				await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(false), itemRequesDefault);
+			
 			}
 			finally
 			{
@@ -127,14 +139,14 @@ namespace COTG.Services
 
 		public static async Task< List<PlayerPresenceDB> > GetPlayersInfo()
 		{
-			QueryDefinition queryDefinition = new QueryDefinition("select * from c");
+	
 			List<PlayerPresenceDB> rv = new List<PlayerPresenceDB>();
+			
 			if (!await Touch())
 				return rv;
 
-			using (FeedIterator<PlayerPresenceDB> feedIterator = presenceContainer.GetItemQueryIterator<PlayerPresenceDB>(
-				queryDefinition,
-				null))
+			using (FeedIterator<PlayerPresenceDB> feedIterator = presenceContainer.GetItemLinqQueryable<PlayerPresenceDB>().ToFeedIterator() ) 
+			
 			{
 				while (feedIterator.HasMoreResults)
 				{

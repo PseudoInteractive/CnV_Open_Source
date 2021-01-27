@@ -513,11 +513,15 @@ namespace COTG.Services
                 {
                     v.troopsHome = tsHome.ToArray();
                     v.troopsTotal = tsTotal.ToArray();
-                }
-                else
+					v._tsHome = v.troopsHome.TS();
+					v._tsTotal = v.troopsTotal.TS();
+				}
+				else
                 {
                     v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
-                }
+					v._tsHome = 0;
+					v._tsTotal = 0;
+				}
                 if ((tsh - v.troopsHome.TS()).Abs() > 16)
                 {
                     changed.Add(v);
@@ -580,7 +584,7 @@ namespace COTG.Services
                     ts += re.troops.TS();
                     spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
                     var source = Spot.GetOrAdd(re.sourceCid);
-                    source.reinforcementsOut = spot.reinforcementsOut.ArrayAppend(re);
+                    source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
                     ++reinCount;
                 }
 

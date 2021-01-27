@@ -11,6 +11,7 @@ namespace COTG.DB
 	{
 		[JsonPropertyName("id")]
 		public string id { get; set; } // playerId is actually an int
+		public bool p { get; set; }  // partition key, always false.
 		public int cid { get; set; } // where they are located
 		public int t { get; set; } // time last seen
 								   // todo: last action

@@ -88,7 +88,7 @@ namespace COTG.Game
 		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		public Building GetBuiding( int bspot) => buildings[bspot];
 		
-		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(20);// fixed size to improve threading behaviour and performance
+		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(64);// fixed size to improve threading behaviour and performance
 		
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax;
@@ -336,7 +336,7 @@ namespace COTG.Game
 				}
 
 			}
-			if (jse.TryGetProperty("bq", out var bq))
+			if (cid == City.build && jse.TryGetProperty("bq", out var bq))
 			{
 				int count = bq.GetArrayLength();
 				buildQueue.Clear();
@@ -348,7 +348,7 @@ namespace COTG.Game
 						ds = js.GetAsInt64("ds"),
 						de = js.GetAsInt64("de"),
 						btime = js.GetAsInt64("btime"),
-						bidHash = js.GetAsInt("bid"),
+						bidHash = js.GetAsInt64("bid"),
 						btype = js.GetAsInt("btype"),
 						bspot = js.GetAsInt("bspot"),
 						brep = js.GetAsInt("brep"),

@@ -11,7 +11,7 @@ namespace COTG.JSON
 		public long ds;
 		public long de;
 		public long btime;
-		public int bidHash; // building id hash, generated for each building in the commnad queue
+		public long bidHash; // building id hash, generated for each building in the commnad queue
 		public int btype; // This is the "proto" member of buildingDef associated with brep
 		public int bspot; // location
 		public int brep; // building id type

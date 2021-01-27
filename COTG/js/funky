@@ -8691,6 +8691,8 @@ const observer = new IntersectionObserver(function (entries) {
     return;
 });
 function registerPopup(pop) {
+    if (!pop || !pop.classList)
+        return;
     let classList = pop.classList;
     let isPopup = false;
     for (const a of popupClasses) {
@@ -17468,18 +17470,29 @@ function outer() {
             });
         }
         window['setPlayerGlobals'] = function (token, cookie, _cid) {
+            let savedToken = ppdt['opt'][67];
+            let savedS = s;
+            let savedCid = _cid;
             ppdt['opt'][67] = token;
             s = cookie;
             let t0 = $.post("/includes/block.php", { a: 10 });
             t0.done(function (xxxx) {
-                ppdt = JSON.parse(xxxx);
-                truncateToken();
-                H2 = ppdt['pn'];
-                P8 = ppdt.pid;
-                cid = parseInt(_cid);
-                raidSecret = Q3F();
-                let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie, cid: _cid } };
-                window['external']['notify'](JSON.stringify(wrapper));
+                try {
+                    ppdt = JSON.parse(xxxx);
+                    truncateToken();
+                    H2 = ppdt['pn'];
+                    P8 = ppdt.pid;
+                    cid = parseInt(_cid);
+                    raidSecret = Q3F();
+                    let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie, cid: _cid } };
+                    window['external']['notify'](JSON.stringify(wrapper));
+                }
+                catch (exception) {
+                    let wrapper = { restoreglobals: { cid: savedCid } };
+                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['setPlayerGlobals'](savedToken, savedS, savedCid);
+                    return;
+                }
                 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
                 B9Z.done(function (R9Z) {
                 });
@@ -67048,17 +67061,6 @@ function outer() {
             E6k.y6();
             K2();
         }
-        jQuery.each(["load", "unload", "error"], function (_, name) {
-            jQuery.fn[name] = function () {
-                var args = Array.prototype.slice.call(arguments, 0);
-                args.splice(0, 0, name);
-                if (arguments.length) {
-                    return this.bind.apply(this, args);
-                }
-                this.triggerHandler.apply(this, args);
-                return this;
-            };
-        });
         function R3F(s7g, u7g) {
             if (s7g == +n4y || s7g == +l4y || s7g == (o4y & 2147483647) || s7g == +I1R)
                 s7g = +n4y;
@@ -67096,108 +67098,6 @@ function outer() {
 ;
 outer();
 i011.R6();
-function incommingfilterInit() {
-    let cachedIncoming = -1;
-    $("#contselectorAIPic").after("<button id='jscript_incattackfilter_choose' class='greensel aipcbsel' style='width:150px'>Incoming Filter</button>");
-    $("#incomingsSpan").append("<span id='jscript_incattackfilter'>(0)</span>");
-    let content = `<div id="jscript_incattackfilter_players" style="display:none; z-index: 4003;width: 300px;height: 500px;position: absolute;top: 98px;left: 425px;background-color: rgba(0, 0, 0, 0.8);color: white;font-size: 21px;box-shadow: 2px 2px 4px #ee000000;/* overflow-y: auto; */">
-        <div style="width:100%;height: 40px;background-color: #ff000080;/* padding: 20px 10px; */"><span style="
-        padding: 0px 10px;
-        cursor: grab;
-        display: flex;
-        line-height: 2;
-        justify-content: space-between;
-        ">Incoming Filter - Players <div id="centxbuttondiv" class="jscript_incattackfilter_close" style="
-        cursor: pointer;
-        "></div></span></div><input type="text" id="jscript_incattackfilter_search" label="searchPlayer" style="width:100%;padding:10px;margin-top: 10px;" placeholder="Search Player">
-        <ul id="jscript_incattackfilter_listplayers" style="
-        list-style-type: none;
-        width: 100%;
-        height: calc(100% - 100px);
-        overflow-y: auto;
-        ">
-        </ul>
-        </div>`;
-    $("body").append(content);
-    $("#jscript_incattackfilter_players").draggable();
-    let button = $("#jscript_incattackfilter_choose");
-    button.on('click', () => {
-        $("#jscript_incattackfilter_players").show();
-    });
-    function addPlayer(name) {
-        $("#jscript_incattackfilter_listplayers").prepend(`<li style="
-            padding: 5px;
-            "><div style="
-            display: flex;
-            justify-content: space-between;
-            "><span>${name}</span><span class="jscript_incattackfilter_remove" data-player=${name} style="cursor: pointer;">X</span></div></li>`);
-        let current = JSON.parse(localStorage.getItem('jscript_incattackfilter'));
-        if (!current) {
-            current = [];
-        }
-        if (current.includes(name) == false) {
-            current.push(name);
-        }
-        localStorage.setItem('jscript_incattackfilter', JSON.stringify(current));
-        notify();
-    }
-    function getAllianceMembers() {
-        let allianceName = aldt["n"];
-        if (allianceName) {
-            $.post('includes/gAd.php', { a: allianceName }, function (res, error) {
-                let data = JSON.parse(res);
-                $("#jscript_incattackfilter_search").autocomplete({
-                    source: data.me.map(r => r.n),
-                    select: function (ev, ui) {
-                        ev.preventDefault();
-                        addPlayer(ui.item.value);
-                    }
-                });
-            });
-        }
-    }
-    getAllianceMembers();
-    $(".jscript_incattackfilter_close").click(function () {
-        $("#jscript_incattackfilter_players").hide();
-    });
-    $('body').on('click', '.jscript_incattackfilter_remove', function () {
-        let player = $(this).data('player');
-        let current = JSON.parse(localStorage.getItem('jscript_incattackfilter'));
-        current = current.filter(value => value !== player);
-        localStorage.setItem('jscript_incattackfilter', JSON.stringify(current));
-        $(this).closest("li").remove();
-        notify();
-    });
-    let currentPlayers = JSON.parse(localStorage.getItem('jscript_incattackfilter'));
-    if (currentPlayers) {
-        currentPlayers.forEach(p => {
-            addPlayer(p);
-        });
-    }
-    function notify() {
-        let players = JSON.parse(localStorage.getItem('jscript_incattackfilter'));
-        if (players) {
-            $.post('includes/getIO.php', {}, data => {
-                let attacks = [];
-                let parsedData = JSON.parse(data);
-                parsedData.inc.forEach(atk => {
-                    if (players.includes(atk.tpn)) {
-                        attacks.push(atk);
-                    }
-                });
-                $("#jscript_incattackfilter").text("(" + attacks.length + ")");
-            });
-        }
-    }
-    setInterval(() => {
-        let incoming = Number($("#allianceIncomings").text().replace('(', '').replace(')', ''));
-        if (cachedIncoming !== incoming) {
-            cachedIncoming = incoming;
-            notify();
-        }
-    }, 30000);
-    notify();
-}
 var jsonT;
 (function (jsonT) {
     ;
@@ -69807,18 +69707,6 @@ function getFormattedTime(date_2) {
     var min_ = TwoDigitNum(date_2.getMinutes());
     var sec_ = TwoDigitNum(date_2.getSeconds());
     return `${month_1}/${day_}/${year_1} ${hour_}:${min_}:${sec_}`;
-}
-function mailcitycoordsInit() {
-    $(document).on("click", "#mailTable tbody td", function (e) {
-        setTimeout(function () {
-            var mailElement = $("#mailrMess");
-            var mailData = mailElement.html();
-            var withCoords = mailData.replace(/\d{1,3}\s?:\s?\d{1,3}/gm, '<span class="cityblink shcitt" style="color:#ee0645ad;"><coords>$&</coords></span><sup>s</sup>');
-            setTimeout(function () {
-                document.getElementById("mailrMess").innerHTML = withCoords;
-            }, 100);
-        }, 100);
-    });
 }
 function openreturnwin_(data_33) {
     $(".toptdinncommtbl1:first").click();

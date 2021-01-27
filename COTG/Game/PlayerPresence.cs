@@ -1,4 +1,6 @@
-﻿using System;
+﻿using COTG.Services;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +40,40 @@ namespace COTG.Game
 			lastSeenSec = pp.t;
 		}
 		public static PlayerPresence[] all = Array.Empty<PlayerPresence>();
+	}
+	public struct Friend
+	{
+		public int pid;
+		public string name;
+		public int online;
+		public int flag1;
+		public int flag2;
+		public static Friend[] all = Array.Empty<Friend>();
+
+		public static async Task LoadAll()
+		{
+			try
+			{
+				var post = Post.SendForJson("includes/gfrnd.php");
+				var dat = (await post);
+				var jse = dat.RootElement;
+				var count = jse.GetArrayLength();
+				all = new Friend[count];
+				for (int i = 0; i < count; ++i)
+				{
+					var jsf = jse[i];
+					all[i].name = jsf[2].GetString();
+					all[i].pid = jsf[4].GetInt32();
+					all[i].online = jsf[0].GetInt32();
+					all[i].flag1 = jsf[1].GetInt32();
+					all[i].flag2 = jsf[3].GetInt32();
+				}
+			}
+			catch(Exception e)
+			{
+				Debug.Log(e);
+			}
+		}
 	}
 
 }

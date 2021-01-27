@@ -7243,6 +7243,7 @@ let _lastTooltip= null;
  let popupSizeDirty=false;
 //let syncViewTimeout=0;
 //let viewPortDirty=true;
+ 	
 
 function PopupOnDrag()
 {
@@ -7269,6 +7270,8 @@ function PopupMouseMove(ev: MouseEvent ) {
 
 function registerPopup( pop : Element)
 {
+	if(!pop || !pop.classList)
+		 return;
 	let classList= pop.classList;
  let isPopup=false;
  for(const a of popupClasses)
@@ -17868,8 +17871,12 @@ function outer() {
 		window['setPlayerGlobals'] = function(token:string, cookie:string, _cid:string)
 		{
 //			ppdt = _ppdt;
+			let savedToken = ppdt['opt'][67];
+			let savedS = s;
+			let savedCid = _cid;
 			ppdt['opt'][67] = token;
 			s= cookie;
+		
 			//ppss^=1; // hack!!
 		//	document.cookie = "sec_session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 		//	document.cookie = "sec_session_id="+cookie+"; expires=Thu, 01 Jan 9999 00:00:00 GMT";
@@ -17877,6 +17884,9 @@ function outer() {
 // this is a dummy block, we do it to get a latest ppdt
 	   	 let  t0 = $.post("/includes/block.php", { a: 10 });
 		 t0.done(function (xxxx) {
+
+				try
+				{
 
 					ppdt = JSON.parse(xxxx);
 					truncateToken()
@@ -17892,12 +17902,25 @@ function outer() {
 	
  // I am not sure if this unblock even works
  
+			
+				} 
+				catch (exception )
+				{
+
+					let wrapper = { restoreglobals: { cid:savedCid} };
+					 window['external']['notify'](JSON.stringify(wrapper));
+			//	send back the raid secret and ppdt
+	
+					window['setPlayerGlobals'](savedToken,savedS,savedCid);
+					return;
+				}
+
 			 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
 				
 				B9Z.done(function (R9Z) {
 			
 				});
-	
+
 			});
 		}
 
@@ -70099,26 +70122,7 @@ function outer() {
 			K2();
 		}
 
-  	jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
-
-	jQuery.fn[ name ] = function() {
-		var args = Array.prototype.slice.call( arguments, 0 );
-
-	
-		args.splice( 0, 0, name );
-		if ( arguments.length ) {
-			return this.bind.apply( this, args );
-		}
-
-		// Use .triggerHandler here because:
-		// - load and unload events don't need to bubble, only applied to window or image
-		// - error event should not bubble to window, although it does pre-1.7
-		// See http://bugs.jquery.com/ticket/11820
-		this.triggerHandler.apply( this, args );
-		return this;
-	};
-
-});
+ 
 
 
 

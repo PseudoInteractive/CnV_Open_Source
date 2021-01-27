@@ -235,7 +235,7 @@ namespace COTG.Views
 						case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
 						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered); break;
-						case Windows.System.VirtualKey.Q: CityBuild.SetAction(CityBuild.Action.destroy); break;
+						case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
 						case (VirtualKey)192: CityBuild.MoveHovered(true); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;

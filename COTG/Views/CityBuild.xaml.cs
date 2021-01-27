@@ -28,6 +28,7 @@ using static COTG.Debug;
 using System.Threading.Tasks;
 using static COTG.Views.CityBuild;
 using Action = COTG.Views.CityBuild.Action;
+using COTG.Services;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -284,6 +285,14 @@ namespace COTG.Views
 
 
 			//	quickBuild.ItemsSource = items;
+		}
+
+		internal static async void ClearQueue()
+		{
+			foreach(var i in buildQueue)
+			{
+				await Post.Send("/includes/cBu.php", $"id={i.bidHash}&cid={City.build}");
+			}
 		}
 
 		private void Upgrade_Click(object sender, RoutedEventArgs e)
@@ -566,9 +575,9 @@ namespace COTG.Views
 									if (buildQueueFull)
 									{
 										Note.Show("Build Queue full");
-										break;
 									}
-									if(desBid == 0)
+
+									else  if (desBid == 0)
 										Note.Show($"No building is wanted here, how about a cottage instead?");
 									else
 										Note.Show($"Building {desName}");
@@ -583,11 +592,12 @@ namespace COTG.Views
 									if (buildQueueFull)
 									{
 										Note.Show("Build Queue full");
-										break;
+
 									}
-
-									Note.Show($"Destorying {b.def.Bn} to make way for {desName}");
-
+									else
+									{
+										Note.Show($"Destorying {b.def.Bn} to make way for {desName}");
+									}
 									Demolish(cc);
 									// Test!
 									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
@@ -652,12 +662,13 @@ namespace COTG.Views
 					{
 						if(b.isRes && !buildQueue.Any(a => a.bspot == bspot))
 						{
-							Demolish(cc);
+							Note.Show("Spot is not empty");
+							break;
 						}
 						if (buildQueueFull)
 						{
 							Note.Show("Build Queue full");
-							break;
+							
 						}
 
 						var sel = _quickBuildId;
@@ -677,7 +688,7 @@ namespace COTG.Views
 						if (buildQueueFull)
 						{
 							Note.Show("Build Queue full");
-							break;
+						
 						}
 						Demolish(cc);
 
@@ -748,8 +759,8 @@ namespace COTG.Views
 												 // toggle visibility
 				var d = b.def;
 			//	var i = instance;
-
-				JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
+				if(!b.isEmpty)
+					JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 				//i.building.Text = d.Bn;
 				//i.description.Text = d.Ds;
 				//i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;

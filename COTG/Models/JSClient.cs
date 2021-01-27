@@ -217,22 +217,25 @@ namespace COTG
 			var session = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
 	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
 		
-			session.Secure = true;
-			session.HttpOnly = true;
-//			remember.Secure = true;
-//			remember.HttpOnly = true;
-//			remember.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(2);
+			
 			session.Value = cookie;
-			//if(!rememberme.IsNullOrEmpty())
-			//	remember.Value = rememberme;
 			cookieManager.DeleteCookie(session);
-			//if (!rememberme.IsNullOrEmpty())
-			//	cookieManager.DeleteCookie(remember);
 			cookieManager.SetCookie(session);
-			//if (!rememberme.IsNullOrEmpty())
-			//	cookieManager.SetCookie(remember);
-		//	ppss ^=1;
 			App.DispatchOnUIThreadSneaky( ()=>view.InvokeScriptAsync("setPlayerGlobals", new[] { token, cookie,cid.ToString() }) );
+		}
+		public static void RestorePlayer()
+		{
+			// already set
+			if (jsVars.token == jsBase.token)
+				return;
+
+			var session = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
+		
+			session.Value = jsBase.s;
+			cookieManager.DeleteCookie(session);
+			cookieManager.SetCookie(session);
+			jsVars = jsBase;
+			Player.activeId = Player.myId;
 		}
 		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string s, string ppdt)
 		{
@@ -427,8 +430,8 @@ namespace COTG
 			//	Log(req.RequestUri.ToString());
 				if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
-				//	var js = GetJsString("jquery");
-					var js = GetJsString("jquery1_12_4") + GetJsString("jquery-migrate1_4_1");
+					//	var js = GetJsString("jquery");
+					var js = GetJsString("jquery3_5_1") + GetJsString("jquerymigrate") + GetJsString("jquerymigrate3_3_2");
 					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
 					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
@@ -467,7 +470,7 @@ namespace COTG
 				}
 				else if (req.RequestUri.ToString().Contains("/jsfunctions/pack.js"))
 				{
-					var js = GetJsString("pack");
+					var js = GetJsString("pack.js");
 
 					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
@@ -1199,8 +1202,8 @@ namespace COTG
 
 				if (match.Groups.Count == 2 && (args.Uri.LocalPath == "/" || args.Uri.Fragment.Contains('&')))
 				{
-					if (httpFilter != null)
-						Debug.Fatal();  // Todo
+					//if (httpFilter != null)
+					//	Debug.Fatal();  // Todo
 					world = int.Parse(match.Groups[1].ToString());
 					try
 					{
@@ -1208,34 +1211,42 @@ namespace COTG
 						httpsHostString = $"https://{args.Uri.Host}";
 						httpsHost = new Uri(httpsHostString);
 
+						//  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
+						//    httpFilter.AllowAutoRedirect = true;
+						//                         httpFilter.ServerCredential =
 
-						httpFilter = new HttpBaseProtocolFilter();// HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
-																  //   httpFilter.AllowAutoRedirect = true;
-																  //                        httpFilter.ServerCredential =
-						cookieManager = httpFilter.CookieManager;
-																  //  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-						httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
-						httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
-//						if (subId == 0)
-//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+
+						//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
+						//	httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+						//	httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+						//						if (subId == 0)
+						//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
+						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
 						//                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
 						//                      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
 						//                  httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.BasicConstraintsError);
 						//              httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidSignature);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 						//                httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Revoked);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
 
 						//                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
 						//                       httpFilter.AllowUI = true;
 						// httpFilter.AutomaticDecompression = true;
+
+						httpFilter = new HttpBaseProtocolFilter();
 						httpFilter.MaxVersion = HttpVersion.Http20;
 
 						//                        httpFilter.User.
+
+					
+
+						cookieManager
+						=
+						httpFilter.CookieManager;
 
 						clientPool = new ConcurrentBag<HttpClient>();
 						for (int i = 0; i < clientCount; ++i)
@@ -1269,7 +1280,9 @@ namespace COTG
 
 							clientPool.Add(httpClient);
 
+							
 						}
+						//cookieManager = new HttpBaseProtocolFilter().CookieManager;
 						//  clientPool.CompleteAdding();
 						view.WebResourceRequested -= View_WebResourceRequested1;
 						view.WebResourceRequested += View_WebResourceRequested1;
@@ -1410,9 +1423,9 @@ namespace COTG
 											   foreach (var httpClient in clientPool)
 											   {
 
-												   httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
-											//	   if (subId == 0)
-											//		   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
+												   httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+								//				   if (subId == 0)
+									//				   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
 											   }
 										   }
 									   }
@@ -1758,6 +1771,10 @@ namespace COTG
 						   case "gPlA":
 							   {
 								   Player.Ctor(jsp.Value);
+								   while( !ppdtInitialized || !Alliance.diplomacyFetched)
+								   {
+									   await Task.Delay(500);
+								   }
 								   App.DispatchOnUIThreadSneaky(() =>
 								   {
 									   // create a timer for precense updates
@@ -1815,6 +1832,12 @@ namespace COTG
 								   City.CitiesChanged();
 								   break;
 							   }
+						   case "restoreglobals":
+						   {
+								   Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
+								RestorePlayer();
+								break;
+						   }
 						   case "c":
 							   {
 								   var jso = jsp.Value;
@@ -1872,7 +1895,7 @@ namespace COTG
 					   ShellPage.isHitTestVisible = true;
 					   ///                   await GetCitylistOverview();
 					   City.UpdateSenatorInfo();  // no async
-
+					   Friend.LoadAll();
 					   TileData.Ctor(false);
 					   //if (TipsSeen.instance.refresh == false
 					   //||TipsSeen.instance.chat0==false
@@ -1922,19 +1945,29 @@ namespace COTG
 		   });
 		}
 		
+		
 
 		private static async void PresenceTimer_Tick(object sender, object e)
 		{
 			var players = await Cosmos.GetPlayersInfo();
 			var changed = false;
-			var presence = new PlayerPresence[players.Count];
 			int put = 0;
+			int validCount = 0;
+			foreach (var _p in players)
+			{
+				var pid = int.Parse(_p.id);
+				if (pid == Player.myId || Friend.all.Any(a =>a.pid==pid) || Player.isAvatar )
+					++validCount;
+			}
+			var presence = new PlayerPresence[validCount];
 			foreach (var _p in players)
 			{
 				var p = new PlayerPresence(_p);
 				int priorCid;
 				var pid = p.pid;
-				
+				if (!(pid == Player.myId || Friend.all.Any(a => a.pid == pid)||Player.isAvatar))
+					continue;
+
 				var priorIndex = PlayerPresence.all.IndexOf( ( a) => a.pid == pid );
 				if (priorIndex == -1)
 				{

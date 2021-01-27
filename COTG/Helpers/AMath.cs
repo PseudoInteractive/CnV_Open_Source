@@ -29,7 +29,17 @@ namespace COTG
 		public static Vector2 ToVector(this (float x, float y) me) => new Vector2(me.x, me.y);
 		public static (float x, float y) ToTuple(this Vector2 me) => (me.X, me.Y);
 		public static Vector3 ToVector(this (float x, float y, float z) me) => new Vector3(me.x, me.y, me.z);
+		public static int ScaleInt(this float f, int i)
+		{
+			return RoundToInt(f * i);
+		}
 
+		public static int ScaleInt(this double f, int i)
+		{
+			return RoundToInt(f * i);
+		}
+
+		
 
 		public static int RoundToInt(this float f)
 		{

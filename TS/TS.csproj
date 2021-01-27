@@ -24,10 +24,17 @@
 
   <ItemGroup>
     <TypeScriptCompile Remove="ts\gfunky3.user.ts" />
+    <TypeScriptCompile Remove="ts\incoming-filter.user.ts" />
+    <TypeScriptCompile Remove="ts\mail-city-coords.user.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="ts\mail-city-coords.user.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="ts\gfunky3.user.ts" />
+    <None Include="ts\incoming-filter.user.ts" />
   </ItemGroup>
 
   <ItemGroup>

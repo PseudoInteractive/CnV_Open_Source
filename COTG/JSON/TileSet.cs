@@ -81,19 +81,19 @@ namespace COTG.JSON
 			// remove names layer
 			instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
 			//  await canvas.RunOnGameLoopThreadAsync( async () =>
-			if (prior != null)
-			{
-				//Assert(false);
-				var count = prior.Length;
-				for (int i = 0; i < count; ++i)
-				{
-					instance.tilesets[i].material = prior[i].material;
-					instance.tilesets[i].shadowMaterial = prior[i].shadowMaterial;
-				}
-				prior = null;
+			//if (prior != null)
+			//{
+			//	//Assert(false);
+			//	var count = prior.Length;
+			//	for (int i = 0; i < count; ++i)
+			//	{
+			//		instance.tilesets[i].material = prior[i].material;
+			//		instance.tilesets[i].shadowMaterial = prior[i].shadowMaterial;
+			//	}
+			//	prior = null;
 
-			}
-			else
+			//}
+			//else
 			{
 				foreach (var tileSet in instance.tilesets)
 				{

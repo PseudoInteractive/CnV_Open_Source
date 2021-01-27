@@ -72,7 +72,7 @@ namespace COTG.Views
 			{
 				var city = City.GetOrAddCity(cid);
 				var nameDialog = new CityRename();
-				var isNew = city._cityName == "*New City" || city._cityName == "*Lawless City";
+				var isNew = city._cityName == "*New City" || city._cityName == "lawless city" || city._cityName == "*Lawless City";
 
 
 				var name = isNew ? lastName : city._cityName;
