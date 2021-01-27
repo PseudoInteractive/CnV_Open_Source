@@ -536,7 +536,6 @@
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <None Include="ClassDiagram2.cd" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
