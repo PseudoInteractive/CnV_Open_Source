@@ -7,6 +7,7 @@ using COTG.Helpers;
 using static COTG.Debug;
 using static COTG.Game.Enum;
 using System.Text.Json;
+using COTG.Views;
 
 namespace COTG.Game
 {
@@ -93,7 +94,20 @@ namespace COTG.Game
 			{
 				if(rv.Count>0)
 				{
-					await Raiding.SendRaids(rv[0],false);
+					var success = false;
+					foreach (var i in rv)
+					{
+						var d = Raiding.ComputeIdealReps(i, city);
+						if ((d.averageCarry - Raiding.desiredCarry).Abs() > 0.25f)
+							continue;
+						await Raiding.SendRaids(i, false);
+						success = true;
+						break;
+					}
+					if(!success)
+					{
+						Note.Show($"No appropariate dungeons for {city.nameAndRemarks}");
+					}
 				}
 			}
 			else

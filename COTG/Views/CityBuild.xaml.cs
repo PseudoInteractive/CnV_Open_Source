@@ -575,6 +575,7 @@ namespace COTG.Views
 									if (buildQueueFull)
 									{
 										Note.Show("Build Queue full");
+										break;
 									}
 
 									else  if (desBid == 0)
@@ -592,7 +593,7 @@ namespace COTG.Views
 									if (buildQueueFull)
 									{
 										Note.Show("Build Queue full");
-
+										break;
 									}
 									else
 									{
@@ -668,7 +669,7 @@ namespace COTG.Views
 						if (buildQueueFull)
 						{
 							Note.Show("Build Queue full");
-							
+							break;
 						}
 
 						var sel = _quickBuildId;
@@ -688,7 +689,7 @@ namespace COTG.Views
 						if (buildQueueFull)
 						{
 							Note.Show("Build Queue full");
-						
+							break;
 						}
 						Demolish(cc);
 

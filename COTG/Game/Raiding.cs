@@ -166,7 +166,7 @@ namespace COTG.Game
             var trs = JsonSerializer.Serialize(tr);
             var args = new sndRaidArgs() { rcid = d.cid, type = raidOnce?1:2, co = r.reps, rt = "1", snd = 1, rut = 0, ts = "", tr = trs };
             var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-            Note.Show($"{city.cid.CidToStringMD()} raid {d.cid.CidToStringMD()}");
+            Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry*100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
             var shiftPressed = App.IsKeyPressedShift();
             var controlPressed = App.IsKeyPressedControl();
             await snd.Post();

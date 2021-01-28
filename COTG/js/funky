@@ -17470,9 +17470,10 @@ function outer() {
             });
         }
         window['setPlayerGlobals'] = function (token, cookie, _cid) {
+            let savedPpdt = ppdt;
             let savedToken = ppdt['opt'][67];
             let savedS = s;
-            let savedCid = _cid;
+            let savedCid = cid;
             ppdt['opt'][67] = token;
             s = cookie;
             let t0 = $.post("/includes/block.php", { a: 10 });
@@ -17488,9 +17489,15 @@ function outer() {
                     window['external']['notify'](JSON.stringify(wrapper));
                 }
                 catch (exception) {
+                    ppdt = savedPpdt;
+                    ppdt['opt'][67] = savedToken;
+                    s = savedS;
+                    cid = savedCid;
+                    H2 = ppdt['pn'];
+                    P8 = ppdt.pid;
+                    raidSecret = Q3F();
                     let wrapper = { restoreglobals: { cid: savedCid } };
                     window['external']['notify'](JSON.stringify(wrapper));
-                    window['setPlayerGlobals'](savedToken, savedS, savedCid);
                     return;
                 }
                 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });

@@ -17870,10 +17870,10 @@ function outer() {
 
 		window['setPlayerGlobals'] = function(token:string, cookie:string, _cid:string)
 		{
-//			ppdt = _ppdt;
+			let savedPpdt = ppdt;
 			let savedToken = ppdt['opt'][67];
 			let savedS = s;
-			let savedCid = _cid;
+			let savedCid = cid;
 			ppdt['opt'][67] = token;
 			s= cookie;
 		
@@ -17906,12 +17906,19 @@ function outer() {
 				} 
 				catch (exception )
 				{
+					ppdt=savedPpdt;
+					ppdt['opt'][67] = savedToken;
+					s= savedS;
+					cid = savedCid;
+	 				H2 = ppdt['pn'];
+					P8 = ppdt.pid;
+					raidSecret = Q3F();
 
 					let wrapper = { restoreglobals: { cid:savedCid} };
 					 window['external']['notify'](JSON.stringify(wrapper));
 			//	send back the raid secret and ppdt
 	
-					window['setPlayerGlobals'](savedToken,savedS,savedCid);
+					
 					return;
 				}
 

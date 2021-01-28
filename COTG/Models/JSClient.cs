@@ -185,31 +185,34 @@ namespace COTG
 				if(p.pid ==pid)
 				{
 
-					SetPlayer(p.token, p.cookie, cid, p.name);
+					SetPlayer(pid,p.token, p.cookie, cid, p.name);
 					return;
 				}
 			}
 			Debug.Log("Missing player");
 		}
-		
-		public static string GetSecSessionId()
-		{
-			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
-			foreach(var cookie in cookies)
-			{
-				if (cookie.Name == "sec_session_id")
-					return cookie.Value;
+
+		//public static string GetSecSessionId()
+		//{
+		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
+		//	foreach(var cookie in cookies)
+		//	{
+		//		if (cookie.Name == "sec_session_id")
+		//			return cookie.Value;
 
 
-			}
-			return ""; // error!
-		}
-		public static void SetPlayer(string token, string cookie, int cid,string name)
+		//	}
+		//	return ""; // error!
+		//}
+		static int inTransitionTo;
+		public static void SetPlayer(int pid,string token, string cookie, int cid,string name)
 		{
 			// already set
 			if (jsVars.token == token)
 				return;
-
+			if (inTransitionTo!=0)
+				return;
+			inTransitionTo = pid;
 			Note.Show($"Entering {name}'s City");
 			Log($"ChangePlayer:{name}");
 			//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
@@ -217,21 +220,23 @@ namespace COTG
 	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
 		
 			
-			session.Value = cookie;
+			
 			cookieManager.DeleteCookie(session);
+			session.Value = cookie;
 			cookieManager.SetCookie(session);
 			App.DispatchOnUIThreadSneaky( ()=>view.InvokeScriptAsync("setPlayerGlobals", new[] { token, cookie,cid.ToString() }) );
 		}
 		public static void RestorePlayer()
 		{
+			inTransitionTo = 0;
 			// already set
-			if (jsVars.token == jsBase.token)
-				return;
+		//	if (jsVars.token == jsBase.token)
+		//		return;
 
 			var session = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
 		
-			session.Value = jsBase.s;
 			cookieManager.DeleteCookie(session);
+			session.Value = jsBase.s;
 			cookieManager.SetCookie(session);
 			jsVars = jsBase;
 			Player.activeId = Player.myId;
@@ -1812,6 +1817,8 @@ namespace COTG
 								   var jso = jsp.Value;
 								   var raidSecret = jso.GetString("secret");
 								   var pid = jso.GetInt("pid");
+								   Assert(pid == inTransitionTo);
+								   inTransitionTo = 0;
 								   var pn = jso.GetString("pn");
 								   var ppdt = jso.GetProperty("ppdt");
 								   var token = jso.GetString("token");
