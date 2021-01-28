@@ -1,7 +1,10 @@
-﻿using System;
+﻿using COTG.Game;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using static COTG.Debug;
@@ -23,7 +26,7 @@ namespace COTG.JSON
 		}
 		public const int sharestringOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
-
+		
 		static BuildingDef()
 		{
 			all = Json.FromResources<Dictionary<int, BuildingDef>>("buildingDef");
@@ -36,6 +39,7 @@ namespace COTG.JSON
 				b.bid = i.Key;
 				b.id = counter;
 				idToBid[counter] = i.Value;
+				// use the first one for the prototype?
 				prototypes[b.Proto] = b;
 				++counter;
 			}
@@ -50,14 +54,14 @@ namespace COTG.JSON
 			sharestringToBuldings = new Dictionary<byte, byte>();
 			var ix = new byte[] {
 				 (byte)'-',(byte)(0),
-				 (byte)',',(byte)(452 - sharestringOffset),
-				 (byte)'.',(byte)(454 - sharestringOffset),
+				 (byte)',',0, //(byte)(452 - sharestringOffset),
+				 (byte)'.',0, //(byte)(454 - sharestringOffset),
 				 (byte)'1',(byte)(447 - sharestringOffset),
 				 (byte)'2',(byte)(448 - sharestringOffset),
 				 (byte)'3',(byte)(461 - sharestringOffset),
 				 (byte)'4',(byte)(465 - sharestringOffset),
-				 (byte)':',(byte)(451 - sharestringOffset),
-				 (byte)';',(byte)(453 - sharestringOffset),
+     			 (byte)':',0, // (byte)(451 - sharestringOffset), // stone
+				 (byte)';',0, // (byte)(453 - sharestringOffset),
 				 (byte)'A',(byte)(462 - sharestringOffset),
 				 (byte)'B',(byte)(445 - sharestringOffset),
 				 (byte)'C',(byte)(446 - sharestringOffset),
@@ -89,16 +93,30 @@ namespace COTG.JSON
 					
 		public static BuildingDef FromId(byte id) => idToBid[id];
 		public static BuildingDef[] idToBid;
-		public static Dictionary<int, BuildingDef> all;
+		public static Dictionary<int, BuildingDef> all; // indexed via bid
 		public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
 
+		[JsonIgnore]
+		public bool isRes => Bc.Count == 1;
+
+		public static bool IsRes(int id) => id switch { City.bidStone =>true, City.bidIron =>true,City.bidLake=>true,City.bidForest=>true,_=>false };
+
+		[JsonIgnore]
 		public bool isPost => Trcap!=null;
+		[JsonIgnore]
 		public bool isBarricade => Trrep!=null;
+		[JsonIgnore]
 		public bool isTower => isPost || isBarricade;
+		[JsonIgnore]
+		public bool isWall => bid == Game.City.bidWall;
+		[JsonIgnore]
+		public bool isTownHall => bid == Game.City.bidTownHall;
 		// Not persisted
-			public byte id; // packed id
-		// not persisted
-			public int bid; // building id
+		[JsonIgnore]
+		public byte id; // packed id
+						// not persisted
+		[JsonIgnore]
+		public int bid; // building id
 
 			[J("bn")] public string Bn { get; set; }
 			[J("proto")] public int Proto { get; set; }

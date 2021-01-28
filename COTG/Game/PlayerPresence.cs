@@ -15,7 +15,7 @@ namespace COTG.Game
 		public readonly int lastSeenSec;// { get; set; } // time last seen
 										// todo: last action
 		public readonly string token;// { get; set; } // token
-		public readonly string cookie;// { get; set; } // cookie
+		public readonly string secSessionId;// { get; set; } // cookie
 		public readonly string name;// => Game.Player.IdToName(pid);
 
 		public DateTimeOffset lastSeen => SmallTime.ToDateTime(lastSeenSec);
@@ -28,13 +28,13 @@ namespace COTG.Game
 			{
 				name = Player.myName;
 				token = JSClient.jsBase.token;
-				cookie = JSClient.jsBase.s;
+				secSessionId = JSClient.jsBase.s;
 			}
 			else
 			{
 				name = Game.Player.IdToName(pid);
 				token = pp.tk;
-				cookie = pp.ck;
+				secSessionId = pp.ck;
 			}
 			cid = pp.cid;
 			lastSeenSec = pp.t;

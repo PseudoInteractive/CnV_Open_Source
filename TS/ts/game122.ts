@@ -17914,7 +17914,7 @@ function outer() {
 					P8 = ppdt.pid;
 					raidSecret = Q3F();
 
-					let wrapper = { restoreglobals: { cid:savedCid} };
+					let wrapper = { restoreglobals: { s:s} };
 					 window['external']['notify'](JSON.stringify(wrapper));
 			//	send back the raid secret and ppdt
 	
@@ -17931,6 +17931,12 @@ function outer() {
 			});
 		}
 
+		function injectToken(C5U, W5U, G5U)
+		{
+			  if (!G5U.crossDomain) 
+						G5U.setRequestHeader(_s(+'3885'), ppdt['opt'][67]);
+				
+		}
 		function Y6F() {
 			var x5U = __s[3338];
 			var O5U = a6.ccazzx.encrypt(currentTime(), x5U, +256);
@@ -17944,10 +17950,7 @@ function outer() {
 				truncateToken();
 			
 				
-				jQuery.ajaxPrefilter(function (C5U, W5U, G5U) {
-					if (!G5U.crossDomain) G5U.setRequestHeader(_s(+
-						'3885'), ppdt['opt'][67]);
-				});
+				jQuery.ajaxPrefilter(injectToken);
 			
 				H2 = ppdt['pn'];
 				P8 = ppdt.pid;
@@ -28017,54 +28020,54 @@ function outer() {
 				$(__s[1851] + p7l)
 					.css("display", "none");
 			} else {
-				var E7l = qam[__s[+p34]][R7l]["n"];
+				var E7l = qam["quests"][R7l]["n"];
 				var
-					k4l = qam[__s[+p34]][R7l]["d"];
+					k4l = qam["quests"][R7l]["d"];
 				var Y7l = 0;
 				if (ppdt["rw"][p7l]['p'] > 0)
-					if (ppdt["rw"][p7l]['p'] >= qam[__s[+p34]][R7l][__s[z34 & 2147483647]]) Y7l =
+					if (ppdt["rw"][p7l]['p'] >= qam["quests"][R7l]["rq"]) Y7l =
 						100;
 					else Y7l = Math.floor(Number(ppdt["rw"][p7l]['p']) / Number(qam[_s(
-						p34 - 0)][R7l][__s[z34 ^ 0]]) * (100));
+						p34 - 0)][R7l]["rq"]) * (100));
 				var D7l = '';
-				if (qam[__s[p34 ^ 0]][R7l]
+				if (qam["quests"][R7l]
 				["r"]) {
-					if (qam[__s[+p34]][R7l]["r"]["r"])
-						for (var B7l in qam[__s[+p34]][R7l]["r"]["r"]) {
+					if (qam["quests"][R7l]["r"]["r"])
+						for (var B7l in qam["quests"][R7l]["r"]["r"]) {
 							if (B7l == ("1" & E6k
 								.s6s)) {
 								var y7l = "";
-								if (Number(qam[__s[p34 - 0]][R7l]["r"]["r"][B7l]) + D6["r"][B7l]["r"] > D6[_s(+
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"][B7l]["r"] > D6[_s(+
 									j1R)][B7l]) y7l = __s['6653' | 77];
-								D7l = D7l + __s[4497] + p6(qam[__s[+p34]][R7l]["r"]["r"][
+								D7l = D7l + __s[4497] + p6(qam["quests"][R7l]["r"]["r"][
 									B7l]) + __s[c2y ^ 0] + y7l + __s[+K5y];
 							}
 							if (B7l == 2) {
 								var y7l = _s(+
 									"4867");
-								if (Number(qam[__s[p34 ^ 0]][R7l]["r"]["r"][B7l]) + D6["r"]
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"]
 								[B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
-								D7l = D7l + __s[3336] + p6(qam[__s[p34 ^ 0]][R7l]["r"]["r"][B7l]) +
+								D7l = D7l + __s[3336] + p6(qam["quests"][R7l]["r"]["r"][B7l]) +
 									__s[+c2y] + y7l + __s[+K5y];
 							}
 							if (B7l == 3) {
 								var y7l = '';
 								if (Number(
-									qam[__s[+p34]][R7l]["r"]["r"][B7l]) + D6["r"][
+									qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"][
 									B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
-								D7l = D7l + __s[1432] + p6(qam[__s[p34 | 4454]][R7l]["r"][_s(+
+								D7l = D7l + __s[1432] + p6(qam["quests"][R7l]["r"][_s(+
 									I6y)][B7l]) + __s[+c2y] + y7l + __s[K5y - 0];
 							}
 							if (B7l == 4) {
 								var y7l = _s(
 									4867);
-								if (Number(qam[__s[+p34]][R7l]["r"]["r"][B7l]) + D6[_s(+
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6[_s(+
 									I6y)][B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
-								D7l = D7l + __s[2146] + p6(qam[__s[p34 * 1]][R7l]["r"]["r"][B7l]) + __s[+c2y] + y7l + __s[1322];
+								D7l = D7l + __s[2146] + p6(qam["quests"][R7l]["r"]["r"][B7l]) + __s[+c2y] + y7l + __s[1322];
 							}
 						}
-					if (qam[__s[+p34]][R7l]["r"][__s[g4p ^ 0]])
-						for (var B7l in qam[__s[+p34]][R7l]["r"][__s[g4p << 909976672]]) {
+					if (qam["quests"][R7l]["r"][__s[g4p ^ 0]])
+						for (var B7l in qam["quests"][R7l]["r"][__s[g4p << 909976672]]) {
 							var c7l = artifacts[B7l][
 								"n"];
 							var m7l = artifacts[B7l]["d"];
@@ -28072,7 +28075,7 @@ function outer() {
 							D7l = D7l + __s[1244] + a7l + __s[4211] + m7l + __s[+F6y] +
 								c7l + __s[4403];
 						}
-					if (qam[__s[p34 ^ 0]][R7l]["r"]['g']) D7l = D7l + __s[4466] + p6(qam[E6k
+					if (qam["quests"][R7l]["r"]['g']) D7l = D7l + __s[4466] + p6(qam[E6k
 						.o55(+p34)][R7l]["r"]['g']) + __s[4403];
 				}
 				var q7l = _s(
@@ -31677,9 +31680,9 @@ function outer() {
 					.o55(+r0R)]))) + __s[271]);
 		}
 
-		function l0V(s4l, j4l) { // change city name notes or comments
+		function l0V(s4l, j4l) { // claim a reward?
 			var u4l = ppdt["rw"][s4l]['l'];
-			if (ppdt["rw"][s4l]['p'] >= qam[__s[+p34]][u4l][__s[z34 >> 1809418112]]) {
+			if (ppdt["rw"][s4l]['p'] >= qam["quests"][u4l]["rq"]) {
 				N6();
 				var H4l = $.post("/includes/cWs.php", { cid: cid, a: s4l, b: j4l });
 				F6();
@@ -35423,7 +35426,7 @@ function outer() {
 								var A7l = __s[3553];
 								var S7l =
 									'';
-								if (qam[__s[p34 ^ 0]][ppdt.rw[O7l]['l']][__s[+z34]] <= ppdt.rw[
+								if (qam["quests"][ppdt.rw[O7l]['l']]["rq"] <= ppdt.rw[
 									O7l]['p']) {
 									var M7l = "";
 									var X7l = _s("6140" <<
@@ -35441,8 +35444,8 @@ function outer() {
 								} else {
 									var M7l = "";
 									var X7l = __s[3002] + Math
-										.floor(Number(ppdt.rw[O7l]['p']) / Number(qam[__s[p34 - 0]][ppdt.rw[O7l][_s(+
-											L9y)]][__s[z34 - 0]]) * (100)) + __s[314];
+										.floor(Number(ppdt.rw[O7l]['p']) / Number(qam["quests"][ppdt.rw[O7l][_s(+
+											L9y)]]["rq"]) * (100)) + __s[314];
 								}
 								t7l = t7l + __s[1681] +
 									O7l + __s[1259] + O7l + __s[3756] + A7l + " rwPop\" value=" + O7l + _s(
@@ -50159,7 +50162,7 @@ function outer() {
 					if (ppdt.rw)
 						if (ppdt.rw[Z7l])
 							if (ppdt.rw[Z7l]['l'])
-								if (qam[__s[p34 ^ 0]][ppdt.rw[Z7l]['l']][__s[+z34]] <= ppdt.rw[Z7l][E6k
+								if (qam["quests"][ppdt.rw[Z7l]['l']]["rq"] <= ppdt.rw[Z7l][E6k
 									.o55(+K2y)]) U7l++;
 			if (U7l > 0) $(__s[1969])
 				.text(__s[2397] + U7l + ")");
@@ -53864,8 +53867,8 @@ function outer() {
 			if (j11 == 0) {
 				aldt = j11;
 				if ($("#achat")
-					.css("display") != "none") $("#achat")
-						.css("display", "none");
+					.css("display") != "none") 
+						$("#achat").css("display", "none");
 				if ($(__s[t1p * 1])
 					.css("display") != "none") $(__s[t1p & 2147483647])
 						.css("display", "none");
@@ -53877,6 +53880,13 @@ function outer() {
 						.show();
 					$("#citnamq")
 						.show();
+				}
+				if(hasSentAldt === false) {
+				hasSentAldt = true;
+				console.log("Aldt!!!");
+				const wrapper = { aldt: 0 }
+				window['external']['notify'](JSON.stringify(wrapper));
+	
 				}
 			} else if (!(j11 == 1)) {
 				aldt = j11;

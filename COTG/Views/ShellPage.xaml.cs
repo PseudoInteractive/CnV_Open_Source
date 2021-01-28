@@ -709,8 +709,7 @@ namespace COTG.Views
 				{
 					if (bd.bid == City.bidTownHall || bd.bid == City.bidWall)
 						return;
-					if (bd.isTower)
-						return;
+					
 					var id = bd.Proto;
 					if (!bdd.TryGetValue(id, out var counter))
 					{
@@ -720,12 +719,14 @@ namespace COTG.Views
 					if (add)
 					{
 						bdd[id] = counter + 1;
-						++bCount;
+						if(!bd.isTower)
+							++bCount;
 					}
 					else
 					{
 						bdd[id] = counter - 1;
-						--bCount;
+						if (!bd.isTower)
+							--bCount;
 					}
 				}
 
@@ -741,15 +742,17 @@ namespace COTG.Views
 				{
 					for (var it = City.buildQueue.iterate;it.Next();)
 					{
+						var r = it.r;
 						// new building
-						if(it.r.slvl==0 )
+						if(r.slvl==0 )
 						{
-							ProcessBuilding(BuildingDef.all[it.r.brep]);
+							ProcessBuilding(BuildingDef.all[r.brep]);
 						}
 						// demo
-						if (it.r.elvl == 0)
+						if (r.elvl == 0)
 						{
-							ProcessBuilding(BuildingDef.all[it.r.brep],false);
+							if (!BuildingDef.IsRes(r.brep))
+								ProcessBuilding(BuildingDef.all[r.brep],false);
 						}
 					}
 				}
@@ -1191,7 +1194,7 @@ namespace COTG.Views
 			{
 				var s = e.AddedItems[0] as string;
 				var friend = Array.Find(PlayerPresence.all,f => f.name == s);
-				JSClient.SetPlayer(friend.pid,friend.token, friend.cookie,friend.cid, friend.name);
+				JSClient.SetPlayer(friend.pid,friend.token, friend.secSessionId,friend.cid, friend.name);
 
 			}
 		}

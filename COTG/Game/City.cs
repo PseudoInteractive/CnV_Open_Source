@@ -60,6 +60,11 @@ namespace COTG.Game
 		public const short bidRangerPost = 543;
 		public const short bidSentinelPost = 547;
 
+		public const short bidStone = 451;
+		public const short bidIron = 452;
+		public const short bidLake = 453;
+		public const short bidForest = 454;
+
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
 		
@@ -244,8 +249,8 @@ namespace COTG.Game
 		
 		public int BidFromOverlay( int id) => layout[id]!=0? layout[id] + BuildingDef.sharestringOffset : 0;
 		
-		public int BidFromOverlay((int x, int y) c) => BidFromOverlay( (c.x-span0) + (c.y-span0) * citySpan);
-		
+		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
+	
 		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c) 
 		{
 			var bid = BidFromOverlay(c);
@@ -787,6 +792,55 @@ namespace COTG.Game
 		{
 			friendCitiesCache = null;
 			myCitiesCache = null;
+		}
+		public static  (int max, int count)  CountBuildings()
+		{
+			var max = -1;
+			var count = 0;
+			
+			foreach (var bi in GetBuild().buildings)
+			{
+				if (bi.id == 0 || bi.bl == 0)
+					continue;
+				var bd = bi.def;
+				if (bd.isTower || bd.isWall)
+				{
+					continue;
+				}
+				if (bd.isTownHall)
+				{
+					max = bi.bl * 100;
+					continue;
+				}
+				++count;
+			}
+			// process queue for new and deleted buildings
+			for (var it = buildQueue.iterate; it.Next();)
+			{
+				var r = it.r;
+				if (r.brep == 0)
+					continue;
+				if (r.isBuild)
+				{
+					var bd = BuildingDef.all[r.brep];
+					if (!(bd.isWall || bd.isTower))
+					{
+						++count;
+					}
+				}
+				else if( r.isDemo )
+				{
+					var bd = BuildingDef.all[r.brep];
+					if (!(bd.isWall || bd.isTower || r.isRes))
+					{
+						--count;
+					}
+
+				}
+
+			}
+			return (max, count);
+
 		}
 	}
 

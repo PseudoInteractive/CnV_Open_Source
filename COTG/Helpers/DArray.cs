@@ -33,24 +33,32 @@ namespace COTG
 			return new Enumerator(this);
 		}
 		public Enumerator iterate => new Enumerator(this);
+		//
+		//  A snapshot of that array memory location and count is taken at iterator start
+		//  Changes in size will not effect iteration
+		//  Reallocation will not effect the iteration
+		//  Modifying existing items will
+		// 
 		public struct Enumerator: IEnumerator<T>
 		{
-			DArray<T> array;
+			
+			T[] array;
+			int count;
 			public int i;
-			public ref T r => ref array.v[i]; // ref access
+			public ref T r => ref array[i]; // ref access
 
 			T IEnumerator<T>.Current => r;
 			object IEnumerator.Current => r;
 
-			public Enumerator( DArray<T> a) { array = a; i = -1; }
+			public Enumerator( DArray<T> a) { array = a.v; count = a.count; i = -1; }
 
 			public bool Next()
 			{
-				return ++i < array.count;
+				return ++i < count;
 			}
 			bool IEnumerator.MoveNext()
 			{
-				return ++i < array.count;
+				return ++i < count;
 			}
 
 			void IEnumerator.Reset()

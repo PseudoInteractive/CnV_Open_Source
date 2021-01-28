@@ -327,17 +327,17 @@ let  lastSentBD=0;
 		let result = 0;
 		for(let i=0;i<lg;++i)
 		{
-			result += bd[i].bid + bd[i].bl;
+			result +=result+ bd[i].bid + bd[i].bl;
 		}
 		return result;
 	}
 function bqChecksum(bd:jsonT.Bq[] ) : number
 	{
 		let lg = bd.length;
-		let result = lg*511;
+		let result = 1;
 		for(let i=0;i<lg;++i)
 		{
-			result += Number(bd[i].bid); // bid is unique
+			result += result + Number(bd[i].bid); // bid is unique
 		}
 		return result;
 	}
@@ -558,88 +558,88 @@ function decwdata(data) {
 //}
 
 
-function _pleaseNoMorePrefilters() { }
+//function _pleaseNoMorePrefilters() { }
 
-function OptimizeAjax()
-{
+//function OptimizeAjax()
+//{
 
-//	priorPrefilter
-	jQuery.ajaxPrefilter(  (A7U, n7U, xhr)=> {
-	//	xhr.setRequestHeader("pp-ss", ppss);
-		if (ppdt['opt'][67] !== undefined)
-		{
-			let cookie = (ppdt['opt'][67] as any as string).substring(0, 10);
-			xhr.setRequestHeader("Content-Encoding" , cookie);
-		}
-	});
-	//jQuery.ajaxSetup({dataType:"nada" } )
-	jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;;
-	//setTimeout(function () {
-	//	(function (open_2) {
-	//		/**
-	//		 * @param {string=} p0
-	//		 * @param {string=} p1
-	//		 * @param {(boolean|null)=} p2
-	//		 * @param {(null|string)=} p3
-	//		 * @param {(null|string)=} p4
-	//		 * @return {void}
-	//		 */
-	//		XMLHttpRequest.prototype.open = function () {
-	//			this.addEventListener("readystatechange", function () {
-	//				//console.log("Change: " + this.readyState + " " + this.responseURL);
-	//				if (this.readyState == 4) {
-	//					__avatarAjaxDone(this.responseURL, this.response);
+////	priorPrefilter
+//	jQuery.ajaxPrefilter(  (A7U, n7U, xhr)=> {
+//	//	xhr.setRequestHeader("pp-ss", ppss);
+//		if (ppdt['opt'][67] !== undefined)
+//		{
+//			let cookie = (ppdt['opt'][67] as any as string).substring(0, 10);
+//			xhr.setRequestHeader("Content-Encoding" , cookie);
+//		}
+//	});
+//	//jQuery.ajaxSetup({dataType:"nada" } )
+//	jQuery.ajaxPrefilter = _pleaseNoMorePrefilters;;
+//	//setTimeout(function () {
+//	//	(function (open_2) {
+//	//		/**
+//	//		 * @param {string=} p0
+//	//		 * @param {string=} p1
+//	//		 * @param {(boolean|null)=} p2
+//	//		 * @param {(null|string)=} p3
+//	//		 * @param {(null|string)=} p4
+//	//		 * @return {void}
+//	//		 */
+//	//		XMLHttpRequest.prototype.open = function () {
+//	//			this.addEventListener("readystatechange", function () {
+//	//				//console.log("Change: " + this.readyState + " " + this.responseURL);
+//	//				if (this.readyState == 4) {
+//	//					__avatarAjaxDone(this.responseURL, this.response);
 
 						
 						
-	//				}
-	//			}, false);
-	//			open_2.apply(this, arguments);
-	//		};
-	//	})(XMLHttpRequest.prototype.open);
-	//}, 100);
-	/*
-	__ajax=window['$']['ajax'];
-		try {
-			DoneWrapper.setup();
+//	//				}
+//	//			}, false);
+//	//			open_2.apply(this, arguments);
+//	//		};
+//	//	})(XMLHttpRequest.prototype.open);
+//	//}, 100);
+//	/*
+//	__ajax=window['$']['ajax'];
+//		try {
+//			DoneWrapper.setup();
 		
-		} catch(e) {
-			setTimeout(OptimizeAjax,1000);
-			return;
+//		} catch(e) {
+//			setTimeout(OptimizeAjax,1000);
+//			return;
 
-		}
-	window['$']['ajax']=avatarPost;
-	*/
-	//	$.['post']=avatarPost;
+//		}
+//	window['$']['ajax']=avatarPost;
+//	*/
+//	//	$.['post']=avatarPost;
 
-	//jQuery.ajaxPrefilter=_ajaxPrefilter;
-//_ajaxPrefilter('text',avatarPrefilter)
+//	//jQuery.ajaxPrefilter=_ajaxPrefilter;
+////_ajaxPrefilter('text',avatarPrefilter)
 
-/*		function Inner() {
-			try {
-				if(!ppdt) {
-					setTimeout(Inner,500);
-					return;
-				}
+///*		function Inner() {
+//			try {
+//				if(!ppdt) {
+//					setTimeout(Inner,500);
+//					return;
+//				}
 
-				let encodingKey=(ppdt['opt'][67] as any as String).substring(0,10);
+//				let encodingKey=(ppdt['opt'][67] as any as String).substring(0,10);
 
 
-				jQuery.ajaxSetup({
-					global: true,dataType: "text",enctype:'application/x-www-form-urlencoded; charset=UTF-8'
-					,headers: { "pp-ss": "0","Content-Encoding": encodingKey } });
-			}
-			catch(e)
-			{
-				console.log(e);
-				setTimeout(Inner,500);
-				return;
-			}
-		}
-		Inner();
-*/
+//				jQuery.ajaxSetup({
+//					global: true,dataType: "text",enctype:'application/x-www-form-urlencoded; charset=UTF-8'
+//					,headers: { "pp-ss": "0","Content-Encoding": encodingKey } });
+//			}
+//			catch(e)
+//			{
+//				console.log(e);
+//				setTimeout(Inner,500);
+//				return;
+//			}
+//		}
+//		Inner();
+//*/
 
-}
+//}
 
 function UpdateResearchAndFaith(): void {
 	/**
@@ -3102,7 +3102,7 @@ function avactor() {
 					res_count: [0, 0, 0, 0, 1, 150000, 220000, 150000, 350000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 150000, 350000]
 				}, {
 					name: "2 sec vanqs",
-					string: "[ShareString.1.3]:########################BBB--JX#-------#####BGBG--PP#--------###-BBBBB-MS#---------##-BGBGB--H#---------##-BGBGB#######------##-ZBB-##BBBBB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBBBBBGB#----#######BGBGTGBGB#######----#BGBBBBBGB#----##----#BGBGBGBGB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
+					string: "[ShareString.1.3]:########################BBB---X#-------#####BGBG--PP#--------###-BBBBB--S#---------##-BGBGB--H#---------##-BGBGB#######------##-ZBB-##BBBBB##-----##----##BBGBGBB##----##----#BGBGBGBGB#----##----#BGBBBBBGB#----#######BGBGTGBGB#######----#BGBBBBBGB#----##----#BGBGBGBGB#----##----##BBGBGBB##----##-----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
 					remarks: "vanqs",
 					notes: "264000 vanqs @ 6 days",
 					troop_count: [0, 0, 0, 0, 0, 264000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

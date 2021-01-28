@@ -600,7 +600,7 @@ namespace COTG.Game
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
 			SpotTab.TouchSpot(cid, mod, true);
 
-			if (mod.IsShiftAndControl() && Player.isAvatar)
+			if (mod.IsShiftAndControl() && Player.isAvatarOrTest)
 			{
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
@@ -617,7 +617,7 @@ namespace COTG.Game
 						str = $"[ShareString.1.3]{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
 
-					Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
+				//	Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
 				});
 			}
 		}
@@ -650,7 +650,7 @@ namespace COTG.Game
 		}
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
-			if (!Discord.isValid)
+			if (!Discord.isValid && !Player.isAvatarOrTest)
 			{
 				classification = Classification.missing;
 				return new ClassificationExtended() { classification = classification };

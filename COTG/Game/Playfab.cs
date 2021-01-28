@@ -100,7 +100,13 @@ namespace COTG.Game
 						//return;
 					}
 				}
+				// wait until our alliance is fetched
+				while(!Alliance.diplomacyFetched)
 				{
+					await Task.Delay(2500);
+				}
+			
+				{ 
 					var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
 					if (group.Error != null)
 					{

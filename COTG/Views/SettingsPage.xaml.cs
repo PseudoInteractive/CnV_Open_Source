@@ -704,7 +704,7 @@ namespace COTG.Views
 				var result = await instance.ShowAsync2();
 				if (!instance.visitToken.IsNullOrEmpty())
 				{
-					Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
+					//Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
 				}
 
 				SettingsPage.SaveAll();

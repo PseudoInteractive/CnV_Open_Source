@@ -130,11 +130,16 @@ namespace COTG.Draw
 					{
 						for (var cx = span0; cx <= span1; ++cx)
 						{
+							var bspot = City.XYToId((cx, cy));
+							if (!CityBuild.IsBuildingSpot(bspot) || (cx==0&&cy==0) )
+								continue; // wall
+
 							(var bid,var bd) = build.BFromOverlay((cx, cy));
-							var current =  GetBuilding((cx, cy));
+							var current =  GetBuilding(bspot);
 							var currentBid = current.isBuilding ? current.def.bid : 0;
 							if (currentBid == bid)
 								continue;
+
 							if(bid==0)
 							{
 								bid = 443 + 8 * 4; // X mark
@@ -147,11 +152,15 @@ namespace COTG.Draw
 							var u0 = iconId.x * duDt;
 							var v0 = iconId.y * dvDt;
 							var cs = CityPointToQuad(cx, cy);
-							var cm = 0.5f.Lerp(cs.c0, cs.c1);
-							var shadowOffset = new Vector2(4.0f, 4.0f);
-							draw.AddQuad(Layer.tileCity + 1, buildingShadows, cs.c0+shadowOffset,cm+shadowOffset, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), new Color(0,0,0,iAlpha*3/4), (zBase, zBase, zBase, zBase)); // shader does the z transform
+							var _c0 = 0.25f.Lerp(cs.c0, cs.c1);
+							var _c1 = 0.75f.Lerp(cs.c0, cs.c1);
+							var shadowOffset = new Vector2(5.0f, 5.0f);
+							var off = (bspot.BSpotToRandom() + animationT * 0.245f);
+							var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 
-							draw.AddQuad(Layer.tileCity+2, buildingAtlas, cs.c0, cm, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+							draw.AddQuad(Layer.tileCity + 1, buildingShadows, _c0+shadowOffset,_c1+shadowOffset, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), new Color(0,0,0,iAlpha*7/8).Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+
+							draw.AddQuad(Layer.tileCity+2, buildingAtlas, _c0, _c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
 							
 						}
 					}

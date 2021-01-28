@@ -180,7 +180,7 @@ namespace COTG.Game
 				if (MainPage.expandedCity!= null)
 					MainPage.expandedCity.ToggleDungeons(MainPage.instance.cityGrid,true,false);
 			}
-            if(  ((shiftPressed&&controlPressed) ^ Player.isAvatar))
+            if(  Player.isAvatarOrTest)
             {
                 await Task.Delay(1000);
                 await city.SuperRaid();

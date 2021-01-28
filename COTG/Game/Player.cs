@@ -26,8 +26,10 @@ namespace COTG.Game
 
 
         public static bool isAvatar => myName=="Avatar";
+		public static bool isTest => myName == "KittyKat";
+		public static bool isAvatarOrTest => isAvatar||isTest;
 
-        public string allianceName => Alliance.IdToName(alliance);
+		public string allianceName => Alliance.IdToName(alliance);
 
         public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();

@@ -14,11 +14,16 @@ namespace COTG.JSON
 		public long bidHash; // building id hash, generated for each building in the commnad queue
 		public int btype; // This is the "proto" member of buildingDef associated with brep
 		public int bspot; // location
-		public int brep; // building id type
+		public int brep; // bid type
 		public byte slvl;
 		public byte elvl;
 		public byte pa; // pa=1 is queued normally, pa=0 is not paid
-/*	"bq": [
+
+		public bool isRes => BuildingDef.IsRes(brep);
+		public bool isDemo => elvl == 0;
+		public bool isBuild => slvl == 0;
+
+		/*	"bq": [
             {
                 "bid": 83072020,
                 "btype": 455,

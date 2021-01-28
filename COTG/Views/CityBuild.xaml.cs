@@ -38,9 +38,13 @@ namespace COTG.Views
 		public static int quickBuildId;
 		public static CityBuild instance;
 
-		public static ushort[] outerTowerSpots = {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63};
-		public static ushort[] innerTowerSpots = { 113, 117, 173, 257, 323, 327, 183, 267 };
-		public static ushort[] wallSpots = { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 };
+		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
+		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
+		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
+
+		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot));
+		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
+		public static bool IsWallSpot(int spot) => wallSpots.Contains((ushort)spot);
 
 		public enum Action
 		{
@@ -301,7 +305,7 @@ namespace COTG.Views
 			var id = XYToId(selected);
 			var sel = GetBuilding(id);
 			var lvl = sel.bl;
-			var def = sel.def;
+			
 			// check for queued upgrades
 			for (var it = buildQueue.iterate; it.Next();)
 			{
@@ -336,7 +340,11 @@ namespace COTG.Views
 
 		public static void Demolish((int x, int y) building)
 		{
-			var id = XYToId(building);
+			Demolish(building);
+		}
+
+		public static void Demolish(int id)
+		{
 			var sel = GetBuilding(id);
 			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
 			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
@@ -348,6 +356,18 @@ namespace COTG.Views
 			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
 			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
 		}
+		public static void Build(int id, int bid)
+		{
+			JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
+
+			// todo: btype
+			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+		}
+		public static void Build((int x, int y) cc, int bid)
+		{
+			Build(XYToId(cc), bid);
+		}
+
 
 		private void Downgrade_Click(object sender, RoutedEventArgs e)
 		{
@@ -560,14 +580,44 @@ namespace COTG.Views
 							// case 1:  nothing here, add building
 							if (b.id == 0)
 							{
-
+								var counts = CountBuildings();
 								// see if we can re-use one
 								if (desBid != 0)
 								{
 									if (takeScore > 0)
 									{
-										Note.Show($"Found and unneeded {desName}, moving it here");
+										Note.Show($"Found an unneeded {desName}, moving it here");
 										MoveBuilding(takeFrom, bspot);
+										break;
+									}
+									if (counts.count >= counts.max)
+									{
+										if (buildQueue.count <= buildQMax - 2)
+										{
+											// Is there a cabin to remove?
+											var buildings = build.buildings;
+											for (int spot = 0; spot < citySpotCount; ++spot)
+											{
+												if (buildings[spot].def.bid == bidCottage)
+												{
+													// is it not being modified?
+													if (buildQueue.Any(a => a.bspot == spot))
+														continue;
+													Note.Show("Demolising a Cottage to make room");
+													Demolish(spot);
+													break;
+												}
+											}
+										}
+
+									}
+
+								}
+								else
+								{
+									if(counts.count >= counts.max)
+									{
+										Note.Show("City is full");
 										break;
 									}
 								}
@@ -578,12 +628,12 @@ namespace COTG.Views
 										break;
 									}
 
-									else  if (desBid == 0)
+									if (desBid == 0)
 										Note.Show($"No building is wanted here, how about a cottage instead?");
 									else
 										Note.Show($"Building {desName}");
 
-									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" }); // 0 is build
+									Build(cc,desBid == 0 ? bidCottage : desBid);
 								}
 							}
 							else if (b.isRes)
@@ -601,7 +651,7 @@ namespace COTG.Views
 									}
 									Demolish(cc);
 									// Test!
-									JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
+									//JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
 								}
 							}
 							else
@@ -676,8 +726,7 @@ namespace COTG.Views
 
 						if (sel != 0)
 						{
-
-							JSClient.view.InvokeScriptAsync("buildop", new[] { sel.ToString(), bspot.ToString(), "0" }); // 0 is build
+							Build(bspot,sel);
 							buildQueue.Add(new BuildQueueItem() { bspot = bspot, brep = sel, slvl = 0, elvl = 1 });
 							break;
 						}
