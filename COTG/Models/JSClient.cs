@@ -52,7 +52,7 @@ namespace COTG
 
 
 		//	public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36 Edg/88.0.705.49";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
@@ -63,21 +63,21 @@ namespace COTG
 		public static ConcurrentBag<HttpClient> clientPool;
 		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
 		static HttpClient _downloadImageClient;
-		public static HttpClient downloadImageClient
-		{
-			get
-			{
-				if (_downloadImageClient == null)
-				{
-					_downloadImageClient = new HttpClient();
-					_downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
-					_downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
-					_downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
-					_downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-				}
-				return _downloadImageClient;
-			}
-		}
+		//public static HttpClient downloadImageClient
+		//{
+		//	get
+		//	{
+		//		if (_downloadImageClient == null)
+		//		{
+		//			_downloadImageClient = new HttpClient();
+		//			_downloadImageClient.DefaultRequestHeaders.Accept.TryParseAdd("image/png, image/svg+xml, image/*; q=0.8, */*; q=0.5");
+		//			_downloadImageClient.DefaultRequestHeaders.Referer = httpsHost;
+		//			_downloadImageClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName(httpsHost.Host);
+		//			_downloadImageClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+		//		}
+		//		return _downloadImageClient;
+		//	}
+		//}
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
 		{
@@ -337,7 +337,7 @@ namespace COTG
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});
 				}
-				App.SetupCoreWindowInputHooks();
+			//	App.SetupCoreWindowInputHooks();
 			}
 			catch (Exception e)
 			{
@@ -694,28 +694,28 @@ namespace COTG
 			}
 
 		}
-		public static async void ShowClearMenu(int cityId)
-		{
-			try
-			{
-				App.DispatchOnUIThreadSneaky(async () =>
-				{
+		//public static async void ShowClearMenu(int cityId)
+		//{
+		//	try
+		//	{
+		//		App.DispatchOnUIThreadSneaky(async () =>
+		//		{
 
-					if (City.StBuild(cityId, false).changed)
-					{
-						await view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
-						await Task.Delay(1000);
-					}
-					view.InvokeScriptAsync("clearres", new string[] { (cityId).ToString() });
-				});
+		//			if (City.StBuild(cityId, false).changed)
+		//			{
+		//				await view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
+		//				await Task.Delay(1000);
+		//			}
+		//			view.InvokeScriptAsync("clearres", new string[] { (cityId).ToString() });
+		//		});
 
-			}
-			catch (Exception e)
-			{
-				Log(e);
-			}
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		Log(e);
+		//	}
 
-		}
+		//}
 		public static async void ClearCenter(int cid)
 		{
 			Note.Show($"{cid.CidToStringMD()} Clear Center Res");
@@ -1219,15 +1219,15 @@ namespace COTG
 
 						httpsHostString = $"https://{args.Uri.Host}";
 						httpsHost = new Uri(httpsHostString);
-
-						//  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
-						//    httpFilter.AllowAutoRedirect = true;
+						httpFilter = new HttpBaseProtocolFilter();
+					//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
+						    httpFilter.AllowAutoRedirect = true;
 						//                         httpFilter.ServerCredential =
 
 
 						//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-						//	httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
-						//	httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+							httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+							httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 						//						if (subId == 0)
 						//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
 						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
@@ -1244,9 +1244,9 @@ namespace COTG
 
 						//                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
 						//                       httpFilter.AllowUI = true;
-						// httpFilter.AutomaticDecompression = true;
+						 httpFilter.AutomaticDecompression = true;
 
-						httpFilter = new HttpBaseProtocolFilter();
+
 						httpFilter.MaxVersion = HttpVersion.Http20;
 
 						//                        httpFilter.User.
@@ -1274,11 +1274,12 @@ namespace COTG
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
 							httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-							httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", ppss.ToString());
+							if(ppss!= 0)
+								httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", ppss.ToString());
 
-							httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 							//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
-
+							httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Pragma", "no-cache");
 
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
@@ -1328,45 +1329,45 @@ namespace COTG
 			//await LoadImage(b,dir,name);
 			//return b;
 		}
-		async static Task LoadImage(BitmapImage b, string dir, string name)
-		{
+		//async static Task LoadImage(BitmapImage b, string dir, string name)
+		//{
 
-			try
-			{
+		//	try
+		//	{
 
-				var uri = new Uri(httpsHost, dir + name);
-				using (var response = await downloadImageClient.GetAsync(uri))
-				{
-					response.EnsureSuccessStatusCode();
-					var buff = await response.Content.ReadAsBufferAsync();
+		//		var uri = new Uri(httpsHost, dir + name);
+		//		using (var response = await downloadImageClient.GetAsync(uri))
+		//		{
+		//			response.EnsureSuccessStatusCode();
+		//			var buff = await response.Content.ReadAsBufferAsync();
 
-					var temp = new byte[buff.Length];
+		//			var temp = new byte[buff.Length];
 
-					var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff);
-					dataReader.ReadBytes(temp);
+		//			var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff);
+		//			dataReader.ReadBytes(temp);
 
-					// Get the path to the app's Assets folder.
-					//  string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-
-
-					// Get the folder object that corresponds to this absolute path in the file system.
-					// StorageFolder folder = await DownloadsFolder.CreateFolderAsync(@"\cotg");
-					var file = await DownloadsFolder.CreateFileAsync(name);
-					await FileIO.WriteBytesAsync(file, temp);
+		//			// Get the path to the app's Assets folder.
+		//			//  string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 
 
-				}
-			}
-			catch (Exception ex)
-			{
-				Log(ex);
-			}
+		//			// Get the folder object that corresponds to this absolute path in the file system.
+		//			// StorageFolder folder = await DownloadsFolder.CreateFolderAsync(@"\cotg");
+		//			var file = await DownloadsFolder.CreateFileAsync(name);
+		//			await FileIO.WriteBytesAsync(file, temp);
 
-		}
-		private static void HttpFilter_ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs args)
-		{
-			Log(args.ToString());
-		}
+
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Log(ex);
+		//	}
+
+		//}
+		//private static void HttpFilter_ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs args)
+		//{
+		//	Log(args.ToString());
+		//}
 
 		static private void View_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
 		{
@@ -1430,7 +1431,7 @@ namespace COTG
 											   foreach (var httpClient in clientPool)
 											   {
 
-												   httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+												   
 								//				   if (subId == 0)
 									//				   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
 											   }

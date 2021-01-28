@@ -1,4 +1,5 @@
-﻿jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
+﻿
+jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 
 	jQuery.fn[ name ] = function() {
 		var args = Array.prototype.slice.call( arguments, 0 );

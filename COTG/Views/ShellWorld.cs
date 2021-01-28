@@ -503,6 +503,18 @@ namespace COTG.Views
 			//}
 
 			var pt = e.CurrentPoint;
+
+			// wheel over javascript
+			if (TryPostJSMouseEvent(null,0))
+			{
+				//				isOverPopup = true;
+				e.Handled = true;
+				ShellPage.SetWebViewHasFocus(true);
+				return;
+			}
+
+
+
 			var wheel = pt.Properties.MouseWheelDelta;
 			var dZoom = wheel.SignOr0() * 0.0625f + wheel * (1.0f / 1024.0f);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
