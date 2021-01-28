@@ -40,7 +40,8 @@ namespace COTG.JSON
 				b.id = counter;
 				idToBid[counter] = i.Value;
 				// use the first one for the prototype?
-				prototypes[b.Proto] = b;
+				if(!prototypes.ContainsKey(b.Proto))
+					prototypes[b.Proto] = b;
 				++counter;
 			}
 			// all extra buildings are assigned to "None" this may not be needed

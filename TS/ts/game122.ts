@@ -21508,7 +21508,7 @@ function outer() {
 
 
 
-		$.ajaxSetup({ global: !"1", cache: false });
+		$.ajaxSetup({ global: false, cache: false });
 		$(document)
 			.ready(function () {
 				$(__s[T6p ^ 0])

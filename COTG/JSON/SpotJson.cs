@@ -2,6 +2,9 @@
 using System.Text.Json.Serialization;
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using Windows.Web.Http;
+using System.Text;
 
 namespace COTG.DB
 {
@@ -16,8 +19,67 @@ namespace COTG.DB
 		public int t { get; set; } // time last seen
 								   // todo: last action
 		public string tk { get; set; } // token
-		public string ck { get; set; } // cookie
+		public string ck { get; set; } // cookies
 
+	}
+	public static class CookieDB
+	{
+		
+		public static bool IsSession(string name) => name == "sec_session_id";
+
+		public static string Apply(string _cookies)
+		{
+			var cookies = _cookies.Split(';');
+			string rv = string.Empty;
+			{
+				JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
+			}
+			foreach (var c in cookies)
+			{
+				var split = 1;
+				int count = c.Length;
+				for(int i=1;i<count-1;++i)
+				{
+					if(c[i] == '=')
+					{
+						split = i;
+						break;
+					}	
+				}
+				var name = c.Substring(0, split).Trim();
+				var value = c.Substring(split + 1, count - (split + 1)).Trim() ;
+				var isSession = IsSession(name);
+				var isHttpOnly = isSession | (name == "remember_me");
+				if (isSession)
+					rv = value;
+
+				JSClient.SetCookie(name, value, isSession, isHttpOnly);
+
+			}
+			return rv;
+		}
+		public static string Serialize(HttpCookieManager cookieManager)
+		{
+			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+			var sb = new StringBuilder();
+
+			bool isFirst = true;
+			foreach (var c in cookies)
+			{
+				if(isFirst)
+				{
+					isFirst = false;
+				}
+				else
+				{
+					sb.Append(';');
+				}
+				sb.Append(c.Name);
+				sb.Append('=');
+				sb.Append(c.Value);
+			}
+			return sb.ToString();
+		}
 	}
 
 	public sealed class SpotDB

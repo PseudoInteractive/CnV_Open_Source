@@ -59,6 +59,13 @@ namespace COTG.Game
 		public const short bidTriariPost = 539;
 		public const short bidRangerPost = 543;
 		public const short bidSentinelPost = 547;
+		public const short bidPriestessPost = 551;
+		public const short bidBallistaPost = 555;
+		public const short bidEquineBarricade = 559;
+		public const short bidRuneBarricade = 563;
+		public const short bidSnagBarricade = 567;
+		public const short bidVeiledBarricade = 571;
+
 
 		public const short bidStone = 451;
 		public const short bidIron = 452;
@@ -809,7 +816,7 @@ namespace COTG.Game
 				}
 				if (bd.isTownHall)
 				{
-					max = bi.bl * 100;
+					max = bi.bl * 10;
 					continue;
 				}
 				++count;

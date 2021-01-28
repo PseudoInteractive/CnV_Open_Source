@@ -185,7 +185,7 @@ namespace COTG
 				if(p.pid ==pid)
 				{
 
-					SetPlayer(pid,p.token, p.secSessionId, cid, p.name);
+					SetPlayer(pid,p.token, p.cookies, cid, p.name);
 					return;
 				}
 			}
@@ -205,7 +205,7 @@ namespace COTG
 		//	return ""; // error!
 		//}
 		static int inTransitionTo;
-		public static void SetPlayer(int pid,string token, string secSessionId, int cid,string name)
+		public static async void SetPlayer(int pid,string token, string cookies, int cid,string name)
 		{
 			// already set
 			if (jsVars.token == token)
@@ -213,37 +213,54 @@ namespace COTG
 			if (inTransitionTo != 0)
 				return;
 			inTransitionTo = pid;
+
 			Note.Show($"Entering {name}'s City");
+
+			
 			Log($"ChangePlayer:{name}");
 			{
-				var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-				foreach (var c in cookies)
+				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+				foreach (var c in _cookies)
 				{
 					Log($"{c.Name} {c.Domain} {c.Path} {c.Value}");
 				}
 			}
-			SetSessionCookie(secSessionId);
+
+			var secSessionId = CookieDB.Apply(cookies);
+
+			
 			{
-				var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-				foreach (var c in cookies)
+				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+				foreach (var c in _cookies)
 				{
 					Log($"{c.Name} {c.Domain} {c.Path} {c.Value} {c.Secure} {c.HttpOnly}");
 				}
 			}
+		//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
+		//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
 			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
 		}
 
-		private static void SetSessionCookie(string secSessionId)
+		public static void SetCookie(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
 		{
-			var cookie = new HttpCookie("sec_session_id", ".crownofthegods.com", "/");
+			var cookie = new HttpCookie(name, ".crownofthegods.com", "/");
 			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
-			cookie.Secure = true;
-			cookie.HttpOnly = true;
-
-
+			if (httpOnly)
+			{
+				cookie.Secure = true;
+				cookie.HttpOnly = true;
+			}
+			
+			if(!session)
+			{
+				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
+			}	
 			cookieManager.DeleteCookie(cookie);
-			cookie.Value = secSessionId;
-			cookieManager.SetCookie(cookie);
+			if (!clearOnly)
+			{
+				cookie.Value = value;
+				cookieManager.SetCookie(cookie);
+			}
 		}
 
 		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string s, string ppdt)
@@ -653,6 +670,7 @@ namespace COTG
 					var city = City.GetOrAddCity(cityId);
 					if (city.pid != Player.activeId)
 					{
+
 						// need to switch player
 						JSClient.SetPlayer(city.pid, cityId);
 					}
@@ -1410,7 +1428,7 @@ namespace COTG
 							   {
 								   var jso = jsp.Value;
 
-								   var s = jso.GetString("s");// GetSecSessionId();
+								   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
 								   var token = jso.GetString("token");
 								   var raidSecret = jso.GetString("raid");
 								   var agent = jso.GetString("agent");
@@ -1846,11 +1864,11 @@ namespace COTG
 						   {
 								   Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
 								   inTransitionTo = 0;
-								   // only need to restore cookie
-								   var s = jsp.Value.GetAsString("s");
+								   // only need to restore cookies
+								   CookieDB.Apply(jsVars.s); 
 
-								   SetSessionCookie(s);
-								   
+								   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.myName);
+
 								   break;
 						   }
 						   case "c":

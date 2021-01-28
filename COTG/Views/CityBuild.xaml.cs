@@ -98,7 +98,7 @@ namespace COTG.Views
 			townhall,
 			empty,
 			res,
-
+			tower,
 			invalid
 		}
 		public static MenuType menuType = MenuType.invalid;
@@ -183,6 +183,21 @@ namespace COTG.Views
 
 
 					break;
+				case MenuType.tower:
+					Item(buildMenu, 0).SetBid(bidSentinelPost);
+					Item(buildMenu, 1).SetBid(bidRangerPost);
+					Item(buildMenu, 2).SetBid(bidTriariPost);
+					Item(buildMenu, 3).SetBid(bidPriestessPost);
+					Item(buildMenu, 4).SetBid(bidBallistaPost);
+					Item(buildMenu, 5).SetBid(bidEquineBarricade);
+					Item(buildMenu, 6).SetBid(bidRuneBarricade);
+					Item(buildMenu, 7).SetBid(bidVeiledBarricade);
+
+
+
+
+					break;
+
 				case MenuType.res:
 					Item(buildMenu, 0).SetAction(actionDemo);
 					for (int i = 0; i < 7; ++i)
@@ -340,7 +355,7 @@ namespace COTG.Views
 
 		public static void Demolish((int x, int y) building)
 		{
-			Demolish(building);
+			Demolish(XYToId(building));
 		}
 
 		public static void Demolish(int id)
@@ -817,10 +832,18 @@ namespace COTG.Views
 				//i.downgrade.IsEnabled = b.bl > 1;
 				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
 				if (!isRight)
+				{
 					singleClickAction = Action.pending;
+					if(CityBuild.IsWallSpot(bspot))
+					{
+						bspot = 0;
+						cc = (span0, span0);
+					}
+				}
 				{
 					selected = cc;
 					var type = isRight ? MenuType.quickBuild :
+						CityBuild.IsTowerSpot(bspot) ? MenuType.tower : 
 						b.id == 0 ? MenuType.empty :
 						b.bl == 0 ? MenuType.res :
 						d.bid == bidTownHall ? MenuType.townhall :

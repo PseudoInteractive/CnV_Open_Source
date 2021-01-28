@@ -1194,7 +1194,7 @@ namespace COTG.Views
 			{
 				var s = e.AddedItems[0] as string;
 				var friend = Array.Find(PlayerPresence.all,f => f.name == s);
-				JSClient.SetPlayer(friend.pid,friend.token, friend.secSessionId,friend.cid, friend.name);
+				JSClient.SetPlayer(friend.pid,friend.token, friend.cookies,friend.cid, friend.name);
 
 			}
 		}

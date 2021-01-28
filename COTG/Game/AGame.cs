@@ -317,7 +317,7 @@ namespace COTG
 				{
 					if (!viewHovers.Exists(a => a.cid == ShellPage.lastCanvasC))
 					{
-						viewHovers.Add((ShellPage.lastCanvasC, 1.0f / 1024.0f, 0.0f));
+						viewHovers.Add((ShellPage.lastCanvasC, 1.0f / 32.0f, 0.0f));
 					}
 				}
 				{
