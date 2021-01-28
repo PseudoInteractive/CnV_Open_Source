@@ -67207,7 +67207,7 @@ function bdChecksum(bd) {
     let lg = bd.length;
     let result = 0;
     for (let i = 0; i < lg; ++i) {
-        result += result + bd[i].bid + bd[i].bl;
+        result += (bd[i].bid + bd[i].bl) * (i + 1);
     }
     return result;
 }
@@ -67215,7 +67215,7 @@ function bqChecksum(bd) {
     let lg = bd.length;
     let result = 1;
     for (let i = 0; i < lg; ++i) {
-        result += result + Number(bd[i].bid);
+        result += Number(bd[i].bid) * (i + 1);
     }
     return result;
 }

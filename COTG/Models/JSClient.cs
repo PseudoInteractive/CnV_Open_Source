@@ -1483,7 +1483,7 @@ namespace COTG
 								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,s, ppdt.ToString());
 
 
-								   UpdatePPDT(ppdt,true);
+								   UpdatePPDT(ppdt,false);
 								   
 								   break;
 							   }

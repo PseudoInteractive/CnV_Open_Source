@@ -327,7 +327,7 @@ let  lastSentBD=0;
 		let result = 0;
 		for(let i=0;i<lg;++i)
 		{
-			result +=result+ bd[i].bid + bd[i].bl;
+			result += (bd[i].bid + bd[i].bl)*(i+1);
 		}
 		return result;
 	}
@@ -337,7 +337,7 @@ function bqChecksum(bd:jsonT.Bq[] ) : number
 		let result = 1;
 		for(let i=0;i<lg;++i)
 		{
-			result += result + Number(bd[i].bid); // bid is unique
+			result += Number(bd[i].bid)*(i+1); // bid is unique
 		}
 		return result;
 	}

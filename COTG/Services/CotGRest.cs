@@ -218,7 +218,7 @@ namespace COTG.Services
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 
-					resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseHeadersRead);
+					resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
                     //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
                     //     Log($"req: {resp.RequestMessage.ToString()}");
                     //   if (resp.ExtendedError != null)
