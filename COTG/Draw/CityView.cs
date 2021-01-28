@@ -155,7 +155,7 @@ namespace COTG.Draw
 							var _c0 = 0.25f.Lerp(cs.c0, cs.c1);
 							var _c1 = 0.75f.Lerp(cs.c0, cs.c1);
 							var shadowOffset = new Vector2(5.0f, 5.0f);
-							var off = (bspot.BSpotToRandom() + animationT * 0.245f);
+							var off = (bspot.BSpotToRandom() + animationT * 0.3245f);
 							var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 
 							draw.AddQuad(Layer.tileCity + 1, buildingShadows, _c0+shadowOffset,_c1+shadowOffset, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), new Color(0,0,0,iAlpha*7/8).Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
@@ -186,7 +186,7 @@ namespace COTG.Draw
 
 				if (mat != null)
 				{
-					var off = (animationT * 0.256f);
+					var off = (animationT * 0.3256f);
 					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 					var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
 					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
@@ -214,7 +214,7 @@ namespace COTG.Draw
 
 				if (mat != null)
 				{
-					var off = (animationT * 0.257f);
+					var off = (animationT * 0.3257f);
 					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 					var cs = CityPointToQuad(hovered.x, hovered.y, 1.2f);
 					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha/2).Scale(cScale), PlanetDepth, zHover);
@@ -227,7 +227,7 @@ namespace COTG.Draw
 					var sel = CityBuild.quickBuildId;
 					if (sel != 0)
 					{
-						DrawBuilding(hovered,iAlpha, sel, animationT * 0.247f);
+						DrawBuilding(hovered,iAlpha, sel, animationT * 0.3247f);
 
 					}
 				}
@@ -236,7 +236,7 @@ namespace COTG.Draw
 
 					
 				
-						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.249f);
+						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
 
 					
 				}
@@ -250,7 +250,7 @@ namespace COTG.Draw
 					continue;
 				var cc = IdToXY(bspot);
 				var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
-				var off = (bspot.BSpotToRandom() + animationT*0.25f);
+				var off = (bspot.BSpotToRandom() + animationT*0.325f);
 				var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 				if (r.elvl == 0)
 				{

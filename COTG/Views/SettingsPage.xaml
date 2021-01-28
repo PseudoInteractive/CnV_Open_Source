@@ -108,13 +108,50 @@
 						  IsChecked="False"
 						  IsThreeState="False" />
 			</wct:WrapPanel>
-			<wct:WrapPanel Orientation="Horizontal"
-						   Margin="4">
-				<Button Content="Update Citylists"
-						Click="SetContinentCityLists"
+
+			<TextBlock Text="City Lists"
+						   Style="{ThemeResource SubtitleTextBlockStyle}"
+						   Margin="4,4,4,4" />
+			<StackPanel Orientation="Vertical"
+						   Margin="4" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}">
+				
+					<Button Content="Update Citylists"
+						Click="UpdateCityLists"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="8"
 						MinWidth="120" />
+				<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+
+					<ToggleSwitch Header="Offense"
+						IsOn="{x:Bind views:SettingsPage.cityListOffense, Mode=TwoWay}"
+						
+						Margin="4"
+						MinWidth="60" />
+
+					<ToggleSwitch Header="Defense"
+						IsOn="{x:Bind views:SettingsPage.cityListDefense, Mode=TwoWay}"
+						Margin="4"
+							MinWidth="60" />
+					<ToggleSwitch Header="Shippers"
+						IsOn="{x:Bind views:SettingsPage.cityListShippers, Mode=TwoWay}"
+						Margin="4"
+						MinWidth="60" />
+					<ToggleSwitch Header="Galleys"
+						IsOn="{x:Bind views:SettingsPage.cityListGalleys, Mode=TwoWay}"
+						
+						Margin="4"
+						MinWidth="60" />
+					<ToggleSwitch Header="Warships"
+						IsOn="{x:Bind views:SettingsPage.cityListWarship, Mode=TwoWay}"
+						Margin="4"
+						MinWidth="60" />
+				</wct:WrapPanel>
+			</StackPanel>
+
+			<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+				
 				<Button Content="Watch incoming for players"
 						Click="WatchIncomingForPlayers"
 						Style="{ThemeResource ButtonRevealStyle}"

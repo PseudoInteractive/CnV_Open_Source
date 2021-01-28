@@ -23,7 +23,18 @@ namespace COTG
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
-        public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
+  
+		public static bool ContainsAny(this string s, string[] tags)
+		{
+			foreach (var a in tags)
+			{
+				if (s.Contains(a))
+					return true;
+			}
+			return false;
+		}
+		
+		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
 		public static string FormatTimeDefault(this DateTimeOffset m) => m.ToString(defaultTimeFormat);
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseTimeFormat);
 		public static string FormatSkipDateIfToday(this DateTimeOffset m)

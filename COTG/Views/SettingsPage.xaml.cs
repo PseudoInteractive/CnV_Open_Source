@@ -111,6 +111,11 @@ namespace COTG.Views
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 25;
 		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
+		public static bool cityListWarship=true;
+		public static bool cityListShippers = true;
+		public static bool cityListDefense = true;
+		public static bool cityListOffense = true;
+		public static bool cityListGalleys = true;
 
 		int uiLighting
 		{
@@ -319,7 +324,7 @@ namespace COTG.Views
 		}
 
 		private static string _versionDescription;
-
+		
 
 		public string VersionDescription
 		{
@@ -469,7 +474,7 @@ namespace COTG.Views
 
 		private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		private void SetContinentCityLists(object sender, RoutedEventArgs e)
+		private void UpdateCityLists(object sender, RoutedEventArgs e)
 		{
 			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
 			   {
@@ -501,25 +506,40 @@ namespace COTG.Views
 						   }
 					   }
 				   }
+				   var global = new List<CityList.GroupDef>();
+				   var perContinent = new List<CityList.GroupDef>();
+
+				   if(SettingsPage.cityListGalleys)
+					   global.Add(CityList.gdGalley);
+				   if (SettingsPage.cityListOffense)
+					   perContinent.Add(CityList.gdOffense);
+				   if (SettingsPage.cityListDefense)
+					   perContinent.Add(CityList.gdDefense);
+				   if (SettingsPage.cityListShippers)
+					   global.Add(CityList.gdShipper);
+				   if (SettingsPage.cityListWarship)
+					   global.Add(CityList.gdWarship);
+
+
 				   foreach (var city in City.myCities)
 				   {
 					   COTG.Debug.Assert(city is City);
 
 					   var remarks = city.remarks.ToLower();
-					   foreach (var t in CityList.perContinentTags)
+					   foreach (var t in perContinent)
 					   {
-						   if (remarks.Contains(t))
+						   if (remarks.ContainsAny( t.tags))
 						   {
-							   var cl = CityList.GetForContinentAndTag(city.cont, t);
+							   var cl = CityList.GetForContinentAndTag(city.cont,t.name);
 							   if (cl.cities.Add(city.cid))
 								   changed.Add(city.cid);
 						   }
 					   }
-					   foreach (var t in CityList.globalTags)
+					   foreach (var t in global )
 					   {
-						   if (remarks.Contains(t))
+						   if (remarks.ContainsAny(t.tags))
 						   {
-							   var cl = CityList.GetOrAdd(t);
+							   var cl = CityList.GetOrAdd(t.name);
 							   if (cl.cities.Add(city.cid))
 								   changed.Add(city.cid);
 						   }

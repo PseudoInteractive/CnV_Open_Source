@@ -864,30 +864,50 @@ namespace COTG.Game
         public int count { get; set; }
 
     }
-    public class CityList
-    {
-        public string name { get; set; }
-        public int id { get; set; } // 0 is unassigned, others are pids
-        public HashSet<int> cities = new HashSet<int>(); // list of cities
-        public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
-        public CityList(string _name) { name = _name; id = AMath.random.Next(65536) + 10000; }
-        public CityList() { }
-        public static CityList Find(int id)
-        {
-            foreach (var c in all)
-                if (c.id == id)
-                    return c;
-            return null;
-        }
-        public static CityList Find(string name)
-        {
-            foreach (var c in all)
-                if (c.name == name)
-                    return c;
-            return null;
-        }
-        public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
-        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
+	public class CityList
+	{
+		public string name { get; set; }
+		public int id { get; set; } // 0 is unassigned, others are pids
+		public HashSet<int> cities = new HashSet<int>(); // list of cities
+		public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
+		public CityList(string _name) { name = _name; id = AMath.random.Next(65536) + 10000; }
+		public CityList() { }
+		public static CityList Find(int id)
+		{
+			foreach (var c in all)
+				if (c.id == id)
+					return c;
+			return null;
+		}
+		public static CityList Find(string name)
+		{
+			foreach (var c in all)
+				if (c.name == name)
+					return c;
+			return null;
+		}
+		public class GroupDef
+		{
+		
+			public string name;
+			public string[] tags; // OR tags
+
+			public GroupDef(string name, string[] tags)
+			{
+				this.name = name;
+				this.tags = tags;
+			}
+		}
+
+		public static GroupDef gdHubs = new GroupDef("Hubs", new[] { "hub" });
+		public static GroupDef gdShipper = new GroupDef("Shipper", new[]{"shipping","shipper"} );
+		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });
+		public static GroupDef gdGalley = new GroupDef("Galleys", new[] { "galley" });
+		public static GroupDef gdOffense = new GroupDef("Offense", new[] { "vanq", "sorc", "horse","druid", "scorp","warship" });
+		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt", "ranger","triari","priest","prae","arb","ballista" });
+
+//		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
+//        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
         public static CityList GetForContinent(int id) => GetOrAdd(id.ToString());
         public static CityList GetForContinentAndTag(int id,string tag) => GetOrAdd($"{id.ToString()} {tag}");
 
