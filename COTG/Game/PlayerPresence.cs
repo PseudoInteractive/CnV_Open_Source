@@ -30,7 +30,7 @@ namespace COTG.Game
 			{
 				name = Player.myName;
 				token = JSClient.jsBase.token;
-				cookies = JSClient.jsBase.s;
+				cookies = JSClient.jsBase.cookies;
 			}
 			else
 			{

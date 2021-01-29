@@ -389,7 +389,14 @@ namespace COTG.Game
 						var bl = bdi.GetAsInt("bl");
 						var bi = BuildingDef.BidToId(bid);
 
-						buildings[put] = new Building() { id = bi, bl = (byte)bl };
+						if ((put == 0) && (bid == 0))
+						{
+							buildings[put] = new Building() { id = BuildingDef.BidToId(bidWall), bl = 0 };
+						}
+						else
+						{
+							buildings[put] = new Building() { id = bi, bl = (byte)bl };
+						}
 						if (bid == bidCastle)
 						{
 							commandSlots = (byte)((bl + 5));

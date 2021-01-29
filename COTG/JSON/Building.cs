@@ -16,6 +16,7 @@ namespace COTG.JSON
 		public bool isEmpty => id == 0;
 		public bool isRes => id != 0 && bl == 0;
 		public BuildingDef def => BuildingDef.FromId(id);
+		public string name => def.Bn;
 		//[J("bu")] public long Bu { get; set; }
 	//	[J("bd")] public long Bd { get; set; }
 	//	[J("rt")] public long Rt { get; set; }

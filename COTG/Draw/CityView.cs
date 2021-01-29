@@ -19,6 +19,7 @@ using static COTG.CanvasHelpers;
 using Microsoft.Xna.Framework;
 using COTG.Views;
 using static COTG.Debug;
+using static COTG.Views.CityBuild;
 namespace COTG.Draw
 {
 	
@@ -52,6 +53,8 @@ namespace COTG.Draw
 		public static Material decalSelectBuilding;
 		public static Material decalSelectEmpty;
 		public static Vector2 half2 = new Vector2(0.5f, 0.5f);
+
+		public static float zHover => 1.0f / 64.0f * Views.SettingsPage.parallax;
 
 		public static (int x, int y) selected = invalidXY;
 		public static (int x, int y) hovered = invalidXY;
@@ -90,7 +93,6 @@ namespace COTG.Draw
 			var city = City.GetBuild();
 
 			var zBase = 0;
-			var zHover = 1.0f / 64.0f * Views.SettingsPage.parallax;
 			// selected
 
 			
@@ -197,19 +199,19 @@ namespace COTG.Draw
 			// hovered
 			if (hovered.IsValid())
 			{
-				var bi = GetBuilding(hovered);
-				var bd = bi.def;
+				var biHovered = GetBuilding(hovered);
+				var bdHovered = biHovered.def;
 
 				Material mat = CityBuild.action switch
 				{
 					CityBuild.Action.layout => decalBuildingValidMulti,
-					CityBuild.Action.build => (bd.id == 0) ? decalBuildingValid : decalSelectEmpty,
-					CityBuild.Action.destroy => (bd.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
+					CityBuild.Action.build => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty,
+					CityBuild.Action.destroy => (bdHovered.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
 					CityBuild.Action.move => selected.IsValid() ?
-						(bd.id == 0 ? decalMoveBuilding : decalBuildingInvalid)
-						: (bd.id == 0 ? decalSelectEmpty : decalMoveBuilding),
+						(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
+						: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
 					// create
-					_ => (bd.id == 0) ? decalBuildingValid : decalSelectEmpty
+					_ => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty
 				};
 
 				if (mat != null)
@@ -217,30 +219,103 @@ namespace COTG.Draw
 					var off = (animationT * 0.3257f);
 					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 					var cs = CityPointToQuad(hovered.x, hovered.y, 1.2f);
-					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha/2).Scale(cScale), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
 
 				}
 				// draw the quickbuild placeholder building
-				if (CityBuild.action == CityBuild.Action.build && bd.id == 0)
+				if (CityBuild.action == CityBuild.Action.build)
 				{
-					
-					var sel = CityBuild.quickBuildId;
-					if (sel != 0)
+					if (bdHovered.id == 0)
 					{
-						DrawBuilding(hovered,iAlpha, sel, animationT * 0.3247f);
 
+						var sel = CityBuild.quickBuildId;
+						if (sel != 0)
+						{
+							DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
+							ShellPage.toolTip = $"Click to place {bdHovered.Bn}";
+						}
+					}
+					else
+					{
+
+						ShellPage.toolTip = $"Spot is occupied";
 					}
 				}
-				else if (CityBuild.action == CityBuild.Action.move && bd.id == 0 && selected.IsValid())
+				else if (CityBuild.action == CityBuild.Action.move)
 				{
 
-					
-				
-						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+					if (selected.IsValid())
+					{
+						if (!IsBuildingSpot(hovered))
+						{
+							ShellPage.toolTip = $"Please do not build buildings on walls";
+						}
+						else
+						{
+							if (bdHovered.id == 0)
+							{
+								ShellPage.toolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
+								DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
 
-					
+
+							}
+							else
+							{
+								if (bdHovered.isRes)
+									ShellPage.toolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
+								else
+								{
+									ShellPage.toolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
+									DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+									// draw a move icond too
+								}
+							}
+						}
+
+					}
+					else
+					{
+						if (biHovered.isBuilding)
+						{
+							ShellPage.toolTip = $"Click to move {bdHovered.Bn}";
+						}
+						else
+						{
+							ShellPage.toolTip = $"Please Select a building to move";
+						}
+					}
 				}
+				else if (CityBuild.action == CityBuild.Action.none)
+				{
+					if (biHovered.isEmpty)
+					{
+						if (IsBuildingSpot(hovered))
+						{
+							ShellPage.toolTip = $"Left click to build something\nRight click to select a quick build tool";
+
+						}
+						else if (IsTowerSpot(hovered))
+						{
+							ShellPage.toolTip = $"Left click to build tower\nRight click to select a quick build tool";
+
+						}
+						else if (IsWallSpot(hovered))
+						{
+							ShellPage.toolTip = $"Left click to build wall\nRight click to select a quick build tool";
+						}
+						else
+						{
+							ShellPage.toolTip = $"Please don't left click here\nRight click to select a quick build tool";
+						}
+					}
+					else if (biHovered.isRes)
+					{
+						ShellPage.toolTip = $"Left click modify {bdHovered.Bn}, click click to select a quick build tool";
+					}
+				}
+
 			}
+
 			var processed = new HashSet<int>();
 			for (var it = buildQueue.iterate; it.Next();)
 			{
@@ -281,7 +356,7 @@ namespace COTG.Draw
 			}
 		}
 
-		private static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue)
+		private static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue, Material overlay=null)
 		{
 			const float zBase = 0.0f;
 			var iconId = BidToAtlas(bid);
@@ -292,6 +367,8 @@ namespace COTG.Draw
 			var off = randomValue;
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+			if(overlay!=null)
+				draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
 		}
 
 		public static void LoadContent()

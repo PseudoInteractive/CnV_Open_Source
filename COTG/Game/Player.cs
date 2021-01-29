@@ -21,7 +21,7 @@ namespace COTG.Game
 		public static int activeId;
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
-
+		public static int myTitle;
         public static int viewHover; // in the view menu
 
 
@@ -31,7 +31,9 @@ namespace COTG.Game
 
 		public string allianceName => Alliance.IdToName(alliance);
 
-        public static Dictionary<int, Player> all = new Dictionary<int, Player>();
+		public static object activePlayerName => IdToName(activeId);
+
+		public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static string IdToName(int id)
         {

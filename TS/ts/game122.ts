@@ -7422,6 +7422,7 @@ function BuildPopup(node:Element) : any
    return dest;
 }
 let tooltipped = null;
+let popupIds = ["tutorialPopup" ];
 let popupClasses =[ "atkpops","longmenu","popUpBox2","medpopupstyle","smallpopupstyle","popUpBox","obscuretop","longwindow"];
 var callSyncViewMode = debounce(DoSyncViewMode, 200);
 function DoSyncViewMode() {
@@ -7461,7 +7462,7 @@ function DoSyncViewMode() {
 				}
 
 			}
-			$(".atkpops,.longmenu,.popUpBox2").each(
+			$(".atkpops,.longmenu,.popUpBox2,#tutorialPopup").each(
 				function () {
 					if (this.style.display != "none" && this.style.display != "hidden")
 				{
@@ -9484,17 +9485,24 @@ function ppdtChanged(__ppdt) {
 		wantUpdate = wantUpdate || wantRs;
 		wantRs = false;
 	}
-	if (!wantUpdate)
-		return;
-	// console.log("Update ppdt");
-	setTimeout(() => {
-	 if (__ppdt.hasOwnProperty("pid")) {
+ 
+	if (__ppdt.hasOwnProperty("pid")) {
 			wrapper.ppdt['pid'] = __ppdt['pid'];
 			wantUpdate = true;
 		}
-		window['external']['notify'](JSON.stringify(wrapper));
+
+	if (!wantUpdate)
+		return;
+ 
+	 if (__ppdt.hasOwnProperty("r")) {
+		wrapper.ppdt['r'] = __ppdt['r']; // player rank
 	}
-		, 300);
+
+	// console.log("Update ppdt");
+	setTimeout(() => {
+	
+		window['external']['notify'](JSON.stringify(wrapper));
+	}	, 300);
 }
 
 function reportAway() {
@@ -11141,10 +11149,10 @@ function outer() {
 			var A26 = bam["speeds"]["crt"];
 			var n26 = bam["speeds"]["mer"];
 			if (Z26 != 0) d26 =
-				qam["techTreeSteps"][Number(Z26)][__s[+r2y]][0]["v"];
+				qam["techTreeSteps"][Number(Z26)]["m"][0]["v"];
 			if (d26 + ppdt.fa[7] / 2 > 0) b26 = b26 / (1 + (d26 + ppdt.fa[7] / (2)) / (
 				100));
-			if (U26 != 0) z26 = qam["techTreeSteps"][Number(U26)][__s[r2y ^ 0]][0]["v"];
+			if (U26 != 0) z26 = qam["techTreeSteps"][Number(U26)]["m"][0]["v"];
 			if (
 				z26 + ppdt.fa[7] / (2) > 0) S26 = S26 / ((1) + (z26 + ppdt[
 					"fa"][7] / 2) / (100));
@@ -11152,22 +11160,22 @@ function outer() {
 				.o55(r2y | 3472)][0]["v"];
 			if (M26 + ppdt.fa[7] / ('2' | 2) > 0) J26 = J26 /
 				(1 + (M26 + ppdt.fa[7] / 2) / 100);
-			if (B26 != 0) G26 = qam["techTreeSteps"][Number(B26)][__s[r2y & 2147483647]][0]["v"];
+			if (B26 != 0) G26 = qam["techTreeSteps"][Number(B26)]["m"][0]["v"];
 			if (G26 + ppdt.fa[3] / (2) > 0) h26 = h26 / (1 + (G26 + ppdt.fa['3' >>
 				740186528] / 2) / 100);
-			if (R26 != 0) C26 = qam["techTreeSteps"][Number(R26)][__s[+r2y]]['0' *
+			if (R26 != 0) C26 = qam["techTreeSteps"][Number(R26)]["m"]['0' *
 				1]["v"];
 			if (C26 + ppdt.fa[3] / 2 > 0) V26 = V26 / (1 + (C26 + ppdt.fa[3] / 2) / (100));
 			if (y26 != 0) W26 = qam[E6k
-				.o55(+G2y)][Number(y26)][__s[r2y >> 952026272]][0]["v"];
+				.o55(+G2y)][Number(y26)]["m"][0]["v"];
 			if (W26 + ppdt[_s(
 				h2y | 2584)][1] / 2 > 0) r26 = r26 / ((1) + (W26 + ppdt.fa[1] / (
 					2)) / 100);
-			if (f26 != 0) i26 = qam["techTreeSteps"][Number(f26)][__s[r2y * 1]][0][_s(+
+			if (f26 != 0) i26 = qam["techTreeSteps"][Number(f26)]["m"][0][_s(+
 				b2y)];
 			if (i26 + ppdt.fa[5] / (2) > 0) A26 = A26 / (1 + (i26 + ppdt.fa[5] / 2) / 100);
 			E6k.y6();
-			if (K26 != 0) X26 = qam["techTreeSteps"][Number(K26)][__s[+r2y]][0]["v"];
+			if (K26 != 0) X26 = qam["techTreeSteps"][Number(K26)]["m"][0]["v"];
 			if (X26 + ppdt.fa[5] / (2) > 0) n26 = n26 / (1 + (X26 +
 				ppdt.fa[5] / (2)) / 100);
 			var D26 = Math.floor(b26 * 1000 * L26);
@@ -11843,16 +11851,16 @@ function outer() {
 				$(__s[6765])
 					.text(p6(ppdt["pr"][4]));
 			}
-			for (let l11 in bam[__s[m9y & 2147483647]])
+			for (let l11 in bam["titles"])
 				if (l11 < 9) {
-					L11 = bam[__s[+m9y]][l11]["b"][1];
-					G11 = bam[__s[+m9y]][Number(l11) + (1)]["b"][1];
+					L11 = bam["titles"][l11]["b"][1];
+					G11 = bam["titles"][Number(l11) + (1)]["b"][1];
 					if (ppdt.r >= L11 && ppdt.r < G11)
-						var X11 = bam[__s[+m9y]][l11]["n"];
+						var X11 = bam["titles"][l11]["n"];
 				} else {
-					L11 = bam[__s[m9y ^ 0]][l11][_s(+
+					L11 = bam["titles"][l11][_s(+
 						B9y)][1];
-					if (ppdt.r >= L11) var X11 = bam[__s[+m9y]][l11]["n"];
+					if (ppdt.r >= L11) var X11 = bam["titles"][l11]["n"];
 				} if (D6) w6F();
 			let O11 = ppdt["rw"][78]['l'];
 			if (O11 == 0)
@@ -12987,7 +12995,7 @@ function outer() {
 				var z51 = x51[__s[+w6y]];
 				var J51 = x51['c'];
 				var
-					L51 = x51[__s[+r2y]];
+					L51 = x51["m"];
 				var C51 = x51[__s[+R8y]];
 				var o51 = Number(C51) * (1000);
 				var
@@ -14517,7 +14525,7 @@ function outer() {
 								330549504 && U2U != +l1R && U2U != +k1R && U2U != +o1R) r9U++;
 						} if (P2U >= (A4y | 73) && P2U <= I4y *
 							1 && U2U != +V5R && U2U != c5R << 1275326496 && U2U != +u8y && U2U != +M5R && U2U != +s5R && U2U != +Q5R &&
-							U2U != +C5R && U2U != Z5R * 1 && D6[__s[+K5R]] == 1) {
+							U2U != +C5R && U2U != Z5R * 1 && D6["w"] == 1) {
 					D6["bd"][U2U]["bid"] = +
 						"0";
 					D6["bd"][U2U]["bl"] = 0;
@@ -15371,9 +15379,9 @@ function outer() {
 								432 && B2U != 434 && B2U != +k7R && B2U != 436 && B2U != '438' >>
 								2009160032 && B2U != (439) && B2U != +t9R)
 								if (B2U != (V5R & 2147483647) && B2U != (c5R ^ 0) && B2U != +u8y && B2U != +M5R && B2U != s5R * 1 &&
-									B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && D6[__s[K5R - 0]] == 1) y2U = R5R >>
+									B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && D6["w"] == 1) y2U = R5R >>
 										914982432;
-								else if (D6[__s[K5R | 1285]] == 0) y2U = R5R << 1535435136;
+								else if (D6["w"] == 0) y2U = R5R << 1535435136;
 							if (y2U == M8U && G8U == 0 ||
 								y2U == n8U || y2U == A8U || y2U == U9U) {
 								if (y2U == R5R - 0)
@@ -17735,12 +17743,12 @@ function outer() {
 			}
 			if (a4l == 0) {
 				var m4l = qam["techTreeSteps"][Number(u3l)][E6k
-					.S55(+r2y)][0][__s[r2y ^ 0]];
+					.S55(+r2y)][0]["m"];
 				var l3l = qam[__s[d0p >> 1032064736]][Number(m4l)][E6k
 					.S55(y0R & 2147483647)];
 				var e3l = qam[__s[d0p | 2054]][Number(m4l)]['p'];
 				var T3l = qam[
-					"techTreeSteps"][Number(u3l)][__s[r2y * 1]][0]["v"];
+					"techTreeSteps"][Number(u3l)]["m"][0]["v"];
 				var s3l = u3l;
 				if (e3l ==
 					!0) var q4l = __s[l0p * 1] + T3l + __s[+o9y];
@@ -17750,16 +17758,16 @@ function outer() {
 				var O3l = 1;
 			} else {
 				var m4l = qam[E6k
-					.S55(G2y << 147677856)][Number(a4l)][__s[r2y * 1]][0][__s[r2y | 404]];
+					.S55(G2y << 147677856)][Number(a4l)]["m"][0]["m"];
 				var s3l = qam[_s(
 					G2y - 0)][Number(a4l)]['c'];
 				var l3l = qam[__s[d0p >> 720362144]][Number(m4l)][_s(y0R -
 					0)];
 				var e3l = qam[__s[d0p ^ 0]][Number(m4l)]['p'];
 				var Q3l = qam["techTreeSteps"][Number(
-					a4l)][__s[r2y * 1]][0]["v"];
+					a4l)]["m"][0]["v"];
 				if (s3l == 0) var k3l = 0;
-				else var k3l = qam["techTreeSteps"][Number(s3l)][__s[r2y | 3348]][0]["v"];
+				else var k3l = qam["techTreeSteps"][Number(s3l)]["m"][0]["v"];
 				if (e3l ==
 					!!"1") {
 					var q4l = __s[l0p & 2147483647] + k3l + __s[o9y & 2147483647];
@@ -17769,7 +17777,7 @@ function outer() {
 				var t3l = H3l;
 				var o3l = q4l;
 				var O3l = qam[E6k
-					.S55(+G2y)][Number(a4l)][__s[r2y - 0]][0]["v"];
+					.S55(+G2y)][Number(a4l)]["m"][0]["v"];
 			}
 			if (c4l != c8y * 1) j3l = j3l + _s(
 				b0p * 1) + X3l;
@@ -18198,12 +18206,12 @@ function outer() {
 			}
 			E6k.y6();
 			if (Z3l == 0) {
-				var K3l = qam["techTreeSteps"][Number(D3l)][__s[r2y * 1]][
-					0][__s[+r2y]];
+				var K3l = qam["techTreeSteps"][Number(D3l)]["m"][
+					0]["m"];
 				var U3l = qam[__s[+d0p]][Number(K3l)][__s[y0R ^ 0]];
 				var R3l = qam[_s(
 					+d0p)][Number(K3l)]['p'];
-				var w1l = qam["techTreeSteps"][Number(D3l)][__s[r2y | 288]][0][
+				var w1l = qam["techTreeSteps"][Number(D3l)]["m"][0][
 					"v"];
 				var h3l = D3l;
 				if (R3l == !!"1") var n3l = __s[+l0p] + w1l + __s[o9y & 2147483647];
@@ -18213,15 +18221,15 @@ function outer() {
 				var v1l = '1' |
 					0;
 			} else {
-				var K3l = qam["techTreeSteps"][Number(Z3l)][__s[r2y << 1400124448]][0][__s[+r2y]];
+				var K3l = qam["techTreeSteps"][Number(Z3l)]["m"][0]["m"];
 				var
 					h3l = qam["techTreeSteps"][Number(Z3l)]['c'];
 				var U3l = qam[__s[d0p * 1]][Number(K3l)][E6k
 					.S55(y0R ^ 0)];
 				var R3l = qam[__s[d0p * 1]][Number(K3l)]['p'];
-				var E3l = qam["techTreeSteps"][Number(Z3l)][__s[r2y & 2147483647]][0]["v"];
+				var E3l = qam["techTreeSteps"][Number(Z3l)]["m"][0]["v"];
 				if (h3l == 0) var P3l = 0;
-				else var P3l = qam["techTreeSteps"][Number(h3l)][__s[+r2y]][0]["v"];
+				else var P3l = qam["techTreeSteps"][Number(h3l)]["m"][0]["v"];
 				if (R3l == !!"1") {
 					var
 						n3l = __s[+l0p] + P3l + __s[+o9y];
@@ -18231,7 +18239,7 @@ function outer() {
 				var p3l = U3l + __s[+Q4p] + F3l;
 				var Y3l = U3l + E6k
 					.S55(Q4p - 0) + n3l;
-				var v1l = qam["techTreeSteps"][Number(Z3l)][__s[+r2y]][0][_s(+
+				var v1l = qam["techTreeSteps"][Number(Z3l)]["m"][0][_s(+
 					b2y)];
 			}
 			if (V3l != +c8y && h3l != 0) y3l = y3l + __s[+b0p] + e1l;
@@ -19357,7 +19365,7 @@ function outer() {
 		//							var V7Z = ppdt["rs"][A5y ^ 0]["n"];
 		//							if (V7Z != +
 		//								'0') {
-		//								var K7Z = qam["techTreeSteps"][V7Z][__s[r2y | 432]][0]["v"];
+		//								var K7Z = qam["techTreeSteps"][V7Z]["m"][0]["v"];
 		//								A7Z = A7Z / ((100 - K7Z) / (100));
 		//							}
 		//						}
@@ -19738,11 +19746,11 @@ function outer() {
 					q0v += __s[O5p - 0];
 					q0v += __s[3274];
 				} if (N0v[__s[b5p * 1]]) q0v += __s[6774] + p6(N0v[E6k
-					.o55(+b5p)][__s[+K5R]]) + __s[+o1R] + p6(N0v[__s[b5p >> 1090186272]]["s"]) + _s(+
+					.o55(+b5p)]["w"]) + __s[+o1R] + p6(N0v[__s[b5p >> 1090186272]]["s"]) + _s(+
 						"2954") + p6(N0v[__s[+b5p]][__s[g4p >> 727435456]]) + __s[2485] + p6(N0v[_s(b5p & E6k
 							.s6s)][__s[B8y & 2147483647]]) + __s[6402];
 			if (N0v[__s[p5p - 0]]) q0v += _s(+
-				'4393') + p6(N0v[__s[p5p - 0]][__s[K5R & 2147483647]]) + __s[4188] + p6(N0v[_s(+
+				'4393') + p6(N0v[__s[p5p - 0]]["w"]) + __s[4188] + p6(N0v[_s(+
 					p5p)]["s"]) + __s[3645] + p6(N0v[__s[+p5p]][__s[+g4p]]) + _s(+
 						'4875') + p6(N0v[__s[+p5p]][__s[B8y * 1]]) + __s[3356] + p6(N0v[__s[+p5p]][_s(+
 							"3653")]) + __s[2195] + p6(N0v[__s[p5p * 1]][__s[3749]]) + __s[1503] +
@@ -23016,7 +23024,7 @@ function outer() {
 			}
 			if (a9w == +'15') {
 				var N9w = ppdt["rs"][+u6y]["n"];
-				if (N9w != 0) E9w = qam["techTreeSteps"][N9w][__s[+r2y]][0][E6k
+				if (N9w != 0) E9w = qam["techTreeSteps"][N9w]["m"][0][E6k
 					.o55(b2y | 2136)] + ppdt.fa[5];
 			}
 			if (a9w == 16) {
@@ -23027,7 +23035,7 @@ function outer() {
 			}
 			if (a9w == +17) {
 				var N9w = ppdt["rs"][F8y | 2]["n"];
-				if (N9w != 0) E9w = qam["techTreeSteps"][N9w][__s[+r2y]][+
+				if (N9w != 0) E9w = qam["techTreeSteps"][N9w]["m"][+
 					'0']["v"] + ppdt.fa[1];
 			}
 			q9w = q9w / ((D6[__s[O1p - 0]][e0D][E6k
@@ -23371,15 +23379,15 @@ function outer() {
 					X5v += __s[O5p ^ 0];
 					X5v += __s[3274];
 				} if (o5v[__s[b5p >> 1038560256]] && G5v != 1) X5v += __s[6774] + p6(
-					o5v[__s[b5p * 1]][__s[+K5R]]) + __s[+o1R] + p6(o5v[__s[b5p << 523256832]]["s"]) +
+					o5v[__s[b5p * 1]]["w"]) + __s[+o1R] + p6(o5v[__s[b5p << 523256832]]["s"]) +
 					__s[2954] + p6(o5v[__s[+b5p]][__s[+g4p]]) + __s[2485] + p6(o5v[_s(b5p >>
 						1842699424)][__s[B8y ^ 0]]) + __s[6402];
 			if (o5v[__s[+E04]]) X5v += __s[4036] + p6(
-				o5v[__s[+E04]][__s[+K5R]]) + __s[o1R & 2147483647] + p6(o5v[__s[E04 ^ 0]][_s(Z9y >>
+				o5v[__s[+E04]]["w"]) + __s[o1R & 2147483647] + p6(o5v[__s[E04 ^ 0]][_s(Z9y >>
 					291371328)]) + __s[2954] + p6(o5v[__s[+E04]][__s[+g4p]]) + __s[2485] + p6(o5v[E6k
 						.S55(E04 - 0)][__s[+B8y]]) + __s[2537];
 			if (o5v[__s[+p5p]]) X5v += _s(+
-				"4393") + p6(o5v[__s[p5p | B9s]][__s[K5R ^ 0]]) + __s[4188] + p6(o5v[__s[p5p ^ 0]][E6k
+				"4393") + p6(o5v[__s[p5p | B9s]]["w"]) + __s[4188] + p6(o5v[__s[p5p ^ 0]][E6k
 					.S55(+Z9y)]) + __s[3645] + p6(o5v[__s[+p5p]][__s[+g4p]]) + __s[4875] + p6(o5v[_s(
 						p5p ^ 0)][__s[B8y >> 111677824]]) + __s[3356] + p6(o5v[__s[+p5p]][__s[3653]]) + E6k
 							.o55(2195) + p6(o5v[__s[p5p << 982150496]][__s[3749]]) + __s[1503] + p6(
@@ -24163,7 +24171,7 @@ function outer() {
 							.indexOf(__s[+n24], b46 + 1);
 						var J46 = N5F(C46);
 						if (H2 == J46 || H2 == "TestDummy" ||
-							H2 == __s[5453] || H2 == "MrLongTongue") {
+							H2 == "Adiera" || H2 == "MrLongTongue") {
 							var S46 = document.getElementById(
 								"cvs");
 							var W46 = document.getElementById("content");
@@ -29563,7 +29571,7 @@ function outer() {
 							.text(f7v.t);
 					}
 					if (f7v.type == 3 && f7v.stype != 'l' && f7v.stype != E6k
-						.o55(+B8y) && f7v.stype != __s[e64 * 1]) {
+						.o55(+B8y) && f7v.stype != "h") {
 						$(__s[1611])
 							.html(__s[6212] + f7v.rid + __s[634] + f7v.rid + __s[6021]);
 						$(__s[5836])
@@ -30029,7 +30037,7 @@ function outer() {
 						$(__s["6145" | 6145])
 							.text(N4v + __s[+o9y]);
 						if (f7v.puri) {
-							var F4v = f7v.puri[__s[K5R * 1]];
+							var F4v = f7v.puri["w"];
 							if (F4v == E6k
 								.S55(4867) || F4v == null) F4v = 0;
 							var q4v = f7v.puri["s"];
@@ -30079,7 +30087,7 @@ function outer() {
 					if ((f7v.type == 2 || f7v.type == +
 						'1' || f7v.type == 0) && f7v.stype != 'c' && f7v.stype != __s[6856] && f7v
 							.stype != "d" && f7v.stype != 'l' && f7v.stype != __s[+B8y] && f7v
-								.stype != __s[+e64]) {
+								.stype != "h") {
 						o8();
 						var S3v = 0;
 						var A3v = 0;
@@ -30886,7 +30894,7 @@ function outer() {
 						$(__s[6145])
 							.text(N4v + __s[o9y >> 923616800]);
 						if (f7v.puri) {
-							var F4v = f7v.puri[__s[+K5R]];
+							var F4v = f7v.puri["w"];
 							if (
 								F4v == '' || F4v == null) F4v = 0;
 							var q4v = f7v.puri["s"];
@@ -30920,7 +30928,7 @@ function outer() {
 							$(__s[872])
 								.text(0);
 							$(__s[6900])
-								.text(Math.floor(f7v.rp[__s[K5R & 2147483647]]));
+								.text(Math.floor(f7v.rp["w"]));
 							$(__s[2787])
 								.text(Math.floor(f7v.rp["s"]));
 							$(__s[2599])
@@ -31804,8 +31812,8 @@ function outer() {
 				['p'][Y9n][__s[3967]])
 					.scrollTop(0);
 			if (helparray[N9n]['p'][Y9n][__s["6440" | 296]] == 1) F3F(helparray[N9n]
-			['p'][Y9n][__s[+e64]]);
-			else N3F(helparray[N9n]['p'][Y9n][__s[e64 << 377895648]]);
+			['p'][Y9n]["h"]);
+			else N3F(helparray[N9n]['p'][Y9n]["h"]);
 			$(__s[1650])
 				.off("click");
 			$(__s[1476])
@@ -33068,7 +33076,7 @@ function outer() {
 			});
 
 		function I2(T0i, I0i) {
-			var t0i = artifacts[T0i][__s[K5R ^ 0]] * (64 << 1765480608);
+			var t0i = artifacts[T0i]["w"] * (64 << 1765480608);
 			var x0i = artifacts[T0i][_s(G6y ^
 				0)] * (64 >> 376636448);
 			var v0i = artifacts[T0i]['g'];
@@ -34243,8 +34251,8 @@ function outer() {
 			$(__s[6197])
 				.text("(" + aldt[__s[2768]] + ")");
 			var M1v = "";
-			if (aldt[__s[+e64]]) {
-				var b1v = aldt[__s[+e64]].reverse();
+			if (aldt["h"]) {
+				var b1v = aldt["h"].reverse();
 				for (var L1v in b1v) {
 					var X1v = aldt[_s(+
 						e64)][L1v][__s[+w6y]] * (1000);
@@ -34252,9 +34260,9 @@ function outer() {
 						.format(__s[1887]);
 					var d1v = moment.utc(X1v)
 						.format(__s[2093]);
-					M1v = M1v + __s[6389] + aldt[__s[+e64]][L1v].n + __s[+g3y] + aldt[__s[+e64]][L1v].n +
-						__s[3644] + aldt[__s[+e64]][L1v].i + __s[+g3y] + aldt[__s[+e64]][L1v].i + _s(+
-							"3644") + aldt[__s[e64 ^ 0]][L1v].pn + __s[g3y << 941975456] + aldt[__s[+e64]][L1v].pn + E6k
+					M1v = M1v + __s[6389] + aldt["h"][L1v].n + __s[+g3y] + aldt["h"][L1v].n +
+						__s[3644] + aldt["h"][L1v].i + __s[+g3y] + aldt["h"][L1v].i + _s(+
+							"3644") + aldt["h"][L1v].pn + __s[g3y << 941975456] + aldt["h"][L1v].pn + E6k
 								.o55(2016) + d1v + __s[g3y - 0] + i1v + __s[K5y - 0];
 				}
 				$(__s[2461])
@@ -34368,19 +34376,19 @@ function outer() {
 				.S55(+H2y)];
 			var k86 = bam["speeds"]["mer"];
 			if (X86 != 0) u86 = qam["techTreeSteps"][
-				Number(X86)][__s[r2y << 626298368]][0]["v"];
+				Number(X86)]["m"][0]["v"];
 			if (u86 + ppdt.fa[7] / ('2' & E6k
 				.s6s) > 0) T86 = T86 / (1 + (u86 + ppdt.fa[7] / 2) / (100));
 			if (
-				z86 != (0)) H86 = qam["techTreeSteps"][Number(z86)][__s[+r2y]][0][_s(+
+				z86 != (0)) H86 = qam["techTreeSteps"][Number(z86)]["m"][0][_s(+
 					b2y)];
 			if (H86 + ppdt.fa[7] / (2) > (0)) x86 = x86 / ((1) + (
 				H86 + ppdt.fa[7] / 2) / 100);
-			if (M86 != 0) j86 = qam["techTreeSteps"][Number(M86)][__s[r2y | 1156]][0]["v"];
+			if (M86 != 0) j86 = qam["techTreeSteps"][Number(M86)]["m"][0]["v"];
 			if (j86 + ppdt.fa[7] /
 				2 > (0)) O86 = O86 / (1 + (j86 + ppdt.fa[7] / 2) / 100);
 			if (G86 != +
-				"0") w86 = qam["techTreeSteps"][Number(G86)][__s[+r2y]][0]["v"];
+				"0") w86 = qam["techTreeSteps"][Number(G86)]["m"][0]["v"];
 			if (w86 + ppdt[_s(
 				h2y << 916392960)][3] / 2 > 0) t86 = t86 / (1 + (w86 + ppdt.fa[3] / +
 					'2') / (100));
@@ -34388,16 +34396,16 @@ function outer() {
 				.s6s)][0]["v"];
 			if (s86 + ppdt.fa[3] / (2) > 0) o86 =
 				o86 / (1 + (s86 + ppdt.fa[3] / (2)) / 100);
-			if (W86 != 0) v86 = qam["techTreeSteps"][Number(W86)][__s[+r2y]][0]["v"];
+			if (W86 != 0) v86 = qam["techTreeSteps"][Number(W86)]["m"][0]["v"];
 			if (v86 + ppdt.fa[1] / (
 				2) > (0)) L86 = L86 / (1 + (v86 + ppdt.fa[1] / (
 					2)) / 100);
-			if (i86 != 0) l86 = qam["techTreeSteps"][Number(i86)][__s[r2y - 0]]["0" >>
+			if (i86 != 0) l86 = qam["techTreeSteps"][Number(i86)]["m"]["0" >>
 				1221339360]["v"];
 			if (l86 + ppdt.fa[5] / (2) > 0) e86 =
 				e86 / (('1' | 1) + (l86 + ppdt.fa[5] / 2) / ("100" | 100));
 			if (d86 != 0)
-				Q86 = qam["techTreeSteps"][Number(d86)][__s[+r2y]][0]["v"];
+				Q86 = qam["techTreeSteps"][Number(d86)]["m"][0]["v"];
 			if (Q86 +
 				ppdt.fa[5] / (2) > 0) k86 = k86 / (1 + (Q86 + ppdt.fa[5] / ("2" -
 					0)) / (100));
@@ -34450,7 +34458,7 @@ function outer() {
 				$(__s[v1t - 0])
 					.text(s0v);
 				$(__s[w1t & 2147483647])
-					.text(c91[__s[+r2y]] + __s[o9y - 0]);
+					.text(c91["m"] + __s[o9y - 0]);
 				$(__s[F1t * 1])
 					.text(c91["b"] + __s[o9y * 1]);
 				$(__s[657])
@@ -35250,7 +35258,7 @@ function outer() {
 			var h7T = "";
 			for (var b7T = 9; b7T >= 2; b7T--) {
 				var
-					V7T = bam[__s[m9y - 0]][b7T]["n"];
+					V7T = bam["titles"][b7T]["n"];
 				if (ppdt.r == b7T) h7T += __s[285] + Number(
 					b7T) + __s[6850] + V7T + __s[P8p | 5];
 				else h7T += __s['285' | 265] + Number(b7T) + __s[+V6y] + V7T + __s[+P8p];
@@ -35965,7 +35973,7 @@ function outer() {
 				$(__s[v1t & 2147483647])
 					.text(V81);
 				$(__s[w1t ^ 0])
-					.text(i81[__s[r2y >> 678685344]] + __s[o9y & 2147483647]);
+					.text(i81["m"] + __s[o9y & 2147483647]);
 				$(__s[+F1t])
 					.text(i81["b"] + __s[o9y | 2824]);
 				$(__s[657])
@@ -40577,7 +40585,7 @@ function outer() {
 						var g8n = Z8n.substr(2, 1)
 							.toLowerCase();
 						var U8n = Number(Z8n.substr(3, 1));
-						if (g8n == __s[+r2y]) var P8n = E6k
+						if (g8n == "m") var P8n = E6k
 							.o55(+p54);
 						else var P8n = __s[+k2m];
 						if ($(__s[2172] + P8n + U8n)
@@ -40590,7 +40598,7 @@ function outer() {
 								.off("click");
 							$(__s[656])
 								.click(function () {
-									if (g8n == __s[r2y >> 797663936]) g8n = 0;
+									if (g8n == "m") g8n = 0;
 									else g8n = 1;
 									var p8n = { b: U8n, a: g8n };
 									var Y8n = __s[+y3R];
@@ -40815,7 +40823,7 @@ function outer() {
 								var w9n = u9n["body"].substr(2,
 									1)
 									.toLowerCase();
-								if (w9n == __s[r2y & 2147483647]) {
+								if (w9n == "m") {
 									$(__s[2052])
 										.show();
 									$(__s[m7y ^ 0] + u9n["body"])
@@ -42394,7 +42402,7 @@ function outer() {
 				$(__s[4896])
 					.text(K31);
 				$(__s[1775])
-					.text(J31[__s[+r2y]] + __s[+o9y]);
+					.text(J31["m"] + __s[+o9y]);
 				$(__s[3577])
 					.text(J31["b"] + __s[o9y - 0]);
 				$(__s[1796])
@@ -43417,31 +43425,31 @@ function outer() {
 			var g8B = bam["speeds"]["crt"];
 			var r8B = bam["speeds"]["mer"];
 			if (A8B != 0)
-				z8B = qam["techTreeSteps"][Number(A8B)][__s[+r2y]][0]["v"];
+				z8B = qam["techTreeSteps"][Number(A8B)]["m"][0]["v"];
 			E6k.R6();
 			if (z8B + ppdt.fa[7] / 2 > 0) G8B = G8B / (1 + (z8B + ppdt.fa[7] / 2) / 100);
-			if (n8B != 0) O8B = qam["techTreeSteps"][Number(n8B)][__s[+r2y]]['0' <<
+			if (n8B != 0) O8B = qam["techTreeSteps"][Number(n8B)]["m"]['0' <<
 				906862304]["v"];
 			if (O8B + ppdt.fa[7] / 2 > 0) C8B = C8B / (1 + (O8B +
 				ppdt.fa[7] / (2)) / (100));
 			if (f8B != (0)) t8B = qam[E6k
-				.o55(G2y * 1)][Number(f8B)][__s[+r2y]][0]["v"];
+				.o55(G2y * 1)][Number(f8B)]["m"][0]["v"];
 			if (t8B + ppdt.fa[+
 				'7'] / (2) > 0) W8B = W8B / (1 + (t8B + ppdt.fa[7] / (2)) / (
 					100));
-			if (K8B != 0) o8B = qam["techTreeSteps"][Number(K8B)][__s[r2y & 2147483647]][0]
+			if (K8B != 0) o8B = qam["techTreeSteps"][Number(K8B)]["m"][0]
 			["v"];
 			if (o8B + ppdt.fa[3] / 2 > 0) i8B = i8B / (('1' |
 				0) + (o8B + ppdt.fa[3] / 2) / (100));
-			if (S8B != 0) L8B = qam["techTreeSteps"][Number(S8B)][__s[r2y - 0]][0]["v"];
+			if (S8B != 0) L8B = qam["techTreeSteps"][Number(S8B)]["m"][0]["v"];
 			if (L8B + ppdt.fa[3] / 2 >
 				0) d8B = d8B / (1 + (L8B + ppdt.fa[3] / 2) / 100);
 			if (J8B != 0) X8B = qam[E6k
-				.S55(+G2y)][Number(J8B)][__s[r2y & 2147483647]][0]["v"];
+				.S55(+G2y)][Number(J8B)]["m"][0]["v"];
 			if (X8B + ppdt.fa[+
 				"1"] / 2 > 0) b8B = b8B / (1 + (X8B + ppdt.fa[1] / 2) / 100);
 			if (h8B != (
-				0)) x8B = qam["techTreeSteps"][Number(h8B)][__s[+r2y]][0]["v"];
+				0)) x8B = qam["techTreeSteps"][Number(h8B)]["m"][0]["v"];
 			if (x8B +
 				ppdt.fa[5] / (2) > 0) g8B = g8B / ((1) + (x8B + ppdt.fa[5] / 2) / 100);
 			if (V8B != 0) M8B = qam["techTreeSteps"][Number(V8B)][E6k
@@ -43970,7 +43978,7 @@ function outer() {
 					$(__s['4908' | 556])
 						.text(p6(k01.b));
 					$(__s["3069" | 789])
-						.text(bam[__s[m9y & 2147483647]][k01.d]["n"]);
+						.text(bam["titles"][k01.d]["n"]);
 					$(__s[2431])
 						.text(k01.e);
 					$(__s[6844])
@@ -44019,7 +44027,7 @@ function outer() {
 						.show();
 					else $(__s[865])
 						.hide();
-					var M01 = k01[__s[+e64]].length;
+					var M01 = k01["h"].length;
 					var z01;
 					var X01;
 					var L01;
@@ -44033,15 +44041,15 @@ function outer() {
 					var x01 = "";
 					for (var u01 = 0; u01 <
 						M01; u01++) {
-						z01 = k01[__s[+e64]][u01]["a"];
-						X01 = k01[__s[+e64]][u01]["b"];
-						L01 = k01[__s[+e64]][u01]['c'];
-						o01 = k01[__s[+e64]][u01]["d"];
-						l01 = k01[__s[e64 * 1]][u01]["e"];
-						j01 = k01[__s[e64 >> 188781696]][u01][__s[B8y >> 1310965440]];
-						T01 = k01[__s[+e64]][u01]['g'];
-						t01 = k01[__s[e64 * 1]][u01][__s[e64 >> 1188339296]];
-						citidd = k01[__s[+e64]][u01][__s[g4p >> 166291232]];
+						z01 = k01["h"][u01]["a"];
+						X01 = k01["h"][u01]["b"];
+						L01 = k01["h"][u01]['c'];
+						o01 = k01["h"][u01]["d"];
+						l01 = k01["h"][u01]["e"];
+						j01 = k01["h"][u01][__s[B8y >> 1310965440]];
+						T01 = k01["h"][u01]['g'];
+						t01 = k01["h"][u01]["h"];
+						citidd = k01["h"][u01][__s[g4p >> 166291232]];
 						if (j01 == 0 && T01 >
 							0) w01 = __s[1794];
 						else if (j01 == ('1' | 1) && T01 > 0) w01 = __s["1182" | 1052];
@@ -46042,7 +46050,7 @@ function outer() {
 				$(__s[+v1t])
 					.text(P91);
 				$(__s[w1t - 0])
-					.text(n91[__s[+r2y]] + __s[o9y * 1]);
+					.text(n91["m"] + __s[o9y * 1]);
 				$(__s[+F1t])
 					.text(n91["b"] + __s[+o9y]);
 				$(__s[657])
@@ -46738,7 +46746,7 @@ function outer() {
 							}
 						c5v += __s[+O5p];
 					} if (N5v[F5v][__s[+t9m]][q5v][__s[b5p * 1]]) c5v += _s(+
-						"1531") + p6(N5v[F5v][__s[t9m * 1]][q5v][__s[b5p - 0]][__s[+K5R]]) + __s[6496] + p6(
+						"1531") + p6(N5v[F5v][__s[t9m * 1]][q5v][__s[b5p - 0]]["w"]) + __s[6496] + p6(
 							N5v[F5v][__s[+t9m]][q5v][__s[+b5p]]["s"]) + __s[3949] + p6(N5v[F5v][_s(
 								t9m & 2147483647)][q5v][__s[+b5p]][__s[+g4p]]) + __s[r8y >> 1087335200] + p6(N5v[F5v][_s(
 									t9m - 0)][q5v][__s[+b5p]][__s[B8y - 0]]) + __s[6955];
@@ -46907,146 +46915,146 @@ function outer() {
 		}
 		var P0F = 0;
 		var v8F = {
-			801: __s[r2y ^ 0],
+			801: "m",
 			802: _s(+
 				r2y),
-			803: __s[r2y - 0],
-			804: __s[+r2y],
-			805: __s[r2y * 1],
-			806: __s[r2y >> 754245536],
+			803: "m",
+			804: "m",
+			805: "m",
+			806: "m",
 			807: "",
-			808: __s[+r2y],
-			809: __s[r2y * 1],
+			808: "m",
+			809: "m",
 			810: "",
 			811: E6k
 				.o55(r2y & 2147483647),
-			812: __s[r2y - 0],
-			813: __s[+r2y],
-			814: __s[r2y ^ 0],
-			815: __s[+r2y],
+			812: "m",
+			813: "m",
+			814: "m",
+			815: "m",
 			816: '',
-			817: __s[+r2y],
-			818: __s[+r2y],
-			819: __s[+r2y],
+			817: "m",
+			818: "m",
+			819: "m",
 			820: "",
-			821: __s[r2y >> 29542400],
-			822: __s[+r2y],
-			823: __s[r2y << 1242401920],
+			821: "m",
+			822: "m",
+			823: "m",
 			824: E6k
 				.o55(+r2y),
-			825: __s[r2y ^ 0],
-			826: __s[r2y ^ 0],
-			827: __s[r2y << 797517120],
+			825: "m",
+			826: "m",
+			827: "m",
 			828: _s(r2y -
 				0),
-			829: __s[+r2y],
+			829: "m",
 			830: "",
-			831: __s[r2y >> 486902848],
+			831: "m",
 			832: _s(r2y <<
 				252553120),
-			833: __s[+r2y],
-			834: __s[+r2y],
-			835: __s[+r2y],
-			836: __s[+r2y],
+			833: "m",
+			834: "m",
+			835: "m",
+			836: "m",
 			837: _s(+
 				r2y),
-			838: __s[r2y << 1683215520],
-			839: __s[r2y | 3360],
+			838: "m",
+			839: "m",
 			840: "",
-			841: __s[r2y ^ 0],
-			842: __s[+r2y],
+			841: "m",
+			842: "m",
 			843: '',
 			844: '',
-			845: __s[+r2y],
-			846: __s[r2y << 890943168],
+			845: "m",
+			846: "m",
 			847: "",
-			848: __s[+r2y],
-			849: __s[+r2y],
+			848: "m",
+			849: "m",
 			850: "",
-			851: __s[r2y & 2147483647],
-			852: __s[+r2y],
-			853: __s[r2y * 1],
+			851: "m",
+			852: "m",
+			853: "m",
 			854: E6k
 				.o55(r2y ^ 0),
-			855: __s[+r2y],
-			856: __s[+r2y],
-			857: __s[r2y - 0],
-			858: __s[r2y ^ 0],
-			859: __s[+r2y],
+			855: "m",
+			856: "m",
+			857: "m",
+			858: "m",
+			859: "m",
 			860: "",
-			861: __s[+r2y],
-			862: __s[r2y * 1],
+			861: "m",
+			862: "m",
 			863: E6k
 				.o55(+r2y),
-			864: __s[r2y << 1746062848],
+			864: "m",
 			865: '',
-			866: __s[r2y << 1466431872],
-			867: __s[r2y - 0],
-			868: __s[r2y | 32],
-			869: __s[+r2y],
+			866: "m",
+			867: "m",
+			868: "m",
+			869: "m",
 			870: "",
 			871: _s(
 				e64 * 1),
-			872: __s[+e64],
-			873: __s[e64 | 2129],
-			874: __s[e64 ^ 0],
-			875: __s[+e64],
+			872: "h",
+			873: "h",
+			874: "h",
+			875: "h",
 			876: E6k
 				.o55(e64 | 2064),
-			877: __s[e64 * 1],
-			878: __s[+e64],
-			879: __s[e64 | 81],
+			877: "h",
+			878: "h",
+			879: "h",
 			880: "",
-			881: __s[+e64],
-			882: __s[+e64],
-			883: __s[e64 << 2020327648],
-			884: __s[+e64],
-			885: __s[e64 | 2064],
-			886: __s[e64 >> 70525728],
-			887: __s[e64 * 1],
-			888: __s[e64 ^ 0],
-			889: __s[e64 * 1],
+			881: "h",
+			882: "h",
+			883: "h",
+			884: "h",
+			885: "h",
+			886: "h",
+			887: "h",
+			888: "h",
+			889: "h",
 			890: '',
-			891: __s[e64 | 2128],
-			892: __s[e64 ^ 0],
+			891: "h",
+			892: "h",
 			893: _s(
 				e64 - 0),
-			894: __s[e64 * 1],
-			895: __s[e64 << 156933728],
-			896: __s[e64 & 2147483647],
+			894: "h",
+			895: "h",
+			896: "h",
 			897: _s(
 				e64 * 1),
-			898: __s[e64 * 1],
-			899: __s[+e64],
+			898: "h",
+			899: "h",
 			900: '',
-			901: __s[+e64],
+			901: "h",
 			902: E6k
 				.S55(e64 << 953035648),
-			903: __s[+e64],
-			904: __s[e64 ^ 0],
-			905: __s[+e64],
+			903: "h",
+			904: "h",
+			905: "h",
 			906: _s(e64 -
 				0),
-			907: __s[e64 * 1],
-			908: __s[e64 << 152789440],
-			909: __s[e64 * 1],
+			907: "h",
+			908: "h",
+			909: "h",
 			910: "",
-			911: __s[e64 >> 1889661824],
-			912: __s[+e64],
+			911: "h",
+			912: "h",
 			913: "",
-			914: __s[e64 | 2320],
-			915: __s[+e64],
-			916: __s[e64 ^ 0],
-			917: __s[+e64],
-			918: __s[e64 << 2001644928],
+			914: "h",
+			915: "h",
+			916: "h",
+			917: "h",
+			918: "h",
 			919: _s(
 				e64 >> 557120352),
 			920: '',
 			921: "",
-			922: __s[+e64],
+			922: "h",
 			923: _s(e64 <<
 				927513248),
-			924: __s[e64 * 1],
+			924: "h",
 			925: __s[+B8y],
 			926: __s[+B8y],
 			927: __s[+B8y],
@@ -47054,10 +47062,10 @@ function outer() {
 				B8y << 1166025504),
 			929: __s[+B8y],
 			930: '',
-			931: __s[+e64],
-			932: __s[+e64],
-			933: __s[+e64],
-			934: __s[e64 & 2147483647],
+			931: "h",
+			932: "h",
+			933: "h",
+			934: "h",
 			935: __s[B8y | 400],
 			936: __s[+B8y],
 			937: _s(+
@@ -47065,7 +47073,7 @@ function outer() {
 			938: __s[B8y ^ 0],
 			939: __s[B8y ^ 0],
 			940: '',
-			941: __s[+e64],
+			941: "h",
 			942: _s(
 				+e64),
 			943: '',
@@ -47187,189 +47195,189 @@ function outer() {
 			else return !"1";
 		}
 		var l8F = {
-			0: __s[+K5R],
-			1: __s[+K5R],
-			2: __s[+K5R],
-			3: __s[K5R - 0],
+			0: "w",
+			1: "w",
+			2: "w",
+			3: "w",
 			4: 'l',
-			5: __s[K5R | 772],
-			6: __s[K5R >> 2008657120],
+			5: "w",
+			6: "w",
 			7: 'l',
 			8: 'l',
 			9: 'l',
-			10: __s[K5R & 2147483647],
-			11: __s[+K5R],
-			12: __s[+K5R],
+			10: "w",
+			11: "w",
+			12: "w",
 			13: _s(+
 				L9y),
-			14: __s[K5R << 2040699776],
-			15: __s[+K5R],
-			16: __s[K5R * 1],
-			17: __s[+K5R],
+			14: "w",
+			15: "w",
+			16: "w",
+			17: "w",
 			18: E6k
 				.o55(K5R - 0),
 			19: 'l',
 			20: 'l',
 			21: 'l',
 			22: 'l',
-			23: __s[K5R ^ 0],
-			24: __s[K5R << 1746470976],
-			25: __s[K5R ^ 0],
-			26: __s[K5R - 0],
+			23: "w",
+			24: "w",
+			25: "w",
+			26: "w",
 			27: _s(
 				+K5R),
-			28: __s[K5R ^ 0],
-			29: __s[K5R ^ 0],
+			28: "w",
+			29: "w",
 			30: 'l',
 			31: 'l',
 			32: _s(+
 				L9y),
 			33: 'l',
-			34: __s[K5R | 1287],
-			35: __s[K5R >> 1360302336],
+			34: "w",
+			35: "w",
 			36: _s(+
 				K5R),
-			37: __s[K5R | 1],
-			38: __s[K5R | 262],
+			37: "w",
+			38: "w",
 			39: 'l',
 			40: 'l',
 			41: _s(L9y -
 				0),
 			42: 'l',
-			43: __s[+K5R],
-			44: __s[K5R | 775],
-			45: __s[K5R | 1539],
+			43: "w",
+			44: "w",
+			45: "w",
 			46: _s(+
 				K5R),
-			47: __s[K5R | 516],
+			47: "w",
 			48: 'l',
 			49: 'l',
 			50: 'l',
 			51: 'l',
-			52: __s[+K5R],
-			53: __s[K5R & 2147483647],
-			54: __s[+K5R],
+			52: "w",
+			53: "w",
+			54: "w",
 			55: 'l',
-			56: __s[+K5R],
-			57: __s[K5R & 2147483647],
-			58: __s[+K5R],
-			59: __s[K5R << 1025307328],
+			56: "w",
+			57: "w",
+			58: "w",
+			59: "w",
 			60: 'l',
 			61: E6k
 				.o55(+K5R),
-			62: __s[K5R * 1],
-			63: __s[K5R | 773],
-			64: __s[K5R | 258],
-			65: __s[+K5R],
+			62: "w",
+			63: "w",
+			64: "w",
+			65: "w",
 			66: E6k
 				.S55(+K5R),
-			67: __s[+K5R],
-			68: __s[+K5R],
-			69: __s[+K5R],
-			70: __s[K5R - 0],
+			67: "w",
+			68: "w",
+			69: "w",
+			70: "w",
 			71: _s(+
 				K5R),
-			72: __s[+K5R],
-			73: __s[+K5R],
-			74: __s[K5R | 1030],
-			75: __s[+K5R],
-			76: __s[+K5R],
-			77: __s[K5R >> 762685312],
-			78: __s[K5R ^ 0],
-			79: __s[K5R | 1796],
-			80: __s[+K5R],
+			72: "w",
+			73: "w",
+			74: "w",
+			75: "w",
+			76: "w",
+			77: "w",
+			78: "w",
+			79: "w",
+			80: "w",
 			81: _s(+
 				L9y),
-			82: __s[K5R >> 1556747296],
-			83: __s[+K5R],
-			84: __s[K5R * 1],
+			82: "w",
+			83: "w",
+			84: "w",
 			85: 'l',
 			86: E6k
 				.S55(+K5R),
-			87: __s[K5R * 1],
+			87: "w",
 			88: 'l',
 			89: 'l',
 			90: 'l',
-			91: __s[+K5R],
-			92: __s[+K5R],
-			93: __s[+K5R],
+			91: "w",
+			92: "w",
+			93: "w",
 			94: 'l',
 			95: _s(K5R <<
 				716803968),
-			96: __s[+K5R],
+			96: "w",
 			97: 'l',
-			98: __s[K5R & 2147483647],
-			99: __s[+K5R],
+			98: "w",
+			99: "w",
 			100: E6k
 				.S55(+L9y),
-			101: __s[K5R & 2147483647],
-			102: __s[K5R * 1],
+			101: "w",
+			102: "w",
 			103: 'l',
 			104: _s(L9y >>
 				2109995776),
 			105: 'l',
 			106: 'l',
-			107: __s[+K5R],
-			108: __s[+K5R],
+			107: "w",
+			108: "w",
 			109: 'l',
 			110: 'l',
 			111: 'l',
-			112: __s[K5R & 2147483647],
-			113: __s[K5R & 2147483647],
+			112: "w",
+			113: "w",
 			114: 'l',
-			115: __s[+K5R],
-			116: __s[K5R >> 1708715648],
-			117: __s[K5R ^ 0],
-			118: __s[+K5R],
-			119: __s[+K5R],
+			115: "w",
+			116: "w",
+			117: "w",
+			118: "w",
+			119: "w",
 			120: 'l',
 			121: _s(+
 				K5R),
-			122: __s[+K5R],
+			122: "w",
 			123: 'l',
-			124: __s[K5R - 0],
-			125: __s[+K5R],
+			124: "w",
+			125: "w",
 			126: _s(K5R -
 				0),
-			127: __s[+K5R],
-			128: __s[+K5R],
+			127: "w",
+			128: "w",
 			129: 'l',
 			130: 'l',
 			131: 'l',
 			132: 'l',
-			133: __s[K5R | 1541],
-			134: __s[+K5R],
-			135: __s[+K5R],
-			136: __s[+K5R],
-			137: __s[+K5R],
-			138: __s[K5R ^ 0],
-			139: __s[+K5R],
-			140: __s[+K5R],
+			133: "w",
+			134: "w",
+			135: "w",
+			136: "w",
+			137: "w",
+			138: "w",
+			139: "w",
+			140: "w",
 			141: _s(K5R <<
 				204253344),
-			142: __s[K5R >> 1813342496],
-			143: __s[K5R & 2147483647],
-			144: __s[+K5R],
+			142: "w",
+			143: "w",
+			144: "w",
 			145: _s(
 				K5R ^ 0),
-			146: __s[+K5R],
-			147: __s[K5R >> 41324096],
-			148: __s[K5R | 1797],
-			149: __s[+K5R],
-			150: __s[+K5R],
-			151: __s[K5R << 950338528],
-			152: __s[K5R & 2147483647],
-			153: __s[K5R - 0],
-			154: __s[+K5R],
-			155: __s[+K5R],
-			156: __s[+K5R],
-			157: __s[+K5R],
-			158: __s[+K5R],
+			146: "w",
+			147: "w",
+			148: "w",
+			149: "w",
+			150: "w",
+			151: "w",
+			152: "w",
+			153: "w",
+			154: "w",
+			155: "w",
+			156: "w",
+			157: "w",
+			158: "w",
 			159: E6k
 				.o55(K5R | 1287),
-			160: __s[K5R * 1],
-			161: __s[K5R & 2147483647],
-			162: __s[K5R | 1540],
+			160: "w",
+			161: "w",
+			162: "w",
 			163: E6k
 				.o55(+L9y),
 			164: 'l',
@@ -47509,29 +47517,28 @@ function outer() {
 			287: 'l',
 			288: 'l',
 			289: "r",
-			290: __s[K5R * 1],
-			291: __s[+K5R],
+			290: "w",
+			291: "w",
 			292: "r",
 			293: _s(
 				4867),
 			294: "r",
 			295: "r",
-			296: __s[K5R | 260],
-			297: _s(K5R ^
-				0),
+			296: "w",
+			297: "w",
 			298: "r",
-			299: __s[+K5R],
-			300: __s[K5R & 2147483647],
+			299: "w",
+			300: "w",
 			301: "r",
 			302: E6k
 				.o55(4867),
-			303: __s[+K5R],
-			304: __s[K5R << 777566848],
+			303: "w",
+			304: "w",
 			305: "r",
 			306: E6k
 				.S55(+I6y),
-			307: __s[+e64],
-			308: __s[+r2y],
+			307: "h",
+			308: "m",
 			309: __s[B8y ^ 0],
 			310: '',
 			311: E6k
@@ -47541,8 +47548,8 @@ function outer() {
 			314: "",
 			315: E6k
 				.o55("4867" | 4355),
-			316: __s[e64 ^ 0],
-			317: __s[+r2y],
+			316: "h",
+			317: "m",
 			318: __s[B8y - 0],
 			319: "",
 			320: '',
@@ -54818,22 +54825,22 @@ function outer() {
 				var o5D = 0;
 				if (x5D == +'14') {
 					var O5D = ppdt["rs"][A5y ^ 0]["n"];
-					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D][__s[+r2y]][0]["v"];
+					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D]["m"][0]["v"];
 				}
 				if (x5D == +'15') {
 					var O5D = ppdt["rs"][u6y - 0]["n"];
 					if (O5D != (
-						0)) var o5D = qam["techTreeSteps"][O5D][__s[r2y >> 881939776]][0][_s(+
+						0)) var o5D = qam["techTreeSteps"][O5D]["m"][0][_s(+
 							b2y)];
 				}
 				if (x5D == (16)) {
 					var O5D = ppdt["rs"][+j6y]["n"];
-					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D][__s[+r2y]][0]
+					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D]["m"][0]
 					["v"];
 				}
 				if (x5D == +17) {
 					var O5D = ppdt["rs"][F8y * 1]["n"];
-					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D][__s[+r2y]][0][_s(
+					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D]["m"][0][_s(
 						b2y * 1)];
 				}
 				X5D = X5D / ((D6[__s[+O1p]][K5D]["s"] + o5D + (100)) / +
@@ -57022,8 +57029,8 @@ function outer() {
 				}
 			}
 			if (C4l == 0) {
-				var G4l = qam["techTreeSteps"][Number(A4l)][__s[+r2y]]['0' <<
-					658416096][__s[r2y * 1]];
+				var G4l = qam["techTreeSteps"][Number(A4l)]["m"]['0' <<
+					658416096]["m"];
 				var h4l = qam[__s[+d0p]][Number(G4l)][__s[+y0R]];
 				var b4l = qam[E6k
 					.S55(d0p << 642497600)][Number(G4l)]['p'];
@@ -57038,16 +57045,16 @@ function outer() {
 				var P4l =
 					1;
 			} else {
-				var G4l = qam["techTreeSteps"][Number(C4l)][__s[+r2y]][0][E6k
+				var G4l = qam["techTreeSteps"][Number(C4l)]["m"][0][E6k
 					.S55(r2y ^ 0)];
 				var d4l = qam["techTreeSteps"][Number(C4l)][__s[x9y - 0]];
 				var h4l = qam[__s[+d0p]][
 					Number(G4l)][__s[+y0R]];
 				var b4l = qam[__s[+d0p]][Number(G4l)]['p'];
 				var Z4l = qam[E6k
-					.S55(+G2y)][Number(C4l)][__s[+r2y]][0]["v"];
+					.S55(+G2y)][Number(C4l)]["m"][0]["v"];
 				if (d4l == 0) var W4l = 0;
-				else var W4l = qam["techTreeSteps"][Number(d4l)][__s[r2y * 1]][0]["v"];
+				else var W4l = qam["techTreeSteps"][Number(d4l)]["m"][0]["v"];
 				if (b4l == !!
 					"1") {
 					var X4l = __s[l0p * 1] + W4l + __s[+o9y];
@@ -57057,7 +57064,7 @@ function outer() {
 				var V4l = S4l;
 				var B4l = X4l;
 				var P4l = qam["techTreeSteps"][
-					Number(C4l)][__s[+r2y]][0]["v"];
+					Number(C4l)]["m"][0]["v"];
 			}
 			E6k.R6();
 			if (M4l != c8y << 1613126368)
@@ -58400,7 +58407,7 @@ function outer() {
 				$(__s[+v1t])
 					.text(F81);
 				$(__s[+w1t])
-					.text(P81[__s[r2y << 1338443008]] + __s[o9y ^ 0]);
+					.text(P81["m"] + __s[o9y ^ 0]);
 				$(__s[+F1t])
 					.text(P81["b"] + __s[o9y - 0]);
 				$(__s[657])
@@ -58408,7 +58415,7 @@ function outer() {
 				$(__s[311])
 					.text(p6(Number(B81['g'])));
 				$(__s[3447])
-					.text(p6(Number(B81[__s[K5R ^ 0]])));
+					.text(p6(Number(B81["w"])));
 				$(__s[817])
 					.text(p6(Number(B81["s"])));
 				$(__s[3664])
@@ -59781,7 +59788,7 @@ function outer() {
 			var T2g = D5F(Number(O2g));
 			var f2g = D6["bd"][O2g][_s(+
 				m1R)];
-			if (n2 == "none" && (T2g == __s[K5R * 1] || D6["bd"][0]["bl"] ==
+			if (n2 == "none" && (T2g == "w" || D6["bd"][0]["bl"] ==
 				(0) && (T2g == __s[g4p >> 799281920] || T2g == __s[G2k - 0]))) {
 				r0V();
 				d2 = 0;
@@ -61139,19 +61146,19 @@ function outer() {
 				var D0D = 0;
 				if (y0D == '14' * 1) {
 					var R0D = ppdt["rs"][A5y | 5]["n"];
-					if (R0D != 0) var D0D = qam["techTreeSteps"][R0D][__s[r2y * 1]][0][_s(+
+					if (R0D != 0) var D0D = qam["techTreeSteps"][R0D]["m"][0][_s(+
 						b2y)];
 				}
 				if (y0D == '15' * 1) {
 					var R0D = ppdt["rs"][+u6y]["n"];
 					if (R0D != 0) var
-						D0D = qam["techTreeSteps"][R0D][__s[+r2y]][0]["v"];
+						D0D = qam["techTreeSteps"][R0D]["m"][0]["v"];
 				}
 				if (y0D == "16" <<
 					681425920) {
 					var R0D = ppdt["rs"][j6y - 0]["n"];
 					if (R0D != 0) var
-						D0D = qam["techTreeSteps"][R0D][__s[+r2y]][0]["v"];
+						D0D = qam["techTreeSteps"][R0D]["m"][0]["v"];
 				}
 				if (y0D == +17) {
 					var R0D = ppdt[E6k
@@ -61240,8 +61247,8 @@ function outer() {
 			$(__s['3407' | 328])
 				.draggable({ handle: __s[5522], scroll: !{} });
 			if (helparray[f9n]['p'][K9n][_s('6440' ^
-				0)] == 1) F3F(helparray[f9n]['p'][K9n][__s[e64 - 0]]);
-			else N3F(helparray[f9n]['p'][K9n][__s[+e64]]);
+				0)] == 1) F3F(helparray[f9n]['p'][K9n]["h"]);
+			else N3F(helparray[f9n]['p'][K9n]["h"]);
 			$(__s[1206])
 				.off("click");
 			$(__s[1206])
@@ -61357,7 +61364,7 @@ function outer() {
 					var T1i = $(this)
 						.attr(__s[q6m << 588406688]);
 					var z1i = $(this)
-						.attr(__s[K5R << 400074848]);
+						.attr("w");
 					var O1i = artifacts[T1i]["n"];
 					var t1i = artifacts[T1i][_s(
 						T9y ^ 0)];
@@ -61505,30 +61512,30 @@ function outer() {
 			if (Z1l == 0) {
 				var K1l = new Object();
 				var g1l = ppdt.r;
-				K1l.n = bam[__s[m9y >> 1928358592]][g1l]["n"];
+				K1l.n = bam["titles"][g1l]["n"];
 				K1l.ctl = 0;
-				K1l.mg = bam[__s[+m9y]][g1l][__s[+q5k]];
-				K1l.mm = bam[__s[m9y & 2147483647]][g1l][__s[j5k >> 809886848]];
-				K1l.tg = bam[__s[m9y | 520]][g1l][__s[D5k | 3364]];
+				K1l.mg = bam["titles"][g1l][__s[+q5k]];
+				K1l.mm = bam["titles"][g1l][__s[j5k >> 809886848]];
+				K1l.tg = bam["titles"][g1l][__s[D5k | 3364]];
 				K1l.nc = y1l;
 				K1l.cc = P1l;
 				K1l.cn = B1l;
 				K1l.cm = R1l;
-				K1l.ntn = bam[__s[+m9y]][g1l + (1)]["n"];
-				K1l.nmg = bam[__s[m9y << 720884320]][g1l + (1)][__s[q5k | B9s]];
-				K1l.nmm = bam[__s[+m9y]][g1l + 1][__s[+j5k]];
-				K1l.ntg = bam[__s[m9y - 0]][g1l + 1][__s[D5k ^ 0]];
+				K1l.ntn = bam["titles"][g1l + (1)]["n"];
+				K1l.nmg = bam["titles"][g1l + (1)][__s[q5k | B9s]];
+				K1l.nmm = bam["titles"][g1l + 1][__s[+j5k]];
+				K1l.ntg = bam["titles"][g1l + 1][__s[D5k ^ 0]];
 				K1l.ntl = 0;
 				if (K1l.n != K1l.ntn) K1l.rc = 1;
 				else K1l.rc = 0;
 			} else
-				for (var g1l in bam[__s[m9y | 64]]) {
+				for (var g1l in bam["titles"]) {
 					if (Z1l <= 78 && g1l != 9) {
 						var
 							p1l = Number(g1l) + (1);
-						var U1l = bam[__s[m9y | 64]][g1l]["b"][2];
+						var U1l = bam["titles"][g1l]["b"][2];
 						var
-							D1l = bam[__s[m9y >> 2020927200]][p1l]["b"][2];
+							D1l = bam["titles"][p1l]["b"][2];
 					} else {
 						var U1l = 79;
 						var
@@ -61536,29 +61543,29 @@ function outer() {
 					}
 					if (Z1l >= U1l && Z1l < D1l) {
 						var K1l = new Object();
-						K1l.n = bam[__s[m9y * 1]][g1l]["n"];
+						K1l.n = bam["titles"][g1l]["n"];
 						K1l.ctl = Number(Z1l) - Number(U1l);
-						K1l.mg = bam[__s[+m9y]][g1l][__s[q5k >> 875286816]];
-						K1l.mm = bam[__s[m9y | 4672]][g1l][__s[+j5k]];
-						K1l.tg = bam[__s[m9y << 1792925280]][g1l][__s[D5k * 1]];
+						K1l.mg = bam["titles"][g1l][__s[q5k >> 875286816]];
+						K1l.mm = bam["titles"][g1l][__s[+j5k]];
+						K1l.tg = bam["titles"][g1l][__s[D5k * 1]];
 						K1l.nc = y1l;
 						K1l.cc = P1l;
 						K1l.cn = B1l;
 						K1l.cm = R1l;
 						if (Z1l >= ('78' | 6)) {
-							K1l.nmg = bam[__s[+m9y]][g1l][__s[+q5k]];
-							K1l.nmm = bam[__s[m9y - 0]][g1l][__s[j5k * 1]];
-							K1l.ntg = bam[__s[+m9y]][g1l][__s[D5k << 853284288]];
+							K1l.nmg = bam["titles"][g1l][__s[+q5k]];
+							K1l.nmm = bam["titles"][g1l][__s[j5k * 1]];
+							K1l.ntg = bam["titles"][g1l][__s[D5k << 853284288]];
 						} else {
-							K1l.nmg = bam[__s[m9y ^ 0]][
+							K1l.nmg = bam["titles"][
 								p1l][__s[q5k << 232307264]];
-							K1l.nmm = bam[__s[m9y << 828809760]][p1l][__s[j5k >> 1023929312]];
-							K1l.ntg = bam[__s[m9y - 0]][p1l][__s[+D5k]];
+							K1l.nmm = bam["titles"][p1l][__s[j5k >> 1023929312]];
+							K1l.ntg = bam["titles"][p1l][__s[+D5k]];
 						}
 					}
 					if (Z1l + ("1" | 1) >= U1l && Z1l + ("1" | 1) <
 						D1l) {
-						K1l.ntn = bam[__s[+m9y]][g1l]["n"];
+						K1l.ntn = bam["titles"][g1l]["n"];
 						K1l.ntl = Number(Z1l + (1)) - Number(U1l);
 						if (K1l.n != K1l.ntn) K1l.rc = '1' <<
 							1182063424;
@@ -64068,33 +64075,33 @@ function outer() {
 
 		function D5F(H5l) {
 			var u5l = {
-				0: __s[+K5R],
-				1: __s[K5R >> 887979392],
-				2: __s[K5R - 0],
+				0: "w",
+				1: "w",
+				2: "w",
 				3: _s(
 					G2k * 1),
-				4: __s[K5R & 2147483647],
-				5: __s[K5R | 513],
-				6: __s[K5R << 1964661120],
+				4: "w",
+				5: "w",
+				6: "w",
 				7: _s(+
 					G2k),
-				8: __s[+K5R],
-				9: __s[+K5R],
-				10: __s[+K5R],
-				11: __s[+K5R],
-				12: __s[+K5R],
+				8: "w",
+				9: "w",
+				10: "w",
+				11: "w",
+				12: "w",
 				13: E6k
 					.o55(+G2k),
-				14: __s[K5R * 1],
-				15: __s[+K5R],
-				16: __s[+K5R],
+				14: "w",
+				15: "w",
+				16: "w",
 				17: __s[+G2k],
 				18: _s(+
 					K5R),
-				19: __s[K5R << 156456992],
-				20: __s[+K5R],
-				21: __s[+K5R],
-				22: __s[+K5R],
+				19: "w",
+				20: "w",
+				21: "w",
+				22: "w",
 				23: _s(
 					+K5R),
 				24: 'l',
@@ -64105,7 +64112,7 @@ function outer() {
 					L9y),
 				29: 'l',
 				30: 'l',
-				31: __s[K5R >> 123954496],
+				31: "w",
 				32: 'l',
 				33: 'l',
 				34: 'l',
@@ -64114,12 +64121,12 @@ function outer() {
 				37: _s(L9y & E6k
 					.s6s),
 				38: 'l',
-				39: __s[+K5R],
-				40: __s[+K5R],
-				41: __s[+K5R],
+				39: "w",
+				40: "w",
+				41: "w",
 				42: _s(K5R |
 					1798),
-				43: __s[+K5R],
+				43: "w",
 				44: 'l',
 				45: 'l',
 				46: 'l',
@@ -64129,7 +64136,7 @@ function outer() {
 				49: 'l',
 				50: 'l',
 				51: 'l',
-				52: __s[+K5R],
+				52: "w",
 				53: 'l',
 				54: 'l',
 				55: 'l',
@@ -64140,8 +64147,8 @@ function outer() {
 				59: 'l',
 				60: _s(
 					L9y * 1),
-				61: __s[K5R << 669025504],
-				62: __s[+K5R],
+				61: "w",
+				62: "w",
 				63: __s[+G2k],
 				64: 'l',
 				65: 'l',
@@ -64153,7 +64160,7 @@ function outer() {
 					.S55(L9y ^ 0),
 				71: 'l',
 				72: 'l',
-				73: __s[K5R << 1132065760],
+				73: "w",
 				74: 'l',
 				75: 'l',
 				76: 'l',
@@ -64178,7 +64185,7 @@ function outer() {
 				92: 'l',
 				93: E6k
 					.o55(+L9y),
-				94: __s[K5R << 1226787520],
+				94: "w",
 				95: 'l',
 				96: 'l',
 				97: 'l',
@@ -64188,8 +64195,8 @@ function outer() {
 				101: 'l',
 				102: 'l',
 				103: 'l',
-				104: __s[+K5R],
-				105: __s[K5R | 1543],
+				104: "w",
+				105: "w",
 				106: 'l',
 				107: _s(L9y <<
 					1177598880),
@@ -64198,13 +64205,13 @@ function outer() {
 				110: 'l',
 				111: _s(L9y |
 					4130),
-				112: __s[K5R | 4],
+				112: "w",
 				113: __s[g4p * 1],
-				114: __s[+K5R],
-				115: __s[K5R & 2147483647],
-				116: __s[K5R - 0],
+				114: "w",
+				115: "w",
+				116: "w",
 				117: __s[+g4p],
-				118: __s[K5R & 2147483647],
+				118: "w",
 				119: 'l',
 				120: _s(
 					+L9y),
@@ -64213,30 +64220,30 @@ function outer() {
 				123: 'l',
 				124: _s(L9y <<
 					453780416),
-				125: __s[+K5R],
-				126: __s[+K5R],
+				125: "w",
+				126: "w",
 				127: 'l',
 				128: 'l',
 				129: E6k
 					.o55(+L9y),
 				130: 'l',
 				131: 'l',
-				132: __s[+K5R],
-				133: __s[K5R << 1622731744],
+				132: "w",
+				133: "w",
 				134: 'l',
 				135: 'l',
 				136: 'l',
 				137: 'l',
 				138: 'l',
-				139: __s[K5R - 0],
-				140: __s[K5R >> 1471701600],
+				139: "w",
+				140: "w",
 				141: 'l',
 				142: 'l',
 				143: E6k
 					.S55(L9y << 1040872448),
 				144: 'l',
 				145: 'l',
-				146: __s[K5R | 1280],
+				146: "w",
 				147: E6k
 					.S55(G2k ^ 0),
 				148: 'l',
@@ -64244,8 +64251,8 @@ function outer() {
 				150: 'l',
 				151: _s(L9y >>
 					782277280),
-				152: __s[K5R - 0],
-				153: __s[K5R ^ 0],
+				152: "w",
+				153: "w",
 				154: 'l',
 				155: _s(
 					L9y >> 814387392),
@@ -64254,8 +64261,8 @@ function outer() {
 				158: 'l',
 				159: 'l',
 				160: 'l',
-				161: __s[+K5R],
-				162: __s[K5R * 1],
+				161: "w",
+				162: "w",
 				163: 'l',
 				164: _s(L9y & E6k
 					.s6s),
@@ -64286,14 +64293,14 @@ function outer() {
 				186: 'l',
 				187: E6k
 					.S55(+L9y),
-				188: __s[+K5R],
-				189: __s[+K5R],
+				188: "w",
+				189: "w",
 				190: 'l',
 				191: 'l',
 				192: _s(
 					L9y - 0),
 				193: 'l',
-				194: __s[K5R | 260],
+				194: "w",
 				195: 'l',
 				196: _s(
 					L9y ^ 0),
@@ -64305,19 +64312,19 @@ function outer() {
 				201: 'l',
 				202: 'l',
 				203: 'l',
-				204: __s[+K5R],
+				204: "w",
 				205: _s(+
 					L9y),
 				206: 'l',
 				207: 'l',
 				208: 'l',
-				209: __s[+K5R],
-				210: __s[K5R >> 1716764576],
-				211: __s[K5R | 6],
-				212: __s[K5R | 517],
-				213: __s[+K5R],
-				214: __s[K5R * 1],
-				215: __s[+K5R],
+				209: "w",
+				210: "w",
+				211: "w",
+				212: "w",
+				213: "w",
+				214: "w",
+				215: "w",
 				216: 'l',
 				217: 'l',
 				218: _s(L9y <<
@@ -64328,13 +64335,13 @@ function outer() {
 				222: 'l',
 				223: 'l',
 				224: 'l',
-				225: __s[K5R ^ 0],
-				226: __s[+K5R],
-				227: __s[+K5R],
-				228: __s[K5R | 1027],
-				229: __s[+K5R],
-				230: __s[K5R << 235824160],
-				231: __s[+K5R],
+				225: "w",
+				226: "w",
+				227: "w",
+				228: "w",
+				229: "w",
+				230: "w",
+				231: "w",
 				232: E6k
 					.S55(L9y | 34),
 				233: 'l',
@@ -64352,13 +64359,13 @@ function outer() {
 				243: 'l',
 				244: 'l',
 				245: 'l',
-				246: __s[+K5R],
+				246: "w",
 				247: 'l',
 				248: 'l',
 				249: 'l',
 				250: 'l',
-				251: __s[K5R & 2147483647],
-				252: __s[K5R ^ 0],
+				251: "w",
+				252: "w",
 				253: 'l',
 				254: _s(
 					L9y * 1),
@@ -64389,8 +64396,8 @@ function outer() {
 				275: 'l',
 				276: 'l',
 				277: 'l',
-				278: __s[K5R - 0],
-				279: __s[K5R - 0],
+				278: "w",
+				279: "w",
 				280: 'l',
 				281: _s(
 					+L9y),
@@ -64400,29 +64407,29 @@ function outer() {
 				285: _s(+
 					L9y),
 				286: 'l',
-				287: __s[+K5R],
-				288: __s[K5R - 0],
+				287: "w",
+				288: "w",
 				289: 'l',
 				290: 'l',
 				291: 'l',
 				292: 'l',
 				293: __s[G2k ^ 0],
-				294: __s[K5R ^ 0],
+				294: "w",
 				295: 'l',
 				296: 'l',
 				297: 'l',
 				298: 'l',
 				299: _s(
 					L9y - 0),
-				300: __s[+K5R],
-				301: __s[+K5R],
+				300: "w",
+				301: "w",
 				302: 'l',
 				303: 'l',
 				304: E6k
 					.o55(L9y & 2147483647),
 				305: 'l',
 				306: 'l',
-				307: __s[K5R & 2147483647],
+				307: "w",
 				308: _s(
 					+K5R),
 				309: 'l',
@@ -64430,8 +64437,8 @@ function outer() {
 				311: 'l',
 				312: 'l',
 				313: 'l',
-				314: __s[K5R * 1],
-				315: __s[+K5R],
+				314: "w",
+				315: "w",
 				316: 'l',
 				317: _s(L9y ^
 					0),
@@ -64439,14 +64446,14 @@ function outer() {
 				319: 'l',
 				320: 'l',
 				321: 'l',
-				322: __s[K5R ^ 0],
+				322: "w",
 				323: __s[+g4p],
-				324: __s[K5R ^ 0],
-				325: __s[K5R & 2147483647],
+				324: "w",
+				325: "w",
 				326: _s(
 					+K5R),
 				327: __s[+g4p],
-				328: __s[K5R | 263],
+				328: "w",
 				329: 'l',
 				330: 'l',
 				331: _s(+
@@ -64454,7 +64461,7 @@ function outer() {
 				332: 'l',
 				333: 'l',
 				334: 'l',
-				335: __s[K5R & 2147483647],
+				335: "w",
 				336: E6k
 					.S55(+K5R),
 				337: 'l',
@@ -64467,7 +64474,7 @@ function outer() {
 				344: 'l',
 				345: _s(+
 					L9y),
-				346: __s[K5R * 1],
+				346: "w",
 				347: 'l',
 				348: 'l',
 				349: 'l',
@@ -64478,7 +64485,7 @@ function outer() {
 				354: E6k
 					.o55(L9y * 1),
 				355: 'l',
-				356: __s[+K5R],
+				356: "w",
 				357: __s[+G2k],
 				358: 'l',
 				359: E6k
@@ -64491,7 +64498,7 @@ function outer() {
 				364: 'l',
 				365: 'l',
 				366: 'l',
-				367: __s[+K5R],
+				367: "w",
 				368: E6k
 					.o55(L9y * 1),
 				369: 'l',
@@ -64504,8 +64511,8 @@ function outer() {
 				376: 'l',
 				377: E6k
 					.o55(G2k << 81876896),
-				378: __s[K5R ^ 0],
-				379: __s[K5R - 0],
+				378: "w",
+				379: "w",
 				380: 'l',
 				381: _s(+
 					L9y),
@@ -64516,7 +64523,7 @@ function outer() {
 					1352776960),
 				386: 'l',
 				387: 'l',
-				388: __s[+K5R],
+				388: "w",
 				389: 'l',
 				390: 'l',
 				391: 'l',
@@ -64526,12 +64533,12 @@ function outer() {
 				395: E6k
 					.S55(L9y << 196583776),
 				396: 'l',
-				397: __s[+K5R],
-				398: __s[K5R << 2069162752],
+				397: "w",
+				398: "w",
 				399: E6k
 					.S55(K5R << 1578722368),
-				400: __s[+K5R],
-				401: __s[+K5R],
+				400: "w",
+				401: "w",
 				402: 'l',
 				403: _s(L9y >>
 					157037920),
@@ -64541,7 +64548,7 @@ function outer() {
 				407: 'l',
 				408: _s(+
 					L9y),
-				409: __s[+K5R],
+				409: "w",
 				410: 'l',
 				411: 'l',
 				412: 'l',
@@ -64550,32 +64557,32 @@ function outer() {
 				414: 'l',
 				415: 'l',
 				416: 'l',
-				417: __s[+K5R],
+				417: "w",
 				418: E6k
 					.o55(K5R | 261),
-				419: __s[+K5R],
-				420: __s[K5R * 1],
-				421: __s[+K5R],
-				422: __s[+K5R],
+				419: "w",
+				420: "w",
+				421: "w",
+				422: "w",
 				423: __s[+G2k],
-				424: __s[K5R ^ 0],
-				425: __s[+K5R],
-				426: __s[+K5R],
+				424: "w",
+				425: "w",
+				426: "w",
 				427: __s[+G2k],
-				428: __s[+K5R],
-				429: __s[K5R ^ 0],
-				430: __s[+K5R],
-				431: __s[K5R ^ 0],
+				428: "w",
+				429: "w",
+				430: "w",
+				431: "w",
 				432: _s(K5R & E6k
 					.s6s),
 				433: __s[+G2k],
-				434: __s[K5R ^ 0],
-				435: __s[K5R >> 909737376],
+				434: "w",
+				435: "w",
 				436: _s(K5R <<
 					483013504),
 				437: __s[G2k - 0],
-				438: __s[K5R & 2147483647],
-				439: __s[+K5R],
+				438: "w",
+				439: "w",
 				440: _s(+
 					K5R)
 			};
@@ -67652,10 +67659,10 @@ function outer() {
 							var f0i = j8();
 							var
 								U0i = p6(f0i.mm);
-							var P0i = p6(ppdt[__s[+r2y]]["b"]);
+							var P0i = p6(ppdt["m"]["b"]);
 							var Z0i = p6(f0i.nmm);
 							var
-								R0i = p6(f0i.nmg + Math.floor(f0i.nmg * (ppdt[__s[+r2y]]["r"] / 100)));
+								R0i = p6(f0i.nmg + Math.floor(f0i.nmg * (ppdt["m"]["r"] / 100)));
 							var K0i =
 								"";
 							if (ppdt[__s[851]]) {
@@ -67725,12 +67732,12 @@ function outer() {
 						}
 						if (e5i == (0)) {
 							var k5i = qam["techTreeSteps"]
-							[Number(l5i)][__s[r2y << 1428894112]][0][__s[+r2y]];
+							[Number(l5i)]["m"][0]["m"];
 							var t5i = qam[__s[+d0p]][
 								Number(k5i)][__s[+y0R]];
 							var w5i = qam[__s[+d0p]][Number(k5i)][_s(K2y >>
 								886067392)];
-							var h5i = qam["techTreeSteps"][Number(l5i)][__s[r2y ^ 0]][0][_s(+
+							var h5i = qam["techTreeSteps"][Number(l5i)]["m"][0][_s(+
 								b2y)];
 							var q0i = l5i;
 							if (w5i == !![]) var a0i = __s[+l0p] + h5i + __s[+o9y];
@@ -67740,17 +67747,17 @@ function outer() {
 							var M5i = '1' -
 								0;
 						} else {
-							var k5i = qam["techTreeSteps"][Number(e5i)][__s[+r2y]][0][__s[+r2y]];
+							var k5i = qam["techTreeSteps"][Number(e5i)]["m"][0]["m"];
 							var
 								q0i = qam["techTreeSteps"][Number(e5i)]['c'];
 							var t5i = qam[__s[d0p >> 1958012608]]
 							[Number(k5i)][__s[+y0R]];
 							var w5i = qam[__s[+d0p]][Number(k5i)]['p'];
 							var j5i =
-								qam["techTreeSteps"][Number(e5i)][__s[r2y - 0]][0]["v"];
+								qam["techTreeSteps"][Number(e5i)]["m"][0]["v"];
 							if (
 								q0i == 0) var E0i = 0;
-							else var E0i = qam["techTreeSteps"][Number(q0i)][__s[+r2y]][0]["v"];
+							else var E0i = qam["techTreeSteps"][Number(q0i)]["m"][0]["v"];
 							if (
 								w5i == !!1) {
 								var a0i = __s[+l0p] + E0i + __s[+o9y];
@@ -67760,7 +67767,7 @@ function outer() {
 							var v5i = T5i;
 							var I5i =
 								a0i;
-							var M5i = qam["techTreeSteps"][Number(e5i)][__s[r2y - 0]][0]["v"];
+							var M5i = qam["techTreeSteps"][Number(e5i)]["m"][0]["v"];
 						}
 						if (m0i != +c8y) u5i = u5i + __s[b0p >> 1616388512] + U5i;
 						$(__s[5559])
@@ -69229,12 +69236,12 @@ function outer() {
 			members: function () {
 				var s6i = {};
 				for (var e6i = '0' >>
-					1647115232; e6i < aldt[__s[+r2y]].length; e6i++) s6i[e6i] = {
-						name: aldt[__s[+r2y]][e6i][E6k
+					1647115232; e6i < aldt["m"].length; e6i++) s6i[e6i] = {
+						name: aldt["m"][e6i][E6k
 							.S55(3315)],
-						rank: bam[__s['157' | 136]][aldt[__s[+r2y]][e6i]["r"]],
-						joined: aldt[__s[+r2y]][e6i][__s[2231]],
-						last_log: aldt[__s[r2y - 0]][e6i][_s(+
+						rank: bam[__s['157' | 136]][aldt["m"][e6i]["r"]],
+						joined: aldt["m"][e6i][__s[2231]],
+						last_log: aldt["m"][e6i][_s(+
 							'5538')]
 					};
 				return s6i;
@@ -69265,19 +69272,19 @@ function outer() {
 
 		function E3F(F1l) {
 			E6k.y6();
-			for (var N1l in bam[__s[+m9y]]) {
+			for (var N1l in bam["titles"]) {
 				if (F1l < 79 && N1l != 9) {
 					var m1l =
 						Number(N1l) + (1);
-					var q1l = bam[__s[+m9y]][N1l]["b"][2];
+					var q1l = bam["titles"][N1l]["b"][2];
 					var c1l =
-						bam[__s[m9y ^ 0]][m1l]["b"][2];
+						bam["titles"][m1l]["b"][2];
 				} else {
 					var q1l = 79;
 					var c1l = +
 						"1001";
 				}
-				if (F1l >= q1l && F1l < c1l || F1l >= ("79" | 14)) return bam[__s[m9y & 2147483647]][N1l][E6k
+				if (F1l >= q1l && F1l < c1l || F1l >= ("79" | 14)) return bam["titles"][N1l][E6k
 					.o55(3315)];
 			}
 		}
@@ -69295,7 +69302,7 @@ function outer() {
 			var h09 = new Object();
 			if (Z09 != 0) {
 				r09++;
-				h09[__s[+K5R]] = Z09;
+				h09["w"] = Z09;
 			}
 			if (g09 != 0) {
 				r09++;
@@ -69314,7 +69321,7 @@ function outer() {
 				var U09 = _s(
 					1066);
 				for (var S09 in h09) {
-					if (S09 == __s[+K5R]) J09 = __s[4795];
+					if (S09 == "w") J09 = __s[4795];
 					if (
 						S09 == "s") J09 = __s[660];
 					if (S09 == __s[g4p | 16]) J09 = _s('3602' &
@@ -69330,7 +69337,7 @@ function outer() {
 					A09 = 0;
 				for (var S09 in h09) {
 					A09++;
-					if (S09 == __s[+K5R]) J09 = __s[4795];
+					if (S09 == "w") J09 = __s[4795];
 					if (S09 == E6k
 						.S55(+Z9y)) J09 = __s[660];
 					if (S09 == __s[g4p & 2147483647]) J09 = __s[3602];
@@ -69952,7 +69959,7 @@ function outer() {
 				$(__s[+v1t])
 					.text(Q91);
 				$(__s[w1t & 2147483647])
-					.text(u91[__s[r2y << 56492864]] + __s[+o9y]);
+					.text(u91["m"] + __s[+o9y]);
 				$(__s[+F1t])
 					.text(u91["b"] + __s[o9y ^ 0]);
 				$(__s[657])

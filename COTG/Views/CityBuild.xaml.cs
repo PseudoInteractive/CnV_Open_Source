@@ -43,9 +43,11 @@ namespace COTG.Views
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
 
 		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot));
+		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
+		public static bool IsTowerSpot((int x, int y) cc) => IsTowerSpot(XYToId(cc));
 		public static bool IsWallSpot(int spot) => wallSpots.Contains((ushort)spot);
-
+		public static bool IsWallSpot((int x, int y) cc) => wallSpots.Contains((ushort)XYToId(cc));
 		public enum Action
 		{
 			none,
@@ -99,6 +101,7 @@ namespace COTG.Views
 			empty,
 			res,
 			tower,
+			wall,
 			invalid
 		}
 		public static MenuType menuType = MenuType.invalid;
@@ -822,10 +825,8 @@ namespace COTG.Views
 			{
 				singleClickAction = Action.none; // default
 												 // toggle visibility
-				var d = b.def;
+
 			//	var i = instance;
-				if(!b.isEmpty)
-					JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 				//i.building.Text = d.Bn;
 				//i.description.Text = d.Ds;
 				//i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;
@@ -838,8 +839,13 @@ namespace COTG.Views
 					{
 						bspot = 0;
 						cc = (span0, span0);
+						b = build.buildings[bspot];
+						
 					}
 				}
+				var d = b.def;
+				if (!b.isEmpty)
+					JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 				{
 					selected = cc;
 					var type = isRight ? MenuType.quickBuild :
@@ -1079,6 +1085,7 @@ namespace COTG.Views
 						found.bid = (bi.bid);
 
 					}
+					found.cacheScore += 1.0f;
 					//Array.Sort(buildingMru, (a, b) => a.cacheScore.CompareTo(b.cacheScore) );
 					//if (menuType == MenuType.quickBuild)
 					{
@@ -1097,7 +1104,7 @@ namespace COTG.Views
 								lowestId = -1;
 								lowestScore = -float.MaxValue;
 							}
-							var entry = (from a in buildingMru where a.bid == bi.bid select a.cacheScore).FirstOrDefault();
+							var entry = (from a in buildingMru where a.bid == i.bid select a.cacheScore).FirstOrDefault();
 							if (entry < lowestScore)
 							{
 								lowestScore = entry;

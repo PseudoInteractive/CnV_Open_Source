@@ -1159,7 +1159,7 @@ namespace COTG.Game
 			{
 				City.build = cid;
 				Assert(pid == Player.activeId);
-				Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.s); // broadcast change
+				Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
 				foreach (var p in PlayerPresence.all)
 				{

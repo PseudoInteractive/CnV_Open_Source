@@ -27,6 +27,8 @@ namespace COTG.DB
 		
 		public static bool IsSession(string name) => name == "sec_session_id";
 
+
+
 		public static string Apply(string _cookies)
 		{
 			var cookies = _cookies.Split(';');

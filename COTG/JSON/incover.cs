@@ -35,6 +35,7 @@ namespace COTG.JSON
 		static int lastPersonalIncomingCount = 0;
 		static int lastWatchIncomingCount = 0;
 		static bool hasRun;
+		
 		const string work = "fetch incoming";
 		struct IncomingInfo
 		{
@@ -430,7 +431,7 @@ namespace COTG.JSON
 
 
 
-												  if (Discord.isValid)
+												  if (Discord.isValid && _hasRun)
 												  {
 
 

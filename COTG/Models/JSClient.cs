@@ -123,8 +123,8 @@ namespace COTG
 			public string pn; // redundant player name
 			[JsonInclude]
 			public  string token;
-			[JsonInclude]
-			public  string s ;
+		//	[JsonInclude]
+		//	public  string s ;
 			[JsonInclude]
 			public string raidSecret;
 	//		[JsonInclude]
@@ -137,7 +137,7 @@ namespace COTG
 			public int[] allowedPlayers;
 			public int[] deniedPlayers;
 
-		
+			public string cookies;
 			
 		}
 		public static JSVars[] jsVarsByPlayer = Array.Empty<JSVars>();
@@ -204,15 +204,15 @@ namespace COTG
 		//	}
 		//	return ""; // error!
 		//}
-		static int inTransitionTo;
+		static string  pendingCookies;
 		public static async void SetPlayer(int pid,string token, string cookies, int cid,string name)
 		{
 			// already set
 			if (jsVars.token == token)
 				return;
-			if (inTransitionTo != 0)
+			if (pendingCookies != null)
 				return;
-			inTransitionTo = pid;
+			pendingCookies = cookies;
 
 			Note.Show($"Entering {name}'s City");
 
@@ -263,9 +263,9 @@ namespace COTG
 			}
 		}
 
-		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string s, string ppdt)
+		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string cookies, string ppdt)
 		{
-			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt,s=s,raidSecret=raid }; // todo: need raidSecret
+			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt, cookies = cookies, raidSecret=raid }; // todo: need raidSecret
 			//
 			// add if necessary
 			//
@@ -1050,6 +1050,11 @@ namespace COTG
 
 				}
 
+				if (jse.TryGetProperty("r", out var r))
+				{
+					Player.myTitle = r.GetAsInt();
+				}
+
 				if (jse.TryGetProperty("clc", out var cityListCities))
 				{
 					++clChanged;
@@ -1069,8 +1074,8 @@ namespace COTG
 
 						}
 					}
-
 				}
+
 				if (clChanged >= 2)
 				{
 					App.DispatchOnUIThreadLow(() =>
@@ -1789,7 +1794,7 @@ namespace COTG
 								   Alliance.Ctor(jsDoc);
 								   
 								   // now we can update player info
-								   Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.s);
+								   Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.cookies);
 
 								  
 								   break;
@@ -1839,8 +1844,8 @@ namespace COTG
 								   var jso = jsp.Value;
 								   var raidSecret = jso.GetString("secret");
 								   var pid = jso.GetInt("pid");
-								   Assert(pid == inTransitionTo);
-								   inTransitionTo = 0;
+
+								   pendingCookies = null;
 								   var pn = jso.GetString("pn");
 								   var ppdt = jso.GetProperty("ppdt");
 								   var token = jso.GetString("token");
@@ -1863,11 +1868,11 @@ namespace COTG
 						   case "restoreglobals":
 						   {
 								   Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
-								   inTransitionTo = 0;
 								   // only need to restore cookies
-								   CookieDB.Apply(jsVars.s); 
+								   CookieDB.Apply(jsVars.cookies);
+								   pendingCookies = null;
 
-								   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.myName);
+								   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
 
 								   break;
 						   }
