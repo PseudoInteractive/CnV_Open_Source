@@ -71,6 +71,7 @@ namespace COTG.Game
 		public const short bidIron = 452;
 		public const short bidLake = 453;
 		public const short bidForest = 454;
+		public const int bpotWall = 0;
 
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
@@ -898,6 +899,10 @@ namespace COTG.Game
 			foreach (var c in all)
 				if (c.name == name)
 					return c;
+
+			foreach (var c in all)
+				if (name.Contains(c.name,StringComparison.OrdinalIgnoreCase)|| c.name.Contains(name, StringComparison.OrdinalIgnoreCase))
+					return c;
 			return null;
 		}
 		public class GroupDef
@@ -918,7 +923,7 @@ namespace COTG.Game
 		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });
 		public static GroupDef gdGalley = new GroupDef("Galleys", new[] { "galley" });
 		public static GroupDef gdOffense = new GroupDef("Offense", new[] { "vanq", "sorc", "horse","druid", "scorp","warship" });
-		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt", "ranger","triari","priest","prae","arb","ballista" });
+		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt","r/t", "vt","v/t", "vrt","v/r/t", "ranger","triari","priest","prae","arb","ballista" });
 
 //		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
 //        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
@@ -930,13 +935,29 @@ namespace COTG.Game
             var cl = CityList.Find(name);
             if (cl == null)
             {
-                var id = AMath.random.Next(65536) + 10000;
+              
                 cl = new CityList(name);
-                CityList.all = CityList.all.ArrayAppend(cl);
+				var id = CityList.all.Length;
+				CityList.all = CityList.all.ArrayAppend(cl);
+				while(id > 1)
+				{
+					if (CityList.all[id].name.CompareTo(CityList.all[id - 1].name) >= 0)
+						break;
+					Swap(ref CityList.all[id], ref CityList.all[id - 1]);
+					--id;
+				}
             }
             return cl;
         }
-        public static CityList FindNewCities() => Find(sNewCities); 
+
+		private static void Swap<T>(ref T a, ref T b)
+		{
+			T temp = a;
+			a = b;
+			b = temp;
+		}
+
+		public static CityList FindNewCities() => Find(sNewCities); 
 
         public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
         public static CityList[] all = Array.Empty<CityList>();

@@ -23,7 +23,7 @@ namespace COTG.Game
         public byte repeatCount;
         public byte troopType; // todo:  We should store3 of these, or specials value for RT, VRT, VT
         public DateTimeOffset time;
-
+		public static bool test;
         //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
         //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
         //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
@@ -180,7 +180,7 @@ namespace COTG.Game
 				if (MainPage.expandedCity!= null)
 					MainPage.expandedCity.ToggleDungeons(MainPage.instance.cityGrid,true,false);
 			}
-            if(  Player.isAvatarOrTest)
+            if(Raid.test)
             {
                 await Task.Delay(1000);
                 await city.SuperRaid();

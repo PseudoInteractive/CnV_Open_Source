@@ -130,7 +130,8 @@ namespace COTG.Views
 
 		public static void ClearHover()
 		{
-			contToolTip = null;
+			if(!IsCityView())
+				contToolTip = null;
 			lastCanvasC = 0;
 			lastCont = -1;
 			toolTip = null;
@@ -587,7 +588,7 @@ namespace COTG.Views
 						{
 							var b = build.GetBuiding(cc);
 							var d = b.def;
-							contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
+						//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = 0;
 							Player.viewHover = 0;
 							toolTip = null;

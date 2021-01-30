@@ -19,7 +19,7 @@ namespace COTG.JSON
 		public static int FindBestHub(int cid)
 		{
 			var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
-
+			
 			int reqHub = 0;
 			var bestDist = 4096f;
 			foreach (var hub in cl.cities)
@@ -37,7 +37,14 @@ namespace COTG.JSON
 			}
 			return reqHub;
 		}
-        public static async Task SetCitySettings(int cid, int reqHub)
+		public static async void SetHub(int cid)
+		{
+			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
+			{
+				await CitySettings.SetCitySettings(_cid, CitySettings.FindBestHub(_cid));
+			}
+		}
+			public static async Task SetCitySettings(int cid, int reqHub)
         {
             await UpdateMinisterOptions(cid, async (split) =>
             {
@@ -239,7 +246,7 @@ namespace COTG.JSON
                 split[39] = sendIron?targetHub.ToString() : "0"; // hub to use for this res
                 split[40] = sendFood?targetHub.ToString() : "0"; // hub to use for this res
                 split[41] = "0"; // use a different city for all sends
-                split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
+                split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requetestbmini
                                                                    //         split[43] = targetHub.ToString();
                 return true;
             });

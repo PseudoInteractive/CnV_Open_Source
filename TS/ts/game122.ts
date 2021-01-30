@@ -7084,7 +7084,7 @@ const __s = [".shRinf",
 function _s(id) {
 	return __s[id];
 }
-
+let testFlag = true;
 var _cid = 0;
 var _viewMode = 0; // 
 
@@ -7093,7 +7093,7 @@ const viewModeCity = 0;
 const viewModeRegion = 1;
 const viewModeWorld = 2;
 var pollthis;
-let D6: jsonT.City = {};
+let city: jsonT.City = {};
 let pollJ: jsonT.Poll = {};
 var P8 = 0;
 function SetViewMode(mode) {
@@ -7101,7 +7101,9 @@ function SetViewMode(mode) {
  // this needs to be black in city view, white in region view
 	callSyncViewMode();
 }
-
+function setTestFlag(flag) {
+	testFlag = flag;
+}
 function debounce(func: () => void, wait: number, _maxWait: number = 0, _leading: boolean = false, _trailing: boolean = true) {
 	let lastArgs,
 		lastThis,
@@ -7421,6 +7423,8 @@ function BuildPopup(node:Element) : any
 //	}
    return dest;
 }
+
+let buildingRemap = {};
 let tooltipped = null;
 let popupIds = ["tutorialPopup" ];
 let popupClasses =[ "atkpops","longmenu","popUpBox2","medpopupstyle","smallpopupstyle","popUpBox","obscuretop","longwindow"];
@@ -7439,11 +7443,11 @@ function DoSyncViewMode() {
 			let __zoom = 64;
 			let _x = _camera.x;
 			let _y = _camera.y;
-			if (_viewMode == viewModeRegion) {
-				_viewMode = viewModeWorld;
-				var x0g = document.getElementById("cvs");
-				x0g.style.display = "none";
-			}
+			//if (_viewMode == viewModeRegion) {
+			//	_viewMode = viewModeWorld;
+			//	var x0g = document.getElementById("cvs");
+			//	x0g.style.display = "none";
+			//}
 		 _popupCount = 0;
 		let popups =[];
 			 {
@@ -7511,15 +7515,23 @@ function DoSyncViewMode() {
 			//         || _zoom != __zoom || _popupCountCache != _popupCount))
 			if ( _cid!==0||(_viewMode !== _viewModeCache || popupSizeDirty
 				|| _popupCountCache !== _popupCount) ||(_lastTooltip !== tooltipped) ) {
-				_viewModeCache = _viewMode;
+				
 				popupSizeDirty=false;
 				_lastTooltip = tooltipped;
-				_zoom = __zoom;
-				_cameraX = _x;
-				_cameraY = _y;
+				
 				_popupCountCache = _popupCount;
-				const wrapper = { c: {  x: _x, y: _y, v: _viewMode, z: __zoom, p: _popupCount, pop:popups, _cid } };
-				_cid=0;
+				const wrapper = { c: {  p: _popupCount, pop:popups } };
+				if(_viewModeCache !== _viewMode)
+				{
+					_viewModeCache = _viewMode;
+					wrapper.c['v'] = _viewMode;
+
+				}
+				if( _cid!== 0)
+				{
+					wrapper.c['c'] = _cid;
+					_cid=0;
+				}
 				window['external']['notify'](JSON.stringify(wrapper));
 			}
 		}
@@ -9461,7 +9473,7 @@ function truncateToken()
 function ppdtChanged(__ppdt) {
 	
 	truncateToken();
-			
+	
 
 	let wrapper = { ppdt: {} };
 	let wantUpdate = false;
@@ -9486,14 +9498,13 @@ function ppdtChanged(__ppdt) {
 		wantRs = false;
 	}
  
-	if (__ppdt.hasOwnProperty("pid")) {
-			wrapper.ppdt['pid'] = __ppdt['pid'];
-			wantUpdate = true;
-		}
 
 	if (!wantUpdate)
 		return;
  
+	if (__ppdt.hasOwnProperty("pid")) {
+			wrapper.ppdt['pid'] = __ppdt['pid'];
+		}
 	 if (__ppdt.hasOwnProperty("r")) {
 		wrapper.ppdt['r'] = __ppdt['r']; // player rank
 	}
@@ -11192,6 +11203,15 @@ function outer() {
 			g26 = { shi: F26, crt: c26, sco: Y26, cav: p26, inf: D26, nob: q26, mst: m26, sie: N26 };
 			return g26;
 		}
+		
+		for(let i =0;i<1000;++i)
+		{
+			let q = L2(i);
+			if(q != 0)
+				buildingRemap[i.toString()] = q;
+
+
+		}
 
 		function L2(v7l) {
 			switch (v7l) {
@@ -11393,12 +11413,12 @@ function outer() {
 		}
 
 		function A9(k1w, H1w, u1w, s1w, e1w) {
-			var c3w = D6.r[1].r;
-			var m3w = D6.r[2].r;
-			var q3w = D6.r[
+			var c3w = city.r[1].r;
+			var m3w = city.r[2].r;
+			var q3w = city.r[
 				3].r;
 			E6k.y6();
-			var E3w = D6.r[4].r;
+			var E3w = city.r[4].r;
 			var a3w = ppdt.g.t;
 			var F3w = c3w + k1w;
 			var N3w = m3w + H1w;
@@ -11406,10 +11426,10 @@ function outer() {
 				u1w;
 			var p3w = E3w + s1w;
 			var D3w = a3w + e1w;
-			D6.r[1].r = F3w;
-			D6.r[2].r = N3w;
-			D6.r[3].r = Y3w;
-			D6.r[4].r = p3w;
+			city.r[1].r = F3w;
+			city.r[2].r = N3w;
+			city.r[3].r = Y3w;
+			city.r[4].r = p3w;
 			ppdt.g.t = D3w;
 			$(__s[O5y ^ 0])
 				.html(p6(Math.floor(F3w)));
@@ -11776,8 +11796,8 @@ function outer() {
 			var J1T = +k7y;
 			if (J1T == 0) return '';
 			let icountf = 0;
-			if (ppdt[__s[+o7y]])
-				if (ppdt[__s[o7y | 1282]][J1T]) icountf = ppdt[__s[+o7y]][J1T];
+			if (ppdt["itc"])
+				if (ppdt["itc"][J1T]) icountf = ppdt["itc"][J1T];
 			var h1T = '';
 			var V1T =
 				'';
@@ -11808,6 +11828,7 @@ function outer() {
 			for (let v11 in
 				T11) t11[v11] = T11[v11];
 			ppdt = t11;
+		   window['updateArtifacts']();	
 			truncateToken();
 			var G11;
 			var L11;
@@ -11861,7 +11882,7 @@ function outer() {
 					L11 = bam["titles"][l11][_s(+
 						B9y)][1];
 					if (ppdt.r >= L11) var X11 = bam["titles"][l11]["n"];
-				} if (D6) w6F();
+				} if (city) w6F();
 			let O11 = ppdt["rw"][78]['l'];
 			if (O11 == 0)
 				if (O11 < +y9y) {
@@ -11974,9 +11995,9 @@ function outer() {
 		function O7V() {
 			var t4w = 0;
 			E6k.y6();
-			for (var x4w = 0; x4w < D6.bd.length; x4w++) {
-				var T4w = D6.bd[x4w].bid;
-				var O4w = D6
+			for (var x4w = 0; x4w < city.bd.length; x4w++) {
+				var T4w = city.bd[x4w].bid;
+				var O4w = city
 					.bd[x4w].bl;
 				if (L2(T4w) != 0) T4w = L2(T4w);
 				if (O4w >= 1 && T4w >= 1)
@@ -12760,7 +12781,7 @@ function outer() {
 
 		function x7V() {
 			N6();
-			var b4w = $.post("/includes/" + __s[2447], { usrid: P8, usr: H2, sc: D6.s }); "pS.php"
+			var b4w = $.post("/includes/" + __s[2447], { usrid: P8, usr: H2, sc: city.s }); "pS.php"
 			F6();
 			b4w.done(function (S4w) {
 				E6k.R6();
@@ -12785,7 +12806,7 @@ function outer() {
 			var t9B = Number(j9B) * (R5y | 0) + Number(I9B);
 			var
 				o9B = getContinent(I9B, j9B);
-			var L9B = getContinent(D6.x, D6.y);
+			var L9B = getContinent(city.x, city.y);
 			var X9B = s9();
 			var v9B = Number(j9B) * +l1y + Number(I9B);
 			var
@@ -12804,25 +12825,25 @@ function outer() {
 				$(__s[+z6y])
 					.html(__s[591]);
 				Y6(__s['4884' | 512]);
-			} else if (D6.crth < l6y >> 1475722208 && w9B == 1) {
+			} else if (city.crth < l6y >> 1475722208 && w9B == 1) {
 				$(__s[+z6y])
 					.html(__s[4212]);
 				Y6(__s[1239]);
-			} else if (w9B == 2 && D6.shph < (25)) {
+			} else if (w9B == 2 && city.shph < (25)) {
 				$(__s[z6y << 529407616])
 					.html(__s[5581]);
 				Y6(__s[2993]);
-			} else if (D6.r[1]["r"] < t8y >> 926117440 || D6.r[2][E6k
-				.S55(I6y ^ 0)] < +t8y || D6.r[3]["r"] < (J8y | 25000) || D6.r[4][
+			} else if (city.r[1]["r"] < t8y >> 926117440 || city.r[2][E6k
+				.S55(I6y ^ 0)] < +t8y || city.r[3]["r"] < (J8y | 25000) || city.r[4][
 				"r"] < +J8y) {
 				$(__s[+z6y])
 					.html(__s[3850]);
-				if (D6.r[1]["r"] < (t8y ^ 0)) Y6(_s(+
+				if (city.r[1]["r"] < (t8y ^ 0)) Y6(_s(+
 					x8y));
-				if (D6.r[2]["r"] < t8y * 1) Y6(__s[+g8y]);
-				if (D6.r[3][_s(
+				if (city.r[2]["r"] < t8y * 1) Y6(__s[+g8y]);
+				if (city.r[3][_s(
 					I6y ^ 0)] < +J8y) Y6(__s[W8y << 1530212544]);
-				if (D6.r[4]["r"] < J8y >> 2068272352) Y6(
+				if (city.r[4]["r"] < J8y >> 2068272352) Y6(
 					__s[f8y * 1]);
 			} else if (ppdt.bc <= 0) {
 				$(__s[+z6y])
@@ -12838,35 +12859,35 @@ function outer() {
 				Y6(__s[348]);
 			} else {
 				if (H9B >= ('1' | 1)) {
-					D6[__s[s8y & 2147483647]][17 << 1348325472] = D6[E6k
+					city[__s[s8y & 2147483647]][17 << 1348325472] = city[E6k
 						.S55(+s8y)][+17] - H9B;
-					D6["th"][17] = D6["th"][17] - H9B;
+					city["th"][17] = city["th"][17] - H9B;
 				} else {
-					D6[__s[s8y * 1]][17 ^ 0] = D6[E6k
+					city[__s[s8y * 1]][17 ^ 0] = city[E6k
 						.o55(s8y >> 1819245536)][+17] - (1);
-					D6["th"][17 << 188368000] = D6["th"][17 - 0] - (1);
+					city["th"][17 << 188368000] = city["th"][17 - 0] - (1);
 				}
-				if (D6[_s(
-					622)]) var l9B = D6[__s[622]].length;
+				if (city[_s(
+					622)]) var l9B = city[__s[622]].length;
 				else {
 					var l9B = 0;
-					D6[__s[622]] = "";
+					city[__s[622]] = "";
 				}
 				var x9B = new Array();
 				x9B.push({ tt: 17, tv: H9B });
 				if (w9B == 1) {
 					var Q9B = 0;
 					var T9B = +l6y;
-					D6[__s[2956]] = D6.crt - +l6y;
-					D6[__s[650]] = D6[__s[650]] - (l6y << 1991996768);
+					city[__s[2956]] = city.crt - +l6y;
+					city[__s[650]] = city[__s[650]] - (l6y << 1991996768);
 				} else {
 					var Q9B = 25;
 					var T9B = +
 						'0';
-					D6[__s[306]] = D6.shp - +l6y;
-					D6[__s[+u8y]] = D6[__s[+u8y]] - +l6y;
+					city[__s[306]] = city.shp - +l6y;
+					city[__s[+u8y]] = city[__s[+u8y]] - +l6y;
 				}
-				D6[__s[622]][l9B] = {
+				city[__s[622]][l9B] = {
 					r_w: t8y | 1152,
 					r_i: J8y >>
 						1500788960,
@@ -12920,7 +12941,7 @@ function outer() {
 							else {
 								$(__s[+z6y])
 									.html(__s[800]);
-								D6 = JSON.parse(J9B);
+								city = JSON.parse(J9B);
 							 
 
 								L0F(3, I9B, j9B);
@@ -12943,7 +12964,7 @@ function outer() {
 			websocket = "";
 			if (r3F) r3F.destroy();
 			cid = 0;
-			D6 = {};
+			city = {};
 			$(__s[+q8y])
 				.html("");
 			$(__s[2893])
@@ -13148,17 +13169,17 @@ function outer() {
 
 		function O2F() {
 			E6k.y6();
-			if (ppdt[__s[o7y * 1]]) {
+			if (ppdt["itc"]) {
 				var n7T = __s[3028];
 				var f7T = 0;
 				for (var
-					A7T in ppdt[__s[+o7y]])
-					if (ppdt[__s[o7y | 1858]][A7T] > 0) {
+					A7T in ppdt["itc"])
+					if (ppdt["itc"][A7T] > 0) {
 						if (f7T == 0) n7T += __s[+H0R];
 						var K7T =
 							I2(A7T, 100);
 						n7T += __s[6013] + A7T + __s[760] + K7T + __s[3496] + A7T + _s('4412' *
-							1) + ppdt[__s[o7y * 1]][A7T] + __s[4449] + ppdt[__s[+o7y]][A7T] + __s[6552];
+							1) + ppdt["itc"][A7T] + __s[4449] + ppdt["itc"][A7T] + __s[6552];
 						if (
 							f7T < (4)) f7T++;
 						else {
@@ -13281,9 +13302,9 @@ function outer() {
 					$(__s[3666])
 						.click(function () {
 							t7F(__s[6800]);
-							if (D6)
-								if (D6.citn) {
-									var O3V = D6.citn + __s[2397] + D6.x + ":" + D6.y +
+							if (city)
+								if (city.citn) {
+									var O3V = city.citn + __s[2397] + city.x + ":" + city.y +
 										")";
 									$(__s[6599])
 										.text(O3V);
@@ -13379,7 +13400,7 @@ function outer() {
 
 		function e6F(a1V) {
 			E6k.R6();
-			if (H2 != "TestDummy" && H2 != "MrLongTongue") {
+			if ((!testFlag) && H2 != "MrLongTongue") {
 				var q1V = a1V;
 				E1V();
 
@@ -13692,13 +13713,13 @@ function outer() {
 			var k5Z = [];
 			var m0Z;
 			var c0Z = 0;
-			if (!D6.mo) D6.mo = [];
+			if (!city.mo) city.mo = [];
 			for (var
 				c0Z = 0; c0Z < 9; c0Z++) {
 				m0Z = 0;
 				if ($(__s[2925] + c0Z + __s[G2R - 0])
 					.prop(__s[286])) m0Z = 1;
-				D6.mo[c0Z] = m0Z;
+				city.mo[c0Z] = m0Z;
 			}
 			E6k.y6();
 			var a0Z;
@@ -13711,8 +13732,8 @@ function outer() {
 				E0Z = $(__s[5276] + c0Z)
 					.val();
 				a0Z = c0Z + o8y * 1;
-				D6.mo[a0Z][0] = m0Z;
-				D6.mo[a0Z][1] = Math.abs(Number(E0Z));
+				city.mo[a0Z][0] = m0Z;
+				city.mo[a0Z][1] = Math.abs(Number(E0Z));
 			}
 		}
 		var e0F, k7F;
@@ -13743,14 +13764,14 @@ function outer() {
 
 		function n7F() {
 			var p2R = '1482';
-			if (D6)
-				if (D6.mo)
+			if (city)
+				if (city.mo)
 					for (var j6Z = 0; j6Z < 17 << 1165267136; j6Z++) {
 						var H6Z = Number(j6Z) + ("9" <<
 							74169248);
-						if (D6.mo[H6Z]) var I6Z = D6.mo[H6Z];
+						if (city.mo[H6Z]) var I6Z = city.mo[H6Z];
 						else var I6Z = 0;
-						var Q6Z = D6[__s[+s8y]][j6Z];
+						var Q6Z = city[__s[+s8y]][j6Z];
 						$(__s[243] + H6Z)
 							.text('');
 						$(__s[243] + H6Z)
@@ -13758,7 +13779,7 @@ function outer() {
 						$(__s[877] + H6Z)
 							.val(I6Z);
 						var l6Z = bam["troops"][j6Z].ts * I6Z;
-						var v6Z = D6.tt;
+						var v6Z = city.tt;
 						var w6Z = Math.floor(Number(
 							v6Z) / bam["troops"][j6Z].ts);
 						if (w6Z <= 0) w6Z = 0;
@@ -13774,7 +13795,7 @@ function outer() {
 					for (var j6Z = 0; j6Z < +17; j6Z++) {
 						var H6Z = Number(j6Z) + 9;
 						var l6Z = bam["troops"][j6Z].ts * I6Z;
-						var v6Z = D6.tt - D6.tu;
+						var v6Z = city.tt - city.tu;
 						$(__s[243] + H6Z)
 							.val('');
 						$(__s[+p2R] + H6Z)
@@ -14195,20 +14216,20 @@ function outer() {
 		var R0F = 0;
 
 		function ProcessBuildQueue() {
-			if (D6.bq)
-				if (D6.bq[0]) {
+			if (city.bq)
+				if (city.bq[0]) {
 					let callDelay = 1000;
-					var n1g = Number(D6.bq[0].bid);
-					var Y1g = Number(D6.bq[0].btype);
+					var n1g = Number(city.bq[0].bid);
+					var Y1g = Number(city.bq[0].btype);
 					var J1g =
-						Number(D6.bq[0].bspot);
-					var r1g = Number(D6.bq[0].ds);
-					var h1g = Number(D6.bq[0].de);
+						Number(city.bq[0].bspot);
+					var r1g = Number(city.bq[0].ds);
+					var h1g = Number(city.bq[0].de);
 					var V1g =
-						Number(D6.bq[0].brep);
-					var P1g = Number(D6.bq[0].elvl);
-					var p1g = Number(D6.bq[0].slvl);
-					var K1g = Number(D6.bq[0].pa);
+						Number(city.bq[0].brep);
+					var P1g = Number(city.bq[0].elvl);
+					var p1g = Number(city.bq[0].slvl);
+					var K1g = Number(city.bq[0].pa);
 					var D1g = bam["buildings"][V1g]["bn"];
 					var
 						y1g = bam["buildings"][V1g][__s[+c1R]];
@@ -14224,7 +14245,7 @@ function outer() {
 						if (Z1g > 100) {
 							if (Z1g + 100 < callDelay)
 								callDelay = Z1g + 100;
-							if (D6["itu"] && D6["itu"][6] && D6["itu"][6] > 0) {
+							if (city["itu"] && city["itu"][6] && city["itu"][6] > 0) {
 								DoPoll2(500);
 								// callDelay = 600;
 							}
@@ -14234,12 +14255,12 @@ function outer() {
 						else {
 							// this building is complete
 							//    console.log("done!");
-							D6.bd[J1g].bid = V1g;  // insert thebuilding into the map
-							D6.bd[J1g].bl = P1g;
+							city.bd[J1g].bid = V1g;  // insert thebuilding into the map
+							city.bd[J1g].bl = P1g;
 							$(__s[6875]) // remove from queue
 								.first()
 								.remove();
-							D6.bq.splice(0, 1);
+							city.bq.splice(0, 1);
 						    
 							h9(J1g, n1g);
 							V8();
@@ -14350,7 +14371,7 @@ function outer() {
 
 		let redrawCity = debounce(RedrawCity, 500);
 		function RedrawCity() {
-			var p8U = D6["bd"][bspotHall ^ 0]["bl"];
+			var p8U = city["bd"][bspotHall ^ 0]["bl"];
 			var S0l = bam[_s(Q5y <<
 				1718611616)][+BAL]["st"][p8U];
 			var b0l = p8U * 10;
@@ -14370,12 +14391,12 @@ function outer() {
 				},
 				42: { "rt": +o8y, "rh": S0l, "ruh": L9U, "rdh": S9U }
 			};
-			D6["bd"][+bspotHall]["rbb"] = d0l;
+			city["bd"][+bspotHall]["rbb"] = d0l;
 		
 	/*
-			for (var U2U in D6["bd"]) {
-				P2U = D6["bd"][U2U]["bid"];
-				D2U = D6["bd"][U2U]["bl"];
+			for (var U2U in city["bd"]) {
+				P2U = city["bd"][U2U]["bid"];
+				D2U = city["bd"][U2U]["bl"];
 				U2U = Number(U2U);
 				f9U = $(__s[+B1R] + U2U)
 					.data("data");
@@ -14405,9 +14426,9 @@ function outer() {
 									'left': __s[1123]
 								});
 						}
-						if (D6.ble[2] == 0) var C9U = D6.ble["4" *
+						if (city.ble[2] == 0) var C9U = city.ble["4" *
 							1];
-						else var C9U = D6.ble[2];
+						else var C9U = city.ble[2];
 						var z0l = D2U * +v1R - (v1R << 2044777600);
 						var X0l = C9U * +v1R - (v1R <<
 							538650016);
@@ -14425,23 +14446,23 @@ function outer() {
 					} else if (!(P2U > +R1R)) X1F(P2U,
 						U2U);
 				}
-				if (P2U == +G1R || P2U == +C6y || P2U == (r1R | 192) || P2U == +b1R) D6["bd"][U2U][E6k
+				if (P2U == +G1R || P2U == +C6y || P2U == (r1R | 192) || P2U == +b1R) city["bd"][U2U][E6k
 					.o55(i1R * 1)] = 0;
 				if (D2U > 10) {
 					D2U = 10;
-					D6["bd"][U2U]["bl"] = 10;
+					city["bd"][U2U]["bl"] = 10;
 				}
 				if (L2(P2U)) {
 					P2U = L2(P2U);
-					D6["bd"][U2U]["bid"] = P2U;
+					city["bd"][U2U]["bid"] = P2U;
 				}
 				if (P2U == +r6y & U2U != (0)) {
-					D6["bd"][U2U]["bid"] = 0;
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bid"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != (n4y & 2147483647) && P2U != +
 					l4y && P2U != o4y - 0 && P2U != I1R << 1609086048 && P2U != +t1y && P2U != T1y * 1 && P2U != g1y - 0 &&
@@ -14449,12 +14470,12 @@ function outer() {
 					P2U != N1y << 248221984 && P2U != +i1y && P2U != q1y * 1 && P2U != D1y * 1 && P2U != (B1y | 36) && P2U != +
 					e1y && P2U != y1y << 156907264 && (U2U == p1R >> 1467943232 || U2U == +z1R || U2U == +n1R || U2U == (d1R |
 						256) || U2U == 323 || U2U == (l1R | 322) || U2U == +k1R || U2U == +o1R)) {
-					D6["bd"][U2U]["bid"] = 0;
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bid"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if ((P2U == (n4y | 547) || P2U == +
 					l4y || P2U == o4y - 0 || P2U == +I1R || P2U == t1y >> 51875552 || P2U == T1y * 1 || P2U == +g1y || P2U ==
@@ -14465,13 +14486,13 @@ function outer() {
 					x5R << 1896147136 && U2U != (g5R & 2147483647) && U2U != W5R * 1 && U2U != f5R >> 1551032608 && U2U != U5R <<
 					737845088 && U2U != N0R << 1837042752 && U2U != (p1R | 80) && U2U != (z1R & 2147483647) && U2U != +n1R &&
 					U2U != (d1R | 1) && U2U != 323 && U2U != (l1R ^ 0) && U2U != k1R * 1 && U2U != +o1R) {
-					D6[_s(N1R |
+					city[_s(N1R |
 						4186)][U2U]["bid"] = 0;
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != n4y * 1 && P2U != l4y - 0 && P2U != +o4y &&
 					P2U != +I1R && P2U != t1y << 1105644064 && P2U != +T1y && P2U != +g1y && P2U != (f1y & 2147483647) && P2U != (
@@ -14486,13 +14507,13 @@ function outer() {
 						U2U == T5R - 0 || U2U == 433 || U2U == +x5R || U2U == g5R - 0 || U2U == W5R * 1 || U2U == (f5R & E6k
 							.s6s) || U2U == +U5R || U2U == +N0R || U2U == +p1R || U2U == +z1R || U2U == +n1R || U2U == +d1R ||
 						U2U == 323 || U2U == l1R >> 1123097632 || U2U == (k1R | 33) || U2U == +o1R)) {
-					D6["bd"][U2U][
+					city["bd"][U2U][
 						"bid"] = 0;
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if ((P2U == O1y * 1 || P2U == w1y >> 1332491136 || P2U ==
 					+H1y || P2U == G1y << 1922023968 || P2U == +b1y || P2U == X1y * 1 || P2U == (I1y ^ 0) || P2U == +z1y ||
@@ -14502,13 +14523,13 @@ function outer() {
 					U2U != x5R << 2130842048 && U2U != g5R - 0 && U2U != W5R << 796786560 && U2U != +f5R && U2U != +U5R &&
 					U2U != N0R - 0 && U2U != (p1R | 32) && U2U != z1R - 0 && U2U != (n1R | 12) && U2U != +d1R && U2U != ('323' ^
 						0) && U2U != (l1R & 2147483647) && U2U != +k1R && U2U != o1R << 1327847936) {
-					D6["bd"][U2U][E6k
+					city["bd"][U2U][E6k
 						.o55(m1R ^ 0)] = 0;
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U != (0) && P2U != G1R <<
 					1028360640 && P2U != +C6y && P2U != (r1R | 260) && P2U != b1R * 1)
@@ -14525,14 +14546,14 @@ function outer() {
 								330549504 && U2U != +l1R && U2U != +k1R && U2U != +o1R) r9U++;
 						} if (P2U >= (A4y | 73) && P2U <= I4y *
 							1 && U2U != +V5R && U2U != c5R << 1275326496 && U2U != +u8y && U2U != +M5R && U2U != +s5R && U2U != +Q5R &&
-							U2U != +C5R && U2U != Z5R * 1 && D6["w"] == 1) {
-					D6["bd"][U2U]["bid"] = +
+							U2U != +C5R && U2U != Z5R * 1 && city["w"] == 1) {
+					city["bd"][U2U]["bid"] = +
 						"0";
-					D6["bd"][U2U]["bl"] = 0;
-					D6["bd"][U2U]["bu"] = 0;
-					D6["bd"][U2U]["bd"] = 0;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U]["rh"] = 0;
+					city["bd"][U2U]["bl"] = 0;
+					city["bd"][U2U]["bu"] = 0;
+					city["bd"][U2U]["bd"] = 0;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U]["rh"] = 0;
 				}
 				if (P2U == (d2y | 266)) {
 					var b9U = bam[_s(
@@ -14552,14 +14573,14 @@ function outer() {
 						var
 							E8U = bam["buildings"][P2U]["cs"][U8U];
 					}
-					D6["bd"][U2U][_s(
+					city["bd"][U2U][_s(
 						+X1R)] = +A5y;
-					D6["bd"][U2U]["rh"] = b9U;
-					D6["bd"][U2U]["ruh"] = E8U;
-					D6["bd"][U2U]["rdh"] = O9U;
+					city["bd"][U2U]["rh"] = b9U;
+					city["bd"][U2U]["ruh"] = E8U;
+					city["bd"][U2U]["rdh"] = O9U;
 					bontxt = +A5y;
 					var g0l = { 21: { "rt": +A5y, "rh": b9U, "rdh": O9U, "ruh": E8U } };
-					D6["bd"][U2U]["rbb"] = g0l;
+					city["bd"][U2U]["rbb"] = g0l;
 				}
 				var w8U = "";
 				var e8U = "";
@@ -14595,11 +14616,11 @@ function outer() {
 						b8U, d8U, i8U, W8U];
 					for (var O8U in t8U) {
 						var B2U = Number(t8U[O8U]);
-						if (D6["bd"][B2U]) {
+						if (city["bd"][B2U]) {
 							var
-								y2U = D6["bd"][B2U]["bid"];
+								y2U = city["bd"][B2U]["bid"];
 							if (y2U == A8U) {
-								var N2U = D6[_s(N1R ^
+								var N2U = city[_s(N1R ^
 									0)][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
 								if (
@@ -14621,7 +14642,7 @@ function outer() {
 								j8U.push({ au: w8U, b: B2U, i: y2U, ad: e8U, a: R2U, add: l8U, bl: N2U });
 								var F2U = {};
 								F2U[U2U] = { a: R2U, i: P2U, au: w8U, bt: p0y << 930651296, b: U2U, bl: N2U, ad: e8U, add: l8U };
-								D6["bd"][B2U][__s[i5R & 2147483647]] = F2U;
+								city["bd"][B2U][__s[i5R & 2147483647]] = F2U;
 							}
 						}
 					}
@@ -14631,11 +14652,11 @@ function outer() {
 					else var T8U = 0;
 					if (I8U != 0) var Q8U = I8U + I8U * (H8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = p0y >> 844304704;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = p0y >> 844304704;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						1: {
 							rh: z8U,
@@ -14645,7 +14666,7 @@ function outer() {
 						}
 					};
 					var m9U = 1;
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					R9U = R9U + z8U;
 				}
 				if (D2U >= 2) var m2U = D2U - (1);
@@ -14662,7 +14683,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[X8y ^ 0] = { rt: +X8y, ruh: c2U, rdh: q2U, rh: o8U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == +n4y || P2U == +
 					l4y || P2U == o4y * 1 || P2U == +I1R)) {
@@ -14677,7 +14698,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[S8y >> 921303424] = { rt: S8y << 1169108096, ruh: c2U, rh: o8U, rdh: q2U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +t1y || P2U == (T1y & E6k
 					.s6s) || P2U == g1y - 0 || P2U == +f1y)) {
@@ -14692,7 +14713,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[P8y << 267513056] = { rdh: q2U, rh: o8U, rt: P8y >> 2096014976, ruh: c2U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == V1y - 0 || P2U == (
 					M1y ^ 0) || P2U == +Q1y || P2U == +Z1y)) {
@@ -14707,7 +14728,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+I8y] = { rt: I8y >> 223461888, rdh: q2U, ruh: c2U, rh: o8U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +u1y || P2U == +N1y || P2U == (
 					i1y ^ 0) || P2U == +q1y)) {
@@ -14721,7 +14742,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[36] = { rdh: q2U, rh: o8U, ruh: c2U, rt: 36 };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == +D1y || P2U == B1y - 0 || P2U ==
 					e1y * 1 || P2U == +y1y)) {
@@ -14735,7 +14756,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+z8y] = { rdh: q2U, rt: z8y ^ 0, ruh: c2U, rh: o8U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == +O1y || P2U == +
 					w1y || P2U == (H1y ^ 0) || P2U == (G1y & 2147483647))) {
@@ -14750,7 +14771,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+d8y] = { ruh: c2U, rdh: q2U, rt: d8y | 4, rh: o8U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= ('1' | 1) && (P2U == b1y >> 107859680 ||
 					P2U == +X1y || P2U == I1y - 0 || P2U == z1y << 1340905088)) {
@@ -14765,7 +14786,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+l8y] = { ruh: c2U, rdh: q2U, rh: o8U, rt: +l8y };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && (P2U == d1y >> 1758159904 ||
 					P2U == +k1y || P2U == +S1y || P2U == (J5y ^ 0))) {
@@ -14781,7 +14802,7 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+c8y] = { rh: o8U, rdh: q2U, ruh: c2U, rt: +c8y };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == (x5y & E6k
 					.s6s) || P2U == +W5y || P2U == +U5y || P2U == +c5y)) {
@@ -14796,11 +14817,11 @@ function outer() {
 					else var c2U = 0;
 					var p2U = {};
 					p2U[+k8y] = { rdh: q2U, ruh: c2U, rh: o8U, rt: +k8y };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == +K4y) {
 					var
-						Y2U = D6["bd"][U2U]["bl"];
+						Y2U = city["bd"][U2U]["bl"];
 					var W9U = bam["buildings"][P2U][_s(+
 						'860')][Y2U];
 					Z0l = 1;
@@ -14811,12 +14832,12 @@ function outer() {
 					else var G9U = 0;
 					var p2U = {};
 					p2U[+F8y] = { rt: F8y & 2147483647, ruh: G9U, rdh: M9U, rh: W9U };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == +C4y) {
 					var K8U = bam[
 						"buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					x9U = x9U + s8U;
@@ -14827,10 +14848,10 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 26: { rt: A8y ^ 0, ruh: E2U, rh: s8U, rdh: k8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == +S2y) {
-					var Y2U = D6[E6k
+					var Y2U = city[E6k
 						.S55(+N1R)][U2U]["bl"];
 					var s8U = bam["buildings"][P2U][__s[B5R - 0]][Y2U];
 					I0l = I0l + s8U;
@@ -14840,11 +14861,11 @@ function outer() {
 						a2U];
 					else var E2U = 0;
 					var p2U = { 31: { ruh: E2U, rh: s8U, rt: b8y | 18, rdh: k8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == F4y - 0 || P2U ==
 					A4y * 1 || P2U == +r4y)) {
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var s8U = bam[_s(+
 						Q5y)][P2U][__s[+B5R]][Y2U];
 					v0l = v0l + s8U;
@@ -14854,12 +14875,12 @@ function outer() {
 						a2U];
 					else var E2U = 0;
 					var p2U = { 32: { rdh: k8U, ruh: E2U, rt: +h8y, rh: s8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == 483) {
 					var K8U = bam[E6k
 						.o55(+Q5y)][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var s8U =
 						bam["buildings"][P2U][__s[t1R & 2147483647]][Y2U];
 					t9U = t9U + s8U;
@@ -14870,12 +14891,12 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 25: { rdh: k8U, rh: s8U, rt: 25, ruh: E2U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == 482) {
 					var K8U = bam[
 						"buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					Q9U = Q9U + s8U;
@@ -14886,12 +14907,12 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 28: { rdh: k8U, ruh: E2U, rt: R2y << 598198208, rh: s8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && (P2U == h4y - 0 ||
 					P2U == +P4y || P2U == +p4y)) {
 					var K8U = bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6[E6k
+					var Y2U = city[E6k
 						.S55(+N1R)][U2U]["bl"];
 					var s8U = bam["buildings"][P2U][__s[t1R * 1]][Y2U];
 					v9U = v9U + s8U;
@@ -14903,12 +14924,12 @@ function outer() {
 						a2U];
 					else var E2U = 0;
 					var p2U = { 30: { rt: r8y << 664044736, rdh: k8U, rh: s8U, ruh: E2U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == 500) {
 					var K8U =
 						bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var
 						s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					T9U = T9U + s8U;
@@ -14919,12 +14940,12 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 27: { rdh: k8U, ruh: E2U, rh: s8U, rt: +e2y } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= (1) && P2U == 502) {
 					var
 						K8U = bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U][E6k
+					var Y2U = city["bd"][U2U][E6k
 						.o55(+i1R)];
 					var s8U = bam["buildings"][P2U][__s[+t1R]][Y2U];
 					l9U = l9U + s8U;
@@ -14935,12 +14956,12 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 29: { rt: +G8y, ruh: E2U, rdh: k8U, rh: s8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 				}
 				if (D2U >= 1 && P2U == (504)) {
 					var K8U =
 						bam["buildings"][P2U][__s[6626]];
-					var Y2U = D6["bd"][U2U]["bl"];
+					var Y2U = city["bd"][U2U]["bl"];
 					var s8U = bam[
 						"buildings"][P2U][__s[+t1R]][Y2U];
 					B9U = B9U + s8U;
@@ -14951,8 +14972,8 @@ function outer() {
 					if (a2U != 0) var E2U = bam["buildings"][P2U][__s[+t1R]][a2U];
 					else var E2U = 0;
 					var p2U = { 24: { rdh: k8U, ruh: E2U, rh: s8U, rt: 24 } };
-					D6["bd"][U2U]["rbb"] = p2U;
-					D6["bd"][U2U][__s[i5R >> 1722621024]] = {};
+					city["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U][__s[i5R >> 1722621024]] = {};
 				}
 				if (D2U >= 1 && P2U == 445) {
 					var
@@ -14979,18 +15000,18 @@ function outer() {
 					if (a2U != 0) var h9U = bam["buildings"][P2U][__s[+s8y]][a2U];
 					else var h9U = 0;
 					var p2U = { 22: { ruh: h9U, rdh: J9U, rh: L0l, rt: +j6y } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
 						if (B2U > 0 &&
-							D6["bd"][B2U]) {
-							var y2U = D6["bd"][B2U]["bid"];
+							city["bd"][B2U]) {
+							var y2U = city["bd"][B2U]["bid"];
 							if (y2U == 483 || y2U == +
 								C4y || y2U == (482) || y2U == +h4y || y2U == (P4y ^ 0) || y2U == +p4y || y2U == ('500' & E6k
 									.s6s) || y2U == 502) {
 								var K8U = bam["buildings"][y2U][__s[6626]];
 								var Y2U =
-									D6["bd"][B2U]["bl"];
+									city["bd"][B2U]["bl"];
 								var s8U = 0;
 								switch (K8U) {
 									case 0:
@@ -15003,9 +15024,9 @@ function outer() {
 										j8U.push({ a: R2U, i: y2U, add: R2U, bl: Y2U, ad: R2U, b: B2U, au: R2U });
 										var F2U = {};
 										F2U = { bt: 25, i: P2U, add: R2U, ad: R2U, a: R2U, b: U2U, bl: Y2U, au: R2U };
-										if (!D6[_s(
-											N1R * 1)][B2U][__s[+i5R]]) D6["bd"][B2U][__s[i5R >> 1669123072]] = {};
-										D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
+										if (!city[_s(
+											N1R * 1)][B2U][__s[+i5R]]) city["bd"][B2U][__s[i5R >> 1669123072]] = {};
+										city["bd"][B2U][__s[+i5R]][U2U] = F2U;
 										break;
 									case 2:
 										x9U = x9U + s8U + D8U;
@@ -15015,9 +15036,9 @@ function outer() {
 										j8U.push({ au: R2U, i: y2U, add: R2U, bl: Y2U, ad: R2U, a: R2U, b: B2U });
 										var F2U = {};
 										F2U = { add: R2U, bt: +A8y, au: R2U, ad: R2U, a: R2U, b: U2U, bl: Y2U, i: P2U };
-										if (!D6[_s(+
-											N1R)][B2U][__s[+i5R]]) D6["bd"][B2U][__s[+i5R]] = {};
-										D6["bd"][B2U][__s[i5R | 4362]][U2U] = F2U;
+										if (!city[_s(+
+											N1R)][B2U][__s[+i5R]]) city["bd"][B2U][__s[+i5R]] = {};
+										city["bd"][B2U][__s[i5R | 4362]][U2U] = F2U;
 										break;
 									case 3:
 										T9U = T9U + s8U + D8U;
@@ -15027,10 +15048,10 @@ function outer() {
 										j8U.push({ ad: R2U, b: B2U, a: R2U, au: R2U, bl: Y2U, add: R2U, i: y2U });
 										var F2U = {};
 										F2U = { ad: R2U, i: P2U, add: R2U, bl: Y2U, b: U2U, bt: +e2y, au: R2U, a: R2U };
-										if (!D6[_s(
-											N1R & 2147483647)][B2U][__s[i5R ^ 0]]) D6["bd"][B2U][_s(i5R <<
+										if (!city[_s(
+											N1R & 2147483647)][B2U][__s[i5R ^ 0]]) city["bd"][B2U][_s(i5R <<
 												1824760192)] = {};
-										D6["bd"][B2U][__s[i5R >> 1469972512]][U2U] = F2U;
+										city["bd"][B2U][__s[i5R >> 1469972512]][U2U] = F2U;
 										break;
 									case 4:
 										Q9U = Q9U + s8U + D8U;
@@ -15040,9 +15061,9 @@ function outer() {
 										j8U.push({ a: R2U, ad: R2U, au: R2U, i: y2U, bl: Y2U, b: B2U, add: R2U });
 										var F2U = {};
 										F2U = { i: P2U, add: R2U, au: R2U, bt: R2y & 2147483647, b: U2U, a: R2U, ad: R2U, bl: Y2U };
-										if (!D6[
-											"bd"][B2U][__s[+i5R]]) D6["bd"][B2U][__s[i5R - 0]] = {};
-										D6["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
+										if (!city[
+											"bd"][B2U][__s[+i5R]]) city["bd"][B2U][__s[i5R - 0]] = {};
+										city["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
 										break;
 									case 5:
 										l9U = l9U + s8U + D8U;
@@ -15052,9 +15073,9 @@ function outer() {
 										j8U.push({ au: R2U, add: R2U, b: B2U, ad: R2U, i: y2U, bl: Y2U, a: R2U });
 										var F2U = {};
 										F2U = { add: R2U, a: R2U, ad: R2U, au: R2U, bl: Y2U, i: P2U, bt: G8y - 0, b: U2U };
-										if (!D6[E6k
-											.S55(N1R - 0)][B2U][__s[+i5R]]) D6["bd"][B2U][__s[+i5R]] = {};
-										D6["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
+										if (!city[E6k
+											.S55(N1R - 0)][B2U][__s[+i5R]]) city["bd"][B2U][__s[+i5R]] = {};
+										city["bd"][B2U][__s[i5R * 1]][U2U] = F2U;
 										break;
 									case 6:
 										v9U = v9U + s8U + D8U;
@@ -15064,15 +15085,15 @@ function outer() {
 										j8U.push({ a: R2U, ad: R2U, add: R2U, au: R2U, i: y2U, b: B2U, bl: Y2U });
 										var F2U = {};
 										F2U = { i: P2U, b: U2U, ad: R2U, au: R2U, bl: Y2U, add: R2U, a: R2U, bt: +r8y };
-										if (!D6[_s(+
-											N1R)][B2U][__s[+i5R]]) D6["bd"][B2U][__s[i5R >> 640062016]] = {};
-										D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
+										if (!city[_s(+
+											N1R)][B2U][__s[+i5R]]) city["bd"][B2U][__s[i5R >> 640062016]] = {};
+										city["bd"][B2U][__s[+i5R]][U2U] = F2U;
 										break;
 								}
 							}
 						}
 					}
-					D6["bd"][U2U][E6k
+					city["bd"][U2U][E6k
 						.S55(q5R >> 486276576)] = j8U;
 				}
 				if (D2U >= 1 && P2U == +c4y) {
@@ -15120,12 +15141,12 @@ function outer() {
 					var j8U = [];
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
-						if (D6[E6k
+						if (city[E6k
 							.S55(+N1R)][B2U]) {
-							var y2U = D6["bd"][B2U]["bid"];
+							var y2U = city["bd"][B2U]["bid"];
 							if (y2U == G0l || y2U ==
 								C0l || y2U == W0l || y2U == i0l) {
-								var N2U = D6["bd"][B2U]["bl"];
+								var N2U = city["bd"][B2U]["bl"];
 								var R2U = bam[
 									"buildings"][y2U]["st"][N2U];
 								var j9U = bam["buildings"][y2U][E6k
@@ -15143,10 +15164,10 @@ function outer() {
 									.push({ au: w8U, add: 0, b: B2U, bl: N2U, a: R2U, i: y2U, ad: e8U });
 								var F2U = {};
 								F2U = { bt: g8U, b: U2U, a: R2U, au: w8U, ad: e8U, add: 0, i: P2U, bl: N2U };
-								if (!D6[_s(
-									N1R << 696067392)][B2U][__s[i5R ^ 0]]) D6["bd"][B2U][__s[+i5R]] = {};
-								D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
-								D6["bd"][B2U]["rt"] = g8U;
+								if (!city[_s(
+									N1R << 696067392)][B2U][__s[i5R ^ 0]]) city["bd"][B2U][__s[+i5R]] = {};
+								city["bd"][B2U][__s[+i5R]][U2U] = F2U;
+								city["bd"][B2U]["rt"] = g8U;
 							}
 						}
 					}
@@ -15199,14 +15220,14 @@ function outer() {
 						}
 					};
 					var c0l = { 14: { "rt": '14' ^ 0, "rh": d9U, "rdh": e0l, "ruh": F9U } };
-					D6["bd"][U2U]["rb"] = j8U;
-					D6["bd"][U2U]["rt"] = 0;
-					D6["bd"][U2U][__s[4429]] = { 0: N9U, 1: Y9U, 2: p9U, 3: D9U };
-					D6["bd"][U2U]["rbb"] = [];
-					D6["bd"][U2U]["rbb"][11] = N9U;
-					D6["bd"][U2U]["rbb"][12] = Y9U;
-					D6["bd"][U2U]["rbb"][+m2y] = p9U;
-					D6["bd"][U2U]["rbb"][+'14'] = D9U;
+					city["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 0;
+					city["bd"][U2U][__s[4429]] = { 0: N9U, 1: Y9U, 2: p9U, 3: D9U };
+					city["bd"][U2U]["rbb"] = [];
+					city["bd"][U2U]["rbb"][11] = N9U;
+					city["bd"][U2U]["rbb"][12] = Y9U;
+					city["bd"][U2U]["rbb"][+m2y] = p9U;
+					city["bd"][U2U]["rbb"][+'14'] = D9U;
 					Q0l = Q0l + o9U;
 					T0l = T0l + z9U;
 					x0l = x0l + i9U;
@@ -15249,10 +15270,10 @@ function outer() {
 						J8U, S8U, V8U, b8U, d8U, i8U, W8U];
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
-						var y2U = D6["bd"]
+						var y2U = city["bd"]
 						[B2U]["bid"];
 						if (y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
-							var N2U = D6[E6k
+							var N2U = city[E6k
 								.S55(N1R - 0)][B2U]["bl"];
 							var R2U = bam["buildings"][y2U][__s[+E5R]][
 								N2U];
@@ -15277,9 +15298,9 @@ function outer() {
 							j8U.push({ b: B2U, add: l8U, a: R2U, au: w8U, i: y2U, ad: e8U, bl: N2U });
 							var F2U = {};
 							F2U = { ad: e8U, bl: N2U, a: R2U, au: w8U, bt: 6, i: P2U, add: l8U, b: U2U };
-							if (!D6["bd"][
-								B2U][__s[+i5R]]) D6["bd"][B2U][__s[+i5R]] = {};
-							D6["bd"][B2U][__s[i5R | 6282]][U2U] = F2U;
+							if (!city["bd"][
+								B2U][__s[+i5R]]) city["bd"][B2U][__s[+i5R]] = {};
+							city["bd"][B2U][__s[i5R | 6282]][U2U] = F2U;
 							if (y2U == M8U) G8U = 1;
 						}
 					}
@@ -15292,11 +15313,11 @@ function outer() {
 					if (I8U != 0) var Q8U = I8U * ((1) + H8U / ("100" >>
 						706311584)) * ((1) + x8U / (100)) * (1 + L8U / ("100" | 64));
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = 1;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 1;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						1: {
 							rt: 1,
@@ -15306,7 +15327,7 @@ function outer() {
 						}
 					};
 					var m9U = 1;
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					H0l = H0l + z8U;
 				}
 				w8U = "";
@@ -15349,9 +15370,9 @@ function outer() {
 					var g9U = 0;
 					for (var O8U in t8U) {
 						var B2U = t8U[O8U];
-						if (D6["bd"][B2U]) {
+						if (city["bd"][B2U]) {
 							var y2U =
-								D6["bd"][B2U]["bid"];
+								city["bd"][B2U]["bid"];
 							if (y2U == 0 && B2U != 0 &&
 								B2U != 1 && B2U != 2 && B2U != (3) && B2U != 4 && B2U != 5 && B2U !=
 								6 && B2U != 7 && B2U != 8 && B2U != 9 && B2U != 10 && B2U != 11 && B2U !=
@@ -15379,9 +15400,9 @@ function outer() {
 								432 && B2U != 434 && B2U != +k7R && B2U != 436 && B2U != '438' >>
 								2009160032 && B2U != (439) && B2U != +t9R)
 								if (B2U != (V5R & 2147483647) && B2U != (c5R ^ 0) && B2U != +u8y && B2U != +M5R && B2U != s5R * 1 &&
-									B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && D6["w"] == 1) y2U = R5R >>
+									B2U != Q5R - 0 && B2U != C5R * 1 && B2U != +Z5R && city["w"] == 1) y2U = R5R >>
 										914982432;
-								else if (D6["w"] == 0) y2U = R5R << 1535435136;
+								else if (city["w"] == 0) y2U = R5R << 1535435136;
 							if (y2U == M8U && G8U == 0 ||
 								y2U == n8U || y2U == A8U || y2U == U9U) {
 								if (y2U == R5R - 0)
@@ -15389,7 +15410,7 @@ function outer() {
 										var N2U = 0;
 										g9U = 1;
 									} else var N2U = 1;
-								else var N2U = D6["bd"][B2U]["bl"];
+								else var N2U = city["bd"][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][E6k
 									.o55(+E5R)][N2U];
 								if (N2U >= 2) var u8U = N2U - (1);
@@ -15418,9 +15439,9 @@ function outer() {
 								F2U = { au: w8U, i: P2U, b: U2U, a: R2U, ad: e8U, add: l8U, bl: N2U, bt: 6 };
 								if (
 									y2U != (R5R | 144)) {
-									if (!D6["bd"][B2U][__s[+i5R]]) D6["bd"][B2U][_s(
+									if (!city["bd"][B2U][__s[+i5R]]) city["bd"][B2U][_s(
 										i5R | 4352)] = {};
-									D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
+									city["bd"][B2U][__s[+i5R]][U2U] = F2U;
 								}
 								if (y2U == M8U) G8U = 1;
 							}
@@ -15435,11 +15456,11 @@ function outer() {
 					if (I8U != 0) var Q8U = I8U * (1 + H8U / (100)) * ((1) +
 						x8U / 100) * (1 + L8U / (100)) * ((1) + c8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = 4;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 4;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						4: {
 							rdh: Q8U,
@@ -15448,7 +15469,7 @@ function outer() {
 							rt: 4
 						}
 					};
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					K9U = K9U + z8U;
 				}
 				w8U = "";
@@ -15488,11 +15509,11 @@ function outer() {
 					for (var O8U in t8U) {
 						var
 							B2U = t8U[O8U];
-						if (D6["bd"][B2U]) {
-							var y2U = D6["bd"][B2U][_s(
+						if (city["bd"][B2U]) {
+							var y2U = city["bd"][B2U][_s(
 								m1R | 2148)];
 							if (y2U == M8U || y2U == D0l || y2U == n8U || y2U == A8U) {
-								var N2U = D6[_s(N1R *
+								var N2U = city[_s(N1R *
 									1)][B2U]["bl"];
 								var R2U = bam["buildings"][y2U][__s[E5R * 1]][N2U];
 								if (N2U >= ("2" |
@@ -15519,9 +15540,9 @@ function outer() {
 								j8U.push({ b: B2U, i: y2U, bl: N2U, au: w8U, a: R2U, add: l8U, ad: e8U });
 								var F2U = {};
 								F2U = { ad: e8U, a: R2U, bl: N2U, b: U2U, add: l8U, i: P2U, au: w8U, bt: 6 };
-								if (!D6[_s(N1R -
-									0)][B2U][__s[+i5R]]) D6["bd"][B2U][__s[i5R - 0]] = {};
-								D6["bd"][B2U][__s[i5R >> 349000384]][U2U] = F2U;
+								if (!city[_s(N1R -
+									0)][B2U][__s[+i5R]]) city["bd"][B2U][__s[i5R - 0]] = {};
+								city["bd"][B2U][__s[i5R >> 349000384]][U2U] = F2U;
 								if (y2U == M8U) G8U = +
 									"1";
 							}
@@ -15535,13 +15556,13 @@ function outer() {
 					if (I8U != 0) var Q8U = I8U * ((1) + H8U / 100) * (("1" >>
 						835127904) + x8U / 100) * ((1) + L8U / ("100" | 68));
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = 10;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 10;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = { 10: { rdh: Q8U, rh: z8U, rt: 10, ruh: T8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					P9U = P9U + z8U;
 				}
 				w8U = '';
@@ -15582,12 +15603,12 @@ function outer() {
 					for (var O8U in
 						t8U) {
 						var B2U = t8U[O8U];
-						if (D6["bd"][B2U]) {
-							var y2U = D6["bd"][
+						if (city["bd"][B2U]) {
+							var y2U = city["bd"][
 								B2U]["bid"];
 							if (y2U == M8U && G8U == 0 || y2U == n8U || y2U ==
 								A8U) {
-								var N2U = D6["bd"][B2U]["bl"];
+								var N2U = city["bd"][B2U]["bl"];
 								var R2U = bam["buildings"]
 								[y2U][__s[+E5R]][N2U];
 								if (N2U >= 2) var u8U = N2U - 1;
@@ -15613,10 +15634,10 @@ function outer() {
 								j8U.push({ ad: e8U, i: y2U, b: B2U, bl: N2U, au: w8U, add: l8U, a: R2U });
 								var F2U = {};
 								F2U = { b: U2U, au: w8U, add: l8U, a: R2U, i: P2U, ad: e8U, bt: 6, bl: N2U };
-								if (!D6[E6k
-									.S55(N1R & 2147483647)][B2U][__s[i5R << 501509312]]) D6["bd"][B2U][_s(+
+								if (!city[E6k
+									.S55(N1R & 2147483647)][B2U][__s[i5R << 501509312]]) city["bd"][B2U][_s(+
 										i5R)] = {};
-								D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
+								city["bd"][B2U][__s[+i5R]][U2U] = F2U;
 								if (y2U == M8U) G8U = 1;
 							}
 						}
@@ -15630,11 +15651,11 @@ function outer() {
 					if (I8U != (0)) var Q8U = I8U * ((1) + H8U / 100) * (1 + x8U / (
 						100)) * ((1) + L8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = 3;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 3;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = {
 						3: {
 							rh: z8U,
@@ -15643,7 +15664,7 @@ function outer() {
 							ruh: T8U
 						}
 					};
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					n9U = n9U + z8U;
 				}
 				w8U = '';
@@ -15683,11 +15704,11 @@ function outer() {
 					for (var O8U in t8U) {
 						var
 							B2U = t8U[O8U];
-						if (D6["bd"][B2U]) {
-							var y2U = D6["bd"][B2U]["bid"];
+						if (city["bd"][B2U]) {
+							var y2U = city["bd"][B2U]["bid"];
 							if (
 								y2U == M8U && G8U == 0 || y2U == n8U || y2U == A8U) {
-								var N2U = D6["bd"][B2U][_s(+
+								var N2U = city["bd"][B2U][_s(+
 									i1R)];
 								var R2U = bam["buildings"][y2U][__s[E5R | 5408]][N2U];
 								if (N2U >= ('2' &
@@ -15714,9 +15735,9 @@ function outer() {
 								j8U.push({ add: l8U, a: R2U, ad: e8U, b: B2U, bl: N2U, i: y2U, au: w8U });
 								var F2U = {};
 								F2U = { b: U2U, au: w8U, bt: 6, add: l8U, a: R2U, bl: N2U, i: P2U, ad: e8U };
-								if (!D6[
-									"bd"][B2U][__s[i5R ^ 0]]) D6["bd"][B2U][__s[i5R ^ 0]] = {};
-								D6["bd"][B2U][__s[+i5R]][U2U] = F2U;
+								if (!city[
+									"bd"][B2U][__s[i5R ^ 0]]) city["bd"][B2U][__s[i5R ^ 0]] = {};
+								city["bd"][B2U][__s[+i5R]][U2U] = F2U;
 								if (y2U == M8U) G8U = 1;
 							}
 						}
@@ -15730,27 +15751,27 @@ function outer() {
 					if (I8U != (0)) var Q8U = I8U * (1 + H8U / (100)) * (1 + x8U /
 						100) * (1 + L8U / 100);
 					else var Q8U = 0;
-					D6["bd"][U2U]["rt"] = 2;
-					D6["bd"][U2U]["rh"] = z8U;
-					D6["bd"][U2U]["ruh"] = T8U;
-					D6["bd"][U2U]["rdh"] = Q8U;
-					D6["bd"][U2U]["rb"] = j8U;
+					city["bd"][U2U]["rt"] = 2;
+					city["bd"][U2U]["rh"] = z8U;
+					city["bd"][U2U]["ruh"] = T8U;
+					city["bd"][U2U]["rdh"] = Q8U;
+					city["bd"][U2U]["rb"] = j8U;
 					var p2U = { 2: { ruh: T8U, rh: z8U, rt: 2, rdh: Q8U } };
-					D6["bd"][U2U]["rbb"] = p2U;
+					city["bd"][U2U]["rbb"] = p2U;
 					A9U = A9U + z8U;
 				}
 			}
 	*/
 			//for (var O8U = "0" >>
-			//	408287168; O8U < D6.bq.length; O8U++)
-			//	if (D6.bq[O8U])
-			//		if (D6.bq[O8U].brep) {
-			//			var y8U = D6.bq[O8U].brep;
-			//			var U2U = D6.bq[O8U].bspot;
+			//	408287168; O8U < city.bq.length; O8U++)
+			//	if (city.bq[O8U])
+			//		if (city.bq[O8U].brep) {
+			//			var y8U = city.bq[O8U].brep;
+			//			var U2U = city.bq[O8U].bspot;
 			//			if (y8U != G1R - 0 && y8U !=
 			//				C6y << 904681344 && y8U != +r1R && y8U != (b1R | 130) && y8U != BAL << 124155232 && y8U <= +TPL && d4F(
 			//					O8U))
-			//				if (D6.bq[O8U].slvl == 0) {
+			//				if (city.bq[O8U].slvl == 0) {
 			//					V9U = V9U + (1);
 			//					if (y8U != +r6y && U2U != 0 && U2U != (
 			//						bdHall ^ 0) && U2U != 3 && U2U != 7 && U2U != (m2y | 12) && U2U != +17 && U2U != (D8y ^ 0) &&
@@ -15775,7 +15796,7 @@ function outer() {
 		}
 		var J8;
 
-		function M7V() { for (var c2g in D6.bq); }
+		function M7V() { for (var c2g in city.bq); }
 
 		function j7V(I3D, H3D, j3D, w3D) {
 			var e3D = Number(ppdt["pr"][1]) + Number(I3D);
@@ -16351,8 +16372,8 @@ function outer() {
 						a0R * 1) { var Y7T = "disButton"; var D7T = "disabled"; }
 					if (R7T >= 172 && ppdt.r <= '1' <<
 						939009472) { var Y7T = "disButton"; var D7T = "disabled"; }
-					if (ppdt[__s[o7y * 1]])
-						if (ppdt[__s[+o7y]][y7T]) m7T = ppdt[__s[+o7y]][y7T];
+					if (ppdt["itc"])
+						if (ppdt["itc"][y7T]) m7T = ppdt["itc"][y7T];
 					var u4T = I2(R7T, 100);
 					if (R7T >= (
 						'98' | 66) && R7T <= 111) var p7T = __s[x3R << 879998880] + y7T + _s(g3R >>
@@ -16414,6 +16435,9 @@ function outer() {
 					});
 			}
 		}
+
+	
+	
 
 		function n3F() {
 			N6();
@@ -16541,12 +16565,12 @@ function outer() {
 				else if (D1T == 4) {
 					var p1T = Z1T % +A5y;
 					var Y1T = (Z1T - p1T) / (A5y >> 225832320);
-					D6["bd"][Z1T]["bid"] = 0;
-					D6["bd"][Z1T]["bl"] = 0;
-					D6["bd"][Z1T]["bu"] = 0;
-					D6["bd"][Z1T]["bd"] = 0;
-					D6["bd"][Z1T]["rt"] = 0;
-					D6["bd"][Z1T]["rh"] = 0;
+					city["bd"][Z1T]["bid"] = 0;
+					city["bd"][Z1T]["bl"] = 0;
+					city["bd"][Z1T]["bu"] = 0;
+					city["bd"][Z1T]["bd"] = 0;
+					city["bd"][Z1T]["rt"] = 0;
+					city["bd"][Z1T]["rh"] = 0;
 					I8(Z1T);
 					N4F(Z1T);
 					a1F();
@@ -16906,10 +16930,10 @@ function outer() {
 
 		//function o7V() {
 		//	var u4w = 100;
-		//	for (let c7w = 0; c7w < D6.bd.length; c7w++) {
-		//		var I4w = D6.bd[c7w]
+		//	for (let c7w = 0; c7w < city.bd.length; c7w++) {
+		//		var I4w = city.bd[c7w]
 		//			.bid;
-		//		var l4w = D6.bd[c7w].bl;
+		//		var l4w = city.bd[c7w].bl;
 		//		if (I4w == d2y << 584242976) {
 		//			var Q4w = bam["buildings"][Number(I4w)][
 		//				"cs"][Number(l4w)];
@@ -16918,17 +16942,17 @@ function outer() {
 		//	}
 		//	$(__s[+i7y])
 		//		.html(__s[5359] + u4w + __s[+o9y]);
-		//	if (D6.bq.length >= 2)
-		//		for (let c7w in D6.bq) {
+		//	if (city.bq.length >= 2)
+		//		for (let c7w in city.bq) {
 		//			if (c7w == 1)
-		//				if (D6.bq[c7w]) {
-		//					var j4w = D6.bq[c7w].ds;
-		//					var a7w = D6.bq[c7w].bid;
-		//					var s4w = D6.bq[c7w].slvl;
+		//				if (city.bq[c7w]) {
+		//					var j4w = city.bq[c7w].ds;
+		//					var a7w = city.bq[c7w].bid;
+		//					var s4w = city.bq[c7w].slvl;
 		//					if (s4w ==
 		//						0) s4w = 1;
-		//					var m7w = D6.bq[c7w].brep;
-		//					var e4w = D6.bq[c7w].elvl;
+		//					var m7w = city.bq[c7w].brep;
+		//					var e4w = city.bq[c7w].elvl;
 		//					if (bam[_s(Q5y <<
 		//						1042045696)][Number(m7w)])
 		//						if (bam["buildings"][Number(m7w)]["bc"][Number(e4w)]) {
@@ -16952,13 +16976,13 @@ function outer() {
 		//						}
 		//				} 
 		//			if (c7w > 1)
-		//				if (D6.bq[c7w]) {
+		//				if (city.bq[c7w]) {
 		//					var v4w = E7w + (e2R >> 1625652960);
-		//					a7w = D6.bq[c7w].bid;
-		//					s4w = D6.bq[c7w].slvl;
+		//					a7w = city.bq[c7w].bid;
+		//					s4w = city.bq[c7w].slvl;
 		//					if (s4w == 0) s4w = 1;
-		//					m7w = D6.bq[c7w].brep;
-		//					e4w = D6.bq[c7w].elvl;
+		//					m7w = city.bq[c7w].brep;
+		//					e4w = city.bq[c7w].elvl;
 		//					if (bam["buildings"][Number(m7w)])
 		//						if (bam["buildings"][Number(m7w)]["bc"][Number(e4w)]) {
 		//							H4w = bam[_s(Q5y -
@@ -17428,26 +17452,26 @@ function outer() {
 					getCity(R0g);
 				}, 200);
 				else if (!(Y0g == 0)) {
-					D6 = JSON.parse(Y0g);
-				    cid = D6.cid;
+					city = JSON.parse(Y0g);
+				    cid = city.cid;
 					gCPosted();
 					Y0g = "";
-					let cit_type = D6.w;
+					let cit_type = city.w;
 					
-					var N0g = D6.x;
-					var F0g = D6.y;
+					var N0g = city.x;
+					var F0g = city.y;
 					$(__s[+l8R])
 						.val(N0g);
 					$(__s[k8R - 0])
 						.val(F0g);
 					$(__s[5303])
 						.hide();
-					if (D6.cn[0]) $(__s[2914])
-						.html(__s[5471] + D6.cn[0] + __s[2483]);
+					if (city.cn[0]) $(__s[2914])
+						.html(__s[5471] + city.cn[0] + __s[2483]);
 					else $(__s[2914])
 						.html(__s[3435]);
 					$(__s[1045])
-						.text(D6[__s[I5R & 2147483647]]);
+						.text(city[__s[I5R & 2147483647]]);
 					var q0g = Math.floor(F0g / 100) + '' + Math.floor(
 						N0g / 100);
 					$(__s[6348] + q0g + ")")
@@ -17461,13 +17485,13 @@ function outer() {
 
 					clearTimeout(U1FTimeout);
 					U1FTimeout = setTimeout(U1F, 250);
-					var c0g = D6.tt - D6.tu;
+					var c0g = city.tt - city.tu;
 					$(__s[+x0p])
 						.text(p6(c0g));
 					//  y9 = M8.clientWidth;
 					//  K9 = M8.clientHeight;
 					i4F();
-					if (D6[__s[2091]] == 0) {
+					if (city[__s[2091]] == 0) {
 						$(__s[g0p | 256])
 							.removeClass(__s[5588])
 							.addClass(__s[3743]);
@@ -17489,7 +17513,7 @@ function outer() {
 					Y7F();
 				}
 			});
-			if (H2 == "TestDummy" || H2 == __s[2848] ||
+			if ((testFlag) || H2 == __s[2848] ||
 				H2 == __s[1801] || H2 == __s[4085] || H2 == __s[3815] || H2 == _s(+
 					"6587") || H2 == __s[2426]);
 		}
@@ -17797,12 +17821,12 @@ function outer() {
 			var i2B = '';
 			var M2B = "";
 			$(__s[6797])
-				.text(p6(D6.tu));
-			for (var t2B in D6.th) {
+				.text(p6(city.tu));
+			for (var t2B in city.th) {
 				G2B = bam["troops"][t2B][__s[1067]];
 				L2B = bam["troops"][t2B]["dsc"];
 				X2B = bam["troops"][t2B]["simg"];
-				o2B = D6.th[t2B];
+				o2B = city.th[t2B];
 				if (o2B > 0) $(__s[4459] + t2B)
 					.html(__s[+t2p] + t2B + __s[+J2p] + X2B + __s[+T2p] + L2B + __s[x2p * 1] + bam[_s(+
 						'4619')][t2B][__s[1067]] + __s[+g2p] + p6(o2B) + __s[840] + t2B + _s("6438" <<
@@ -18052,8 +18076,8 @@ function outer() {
 			lastSentBD = 0;
 			lastSentBq=0;
 			lastSentSts = "";
-			D6.bq = [];
-			D6.tq = [];
+			city.bq = [];
+			city.tq = [];
 			b9 = 0;
 	//		b5F = 0;
 			g2 = 0;
@@ -18725,22 +18749,22 @@ function outer() {
 								if (Z9T == 5)
 									;
 								if (Z9T == 6) {
-									if (D6["itu"])
-										if (D6["itu"][Z9T]) D6["itu"][Z9T] += U9T;
-										else D6["itu"][Z9T] = U9T;
+									if (city["itu"])
+										if (city["itu"][Z9T]) city["itu"][Z9T] += U9T;
+										else city["itu"][Z9T] = U9T;
 									else {
-										D6["itu"] = new Object();
-										D6["itu"][Z9T] = U9T;
+										city["itu"] = new Object();
+										city["itu"][Z9T] = U9T;
 									}
 									J2();
 								}
 								if (Z9T == 7) {
-									if (D6["itu"])
-										if (D6["itu"][Z9T]) D6["itu"][Z9T] += U9T;
-										else D6["itu"][Z9T] = U9T;
+									if (city["itu"])
+										if (city["itu"][Z9T]) city["itu"][Z9T] += U9T;
+										else city["itu"][Z9T] = U9T;
 									else {
-										D6["itu"] = new Object();
-										D6["itu"][Z9T] = U9T;
+										city["itu"] = new Object();
+										city["itu"][Z9T] = U9T;
 									}
 									J2();
 								}
@@ -18749,34 +18773,34 @@ function outer() {
 									var D9T =
 										Number(c9T) + Number(B9T[9]);
 									for (var N9T = b9T - 1; N9T >= 0; N9T--)
-										if (D6["itu"])
-											if (D6["itu"][Z9T]) {
-												var p9T = D6["itu"][Z9T].length;
-												D6["itu"][Z9T][p9T] = new Object();
-												D6["itu"][Z9T][p9T][0] = B9T[Z9T];
-												D6["itu"][Z9T][p9T][1] = D9T;
+										if (city["itu"])
+											if (city["itu"][Z9T]) {
+												var p9T = city["itu"][Z9T].length;
+												city["itu"][Z9T][p9T] = new Object();
+												city["itu"][Z9T][p9T][0] = B9T[Z9T];
+												city["itu"][Z9T][p9T][1] = D9T;
 											} else {
-												D6["itu"][Z9T] = new Object();
-												D6["itu"][Z9T][0] = new Object();
-												D6["itu"][Z9T][0][0] = B9T[Z9T];
-												D6["itu"][Z9T][0][1] = D9T;
+												city["itu"][Z9T] = new Object();
+												city["itu"][Z9T][0] = new Object();
+												city["itu"][Z9T][0][0] = B9T[Z9T];
+												city["itu"][Z9T][0][1] = D9T;
 											}
 										else {
-											D6["itu"] =
+											city["itu"] =
 												new Object();
-											D6["itu"][Z9T] = new Object();
-											D6["itu"][Z9T][0] = new Object();
-											D6["itu"][Z9T][0][0] = B9T[Z9T];
-											D6["itu"][Z9T][0][1] = D9T;
+											city["itu"][Z9T] = new Object();
+											city["itu"][Z9T][0] = new Object();
+											city["itu"][Z9T][0][0] = B9T[Z9T];
+											city["itu"][Z9T][0][1] = D9T;
 										}
 									J2();
 								}
 								if (Z9T == 12) {
-									var E9T = D6['bd'][bspotHall ^ 0]["bl"];
+									var E9T = city['bd'][bspotHall ^ 0]["bl"];
 									var Y9T = artifacts[d9T]["r"][12];
 									if (Number(E9T) <=
 										Number(Y9T)) {
-										D6["bd"][+bspotHall]["bl"] = Number(Y9T);
+										city["bd"][+bspotHall]["bl"] = Number(Y9T);
 										var a9T = Y8(Number(
 											Y9T));
 										var F9T = 10;
@@ -18959,10 +18983,10 @@ function outer() {
 		};
 
 		function g3F() {
-			if (D6.w == 1) {
+			if (city.w == 1) {
 				$(__s[6405])
 					.show();
-				if (D6["bd"][0]["bl"] >= 1) $(__s[f1p - 0])
+				if (city["bd"][0]["bl"] >= 1) $(__s[f1p - 0])
 					.removeClass()
 					.addClass(__s[2247]);
 				else $(__s[f1p << 170377888])
@@ -18971,7 +18995,7 @@ function outer() {
 			} else {
 				$(__s["6405" | 256])
 					.hide();
-				if (D6["bd"][0]["bl"] >= ("1" | 1)) $(__s[+f1p])
+				if (city["bd"][0]["bl"] >= ("1" | 1)) $(__s[+f1p])
 					.removeClass()
 					.addClass(__s[1492]);
 				else $(__s[+f1p])
@@ -18989,10 +19013,10 @@ function outer() {
 				2147483647, 526);
 			var Q5g = new Array(+r1R, 523, 524);
 			for (var k5g = +
-				"0"; k5g < D6["bd"].length; k5g++) {
-				var e5g = D6["bd"][k5g]["bid"];
+				"0"; k5g < city["bd"].length; k5g++) {
+				var e5g = city["bd"][k5g]["bid"];
 				var j5g =
-					D6["bd"][k5g]["bl"];
+					city["bd"][k5g]["bl"];
 				$(__s[B1R << 1102389152] + k5g)
 					.data("data", { "bl": j5g, "bid": e5g });
 				if (e5g != 0)
@@ -19018,9 +19042,9 @@ function outer() {
 									'left': __s[1123]
 								});
 						}
-						//           console.log(D6.ble);
-						if (D6.ble[2] == 0) var l5g = D6.ble[4];
-						else var l5g = D6.ble[2];
+						//           console.log(city.ble);
+						if (city.ble[2] == 0) var l5g = city.ble[4];
+						else var l5g = city.ble[2];
 						if (j5g == 0) j5g = 1;
 						var w5g = j5g * (v1R >>
 							760234400) - +v1R;
@@ -19039,20 +19063,20 @@ function outer() {
 							});
 					} else if (!(e5g > +TPL)) {
 						if (e5g == C6y * 1) {
-							if (D6.bd[k5g].bl != (0)) D6.bd[
+							if (city.bd[k5g].bl != (0)) city.bd[
 								k5g].bl = 0;
 							e5g = x5g[Math.round(Math.random() * (x5g.length - 1))];
 						} else if (e5g == b1R - 0) {
-							if (D6.bd[k5g]
-								.bl != 0) D6.bd[k5g].bl = 0;
+							if (city.bd[k5g]
+								.bl != 0) city.bd[k5g].bl = 0;
 							e5g = O5g[Math.round(Math.random() * (O5g.length - ("1" | 1)))];
 						} else if (e5g == (G1R | 2)) {
-							if (D6.bd[
-								k5g].bl != 0) D6.bd[k5g].bl = 0;
+							if (city.bd[
+								k5g].bl != 0) city.bd[k5g].bl = 0;
 							e5g = t5g[Math.round(Math.random() * (t5g.length - 1))];
 						} else if (e5g == r1R << 864954656) {
-							if (D6
-								.bd[k5g].bl != (0)) D6.bd[k5g].bl = 0;
+							if (city
+								.bd[k5g].bl != (0)) city.bd[k5g].bl = 0;
 							e5g = Q5g[Math.round(Math.random() * (Q5g.length - (1)))];
 						}
 						var L5g = e5g;
@@ -19143,8 +19167,8 @@ function outer() {
 			if ($("#cvs")
 				.css("display") != "none") {
 				//    c6.raf.start();
-				T2.x = D6.x * +64;
-				T2.y = D6.y * +64;
+				T2.x = city.x * +64;
+				T2.y = city.y * +64;
 				//  c6.step();
 				setTimeout(function () {
 					E6k.y6();
@@ -19177,7 +19201,7 @@ function outer() {
 		};
 
 		function z1F(Z9g, K9g) {
-			if (typeof K9g === "undefined") K9g = D6["bd"][Number(Z9g)][
+			if (typeof K9g === "undefined") K9g = city["bd"][Number(Z9g)][
 				"bl"];
 			var g9g = Y8(K9g) - 443;
 			var n9g = g9g % (4);
@@ -19209,9 +19233,9 @@ function outer() {
 		//	console.log("!!!!!");
 		//	var R1p = "6192";
 		//	E6k.R6();
-		//	if (D6 !== undefined)
-		//		if (D6.mo !== undefined) {
-		//			if (D6.mo[0] == (1) && D6.bq.length == 0) {
+		//	if (city !== undefined)
+		//		if (city.mo !== undefined) {
+		//			if (city.mo[0] == (1) && city.bq.length == 0) {
 		//				var h7Z;
 		//				var C7Z;
 		//				var
@@ -19223,24 +19247,24 @@ function outer() {
 		//				var J7Z = new Object();
 		//				var d7Z =
 		//					new Object();
-		//				for (var g7Z in D6.bd) {
-		//					C7Z = D6.bd[g7Z]["bl"];
+		//				for (var g7Z in city.bd) {
+		//					C7Z = city.bd[g7Z]["bl"];
 		//					if (C7Z >= 1 && C7Z < +
 		//						'10') {
-		//						h7Z = D6.bd[g7Z]["bid"];
+		//						h7Z = city.bd[g7Z]["bid"];
 		//						if (bam["buildings"][Number(h7Z)]) {
 		//							b7Z = bam[_s(+
 		//								Q5y)][Number(h7Z)][__s[6112]];
-		//							u4Z = D6.mo[Number(b7Z)];
+		//							u4Z = city.mo[Number(b7Z)];
 		//							if (u4Z == 1) {
 		//								var R7Z = bam["buildings"][Number(h7Z)][_s(+
 		//									h6R)][Number(C7Z) + (1)][__s[m1p << 965772928]];
 		//								var B7Z = bam["buildings"][Number(
 		//									h7Z)]["bc"][Number(C7Z) + 1][__s[B1p ^ 0]];
-		//								var a7Z = D6.r["1" &
+		//								var a7Z = city.r["1" &
 		//									2147483647].r;
-		//								var c7Z = D6.r[2].r;
-		//								if (H2 == "TestDummy") {
+		//								var c7Z = city.r[2].r;
+		//								if ((testFlag)) {
 		//									R7Z = 0;
 		//									B7Z = 0;
 		//								}
@@ -19270,11 +19294,11 @@ function outer() {
 		//						}
 		//					}
 		//				}
-		//				if (d7Z["bid"] !== undefined) Y2(d7Z[E6k
+		//				if (d7Z["bid"] !== undefined) buildOp(d7Z[E6k
 		//					.S55(m1R & 2147483647)], Number(d7Z[__s[R1p << 2140165632]]), 4);
 		//			}
-		//			if ((D6.mo[+A8y] == ("1" |
-		//				0) || D6.mo[e2y - 0] == 1) && D6.bq.length == 0) {
+		//			if ((city.mo[+A8y] == ("1" |
+		//				0) || city.mo[e2y - 0] == 1) && city.bq.length == 0) {
 		//				var h7Z;
 		//				var C7Z;
 		//				var b7Z;
@@ -19286,25 +19310,25 @@ function outer() {
 		//				var J7Z = new Object();
 		//				var d7Z = new Object();
 		//				for (
-		//					var g7Z in D6.bd) {
-		//					C7Z = D6.bd[g7Z]["bl"];
+		//					var g7Z in city.bd) {
+		//					C7Z = city.bd[g7Z]["bl"];
 		//					if (C7Z >= 1 && C7Z < 10) {
 		//						h7Z =
-		//							D6.bd[g7Z]["bid"];
+		//							city.bd[g7Z]["bid"];
 		//						if (bam["buildings"][Number(h7Z)]) {
 		//							b7Z = bam["buildings"][
 		//								Number(h7Z)][__s[6112]];
-		//							if (b7Z == +A8y && D6.mo[A8y * 1] == (1) || b7Z == +
-		//								e2y && D6.mo[+e2y] == 1) {
-		//								u4Z = D6.mo[Number(b7Z)];
+		//							if (b7Z == +A8y && city.mo[A8y * 1] == (1) || b7Z == +
+		//								e2y && city.mo[+e2y] == 1) {
+		//								u4Z = city.mo[Number(b7Z)];
 		//								if (u4Z == 1) {
 		//									var R7Z = bam[_s(
 		//										Q5y & 2147483647)][Number(h7Z)]["bc"][Number(C7Z) + (1)][_s(m1p *
 		//											1)];
 		//									var B7Z = bam["buildings"][Number(h7Z)]["bc"][Number(C7Z) + ("1" <<
 		//										2034640768)][__s[+B1p]];
-		//									var a7Z = D6.r[1].r;
-		//									var c7Z = D6.r[2].r;
+		//									var a7Z = city.r[1].r;
+		//									var c7Z = city.r[2].r;
 		//									if (H2 == E6k
 		//										.o55(x2R << 1933649440)) {
 		//										R7Z = 0;
@@ -19337,17 +19361,17 @@ function outer() {
 		//						}
 		//					}
 		//				}
-		//				if (d7Z["bid"] !== undefined) Y2(d7Z[_s(+
+		//				if (d7Z["bid"] !== undefined) buildOp(d7Z[_s(+
 		//					m1R)], Number(d7Z[__s[+R1p]]), 4);
 		//			}
-		//			if (D6.mo[9] >= 0 && D6.tq.length == 0) {
+		//			if (city.mo[9] >= 0 && city.tq.length == 0) {
 		//				var
 		//					n7Z = new Object();
-		//				for (var P7Z = 0; P7Z < D6.tc.length; P7Z++) {
+		//				for (var P7Z = 0; P7Z < city.tc.length; P7Z++) {
 		//					var p7Z = Number(P7Z) + ("9" -
 		//						0);
-		//					if (D6.mo[p7Z] > 0) {
-		//						var Z7Z = D6.tc[P7Z];
+		//					if (city.mo[p7Z] > 0) {
+		//						var Z7Z = city.tc[P7Z];
 		//						var S7Z = P7Z;
 		//						var x4Z = y0F(P7Z);
 		//						var e4Z = bam[
@@ -19394,32 +19418,32 @@ function outer() {
 		//								A7Z = A7Z / ((100 - K7Z) / 100);
 		//							}
 		//						}
-		//						A7Z = A7Z / ((1) + D6[__s[+O1p]][x4Z][
+		//						A7Z = A7Z / ((1) + city[__s[+O1p]][x4Z][
 		//							"s"] / 100);
 		//						if (A7Z <= 1) A7Z = 1;
 		//						var r7Z = 0;
 		//						var m7Z =
-		//							D6.tc.length;
-		//						var D7Z = D6.tq.length;
+		//							city.tc.length;
+		//						var D7Z = city.tq.length;
 		//						for (var G7Z = 0; G7Z < m7Z; G7Z++) {
-		//							var f7Z = D6.tc[
+		//							var f7Z = city.tc[
 		//								G7Z] * bam["troops"][G7Z][__s[t1R & 2147483647]];
 		//							r7Z += f7Z;
 		//						}
 		//						if (D7Z >= 1)
 		//							for (var G7Z = 0; G7Z < D7Z; G7Z++) {
-		//								var E7Z = D6.tq[G7Z].ttype;
-		//								var k4Z = D6.tq[G7Z].tc;
+		//								var E7Z = city.tq[G7Z].ttype;
+		//								var k4Z = city.tq[G7Z].tc;
 		//								var
 		//									f7Z = k4Z * bam["troops"][E7Z][__s[t1R - 0]];
 		//								r7Z += f7Z;
 		//							}
-		//						r7Z = D6[__s[6626]] - r7Z;
+		//						r7Z = city[__s[6626]] - r7Z;
 		//						var C4Z = O2();
-		//						var q7Z = D6["r"][1][
+		//						var q7Z = city["r"][1][
 		//							"r"];
-		//						var F7Z = D6["r"][2]["r"];
-		//						var N7Z = D6[_s(
+		//						var F7Z = city["r"][2]["r"];
+		//						var N7Z = city[_s(
 		//							+I6y)][3]["r"];
 		//						var Y7Z = ppdt['g'][_s(w6y >>
 		//							1284272544)];
@@ -19431,12 +19455,12 @@ function outer() {
 		//						var L4Z = Number(ppdt[_s(
 		//							+h6R)]) + Number(l4Z);
 		//						if (P5V(S7Z))
-		//							if (D6.mo[p7Z] > Z7Z) {
+		//							if (city.mo[p7Z] > Z7Z) {
 		//								if (Z7Z == 0) {
 		//									var w4Z = 1;
-		//									var I4Z = D6.mo[
+		//									var I4Z = city.mo[
 		//										p7Z];
-		//								} else { var w4Z = Z7Z / D6.mo[p7Z]; var I4Z = D6.mo[p7Z] - Z7Z; } n7Z[S7Z] =
+		//								} else { var w4Z = Z7Z / city.mo[p7Z]; var I4Z = city.mo[p7Z] - Z7Z; } n7Z[S7Z] =
 		//									new Object();
 		//								n7Z[S7Z][__s[+w6y]] = Number(S7Z);
 		//								n7Z[S7Z][__s[R8y >> 964727360]] = Number(A7Z);
@@ -19464,27 +19488,27 @@ function outer() {
 		//						var i7Z = Math
 		//							.floor(300000 / Number(O4Z));
 		//						var r7Z = 0;
-		//						var m7Z = D6.tc.length;
-		//						var D7Z = D6.tq
+		//						var m7Z = city.tc.length;
+		//						var D7Z = city.tq
 		//							.length;
 		//						for (var G7Z = 0; G7Z < m7Z; G7Z++) {
-		//							var f7Z = D6.tc[G7Z] * bam["troops"][G7Z][
+		//							var f7Z = city.tc[G7Z] * bam["troops"][G7Z][
 		//								__s[+t1R]];
 		//							r7Z += f7Z;
 		//						}
 		//						if (D7Z >= 1)
 		//							for (var G7Z = 0; G7Z < D7Z; G7Z++) {
-		//								var E7Z = D6.tq[G7Z].ttype;
-		//								var k4Z = D6.tq[G7Z].tc;
+		//								var E7Z = city.tq[G7Z].ttype;
+		//								var k4Z = city.tq[G7Z].tc;
 		//								var
 		//									f7Z = k4Z * bam["troops"][E7Z][__s[t1R >> 1473671840]];
 		//								r7Z += f7Z;
 		//							}
-		//						r7Z = D6[__s[6626]] - r7Z;
-		//						var q7Z = D6["r"]["1" | 1][_s(+
+		//						r7Z = city[__s[6626]] - r7Z;
+		//						var q7Z = city["r"]["1" | 1][_s(+
 		//							I6y)];
-		//						var F7Z = D6["r"][2]["r"];
-		//						var N7Z = D6["r"][
+		//						var F7Z = city["r"][2]["r"];
+		//						var N7Z = city["r"][
 		//							"3" | 1]["r"];
 		//						var Y7Z = ppdt['g'][__s[w6y ^ 0]];
 		//						var e4Z = bam[_s(
@@ -19851,8 +19875,8 @@ function outer() {
 				if (d5U[1] == 7) {
 					b5U = d5U[4];
 					S5U = 0;
-					if (ppdt[__s[o7y << 1534577856]])
-						if (ppdt[__s[+o7y]][b5U]) S5U = ppdt[__s[+o7y]][b5U];
+					if (ppdt["itc"])
+						if (ppdt["itc"][b5U]) S5U = ppdt["itc"][b5U];
 					var r5U = __s[6640] + b5U + E6k
 						.o55(u7p - 0) + S5U + __s[6461] + n5U + __s[3638] + g5U + _s('6565' |
 							4132);
@@ -19862,8 +19886,8 @@ function outer() {
 				if (d5U[2] == 7) {
 					b5U = d5U[5];
 					S5U = 0;
-					if (ppdt[__s[+o7y]])
-						if (ppdt[__s[+o7y]][b5U]) S5U = ppdt[__s[o7y << 792984928]][b5U];
+					if (ppdt["itc"])
+						if (ppdt["itc"][b5U]) S5U = ppdt["itc"][b5U];
 					var V5U = _s('6640' >>
 						1707396256) + b5U + __s[+u7p] + S5U + __s[6461] + f5U + __s[3638] + Z5U + _s(
 							6565);
@@ -19873,8 +19897,8 @@ function outer() {
 				if (d5U[3] == 7) {
 					b5U = d5U[6];
 					S5U = 0;
-					if (ppdt[__s[o7y << 407024992]])
-						if (ppdt[__s[+o7y]][b5U]) S5U = ppdt[__s[+o7y]][b5U];
+					if (ppdt["itc"])
+						if (ppdt["itc"][b5U]) S5U = ppdt["itc"][b5U];
 					var h5U = __s[6640] + b5U + _s(
 						u7p * 1) + S5U + __s['6461' | 6420] + K5U + __s[3638] + A5U + _s('6565' <<
 							1173952000);
@@ -19968,7 +19992,7 @@ function outer() {
 					.removeClass(__s[+w7p])
 					.addClass(__s[+F7p]);
 			} else {
-				var W6w = D6.bd[bspotHall].bl;
+				var W6w = city.bd[bspotHall].bl;
 				if (W6w >= 2) {
 					$(E6k
 						.S55(v7p & 2147483647))
@@ -20612,8 +20636,8 @@ function outer() {
 			}
 			if (z4g != 0) {
 				t4g = 0;
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[+o7y]][z4g]) t4g = ppdt[__s[o7y * 1]][z4g];
+				if (ppdt["itc"])
+					if (ppdt["itc"][z4g]) t4g = ppdt["itc"][z4g];
 				var L4g = '';
 				if (t4g == +
 					'0');
@@ -20625,8 +20649,8 @@ function outer() {
 			if (M4g != 0) {
 				t4g = 0;
 				if (
-					ppdt[__s[o7y * 1]])
-					if (ppdt[__s[+o7y]][M4g]) t4g = ppdt[__s[+o7y]][M4g];
+					ppdt["itc"])
+					if (ppdt["itc"][M4g]) t4g = ppdt["itc"][M4g];
 				var L4g = "";
 				if (
 					t4g == (0));
@@ -20639,8 +20663,8 @@ function outer() {
 				V4g = "1" >>
 					641824032;
 				t4g = 0;
-				if (ppdt[__s[o7y | 1600]])
-					if (ppdt[__s[o7y ^ 0]][C4g]) t4g = ppdt[__s[+o7y]][C4g];
+				if (ppdt["itc"])
+					if (ppdt["itc"][C4g]) t4g = ppdt["itc"][C4g];
 				var L4g = "";
 				if (t4g ==
 					0);
@@ -20653,8 +20677,8 @@ function outer() {
 				0)) {
 				r4g = 1;
 				t4g = 0;
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[o7y & 2147483647]][G4g]) t4g = ppdt[__s[o7y << 1465063072]][G4g];
+				if (ppdt["itc"])
+					if (ppdt["itc"][G4g]) t4g = ppdt["itc"][G4g];
 				var L4g = _s(
 					4867);
 				if (t4g == 0);
@@ -20665,8 +20689,8 @@ function outer() {
 			}
 			if (X4g != 0) {
 				t4g = 0;
-				if (ppdt[__s[o7y & 2147483647]])
-					if (ppdt[__s[o7y >> 4008896]][X4g]) t4g = ppdt[__s[o7y * 1]][X4g];
+				if (ppdt["itc"])
+					if (ppdt["itc"][X4g]) t4g = ppdt["itc"][X4g];
 				var L4g = '';
 				if (
 					t4g == (0));
@@ -20715,7 +20739,7 @@ function outer() {
 					}
 				} else {
 					for (var e5Z = 0; e5Z < 9; e5Z++) {
-						if (D6.mo[e5Z] == ("1" |
+						if (city.mo[e5Z] == ("1" |
 							1)) $(__s[6737] + e5Z + __s[+M3p])
 								.prop(__s[286], !!{});
 						else $(__s[6737] + e5Z + __s[M3p & 2147483647])
@@ -20727,7 +20751,7 @@ function outer() {
 					for (var e5Z = 9; e5Z < +X8y; e5Z++) {
 						s5Z = e5Z +
 							+o8y;
-						if (D6.mo[s5Z][0] == (1)) $(__s[r2R << 1617016928] + e5Z)
+						if (city.mo[s5Z][0] == (1)) $(__s[r2R << 1617016928] + e5Z)
 							.prop(__s[286], !!"1");
 						else $(__s[+r2R] + e5Z)
 							.prop(__s[286], !{});
@@ -20736,7 +20760,7 @@ function outer() {
 						$(__s[5276] + e5Z)
 							.prop("disabled", ![]);
 						$(__s[5276] + e5Z)
-							.val(D6.mo[s5Z][1]);
+							.val(city.mo[s5Z][1]);
 					}
 				} $(__s[2224])
 					.val('');
@@ -20760,14 +20784,14 @@ function outer() {
 		function a9F() {
 			var N4g = 0;
 			var q4g = currentTime();
-			if (D6.bq.length > "0" >>
+			if (city.bq.length > "0" >>
 				718865280) {
-				for (var Y4g in D6.bq) {
-					bstart = Number(D6.bq[Y4g].ds);
-					bend = Number(D6.bq[Y4g].de);
-					ispaid = Number(D6.bq[Y4g].pa);
-					brep = Number(D6.bq[Y4g].brep);
-					elvl = Number(D6.bq[Y4g].elvl);
+				for (var Y4g in city.bq) {
+					bstart = Number(city.bq[Y4g].ds);
+					bend = Number(city.bq[Y4g].de);
+					ispaid = Number(city.bq[Y4g].pa);
+					brep = Number(city.bq[Y4g].brep);
+					elvl = Number(city.bq[Y4g].elvl);
 					if (Y4g == 0) N4g += bend - q4g;
 					else N4g += bend - bstart;
 				}
@@ -20779,10 +20803,10 @@ function outer() {
 			} else $(__s[913])
 				.css("display", "none");
 			N4g = 0;
-			if (D6.tq.length > 0) {
-				for (var Y4g in D6.tq) {
-					bstart = Number(D6.tq[Y4g].ds);
-					bend = Number(D6.tq[Y4g].de);
+			if (city.tq.length > 0) {
+				for (var Y4g in city.tq) {
+					bstart = Number(city.tq[Y4g].ds);
+					bend = Number(city.tq[Y4g].de);
 					if (Y4g == 0) N4g += bend - q4g;
 					else N4g += bend - bstart;
 				}
@@ -20863,7 +20887,7 @@ function outer() {
 
 		function e1F() {
 			var k6l = __s[7023];
-			var a1l = D6.tps[3][__s[+w6y]];
+			var a1l = city.tps[3][__s[+w6y]];
 			var E1l = _s(+
 				"2125") + a1l + __s[4242];
 			if (a1l <= 9) {
@@ -20910,7 +20934,7 @@ function outer() {
 					.removeClass(__s[w7p & 2147483647])
 					.addClass(__s[+F7p]);
 			} else {
-				var C6w = D6.bd[bspotHall].bl;
+				var C6w = city.bd[bspotHall].bl;
 				if (C6w >= ('2' | 2)) {
 					$(_s(+
 						v7p))
@@ -21639,14 +21663,14 @@ function outer() {
 		function y5V(x0D, X0D, L0D, o0D, t0D, O0D) {
 			var M6p = '1431';
 			var s6p = '6824';
-			var w0D = D6.r[1].r;
+			var w0D = city.r[1].r;
 			var
-				T0D = D6.r[2].r;
-			var Q0D = D6.r[3].r;
+				T0D = city.r[2].r;
+			var Q0D = city.r[3].r;
 			var l0D = ppdt.g.t;
-			var v0D = D6.tt - D6
+			var v0D = city.tt - city
 				.tu;
-			var I0D = D6.tq.length;
+			var I0D = city.tq.length;
 			var H0D = 0;
 			if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) var
 				j0D = 16;
@@ -21687,7 +21711,7 @@ function outer() {
 				H0D = 1;
 			} else $(__s[2556])
 				.css(__s[+S2y], __s[+s6p]);
-			if (H0D == 1 && H2 != "TestDummy") {
+			if (H0D == 1 && (!testFlag)) {
 				$(__s[+a6p])
 					.attr("disabled", !!1);
 				$(__s[a6p & 2147483647])
@@ -22837,11 +22861,11 @@ function outer() {
 				var Q42 = __s[370] + l42 + __s[5817] +
 					l42 + __s[4550] + x42 + __s[3849] + l42 + __s[3047];
 				for (var w42 = 0; w42 <
-					D6.tc.length; w42++)
+					city.tc.length; w42++)
 					if (w42 != 0 && w42 != 1 && w42 != 7 && w42 != 12 && w42 != +m2y && w42 != +17) {
-						var t42 = D6
+						var t42 = city
 							.tc[w42];
-						var L42 = Math.floor(Number(D6.th[w42]) * I42);
+						var L42 = Math.floor(Number(city.th[w42]) * I42);
 						var X42 = bam["troops"][
 							w42][__s[c1R << 313811104]];
 						var o42 = bam["troops"][w42][_s("1067" <<
@@ -23038,7 +23062,7 @@ function outer() {
 				if (N9w != 0) E9w = qam["techTreeSteps"][N9w]["m"][+
 					'0']["v"] + ppdt.fa[1];
 			}
-			q9w = q9w / ((D6[__s[O1p - 0]][e0D][E6k
+			q9w = q9w / ((city[__s[O1p - 0]][e0D][E6k
 				.o55(Z9y ^ 0)] + E9w + (100)) / 100);
 			q9w = Math.ceil(q9w);
 			q9w = Math.round(q9w / ("1000" | 456)) * (1000);
@@ -23085,8 +23109,8 @@ function outer() {
 			if (C3T == (0)) return '';
 			else {
 				let icountf = 0;
-				if (ppdt[__s[o7y >> 1137041504]])
-					if (ppdt[__s[o7y | 1602]][C3T]) icountf = ppdt[__s[o7y * 1]][C3T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][C3T]) icountf = ppdt["itc"][C3T];
 				var W3T = "";
 				var i3T = "";
 				if (icountf == 0) W3T = __s[6772];
@@ -23544,13 +23568,13 @@ function outer() {
 				.prop(__s[286], !![]);
 			else $(__s[2341])
 				.prop(__s[286], !1);
-			if (D6.mo !== undefined && (ppdt[__s[V9y * 1]][1] * (1000) >
+			if (city.mo !== undefined && (ppdt[__s[V9y * 1]][1] * (1000) >
 				currentTime() || ppdt[__s[+V9y]][2] * (1000) > currentTime() || ppdt[__s[+V9y]][+
 				'3'] * (1000) > currentTime() || ppdt[__s[V9y | 2068]][4] * 1000 > currentTime())) {
 				n7F();
 				O0F();
 				F2F();
-				var v5Z = D6.mo;
+				var v5Z = city.mo;
 				if (ppdt.r < 5) {
 					$(__s[R04 >> 488687840])
 						.prop("disabled", !!"1");
@@ -23565,8 +23589,8 @@ function outer() {
 						.prop("disabled", !!"");
 					$(__s[L04 >> 1464451264])
 						.prop("disabled", !{});
-					if (D6.mo[A8y ^ 0])
-						if (D6.mo[A8y * 1] == 1) {
+					if (city.mo[A8y ^ 0])
+						if (city.mo[A8y * 1] == 1) {
 							$(__s[R04 & 2147483647])
 								.prop(__s['286' | 266], !!"1");
 							$(__s[e04 | 8])
@@ -23576,8 +23600,8 @@ function outer() {
 							.prop(__s[286], !{});
 					else $(__s[+e04])
 						.prop(__s['286' | 264], !!0);
-					if (D6.mo[e2y - 0])
-						if (D6.mo[e2y & 2147483647] == 1) {
+					if (city.mo[e2y - 0])
+						if (city.mo[e2y & 2147483647] == 1) {
 							$(__s[+R04])
 								.prop(__s[286], !!"1");
 							$(__s[L04 - 0])
@@ -23611,20 +23635,20 @@ function outer() {
 			var R2g = '';
 			var y2g = new Array();
 			for (var B2g = '0' *
-				1; B2g < D6.bq.length; B2g++) {
-				var D2g = D6.bq[B2g].bid;
+				1; B2g < city.bq.length; B2g++) {
+				var D2g = city.bq[B2g].bid;
 				if (D2g == p2g) {
 					if (B2g == (0)) Y2g = '1' <<
 						695669024;
-					R2g = D6.bq[B2g].bspot;
+					R2g = city.bq[B2g].bspot;
 				}
 			}
 			if (R2g == "" && R2g != 0) $("#a" + p2g)
 				.remove();
 			else {
-				for (var B2g = 0; B2g < D6.bq.length; B2g++) {
-					var N2g = D6.bq[B2g].bspot;
-					var D2g = D6.bq[
+				for (var B2g = 0; B2g < city.bq.length; B2g++) {
+					var N2g = city.bq[B2g].bspot;
+					var D2g = city.bq[
 						B2g].bid;
 					if (R2g == N2g) {
 						y2g.push(D2g);
@@ -23674,8 +23698,8 @@ function outer() {
 			var P04 = '3079';
 			E6k.R6();
 			var e1U = +bidWALL;
-			var s1U = D6.bd[0]["bl"];
-			var s6U = D6.bd[0][_s(i1R ^
+			var s1U = city.bd[0]["bl"];
+			var s6U = city.bd[0][_s(i1R ^
 				0)];
 			var X1U = +bidWALL;
 			var T1U = 0;
@@ -23699,10 +23723,10 @@ function outer() {
 				$(__s[h04 | 2064])
 					.attr("disabled", !0);
 			}
-			for (var H1U in D6.bq) {
-				var P1U = D6.bq[H1U].bspot;
+			for (var H1U in city.bq) {
+				var P1U = city.bq[H1U].bspot;
 				if (T1U == P1U) s1U =
-					Number(D6.bq[H1U].elvl);
+					Number(city.bq[H1U].elvl);
 			}
 			$(__s[+X04])
 				.css("display", "none");
@@ -23733,12 +23757,12 @@ function outer() {
 					0)][__s[+B1p]];
 				if (v1U >= (1)) var Q1U = __s[l04 - 0] + p6(v1U) + __s[d04 & 2147483647];
 				else var Q1U = "";
-				var G1U = D6.r[1].r;
-				var i1U = D6.r[2].r;
+				var G1U = city.r[1].r;
+				var i1U = city.r[2].r;
 				var
-					R1U = D6.bq.length;
-				var y1U = D6.bd[bspotHall].bl;
-				var k6U = D6.bq.length;
+					R1U = city.bq.length;
+				var y1U = city.bd[bspotHall].bl;
+				var k6U = city.bq.length;
 				var e6U = y1U * 10;
 				if (
 					ppdt[__s[V9y & 2147483647]][1] * 1000 >= currentTime()) {
@@ -23788,13 +23812,13 @@ function outer() {
 				var e1U = bidWALL >> 1942317024;
 				var E1U = $(__s[+x24])
 					.css("display");
-				for (var H1U = 0; H1U < D6.bq.length; H1U++)
-					if (T1U == D6.bq[H1U].bspot) {
-						var Y1U = D6.bq[H1U].elvl;
-						var B1U = D6.bq[H1U].slvl;
+				for (var H1U = 0; H1U < city.bq.length; H1U++)
+					if (T1U == city.bq[H1U].bspot) {
+						var Y1U = city.bq[H1U].elvl;
+						var B1U = city.bq[H1U].slvl;
 						if (Y1U > B1U) n1U = +
 							'1';
-					} if (s1U == "") s1U = D6.bd[Number(b1U)].bl;
+					} if (s1U == "") s1U = city.bd[Number(b1U)].bl;
 				if (s1U == 0) {
 					var u1U = +
 						'0';
@@ -23806,10 +23830,10 @@ function outer() {
 						"buildings"][Number(e1U)])
 						if (bam["buildings"][Number(e1U)]["bc"][Number(u1U)]) {
 							var j1U = Math.ceil(bam[_s(Q5y |
-								1035)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(D6.cs) / (100)));
+								1035)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(city.cs) / (100)));
 							var
 								w1U = Math.ceil(bam["buildings"][Number(e1U)]["bc"][Number(u1U)]["td"] / (Number(
-									D6.cs) / (100)));
+									city.cs) / (100)));
 						} else { var j1U = +D5y; var w1U = +D5y; }
 					else {
 						var j1U = D5y * 1;
@@ -23821,10 +23845,10 @@ function outer() {
 					if (bam["buildings"][Number(e1U)])
 						if (bam["buildings"][Number(e1U)]["bc"][Number(u1U)]) {
 							var j1U = Math.ceil(bam[_s(Q5y <<
-								627088640)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(D6
+								627088640)][Number(e1U)]["bc"][Number(u1U)]["tu"] / (Number(city
 									.cs) / 100));
 							var w1U = Math.ceil(bam["buildings"][Number(e1U)]["bc"][Number(u1U)][E6k
-								.o55(+n7y)] / (Number(D6.cs) / (100)));
+								.o55(+n7y)] / (Number(city.cs) / (100)));
 						} else {
 							var j1U = +D5y;
 							var w1U = D5y >>
@@ -23833,10 +23857,10 @@ function outer() {
 					else { var j1U = +D5y; var w1U = +D5y; }
 				}
 				if (bam["buildings"][e1U])
-					for (var H1U in D6.bq) {
-						var C1U = D6.bq[H1U].bspot;
-						var K1U = D6.bq[H1U].slvl;
-						var W1U = D6.bq[H1U]
+					for (var H1U in city.bq) {
+						var C1U = city.bq[H1U].bspot;
+						var K1U = city.bq[H1U].slvl;
+						var W1U = city.bq[H1U]
 							.elvl;
 						if (C1U == b1U && K1U < W1U)
 							if (W1U + (1) > u1U) u1U = W1U + 1;
@@ -23984,8 +24008,8 @@ function outer() {
 							87801472) + p6(v1U) + __s[+d04];
 						else h1U = "";
 					}
-					var G1U = D6.r[1].r;
-					var i1U = D6.r[2].r;
+					var G1U = city.r[1].r;
+					var i1U = city.r[2].r;
 					if (
 						l1U > G1U || v1U > i1U) {
 						$(__s[+k04])
@@ -24042,14 +24066,14 @@ function outer() {
 						if (s1U > 1)
 							for (var H1U = s1U; H1U > 1; H1U--) {
 								I1U = I1U + Math.ceil(bam["buildings"][Number(e1U)][E6k
-									.o55(+h6R)][Number(H1U)]["td"] / (Number(D6.cs) / ("100" | 68)));
+									.o55(+h6R)][Number(H1U)]["td"] / (Number(city.cs) / ("100" | 68)));
 								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(H1U - (
 									1))][__s[B1p | 532]]) / 3);
 								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(H1U - ("1" ^
 									0))][__s[+m1p]]) / 3);
 							} else if (s1U >= (1)) {
 								I1U = I1U + Math.ceil(bam[E6k
-									.o55(+Q5y)][Number(e1U)]["bc"][Number(s1U)]["td"] / (Number(D6.cs) / 100));
+									.o55(+Q5y)][Number(e1U)]["bc"][Number(s1U)]["td"] / (Number(city.cs) / 100));
 								L1U = L1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(s1U)][E6k
 									.o55(+B1p)]) / (3));
 								o1U = o1U + Math.floor(Number(bam["buildings"][Number(e1U)]["bc"][Number(s1U)][_s(
@@ -24170,7 +24194,7 @@ function outer() {
 						var h46 = z46
 							.indexOf(__s[+n24], b46 + 1);
 						var J46 = N5F(C46);
-						if (H2 == J46 || H2 == "TestDummy" ||
+						if (H2 == J46 || (testFlag) ||
 							H2 == "Adiera" || H2 == "MrLongTongue") {
 							var S46 = document.getElementById(
 								"cvs");
@@ -24262,13 +24286,13 @@ function outer() {
 		function E7F() {
 			var o24 = '3572';
 			$(__s[583])
-				.text(p6(D6.tu));
+				.text(p6(city.tu));
 			$(__s[4537])
-				.text(p6(D6.tu));
+				.text(p6(city.tu));
 			$(__s[5041])
-				.text(p6(D6.tu));
+				.text(p6(city.tu));
 			$(__s[6011])
-				.text(p6(D6.tc[7]));
+				.text(p6(city.tc[7]));
 			$(__s[4747])
 				.prop(__s[286], !!{});
 			$(__s[1505])
@@ -24289,14 +24313,14 @@ function outer() {
 
 			$(__s[6748])
 				.hide();
-			for (var f2l in D6.tc) {
+			for (var f2l in city.tc) {
 				if (f2l != (0)) {
 					B2l = bam["troops"][f2l][_s(
 						1067)];
 					Z2l = bam["troops"][f2l]["dsc"];
 					U2l = bam["troops"][f2l]["simg"];
-					P2l = D6.tc[f2l];
-					K2l = D6.th[f2l];
+					P2l = city.tc[f2l];
+					K2l = city.th[f2l];
 					$(__s[2115] + f2l)
 						.html(__s[t2p ^ 0] + f2l + __s[+J2p] + U2l + __s[+T2p] + Z2l + __s[+x2p] + bam[_s(
 							4619)][f2l][__s[1067]] + __s[g2p ^ 0] + p6(K2l) + __s[f5R >> 1686622976] +
@@ -24318,21 +24342,21 @@ function outer() {
 						= bam["troops"][f2l][__s[1067]];
 					Z2l = bam["troops"][f2l]["dsc"];
 					U2l = bam["troops"][f2l]["simg"];
-					P2l = D6.tc[f2l];
-					K2l = D6.th[f2l];
+					P2l = city.tc[f2l];
+					K2l = city.th[f2l];
 					$(__s[5213] + f2l)
 						.html(__s[+t2p] + f2l + __s[J2p - 0] + U2l + __s[+T2p] + Z2l + __s[+x2p] + bam[_s(+
 							'4619')][f2l][__s[1067]] + __s[+g2p] + p6(K2l) + __s[f5R ^ 0] + p6(P2l) + _s(
 								4618) + f2l + __s[o24 * 1] + f2l + __s[f2p - 0] + K2l + __s[2522] +
 							f2l + __s[+f2p] + K2l + __s[+U2p] + p6(K2l) + __s[V2p & 2147483647]);
 				}
-				if (f2l == +'14' && D6
+				if (f2l == +'14' && city
 					.tc[f2l] > 0) {
 					B2l = bam["troops"][f2l][__s[1067]];
 					Z2l = bam["troops"][f2l]["dsc"];
 					U2l = bam["troops"][f2l]["simg"];
-					P2l = D6.tc[f2l];
-					K2l = D6.th[f2l];
+					P2l = city.tc[f2l];
+					K2l = city.th[f2l];
 					$(__s[5213] + f2l)
 						.html(__s[+t2p] + f2l + __s[J2p & 2147483647] + U2l + __s[+T2p] + Z2l + __s[+x2p] + bam[E6k
 							.o55(4619)][f2l][__s[1067]] + __s[g2p >> 764273440] + p6(K2l) + __s[+f5R] + p6(
@@ -24344,15 +24368,15 @@ function outer() {
 				}
 			}
 			var g2l = 0;
-			if (D6.tt < +T44) g2l = 1;
-			else if (D6.tt < 40000) g2l = +e2R;
-			else if (D6.tt < +x44) g2l = 500;
-			else if (D6.tt < (80000)) g2l = '800' | 800;
-			else if (D6.tt < t8y >> 1487723104) g2l = 1000;
-			else if (D6.tt < +g44) g2l = 1200;
-			else if (D6.tt < +f44) g2l = 1600;
-			else if (D6.tt < U44 << 1491320000) g2l = 2000;
-			else if (D6.tt < 240000) g2l = +c44;
+			if (city.tt < +T44) g2l = 1;
+			else if (city.tt < 40000) g2l = +e2R;
+			else if (city.tt < +x44) g2l = 500;
+			else if (city.tt < (80000)) g2l = '800' | 800;
+			else if (city.tt < t8y >> 1487723104) g2l = 1000;
+			else if (city.tt < +g44) g2l = 1200;
+			else if (city.tt < +f44) g2l = 1600;
+			else if (city.tt < U44 << 1491320000) g2l = 2000;
+			else if (city.tt < 240000) g2l = +c44;
 			else g2l = +O7p;
 			$(__s[6470])
 				.text(p6(g2l));
@@ -24572,16 +24596,16 @@ function outer() {
 							var V3U = bam["buildings"][Number(j3U)]["ds"];
 							var J3U = bam["buildings"][Number(j3U)]["bn"];
 							var o3U = Math.ceil(
-								bam["buildings"][Number(j3U)]["bc"][1]["tu"] / (Number(D6.cs) / 100)
+								bam["buildings"][Number(j3U)]["bc"][1]["tu"] / (Number(city.cs) / 100)
 							);
 							if (o3U < Number(ppdt.mibt)) o3U = Number(ppdt.mibt);
 							var h3U = Q2(o3U);
 							if (j3U >= +TPL) {
 								if (
-									D6.ble[2] == 0) var T3U = D6.ble[4];
-								else var T3U = D6.ble[2];
-								if (D6.ble[5] == 0) var d3U = 1;
-								else var d3U = D6.ble[5];
+									city.ble[2] == 0) var T3U = city.ble[4];
+								else var T3U = city.ble[2];
+								if (city.ble[5] == 0) var d3U = 1;
+								else var d3U = city.ble[5];
 								var f3U = shrinesarr[Number(T3U)][__s[193]];
 								var n3U =
 									shrinesarr[Number(T3U)]["d"];
@@ -24629,17 +24653,17 @@ function outer() {
 									.css("zoom", 1);
 							}
 							var l3U = 0;
-							for (var w3U = 0; w3U < D6.bd
+							for (var w3U = 0; w3U < city.bd
 								.length; w3U++) {
-								var O3U = D6.bd[w3U].bl;
-								if (O3U >= 1 && Z2(w3U) && D6.bd[w3U].bid <= (TPL |
+								var O3U = city.bd[w3U].bl;
+								if (O3U >= 1 && Z2(w3U) && city.bd[w3U].bid <= (TPL |
 									96)) l3U = l3U + ('1' | 1);
 							}
-							for (var w3U = 0; w3U < D6.bq.length; w3U++) {
-								var O3U = D6
+							for (var w3U = 0; w3U < city.bq.length; w3U++) {
+								var O3U = city
 									.bq[w3U].slvl;
-								var g3U = D6.bq[w3U].bspot;
-								if (O3U == 0 && Z2(w3U) && D6.bq[w3U].brep <= +
+								var g3U = city.bq[w3U].bspot;
+								if (O3U == 0 && Z2(w3U) && city.bq[w3U].brep <= +
 									TPL) l3U = l3U + 1;
 							}
 							var I3U = 0;
@@ -24656,17 +24680,17 @@ function outer() {
 								(A5y - 0);
 							if (H3U == +TPL) H4F(M3U, b3U, 3);
 							else H4F(M3U, b3U, 1);
-							if (H3U == +h4y && D6.w == 1 && (u3U != +V5R && u3U != +c5R &&
+							if (H3U == +h4y && city.w == 1 && (u3U != +V5R && u3U != +c5R &&
 								u3U != +u8y && u3U != +M5R && u3U != s5R >> 1839307904 && u3U != +Q5R && u3U != +C5R && u3U != +
 								Z5R)) I3U = 1;
-							if (H3U == +F4y && D6.w == (1) && (u3U != (V5R ^ 0) && u3U != c5R <<
+							if (H3U == +F4y && city.w == (1) && (u3U != (V5R ^ 0) && u3U != c5R <<
 								1454664192 && u3U != +u8y && u3U != +M5R && u3U != +s5R && u3U != +Q5R && u3U != +C5R && u3U !=
 								+Z5R)) I3U = 1;
 							if (H3U != p4y << 424612800 && H3U != +r4y && H3U != +h4y && H3U != (F4y ^
 								0) && H3U != A4y >> 1889772096 && H3U != (P4y | 288) && (u3U == +V5R || u3U == (c5R ^ 0) ||
 									u3U ==
 									(u8y | 368) || u3U == M5R * 1 || u3U == (s5R | 66) || u3U == (Q5R & 2147483647) || u3U == (C5R &
-										2147483647) || u3U == (Z5R ^ 0)) && D6.w == 1) I3U = 1;
+										2147483647) || u3U == (Z5R ^ 0)) && city.w == 1) I3U = 1;
 							if (H3U != +n4y && H3U != l4y <<
 								110912544 && H3U != o4y << 1743043552 && H3U != +I1R && H3U != +t1y && H3U != +T1y && H3U != +
 								g1y && H3U != f1y >> 590223872 && H3U != V1y - 0 && H3U != +M1y && H3U != +Q1y && H3U != +Z1y &&
@@ -24738,17 +24762,17 @@ function outer() {
 							if (z3U >= 1) var L3U = __s[+l04] + p6(z3U) + E6k
 								.S55(+d04);
 							else var L3U = "";
-							var i3U = D6.r[1].r;
-							var W3U = D6.r[2]
+							var i3U = city.r[1].r;
+							var W3U = city.r[2]
 								.r;
 							if (H3U == TPL * 1) {
-								i3U = i3U + D6.ble[12];
-								W3U = W3U + D6.ble[+m2y];
+								i3U = i3U + city.ble[12];
+								W3U = W3U + city.ble[+m2y];
 							}
-							var r3U = D6.bq.length;
-							var A3U = D6.bd[bspotHall].bl;
+							var r3U = city.bq.length;
+							var A3U = city.bd[bspotHall].bl;
 							var K3U =
-								D6.bq.length;
+								city.bq.length;
 							var S3U = A3U * 10;
 							if (ppdt[__s[+V9y]][1] * 1000 >= currentTime()) {
 								var
@@ -25298,14 +25322,14 @@ function outer() {
 			var W2l;
 			var b2l;
 			$(__s[5089])
-				.text(p6(D6.tu));
-			for (var C2l in D6.th)
+				.text(p6(city.tu));
+			for (var C2l in city.th)
 				if (C2l != (0)) {
 					S2l = bam["troops"][C2l][__s[1067]];
 					i2l = bam["troops"][C2l]["dsc"];
 					d2l = bam["troops"][C2l]["simg"];
-					b2l = D6.tc[C2l];
-					W2l = D6.th[C2l];
+					b2l = city.tc[C2l];
+					W2l = city.th[C2l];
 					$(__s['1457' | 1425] + C2l)
 						.html(__s[+t2p] + C2l + __s[+J2p] + d2l + __s[+T2p] + i2l + __s[+x2p] + bam[_s(
 							4619)][C2l][__s[1067]] + __s[+g2p] + p6(W2l) + __s[f5R ^ 0] + p6(b2l) + E6k
@@ -25393,9 +25417,9 @@ function outer() {
 
 		function P4V(t5l) {
 			var s54 = '4468';
-			var l5l = D6.bd[Number(t5l)].rb;
-			var x5l = D6.bd[Number(t5l)].bid;
-			// console.log(D6.bd[Number(t5l)]);
+			var l5l = city.bd[Number(t5l)].rb;
+			var x5l = city.bd[Number(t5l)].bid;
+			// console.log(city.bd[Number(t5l)]);
 			E6k.y6();
 			var j5l = "";
 			if (l5l == undefined) {
@@ -25414,7 +25438,7 @@ function outer() {
 				for (
 					var L5l in l5l) {
 					o5l = bam["buildings"][Number(l5l[L5l][__s[+g4p]])]["bn"];
-					i5l = D6.bd[Number(l5l[L5l]["b"])]["bl"];
+					i5l = city.bd[Number(l5l[L5l]["b"])]["bl"];
 					G5l = l5l[L5l]['a'];
 					M5l += Number(G5l);
 					if (i5l != 0) j5l += __s[5719] + i5l + " " + o5l +
@@ -25429,7 +25453,7 @@ function outer() {
 			}
 			$(__s[4072])
 				.remove();
-			var w5l = D6.bd[Number(t5l)].rt;
+			var w5l = city.bd[Number(t5l)].rt;
 			if (Number(x5l) == c4y << 1850015904) {
 				var v5l = _s(+
 					'4867');
@@ -25438,7 +25462,7 @@ function outer() {
 				var I5l = '';
 				var f5l = E6k
 					.o55(4867);
-				var O5l = D6.bd[Number(t5l)].rtt;
+				var O5l = city.bd[Number(t5l)].rtt;
 				for (var X5l in O5l) {
 					v5l += __s[+g54] +
 						btxt[Number(O5l[Number(X5l)]["rt"])] + __s[c2y * 1] + p6(Math.floor(Number(O5l[Number(X5l)][
@@ -25473,7 +25497,7 @@ function outer() {
 				$(__s[+M54])
 					.text('');
 			} else if (x5l == d2y * 1) {
-				var z5l = D6.bd[Number(t5l)].bl;
+				var z5l = city.bd[Number(t5l)].bl;
 				var b5l = z5l - +
 					'1';
 				var d5l = z5l + 1;
@@ -25502,17 +25526,17 @@ function outer() {
 				$(__s[+X04])
 					.html(v5l);
 			} else if (w5l <= 5 && w5l > (0)) {
-				var Q5l = D6.bd[Number(t5l)].ruh;
-				var T5l = D6
+				var Q5l = city.bd[Number(t5l)].ruh;
+				var T5l = city
 					.bd[Number(t5l)].rdh;
-				var C5l = D6.bd[Number(t5l)].rh;
+				var C5l = city.bd[Number(t5l)].rh;
 				var I5l = (0) - Number(C5l);
 				if (Number(x5l) ==
 					BAL << 550489024) {
 					var Q5l = M1R >> 1638837472;
 					var T5l = +M1R;
 					var C5l = +M1R;
-					var S5l = D6.bd[+bspotHall][E6k
+					var S5l = city.bd[+bspotHall][E6k
 						.S55(i1R - 0)];
 					var r5l = Number(S5l) * (10);
 					var A5l = bam["buildings"][+BAL]["st"][
@@ -25544,7 +25568,7 @@ function outer() {
 				$(__s[+b24])
 					.html(j5l);
 			} else {
-				var z5l = D6.bd[Number(t5l)].bl;
+				var z5l = city.bd[Number(t5l)].bl;
 				var b5l = z5l - (1);
 				var d5l = z5l + ("1" -
 					0);
@@ -25569,7 +25593,7 @@ function outer() {
 				for (var L5l in l5l) {
 					o5l = bam["buildings"][Number(l5l[L5l][_s(+
 						g4p)])]["bn"];
-					i5l = D6.bd[Number(L5l)]["bl"];
+					i5l = city.bd[Number(L5l)]["bl"];
 					G5l = l5l[L5l]["a"];
 					M5l += Number(G5l);
 					j5l += __s['228' | 4] + i5l + " " + o5l + __s[3996] + Math.floor(G5l) + E6k
@@ -25671,13 +25695,13 @@ function outer() {
 
 		function v5V() {
 			E6k.y6();
-			if (D6.bq.length == 0) k1F();
+			if (city.bq.length == 0) k1F();
 			else {
 				var r4w = [];
 				var A4w = [];
-				for (var V4w = 0; V4w < D6.bq.length; V4w++) {
+				for (var V4w = 0; V4w < city.bq.length; V4w++) {
 					var n4w =
-						D6.bq[V4w][__s[m54 ^ 0]];
+						city.bq[V4w][__s[m54 ^ 0]];
 					r4w.push(n4w);
 				}
 				$(__s[5823])
@@ -25718,23 +25742,23 @@ function outer() {
 				.css("display", "none");
 		}
 
-		function F0V() { N6(); var b92 = $.post("/includes/" + __s[3933]); }
+		function F0V() { N6(); var b92 = $.post("/includes/sResCd.php"); }
 
 		function L6F(x4T) {
-			var T4T = D6.bd[d2].bid;
+			var T4T = city.bd[d2].bid;
 			if (T4T == (0) || T4T == b1R >> 1640662688 || T4T == +C6y ||
 				T4T == +G1R) {
 				N6();
-				var O4T = $.post("/includes/" + __s[2719], { b: x4T, cid: cid, a: d2 }); // "uSpeci.php"
+				var O4T = $.post("/includes/uSpeci.php", { b: x4T, cid: cid, a: d2 }); // "uSpeci.php"
 				F6();
 				O4T.done(function (X4T) {
 					E6k.y6();
 					X4T = '';
 					var L4T = r1R ^ 0;
-					D6.bd[d2].bid = +r1R;
+					city.bd[d2].bid = +r1R;
 					var t4T = d2 % (A5y * 1);
 					var o4T = (d2 - t4T) / (A5y & 2147483647);
-					console.log("Bad");
+				//	console.log("Bad");
 					//          W2.removeTile(z2.getTileX(t4T * (64 >> 640707424)), z2.getTileX(o4T * (64 & 2147483647)), z2);
 					//          W2.putTile(L4T, z2.getTileX(t4T * +64), z2.getTileY(o4T * +64), z2);
 					ppdt.itc[x4T] = ppdt.itc[x4T] - (1);
@@ -25748,19 +25772,19 @@ function outer() {
 			var O5Z = z5Z * (A5y | 20) + X5Z;
 			if (B5F(O5Z)) O5Z = 0;
 			var
-				t5Z = Number(D6.bd[O5Z].bl);
-			var L5Z = Number(D6.bd[O5Z].bid);
-			for (var o5Z in D6.bq) {
-				var M5Z = D6.bq[o5Z]
+				t5Z = Number(city.bd[O5Z].bl);
+			var L5Z = Number(city.bd[O5Z].bid);
+			for (var o5Z in city.bq) {
+				var M5Z = city.bq[o5Z]
 					.bspot;
 				if (O5Z == M5Z) {
-					t5Z = Number(D6.bq[o5Z].elvl);
-					L5Z = Number(D6.bq[o5Z].brep);
+					t5Z = Number(city.bq[o5Z].elvl);
+					L5Z = Number(city.bq[o5Z].brep);
 				}
 			}
 			if (t5Z != 0) {
 				t5Z = t5Z + (1);
-				Y2(L5Z, O5Z, 1);
+				buildOp(L5Z, O5Z, 1);
 			}
 		}
 
@@ -25778,15 +25802,15 @@ function outer() {
 						[1];
 						if (cid == ctyid) ppdt['c'][X9l][2] = t9l;
 					}
-					D6[__s[+I5R]] = t9l;
-					let L9l = D6[__s[M8R ^ 0]][0];
-					let G9l = D6.citn;
+					city[__s[+I5R]] = t9l;
+					let L9l = city[__s[M8R ^ 0]][0];
+					let G9l = city.citn;
 					let M9l = G9l;
 					let z9l = $(__s[O54 >> 437751616] + cid + __s[G2R * 1]).html();
 					if (z9l) {
 						var C9l = z9l.indexOf(__s[6614]);
 						M9l = z9l.substring(C9l, z9l.length);
-						G9l = D6.citn + __s[+w54] + L9l;
+						G9l = city.citn + __s[+w54] + L9l;
 						M9l = G9l + " " + M9l;
 					}
 					else {
@@ -25799,7 +25823,7 @@ function outer() {
 					if (L9l == "") L9l = __s[3435];
 					else L9l = __s[4427] + L9l;
 					$(__s[1045])
-						.text(D6.citn);
+						.text(city.citn);
 					$(__s[2914])
 						.html(L9l);
 				}
@@ -25859,11 +25883,11 @@ function outer() {
 				h9g = h9g * +G5y;
 				r9g = r9g * +G5y;
 				$(__s[B1R * 1] + b9g)
-					.data("data", { "bid": S9g, "bl": D6["bd"][b9g]["bl"] });
+					.data("data", { "bid": S9g, "bl": city["bd"][b9g]["bl"] });
 				var
 					J9g = S9g % 4;
 				var V9g = (S9g - J9g) / 4;
-				D6["bd"][b9g]["bid"] = A9g;
+				city["bd"][b9g]["bid"] = A9g;
 				J9g = J9g * (G5y * 1);
 				V9g = V9g * +G5y;
 				$(__s[r5y & 2147483647] + b9g)
@@ -25881,6 +25905,7 @@ function outer() {
 //				if (S9g == 447) r5F();
 			}
 		}
+
 
 		function c7F() {
 			var X54 = "1396";
@@ -25904,8 +25929,8 @@ function outer() {
 					.text(p6(ppdt.cb));
 				var d1T = ppdt.m.t;
 				G1T = 0;
-				if (ppdt[__s[o7y - 0]])
-					if (ppdt[__s[+o7y]][M1T]) G1T = ppdt[__s[+o7y]][M1T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][M1T]) G1T = ppdt["itc"][M1T];
 				$(__s[a0R & 2147483647] + M1T)
 					.text(G1T);
 				if (i1T > ppdt.r) {
@@ -26080,10 +26105,10 @@ function outer() {
 						};
 						var cityUrl = "http://cotgopt.com/?map=";
 						// on water or on lang?
-						if (D6.w === "1") cityUrl = cityUrl + "W";
+						if (city.w === "1") cityUrl = cityUrl + "W";
 						else cityUrl = cityUrl + "L";
 						for (let iterator = 23; iterator < 417; iterator += 1) {
-							let spotType = Number(D6.bd[iterator].bid);
+							let spotType = Number(city.bd[iterator].bid);
 							if (d4F(iterator))
 								if (q6l[spotType] !== undefined) cityUrl = cityUrl + q6l[spotType];
 								else cityUrl = cityUrl + "0";
@@ -26235,7 +26260,7 @@ function outer() {
 										p0F();
 										B8();
 									} else {
-										D6 = JSON.parse(M2l);
+										city = JSON.parse(M2l);
 		  							  sendBuildingData();
 
 										J2();
@@ -26264,26 +26289,26 @@ function outer() {
 			var s22 = $(__s[+V74])
 				.val();
 			if (s22 == 1) {
-				var k22 = Number(D6.crth);
+				var k22 = Number(city.crth);
 				if ($(__s[2336])
-					.prop(__s[286]) == !0) var E62 = Math.floor(D6.r[1]["r"] / (1000));
+					.prop(__s[286]) == !0) var E62 = Math.floor(city.r[1]["r"] / (1000));
 				else if ($(__s[1313])
-					.prop(__s[286]) == !!1) var E62 = Math.floor(D6.r[2]["r"] / (1000));
+					.prop(__s[286]) == !!1) var E62 = Math.floor(city.r[2]["r"] / (1000));
 				else if ($(__s[2212])
-					.prop(__s[286]) == !0) var E62 = Math.floor(D6.r[3]["r"] / 1000);
+					.prop(__s[286]) == !0) var E62 = Math.floor(city.r[3]["r"] / 1000);
 				else if ($(__s[6237])
-					.prop(__s[286]) == !!{}) var E62 = Math.floor(D6.r[4]["r"] / ("1000" <<
+					.prop(__s[286]) == !!{}) var E62 = Math.floor(city.r[4]["r"] / ("1000" <<
 						2061928800));
 			} else {
-				var k22 = Number(D6.shph);
+				var k22 = Number(city.shph);
 				if ($(__s[2336])
-					.prop(__s[286]) == !0) var E62 = Math.floor(D6.r[1]["r"] / +D5y);
+					.prop(__s[286]) == !0) var E62 = Math.floor(city.r[1]["r"] / +D5y);
 				else if ($(__s[1313])
-					.prop(__s[286]) == !"") var E62 = Math.floor(D6.r[2]["r"] / +D5y);
+					.prop(__s[286]) == !"") var E62 = Math.floor(city.r[2]["r"] / +D5y);
 				else if ($(__s[2212])
-					.prop(__s[286]) == !!"1") var E62 = Math.floor(D6.r[3]["r"] / (D5y >> 1367929664));
+					.prop(__s[286]) == !!"1") var E62 = Math.floor(city.r[3]["r"] / (D5y >> 1367929664));
 				else if ($(__s[6237])
-					.prop(__s[286]) == !!1) var E62 = Math.floor(D6.r[4]["r"] / +D5y);
+					.prop(__s[286]) == !!1) var E62 = Math.floor(city.r[4]["r"] / +D5y);
 			}
 			var e22 = "0" >>
 				1144603840;
@@ -26561,9 +26586,9 @@ function outer() {
 				$(__s[3962])
 					.click(function () {
 						$(__s[5957])
-							.val(D6.cn[0]);
+							.val(city.cn[0]);
 						$(__s[2263])
-							.val(D6.cn[1]);
+							.val(city.cn[1]);
 						var T0B = '';
 						var x0B;
 						var o0B;
@@ -26589,7 +26614,7 @@ function outer() {
 							E6k.R6();
 							if (L0B != 0) {
 								$(__s[2266])
-									.val(D6.citn);
+									.val(city.citn);
 								$(__s[4751])
 									.text(L0B);
 							}
@@ -26634,7 +26659,7 @@ function outer() {
 							var b0B = W0B.indexOf(__s[6614]);
 							var i0B = W0B.substring(b0B, W0B
 								.length);
-							var d0B = D6.citn + __s[+w54] + M0B;
+							var d0B = city.citn + __s[+w54] + M0B;
 							i0B = d0B + " " + i0B;
 							$(__s[+O54] + cid + __s[G2R & 2147483647])
 								.html(i0B);
@@ -26643,11 +26668,11 @@ function outer() {
 							if (M0B == "") M0B = __s[3435];
 							else M0B = __s[4427] + M0B;
 							$(__s[1045])
-								.text(D6.citn);
+								.text(city.citn);
 							$(__s[2914])
 								.html(M0B);
-							D6[__s[+M8R]][0] = M0B;
-							D6[__s[+M8R]][0] = G0B;
+							city[__s[+M8R]][0] = M0B;
+							city[__s[+M8R]][0] = G0B;
 							var S0B = '';
 						});
 					});
@@ -26838,15 +26863,15 @@ function outer() {
 				$(__s['3157' | 81])
 					.click(function () {
 						$(__s[+l8R])
-							.val(D6.x);
+							.val(city.x);
 						$(__s[k8R >> 379378464])
-							.val(D6.y);
+							.val(city.y);
 						if ($("#city_map")
 							.css("display") != "none") e5F(+bspotHall);
 						else if ($("#cvs")
 							.css("display") != "none") O8(cid);
 						else if ($("#content")
-							.css("display") != "none") o7F(D6.x, D6.y);
+							.css("display") != "none") o7F(city.x, city.y);
 					});
 				$(__s[832])
 					.click(function () {
@@ -27410,9 +27435,9 @@ function outer() {
 			var x34 = "5918";
 			var T34 = '5758';
 			var g34 = "4737";
-			var B3U = D6.w;
+			var B3U = city.w;
 			var
-				y3U = D6.bd[bspotHall].bl;
+				y3U = city.bd[bspotHall].bl;
 			if (P3U == (bspotHall ^ 0)) $(__s[+r04])
 				.show();
 			else $(__s[+r04])
@@ -27654,7 +27679,7 @@ function outer() {
 		}
 
 		function b5V(F6w, a6w, n6w, k2w, E6w, m6w, c6w, q6w) {
-			var Y6w = D6.ble[1];
+			var Y6w = city.ble[1];
 			var D6w = Number(n6w) - (
 				j6y & 2147483647);
 			E6k.y6();
@@ -27668,7 +27693,7 @@ function outer() {
 			var
 				U6w = Number(n6w) + +j6y;
 			var Z6w = 0;
-			var N6w = D6.bq.length;
+			var N6w = city.bq.length;
 			$(__s[3205])
 				.off("click");
 			$(__s[6328])
@@ -27684,15 +27709,15 @@ function outer() {
 					J5V();
 				});
 			for (var K6w = 0; K6w < N6w; K6w++) {
-				var f6w = D6.bq[K6w][__s[m54 * 1]];
+				var f6w = city.bq[K6w][__s[m54 * 1]];
 				if (n6w ==
 					f6w || D6w == f6w || g6w == f6w || p6w == f6w || y6w == f6w || R6w == f6w || B6w == f6w || P6w == f6w ||
 					U6w == f6w) Z6w = 1;
 			}
-			if (D6.bd[n6w]["bid"] != (0) || D6.bd[D6w]["bid"] != 0 ||
-				D6.bd[g6w]["bid"] != 0 || D6.bd[p6w]["bid"] != (0) || D6.bd[y6w][E6k
-					.o55(m1R | 97)] != 0 || D6.bd[R6w]["bid"] != 0 || D6.bd[B6w][_s(m1R |
-						2404)] != 0 || D6.bd[P6w]["bid"] != (0) || D6.bd[U6w]["bid"] != +
+			if (city.bd[n6w]["bid"] != (0) || city.bd[D6w]["bid"] != 0 ||
+				city.bd[g6w]["bid"] != 0 || city.bd[p6w]["bid"] != (0) || city.bd[y6w][E6k
+					.o55(m1R | 97)] != 0 || city.bd[R6w]["bid"] != 0 || city.bd[B6w][_s(m1R |
+						2404)] != 0 || city.bd[P6w]["bid"] != (0) || city.bd[U6w]["bid"] != +
 						"0" || !Z2(n6w) || !Z2(D6w) || !Z2(g6w) || !Z2(p6w) || !Z2(y6w) || !Z2(R6w) || !Z2(B6w) || !Z2(P6w) || !Z2(
 							U6w)) Z6w = 1;
 			if (Z6w == (1)) Y6(__s[3774]);
@@ -28045,7 +28070,7 @@ function outer() {
 							if (B7l == ("1" & E6k
 								.s6s)) {
 								var y7l = "";
-								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"][B7l]["r"] > D6[_s(+
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + city["r"][B7l]["r"] > city[_s(+
 									j1R)][B7l]) y7l = __s['6653' | 77];
 								D7l = D7l + __s[4497] + p6(qam["quests"][R7l]["r"]["r"][
 									B7l]) + __s[c2y ^ 0] + y7l + __s[+K5y];
@@ -28053,24 +28078,24 @@ function outer() {
 							if (B7l == 2) {
 								var y7l = _s(+
 									"4867");
-								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"]
-								[B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + city["r"]
+								[B7l]["r"] > city["st"][B7l]) y7l = __s[6653];
 								D7l = D7l + __s[3336] + p6(qam["quests"][R7l]["r"]["r"][B7l]) +
 									__s[+c2y] + y7l + __s[+K5y];
 							}
 							if (B7l == 3) {
 								var y7l = '';
 								if (Number(
-									qam["quests"][R7l]["r"]["r"][B7l]) + D6["r"][
-									B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
+									qam["quests"][R7l]["r"]["r"][B7l]) + city["r"][
+									B7l]["r"] > city["st"][B7l]) y7l = __s[6653];
 								D7l = D7l + __s[1432] + p6(qam["quests"][R7l]["r"][_s(+
 									I6y)][B7l]) + __s[+c2y] + y7l + __s[K5y - 0];
 							}
 							if (B7l == 4) {
 								var y7l = _s(
 									4867);
-								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + D6[_s(+
-									I6y)][B7l]["r"] > D6["st"][B7l]) y7l = __s[6653];
+								if (Number(qam["quests"][R7l]["r"]["r"][B7l]) + city[_s(+
+									I6y)][B7l]["r"] > city["st"][B7l]) y7l = __s[6653];
 								D7l = D7l + __s[2146] + p6(qam["quests"][R7l]["r"]["r"][B7l]) + __s[+c2y] + y7l + __s[1322];
 							}
 						}
@@ -28122,20 +28147,20 @@ function outer() {
 				$(__s[5524])
 					.click(function () {
 						var D2B = new Object();
-						for (var R2B in D6.th) {
+						for (var R2B in city.th) {
 							tname = bam["troops"][R2B][
 								__s[1067]];
 							tdesc = bam["troops"][R2B]["dsc"];
 							tpic = bam["troops"][R2B][__s[+c1R]];
-							thome = D6.th[R2B];
+							thome = city.th[R2B];
 							if (thome > 0) {
 								var y2B = $(__s[o34 | 1008] + R2B)
 									.val();
 								if (!(y2B <= 0))
 									if (!(y2B > thome))
 										if (y2B > (0)) {
-											D6["th"][R2B] = D6["th"][R2B] - y2B;
-											D6[__s[+s8y]][R2B] = D6[__s[s8y & 2147483647]][R2B] - y2B;
+											city["th"][R2B] = city["th"][R2B] - y2B;
+											city[__s[+s8y]][R2B] = city[__s[s8y & 2147483647]][R2B] - y2B;
 											D2B[R2B] = y2B;
 											var p2B = bam["troops"][R2B][__s[+t1R]] * y2B;
 											ppdt.td.l = ppdt.td.l - p2B;
@@ -28239,8 +28264,8 @@ function outer() {
 								var j7Z = Q7Z * (A5y << 956165248) + l7Z;
 								if (
 									B5F(j7Z)) j7Z = 0;
-								var w7Z = Number(D6.bd[j7Z].bl);
-								var T7Z = Number(D6.bd[j7Z].bid);
+								var w7Z = Number(city.bd[j7Z].bl);
+								var T7Z = Number(city.bd[j7Z].bid);
 								if (
 									H7Z == __s[3456] && T7Z != 0) E2F();
 								else if (B5Z()) e8F();
@@ -28255,7 +28280,7 @@ function outer() {
 											();
 										var x7Z = $("#buildingMoveButton")
 											.attr("s");
-										var v7Z = D6.bd[x7Z].bid;
+										var v7Z = city.bd[x7Z].bid;
 										if (L2(v7Z) != 0) v7Z = L2(v7Z);
 										if (
 											v7Z < TPL << 912961024) {
@@ -28273,14 +28298,14 @@ function outer() {
 									var j7Z = Q7Z * +A5y + l7Z;
 									if (B5F(j7Z))
 										j7Z = 0;
-									var w7Z = Number(D6.bd[j7Z].bl);
-									var T7Z = Number(D6.bd[j7Z].bid);
+									var w7Z = Number(city.bd[j7Z].bl);
+									var T7Z = Number(city.bd[j7Z].bid);
 									for (var t7Z in
-										D6.bq) {
-										var L7Z = D6.bq[t7Z].bspot;
+										city.bq) {
+										var L7Z = city.bq[t7Z].bspot;
 										if (j7Z == L7Z) {
-											w7Z = Number(D6.bq[t7Z].elvl);
-											T7Z = Number(D6.bq[t7Z].brep);
+											w7Z = Number(city.bq[t7Z].elvl);
+											T7Z = Number(city.bq[t7Z].brep);
 										}
 									}
 									if (w7Z > 0 && w7Z < 10 && (H7Z == E6k
@@ -28359,15 +28384,15 @@ function outer() {
 					});
 				$(__s[876])
 					.click(function () {
-						if (!D6.mo) D6.mo = [];
+						if (!city.mo) city.mo = [];
 						if ($(__s[+e04])
 							.prop(__s[286]) && $(__s[R04 - 0])
-								.prop(__s[286])) D6.mo[A8y * 1] = 1;
-						else D6.mo[+A8y] = 0;
+								.prop(__s[286])) city.mo[A8y * 1] = 1;
+						else city.mo[+A8y] = 0;
 						if ($(__s[+L04])
 							.prop(__s[286]) && $(__s[R04 * 1])
-								.prop(__s[286])) D6.mo[e2y - 0] = 1;
-						else D6.mo[+e2y] = 0;
+								.prop(__s[286])) city.mo[e2y - 0] = 1;
+						else city.mo[+e2y] = 0;
 						a0F();
 					});
 			});
@@ -31276,13 +31301,13 @@ function outer() {
 			var
 				I84 = "4639";
 			var I3w = 0;
-			if (D6["itu"])
-				if (D6["itu"][7])
-					if (D6["itu"][7] > (0)) I3w = D6["itu"][7];
+			if (city["itu"])
+				if (city["itu"][7])
+					if (city["itu"][7] > (0)) I3w = city["itu"][7];
 			if (I3w > 0)
 				var a4w = __s[2706] + Q2(I3w);
 			else var a4w = "";
-			if (D6.ciupd != 0) I5V();
+			if (city.ciupd != 0) I5V();
 			$(__s[6007])
 				.html(__s[801]);
 			if (a4w != "") {
@@ -31291,28 +31316,28 @@ function outer() {
 				$(__s[Z3p ^ 0])
 					.show();
 			}
-			var W3w = D6.tq.length;
+			var W3w = city.tq.length;
 			if (ppdt[__s[+V9y]][2] * 1000 >= currentTime()) var
 				T3w = 16;
 			else var T3w = 6;
 			$(__s[6206])
 				.text(W3w + __s[g9R << 31201760] + T3w);
 			var x3w = 0;
-			if (D6["itu"])
-				if (D6["itu"][6])
-					if (D6["itu"][6] > 0) x3w = D6["itu"][6];
+			if (city["itu"])
+				if (city["itu"][6])
+					if (city["itu"][6] > 0) x3w = city["itu"][6];
 			var w3w = '';
 			if (x3w > 0) {
 				w3w = "<br>Speedup time: " + Q2(x3w);
 			}
 			$(__s[i7y - 0])
-				.html(__s[5359] + p6(D6["cs"]) + __s[5227] + w3w);
-			var H3w = Math.floor(D6
+				.html(__s[5359] + p6(city["cs"]) + __s[5227] + w3w);
+			var H3w = Math.floor(city
 				.r[1].r / 1000);
-			var s3w = Math.floor(D6.r[2].r / (1000));
+			var s3w = Math.floor(city.r[2].r / (1000));
 			E6k.R6();
-			var k3w = Math.floor(D6.r[3].r / (1000));
-			var E4w = Math.floor(D6.r[4]
+			var k3w = Math.floor(city.r[3].r / (1000));
+			var E4w = Math.floor(city.r[4]
 				.r / (1000));
 			if (H3w <= 0) H3w = 0;
 			if (s3w <= (0)) s3w = 0;
@@ -31320,9 +31345,9 @@ function outer() {
 				k3w = 0;
 			if (E4w <= 0) E4w = 0;
 			var j3w = 0;
-			for (var v3w = 0; v3w < D6.th
-				.length; v3w++) j3w = j3w + D6.th[v3w];
-			if ((!D6.hasOwnProperty('trin') || D6.trin.length == 0) && j3w == (0)) {
+			for (var v3w = 0; v3w < city.th
+				.length; v3w++) j3w = j3w + city.th[v3w];
+			if ((!city.hasOwnProperty('trin') || city.trin.length == 0) && j3w == (0)) {
 				if ($(E6k
 					.S55(6132))
 					.css("display") != "none") {
@@ -31346,16 +31371,16 @@ function outer() {
 				var R4w;
 				var q4w;
 				var P4w = 0;
-				for (var g4w in D6.th) {
+				for (var g4w in city.th) {
 					var N4w = 0;
-					if (D6.th[g4w] > ("0" ^
-						0)) N4w = N4w + D6.th[g4w];
-					if (D6.trin[g4w] > 0) N4w = N4w + D6.trin[g4w];
+					if (city.th[g4w] > ("0" ^
+						0)) N4w = N4w + city.th[g4w];
+					if (city.trin[g4w] > 0) N4w = N4w + city.trin[g4w];
 					if (N4w > 0) {
 						R4w
 							= bam["troops"][g4w][__s[1067]];
 						F4w = bam["troops"][g4w][__s[+c1R]];
-						q4w = p6(Number(D6.th[g4w])) + " " + R4w + "s";
+						q4w = p6(Number(city.th[g4w])) + " " + R4w + "s";
 						if (P4w < 6) {
 							U4w = U4w +
 								__s[1423] + F4w + __s[84] + R4w + __s[+P84] + q4w + _s(I84 & E6k
@@ -31386,9 +31411,9 @@ function outer() {
 				$(__s[6132])
 					.html(B4w);
 				$(__s["3121" | 2049])
-					.text(p6(D6[__s["7032" | 4112]]));
+					.text(p6(city[__s["7032" | 4112]]));
 			}
-			if (!D6.triin || D6.triin.length == 0) {
+			if (!city.triin || city.triin.length == 0) {
 				$(__s[4722])
 					.css("display", "block");
 				$(__s["4471" | 54])
@@ -31403,18 +31428,18 @@ function outer() {
 				var q4w;
 				var P4w = "0" |
 					0;
-				for (var g4w in D6.triin) {
+				for (var g4w in city.triin) {
 					R4w = bam["troops"][g4w][__s['1067' | 1059]];
 					F4w = bam["troops"][g4w][__s[c1R & 2147483647]];
-					q4w = p6(Number(D6.triin[g4w])) + " " + R4w + "s";
+					q4w = p6(Number(city.triin[g4w])) + " " + R4w + "s";
 					if (P4w < ('9' | 1)) {
 						U4w = U4w +
 							__s[1423] + F4w + __s[84] + R4w + __s[+P84] + q4w + __s[+I84];
-						Z4w = Z4w + __s[p84 >> 400269152] + p6(Number(D6.triin[g4w])) + __s[+M8p];
+						Z4w = Z4w + __s[p84 >> 400269152] + p6(Number(city.triin[g4w])) + __s[+M8p];
 					} else {
 						p4w = p4w +
 							__s[2468] + F4w + __s['84' | 16] + R4w + __s[+P84] + q4w + __s[I84 | 4110];
-						Y4w = Y4w + __s[p84 >> 397246976] + p6(Number(D6.triin[g4w])) + __s[M8p * 1];
+						Y4w = Y4w + __s[p84 >> 397246976] + p6(Number(city.triin[g4w])) + __s[M8p * 1];
 					}
 					P4w++;
 				}
@@ -31432,15 +31457,15 @@ function outer() {
 			var u3w = 0;
 			$(__s[4144])
 				.css("display", "none");
-			if (D6.ble[1] == 1) {
+			if (city.ble[1] == 1) {
 				$(E6k
 					.o55('4144' | B9s))
 					.show();
 				u3w = 1;
-				var c4w = shrinesarr[Number(D6.ble[2])][__s[193]];
+				var c4w = shrinesarr[Number(city.ble[2])][__s[193]];
 				var z3w =
-					shrinesarr[Number(D6.ble[2])]["class"];
-				var l3w = D6.ble["3" | 1] * 1000;
+					shrinesarr[Number(city.ble[2])]["class"];
+				var l3w = city.ble["3" | 1] * 1000;
 				var C3w = new Date(
 					l3w);
 				var S3w = MDFormat(l3w) + __s[q04 & 2147483647] + formatTimehrs(C3w);
@@ -31449,21 +31474,21 @@ function outer() {
 					L3w = b3w.utc()
 						.format(__s[5967]);
 				$(__s['1657' | 601])
-					.text(p6(D6.ble[6]));
+					.text(p6(city.ble[6]));
 				$(__s[2869])
-					.text(p6(D6.ble[7]));
+					.text(p6(city.ble[7]));
 				$(__s[2937])
-					.text(p6(D6.ble[10]));
+					.text(p6(city.ble[10]));
 				$(__s[1652])
-					.text(p6(D6.ble[11]));
+					.text(p6(city.ble[11]));
 				$(__s[3409])
-					.text(p6(D6.ble[8]));
+					.text(p6(city.ble[8]));
 				$(__s[3367])
-					.text(p6(D6.ble[9]));
+					.text(p6(city.ble[9]));
 				$(__s[5931])
-					.text(p6(Math.floor(D6.ble[12])));
+					.text(p6(Math.floor(city.ble[12])));
 				$(__s[671])
-					.text(p6(Math.floor(D6.ble[m2y - 0])));
+					.text(p6(Math.floor(city.ble[m2y - 0])));
 				$(__s[110])
 					.text(c4w);
 				$(__s[4430])
@@ -31474,12 +31499,12 @@ function outer() {
 						.removeClass();
 					$(__s[+g0t])
 						.addClass(__s[5200] + z3w);
-					bam["buildings"][+TPL][__s[c1R & 2147483647]] = shrinesarr[Number(D6.ble[2])][_s(+
+					bam["buildings"][+TPL][__s[c1R & 2147483647]] = shrinesarr[Number(city.ble[2])][_s(+
 						c1R)];
 					bam["buildings"][TPL ^ 0]["bn"] = __s[930] + c4w;
-					bam["buildings"][+TPL]["ds"] = shrinesarr[Number(D6.ble[2])]["d"];
-					if (Math.floor(D6
-						.ble[10]) == 0 && Math.floor(D6.ble[11]) == 0) {
+					bam["buildings"][+TPL]["ds"] = shrinesarr[Number(city.ble[2])]["d"];
+					if (Math.floor(city
+						.ble[10]) == 0 && Math.floor(city.ble[11]) == 0) {
 						$(__s[g0t ^ 0])
 							.removeClass(__s[+w7p]);
 						$(__s[g0t - 0])
@@ -31497,18 +31522,18 @@ function outer() {
 					}
 				}
 			}
-			if (D6.ble["5" | 4] >= 1) {
+			if (city.ble["5" | 4] >= 1) {
 				u3w = 1;
 				var X3w =
-					shrinesarr[Number(D6.ble[4])][__s[5454]][Number(D6.ble[5])];
+					shrinesarr[Number(city.ble[4])][__s[5454]][Number(city.ble[5])];
 				var t3w = shrinesarr[Number(
-					D6.ble[4])][__s[1067]][Number(D6.ble[5])];
-				var c4w = shrinesarr[Number(D6.ble[4])][_s(
+					city.ble[4])][__s[1067]][Number(city.ble[5])];
+				var c4w = shrinesarr[Number(city.ble[4])][_s(
 					193)];
-				var M3w = shrinesarr[Number(D6.ble[4])][__s[+U0t]];
-				var D4w = D6.ble[12] -
+				var M3w = shrinesarr[Number(city.ble[4])][__s[+U0t]];
+				var D4w = city.ble[12] -
 					Number(t3w);
-				var y4w = D6.ble[+m2y] - Number(t3w);
+				var y4w = city.ble[+m2y] - Number(t3w);
 				if (D4w < (0)) D4w = 0;
 				if (y4w < 0)
 					y4w = 0;
@@ -31519,10 +31544,10 @@ function outer() {
 				$(__s[5448])
 					.text(c4w);
 				$(__s[5432])
-					.text(D6.ble[5]);
+					.text(city.ble[5]);
 				$(__s[5428])
-					.text(D6.ble[5]);
-				var o3w = D6.ble[+'14'];
+					.text(city.ble[5]);
+				var o3w = city.ble[+'14'];
 				if (o3w == 0) $(__s[6499])
 					.css("display", "none");
 				else {
@@ -31543,22 +31568,22 @@ function outer() {
 					.addClass(__s[+w7p]);
 				$(__s[g0t | 5121])
 					.attr("disabled", !!{});
-				bam["buildings"][+TPL][__s[c1R >> 996830272]] = shrinesarr[Number(D6.ble[4])][__s[c1R * 1]];
+				bam["buildings"][+TPL][__s[c1R >> 996830272]] = shrinesarr[Number(city.ble[4])][__s[c1R * 1]];
 				bam["buildings"][TPL << 418261952]["bn"] = __s[930] + c4w;
-				bam["buildings"][TPL ^ 0]["ds"] = shrinesarr[Number(D6.ble[4])]["d"];
-				if (D6.ble[+
+				bam["buildings"][TPL ^ 0]["ds"] = shrinesarr[Number(city.ble[4])]["d"];
+				if (city.ble[+
 					"5"] == 10) $(__s[s0t ^ 0])
 						.css("display", "none");
-				else if (D6.ble[1] == 1) $(__s[s0t - 0])
+				else if (city.ble[1] == 1) $(__s[s0t - 0])
 					.css("display", "none");
 				else $(__s[s0t ^ 0])
 					.show();
 			}
-			if (D6.ble[5] >= 1 && (D6.ble[12] > 0 || D6.ble[m2y >> 734599008] > 0)) {
+			if (city.ble[5] >= 1 && (city.ble[12] > 0 || city.ble[m2y >> 734599008] > 0)) {
 				u3w =
 					1;
-				var D4w = D6.ble[12];
-				var y4w = D6.ble[m2y << 1754928224];
+				var D4w = city.ble[12];
+				var y4w = city.ble[m2y << 1754928224];
 				if (D4w < 0) D4w = "0" -
 					0;
 				if (y4w < 0) y4w = 0;
@@ -31576,9 +31601,9 @@ function outer() {
 					.addClass(__s[+w7p]);
 				$(__s[+g0t])
 					.attr("disabled", !![]);
-				if (D6.ble[5] == 10) $(__s[+s0t])
+				if (city.ble[5] == 10) $(__s[+s0t])
 					.css("display", "none");
-				else if (D6.ble[1] == 1) $(__s[+s0t])
+				else if (city.ble[1] == 1) $(__s[+s0t])
 					.css("display", "none");
 				else $(__s[+s0t])
 					.show();
@@ -31619,72 +31644,72 @@ function outer() {
 			$(__s[1952])
 				.text(__s[+z2R] + s3w);
 			$(__s[2139])
-				.text(D6[__s[+Q0t]][11]);
+				.text(city[__s[+Q0t]][11]);
 			$(__s[1298])
-				.text(D6[__s[+Q0t]][12]);
+				.text(city[__s[+Q0t]][12]);
 			$(__s[503])
-				.text(D6[__s[+Q0t]][+m2y]);
+				.text(city[__s[+Q0t]][+m2y]);
 			$(__s[2757])
-				.text(D6[__s[+Q0t]]['14' ^ 0]);
+				.text(city[__s[+Q0t]]['14' ^ 0]);
 			$(__s[1959])
-				.text(D6[__s[+Q0t]]['15' | 11]);
+				.text(city[__s[+Q0t]]['15' | 11]);
 			$(__s["6575" | 4384])
-				.text(D6[__s[Q0t - 0]][2]);
+				.text(city[__s[Q0t - 0]][2]);
 			$(__s['4026' | 3370])
-				.text(D6[__s[Q0t - 0]][3]);
+				.text(city[__s[Q0t - 0]][3]);
 			$(__s[4083])
-				.text(D6[__s[Q0t & 2147483647]][4]);
+				.text(city[__s[Q0t & 2147483647]][4]);
 			$(__s['3636' | 2068])
-				.text(D6[__s[+Q0t]][5]);
+				.text(city[__s[+Q0t]][5]);
 			$(__s[2561])
-				.text(D6[__s[Q0t ^ 0]][6]);
+				.text(city[__s[Q0t ^ 0]][6]);
 			$(__s[3368])
-				.text(D6[__s[+Q0t]][16]);
+				.text(city[__s[+Q0t]][16]);
 			$(__s[O1y ^ 0])
-				.text(D6[__s[Q0t | 4160]][+17]);
+				.text(city[__s[Q0t | 4160]][+17]);
 			$(__s[1795])
-				.text(D6[__s[Q0t ^ 0]][+u7y]);
+				.text(city[__s[Q0t ^ 0]][+u7y]);
 			$(__s[2275])
-				.text(D6[__s[+Q0t]][+p0y]);
+				.text(city[__s[+Q0t]][+p0y]);
 			$(__s[1614])
-				.text(D6[__s[+Q0t]][7]);
+				.text(city[__s[+Q0t]][7]);
 			$(__s[2588])
-				.text(D6[__s[+Q0t]][8]);
+				.text(city[__s[+Q0t]][8]);
 			$(__s[1933])
-				.text(D6[__s[+Q0t]][9]);
+				.text(city[__s[+Q0t]][9]);
 			$(__s[6191])
-				.text(D6[__s[+Q0t]][10]);
-			var i3w = D6[__s[+Q0t]][2] + D6[__s[Q0t & 2147483647]][
-				3] + D6[__s[+Q0t]][4] + D6[__s[+Q0t]][5] + D6[__s[+Q0t]]["6" & E6k
+				.text(city[__s[+Q0t]][10]);
+			var i3w = city[__s[+Q0t]][2] + city[__s[Q0t & 2147483647]][
+				3] + city[__s[+Q0t]][4] + city[__s[+Q0t]][5] + city[__s[+Q0t]]["6" & E6k
 					.s6s];
-			var d3w = D6[__s[Q0t * 1]][7] + D6[__s[+Q0t]][8] + D6[__s[Q0t * 1]][9] + D6[E6k
+			var d3w = city[__s[Q0t * 1]][7] + city[__s[+Q0t]][8] + city[__s[Q0t * 1]][9] + city[E6k
 				.S55(+Q0t)][10];
-			if (D6["r"][4]['g'] < 0) {
+			if (city["r"][4]['g'] < 0) {
 				var O3w = "-";
 				var Q3w = __s[4225];
 			} else {
 				var O3w = __s[l0p ^ 0];
 				var Q3w = "";
 			}
-			var G3w = Math.floor(Number(D6[__s[+Q0t]][0]) / (2));
+			var G3w = Math.floor(Number(city[__s[+Q0t]][0]) / (2));
 			$(__s[5811])
 				.text(G3w + __s[+o9y]);
 			$(__s[1062])
-				.text(D6[__s[Q0t * 1]][1] + __s[2331]);
+				.text(city[__s[Q0t * 1]][1] + __s[2331]);
 			$(__s[1634])
 				.text(p6(i3w));
 			$(__s[u1y | 517])
 				.text(p6(d3w));
 			$(__s[1325])
-				.html(__s[+l0p] + p6(Math.floor(D6["r"][1]['g'])) + _s("1248" <<
+				.html(__s[+l0p] + p6(Math.floor(city["r"][1]['g'])) + _s("1248" <<
 					737231520));
 			$(__s[95])
-				.html(__s[l0p << 401383104] + p6(Math.floor(D6["r"][2]['g'])) + __s[1248]);
+				.html(__s[l0p << 401383104] + p6(Math.floor(city["r"][2]['g'])) + __s[1248]);
 			$(__s[2017])
-				.html(__s[+l0p] + p6(Math.floor(D6["r"][3]['g'])) + _s(+
+				.html(__s[+l0p] + p6(Math.floor(city["r"][3]['g'])) + _s(+
 					'1248'));
 			$(__s[5474])
-				.html(__s[+q14] + Q3w + __s[V6y | 6657] + O3w + p6(Math.floor(Math.abs(D6["r"][4][E6k
+				.html(__s[+q14] + Q3w + __s[V6y | 6657] + O3w + p6(Math.floor(Math.abs(city["r"][4][E6k
 					.o55(+r0R)]))) + __s[271]);
 		}
 
@@ -32447,9 +32472,9 @@ function outer() {
 					.keyup(function () { setTimeout(function () { I8F(); }, 500); });
 				$(__s[3656])
 					.click(function () {
-						if (D6) {
-							if (!D6.mo) D6.mo = [];
-							if (D6.mo.length == 0) D6.mo =
+						if (city) {
+							if (!city.mo) city.mo = [];
+							if (city.mo.length == 0) city.mo =
 								[];
 							for (var O6Z = 0; O6Z < (17 ^ 0); O6Z++) {
 								var t6Z = Number(O6Z) + +
@@ -32457,7 +32482,7 @@ function outer() {
 								var o6Z = $(__s[877] + t6Z)
 									.val();
 								if (o6Z == "") o6Z = 0;
-								D6.mo[t6Z] = o6Z;
+								city.mo[t6Z] = o6Z;
 								$(__s[877] + t6Z)
 									.val("");
 							}
@@ -32468,7 +32493,7 @@ function outer() {
 					});
 				$(__s[2891])
 					.click(function () {
-						for (var L6Z = 0; L6Z < D6.tc.length; L6Z++) {
+						for (var L6Z = 0; L6Z < city.tc.length; L6Z++) {
 							var X6Z = Number(L6Z) + 9;
 							$(__s[877] + X6Z)
 								.val('');
@@ -32734,7 +32759,7 @@ function outer() {
 
 		function N9F(o7g) {
 			E6k.y6();
-			var L7g = Number(D6.bd[+bspotHall]["bl"]);
+			var L7g = Number(city.bd[+bspotHall]["bl"]);
 			var X7g = Number(bam[_s(
 				Q5y ^ 0)][o7g][__s["5812" | 5264]]);
 			if (Number(o7g) == r1R << 545553696 || Number(o7g) == +C6y || Number(
@@ -33158,7 +33183,7 @@ function outer() {
 		var B9 = 0;
 
 		function p2(r9n, A9n) {
-			var J9n = D6.bd.length;
+			var J9n = city.bd.length;
 			var n9n;
 			E6k.y6();
 			var h9n;
@@ -33166,8 +33191,8 @@ function outer() {
 			var S9n = 0;
 			for (var b9n = 0; b9n < J9n; b9n++) {
 				n9n = b9n;
-				h9n = Number(D6.bd[b9n]["bid"]);
-				V9n = Number(D6.bd[b9n]["bl"]);
+				h9n = Number(city.bd[b9n]["bid"]);
+				V9n = Number(city.bd[b9n]["bl"]);
 				if (r9n == h9n) S9n += V9n;
 			}
 			if (S9n >= A9n) return !
@@ -35022,7 +35047,7 @@ function outer() {
 				E6k.y6();
 				if (r2w == 11) Y6(__s[E8y - 0]);
 				else if (r2w != (0)) {
-					D6 = JSON.parse(r2w);
+					city = JSON.parse(r2w);
 	 				
 
 					J2();
@@ -35364,9 +35389,9 @@ function outer() {
 						i4F();
 					}, v9R ^ 0);
 				} else {
-				if (D6[__s[+M8R]][0] != '') var A2V = D6.citn + E6k
-					.S55(+w54) + D6[__s[M8R >> 809782336]][0];
-				else var A2V = D6.citn;
+				if (city[__s[+M8R]][0] != '') var A2V = city.citn + E6k
+					.S55(+w54) + city[__s[M8R >> 809782336]][0];
+				else var A2V = city.citn;
 				if (A2V.length > u6y << 1091749536) {
 					A2V = A2V.substring(0, +u6y);
 					A2V = A2V + __s[+Z14];
@@ -35514,8 +35539,8 @@ function outer() {
 			if (F4T == 0) return "";
 			else {
 				let icountf = 0;
-				if (ppdt[__s[o7y - 0]])
-					if (ppdt[__s[+o7y]][F4T]) icountf = ppdt[__s[+o7y]][F4T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][F4T]) icountf = ppdt["itc"][F4T];
 				var c4T = "";
 				var
 					q4T = "";
@@ -36450,7 +36475,7 @@ function outer() {
 				Number(V4D) * 1000;
 			var S4D = Number(r4D) * 1000;
 			var W4D = 0;
-			if (i4D < D6["r"]['1' <<
+			if (i4D < city["r"]['1' <<
 				432468000]["r"] || J4D == '') {
 				$(__s[4260])
 					.text(p6(i4D));
@@ -36467,7 +36492,7 @@ function outer() {
 				$(__s[U3t | 2273])
 					.css(__s[+S2y], __s[+u4p]);
 			}
-			if (d4D < D6.r[2].r || h4D == '') {
+			if (d4D < city.r[2].r || h4D == '') {
 				$(_s(+
 					"1053"))
 					.text(p6(d4D));
@@ -36484,7 +36509,7 @@ function outer() {
 				$(__s[+U3t])
 					.css(__s[+S2y], __s[+u4p]);
 			}
-			if (b4D < D6.r[3].r || V4D == '') {
+			if (b4D < city.r[3].r || V4D == '') {
 				$(_s(+
 					"4185"))
 					.text(p6(b4D));
@@ -36501,7 +36526,7 @@ function outer() {
 				$(__s[+U3t])
 					.css(__s[S2y >> 943872064], __s[+u4p]);
 			}
-			if (S4D < D6.r[4].r || r4D == "") {
+			if (S4D < city.r[4].r || r4D == "") {
 				$(__s[2961])
 					.text(p6(S4D));
 				$(__s[2961])
@@ -38683,9 +38708,9 @@ function outer() {
 					if (A4Z > 0) r4Z++;
 				}
 			}
-			var P4Z = D6.tq.length + r4Z;
-			var U4Z = D6
-				.tt - D6.tu;
+			var P4Z = city.tq.length + r4Z;
+			var U4Z = city
+				.tt - city.tu;
 			if (b4Z < 0) b4Z = 0;
 			$(__s["2822" | 772])
 				.text(Q2(K4Z));
@@ -38764,8 +38789,8 @@ function outer() {
 					I7U = E5U[a5U][2];
 					if (w7U == 1) {
 						j7U = 0;
-						if (ppdt[__s[o7y - 0]])
-							if (ppdt[__s[o7y ^ 0]][e7U]) j7U = ppdt[__s[o7y & 2147483647]][e7U];
+						if (ppdt["itc"])
+							if (ppdt["itc"][e7U]) j7U = ppdt["itc"][e7U];
 						var u7U = I2(e7U, 100);
 						k7U += __s[4645] + a5U + __s[1198] + u7U + __s[3876] + e7U + _s(u7p >>
 							376789056) + j7U + __s[4321] + a5U + __s['2502' | 68] + a5U + __s[5879];
@@ -40922,63 +40947,63 @@ function outer() {
 			E6k.y6();
 			if (o1D == 1)
 				for (var t1D = 0; t1D < qtopleft.length; t1D++) {
-					bid = D6["bd"][qtopleft[t1D]][_s(m1R ^
+					bid = city["bd"][qtopleft[t1D]][_s(m1R ^
 						0)];
 					if (bid == (G1R | 385) || bid == +C6y || bid == +r1R || bid == (b1R ^ 0)) {
 						I8(qtopleft[t1D]);
-						D6["bd"][qtopleft[t1D]]["bid"] = 0;
-						D6["bd"][qtopleft[t1D]]["bl"] = 0;
-						D6["bd"][qtopleft[t1D]]["bu"] = 0;
-						D6["bd"][qtopleft[t1D]]["bd"] = 0;
+						city["bd"][qtopleft[t1D]]["bid"] = 0;
+						city["bd"][qtopleft[t1D]]["bl"] = 0;
+						city["bd"][qtopleft[t1D]]["bu"] = 0;
+						city["bd"][qtopleft[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == 2)
 				for (var t1D = 0; t1D < qtopright.length; t1D++) {
-					bid = D6["bd"][qtopright[t1D]][_s(+
+					bid = city["bd"][qtopright[t1D]][_s(+
 						m1R)];
 					if (bid == +G1R || bid == C6y - 0 || bid == r1R >> 671390368 || bid == +b1R) {
 						I8(qtopright[t1D]);
-						D6["bd"][qtopright[t1D]]["bid"] = 0;
-						D6["bd"][qtopright[t1D]]["bl"] = 0;
-						D6["bd"][qtopright[t1D]]["bu"] = 0;
-						D6["bd"][qtopright[t1D]]["bd"] = 0;
+						city["bd"][qtopright[t1D]]["bid"] = 0;
+						city["bd"][qtopright[t1D]]["bl"] = 0;
+						city["bd"][qtopright[t1D]]["bu"] = 0;
+						city["bd"][qtopright[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == 3)
 				for (var t1D = 0; t1D < qbotleft.length; t1D++) {
-					bid = D6["bd"][qbotleft[t1D]][E6k
+					bid = city["bd"][qbotleft[t1D]][E6k
 						.o55(m1R * 1)];
 					if (bid == +G1R || bid == +C6y || bid == r1R - 0 || bid == b1R * 1) {
 						I8(qbotleft[
 							t1D]);
-						D6["bd"][qbotleft[t1D]]["bid"] = 0;
-						D6["bd"][qbotleft[t1D]]["bl"] = 0;
-						D6["bd"][qbotleft[t1D]]["bu"] = 0;
-						D6["bd"][qbotleft[t1D]]["bd"] = 0;
+						city["bd"][qbotleft[t1D]]["bid"] = 0;
+						city["bd"][qbotleft[t1D]]["bl"] = 0;
+						city["bd"][qbotleft[t1D]]["bu"] = 0;
+						city["bd"][qbotleft[t1D]]["bd"] = 0;
 					}
 				} else if (o1D == "4" >>
 					766473472)
 				for (var t1D = 0; t1D < qbotright.length; t1D++) {
-					bid = D6["bd"][qbotright[t1D]][E6k
+					bid = city["bd"][qbotright[t1D]][E6k
 						.S55(m1R >> 1630080160)];
 					if (bid == +G1R || bid == C6y << 914288736 || bid == +r1R || bid == +
 						b1R) {
 						I8(qbotright[t1D]);
-						D6["bd"][qbotright[t1D]]["bid"] = 0;
-						D6["bd"][qbotright[t1D]]["bl"] = 0;
-						D6["bd"][qbotright[t1D]]["bu"] = 0;
-						D6["bd"][qbotright[t1D]]["bd"] = 0;
+						city["bd"][qbotright[t1D]]["bid"] = 0;
+						city["bd"][qbotright[t1D]]["bl"] = 0;
+						city["bd"][qbotright[t1D]]["bu"] = 0;
+						city["bd"][qbotright[t1D]]["bd"] = 0;
 					}
 				} else if (o1D ==
 					5)
 				for (var t1D = 0; t1D < qcenter.length; t1D++) {
-					bid = D6["bd"][qcenter[t1D]][_s(
+					bid = city["bd"][qcenter[t1D]][_s(
 						m1R * 1)];
 					if (bid == (G1R & 2147483647) || bid == (C6y ^ 0) || bid == +r1R || bid == b1R <<
 						600757344) {
 						I8(qcenter[t1D]);
-						D6["bd"][qcenter[t1D]]["bid"] = 0;
-						D6["bd"][qcenter[t1D]]["bl"] = 0;
-						D6["bd"][qcenter[t1D]]["bu"] = 0;
-						D6["bd"][qcenter[t1D]]["bd"] = 0;
+						city["bd"][qcenter[t1D]]["bid"] = 0;
+						city["bd"][qcenter[t1D]]["bl"] = 0;
+						city["bd"][qcenter[t1D]]["bu"] = 0;
+						city["bd"][qcenter[t1D]]["bd"] = 0;
 					}
 				}
 		}
@@ -41118,11 +41143,11 @@ function outer() {
 
 		function e3F(h2U) {
 			redrawCity();
-			var J2U = D6.bd[Number(h2U)].rbb;
-			var i2U = D6.bd[Number(h2U)].rb;
-			var d2U = D6.bd[
+			var J2U = city.bd[Number(h2U)].rbb;
+			var i2U = city.bd[Number(h2U)].rb;
+			var d2U = city.bd[
 				Number(h2U)].rbt;
-			var S2U = D6.bd[Number(h2U)].bid;
+			var S2U = city.bd[Number(h2U)].bid;
 			$(__s[+b24])
 				.css("display", "none");
 			if (L2(S2U)) var r2U = L2(S2U);
@@ -41151,7 +41176,7 @@ function outer() {
 					for (var G2U in i2U) {
 						C2U = bam["buildings"][Number(i2U[G2U][_s(+
 							g4p)])]["bn"];
-						b2U = D6.bd[Number(i2U[G2U]["b"])]["bl"];
+						b2U = city.bd[Number(i2U[G2U]["b"])]["bl"];
 						W2U = i2U[G2U]["a"];
 						V2U += Number(W2U);
 						if (b2U != 0) X2U += __s[5719] + b2U + " " + C2U + _s(
@@ -41167,7 +41192,7 @@ function outer() {
 					for (var G2U in d2U) {
 						C2U = bam["buildings"][Number(d2U[
 							G2U][__s[g4p & 2147483647]])]["bn"];
-						b2U = D6.bd[Number(d2U[G2U]["b"])]["bl"];
+						b2U = city.bd[Number(d2U[G2U]["b"])]["bl"];
 						W2U = d2U[G2U]['a'];
 						V2U += Number(W2U);
 						if (b2U != 0) X2U += __s[228] + b2U + " " + C2U + _s(
@@ -41546,11 +41571,11 @@ function outer() {
 			$(__s[1884])
 				.html("");
 			var K72 = __s[5238];
-			for (var f72 = 0; f72 < D6.tc.length; f72++)
+			for (var f72 = 0; f72 < city.tc.length; f72++)
 				if (f72 != 0 && f72 != 1 && f72 != 7 && f72 != 12 && f72 != +m2y && f72 != 17 <<
 					784336672) {
-					var g72 = D6.tc[f72];
-					var y72 = D6.th[f72];
+					var g72 = city.tc[f72];
+					var y72 = city.th[f72];
 					var U72 = bam["troops"][f72][_s(+
 						'3286')];
 					var D72 = bam["troops"][f72][__s[1067]];
@@ -42262,18 +42287,18 @@ function outer() {
 					else if (w2w == 9) Y6(__s[E8y << 151686176]);
 					else {
 						w2w = JSON.parse(w2w);
-						D6.bq = w2w;
+						city.bq = w2w;
 						var v2w = q2[0].bspot;
 						q2 = null;
 						var I2w = E2m | 740;
 						X2(7);
 						var O2w = v2w % +A5y;
 						var M2w = (v2w - O2w) / (A5y | 0);
-						if (D6.ble[2] == 0) var
-							l2w = D6.ble[4];
-						else var l2w = D6.ble[2];
+						if (city.ble[2] == 0) var
+							l2w = city.ble[4];
+						else var l2w = city.ble[2];
 						var I2w = +E2m;
-						if (D6.w == (1)) I2w = I2w + (441);
+						if (city.w == (1)) I2w = I2w + (441);
 						J9();
 						var Q2w = e2w - (j6y & 2147483647);
 						var t2w = e2w - (A5y & 2147483647);
@@ -42285,15 +42310,15 @@ function outer() {
 						var T2w = e2w + (A5y >>
 							272862560);
 						var x2w = e2w + +j6y;
-						D6["bd"][e2w]["bid"] = TPL | 32;
-						D6["bd"][Q2w]["bid"] = 891;
-						D6["bd"][t2w]["bid"] = 892 ^ 0;
-						D6["bd"][o2w]["bid"] = 893;
-						D6["bd"][L2w]["bid"] = 894;
-						D6["bd"][X2w]["bid"] = 895 ^ 0;
-						D6["bd"][z2w]["bid"] = 896;
-						D6["bd"][T2w]["bid"] = +897;
-						D6["bd"][x2w]["bid"] = '898' | 130;
+						city["bd"][e2w]["bid"] = TPL | 32;
+						city["bd"][Q2w]["bid"] = 891;
+						city["bd"][t2w]["bid"] = 892 ^ 0;
+						city["bd"][o2w]["bid"] = 893;
+						city["bd"][L2w]["bid"] = 894;
+						city["bd"][X2w]["bid"] = 895 ^ 0;
+						city["bd"][z2w]["bid"] = 896;
+						city["bd"][T2w]["bid"] = +897;
+						city["bd"][x2w]["bid"] = '898' | 130;
 					}
 			});
 		}
@@ -42312,31 +42337,31 @@ function outer() {
 			gStCid = Z9V;
 			var g9V = Math.round(Z9V % +R5y);
 			var U9V = Math.round((Z9V - g9V) / +R5y);
-			if (_viewMode !== viewModeWorld) // in world mode we handle it differently
+		//	if (_viewMode !== viewModeWorld) // in world mode we handle it differently
 			{
-				SetViewMode(viewModeWorld);
+			//	SetViewMode(viewModeWorld);
 
 
 				//  c6.paused = !!0;
-				//  c6.raf.start();
-				var y9V = document.getElementById("cvs");
-				var Y9V = document.getElementById("content");
-				var B9V = document.getElementById("city_map");
-				y9V.style.display = "none";
-				Y9V.style.display = "none";
-				B9V.style.display = "none";
-				$("#quickBuildMenu")
-					.css("display", "none");
-				// $(__s[1509]).show();
-				// $(__s[b2p * 1]).show();
-				// $("#citnamq").show();
-				$(__s[+D44])
-					.css("display", "none");
-				$(__s[+T24])
-					.css("display", "none");
-				$(__s[+S4m])
-					.css("display", "none");
-				//     _viewMode = viewModeWorld;
+				////  c6.raf.start();
+				//var y9V = document.getElementById("cvs");
+				//var Y9V = document.getElementById("content");
+				//var B9V = document.getElementById("city_map");
+				//y9V.style.display = "none";
+				//Y9V.style.display = "none";
+				//B9V.style.display = "none";
+				//$("#quickBuildMenu")
+				//	.css("display", "none");
+				//// $(__s[1509]).show();
+				//// $(__s[b2p * 1]).show();
+				//// $("#citnamq").show();
+				//$(__s[+D44])
+				//	.css("display", "none");
+				//$(__s[+T24])
+				//	.css("display", "none");
+				//$(__s[+S4m])
+				//	.css("display", "none");
+				////     _viewMode = viewModeWorld;
 
 				//   c6.paused = ![];
 				//   c6.lockRender = !"1";
@@ -42437,30 +42462,30 @@ function outer() {
 		function Z5V(F8w) {
 			var M9w = F8w;
 			var Y8w = new Object();
-			var c8w = D6.r[1].r;
-			var s9w = D6.r[2].r;
+			var c8w = city.r[1].r;
+			var s9w = city.r[2].r;
 			var
-				u9w = D6.r['3' | 1].r;
+				u9w = city.r['3' | 1].r;
 			var H9w = ppdt.g.t;
 			var o9w = F8w;
 			var Q9w = 0;
-			var X9w = D6.tc.length;
+			var X9w = city.tc.length;
 			var t9w =
-				D6.tq.length;
+				city.tq.length;
 			for (var N8w = 0; N8w < X9w; N8w++) {
-				var E8w = D6.tc[N8w] * bam["troops"][N8w]
+				var E8w = city.tc[N8w] * bam["troops"][N8w]
 				[__s[+t1R]];
 				Q9w += E8w;
 			}
 			if (t9w >= 1)
 				for (var N8w = 1; N8w < t9w; N8w++) {
-					var z9w = D6.tq[N8w].ttype;
-					var L9w = D6.tq[N8w].tc;
+					var z9w = city.tq[N8w].ttype;
+					var L9w = city.tq[N8w].tc;
 					var E8w = L9w *
 						bam["troops"][z9w][__s[+t1R]];
 					Q9w += E8w;
 				}
-			var O9w = D6.tt - Q9w;
+			var O9w = city.tt - Q9w;
 			var k9w = 0;
 			var w9w = 0;
 			var I9w = 0;
@@ -42472,7 +42497,7 @@ function outer() {
 			Y8w.d = bam["troops"][Number(F8w)].gc;
 			Y8w.e = bam["troops"][Number(F8w)].ts;
 			E6k.y6();
-			for (var m8w = 0; m8w < D6.tc.length; m8w++) {
+			for (var m8w = 0; m8w < city.tc.length; m8w++) {
 				var F8w = $(__s[+I2p] + m8w)
 					.val();
 				if (Number(F8w) > 0 && m8w != M9w) {
@@ -42517,39 +42542,37 @@ function outer() {
 				.o55(+h6R)][Number(r6g)][__s[m1p & 2147483647]]);
 			var g6g = Number(bam["buildings"][Number(J6g)][_s(
 				h6R - 0)][Number(r6g)][__s[B1p * 1]]);
-			var R6g = Number(D6.r[1].r);
-			var P6g = Number(D6.r[2].r);
+			var R6g = Number(city.r[1].r);
+			var P6g = Number(city.r[2].r);
 			var
 				K6g = 0;
 			if (U6g <= R6g && g6g <= P6g) {
-				var y6g = D6.bd[bspotHall].bl;
-				var p6g = Number(y6g) * ('10' >>
-					1146069344);
+				var y6g = city.bd[bspotHall].bl;
+				var p6g = Number(y6g) * (10);
 				if (r6g == 1 && (S6g == 3 || S6g == 7 || S6g == +m2y ||
 					S6g == 17 - 0 || S6g == +D8y || S6g == S1R - 0 || S6g == (t5R & 2147483647) || S6g == +J5R || S6g == (T5R &
 						2147483647) || S6g == 433 || S6g == (x5R | 427) || S6g == (g5R & 2147483647) || S6g == (W5R & 2147483647) ||
 					S6g == +f5R || S6g == (U5R | 0) || S6g == +N0R || S6g == +p1R || S6g == z1R >> 1929019488 || S6g == +
 					n1R || S6g == (d1R | 0) || S6g == 323 || S6g == (l1R ^ 0) || S6g == +k1R || S6g == o1R <<
 					1537867712) && (J6g == n4y - 0 || J6g == +t1y || J6g == +V1y || J6g == (u1y & 2147483647) || J6g == (D1y &
-						2147483647) || J6g == O1y >> 1876829696 || J6g == +b1y || J6g == +d1y || J6g == x5y * 1 && H2 != _s(
-							x2R * 1))) K6g = 1;
+						2147483647) || J6g == O1y >> 1876829696 || J6g == +b1y || J6g == +d1y || J6g == x5y * 1 && (!testFlag) )) K6g = 1;
 				if (r6g == 1 && (S6g == +p1R || S6g == +z1R || S6g == n1R >>
 					1744547712 || S6g == +d1R || S6g == 323 || S6g == +l1R || S6g == +k1R || S6g == (o1R & 2147483647)) && (
 						J6g == +n4y || J6g == t1y >> 1397553472 || J6g == +V1y || J6g == +u1y || J6g == (D1y & 2147483647))) K6g = +
 							"1";
 				F2 = 0;
-				for (var h6g = 0; h6g < D6.bd.length; h6g++) {
-					var n6g = D6.bd[h6g].bl;
-					var V6g = D6.bd[h6g]
+				for (var h6g = 0; h6g < city.bd.length; h6g++) {
+					var n6g = city.bd[h6g].bl;
+					var V6g = city.bd[h6g]
 						.bid;
 					if (n6g >= (1) && Z2(h6g) && V6g != +TPL && V6g != 891 && V6g != +892 && V6g != (893) && V6g != 894 && V6g != +895 && V6g != 895 * 1 && V6g != 896 && V6g != +897)
 						F2 = F2 + 1;
 				}
-				for (var h6g = 0; h6g < D6.bq.length; h6g++) {
-					var n6g = D6.bq[h6g].slvl;
+				for (var h6g = 0; h6g < city.bq.length; h6g++) {
+					var n6g = city.bq[h6g].slvl;
 					var
-						D6g = D6.bq[h6g].bspot;
-					var A6g = D6.bq[h6g].brep;
+						D6g = city.bq[h6g].bspot;
+					var A6g = city.bq[h6g].brep;
 					if (n6g == 0 && Z2(D6g) && A6g != (G1R ^ 0) &&
 						A6g != +C6y && A6g != (r1R & 2147483647) && A6g != (b1R ^ 0)) F2 = F2 + 1;
 				}
@@ -42557,7 +42580,7 @@ function outer() {
 					"1" && K6g != 1) Y6(__s[+n4m]);
 				else {
 					N6();
-					var B6g = $.post("/includes/" + __s[219], { cid: cid, id: Z6g });
+					var B6g = $.post("/includes/cBq.php", { cid: cid, id: Z6g });
 					F6();
 					B6g.done(function (Y6g) {
 						if (Y6g == 1) Y6(__s[4568]);
@@ -42566,14 +42589,14 @@ function outer() {
 						else if (Y6g == 4) Y6(__s[627]);
 						else if (Y6g == 6) Y6(__s["5179" | 5131]);
 						else if (Y6g == 0)
-							for (var N6g = 0; N6g < D6.bq.length; N6g++) {
-								var F6g = D6.bq[N6g].bid;
+							for (var N6g = 0; N6g < city.bq.length; N6g++) {
+								var F6g = city.bq[N6g].bid;
 								if (F6g == Z6g) {
-									D6[
-										"r"][1]["r"] = D6["r"][1]["r"] - U6g;
-									D6["r"][2]["r"] = D6["r"][2][_s(+
+									city[
+										"r"][1]["r"] = city["r"][1]["r"] - U6g;
+									city["r"][2]["r"] = city["r"][2][_s(+
 										I6y)] - g6g;
-									D6.bq[N6g].pa = 1;
+									city.bq[N6g].pa = 1;
 									clearTimeout(i8);
 									anstart = 0;
 									V8();
@@ -42672,7 +42695,7 @@ function outer() {
 
 		function z5F() {
 			$(__s[6506])
-				.text(p6(D6.tu));
+				.text(p6(city.tu));
 			$(__s[+c1m])
 				.css("display", "none");
 			E6k.R6();
@@ -42682,10 +42705,10 @@ function outer() {
 			var d8l;
 			var W8l;
 			var b8l;
-			for (var C8l = 0; C8l < D6.tc.length; C8l++) {
-				d8l = D6.tc[
+			for (var C8l = 0; C8l < city.tc.length; C8l++) {
+				d8l = city.tc[
 					C8l];
-				W8l = D6.th[C8l];
+				W8l = city.th[C8l];
 				b8l = bam["troops"][C8l]["simg"];
 				if (C8l != (0) && C8l != 1 && C8l != '7' >>
 					594275040 && C8l != (12) && C8l != +m2y && C8l != +17) $(__s[1226] + C8l)
@@ -43112,8 +43135,8 @@ function outer() {
 		//    var z2F = 1;
 
 		function E0V(B7w) {
-			for (var y7w in D6.bq)
-				if (Number(B7w) == Number(D6.bq[y7w].bid)) var K7w = y7w;
+			for (var y7w in city.bq)
+				if (Number(B7w) == Number(city.bq[y7w].bid)) var K7w = y7w;
 			var U7w = $("#a" + B7w)
 				.attr(__s[4491]);
 			var D7w = Number(U7w) % (A5y ^ 0);
@@ -43122,10 +43145,10 @@ function outer() {
 				U7w != 0);
 			$("#a" + B7w)
 				.remove();
-			var Z7w = D6.bq[K7w].bspot;
-			var R7w = D6.bq[K7w].elvl;
-			var P7w = D6.bq[K7w].slvl;
-			var f7w = D6.bq[
+			var Z7w = city.bq[K7w].bspot;
+			var R7w = city.bq[K7w].elvl;
+			var P7w = city.bq[K7w].slvl;
+			var f7w = city.bq[
 				K7w].brep;
 			if (R7w > 1) var g7w = P7w - 1;
 			else var g7w = 1;
@@ -43143,7 +43166,7 @@ function outer() {
 			if (P7w == 0 && f7w != G1R <<
 				1296922304 && f7w != +C6y && f7w != r1R >> 358464736 && f7w != (b1R & 2147483647)) I8(Z7w);
 			h9(Z7w);
-			D6.bq.splice(K7w, 1);
+			city.bq.splice(K7w, 1);
 			 
 			if (K7w == 0) {
 				clearTimeout(i8);
@@ -43262,30 +43285,30 @@ function outer() {
 			var
 				J3D = 0;
 			for (var h3D = 0; h3D < qtopleft.length; h3D++) {
-				J3D = D6["bd"][qtopleft[
+				J3D = city["bd"][qtopleft[
 					h3D]]["bid"];
 				if (J3D == G1R - 0 || J3D == +C6y || J3D == +r1R || J3D == +b1R) f3D += +
 					'1';
 			}
 			for (var h3D = 0; h3D < qtopright.length; h3D++) {
-				J3D = D6["bd"][qtopright[h3D]][E6k
+				J3D = city["bd"][qtopright[h3D]][E6k
 					.o55(m1R << 175753056)];
 				if (J3D == +G1R || J3D == C6y - 0 || J3D == +r1R || J3D == (b1R | 0)) n3D += +
 					"1";
 			}
 			for (var h3D = 0; h3D < qbotleft.length; h3D++) {
-				J3D = D6["bd"][
+				J3D = city["bd"][
 					qbotleft[h3D]]["bid"];
 				if (J3D == +G1R || J3D == (C6y | 192) || J3D == (r1R & 2147483647) || J3D == (
 					b1R & 2147483647)) V3D += 1;
 			}
 			for (var h3D = 0; h3D < qbotright.length; h3D++) {
-				J3D = D6['bd'][qbotright[h3D]]["bid"];
+				J3D = city['bd'][qbotright[h3D]]["bid"];
 				if (J3D == +G1R || J3D == +C6y || J3D == r1R * 1 || J3D == +
 					b1R) r3D += 1;
 			}
 			for (var h3D = 0; h3D < qcenter.length; h3D++) {
-				J3D = D6["bd"][
+				J3D = city["bd"][
 					qcenter[h3D]]["bid"];
 				if (J3D == +G1R || J3D == (C6y & 2147483647) || J3D == +r1R || J3D == +b1R)
 					A3D += 1;
@@ -43593,20 +43616,20 @@ function outer() {
 				'0';
 			var Q8w = 0;
 			var x8w = 0;
-			U2w = Number(D6.tps[0]["s"]) + 100;
-			n2w = Number(D6.tps[1]["s"]) + 100;
-			P2w = Number(D6.tps[2]["s"]) + 100;
-			f2w = Number(D6.tps[3]["s"]) + (100);
-			K2w = Number(D6.tps[4]["s"]) + 100;
-			g2w = Number(D6.tps[5]["s"]) + (100);
-			Z2w = Number(D6.tps[6]["s"]) + (100);
-			F2w = D6.tps[0][__s[+w6y]];
-			m2w = D6.tps[1][__s[+w6y]];
-			a2w = D6.tps[2][__s[+w6y]];
-			E2w = D6.tps[3][__s[w6y ^ 0]];
-			k8w = D6.tps[4][__s[+w6y]];
-			u8w = D6.tps[5][__s[+w6y]];
-			v8w = D6.tps[6][__s[+w6y]];
+			U2w = Number(city.tps[0]["s"]) + 100;
+			n2w = Number(city.tps[1]["s"]) + 100;
+			P2w = Number(city.tps[2]["s"]) + 100;
+			f2w = Number(city.tps[3]["s"]) + (100);
+			K2w = Number(city.tps[4]["s"]) + 100;
+			g2w = Number(city.tps[5]["s"]) + (100);
+			Z2w = Number(city.tps[6]["s"]) + (100);
+			F2w = city.tps[0][__s[+w6y]];
+			m2w = city.tps[1][__s[+w6y]];
+			a2w = city.tps[2][__s[+w6y]];
+			E2w = city.tps[3][__s[w6y ^ 0]];
+			k8w = city.tps[4][__s[+w6y]];
+			u8w = city.tps[5][__s[+w6y]];
+			v8w = city.tps[6][__s[+w6y]];
 			e1F();
 			if (U2w == 100) U2w = "-";
 			else U2w = U2w + __s[+o9y];
@@ -43636,40 +43659,40 @@ function outer() {
 				.text(g2w);
 			$(__s[5700])
 				.text(Z2w);
-			var q2w = D6[__s[650]];
-			var t8w = D6[__s[2956]];
-			var c2w = D6[__s[+u8y]];
+			var q2w = city[__s[650]];
+			var t8w = city[__s[2956]];
+			var c2w = city[__s[+u8y]];
 			var
-				T8w = D6[__s[306]];
+				T8w = city[__s[306]];
 			$(__s[4760])
 				.text(p6(Math.floor(q2w)));
 			$(__s['4049' | 976])
 				.text(p6(Math.floor(c2w)));
-			D2w = D6.tt;
+			D2w = city.tt;
 			var B2w = 0;
 			var R2w = 0;
 			var y2w = 0;
 			for (var A2w = 1; A2w <
-				D6.tc.length; A2w++) {
-				var e8w = D6.tc[A2w];
+				city.tc.length; A2w++) {
+				var e8w = city.tc[A2w];
 				var s8w = bam["troops"][A2w][_s(t1R <<
 					1695348256)];
 				var p2w = e8w * s8w;
 				B2w = B2w + p2w;
 				R2w = R2w + p2w;
 			}
-			for (var A2w = 1; A2w < D6.th.length; A2w++) {
-				var H8w = D6.th[A2w];
+			for (var A2w = 1; A2w < city.th.length; A2w++) {
+				var H8w = city.th[A2w];
 				var j8w = bam[E6k
 					.o55(4619)][A2w][__s[t1R ^ 0]];
 				var w8w = H8w * j8w;
 				y2w = y2w + w8w;
 			}
-			if (D6.tq.length >= 1)
-				for (var A2w = 0; A2w < D6.tq.length; A2w++)
-					if (D6.tq[A2w].ttype != 0) B2w = B2w + Number(D6.tq[A2w].tc);
+			if (city.tq.length >= 1)
+				for (var A2w = 0; A2w < city.tq.length; A2w++)
+					if (city.tq[A2w].ttype != 0) B2w = B2w + Number(city.tq[A2w].tc);
 			var I8w = D2w - B2w;
-			D6.tu = B2w;
+			city.tu = B2w;
 			var Y2w = h4F();
 			var l8w = $(__s[6074])
 				.length;
@@ -43745,7 +43768,7 @@ function outer() {
 							.html(d59);
 						$(__s[6408])
 							.tooltipster();
-						if (D6[__s[6004]][1] == 1) $(__s[2509])
+						if (city[__s[6004]][1] == 1) $(__s[2509])
 							.prop("disabled", ![]);
 						else $(__s[2509])
 							.prop("disabled", !!"1");
@@ -44173,20 +44196,22 @@ function outer() {
 		}
 
 		function W1F(k5w) {
+  			lastSentBq = -1;
+
 			var N0w = h8;
 			var c0w = S8;
 			var R0w = c0w * +A5y + N0w;
 			if (B5F(R0w)) R0w = 0;
 			var y0w =
-				Number(D6.bd[R0w].bl);
-			var F0w = Number(D6.bd[R0w].bid);
+				Number(city.bd[R0w].bl);
+			var F0w = Number(city.bd[R0w].bid);
 			var p0w = Number(k5w);
-			for (var D0w in D6.bq) {
+			for (var D0w in city.bq) {
 				var
-					m0w = D6.bq[D0w].bspot;
+					m0w = city.bq[D0w].bspot;
 				if (R0w == m0w) {
-					y0w = Number(D6.bq[D0w].elvl);
-					F0w = Number(D6.bq[D0w].brep);
+					y0w = Number(city.bq[D0w].elvl);
+					F0w = Number(city.bq[D0w].brep);
 				}
 			}
 			if (y0w == p0w) Y6(__s[6910]);
@@ -44328,10 +44353,10 @@ function outer() {
 						else if (u0Z == +A8y) Y6(__s["5380" | 4]);
 						else if (u0Z == +e2y) Y6(__s[E8y & 2147483647]);
 						else {
-							for (var H0Z = 0; H0Z < h9B.length; H0Z++) D6["th"][Number(h9B[H0Z][_s(+
-								"6626")])] = D6["th"][Number(h9B[H0Z][__s[6626]])] - Number(h9B[H0Z][_s(+
+							for (var H0Z = 0; H0Z < h9B.length; H0Z++) city["th"][Number(h9B[H0Z][_s(+
+								"6626")])] = city["th"][Number(h9B[H0Z][__s[6626]])] - Number(h9B[H0Z][_s(+
 									r1t)]) * Number(r9B);
-							D6[__s[6066]] = D6[__s[6066]] + Number(r9B);
+							city[__s[6066]] = city[__s[6066]] + Number(r9B);
 							o0F(Z9B, K9B);
 							z5F();
 							B8();
@@ -44560,8 +44585,9 @@ function outer() {
 		window['exBuildingInfo'] = function (_bid: string, bl: string, _xy:string) {
 				let xy = Number(_xy);		
 				let bId = Number(_bid);
-				let uptime = Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(D6.cs) / (100)));
-				let dtime = Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(D6.cs) / (100)));
+				d2 =xy;
+				let uptime = _bid == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
+				let dtime = _bid == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
 				buildingInfo(bId, Number(bl), uptime, dtime, xy);
 		}
 
@@ -44607,14 +44633,14 @@ function outer() {
 					.css("display");
 				$(__s[k04 ^ 0])
 					.show();
-				if (l6U == (0) || l6U == undefined || l6U == "undefined") l6U = D6.bd[Number(V6U)]
+				if (l6U == (0) || l6U == undefined || l6U == "undefined") l6U = city.bd[Number(V6U)]
 					.bid;
 				if (l6U == 0 || l6U == undefined || l6U == "undefined")
-					for (var Q6U = 0; Q6U < D6.bq.length; Q6U++) {
-						var j2U = D6.bq[Q6U][__s[+m54]];
+					for (var Q6U = 0; Q6U < city.bq.length; Q6U++) {
+						var j2U = city.bq[Q6U][__s[+m54]];
 						if (j2U == L6U) {
 							l6U
-								= D6.bq[Q6U][__s[T1m & 2147483647]];
+								= city.bq[Q6U][__s[T1m & 2147483647]];
 							s2U = '1' | 1;
 						}
 					}
@@ -44630,20 +44656,20 @@ function outer() {
 						l6U = TPL * 1;
 					} else K8F(l6U, L6U);
 				if (l6U == 0)
-					for (var Q6U = 0; Q6U < D6.bq.length; Q6U++)
-						if (L6U == D6.bq[Q6U].bspot) {
-							l6U = D6.bq[Q6U].brep;
-							T6U = D6.bq[Q6U].elvl;
-							var n6U = D6.bq[Q6U].slvl;
+					for (var Q6U = 0; Q6U < city.bq.length; Q6U++)
+						if (L6U == city.bq[Q6U].bspot) {
+							l6U = city.bq[Q6U].brep;
+							T6U = city.bq[Q6U].elvl;
+							var n6U = city.bq[Q6U].slvl;
 							if (x6U > n6U) D6U = 1;
 						} for (var Q6U = +
-							"0"; Q6U < D6.bq.length; Q6U++)
-					if (L6U == D6.bq[Q6U].bspot) {
-						var w2U = D6.bq[Q6U].elvl;
-						var n6U = D6.bq[Q6U].slvl;
+							"0"; Q6U < city.bq.length; Q6U++)
+					if (L6U == city.bq[Q6U].bspot) {
+						var w2U = city.bq[Q6U].elvl;
+						var n6U = city.bq[Q6U].slvl;
 						if (w2U > n6U) D6U =
 							1;
-					} if (T6U == '') T6U = D6.bd[Number(V6U)].bl;
+					} if (T6U == '') T6U = city.bd[Number(V6U)].bl;
 				if (T6U == '0' <<
 					1432479040) { var x6U = 0; var O6U = 0; var t6U = 0; } else if (T6U < 10) {
 						var
@@ -44651,10 +44677,10 @@ function outer() {
 						if (bam["buildings"][Number(l6U)])
 							if (bam["buildings"][Number(l6U)]["bc"][Number(x6U)]) {
 								var O6U = Math.ceil(bam[_s(+
-									Q5y)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(D6.cs) / (100)));
+									Q5y)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(city.cs) / (100)));
 								var
 									t6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][Number(x6U)][_s(n7y <<
-										414904256)] / (Number(D6.cs) / 100));
+										414904256)] / (Number(city.cs) / 100));
 							} else { var O6U = +D5y; var t6U = D5y ^ 0; }
 						else {
 							var
@@ -44666,10 +44692,10 @@ function outer() {
 					if (bam["buildings"][Number(l6U)])
 						if (bam["buildings"][Number(l6U)]["bc"][Number(x6U)]) {
 							var O6U = Math.ceil(bam[_s(
-								Q5y ^ 0)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(D6.cs) /
+								Q5y ^ 0)][Number(l6U)]["bc"][Number(x6U)]["tu"] / (Number(city.cs) /
 									100));
 							var t6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][Number(x6U)][_s(n7y *
-								1)] / (Number(D6.cs) / (100)));
+								1)] / (Number(city.cs) / (100)));
 						} else {
 							var O6U = D5y * 1;
 							var t6U = D5y <<
@@ -44678,10 +44704,10 @@ function outer() {
 					else { var O6U = +D5y; var t6U = +D5y; }
 				}
 				if (bam["buildings"][l6U])
-					for (var Q6U in D6.bq) {
-						var e2U = D6.bq[Q6U].bspot;
-						var k2U = D6.bq[Q6U].slvl;
-						var X6U = D6.bq[Q6U]
+					for (var Q6U in city.bq) {
+						var e2U = city.bq[Q6U].bspot;
+						var k2U = city.bq[Q6U].slvl;
+						var X6U = city.bq[Q6U]
 							.elvl;
 						if (e2U == V6U && k2U < X6U)
 							if (X6U + (1) > x6U) {
@@ -44800,7 +44826,7 @@ function outer() {
 						C5y)];
 					if (x6U <= 10 && x6U > 0) {
 						var O6U = Math.ceil(bam["buildings"][Number(l6U)]["bc"][
-							Number(x6U)]["tu"] / (Number(D6.cs) / (100)));
+							Number(x6U)]["tu"] / (Number(city.cs) / (100)));
 						var U6U = Q2(O6U);
 						var W6U = Math.floor(
 							bam["buildings"][Number(l6U)]["bc"][Number(x6U)][__s[+m1p]]);
@@ -44830,8 +44856,8 @@ function outer() {
 							.o55(d04 << 1187787744);
 						else K6U = "";
 					}
-					var A6U = D6.r[1].r;
-					var r6U = D6.r[2].r;
+					var A6U = city.r[1].r;
+					var r6U = city.r[2].r;
 					if (W6U > A6U || C6U >
 						r6U) {
 						$(__s[k04 << 664539008])
@@ -44891,14 +44917,14 @@ function outer() {
 						if (T6U > ('1' | 1))
 							for (var Q6U = T6U; Q6U > 1; Q6U--) {
 								o6U = o6U + Math.ceil(bam["buildings"][Number(
-									l6U)]["bc"][Number(Q6U)]["td"] / (Number(D6.cs) / (100)));
+									l6U)]["bc"][Number(Q6U)]["td"] / (Number(city.cs) / (100)));
 								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(Q6U - 1)][
 									__s[+B1p]]) / 3);
 								b6U = b6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(Q6U -
 									(1))][__s[m1p ^ 0]]) / 3);
 							} else if (T6U >= 1) {
 								o6U = o6U + Math.ceil(bam[_s(
-									Q5y ^ 0)][Number(l6U)]["bc"][Number(T6U)]["td"] / (Number(D6.cs) /
+									Q5y ^ 0)][Number(l6U)]["bc"][Number(T6U)]["td"] / (Number(city.cs) /
 										(100)));
 								G6U = G6U + Math.floor(Number(bam["buildings"][Number(l6U)]["bc"][Number(T6U)][
 									__s[B1p & 2147483647]]) / (3));
@@ -44918,8 +44944,8 @@ function outer() {
 				}
 				if (
 					l6U >= +TPL) {
-					var A6U = D6.ble[12];
-					var r6U = D6.ble[+m2y];
+					var A6U = city.ble[12];
+					var r6U = city.ble[+m2y];
 					if (W6U > A6U || C6U > r6U) {
 						$(_s(+
 							k04))
@@ -44934,17 +44960,17 @@ function outer() {
 							.addClass("greenb")
 							.removeClass("disButton");
 					}
-					if (D6.ble[1] == 0) {
+					if (city.ble[1] == 0) {
 						$(__s[+k04])
 							.prop("disabled", !!1);
 						$(__s[k04 - 0])
 							.addClass("disButton")
 							.removeClass("greenb");
 					}
-					if (D6.ble[2] == 0) var S6U = D6.ble[4];
-					else var S6U = D6.ble[2];
-					if (D6.ble[5] == 0) var E6U = 1;
-					else var E6U = D6.ble[5];
+					if (city.ble[2] == 0) var S6U = city.ble[4];
+					else var S6U = city.ble[2];
+					if (city.ble[5] == 0) var E6U = 1;
+					else var E6U = city.ble[5];
 					var x2U = shrinesarr[Number(S6U)][__s[193]];
 					var J6U = shrinesarr[
 						Number(S6U)]["d"];
@@ -45002,7 +45028,7 @@ function outer() {
 
 		function i7F(u22) {
 			N6();
-			var H22 = $.post("/includes/" + __s[6823], { a: u22 });
+			var H22 = $.post("/includes/RmOf.php", { a: u22 });
 			F6();
 			H22.done(function (j22) {
 				E6k.R6();
@@ -45134,8 +45160,8 @@ function outer() {
 				for (var M7U in C7U) {
 					z7U = C7U[M7U];
 					G7U = 0;
-					if (ppdt[__s[o7y | 128]])
-						if (ppdt[__s[+o7y]][z7U]) G7U = ppdt[__s[+o7y]][z7U];
+					if (ppdt["itc"])
+						if (ppdt["itc"][z7U]) G7U = ppdt["itc"][z7U];
 					var W7U = I2(z7U, 100);
 					X7U += __s[3080] + M7U + __s["915" | 912] + W7U + __s[3876] + z7U + __s[+u7p] + G7U +
 						__s[2025] + M7U + __s[2452] + M7U + __s[1963];
@@ -45172,7 +45198,7 @@ function outer() {
 
 		function E5F() {
 			$(__s[2277])
-				.text(D6[__s[I5R >> 1512863904]]);
+				.text(city[__s[I5R >> 1512863904]]);
 			$("#incoinfoPage")
 				.show();
 			$(__s[p6t | 4358])
@@ -45576,7 +45602,7 @@ function outer() {
 		}
 
 		function V5V(C2w, W2w, i2w, J2w, h2w, d2w, b2w, S2w) {
-			var G2w = D6.c;
+			var G2w = city.c;
 			if (G2w == 0) {
 				h2 = [];
 				$(__s[6595])
@@ -45657,7 +45683,7 @@ function outer() {
 					else if (A6w == 11) Y6(__s[E8y >> 2019175456]);
 					else {
 						A6w = JSON.parse(A6w);
-						D6.bq = A6w;
+						city.bq = A6w;
 						X2('7' | 5);
 					}
 			});
@@ -46814,8 +46840,8 @@ function outer() {
 		//  var c1g = [];
 		//  var m1g = [];
 		//  for (var N1g = '0' &
-		//    2147483647; N1g < D6[__s[D54 ^ 0]].length; N1g++) {
-		//    var E1g = D6[__s[D54 << 557171904]][N1g][_s(
+		//    2147483647; N1g < city[__s[D54 ^ 0]].length; N1g++) {
+		//    var E1g = city[__s[D54 << 557171904]][N1g][_s(
 		//      m54 * 1)];
 		//    c1g.push(E1g);
 		//  }
@@ -46833,8 +46859,8 @@ function outer() {
 		//    var e6g = Number(F1g[N1g].bid);
 		//    var s6g = m1g.indexOf(
 		//      Number(q1g));
-		//    var u6g = Number(D6.bq[N1g].ds);
-		//    var H6g = Number(D6.bq[N1g].de);
+		//    var u6g = Number(city.bq[N1g].ds);
+		//    var H6g = Number(city.bq[N1g].de);
 		//    var j6g = H6g - u6g;
 		//    var
 		//      w6g = Q2(j6g);
@@ -47559,19 +47585,19 @@ function outer() {
 
 		function i7V() {
 			E6k.R6();
-			for (var Q6g = 0; Q6g < D6.bq.length; Q6g++) {
+			for (var Q6g = 0; Q6g < city.bq.length; Q6g++) {
 				var o6g = bam[_s(Q5y >>
-					413132960)][D6.bq[Q6g].brep]["bn"];
-				var T6g = Number(D6.bq[Q6g].bid);
-				var C6g = Number(D6.bq[
+					413132960)][city.bq[Q6g].brep]["bn"];
+				var T6g = Number(city.bq[Q6g].bid);
+				var C6g = Number(city.bq[
 					Q6g].brep);
-				var W6g = Number(D6.bq[Q6g].bspot);
-				var O6g = Number(D6.bq[Q6g].ds);
-				var x6g = Number(D6.bq[Q6g]
+				var W6g = Number(city.bq[Q6g].bspot);
+				var O6g = Number(city.bq[Q6g].ds);
+				var x6g = Number(city.bq[Q6g]
 					.de);
-				var d6g = Number(D6.bq[Q6g].brep);
-				var L6g = Number(D6.bq[Q6g].elvl);
-				var b6g = Number(D6.bq[Q6g]
+				var d6g = Number(city.bq[Q6g].brep);
+				var L6g = Number(city.bq[Q6g].elvl);
+				var b6g = Number(city.bq[Q6g]
 					.slvl);
 				var X6g = x6g - O6g;
 				var z6g = new Date(x6g);
@@ -47651,7 +47677,7 @@ function outer() {
 		//      T2.lineTo(V0R | 16, 25);
 		//      if (w4F == 1) {
 		//        var r56 = c6.add.text(0, "0" & E6k
-		//          .s6s, D6.pn, {
+		//          .s6s, city.pn, {
 		//            font: __s[2972],
 		//            fill: __s[+g6p],
 		//            wordWrapWidth: 64 * 1,
@@ -47659,10 +47685,10 @@ function outer() {
 		//              !{},
 		//            align: __s[66]
 		//          });
-		//        r56.x = Math.floor(D6.x * +64 + (h8y | 0) - r56.width / 2);
-		//        r56.y = Math.floor(D6.y * +64 + s0R * 1);
-		//        tileMap.putTile(1417, citiesLayer.getTileX(D6.x * +64), citiesLayer.getTileY(D6.y * (64 - 0)), citiesLayer);
-		//        tileMap.putTile(+B6R, labelsLayer.getTileX(D6.x * +64), labelsLayer.getTileY(D6.y * (64 - 0)), labelsLayer);
+		//        r56.x = Math.floor(city.x * +64 + (h8y | 0) - r56.width / 2);
+		//        r56.y = Math.floor(city.y * +64 + s0R * 1);
+		//        tileMap.putTile(1417, citiesLayer.getTileX(city.x * +64), citiesLayer.getTileY(city.y * (64 - 0)), citiesLayer);
+		//        tileMap.putTile(+B6R, labelsLayer.getTileX(city.x * +64), labelsLayer.getTileY(city.y * (64 - 0)), labelsLayer);
 		//        y4F(+v9y);
 		//        var A56 = ppdt["rw"]['78' | 66]['l'];
 		//        if (A56 == 0)
@@ -47747,7 +47773,7 @@ function outer() {
 						var J1D = X1D % +A5y;
 						var h1D = (X1D - J1D) / +A5y;
 						z1D = 0;
-						if (M1D == "-" && D6.bd[X1D]["bid"] != 0) {
+						if (M1D == "-" && city.bd[X1D]["bid"] != 0) {
 							z1D = 475;
 							z1D = z1D - 443;
 							var W1D = z1D % 4 * (G5y >> 2112323712);
@@ -47760,11 +47786,11 @@ function outer() {
 									'height': _s(+
 										p5y)
 								});
-						} else if (!(M1D == "-" && D6.bd[X1D]["bid"] == 0))
+						} else if (!(M1D == "-" && city.bd[X1D]["bid"] == 0))
 							if (layarray[M1D])
-								if (D6.bd[X1D]["bid"] != layarray[M1D]) {
-									if (M1D == __s[4632] && D6.bd[X1D][
-										"bid"] != (F4y | 256) && D6.bd[X1D]["bid"] != (A4y & 2147483647) && D6.bd[X1D]
+								if (city.bd[X1D]["bid"] != layarray[M1D]) {
+									if (M1D == __s[4632] && city.bd[X1D][
+										"bid"] != (F4y | 256) && city.bd[X1D]["bid"] != (A4y & 2147483647) && city.bd[X1D]
 										["bid"] != +r4y)
 										if (X1D == +V5R || X1D == +c5R || X1D == u8y >> 1281648832 || X1D == +M5R) {
 											z1D = t0R ^ 0;
@@ -47775,8 +47801,8 @@ function outer() {
 										} else {
 											z1D = 50;
 											C1D = x0R << 1412177632;
-										} else if (M1D == __s[6989] && D6.bd[X1D]["bid"] !=
-											(h4y & 2147483647) && D6.bd[X1D]["bid"] != +P4y && D6.bd[X1D]["bid"] !=
+										} else if (M1D == __s[6989] && city.bd[X1D]["bid"] !=
+											(h4y & 2147483647) && city.bd[X1D]["bid"] != +P4y && city.bd[X1D]["bid"] !=
 											p4y * 1)
 										if (X1D == (V5R ^ 0) || X1D == c5R >> 1614424704 || X1D == +u8y || X1D == +M5R) {
 											z1D = 51;
@@ -47895,75 +47921,75 @@ function outer() {
 			E6k.y6();
 			switch (d9w) {
 				case 0:
-					var i9w = D6.tps[0].t;
+					var i9w = city.tps[0].t;
 					if (i9w == 0) return ![];
 					else return !!1;
 				case 1:
-					var i9w = D6.tps[5].t;
+					var i9w = city.tps[5].t;
 					if (i9w <= (5)) return !1;
 					else return !!{};
 				case 2:
-					var i9w = D6.tps[1].t;
+					var i9w = city.tps[1].t;
 					if (i9w <= 3) return ![];
 					else return !!{};
 				case 3:
-					var i9w = D6.tps[1].t;
+					var i9w = city.tps[1].t;
 					if (i9w <= (9)) return !{};
 					else return !![];
 				case '4' | 4:
-					var i9w = D6.tps[4].t;
+					var i9w = city.tps[4].t;
 					if (i9w == 0) return !"1";
 					else return !![];
 				case 5:
-					var i9w = D6.tps['1' | 1].t;
+					var i9w = city.tps['1' | 1].t;
 					if (i9w == 0) return ![];
 					else return !!{};
 				case 6:
-					var i9w = D6.tps[3].t;
+					var i9w = city.tps[3].t;
 					if (i9w == 0) return !{};
 					else return !"";
 				case 7:
-					var i9w = D6.tps[2].t;
+					var i9w = city.tps[2].t;
 					if (i9w == (0)) return ![];
 					else return !!"1";
 				case 8:
-					var i9w = D6.tps[2].t;
+					var i9w = city.tps[2].t;
 					if (i9w <= 4) return !{};
 					else return !0;
 				case 9:
-					var i9w = D6.tps[4].t;
+					var i9w = city.tps[4].t;
 					if (i9w <= 5) return !!"";
 					else return !0;
 				case '10' | 8:
-					var i9w = D6.tps[2].t;
+					var i9w = city.tps[2].t;
 					if (i9w <= 9) return ![];
 					else return !0;
 				case 11:
-					var i9w = D6.tps[3].t;
+					var i9w = city.tps[3].t;
 					if (i9w <= 6) return !!0;
 					else return !!1;
 				case 12:
-					var i9w = D6.tps["5" | 5].t;
+					var i9w = city.tps["5" | 5].t;
 					if (i9w == 0) return !!"";
 					else return !!{};
 				case m2y * 1:
-					var i9w = D6.tps[5].t;
+					var i9w = city.tps[5].t;
 					if (i9w <= 9) return !!"";
 					else return !0;
 				case '14' * 1:
-					var i9w = D6.tps[6].t;
+					var i9w = city.tps[6].t;
 					if (i9w <= (5)) return !1;
 					else return !!{};
 				case '15' - 0:
-					var i9w = D6.tps["6" | 2].t;
+					var i9w = city.tps["6" | 2].t;
 					if (i9w == (0)) return !!0;
 					else return !!{};
 				case 16:
-					var i9w = D6.tps["6" | 2].t;
+					var i9w = city.tps["6" | 2].t;
 					if (i9w <= 9) return !1;
 					else return !!{};
 				case +17:
-					var i9w = D6.tps[4].t;
+					var i9w = city.tps[4].t;
 					if (i9w <= 9) return !"1";
 					else return !!{};
 			}
@@ -47972,13 +47998,13 @@ function outer() {
 		function r0V() { n8(); }
 
 		function E1F() {
-			var A62 = p6(Number(D6.crth));
-			var n62 = p6(Number(D6.crt));
-			var f62 = p6(Number(D6.shph));
+			var A62 = p6(Number(city.crth));
+			var n62 = p6(Number(city.crt));
+			var f62 = p6(Number(city.shph));
 			var
-				K62 = p6(Number(D6.shp));
-			var g62 = p6(Number(D6.crth) * (1000));
-			var Z62 = p6(Number(D6.shph) * (
+				K62 = p6(Number(city.shp));
+			var g62 = p6(Number(city.crth) * (1000));
+			var Z62 = p6(Number(city.shph) * (
 				D5y << 1752232896));
 			$(__s[4488])
 				.text(A62);
@@ -48145,20 +48171,20 @@ function outer() {
 				$(__s[+T24])
 					.css("display", "none");
 				var X0g = new Array();
-				var W0g = 24 * Math.floor(D6.y / 25) + Math.floor(D6.x / 25);
+				var W0g = 24 * Math.floor(city.y / 25) + Math.floor(city.x / 25);
 				X0g.push(Number(W0g));
 				B1F(X0g);
 				w2();
 				if (L0g == 0) {
 					if (cityxx) {
 						$(__s[+l8R])
-							.val(D6.x);
+							.val(city.x);
 						$(__s[+k8R])
-							.val(D6.y);
+							.val(city.y);
 						_camera.x = cityxx;
 						_camera.y = cityyy;
-						T2.x = D6.x * (64 ^ 0);
-						T2.y = D6.y * (64 - 0);
+						T2.x = city.x * (64 ^ 0);
+						T2.y = city.y * (64 - 0);
 						//        c6.step();
 					}
 				}
@@ -48205,8 +48231,8 @@ function outer() {
 				$(__s[+T24])
 					.css("display", "none");
 				if (b0g == (1)) {
-					m0F = D6.x;
-					j5F = D6.y;
+					m0F = city.x;
+					j5F = city.y;
 				} else {
 					m0F = Math.floor(_camera.x / +64);
 					j5F = Math.floor(_camera.y / (64 * 1));
@@ -48269,9 +48295,9 @@ function outer() {
 				A0g.style.display = "block";
 				w2();
 				$(__s[l8R & 2147483647])
-					.val(D6.x);
+					.val(city.x);
 				$(__s[k8R * 1])
-					.val(D6.y);
+					.val(city.y);
 				e5F(+bspotHall);
 			});
 
@@ -48369,8 +48395,8 @@ function outer() {
 					0 && s4g == 0) {
 					s4g = 1;
 					Z7g = 0;
-					if (ppdt[__s[o7y - 0]])
-						if (ppdt[__s[+o7y]][y7g]) Z7g = ppdt[__s[+o7y]][y7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][y7g]) Z7g = ppdt["itc"][y7g];
 					var P7g = "";
 					if (Z7g == +
 						'0');
@@ -48383,8 +48409,8 @@ function outer() {
 					e4g == 0) {
 					e4g = 1;
 					Z7g = 0;
-					if (ppdt[__s[o7y * 1]])
-						if (ppdt[__s[o7y >> 942902304]][N7g]) Z7g = ppdt[__s[+o7y]][N7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][N7g]) Z7g = ppdt["itc"][N7g];
 					var P7g = '';
 					if (
 						Z7g == 0);
@@ -48396,8 +48422,8 @@ function outer() {
 				if (q7g != (0) && u4g == 0) {
 					u4g = 1;
 					Z7g = 0;
-					if (ppdt[__s[o7y >> 1479904928]])
-						if (ppdt[__s[+o7y]][q7g]) Z7g = ppdt[__s[+o7y]][q7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][q7g]) Z7g = ppdt["itc"][q7g];
 					var P7g = "";
 					if (Z7g ==
 						0);
@@ -48410,7 +48436,7 @@ function outer() {
 					Z7g = 0;
 					if (ppdt[E6k
 						.o55(+o7y)])
-						if (ppdt[__s[o7y & 2147483647]][F7g]) Z7g = ppdt[__s[+o7y]][F7g];
+						if (ppdt["itc"][F7g]) Z7g = ppdt["itc"][F7g];
 					var P7g = '';
 					if (
 						Z7g == 0);
@@ -48421,14 +48447,14 @@ function outer() {
 				}
 				$(__s[1328])
 					.show();
-				if (D6["bd"][bspotHall >> 1672468448]["bl"] == (1)) {
+				if (city["bd"][bspotHall >> 1672468448]["bl"] == (1)) {
 					if (m7g == _s(+
 						'4867')) $(__s[1328])
 							.show();
 					if (Y7g != 0) {
 						Z7g = 0;
-						if (ppdt[__s[+o7y]])
-							if (ppdt[__s[+o7y]][Y7g]) Z7g = ppdt[__s[o7y >> 934935616]][Y7g];
+						if (ppdt["itc"])
+							if (ppdt["itc"][Y7g]) Z7g = ppdt["itc"][Y7g];
 						var P7g = "";
 						if (Z7g == 0);
 						var B7g = artifacts[Y7g]["n"];
@@ -48440,7 +48466,7 @@ function outer() {
 						Z7g = 0;
 						if (ppdt[_s(
 							o7y >> 857619936)])
-							if (ppdt[__s[+o7y]][p7g]) Z7g = ppdt[__s[o7y & 2147483647]][p7g];
+							if (ppdt["itc"][p7g]) Z7g = ppdt["itc"][p7g];
 						var P7g = "";
 						if (Z7g == 0);
 						var B7g = artifacts[p7g]["n"];
@@ -48455,8 +48481,8 @@ function outer() {
 				if (c7g != (0) && k4g == (0)) {
 					k4g = 1;
 					Z7g = 0;
-					if (ppdt[__s[o7y ^ 0]])
-						if (ppdt[__s[o7y * 1]][c7g]) Z7g = ppdt[__s[+o7y]][c7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][c7g]) Z7g = ppdt["itc"][c7g];
 					var P7g = "";
 					if (
 						Z7g == 0);
@@ -48468,8 +48494,8 @@ function outer() {
 				if (D7g != 0) {
 					Z7g = +
 						'0';
-					if (ppdt[__s[+o7y]])
-						if (ppdt[__s[+o7y]][D7g]) Z7g = ppdt[__s[+o7y]][D7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][D7g]) Z7g = ppdt["itc"][D7g];
 					var P7g = '';
 					if (Z7g == (
 						0));
@@ -48480,8 +48506,8 @@ function outer() {
 				}
 				if (R7g != (0)) {
 					Z7g = 0;
-					if (ppdt[__s[+o7y]])
-						if (ppdt[__s[o7y ^ 0]][R7g]) Z7g = ppdt[__s[o7y & 2147483647]][R7g];
+					if (ppdt["itc"])
+						if (ppdt["itc"][R7g]) Z7g = ppdt["itc"][R7g];
 					var P7g = '';
 					if (
 						Z7g == 0);
@@ -50108,14 +50134,14 @@ function outer() {
 
 		function y3F(H7g, j7g) {
 			E6k.y6();
-			if (H7g == +h4y && D6.w == 1 && (j7g != V5R >> 2126081568 &&
+			if (H7g == +h4y && city.w == 1 && (j7g != V5R >> 2126081568 &&
 				j7g != (c5R | 384) && j7g != (u8y ^ 0) && j7g != (M5R | 282) && j7g != +s5R && j7g != (Q5R & 2147483647) &&
 				j7g != +C5R && j7g != Z5R - 0)) return !{};
-			else if (H7g == F4y * 1 && D6.w == 1 && (j7g != +V5R && j7g != +c5R && j7g != +u8y && j7g !=
+			else if (H7g == F4y * 1 && city.w == 1 && (j7g != +V5R && j7g != +c5R && j7g != +u8y && j7g !=
 				M5R - 0 && j7g != (s5R & 2147483647) && j7g != +Q5R && j7g != +C5R && j7g != (Z5R & 2147483647))) return ![];
 			else if (H7g != +p4y && H7g != +r4y && H7g != (h4y & 2147483647) && H7g != (F4y ^ 0) && H7g != A4y * 1 && H7g != (
 				P4y | 368) && (j7g == V5R - 0 || j7g == +c5R || j7g == +u8y || j7g == M5R << 953708640 || j7g == s5R * 1 ||
-					j7g == (Q5R ^ 0) || j7g == C5R - 0 || j7g == +Z5R) && D6.w == (1)) return !{};
+					j7g == (Q5R ^ 0) || j7g == C5R - 0 || j7g == +Z5R) && city.w == (1)) return !{};
 			else if (H7g != (n4y & 2147483647) && H7g != (l4y ^ 0) && H7g != (o4y | 5) && H7g != +I1R && H7g != +t1y && H7g !=
 				T1y >> 2125008384 && H7g != +g1y && H7g != f1y >> 477043104 && H7g != V1y - 0 && H7g != (M1y | 540) && H7g !=
 				Q1y * 1 && H7g != +Z1y && H7g != u1y - 0 && H7g != +N1y && H7g != +i1y && H7g != (q1y ^ 0) && H7g != +D1y &&
@@ -50155,8 +50181,8 @@ function outer() {
 			else if ((H7g == O1y * 1 || H7g == +w1y || H7g == (H1y ^ 0) || H7g == +G1y || H7g == +b1y || H7g == +X1y ||
 				H7g == +I1y || H7g == z1y << 2136267392 || H7g == +d1y || H7g == (k1y ^ 0) || H7g == S1y << 551109280 ||
 				H7g == (J5y ^ 0) || H7g == +x5y || H7g == W5y >> 1862552512 || H7g == U5y << 1218540256 || H7g == c5y - 0
-			) && D6.bd[0]["bl"] == 0) return ![];
-			else if (D6.bd[j7g]["bid"] != (0)) return !"1";
+			) && city.bd[0]["bl"] == 0) return ![];
+			else if (city.bd[j7g]["bid"] != (0)) return !"1";
 			else return !!1;
 		}
 
@@ -50185,8 +50211,8 @@ function outer() {
 			var u3g = 1;
 			E6k.R6();
 			var s3g = 8;
-			if (D6.ble[2] == 0) var s3g = D6.ble[4];
-			else var s3g = D6.ble[2];
+			if (city.ble[2] == 0) var s3g = city.ble[4];
+			else var s3g = city.ble[2];
 			var H3g = u3g * +v1R - v1R * 1;
 			var j3g = s3g * (v1R >> 1053860224) - +v1R;
 			$(__s[+r5y] + (w3g + u6y * 1))
@@ -50203,15 +50229,16 @@ function outer() {
 		}
 
 		function ProcessBuuPoll() {
-			if (D6.bq.length<=1)
+			if (city.bq.length<=1)
 			    DoPoll2(300);
-			if (D6.bq.length<=2)
+			if (city.bq.length<=2)
 			    DoPoll2(500);
 			 else
 				DoPoll2(1600);
 		}
 
-		function C5F(v0w) {
+  // wall building?
+		function buildWall(v0w) {
 			J9();
 			var Y9g = bidWALL >> 790423264;
 			var y9g = 0;
@@ -50225,7 +50252,7 @@ function outer() {
 					.css("display");
 				var R9g = 1;
 				var P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)][E6k
-					.o55(h6R * 1)][Number(R9g)]["tu"]) / (Number(D6.cs) / ("100" | 64)));
+					.o55(h6R * 1)][Number(R9g)]["tu"]) / (Number(city.cs) / ("100" | 64)));
 				if (P9g < Number(
 					ppdt.mibt)) P9g = Number(ppdt.mibt);
 				var N9g = O2();
@@ -50233,31 +50260,31 @@ function outer() {
 				var u0w = P9g;
 				var o0w =
 					Number(u0w) + Number(P9g);
-				var j0w = D6.bq.length;
+				var j0w = city.bq.length;
 				var c9g = Number(bam["buildings"][Number(Y9g)][_s(
 					+h6R)][Number(R9g)][__s[m1p | 1282]]);
 				var m9g = Number(bam["buildings"][Number(Y9g)][_s(h6R &
 					2147483647)][Number(R9g)][__s[B1p | 576]]);
-				var l0w = Number(D6.r[1].r);
-				var I0w = Number(D6.r["2" |
+				var l0w = Number(city.r[1].r);
+				var I0w = Number(city.r["2" |
 					2].r);
 				if (j0w == (0)) {
 					var B9g = currentTime();
 					var D9g = Number(B9g) + Number(
 						P9g);
 				} else {
-					var B9g = D6.bq[D6.bq.length - ("1" | 1)].de + (e2R >> 1801953792);
+					var B9g = city.bq[city.bq.length - ("1" | 1)].de + (e2R >> 1801953792);
 					var D9g = Number(B9g) +
 						Number(P9g);
 				}
-				var a9g = D6.bq.length;
-				var w0w = D6.bd[bspotHall].bl;
-				//  var L0w = D6.bq.length;
+				var a9g = city.bq.length;
+				var w0w = city.bd[bspotHall].bl;
+				//  var L0w = city.bq.length;
 				var
 					O0w = Number(w0w) * (10);
 				var G0w = 0;
-				for (var p9g = 0; p9g < D6.bq.length; p9g++)
-					if (D6.bq[p9g][__s[m54 & 2147483647]] == 0) G0w = 1;
+				for (var p9g = 0; p9g < city.bq.length; p9g++)
+					if (city.bq[p9g][__s[m54 & 2147483647]] == 0) G0w = 1;
 				if (a9g >= x0w) Y6(_s(
 					z4m | 1107));
 				if (a9g < x0w)
@@ -50296,7 +50323,7 @@ function outer() {
 							if (!(i0w >= 0)) {
 								i0w = JSON.parse(i0w);
 								s8(c9g, m9g, 0, 0, 0);
-								D6 = i0w;
+								city = i0w;
 
 								V8();
 								UpdateBuildingCounts();
@@ -50317,15 +50344,15 @@ function outer() {
 					.css("display");
 				if (Q0w != "none") var R9g = Number($(__s[+k04])
 					.attr('l'));
-				else var R9g = D6.bd[Number(y9g)].bl + 1;
+				else var R9g = city.bd[Number(y9g)].bl + 1;
 				var z0w = Number(R9g) + 1;
-				for (var p9g in D6.bq) {
+				for (var p9g in city.bq) {
 					var T0w =
-						D6.bq[p9g].bspot;
-					if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) + (1);
+						city.bq[p9g].bspot;
+					if (y9g == T0w) R9g = Number(city.bq[p9g].elvl) + (1);
 				}
 				var P9g = Math.ceil(Number(
-					bam["buildings"][Number(Y9g)]["bc"][Number(R9g)]["tu"]) / (Number(D6
+					bam["buildings"][Number(Y9g)]["bc"][Number(R9g)]["tu"]) / (Number(city
 						.cs) / 100));
 				if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt.mibt);
 				var N9g = O2();
@@ -50333,27 +50360,27 @@ function outer() {
 					new Date();
 				var u0w = P9g;
 				var o0w = Number(u0w) + Number(P9g);
-				var j0w = D6.bq.length;
+				var j0w = city.bq.length;
 				var c9g = Number(bam[E6k
 					.S55(+Q5y)][Number(Y9g)]["bc"][Number(R9g)][__s[m1p - 0]]);
 				var m9g = Number(bam[
 					"buildings"][Number(Y9g)]["bc"][Number(R9g)][__s[B1p | 16]]);
-				var l0w = Number(D6
+				var l0w = Number(city
 					.r[1].r);
-				var I0w = Number(D6.r[2].r);
+				var I0w = Number(city.r[2].r);
 				if (j0w == 0) {
 					var B9g = currentTime();
 					var
 						D9g = Number(B9g) + Number(P9g);
 				} else {
-					var B9g = D6.bq[D6.bq.length - (1)].de + +
+					var B9g = city.bq[city.bq.length - (1)].de + +
 						e2R;
 					var D9g = Number(B9g) + Number(P9g);
 				}
-				var a9g = D6.bq.length;
-				var w0w = D6.bd[bspotHall]
+				var a9g = city.bq.length;
+				var w0w = city.bd[bspotHall]
 					.bl;
-				var L0w = D6.bq.length;
+				var L0w = city.bq.length;
 				var O0w = Number(w0w) * 10;
 				if (a9g < x0w)
 					if (v0w == 2 && l0w >= c9g && I0w >= m9g) {
@@ -50387,7 +50414,7 @@ function outer() {
 							if (!(S0w >= 0)) {
 								S0w = JSON.parse(S0w);
 								s8(c9g, m9g, 0, 0, 0);
-								D6 = S0w;
+								city = S0w;
 									  sendBuildingData();
 
 								V8();
@@ -50408,40 +50435,40 @@ function outer() {
 			if (v0w == 3) { // downgrade
 				var Q0w = $(__s[+x24])
 					.css("display");
-				var R9g = D6.bd[Number(y9g)].bl - (1);
+				var R9g = city.bd[Number(y9g)].bl - (1);
 				var z0w = Number(R9g) + +
 					"1";
-				for (var p9g in D6.bq) {
-					var T0w = D6.bq[p9g].bspot;
-					if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) -
+				for (var p9g in city.bq) {
+					var T0w = city.bq[p9g].bspot;
+					if (y9g == T0w) R9g = Number(city.bq[p9g].elvl) -
 						1;
 				}
 				var P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)]["bc"][Number(
-					R9g)]["td"]) / (Number(D6.cs) / 100));
+					R9g)]["td"]) / (Number(city.cs) / 100));
 				if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt
 					.mibt);
 				var N9g = O2();
 				var t0w = new Date();
 				var u0w = P9g;
 				var o0w = Number(u0w) + Number(P9g);
-				var j0w = D6
+				var j0w = city
 					.bq.length;
 				var c9g = Number(bam["buildings"][Number(Y9g)]["bc"][Number(R9g)][E6k
 					.o55(m1p >> 1039925760)]);
 				var m9g = Number(bam["buildings"][Number(Y9g)]["bc"][Number(
 					R9g)][__s[+B1p]]);
-				var l0w = Number(D6.r[1].r);
-				var I0w = Number(D6.r[2].r);
+				var l0w = Number(city.r[1].r);
+				var I0w = Number(city.r[2].r);
 				if (
 					j0w == (0)) { var B9g = currentTime(); var D9g = Number(B9g) + Number(P9g); } else {
 					var B9g =
-						D6.bq[D6.bq.length - (1)].de + (e2R << 1760955040);
+						city.bq[city.bq.length - (1)].de + (e2R << 1760955040);
 					var D9g = Number(B9g) + Number(P9g);
 				}
 				var a9g =
-					D6.bq.length;
-				var w0w = D6.bd[bspotHall].bl;
-				var L0w = D6.bq.length;
+					city.bq.length;
+				var w0w = city.bd[bspotHall].bl;
+				var L0w = city.bq.length;
 				var O0w = Number(w0w) * 10;
 				if (
 					a9g < x0w)
@@ -50474,7 +50501,7 @@ function outer() {
 							if (!(V0w >= 0)) {
 								V0w = JSON.parse(V0w);
 								s8(c9g, m9g, 0, 0, 0);
-								D6 = V0w;
+								city = V0w;
 									  sendBuildingData();
 
 								V8();
@@ -50494,7 +50521,7 @@ function outer() {
 				4)) {
 				var M0w = 0;
 				for (var p9g = 0; p9g < C8.length; p9g++)
-					if (D6["bd"][p9g]["bl"] >= 1 && D6["bd"][p9g]["bid"] !=
+					if (city["bd"][p9g]["bl"] >= 1 && city["bd"][p9g]["bid"] !=
 						bidWALL >> 1266285600) M0w = 1;
 				if (M0w == 0) {
 					var Q0w = $(__s[+x24])
@@ -50502,32 +50529,32 @@ function outer() {
 					var R9g = 1;
 					var z0w = Number(R9g) + (1);
 					for (var
-						p9g in D6.bq) { var T0w = D6.bq[p9g].bspot; if (y9g == T0w) R9g = Number(D6.bq[p9g].elvl) - 1; }
+						p9g in city.bq) { var T0w = city.bq[p9g].bspot; if (y9g == T0w) R9g = Number(city.bq[p9g].elvl) - 1; }
 					var
 						P9g = Math.ceil(Number(bam["buildings"][Number(Y9g)]["bc"][Number(R9g)]["td"]) / (
-							Number(D6.cs) / 100));
+							Number(city.cs) / 100));
 					if (P9g < Number(ppdt.mibt)) P9g = Number(ppdt.mibt);
 					var N9g = O2();
 					var t0w =
 						new Date();
 					var u0w = P9g;
 					var o0w = Number(u0w) + Number(P9g);
-					var j0w = D6.bq.length;
+					var j0w = city.bq.length;
 					var c9g = +
 						"0";
 					var m9g = 0;
-					var l0w = Number(D6.r[1].r);
-					var I0w = Number(D6.r[2].r);
+					var l0w = Number(city.r[1].r);
+					var I0w = Number(city.r[2].r);
 					if (j0w ==
 						0) { var B9g = currentTime(); var D9g = Number(B9g) + Number(P9g); } else {
-						var B9g = D6.bq[D6.bq
+						var B9g = city.bq[city.bq
 							.length - (1)].de + (e2R & 2147483647);
 						var D9g = Number(B9g) + Number(P9g);
 					}
-					var a9g = D6.bq
+					var a9g = city.bq
 						.length;
-					var w0w = D6.bd[bspotHall].bl;
-					var L0w = D6.bq.length;
+					var w0w = city.bd[bspotHall].bl;
+					var L0w = city.bq.length;
 					var O0w = Number(w0w) * 10;
 					if (a9g <
 						x0w)
@@ -50560,7 +50587,7 @@ function outer() {
 								if (!(n0w >= (0))) {
 									n0w = JSON.parse(n0w);
 									s8(c9g, m9g, 0, 0, 0);
-									D6 = n0w;
+									city = n0w;
 		 							  sendBuildingData();
 
 									V8();
@@ -50582,9 +50609,9 @@ function outer() {
 		var g2 = 0;
 
 		function b1F(M7w, z7w) {
-			var C7w = D6.w;
-			for (var G7w = 0; G7w < D6.bq.length; G7w++)
-				if (D6.bq[G7w]) { var W7w = D6.bq[G7w][__s[m54 & 2147483647]]; if (z7w == W7w) return !{}; } if (C7w == 1)
+			var C7w = city.w;
+			for (var G7w = 0; G7w < city.bq.length; G7w++)
+				if (city.bq[G7w]) { var W7w = city.bq[G7w][__s[m54 & 2147483647]]; if (z7w == W7w) return !{}; } if (C7w == 1)
 				if ((M7w == p4y >> 1021300224 || M7w == +r4y || M7w == +F4y || M7w == +A4y || M7w == (h4y | 482) || M7w ==
 					P4y * 1) && (z7w == +V5R || z7w == (c5R ^ 0) || z7w == +u8y || z7w == M5R << 1236115200 || z7w == +s5R ||
 						z7w == (Q5R ^ 0) || z7w == (Z5R & 2147483647) || z7w == +C5R)) return !![];
@@ -50804,7 +50831,7 @@ function outer() {
 			E6k.R6();
 			var g5Z = S8;
 			var Z5Z = g5Z * (A5y ^ 0) + K5Z;
-			Y2(U5Z, Z5Z, 0);
+			buildOp(U5Z, Z5Z, 0);
 		}
 
 
@@ -50934,7 +50961,7 @@ function outer() {
 
 		function a0F() {
 			N6();
-			var z7Z = $.post("/includes/" + __s[4691], { a: JSON.stringify(D6.mo), b: D6.cid });
+			var z7Z = $.post("/includes/" + __s[4691], { a: JSON.stringify(city.mo), b: city.cid });
 			F6();
 			z7Z.done(function (M7Z) { E6k.y6(); if (M7Z == (0)); });
 		}
@@ -52120,21 +52147,21 @@ function outer() {
 				.css("display", "none");
 			$(__s[j4m * 1])
 				.show();
-			if (D6) {
-				if (!D6.mo) D6.mo = [];
+			if (city) {
+				if (!city.mo) city.mo = [];
 				$(__s[534])
-					.val(D6[__s[460]]);
-				if (D6.mo) {
-					if (D6.mo[+R2y]) $(__s[6199] + D6.mo[+R2y])
+					.val(city[__s[460]]);
+				if (city.mo) {
+					if (city.mo[+R2y]) $(__s[6199] + city.mo[+R2y])
 						.prop(__s[X4y & 2147483647], !0);
-					if (D6.mo[G8y * 1]) $(__s['5686' | 4624] + D6.mo[+G8y])
+					if (city.mo[G8y * 1]) $(__s['5686' | 4624] + city.mo[+G8y])
 						.prop(__s[+X4y], !![]);
-					if (D6.mo[r8y >> 1169162240]) $(__s[1544] + D6.mo[+r8y])
+					if (city.mo[r8y >> 1169162240]) $(__s[1544] + city.mo[+r8y])
 						.prop(__s[X4y << 1672474336], !0);
-					if (D6.mo[+b8y]) $(__s["5151" | 4102] + D6.mo[b8y | 8])
+					if (city.mo[+b8y]) $(__s["5151" | 4102] + city.mo[b8y | 8])
 						.prop(__s[X4y & 2147483647], !!1);
-					if (D6.mo.hasOwnProperty(h8y * 1))
-						if (D6.mo[h8y & 2147483647] == (1)) {
+					if (city.mo.hasOwnProperty(h8y * 1))
+						if (city.mo[h8y & 2147483647] == (1)) {
 							$(__s[+A94])
 								.prop(__s[286], !!{});
 							$(__s[+D4m])
@@ -52156,49 +52183,49 @@ function outer() {
 								.css("display", "none");
 							$(__s[+m4m])
 								.show();
-						} if (D6.mo[+X8y]) $(__s[R94 | 4103])
-							.val(D6.mo[X8y & 2147483647]);
+						} if (city.mo[+X8y]) $(__s[R94 | 4103])
+							.val(city.mo[X8y & 2147483647]);
 					else $(__s[R94 * 1])
 						.val(0);
-					if (D6.mo[+P8y]) $(__s[+L94])
-						.val(D6.mo[+P8y]);
+					if (city.mo[+P8y]) $(__s[+L94])
+						.val(city.mo[+P8y]);
 					else $(__s[+L94])
 						.val(0);
-					if (D6.mo[I8y << 1625841632]) $(__s[Y94 * 1])
-						.val(D6.mo[I8y * 1]);
+					if (city.mo[I8y << 1625841632]) $(__s[Y94 * 1])
+						.val(city.mo[I8y * 1]);
 					else $(__s[Y94 >> 2100028352])
 						.val(0);
-					if (D6.mo[36]) $(__s[v94 ^ 0])
-						.val(D6.mo[36]);
+					if (city.mo[36]) $(__s[v94 ^ 0])
+						.val(city.mo[36]);
 					else $(__s[+v94])
 						.val(0);
-					if (D6.mo[x0R * 1]) $(__s[+e94])
-						.val(D6.mo[+x0R]);
+					if (city.mo[x0R * 1]) $(__s[+e94])
+						.val(city.mo[+x0R]);
 					else $(__s[+e94])
 						.val(0);
-					if (D6.mo[g0R & 2147483647]) $(__s[+y94])
-						.val(D6.mo[g0R ^ 0]);
+					if (city.mo[g0R & 2147483647]) $(__s[+y94])
+						.val(city.mo[g0R ^ 0]);
 					else $(__s[+y94])
 						.val(0);
-					if (D6.mo[49]) $(__s[+O94])
-						.val(D6.mo[49]);
+					if (city.mo[49]) $(__s[+O94])
+						.val(city.mo[49]);
 					else $(__s[O94 ^ 0])
 						.val(0);
-					if (D6.mo[50]) $(__s[w94 | 281])
-						.val(D6.mo['50' | 50]);
+					if (city.mo[50]) $(__s[w94 | 281])
+						.val(city.mo['50' | 50]);
 					else $(__s[w94 * 1])
 						.val(0);
-					if (D6.mo[z8y | 4]) $(__s[2188] + D6.mo[z8y ^ 0])
+					if (city.mo[z8y | 4]) $(__s[2188] + city.mo[z8y ^ 0])
 						.prop(__s[+X4y], !!1);
-					if (D6.mo[d8y | 0]) $(__s[5362] + D6.mo[d8y >> 1952780768])
+					if (city.mo[d8y | 0]) $(__s[5362] + city.mo[d8y >> 1952780768])
 						.prop(__s[X4y & 2147483647], !0);
-					if (D6.mo[l8y >> 535107616]) $(__s[1384] + D6.mo[l8y >>
+					if (city.mo[l8y >> 535107616]) $(__s[1384] + city.mo[l8y >>
 						1684070976])
 						.prop(__s[+X4y], !![]);
-					if (D6.mo[+c8y]) $(__s[5022] + D6.mo[+c8y])
+					if (city.mo[+c8y]) $(__s[5022] + city.mo[+c8y])
 						.prop(__s[+X4y], !"");
-					if (D6.mo.hasOwnProperty(k8y ^ 0))
-						if (D6.mo[k8y << 187004192] == (1)) {
+					if (city.mo.hasOwnProperty(k8y ^ 0))
+						if (city.mo[k8y << 187004192] == (1)) {
 							$(__s[G94 >> 163748960])
 								.prop(__s[286], !"");
 							$(__s[+R4m])
@@ -52220,23 +52247,23 @@ function outer() {
 								.css("display", "none");
 							$(__s[e4m >> 1786088032])
 								.show();
-						} if (D6.mo[+o8y]) $(__s[3828] + D6.mo[+o8y])
+						} if (city.mo[+o8y]) $(__s[3828] + city.mo[+o8y])
 							.prop(__s[+X4y], !0);
-					if (D6.mo[S8y | 1]) $(__s[3262] + D6.mo[+S8y])
+					if (city.mo[S8y | 1]) $(__s[3262] + city.mo[+S8y])
 						.prop(__s[X4y & 2147483647], !0);
-					if (D6.mo.hasOwnProperty(t0R | 40))
-						if (D6.mo[t0R ^ 0] == 1) $(__s[+H94])
+					if (city.mo.hasOwnProperty(t0R | 40))
+						if (city.mo[t0R ^ 0] == 1) $(__s[+H94])
 							.prop(__s[286], !![]);
 						else $(__s[+H94])
 							.prop(__s[286], !{});
 					else $(__s[+H94])
 						.prop(__s[286], !"1");
-					if (D6.mo[J0R | 40]) $(__s[+d94])
-						.val(D6.mo[+J0R]);
+					if (city.mo[J0R | 40]) $(__s[+d94])
+						.val(city.mo[+J0R]);
 					else $(__s[+d94])
 						.val(0);
-					if (D6.mo[46]) $(__s[l94 ^ 0])
-						.val(D6.mo[46]);
+					if (city.mo[46]) $(__s[l94 ^ 0])
+						.val(city.mo[46]);
 					else $(__s[l94 >> 552883936])
 						.val(0);
 				}
@@ -52322,7 +52349,7 @@ function outer() {
 						E4B = bam["troops"][Number(r4B)][__s[+t8R]];
 						q4B = bam["troops"][Number(r4B)][__s[+t1R]] * V4B;
 						F4B += q4B;
-						p4B = D6.th[d4B];
+						p4B = city.th[d4B];
 						if (p4B > (0)) h4B = Math.floor(p4B / V4B);
 						else h4B = 0;
 						if (h4B > 0)
@@ -52528,8 +52555,8 @@ function outer() {
 						var T8l = $(this)
 							.attr("id");
 						var l8l = T8l.substring(6);
-						if (D6["th"][l8l])
-							if (Q8l > D6["th"][l8l]) j8l = 1;
+						if (city["th"][l8l])
+							if (Q8l > city["th"][l8l]) j8l = 1;
 					});
 			} else if (I8l == 1) {
 				var u8l =
@@ -52546,8 +52573,8 @@ function outer() {
 							.attr("id");
 						E6k.y6();
 						var x8l = t8l.substring(6);
-						if (D6["th"][x8l])
-							if (O8l > D6["th"][x8l]) j8l = 1;
+						if (city["th"][x8l])
+							if (O8l > city["th"][x8l]) j8l = 1;
 					});
 			} else if (I8l == 2) {
 				var u8l = _s(+
@@ -52563,8 +52590,8 @@ function outer() {
 						var X8l = $(this)
 							.attr("id");
 						var o8l = X8l.substring(6);
-						if (D6["th"][o8l])
-							if (L8l > D6["th"][o8l]) j8l = 1;
+						if (city["th"][o8l])
+							if (L8l > city["th"][o8l]) j8l = 1;
 					});
 			} else {
 				var u8l = __s[1976];
@@ -52580,8 +52607,8 @@ function outer() {
 						var G8l = $(this)
 							.attr("id");
 						var z8l = G8l.substring(6);
-						if (D6["th"][z8l])
-							if (M8l > D6["th"][z8l]) j8l = 1;
+						if (city["th"][z8l])
+							if (M8l > city["th"][z8l]) j8l = 1;
 					});
 			}
 			var w8l = 1;
@@ -52794,7 +52821,7 @@ function outer() {
 			var n9w = 0;
 			var f9w = 0;
 			var K9w = 0;
-			for (var S9w = 0; S9w < D6.tc
+			for (var S9w = 0; S9w < city.tc
 				.length; S9w++) {
 				var J9w = $(__s[I2p & 2147483647] + S9w)
 					.val();
@@ -52839,7 +52866,7 @@ function outer() {
 					}
 				}
 			}
-			var y9w = D6.tq.length + f9w;
+			var y9w = city.tq.length + f9w;
 			y5V(h9w, r9w, V9w, A9w, n9w, f9w);
 			B0F();
 			var P9w = currentTime() + g9w;
@@ -52879,17 +52906,17 @@ function outer() {
 			//var G1g = arguments.callee.caller.name;
 			var Y3g, a3g, q3g, N3g, p3g, c3g, y3g, u1g, m3g, v1g, x1g,
 				T1g;
-			if (D6.bq.length > 0)
-				for (var D3g in D6.bq) {
-					y3g = Number(D6.bq[D3g].bid);
-					u1g = Number(D6.bq[D3g].btype);
-					Y3g = Number(D6.bq[D3g].bspot);
-					a3g = Number(D6.bq[D3g].ds);
-					q3g = Number(D6.bq[D3g].de);
-					N3g = Number(D6.bq[D3g].brep);
-					p3g = Number(D6.bq[D3g].elvl);
-					c3g = Number(D6.bq[D3g].slvl);
-					m3g = Number(D6.bq[D3g].pa);
+			if (city.bq.length > 0)
+				for (var D3g in city.bq) {
+					y3g = Number(city.bq[D3g].bid);
+					u1g = Number(city.bq[D3g].btype);
+					Y3g = Number(city.bq[D3g].bspot);
+					a3g = Number(city.bq[D3g].ds);
+					q3g = Number(city.bq[D3g].de);
+					N3g = Number(city.bq[D3g].brep);
+					p3g = Number(city.bq[D3g].elvl);
+					c3g = Number(city.bq[D3g].slvl);
+					m3g = Number(city.bq[D3g].pa);
 					var H1g = bam["buildings"][N3g]["bn"];
 					var L1g = bam[_s(
 						Q5y ^ 0)][N3g][__s[3584]];
@@ -52898,7 +52925,8 @@ function outer() {
 					if ($("#a" +y3g)
 						.length == 0)
 						if (!k0F.hasOwnProperty(y3g))
-							if (Q1g > currentTime()) {
+		//					if (Q1g > currentTime()) 
+	   {
 								if (D3g == 0) {
 									anstart = 0;
 									var l1g = currentTime();
@@ -52955,7 +52983,7 @@ function outer() {
 										Number(N3g)]["bc"][Number(p3g)][__s[+m1p]]);
 									var o1g = Number(bam["buildings"][
 										Number(N3g)]["bc"][Number(p3g)][__s[+B1p]]);
-									if (t1g < D6["r"]["1" | 1]["r"] && o1g < D6["r"][2]["r"])
+									if (t1g < city["r"]["1" | 1]["r"] && o1g < city["r"][2]["r"])
 										var I1g = __s[6342] + y3g + __s[6929] + y3g + _s('5400' *
 											1);
 									else var I1g = __s['6342' | 192] + y3g + __s[6929] + y3g + __s[7019];
@@ -53049,7 +53077,7 @@ function outer() {
 			F6();
 			k59.done(function (e59) {
 				E6k.R6();
-				D6[__s[460]] = E09;
+				city[__s[460]] = E09;
 			});
 		}
 		var w3F;
@@ -53177,7 +53205,7 @@ function outer() {
 				var Z2T;
 				var U2T;
 				N6();
-				var C2T = $.post("/includes/" + __s[653], { cid: cid });
+				var C2T = $.post("/includes/gRefI.php", { cid: cid });
 				F6();
 				C2T.done(function (P2T) {
 					P2T = JSON.parse(P2T);
@@ -53305,13 +53333,28 @@ function outer() {
 		var y7V;
 		var B7V;
 
-		function Y2(bId, bXY, op) {
+		function buildOp(bId, bXY, op) {
+			lastSentBq = -1;
 			J9();
 			var V5w = 0;
 			bId = Number(bId);
 			bXY = Number(bXY);
 			op = Number(op);
 			var k7w = new Array();
+			
+
+			if(bId == bidWALL )
+			{
+				if(op == 0)
+					buildWall(1);
+			  if(op == 1)
+					buildWall(2);
+				 if(op == 2)
+					buildWall(3);
+				 if(op == 3)
+					buildWall(4);
+				 return;
+			}
 			//var P5w = Math.floor(currentTime() / (1000)) + bXY;
 			{
 				if (op == 1 && bId >= +TPL) D1F(); // upgrade temple
@@ -53319,22 +53362,20 @@ function outer() {
 					var O5w = 0;
 					var t5w = Number(bam["buildings"][Number(bId)]['proto']);
 					if (
-						bId == h4y - 0 && D6.w == 1 && (bXY != +V5R && bXY != (c5R | 266) && bXY != +u8y && bXY !=
-							+M5R && bXY != s5R >> 489152 && bXY != +Q5R && bXY != (C5R ^ 0) && bXY != +Z5R && H2 != _s(x2R <<
-								35402208))) {
+						bId == h4y - 0 && city.w == 1 && (bXY != +V5R && bXY != (c5R | 266) && bXY != +u8y && bXY !=
+							+M5R && bXY != s5R >> 489152 && bXY != +Q5R && bXY != (C5R ^ 0) && bXY != +Z5R && (!testFlag))) {
 						O5w = 1;
 						Y6(__s[655]);
 					}
-					if (bId == (F4y | 72) && D6.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +
-						u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && H2 !=
-						"TestDummy") {
+					if (bId == (F4y | 72) && city.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +
+						u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && (!testFlag)) {
 						O5w = 1;
 						Y6(__s[655]);
 					}
 					if (bId != +p4y && bId != (r4y & 2147483647) && bId != h4y - 0 && bId != F4y - 0 &&
 						bId != (A4y & 2147483647) && bId != (P4y & 2147483647) && (bXY == +V5R || bXY == (c5R & 2147483647) || bXY == u8y -
 							0 || bXY == (M5R ^ 0) || bXY == (s5R | 67) || bXY == Q5R << 1330269856 || bXY == +C5R || bXY == Z5R <<
-							1362508416) && D6.w == 1 && H2 != "TestDummy") {
+							1362508416) && city.w == 1 && (!testFlag)) {
 						O5w = '1' | 1;
 						Y6(__s[1405]);
 					}
@@ -53355,7 +53396,7 @@ function outer() {
 						bId != +Q1y && bId != Z1y << 518286752 && bId != u1y - 0 && bId != +N1y && bId != +i1y && bId != +q1y &&
 						bId != D1y * 1 && bId != B1y * 1 && bId != +e1y && bId != (y1y ^ 0) && (bXY == p1R * 1 || bXY == z1R <<
 							575091360 || bXY == (n1R ^ 0) || bXY == +d1R || bXY == (323) || bXY == +l1R || bXY == k1R *
-							1 || bXY == o1R * 1 && H2 != "TestDummy")) {
+							1 || bXY == o1R * 1 && (!testFlag))) {
 						O5w = 1;
 						Y6(__s[863]);
 					}
@@ -53367,7 +53408,7 @@ function outer() {
 						S1R | 130) && bXY != +t5R && bXY != +J5R && bXY != (T5R & 2147483647) && bXY != ('433' | 176) && bXY !=
 						x5R - 0 && bXY != +g5R && bXY != W5R << 920500128 && bXY != f5R << 752539296 && bXY != U5R - 0 && bXY != +
 						N0R && bXY != (p1R ^ 0) && bXY != +z1R && bXY != +n1R && bXY != d1R * 1 && bXY != 323 && bXY != +l1R &&
-						bXY != +k1R && bXY != o1R << 1600765280 && H2 != "TestDummy") {
+						bXY != +k1R && bXY != o1R << 1600765280 && (!testFlag)) {
 						O5w = 1;
 						Y6(__s[4062]);
 					}
@@ -53384,7 +53425,7 @@ function outer() {
 									.s6s) || bXY == +T5R || bXY == ('433' | 177) || bXY == x5R << 679735904 || bXY == +g5R || bXY == (
 										W5R & 2147483647) || bXY == f5R >> 1279393504 || bXY == +U5R || bXY == +N0R || bXY == +p1R || bXY ==
 								z1R * 1 || bXY == +n1R || bXY == (d1R | 256) || bXY == (323) || bXY == +l1R || bXY == +k1R ||
-								bXY == o1R >> 119232160 && H2 != "TestDummy")) {
+								bXY == o1R >> 119232160 && (!testFlag))) {
 						O5w = 1;
 						Y6(__s[1664]);
 					}
@@ -53395,26 +53436,26 @@ function outer() {
 						bXY != (S1R | 2) && bXY != +t5R && bXY != (J5R ^ 0) && bXY != T5R * 1 && bXY != 433 && bXY != +x5R &&
 						bXY != +g5R && bXY != +W5R && bXY != +f5R && bXY != +U5R && bXY != N0R - 0 && bXY != p1R * 1 && bXY !=
 						z1R - 0 && bXY != +n1R && bXY != (d1R & 2147483647) && bXY != 323 && bXY != l1R <<
-						611117984 && bXY != +k1R && bXY != o1R << 449644192 && H2 != "TestDummy") {
+						611117984 && bXY != +k1R && bXY != o1R << 449644192 && (!testFlag)) {
 						O5w = 1;
 						Y6(__s[6755]);
 					}
-					if (D6.bd[bXY]["bid"] != 0 && D6.bd[bXY]["bid"] !=
+					if (city.bd[bXY]["bid"] != 0 && city.bd[bXY]["bid"] !=
 						bId) {
 						O5w = 1;
 						Y6(__s[3957]);
 					}
-					for (var H5w = 0; H5w < D6.bq.length; H5w++)
-						if (D6.bq[H5w])
-							if (D6.bq[H5w][__s[+m54]] == bXY)
-								if (D6.bq[H5w][__s[T1m * 1]] != bId) O5w = 1;
-					for (var H5w = 0; H5w < D6.bq.length; H5w++)
-						if (D6.bq[H5w])
-							if (D6.bq[H5w][__s[+m54]] == bXY) {
-								if (D6.bq[H5w][__s[4157]] < D6.bq[H5w][_s(+
+					for (var H5w = 0; H5w < city.bq.length; H5w++)
+						if (city.bq[H5w])
+							if (city.bq[H5w][__s[+m54]] == bXY)
+								if (city.bq[H5w][__s[T1m * 1]] != bId) O5w = 1;
+					for (var H5w = 0; H5w < city.bq.length; H5w++)
+						if (city.bq[H5w])
+							if (city.bq[H5w][__s[+m54]] == bXY) {
+								if (city.bq[H5w][__s[4157]] < city.bq[H5w][_s(+
 									"1381")] && (op == 2 || op == 3)) O5w = "1" | 1;
-								if (D6.bq[H5w][_s(+
-									"4157")] > D6.bq[H5w][__s[1381]] && (op == 0 || op == 1)) O5w = 1;
+								if (city.bq[H5w][_s(+
+									"4157")] > city.bq[H5w][__s[1381]] && (op == 0 || op == 1)) O5w = 1;
 							} if (
 						O5w == 0) {
 						if (bId == +r4y && (bXY == +V5R || bXY == c5R - 0 || bXY == (u8y ^ 0) || bXY == M5R >>
@@ -53446,20 +53487,20 @@ function outer() {
 								.css("display");
 							if (q5w != "none") var I5w = Number($(__s[k04 & 2147483647])
 								.attr('l'));
-							else var I5w = D6.bd[Number(bXY)].bl + 1;
+							else var I5w = city.bd[Number(bXY)].bl + 1;
 							var B5w = Number(I5w) + 1;
 						} else if (op == 4) {
 							var
-								I5w = Number(D6.bd[Number(bXY)].bl) + 1;
+								I5w = Number(city.bd[Number(bXY)].bl) + 1;
 							var B5w = I5w + 1;
 						} else if (op == 2) {
-							var I5w = Number(D6.bd[bXY].bl);
-							for (var H5w in D6.bq) {
-								var D5w = D6.bq[H5w].bspot;
+							var I5w = Number(city.bd[bXY].bl);
+							for (var H5w in city.bq) {
+								var D5w = city.bq[H5w].bspot;
 								if (bXY ==
-									D5w) I5w = Number(D6.bq[H5w].elvl);
+									D5w) I5w = Number(city.bq[H5w].elvl);
 							}
-						} else if (op == 3) var I5w = Number(D6.bd[bXY].bl);
+						} else if (op == 3) var I5w = Number(city.bd[bXY].bl);
 						var
 							K5w = Number(bXY % (A5y << 1341960960));
 						var U5w = Number((bXY - K5w) / (A5y >> 680720320));
@@ -53470,19 +53511,19 @@ function outer() {
 							if (op < 2) {
 								var v5w =
 									Math.ceil(Number(bam["buildings"][Number(bId)]["bc"][Number(I5w)]["tu"]) /
-										(Number(D6.cs) / 100));
+										(Number(city.cs) / 100));
 								if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 							}
 							if (op == '4' -
 								0) {
 								var v5w = Math.ceil(Number(bam["buildings"][Number(bId)]["bc"][Number(I5w)][
-									"tu"]) / (Number(D6.cs) / (100)));
+									"tu"]) / (Number(city.cs) / (100)));
 								if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt
 									.mibt);
 							}
 							if (op == (2)) {
 								var v5w = Math.ceil(Number(bam["buildings"][Number(
-									bId)]["bc"][Number(I5w)]["td"]) / (Number(D6.cs) / 100));
+									bId)]["bc"][Number(I5w)]["td"]) / (Number(city.cs) / 100));
 								if (v5w <
 									Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 							}
@@ -53493,7 +53534,7 @@ function outer() {
 								else {
 									for (var H5w = I5w; H5w >= (1); H5w--) v5w = Number(v5w) + Math.ceil(Number(bam[E6k
 										.S55(Q5y << 62540672)][Number(bId)]["bc"][Number(I5w)]["td"]) /
-										(Number(D6.cs) / (100)));
+										(Number(city.cs) / (100)));
 									if (v5w < Number(ppdt.mibt)) v5w = Number(ppdt.mibt);
 								}
 							}
@@ -53504,27 +53545,27 @@ function outer() {
 							var p5w = v5w;
 							var e7w = Number(p5w) +
 								Number(v5w);
-							var F5w = D6.bq.length;
+							var F5w = city.bq.length;
 							var z5w = Number(bam["buildings"][Number(bId)][E6k
 								.o55(+h6R)][Number(I5w)][__s[m1p >> 1407551456]]);
 							var M5w = Number(bam["buildings"][Number(
 								bId)]["bc"][Number(I5w)][__s[B1p * 1]]);
-							var A5w = Number(D6.r[1].r);
+							var A5w = Number(city.r[1].r);
 							var
-								n5w = Number(D6.r[2].r);
+								n5w = Number(city.r[2].r);
 							if (F5w == (0)) {
 								var L5w = currentTime();
 								var X5w = Number(L5w) +
 									Number(v5w);
 							} else {
-								var L5w = D6.bq[D6.bq.length - (1)].de + (e2R <<
+								var L5w = city.bq[city.bq.length - (1)].de + (e2R <<
 									121836800);
 								var X5w = Number(L5w) + Number(v5w);
 							}
-							var g5w = D6.bq.length;
-							var Y5w = D6.bd[_s(
+							var g5w = city.bq.length;
+							var Y5w = city.bd[_s(
 								I7p << 297920064)].bl;
-							var E5w = D6.bq.length;
+							var E5w = city.bq.length;
 							var N5w = Number(Y5w) * 10;
 							if (x9 == 1) {
 								z5w
@@ -53532,19 +53573,19 @@ function outer() {
 								M5w = 0;
 							}
 							F2 = 0;
-							for (var H5w = 0; H5w < D6.bd.length; H5w++) {
-								var r5w = D6.bd[H5w]
+							for (var H5w = 0; H5w < city.bd.length; H5w++) {
+								var r5w = city.bd[H5w]
 									.bl;
-								var G5w = D6.bd[H5w].bid;
+								var G5w = city.bd[H5w].bid;
 								if (r5w >= 1 && Z2(H5w) && G5w != +TPL && G5w != 891 && G5w != +
 									892 && G5w != 893 && G5w != 894 && G5w != +895 && G5w != +895 && G5w != 896 &&
 									G5w != +897) F2 = F2 + (1);
 							}
-							for (var H5w = 0; H5w < D6.bq.length; H5w++)
-								if (D6.bq[H5w]) {
-									var r5w = D6.bq[H5w].slvl;
-									var m5w = D6.bq[H5w].bspot;
-									var h5w = D6.bq[H5w]
+							for (var H5w = 0; H5w < city.bq.length; H5w++)
+								if (city.bq[H5w]) {
+									var r5w = city.bq[H5w].slvl;
+									var m5w = city.bq[H5w].bspot;
+									var h5w = city.bq[H5w]
 										.brep;
 									if (r5w == 0 && Z2(m5w) && h5w != +G1R && h5w != +C6y && h5w != r1R - 0 &&
 										h5w != +b1R) F2 = F2 + 1;
@@ -53594,7 +53635,7 @@ function outer() {
 												if (!(s7w >= 0)) {
 													s7w = JSON.parse(s7w);
 													s8(z5w, M5w, 0, 0, 0);
-													D6 = s7w;
+													city = s7w;
 	
 													sendBuildingData();
 
@@ -53623,28 +53664,28 @@ function outer() {
 									else if (n5w < M5w && o5w == 0) Y6(__s[+g8y]);
 									else {
 										a5V();
-										var f5w = D6.bd[bXY]["bl"];
-										for (var H5w = 0; H5w < D6.bq
+										var f5w = city.bd[bXY]["bl"];
+										for (var H5w = 0; H5w < city.bq
 											.length; H5w++) {
-											var c5w = D6.bq[H5w][__s[m54 >> 1189872704]];
-											var R5w = D6.bq[H5w][_s(+
+											var c5w = city.bq[H5w][__s[m54 >> 1189872704]];
+											var R5w = city.bq[H5w][_s(+
 												'1381')];
 											if (c5w == bXY)
 												if (R5w > f5w) f5w = R5w;
 										}
 										var w5w = Number(f5w + 1);
 										var d5w = Math.ceil(bam[_s(Q5y *
-											1)][bId]["bc"][w5w]["tu"] / (Number(D6.cs) / 100));
+											1)][bId]["bc"][w5w]["tu"] / (Number(city.cs) / 100));
 										var W5w =
-											Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(D6.cs) / +
+											Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(city.cs) / +
 												"100"));
 										var C5w = 0;
 										if (x9 == ("1" | 1)) w5w = 10;
-										for (var H5w in D6.bq) {
+										for (var H5w in city.bq) {
 											var
-												S5w = D6.bq[H5w].bspot;
-											var Z5w = D6.bq[H5w].slvl;
-											var J5w = D6.bq[H5w].elvl;
+												S5w = city.bq[H5w].bspot;
+											var Z5w = city.bq[H5w].slvl;
+											var J5w = city.bq[H5w].elvl;
 											if (S5w == bXY &&
 												J5w == w5w) C5w = 1;
 											else C5w = 0;
@@ -53676,7 +53717,7 @@ function outer() {
 												if (!(w7w >= 0)) {
 													w7w = JSON.parse(w7w);
 													s8(z5w, M5w, 0, 0, 0);
-													D6 = w7w;
+													city = w7w;
 			 							  sendBuildingData();
 
 													V8();
@@ -53696,16 +53737,16 @@ function outer() {
 									if (!(A5w < z5w && o5w == 0))
 										if (!(n5w < M5w && o5w == 0)) {
 											var w5w = Number(I5w);
-											var d5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["tu"] / (Number(D6.cs) / (100)));
-											var W5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(D6.cs) / 100));
+											var d5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["tu"] / (Number(city.cs) / (100)));
+											var W5w = Math.ceil(bam["buildings"][bId]["bc"][w5w]["td"] / (Number(city.cs) / 100));
 											var
 												C5w = 0;
 											if (x9 == 1) w5w = 10;
-											for (var H5w in D6.bq) {
+											for (var H5w in city.bq) {
 												var
-													S5w = D6.bq[H5w].bspot;
-												var Z5w = D6.bq[H5w].slvl;
-												var J5w = D6.bq[H5w].elvl;
+													S5w = city.bq[H5w].bspot;
+												var Z5w = city.bq[H5w].slvl;
+												var J5w = city.bq[H5w].elvl;
 												if (S5w ==
 													bXY && J5w == w5w) C5w = 1;
 												else C5w = 0;
@@ -53733,7 +53774,7 @@ function outer() {
 													E6k.R6();
 													if (!(l7w >= 0)) {
 														l7w = JSON.parse(l7w);
-														D6 = l7w;
+														city = l7w;
 			  							  sendBuildingData();
 
 														if (o5w == 0) s8(z5w, M5w, 0, 0, 0);
@@ -53755,8 +53796,8 @@ function outer() {
 										1));
 									else if (bId == +bidCASTLE && w5w == 0) Y6(__s[6957]);
 									else {
-										var d5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["tu"] / (Number(D6.cs) / (100)));
-										var W5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["td"] / (Number(D6.cs) / (100)));
+										var d5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["tu"] / (Number(city.cs) / (100)));
+										var W5w = Math.ceil(bam["buildings"][bId]["bc"][I5w]["td"] / (Number(city.cs) / (100)));
 										buildingInfo(bId, w5w, d5w, W5w, bXY);
 										z5w = Number(z5w) / (3);
 										M5w = Number(M5w) / 3;
@@ -53783,7 +53824,7 @@ function outer() {
 											E6k.y6();
 											if (!(x7w >= 0)) {
 												x7w = JSON.parse(x7w);
-												D6 = x7w;
+												city = x7w;
 										  sendBuildingData();
 
 												X2(7);
@@ -53821,7 +53862,7 @@ function outer() {
 									x5w.done(function (o7w) {
 										if (!(o7w >= 0)) {
 											o7w = JSON.parse(o7w);
-											D6 = o7w;
+											city = o7w;
 		   							  sendBuildingData();
 
 											X2(7);
@@ -53842,7 +53883,16 @@ function outer() {
 			}
 		}
 
-		 window['buildop'] = Y2;
+	window['buildop'] = function (bId, bXY, op) 
+   {
+     bId = Number(bId);
+		var nBid = L2( bId );
+		if(nBid != 0 )
+				bId = nBid;
+		buildOp(bId,bXY,op);
+
+   }
+
 		function h7V() { }
 
 		function B5V(w9l, I9l) {
@@ -53915,8 +53965,8 @@ function outer() {
 			if (x3T == 0) return "";
 			else {
 				let icountf = 0;
-				if (ppdt[__s[o7y | 322]])
-					if (ppdt[__s[+o7y]][x3T]) icountf = ppdt[__s[o7y - 0]][x3T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][x3T]) icountf = ppdt["itc"][x3T];
 				var O3T = '';
 				var t3T =
 					"";
@@ -53947,7 +53997,7 @@ function outer() {
 		//    W2.removeTile(z2.getTileX(J7w * (64 * 1)), z2.getTileY(h7w * (64 * 1)), z2);
 		//    W2.removeTile(r2.getTileX(J7w * +64), r2.getTileY(h7w * (64 & 2147483647)), r2);
 		//    W2.removeTile(D2.getTileX(J7w * (64 * 1)), D2.getTileY(h7w * +64), D2);
-		//    var r7w = D6.bd[V7w].bl;
+		//    var r7w = city.bd[V7w].bl;
 		//    var A7w =
 		//      Y8(r7w);
 		//    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), r2);
@@ -53958,7 +54008,7 @@ function outer() {
 		//    W2.removeTile(z2.getTileX(J7w * +64), z2.getTileY(h7w * +64), z2);
 		//    W2.removeTile(r2.getTileX(J7w * (64 - 0)), r2.getTileY(h7w * +64), r2);
 		//    W2.removeTile(D2.getTileX(J7w * +64), D2.getTileY(h7w * +64), D2);
-		//    var r7w = D6.bd[V7w].bl;
+		//    var r7w = city.bd[V7w].bl;
 		//    var A7w = Y8(
 		//      r7w);
 		//    W2.putTile(A7w, z2.getTileX(J7w * +64), z2.getTileY(h7w * (64 >> 20093536)), r2);
@@ -53987,7 +54037,7 @@ function outer() {
 			var H0k = "6519";
 			var w0k = "4465";
 			var j0k = '3006';
-			var i6w = D6.bd[bspotHall]
+			var i6w = city.bd[bspotHall]
 				.bl;
 			var d6w = 0;
 			if (i6w >= (1) && d6w == 0) {
@@ -54262,7 +54312,7 @@ function outer() {
 				$(__s[+H0k])
 					.attr("disabled", !"");
 			}
-			if (D6.ble[1] == 0) {
+			if (city.ble[1] == 0) {
 				$(__s[6696])
 					.attr("disabled", !0);
 				$(__s[g0t ^ 0])
@@ -54278,7 +54328,7 @@ function outer() {
 				$(__s[+G0k])
 					.attr("disabled", !!"1");
 			}
-			if (D6.c == (1)) {
+			if (city.c == (1)) {
 				$(__s[1158])
 					.attr("disabled", !!{});
 				$(__s[5472])
@@ -54467,17 +54517,17 @@ function outer() {
 				var A5Z = S8;
 				var h5Z = A5Z * +A5y + r5Z;
 				var
-					n5Z = Number(D6.bd[h5Z].bl);
-				var J5Z = Number(D6.bd[h5Z].bid);
-				for (var V5Z in D6.bq) {
-					var f5Z = D6.bq[V5Z]
+					n5Z = Number(city.bd[h5Z].bl);
+				var J5Z = Number(city.bd[h5Z].bid);
+				for (var V5Z in city.bq) {
+					var f5Z = city.bq[V5Z]
 						.bspot;
 					if (h5Z == f5Z) {
-						n5Z = Number(D6.bq[V5Z].elvl);
-						J5Z = Number(D6.bq[V5Z].brep);
+						n5Z = Number(city.bq[V5Z].elvl);
+						J5Z = Number(city.bq[V5Z].brep);
 					}
 				}
-				if (J5Z != +BAL && J5Z != (bidCASTLE & 2147483647) && J5Z != +TPL) Y2(J5Z, h5Z,
+				if (J5Z != +BAL && J5Z != (bidCASTLE & 2147483647) && J5Z != +TPL) buildOp(J5Z, h5Z,
 					3);
 			}
 		}
@@ -54843,7 +54893,7 @@ function outer() {
 					if (O5D != 0) var o5D = qam["techTreeSteps"][O5D]["m"][0][_s(
 						b2y * 1)];
 				}
-				X5D = X5D / ((D6[__s[+O1p]][K5D]["s"] + o5D + (100)) / +
+				X5D = X5D / ((city[__s[+O1p]][K5D]["s"] + o5D + (100)) / +
 					"100");
 				if (X5D <= ("1000" | 960)) X5D = 1000;
 				X5D = Math.round(X5D / ("1000" | 104)) * ("1000" | 328);
@@ -54858,28 +54908,28 @@ function outer() {
 					V5D = 0;
 				}
 				var G5D = 0;
-				var U5D = D6.tc.length;
-				var f5D = D6.tq.length;
+				var U5D = city.tc.length;
+				var f5D = city.tq.length;
 				for (var t5D = 0; t5D <
 					U5D; t5D++) {
-					var W5D = D6.tc[t5D] * bam["troops"][t5D][__s[t1R & 2147483647]];
+					var W5D = city.tc[t5D] * bam["troops"][t5D][__s[t1R & 2147483647]];
 					G5D += W5D;
 				}
 				if (f5D >= (1))
 					for (var t5D = 1; t5D < f5D; t5D++) {
-						var B5D = D6.tq[t5D].ttype;
-						var y5D = D6.tq[t5D].tc;
+						var B5D = city.tq[t5D].ttype;
+						var y5D = city.tq[t5D].tc;
 						var W5D =
 							y5D * bam["troops"][B5D][__s[+t1R]];
 						G5D += W5D;
 					}
-				G5D = D6[__s[6626]] - G5D;
+				G5D = city[__s[6626]] - G5D;
 				var p5D = O2();
-				var c5D = D6["r"][
+				var c5D = city["r"][
 					"1" | 1]["r"];
-				var q5D = D6["r"][2]["r"];
+				var q5D = city["r"][2]["r"];
 				var F5D =
-					D6["r"][3]["r"];
+					city["r"][3]["r"];
 				var N5D = ppdt['g'][E6k
 					.o55(+w6y)];
 				var i5D = 0;
@@ -54889,26 +54939,26 @@ function outer() {
 					Y5D = Number(ppdt["bc"]);
 				var D5D = Number(ppdt["bc"]) + Number(i5D);
 				if (
-					J5D > D6["r"][1]["r"] && H2 != "TestDummy") Y6(__s[+x8y]);
-				else if (h5D > D6["r"][3]["r"] && H2 != "TestDummy") Y6(_s(W8y |
+					J5D > city["r"][1]["r"] && (!testFlag)) Y6(__s[+x8y]);
+				else if (h5D > city["r"][3]["r"] && (!testFlag)) Y6(_s(W8y |
 					622));
-				else if (b5D <= 0 && x5D != 0 && H2 != "TestDummy") Y6(__s[F4R & 2147483647]);
-				else if (V5D > ppdt['g'][__s[+w6y]] && H2 != "TestDummy") Y6(__s[805]);
-				else if (S5D > D6["r"][2]["r"] && H2 != "TestDummy") Y6(__s[+g8y]);
-				else if (b5D > G5D && x5D != 0 && H2 != "TestDummy") Y6(__s[6335]);
+				else if (b5D <= 0 && x5D != 0 && (!testFlag)) Y6(__s[F4R & 2147483647]);
+				else if (V5D > ppdt['g'][__s[+w6y]] && (!testFlag)) Y6(__s[805]);
+				else if (S5D > city["r"][2]["r"] && (!testFlag)) Y6(__s[+g8y]);
+				else if (b5D > G5D && x5D != 0 && (!testFlag)) Y6(__s[6335]);
 				else if (i5D > 0 && Number(D5D) > Number(R5D)) Y6(__s['2994' | 2832]);
 				else {
-					var A5D = D6["tq"].length;
+					var A5D = city["tq"].length;
 					if (A5D == 0) {
 						var M5D = currentTime();
 						var r5D = M5D +
 							z5D;
 					} else {
-						var M5D = D6["tq"][A5D - (1)]["de"] + +e2R;
+						var M5D = city["tq"][A5D - (1)]["de"] + +e2R;
 						var r5D = M5D +
 							z5D;
 					}
-					D6["tu"] = D6["tu"] + b5D;
+					city["tu"] = city["tu"] + b5D;
 					var n5D = {
 						tid: Number(p5D),
 						ttype: Number(x5D),
@@ -54931,15 +54981,15 @@ function outer() {
 					P5D.done(function (m5D) {
 						if (m5D == (G8y | 29)) Y6(__s[145]);
 						else if (m5D == 0) {
-							D6["tq"][A5D] = n5D;
+							city["tq"][A5D] = n5D;
 							$(__s[+x0p])
-								.text(D6.tt - D6.tu);
+								.text(city.tt - city.tu);
 							$(__s[+S0k])
 								.val('');
-							D6["r"][1]["r"] = D6["r"][1]["r"] -
+							city["r"][1]["r"] = city["r"][1]["r"] -
 								J5D;
-							D6["r"][2]["r"] = D6["r"][2]["r"] - S5D;
-							D6["r"][3]["r"] = D6["r"][3][E6k
+							city["r"][2]["r"] = city["r"][2]["r"] - S5D;
+							city["r"][3]["r"] = city["r"][3][E6k
 								.S55(+I6y)] - h5D;
 							ppdt['g'][__s[w6y & 2147483647]] = ppdt['g'][__s[+w6y]] - V5D;
 							X2(8);
@@ -54958,20 +55008,20 @@ function outer() {
 				var b5Z = S8;
 				var G5Z = b5Z * (A5y - 0) +
 					d5Z;
-				var C5Z = Number(D6.bd[G5Z].bl);
-				var W5Z = Number(D6.bd[G5Z].bid);
-				for (var i5Z in D6.bq) {
-					var S5Z = D6
+				var C5Z = Number(city.bd[G5Z].bl);
+				var W5Z = Number(city.bd[G5Z].bid);
+				for (var i5Z in city.bq) {
+					var S5Z = city
 						.bq[i5Z].bspot;
 					if (G5Z == S5Z) {
-						C5Z = Number(D6.bq[i5Z].elvl);
-						W5Z = Number(D6.bq[i5Z].brep);
+						C5Z = Number(city.bq[i5Z].elvl);
+						W5Z = Number(city.bq[i5Z].brep);
 					}
 				}
 				if (C5Z > 1) {
 					C5Z = C5Z - (1);
-					Y2(W5Z, G5Z, 2);
-				} else if (W5Z != +BAL) Y2(W5Z, G5Z, 3);
+					buildOp(W5Z, G5Z, 2);
+				} else if (W5Z != +BAL) buildOp(W5Z, G5Z, 3);
 			}
 		}
 		var g7V;
@@ -55134,20 +55184,20 @@ function outer() {
 
 		function Z4F() {
 			E6k.y6();
-			if (D6.tq.length > 0) {
-				for (var a5D = 0; a5D < D6.tq.length; a5D++) {
+			if (city.tq.length > 0) {
+				for (var a5D = 0; a5D < city.tq.length; a5D++) {
 					var
-						E5D = D6.tq[a5D].tid;
-					var j7D = D6.tq[a5D].ttype;
+						E5D = city.tq[a5D].tid;
+					var j7D = city.tq[a5D].ttype;
 					var t7D = bam["troops"][Number(j7D)]
 						.tn;
 					var O7D = bam["troops"][Number(j7D)][__s[+c1R]];
-					var u7D = D6.tq[a5D].tc;
+					var u7D = city.tq[a5D].tc;
 					var
-						I7D = D6.tq[a5D].ds;
-					var e7D = D6.tq[a5D].de;
-					var w7D = D6.tq[a5D].bt;
-					var s7D = D6.tq[a5D].pa;
+						I7D = city.tq[a5D].ds;
+					var e7D = city.tq[a5D].de;
+					var w7D = city.tq[a5D].bt;
+					var s7D = city.tq[a5D].pa;
 					var b7D =
 						e7D - I7D;
 					var x7D = new Date(e7D);
@@ -55185,7 +55235,7 @@ function outer() {
 
 					let Y7D = 0;
 					try {
-						Y7D = D6.tq[0]['de']; // queue finished time
+						Y7D = city.tq[0]['de']; // queue finished time
 					}
 					catch (e) {
 						console.log("Error!!");
@@ -55195,17 +55245,17 @@ function outer() {
 					let B7D =
 						Y7D - R7D;
 					if (Number(k7D) > 1000) // this is when the queue is ready?
-						if (D6["itu"])
-							if (D6["itu"][7])
-								if (D6["itu"][7] > 0) {
-									var y7D = D6["itu"][7];
+						if (city["itu"])
+							if (city["itu"][7])
+								if (city["itu"][7] > 0) {
+									var y7D = city["itu"][7];
 									var D7D = Number(k7D) -
 										B7D;
 									if (y7D >= D7D) {
-										D6["itu"][7] = D6["itu"][7] - D7D;
+										city["itu"][7] = city["itu"][7] - D7D;
 										B7D = Number(k7D) - (2000);
 									} else {
-										D6["itu"][7] = "0";
+										city["itu"][7] = "0";
 										l7D = Number(l7D) - y7D;
 										B7D = Number(R7D) - Number(l7D);
 									}
@@ -55224,9 +55274,9 @@ function outer() {
 						$(__s[6526])
 							.first()
 							.remove();
-						//           if (D6.tq[0].tm < D6.tq[0].tc) var q7D = Number(D6.tq[0].tc) - Number(D6.tq[0].tm);
+						//           if (city.tq[0].tm < city.tq[0].tc) var q7D = Number(city.tq[0].tc) - Number(city.tq[0].tm);
 						try {
-							D6.tq.splice(0, 1);
+							city.tq.splice(0, 1);
 						}
 						catch (eee) { }
 						m9();
@@ -55239,20 +55289,20 @@ function outer() {
 				}
 
 				function T7D() {
-					C7D = D6.tq[0].tid;
-					o7D = D6.tq[0].bt;
+					C7D = city.tq[0].tid;
+					o7D = city.tq[0].bt;
 					E6k.R6();
-					G7D = D6.tq[0].ds;
-					M7D = D6.tq[0].de;
-					L7D = D6.tq[0].tc;
-					H7D = D6.tq[0].ttype;
-					s7D = D6.tq[0].pa;
+					G7D = city.tq[0].ds;
+					M7D = city.tq[0].de;
+					L7D = city.tq[0].tc;
+					H7D = city.tq[0].ttype;
+					s7D = city.tq[0].pa;
 					if (s7D == ("1" | 1)) {
 						$(__s[3372])
 							.first()
 							.html(__s[5726]);
-						W7D = D6[__s[+s8y]][Number(H7D)];
-						i7D = D6["th"][Number(H7D)];
+						W7D = city[__s[+s8y]][Number(H7D)];
+						i7D = city["th"][Number(H7D)];
 						l7D = G7D;
 						k7D = o7D;
 						Q7D = Math.floor(k7D / 100);
@@ -55262,7 +55312,7 @@ function outer() {
 				}
 				var X7D = $(__s[6526])
 					.length;
-				if (X7D == (0) || D6.tq.length == 1) {
+				if (X7D == (0) || city.tq.length == 1) {
 					b9 = 0;
 					N9 = 0;
 				}
@@ -55290,18 +55340,18 @@ function outer() {
 
 					if (o7D > +
 						"1000")
-						var f7D = D6.tq.length > 0 ? D6.tq[0].tm : 0;
+						var f7D = city.tq.length > 0 ? city.tq[0].tm : 0;
 					if (A7D > f7D) {
 						var n7D = Math.floor(Number(A7D) - Number(f7D));
-						var U7D = Number(D6.tc[Number(H7D)]) +
+						var U7D = Number(city.tc[Number(H7D)]) +
 							n7D;
-						var P7D = Number(D6.th[Number(H7D)]) + n7D;
-						if (D6.tq.length > 0) {
-							D6.tq[0].tm = Number(D6.tq[0].tm) + Number(n7D);
-							var g7D = Number(D6.tq[0].tc) -
-								Number(D6.tq[0].tm);
-							if (D6.tq[0].tm <= D6.tq[0].tc) {
-								D6.tq[0].tl = g7D;
+						var P7D = Number(city.th[Number(H7D)]) + n7D;
+						if (city.tq.length > 0) {
+							city.tq[0].tm = Number(city.tq[0].tm) + Number(n7D);
+							var g7D = Number(city.tq[0].tc) -
+								Number(city.tq[0].tm);
+							if (city.tq[0].tm <= city.tq[0].tc) {
+								city.tq[0].tl = g7D;
 								m9();
 								B0F();
 							}
@@ -55329,14 +55379,14 @@ function outer() {
 		var f7V;
 
 		function q4V() {
-			var I41 = D6.th.length;
+			var I41 = city.th.length;
 			E6k.R6();
 			var j41;
 			var w41;
 			var v41;
 			for (var H41 = 0; H41 < I41; H41++) {
-				j41 = D6.th[H41];
-				w41 = D6.tc[H41];
+				j41 = city.th[H41];
+				w41 = city.tc[H41];
 				v41 = j41 + __s[g9R | 0] + w41;
 				$(__s[5567] + H41)
 					.text(p6(j41));
@@ -55371,16 +55421,16 @@ function outer() {
 		var S8 = 0;
 
 		function m9() {
-			for (var o4D = 0; o4D < D6.tc.length; o4D++) {
-				var z4D = Number(D6.tc[o4D]);
+			for (var o4D = 0; o4D < city.tc.length; o4D++) {
+				var z4D = Number(city.tc[o4D]);
 				$(__s[3018] + o4D)
 					.text(p6(z4D));
 				var L4D = 0;
-				for (var X4D = 0; X4D < D6.tq.length; X4D++) {
-					var M4D = D6.tq[X4D]
+				for (var X4D = 0; X4D < city.tq.length; X4D++) {
+					var M4D = city.tq[X4D]
 						.ttype;
 					if (M4D == o4D) {
-						var G4D = D6.tq[X4D].tl;
+						var G4D = city.tq[X4D].tl;
 						L4D = Number(L4D) + Number(G4D);
 					}
 				}
@@ -55627,12 +55677,12 @@ function outer() {
 		}
 
 		function x5V(d1w, W1w, i1w, b1w, z1w, M1w, G1w) {
-			var T1w = D6.r[1].r;
-			var x1w = D6.r[2]
+			var T1w = city.r[1].r;
+			var x1w = city.r[2]
 				.r;
-			var O1w = D6.r[3].r;
+			var O1w = city.r[3].r;
 			E6k.R6();
-			var Q1w = D6.r[4].r;
+			var Q1w = city.r[4].r;
 			var t1w = ppdt.g.t;
 			var w1w = T1w + d1w;
 			var j1w = x1w + W1w;
@@ -55640,10 +55690,10 @@ function outer() {
 				i1w;
 			var v1w = Q1w + b1w;
 			var l1w = t1w + z1w;
-			D6.r[1].r = w1w;
-			D6.r[2].r = j1w;
-			D6.r[3].r = I1w;
-			D6.r[4].r = v1w;
+			city.r[1].r = w1w;
+			city.r[2].r = j1w;
+			city.r[3].r = I1w;
+			city.r[4].r = v1w;
 			ppdt.g.t = l1w;
 			var o1w = { i: I1w, f: v1w, a: M1w, b: G1w, s: j1w, g: l1w, w: w1w };
 			var L1w = _s(+
@@ -55768,17 +55818,17 @@ function outer() {
 		//  var F3U = $.post("/includes/" +"gC.php", { a: N3U });
 		//  F6();
 		//  F3U.done(function(k1U) {
-		//      D6 = JSON.parse(k1U); 
+		//      city = JSON.parse(k1U); 
 		//      gCPosted();
 		//    if ($("#citySpotMenu")
 		//      .is(":visible")) {
-		//      var c3U = D6["bd"][Number(d2)]["bid"];
+		//      var c3U = city["bd"][Number(d2)]["bid"];
 		//      var m3U =
-		//        D6["bd"][Number(d2)]["bl"];
+		//        city["bd"][Number(d2)]["bl"];
 		//      var a3U = Math.ceil(bam["buildings"][c3U][E6k
-		//        .o55(h6R | 2049)][m3U]["tu"] / (Number(D6.cs) / 100));
+		//        .o55(h6R | 2049)][m3U]["tu"] / (Number(city.cs) / 100));
 		//      var E3U = Math.ceil(bam[
-		//        "buildings"][c3U]["bc"][m3U]["td"] / (Number(D6.cs) / 100));
+		//        "buildings"][c3U]["bc"][m3U]["td"] / (Number(city.cs) / 100));
 		//      v9(c3U, m3U, a3U, E3U, d2);
 		//      e3F(d2);
 		//    }
@@ -55848,10 +55898,10 @@ function outer() {
 
 		function t9F() {
 			E6k.R6();
-			if (D6.w == 1) {
+			if (city.w == 1) {
 				$(__s[6405])
 					.show();
-				if (D6["bd"][0]["bl"] >= 1) $(__s[+f1p])
+				if (city["bd"][0]["bl"] >= 1) $(__s[+f1p])
 					.removeClass()
 					.addClass(__s[2247]);
 				else $(__s[+f1p])
@@ -55860,7 +55910,7 @@ function outer() {
 			} else {
 				$(__s[6405])
 					.hide();
-				if (D6["bd"][0]["bl"] >= 1) $(__s[f1p << 1798645888])
+				if (city["bd"][0]["bl"] >= 1) $(__s[f1p << 1798645888])
 					.removeClass()
 					.addClass(__s[1492]);
 				else $(__s[f1p ^ 0])
@@ -55871,7 +55921,7 @@ function outer() {
 
 		function s0F() {
 			// var P3g = arguments.callee.caller.name;
-			buildQueueDirty = false;
+	//		buildQueueDirty = false;
 			$("#buildTableb")
 				.html('');
 			k1F();
@@ -55903,7 +55953,7 @@ function outer() {
 
 		function O3F() {
 			$(__s[2277])
-				.text(D6[__s[+I5R]]);
+				.text(city[__s[+I5R]]);
 			$("#incoinfoPage")
 				.show();
 			E6k.R6();
@@ -56013,8 +56063,8 @@ function outer() {
 
 		function d3F(D31) {
 			if (D31.cid == cid) {
-				var Y31 = D6.bq;
-				var F31 = D6.tq;
+				var Y31 = city.bq;
+				var F31 = city.tq;
 				// build speedup
 				if (D31.hasOwnProperty(_s(
 					2092))) R6F(D31[__s[2092]]);
@@ -56023,25 +56073,25 @@ function outer() {
 					.S55(111)]);
 				var N31 = {};
 				// merge and overwrite
-				for (var p31 in D6) N31[p31] = D6[p31];
+				for (var p31 in city) N31[p31] = city[p31];
 				for (var p31 in D31) N31[p31] = D31[p31];
-				D6 = N31;
-				//if (D6.pid != ppdt.pid)
+				city = N31;
+				//if (city.pid != ppdt.pid)
 				//	if (ppdt.pid != 2 && ppdt.pn != __s[2473]) 
 				//			a7F();
 				
-				//	if (JSON.stringify(D6.bq) != JSON.stringify(Y31)) {
+				//	if (JSON.stringify(city.bq) != JSON.stringify(Y31)) {
 				//		buildQueueDirty = true;
 				//		
-					//	if (D6.bq.length > 0) {
+					//	if (city.bq.length > 0) {
 						//	V8();
 					//	}
 
 					
 				//} else if (Y31.length > (0)) s0F();
 				J2();
-				if (D6.tq.length > (0)) {
-					if (JSON.stringify(D6.tq) != JSON.stringify(F31)) {
+				if (city.tq.length > (0)) {
+					if (JSON.stringify(city.tq) != JSON.stringify(F31)) {
 						$(_s(
 							1125))
 							.html('');
@@ -56122,7 +56172,7 @@ function outer() {
 		function G9(U19) {
 			var f19 = { a: cid, b: U19 };
 			$(__s[2277])
-				.text(D6[__s[I5R * 1]]);
+				.text(city[__s[I5R * 1]]);
 			$(__s[3179])
 				.html("");
 			$(__s[1909])
@@ -56447,11 +56497,11 @@ function outer() {
 				.val();
 			E6k.R6();
 			var c72 = "";
-			for (var N72 = 0; N72 < D6.tc.length; N72++)
+			for (var N72 = 0; N72 < city.tc.length; N72++)
 				if (N72 != 0 && N72 != 1 && N72 != 7 && N72 != 12 && N72 != (m2y & 2147483647) && N72 != (17 & E6k
 					.s6s)) {
-					var m72 = D6.tc[N72];
-					var e42 = Math.floor(Number(D6.th[N72]) * F72 / k42);
+					var m72 = city.tc[N72];
+					var e42 = Math.floor(Number(city.th[N72]) * F72 / k42);
 					var a72 = bam[E6k
 						.S55(4619)][N72][__s[c1R << 562136256]];
 					var E72 = bam["troops"][N72][_s(+
@@ -56538,21 +56588,21 @@ function outer() {
 		let U1FTimeout = undefined;
 		function U1F() {
 			try {
-				if (!D6[__s[5932]]) D6[__s[5932]] = Math.round(currentTime() / ("1000" ^
+				if (!city[__s[5932]]) city[__s[5932]] = Math.round(currentTime() / ("1000" ^
 					0));
-				var N1w = D6.r[1].g;
-				var p1w = D6.r[2].g;
-				var Y1w = D6.r[3].g;
-				var F1w = D6.r[4]
+				var N1w = city.r[1].g;
+				var p1w = city.r[2].g;
+				var Y1w = city.r[3].g;
+				var F1w = city.r[4]
 					.g;
 				var q1w = ppdt.g.b;
-				var c1w = D6.r[1].r;
-				var m1w = D6.r[2].r;
-				var a1w = D6.r[3]
+				var c1w = city.r[1].r;
+				var m1w = city.r[2].r;
+				var a1w = city.r[3]
 					.r;
-				var E1w = D6.r[4].r;
+				var E1w = city.r[4].r;
 				var w6w = ppdt.g.t;
-				var K1w = Math.round(currentTime() / 1000) - D6[E6k
+				var K1w = Math.round(currentTime() / 1000) - city[E6k
 					.S55(5932)];
 				var v6w = Number(N1w) / +K0R / (K0R - 0) * K1w;
 				var l6w = Number(p1w) / (K0R ^ 0) / (
@@ -56561,11 +56611,11 @@ function outer() {
 				var y1w = Number(F1w) / (
 					K0R - 0) / (K0R | 12) * K1w;
 				var D1w = Number(q1w) / +K0R / +K0R * K1w;
-				var n1w = D6.st['1' <<
+				var n1w = city.st['1' <<
 					858841184];
-				var f1w = D6.st[2];
-				var A1w = D6.st[3];
-				var r1w = D6.st[4];
+				var f1w = city.st[2];
+				var A1w = city.st[3];
+				var r1w = city.st[4];
 				var S1w = v6w +
 					c1w;
 				var J1w = l6w + m1w;
@@ -56579,7 +56629,7 @@ function outer() {
 					.html(p6(Math.floor(k6w)));
 				$(__s[5132])
 					.html(p6(Math.floor(e6w)));
-				if (ppdt[__s[V9y * 1]][1] * 1000 >= currentTime() && D6[_s(O1p >>
+				if (ppdt[__s[V9y * 1]][1] * 1000 >= currentTime() && city[_s(O1p >>
 					191527936)][3][__s[w6y & 2147483647]] == 10) {
 					if (S1w >= n1w - 1000) S1w = n1w - 1000;
 					else if (S1w >= n1w) S1w = n1w;
@@ -56663,18 +56713,18 @@ function outer() {
 				var H6w = A1w - h1w -
 					D8;
 				var j6w = r1w - V1w - z8;
-				D6.r[1].r = S1w;
-				D6.r[2].r = J1w;
-				D6.r[3].r = h1w;
-				D6.r[4].r = V1w;
+				city.r[1].r = S1w;
+				city.r[2].r = J1w;
+				city.r[3].r = h1w;
+				city.r[4].r = V1w;
 				ppdt.g.t = U1w;
-				if (D6.bq.length > (0))
-					for (var g1w in D6.bq)
-						if (D6.bq[g1w][__s[6995]] == 0) {
-							var P1w = D6.bq[g1w][__s[+T1m]];
+				if (city.bq.length > (0))
+					for (var g1w in city.bq)
+						if (city.bq[g1w][__s[6995]] == 0) {
+							var P1w = city.bq[g1w][__s[+T1m]];
 							var B1w =
-								D6.bq[g1w][__s[1381]];
-							var Z1w = D6.bq[g1w]["bid"];
+								city.bq[g1w][__s[1381]];
+							var Z1w = city.bq[g1w]["bid"];
 							var Q6w = Math.floor(
 								bam["buildings"][Number(P1w)]["bc"][Number(B1w)][__s[m1p * 1]]);
 							var I6w =
@@ -56687,20 +56737,20 @@ function outer() {
 							} else if ($(__s[3903] + Z1w)
 								.is(__s[469]) === !!1) $(__s[3903] + Z1w)
 									.attr("disabled", !!0);
-						} if (D6.r[1].r < 0) {
-							D6.r[1].r = 0;
+						} if (city.r[1].r < 0) {
+							city.r[1].r = 0;
 							S1w = 0;
 						}
-				if (D6.r[2].r < 0) {
-					D6.r[2].r = 0;
+				if (city.r[2].r < 0) {
+					city.r[2].r = 0;
 					J1w = 0;
 				}
-				if (D6.r[3].r < 0) {
-					D6.r[3].r = 0;
+				if (city.r[3].r < 0) {
+					city.r[3].r = 0;
 					h1w = 0;
 				}
-				if (D6.r[4].r < 0) {
-					D6.r[4].r = 0;
+				if (city.r[4].r < 0) {
+					city.r[4].r = 0;
 					V1w = 0;
 				}
 				$(__s[+O5y])
@@ -56739,7 +56789,7 @@ function outer() {
 					$(__s[4916])
 						.html(p6(Math.floor(j6w)));
 				}
-				D6[__s[5932]] = Math.round(currentTime() / (1000));
+				city[__s[5932]] = Math.round(currentTime() / (1000));
 				if ($("#citySpotMenu").css("display") != "none")
 					if ($(__s[+k04])
 						.attr("s") == 0) wallspot();
@@ -56763,18 +56813,18 @@ function outer() {
 		}
 
 		function k7V(H4D, t4D) {
-			for (var c7D = 0; c7D < D6.tq.length; c7D++)
-				if (H4D == D6.tq[c7D].tid) var E7D = c7D;
+			for (var c7D = 0; c7D < city.tq.length; c7D++)
+				if (H4D == city.tq[c7D].tid) var E7D = c7D;
 			N6();
 			var O4D = $.post("/includes/" + __s[523], { a: H4D, cid: cid });
 			$(__s[2039] + E7D + ")")
 				.remove();
 			$("#a" + H4D)
 				.remove();
-			var e4D = D6.tq[Number(E7D)].ttype;
+			var e4D = city.tq[Number(E7D)].ttype;
 			var x4D = $(__s['3919' | 3853] + E7D + ")")
 				.text();
-			var k4D = D6.tq[E7D].tl;
+			var k4D = city.tq[E7D].tl;
 			var l4D = bam["troops"][Number(e4D)][__s[e1p | 9]] * k4D;
 			var
 				I4D = bam["troops"][Number(e4D)]["sc"] * k4D;
@@ -56782,14 +56832,14 @@ function outer() {
 				Number(e4D)][__s[L1p >> 770682752]] * k4D;
 			var v4D = bam["troops"][Number(e4D)][__s[+y1p]] *
 				k4D;
-			D6.tu = D6.tu - k4D;
+			city.tu = city.tu - k4D;
 			A9(l4D, I4D, T4D, 0, v4D);
 			var s4D = 0;
-			D6.tq.splice(E7D, 1);
-			if (D6.tq.length > 0)
-				for (var c7D = 0; c7D < D6.tq.length; c7D++) {
-					var w4D = D6.tq[c7D].bt;
-					var u4D = D6.tq[c7D].tid;
+			city.tq.splice(E7D, 1);
+			if (city.tq.length > 0)
+				for (var c7D = 0; c7D < city.tq.length; c7D++) {
+					var w4D = city.tq[c7D].bt;
+					var u4D = city.tq[c7D].tid;
 					if (
 						c7D == 0) {
 						var a7D = currentTime();
@@ -56800,8 +56850,8 @@ function outer() {
 						var m7D = a7D + w4D;
 						s4D = m7D;
 					}
-					D6.tq[c7D].ds = a7D;
-					D6.tq[c7D].de = m7D;
+					city.tq[c7D].ds = a7D;
+					city.tq[c7D].de = m7D;
 					$("#a" + u4D)
 						.attr("st", a7D);
 					$("#a" + u4D)
@@ -56986,8 +57036,8 @@ function outer() {
 
 		function e0V() {
 			var I3g = 8;
-			if (D6.ble[2] == 0) var I3g = D6.ble[4];
-			else var I3g = D6.ble[2];
+			if (city.ble[2] == 0) var I3g = city.ble[4];
+			else var I3g = city.ble[2];
 			E6k.R6();
 			var v3g = shrinesarr[I3g]["simg"];
 			return v3g;
@@ -57158,10 +57208,10 @@ function outer() {
 				} else if (ppdt.r == 8) { var x1T = U6y >> 2020526208; var O1T = 121; } else if (ppdt.r == ("9" ^
 					0)) { var x1T = +z1R; var O1T = 122; } icountw = 0;
 				icounts = 0;
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[o7y & 2147483647]][x1T]) icountw = ppdt[__s[o7y - 0]][x1T];
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[o7y - 0]][O1T]) icounts = ppdt[__s[o7y - 0]][O1T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][x1T]) icountw = ppdt["itc"][x1T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][O1T]) icounts = ppdt["itc"][O1T];
 				if (icountw == 0) {
 					$(_s(
 						+r4k))
@@ -57386,17 +57436,17 @@ function outer() {
 					var E2g = $(__s[+k04])
 						.attr("s");
 					var m2g = 0;
-					if (m2g == 0 || m2g == undefined || m2g == __s[+h2R]) m2g = D6.bd[Number(E2g)].bid;
+					if (m2g == 0 || m2g == undefined || m2g == __s[+h2R]) m2g = city.bd[Number(E2g)].bid;
 					if (m2g == 0 || m2g == undefined || m2g == "undefined")
-						for (var a2g = 0; a2g < D6.bq.length; a2g++) {
-							var k8g = D6.bq[a2g][__s[m54 & 2147483647]];
+						for (var a2g = 0; a2g < city.bq.length; a2g++) {
+							var k8g = city.bq[a2g][__s[m54 & 2147483647]];
 							if (
-								k8g == E2g) m2g = D6.bq[a2g][__s[+T1m]];
+								k8g == E2g) m2g = city.bq[a2g][__s[+T1m]];
 						}
 					if (L2(m2g) != (0)) m2g = L2(m2g);
-					if (m2g == bidWALL - 0) C5F(2); // upgrade
+					if (m2g == bidWALL - 0) buildWall(2); // upgrade
 					else if (m2g == +TPL) D1F();
-					else Y2(m2g, E2g, 1);
+					else buildOp(m2g, E2g, 1);
 				}
 			});
 		$(__s[+h04])
@@ -57438,7 +57488,7 @@ function outer() {
 		//function T7V() {
 		//  w3F.destroy(!!1);
 		//  E2.destroy(!![]);
-		//  if (D6.w == 0) W2.addTilesetImage(__s[176], _s(+
+		//  if (city.w == 0) W2.addTilesetImage(__s[176], _s(+
 		//    '5813'));
 		//  else W2.addTilesetImage(__s[176], __s[5630]);
 		//  w3F = W2.createLayer(__s[4193]);
@@ -57451,13 +57501,13 @@ function outer() {
 						.attr("s");
 					var T8g = 0;
 					if (T8g == 0 || T8g == undefined || T8g == E6k
-						.S55(h2R >> 1320820960)) T8g = D6.bd[Number(O8g)].bid;
+						.S55(h2R >> 1320820960)) T8g = city.bd[Number(O8g)].bid;
 					if (T8g == (0) || T8g == undefined ||
 						T8g == "undefined")
-						for (var x8g = 0; x8g < D6.bq.length; x8g++) {
-							var t8g = D6.bq[x8g][__s[+m54]];
+						for (var x8g = 0; x8g < city.bq.length; x8g++) {
+							var t8g = city.bq[x8g][__s[+m54]];
 							if (
-								t8g == O8g) T8g = D6.bq[x8g][__s[T1m >> 1650336544]];
+								t8g == O8g) T8g = city.bq[x8g][__s[T1m >> 1650336544]];
 						}
 					if (L2(T8g) != 0) T8g = L2(T8g);
 					var X8g = Number(bam["buildings"][Number(T8g)]['proto']);
@@ -57490,22 +57540,21 @@ function outer() {
 				if (!(d8g.originalEvent === "bad")) {
 					var i8g = $("#buildingDowngradeButton")
 						.attr("s");
-					var W8g = D6.bd[i8g].bid;
+					var W8g = city.bd[i8g].bid;
 					if (L2(W8g) != (0)) W8g = L2(W8g);
-					if (W8g == (
-						bidWALL ^ 0)) C5F(3); // downgrade
-					else Y2(W8g, i8g, 2);
+					if (W8g == (bidWALL)) buildWall(3); // downgrade
+					else buildOp(W8g, i8g, 2);
 				}
 			});
 
 		function S2(g2Z) {
-			var f2Z = Math.floor(D6.crt);
-			var M2Z = Math.floor(D6.crth);
-			var P2Z = Math.floor(D6.crtu);
+			var f2Z = Math.floor(city.crt);
+			var M2Z = Math.floor(city.crth);
+			var P2Z = Math.floor(city.crtu);
 			var
-				n2Z = Math.floor(D6.shp);
-			var z2Z = Math.floor(D6.shph);
-			var Z2Z = Math.floor(D6.shpu);
+				n2Z = Math.floor(city.shp);
+			var z2Z = Math.floor(city.shph);
+			var Z2Z = Math.floor(city.shpu);
 			var i2Z = Number(
 				z2Z) * (D5y - 0);
 			var d2Z = Number(M2Z) * 1000;
@@ -57575,12 +57624,12 @@ function outer() {
 			if (j2Z == "") j2Z = 0;
 			var V2Z = Number(
 				I2Z) + Number(v2Z) + Number(H2Z) + Number(j2Z);
-			var b2Z = Math.floor(D6["r"][1][E6k
+			var b2Z = Math.floor(city["r"][1][E6k
 				.o55(+I6y)]) - 1;
-			var J2Z = Math.floor(D6["r"]['2' | 2]["r"]) - ('1' -
+			var J2Z = Math.floor(city["r"]['2' | 2]["r"]) - ('1' -
 				0);
-			var C2Z = Math.floor(D6["r"][3]["r"]) - (1);
-			var G2Z = Math.floor(D6[E6k
+			var C2Z = Math.floor(city["r"][3]["r"]) - (1);
+			var G2Z = Math.floor(city[E6k
 				.o55(+I6y)][4]["r"]) - 1;
 			var l2Z = $("#landseasendres")
 				.val();
@@ -57927,11 +57976,11 @@ function outer() {
 				if (!(J8g.originalEvent === "bad")) {
 					var S8g = $("#buildingDemolishButton") //  "#buildingDemolishButton"
 						.attr("s");
-					var b8g = D6.bd[S8g].bid;
+					var b8g = city.bd[S8g].bid;
 					if (L2(b8g) != (0)) b8g = L2(b8g);
 					if (b8g ==
-						bidWALL >> 1938472320) C5F(4); // demo
-					else Y2(b8g, S8g, 3);
+						bidWALL >> 1938472320) buildWall(4); // demo
+					else buildOp(b8g, S8g, 3);
 				}
 			});
 
@@ -57960,7 +58009,7 @@ function outer() {
 								{
 									wrapper.citydata = {} as jsonT.City;
 								}
-								wrapper.citydata.bd = D6.bd;
+								wrapper.citydata.bd = city.bd;
 		// share string
 								
 							}
@@ -57971,7 +58020,7 @@ function outer() {
 								{
 									wrapper.citydata = {} as jsonT.City;
 								}
-							 wrapper.citydata.sts = D6.sts;
+							 wrapper.citydata.sts = city.sts;
 						}
 						
 					
@@ -57982,14 +58031,14 @@ function outer() {
 							{
 								wrapper.citydata = {};
 							}
-							wrapper.citydata.bq = D6.bq;
+							wrapper.citydata.bq = city.bq;
 							
 						}
 					
 			
 						let troopsHome = 0;
 						for (let it = 0; it < 17; ++it) {
-							troopsHome += D6['th'][it];
+							troopsHome += city['th'][it];
 						}
 						// only if raids have come home
 						if (lastCid != cid) {
@@ -58004,20 +58053,20 @@ function outer() {
 									{
 										wrapper.citydata = {};
 									}
-									wrapper.citydata.comm= D6.comm;
-									wrapper.citydata.th= D6.th;
-									wrapper.citydata.tc= D6.tc;
+									wrapper.citydata.comm= city.comm;
+									wrapper.citydata.th= city.th;
+									wrapper.citydata.tc= city.tc;
 									wrapper.citydata.ts= 1;
 									
 								
-									if (D6.hasOwnProperty('trin') && D6.trin.length > 0) {
-										wrapper.citydata.trin = D6.trin;
+									if (city.hasOwnProperty('trin') && city.trin.length > 0) {
+										wrapper.citydata.trin = city.trin;
 									}
-									if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
-										wrapper.citydata.trintr = D6.trintr;
+									if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
+										wrapper.citydata.trintr = city.trintr;
 									}
-									if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
-										wrapper.citydata.triin = D6.triin;
+									if (city.hasOwnProperty('triin') && city.triin.length > 0) {
+										wrapper.citydata.triin = city.triin;
 									}
 		
 							
@@ -58172,7 +58221,7 @@ function outer() {
 						if(wrapper.hasOwnProperty("citydata"))
 						{
 							wrapper.citydata.cid = cid;
-							wrapper.citydata.pid = D6.pid; // in some cases this is not ours
+							wrapper.citydata.pid = city.pid; // in some cases this is not ours
 						}
 						window['external']['notify'](JSON.stringify(wrapper));
 					}
@@ -58342,7 +58391,7 @@ function outer() {
 						}
 					} else {
 						L0F(1, g6B, Z6B);
-						D6 = JSON.parse(H2B);
+						city = JSON.parse(H2B);
 					  sendBuildingData();
 						J2();
 						for (var j2B = 1; j2B < (u7y & 2147483647); j2B++) {
@@ -58537,15 +58586,15 @@ function outer() {
 		function s9() {
 			var W8w;
 			var C8w = 0;
-			var i8w = D6.bd.length;
+			var i8w = city.bd.length;
 			for (var G8w = 0; G8w < i8w; G8w++) {
-				W8w = D6
+				W8w = city
 					.bd[G8w]["bid"];
-				if (W8w == +bidCASTLE) C8w = D6.bd[G8w]["bl"];
+				if (W8w == +bidCASTLE) C8w = city.bd[G8w]["bl"];
 			}
 			var d8w = 5 + C8w;
 			var b8w =
-				D6.comm;
+				city.comm;
 			var S8w = d8w - b8w;
 			return S8w;
 		}
@@ -58565,8 +58614,8 @@ function outer() {
 			if (u3T == 0) return '';
 			else {
 				icountf = 0;
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[+o7y]][u3T]) icountf = ppdt[__s[o7y & 2147483647]][u3T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][u3T]) icountf = ppdt["itc"][u3T];
 				var j3T = '';
 				var
 					H3T = '';
@@ -58604,7 +58653,7 @@ function outer() {
 				if (!(A8g.originalEvent === "bad")) {
 					var h8g = $("#buildingMoveButton")
 						.attr("s");
-					var V8g = D6.bd[h8g].bid;
+					var V8g = city.bd[h8g].bid;
 					if (L2(V8g) != 0) V8g = L2(V8g);
 					u7F = bam["buildings"][V8g][__s[3216]];
 					g2 = 1;
@@ -58682,45 +58731,45 @@ function outer() {
 				$(__s[+v4k])
 					.css(__s[+b9R], __s[w4k >> 134614528]);
 			} else if ($(__s[2336])
-				.prop(__s[286]) == !"" && Math.floor(D6.r[1]["r"] / 1000) < Number(O22)) {
+				.prop(__s[286]) == !"" && Math.floor(city.r[1]["r"] / 1000) < Number(O22)) {
 				Y6(E6k
 					.o55(+x8y));
 				$(__s[H5t & 2147483647])
 					.css(__s[+b9R], __s[w4k ^ 0]);
 			} else if ($(__s[1313])
-				.prop(__s[286]) == !!{} && Math.floor(D6.r[2]["r"] / 1000) < Number(O22)) {
+				.prop(__s[286]) == !!{} && Math.floor(city.r[2]["r"] / 1000) < Number(O22)) {
 				Y6(_s(
 					+g8y));
 				$(__s[+H5t])
 					.css(__s[+b9R], __s[+w4k]);
 			} else if ($(__s[2212])
-				.prop(__s[286]) == !"" && Math.floor(D6.r[3]["r"] / (1000)) < Number(
+				.prop(__s[286]) == !"" && Math.floor(city.r[3]["r"] / (1000)) < Number(
 					O22)) {
 				Y6(__s[+W8y]);
 				$(__s[+H5t])
 					.css(__s[+b9R], __s[w4k ^ 0]);
 			} else if ($(__s[6237])
-				.prop(__s[286]) == !0 && Math.floor(D6.r[4]["r"] / 1000) < Number(O22)) {
+				.prop(__s[286]) == !0 && Math.floor(city.r[4]["r"] / 1000) < Number(O22)) {
 				Y6(_s(
 					f8y ^ 0));
 				$(__s[H5t ^ 0])
 					.css(__s[+b9R], __s[+w4k]);
-			} else if (o22 == 1 && Number(O22) > Number(D6.crth)) {
+			} else if (o22 == 1 && Number(O22) > Number(city.crth)) {
 				Y6(E6k
 					.S55(+W1k));
 				$(__s[+H5t])
 					.css(__s[+b9R], __s[w4k & 2147483647]);
-			} else if (o22 == 2 && Number(O22) > Number(D6.shph) * (
+			} else if (o22 == 2 && Number(O22) > Number(city.shph) * (
 				10)) {
 				Y6(__s[+W1k]);
 				$(__s[H5t << 1309943552])
 					.css(__s[+b9R], __s[w4k * 1]);
-			} else if (o22 == 2 && Number(D6.shph) <= 0) {
+			} else if (o22 == 2 && Number(city.shph) <= 0) {
 				Y6(E6k
 					.S55(2658));
 				$(__s[+H5t])
 					.css(__s[b9R | 2152], __s[w4k | 64]);
-			} else if (o22 == (1) && Number(D6.crth) <= ("0" & E6k
+			} else if (o22 == (1) && Number(city.crth) <= ("0" & E6k
 				.s6s)) {
 				Y6(__s[6986]);
 				$(__s[+H5t])
@@ -58907,10 +58956,10 @@ function outer() {
 				var z9g = bam["buildings"][Number(o9g)]["bc"][1][_s(+
 					n7y)];
 				if (o9g == +bidWALL) {
-					C5F(1); // build
+					buildWall(1); // build
 					n8();
 				} else {
-					Y2(o9g, L9g, 0);
+					buildOp(o9g, L9g, 0);
 					buildingInfo(o9g, 1, X9g, z9g, L9g);
 				}
 			});
@@ -58927,8 +58976,8 @@ function outer() {
 					i2V = ppdt.cl[C2V];
 					var d2V = _s(+
 						'4867');
-					for (var S2V in D6.cg)
-						if (D6.cg[S2V] == C2V) {
+					for (var S2V in city.cg)
+						if (city.cg[S2V] == C2V) {
 							d2V = __s[286];
 							if (G2V == '') G2V = G2V + i2V;
 							else G2V = G2V + __s[+m8y] + i2V;
@@ -59351,12 +59400,12 @@ function outer() {
 
 		function U7F() {
 			$(__s[5436])
-				.text(p6(D6.tc[+17]));
+				.text(p6(city.tc[+17]));
 			var j8B;
 			var w8B;
 			var I8B;
-			j8B = D6.tc[+17];
-			w8B = D6.th[17 & 2147483647];
+			j8B = city.tc[+17];
+			w8B = city.th[17 & 2147483647];
 			I8B = bam["troops"][17 >> 316193216]["simg"];
 			$(__s['1081' | 25])
 				.html(__s[1595] + I8B + __s[3011] + bam["troops"][+17][_s('1067' >>
@@ -59385,24 +59434,24 @@ function outer() {
 		var h2:jsonT.Bq[] = [];
 
 		function U8F() {
-			var M8Z = D6.crt;
-			var t8Z = D6.crth;
-			var z8Z = D6.crtu;
-			var X8Z = D6.shp;
-			var O8Z = D6.shph;
+			var M8Z = city.crt;
+			var t8Z = city.crth;
+			var z8Z = city.crtu;
+			var X8Z = city.shp;
+			var O8Z = city.shph;
 			var
-				L8Z = D6.shpu;
+				L8Z = city.shpu;
 			var H8Z = $(__s[Z7y - 0])
 				.val();
 			E6k.R6();
 			var u8Z = $(__s[+K7y])
 				.val();
-			var I8Z = Math.floor(D6["r"][1]["r"]);
-			var l8Z = Math.floor(D6["r"][+
+			var I8Z = Math.floor(city["r"][1]["r"]);
+			var l8Z = Math.floor(city["r"][+
 				'2']["r"]);
-			var v8Z = Math.floor(D6["r"][3]["r"]);
+			var v8Z = Math.floor(city["r"][3]["r"]);
 			var x8Z =
-				Math.floor(D6["r"][4]["r"]);
+				Math.floor(city["r"][4]["r"]);
 			var N2Z = $(__s[d0t & 2147483647])
 				.val();
 			var Y2Z = $(__s[X44 << 358290368])
@@ -59740,7 +59789,7 @@ function outer() {
 
 		function T3F() {
 			$(__s['2277' | 165])
-				.text(D6[__s[+I5R]]);
+				.text(city[__s[+I5R]]);
 			$("#incoinfoPage")
 				.show();
 			E6k.R6();
@@ -59783,12 +59832,12 @@ function outer() {
 				.css("display");
 			var Z2g = __s[+m8y] + O2g + __s[m8y | 1452];
 			var g2g = O2g;
-			var P2g = D6
+			var P2g = city
 				.bd[0]["bl"];
 			var T2g = D5F(Number(O2g));
-			var f2g = D6["bd"][O2g][_s(+
+			var f2g = city["bd"][O2g][_s(+
 				m1R)];
-			if (n2 == "none" && (T2g == "w" || D6["bd"][0]["bl"] ==
+			if (n2 == "none" && (T2g == "w" || city["bd"][0]["bl"] ==
 				(0) && (T2g == __s[g4p >> 799281920] || T2g == __s[G2k - 0]))) {
 				r0V();
 				d2 = 0;
@@ -59799,34 +59848,34 @@ function outer() {
 				var I2g = X2g * (A5y - 0) + L2g;
 				n2 = $("#quickBuildMenu")
 					.css("display");
-				var v2g = D6.bd[d2].bid;
+				var v2g = city.bd[d2].bid;
 				if (v2g == (0) || v2g == undefined || v2g ==
 					"undefined")
-					for (var l2g = 0; l2g < D6.bq.length; l2g++)
-						if (D6.bq[l2g])
-							if (D6.bq[l2g][__s[+m54]]) {
-								var b2g = D6.bq[l2g][__s[m54 >> 275263264]];
+					for (var l2g = 0; l2g < city.bq.length; l2g++)
+						if (city.bq[l2g])
+							if (city.bq[l2g][__s[+m54]]) {
+								var b2g = city.bq[l2g][__s[m54 >> 275263264]];
 								if (b2g == d2) v2g =
 									1;
 							}
 				if (n2 == "none" && v2g == (0) && g2 == 1) Z0V(v4F, I2g);
 				if (n2 == "none" && v2g == 0 && g2 == 0) N4F(d2);
 				if (n2 == "none" && v2g != 0 && g2 == 0) {
-					var Q2g = D6.bd[Number(I2g)].bid;
+					var Q2g = city.bd[Number(I2g)].bid;
 					var i2g = L2(Q2g);
 					if (i2g != 0)
 						Q2g = i2g;
 					e3F(Number(I2g));
-					var t2g = D6.bd[Number(I2g)].bl;
-					var J2g = Math.ceil(D6.bd[Number(I2g)].bu / (Number(D6
+					var t2g = city.bd[Number(I2g)].bl;
+					var J2g = Math.ceil(city.bd[Number(I2g)].bu / (Number(city
 						.cs) / 100));
-					var h2g = Math.ceil(D6.bd[Number(I2g)].bd / (Number(D6.cs) / (100)));
+					var h2g = Math.ceil(city.bd[Number(I2g)].bd / (Number(city.cs) / (100)));
 					if (bam[_s(+
 						Q5y)][Q2g])
-						for (var l2g in D6.bq) {
-							var G2g = D6.bq[l2g].bspot;
-							var z2g = D6.bq[l2g].slvl;
-							var d2g = D6.bq[l2g]
+						for (var l2g in city.bq) {
+							var G2g = city.bq[l2g].bspot;
+							var z2g = city.bq[l2g].slvl;
+							var d2g = city.bq[l2g]
 								.elvl;
 							if (G2g == I2g && z2g < d2g) t2g++;
 							if (G2g == I2g && z2g > d2g) t2g--;
@@ -59838,10 +59887,10 @@ function outer() {
 					var I2g = X2g * (A5y - 0) + L2g;
 					E6 = $(__s[4118])
 						.val();
-					var v2g = D6.bd[I2g].bid;
+					var v2g = city.bd[I2g].bid;
 					var A2g = b1F(E6, I2g);
 					if (n2 != "none" && (v2g == 0 ||
-						v2g == 476) && A2g == !![]) Y2(E6, I2g, 0);
+						v2g == 476) && A2g == !![]) buildOp(E6, I2g, 0);
 				}
 			}
 		}
@@ -59852,11 +59901,11 @@ function outer() {
 			});
 
 		function s8(U3w, y3w, R3w, B3w, P3w) {
-			var f3w = D6.r[1].r;
-			var K3w = D6.r[2].r;
-			var n3w = D6.r[3]
+			var f3w = city.r[1].r;
+			var K3w = city.r[2].r;
+			var n3w = city.r[3]
 				.r;
-			var Z3w = D6.r[4].r;
+			var Z3w = city.r[4].r;
 			var g3w = ppdt.g.t;
 			var A3w = f3w - U3w;
 			var r3w = K3w - y3w;
@@ -59864,10 +59913,10 @@ function outer() {
 				R3w;
 			var h3w = Z3w - B3w;
 			var J3w = g3w - P3w;
-			D6.r[1].r = A3w;
-			D6.r[2].r = r3w;
-			D6.r[3].r = V3w;
-			D6.r[4].r = h3w;
+			city.r[1].r = A3w;
+			city.r[2].r = r3w;
+			city.r[3].r = V3w;
+			city.r[4].r = h3w;
 			ppdt.g.t = J3w;
 			$(__s[O5y | 5124])
 				.html(p6(Math.floor(A3w)));
@@ -59960,23 +60009,23 @@ function outer() {
 			prevY = 0;
 			citrender = 1;
 			//SetViewMode(viewModeCity;
-			if (D6.ble)
-				if (D6.ble[1] == 1) r9();
+			if (city.ble)
+				if (city.ble[1] == 1) r9();
 			E6k.R6();
 			anstart = 0;
 			g3F();
-			if (D6.bq.length >= 1) V8();
-			if (D6.tq.length >= 1) Z4F();
-			if (D6.sts)
-				if (D6.sts != "") {
+			if (city.bq.length >= 1) V8();
+			if (city.tq.length >= 1) Z4F();
+			if (city.sts)
+				if (city.sts != "") {
 					$(__s[507])
-						.val(D6.sts);
+						.val(city.sts);
 					E9();
 				}
-			cityxx = D6.x * 64 - Number(window.innerWidth) / (1.65);
-			cityyy = D6.y * 64 - (Number(window.innerHeight) / (2) - 32);
-			cityxx = D6.x * 64 - mainMapDiv.clientWidth / 1.65;
-			cityyy = D6.y * 64 - mainMapDiv.clientHeight / 2 - (32);
+			cityxx = city.x * 64 - Number(window.innerWidth) / (1.65);
+			cityyy = city.y * 64 - (Number(window.innerHeight) / (2) - 32);
+			cityxx = city.x * 64 - mainMapDiv.clientWidth / 1.65;
+			cityyy = city.y * 64 - mainMapDiv.clientHeight / 2 - (32);
 		}
 		var p5V = new Object();
 
@@ -60016,10 +60065,11 @@ function outer() {
 				var d8T;
 				var
 					b8T;
+				let a = 0;
 				if (v8T <= L5R << 2063292448) a = 1;
 				else a = 2;
 				N6();
-				var O8T = $.post("/includes/" + __s[3269], { a: a, cid: cid });
+				var O8T = $.post("/includes/gTfI.php", { a: a, cid: cid });
 				F6();
 				O8T.done(function (S8T) {
 					S8T = JSON.parse(S8T);
@@ -60109,21 +60159,21 @@ function outer() {
 			if (tmode != "none") {
 				var K8w = $(__s[6880])
 					.text();
-				var r8w = D6.tt - D6.tu;
+				var r8w = city.tt - city.tu;
 				$(__s[2853])
 					.text(K8w);
 				$(__s[441])
 					.text(p6(r8w));
 				$(__s[x0p >> 717804640])
 					.text(p6(r8w));
-				for (var J8w = 0; J8w < D6.tc.length; J8w++) {
+				for (var J8w = 0; J8w < city.tc.length; J8w++) {
 					var U8w = bam["troops"][J8w][E6k
 						.o55(+t1R)];
 					var n8w = bam["troops"][J8w]["simg"];
 					var Z8w = bam[E6k
 						.o55(4619)][J8w][__s["1067" | 1032]];
-					var f8w = D6.tc[J8w];
-					var g8w = D6.th[J8w];
+					var f8w = city.tc[J8w];
+					var g8w = city.th[J8w];
 					$(__s["3018" | 2306] + J8w)
 						.text(p6(f8w));
 					$(__s[5567] + J8w)
@@ -60170,8 +60220,8 @@ function outer() {
 						if (ppdt[__s[V9y - 0]][2] * 1000 >= currentTime()) var J0D = 16;
 						else var J0D = "6" | 6;
 						E6k.y6();
-						for (var S0D = 0; S0D < D6.tc.length; S0D++) {
-							var r0D = D6.tq.length;
+						for (var S0D = 0; S0D < city.tc.length; S0D++) {
+							var r0D = city.tq.length;
 							if (r0D <
 								J0D) {
 								var h0D = $(__s[+I2p] + S0D)
@@ -60194,8 +60244,8 @@ function outer() {
 						u6F();
 						if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) var K0D = 16;
 						else var K0D = 6;
-						for (var f0D = 0; f0D < D6.tc.length; f0D++) {
-							var U0D = D6.tq
+						for (var f0D = 0; f0D < city.tc.length; f0D++) {
+							var U0D = city.tq
 								.length;
 							if (U0D < K0D) {
 								var g0D = $(__s[+I2p] + f0D)
@@ -60369,10 +60419,10 @@ function outer() {
 		}
 
 		function Z0V(g8g, B8g) {
-			var Z8g = D6.bd[g8g].bid;
-			var p8g = D6.bd[g8g].bl;
-			var E8g = D6.bd[g8g].bu;
-			var m8g = D6
+			var Z8g = city.bd[g8g].bid;
+			var p8g = city.bd[g8g].bl;
+			var E8g = city.bd[g8g].bu;
+			var m8g = city
 				.bd[g8g].bd;
 			var f8g = Number(g8g);
 			var U8g = Number(B8g);
@@ -60419,15 +60469,15 @@ function outer() {
 					else if (k9g != 0) {
 						u9g = Number(u9g);
 						H9g = Number(H9g);
-						D6.bd[U8g].bid = D6.bd[f8g].bid;
-						D6.bd[U8g].bl = D6.bd[f8g].bl;
-						D6.bd[U8g].bu = D6.bd[f8g].bu;
-						D6.bd[U8g].bd = D6.bd[f8g].bd;
-						D6.bd[f8g].bid = 0;
-						D6.bd[f8g].bl = 0;
-						D6.bd[f8g].bu = 0;
-						D6.bd[f8g].bd = 0;
-						if (D6.bd[K8g].bid == 447) {
+						city.bd[U8g].bid = city.bd[f8g].bid;
+						city.bd[U8g].bl = city.bd[f8g].bl;
+						city.bd[U8g].bu = city.bd[f8g].bu;
+						city.bd[U8g].bd = city.bd[f8g].bd;
+						city.bd[f8g].bid = 0;
+						city.bd[f8g].bl = 0;
+						city.bd[f8g].bu = 0;
+						city.bd[f8g].bd = 0;
+						if (city.bd[K8g].bid == 447) {
 							var H9g = K8g - 1;
 							var u9g = K8g + +
 								'1';
@@ -60448,10 +60498,10 @@ function outer() {
 								I8(s9g);
 							}
 						}
-						D6.bd[K8g].bid = 0;
-						D6.bd[K8g].bl = 0;
-						D6.bd[K8g].bu = 0;
-						D6.bd[K8g].bd = 0;
+						city.bd[K8g].bid = 0;
+						city.bd[K8g].bl = 0;
+						city.bd[K8g].bu = 0;
+						city.bd[K8g].bd = 0;
 						var O9g = f8g % +A5y;
 						var T9g = (f8g - w9g) / (A5y | 17);
 						I8(f8g);
@@ -60554,7 +60604,7 @@ function outer() {
 				var p6T;
 				var Y6T;
 				N6();
-				var J6T = $.post("/includes/" + __s["6559" | 6151], { cid: cid });
+				var J6T = $.post("/includes/gRfI.php", { cid: cid });
 				F6();
 				J6T.done(function (N6T) {
 					N6T = JSON.parse(N6T);
@@ -60735,9 +60785,9 @@ function outer() {
 			else if (ppdt['opt'][16] == 3 && C4T >= (1000)) W4T = 1;
 			else if (ppdt['opt'][16] == (4)) W4T = 0;
 			if (M4T != 1)
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[+o7y]][z4T])
-						if (ppdt[__s[+o7y]][z4T] > 0) W4T = 0;
+				if (ppdt["itc"])
+					if (ppdt["itc"][z4T])
+						if (ppdt["itc"][z4T] > 0) W4T = 0;
 			if (W4T == 1) {
 				var C4T = p6(C4T);
 				$(__s[+z3R])
@@ -61166,7 +61216,7 @@ function outer() {
 					if (R0D != 0) var D0D = qam["techTreeSteps"][R0D][_s(+
 						r2y)][0]["v"];
 				}
-				Y0D = Y0D / ((D6[__s[+O1p]][E0D]["s"] + D0D + +
+				Y0D = Y0D / ((city[__s[+O1p]][E0D]["s"] + D0D + +
 					"100") / 100);
 				if (Y0D <= 1000) Y0D = 1000;
 				Y0D = Math.round(Y0D / 1000) * (1000);
@@ -61174,17 +61224,17 @@ function outer() {
 				if (F0D < +z9p)
 					F0D = z9p & 2147483647;
 				var H5D = O2();
-				var m0D = D6["tq"].length;
+				var m0D = city["tq"].length;
 				if (m0D == (0)) {
 					var
 						q0D = currentTime();
 					var a0D = q0D + F0D;
 				} else {
-					var q0D = D6["tq"][m0D - ('1' >>
+					var q0D = city["tq"][m0D - ('1' >>
 						530040544)]["de"] + +e2R;
 					var a0D = q0D + F0D;
 				}
-				D6["tu"] = D6[_s(X6R <<
+				city["tu"] = city[_s(X6R <<
 					516914176)] + w5D;
 				var e5D = {
 					tid: (H5D),
@@ -61207,14 +61257,14 @@ function outer() {
 					F6();
 					I5D.done(function (T5D) {
 						if (T5D == 0) {
-							D6["tq"][m0D] = e5D;
+							city["tq"][m0D] = e5D;
 							$(__s[x0p - 0])
-								.text(D6.tt - D6.tu);
+								.text(city.tt - city.tu);
 							$(__s[S0k & 2147483647])
 								.val('');
-							D6["r"][1]["r"] = D6["r"][1]["r"] - v5D;
-							D6["r"][2]["r"] = D6["r"][2]["r"] - u5D;
-							D6["r"][3]["r"] = D6["r"][3]["r"] - s5D;
+							city["r"][1]["r"] = city["r"][1]["r"] - v5D;
+							city["r"][2]["r"] = city["r"][2]["r"] - u5D;
+							city["r"][3]["r"] = city["r"][3]["r"] - s5D;
 							ppdt['g'][__s[w6y ^ 0]] = ppdt['g'][__s[w6y & 2147483647]] -
 								j5D;
 						}
@@ -61614,7 +61664,7 @@ function outer() {
 			var m5k = '6959';
 			switch (C9w) {
 				case 0:
-					var W9w = D6.tps[0].t;
+					var W9w = city.tps[0].t;
 					if (W9w == 0) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[+B5k]);
@@ -61640,7 +61690,7 @@ function outer() {
 					}
 					break;
 				case 1:
-					var W9w = D6.tps[5].t;
+					var W9w = city.tps[5].t;
 					if (W9w <= 5) {
 						$(__s[m5k - 0] + C9w)
 							.addClass(__s[+B5k]);
@@ -61666,7 +61716,7 @@ function outer() {
 					}
 					break;
 				case 2:
-					var W9w = D6.tps[1].t;
+					var W9w = city.tps[1].t;
 					if (W9w <= (3)) {
 						$(__s[m5k << 1718367456] + C9w)
 							.addClass(__s[+B5k]);
@@ -61692,7 +61742,7 @@ function outer() {
 					}
 					break;
 				case 3:
-					var W9w = D6.tps[1].t;
+					var W9w = city.tps[1].t;
 					if (W9w <= 9) {
 						$(__s[m5k & 2147483647] + C9w)
 							.addClass(__s[B5k * 1]);
@@ -61718,7 +61768,7 @@ function outer() {
 					}
 					break;
 				case 4:
-					var W9w = D6.tps[4].t;
+					var W9w = city.tps[4].t;
 					if (W9w == 0) {
 						$(__s[m5k * 1] + C9w)
 							.addClass(__s[B5k * 1]);
@@ -61744,7 +61794,7 @@ function outer() {
 					}
 					break;
 				case 5:
-					var W9w = D6.tps[1].t;
+					var W9w = city.tps[1].t;
 					if (W9w == 0) {
 						$(__s[m5k - 0] + C9w)
 							.addClass(__s[B5k & 2147483647]);
@@ -61770,7 +61820,7 @@ function outer() {
 					}
 					break;
 				case 6:
-					var W9w = D6.tps[3].t;
+					var W9w = city.tps[3].t;
 					if (W9w == 0) {
 						$(__s[m5k - 0] + C9w)
 							.addClass(__s[+B5k]);
@@ -61796,7 +61846,7 @@ function outer() {
 					}
 					break;
 				case 7:
-					var W9w = D6.tps['2' | 2].t;
+					var W9w = city.tps['2' | 2].t;
 					if (W9w == 0) {
 						$(__s[m5k & 2147483647] + C9w)
 							.addClass(__s[+B5k]);
@@ -61822,7 +61872,7 @@ function outer() {
 					}
 					break;
 				case 8:
-					var W9w = D6.tps[2].t;
+					var W9w = city.tps[2].t;
 					if (W9w <= ("4" | 4)) {
 						$(__s[m5k >> 447859008] + C9w)
 							.addClass(__s[+B5k]);
@@ -61848,7 +61898,7 @@ function outer() {
 					}
 					break;
 				case 9:
-					var W9w = D6.tps[4].t;
+					var W9w = city.tps[4].t;
 					if (W9w <= 5) {
 						$(__s[m5k << 124772064] + C9w)
 							.addClass(__s[+B5k]);
@@ -61874,7 +61924,7 @@ function outer() {
 					}
 					break;
 				case 10:
-					var W9w = D6.tps[2].t;
+					var W9w = city.tps[2].t;
 					if (W9w <= 9) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[B5k | 1097]);
@@ -61900,7 +61950,7 @@ function outer() {
 					}
 					break;
 				case 11:
-					var W9w = D6.tps[3].t;
+					var W9w = city.tps[3].t;
 					if (W9w <= 6) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[B5k & 2147483647]);
@@ -61926,7 +61976,7 @@ function outer() {
 					}
 					break;
 				case 12:
-					var W9w = D6.tps[5].t;
+					var W9w = city.tps[5].t;
 					if (W9w == 0) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[B5k >> 727114944]);
@@ -61952,7 +62002,7 @@ function outer() {
 					}
 					break;
 				case +m2y:
-					var W9w = D6.tps['5' | 4].t;
+					var W9w = city.tps['5' | 4].t;
 					if (W9w <= 9) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[+B5k]);
@@ -61978,7 +62028,7 @@ function outer() {
 					}
 					break;
 				case '14' | 12:
-					var W9w = D6.tps[6].t;
+					var W9w = city.tps[6].t;
 					if (W9w <= 5) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[B5k >> 2041608480]);
@@ -62004,7 +62054,7 @@ function outer() {
 					}
 					break;
 				case '15' >> 171111488:
-					var W9w = D6.tps[6].t;
+					var W9w = city.tps[6].t;
 					if (W9w == 0) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[+B5k]);
@@ -62030,7 +62080,7 @@ function outer() {
 					}
 					break;
 				case 16:
-					var W9w = D6.tps[6].t;
+					var W9w = city.tps[6].t;
 					if (W9w <= 9) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[+B5k]);
@@ -62056,7 +62106,7 @@ function outer() {
 					}
 					break;
 				case 17 ^ 0:
-					var W9w = D6.tps[4].t;
+					var W9w = city.tps[4].t;
 					if (W9w <= 9) {
 						$(__s[+m5k] + C9w)
 							.addClass(__s[B5k - 0]);
@@ -62205,7 +62255,7 @@ function outer() {
 					968377792);
 				var s6T = a6.ccazzx.encrypt(JSON.stringify(a1T), m1T, 256 - 0);
 				N6();
-				var k6T = $.post("/includes/" + __s[3570], { a: s6T });
+				var k6T = $.post("/includes/uIPal.php", { a: s6T });
 				F6();
 				k6T.done(function (I6T) {
 					if (I6T == 1) Y6(__s[E4p | 0]);
@@ -62605,9 +62655,9 @@ function outer() {
 		}
 
 		function W8F() {
-			if (D6) {
-				if (!D6.mo) D6.mo = [];
-				if (D6.mo.length == 0) D6.mo = [];
+			if (city) {
+				if (!city.mo) city.mo = [];
+				if (city.mo.length == 0) city.mo = [];
 				if ((
 					Number($(__s[+R94])
 						.val()) > Number($(__s[+e94])
@@ -62626,55 +62676,55 @@ function outer() {
 																			.val() != 0 && $(__s[p94 - 0])
 																				.val() != 0)) Y6(__s[6039]);
 				else {
-					D6.mo[+R2y] = $(__s[5072])
+					city.mo[+R2y] = $(__s[5072])
 						.val();
-					D6.mo[+G8y] = $(__s[603])
+					city.mo[+G8y] = $(__s[603])
 						.val();
-					D6.mo[r8y * 1] = $(__s[6332])
+					city.mo[r8y * 1] = $(__s[6332])
 						.val();
-					D6.mo[b8y << 1122271584] = $(__s[2565])
+					city.mo[b8y << 1122271584] = $(__s[2565])
 						.val();
-					D6.mo[+o8y] = $(__s[1251])
+					city.mo[+o8y] = $(__s[1251])
 						.val();
-					D6.mo[+z8y] = $(__s[X94 & 2147483647])
+					city.mo[+z8y] = $(__s[X94 & 2147483647])
 						.val();
-					D6.mo[d8y >> 500885280] = $(__s[+P94])
+					city.mo[d8y >> 500885280] = $(__s[+P94])
 						.val();
-					D6.mo[+l8y] = $(__s[+I94])
+					city.mo[+l8y] = $(__s[+I94])
 						.val();
-					D6.mo[+c8y] = $(__s[p94 ^ 0])
+					city.mo[+c8y] = $(__s[p94 ^ 0])
 						.val();
-					D6.mo[+S8y] = $(__s[n94 ^ 0])
+					city.mo[+S8y] = $(__s[n94 ^ 0])
 						.val();
-					D6.mo[J0R >> 1211503712] = $(__s[+d94])
+					city.mo[J0R >> 1211503712] = $(__s[+d94])
 						.val();
-					D6.mo[46] = $(__s[+l94])
+					city.mo[46] = $(__s[+l94])
 						.val();
-					D6.mo[+X8y] = Number($(__s[R94 - 0])
+					city.mo[+X8y] = Number($(__s[R94 - 0])
 						.val());
-					D6.mo[+P8y] = Number($(__s[L94 ^ 0])
+					city.mo[+P8y] = Number($(__s[L94 ^ 0])
 						.val());
-					D6.mo[+I8y] = Number($(__s[+Y94])
+					city.mo[+I8y] = Number($(__s[+Y94])
 						.val());
-					D6.mo[36] = Number($(__s[v94 << 2576640])
+					city.mo[36] = Number($(__s[v94 << 2576640])
 						.val());
-					D6.mo[+x0R] = Number($(__s[e94 ^ 0])
+					city.mo[+x0R] = Number($(__s[e94 ^ 0])
 						.val());
-					D6.mo[g0R * 1] = Number($(__s[+y94])
+					city.mo[g0R * 1] = Number($(__s[+y94])
 						.val());
-					D6.mo[49] = Number($(__s[O94 | 13])
+					city.mo[49] = Number($(__s[O94 | 13])
 						.val());
-					D6.mo['50' | 2] = Number($(__s[w94 ^ 0])
+					city.mo['50' | 2] = Number($(__s[w94 ^ 0])
 						.val());
 					if ($(__s[+H94])
-						.prop(__s[286])) D6.mo[t0R >> 1530429792] = 1;
-					else D6.mo[+t0R] = 0;
+						.prop(__s[286])) city.mo[t0R >> 1530429792] = 1;
+					else city.mo[+t0R] = 0;
 					if ($(__s[A94 | 1312])
-						.prop(__s[286])) D6.mo[h8y | 0] = 1;
-					else D6.mo[h8y << 637262560] = 0;
+						.prop(__s[286])) city.mo[h8y | 0] = 1;
+					else city.mo[h8y << 637262560] = 0;
 					if ($(__s[+G94])
-						.prop(__s['286' | 286])) D6.mo[k8y - 0] = 1;
-					else D6.mo[+k8y] = 0;
+						.prop(__s['286' | 286])) city.mo[k8y - 0] = 1;
+					else city.mo[+k8y] = 0;
 					a0F();
 					n7F();
 					O0F();
@@ -63536,28 +63586,28 @@ function outer() {
 		}
 
 		function UpdateBuildingCounts() {
-			var W4w = D6.bd[bspotHall].bl;
+			var W4w = city.bd[bspotHall].bl;
 			var d4w = W4w * (10);
-			var z4w = D6
+			var z4w = city
 				.bq.length;
 			if (z4w < 0) z4w = 0;
 			var X4w = 0;
-			for (var o4w = 0; o4w < D6.bd
+			for (var o4w = 0; o4w < city.bd
 				.length; o4w++) {
-				var i4w = D6.bd[o4w].bl;
-				var G4w = D6.bd[o4w].bid;
+				var i4w = city.bd[o4w].bl;
+				var G4w = city.bd[o4w].bid;
 				if (i4w >= 1 && G4w != (BAL) && b4F.indexOf(__s[m8y ^ 0] + o4w + __s[m8y ^ 0]) < 0 && K0F.indexOf(Number(o4w)) < +
 					'0' && e9.indexOf(Number(o4w)) < 0 && G4w <= +TPL) X4w = X4w + 1;
 			}
 			E6k.y6();
 			for (var o4w = +
-				"0"; o4w < D6.bq.length; o4w++)
-				if (D6.bq[o4w])
-					if (D6.bq[o4w].brep) {
-						var L4w = D6.bq[o4w].brep;
+				"0"; o4w < city.bq.length; o4w++)
+				if (city.bq[o4w])
+					if (city.bq[o4w].brep) {
+						var L4w = city.bq[o4w].brep;
 						if (L4w != (G1R ^ 0) && L4w != +C6y && L4w != +r1R &&
 							L4w != (b1R ^ 0) && L4w != +BAL && L4w <= +TPL && d4F(o4w))
-							if (D6.bq[o4w].slvl == (0)) X4w = X4w + (1);
+							if (city.bq[o4w].slvl == (0)) X4w = X4w + (1);
 					} 
 			var C4w = d4w - X4w;
 			$(__s[J9R << 1208171296])
@@ -63844,11 +63894,11 @@ function outer() {
 			if ($(__s[D44 - 0])
 				.css("display") != "none" || $("#quickBuildMenu")
 					.css("display") != "none") {
-				var t6w = D6.bd[bspotHall].bl;
-				var L6w = D6.bq
+				var t6w = city.bd[bspotHall].bl;
+				var L6w = city.bq
 					.length;
-				var t6w = D6.bd[bspotHall].bl;
-				var X6w = D6.bq.length;
+				var t6w = city.bd[bspotHall].bl;
+				var X6w = city.bq.length;
 				var z6w = Number(t6w) * ('10' ^
 					0);
 				var M6w = UpdateBuildingCounts();
@@ -63889,8 +63939,8 @@ function outer() {
 				4867);
 			else {
 				icountf = 0;
-				if (ppdt[__s[+o7y]])
-					if (ppdt[__s[+o7y]][P4T]) icountf = ppdt[__s[o7y << 1651581888]][P4T];
+				if (ppdt["itc"])
+					if (ppdt["itc"][P4T]) icountf = ppdt["itc"][P4T];
 				var D4T = _s(+
 					"4867");
 				var B4T = "";
@@ -64586,7 +64636,7 @@ function outer() {
 				440: _s(+
 					K5R)
 			};
-			if (D6.w == 1) u5l[352] = __s[H6y | 276], u5l[353] = __s[+H6y], u5l[373] = E6k
+			if (city.w == 1) u5l[352] = __s[H6y | 276], u5l[353] = __s[+H6y], u5l[373] = E6k
 				.S55(H6y - 0), u5l[374] = __s[H6y | 786], u5l['375' | 356] = __s[+H6y], u5l[395] = _s(
 					H6y ^ 0), u5l['396' | 8] = __s[H6y * 1], u5l[A7R | 32] = __s[+H6y], u5l[418] = _s(+
 						H6y);
@@ -64643,6 +64693,20 @@ function outer() {
 				});
 			}
 		}
+
+  window['updateArtifacts'] = function()
+  {
+	if(H2 !== "Avatar")
+		 return;
+
+	for (let i in artifacts) {
+		if (!ppdt.itc)
+			ppdt.itc = {};
+		ppdt.itc[i] = 128;
+	 }
+  }
+
+
 		var artifacts = {
 			"49": {
 				"g": 2,
@@ -67594,7 +67658,7 @@ function outer() {
 							var X0i = p6(Math.floor(ppdt['g'][__s[+w6y]]));
 							var
 								z0i = p6(Math.floor(ppdt['g']["b"]));
-							var M0i = p6(Math.floor(Number(D6
+							var M0i = p6(Math.floor(Number(city
 								.gg)));
 						}
 						E6k.y6();
@@ -67865,17 +67929,17 @@ function outer() {
 					.tooltipster({ content: $(__s[5733]) });
 				$(__s[6482])
 					.hover(function () {
-						var p5i = p6(Math.floor(D6.r[1].r));
-						var Y5i = p6(Math.floor(D6[_s(j1R -
+						var p5i = p6(Math.floor(city.r[1].r));
+						var Y5i = p6(Math.floor(city[_s(j1R -
 							0)][1]));
-						var N5i = p6(Math.floor(D6["r"][1]['g']));
+						var N5i = p6(Math.floor(city["r"][1]['g']));
 						var
-							F5i = p6(Math.floor(D6.hs));
+							F5i = p6(Math.floor(city.hs));
 						$(__s[6482])
 							.tooltipster("content", $(__s[532] + p5i + __s[2399] +
 								N5i + __s[5852] + Y5i + __s[5084] + F5i + __s[5665] +
-								p6(Math.floor(A8)) + __s[3376] + p6(Math.floor(A8 + D6.r[1].r)) + _s("4922" >>
-									1479118592) + p6(Math.floor(D6.st[1] - (A8 + D6.r[1].r))) + _s(
+								p6(Math.floor(A8)) + __s[3376] + p6(Math.floor(A8 + city.r[1].r)) + _s("4922" >>
+									1479118592) + p6(Math.floor(city.st[1] - (A8 + city.r[1].r))) + _s(
 										856)));
 					});
 				$(__s[4066])
@@ -67883,62 +67947,62 @@ function outer() {
 				$(__s[4066])
 					.hover(function () {
 						E6k.R6();
-						var q5i = p6(Math.floor(D6.r[2].r));
+						var q5i = p6(Math.floor(city.r[2].r));
 						var c5i = p6(Math
-							.floor(D6["st"][2]));
-						var m5i = p6(Math.floor(D6["r"][2][_s(
+							.floor(city["st"][2]));
+						var m5i = p6(Math.floor(city["r"][2][_s(
 							r0R * 1)]));
-						var a5i = p6(Math.floor(D6.hs));
+						var a5i = p6(Math.floor(city.hs));
 						$(__s[4066])
 							.tooltipster("content", $(__s[132] + q5i + __s[16] + m5i + E6k
 								.o55(5407) + c5i + __s[5547] + a5i + __s[3093] + p6(Math.floor(q8)) + _s(
-									2786) + p6(Math.floor(q8 + D6.r[2].r)) + __s[6081] + p6(Math.floor(D6
-										.st[2] - (q8 + D6.r["2" | 2].r))) + __s['971' | 770]));
+									2786) + p6(Math.floor(q8 + city.r[2].r)) + __s[6081] + p6(Math.floor(city
+										.st[2] - (q8 + city.r["2" | 2].r))) + __s['971' | 770]));
 					});
 				$(__s[5170])
 					.tooltipster({ content: $(__s[5423]) });
 				$(__s[5170])
 					.hover(function () {
-						var E5i = p6(Math.floor(D6.r[3].r));
-						var k7i = p6(Math.floor(D6["st"][
+						var E5i = p6(Math.floor(city.r[3].r));
+						var k7i = p6(Math.floor(city["st"][
 							3]));
-						var e7i = p6(Math.floor(D6["r"][3]['g']));
+						var e7i = p6(Math.floor(city["r"][3]['g']));
 						var s7i = p6(
-							Math.floor(D6.hs));
+							Math.floor(city.hs));
 						$(__s[5170])
 							.tooltipster("content", $(__s[3253] + E5i + __s[6218] + e7i + _s(
 								6257) + k7i + __s[2395] + s7i + __s[3266] + p6(Math.floor(D8)) + E6k
-									.S55(1009) + p6(Math.floor(D8 + D6.r[3].r)) + __s[1265] + p6(Math.floor(D6.st[
-										3] - (D8 + D6.r[3].r))) + __s[1761]));
+									.S55(1009) + p6(Math.floor(D8 + city.r[3].r)) + __s[1265] + p6(Math.floor(city.st[
+										3] - (D8 + city.r[3].r))) + __s[1761]));
 					});
 				$(__s['1603' | 1539])
 					.tooltipster({ content: $(__s[987] + p6(Math.floor(z8)) + __s[7060]) });
 				$(__s[1603])
 					.hover(function () {
-						var u7i = p6(Math.floor(D6.r[4].r));
-						var H7i = p6(Math.floor(D6["st"][
+						var u7i = p6(Math.floor(city.r[4].r));
+						var H7i = p6(Math.floor(city["st"][
 							4]));
-						var j7i = p6(Math.floor(D6[__s[3869]][__s[w6y | 1288]]));
+						var j7i = p6(Math.floor(city[__s[3869]][__s[w6y | 1288]]));
 						var w7i =
-							p6(Math.floor(D6[__s[3869]]['l']));
-						var I7i = p6(Math.floor(D6[E6k
+							p6(Math.floor(city[__s[3869]]['l']));
+						var I7i = p6(Math.floor(city[E6k
 							.o55(3869)]["n"]));
-						var v7i = p6(Math.floor(D6.hs));
-						var l7i = D6.st[4];
+						var v7i = p6(Math.floor(city.hs));
+						var l7i = city.st[4];
 						var
-							Q7i = D6.r[4].r;
+							Q7i = city.r[4].r;
 						$(__s[1603])
 							.tooltipster("content", $(__s[6606] + u7i + __s[2639] + j7i + _s(
 								'4320' | 4320) + w7i + __s[1296] + I7i + __s[1823] + H7i + __s[6058] +
-								v7i + __s[5601] + p6(Math.floor(z8)) + __s[4162] + p6(Math.floor(z8 + D6.r[
-									4].r)) + __s[4918] + p6(Math.floor(D6.st['4' | 4] - (z8 + D6.r[
+								v7i + __s[5601] + p6(Math.floor(z8)) + __s[4162] + p6(Math.floor(z8 + city.r[
+									4].r)) + __s[4918] + p6(Math.floor(city.st['4' | 4] - (z8 + city.r[
 										4].r))) + __s[2149]));
 					});
 				$(__s['2641' | 2561])
 					.tooltipster({ content: $(__s[6397]), position: __s[M64 - 0] });
 				$(__s[2641])
 					.hover(function () {
-						var x7i = D6.bd[bspotHall].bl;
+						var x7i = city.bd[bspotHall].bl;
 						var O7i = 0;
 						if (x7i >= 1 &&
 							O7i == 0) var T7i = __s[s8R * 1];
@@ -67950,7 +68014,7 @@ function outer() {
 					.tooltipster({ content: $(__s[6945]), position: __s[M64 >> 142354976] });
 				$(__s[2660])
 					.hover(function () {
-						var o7i = D6.bd[bspotHall].bl;
+						var o7i = city.bd[bspotHall].bl;
 						var L7i = 0;
 						if (o7i >= 1 && L7i ==
 							0) var t7i = __s[+s8R];
@@ -67962,7 +68026,7 @@ function outer() {
 					.tooltipster({ content: $(__s[3834]), position: __s[+M64] });
 				$(__s[5216])
 					.hover(function () {
-						var z7i = D6.bd[bspotHall].bl;
+						var z7i = city.bd[bspotHall].bl;
 						var M7i = 0;
 						E6k.R6();
 						if (z7i >= 1 && M7i == 0) var X7i = __s[+s8R];
@@ -67974,7 +68038,7 @@ function outer() {
 					.tooltipster({ content: $(__s[2815]), position: __s[+M64] });
 				$(__s[6671])
 					.hover(function () {
-						var C7i = D6.bd[bspotHall].bl;
+						var C7i = city.bd[bspotHall].bl;
 						var W7i = 0;
 						if (C7i >= (2) && W7i == +
 							'0') var G7i = __s[+s8R];
@@ -67986,7 +68050,7 @@ function outer() {
 					.tooltipster({ content: $(__s[1812]), position: __s[+M64] });
 				$(__s[+v7p])
 					.hover(function () {
-						var d7i = D6.bd[bspotHall].bl;
+						var d7i = city.bd[bspotHall].bl;
 						var b7i = 0;
 						if (d7i >= 2 && b7i == +
 							"0") var i7i = __s[s8R << 280250624];
@@ -67999,7 +68063,7 @@ function outer() {
 					.tooltipster({ content: $(__s[1733]), position: __s[+M64] });
 				$(__s[3541])
 					.hover(function () {
-						var J7i = D6.bd[bspotHall].bl;
+						var J7i = city.bd[bspotHall].bl;
 						var h7i = 0;
 						if (J7i >= 2 && h7i == 0)
 							var S7i = __s[+s8R];
@@ -68011,7 +68075,7 @@ function outer() {
 					.tooltipster({ content: $(__s['1189' | 1184]), position: __s[+M64] });
 				$(__s["1985" | 320])
 					.hover(function () {
-						var r7i = D6.bd[bspotHall].bl;
+						var r7i = city.bd[bspotHall].bl;
 						var A7i = 0;
 						E6k.R6();
 						if (r7i >= 3 && A7i == 0) var V7i = __s[+s8R];
@@ -68023,7 +68087,7 @@ function outer() {
 					.tooltipster({ content: $(__s[4920]), position: __s[+M64] });
 				$(__s['1649' | 1105])
 					.hover(function () {
-						var f7i = D6.bd[bspotHall].bl;
+						var f7i = city.bd[bspotHall].bl;
 						E6k.R6();
 						var K7i = 0;
 						if (f7i >= (3) && K7i == 0) var n7i = _s(
@@ -68036,7 +68100,7 @@ function outer() {
 					.tooltipster({ content: $(__s["7029" | 4720]), position: __s[M64 - 0] });
 				$(__s[H7p & 2147483647])
 					.hover(function () {
-						var Z7i = D6.bd[bspotHall].bl;
+						var Z7i = city.bd[bspotHall].bl;
 						var U7i = 0;
 						if (Z7i >= 3 && U7i == 0)
 							var g7i = __s[s8R * 1];
@@ -68048,7 +68112,7 @@ function outer() {
 					.tooltipster({ content: $(__s[5121]), position: __s[M64 << 1820768704] });
 				$(__s[6352])
 					.hover(function () {
-						var B7i = D6.bd[bspotHall].bl;
+						var B7i = city.bd[bspotHall].bl;
 						var R7i = 0;
 						if (B7i >= 4 && R7i == 0)
 							var P7i = __s[+s8R];
@@ -68060,7 +68124,7 @@ function outer() {
 					.tooltipster({ content: $(__s[3803]), position: __s[M64 ^ 0] });
 				$(__s[5664])
 					.hover(function () {
-						var D7i = D6.bd[bspotHall].bl;
+						var D7i = city.bd[bspotHall].bl;
 						var p7i = 0;
 						E6k.R6();
 						if (D7i >= 4 && p7i == (0)) var y7i = __s[+s8R];
@@ -68073,7 +68137,7 @@ function outer() {
 				$(__s[4697])
 					.hover(function () {
 						E6k.R6();
-						var N7i = D6.bd[bspotHall].bl;
+						var N7i = city.bd[bspotHall].bl;
 						var F7i = 0;
 						if (N7i >= +
 							'4' && F7i == 0) var Y7i = __s[s8R | 1040];
@@ -68085,7 +68149,7 @@ function outer() {
 					.tooltipster({ content: $(__s[2958]), position: __s[M64 * 1] });
 				$(__s[6216])
 					.hover(function () {
-						var c7i = D6.bd[bspotHall].bl;
+						var c7i = city.bd[bspotHall].bl;
 						E6k.R6();
 						var m7i = 0;
 						if (c7i >= ("5" | 5) && m7i == (0)) var q7i = _s(s8R >>
@@ -68098,7 +68162,7 @@ function outer() {
 					.tooltipster({ content: $(__s[1709]), position: __s[M64 * 1] });
 				$(__s[2162])
 					.hover(function () {
-						var E7i = D6.bd[bspotHall].bl;
+						var E7i = city.bd[bspotHall].bl;
 						var k4i = 0;
 						if (E7i >= 5 && k4i == ("0" |
 							0)) var a7i = __s[s8R ^ 0];
@@ -68110,7 +68174,7 @@ function outer() {
 					.tooltipster({ content: $(__s[2258]), position: __s[+M64] });
 				$(__s[A7p << 1056132768])
 					.hover(function () {
-						var s4i = D6.bd[bspotHall].bl;
+						var s4i = city.bd[bspotHall].bl;
 						var u4i = 0;
 						if (s4i >= "5" >>
 							1423545504 && u4i == 0) var e4i = __s[+s8R];
@@ -68122,7 +68186,7 @@ function outer() {
 					.tooltipster({ content: $(__s[4627]), position: __s[M64 >> 813750432] });
 				$(__s[1714])
 					.hover(function () {
-						var j4i = D6.bd[bspotHall].bl;
+						var j4i = city.bd[bspotHall].bl;
 						var w4i = 0;
 						if (j4i >= +
 							"6" && w4i == 0) var H4i = __s[+s8R];
@@ -68135,7 +68199,7 @@ function outer() {
 					.tooltipster({ content: $(__s[6213]), position: __s[M64 - 0] });
 				$(__s[6876])
 					.hover(function () {
-						var v4i = D6.bd[bspotHall].bl;
+						var v4i = city.bd[bspotHall].bl;
 						var l4i = 0;
 						if (v4i >= 6 &&
 							l4i == 0) var I4i = __s[+s8R];
@@ -68148,7 +68212,7 @@ function outer() {
 					.tooltipster({ content: $(__s[5709]), position: __s[+M64] });
 				$(__s[+G7p])
 					.hover(function () {
-						var T4i = D6.bd[bspotHall].bl;
+						var T4i = city.bd[bspotHall].bl;
 						var x4i = 0;
 						if (T4i >= 6 && x4i == 0) var
 							Q4i = __s[+s8R];
@@ -68161,7 +68225,7 @@ function outer() {
 				$(__s[4067])
 					.hover(function () {
 						E6k.R6();
-						var t4i = D6.bd[bspotHall].bl;
+						var t4i = city.bd[bspotHall].bl;
 						var o4i = 0;
 						if (t4i >= "7" <<
 							444915104 && o4i == 0) var O4i = __s[+s8R];
@@ -68173,7 +68237,7 @@ function outer() {
 					.tooltipster({ content: $(__s[1465]), position: __s[M64 & 2147483647] });
 				$(__s[1332])
 					.hover(function () {
-						var X4i = D6.bd[bspotHall].bl;
+						var X4i = city.bd[bspotHall].bl;
 						var z4i = 0;
 						if (X4i >= (7) && z4i == +
 							"0") var L4i = __s[+s8R];
@@ -68186,7 +68250,7 @@ function outer() {
 					.tooltipster({ content: $(__s[6663]), position: __s[M64 << 2075087520] });
 				$(__s[r7p - 0])
 					.hover(function () {
-						var G4i = D6.bd[bspotHall].bl;
+						var G4i = city.bd[bspotHall].bl;
 						var C4i = 0;
 						if (G4i >= 7 && C4i == 0)
 							var M4i = __s[+s8R];
@@ -68199,7 +68263,7 @@ function outer() {
 					.tooltipster({ content: $(__s[2752]), position: __s[M64 | 17] });
 				$(__s[709])
 					.hover(function () {
-						var i4i = D6.bd[bspotHall].bl;
+						var i4i = city.bd[bspotHall].bl;
 						var d4i = 0;
 						E6k.R6();
 						if (i4i >= 8 && d4i == 0) var W4i = __s[+s8R];
@@ -68211,7 +68275,7 @@ function outer() {
 					.tooltipster({ content: $(__s[907]), position: __s[+M64] });
 				$(__s[2365])
 					.hover(function () {
-						var S4i = D6.bd[bspotHall].bl;
+						var S4i = city.bd[bspotHall].bl;
 						var J4i = 0;
 						if (S4i >= "8" <<
 							777226080 && J4i == 0) var b4i = __s[s8R << 262880832];
@@ -68223,7 +68287,7 @@ function outer() {
 					.tooltipster({ content: $(__s["1848" | 8]), position: __s[M64 | 1] });
 				$(__s[h0k | 0])
 					.hover(function () {
-						var V4i = D6.bd[bspotHall].bl;
+						var V4i = city.bd[bspotHall].bl;
 						var r4i = 0;
 						E6k.y6();
 						if (V4i >= 8 && r4i == 0) var h4i = __s[s8R >> 173134048];
@@ -68235,7 +68299,7 @@ function outer() {
 					.tooltipster({ content: $(__s[635]), position: __s[M64 - 0] });
 				$(__s[+h7p])
 					.hover(function () {
-						var n4i = D6.bd[bspotHall].bl;
+						var n4i = city.bd[bspotHall].bl;
 						var f4i = 0;
 						if (n4i >= 8 && f4i == 0)
 							var A4i = __s[+s8R];
@@ -68247,7 +68311,7 @@ function outer() {
 					.tooltipster({ content: $(__s[1409]), position: __s[M64 | 4104] });
 				$(__s[b7p ^ 0])
 					.hover(function () {
-						var g4i = D6.bd[bspotHall].bl;
+						var g4i = city.bd[bspotHall].bl;
 						var Z4i = 0;
 						E6k.R6();
 						if (g4i >= (8) && Z4i == 0) var K4i = __s[s8R - 0];
@@ -68261,7 +68325,7 @@ function outer() {
 					.tooltipster({ content: $(__s["3381" | 1077]), position: __s[+M64] });
 				$(__s[+G1R])
 					.hover(function () {
-						var P4i = D6.bd[bspotHall].bl;
+						var P4i = city.bd[bspotHall].bl;
 						var B4i = 0;
 						if (P4i >= ("9" |
 							0) && B4i == 0) var U4i = __s[+s8R];
@@ -68274,7 +68338,7 @@ function outer() {
 					.tooltipster({ content: $(__s["4642" | 4128]), position: __s[M64 & 2147483647] });
 				$(__s[1716])
 					.hover(function () {
-						var y4i = D6.bd[bspotHall].bl;
+						var y4i = city.bd[bspotHall].bl;
 						var D4i = 0;
 						if (y4i >= "9" >>
 							2138196064 && D4i == 0) var R4i = __s[s8R ^ 0];
@@ -68287,7 +68351,7 @@ function outer() {
 				$(__s[+X7p])
 					.hover(function () {
 						E6k.R6();
-						var Y4i = D6.bd[bspotHall].bl;
+						var Y4i = city.bd[bspotHall].bl;
 						var N4i = 0;
 						if (Y4i >= (9) &&
 							N4i == 0) var p4i = __s[s8R * 1];
@@ -68300,7 +68364,7 @@ function outer() {
 					.tooltipster({ content: $(__s[4473]) });
 				$(__s[P7p - 0])
 					.hover(function () {
-						var q4i = D6.bd[bspotHall].bl;
+						var q4i = city.bd[bspotHall].bl;
 						var c4i = 0;
 						if (q4i >= 10 && c4i == ("0" |
 							0)) var F4i = __s[s8R * 1];
@@ -68312,7 +68376,7 @@ function outer() {
 					.tooltipster({ content: $(__s['3746' | 3202]) });
 				$(__s[7033])
 					.hover(function () {
-						var a4i = D6.bd[bspotHall].bl;
+						var a4i = city.bd[bspotHall].bl;
 						var E4i = 0;
 						if (a4i >= 10 &&
 							E4i == 0) var m4i = __s[+s8R];
@@ -68325,7 +68389,7 @@ function outer() {
 					.tooltipster({ content: $(__s[5676]) });
 				$(__s[3149])
 					.hover(function () {
-						var e3i = D6.bd[bspotHall].bl;
+						var e3i = city.bd[bspotHall].bl;
 						E6k.y6();
 						var s3i = 0;
 						if (e3i >= (10) && s3i == 0) var k3i = _s(
@@ -68338,17 +68402,17 @@ function outer() {
 					.tooltipster({ content: $(__s[6710]), position: __s[M64 >> 618086112] });
 				$(__s[2572])
 					.hover(function () {
-						var I3i = D6.bd[bspotHall].bl;
+						var I3i = city.bd[bspotHall].bl;
 						var j3i = I3i * 10;
-						var u3i = D6.bq.length;
+						var u3i = city.bq.length;
 						if (
 							u3i < 0) u3i = 0;
 						var T3i = 0;
-						var w3i = D6[_s('6802' <<
+						var w3i = city[_s('6802' <<
 							2053653120)];
 						E6k.R6();
 						var v3i = j3i - w3i;
-						var l3i = D6[__s[1035]];
+						var l3i = city[__s[1035]];
 						if (ppdt[__s[V9y * 1]][
 							1] * (1000) >= currentTime()) var H3i = 16;
 						else var H3i = 6;
@@ -68372,54 +68436,54 @@ function outer() {
 						var C3i = O3i;
 						var G3i = 0;
 						var x3i = "";
-						if (D6.itu)
-							if (D6.itu[8])
-								for (let t3i   in D6.itu[8]) {
+						if (city.itu)
+							if (city.itu[8])
+								for (let t3i   in city.itu[8]) {
 									var M3i = currentTime();
-									var L3i = D6["itu"][8][t3i][1];
-									if (L3i < M3i) D6["itu"][8].splice(t3i, 1);
+									var L3i = city["itu"][8][t3i][1];
+									if (L3i < M3i) city["itu"][8].splice(t3i, 1);
 									else {
 										var z3i = new Date(L3i);
 										var X3i = formatTimehrs(z3i) + " " + MDFormat(
 											L3i);
-										x3i = x3i + __s[594] + D6["itu"][8][t3i][0] + E6k
+										x3i = x3i + __s[594] + city["itu"][8][t3i][0] + E6k
 											.S55(4141) + X3i + __s[K5y - 0];
-										G3i += D6["itu"][8][t3i][0];
+										G3i += city["itu"][8][t3i][0];
 									}
 								}
 						if (x3i != '') x3i = __s[6476] + x3i + __s['6069' | 273];
 						$(__s[+i7y])
-							.tooltipster("content", $(__s[4082] + p6(D6[__s[1924]]) + _s(
-								5052) + p6(D6[__s[5698]]) + __s[3736] + p6(D6[_s(+
+							.tooltipster("content", $(__s[4082] + p6(city[__s[1924]]) + _s(
+								5052) + p6(city[__s[5698]]) + __s[3736] + p6(city[_s(+
 									'1159')]) + __s[1835] + x3i + __s[5865]));
 					});
 				$(__s[6539])
 					.tooltipster({ content: $(__s[1151]), position: __s[M64 ^ 0] });
 				$(__s[6539])
 					.hover(function () {
-						tto = D6.tt;
+						tto = city.tt;
 						var i3i = 0;
 						var d3i = 0;
-						for (var W3i = 1; W3i < D6.tc
+						for (var W3i = 1; W3i < city.tc
 							.length; W3i++) {
-							var S3i = D6.tc[W3i];
+							var S3i = city.tc[W3i];
 							var J3i = bam["troops"][W3i][__s[+t1R]];
 							var
 								b3i = S3i * J3i;
 							i3i = i3i + b3i;
 						}
-						for (var W3i = 1; W3i < D6.th.length; W3i++) {
-							var V3i = D6.th[W3i];
+						for (var W3i = 1; W3i < city.th.length; W3i++) {
+							var V3i = city.th[W3i];
 							var r3i =
 								bam["troops"][W3i][__s[t1R | 4128]];
 							var A3i = V3i * r3i;
 							d3i = d3i + A3i;
 						}
-						if (D6.tq.length >= (1))
-							for (var W3i = 1; W3i < D6.tq.length; W3i++) i3i = i3i + Number(D6.tq[W3i].tc);
+						if (city.tq.length >= (1))
+							for (var W3i = 1; W3i < city.tq.length; W3i++) i3i = i3i + Number(city.tq[W3i].tc);
 						var
 							n3i = tto - i3i;
-						D6.tu = i3i;
+						city.tu = i3i;
 						var f3i = p6(n3i);
 						var h3i = p6(d3i);
 						$(__s[6539])
@@ -68442,9 +68506,9 @@ function outer() {
 					.tooltipster({ content: $(__s[1473]), position: __s[+M64] });
 				$(__s[2886])
 					.hover(function () {
-						var U3i = p6(D6[__s[504]]);
+						var U3i = p6(city[__s[504]]);
 						E6k.R6();
-						var P3i = p6(D6[__s[7032]]);
+						var P3i = p6(city[__s[7032]]);
 						$(__s[2886])
 							.tooltipster("content", $(__s[6321] + P3i + __s[10] + U3i + _s("4606" |
 								130)));
@@ -68453,10 +68517,10 @@ function outer() {
 					.tooltipster({ content: $(__s[272]), position: __s[+M64] });
 				$(__s['6990' | 4])
 					.hover(function () {
-						var B3i = p6(D6[__s[4470]]);
-						var R3i = p6(D6[__s[306]]);
+						var B3i = p6(city[__s[4470]]);
+						var R3i = p6(city[__s[306]]);
 						var y3i = p6(
-							D6[__s[+u8y]]);
+							city[__s[+u8y]]);
 						E6k.y6();
 						$(__s[6990])
 							.tooltipster("content", $(__s[6882] + B3i + __s[5258] +
@@ -68466,10 +68530,10 @@ function outer() {
 					.tooltipster({ content: $(__s[4910]), position: __s[M64 - 0] });
 				$(__s['1659' | 1144])
 					.hover(function () {
-						var D3i = p6(D6["crt"]);
-						var p3i = p6(D6[__s["2956" | 648]]);
+						var D3i = p6(city["crt"]);
+						var p3i = p6(city[__s["2956" | 648]]);
 						var Y3i =
-							p6(D6[__s[650]]);
+							p6(city[__s[650]]);
 						$(__s[1659])
 							.tooltipster("content", $(__s[5096] + D3i + __s[4048] + p3i + __s[4140] +
 								Y3i + __s[b7t - 0]));
@@ -68970,7 +69034,7 @@ function outer() {
 		//				});
 		//			$(__s[4591])
 		//				.removeClass(__s[4891]);
-		//			if (D6["bd"][0]["bl"] > 0 &&
+		//			if (city["bd"][0]["bl"] > 0 &&
 		//				e7g == __s[g4p >> 510267584] || e7g == __s[G2k ^ 0] || e7g == 'l') {
 		//				n2 =
 		//					$("#quickBuildMenu")
@@ -69103,85 +69167,85 @@ function outer() {
 			}
 		}
 		cotg.city = {
-			id: function () { return D6.cid; },
+			id: function () { return city.cid; },
 			troops: function () {
 				E6k.y6();
 				var
 					E1i = {
-						galley: { total: D6.tc['14' ^ 0], home: D6.th[+'14'] },
+						galley: { total: city.tc['14' ^ 0], home: city.th[+'14'] },
 						ram: {
-							total: D6.tc[12],
-							home: D6.th[
+							total: city.tc[12],
+							home: city.th[
 								12]
 						},
-						triari: { total: D6.tc[3], home: D6.th[3] },
-						arbalist: { total: D6.tc[8], home: D6.th[8] },
+						triari: { total: city.tc[3], home: city.th[3] },
+						arbalist: { total: city.tc[8], home: city.th[8] },
 						horseman: {
-							total: D6.tc[10],
-							home: D6.th[+
+							total: city.tc[10],
+							home: city.th[+
 								'10']
 						},
-						scorpion: { total: D6.tc[+m2y], home: D6.th[+m2y] },
+						scorpion: { total: city.tc[+m2y], home: city.th[+m2y] },
 						sorcerer: {
-							total: D6.tc[6],
-							home: D6.th[6]
+							total: city.tc[6],
+							home: city.th[6]
 						},
-						senator: { total: D6.tc[17 >> 1557643776], home: D6.th[+17] },
-						ballista: { total: D6.tc[1], home: D6.th[1] },
+						senator: { total: city.tc[17 >> 1557643776], home: city.th[+17] },
+						ballista: { total: city.tc[1], home: city.th[1] },
 						stinger: {
-							total: D6.tc[+'15'],
-							home: D6.th['15' & 2147483647]
+							total: city.tc[+'15'],
+							home: city.th['15' & 2147483647]
 						},
-						vanquisher: { total: D6.tc[5], home: D6.th[5] },
-						priestess: { total: D6.tc[4], home: D6.th[4] },
+						vanquisher: { total: city.tc[5], home: city.th[5] },
+						priestess: { total: city.tc[4], home: city.th[4] },
 						ranger: {
-							total: D6.tc[2],
-							home: D6.th[
+							total: city.tc[2],
+							home: city.th[
 								2]
 						},
-						scout: { total: D6.tc[7], home: D6.th[7] },
+						scout: { total: city.tc[7], home: city.th[7] },
 						guard: {
-							total: D6.tc[+
+							total: city.tc[+
 								"0"],
-							home: D6.th[0]
+							home: city.th[0]
 						},
-						praetor: { total: D6.tc[9], home: D6.th[9] },
+						praetor: { total: city.tc[9], home: city.th[9] },
 						druid: {
-							total: D6
+							total: city
 								.tc[11],
-							home: D6.th[11]
+							home: city.th[11]
 						},
 						warship: {
-							total: D6.tc["16" | 16],
-							home: D6.th["16" *
+							total: city.tc["16" | 16],
+							home: city.th["16" *
 								1]
 						}
 					};
 				return E1i;
 			},
-			castle: function () { E6k.y6(); return D6.c; },
+			castle: function () { E6k.y6(); return city.c; },
 			water: function () {
-				return D6
+				return city
 					.w;
 			},
-			name: function () { E6k.R6(); return D6.citn; },
+			name: function () { E6k.R6(); return city.citn; },
 			resources: function () {
 				var a1i = {
-					wood: D6.r[
+					wood: city.r[
 						1]["r"],
-					wood_ph: D6.r[1]['g'],
-					wood_st: D6.st[1],
-					stone: D6.r["2" ^
+					wood_ph: city.r[1]['g'],
+					wood_st: city.st[1],
+					stone: city.r["2" ^
 						0]["r"],
-					stone_ph: D6.r[2]['g'],
-					stone_st: D6.st[2],
-					iron: D6.r[3]["r"],
-					iron_ph: D6.r[3]['g'],
-					iron_st: D6.st[
+					stone_ph: city.r[2]['g'],
+					stone_st: city.st[2],
+					iron: city.r[3]["r"],
+					iron_ph: city.r[3]['g'],
+					iron_st: city.st[
 						3],
-					food: D6.r[4]["r"],
-					food_ph: D6.r[4]['g'],
-					food_st: D6.st[4]
+					food: city.r[4]["r"],
+					food_ph: city.r[4]['g'],
+					food_st: city.st[4]
 				};
 				return a1i;
 			}
@@ -69251,11 +69315,11 @@ function outer() {
 		function h4F() {
 			var X8w;
 			var L8w = 0;
-			var z8w = D6.bd.length;
+			var z8w = city.bd.length;
 			for (var o8w = 0; o8w < z8w; o8w++) {
 				X8w
-					= D6.bd[o8w]["bid"];
-				if (X8w == +bidCASTLE) L8w = D6.bd[o8w]["bl"];
+					= city.bd[o8w]["bid"];
+				if (X8w == +bidCASTLE) L8w = city.bd[o8w]["bl"];
 			}
 			var M8w = +
 				'5' + L8w;
@@ -69659,16 +69723,16 @@ function outer() {
 
 		function T7F(D06, Y06) {
 			E6k.R6();
-			var p06 = D6.tq.length;
+			var p06 = city.tq.length;
 			var N06;
 			var F06;
 			var q06;
 			var y06 = 0;
-			y06 += D6.tc[D06];
+			y06 += city.tc[D06];
 			for (var R06 = 0; R06 < p06; R06++) {
 				N06 = R06;
-				trpid = Number(D6.tq[R06][__s[2784]]);
-				count = Number(D6.tq[R06][__s[+s8y]]);
+				trpid = Number(city.tq[R06][__s[2784]]);
+				count = Number(city.tq[R06][__s[+s8y]]);
 				if (D06 == trpid) y06 += count;
 			}
 			if (y06 >= Y06) return !!1;
@@ -70101,7 +70165,7 @@ function outer() {
 					$(b6w)
 						.attr("disabled", ![]);
 				});
-			if (D6.ble["1" | 1] == 0) {
+			if (city.ble["1" | 1] == 0) {
 				$(__s[6696])
 					.attr("disabled", !!{});
 				$(__s[g0t * 1])
@@ -70117,7 +70181,7 @@ function outer() {
 				$(__s[+G0k])
 					.attr("disabled", !0);
 			}
-			if (D6.c == 1) {
+			if (city.c == 1) {
 				$(__s[1158])
 					.attr("disabled", !!"1");
 				$(__s[5472])
@@ -70176,8 +70240,8 @@ function outer() {
 //			var b7g = new Array(527, 528, "529" | 512, 530, 531, 532, 533,
 //				534);
 //			E6k.y6();
-//			for (var z7g = 0; z7g < D6.bd.length; z7g++)
-//				if (D6.bd[z7g].bid == 447) {
+//			for (var z7g = 0; z7g < city.bd.length; z7g++)
+//				if (city.bd[z7g].bid == 447) {
 //					var K7g = z7g - (1);
 //					var g7g = z7g + (1);
 //					var V7g =
@@ -70197,7 +70261,7 @@ function outer() {
 //							17);
 //						d7g = d7g * +G5y;
 //						J7g = J7g * (G5y << 1119893856);
-//						var n7g = D6["bd"][Number(M7g)]["bid"];
+//						var n7g = city["bd"][Number(M7g)]["bid"];
 //						var f7g = D5F(
 //							Number(M7g));
 //						if (n7g == 0 && f7g == 'l') {

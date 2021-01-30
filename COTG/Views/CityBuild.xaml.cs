@@ -30,6 +30,7 @@ using static COTG.Views.CityBuild;
 using Action = COTG.Views.CityBuild.Action;
 using COTG.Services;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+using static COTG.Draw.CityView;
 
 namespace COTG.Views
 {
@@ -59,6 +60,8 @@ namespace COTG.Views
 			upgrade,
 			downgrade,
 			abandon,
+			flipLayoutV,
+			flipLayoutH,
 			invalid,
 			count = invalid,
 
@@ -137,13 +140,14 @@ namespace COTG.Views
 		static ActionInfo actionDemo = new ActionInfo("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
 		static ActionInfo actionLayout = new ActionInfo("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
 		static ActionInfo actionUpgrade = new ActionInfo("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
+		static ActionInfo actionBuild = new ActionInfo("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static ActionInfo actionDowngrade = new ActionInfo("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
 		static ActionInfo actionAbandon = new ActionInfo("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
 		static RadialMenuItem itemQB;
 
 
 		public static BuildMenuItem Item(RadRadialMenu buildMenu, int id) => (BuildMenuItem)buildMenu.Items[id];
-		public static void UpdateBuildMenuType(MenuType _menuType)
+		public static void UpdateBuildMenuType(MenuType _menuType, Building b)
 		{
 			if (menuType == _menuType)
 				return;
@@ -171,7 +175,10 @@ namespace COTG.Views
 					Item(buildMenu, 1).SetAction(actionMove);
 					Item(buildMenu, 2).SetAction(menuType == MenuType.buliding ? actionDemo : actionAbandon);
 					Item(buildMenu, 3).SetAction(actionLayout);
-					Item(buildMenu, 4).SetAction(actionUpgrade);
+					if( b.bl == 0 )
+						Item(buildMenu, 4).SetAction(actionBuild);
+					else
+						Item(buildMenu, 4).SetAction(actionUpgrade);
 					Item(buildMenu, 5).SetAction(actionDowngrade);
 					Item(buildMenu, 6).Clear();
 					Item(buildMenu, 7).Clear();
@@ -321,80 +328,160 @@ namespace COTG.Views
 		{
 
 			var id = XYToId(selected);
-			var sel = GetBuilding(id);
+			var sel = GetBuildingPostQueue(id);
 			var lvl = sel.bl;
 			
-			// check for queued upgrades
-			for (var it = buildQueue.iterate; it.Next();)
-			{
-				if (it.r.bspot == id)
-					lvl = it.r.elvl;
-			}
-			JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (selected.x - span0).ToString(), (selected.y - span0).ToString(), (lvl + 1).ToString() });
+			if(lvl == 0)// special case
+				JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "0" });
+			else
+				JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (selected.x - span0).ToString(), (selected.y - span0).ToString(), (lvl + 1).ToString() });
+		
 			buildQueue.Add(new JSON.BuildQueueItem() { bspot = (ushort)id, slvl = (byte)(lvl), elvl = (byte)(lvl + 1) });
 		}
-		public static void UpgradeToLevel(int level, (int x, int y) target)
+		public static void UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
 		{
 			//var target = hovered;
 			if (!target.IsValid())
 			{
-				Note.Show("Please select a building");
+				Status("Please select a building", dryRun);
 				return;
 			}
 			var id = XYToId(target);
-			var sel = GetBuilding(id);
+			var sel = GetBuildingPostQueue(id);
 			var lvl = sel.bl;
 			if (level == 1)
 				level = lvl + 1;
-			for (var it = buildQueue.iterate; it.Next();)
+
+			if (lvl == 0)
 			{
-				if (it.r.bspot == id)
-					lvl = it.r.elvl;
+				if (!dryRun)
+				{
+					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "0" });
+					buildQueue.Add(new JSON.BuildQueueItem() { bspot = (ushort)id, slvl = 0, elvl = (byte)(1) });
+				}
+				lvl = 1;
 			}
-			JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (target.x - span0).ToString(), (target.y - span0).ToString(), (level).ToString() });
-			for (; lvl < level; ++lvl)
-				buildQueue.Add(new JSON.BuildQueueItem() { bspot = id, slvl = (byte)(lvl), elvl = (byte)(lvl + 1) });
+			if (lvl < level)
+			{
+
+				if (!dryRun)
+				{
+					JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (target.x - span0).ToString(), (target.y - span0).ToString(), (level).ToString() });
+					buildQueue.Add(new JSON.BuildQueueItem() { bspot = id, slvl = (byte)(lvl), elvl = (byte)(level) }); ;
+				}
+			}			
 		}
 
-		public static void Demolish((int x, int y) building)
+		public static void Demolish((int x, int y) building, bool dryRun)
 		{
-			Demolish(XYToId(building));
+			Demolish(XYToId(building), dryRun);
 		}
 
-		public static void Demolish(int id)
+		public static Building GetBuildingPostQueue(int spot)
 		{
-			var sel = GetBuilding(id);
-			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
-			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
+			var b = GetBuilding(spot);
+			var wasBuilding = b.isBuilding;
+			// its a struct so we can mutate it
+			foreach( var q in buildQueue)
+			{
+				if(q.bspot == spot)
+				{
+					b.bl = q.elvl;
+					b.id = BuildingDef.BidToId( q.brep);
+					if (b.bl == 0 && wasBuilding)
+						b.id = 0;
+				}
+			}
+			return b;
+
 		}
-		public static void Downgrade((int x, int y) building)
+
+		public static void Demolish(int id, bool dryRun)
+		{
+			var sel = GetBuildingPostQueue(id);
+			if (sel.isEmpty)
+			{
+				Status("Already destoryed", dryRun);
+			}
+			else
+			{
+				Status($"Destory {sel.def.Bn}", dryRun);
+				if (!dryRun)
+				{
+					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
+					buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
+				}
+			}
+		}
+		public static void Downgrade((int x, int y) building, bool dryRun)
 		{
 			var id = XYToId(building);
-			var sel = GetBuilding(id);
-			JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
-			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
-		}
-		public static void Build(int id, int bid)
-		{
-			JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
+			var sel = GetBuildingPostQueue(id);
 
-			// todo: btype
-			buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+			if (sel.bl == 1)
+			{
+				Demolish(id, dryRun);
+			}
+			else if(sel.bl == 0)
+			{
+				Status("Already destoryed", dryRun);
+				return;
+
+			}
+			else
+			{
+				Status($"Downgrade {sel.def.Bn}", dryRun);
+				if(!dryRun)
+					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
+
+			}
+			if(!dryRun)
+				buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
 		}
-		public static void Build((int x, int y) cc, int bid)
+		public static void Build(int id, int bid, bool dryRun)
 		{
-			Build(XYToId(cc), bid);
+			var sel = GetBuildingPostQueue(id);
+			if (!sel.isEmpty)
+			{
+				Status("Spot is occupied",dryRun);
+			}
+			else
+			{
+				if( IsTowerSpot(id))
+				{
+					if(City.GetBuild().buildings[bpotWall].bl == 0)
+					{
+						Status("Please build a wall first", dryRun);
+						return;
+					}
+				}
+				if (dryRun)
+				{
+					DrawBuilding(IdToXY(id), cityDrawAlpha, bid, AGame.animationT * 0.3247f);
+				}
+				else
+				{
+					JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
+
+					// todo: btype
+					buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+				}
+			}
+		}
+		public static void Build((int x, int y) cc, int bid, bool dryRun)
+		{
+			Build(XYToId(cc), bid, dryRun);
 		}
 
 
 		private void Downgrade_Click(object sender, RoutedEventArgs e)
 		{
-			Downgrade(selected);
+			Downgrade(selected,false);
 		}
 
 		private void Destroy_Click(object sender, RoutedEventArgs e)
 		{
-			Demolish(selected);
+			Demolish(selected,false);
 		}
 		public static ImageBrush BrushFromAtlas(string name, int x, int y, float scale)
 		{
@@ -442,6 +529,7 @@ namespace COTG.Views
 
 		public static void MoveBuilding(int a, int b)
 		{
+			// Todo: Error checking
 			var build = City.GetBuild();
 			Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}");
 			ref var b1 = ref build.buildings[a];
@@ -453,6 +541,7 @@ namespace COTG.Views
 		}
 		public static async void SwapBuilding(int a, int b)
 		{
+			// Todo: Error checking
 			var build = City.GetBuild();
 			// I hope that these operations are what I expect with references
 			var temp = build.buildings[b];
@@ -465,43 +554,80 @@ namespace COTG.Views
 
 		}
 
-		internal static void MoveHovered(bool isSingleAction)
+		internal static void MoveHovered(bool isSingleAction, bool dryRun)
 		{
 			int bspot = XYToId(hovered);
 			var build = GetBuild();
 			var b = build.buildings[bspot];
-			if (CanvasHelpers.IsValid(selected) && b.bl < 1)
+			if (CanvasHelpers.IsValid(selected) )
 			{
-				if (b.id != 0)
+				if (b.id != 0 && b.bl ==0)
 				{
-					Note.Show("Please select an empty spot");
+					Status("Please select an empty spot", dryRun);
 				}
 				else
 				{
 					var source = XYToId(selected);
 
-					if (isSingleAction)
+
+					// Is this a valid transition
+					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) ? 0 : 2;
+					if(bs1 ==0 )
+					{
+						Status("Please don't put buildings on walls.", dryRun);
+						return;
+					}
+					var bs0 = IsTowerSpot(selected) ? 1 : 2;
+					if (bs0 != bs1)
+					{
+						Status("Cannot move between building and wall spots", dryRun);
+						return;
+					}
+
+					if (isSingleAction && !dryRun)
 					{
 						singleClickAction = Action.none;
 						action = Action.none;
 					}
-					MoveBuilding(source, bspot);
-					ClearSelectedBuilding();
+
+					if (dryRun)
+					{
+						DrawSprite(hovered, decalMoveBuilding, 0.343f);
+						DrawSprite(selected, decalMoveBuilding, 0.323f);
+
+					}
+					else
+					{
+
+						if (b.bl > 0)
+						{
+							SwapBuilding(source, bspot);
+						}
+						else
+						{
+							MoveBuilding(source, bspot);
+						}
+						ClearSelectedBuilding();
+					}
 				}
 			}
 			else
 			{
 				if (b.bl <= 0)
 				{
-					Note.Show("Please select a building");
+					Status("Please select a building", dryRun);
 				}
 				else
 				{
-					selected = hovered;
-					if (isSingleAction)
+					Status($"Select building {b.def.Bn} at {hovered.bspotToString()}" );
+					if (!dryRun)
 					{
-						singleClickAction = Action.pending;
-						action = Action.move;
+						selected = hovered;
+						if (isSingleAction)
+						{
+							singleClickAction = Action.pending;
+							action = Action.move;
+						}
 					}
 				}
 			}
@@ -537,11 +663,15 @@ namespace COTG.Views
 			//	quickBuildId = 0;
 			//}
 		}
-		public static void PerformAction(Action action, (int x, int y) cc, int _quickBuildId)
+
+		public static void PerformAction(Action action, (int x, int y) cc, int _quickBuildId, bool dryRun)
 		{
+		
+
 			int bspot = XYToId(cc);
 			var build = GetBuild();
 			var b = build.buildings[bspot];
+
 
 			switch (action)
 			{
@@ -550,7 +680,7 @@ namespace COTG.Views
 						var layout = build.layout;
 						if (build.layout == null)
 						{
-							Note.Show("Please assign a layout");
+							Status("Please assign a layout",dryRun);
 						}
 						else
 						{
@@ -588,6 +718,7 @@ namespace COTG.Views
 										{
 											putScore = score;
 											putTo = xy;
+
 										}
 
 									}
@@ -604,8 +735,16 @@ namespace COTG.Views
 								{
 									if (takeScore > 0)
 									{
-										Note.Show($"Found an unneeded {desName}, moving it here");
-										MoveBuilding(takeFrom, bspot);
+										Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
+										if (!dryRun)
+										{
+											MoveBuilding(takeFrom, bspot);
+										}
+										else
+										{
+											DrawSprite(cc, decalMoveBuilding, 0.343f);
+											DrawSprite(selected, decalMoveBuilding, 0.323f);
+										}
 										break;
 									}
 									if (counts.count >= counts.max)
@@ -614,19 +753,40 @@ namespace COTG.Views
 										{
 											// Is there a cabin to remove?
 											var buildings = build.buildings;
+											var bestSpot = -1;
+											int bestLevel = int.MaxValue;
 											for (int spot = 0; spot < citySpotCount; ++spot)
 											{
-												if (buildings[spot].def.bid == bidCottage)
+												var bld = buildings[spot];
+												if (bld.def.bid == bidCottage)
 												{
-													// is it not being modified?
-													if (buildQueue.Any(a => a.bspot == spot))
-														continue;
-													Note.Show("Demolising a Cottage to make room");
-													Demolish(spot);
-													break;
+													if (bld.bl < bestLevel)
+													{
+														// is it not being modified?
+														if (buildQueue.Any(a => a.bspot == spot))
+															continue;
+
+														bestLevel = bld.bl;
+														bestSpot = spot;
+													}
 												}
 											}
+											if(bestSpot != -1)
+											{
+												Status("Will Demolish a Cottage to make room", dryRun);
+												if (dryRun)
+												{
+													DrawSprite(IdToXY(bestSpot), decalBuildingInvalid, .31f);
+												}
+												else
+												{
+													Demolish(bestSpot,dryRun);
+												}
+												break;
+
+											}
 										}
+
 
 									}
 
@@ -635,23 +795,26 @@ namespace COTG.Views
 								{
 									if(counts.count >= counts.max)
 									{
-										Note.Show("City is full");
+										Status("City is full",dryRun);
 										break;
 									}
 								}
 								{
 									if (buildQueueFull)
 									{
-										Note.Show("Build Queue full");
+										Status("Build Queue full", dryRun);
 										break;
 									}
 
 									if (desBid == 0)
-										Note.Show($"No building is wanted here, how about a cottage instead?");
+										Status($"No building is wanted here, how about a cottage instead?", dryRun);
 									else
-										Note.Show($"Building {desName}");
+										Status($"Build a {desName}", dryRun);
 
-									Build(cc,desBid == 0 ? bidCottage : desBid);
+									
+									
+									Build(cc, desBid == 0 ? bidCottage : desBid,dryRun);
+									
 								}
 							}
 							else if (b.isRes)
@@ -660,14 +823,22 @@ namespace COTG.Views
 								{
 									if (buildQueueFull)
 									{
-										Note.Show("Build Queue full");
+										Status("Build Queue full",dryRun);
 										break;
 									}
 									else
 									{
-										Note.Show($"Destorying {b.def.Bn} to make way for {desName}");
+										Status($"Destorying {b.def.Bn} to make way for {desName}",dryRun);
 									}
-									Demolish(cc);
+									if (dryRun)
+									{
+
+										DrawSprite(hovered, decalBuildingInvalid, .31f);
+									}
+									else
+									{
+										Demolish(cc,dryRun);
+									}
 									// Test!
 									//JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
 								}
@@ -688,21 +859,35 @@ namespace COTG.Views
 										{
 											case 4:
 												{
-													Note.Show($"Swaping {b.def.Bn} and {desName} as they are mixed up");
+													Status($"Swaping {b.def.Bn} and {desName} as they are mixed up", dryRun);
+													if (dryRun)
+													{
+														DrawSprite(hovered, decalMoveBuilding, 0.343f);
+														DrawSprite(IdToXY(putTo), decalMoveBuilding, 0.323f);
 
-													SwapBuilding(bspot, putTo);
+													}
+													else
+													{
+														SwapBuilding(bspot, putTo);
+													}
 													// two way swap 
 													break;
 												}
 											case 3:
-												Note.Show($"Moved {name} to where it is wanted");
-												MoveBuilding(bspot, putTo);
+												Status($"Move {name} to where it is wanted", dryRun);
+												if (dryRun)
+												{
+													DrawSprite(hovered, decalMoveBuilding, 0.343f);
+													DrawSprite(IdToXY(putTo), decalMoveBuilding, 0.323f);
+												}
+												else
+													MoveBuilding(bspot, putTo);
 												break;
 											case 2:
-												Note.Show($"{name} is wanted elsewhere but there is a building in the way");
+												Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
 												break;
 											case 1:
-												Note.Show($"{name} is wanted elsewhere but there are reources in the way");
+												Status($"{name} is wanted elsewhere but there are reources in the way", dryRun);
 												break;
 
 
@@ -713,13 +898,16 @@ namespace COTG.Views
 
 									if (!buildingWanted)
 									{
-										Note.Show($"{b.def.Bn} is not wanted, destroying it");
-										Demolish(cc);
+										Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+										if(dryRun)
+											DrawSprite(hovered, decalBuildingInvalid, .31f);
+										else
+											Demolish(cc, dryRun);
 									}
 								}
 								else
 								{
-									Note.Show($"{desName} is in the right spot, no changed needed");
+									Status($"{desName} is in the right spot, no changed needed", dryRun);
 
 								}
 							}
@@ -731,12 +919,12 @@ namespace COTG.Views
 					{
 						if(b.isRes && !buildQueue.Any(a => a.bspot == bspot))
 						{
-							Note.Show("Spot is not empty");
+							Status("Spot is not empty", dryRun);
 							break;
 						}
 						if (buildQueueFull)
 						{
-							Note.Show("Build Queue full");
+							Status("Build Queue full", dryRun);
 							break;
 						}
 
@@ -744,38 +932,38 @@ namespace COTG.Views
 
 						if (sel != 0)
 						{
-							Build(bspot,sel);
-							buildQueue.Add(new BuildQueueItem() { bspot = bspot, brep = sel, slvl = 0, elvl = 1 });
+							Build(bspot,sel,dryRun);
+							
 							break;
 						}
-						Note.Show("Please select a valid building");
+						Status("Please select a valid building");
 						break;
 					}
 				case Action.destroy:
 					{
 						if (buildQueueFull)
 						{
-							Note.Show("Build Queue full");
+							Status("Build Queue full", dryRun);
 							break;
 						}
-						Demolish(cc);
+						Demolish(cc, dryRun);
 
 						
 						break;
 					}
 				case Action.move:
 					{
-						MoveHovered(singleClickAction == Action.pending);
+						MoveHovered(singleClickAction == Action.pending, dryRun);
 						break;
 					}
 				case Action.downgrade:
 					{
-						Downgrade(cc);
+						Downgrade(cc,dryRun);
 						break;
 					}
 				case Action.upgrade:
 					{
-						UpgradeToLevel(1,cc);
+						UpgradeToLevel(1,cc,dryRun);
 						break;
 					}
 				case Action.abandon:
@@ -788,7 +976,7 @@ namespace COTG.Views
 
 		internal static void ShortBuild(short bid)
 		{
-			PerformAction(CityBuild.Action.build, hovered, bid);
+			PerformAction(CityBuild.Action.build, hovered, bid,false);
 
 		}
 
@@ -798,6 +986,13 @@ namespace COTG.Views
 			hovered = cc;
 
 		}
+
+		public static void PreviewBuildAction()
+		{
+			PerformAction(action, hovered, quickBuildId, true);
+
+		}
+
 		public static void Click((int x, int y) cc, bool isRight)
 		{
 			if (ShellPage.instance.buildMenu.IsOpen)
@@ -813,7 +1008,7 @@ namespace COTG.Views
 
 			if (!isRight && action != Action.none)
 			{
-				PerformAction(action, cc, quickBuildId);
+				PerformAction(action, cc, quickBuildId,false);
 				if (singleClickAction == Action.pending)
 				{
 					action = Action.none;
@@ -844,17 +1039,18 @@ namespace COTG.Views
 					}
 				}
 				var d = b.def;
-				if (!b.isEmpty)
+		//		if (!b.isEmpty)
 					JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 				{
 					selected = cc;
 					var type = isRight ? MenuType.quickBuild :
-						CityBuild.IsTowerSpot(bspot) ? MenuType.tower : 
+						CityBuild.IsTowerSpot(bspot) ? MenuType.tower :
+						bspot == 0 ? MenuType.buliding :
 						b.id == 0 ? MenuType.empty :
 						b.bl == 0 ? MenuType.res :
 						d.bid == bidTownHall ? MenuType.townhall :
 						MenuType.buliding;
-					UpdateBuildMenuType(type);
+					UpdateBuildMenuType(type, b);
 
 					//				ShellPage.instance.buildMenu.IsOpen = true;
 					var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
@@ -1047,7 +1243,7 @@ namespace COTG.Views
 				{
 					if (singleClickAction == CityBuild.Action.pending)
 					{
-						PerformAction(CityBuild.Action.build, selected, bi.bid);
+						PerformAction(CityBuild.Action.build, selected, bi.bid,false);
 					}
 					else
 					{
@@ -1145,7 +1341,7 @@ namespace COTG.Views
 							}
 							else
 							{
-								PerformAction(bi.action, selected, 0);
+								PerformAction(bi.action, selected, 0,false);
 								singleClickAction = CityBuild.Action.none;
 								ClearSelectedBuilding();
 							}

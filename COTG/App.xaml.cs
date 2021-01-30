@@ -753,6 +753,12 @@ namespace COTG
 			return $"[{coord}](/c/{coord})";
 
 		}
+		public static string bspotToString(this (int x, int y) cc )
+		{
+			var coord = $"{(cc.x):000}:{(cc.y ):000}"; ;
+			return coord;
+
+		}
 		public static string CidToCoords(this int cid)
 		{
 			var coord = cid.CidToString();

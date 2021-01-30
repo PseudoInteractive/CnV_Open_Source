@@ -1258,7 +1258,7 @@ namespace COTG.Game
 
 		public void ReturnFastClick()
 		{
-			if (App.IsKeyPressedShift())
+			if (Raid.test)
 			{
 				SuperRaid();
 			}
@@ -1386,7 +1386,7 @@ namespace COTG.Game
 						AApp.AddItem(flyout, "Return At...", this.ReturnAt);
 					}
 
-					AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetCitySettings(cid, CitySettings.FindBestHub(cid)));
+					AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetHub(cid));
 					AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
 					AApp.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));

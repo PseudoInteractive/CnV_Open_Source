@@ -96,7 +96,7 @@ window['addtoattacksender'] = addToAttackSender;
 //function betterBase64Decode() {
 //	try {
 //		//var me=arguments.callee.caller.caller.prototype;
-//		//me.eval(MakeGlobalGetter("D6"));
+//		//me.eval(MakeGlobalGetter("city"));
 //		//me.eval(MakeGlobalCopy("a6"));
 //		//console.log(window['GetD6']());;
 
@@ -118,7 +118,7 @@ window['addtoattacksender'] = addToAttackSender;
 //function betterBase64Encode()   {
 //	try {
 //		//var me=arguments.callee.caller.caller.prototype;
-//		//me.eval(MakeGlobalGetter("D6"));
+//		//me.eval(MakeGlobalGetter("city"));
 //		//me.eval(MakeGlobalCopy("a6"));
 //		//console.log(window['GetD6']());;
 
@@ -136,7 +136,7 @@ window['addtoattacksender'] = addToAttackSender;
 //}
 function GetCity(): jsonT.City {
 	//	return window['getD6']();
-	return D6;//
+	return city;//
 }
 /*function DummyPromise(data:string) {
 	return new Promise<Response>();
@@ -316,7 +316,7 @@ let  lastSentBD=0;
 	function compareSts() : boolean
 	{
 		var prior = lastSentSts;
-		lastSentSts = D6.sts || "";
+		lastSentSts = city.sts || "";
 		return (prior != lastSentSts );
 
 	}
@@ -344,14 +344,14 @@ function bqChecksum(bd:jsonT.Bq[] ) : number
 
 	function compareBD() : boolean
 	{
-			let b0 = bdChecksum(D6.bd);
+			let b0 = bdChecksum(city.bd);
 			var b1 = lastSentBD;
 			lastSentBD = b0;
 			return b0!==b1;
 	}
 function compareBq() : boolean
 	{
-			let b0 = bqChecksum(D6.bq);
+			let b0 = bqChecksum(city.bq);
 			var b1 = lastSentBq;
 			lastSentBq = b0;
 			if(b0===b1)
@@ -367,39 +367,39 @@ function sendCityData(delayInMs) {
 		const wrapper = {
 			citydata  :
 			{
-				pid: D6.pid,
-				cid: D6.cid,
-				citn:D6.citn,
-				comm: D6.comm,
-				th: D6.th,
-				tc: D6.tc
+				pid: city.pid,
+				cid: city.cid,
+				citn:city.citn,
+				comm: city.comm,
+				th: city.th,
+				tc: city.tc
 				
 			
 			} as jsonT.City
 		};
 		if(compareBD())
 		{
-			wrapper.citydata.bd = D6.bd;
+			wrapper.citydata.bd = city.bd;
 		}
 		if(compareBq())
 		{
-			wrapper.citydata.bq = D6.bq;
+			wrapper.citydata.bq = city.bq;
 		}
 		if(compareSts() )
 		{
-			 wrapper.citydata.sts = D6.sts;
+			 wrapper.citydata.sts = city.sts;
 		}
 			
 
-		if (D6.hasOwnProperty('trin') && D6.trin.length > 0)
+		if (city.hasOwnProperty('trin') && city.trin.length > 0)
 		{
-			wrapper.citydata['trin'] = D6.trin;
+			wrapper.citydata['trin'] = city.trin;
 		}
-		if (D6.hasOwnProperty('trintr') && D6.trintr.length > 0) {
-			wrapper.citydata['trintr'] = D6.trintr;
+		if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
+			wrapper.citydata['trintr'] = city.trintr;
 		}
-		if (D6.hasOwnProperty('triin') && D6.triin.length > 0) {
-			wrapper.citydata['triin'] = D6.triin;
+		if (city.hasOwnProperty('triin') && city.triin.length > 0) {
+			wrapper.citydata['triin'] = city.triin;
 		}
 
 		window['external']['notify'](JSON.stringify(wrapper));
@@ -418,20 +418,24 @@ function sendBuildingData() {
 		const wrapper = {
 			citydata:
 			{
-				pid:D6.pid,
-				cid: D6.cid,
+				pid:city.pid,
+				cid: city.cid,
 				
 			} as jsonT.City
 		};
+		let any = false;
 		if(compareBq())
 		{
-			wrapper.citydata.bq = D6.bq;
+			any=true;
+			wrapper.citydata.bq = city.bq;
 		}
 		if(compareBD())
 		{
-			wrapper.citydata.bd = D6.bd;
+			any=true;
+			wrapper.citydata.bd = city.bd;
 		}
-		window['external']['notify'](JSON.stringify(wrapper));
+		if(any)
+			window['external']['notify'](JSON.stringify(wrapper));
 }
 function sendchat(channel:string,message:string)
 {
@@ -750,7 +754,7 @@ function avapost(url: string, args: string) {
 
 // returns for current city
 function avagetts() {
-	var rv = { tc: D6.tc, th: D6.th };
+	var rv = { tc: city.tc, th: city.th };
 	return JSON.stringify(rv);
 }
 
@@ -846,8 +850,8 @@ function postppdt()
 
 		console.log("Notify here");
 		let options: AddEventListenerOptions = { capture: true, passive:true,once:false } 
-		document.addEventListener("keydown", onKeyDown, options);
-		document.addEventListener("keyup", onKeyUp, options);
+		//document.addEventListener("keydown", onKeyDown, options);
+		//document.addEventListener("keyup", onKeyUp, options);
 	//	window.addEventListener("click", onMouseDown, options);
 	//	document.addEventListener("mousedown", onMouseDown, options);
 		document.getElementById("mainMapDiv").addEventListener("mousedown",canvasMouseDown,options);
@@ -875,8 +879,8 @@ function postppdt()
 
 		
 		let wrapper = { jsvars: creds }
-//		if (D6 != null)
-//			wrapper['citydata'] = D6;
+//		if (city != null)
+//			wrapper['citydata'] = city;
 
 		window['external']['notify'](JSON.stringify(wrapper));
 		//OptimizeAjax();
@@ -1223,9 +1227,9 @@ function avactor() {
 			var boss_strengthw_ = Math.ceil(AsNumber(bossdefw_[lvl_ - 1]) * 4);
 			
 			let i_4X = 0;
-			for (var x_85 in D6.th) {
+			for (var x_85 in city.th) {
 				
-				let home_1 = AsNumber(D6.th[x_85]);
+				let home_1 = AsNumber(city.th[x_85]);
 				if (i_4X === 0 || i_4X === 1 || i_4X === 7 || i_4X === 12 || i_4X === 13) {
 					
 					home_1 = 0;
@@ -1719,7 +1723,7 @@ function avactor() {
 			//  ppdt.clc[temp_3] = [];
 			//  var tempcl_ = $("#cityDropdownMenu > option");
 			//  var ll_ = tempcl_.length;
-			//  if (D6.cg,temp_3) > -1) {
+			//  if (city.cg,temp_3) > -1) {
 			//    ppdt.clc[temp_3].push($(tempcl_[0]).attr("value"));
 			//  }
 			//  if (ll_ > 1) {
@@ -2040,14 +2044,14 @@ function avactor() {
                     defobj.targets.x.push(tempx);
                     defobj.targets.y.push(tempy);
                     defobj.targets.cstr.push(tempx+":"+tempy);
-                    defobj.targets.dist.push(Math.sqrt((tempx-D6.x)*(tempx-D6.x)+(tempy-D6.y)*(tempy-D6.y)));
+                    defobj.targets.dist.push(Math.sqrt((tempx-city.x)*(tempx-city.x)+(tempy-city.y)*(tempy-city.y)));
                     defobj.targets.numb++;
                 }
             }
-            for (let i in D6.tc) {
-                if (D6.tc[i]) {
-                    defobj.t.tot.push(Math.ceil(D6.tc[i]*Number($("#defperc").val())/100));
-                    defobj.t.home.push(Math.ceil(D6.th[i]*Number($("#defperc").val())/100));
+            for (let i in city.tc) {
+                if (city.tc[i]) {
+                    defobj.t.tot.push(Math.ceil(city.tc[i]*Number($("#defperc").val())/100));
+                    defobj.t.home.push(Math.ceil(city.th[i]*Number($("#defperc").val())/100));
                     defobj.t.type.push(Number(i));
                     if ($("#usedef"+i).prop( "checked")==true) {
                         defobj.t.speed.push(ttspeed[i]/ttSpeedBonus[i]);
@@ -2117,10 +2121,10 @@ function avactor() {
 			tempx = Number(tid % 65536);
 			tempy = Number((tid - tempx) / 65536);
 			var defobj = { targets: { x: [tempx], y: [tempy], dist: [], numb: 1 }, t: { home: [], type: [], use: [], speed: [], amount: [] }, perc: 100, dep: 0, ret: 0, rettime: 0, hr: 0, min: 0, sec: 0, dat: 0 };
-            defobj.targets.dist.push(Math.sqrt((tempx-D6.x)*(tempx-D6.x)+(tempy-D6.y)*(tempy-D6.y)));
-            for (let i in D6.th) {
-                if (D6.th[i]) {
-                    defobj.t.home.push(Math.ceil(D6.th[i]*Number($("#defperc").val())/100));
+            defobj.targets.dist.push(Math.sqrt((tempx-city.x)*(tempx-city.x)+(tempy-city.y)*(tempy-city.y)));
+            for (let i in city.th) {
+                if (city.th[i]) {
+                    defobj.t.home.push(Math.ceil(city.th[i]*Number($("#defperc").val())/100));
 					defobj.t.type.push(Number(i));
 					defobj.t.speed.push(ttspeed[i] / ttSpeedBonus[i]);
 					defobj.t.use.push(1);
@@ -2769,82 +2773,8 @@ function avactor() {
 			}
 		});
 
-		$("#citynotes").draggable({
-			handle: ".popUpBar",
-			containment: "window",
-			scroll: false
-		});
-		$("#citynotes").height("310px");
-		$("#citynotes").width("495px");
 		
-		var layoutopttab_ = "<li id='layoutopt' class='ui-state-default ui-corner-top' role='tab' tabindex='-1' aria-controls='layoutoptBody'";
-		
-		layoutopttab_ = `${layoutopttab_}aria-labeledby='ui-id-60' aria-selected='false' aria-expanded='false'>`;
-		
-		layoutopttab_ = `${layoutopttab_}<a href='#layoutoptBody' class='ui-tabs-anchor' role='presentation' tabindex='-1' id='ui-id-60'>Layout Options</a></li>`;
-		
-		var layoutoptbody_ = "<div id='layoutoptBody' aria-labeledby='ui-id-60' class='ui-tabs-panel ui-widget-content ui-corner-bottom' ";
-		
-		layoutoptbody_ = `${layoutoptbody_} role='tabpanel' aria-hidden='true' style='display: none;'><table><tbody><tr><td><input id='addnotes' class='clsubopti' type='checkbox'> Add Notes</td>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<td><input id='addtroops' class='clsubopti' type='checkbox'> Add Troops</td></tr><tr><td><input id='addtowers' class='clsubopti' type='checkbox'> Add Towers</td><td><input id='addbuildings' class='clsubopti' type='checkbox'> Upgrade Cabins</td>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<td> Cabin Lvl: <input id='cablev' type='number' style='width:22px;' value='7'></td></tr><tr><td><input id='addwalls' class='clsubopti' type='checkbox'> Add Walls</td>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<td><input id='addhub' class='clsubopti' type='checkbox'> Set Nearest Hub With layout</td></tr><tr><td>Select Hubs list: </td><td id='selhublist'></td><td>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<button id='nearhubAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Set Nearest Hub</button><button id='infantryAp' class='regButton greenb' style='width:130px; margin-left: 10%'>Infantry setup</button></td></tr></tbody></table>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<table><tbody><tr><td colspan='2'><input id='addres' class='clsubopti' type='checkbox'> Add Resources:</td><td id='buttd' colspan='2'></td></tr><tr><td>wood<input id='woodin' type='number' style='width:100px;' value='200000'></td><td>stone<input id='stonein' type='number' style='width:100px;' value='220000'></td>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}<td>iron<input id='ironin' type='number' style='width:100px;' value='200000'></td><td>food<input id='foodin' type='number' style='width:100px;' value='350000'></td></tr>`;
-		
-		layoutoptbody_ = `${layoutoptbody_}</tbody></table></div>`;
-		
-		var layoptbut_ = "<button id='layoptBut' class='regButton greenb' style='width:150px;'>Save Res Settings</button>";
-		var tabs_1 = $("#CNtabs").tabs();
-		var ul_1 = tabs_1.find("ul");
-		$(layoutopttab_).appendTo(ul_1);
-		tabs_1.tabs("refresh");
-		$("#CNtabs").append(layoutoptbody_);
-		$("#buttd").append(layoptbut_);
-		$("#nearhubAp").click(() => {
-			setnearhub(null);
-		});
-		$("#infantryAp").click(() => {
-			setinfantry_();
-		});
-		$("#layoptBut").click(() => {
-			localStorage.setItem("woodin", $("#woodin").val().toString());
-			localStorage.setItem("foodin", $("#foodin").val().toString());
-			localStorage.setItem("ironin", $("#ironin").val().toString());
-			localStorage.setItem("stonein", $("#stonein").val().toString());
-			localStorage.setItem("cablev", $("#cablev").val().toString());
-		});
-		if (localStorage.getItem("cablev")) {
-			$("#cablev").val(LocalStoreAsInt("cablev"));
-		}
-		if (localStorage.getItem("woodin")) {
-			$("#woodin").val(localStorage.getItem("woodin"));
-		}
-		if (localStorage.getItem("stonein")) {
-			$("#stonein").val(localStorage.getItem("stonein"));
-		}
-		if (localStorage.getItem("ironin")) {
-			$("#ironin").val(localStorage.getItem("ironin"));
-		}
-		if (localStorage.getItem("foodin")) {
-			$("#foodin").val(localStorage.getItem("foodin"));
-		}
-		InitCheckbox('addres');
-		InitCheckbox("addbuildings");
-		InitCheckbox("addnotes");
-		InitCheckbox('addwalls');
-
-		InitCheckbox("addtowers");
-		InitCheckbox("addhub");
-
-
+	
 		InitCheckbox("addtroops");
 		$("#editspncn").click(() => {
 			$("#selHub").remove();
@@ -2875,7 +2805,25 @@ function avactor() {
 					}
 				}
 				
-				var prefered_data_ = [{
+				var prefered_data_ = [
+					
+					{
+						name:"Ava 2s Vanq Starter",
+						string:"[ShareString.1.3]:########################-------#----J--#####--------#-------.###---------#---------##---------#-.------,##------#######,-.---##-----##BGBGB##-----##----##GBGBGBG##-..-##----#BGBGBGBGB#-.--##:--.#BGBGBGBGB#--S,#######BGBGTGBGB#######---:#BGBGBGBGB#,-:-##-;-:#-GBGBGBG-#----##----##-BGBGB-##,--,##-,---##-----##-----##------#######::-:--##--P------#-,-:--:--##.-----X--#---------###------,,#----:-,,#####.-,--,-#-.-----########################",
+						remarks: "Landlocked Vanqs Initial step",
+						notes: "Move on to to 2s Vanq Finisher when buildings are complete",
+						troop_count: [0, 0, 0, 0, 0, 264000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+						res_count: [0, 0, 0, 0, 1, 130000, 210000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 750000, 750000]
+					},
+					{
+						name:"Ava 2s Vanq Finisher",
+						string:"[ShareString.1.3]:########################-------#-;-,J--#####BBBBB---#-------.###-BGBGB---#----::---##ZBBBBB-,-#-.------,##-BGBGB#######,-.---##-BBBB##BBBBB##-----##;---##BBGBGBB##-..-##----#BGBGBGBGB#-.SS##:--.#BGBBBBBGB#--S,#######BGBGTGBGB#######---:#BGBGBGBGB#,-:-##-;-:#BGBGBGBGB#----##----##BBGBGBB##,--,##-,-;-##BBBBB##-----##-----:#######::-:--##--PP-----#-,-:--:--##.---.-X--#---------###------,,#----:-,,#####.-,--,-#-.-----##############v##########",
+						remark: "Landlocked Vanqs finisher",
+						notes: "Move on to to 2s Vanq Finisher when buildings are complete",
+						troop_count: [0, 0, 0, 0, 0, 264000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+						res_count: [0, 0, 0, 0, 1, 80000, 80000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 120000, 120000, 750000, 750000]
+					},
+					{
 					name: "Guz 7s Prae 122k",
 					string: "[ShareString.1.3]:########################-------#-------#####BBBB----#--------###BZZZB----#---------##BBBBB----#---------##BZZZZ-#######------##BBBBB##BBBBB##-----##----##BZZZZZB##----##----#BBBBBBBBB#----##----#BZZZZZZZB#----#######BBBBTBBBB#######P--X#BZZZZZZZB#----##-SSJ#BBBBBBBBB#----##P---##BZZZZZB##----##P----##BBBBB##-----##------#######------##---------#---------##---------#---------###--------#--------#####-------#-------########################",
 					remarks: "Landlocked Praetors",
@@ -3277,7 +3225,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_8 = D6.mo;
+							var aa_8 = city.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_4;
 								for (k_4 in troopcounw_[j_13]) {
@@ -3308,7 +3256,7 @@ function avactor() {
 									var tempx_12 = AsNumber(hubs_3.cid[i_55] % 65536);
 									
 									var tempy_12 = AsNumber((hubs_3.cid[i_55] - tempx_12) / 65536);
-									hubs_3.distance.push(Math.sqrt((tempx_12 - D6.x) * (tempx_12 - D6.x) + (tempy_12 - D6.y) * (tempy_12 - D6.y)));
+									hubs_3.distance.push(Math.sqrt((tempx_12 - city.x) * (tempx_12 - city.x) + (tempy_12 - city.y) * (tempy_12 - city.y)));
 								}
 								
 								var mindist_3 = Math.min(...hubs_3.distance);
@@ -3380,7 +3328,7 @@ function avactor() {
 									jQuery("#citnotesaveb")[0].click();
 								}, 100);
 							}
-							var aa_9 = D6.mo;
+							var aa_9 = city.mo;
 							if ($("#addtroops").prop("checked") == true) {
 								var k_5;
 								for (k_5 in troopcound_[j_14]) {
@@ -3411,7 +3359,7 @@ function avactor() {
 									var tempx_13 = AsNumber(hubs_4.cid[i_56] % 65536);
 									
 									var tempy_13 = AsNumber((hubs_4.cid[i_56] - tempx_13) / 65536);
-									hubs_4.distance.push(Math.sqrt((tempx_13 - D6.x) * (tempx_13 - D6.x) + (tempy_13 - D6.y) * (tempy_13 - D6.y)));
+									hubs_4.distance.push(Math.sqrt((tempx_13 - city.x) * (tempx_13 - city.x) + (tempy_13 - city.y) * (tempy_13 - city.y)));
 								}
 								
 								var mindist_4 = Math.min(...hubs_4.distance);

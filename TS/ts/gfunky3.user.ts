@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name gfunky3
 // @namespace www.tampermonkey.com
-// @version 1.2.1a
+// @version 1.2.8
 // @description gfunky3
 // @author Greety
 // @match https://*.crownofthegods.com
@@ -29,21 +29,11 @@ START POPUP MESSAGE FOR PLAYERS WHEN THEY OPEN THE GAME
 		startupwin+="<div id='HelloWorld' class='anwdrh redheading' style='text-align:center;'><span> Welcome to Crown Of The Gods. This is a Beta version prior to being approved by Developers for the addon marketplace</span></div>";
 		startupwin+="<div id='bottomcrownpic'></div>";
 		startupwin+="<div><span style='margin-left: 5%;'> <h1 style='text-align:center;'> GFunky3 BY GREETY </h1></span><br>";
-		startupwin+="<span style='margin-left: 5%;'><h4 style='text-align:center;color:blue;'>Special Thanks to Dhruv, Lionell, And  Fact</h4><br>";
-		startupwin+="<h4 style='text-align:center;color:green;' >Updated November 29 2020</h4></span><br><br>";
-		startupwin+="<span style='margin-left: 5%;'><h4>changes:</h4><ul style='margin-left: 6%;'>";
-		startupwin+="<li>Redesigned Layouts menu</li>";
-		startupwin+="<li>Added Land Offense</li>";
-		startupwin+="<li>Added Land Defense</li>";
-		startupwin+="<li>Added Water Offense</li>";
-		startupwin+="<li>Added Water Defense</li>";
-		startupwin+="<li>Added Hubs</li>";
-        startupwin+="<li>Added Shippers</li>";
-        startupwin+="<li>Added Portals</li>";
-        startupwin+="<li>Added Troop Scout Galleys</li>";
-        startupwin+="<li>Redesigned the Welcome Screen</li>";
-        startupwin+="<li>Added exit X to welcome screen</li>";
-        startupwin+="<li>Added persistent raid option</li>";
+		startupwin+="<span style='margin-left: 5%;'><h4 style='text-align:center;color:blue;'>Special Thanks to Kalish, Dhruv, Lionell, And  Fact</h4><br>";
+		startupwin+="<h4 style='text-align:center;color:green;' >Updated January 18 2021</h4></span><br><br>";
+		startupwin+="<span style='margin-left: 5%;'><h4>changes:</h4><ul style='margin-left: 6%;font-size:14px !important;'>";
+		startupwin+="<li class='gfadded'>	[Added] Complete Change Log Now Available Under Reports and New Button	</li>";
+		
 		startupwin+="</ul></span></div>";
 		startupwin+="</div></div></div>";
 		$("body").append(startupwin);
@@ -122,7 +112,7 @@ Fetch from overviews - note you need to set the referrer for it to work
     let host = `https://w${window.worldidnumid}.crownofthegods.com`;
 let hostOverview = `https://w${window.worldidnumid}.crownofthegods.com/overview.php?s=0`;
 
-function OverviewPost(url: string, post?: object, onSuccess?: (a) => void ) {
+function OverviewPost(url: string, post?: object, onSuccess?: (a: any) => void ) {
 
 	fetch(
 
@@ -179,14 +169,14 @@ START OF QUICKBUILD SCRIPT
     const CLASS_AND_CSS_FIRST_BUTTON = 'style="' + CSS_FIRST_BUTTON + '" class="regButton greenb"';
     const CLASS_AND_CSS_NEXT_BUTTON = 'style="' + CSS_NEXT_BUTTON + '" class="regButton greenb"';
 
-    var QB :any = {
-        _version: "0.3.0"
+    var QB = {
+        _version: "0.4.2"
     };
 
 
 
 // Facility to have building informations
-    QB.BUILDINGS = new function () {
+    QB.BUILDINGS= new function () : void  {
         var that = QB;
 
         // Inner data to characterise buildings
@@ -195,151 +185,53 @@ START OF QUICKBUILD SCRIPT
 
 
 // Resources getters
-            forester: {
-                id: [448],
-                buildable: true,
-                schedule: "2",
-                shortcut: "f",
-                movable: true
-            },
-            quarry: {
-                id: [461],
-                buildable: true,
-                schedule: "3",
-                shortcut: "s",
-                movable: true
-            },
-            farmhouse: {
-                id: [447],
-                buildable: true,
-                schedule: "1",
-                shortcut: "a",
-                movable: true
-            },
-            mine: {
-                id: [465],
-                buildable: true,
-                schedule: "4",
-                shortcut: "i",
-                movable: true
-            },
+				foresters_hut: { id: [448], buildable: true, schedule: "2", shortcut: "f", movable: true},
+				stone_mine: {id: [461], buildable: true, schedule: "3", shortcut: "s", movable: true},
+				farm_estate: {id: [447], buildable: true,schedule: "1", shortcut: "a", movable: true},
+				iron_mine: {id: [465], buildable: true, schedule: "4",shortcut: "i", movable: true},
 
 
 
 
 // Resources helpers
-            sawmill: {
-                id: [460],
-                buildable: true,
-                schedule: "L",
-                shortcut: "l",
-                movable: true
-            },
-            stonemason: {
-                id: [462],
-                buildable: true,
-                schedule: "A",
-                shortcut: "h",
-                movable: true
-            },
-            windmill: {
-                id: [463],
-                buildable: true,
-                schedule: "M",
-                shortcut: "g",
-                movable: true
-            },
-            smelter: {
-                id: [477],
-                buildable: true,
-                schedule: "D",
-                shortcut: "z",
-                movable: true
-            },
+				sawmill: { id: [460], buildable: true, schedule: "L", shortcut: "l", movable: true},
+				masons_hut: {id: [462], buildable: true, schedule: "A", shortcut: "h", movable: true},
+				grain_mill: {id: [463], buildable: true, schedule: "M", shortcut: "g", movable: true},
+				smelter: {id: [477], buildable: true, schedule: "D", shortcut: "z", movable: true},
 
 
 
 
 
 // Others
-            storehouse: {
-                id: [464],
-                buildable: true,
-                schedule: "S",
-                shortcut: "r",
-                movable: true
-            },
-            cottage: {
-                id: [446],
-                buildable: true,
-                schedule: "C",
-                shortcut: "c",
-                movable: true
-            },
-            hideaway: {
-                id: [479],
-                buildable: true,
-                schedule: "H",
-                shortcut: "q",
-                movable: true
-            },
-            townhouse: {
-                id: [481],
-                buildable: true,
-                schedule: "U",
-                shortcut: "v",
-                movable: true
-            }, // i.e. villa: useless. Raid !
+				storehouse: {id: [464], buildable: true, schedule: "S", shortcut: "r", movable: true},
+				cabin: {id: [446], buildable: true, schedule: "C", shortcut: "c", movable: true},
+				hideaway: {id: [479], buildable: true, schedule: "H", shortcut: "q", movable: true},
+				villa: {id: [481], buildable: true, schedule: "U", shortcut: "v", movable: true}, // i.e. villa: useless. Raid !
 
 
 
 
 //DO Not build
-            townhall: {
-                id: [455],
-                buildable: false,
-                schedule: "T"
-            },
-            castle: {
-                id: [467],
-                buildable: false,
-                schedule: "X",
-                // shortcut: "x", too dangerous !!!
-                movable: true
-            },
-            temple: {
-                id: [1000],
-                buildable: false
-            },
-/*
+				basilica: {id: [455], buildable: false, schedule: "T"},
+				castle: {id: [467], buildable: false, schedule: "X", movable: true},
+				temple: {id: [1000], buildable: false},
 
 
-TODO update id for Temple
+//TODO update id for Temple
 
 
 
 
-*/
+
 
 
 
 
 
 // Trade
-            port: {
-                id: [488, 489, 490],
-                buildable: true,
-                schedule: "R",
-                shortcut: "o",
-                movable: true
-            },
-            marketplace: {
-                id: [449],
-                buildable: true,
-                schedule: "P",
-                shortcut: "m",
-                movable: true
-            }, // i.e. forum
+				port: {id: [488, 489, 490], buildable: true, schedule: "R", shortcut: "o", movable: true},
+				forum: {id: [449],buildable: true,schedule: "P", shortcut: "m", movable: true},
 
 
 
@@ -347,62 +239,14 @@ TODO update id for Temple
 
 
 // Military
-            cityguardhouse: {
-                id: [504],
-                buildable: true,
-                schedule: "K",
-                shortcut: "u",
-                movable: true
-            }, // quite useless
-            barracks: {
-                id: [445],
-                buildable: true,
-                schedule: "B",
-                shortcut: "b",
-                movable: true
-            },
-            trainingground: {
-                id: [483],
-                buildable: true,
-                schedule: "G",
-                shortcut: "t",
-                movable: true
-            },
-            stable: {
-                id: [466],
-                buildable: true,
-                schedule: "E",
-                shortcut: "e",
-                movable: true
-            },
-            mage_tower: {
-                id: [500],
-                buildable: true,
-                schedule: "J",
-                shortcut: "w",
-                movable: true
-            },
-            academy: {
-                id: [482],
-                buildable: true,
-                schedule: "Z",
-                shortcut: "y",
-                movable: true
-            },
-            blacksmith: {
-                id: [502],
-                buildable: true,
-                schedule: "Y",
-                shortcut: "k",
-                movable: true
-            },
-            shipyard: {
-                id: [491, 496, 498],
-                buildable: true,
-                schedule: "V",
-                shortcut: "p",
-                movable: true
-            },
+				guardhouse: {id: [504], buildable: true, schedule: "K", shortcut: "u", movable: true},
+				barracks: {id: [445], buildable: true, schedule: "B", shortcut: "b", movable: true},
+				training_arena: {id: [483], buildable: true, schedule: "G", shortcut: "t", movable: true},
+				stable: {id: [466], buildable: true,schedule: "E", shortcut: "e", movable: true},
+				sorcerers_tower: {id: [500], buildable: true, schedule: "J", shortcut: "w",movable: true},
+				academy: {id: [482], buildable: true, schedule: "Z", shortcut: "y", movable: true},
+				blacksmith: {id: [502], buildable: true, schedule: "Y", shortcut: "k", movable: true},
+				shipyard: {id: [491, 496, 498], buildable: true, schedule: "V", shortcut: "p",movable: true},
 
 
 
@@ -410,50 +254,22 @@ TODO update id for Temple
 
 
 // Resources
-            forest: {
-                id: [454],
-                buildable: false,
-                schedule: "."
-            },
-            stone: {
-                id: [451],
-                buildable: false,
-                schedule: ":"
-            },
-            iron: {
-                id: [452],
-                buildable: false,
-                schedule: ","
-            },
-            lake: {
-                id: [453],
-                buildable: false,
-                schedule: ";"
-            }
-
+				forest: {id: [454], buildable: false, schedule: "."},
+				stone: {id: [451], buildable: false, schedule: ":" },
+				iron: {id: [452], buildable: false, schedule: ","},
+				lake: {id: [453], buildable: false, schedule: ";"},
  /*
 
- TODO: add wall & towers
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+				wall: { id:[809], buildable: true, moveable:false},
+				sentinel_post: { id:[547], buildable: true, shortcut: "1", moveable: true},
+				ranger_post: { id: [543], buildable: true, shortcut:"2", moveable: true},
+				snag_barricade: { id:[567], buildable: true, shortcut:"6", moveable: true},
+				triari_post: { id: [539], buildable: true, shortcut:"3", moveable: true},
+				equine_barricade: { id:[559], buildable: true,shortcut: "7", moveable: true},
+				priestess_post: { id:[551], buildable: true, shortcut:"4", moveable: true},
+				rune_barricade: { id:[563], buildable: true, shortcut:"8", moveable: true},
+				ballista_post: { id:[555], buildable: true, shortcut:"5", moveable: true},
+				veiled_barricade: { id:[571], buildable: true, shortcut "9", moveable: true},
  */
         };
 
@@ -476,8 +292,8 @@ TODO update id for Temple
 
 
 // Is a building type buildable. For information, due to dangerousness of building castles, the operation has to be manual.
-        that.isBuildable = function (btype) {
-            return that._LIST.filter(function (item) {
+        that.isBuildable = function (btype: any) {
+            return that._LIST.filter(function (item: {id: string|any[]; buildable: any;}) {
                 return (item.id.indexOf(btype) >= 0) && (item.buildable);
             }).length > 0;
         };
@@ -486,8 +302,8 @@ TODO update id for Temple
 
 
 // Return building from a btype (if known)
-        that.buildingFromId = function (btype) {
-            return that._LIST.find(function (item) {
+        that.buildingFromId = function (btype: any) {
+            return that._LIST.find(function (item: {id: string|any[];}) {
                 return (item.id.indexOf(btype) >= 0);
             });
         };
@@ -495,7 +311,7 @@ TODO update id for Temple
 
 
 // Searching town hall.
-        that.isTownHall = function (btype) {
+        that.isTownHall = function (btype: any) {
             return that._DETAILS.townhall.id[0] === btype;
         };
 
@@ -503,9 +319,9 @@ TODO update id for Temple
 
 
 // Return true if has farm or lakes in plan => i.e. food city.
-        that.needToClearAllResources = function (scheduleMap) {
+        that.needToClearAllResources = function (scheduleMap: any[]) {
             if (scheduleMap.length === 0) return false;
-            return scheduleMap.some(function (building) {
+            return scheduleMap.some(function (building: any) {
                 return (building === that._DETAILS.farmhouse) ||
                     //(building === that._DETAILS.windmill) ||
                     (building === that._DETAILS.lake);
@@ -520,7 +336,7 @@ TODO update id for Temple
         // toMove: true if (not error, nor to destroy), and curent and schedule do not match, and movable.
         //      spare building are set to toMove at this step.
         // toAdd: true if (not error, nor to destroy, nor to move), and schedule can be built
-        that.updateStatus = function (curentBuilding, scheduleBuilding, needToClearAllResources) {
+        that.updateStatus = function (curentBuilding: {error: boolean; toDestroy: boolean; toMove: boolean; toAdd: boolean; btype: any; demolishing: any; building: {movable: any; buildable: any;}; buildingToAdd: any;}, scheduleBuilding: {id: string|any[]; buildable: any;}, needToClearAllResources: any) {
             curentBuilding.error = false;
             curentBuilding.toDestroy = false;
             curentBuilding.toMove = false;
@@ -581,12 +397,12 @@ TODO update id for Temple
 
 
  // Count the number of building and transforming to move in to destroy for spare buildings.
-        that.checkMove = function (curentMap, scheduleMap) {
+        that.checkMove = function (curentMap: any[], scheduleMap: any[]) {
 
 
 
  // Counting in the map per type
-            var nbOfBuildingScheduledPerType = scheduleMap.reduce(function (pv, cv) {
+            var nbOfBuildingScheduledPerType = scheduleMap.reduce(function (pv: {[x: string]: number;}, cv: {name: string|number;}) {
                 if (cv) {
                     if (pv[cv.name]) {
                         pv[cv.name] = pv[cv.name] + 1;
@@ -616,7 +432,7 @@ TODO update id for Temple
 
 
 // Checking to move
-            curentMap.forEach(function (curent) {
+            curentMap.forEach(function (curent: {toMove: boolean; building: {name: string|number;}; toDestroy: boolean; demolishing: any;}) {
                 if (curent.toMove) {
                     if ((!nbOfBuildingScheduledPerType[curent.building.name]) ||
                         (nbOfBuildingScheduledPerType[curent.building.name] === 0)) {
@@ -634,7 +450,7 @@ TODO update id for Temple
 
 
 // Return the building from a plan letter.
-        that.buildingFromMapLetter = function (letter) {
+        that.buildingFromMapLetter = function (letter: string|number) {
             return that._FromMapLetter[letter];
         };
 
@@ -659,7 +475,7 @@ TODO update id for Temple
 
 
 // CoTG city data parser
-        that.parseCurentCityData = function (cdata) {
+        that.parseCurentCityData = function (cdata: {cid: any; bd: {[x: string]: {bl: any;};}; bq: any[]; sts: string;}) {
             var updatedData = false;
 
             if (that.data.id !== cdata.cid) {
@@ -719,7 +535,7 @@ TODO update id for Temple
 
 
 // Processing building queue
-                cdata.bq.forEach(function (buildQueueItem) {
+                cdata.bq.forEach(function (buildQueueItem: {bspot: any; elvl: number; slvl: number; brep: any;}) {
                     var index = buildQueueItem.bspot;
                     if (that.data.curentMap[index]) {
                         if (buildQueueItem.elvl === 0) {
@@ -778,14 +594,14 @@ TODO update id for Temple
             // remove some classes
             // add some classes
             // set a title
-            classSwitch: function (buttonSelector, classToRemove, classToAdd, title) {
+            classSwitch: function (buttonSelector: {removeClass: (arg0: any) => void; addClass: (arg0: any) => void; attr: (arg0: string,arg1: any) => void;}, classToRemove: any, classToAdd: any, title: any) {
                 buttonSelector.removeClass(classToRemove);
                 buttonSelector.addClass(classToAdd);
                 buttonSelector.attr("title", title);
             },
             // display a message in bottom rigth
             errorMsg: {
-                display: function (message) {
+                display: function (message: string) {
                     this._id = this._id + 1;
                     var ident = this._idKey + this._id;
                     var errormsgs = '<tr ID = "' + ident + '"><td><div class = "errBR">' + message + '<div></td></tr>';
@@ -821,7 +637,7 @@ TODO update id for Temple
 
 // Building added data (re computed ones) & update HMI
         that.previousViewData = {};
-        that.onCityDataUpdated = function (updatedData) {
+        that.onCityDataUpdated = function (updatedData: any) {
             if (updatedData) {
                 that.addedData = {
                     needToClearResources: that.BUILDINGS.needToClearAllResources(that.data.scheduleMap),
@@ -833,17 +649,17 @@ TODO update id for Temple
 
 
 // Case of warship & stingers
-                var partialMap = that.data.scheduleMap.filter(function (item) {
+                var partialMap = that.data.scheduleMap.filter(function (item: {buildable: any;}) {
                     return item && item.buildable
                 }).length <= 60;
                 if (partialMap) {
-                    if (that.data.scheduleMap.filter(function (item) {
+                    if (that.data.scheduleMap.filter(function (item: any) {
                             return item === that.BUILDINGS._DETAILS.shipyard
                         }).length === 8) {
                         that.addedData.pureNavy = true;
                     }
                 }
-                if (that.data.scheduleMap.filter(function (item) {
+                if (that.data.scheduleMap.filter(function (item: any) {
                         return item === that.BUILDINGS._DETAILS.marketplace
                     }).length >= 20) {
                     that.addedData.pureTrade = true;
@@ -879,13 +695,13 @@ TODO update id for Temple
 // Building new view data
             var mapSetOk = (that.data.scheduleMap.length !== 0 && that.data.curentMap.length !== 0);
             var infoMsg = that.message.map;
-            var buildingsToDestroy = that.data.curentMap.filter(function (item) {
+            var buildingsToDestroy = that.data.curentMap.filter(function (item: {toDestroy: any;}) {
                 return item.toDestroy;
             });
-            var buildingsToMove = that.data.curentMap.filter(function (item) {
+            var buildingsToMove = that.data.curentMap.filter(function (item: {toMove: any;}) {
                 return item.toMove;
             });
-            var buildingsToAdd = that.data.curentMap.filter(function (item) {
+            var buildingsToAdd = that.data.curentMap.filter(function (item: {toAdd: any;}) {
                 return item.toAdd;
             });
             var divButtons = mapSetOk ? [{ // Button info
@@ -902,7 +718,7 @@ TODO update id for Temple
                 }] : [{
                     text: buildingsToDestroy.length + " Clear"
                 }].concat(
-                    buildingsToDestroy.reduce(function (pv, cv) {
+                    buildingsToDestroy.reduce(function (pv: any[], cv: {index: any; building: {name: any;};}) {
                         return pv.concat([{
                             index: cv.index,
                             text: cv.building.name
@@ -917,7 +733,7 @@ TODO update id for Temple
                 }] : [{
                     text: buildingsToMove.length + " Move"
                 }].concat(
-                    buildingsToMove.reduce(function (pv, cv) {
+                    buildingsToMove.reduce(function (pv: any[], cv: {index: any; building: {name: any;};}) {
                         return pv.concat([{
                             index: cv.index,
                             text: cv.building.name
@@ -932,7 +748,7 @@ TODO update id for Temple
                 }] : [{
                     text: buildingsToAdd.length + " Add"
                 }].concat(
-                    buildingsToAdd.reduce(function (pv, cv) {
+                    buildingsToAdd.reduce(function (pv: any[], cv: {index: any; buildingToAdd: {name: any;};}) {
                         return pv.concat([{
                             index: cv.index,
                             text: cv.buildingToAdd.name
@@ -971,14 +787,24 @@ TODO update id for Temple
             if (JSON.stringify(that.previousViewData) !== JSON.stringify(currentViewData)) {
                 // Updating HMI.
                 that.previousViewData = currentViewData;
-                var updateItem = function (selector, data) {
+                var updateItem = function (selector: JQuery<HTMLElement>, data: {
+                        [x: string]: any; children?: ({ // Div info
+                            visible: boolean; text: string; title: any; children?: undefined;
+                        }|{ // Div button bar
+                            visible: boolean; children: ({ // Button info
+                                title: any; removeClass: string; addClass: string; text: string; options?: undefined;
+                            }|{ // Selector Clear
+                                title: string; removeClass: string; addClass: string; options: {text: string;}[]; text?: undefined;
+                            })[]; text?: undefined; title?: undefined;
+                        })[];
+                    }) {
                     Object.keys(data).forEach(function (key) {
                         var classes = false;
                         switch (key) {
                             case "children":
                                 {
                                     var childrenSelector = selector.children();
-                                    data[key].forEach(function (childData, index) {
+                                    data[key].forEach(function (childData: any, index: any) {
                                         updateItem(childrenSelector.eq(index), childData);
                                     });
                                 }
@@ -1009,7 +835,7 @@ TODO update id for Temple
                             case "options":
                                 {
                                     selector.html(data[key].reduce(
-                                        function (pv, cv) {
+                                        function (pv: string, cv: {index: string; text: string;}) {
                                             var index = cv.index ? "index='" + cv.index + "'" : "";
                                             return pv + "<option " + index + ">" + cv.text + "</option>"
                                         }, ""));
@@ -1081,7 +907,7 @@ TODO update id for Temple
                         toAdd = that.data.scheduleMap[selectedBuilding];
                     } else if (curentBuilding.btype === 0) {
                         // Have click on empty & nothing planed
-                        if (that.data.curentMap.filter(function (item) {
+                        if (that.data.curentMap.filter(function (item: {building: {buildable: any;};}) {
                                 return item.building && item.building.buildable
                             }).length < 50) {
                             // Adding a cottage
@@ -1228,7 +1054,7 @@ TODO update id for Temple
                 this.addEventListener("readystatechange", function () {
                     if (this.readyState == 4) {
                         var url = this.responseURL;
-                        var cdata;
+                        var cdata: any;
                         if (url.indexOf('gC.php') != -1) {
                             // Changing city response.
                             try {
@@ -1287,7 +1113,7 @@ START OF CORE FUNKY
 // GLOBAL VARIABLES
 
     var ttts=[1,10,1,1,1,1,1,2,2,2,2,2,10,10,100,100,400,1]; //ts per unit
-    var citytc;
+    var citytc: {[x: string]: any;};
     var message="Not enough TS to kill this boss!";
     var other_loot=[360,1050,4500,16000,33000,58500,118400,200450,300000,450400]; //forest, hill loot
     var mountain_loot=[360,1050,4500,16000,33000,58500,118400,200450,300000,450400];//mountain loot
@@ -1334,13 +1160,13 @@ START OF CORE FUNKY
 	var layoutshl=[""];
 	var today= new Date();
     var hidespf=false;
-    var cdata; //city data return
-    var wdata; //world data
-    var pldata; //players list on server
-    var pdata; //player data
-    var poll2; //poll2data
+    var cdata: {cid: number; th: number[]; bd: any; x: any; y: any; co: any; mo: any; tc: number[]; tt: any;}; //city data return
+    var wdata: {a?: any; cities: any; bosses: any; ll?: any[]; cavern?: any[]; portals?: any[]; shrines?: any[];}; //world data
+    var pldata: any[]; //players list on server
+    var pdata: any; //player data
+    var poll2: {player: {clc: {};}; OGA: {[x: string]: string[];}; city: {[x: string]: any; th: number[]; tc: number[]; cid: any;};}; //poll2data
     var clc={};// city lists info
-    var oga; //city outgoing attacks info
+    var oga: any; //city outgoing attacks info
     var city={cid:0,x:0,y:0,th:[0],cont:0}; //current city data
     var bosses={name:["Cyclops","Andar's Colosseum Challenge","Dragon","Romulus and Remus","Gorgon","GM Gordy","Triton"],
                 pic:["cyclops32 mauto bostooltip tooltipstered","andar32 mauto bostooltip tooltipstered","dragon32 mauto bostooltip tooltipstered","romrem32 mauto bostooltip tooltipstered","gorgon32 mauto bostooltip tooltipstered","gmgordy32 mauto bostooltip tooltipstered","triton32 mauto bostooltip tooltipstered"]};
@@ -1394,9 +1220,9 @@ START OF CORE FUNKY
     var beentoworld=false;
     var splayers={name:[],ally:[],cities:[]};
     var shrinec=[[]];
-    var buildingdata;
-	var coofz;
-    var coon;
+    var buildingdata: {[x: string]: {bid: string|number;};};
+	var coofz: number;
+    var coon: number;
 
 
    setTimeout(function() {
@@ -1512,7 +1338,7 @@ START OF CORE FUNKY
 
 
 //decoding world data in the new format
-    function decwdata(data) {
+    function decwdata(data: string) {
         var DecData = {bosses:[],cities:[],ll:[],cavern:[],portals:[],shrines:[]},
             temp = data.split("|"),
             keys = temp[1].split("l"),
@@ -1566,7 +1392,7 @@ START OF CORE FUNKY
 
 
 //getting date
-    function getFormattedDate(date) {
+    function getFormattedDate(date: Date) {
         var year = date.getFullYear();
         var month = (1 + date.getMonth()).toString();
         month = month.length > 1 ? month : '0' + month;
@@ -1579,7 +1405,7 @@ START OF CORE FUNKY
 
 
 //rounds nubers to second digit after decimal
-    function roundToTwo(num) {
+    function roundToTwo(num: string|number) {
         return +(Math.round(num + "e+2")  + "e-2");
     }
 /*    function errormsgBR(a, b) {
@@ -1600,50 +1426,33 @@ START OF CORE FUNKY
     var message="Error, you need at least ";*/
 
     var errz=0;
-    function errorgo(j) {
-        var errormsgs;
-        errz = errz+1;
-        var b = 'errBR' +errz;
-        var c = '#' +b;
-        var d = '#' +b+ ' div';
-        errormsgs = '<tr ID = "' +b+ '"><td><div class = "errBR">' +j+ '<div></td></tr>';
+    var errmBR=0;
+    function errorgo(...args: [j: string]) {
+        var errormsgs: string | Element | Comment | DocumentFragment | JQuery<JQuery.Node> | (JQuery.Node | JQuery<JQuery.Node>)[];
+        errmBR = errmBR + 1;
+        var b = 'errBR' + errmBR;
+        var c = '#' + b;
+        var d = '#' + b + ' div';
+        errormsgs = '<tr ID = "' + b + '"><td><div class = "errBR">' + j + '<div></td></tr>';
         $("#errorBRpopup").append(errormsgs);
         $(c).show();
-        $(d).animate({ opacity: 1, bottom: "+10px" }, 'slow');
-        setTimeout(function(){
-            $(d).animate({ opacity: 0, bottom: "-10px" }, 'slow');
+        $(d).animate({
+            opacity: 1,
+            bottom: "+10px"
+        }, 'slow');
+        setTimeout(function() {
+            $(d).animate({
+                opacity: 0,
+                bottom: "-10px"
+            }, 'slow');
             $(c).fadeOut("slow");
         }, 5000);
-        setTimeout(function(){
+        setTimeout(function() {
             $(c).remove();
         }, 6000);
     }
-   function errorgo(j) {
-        var errormsgs;
-        errmBR = errmBR+1;
-        var b = 'errBR' +errmBR;
-        var c = '#' +b;
-        var d = '#' +b+ ' div';
-        errormsgs = '<tr ID = "' +b+ '"><td><div class = "errBR">' +j+ '<div></td></tr>';
-        $("#errorBRpopup").append(errormsgs);
-        $(c).show();
-    $(d).animate({
-      opacity: 1,
-      bottom: "+10px"
-    }, 'slow');
-    setTimeout(function() {
-      $(d).animate({
-        opacity: 0,
-        bottom: "-10px"
-      }, 'slow');
-      $(c).fadeOut("slow");
-    }, 5000);
-    setTimeout(function() {
-      $(c).remove();
-    }, 6000);
-  }
 
-    String.prototype.replaceAt=function(index, char) {
+    String.prototype.replaceAt=function(index: string|number, char: any) {
         var a = this.split("");
         a[index] = char;
         return a.join("");
@@ -1672,8 +1481,8 @@ START OF CORE FUNKY
                              setloyal(ldata);
                          }
                         });
-        var reslvl;
-        function setloyal(ldata) {
+        var reslvl: any;
+        function setloyal(ldata: {t: any;}) {
             var faith=0;
 
 
@@ -2055,8 +1864,8 @@ START OF CORE FUNKY
                 localStorage.setItem('dretcheck',0);
                 defobj.ret=0;
             }
-            var tempx;
-            var tempy;
+            var tempx: string|number|string[];
+            var tempy: string|number|string[];
             for (var i=1;i<15;i++) {
                 if ($("#d"+i+"x").val()) {
                     tempx=$("#d"+i+"x").val();
@@ -2096,7 +1905,7 @@ START OF CORE FUNKY
             $("#deftab").click();
         });
 	    $('#ndefGo').click(function() {
-            cotgsubscribe.subscribe( "regional", function( data ) {
+            cotgsubscribe.subscribe( "regional", function( data: {x: any; y: any; info: any;} ) {
                 //do something with chat
                 var x=data.x;
                 var y=data.y;
@@ -2109,7 +1918,7 @@ START OF CORE FUNKY
             $("#neardeftab").trigger({type:"click",originalEvent:"1"});
         });
         $('#neardeftab').click(function() {
-            cotgsubscribe.subscribe( "regional", function( data ) {
+            cotgsubscribe.subscribe( "regional", function( data: {x: any; y: any; info: any;} ) {
                 //do something with chat
                 var x=data.x;
                 var y=data.y;
@@ -2131,7 +1940,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
 
 
         $('#ui-id-115').click(function() {
-            cotgsubscribe.subscribe( "regional", function( data ) {
+            cotgsubscribe.subscribe( "regional", function( data: {x: any; y: any; info: any;} ) {
                 //do something with chat
                 var x=data.x;
                 var y=data.y;
@@ -2187,8 +1996,8 @@ TODO: FIND REFERENCE POINT to Ui-id-115
             for (var i=1;i<16;i++) {
                 if (!$("#d"+i+"x").val()) {
                     var tid=Number($("#showReportsGo").attr("data"));
-                    var tempx;
-                    var tempy;
+                    var tempx: string|number|string[]|((this: HTMLElement,index: number,value: string) => string);
+                    var tempy: string|number|string[]|((this: HTMLElement,index: number,value: string) => string);
                     tempx=Number(tid % 65536);
                     tempy=Number((tid-tempx)/65536);
                     $("#d"+i+"x").val(tempx);
@@ -2199,8 +2008,8 @@ TODO: FIND REFERENCE POINT to Ui-id-115
         });
 		$("#quickdefCityGo").click(function() {
             var tid=Number($("#showReportsGo").attr("data"));
-            var tempx;
-            var tempy;
+            var tempx: number;
+            var tempy: number;
             tempx=Number(tid % 65536);
             tempy=Number((tid-tempx)/65536);
             var defobj={targets:{x:[tempx],y:[tempy],dist:[],numb:1},t:{home:[],type:[],use:[],speed:[],amount:[]},perc:100,dep:0,ret:0,rettime:0,hr:0,min:0,sec:0,dat:0};
@@ -2277,7 +2086,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
  });
 
 //import attack orders
-  	function Aimp(str) {
+  	function Aimp(str: string|number|string[]) {
         var Aexp=JSON.parse(str);
         for (var i=1; i<=Aexp.x.length; i++) {
             $("#t"+i+"x").val(Aexp.x[i-1]);
@@ -2291,7 +2100,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
         }
 
 // Near Defense Table
-	function neardeftable(t) {
+	function neardeftable(t: {[x: string]: {c: any;};}) {
         var cx=$("#ndefx").val();
         var cy=$("#ndefy").val();
         var cont=Number(Math.floor(cx/100)+10*Math.floor(cy/100));
@@ -2410,7 +2219,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
     }
 
 //Near Offense Table
-    function nearofftable(t) {
+    function nearofftable(t: {[x: string]: {c: any;};}) {
         var contoff=Number($("#noffx").val());
         var cit=[[]];
         var troopmail=[[]];
@@ -2534,7 +2343,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
 //	Troop	16	Warship
 //	Troop	17	Senator
 
-	function totaldeftable(t) {
+	function totaldeftable(t: {[x: string]: {c: any;};}) {
         var contdef=Number($("#tdefx").val());
         var cit=[[]];
         var deftroopmail=[[]];
@@ -2639,7 +2448,7 @@ TODO: FIND REFERENCE POINT to Ui-id-115
         });
     }
 
-	    function clickevent(element) {
+	    function clickevent(element: any) {
         var event = jQuery.Event("click");
             event.user = "foo";
     }
@@ -2651,7 +2460,7 @@ SEND DEFENSE Function
 
 
 */
-    function SendDef(defobj) {
+    function SendDef(defobj: {targets: any; t: any; perc?: string|number|string[]; dep: any; ret: any; rettime: any; hr: any; min: any; sec: any; date?: any; dat?: any;}) {
         $("#commandsPopUpBox").show();
         var commandtabs=$("#commandsdiv").tabs();
         commandtabs.tabs( "option", "active", 2 );
@@ -2660,7 +2469,7 @@ SEND DEFENSE Function
         var tarnumb=defobj.targets.numb;
         var t=defobj.t;
         var maxdist=Math.max.apply(Math, targets.dist);
-        var time;
+        var time: number;
 
 
 //Galley DEFEND MATH
@@ -2881,7 +2690,7 @@ Update Attack Function
 */
     function updateattack() {
         var t={home:[],type:[]};
-		var scouttts;
+		var scouttts: any;
 		for (var i in cdata.tc) {
             if (cdata.tc[i]){
                 if(i==7){
@@ -2950,8 +2759,8 @@ Send Attack Function
         var targets={x:[],y:[],real:[],dist:[],cstr:[]};
         var fakenumb=0;
         var realnumb=0;
-        var tempx;
-        var tempy;
+        var tempx: string|number|string[];
+        var tempy: string|number|string[];
 
 
 	   for (var i=1;i<16;i++) {
@@ -2970,7 +2779,7 @@ Send Attack Function
 
 
 //SCOUTS SECTION
-        var scouttts; //Scout Total TS
+        var scouttts: number; //Scout Total TS
         var t={home:[],type:[],real:[],fake:[],speed:[],scoutfake:[],scoutreal:[]};
         for (var i in cdata.tc) {
             if (cdata.tc[i]) {
@@ -2986,9 +2795,9 @@ Send Attack Function
             }
 		}
         var maxdist=Math.max.apply(Math, targets.dist);
-        var time;
-        var faketss;// Fake TS Scouts
-        var fakeg; // Fake Galley Amount
+        var time: number;
+        var faketss: number;// Fake TS Scouts
+        var fakeg: number; // Fake Galley Amount
         var tscbr=cdata.tt;
        if(tscbr<20000){faketss=1;fakeg=1;}
         else if(tscbr<40000){faketss=200;fakeg=1;}//1 600, 2 1200, 3 1800, 4 2400, 5 3000
@@ -3853,7 +3662,7 @@ END SEND Attack Function
     function makebuildcount() {
 		$("#bdtable").remove();
 		var currentbd={name:[],bid:[],count:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
-		var j;
+		var j: number;
 		var bdtypecount=-1;
 		var bdNumber=-1;
 
@@ -3914,10 +3723,10 @@ Predicting Incoming Troops Section
         });
     });
 
-	function roundingto2(num) {
+	function roundingto2(num: string|number) {
         return +(Math.round(num + "e+2")  + "e-2");
     }
-    function twodigitnum(n){
+    function twodigitnum(n: string|number){
     return n > 9 ? "" + n: "0" + n;
     }
 
@@ -3942,7 +3751,7 @@ Predicting Incoming Troops Section
         var infspeed = [];
         var artspeed = [];
         var senspeed = [];
-        var temp;
+        var temp: number;
         for (i in speeeed) {
             temp=5/(1+speeeed[i]*1.0/100);
             navyspeed[i]= roundingto2(temp);
@@ -3974,8 +3783,8 @@ Predicting Incoming Troops Section
             var sdiff=atime.substring(6,8)-stime.substring(6,8);
             var d = new Date();
             var x = new Date();
-            var arrivaltimemonth;
-            var arrivaltimedate;
+            var arrivaltimemonth: string|number;
+            var arrivaltimedate: string|number;
             if(atime.length===14){
                 arrivaltimemonth=Number(atime.substring(9,11));//month
                 arrivaltimedate=Number(atime.substring(12,14));//date
@@ -3984,7 +3793,7 @@ Predicting Incoming Troops Section
                 arrivaltimemonth=d.getMonth() +1;
                 arrivaltimedate=d.getDate();
             }
-            var time;
+            var time: number;
             if (hdiff>=0) {time=60*hdiff;}
             else {time=(24+hdiff)*60;}
             if((atime.length===14 || stime.length===14) && hdiff>0){
@@ -3996,9 +3805,9 @@ Predicting Incoming Troops Section
             var ispeed=roundingto2(time/dist);
             var nspeed=roundingto2((time-60)/dist);
             //adds time taken by troops to return home to arrival time and changed formats
-            var locks;
-            var lockm;
-            var lockh;
+            var locks: number;
+            var lockm: number;
+            var lockh: number;
             if(sdiff>=0){locks=sdiff;}
             else{locks=60+sdiff;
                  mdiff=mdiff-1;}
@@ -4135,7 +3944,7 @@ END Predicting Incoming Troops Section
 
 
 //layout part,raid return part
-    function openreturnwin(data) {
+    function openreturnwin(data: {[x: string]: {i: any;};}) {
         $(".toptdinncommtbl1:first").click();
 
         setTimeout(function() {
@@ -4182,7 +3991,7 @@ END Predicting Incoming Troops Section
             }
         });
 
-        var j,end,bb,cc,aa;
+        var j: number,end: number,bb: string|number|string[]|((this: HTMLElement,index: number,value: string) => string),cc: string|number|string[]|((this: HTMLElement,index: number,value: string) => string),aa: string|number|string[]|((this: HTMLElement,index: number,value: string) => string);
         var returncities={cid:[],cont:[]};
         $("#returnAllGo").click(function() {
             if ($("#selClist").val()=="all") {
@@ -4279,7 +4088,7 @@ Boss Section
 
 */
     function getbossinfo() {
-        var temp;
+        var temp: any;
         bossinfo={x:[],y:[],lvl:[],data:[],name:[],cont:[],distance:[],cid:[]};
         for (var i in wdata.bosses) {
                 var templvl=Number(wdata.bosses[i].substr(1,2))-10;
@@ -4401,7 +4210,7 @@ END Boss Only Section
 
 
 //auto fill boss and raid numbers
-    cotgsubscribe.subscribe( "regional", function( data ) {
+    cotgsubscribe.subscribe( "regional", function( data: {x: any; y: any; type: any; info: {type: any; lvl: any; prog: any; name: any; active: any;};} ) {
             var x=data.x;
             var y=data.y;
             var dtype=data.type;
@@ -4411,7 +4220,7 @@ END Boss Only Section
             var bossname=data.info.name;
             var bossactive=data.info.active;
      //       var troops = cotg.city.troops();
-            var home;
+            var home: number;
             var optimalTS= Math.ceil((other_loot[lvl-1]/10 * ((1-prog/100)+1))*1.0175);
             if(dtype==="dungeon"){
                 if($("#cityplayerInfo div table tbody tr").length===11){
@@ -4858,8 +4667,8 @@ END Boss Only Section
 // recall button in command window
     function recallraidl100(){
 //        var troops = cotg.city.troops();
-        var loot;
-        var total;
+        var loot: number[];
+        var total: number;
         var total_number=0;
         var total_lootz=0;
         var i=0;
@@ -4914,8 +4723,8 @@ END Boss Only Section
 //carry check in command window
     function carrycheck(){
  //       var troops = cotg.city.troops();
-        var loot;
-        var total;
+        var loot: number[];
+        var total: number;
         var total_number=0;
         var total_lootx=0;
         var i=0;
@@ -4953,7 +4762,7 @@ END Boss Only Section
 
 
 //Raiding script // carry percentage part in war councilor raider
-     function carry_percentage(total_loot){
+     function carry_percentage(total_loot: number){
         var troop_loot=0;
         $(".tninput").each(function() {
             var trpinpid =$(this).attr('id');
@@ -4983,8 +4792,8 @@ END Boss Only Section
                 buttont.attr('type',tempz1);
             }
             $(buttont).click(function() {
-                var count;
-                var loot1;
+                var count: string|number|string[]|((this: HTMLElement,index: number,value: string) => string);
+                var loot1: number[];
                 var countz=Number($('.splitRaid').children('option').length);//getting empty command slots
                 if(countz>1){
                     count=countz-1;
@@ -5000,7 +4809,7 @@ END Boss Only Section
 				$("#dungloctab").find(".addraiwc td:nth-child(4)").html("<select id='raidSelect' style='padding: 2px; border-radius: 4px;' class='greenb shRnTr' autofocus><option value=.0>No Option Selected</option><option value='.95'>95%</option><option value='.97'>97%</option><Option value='1.00'>100%</option><option value='1.03'>103%</option><option value='1.05'>105%</option><option value='1.07'>107%</option><option value='1.10'>110%</option><option value='1.12'>112%</option><option value='1.15'>115%</option></select>");
 
   //              var troops = cotg.city.troops();
-                var home;
+                var home: number;
                 $(function () {
 					$('#raidSelect').change(function () {
 						localStorage.setItem('raidData', this.value);
@@ -5314,7 +5123,7 @@ END Boss Only Section
                          setloyal(ldata);
                      }
                     });
-        function setloyal(ldata) {
+        function setloyal(ldata: {t: any;}) {
             $.each(ldata.t, function(key, value) {
                 if (key==2) {
                     $.each(this, function(key, value) {
@@ -5490,7 +5299,7 @@ END Boss Only Section
         });
 
     //combat sum window
-        function comsumwin(arg) {
+        function comsumwin(arg: string) {
             var comswin="<div id='comsumWin' style='width:60%;height:65%;left:30%' class='popUpBox'><div class='popUpBar'><span class='ppspan'>Combat Reports Summary</span><button id='sumX' onclick=\"$('#comsumWin').remove();\" class='xbutton greenb'><div id='xbuttondiv'><div><div id='centxbuttondiv'></div></div></div></button></div><div id=comsumbody' class='popUpWindow'><span style='margin-left:5%;'>Pick a Date to retrieve combat summary:    </span><input style='width:90px;' id='comsumDat' type='text' value='00/00/0000'><button class='regButton greenbuttonGo greenb' id='getcomSum' style='width:10%;margin-left:5%'> Go </Button><div id='comsumTabbody' style='margin:1%;'></div></div></div>";
             $("body").append(comswin);
             $("#comsumWin").draggable({ handle: ".popUpBar" , containment: "window", scroll: false});
@@ -5501,7 +5310,7 @@ END Boss Only Section
             });
         }
 
-		function comsumtab(arg) {
+		function comsumtab(arg: string) {
 			var ata={sent:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lost:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],survive:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};// non siege
 			var ats={sent:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lost:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],survive:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};// siege
 			var dt={sent:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lost:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],survive:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};// defence
@@ -5519,7 +5328,7 @@ END Boss Only Section
 			var scoc=0;
 			var day=$("#comsumDat").val().substring(3,5);
 			var month=$("#comsumDat").val().substring(0,2);
-			var rlines
+			var rlines: string|any[]|JQuery<HTMLElement>
 			if (arg=="city") {
 			// console.log(arg);
 				rlines=$("#bottomspotinfo table tbody tr");
@@ -5530,7 +5339,7 @@ END Boss Only Section
 			if( rlines.length > 0 ){
 				var r=0;
 				var loop=function() {
-					var rday,rmonth,thiss,rid;
+					var rday: string,rmonth: string,thiss: any,rid: string;
 					if (arg=="city") {
 						thiss=rlines[r];
 						rday=$(thiss).children().first().next().html().substring(9,11);
@@ -5573,7 +5382,7 @@ END Boss Only Section
 											var tempts=0;
 											var rdatareport= rdata.siege.reports;
                                          $.each(rdatareport, function() {
-											var ztts = this.tts. reduce(function(a, b){
+											var ztts = this.tts. reduce(function(a: any, b: any){
                                             return a + b;
 											}, 0);
 											if (ztts===0){
@@ -5654,7 +5463,7 @@ END Boss Only Section
                                             var rdatareports= rdata.plunder.reports;
                                         }
                                         $.each(rdatareports, function() {
-                                            var ztts = this.tts. reduce(function(a, b){
+                                            var ztts = this.tts. reduce(function(a: any, b: any){
                                                 return a + b;
                                             }, 0);
                                             if (ztts===0){
@@ -7953,11 +7762,11 @@ END Boss Only Section
                 });
             }
         });
-        function filtertroops(type) {
+        function filtertroops(type: string) {
             var clist=$("#sel"+type).val();
             var con=Number($("#selc"+type).val());
-            var clistbool;
-            var contbool;
+            var clistbool: boolean;
+            var contbool: boolean;
             if (clist!="all") {
                 //console.log("1");
                 $.each(poll2.player.clc, function(key, value) {
@@ -8023,7 +7832,7 @@ END Boss Only Section
 
 
 //update incomings summary
-    function updateincoming(data) {
+    function updateincoming(data: {a: any;}) {
         var inctab="<thead><th>Player</th><th>City</th><th>Coords</th><th># INC</th><th><div class='"+tpicdiv[2]+"'</div></th><th><div class='"+tpicdiv[3]+"'</div></th><th><div class='"+tpicdiv[4]+"'</div></th><th><div class='"+tpicdiv[7]+"'</div></th><th><div class='"+tpicdiv[8]+"'</div></th><th><div class='"+tpicdiv[9]+"'</div></th><th><div class='"+tpicdiv[15]+"'</div></th><th><div class='"+tpicdiv[14]+"'</div></th><th><div class='"+tpicdiv[1]+"'</div></th><th>other</th><th colspan='2'>TS total</th><th>Next INC</th></thead><tbody> This Information Has been Moved";
         var i=0;
         var ttd=[2,3,4,7,8,9,15,14,1];
@@ -8037,7 +7846,7 @@ END Boss Only Section
             var tempx=Number(key%65536);
             var tempy=Number((key-tempx)/65536);
             var cont=Number(Math.floor(tempx/100)+10*Math.floor(tempy/100));
-            var atime;
+            var atime: string;
             inctab+="<tr cont='"+cont+"'><td class='playerblink'>"+this[0]+"</td><td>"+this[1]+"</td><td class='coordblink shcitt' data='"+key+"'>"+tempx+":"+tempy+"</td><td>"+this[3]+"</td>";
             var att=false;
             for (var i in this[9]) {
@@ -8105,7 +7914,7 @@ END Boss Only Section
 
 
 //update raid overview
-    function updateraidover(data,notes) {
+    function updateraidover(data: {a: any;},notes: {id: any; notes: any;}) {
        // console.log(notes);
         var raidovertab="<thead><tr data='0'><th></th><th>Name</th><th colspan='2'>Notes</th><th>Coords</th><th>Raids</th><th>Out</th><th>In</th><th>Raiding TS</th><th>Resources</th></tr></thead><tbody>";
         $.each(data.a, function() {
@@ -8153,7 +7962,7 @@ END Boss Only Section
 
 
 //update support summary
-    function updatesupport(data) {
+    function updatesupport(data: any) {
         var supporttab="<thead><th></th><th>Player</th><th>City</th><th>Coords</th><th>Alliance</th><th>TS supporting</th><th>TS sending</th><th>TS returning</th></thead><tbody>";
         $.each(data, function() {
             var tid=this[9][0][1];
@@ -8162,7 +7971,7 @@ END Boss Only Section
             supporttab+="<tr class='expsuptab'><td colspan='8'><div class='beigemenutable' style='width:98%;height: AUTO !important;max-height: 85%;'><table><thead><th></th><th>City</th><th>Coords</th><th colspan='2'>Troops</th><th>Status</th><th>Arrival</th></thead><tbody>";
             for (var i in this[9]) {
                 var sid=this[9][i][15];
-                var status;
+                var status: string;
                 var id=this[9][i][10];
                 switch (this[9][i][0]) {
                     case 1:
@@ -8232,7 +8041,7 @@ END Boss Only Section
 
 
 //update raids summary
-    function updateraids(data,turnc) {
+    function updateraids(data: {b: any;},turnc: string|number|string[]) {
         var raidtab="<thead><th>Report</th><th>Type</th><th>Cavern progress</th><th>losses</th><th>Carry</th><th>Date</th><th>Origin</th></thead><tbody>";
         var i=0;
         $.each(data.b, function() {
@@ -8266,7 +8075,7 @@ END Boss Only Section
 
 
 //update res summary
-    function updateres(data) {
+    function updateres(data: any) {
         var restabb="<thead><tr data='0'><th>Name</th><th colspan='2'>Notes</th><th>Coords</th><th>Wood</th><th>(Storage)</th><th>Stones</th><th>(Storage)</th><th>Iron</th><th>(Storage)</th><th>Food</th><th>(Storage)</th><th>Carts</th><th>(Total)</th><th>Ships</th><th>(Total)</th><th>Score</th></tr></thead><tbody>";
         var woodtot=0;
         var irontot=0;
@@ -8280,8 +8089,8 @@ END Boss Only Section
             var y=Number((cid-x)/65536);
             var con=Number(Math.floor(x/100)+10*Math.floor(y/100));
             restabb+="<tr data='"+cid+"' cont='"+con+"'><td id='cn"+cid+"' class='coordblink'>"+this.city+"</td><td colspan='2'>"+this.reference+"</td><td class='coordblink shcitt' data='"+cid+"'>"+x+":"+y+"</td>";
-            var res;
-            var sto;
+            var res: number;
+            var sto: number;
             cartstot+=this.carts_total;
             shipstot+=this.ships_total;
             for (var i=0; i<4; i++)
@@ -8354,7 +8163,7 @@ END Boss Only Section
 
 
 //update troops summary
-    function updatetroops(data,notes) {
+    function updatetroops(data: any,notes: {id: any; notes: any;}) {
         var troopstab="<thead><tr data='0'><th>Name</th><th style='width:150px;'>Notes</th><th>Coords</th><th class='spf'><div class='"+tpicdiv[8]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[1]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[11]+"'></div>(home)</th><th class='spf'>(Total)</th>";
         troopstab+="<th class='spf'><div class='"+tpicdiv[14]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[0]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[10]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[9]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[4]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[12]+"'></div>(home)</th><th class='spf'>(Total)</th>";
         troopstab+="<th class='spf'><div class='"+tpicdiv[2]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[13]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[7]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[17]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[6]+"'></div>(home)</th><th class='spf'>(Total)</th><th class='spf'><div class='"+tpicdiv[15]+"'></div>(home)</th><th class='spf'>(Total)</th>";
@@ -8379,10 +8188,10 @@ END Boss Only Section
         var triaritot=0;
         var vanqstot=0;
         var warshipstot=0;
-        var tshome;
-        var tstot;
-        var strhome;
-        var strtot;
+        var tshome: number;
+        var tstot: number;
+        var strhome: any;
+        var strtot: any;
         $.each(data, function() {
             tshome=0;
             tstot=0;
@@ -8393,9 +8202,9 @@ END Boss Only Section
             var con=Number(Math.floor(x/100)+10*Math.floor(y/100));
             var strhome="<table><tr class='nofilter'>";
             var strtot="<table><tr class='nofilter'>";
-            var thome;
-            var ttot;
-            var tt;
+            var thome: number;
+            var ttot: number;
+            var tt: number;
             troopstab+="<tr data='"+cid+"' cont='"+con+"'><td id='cnt"+cid+"' class='coordblink'>"+this.c+"</td><td style='width:150px;'>"+not+"</td><td class='coordblink shcitt' data='"+cid+"'>"+x+":"+y+"</td>";
             function makets() {
                 /*if (thome>0) {
@@ -8761,7 +8570,7 @@ END Boss Only Section
 
 
 // exporting table to csv file taken from https://gist.github.com/adilapapaya/9787842
-    function exportTableToCSV($table, filename) {
+    function exportTableToCSV($table: {find: (arg0: string) => any;}, filename: any) {
         var $headers = $table.find('tr:has(th)')
         ,$rows = $table.find('tr:has(td)')
         // Temporary delimiter characters unlikely to be typed by keyboard
@@ -8783,9 +8592,9 @@ END Boss Only Section
         // Helper Functions
         //------------------------------------------------------------
         // Format the output so it has the appropriate delimiters
-        function formatRows(rows){return rows.get().join(tmpRowDelim).split(tmpRowDelim).join(rowDelim).split(tmpColDelim).join(colDelim);}
+        function formatRows(rows: {get: () => any[];}){return rows.get().join(tmpRowDelim).split(tmpRowDelim).join(rowDelim).split(tmpColDelim).join(colDelim);}
         // Grab and format a row from the table
-        function grabRow(i,row){
+        function grabRow(i: any,row: any){
             var $row = $(row);
             //for some reason $cols = $row.find('td') || $row.find('th') won't work...
             var $cols = $row.find('td');
@@ -8794,7 +8603,7 @@ END Boss Only Section
                     .get().join(tmpColDelim);
         }
         // Grab and format a column from the table
-        function grabCol(j,col){
+        function grabCol(j: any,col: any){
                 var $col = $(col),
                 $text = $col.text();
                 return $text.replace('"', '""'); // escape double quotes

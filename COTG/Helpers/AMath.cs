@@ -26,6 +26,19 @@ namespace COTG
 			return Vector2.Dot(v0, v1);
 		}
 
+		public static float SmoothStep(this float f, float v0, float v1, float pow=1)
+		{
+			var df = (f - v0) / (v1 - v0);
+			var dfs = MathF.Pow(df, pow);
+			var df2 = dfs * dfs;
+			if (df <= 0.0f)
+				return 0;
+			if (df >=  1.0f)
+				return 1.0f;
+			
+			return 3*df2 - 2*df2*dfs;
+		}
+
 		public static Vector2 ToVector(this (float x, float y) me) => new Vector2(me.x, me.y);
 		public static (float x, float y) ToTuple(this Vector2 me) => (me.X, me.Y);
 		public static Vector3 ToVector(this (float x, float y, float z) me) => new Vector3(me.x, me.y, me.z);

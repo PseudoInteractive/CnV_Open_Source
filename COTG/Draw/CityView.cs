@@ -79,9 +79,34 @@ namespace COTG.Draw
 										1.0f - 704.0f*cityTileGainY / 128 );
 		
 		private static TextFormat textformatBuilding = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+		public static int cityDrawAlpha;
+
+		public static void Status(string s, bool dryRun)
+		{
+			if (dryRun)
+			{
+				Status(s);
+			}
+			else
+			{
+				Note.Show(s);
+			}
+		}
+
+		// Dry Run can be accessed on conditional and directly
+		public static void Status(string s)
+		{
+				if (ShellPage.contToolTip != null)
+					ShellPage.contToolTip = $"{ShellPage.contToolTip}\n{s}";
+				else
+					ShellPage.contToolTip = s;
+		}
+
 
 		public static void Draw(float alpha)
 		{
+			ShellPage.contToolTip = null;
+
 			var build = City.GetBuild();
 			if (build == null)
 				return;
@@ -91,7 +116,7 @@ namespace COTG.Draw
 			buildCityOrigin = build.cid.CidToWorldV();
 			// draw each building tile
 			var city = City.GetBuild();
-
+			cityDrawAlpha = iAlpha;
 			var zBase = 0;
 			// selected
 
@@ -174,10 +199,14 @@ namespace COTG.Draw
 
 			}
 
+
+			// if selected is 
+			
+			var biSelected = GetBuilding(selected);
+			var bdSelected = biSelected.def;
+
 			if (selected.IsValid())
 			{
-				var bi = GetBuilding(selected);
-				var bd = bi.def;
 				Material mat = CityBuild.action switch
 				{
 					CityBuild.Action.build => null,
@@ -216,10 +245,7 @@ namespace COTG.Draw
 
 				if (mat != null)
 				{
-					var off = (animationT * 0.3257f);
-					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-					var cs = CityPointToQuad(hovered.x, hovered.y, 1.2f);
-					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+					DrawSprite(hovered, mat, 0.312f);
 
 				}
 				// draw the quickbuild placeholder building
@@ -232,13 +258,13 @@ namespace COTG.Draw
 						if (sel != 0)
 						{
 							DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
-							ShellPage.toolTip = $"Click to place {bdHovered.Bn}";
+							ShellPage.contToolTip = $"Click to place {bdSelected.Bn}";
 						}
 					}
 					else
 					{
 
-						ShellPage.toolTip = $"Spot is occupied";
+						ShellPage.contToolTip = $"Spot is occupied";
 					}
 				}
 				else if (CityBuild.action == CityBuild.Action.move)
@@ -248,13 +274,13 @@ namespace COTG.Draw
 					{
 						if (!IsBuildingSpot(hovered))
 						{
-							ShellPage.toolTip = $"Please do not build buildings on walls";
+							ShellPage.contToolTip = $"Please do not build buildings on walls";
 						}
 						else
 						{
 							if (bdHovered.id == 0)
 							{
-								ShellPage.toolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
+								ShellPage.contToolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
 								DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
 
 
@@ -262,10 +288,10 @@ namespace COTG.Draw
 							else
 							{
 								if (bdHovered.isRes)
-									ShellPage.toolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
+									ShellPage.contToolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
 								else
 								{
-									ShellPage.toolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
+									ShellPage.contToolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
 									DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
 									// draw a move icond too
 								}
@@ -277,11 +303,11 @@ namespace COTG.Draw
 					{
 						if (biHovered.isBuilding)
 						{
-							ShellPage.toolTip = $"Click to move {bdHovered.Bn}";
+							ShellPage.contToolTip = $"Click to move {bdHovered.Bn}";
 						}
 						else
 						{
-							ShellPage.toolTip = $"Please Select a building to move";
+							ShellPage.contToolTip = $"Please Select a building to move";
 						}
 					}
 				}
@@ -291,30 +317,31 @@ namespace COTG.Draw
 					{
 						if (IsBuildingSpot(hovered))
 						{
-							ShellPage.toolTip = $"Left click to build something\nRight click to select a quick build tool";
+							ShellPage.contToolTip = $"Left click to build something\nRight click to select a quick build tool";
 
 						}
 						else if (IsTowerSpot(hovered))
 						{
-							ShellPage.toolTip = $"Left click to build tower\nRight click to select a quick build tool";
+							ShellPage.contToolTip = $"Left click to build tower\nRight click to select a quick build tool";
 
 						}
 						else if (IsWallSpot(hovered))
 						{
-							ShellPage.toolTip = $"Left click to build wall\nRight click to select a quick build tool";
+							ShellPage.contToolTip = $"Left click to build wall\nRight click to select a quick build tool";
 						}
 						else
 						{
-							ShellPage.toolTip = $"Please don't left click here\nRight click to select a quick build tool";
+							ShellPage.contToolTip = $"Please don't left click here\nRight click to select a quick build tool";
 						}
 					}
 					else if (biHovered.isRes)
 					{
-						ShellPage.toolTip = $"Left click modify {bdHovered.Bn}, click click to select a quick build tool";
+						ShellPage.contToolTip = $"Left click modify {bdHovered.Bn}, Right click to select a quick build tool";
 					}
 				}
 
 			}
+			PreviewBuildAction();
 
 			var processed = new HashSet<int>();
 			for (var it = buildQueue.iterate; it.Next();)
@@ -356,7 +383,15 @@ namespace COTG.Draw
 			}
 		}
 
-		private static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue, Material overlay=null)
+		public static void DrawSprite( (int x, int y) cc, Material mat, float animFreq)
+		{
+			var off = (animationT * animFreq);
+			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+			var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
+			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+		}
+
+		public static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue, Material overlay=null)
 		{
 			const float zBase = 0.0f;
 			var iconId = BidToAtlas(bid);
@@ -402,16 +437,16 @@ namespace COTG.Draw
 			if (selected.IsValid())
 			{
 				selected = invalidXY;
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-					var i = Views.CityBuild.instance;
-					i.rect.Fill = null;
-					i.building.Text = string.Empty;
-					i.description.Text = string.Empty;
-					i.upgrade.IsEnabled = false;
-					i.downgrade.IsEnabled = false;
+				//App.DispatchOnUIThreadSneaky(() =>
+				//{
+				//	var i = Views.CityBuild.instance;
+				//	i.rect.Fill = null;
+				//	i.building.Text = string.Empty;
+				//	i.description.Text = string.Empty;
+				//	i.upgrade.IsEnabled = false;
+				//	i.downgrade.IsEnabled = false;
 
-				});
+				//});
 			}
 		}
 

@@ -225,7 +225,8 @@ namespace COTG.Views
 						case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
 						case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
 
-						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2,CityView.hovered); break;
+						case Windows.System.VirtualKey.F11: if(Player.isAvatarOrTest) Raid.test^= true; break;
+						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5, CityView.hovered); break;
@@ -234,11 +235,11 @@ namespace COTG.Views
 						case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
-						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered); break;
+						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered,false); break;
 						case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
-						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered); break;
+						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered,false); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
-						case (VirtualKey)192: CityBuild.MoveHovered(true); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+						case (VirtualKey)192: CityBuild.MoveHovered(true,false); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 
 						// short keys
 						case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;

@@ -36,7 +36,7 @@ namespace COTG.Views
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 	public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
 	{
-		private static SettingsPage instance;
+		internal static SettingsPage instance;
 		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
@@ -145,7 +145,7 @@ namespace COTG.Views
 		public static CityList hubCitylistUI
 		{
 			get => CityList.Find(hubCitylistName);
-			set => hubCitylistName = value.name;
+			set => hubCitylistName = value switch { null => hubCitylistName, _ => value.name };
 		}
 
 		public string visitToken;
@@ -519,6 +519,7 @@ namespace COTG.Views
 					   global.Add(CityList.gdShipper);
 				   if (SettingsPage.cityListWarship)
 					   global.Add(CityList.gdWarship);
+				   global.Add(CityList.gdHubs);
 
 
 				   foreach (var city in City.myCities)

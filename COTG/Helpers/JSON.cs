@@ -163,7 +163,8 @@ namespace COTG.Helpers
             return e.GetInt32();
 
         }
-        public static string GetString(this JsonElement js, string prop)
+		
+		public static string GetString(this JsonElement js, string prop)
         {
             if (!js.TryGetProperty(prop, out var e))
             {

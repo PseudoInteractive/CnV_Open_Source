@@ -364,13 +364,13 @@ function updateattack() {
 
 	var t = { home: [], type: [] };
 	var scouttts;
-	for (let i in D6.tc) {
-		if (D6.tc[i]) {
+	for (let i in city.tc) {
+		if (city.tc[i]) {
 			if (Number(i) == 7) {
-				scouttts = D6.tc[7];
+				scouttts = city.tc[7];
 			}
 			else {
-				t.home.push(D6.tc[i]);
+				t.home.push(city.tc[i]);
 				t.type.push(i);
 			}
 		}
@@ -385,9 +385,9 @@ function updateattack() {
 }
 function updatedef() {
 	var t = { home: [], type: [] };
-	for (let i in D6.tc) {
-		if (D6.tc[i]) {
-			t.home.push(D6.tc[i]);
+	for (let i in city.tc) {
+		if (city.tc[i]) {
+			t.home.push(city.tc[i]);
 			t.type.push(i);
 		}
 	}
@@ -420,19 +420,19 @@ function SendAttack() {
 			targets.real.push($("#type" + i).val());
 			if ($("#type" + i).val() == 1) { realnumb += 1; }
 			else { fakenumb += 1; }
-			targets.dist.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
+			targets.dist.push(Math.sqrt((tempx - city.x) * (tempx - city.x) + (tempy - city.y) * (tempy - city.y)));
 		}
 	}
 	var scouttts;
 	let rams = 0;
 	var t = { home: [], type: [], real: [], fake: [], speed: [], scoutfake: [], scoutreal: [] };
-	for (let i in D6.tc) {
-		if (D6.tc[i]) {
-			if (Number(i) == 7) { scouttts = D6.tc[7]; }
+	for (let i in city.tc) {
+		if (city.tc[i]) {
+			if (Number(i) == 7) { scouttts = city.tc[7]; }
 			else {
 				if (Number(i) == 12)
-					rams = D6.tc[12];
-				t.home.push(Math.ceil(D6.tc[i] * Number($("#perc").val()) / 100));
+					rams = city.tc[12];
+				t.home.push(Math.ceil(city.tc[i] * Number($("#perc").val()) / 100));
 				t.type.push(Number(i));
 				if ($("#usereal" + i).prop("checked") === true) {
 					t.speed.push(ttspeed[i] / ttSpeedBonus[i]);
@@ -444,7 +444,7 @@ function SendAttack() {
 	var time;
 	var faketss;
 	var fakeg;
-	var tscbr = D6.tt;
+	var tscbr = city.tt;
 	/*    if(tscbr<20000){faketss=200;fakeg=1;}
 		else if(tscbr<40000){faketss=500;fakeg=1;}
 		else if(tscbr<60000){faketss=800;fakeg=2;}
@@ -924,11 +924,11 @@ function SendAttack() {
 //		/** @type {number} */
 //		let bdNumber_ = -1;
 //		let i_16;
-//		for (i_16 in D6.bd) {
-//			if (buildings_.bid.indexOf(D6.bd[i_16].bid) > -1) {
-//				if (currentbd_.bid.indexOf(D6.bd[i_16].bid) > -1) {
+//		for (i_16 in city.bd) {
+//			if (buildings_.bid.indexOf(city.bd[i_16].bid) > -1) {
+//				if (currentbd_.bid.indexOf(city.bd[i_16].bid) > -1) {
 //					/** @type {number} */
-//					j_4 = currentbd_.bid.indexOf(D6.bd[i_16].bid);
+//					j_4 = currentbd_.bid.indexOf(city.bd[i_16].bid);
 //					currentbd_.count[j_4] += 1;
 //					/** @type {number} */
 //					bdNumber_ = bdNumber_ + 1;
@@ -936,7 +936,7 @@ function SendAttack() {
 //					/** @type {number} */
 //					bdtypecount_ = bdtypecount_ + 1;
 //					/** @type {number} */
-//					j_4 = buildings_.bid.indexOf(D6.bd[i_16].bid);
+//					j_4 = buildings_.bid.indexOf(city.bd[i_16].bid);
 //					currentbd_.name[bdtypecount_] = buildings_.name[j_4];
 //					currentbd_.bid[bdtypecount_] = buildings_.bid[j_4];
 //					currentbd_.count[bdtypecount_] += 1;

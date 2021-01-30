@@ -17,24 +17,6 @@
 			<RowDefinition/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<!--<controls:Expander Grid.Row="1"  x:Name="expander" VerticalAlignment="Top" Margin="0,0,0,10"
-                           Header="Quick Build"
-                           HorizontalContentAlignment="Stretch"
-                           IsExpanded="False"
-                           ExpandDirection="Down">
-			<TextBlock Text="TBD" />
-		</controls:Expander>-->
-		<StackPanel Grid.Row="2">
-			<Rectangle x:Name="rect"  x:FieldModifier="public" Width="128" Height="128" HorizontalAlignment="Center" />
-			
-			<TextBlock x:Name="building" Text="Castle" x:FieldModifier="public" FontSize="14" />
-			<TextBlock x:Name="description" x:FieldModifier="public" TextWrapping="WrapWholeWords" FontSize="12" />
-			<Button x:Name="upgrade" Content="Upgrade"  x:FieldModifier="public" Click="Upgrade_Click" />
-			<Button x:Name="downgrade" Content="DownGrade"  x:FieldModifier="public" Click="Downgrade_Click" />
-			<Button x:Name="destroy" Content="Destroy"  x:FieldModifier="public" Click="Destroy_Click" />
-			<Button x:Name="abandon" Content="Abandon"  x:FieldModifier="public" Click="Abandon_Click" />
-
-
-		</StackPanel>
+		
 	</Grid>
 </UserControl>

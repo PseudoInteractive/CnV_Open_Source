@@ -141,6 +141,7 @@ namespace COTG
 		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
 
 
+
 		internal static void SetLighting(Lighting value)
 		{
 			foreach (var tile in TileData.instance.tilesets)
@@ -165,8 +166,10 @@ namespace COTG
 		public static float cameraZoom = cityZoomDefault;
 		public static float cameraZoomLag = cityZoomFocusThreshold;
 		public const float maxZoom = 4096;
+		public const float cameraZoomWorldDefault = 16;
 		public const float cameraZoomRegionDefault = 64;
 		public const float cityZoomThreshold = 256f;
+		public const float cityZoomWorldThreshold = 32;
 		public const float cityZoomFocusThreshold = 512;
 		public const float cityZoomDefault = 1280;
 		public float eventTimeOffsetLag;
@@ -1845,13 +1848,15 @@ namespace COTG
 					//	textLayout.Draw( c, Color.Black, Layer.overlayText);//.Dra ds.DrawText(_toolTip, c, tipTextBrush, tipTextFormat);
 				}
 				var _contTip = ShellPage.contToolTip;
-				if (_contTip != null )
+				if (_contTip != null   )
 				{
+						var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128, cityZoomThreshold + 128).
+							Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16, cityZoomWorldThreshold - 16));
 					//	TextLayout textLayout = GetTextLayout( _contTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					Vector2 c = new Vector2(20, 16).SToC();
-					//var expand = new Vector2(7);
-					DrawTextBox(_contTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						//var expand = new Vector2(7);
+						DrawTextBox(_contTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					//  var rectD = new Vector2(32*4, 24*5);
 					// var target = new Rect((mousePosition + rectD*0.25f).ToPoint(), rectD.ToSize());
 					//tipTextBrush.StartPoint = tipBackgroundBrush.StartPoint = new Vector2((float)bounds.Left, (float)bounds.Top);
@@ -2192,7 +2197,7 @@ namespace COTG
 		public static (int x, int y) invalidXY = (int.MinValue, int.MinValue);
 
 		
-		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < 128 * 3;
+		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < (int)color.A*3/2 ;
 
 		public static Color AlphaToWhite(this int alpha) { return new Color(255, 255, 255, alpha); }
 		public static Color AlphaToAll (this int alpha) { return new Color(alpha, alpha, alpha, alpha); }
@@ -2201,6 +2206,11 @@ namespace COTG
 		public static Color Scale(this Color value, Vector4 scale )
 		{
 			return new Color((int)((float)(int)value.R * scale.X), (int)((float)(int)value.G * scale.Y), (int)((float)(int)value.B * scale.Z), (int)((float)(int)value.A * scale.W));
+
+		}
+		public static Color Scale(this Color value, float scale)
+		{
+			return new Color((int)((float)(int)value.R * scale), (int)((float)(int)value.G * scale), (int)((float)(int)value.B * scale), (int)((float)(int)value.A * scale));
 
 		}
 		public static Color Scale(this Color value, Vector2 scale)

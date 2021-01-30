@@ -158,6 +158,7 @@ namespace COTG
 		public static string PlayerToken(int pid) => PlayerVars(pid).token;
 
 		public static int ppss;
+		public static bool isSub => ppss != 0;
 
 		public static long GameTimeMs()
 		{
@@ -319,8 +320,8 @@ namespace COTG
 					//Opacity = 0.5,
 				};
 
-				view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-				view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+			//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+			//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -408,15 +409,15 @@ namespace COTG
 
 		}
 
-		private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
-		{
-			Note.Show("Pointer " + e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind + e.KeyModifiers + e.ToString());
-		}
+		//private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
+		//{
+		//	Note.Show("Pointer " + e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind + e.KeyModifiers + e.ToString());
+		//}
 
-		private static void webViewKeyDownHandler(object sender, KeyRoutedEventArgs e)
-		{
-			Note.Show("Key " + e.Key + e.ToString());
-		}
+		//private static void webViewKeyDownHandler(object sender, KeyRoutedEventArgs e)
+		//{
+		//	Note.Show("Key " + e.Key + e.ToString());
+		//}
 
 		async private static void View_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
 		{
@@ -1089,7 +1090,11 @@ namespace COTG
 						   CityList.selections[i + 1] = (lists[i]);
 					   }
 					   CityList.all = lists.ToArray();
-
+					   if (SettingsPage.instance!=null)
+					   {
+						   SettingsPage.instance.hubCityListBox.ItemsSource = null;
+						   SettingsPage.instance.hubCityListBox.ItemsSource = CityList.all;
+					   }
 					   CityList.box.ItemsSource = CityList.selections;
 					   CityList.box.SelectedIndex = priorIndex; // Hopefully this is close enough
 																//                       SettingsPage.instance.
@@ -1297,8 +1302,8 @@ namespace COTG
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
 							httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-							if(ppss!= 0)
-								httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", ppss.ToString());
+							if(subId != 0)
+								httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", subId.ToString());
 
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 							//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
@@ -1478,6 +1483,7 @@ namespace COTG
 								   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 								   Helpers.JSON.timeZoneString = str;
 								   //   Log(JSONHelper.timeZoneString);
+								   
 								   Log($"TOffset {gameTOffset}");
 								   Log(ServerTime().ToString());
 								   ppss = jso.GetAsInt("ppss");
@@ -1507,7 +1513,9 @@ namespace COTG
 
 
 								   UpdatePPDT(ppdt,false);
-								   
+								   if (Player.isAvatarOrTest)
+									   Raid.test = true;
+
 								   break;
 							   }
 						   case "aexp":
@@ -1879,12 +1887,30 @@ namespace COTG
 						   case "c":
 							   {
 								   var jso = jsp.Value;
-								   var cid = jso.GetInt("c");
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
-								//   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
-								   var pop = jso.GetProperty("pop");
-								   if( pop.ValueKind != JsonValueKind.Null )
+								   if(jso.TryGetProperty("v", out var v))
+								   {
+									   var vm = (ShellPage.ViewMode)v.GetAsInt();
+									   switch (vm)
+									   {
+										   case ShellPage.ViewMode.city:
+											   AGame.cameraZoom = AGame.cityZoomDefault;
+											   break;
+										   case ShellPage.ViewMode.region:
+											   AGame.cameraZoom = AGame.cameraZoomRegionDefault;
+											   break;
+										   case ShellPage.ViewMode.world:
+											   AGame.cameraZoom = AGame.cameraZoomWorldDefault;
+
+											   break;
+									   }
+									   City.build.BringCidIntoWorldView(false);
+
+								   }
+
+								   //   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
+								   if(jso.TryGetProperty("pop", out var pop))
 								   {
 									   var str = pop.ToString();
 
@@ -1896,9 +1922,10 @@ namespace COTG
 								   }
 								   ShellPage.NotifyCotgPopup(popupCount);
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
-								  if(cid != 0)
-									   City.StBuild(cid,true);
-
+								   if (jso.TryGetProperty("c", out var _cid))
+								   {
+									   City.StBuild(_cid.GetAsInt(), true);
+								   }
 								   break;
 							   }
 

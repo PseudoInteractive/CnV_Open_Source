@@ -603,7 +603,7 @@ function setnearhub(j_12) {
 	
 
 	var res = [0, 0, 0, 0, 1, 130000, 130000, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 300000, 300000, 300000, 400000];
-	var aa = D6.mo;
+	var aa = city.mo;
 	if (j_12 != undefined) {
 		if ($("#addnotes").prop("checked") == true) {
 			$("#CNremarks").val(remarksl_[j_12]);
@@ -629,7 +629,7 @@ function setnearhub(j_12) {
 	for (var i in hubs.cid) {
 		var tempx = Number(hubs.cid[i] % 65536);
 		var tempy = Number((hubs.cid[i] - tempx) / 65536);
-		hubs.distance.push(Math.sqrt((tempx - D6.x) * (tempx - D6.x) + (tempy - D6.y) * (tempy - D6.y)));
+		hubs.distance.push(Math.sqrt((tempx - city.x) * (tempx - city.x) + (tempy - city.y) * (tempy - city.y)));
 	}
 	var mindist = Math.min.apply(Math, hubs.distance);
 	nearesthub = hubs.cid[hubs.distance.indexOf(mindist)];
@@ -656,7 +656,7 @@ function setnearhub(j_12) {
 	for (var k in res) {
 		aa[28 + Number(k)] = res[k];
 	}
-	var dat = { a: JSON.stringify(aa), b: D6.cid };
+	var dat = { a: JSON.stringify(aa), b: city.cid };
 	jQuery.ajax( { url: 'includes/mnio.php', type: 'POST',  data: dat });
 }
 /**
