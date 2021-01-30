@@ -7092,11 +7092,14 @@ var _viewModeCache = 0;
 const viewModeCity = 0;
 const viewModeRegion = 1;
 const viewModeWorld = 2;
+const viewModeInvalid = 8;
 var pollthis;
 let city: jsonT.City = {};
 let pollJ: jsonT.Poll = {};
 var P8 = 0;
 function SetViewMode(mode) {
+
+	_viewModeCache = _viewModeInvalid;
 	_viewMode = mode;
  // this needs to be black in city view, white in region view
 	callSyncViewMode();
@@ -7104,6 +7107,10 @@ function SetViewMode(mode) {
 function setTestFlag(flag) {
 	testFlag = flag;
 }
+
+let xcoord=0;
+let ycoord=0;
+
 function debounce(func: () => void, wait: number, _maxWait: number = 0, _leading: boolean = false, _trailing: boolean = true) {
 	let lastArgs,
 		lastThis,
@@ -24211,7 +24218,7 @@ function outer() {
 							//c6.paused = !"";
 							//c6.lockRender = !0;
 							regrender = 0;
-							worldrender = 0;
+						//	worldrender = 0;
 							citrender = 1;
 							//c6.time.advancedTiming = !!1;
 							//c6.time.desiredFps = 1;
@@ -48127,9 +48134,9 @@ function outer() {
 			.click(function () {
 				//        c6.paused = !"1";
 				//        c6.lockRender = !"1";
-				regrender = 1;
+			//	regrender = 1;
 				SetViewMode(viewModeRegion);
-				E6k.R6();
+			//	E6k.R6();
 				worldrender = 0;
 				//      c6.time.advancedTiming = !"";
 				//      c6.time.desiredFps = 5;
@@ -48268,37 +48275,39 @@ function outer() {
 		}
 		$("#cityButton")
 			.click(function () {
+	
+				SetViewMode(viewModeCity);
 				// c6.paused = !0;
 				// c6.lockRender = !![];
-				regrender = 0;
-				worldrender = 0;
-				E6k.R6();
-				citrender = 1;
-				SetViewMode(viewModeCity);
-				// c6.time.advancedTiming = !!{};
-				//  c6.time.desiredFps = 1;
-				//  c6.time.fpsMax = 1;
-				//  c6.raf.stop();
-				P9();
-				$(__s[S6p | 1360])
-					.css("display", "none");
-				$(__s[g04 * 1])
-					.css("display", "none");
-				$(__s[S4m << 1267391808])
-					.show();
-				var V0g = document.getElementById("cvs");
-				var r0g = document.getElementById(_s(+
-					q6p));
-				var A0g = document.getElementById("city_map");
-				V0g.style.display = "none";
-				r0g.style.display = "none";
-				A0g.style.display = "block";
-				w2();
-				$(__s[l8R & 2147483647])
-					.val(city.x);
-				$(__s[k8R * 1])
-					.val(city.y);
-				e5F(+bspotHall);
+				//regrender = 0;
+				//worldrender = 0;
+				//E6k.R6();
+				//citrender = 1;
+				//SetViewMode(viewModeCity);
+				//// c6.time.advancedTiming = !!{};
+				////  c6.time.desiredFps = 1;
+				////  c6.time.fpsMax = 1;
+				////  c6.raf.stop();
+				//P9();
+				//$(__s[S6p | 1360])
+				//	.css("display", "none");
+				//$(__s[g04 * 1])
+				//	.css("display", "none");
+				//$(__s[S4m << 1267391808])
+				//	.show();
+				//var V0g = document.getElementById("cvs");
+				//var r0g = document.getElementById(_s(+
+				//	q6p));
+				//var A0g = document.getElementById("city_map");
+				//V0g.style.display = "none";
+				//r0g.style.display = "none";
+				//A0g.style.display = "block";
+				//w2();
+				//$(__s[l8R & 2147483647])
+				//	.val(city.x);
+				//$(__s[k8R * 1])
+				//	.val(city.y);
+				//e5F(+bspotHall);
 			});
 
 		function P4F() {
@@ -54579,7 +54588,7 @@ function outer() {
 					.val();
 			}
 			N6();
-			var W3B = $.post("/includes/" + __s[190], { y: G3B, x: M3B, cid: cid });
+			var W3B = $.post("/includes/aSpot.php", { y: G3B, x: M3B, cid: cid });
 			F6();
 			W3B.done(function (B3B) {
 				E6k.R6();
@@ -55444,6 +55453,7 @@ function outer() {
 		}
 		var n7V;
 
+  // this allears to be related to reports
 		function C8F(b3Z) {
 			if (ppdt)
 				if (ppdt[__s[+r9p]])
@@ -64636,9 +64646,13 @@ function outer() {
 				440: _s(+
 					K5R)
 			};
-			if (city.w == 1) u5l[352] = __s[H6y | 276], u5l[353] = __s[+H6y], u5l[373] = E6k
-				.S55(H6y - 0), u5l[374] = __s[H6y | 786], u5l['375' | 356] = __s[+H6y], u5l[395] = _s(
-					H6y ^ 0), u5l['396' | 8] = __s[H6y * 1], u5l[A7R | 32] = __s[+H6y], u5l[418] = _s(+
+			if (city.w == 1) u5l[352] = __s[H6y | 276],
+				u5l[353] = __s[+H6y], 
+	`			u5l[373] =	E6k.S55(H6y - 0), 
+				u5l[374] = __s[H6y | 786], 
+				u5l['375' | 356] = __s[+H6y], 
+				u5l[395] = _s(	H6y ^ 0), 
+				u5l['396' | 8] = __s[H6y * 1], u5l[A7R | 32] = __s[+H6y], u5l[418] = _s(+
 						H6y);
 			if (u5l[H5l]) return u5l[H5l];
 			else return 0;

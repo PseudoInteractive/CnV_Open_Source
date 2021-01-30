@@ -1639,38 +1639,11 @@ let Res_ = [0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 /** @type {!Array} */
 let ttname = ["guard", "ballista", "ranger", "triari", "priestess", "vanquisher", "sorcerers", "scout", "arbalist", "praetor", "horseman", "druid", "ram", "scorpion", "galley", "stinger", "warship", "senator"];
 /** @type {!Array} */
-let layoutsl_ = [""];
-/** @type {!Array} */
-let layoutsw_ = [""];
-/** @type {!Array} */
-let layoutdf_ = [""];
-let resl_ = [[]];
 let OGA: jsonT.Command[] = [];
 let wdata;
 let PostgWrd = () => { };
 /** @type {!Array} */
-let remarksl_ = [""];
-/** @type {!Array} */
-let remarksw_ = [""];
-/** @type {!Array} */
-let remarkdf_ = [""];
-/** @type {!Array} */
-let troopcounw_ = [[]];
-/** @type {!Array} */
-let troopcound_ = [[]];
-/** @type {!Array} */
-let troopcounl_ = [[]];
-/** @type {!Array} */
-let resw_ = [[]];
-/** @type {!Array} */
-let resd_ = [[]];
-/** @type {!Array} */
-let notesl_ = [""];
-/** @type {!Array} */
-let notesw_ = [""];
-/** @type {!Array} */
-let notedf_ = [""];
-/** @type {string} */
+
 let emptyspots_ = ",.;:#-T";
 /** @type {boolean} */
 let beentoworld = false;
