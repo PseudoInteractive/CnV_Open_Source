@@ -23,7 +23,14 @@ namespace COTG
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
-  
+
+		public static void Swap<T>(ref T a, ref T b)
+		{
+			T temp = a;
+			a = b;
+			b = temp;
+		}
+
 		public static bool ContainsAny(this string s, string[] tags)
 		{
 			foreach (var a in tags)

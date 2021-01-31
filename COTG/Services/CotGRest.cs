@@ -837,7 +837,25 @@ namespace COTG.Services
             await p.Send(postContent);
 
         }
-        async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost)
+		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent)
+		{
+			var p = new Post(url);
+			return await p.Send(postContent);
+		}
+		async public static Task<bool> SendForOkay(string url, string postContent)
+		{
+			var p = new Post(url);
+
+			var result = await p.Send(postContent);
+			if (result == null)
+				return false;
+			if (result.StatusCode == HttpStatusCode.Ok)
+				return true;
+			Log($"HTTP: {result.StatusCode} url:{url} post:{postContent}");
+			return false;
+		}
+
+		async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost)
         {
             var p = new Post(url);
             return await p.AcceptJson(await p.Send(postContent));

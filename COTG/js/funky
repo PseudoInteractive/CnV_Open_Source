@@ -18271,9 +18271,6 @@ function outer() {
             return v6v;
         };
         function K8F(w6U, j6U) {
-            E6k.y6();
-            $(__s[+r5y] + j6U)
-                .css(__s[t3y | 1036], __s[5557]);
         }
         function V0V() {
             var O82 = $(__s[6198]);
@@ -18409,7 +18406,7 @@ function outer() {
             return A6v;
         };
         function g3F() {
-            $(__s[2567])
+            $("#countloaddiv")
                 .css("display", "none");
         }
         a6.addRoundKey = function (Z6v, U6v, P6v, B6v) {
@@ -24995,127 +24992,6 @@ function outer() {
             t9 = P1V;
         }
         function N4F(P3U) {
-            var t34 = "4756";
-            var x34 = "5918";
-            var T34 = '5758';
-            var g34 = "4737";
-            var B3U = city.w;
-            var y3U = city.bd[bspotHall].bl;
-            if (P3U == (bspotHall ^ 0))
-                $(__s[+r04])
-                    .show();
-            else
-                $(__s[+r04])
-                    .css("display", "none");
-            var D3U = P3U % +A5y;
-            var p3U = (P3U - D3U) / (A5y <<
-                1081210016);
-            var R3U = $(__s[+r5y] + P3U);
-            R3U.addClass(__s[5725]);
-            R3U.css({ 'background-color': __s[5880], 'height': __s[+I9R] });
-            if (B3U == 1)
-                if (P3U == +V5R || P3U == c5R - 0 || P3U == +u8y || P3U == +M5R || P3U == +s5R || P3U == +Q5R || P3U == (Z5R ^
-                    0) || P3U == (C5R & 2147483647)) {
-                    $(__s[t34 << 1167823328])
-                        .removeClass(__s[F7p - 0]);
-                    $(__s[+t34])
-                        .addClass(__s[w7p << 578233280]);
-                    $(__s[t34 | 4628])
-                        .attr("disabled", !![]);
-                    if (y3U >= 10) {
-                        $(__s[+J34])
-                            .removeClass(__s[w7p ^ 0]);
-                        $(__s[+J34])
-                            .addClass(__s[+F7p]);
-                        $(__s[T34 * 1])
-                            .removeClass(__s[+w7p]);
-                        $(__s[T34 >> 1616596704])
-                            .addClass(__s[+F7p]);
-                        $(__s[+J34])
-                            .attr("disabled", !{});
-                        $(__s[+T34])
-                            .attr("disabled", !!0);
-                        $(__s[x34 * 1])
-                            .addClass(__s[+F7p]);
-                        $(__s[+x34])
-                            .removeClass(__s[+w7p]);
-                        $(__s[g34 * 1])
-                            .addClass(__s[+F7p]);
-                        $(__s[+g34])
-                            .removeClass(__s[+w7p]);
-                    }
-                }
-                else {
-                    $(__s[t34 & 2147483647])
-                        .removeClass(__s[F7p * 1]);
-                    $(__s[+t34])
-                        .addClass(__s[w7p << 1690402112]);
-                    $(__s[+t34])
-                        .on();
-                    $(__s[+J34])
-                        .removeClass(__s[F7p << 480092512]);
-                    $(__s[J34 & 2147483647])
-                        .addClass(__s[w7p * 1]);
-                    $(__s[T34 >> 1382550944])
-                        .removeClass(__s[+F7p]);
-                    $(__s[+T34])
-                        .addClass(__s[+w7p]);
-                    $(__s[+J34])
-                        .attr("disabled", !![]);
-                    $(__s[T34 * 1])
-                        .attr("disabled", !!"1");
-                    $(__s[+x34])
-                        .removeClass(__s[+F7p]);
-                    $(__s[x34 ^ 0])
-                        .addClass(__s[w7p | 3264]);
-                    $(__s[g34 - 0])
-                        .removeClass(__s[F7p & 2147483647]);
-                    $(__s[g34 - 0])
-                        .addClass(__s[+w7p]);
-                    $(__s[+x34])
-                        .attr("disabled", !![]);
-                    $(__s[+g34])
-                        .attr("disabled", !!{});
-                }
-            if (B3U == (0)) {
-                $(__s[t34 - 0])
-                    .removeClass(__s[F7p - 0]);
-                $(__s[t34 ^ 0])
-                    .addClass(__s[w7p | 2194]);
-                $(__s[+J34])
-                    .removeClass(__s[F7p - 0]);
-                $(__s[+J34])
-                    .addClass(__s[+w7p]);
-                $(__s[T34 << 1977614944])
-                    .removeClass(__s[F7p << 1155363744]);
-                $(__s[T34 | 5128])
-                    .addClass(__s[w7p >> 2000783296]);
-                $(__s[J34 & 2147483647])
-                    .attr("disabled", !!{});
-                $(__s[+T34])
-                    .attr("disabled", !!"1");
-                $(__s[x34 | 5384])
-                    .removeClass(__s[F7p - 0]);
-                $(__s[x34 & 2147483647])
-                    .addClass(__s[+w7p]);
-                $(__s[+g34])
-                    .removeClass(__s[+F7p]);
-                $(__s[+g34])
-                    .addClass(__s[w7p * 1]);
-                $(__s[+x34])
-                    .attr("disabled", !!{});
-                $(__s[+g34])
-                    .attr("disabled", !0);
-            }
-            w2();
-            $(__s[4947])
-                .show();
-            $(__s[o04 - 0])
-                .attr("s", P3U);
-            if (K0F.indexOf(P3U) >= (0) || e9.indexOf(P3U) >= 0)
-                y1F();
-            else
-                y1F();
         }
         $(document)
             .ready(function () {
@@ -33020,44 +32896,6 @@ function outer() {
                     .addClass(__s[1658]);
         }
         function f8F(H6U, u6U) {
-            if (H6U == ('891' | 56)) {
-                H6U = +TPL;
-                u6U = u6U + +o8y;
-            }
-            else if (H6U == +892) {
-                H6U = TPL | 274;
-                u6U = u6U + +k8y;
-            }
-            else if (H6U == 893) {
-                H6U = TPL * 1;
-                u6U = u6U + +c8y;
-            }
-            else if (H6U == 894) {
-                H6U = TPL << 1237453952;
-                u6U = u6U + +A5y;
-            }
-            else if (H6U == +TPL) {
-                H6U = +TPL;
-                u6U = u6U + (u6y - 0);
-            }
-            else if (H6U == 895 * 1) {
-                H6U = +TPL;
-                u6U = u6U + (p0y & 2147483647);
-            }
-            else if (H6U == (896)) {
-                H6U = +TPL;
-                u6U = u6U;
-            }
-            else if (H6U == +897) {
-                H6U = +TPL;
-                u6U = u6U - 1;
-            }
-            else if (H6U == 898) {
-                H6U = +TPL;
-                u6U = u6U - 2;
-            }
-            $(__s[r5y * 1] + u6U)
-                .css(__s[t3y | 32], __s[6102]);
         }
         function i4F() {
             E6k.y6();
@@ -41784,14 +41622,6 @@ function outer() {
             $(__s[+H4m])
                 .show();
         }
-        function R4V(U3U) {
-            var Z3U = $(__s[+r5y] + U3U);
-            if (Z3U.css(__s[b9R << 1913276032]) != __s[4166]) {
-                return !1;
-            }
-            else
-                return !"";
-        }
         function W1F(k5w) {
             lastSentBq = -1;
             var N0w = h8;
@@ -47032,25 +46862,6 @@ function outer() {
             }, x44 - 0);
         }
         function k0V(w3g) {
-            var u3g = 1;
-            E6k.R6();
-            var s3g = 8;
-            if (city.ble[2] == 0)
-                var s3g = city.ble[4];
-            else
-                var s3g = city.ble[2];
-            var H3g = u3g * +v1R - v1R * 1;
-            var j3g = s3g * (v1R >> 1053860224) - +v1R;
-            $(__s[+r5y] + (w3g + u6y * 1))
-                .css({
-                'background': __s[h5y - 0] + R9 + __s[+X5y] + H3g + __s[+P5y] + j3g + _s(+I5y),
-                'width': __s[+w1R],
-                'height': __s[w1R >> 2044188640],
-                'zoom': _s(F1R >>
-                    546876768),
-                '-moz-transform': __s[1798],
-                'left': __s[+A1R]
-            });
         }
         function ProcessBuuPoll() {
             if (city.bq.length <= 1)
@@ -47493,8 +47304,6 @@ function outer() {
             catch (h3g) { }
         }
         function g8F(v6U, I6U) {
-            $(__s[+r5y] + I6U)
-                .addClass(__s[r2p >> 691500064]);
         }
         function u8F(U5Z) {
             var K5Z = h8;
@@ -52637,24 +52446,6 @@ function outer() {
                 delete k0F[U3g];
         }
         function I8(U9g) {
-            E6k.R6();
-            $(__s[r5y << 56533184] + U9g)
-                .css({
-                'background': '',
-                'width': __s[p5y & 2147483647],
-                'height': __s[+p5y],
-                'filter': E6k
-                    .S55("4867" | 512)
-            });
-            $(__s[e1R >> 891067520] + U9g)
-                .css({
-                'background': '',
-                'width': __s[p5y ^ 0],
-                'height': __s[p5y | 128],
-                'filter': E6k
-                    .S55(4867)
-            });
-            h9(U9g);
         }
         window.onerror = C9F();
         function O3F() {
@@ -56167,16 +55958,6 @@ function outer() {
             E6k.y6();
             J2();
         }, +x44);
-        function S9F(d5g) {
-            var i5g = $(__s[+r5y] + d5g);
-            if (i5g.css(__s[+b9R]) != __s[4166]) {
-                console
-                    .log(i5g.css(__s[+b9R]));
-                return !{};
-            }
-            else
-                return !!"1";
-        }
         function R5F(P0v) {
             var g0v = '';
             if (window.getSelection)

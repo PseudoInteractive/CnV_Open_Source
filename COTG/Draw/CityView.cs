@@ -272,7 +272,7 @@ namespace COTG.Draw
 
 					if (selected.IsValid())
 					{
-						if (!IsBuildingSpot(hovered))
+						if (Player.isAvatarOrTest ? IsTowerSpot(hovered):!IsBuildingSpot(hovered))
 						{
 							ShellPage.contToolTip = $"Please do not build buildings on walls";
 						}

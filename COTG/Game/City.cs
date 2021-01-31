@@ -483,7 +483,68 @@ namespace COTG.Game
             return null;
         }
 
-        public static void CheckTipRaiding()
+		public async void SaveLayout()
+		{
+			if (layout == null)
+				return;
+			
+				var sb = new StringBuilder("[ShareString.1.3]");
+				sb.Append(isOnWater? ';' : ':');
+				foreach(var c in layout)
+				{
+					if(!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o) )
+					{
+						o = (byte)'-';
+					}
+					sb.Append((char)o);
+				}
+				sb.Append("[/ShareString]");
+				var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(sb.ToString(), Encoding.UTF8);
+				var rv = await Post.SendForOkay("/includes/pSs.php",post );
+			Assert(rv == true);
+		}
+
+		public void FlipLayoutH()
+		{
+			if (layout == null)
+				return;
+			for(int y=0;y< citySpan;++y)
+				for(int x=0;x< citySpan/2;++x)
+				{
+					if(isOnWater)
+					{
+						if (y > citySpan / 2)
+							continue;
+					}
+					var x1 = citySpan - x - 1;
+
+					AUtil.Swap(ref layout[x + y * citySpan], ref layout[x1 + y * citySpan]);
+				}
+
+			SaveLayout();
+		}
+
+		public void FlipLayoutV()
+		{
+			if (layout == null)
+				return;
+			for (int x = 0; x < citySpan; ++x)
+				for (int y = 0; y < citySpan / 2; ++y)
+				{
+					if (isOnWater)
+					{
+						if (x > citySpan / 2)
+							continue;
+					}
+					var y1 = citySpan - y - 1;
+
+					AUtil.Swap(ref layout[x + y * citySpan], ref layout[x + y1 * citySpan]);
+				}
+
+			SaveLayout();
+		}
+
+		public static void CheckTipRaiding()
         {
             //if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3 )
             //    return;
@@ -943,19 +1004,13 @@ namespace COTG.Game
 				{
 					if (CityList.all[id].name.CompareTo(CityList.all[id - 1].name) >= 0)
 						break;
-					Swap(ref CityList.all[id], ref CityList.all[id - 1]);
+					AUtil.Swap(ref CityList.all[id], ref CityList.all[id - 1]);
 					--id;
 				}
             }
             return cl;
         }
 
-		private static void Swap<T>(ref T a, ref T b)
-		{
-			T temp = a;
-			a = b;
-			b = temp;
-		}
 
 		public static CityList FindNewCities() => Find(sNewCities); 
 

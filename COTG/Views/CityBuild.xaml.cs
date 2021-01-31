@@ -143,6 +143,8 @@ namespace COTG.Views
 		static ActionInfo actionBuild = new ActionInfo("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static ActionInfo actionDowngrade = new ActionInfo("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
 		static ActionInfo actionAbandon = new ActionInfo("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
+		static ActionInfo actionFlipLayoutH = new ActionInfo("Flip H", Action.flipLayoutH, "City/decal_select_building.png", "Flip Layout Horizontally");
+		static ActionInfo actionFlipLayoutV = new ActionInfo("Flip V", Action.flipLayoutV, "City/decal_select_building.png", "Flip Layout Vertically");
 		static RadialMenuItem itemQB;
 
 
@@ -171,9 +173,8 @@ namespace COTG.Views
 
 					break;
 				case MenuType.buliding:
-				case MenuType.townhall:
 					Item(buildMenu, 1).SetAction(actionMove);
-					Item(buildMenu, 2).SetAction(menuType == MenuType.buliding ? actionDemo : actionAbandon);
+					Item(buildMenu, 2).SetAction(actionDemo);
 					Item(buildMenu, 3).SetAction(actionLayout);
 					if( b.bl == 0 )
 						Item(buildMenu, 4).SetAction(actionBuild);
@@ -184,6 +185,16 @@ namespace COTG.Views
 					Item(buildMenu, 7).Clear();
 					Item(buildMenu, 0).Clear();
 
+					break;
+				case MenuType.townhall:
+					Item(buildMenu, 1).SetAction(actionMove);
+					Item(buildMenu, 2).SetAction(actionAbandon);
+					Item(buildMenu, 3).SetAction(actionLayout);
+					Item(buildMenu, 4).SetAction(actionUpgrade);
+					Item(buildMenu, 5).SetAction(actionDowngrade);
+					Item(buildMenu, 6).SetAction(actionFlipLayoutH);
+					Item(buildMenu, 7).SetAction(actionFlipLayoutV);
+					Item(buildMenu, 0).Clear();
 					break;
 				case MenuType.empty:
 					Item(buildMenu, 0).SetAction(actionLayout);
@@ -572,7 +583,7 @@ namespace COTG.Views
 
 					// Is this a valid transition
 					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) ? 0 : 2;
-					if(bs1 ==0 )
+					if(bs1 ==0  && !Player.isAvatarOrTest )
 					{
 						Status("Please don't put buildings on walls.", dryRun);
 						return;
@@ -969,6 +980,16 @@ namespace COTG.Views
 				case Action.abandon:
 					{
 						instance.Abandon_Click(null, null);
+						break;
+					}
+				case Action.flipLayoutH:
+					{
+						GetBuild().FlipLayoutH();
+						break;
+					}
+				case Action.flipLayoutV:
+					{
+						GetBuild().FlipLayoutV();
 						break;
 					}
 			}
