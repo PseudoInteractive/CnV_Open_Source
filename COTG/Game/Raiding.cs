@@ -142,14 +142,14 @@ namespace COTG.Game
             public int rut { get; set; }
             public string ts { get; set; }
         }
-        public static async Task SendRaids(Dungeon d, bool clearDungeonList)
+        public static async Task<bool> SendRaids(Dungeon d, bool clearDungeonList)
         {
             var city = d.city;
             if (city == null)
-                return;
+                return true;
             var r = ComputeIdealReps(d,city);
             if (r.reps <= 0 || r.averageCarry < 0.5f)
-                return;
+                return true;
             var tr = new List<sndRaidtr>();
             foreach (var ttc in city.troopsHome)
             {
@@ -169,7 +169,8 @@ namespace COTG.Game
             Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry*100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
             var shiftPressed = App.IsKeyPressedShift();
             var controlPressed = App.IsKeyPressedControl();
-            await snd.Post();
+			if (!await snd.Post())
+				return false;
  //           await Task.Delay(500);
 //            UpdateTS(true);
        
@@ -185,6 +186,7 @@ namespace COTG.Game
                 await Task.Delay(1000);
                 await city.SuperRaid();
             }
+			return true;
 
         }
         public static DateTimeOffset nextAllowedTsHomeUpdate;

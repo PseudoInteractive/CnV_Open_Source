@@ -104,7 +104,7 @@
 							     SelectedItem="{x:Bind views:SettingsPage.hubCitylistUI, Mode=TwoWay}"
 							
 							  DisplayMemberPath="name"
-							  ItemsSource="{x:Bind game:CityList.all, Mode=OneWay}"
+							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="Active City List"
 							  Margin="4" />
 					<TextBox x:Name="bestHub" Header="Best hub" Style="{StaticResource TextBoxReveal}" />

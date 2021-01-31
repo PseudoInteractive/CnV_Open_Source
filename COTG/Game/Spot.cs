@@ -105,7 +105,7 @@ namespace COTG.Game
 		}
 		public static void UpdateName(int cid, string name) => GetOrAdd(cid, name);
 
-		internal bool HasTag(Tag tag)
+		internal bool HasTag(Tags tag)
 		{
 			return remarks.Contains(tag.ToString(), StringComparison.OrdinalIgnoreCase);
 		}
@@ -1365,6 +1365,18 @@ namespace COTG.Game
 				// Look - its my city!
 				if (this.isFriend)
 				{
+					//{
+					//	var tags = TagHelper.GetTags(this);
+					//	var tagFlyout = AApp.AddSubMenu(flyout, "Tags");
+					//	foreach(var t in TagHelper.tags)
+					//	{
+					//		var n = t.s;
+					//		var id = t.id;
+					//		AApp.AddItem(tagFlyout, n,tags.HasFlag(id),(on)=>SetTag(id,on) );
+
+
+					//	}
+					//}
 					// This one has multi select
 					int count = 1;
 					if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
@@ -1389,7 +1401,7 @@ namespace COTG.Game
 					AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetHub(cid));
 					AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
-					AApp.AddItem(flyout, "Rename", (_, _) => CityRename.RenameDialog(cid));
+					AApp.AddItem(flyout, "Info",Spot.InfoClick, cid);
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
 					AApp.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
@@ -1483,6 +1495,21 @@ namespace COTG.Game
 
 			//   flyout.XamlRoot = uie.XamlRoot;
 			flyout.ShowAt(uie, position);
+		}
+
+		private void SetTag(Tags id, bool on)
+		{
+			remarks = CityRename.SetTag(remarks,id.ToString(), on);
+
+
+		}
+		public static async void InfoClick(object sender, RoutedEventArgs e)
+		{
+			var cids = MainPage.GetContextCids(sender);
+			foreach (var cid in cids)
+			{
+				await CityRename.RenameDialog(cid);
+			}
 		}
 		public void DefendMe()
 		{

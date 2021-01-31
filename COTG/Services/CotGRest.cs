@@ -42,7 +42,7 @@ namespace COTG.Services
 			get => -1;
 		}
 
-		public virtual async Task Accept(HttpResponseMessage resp)
+		public virtual async Task<bool> Accept(HttpResponseMessage resp)
         {
 
             try
@@ -58,12 +58,18 @@ namespace COTG.Services
 					}
 					//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
 					ProcessJsonRaw(temp);
+					return true;
+				}
+				else
+				{
+					return false;
 				}
             }
             catch (Exception e)
             {
 				Note.Show("Internet failed");
                 Log(e);
+				return false;
             }
 
         }
@@ -166,7 +172,7 @@ namespace COTG.Services
             return nullPost;
         }
 
-        async public Task Post()
+        async public Task<bool> Post()
         {
             while( JSClient.jsVars == null)
             {
@@ -174,13 +180,13 @@ namespace COTG.Services
             }
                 try
                 {
-                        await Accept(await Send(GetPostContent()));
-
-
+                       return await Accept(await Send(GetPostContent()));
+	
                 }
                 catch (Exception e)
                 {
                     Log(e);
+					return false;
                 }
 
         }
@@ -350,7 +356,7 @@ namespace COTG.Services
             if (action != null)
                 action(root, city);
         }
-        public static Task Post(int _cid, Action<JsonElement, City> _action = null)
+        public static Task<bool> Post(int _cid, Action<JsonElement, City> _action = null)
         {
             Assert(_cid > 1);
             return (new GetCity(_cid, _action)).Post();
@@ -398,25 +404,27 @@ namespace COTG.Services
 			autoRaid = _autoRaid;
 
 		}
-        public static async Task Post(int _cid, bool getCityFirst, bool _autoRaid)
+        public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
 
 			if (City.TryGet(_cid, out var city) && (city.pid != Player.activeId))
 			{
-				int q = 0;
-				return;
+				return false;
 			}
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
 			{
-				{
-					await GetCity.Post(_cid, null);
-				}
+				
+				var okay=	await GetCity.Post(_cid, null);
+				if (!okay)
+					return false;
 
 			}            //   await Task.Delay(2000);
-            //   COTG.Views.MainPage.CityListUpdateAll();
-            if(secret != null)
-                await new ScanDungeons(_cid, _autoRaid).Post();
+						 //   COTG.Views.MainPage.CityListUpdateAll();
+			if (secret == null)
+				return false;
+            
+			return   await new ScanDungeons(_cid, _autoRaid).Post();
 
         }
         public override string GetPostContent()
@@ -425,7 +433,7 @@ namespace COTG.Services
             return args;
         }
 
-        public override async Task Accept(HttpResponseMessage resp)
+        public override async Task<bool> Accept(HttpResponseMessage resp)
         {
             Log("Got fCv");
 
@@ -452,12 +460,14 @@ namespace COTG.Services
                     var jse = json.RootElement;
                     jse = jse[0];
                     City.TryGet(cid, out var city);
-                    await Dungeon.ShowDungeonList(city, jse,autoRaid);
+                    return await Dungeon.ShowDungeonList(city, jse,autoRaid);
                 }
+				return true; // no dungeons?
             }
             catch (Exception e)
             {
                 Log(e.Message);
+				return false;
             }
 
         }

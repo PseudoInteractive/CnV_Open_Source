@@ -184,9 +184,9 @@ namespace COTG.Views
                 Raiding.ReturnSlowBatch(cids);
         }
 
+		
 
-
-        public static void ReturnFastClick(object sender, RoutedEventArgs e)
+		public static void ReturnFastClick(object sender, RoutedEventArgs e)
         {
             var cids = GetContextCids(sender);
             if (cids.Count == 1)
@@ -517,8 +517,15 @@ namespace COTG.Views
 
 			await Raiding.UpdateTS(true);
 			var sel = Spot.GetSelectedForContextMenu(0, false);
+			int counter = 0;
+			int max =sel.Count;
 			foreach(var cid in sel)
 			{
+				++counter;
+				if(counter%16==0)
+				{
+					Note.ShowTip($"Auto Raid: {counter}/{max}..");
+				}
 				Spot s = Spot.GetOrAdd(cid);
 				if (s is City city)
 				{
@@ -526,6 +533,7 @@ namespace COTG.Views
 				}
 	
 			}
+			Note.Show($"Finished Auto Raid with {max} selected");
 
 		}
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)

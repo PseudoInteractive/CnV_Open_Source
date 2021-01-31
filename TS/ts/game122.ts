@@ -11452,31 +11452,31 @@ function outer() {
 		}
 
 		function V5F(G9g) {
-			var i9g = 0;
-			var C9g = G9g % (A5y | 16);
-			var d9g = (G9g - C9g) / (A5y >>
-				613810560);
-			C9g = C9g * (G5y - 0);
-			d9g = d9g * (G5y | 0);
-			var M9g = i9g % (4);
-			var W9g = (i9g - M9g) / (4);
-			M9g = M9g * (G5y | 0);
-			E6k.R6();
-			W9g = W9g * +G5y;
-			$(__s[r5y * 1] + G9g)
-				.removeClass(__s[5725]);
-			$(__s[r5y * 1] + G9g)
-				.css({
-					'background': __s[h5y - 0] + cityAtlas + __s[X5y >> 1623255776] + M9g + __s[P5y * 1] + W9g + E6k
-						.S55(+I5y),
-					'width': __s[+p5y],
-					'height': __s[+p5y],
-					'zoom': _s(+
-						"4499"),
-					'-moz-transform': __s[4792],
-					'left': __s[n5y >> 1448469344],
-					'filter': ""
-				});
+			//var i9g = 0;
+			//var C9g = G9g % (A5y | 16);
+			//var d9g = (G9g - C9g) / (A5y >>
+			//	613810560);
+			//C9g = C9g * (G5y - 0);
+			//d9g = d9g * (G5y | 0);
+			//var M9g = i9g % (4);
+			//var W9g = (i9g - M9g) / (4);
+			//M9g = M9g * (G5y | 0);
+			//E6k.R6();
+			//W9g = W9g * +G5y;
+			//$(__s[r5y * 1] + G9g)
+			//	.removeClass(__s[5725]);
+			//$(__s[r5y * 1] + G9g)
+			//	.css({
+			//		'background': __s[h5y - 0] + cityAtlas + __s[X5y >> 1623255776] + M9g + __s[P5y * 1] + W9g + E6k
+			//			.S55(+I5y),
+			//		'width': __s[+p5y],
+			//		'height': __s[+p5y],
+			//		'zoom': _s(+
+			//			"4499"),
+			//		'-moz-transform': __s[4792],
+			//		'left': __s[n5y >> 1448469344],
+			//		'filter': ""
+			//	});
 		}
 		worldd = new Object();
 
@@ -18847,9 +18847,9 @@ function outer() {
 		};
 
 		function K8F(w6U, j6U) {
-			E6k.y6();
-			$(__s[+r5y] + j6U)
-				.css(__s[t3y | 1036], __s[5557]);
+			//E6k.y6();
+			//$(__s[+r5y] + j6U)
+			//	.css(__s[t3y | 1036], __s[5557]);
 		}
 
 		function V0V() {
@@ -18990,203 +18990,203 @@ function outer() {
 		};
 
 		function g3F() {
-			if (city.w == 1) {
-				$(__s[6405])
-					.show();
-				if (city["bd"][0]["bl"] >= 1) $(__s[f1p - 0])
-					.removeClass()
-					.addClass(__s[2247]);
-				else $(__s[f1p << 170377888])
-					.removeClass()
-					.addClass(__s[6120]);
-			} else {
-				$(__s["6405" | 256])
-					.hide();
-				if (city["bd"][0]["bl"] >= ("1" | 1)) $(__s[+f1p])
-					.removeClass()
-					.addClass(__s[1492]);
-				else $(__s[+f1p])
-					.removeClass()
-					.addClass(__s[3111]);
-			}
-			var X5g = Number(ppdt.opt[A8y - 0]) / 100;
-			E6k.y6();
-			$("#city_map")
-				.css(__s[t3y ^ 0], __s[1604] + X5g + ")");
-			var x5g = new Array(C6y | 448,
-				s1p * 1, 522);
-			var O5g = new Array(+b1R, 519, '520' | 8);
-			var t5g = new Array(+G1R, '525' &
-				2147483647, 526);
-			var Q5g = new Array(+r1R, 523, 524);
-			for (var k5g = +
-				"0"; k5g < city["bd"].length; k5g++) {
-				var e5g = city["bd"][k5g]["bid"];
-				var j5g =
-					city["bd"][k5g]["bl"];
-				$(__s[B1R << 1102389152] + k5g)
-					.data("data", { "bl": j5g, "bid": e5g });
-				if (e5g != 0)
-					if (e5g == TPL << 516756128) {
-						if (j5g != 0 && k5g != 0) {
-							var H5g = Y8(j5g) - ('443' >>
-								1495835168);
-							var s5g = H5g % ("4" | 4);
-							var u5g = (H5g - s5g) / (4);
-							s5g = s5g * (G5y - 0);
-							u5g = u5g * (G5y & 2147483647);
-							var o5g = k5g + (j6y | 0);
-							$(__s[+e1R] + o5g)
-								.css({
-									'background': __s[+h5y] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + _s(+
-										I5y),
-									'width': __s[+p5y],
-									'height': __s[+p5y],
-									'bottom': __s[1025],
-									'zoom': E6k
-										.S55(4025),
-									'-moz-transform': __s[+897],
-									'left': __s[1123]
-								});
-						}
-						//           console.log(city.ble);
-						if (city.ble[2] == 0) var l5g = city.ble[4];
-						else var l5g = city.ble[2];
-						if (j5g == 0) j5g = 1;
-						var w5g = j5g * (v1R >>
-							760234400) - +v1R;
-						var I5g = l5g * (v1R * 1) - v1R * 1;
-						$(__s[+r5y] + (k5g + (u6y << 667952608)))
-							.css({
-								'background': __s[+h5y] + R9 + __s[X5y >> 1274712832] + w5g + __s[+P5y] + I5g + E6k
-									.o55(I5y & 2147483647),
-								'width': __s[w1R * 1],
-								'height': __s[w1R >> 813708512],
-								'zoom': E6k
-									.S55(+F1R),
-								'-moz-transform': __s[1798],
-								'left': _s(A1R >>
-									1411425024)
-							});
-					} else if (!(e5g > +TPL)) {
-						if (e5g == C6y * 1) {
-							if (city.bd[k5g].bl != (0)) city.bd[
-								k5g].bl = 0;
-							e5g = x5g[Math.round(Math.random() * (x5g.length - 1))];
-						} else if (e5g == b1R - 0) {
-							if (city.bd[k5g]
-								.bl != 0) city.bd[k5g].bl = 0;
-							e5g = O5g[Math.round(Math.random() * (O5g.length - ("1" | 1)))];
-						} else if (e5g == (G1R | 2)) {
-							if (city.bd[
-								k5g].bl != 0) city.bd[k5g].bl = 0;
-							e5g = t5g[Math.round(Math.random() * (t5g.length - 1))];
-						} else if (e5g == r1R << 864954656) {
-							if (city
-								.bd[k5g].bl != (0)) city.bd[k5g].bl = 0;
-							e5g = Q5g[Math.round(Math.random() * (Q5g.length - (1)))];
-						}
-						var L5g = e5g;
-						e5g = e5g - 443;
-						var z5g = k5g;
-						var v5g = k5g % (A5y >> 1988652736);
-						var T5g = (k5g - v5g) / (A5y <<
-							681734240);
-						v5g = v5g * (G5y ^ 0);
-						T5g = T5g * +G5y;
-						var w5g = e5g % (4);
-						var I5g = (e5g - w5g) / (4);
-						w5g = w5g * +G5y;
-						I5g = I5g * +G5y;
-						if (e5g != (0)) {
-							var H5g = Y8(j5g) - 443;
-							var s5g = H5g % (4);
-							var
-								u5g = (H5g - s5g) / (4);
-							s5g = s5g * (G5y >> 1924839040);
-							u5g = u5g * +G5y;
-							if (j5g != 0 && k5g != (0)) {
-								var H5g = Y8(j5g) - +
-									"443";
-								var s5g = H5g % (4);
-								var u5g = (H5g - s5g) / (4);
-								s5g = s5g * +G5y;
-								u5g = u5g * (G5y << 52176992);
-								$(__s[+e1R] + k5g)
-									.css({
-										'background': __s[h5y >> 478560384] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + E6k
-											.o55(+I5y),
-										'width': __s[p5y | 4640],
-										'height': __s[p5y - 0],
-										'bottom': _s('1025' ^
-											0),
-										'zoom': __s[4025],
-										'-moz-transform': _s(897 >>
-											1972843808),
-										'left': __s[1123],
-										"opacity": __s[4499]
-									});
-							}
-							if (k5g == +bspotHall) $(
-								__s[+r5y] + k5g)
-								.css({
-									'background': __s[+h5y] + cityAtlas + __s[X5y - 0] + w5g + __s[+P5y] + I5g + _s(+
-										I5y),
-									'width': __s[p5y * 1],
-									'height': __s[+p5y],
-									'zoom': _s(+
-										'5756'),
-									'-moz-transform': __s[5553],
-									'left': __s["6670" | 6150]
-								});
-							else if (L5g == 500) $(__s[+r5y] + k5g)
-								.css({
-									'background': __s[h5y * 1] + cityAtlas + __s[+X5y] + w5g + __s[P5y * 1] + I5g + _s(
-										I5y ^ 0),
-									'width': __s[p5y | 288],
-									'height': __s[p5y & 2147483647],
-									'zoom': _s(+
-										p9R),
-									'-moz-transform': __s[+892]
-								});
-							else $(__s[+r5y] + k5g)
-								.css({
-									'background': __s[+h5y] + cityAtlas + __s[X5y << 534906624] + w5g + __s[P5y | 34] + I5g +
-										__s[+I5y],
-									'width': __s[+p5y],
-									'height': __s[p5y ^ 0],
-									'zoom': _s('5927' |
-										4897),
-									'-moz-transform': __s[897 - 0]
-								});
-						}
-					}
-			}
-			//r5F();
-			if (ppdt) {
-				if (ppdt.opt[u6y ^ 0]) U3F();
-				else P3F();
-				if (ppdt.opt[25]) $(__s[Z4R << 1974892992])
-					.show();
-				else $(__s[Z4R >> 1743699744])
-					.hide();
-			}
-			if ($("#cvs")
-				.css("display") != "none") {
-				//    c6.raf.start();
-				T2.x = city.x * +64;
-				T2.y = city.y * +64;
-				//  c6.step();
-				setTimeout(function () {
-					E6k.y6();
-					r0F();
-				}, 300);
-			}
-			if (B7F == 1) {
-				B7F = 0;
-				// A2F();
-			}
-			$(__s[2567])
+			//if (city.w == 1) {
+			//	$(__s[6405])
+			//		.show();
+			//	if (city["bd"][0]["bl"] >= 1) $(__s[f1p - 0])
+			//		.removeClass()
+			//		.addClass(__s[2247]);
+			//	else $(__s[f1p << 170377888])
+			//		.removeClass()
+			//		.addClass(__s[6120]);
+			//} else {
+			//	$(__s["6405" | 256])
+			//		.hide();
+			//	if (city["bd"][0]["bl"] >= ("1" | 1)) $(__s[+f1p])
+			//		.removeClass()
+			//		.addClass(__s[1492]);
+			//	else $(__s[+f1p])
+			//		.removeClass()
+			//		.addClass(__s[3111]);
+			//}
+			//var X5g = Number(ppdt.opt[A8y - 0]) / 100;
+			//E6k.y6();
+			//$("#city_map")
+			//	.css(__s[t3y ^ 0], __s[1604] + X5g + ")");
+			//var x5g = new Array(C6y | 448,
+			//	s1p * 1, 522);
+			//var O5g = new Array(+b1R, 519, '520' | 8);
+			//var t5g = new Array(+G1R, '525' &
+			//	2147483647, 526);
+			//var Q5g = new Array(+r1R, 523, 524);
+			//for (var k5g = +
+			//	"0"; k5g < city["bd"].length; k5g++) {
+			//	var e5g = city["bd"][k5g]["bid"];
+			//	var j5g =
+			//		city["bd"][k5g]["bl"];
+			//	$(__s[B1R << 1102389152] + k5g)
+			//		.data("data", { "bl": j5g, "bid": e5g });
+			//	if (e5g != 0)
+			//		if (e5g == TPL << 516756128) {
+			//			if (j5g != 0 && k5g != 0) {
+			//				var H5g = Y8(j5g) - ('443' >>
+			//					1495835168);
+			//				var s5g = H5g % ("4" | 4);
+			//				var u5g = (H5g - s5g) / (4);
+			//				s5g = s5g * (G5y - 0);
+			//				u5g = u5g * (G5y & 2147483647);
+			//				var o5g = k5g + (j6y | 0);
+			//				$(__s[+e1R] + o5g)
+			//					.css({
+			//						'background': __s[+h5y] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + _s(+
+			//							I5y),
+			//						'width': __s[+p5y],
+			//						'height': __s[+p5y],
+			//						'bottom': __s[1025],
+			//						'zoom': E6k
+			//							.S55(4025),
+			//						'-moz-transform': __s[+897],
+			//						'left': __s[1123]
+			//					});
+			//			}
+			//			//           console.log(city.ble);
+			//			if (city.ble[2] == 0) var l5g = city.ble[4];
+			//			else var l5g = city.ble[2];
+			//			if (j5g == 0) j5g = 1;
+			//			var w5g = j5g * (v1R >>
+			//				760234400) - +v1R;
+			//			var I5g = l5g * (v1R * 1) - v1R * 1;
+			//			$(__s[+r5y] + (k5g + (u6y << 667952608)))
+			//				.css({
+			//					'background': __s[+h5y] + R9 + __s[X5y >> 1274712832] + w5g + __s[+P5y] + I5g + E6k
+			//						.o55(I5y & 2147483647),
+			//					'width': __s[w1R * 1],
+			//					'height': __s[w1R >> 813708512],
+			//					'zoom': E6k
+			//						.S55(+F1R),
+			//					'-moz-transform': __s[1798],
+			//					'left': _s(A1R >>
+			//						1411425024)
+			//				});
+			//		} else if (!(e5g > +TPL)) {
+			//			if (e5g == C6y * 1) {
+			//				if (city.bd[k5g].bl != (0)) city.bd[
+			//					k5g].bl = 0;
+			//				e5g = x5g[Math.round(Math.random() * (x5g.length - 1))];
+			//			} else if (e5g == b1R - 0) {
+			//				if (city.bd[k5g]
+			//					.bl != 0) city.bd[k5g].bl = 0;
+			//				e5g = O5g[Math.round(Math.random() * (O5g.length - ("1" | 1)))];
+			//			} else if (e5g == (G1R | 2)) {
+			//				if (city.bd[
+			//					k5g].bl != 0) city.bd[k5g].bl = 0;
+			//				e5g = t5g[Math.round(Math.random() * (t5g.length - 1))];
+			//			} else if (e5g == r1R << 864954656) {
+			//				if (city
+			//					.bd[k5g].bl != (0)) city.bd[k5g].bl = 0;
+			//				e5g = Q5g[Math.round(Math.random() * (Q5g.length - (1)))];
+			//			}
+			//			var L5g = e5g;
+			//			e5g = e5g - 443;
+			//			var z5g = k5g;
+			//			var v5g = k5g % (A5y >> 1988652736);
+			//			var T5g = (k5g - v5g) / (A5y <<
+			//				681734240);
+			//			v5g = v5g * (G5y ^ 0);
+			//			T5g = T5g * +G5y;
+			//			var w5g = e5g % (4);
+			//			var I5g = (e5g - w5g) / (4);
+			//			w5g = w5g * +G5y;
+			//			I5g = I5g * +G5y;
+			//			if (e5g != (0)) {
+			//				var H5g = Y8(j5g) - 443;
+			//				var s5g = H5g % (4);
+			//				var
+			//					u5g = (H5g - s5g) / (4);
+			//				s5g = s5g * (G5y >> 1924839040);
+			//				u5g = u5g * +G5y;
+			//				if (j5g != 0 && k5g != (0)) {
+			//					var H5g = Y8(j5g) - +
+			//						"443";
+			//					var s5g = H5g % (4);
+			//					var u5g = (H5g - s5g) / (4);
+			//					s5g = s5g * +G5y;
+			//					u5g = u5g * (G5y << 52176992);
+			//					$(__s[+e1R] + k5g)
+			//						.css({
+			//							'background': __s[h5y >> 478560384] + cityAtlas + __s[+X5y] + s5g + __s[+P5y] + u5g + E6k
+			//								.o55(+I5y),
+			//							'width': __s[p5y | 4640],
+			//							'height': __s[p5y - 0],
+			//							'bottom': _s('1025' ^
+			//								0),
+			//							'zoom': __s[4025],
+			//							'-moz-transform': _s(897 >>
+			//								1972843808),
+			//							'left': __s[1123],
+			//							"opacity": __s[4499]
+			//						});
+			//				}
+			//				if (k5g == +bspotHall) $(
+			//					__s[+r5y] + k5g)
+			//					.css({
+			//						'background': __s[+h5y] + cityAtlas + __s[X5y - 0] + w5g + __s[+P5y] + I5g + _s(+
+			//							I5y),
+			//						'width': __s[p5y * 1],
+			//						'height': __s[+p5y],
+			//						'zoom': _s(+
+			//							'5756'),
+			//						'-moz-transform': __s[5553],
+			//						'left': __s["6670" | 6150]
+			//					});
+			//				else if (L5g == 500) $(__s[+r5y] + k5g)
+			//					.css({
+			//						'background': __s[h5y * 1] + cityAtlas + __s[+X5y] + w5g + __s[P5y * 1] + I5g + _s(
+			//							I5y ^ 0),
+			//						'width': __s[p5y | 288],
+			//						'height': __s[p5y & 2147483647],
+			//						'zoom': _s(+
+			//							p9R),
+			//						'-moz-transform': __s[+892]
+			//					});
+			//				else $(__s[+r5y] + k5g)
+			//					.css({
+			//						'background': __s[+h5y] + cityAtlas + __s[X5y << 534906624] + w5g + __s[P5y | 34] + I5g +
+			//							__s[+I5y],
+			//						'width': __s[+p5y],
+			//						'height': __s[p5y ^ 0],
+			//						'zoom': _s('5927' |
+			//							4897),
+			//						'-moz-transform': __s[897 - 0]
+			//					});
+			//			}
+			//		}
+			//}
+			////r5F();
+			//if (ppdt) {
+			//	if (ppdt.opt[u6y ^ 0]) U3F();
+			//	else P3F();
+			//	if (ppdt.opt[25]) $(__s[Z4R << 1974892992])
+			//		.show();
+			//	else $(__s[Z4R >> 1743699744])
+			//		.hide();
+			//}
+			//if ($("#cvs")
+			//	.css("display") != "none") {
+			//	//    c6.raf.start();
+			//	T2.x = city.x * +64;
+			//	T2.y = city.y * +64;
+			//	//  c6.step();
+			//	setTimeout(function () {
+			//		E6k.y6();
+			//		r0F();
+			//	}, 300);
+			//}
+			//if (B7F == 1) {
+			//	B7F = 0;
+			//	// A2F();
+			//}
+			$("#countloaddiv")
 				.css("display", "none");
 		}
 		a6.addRoundKey = function (Z6v, U6v, P6v, B6v) {
@@ -19208,25 +19208,25 @@ function outer() {
 		};
 
 		function z1F(Z9g, K9g) {
-			if (typeof K9g === "undefined") K9g = city["bd"][Number(Z9g)][
-				"bl"];
-			var g9g = Y8(K9g) - 443;
-			var n9g = g9g % (4);
-			var f9g = (g9g - n9g) / 4;
-			n9g = n9g * (G5y << 1601720640);
-			f9g = f9g * +G5y;
-			$(__s[+e1R] + Z9g)
-				.css({
-					'background': __s[h5y | 8] + cityAtlas + __s[X5y & 2147483647] + n9g + __s[+P5y] + f9g + _s(
-						I5y >> 62196032),
-					'width': __s[p5y << 110503648],
-					'height': __s[p5y & 2147483647],
-					'bottom': E6k
-						.S55(1025),
-					'zoom': __s[4025],
-					'-moz-transform': __s[+897],
-					'left': __s[1123]
-				});
+			//if (typeof K9g === "undefined") K9g = city["bd"][Number(Z9g)][
+			//	"bl"];
+			//var g9g = Y8(K9g) - 443;
+			//var n9g = g9g % (4);
+			//var f9g = (g9g - n9g) / 4;
+			//n9g = n9g * (G5y << 1601720640);
+			//f9g = f9g * +G5y;
+			//$(__s[+e1R] + Z9g)
+			//	.css({
+			//		'background': __s[h5y | 8] + cityAtlas + __s[X5y & 2147483647] + n9g + __s[+P5y] + f9g + _s(
+			//			I5y >> 62196032),
+			//		'width': __s[p5y << 110503648],
+			//		'height': __s[p5y & 2147483647],
+			//		'bottom': E6k
+			//			.S55(1025),
+			//		'zoom': __s[4025],
+			//		'-moz-transform': __s[+897],
+			//		'left': __s[1123]
+			//	});
 		}
 
 		function C4V(p2Z) {
@@ -25877,40 +25877,40 @@ function outer() {
 		function F4V() { }
 
 		function X1F(S9g, b9g) {
-			E6k.y6();
-			if (S9g == 0) {
-				I8(b9g);
-				$(__s[B1R ^ 0] + b9g)
-					.data("data", { "bid": 0, "bl": 0 });
-			} else {
-				var A9g = S9g;
-				S9g = S9g - (443);
-				var h9g = b9g % (A5y | 1);
-				var r9g = (b9g - h9g) / (A5y ^ 0);
-				h9g = h9g * +G5y;
-				r9g = r9g * +G5y;
-				$(__s[B1R * 1] + b9g)
-					.data("data", { "bid": S9g, "bl": city["bd"][b9g]["bl"] });
-				var
-					J9g = S9g % 4;
-				var V9g = (S9g - J9g) / 4;
-				city["bd"][b9g]["bid"] = A9g;
-				J9g = J9g * (G5y * 1);
-				V9g = V9g * +G5y;
-				$(__s[r5y & 2147483647] + b9g)
-					.css({
-						'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + J9g + __s[P5y - 0] + V9g + _s(I5y &
-							2147483647),
-						'width': __s[+p5y],
-						'height': __s[p5y * 1],
-						'zoom': _s('5927' -
-							0),
-						'-moz-transform': __s[897 - 0],
-						'left': __s[A1R | 256]
-					});
-				z1F(b9g);
-//				if (S9g == 447) r5F();
-			}
+//			E6k.y6();
+//			if (S9g == 0) {
+//				I8(b9g);
+//				$(__s[B1R ^ 0] + b9g)
+//					.data("data", { "bid": 0, "bl": 0 });
+//			} else {
+//				var A9g = S9g;
+//				S9g = S9g - (443);
+//				var h9g = b9g % (A5y | 1);
+//				var r9g = (b9g - h9g) / (A5y ^ 0);
+//				h9g = h9g * +G5y;
+//				r9g = r9g * +G5y;
+//				$(__s[B1R * 1] + b9g)
+//					.data("data", { "bid": S9g, "bl": city["bd"][b9g]["bl"] });
+//				var
+//					J9g = S9g % 4;
+//				var V9g = (S9g - J9g) / 4;
+//				city["bd"][b9g]["bid"] = A9g;
+//				J9g = J9g * (G5y * 1);
+//				V9g = V9g * +G5y;
+//				$(__s[r5y & 2147483647] + b9g)
+//					.css({
+//						'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + J9g + __s[P5y - 0] + V9g + _s(I5y &
+//							2147483647),
+//						'width': __s[+p5y],
+//						'height': __s[p5y * 1],
+//						'zoom': _s('5927' -
+//							0),
+//						'-moz-transform': __s[897 - 0],
+//						'left': __s[A1R | 256]
+//					});
+//				z1F(b9g);
+////				if (S9g == 447) r5F();
+//			}
 		}
 
 
@@ -47718,132 +47718,132 @@ function outer() {
 		//}
 
 		function E9() {
-			var S1D = {
-				"T": __s[3786],
-				"B": __s[W8y & 2147483647],
-				"C": __s[+f8y],
-				"1": _s(+
-					'805'),
-				"P": __s[6986],
-				"L": __s[c7t - 0],
-				"3": __s[2658],
-				"A": _s(
-					3244),
-				"M": __s[4884],
-				"S": __s[6815],
-				"4": _s(+
-					"4265"),
-				"E": __s[n6y << 54378304],
-				"X": __s[5414],
-				"D": __s[1239],
-				"2": _s("6335" ^
-					0),
-				"H": __s[3545],
-				"K": __s[826],
-				"G": __s[2186],
-				"Z": _s(+
-					"348"),
-				"J": __s[1623],
-				"Y": __s[4217],
-				"U": __s[5113],
-				"R": __s[1416],
-				"V": __s[336],
-				".": '',
-				";": '',
-				",": _s(+
-					"4867"),
-				":": ''
-			};
-			$(__s[4368])
-				.css(__s[u9y ^ 0], Number(ppdt['opt'][F8y >> 705470144]) / (100));
-			$(__s[3145])
-				.css({ 'background': '', 'filter': "" });
-			E6k.y6();
-			var G1D = $(__s[507])
-				.val();
-			G1D = G1D.trim();
-			G1D = G1D.replace(/(\r\n|\n|\r)/gm, "");
-			if (G1D != '') {
-				var b1D = G1D
-					.substring(0, +u7y);
-				if (b1D == __s[6284] || b1D == _s('6380' >>
-					860408832)) {
-					var i1D = G1D.substring(u7y * 1, 441);
-					i1D = i1D.split('');
-					var M1D;
-					var V1D;
-					var z1D;
-					var C1D;
-					for (var X1D = 0; X1D < i1D
-						.length; X1D++) {
-						M1D = i1D[X1D];
-						var J1D = X1D % +A5y;
-						var h1D = (X1D - J1D) / +A5y;
-						z1D = 0;
-						if (M1D == "-" && city.bd[X1D]["bid"] != 0) {
-							z1D = 475;
-							z1D = z1D - 443;
-							var W1D = z1D % 4 * (G5y >> 2112323712);
-							var d1D = (z1D - W1D) / 4 * +G5y;
-							$(__s[5802] + X1D)
-								.css({
-									'background': __s[h5y & 2147483647] + cityAtlas + __s[X5y - 0] + W1D + _s(P5y >>
-										1441929600) + d1D + __s[I5y << 1531008992],
-									'width': __s[+p5y],
-									'height': _s(+
-										p5y)
-								});
-						} else if (!(M1D == "-" && city.bd[X1D]["bid"] == 0))
-							if (layarray[M1D])
-								if (city.bd[X1D]["bid"] != layarray[M1D]) {
-									if (M1D == __s[4632] && city.bd[X1D][
-										"bid"] != (F4y | 256) && city.bd[X1D]["bid"] != (A4y & 2147483647) && city.bd[X1D]
-										["bid"] != +r4y)
-										if (X1D == +V5R || X1D == +c5R || X1D == u8y >> 1281648832 || X1D == +M5R) {
-											z1D = t0R ^ 0;
-											C1D = J0R - 0;
-										} else if (X1D == +s5R || X1D == (Q5R & 2147483647)) {
-											z1D = 49;
-											C1D = 46;
-										} else {
-											z1D = 50;
-											C1D = x0R << 1412177632;
-										} else if (M1D == __s[6989] && city.bd[X1D]["bid"] !=
-											(h4y & 2147483647) && city.bd[X1D]["bid"] != +P4y && city.bd[X1D]["bid"] !=
-											p4y * 1)
-										if (X1D == (V5R ^ 0) || X1D == c5R >> 1614424704 || X1D == +u8y || X1D == +M5R) {
-											z1D = 51;
-											C1D = +g0R;
-										} else if (X1D == +s5R || X1D == +Q5R) {
-											z1D = +V0R;
-											C1D = 53;
-										} else {
-											z1D = 54;
-											C1D = +s0R;
-										} else {
-										z1D = S1D[M1D];
-										C1D = Number(layarray[M1D]) - (443);
-									}
-									if (z1D != 0 && z1D != '' &&
-										z1D < 100) {
-										if (ppdt['opt'][+j6y] == 1) z1D = Number(C1D);
-										else z1D = Number(z1D);
-										var W1D = z1D % 4 * +G5y;
-										var d1D = (z1D - W1D / +G5y) / (4) * +
-											G5y;
-										$(__s[5802] + X1D)
-											.css({
-												'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + W1D + __s[+P5y] + d1D + E6k
-													.o55(I5y | 4324),
-												'width': __s[p5y << 1375481024],
-												'height': _s(p5y *
-													1)
-											});
-									}
-								}
-					}
-				} else Y6(__s[3278]);
-			}
+			//var S1D = {
+			//	"T": __s[3786],
+			//	"B": __s[W8y & 2147483647],
+			//	"C": __s[+f8y],
+			//	"1": _s(+
+			//		'805'),
+			//	"P": __s[6986],
+			//	"L": __s[c7t - 0],
+			//	"3": __s[2658],
+			//	"A": _s(
+			//		3244),
+			//	"M": __s[4884],
+			//	"S": __s[6815],
+			//	"4": _s(+
+			//		"4265"),
+			//	"E": __s[n6y << 54378304],
+			//	"X": __s[5414],
+			//	"D": __s[1239],
+			//	"2": _s("6335" ^
+			//		0),
+			//	"H": __s[3545],
+			//	"K": __s[826],
+			//	"G": __s[2186],
+			//	"Z": _s(+
+			//		"348"),
+			//	"J": __s[1623],
+			//	"Y": __s[4217],
+			//	"U": __s[5113],
+			//	"R": __s[1416],
+			//	"V": __s[336],
+			//	".": '',
+			//	";": '',
+			//	",": _s(+
+			//		"4867"),
+			//	":": ''
+			//};
+			//$(__s[4368])
+			//	.css(__s[u9y ^ 0], Number(ppdt['opt'][F8y >> 705470144]) / (100));
+			//$(__s[3145])
+			//	.css({ 'background': '', 'filter': "" });
+			//E6k.y6();
+			//var G1D = $(__s[507])
+			//	.val();
+			//G1D = G1D.trim();
+			//G1D = G1D.replace(/(\r\n|\n|\r)/gm, "");
+			//if (G1D != '') {
+			//	var b1D = G1D
+			//		.substring(0, +u7y);
+			//	if (b1D == __s[6284] || b1D == _s('6380' >>
+			//		860408832)) {
+			//		var i1D = G1D.substring(u7y * 1, 441);
+			//		i1D = i1D.split('');
+			//		var M1D;
+			//		var V1D;
+			//		var z1D;
+			//		var C1D;
+			//		for (var X1D = 0; X1D < i1D
+			//			.length; X1D++) {
+			//			M1D = i1D[X1D];
+			//			var J1D = X1D % +A5y;
+			//			var h1D = (X1D - J1D) / +A5y;
+			//			z1D = 0;
+			//			if (M1D == "-" && city.bd[X1D]["bid"] != 0) {
+			//				z1D = 475;
+			//				z1D = z1D - 443;
+			//				var W1D = z1D % 4 * (G5y >> 2112323712);
+			//				var d1D = (z1D - W1D) / 4 * +G5y;
+			//				$(__s[5802] + X1D)
+			//					.css({
+			//						'background': __s[h5y & 2147483647] + cityAtlas + __s[X5y - 0] + W1D + _s(P5y >>
+			//							1441929600) + d1D + __s[I5y << 1531008992],
+			//						'width': __s[+p5y],
+			//						'height': _s(+
+			//							p5y)
+			//					});
+			//			} else if (!(M1D == "-" && city.bd[X1D]["bid"] == 0))
+			//				if (layarray[M1D])
+			//					if (city.bd[X1D]["bid"] != layarray[M1D]) {
+			//						if (M1D == __s[4632] && city.bd[X1D][
+			//							"bid"] != (F4y | 256) && city.bd[X1D]["bid"] != (A4y & 2147483647) && city.bd[X1D]
+			//							["bid"] != +r4y)
+			//							if (X1D == +V5R || X1D == +c5R || X1D == u8y >> 1281648832 || X1D == +M5R) {
+			//								z1D = t0R ^ 0;
+			//								C1D = J0R - 0;
+			//							} else if (X1D == +s5R || X1D == (Q5R & 2147483647)) {
+			//								z1D = 49;
+			//								C1D = 46;
+			//							} else {
+			//								z1D = 50;
+			//								C1D = x0R << 1412177632;
+			//							} else if (M1D == __s[6989] && city.bd[X1D]["bid"] !=
+			//								(h4y & 2147483647) && city.bd[X1D]["bid"] != +P4y && city.bd[X1D]["bid"] !=
+			//								p4y * 1)
+			//							if (X1D == (V5R ^ 0) || X1D == c5R >> 1614424704 || X1D == +u8y || X1D == +M5R) {
+			//								z1D = 51;
+			//								C1D = +g0R;
+			//							} else if (X1D == +s5R || X1D == +Q5R) {
+			//								z1D = +V0R;
+			//								C1D = 53;
+			//							} else {
+			//								z1D = 54;
+			//								C1D = +s0R;
+			//							} else {
+			//							z1D = S1D[M1D];
+			//							C1D = Number(layarray[M1D]) - (443);
+			//						}
+			//						if (z1D != 0 && z1D != '' &&
+			//							z1D < 100) {
+			//							if (ppdt['opt'][+j6y] == 1) z1D = Number(C1D);
+			//							else z1D = Number(z1D);
+			//							var W1D = z1D % 4 * +G5y;
+			//							var d1D = (z1D - W1D / +G5y) / (4) * +
+			//								G5y;
+			//							$(__s[5802] + X1D)
+			//								.css({
+			//									'background': __s[+h5y] + cityAtlas + __s[X5y ^ 0] + W1D + __s[+P5y] + d1D + E6k
+			//										.o55(I5y | 4324),
+			//									'width': __s[p5y << 1375481024],
+			//									'height': _s(p5y *
+			//										1)
+			//								});
+			//						}
+			//					}
+			//		}
+			//	} else Y6(__s[3278]);
+			//}
 		}
 		$(document)
 			.ready(function () {
@@ -60877,8 +60877,7 @@ function outer() {
 						E6k.R6();
 						if (z3D == __s[6284] || z3D == __s[6380]) {
 							N6();
-							var M3D = $.post(_s(
-								4629), { cid: cid, a: X3D });
+							var M3D = $.post("/includes/pSs.php", { cid: cid, a: X3D });
 							F6();
 							M3D.done(function (G3D) { E9(); });
 						} else Y6(__s[3278]);
@@ -60888,7 +60887,7 @@ function outer() {
 						E6k.y6();
 						var C3D = "";
 						N6();
-						var W3D = $.post(__s["4629" | 512], { cid: cid, a: C3D });
+						var W3D = $.post("/includes/pSs.php", { cid: cid, a: C3D });
 						F6();
 						W3D.done(function (i3D) {
 							$(__s[507])
@@ -64648,7 +64647,7 @@ function outer() {
 			};
 			if (city.w == 1) u5l[352] = __s[H6y | 276],
 				u5l[353] = __s[+H6y], 
-	`			u5l[373] =	E6k.S55(H6y - 0), 
+				u5l[373] =	E6k.S55(H6y - 0), 
 				u5l[374] = __s[H6y | 786], 
 				u5l['375' | 356] = __s[+H6y], 
 				u5l[395] = _s(	H6y ^ 0), 

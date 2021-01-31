@@ -835,6 +835,13 @@ namespace COTG
 				rv.Click += command;
 			return rv;
 		}
+		public static MenuFlyoutItem CreateMenuItem(string text, bool isChecked, Action<bool> command)
+		{
+			var rv = new ToggleMenuFlyoutItem() { Text = text, IsChecked= isChecked };
+		
+				rv.Click += (sender, _) => command((sender as ToggleMenuFlyoutItem).IsChecked);
+			return rv;
+		}
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, RoutedEventHandler command, object context = null)
 		{
 			var rv = CreateMenuItem(text, command, context);
@@ -845,6 +852,13 @@ namespace COTG
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, RoutedEventHandler command, object context = null)
 		{
 			var rv = CreateMenuItem(text, command, context);
+
+			menu.Items.Add(rv);
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text,bool isChecked, Action<bool> command)
+		{
+			var rv = CreateMenuItem(text, isChecked, command);
 
 			menu.Items.Add(rv);
 			return rv;

@@ -258,7 +258,7 @@
 							  Width="120"
 							  SelectedItem="{x:Bind views:SettingsPage.hubCitylistUI, Mode=TwoWay}"
 							  DisplayMemberPath="name"
-							  ItemsSource="{x:Bind game:CityList.all, Mode=OneWay}"
+							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="Active City List"
 							  Margin="4" />
 					<controls:NumberBox Header="Cottage Level"

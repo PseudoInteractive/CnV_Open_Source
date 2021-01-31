@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 using Windows.Foundation;
@@ -35,12 +36,10 @@ namespace COTG.Views
             {
             }
 
-		static string SetTag(string src, string tag, bool? isOn)
+		public static string SetTag(string src, string tag, bool isOn)
 		{
-			if (isOn == null)
-				return src;
 			var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);
-			if (isOn.GetValueOrDefault())
+			if (isOn)
 			{
 				if (exists)
 					return src;
@@ -65,14 +64,30 @@ namespace COTG.Views
 					return src;
 			}
 		}
+		public static string SetTag(string src, string tag, bool? isOn)
+		{
+			if (isOn == null)
+				return src;
+			return SetTag(src, tag, isOn.GetValueOrDefault());
+		}
+
+		
 		static string lastName = string.Empty;
-		public static async void RenameDialog(int cid)
+		public static async Task RenameDialog(int cid)
 		{
 			try
 			{
 				var city = City.GetOrAddCity(cid);
 				var nameDialog = new CityRename();
 				var isNew = city._cityName == "*New City" || city._cityName == "lawless city" || city._cityName == "*Lawless City";
+
+
+				foreach(var tag in TagHelper.tags)
+				{
+					var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
+					nameDialog.tags.Children.Add(check);
+
+				}
 
 
 				var name = isNew ? lastName : city._cityName;
@@ -116,29 +131,22 @@ namespace COTG.Views
 						await GetCity.Post(cid); // need to fetch notes
 						string tags = city.remarks;
 
-						tags = SetTag(tags, "Hub", nameDialog.hub.IsChecked);
-						tags = SetTag(tags, "Vanq", nameDialog.vanqs.IsChecked);
-						tags = SetTag(tags, "RT", nameDialog.rt.IsChecked);
-						tags = SetTag(tags, "Priestess", nameDialog.priestess.IsChecked);
-						tags = SetTag(tags, "Praetor", nameDialog.prae.IsChecked);
-						tags = SetTag(tags, "Horse", nameDialog.horse.IsChecked);
-						tags = SetTag(tags, "Arb", nameDialog.arb.IsChecked);
-						tags = SetTag(tags, "Sorc", nameDialog.sorc.IsChecked);
-						tags = SetTag(tags, "Druid", nameDialog.druid.IsChecked);
-						tags = SetTag(tags, "Scorp", nameDialog.scorp.IsChecked);
-						tags = SetTag(tags, "Shipping", nameDialog.shipping.IsChecked);
-						tags = SetTag(tags, "Stinger", nameDialog.stinger.IsChecked);
-						tags = SetTag(tags, "Galley", nameDialog.galley.IsChecked);
-						tags = SetTag(tags, "Warship", nameDialog.warship.IsChecked);
+						foreach (var tag in TagHelper.tags)
+						{
+							var check = nameDialog.tags.Children.First( (ch)=> (ch as ToggleButton).Content == tag.s) as ToggleButton;
+							tags = SetTag(tags, tag.s, check.IsChecked);
+
+						}
+
 
 						city.remarks = tags;
 						//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-						Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}");
+						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}");
 					}
 					Note.Show($"Set name to {lastName}");
 					if (SettingsPage.setHub)
 					{
-						HubSettings.Show(cid);
+						await HubSettings.Show(cid);
 					}
 					if (SettingsPage.clearRes)
 					{

@@ -102,7 +102,7 @@ namespace COTG.JSON
                 split[36] = reqFood.ToString();
 
 				// hubs dont send by default
-				var isHub = spot.HasTag(Tag.Hub);
+				var isHub = spot.HasTag(Tags.Hub);
 
 				// send target
 				split[37] = sendWood&& !isHub ? reqHub.ToString() : "0"; // hub to use for this res
@@ -169,7 +169,13 @@ namespace COTG.JSON
 
 
         }
-        public static void SetRecruitFromTag(int cid)
+
+//		Name Protocol    Method Result  Content type    Received Time    Initiator
+//https://w21.crownofthegods.com/includes/pSs.php	HTTP/1.0	POST	200	text/html		85.7 ms	XMLHttpRequest
+
+
+
+		public static void SetRecruitFromTag(int cid)
         {
             var spot = Spot.GetOrAdd(cid);
 
@@ -197,7 +203,15 @@ namespace COTG.JSON
                 split[12] = "100000";
                 result = "\nSet recruit rt";
             }
-            if (rem.Contains("vanq"))
+			if (rem.Contains("vt") )
+			{
+				// 12 is triari
+				// 14 is vanq
+				split[12] = "200000";
+				split[14] = "200000";
+				result = "\nSet recruit VT";
+			}
+			if (rem.Contains("vanq"))
             {
                 split[14] = "343343";
                result = "\nSet recruit vanqs";

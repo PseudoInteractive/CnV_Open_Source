@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace COTG.Game
 {
 	[Flags]
-	public  enum Tag 
+	public  enum Tags 
 	{
-		none= 0,
 		RT= 1 << Enum.ttRanger,
-		Vanq= 1 << Enum.ttVanquisher,
+		VT = 1 << Enum.ttTriari,
+		Vanq = 1 << Enum.ttVanquisher,
 		Priest= 1 << Enum.ttPriestess,
 		Prae= 1 << Enum.ttPraetor,
 		Sorc= 1 << Enum.ttSorcerer,
@@ -23,12 +23,44 @@ namespace COTG.Game
 		Galley = 1 << Enum.ttGalley,
 		Warship = 1 << Enum.ttWarship,
 		Navy = 1 << 20,
-		Shipping= 1 << 21,
+		Ship= 1 << 21,
 		Hub = 1 << 22,
 	}
-
-	public static class TagsHelper
+	public struct TagInfo
 	{
+		public Tags id;
+		public string s;
+	}
+	public static class TagHelper
+	{
+		public static TagInfo[] tags;
+		static TagHelper()
+		{
+			var names = Tags.GetNames(typeof(Tags));
+			tags = new TagInfo[names.Length];
+			for(int i=0;i<names.Length;++i)
+			{
+				tags[i].id = Tags.Parse<COTG.Game.Tags>(names[i]);
+				tags[i].s = names[i];
+			}
+			
+		}
 
+		public static Tags Get(string src)
+		{
+			Tags result = default;
+			foreach (var t in tags)
+			{
+				if (src.Contains(t.s, StringComparison.OrdinalIgnoreCase))
+				{
+					result = result | t.id;
+				}
+			}
+			return result;
+		}
+		public static Tags GetTags(this Spot city)
+		{
+			return Get(city.remarks);
+		}
 	}
 }

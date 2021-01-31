@@ -62,7 +62,7 @@ namespace COTG.Game
                 rv += 6; // penalty of 4 spaces for wrong type
             return rv;
         }
-		public static async Task ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
 			var rv = autoRaid ? new ResetableCollection<Dungeon>(): raidDungeons;
 			rv.Clear();
@@ -95,18 +95,31 @@ namespace COTG.Game
 				if(rv.Count>0)
 				{
 					var success = false;
-					foreach (var i in rv)
+					foreach (var _i in rv)
 					{
-						var d = Raiding.ComputeIdealReps(i, city);
+						var d = Raiding.ComputeIdealReps(_i, city);
 						if ((d.averageCarry - Raiding.desiredCarry).Abs() > 0.25f)
 							continue;
-						await Raiding.SendRaids(i, false);
+						var i = _i;
+						int counter = 0;
+						for(; ; )
+						{ 
+							var good = await Raiding.SendRaids(i, false);
+							if (good)
+								break;
+							if(++counter > 16)
+							{
+								Note.Show($"Giving up on {city.nameAndRemarks}");
+								break;
+							}
+							await Task.Delay(2000);	
+						}
 						success = true;
 						break;
 					}
 					if(!success)
 					{
-						Note.Show($"No appropariate dungeons for {city.nameAndRemarks}");
+						Note.Show($"No appropriate dungeons for {city.nameAndRemarks}");
 					}
 				}
 			}
@@ -115,6 +128,8 @@ namespace COTG.Game
 				// dont wait on this 
 				//COTG.Views.MainPage.UpdateDungeonList(rv);
 			}
-        }
+
+			return true;
+		}
 	}
 }

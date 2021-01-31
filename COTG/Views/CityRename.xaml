@@ -25,21 +25,8 @@
         <TextBox Grid.Row="0" x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
         <TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
 		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
-		<controls:WrapPanel Grid.Row="3">
-			<ToggleButton x:Name="hub" Content="Hub"/> 
-			<ToggleButton x:Name="vanqs" Content="Vanq"/> 
-			<ToggleButton x:Name="rt" Content="RT"/> 
-			<ToggleButton x:Name="priestess" Content="Priestess"/> 
-			<ToggleButton x:Name="prae" Content="Praetor"/> 
-			<ToggleButton x:Name="horse" Content="Horse"/> 
-			<ToggleButton x:Name="arb" Content="Arb"/> 
-			<ToggleButton x:Name="scorp" Content="Scorp"/> 
-			<ToggleButton x:Name="sorc" Content="Sorc"/> 
-			<ToggleButton x:Name="druid" Content="Druid"/> 
-			<ToggleButton x:Name="galley" Content="Galley"/> 
-			<ToggleButton x:Name="stinger" Content="Stinger"/> 
-			<ToggleButton x:Name="warship" Content="Warship"/> 
-			<ToggleButton x:Name="shipping" Content="Shipping"/> 
+		<controls:WrapPanel Grid.Row="3" x:Name="tags" x:FieldModifier="public" >
+			
 		</controls:WrapPanel>
 		<controls:WrapPanel Grid.Row="4">
 		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:SettingsPage.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
