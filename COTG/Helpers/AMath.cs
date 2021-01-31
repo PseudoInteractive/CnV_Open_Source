@@ -66,6 +66,48 @@ namespace COTG
 		{
 			return (int)MathF.Ceiling(f);
 		}
+
+		//
+		// Summary:
+		//     Computes the average of a sequence of nullable System.Double values.
+		//
+		// Parameters:
+		//   source:
+		//     A sequence of nullable System.Double values to calculate the average of.
+		//
+		// Returns:
+		//     The average of the sequence of values, or null if the source sequence is empty
+		//     or contains only values that are null.
+		//
+		// Exceptions:
+		//   T:System.ArgumentNullException:
+		//     source is null.
+		public static Vector2 Average(this IEnumerable<Vector2> source)
+		{
+			var it = source.GetEnumerator();
+			if(!it.MoveNext())
+			{
+				return new Vector2();  // empty;
+			}
+			var rv = it.Current;
+			if (!it.MoveNext()) // 1
+				return rv;
+			rv += it.Current;
+			if (!it.MoveNext())
+				return rv *= 0.5f;
+
+			var count = 2;
+			do
+			{
+				rv += it.Current;
+				++count;
+			} while (it.MoveNext());
+
+			return rv * (1.0f / count);
+
+		}
+
+
 		public static (int x, int y) RoundToInt(this Vector2 v)
 		{
 			return (RoundToInt(v.X), RoundToInt(v.Y));

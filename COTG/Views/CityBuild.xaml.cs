@@ -1001,7 +1001,7 @@ namespace COTG.Views
 
 		}
 
-		public static void PointerDown((int x, int y) cc, bool isRight)
+		public static void PointerDown((int x, int y) cc)
 		{
 			//  called before pointer release, pointer release is a click or drag/swaipe
 			hovered = cc;
