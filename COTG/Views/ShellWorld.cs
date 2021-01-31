@@ -48,9 +48,11 @@ namespace COTG.Views
 		//	var workItemHandler = new WorkItemHandler((action) =>
 			{
 				var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+				Log(canvas.ManipulationMode);
+				canvas.ManipulationMode = ManipulationModes.All;
 				coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
 
-
+				coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
 				coreInputSource.PointerMoved += Canvas_PointerMoved;
 				coreInputSource.PointerPressed += Canvas_PointerPressed;
 				coreInputSource.PointerReleased += Canvas_PointerReleased;
@@ -68,7 +70,15 @@ namespace COTG.Views
 
 		}
 
-
+		private static void CoreInputSource_InputEnabled(object sender, InputEnabledEventArgs args) {
+			LogJson(args);
+		}
+		class PointerPress
+		{
+			public int id;
+			Vector2 start;
+			ulong timestamp;
+		}
 
 		private static void CoreInputSource_PointerCaptureLost(object sender, PointerEventArgs args)
 		{
@@ -140,8 +150,13 @@ namespace COTG.Views
 			Player.viewHover = 0;
 		}
 
+		static void PointerInfo(PointerEventArgs args, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
+		{
+			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} t:{args.CurrentPoint.PointerDevice.PointerDeviceType} <{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
+		}
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
+			PointerInfo(e);
 			Log("pointer Exit " + isOverPopup);
 			isOverPopup = false;
 			//if (ShellPage.IsCityView())
@@ -182,6 +197,7 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
+			PointerInfo(e);
 			if (!isHitTestVisible)
 				return;
 
@@ -342,6 +358,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
+			PointerInfo(e);
 			e.KeyModifiers.UpdateKeyModifiers();
 			if (CityBuild.menuOpen)
 			{
@@ -497,6 +514,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
+			PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;
@@ -558,6 +576,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
 		{
+			PointerInfo(e);
 			e.KeyModifiers.UpdateKeyModifiers();
 			if (!isHitTestVisible)
 				return;

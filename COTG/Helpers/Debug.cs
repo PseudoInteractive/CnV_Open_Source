@@ -104,6 +104,20 @@ namespace COTG
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 		}
+
+		[Conditional("DEBUG")]
+		public static void LogJson<T>(T s,
+		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+		{
+
+			System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}");
+			System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize<T>(s));
+			DumpStack(new StackTrace(1, true));
+			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
+
+		}
 		[Conditional("TRACE")]
         public static void Log(Exception e,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
