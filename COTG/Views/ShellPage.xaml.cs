@@ -1172,9 +1172,43 @@ namespace COTG.Views
 			// todo!
 		}
 
+		static byte viewToggle;
+		const byte viewToggleCount = 4;
+		const byte viewToggleWeb = 1;
 		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{
-			var hasFocus = !webviewHasFocus;
+			// stage 1 is web view has focus
+			if(webviewHasFocus)
+			{
+				viewToggle = viewToggleWeb;
+			}
+
+			++viewToggle;
+			if (viewToggle >= viewToggleCount)
+				viewToggle = 0;
+
+			switch(viewToggle)
+			{
+				case 0:
+				case 1:
+					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+					grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+					break;
+				case 2:
+					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+					grid.ColumnDefinitions[2].Width = new GridLength(80);
+					break;
+				case 3:
+					grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
+					grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
+					break;
+
+			}
+
+
+			var hasFocus = (viewToggle == viewToggleWeb);
+
+		//	webviewHasFocus = hasFocus;
 
 			CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
 			canvasVisible = !hasFocus;

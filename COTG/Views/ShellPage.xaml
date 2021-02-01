@@ -138,6 +138,8 @@
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
 					<winui:ProgressRing x:Name="progress" IsActive="False" />
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
+					<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption"
+                           ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML.  Further clickging will toggle between different layouts" />
 				</StackPanel>
 			</CommandBar.Content>
 			<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
@@ -145,8 +147,6 @@
 			<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
 			<AppBarSeparator/>
-			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
-                           ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 			<AppBarSeparator/>
 			<AppBarButton x:Name="Fresh"
                               Label="Fresh"

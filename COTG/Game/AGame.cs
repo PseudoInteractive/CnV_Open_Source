@@ -43,6 +43,10 @@ namespace COTG
 
 	public static partial class Helper
 	{
+		public static bool IsKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key);
+
+		public static bool WasKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key) && !AGame.priorKeyboardState.IsKeyDown(key);
+
 		static public CoreWindow CoreWindow => Window.Current.CoreWindow;
 		static public UIElement CoreContent => Window.Current.Content;
 		public static bool TryGetValue<T>(this List<T> l, Func<T, bool> pred, out T var)
@@ -302,7 +306,7 @@ namespace COTG
 		//		public static MouseState priorMouseState;
 				public static KeyboardState keyboardState;
 				public static KeyboardState priorKeyboardState;
-			public static bool WasKeyPressed(Keys key) => keyboardState.IsKeyDown(key) && !priorKeyboardState.IsKeyDown(key);
+
 		const float viewHoverZGain = 1.0f / 64.0f;
 		const float viewHoverElevationKt = 24.0f;
 		public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
@@ -419,6 +423,7 @@ namespace COTG
 					else
 					{
 						ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+						ShellPage.Gesture.Tick();
 					}
 					
 				}
@@ -1064,21 +1069,21 @@ namespace COTG
 				if(fontFilter!=null)
 					GraphicsDevice.SamplerStates[7] = fontFilter;
 				GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-				if (WasKeyPressed(Keys.F))
-				{
-					++filterCounter;
-					fontFilter = new SamplerState()
-					{
-						Filter = ((filterCounter & 1)==0) ? TextureFilter.Linear : TextureFilter.Anisotropic,
+				//if (WasKeyPressed(Keys.F))
+				//{
+				//	++filterCounter;
+				//	fontFilter = new SamplerState()
+				//	{
+				//		Filter = ((filterCounter & 1)==0) ? TextureFilter.Linear : TextureFilter.Anisotropic,
 						
-						MipMapLevelOfDetailBias =-((((filterCounter/2)%4))*0.5f),
-						MaxMipLevel=8
-						,BorderColor = new Color(255,0,0,255),
-						MaxAnisotropy=2,
+				//		MipMapLevelOfDetailBias =-((((filterCounter/2)%4))*0.5f),
+				//		MaxMipLevel=8
+				//		,BorderColor = new Color(255,0,0,255),
+				//		MaxAnisotropy=2,
 
-					};
-					Log($"{fontFilter.Filter} {fontFilter.MipMapLevelOfDetailBias}");
-				}
+				//	};
+				//	Log($"{fontFilter.Filter} {fontFilter.MipMapLevelOfDetailBias}");
+				//}
 				//if (fontEffect._pixelShader != null)
 				//{
 				//	for (int i = 0; i < fontEffect._pixelShader.Samplers.Length; ++i)
@@ -1823,7 +1828,6 @@ namespace COTG
 					}
 				// show selected
 				var _toolTip = ShellPage.toolTip;
-					_toolTip = $"{ShellPage.Gesture.points.Count} {ShellPage.Gesture.GetStretch()} {ShellPage.Gesture.lastStretch}";
 				if (underMouse != null)
 				{
 					//         Spot.viewHover = 0; // clear

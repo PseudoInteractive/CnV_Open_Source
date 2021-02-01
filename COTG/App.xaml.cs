@@ -106,33 +106,32 @@ namespace COTG
 
 		}
 
-		// these are not reliably set
-		// We set then on key up and key down events and on mouse input events
-		static public bool shiftPressed, controlPressed;
 
-		private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
-		{
-			var window = CoreWindow.GetForCurrentThread();
-			if (window == null)
-			{
-				return CoreVirtualKeyStates.None;
-			}
+		//private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
+		//{
+		//	var window = CoreWindow.GetForCurrentThread();
+		//	if (window == null)
+		//	{
+		//		return CoreVirtualKeyStates.None;
+		//	}
 
-			return window.GetAsyncKeyState(key);
-		}
-		public static bool IsModifierKeyDown(VirtualKey key)
-		{
-			var state = GetKeyState(key);
-			return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-		}
+		//	return window.GetAsyncKeyState(key);
+		//}
+		//public static bool IsModifierKeyDown(VirtualKey key)
+		//{
+		//	var state = GetKeyState(key);
+		//	return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+		//}
 
 		public static bool IsKeyPressedControl()
 		{
-			return IsModifierKeyDown(VirtualKey.Control); // controlPressed;
+			return Microsoft.Xna.Framework.Input.Keys.LeftControl.IsKeyPressed() |
+				   Microsoft.Xna.Framework.Input.Keys.RightControl.IsKeyPressed();// shiftPressed;
 		}
 		public static bool IsKeyPressedShift()
 		{
-			return IsModifierKeyDown(VirtualKey.Shift);// shiftPressed;
+			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed()|
+				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
 		}
 		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
 		{
@@ -142,16 +141,16 @@ namespace COTG
 
 		public static void OnKeyUp(VirtualKey key)
 		{
-			switch (key)
-			{
-				case VirtualKey.Shift:
-					shiftPressed = false;
-					break;
-				case VirtualKey.Control:
-					controlPressed = false;
-					break;
+			//switch (key)
+			//{
+			//	case VirtualKey.Shift:
+			//		shiftPressed = false;
+			//		break;
+			//	case VirtualKey.Control:
+			//		controlPressed = false;
+			//		break;
 
-			}
+			//}
 			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
 		}
 
@@ -166,16 +165,16 @@ namespace COTG
 
 		public static void OnKeyDown(VirtualKey key)
 		{
-			switch (key)
-			{
-				case VirtualKey.Shift:
-					shiftPressed = true;
-					break;
-				case VirtualKey.Control:
-					controlPressed = true;
-					break;
+			//switch (key)
+			//{
+			//	case VirtualKey.Shift:
+			//		shiftPressed = true;
+			//		break;
+			//	case VirtualKey.Control:
+			//		controlPressed = true;
+			//		break;
 
-			}
+			//}
 			
 			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
 		}
@@ -742,10 +741,11 @@ namespace COTG
 		}
 
 
+		[Conditional("DEBUG")]
 		public static void UpdateKeyModifiers(this VirtualKeyModifiers mod)
 		{
-			App.shiftPressed = mod.IsShift();
-			App.controlPressed = mod.IsControl();
+		//	App.shiftPressed = mod.IsShift();
+		//	App.controlPressed = mod.IsControl();
 		}
 		public static string CidToStringMD(this int cid)
 		{
@@ -1053,8 +1053,8 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				Verify(ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
-				Verify(ob.Focus(FocusState.Programmatic));
+				ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
+				ob.Focus(FocusState.Programmatic);
 			}
 		}
 		static string lastTip;

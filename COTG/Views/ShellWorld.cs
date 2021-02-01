@@ -153,6 +153,24 @@ namespace COTG.Views
 						return (c,false);
 					}
 			}
+			public static void Tick()
+			{
+				if (points.Any() && currentGesture == GestureAction.none)
+				{
+					var tick = (Environment.TickCount - (int)(points[0].startTimestamp/1000) );
+					if(tick > 700)
+					{
+						// auto rick click on hold
+						(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
+						Reset();
+						var cid = worldC.WorldToCid();
+						App.DispatchOnUIThreadSneaky(RightClick(cc, cid));
+
+					}
+				}
+
+			}
+
 			public static void ProcessPointerExited(Windows.UI.Input.PointerPoint point)
 			{
 					var id = point.PointerId;
@@ -215,14 +233,14 @@ namespace COTG.Views
 				}
 				if (currentGesture == GestureAction.none)
 				{
-					if(index==0)
-					{
-						if(point.Timestamp > points[0].startTimestamp * 500L*1000L)
-						{
-							Reset();
-							return (c, new Vector3(), GestureAction.rightClick);
-						}
-					}
+					//if(index==0)
+					//{
+					//	if(point.Timestamp > points[0].startTimestamp * 500L*1000L)
+					//	{
+					//		Reset();
+					//		return (c, new Vector3(), GestureAction.rightClick);
+					//	}
+					//}
 					return (c, new Vector3(), GestureAction.none);
 				}
 				Vector3 delta = new Vector3();
@@ -270,7 +288,7 @@ namespace COTG.Views
 					var result = (rv, GestureAction.leftClick);
 					if (currentGesture != GestureAction.none)
 						result=(rv, GestureAction.none);
-					else if (maxPoints > 1 || point.Timestamp > points[0].startTimestamp + 1 * 300L * 1000L ||
+					else if (maxPoints > 1 ||
 						point.Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonReleased)
 						result = (rv, GestureAction.rightClick);
 					
@@ -477,8 +495,7 @@ namespace COTG.Views
 
 					case GestureAction.rightClick:
 						{
-							var mod = e.KeyModifiers;
-							App.DispatchOnUIThreadSneaky(RightClick( cc, cid,mod));
+							App.DispatchOnUIThreadSneaky(RightClick( cc, cid));
 							break;
 						}
 					//case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
@@ -517,7 +534,7 @@ namespace COTG.Views
 			}
 		}
 
-		private static DispatchedHandler RightClick( (int x, int y) cc, int cid, Windows.System.VirtualKeyModifiers keyModifiers)
+		private static DispatchedHandler RightClick( (int x, int y) cc, int cid)
 		{
 			return () =>
 			{
@@ -529,7 +546,7 @@ namespace COTG.Views
 				{
 
 					var spot = Spot.GetOrAdd(cid);
-					if (!keyModifiers.IsShift())
+					if (!App.IsKeyPressedShift())
 						spot.SetFocus(true, true, false);
 					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
 					// }
@@ -1015,8 +1032,8 @@ namespace COTG.Views
 			else if(gestureResult.action==GestureAction.rightClick)
 			{
 				var cid = c.WorldToCid();
-				var mod = e.KeyModifiers;
-				App.DispatchOnUIThreadSneaky(RightClick(cc, cid, mod));
+				
+				App.DispatchOnUIThreadSneaky(RightClick(cc, cid));
 			}
 			else
 			{
