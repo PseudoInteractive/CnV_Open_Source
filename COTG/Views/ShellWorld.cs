@@ -73,17 +73,17 @@ namespace COTG.Views
 		private static void CoreInputSource_InputEnabled(object sender, InputEnabledEventArgs args) {
 			LogJson(args);
 		}
-
-		enum GestureAction
+		[Flags]
+		public enum GestureAction
 		{
-			none,
-			leftClick,
-			rightClick,
-			zoom,
-			hover, // mouse only
-			pan,
+			none=0,
+			leftClick=1,
+			rightClick=2,
+			zoom=4,
+			pan = 8,
+			hover = 64, // mouse only
 		}
-		static class Gesture
+		public static class Gesture
 		{
 			public class Point
 			{
@@ -105,7 +105,7 @@ namespace COTG.Views
 
 			}
 			static Vector2 lastDelta;
-			static float lastStretch;
+			public static float lastStretch;
 			public static List<Point> points = new List<Point>();
 			public static int maxPoints;
 			public static GestureAction currentGesture;
@@ -137,6 +137,15 @@ namespace COTG.Views
 						pointer = new Point() { id = id, startTimestamp = point.Timestamp, startC = c, c = c };
 						points.Add(pointer);
 						maxPoints = points.Count.Max(maxPoints);
+					//  reset
+					if(points.Count > 1)
+					{
+						var cStart = GetAverageStartPosition();
+						var cCurrent= GetAveragePosition();
+						lastDelta = cCurrent - cStart;
+						lastStretch = GetStretch();
+						
+					}
 						return (GetAveragePosition(),true);
 					}
 					else
@@ -152,17 +161,12 @@ namespace COTG.Views
 					{
 						return;
 					}
-					if (index == 0)
-					{
+					
 						Reset();
-					}
-					else
-					{
-						points.RemoveAt(index);
-					}
+					
 			}
 
-			public static (Vector2 c, Vector2 delta, GestureAction action) ProcessMoved(Windows.UI.Input.PointerPoint point)
+			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved(Windows.UI.Input.PointerPoint point)
 			{
 				var pointC = GetCanvasPosition(point.Position);
 				var id = point.PointerId;
@@ -170,16 +174,16 @@ namespace COTG.Views
 				if (index == -1)
 				{
 					if(!points.Any())
-						return (pointC, new Vector2(), GestureAction.hover); // this is a mouse move without a press
+						return (pointC, new Vector3(), GestureAction.hover); // this is a mouse move without a press
 					else
-						return (pointC,new Vector2(), GestureAction.none); // this finger not tracked
+						return (pointC,new Vector3(), GestureAction.none); // this finger not tracked
 				}
 				// should not happen
 				if (!point.IsInContact)
 				{
 					Assert(false);
 					Reset();
-					return (pointC, new Vector2(), GestureAction.hover); // this is a mouse move without a press
+					return (pointC, new Vector3(), GestureAction.hover); // this is a mouse move without a press
 				}
 				points[index].c = pointC;
 
@@ -187,45 +191,66 @@ namespace COTG.Views
 					var c = GetAveragePosition();
 				var dc = c - cStart;
 				var stretch = GetStretch();
+			//	if (currentGesture == GestureAction.none)
+				{
+					if (!currentGesture.HasFlag(GestureAction.zoom))
+					{
+						// stretch trumps pan
+						if (stretch.Abs() > 8)
+						{
+							lastStretch = stretch;
+							currentGesture |= GestureAction.zoom; // sticky bit
+						}
+					}
+					if (!currentGesture.HasFlag(GestureAction.pan))
+					{
+
+						if (dc.Length() > 16)
+						{
+							lastDelta = dc;
+							currentGesture |= GestureAction.pan; // sticky bit
+
+						}
+					}
+				}
 				if (currentGesture == GestureAction.none)
 				{
-					// stretch trumps pan
-					if (stretch.Abs() > 8)
+					if(index==0)
 					{
+						if(point.Timestamp > points[0].startTimestamp * 500L*1000L)
+						{
+							Reset();
+							return (c, new Vector3(), GestureAction.rightClick);
+						}
+					}
+					return (c, new Vector3(), GestureAction.none);
+				}
+				Vector3 delta = new Vector3();
+				var gesture = GestureAction.none;
+				if (currentGesture.HasFlag(GestureAction.zoom))
+				{
+					var dz = stretch - lastStretch;
+					if (dz.Abs() >= 0.5f)
+					{
+						gesture |= GestureAction.zoom;
 						lastStretch = stretch;
-						currentGesture = GestureAction.zoom; // sticky bit
-					}
-					else if (dc.Length() > 16)
-					{
-						lastDelta = dc;
-						currentGesture = GestureAction.pan; // sticky bit
-
+						delta.Z = dz;
 					}
 				}
-				if (currentGesture == GestureAction.none)
-					return (c, new Vector2(), GestureAction.none);
-				if (currentGesture == GestureAction.zoom )
-				{
-					var delta = stretch - lastStretch;
-					lastStretch = stretch;
-					return (c,new Vector2(delta), GestureAction.zoom);
-				}
-				if (currentGesture == GestureAction.pan)
-				{
 
+				if (currentGesture.HasFlag(GestureAction.pan ))
+				{
 					var deltadelta = lastDelta - dc;
+					
 					lastDelta = dc;
-
-					if (maxPoints == 2) // 2 finger zoom
-					{
-						return (c, deltadelta, GestureAction.zoom);
-					}
-					return (c, deltadelta, GestureAction.pan);
+					delta.X = deltadelta.X;
+					delta.Y = deltadelta.Y;
+					gesture |= GestureAction.pan;
 				}
-				return (c, new Vector2(), GestureAction.none); // this finger not tracked
+				return (c, delta,gesture); // this finger not tracked
 
 			}
-
+			
 			public static (Vector2 c, GestureAction action) ProcessRelased(Windows.UI.Input.PointerPoint point)
 			{
 				var c = GetCanvasPosition(point.Position);
@@ -239,29 +264,21 @@ namespace COTG.Views
 					}
 					points[index].c = c;
 					var rv = GetAveragePosition();
-					if ( index == 0 )
+					
 					{
-						var startTime = points[0].startTimestamp;
-						var gesture = currentGesture;
-
-						Reset();
-
+						
+					var result = (rv, GestureAction.leftClick);
+					if (currentGesture != GestureAction.none)
+						result=(rv, GestureAction.none);
+					else if (maxPoints > 1 || point.Timestamp > points[0].startTimestamp + 1 * 300L * 1000L ||
+						point.Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonReleased)
+						result = (rv, GestureAction.rightClick);
+					
+					Reset();
+					return result;
 						// Actions trump presses
-						if (gesture  != GestureAction.none)
-							return (rv,GestureAction.none);
-						if(maxPoints > 1 || point.Timestamp > startTime + 1*1000L*1000L || 
-							point.Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonReleased)
-							return (rv, GestureAction.rightClick);
-						else
-							return (rv, GestureAction.leftClick);
 
-					}
-					else
-					{
-						// for second finger we just ignore it
-						points.RemoveAt(index);
-						return (rv, GestureAction.none);
-					}
+				}
 					
 			}
 		}
@@ -460,23 +477,8 @@ namespace COTG.Views
 
 					case GestureAction.rightClick:
 						{
-
-							App.DispatchOnUIThreadSneaky(() =>
-							{
-								if (IsCityView() && (cid == City.build))
-								{
-									CityBuild.Click(cc,true);
-								}
-								else
-								{
-
-									var spot = Spot.GetOrAdd(cid);
-									if (!e.KeyModifiers.IsShift())
-										spot.SetFocus(true, true, false);
-									spot.ShowContextMenu(canvas, CanvasToDIP(cameraC) );
-									// }
-								}
-							});
+							var mod = e.KeyModifiers;
+							App.DispatchOnUIThreadSneaky(RightClick( cc, cid,mod));
 							break;
 						}
 					//case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
@@ -514,6 +516,27 @@ namespace COTG.Views
 			{
 			}
 		}
+
+		private static DispatchedHandler RightClick( (int x, int y) cc, int cid, Windows.System.VirtualKeyModifiers keyModifiers)
+		{
+			return () =>
+			{
+				if (IsCityView() && (cid == City.build))
+				{
+					CityBuild.Click(cc, true);
+				}
+				else
+				{
+
+					var spot = Spot.GetOrAdd(cid);
+					if (!keyModifiers.IsShift())
+						spot.SetFocus(true, true, false);
+					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
+					// }
+				}
+			};
+		}
+
 		static public bool isOverPopup;
 		private static bool TryPostJSMouseEvent(string eventName, int button)
 		{
@@ -715,26 +738,29 @@ namespace COTG.Views
 				ShellPage.SetWebViewHasFocus(true);
 				return;
 			}
-			DoZoom(pt.Properties.MouseWheelDelta);
+			DoZoom(pt.Properties.MouseWheelDelta,false);
 		}
 
-		static void DoZoom(float delta)
+		static void DoZoom(float delta,bool skipPan)
 		{ 
 
-		
-			var dZoom = delta.SignOr0() * 0.0625f + delta * (1.0f / 1024.0f);
+			
+			var dZoom = delta.SignOr0() * 0.0f + delta * (1.0f / 256);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
 			var cBase = new Vector2(); ////GetCanvasPosition(pt.Position) - halfSpan;
 
-			var skipMove = false;
+			var skipMove = skipPan;
 
 			if ( IsCityView()  )
 			{
 				if (AutoSwitchCityView())
 				{
-					cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
-					cameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
-				}
+					if (!skipPan)
+					{
+						cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
+						cameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
+					}
+				} 
 			}
 			else
 			{
@@ -781,7 +807,7 @@ namespace COTG.Views
 			(var c,var cc) = ScreenToWorldAndCityC(mousePositionW);
 			//var point = e.CurrentPoint;
 			//var props = point.Properties;
-			if (gestureResult.action==GestureAction.hover)
+			if (gestureResult.action == GestureAction.hover)
 			{
 				if (TryPostJSMouseEvent(null, 0))
 				{
@@ -799,7 +825,7 @@ namespace COTG.Views
 						{
 							var b = build.GetBuiding(cc);
 							var d = b.def;
-						//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
+							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = 0;
 							Player.viewHover = 0;
 							toolTip = null;
@@ -807,7 +833,7 @@ namespace COTG.Views
 						}
 					}
 					else
-					{ 
+					{
 
 						if (cont != lastCont)
 						{
@@ -824,11 +850,11 @@ namespace COTG.Views
 						if (lastCanvasC != cid)
 						{
 
-						Spot.viewHover = 0;
-						Player.viewHover = 0;
-						toolTip = null;
+							Spot.viewHover = 0;
+							Player.viewHover = 0;
+							toolTip = null;
 
-						lastCanvasC = cid;
+							lastCanvasC = cid;
 							var packedId = World.GetPackedId(c);
 							var data = World.GetInfoFromPackedId(packedId);
 							switch (data.type)
@@ -986,32 +1012,41 @@ namespace COTG.Views
 				e.Handled = false;
 
 			}
-			else if(gestureResult.action == GestureAction.pan)
+			else if(gestureResult.action==GestureAction.rightClick)
 			{
-				var dr = gestureResult.delta;
+				var cid = c.WorldToCid();
+				var mod = e.KeyModifiers;
+				App.DispatchOnUIThreadSneaky(RightClick(cc, cid, mod));
+			}
+			else
+			{
+				e.Handled = true;
+				if (gestureResult.action.HasFlag(GestureAction.zoom))
 				{
-					dr *= 1.0f / cameraZoomLag;
-					cameraC += dr;
-					// instant
-					cameraCLag = cameraC;
-					e.Handled = true;
-					if (IsCityView())
+					DoZoom(gestureResult.delta.Z * 0.75f, gestureResult.action.HasFlag(GestureAction.pan));
+					cameraZoomLag = cameraZoom;
+				}
+				if (gestureResult.action.HasFlag(GestureAction.pan))
+				{
+					var dr = gestureResult.delta;
 					{
-						AutoSwitchCityView();
+						dr *= 1.0f / cameraZoomLag;
+						cameraC += dr.ToV2();
+						// instant
+						cameraCLag = cameraC;
+						if (IsCityView())
+						{
+							AutoSwitchCityView();
+						}
+					}
+					//else
+					{
+
+						//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
 					}
 				}
-				//else
-				{
 
-			//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
-				}
 			}
-			else if( gestureResult.action == GestureAction.zoom)
-			{
-				DoZoom(gestureResult.delta.Y);
-			}
-
-
 		}
 
 	}

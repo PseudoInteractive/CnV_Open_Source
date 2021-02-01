@@ -1823,7 +1823,7 @@ namespace COTG
 					}
 				// show selected
 				var _toolTip = ShellPage.toolTip;
-
+					_toolTip = $"{ShellPage.Gesture.points.Count} {ShellPage.Gesture.GetStretch()} {ShellPage.Gesture.lastStretch}";
 				if (underMouse != null)
 				{
 					//         Spot.viewHover = 0; // clear
