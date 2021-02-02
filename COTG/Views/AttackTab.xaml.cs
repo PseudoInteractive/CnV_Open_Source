@@ -40,8 +40,8 @@ namespace COTG.Views
         public static bool IsVisible() => instance.isVisible;
 
 		
-        public static DumbCollection<Spot> attacks = new DumbCollection<Spot>( new[] { Spot.pending} );
-        public static DumbCollection<Spot> targets = new DumbCollection<Spot>(new[] { Spot.pending });
+        public static DumbCollection<Spot> attacks = new DumbCollection<Spot>();
+        public static DumbCollection<Spot> targets = new DumbCollection<Spot>();
         public AttackTab()
         {
             Assert(instance == null);

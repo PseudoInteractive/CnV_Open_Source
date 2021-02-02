@@ -17,14 +17,15 @@ namespace COTG.Game
     {
         public int sourceCid;
         public int targetCid;
+		static int pid;
 
         public long order;
         public TroopTypeCount[] troops = TroopTypeCount.empty;
         static async void Return(long order)
         {
-            await Post.Send("overview/reinreca.php", "a=" + order);
+            await Post.Send("overview/reinreca.php", "a=" + order, pid);
             await Task.Delay(1000);
-            await Post.Send("overview/reinreca.php", "a=" + order);
+            await Post.Send("overview/reinreca.php", "a=" + order, pid);
         }
         internal static async void ShowReturnDialog(int cid,UIElement uie)
         {
@@ -33,7 +34,7 @@ namespace COTG.Game
             await Services.ReinforcementsOverview.instance.Post();
             var spot = Spot.GetOrAdd(cid);
             var panel = new StackPanel();
-
+			pid = spot.pid;
             
             var msg = new ContentDialog()
             {

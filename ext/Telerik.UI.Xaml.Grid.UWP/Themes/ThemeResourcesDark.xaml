@@ -4,7 +4,8 @@
     xmlns:telerik="using:Telerik.UI.Xaml.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeColorsDark.xaml"/>
+		<ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeResourcesDefault.xaml"/>
+		<ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/ThemeColorsDark.xaml"/>
         <ResourceDictionary>
             <telerik:UserThemeResources x:Key="ResourceLoaderInitializer"/>
             <ResourceDictionary.MergedDictionaries>

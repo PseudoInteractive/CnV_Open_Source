@@ -60,16 +60,19 @@ namespace COTG.Services
         private static Container container;
         private static Container ordersContainer;
 		private static Container presenceContainer;
-//		private static Container sessionContainer;
+		//		private static Container sessionContainer;
+
+		static string worldPostfix => JSClient.world == 21 ? "": ('_' + JSClient.world.ToString());
 
 		// The name of the database and container we will create
-		private static string databaseId => $"w{JSClient.world}";
-        private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }";
-		private static string presenceContainerId => $"p282";
+		// We are currently putting them all into w21 to save on databases
+		private static string databaseId => $"w21";
+        private static string containerId => $"i{111+(Alliance.myId==131||Alliance.myId==132 ? 22 : Alliance.myId) }{worldPostfix}";
+		private static string presenceContainerId => $"p282{worldPostfix}";
 	//	private static string sessionContainerId => $"s{151 + (Alliance.myId == 131 || Alliance.myId == 132 ? 131 : Alliance.myId) }";
-		private static string ordersContainerId => "seenOrders";
-        private static string blobContainerId => $"c{JSClient.world}";
-        private static string blobName => $"b{311 + Alliance.myId}22";
+		private static string ordersContainerId => $"seenOrders{worldPostfix}";
+//        private static string blobContainerId => $"c{JSClient.world}";
+ //       private static string blobName => $"b{311 + Alliance.myId}22";
      	const int concurrentRequestCount = 1;
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
@@ -78,7 +81,7 @@ namespace COTG.Services
 
 		// Create a table client for interacting with the table service
 		static TableClient tableClient;// = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
-		const string tableName = "a";
+		static string tableName => "a";
 
 	// Create a table client for interacting with the table service 
 

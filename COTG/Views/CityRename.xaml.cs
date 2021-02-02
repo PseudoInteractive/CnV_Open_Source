@@ -125,7 +125,7 @@ namespace COTG.Views
 					else
 						lastName = nameDialog.suggested.Text;
 					city._cityName = lastName;
-					Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}");
+					Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayer(City.build));
 					if (SettingsPage.applyTags)
 					{
 						await GetCity.Post(cid); // need to fetch notes
@@ -141,7 +141,7 @@ namespace COTG.Views
 
 						city.remarks = tags;
 						//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}");
+						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayer(City.build));
 					}
 					Note.Show($"Set name to {lastName}");
 					if (SettingsPage.setHub)

@@ -92,6 +92,7 @@
 			<CommandBar.Content>
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
+							  Visibility="Collapsed"
                      SelectionChanged="friendListBox_SelectionChanged"
                       Width="120"
                      
@@ -112,7 +113,7 @@
 					TextSubmitted="CitySubmitted"
                       DisplayMemberPath="nameAndRemarks"
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="City with build focus"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
                       Margin="4" />
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
@@ -154,7 +155,7 @@
 			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
-			<AppBarToggleButton x:Name="layout" IsChecked="{x:Bind views:CityBuild.isLayout}" Icon="AllApps" Label="Layout"
+			<AppBarToggleButton x:Name="layout" IsChecked="{x:Bind views:CityBuild._isLayout, Mode=TwoWay}" Icon="Orientation" Label="Layout"
                            ToolTipService.ToolTip="Toggles between normal city building and layout mode (i.e. like LOUOpt" />
 			<AppBarButton x:Name="Fresh"
                               Label="Fresh"

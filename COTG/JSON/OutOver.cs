@@ -69,7 +69,7 @@ namespace COTG.JSON
                         try
                         {
                         //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
-                        using (var jsd = await Post.SendForJson("overview/outover.php", "a=0"))
+                        using (var jsd = await Post.SendForJson("overview/outover.php", "a=0",Player.myId))
                             {
                                 foreach (var spot in Spot.defendersO)
                                 {
@@ -185,7 +185,7 @@ namespace COTG.JSON
                             }
                         }
                         // hits history
-                        using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=1"))
+                        using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=1", Player.myId))
                         {
                             //int counter = 0;
                             await jsd.RootElement.EnumerateArray().ToArray().ParallelForAsync4(reportParts,
@@ -213,7 +213,7 @@ namespace COTG.JSON
                                     }
                                     else
                                     {
-                                        using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
+                                        using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId, Player.myId))
                                         {
                                             ++fetched;
                                         // scout

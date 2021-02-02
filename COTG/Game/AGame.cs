@@ -459,7 +459,7 @@ namespace COTG
 				{
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, alphaAddEffect);
+					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, alphaAddEffect);
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -1334,7 +1334,7 @@ namespace COTG
 					//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
 					if (worldChanges != null && !focusOnCity)
 					{
-						var tOffset = new Vector2(0.75f, 0.0f);
+						var tOffset = new Vector2(0.0f, 0.0f);
 						var t2d = worldChanges.texture2d;
 						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
 						draw.AddQuad(Layer.tileCity-1, worldChanges,

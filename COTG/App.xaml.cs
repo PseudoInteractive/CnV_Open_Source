@@ -871,6 +871,17 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+		public static void RemoveEmpy(this MenuFlyout menu)
+		{
+			for (int i = menu.Items.Count; --i >= 0;)
+			{
+				if (menu.Items[i] is MenuFlyoutSubItem sub)
+				{
+					if (sub.Items.Count == 0)
+						menu.Items.RemoveAt(i);
+				}
+			}
+		}
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, Action command)
 		{
 			var rv = new MenuFlyoutItem() { Text = text };

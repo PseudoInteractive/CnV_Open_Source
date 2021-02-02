@@ -478,6 +478,7 @@ namespace COTG.Views
 		{
 			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
 			   {
+				   var pid = Player.activeId;
 				   using var work = new ShellPage.WorkScope("update citylists");
 				   var cityListCount = CityList.all.Length;
 				   var changed = new HashSet<int>();
@@ -589,10 +590,10 @@ namespace COTG.Views
 					   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(temp))}&cid={cid}");
 				   }
 				   if (sli != null)
-					   await Post.Send("includes/sLi.php", sli);
+					   await Post.Send("includes/sLi.php", sli, pid);
 				   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
 				   foreach (var it in cgs)
-					   await Post.Send("includes/cgS.php", it);
+					   await Post.Send("includes/cgS.php", it, pid);
 				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
 				   //   JSClient.GetCitylistOverview();
 				   //			   Note.Show($"Successfully added continent citylists :)");

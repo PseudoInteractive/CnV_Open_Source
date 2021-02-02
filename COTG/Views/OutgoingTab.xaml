@@ -35,7 +35,7 @@
                         RowHeight="{StaticResource GridRowHeight}"
                         PointerPressed="gridPointerPress"
                         GroupPanelPosition="Bottom"
-                        ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
+                      
                         AlternationStep="2"
                         SelectionMode="Single"
                         AllowFocusOnInteraction="True"

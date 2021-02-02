@@ -84,10 +84,12 @@ namespace COTG.Game
         }
         public void SendDonation(int woodToSend,int stoneToSend, int sendType)
         {
-            var secret = $"JJx452Tdd{World.CidToPlayer(senderCity.cid)}sRAssa";
+			var pid = World.CidToPlayer(senderCity.cid);
+
+			var secret = $"JJx452Tdd{pid}sRAssa";
             var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
 
-            Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f="+HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8)) ;
+            Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f="+HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid) ;
             Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) /(sendType==1?1000:10000)):N0} {(sendType==1?"carts":"ships")}");
         }
 

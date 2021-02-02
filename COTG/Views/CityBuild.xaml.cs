@@ -38,12 +38,15 @@ namespace COTG.Views
 	{
 		public static int quickBuildId;
 		public static CityBuild instance;
-		public static bool layoutMode;
-		public static bool isLayout { get; set; }
-
+		public static bool isLayout;
+		
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
+
+		public static HashSet<ushort> shoreSpots = new HashSet<ushort>(new ushort[] {416,394,372,351,331,332,376,354});
+		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
+																			417,418});
 
 		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot));
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
@@ -51,6 +54,10 @@ namespace COTG.Views
 		public static bool IsTowerSpot((int x, int y) cc) => IsTowerSpot(XYToId(cc));
 		public static bool IsWallSpot(int spot) => wallSpots.Contains((ushort)spot);
 		public static bool IsWallSpot((int x, int y) cc) => wallSpots.Contains((ushort)XYToId(cc));
+		public static bool IsWaterSpot(int spot) => City.GetBuild().isOnWater && waterSpots.Contains((ushort)spot);
+
+		public static bool IsShoreSpot(int spot) => City.GetBuild().isOnWater && shoreSpots.Contains((ushort)spot);
+
 		public enum Action
 		{
 			none,
@@ -107,6 +114,7 @@ namespace COTG.Views
 			res,
 			tower,
 			wall,
+			shore,
 			invalid
 		}
 		public static MenuType menuType = MenuType.invalid;
@@ -149,14 +157,30 @@ namespace COTG.Views
 		static ActionInfo actionFlipLayoutV = new ActionInfo("Flip V", Action.flipLayoutV, "City/decal_select_building.png", "Flip Layout Vertically");
 		static RadialMenuItem itemQB;
 
+		static Style menuBackground;
+		static Style menuBackgroundQuick;
+
 
 		public static BuildMenuItem Item(RadRadialMenu buildMenu, int id) => (BuildMenuItem)buildMenu.Items[id];
-		public static void UpdateBuildMenuType(MenuType _menuType, Building b)
+		public static void UpdateBuildMenuType(MenuType _menuType,int bspot)
 		{
-			if (menuType == _menuType)
-				return;
-			menuType = _menuType;
+			//	if (menuType == _menuType)
+			//		return;
 			var buildMenu = ShellPage.instance.buildMenu;
+			if ((menuType == MenuType.quickBuild) != (_menuType == MenuType.quickBuild))
+			{
+				if (_menuType == MenuType.quickBuild)
+				{
+					buildMenu.ContentMenuBackgroundStyle = menuBackgroundQuick;
+				}
+				else
+				{
+					buildMenu.ContentMenuBackgroundStyle = menuBackground;
+
+				}
+			}
+			menuType = _menuType;
+			
 
 
 			switch (menuType)
@@ -178,7 +202,7 @@ namespace COTG.Views
 					Item(buildMenu, 1).SetAction(actionMove);
 					Item(buildMenu, 2).SetAction(actionDemo);
 					Item(buildMenu, 3).SetAction(actionLayout);
-					if( b.bl == 0 )
+					if( GetBuild().buildings[bspot].bl == 0 )
 						Item(buildMenu, 4).SetAction(actionBuild);
 					else
 						Item(buildMenu, 4).SetAction(actionUpgrade);
@@ -215,10 +239,16 @@ namespace COTG.Views
 					Item(buildMenu, 5).SetBid(bidEquineBarricade);
 					Item(buildMenu, 6).SetBid(bidRuneBarricade);
 					Item(buildMenu, 7).SetBid(bidVeiledBarricade);
-
-
-
-
+					break;
+				case MenuType.shore:
+					Item(buildMenu, 0).SetBid(bidPort);
+					Item(buildMenu, 1).SetBid(bidShipyard);
+					Item(buildMenu, 2).Clear();
+					Item(buildMenu, 3).Clear();
+					Item(buildMenu, 4).Clear();
+					Item(buildMenu, 5).Clear();
+					Item(buildMenu, 6).Clear();
+					Item(buildMenu, 7).Clear();
 					break;
 
 				case MenuType.res:
@@ -230,7 +260,39 @@ namespace COTG.Views
 					break;
 
 			}
+			var townHallLevel = GetBuild().buildings[City.bspotTownHall].bl;
+			for(int i=0;i<8;++i)
+			{
+				var item = buildMenu.Items[i];
+				if(item is BuildMenuItem bi)
+				{
+					if(bi.isAction)
+					{
+						bi.SetEnabled(true);
+					}
+					else if( bi.isBuilding)
+					{
+						var def = BuildingDef.all[bi.bid];
+						var enabled = true;
+						if(def.Thl > townHallLevel)
+						{
+							enabled = false;
+						}
+						else if(_menuType == MenuType.empty)
+						{
+							enabled = true; // todo
 
+						}
+						bi.SetEnabled(enabled);
+					}
+					else
+					{
+						bi.SetEnabled(false);
+					}
+
+				}
+				
+			}
 		}
 
 
@@ -266,8 +328,9 @@ namespace COTG.Views
 				{
 					if (!open)
 					{
-						await Task.Delay(350);
+						await Task.Delay(450);
 						App.DispatchOnUIThreadSneaky( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
+					
 						menuOpen = false;
 					}
 					else
@@ -281,7 +344,8 @@ namespace COTG.Views
 			{
 
 			}
-
+			menuBackground = buildMenu.ContentMenuBackgroundStyle;
+			menuBackgroundQuick = buildMenu.ContentMenuBackgroundQuickStyle;
 			return instance;
 
 		}
@@ -324,16 +388,45 @@ namespace COTG.Views
 			//	{
 			//		items.Add(new QuickBuildItem(i));
 			//	}
-
+			
 
 			//	quickBuild.ItemsSource = items;
 		}
+
+		public static bool _isLayout
+		{
+			get => isLayout;
+			 set
+			{
+				if (isLayout == value)
+					return;
+				isLayout = value;
+				if (isLayout)
+				{
+
+					var build = GetBuild();
+					if (build.layout != null)
+					{
+						build.LayoutToBuildings();
+						
+					}
+
+				}
+				else
+				{
+					City.GetBuild().SaveBuildingsToLayout();
+					GetCity.Post(City.build);
+
+				}
+			}
+		}
+
 
 		internal static async void ClearQueue()
 		{
 			foreach(var i in buildQueue)
 			{
-				await Post.Send("/includes/cBu.php", $"id={i.bidHash}&cid={City.build}");
+				await Post.Send("/includes/cBu.php", $"id={i.bidHash}&cid={City.build}", World.CidToPlayer(City.build));
 			}
 		}
 
@@ -367,17 +460,18 @@ namespace COTG.Views
 
 			if (lvl == 0)
 			{
-				if (!dryRun)
-				{
-					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "0" });
-					buildQueue.Add(new JSON.BuildQueueItem() { bspot = (ushort)id, slvl = 0, elvl = (byte)(1) });
-				}
+				Build(id, sel.def.bid, dryRun);
 				lvl = 1;
 			}
 			if (lvl < level)
 			{
 
-				if (!dryRun)
+				if(isLayout)
+				{
+					GetBuild().buildings[id].bl++;
+
+				}
+				else if (!dryRun)
 				{
 					JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (target.x - span0).ToString(), (target.y - span0).ToString(), (level).ToString() });
 					buildQueue.Add(new JSON.BuildQueueItem() { bspot = id, slvl = (byte)(lvl), elvl = (byte)(level) }); ;
@@ -421,8 +515,16 @@ namespace COTG.Views
 				Status($"Destory {sel.def.Bn}", dryRun);
 				if (!dryRun)
 				{
-					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
-					buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
+					if (isLayout)
+					{
+						var build = GetBuild();
+						build.buildings[id].SetBid(0, 0);
+					}
+					else
+					{
+						JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
+						buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
+					}
 				}
 				else
 				{
@@ -448,9 +550,17 @@ namespace COTG.Views
 			else
 			{
 				Status($"Downgrade {sel.def.Bn}", dryRun);
-				if(!dryRun)
-					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
-
+				if (!dryRun)
+				{
+					if (isLayout)
+					{
+						--GetBuild().buildings[id].bl;
+					}
+					else
+					{
+						JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
+					}
+				}
 			}
 			if(!dryRun)
 				buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
@@ -464,24 +574,75 @@ namespace COTG.Views
 			}
 			else
 			{
-				if( IsTowerSpot(id))
+				var buildDef = BuildingDef.all[bid];
+				if( IsWallSpot(id))
 				{
-					if(City.GetBuild().buildings[bpotWall].bl == 0)
+					Status("Walls go here", dryRun);
+					return;
+				}
+				if( IsWaterSpot(id))
+				{
+					Status("There is water here :(", dryRun);
+					return;
+				}
+				if ( IsTowerSpot(id))
+				{
+					if(City.GetBuild().buildings[bspotWall].bl == 0)
 					{
 						Status("Please build a wall first", dryRun);
 						return;
 					}
+					if(!buildDef.isTower)
+					{
+						Status("This looks like a nice place for a tower.", dryRun);
+						return;
+					}
 				}
+				else
+				{
+					if (buildDef.isTower)
+					{
+						Status("This does not looks like a nice place for a tower.", dryRun);
+						return;
+					}
+					if(IsShoreSpot(id) )
+					{
+						if(!buildDef.isShoreBuilding)
+						{
+							Status("Ports and Shipyards go here", dryRun);
+							return;
+						}
+					}
+					else
+					{
+						if(buildDef.isShoreBuilding)
+						{
+							Status("Please put this on the shore", dryRun);
+							return;
+						}
+					}
+
+				}
+
 				if (dryRun)
 				{
 					DrawBuilding(IdToXY(id), cityDrawAlpha, bid, AGame.animationT * 0.3247f);
 				}
 				else
 				{
-					JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
+					if (isLayout)
+					{
+						var build = GetBuild();
+						build.buildings[id].SetBid(bid, 10);
+				
+					}
+					else
+					{
+						JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
 
-					// todo: btype
-					buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+						// todo: btype
+						buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+					}
 				}
 			}
 		}
@@ -548,7 +709,11 @@ namespace COTG.Views
 		{
 			// Todo: Error checking
 			var build = City.GetBuild();
-			Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}");
+			if (!isLayout)
+			{
+				Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
+
+			}
 			ref var b1 = ref build.buildings[a];
 			ref var b0 = ref build.buildings[b];
 			// I hope that these operations are what I expect with references
@@ -564,11 +729,12 @@ namespace COTG.Views
 			var temp = build.buildings[b];
 			build.buildings[b] = build.buildings[a];
 			build.buildings[a] = temp;
-
-			await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}");
-			await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}");
-			await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}");
-
+			if (!isLayout)
+			{
+				await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayer(City.build));
+				await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayer(City.build));
+				await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
+			}
 		}
 
 		internal static void MoveHovered(bool isSingleAction, bool dryRun)
@@ -1041,14 +1207,21 @@ namespace COTG.Views
 
 		}
 
-		public static void Click((int x, int y) cc, bool isRight)
+		public static async void Click((int x, int y) cc, bool isRight)
 		{
-			if (ShellPage.instance.buildMenu.IsOpen)
+			if (CityBuild.menuOpen)
 			{
-				ShellPage.instance.buildMenu.IsOpen = false;
-				//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
-				Assert(false);
-				return;
+				if (ShellPage.instance.buildMenu.IsOpen)
+				{
+					ShellPage.instance.buildMenu.IsOpen = false;
+					//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
+					//	Assert(false);
+				//	return;
+				}
+			}
+			while( CityBuild.menuOpen )
+			{
+				await Task.Delay(200).ConfigureAwait(true);
 			}
 
 			int bspot = XYToId(cc);
@@ -1057,7 +1230,7 @@ namespace COTG.Views
 
 			if (!isRight && action != Action.none)
 			{
-				PerformAction(action, cc, quickBuildId,false);
+				PerformAction(action, cc, quickBuildId, false);
 				if (singleClickAction == Action.pending)
 				{
 					action = Action.none;
@@ -1067,10 +1240,12 @@ namespace COTG.Views
 			}
 			else
 			{
+				action = Action.none;
+
 				singleClickAction = Action.none; // default
 												 // toggle visibility
 
-			//	var i = instance;
+				//	var i = instance;
 				//i.building.Text = d.Bn;
 				//i.description.Text = d.Ds;
 				//i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;
@@ -1078,6 +1253,11 @@ namespace COTG.Views
 				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
 				if (!isRight)
 				{
+					if (IsWallSpot(bspot))
+					{
+						Note.Show("There is water here. :(");
+						return;
+					} 
 					singleClickAction = Action.pending;
 					if(CityBuild.IsWallSpot(bspot))
 					{
@@ -1094,12 +1274,13 @@ namespace COTG.Views
 					selected = cc;
 					var type = isRight ? MenuType.quickBuild :
 						CityBuild.IsTowerSpot(bspot) ? MenuType.tower :
+						CityBuild.IsShoreSpot(bspot) ? MenuType.shore :
 						bspot == 0 ? MenuType.buliding :
 						b.id == 0 ? MenuType.empty :
 						b.bl == 0 ? MenuType.res :
 						d.bid == bidTownHall ? MenuType.townhall :
 						MenuType.buliding;
-					UpdateBuildMenuType(type, b);
+					UpdateBuildMenuType(type, bspot);
 
 					//				ShellPage.instance.buildMenu.IsOpen = true;
 					var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
@@ -1108,6 +1289,7 @@ namespace COTG.Views
 					Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 					//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 					//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
+					
 					bm.IsOpen = true;
 
 				}
@@ -1178,15 +1360,25 @@ namespace COTG.Views
 		}
 		public void Clear()
 		{
-			action = Action.invalid;
-			bid = 0;
-			Header = "~";
-			ToolTipContent = "This space is intentionally blank.";
-			((BuildingRect)IconContent).image = "sphere64.png";
-			IsSelected = false;
+			if (action != Action.invalid || bid != 0)
+			{
+				action = Action.invalid;
+				bid = 0;
+				Header = "~";
+				ToolTipContent = "This space is intentionally blank.";
+				((BuildingRect)IconContent).image = "sphere64.png";
+				IsSelected = false;
+			}
 
 
+		}
 
+		internal void SetEnabled(bool v)
+		{
+			if(v != IsEnabled)
+			{
+				IsEnabled = v;
+			}
 		}
 	}
 	public class BuildMenuGroup : RadialMenuItem
@@ -1425,6 +1617,7 @@ namespace COTG.Views
 				Assert(false);
 			}
 			//		var def = context.CommandParameter as BuildingDef;
+
 
 			// perform custom logic here
 			context.MenuItem.Owner.Owner.IsOpen = false;

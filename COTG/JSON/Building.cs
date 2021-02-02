@@ -17,16 +17,23 @@ namespace COTG.JSON
 		public bool isRes => id != 0 && bl == 0;
 		public BuildingDef def => BuildingDef.FromId(id);
 		public string name => def.Bn;
+
+
+		internal void SetBid(int bid, int bl)
+		{
+			this.id = BuildingDef.BidToId(bid);
+			this.bl = (byte)bl;
+		}
 		//[J("bu")] public long Bu { get; set; }
-	//	[J("bd")] public long Bd { get; set; }
-	//	[J("rt")] public long Rt { get; set; }
-	//	[J("rh")] public long Rh { get; set; }
-	//	[J("rbb", NullValueHandling = N.Ignore)] public Dictionary<string, Rbb> Rbb { get; set; }
-	//	[J("ruh", NullValueHandling = N.Ignore)] public long? Ruh { get; set; }
-	//	[J("rdh", NullValueHandling = N.Ignore)] public long? Rdh { get; set; }
-	//	[J("rbt", NullValueHandling = N.Ignore)] public Dictionary<string, Rb> Rbt { get; set; }
-	//	[J("rb", NullValueHandling = N.Ignore)] public Rb[] Rb { get; set; }
-	//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
+		//	[J("bd")] public long Bd { get; set; }
+		//	[J("rt")] public long Rt { get; set; }
+		//	[J("rh")] public long Rh { get; set; }
+		//	[J("rbb", NullValueHandling = N.Ignore)] public Dictionary<string, Rbb> Rbb { get; set; }
+		//	[J("ruh", NullValueHandling = N.Ignore)] public long? Ruh { get; set; }
+		//	[J("rdh", NullValueHandling = N.Ignore)] public long? Rdh { get; set; }
+		//	[J("rbt", NullValueHandling = N.Ignore)] public Dictionary<string, Rb> Rbt { get; set; }
+		//	[J("rb", NullValueHandling = N.Ignore)] public Rb[] Rb { get; set; }
+		//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
 	}
 
 		//public partial class Rb

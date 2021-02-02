@@ -173,7 +173,7 @@ namespace COTG.Views
             //  Log("Vis change" + visible);
             App.DispatchOnUIThreadSneaky(() =>
             {
-                defenderGrid.ItemsSource = Spot.emptySpotSource;
+                defenderGrid.ItemsSource = null;
                 armyGrid.ItemsSource = Army.empty;
             });
             if (visible)

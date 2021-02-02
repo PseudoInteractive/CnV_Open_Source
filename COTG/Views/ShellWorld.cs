@@ -179,9 +179,7 @@ namespace COTG.Views
 					{
 						return;
 					}
-					
-						Reset();
-					
+					Reset();
 			}
 
 			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved(Windows.UI.Input.PointerPoint point)
@@ -578,6 +576,7 @@ namespace COTG.Views
 			if (CityBuild.menuOpen)
 			{
 				App.DispatchOnUIThreadSneaky(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
+				return;
 			}
 
 			if (!isHitTestVisible)

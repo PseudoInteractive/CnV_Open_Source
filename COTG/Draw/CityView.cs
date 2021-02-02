@@ -162,6 +162,8 @@ namespace COTG.Draw
 								continue; // wall
 
 							(var bid,var bd) = build.BFromOverlay((cx, cy));
+							if (bd.isRes)
+								bid = 0;
 							var current =  GetBuilding(bspot);
 							var currentBid = current.isBuilding ? current.def.bid : 0;
 							if (currentBid == bid)
@@ -240,7 +242,7 @@ namespace COTG.Draw
 						(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
 						: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
 					// create
-					_ => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty
+					_ => (bdHovered.id == 0) ? decalSelectEmpty : decalSelectEmpty
 				};
 
 				if (mat != null)
@@ -251,21 +253,20 @@ namespace COTG.Draw
 				// draw the quickbuild placeholder building
 				if (CityBuild.action == CityBuild.Action.build)
 				{
-					if (bdHovered.id == 0)
-					{
+					//if (bdHovered.id == 0)
+					//{
 
-						var sel = CityBuild.quickBuildId;
-						if (sel != 0)
-						{
-							DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
-							ShellPage.contToolTip = $"Click to place {bdSelected.Bn}";
-						}
-					}
-					else
-					{
-
-						ShellPage.contToolTip = $"Spot is occupied";
-					}
+					//	var sel = CityBuild.quickBuildId;
+					//	if (sel != 0)
+					//	{
+					//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
+					//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
+					//	}
+					//}
+					//else
+					//{
+					//	ShellPage.contToolTip = $"Spot is occupied";
+					//}
 				}
 				else if (CityBuild.action == CityBuild.Action.move)
 				{
@@ -315,7 +316,6 @@ namespace COTG.Draw
 
 			}
 			PreviewBuildAction();
-
 			var processed = new HashSet<int>();
 			for (var it = buildQueue.iterate; it.Next();)
 			{

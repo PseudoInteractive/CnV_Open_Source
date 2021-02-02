@@ -156,7 +156,7 @@ namespace COTG.JSON
                 if (await opts(split))
                 {
                     var args2 = string.Join(',', split);
-                    await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}");
+                    await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayer(cid));
                     // find closest hub
                     Note.Show($"Set hub settings",true);
                 }

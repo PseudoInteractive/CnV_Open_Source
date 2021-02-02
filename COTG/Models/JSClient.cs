@@ -741,7 +741,7 @@ namespace COTG
 
 			if (cid != 0)
 			{
-				await Post.SendEncrypted("includes/clearresque.php", "{\"a\":" + cid + ",\"b\":5}", "BBIdl1a11AEkem24c2");
+				await Post.SendEncrypted("includes/clearresque.php", "{\"a\":" + cid + ",\"b\":5}", "BBIdl1a11AEkem24c2", World.CidToPlayer(cid));
 
 			}
 		}
@@ -1180,11 +1180,15 @@ namespace COTG
 				
 				if (!ppdtInitialized)
 				{
-					
 
-					Raiding.UpdateTS(true, true);
+					ppdtInitialized = true;
+				
+					if(MainPage.IsVisible())
+					{
+						App.DispatchOnUIThreadSneaky( ()=>MainPage.instance.Refresh());
+					}
 				}
-				ppdtInitialized = true;
+				
 				//    Log(City.all.ToString());
 				//   Log(City.all.Count());
 
@@ -2083,13 +2087,14 @@ namespace COTG
 					foreach (var p in PlayerPresence.all)
 					{
 						ShellPage.instance.friendListBox.Items.Add(p.name);
-						if (p.pid == jsVars.pid)
+						if (p.pid == Player.activeId)
 							sel = counter;
 						++counter;
 						// reset menu, TOTO:  Keep track of active selection
 					}
 
-					ShellPage.instance.friendListBox.SelectedItem = sel;
+					ShellPage.instance.friendListBox.SelectedIndex = sel;
+					ShellPage.instance.friendListBox.Visibility = PlayerPresence.all.Length > 1 ? Visibility.Visible : Visibility.Collapsed;
 				});
 			}
 

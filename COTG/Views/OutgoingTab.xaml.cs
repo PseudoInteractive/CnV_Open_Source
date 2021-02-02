@@ -114,7 +114,7 @@ namespace COTG.Views
         {
             App.DispatchOnUIThreadSneaky(() =>
             {
-                attackerGrid.ItemsSource = Spot.emptySpotSource;
+                attackerGrid.ItemsSource = null;
                 armyGrid.ItemsSource = Army.empty;
             });
 

@@ -42,7 +42,7 @@
                        
                         PointerPressed="gridPointerPress"
                         GroupPanelPosition="Bottom"
-                        ItemsSource="{x:Bind game:Spot.emptySpotSource, Mode=OneTime}"
+                   
                         AlternationStep="2"
                         SelectionMode="Extended"
                         ColumnDataOperationsMode="Flyout"

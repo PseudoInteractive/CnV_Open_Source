@@ -13,7 +13,7 @@
         <ResourceDictionary Source="ms-appx:///Telerik.UI.Xaml.Primitives.UWP/Themes/SharedResources.xaml"/>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Dark" Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesDark.xaml"/>
+				<ResourceDictionary x:Key="Dark" Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesDark.xaml"/>
                 <ResourceDictionary x:Key="Light" Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesLight.xaml"/>
                 <ResourceDictionary x:Key="HighContrast" Source="ms-appx:///Telerik.UI.Xaml.Grid.UWP/Themes/ThemeResourcesHighContrast.xaml"/>
             </ResourceDictionary.ThemeDictionaries>

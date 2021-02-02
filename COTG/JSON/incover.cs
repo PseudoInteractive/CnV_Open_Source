@@ -96,7 +96,7 @@ namespace COTG.JSON
 					var task0 = Task.Run(async () =>
 					  {
 					  //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
-					  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0"))
+					  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0",Player.myId))
 					  {
 						  //{
 						  //    var estimator = new Army();
@@ -561,7 +561,7 @@ namespace COTG.JSON
 						}
 
 						// defense history
-						using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2"))
+						using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2",Player.myId))
 						{
 							//int counter = 0;
 							await jsd.RootElement.EnumerateArray().ToArray().ParallelForAsync4(reportParts,
@@ -633,7 +633,7 @@ namespace COTG.JSON
 											// we have to look up the report
 											try
 											{
-												using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId))
+												using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId,Player.myId))
 												{
 													var root = jsdr.RootElement;
 													int reportType = -1;

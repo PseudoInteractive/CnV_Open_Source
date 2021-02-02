@@ -499,6 +499,7 @@
     <RootType FullName="Telerik.UI.Xaml.Controls.Primitives.RadRadialMenu">
       <RootProperty Name="NavigationMenuBackgroundStyle" />
       <RootProperty Name="ContentMenuBackgroundStyle" />
+      <RootProperty Name="ContentMenuBackgroundQuickStyle" />
       <RootProperty Name="ContentMenuBackground2Style" />
     </RootType>
     <RootType FullName="Telerik.UI.Xaml.Controls.Primitives.Menu.MenuToolTip" />

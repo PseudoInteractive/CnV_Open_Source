@@ -71,8 +71,8 @@ namespace COTG.Game
 		public const short bidIron = 452;
 		public const short bidLake = 453;
 		public const short bidForest = 454;
-		public const int bpotWall = 0;
-
+		public const int bspotWall = 0;
+		public const int bspotTownHall = span1 * citySpan + span1;
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
 		
@@ -108,16 +108,16 @@ namespace COTG.Game
 
 
 
-		public static void CitySwitching()
-		{
-			//	buildings = Emptybuildings;
-			buildQueue.Clear();
-		}
 		public static void CitySwitched()
 		{
-			CitySwitching();
+			buildQueue.Clear(); 
 			Draw.CityView.ClearSelectedBuilding();
 			CityBuild.ClearAction();
+			if (CityBuild.menuOpen)
+			{
+				App.DispatchOnUIThreadSneaky(() =>
+			   ShellPage.instance.buildMenu.IsOpen = false);
+			}
 		}
 
 		public City() { type = typeCity; }
@@ -328,7 +328,7 @@ namespace COTG.Game
 				if (!s.IsNullOrEmpty())
 				{
 
-					layout = new byte[441];
+					layout = new byte[citySpotCount];
 
 					const int offset = 18;
 					const int count = citySpan * citySpan;
@@ -376,39 +376,41 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				
-				commandSlots = 5;
-				isCastle = false;
-				if (eBd.GetArrayLength() == citySpan * citySpan)
+				if (!CityBuild.isLayout)
 				{
-					if (buildings == Emptybuildings)
-						buildings = new JSON.Building[citySpan * citySpan];
-					int put = 0;
-					foreach (var bdi in eBd.EnumerateArray())
+					commandSlots = 5;
+					isCastle = false;
+					if (eBd.GetArrayLength() == citySpan * citySpan)
 					{
-						var bid = bdi.GetAsInt("bid");
-						var bl = bdi.GetAsInt("bl");
-						var bi = BuildingDef.BidToId(bid);
+						if (buildings == Emptybuildings)
+							buildings = new JSON.Building[citySpan * citySpan];
+						int put = 0;
+						foreach (var bdi in eBd.EnumerateArray())
+						{
+							var bid = bdi.GetAsInt("bid");
+							var bl = bdi.GetAsInt("bl");
+							var bi = BuildingDef.BidToId(bid);
 
-						if ((put == 0) && (bid == 0))
-						{
-							buildings[put] = new Building() { id = BuildingDef.BidToId(bidWall), bl = 0 };
+							if ((put == 0) && (bid == 0))
+							{
+								buildings[put] = new Building() { id = BuildingDef.BidToId(bidWall), bl = 0 };
+							}
+							else
+							{
+								buildings[put] = new Building() { id = bi, bl = (byte)bl };
+							}
+							if (bid == bidCastle)
+							{
+								commandSlots = (byte)((bl + 5));
+								isCastle = true;
+							}
+							++put;
 						}
-						else
-						{
-							buildings[put] = new Building() { id = bi, bl = (byte)bl };
-						}
-						if (bid == bidCastle)
-						{
-							commandSlots = (byte)((bl + 5));
-							isCastle = true;
-						}
-						++put;
 					}
-				}
-				else
-				{
-					Log("error BD bad");
+					else
+					{
+						Log("error BD bad");
+					}
 				}
 			}
 			if (jse.TryGetProperty("comm", out var comm))
@@ -483,7 +485,7 @@ namespace COTG.Game
             return null;
         }
 
-		public async void SaveLayout()
+		public async Task SaveLayout()
 		{
 			if (layout == null)
 				return;
@@ -500,10 +502,43 @@ namespace COTG.Game
 				}
 				sb.Append("[/ShareString]");
 				var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(sb.ToString(), Encoding.UTF8);
-				var rv = await Post.SendForOkay("/includes/pSs.php",post );
+				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayer(cid));
 			Assert(rv == true);
 		}
+		public async void SaveBuildingsToLayout()
+		{
+			layout = new byte[citySpotCount];
+			int put = 0;
+			foreach (var b in buildings)
+			{
+				 var bid =  b.def.bid;
+				if (bid != 0)
+					bid -= BuildingDef.sharestringOffset;
+				layout[put++] = (byte)bid;
+			}
+			await SaveLayout();
+		}
 
+		public void LayoutToBuildings()
+		{
+			for (int s = 1; s < citySpotCount; ++s)
+			{
+				var bid = BidFromOverlay(s);
+				if (bid != 0)
+				{
+					buildings[s].id = BuildingDef.BidToId(bid);
+					if (buildings[s].isRes)
+						buildings[s].bl = 0;
+					else
+						buildings[s].bl = 10;
+				}
+				else
+				{
+					buildings[s].bl = 0;
+					buildings[s].id = 0;
+				}
+			}
+		}
 		public void FlipLayoutH()
 		{
 			if (layout == null)

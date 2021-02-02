@@ -30,17 +30,15 @@ namespace COTG.Services
         public string localPath;
         public static JsonDocument emptyJson;
 
-        public RestAPI(string _localPath)
+        public RestAPI(string _localPath, int _pid =-1)
         {
             localPath = _localPath;
             emptyJson = JsonDocument.Parse("{}");
+			pid = _pid;
             //  all.Add(this);
         }
 
-		public virtual int pid
-		{
-			get => -1;
-		}
+		public int pid = -1;
 
 		public virtual async Task<bool> Accept(HttpResponseMessage resp)
         {
@@ -192,7 +190,7 @@ namespace COTG.Services
         }
 
         public const string nullPost = "a=0";
-        async public Task<HttpResponseMessage> Send(string postContent= nullPost, int pid = -1)
+        async public Task<HttpResponseMessage> Send(string postContent= nullPost)
         {
             HttpClient client = null;
 			await JSClient.clientPoolSema.WaitAsync();
@@ -330,18 +328,16 @@ namespace COTG.Services
     public class GetCity : RestAPI
     {
         public int cid;
-        int _pid;
-		public override int pid => _pid;
         Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php")
+        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php", World.CidToPlayer(_cid))
         {
             cid = _cid;
             action = _action;
-            _pid = World.GetInfo( _cid.CidToWorld()).player;
+          
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{_pid}ccJx1e2");
+            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{pid}ccJx1e2");
             var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
@@ -371,9 +367,10 @@ namespace COTG.Services
     {
         public string json;
         public int cid;
-        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php" )
+        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php", World.CidToPlayer(_cid))
         {
-            Log($"sndRaid:{_json}");
+			
+			Log($"sndRaid:{_json}");
             cid = _cid;
             json = _json;
 
@@ -398,19 +395,17 @@ namespace COTG.Services
 		bool autoRaid;
         //                       Xs4b22320360lme55s
         public static string secret=>JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
-        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php")
+        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php", World.CidToPlayer(_cid))
         {
-            cid = _cid;
+			
+			cid = _cid;
 			autoRaid = _autoRaid;
 
 		}
         public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
 
-			if (City.TryGet(_cid, out var city) && (city.pid != Player.activeId))
-			{
-				return false;
-			}
+			
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
 			{
@@ -826,25 +821,25 @@ namespace COTG.Services
 
     public class Post : RestAPI
     {
-        public Post(string url) : base(url) { }
+        public Post(string url, int _pid=-1) : base(url, _pid) { }
 
 
         // Does not wait for full response and does not parse json
         // postContent is xml uri encoded
-        async public static Task Send(string url, string postContent)
+        async public static Task Send(string url, string postContent, int _pid = -1)
         {
-            var p = new Post(url);
+            var p = new Post(url, _pid);
             await p.Send(postContent);
 
         }
-		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent)
+		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent, int _pid = -1)
 		{
-			var p = new Post(url);
+			var p = new Post(url, _pid);
 			return await p.Send(postContent);
 		}
-		async public static Task<bool> SendForOkay(string url, string postContent)
+		async public static Task<bool> SendForOkay(string url, string postContent, int _pid=-1)
 		{
-			var p = new Post(url);
+			var p = new Post(url, _pid);
 
 			var result = await p.Send(postContent);
 			if (result == null)
@@ -855,33 +850,33 @@ namespace COTG.Services
 			return false;
 		}
 
-		async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost)
+		async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost, int _pid=-1)
         {
-            var p = new Post(url);
+            var p = new Post(url,_pid);
             return await p.AcceptJson(await p.Send(postContent));
         }
-        async public static Task<string> SendForText(string url, string postContent = nullPost)
+        async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid=-1)
         {
-            var p = new Post(url);
+            var p = new Post(url,_pid);
             return  await p.AcceptText(await p.Send(postContent));
         }
 
-        async public static Task<T> SendForJsonT<T>(string url, string postContent=nullPost)
+        async public static Task<T> SendForJsonT<T>(string url, string postContent=nullPost, int _pid = -1)
         {
-            var p = new Post(url);
+            var p = new Post(url, _pid);
             return await p.AcceptJsonT<T>(await p.Send(postContent));
 
 
         }
 
-        async public static Task SendEncrypted(string url, string postContentJson, string secret)
+        async public static Task SendEncrypted(string url, string postContentJson, string secret, int _pid)
         {
-            var p = new Post(url);
+            var p = new Post(url, _pid);
             await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
         }
-        async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret)
+        async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret, int _pid)
         {
-            var p = new Post(url);
+            var p = new Post(url,_pid);
             return await p.AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8)));
         }
 
@@ -915,7 +910,9 @@ namespace COTG.Services
             {
                 tttv.Add(new tt_tv() { tt = t.type, tv = t.count/splits });
             }
-            var sr = new SndRein()
+			var pid = World.CidToPlayer(cid);
+
+			var sr = new SndRein()
             {
                 cid = cid,
                 rcid = rcid,
@@ -933,12 +930,12 @@ namespace COTG.Services
                 sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
             }
             var post = JsonSerializer.Serialize(sr);
-            var secret = $"XTR977sW{World.CidToPlayer(cid)}sss2x2";
+            var secret = $"XTR977sW{pid}sss2x2";
             var city = City.GetOrAddCity(cid);
             for(var i = 0; ; )
             {
                 Note.Show("Sending Reinforcements "+(i+1));
-                var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret);
+                var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret,pid);
                 if(jsd ==null )
                 {
                     Note.Show("Something went wrong");

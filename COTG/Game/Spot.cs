@@ -59,7 +59,7 @@ namespace COTG.Game
 		public static City invalid = new City() { _cityName = "?" };
 		public static City pending = new City() { _cityName = "pending" };
 
-		public static City[] emptySpotSource = new[] { pending };
+		//public static City[] emptySpotSource = new[] { pending };
 
 		public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
 		public string remarks { get; set; } = string.Empty; // only for city
@@ -605,7 +605,7 @@ namespace COTG.Game
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
 
-				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
+				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayer(cid));
 				Log(str);
 
 				App.DispatchOnUIThreadSneaky(() =>
@@ -656,7 +656,7 @@ namespace COTG.Game
 				return new ClassificationExtended() { classification = classification };
 			}
 			classification = Classification.pending;
-			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}");
+			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayer(cid));
 			ClassificationExtended rv = new ClassificationExtended(); ;
 			try
 			{
@@ -1147,16 +1147,18 @@ namespace COTG.Game
 		{
 			return build == cid;
 		}
-		public static (City city, bool changed) StBuild(int cid, bool scrollIntoView, bool select = true)
-		{
-			var city = City.GetOrAddCity(cid);
-			return (city, city.SetBuild(scrollIntoView, select));
-		}
+	
 		public bool SetBuild(bool scrollIntoView, bool select = true)
 		{
 			var changed = cid != build;
 			if (changed)
 			{
+				var _layout = CityBuild.isLayout;
+				if (_layout)
+				{
+					City.GetBuild().SaveBuildingsToLayout();
+					CityBuild.isLayout = false;
+				}
 				City.build = cid;
 				Assert(pid == Player.activeId);
 				Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
@@ -1170,7 +1172,10 @@ namespace COTG.Game
 				}
 
 				City.CitySwitched();
-				
+				if(_layout)
+				{
+					GetCity.Post( cid, (_,_)=>  CityBuild._isLayout = true );
+				}
 			}
 			SetFocus(scrollIntoView, select);
 			City.SyncCityBox();
@@ -1249,8 +1254,8 @@ namespace COTG.Game
 
 		public async Task SuperRaid()
 		{
-			await Post.Send("overview/rcallall.php", "a=" + cid);
-			await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3");
+			await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayer(cid));
+			await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3", World.CidToPlayer(cid));
 		}
 
 		public void ReturnFastClick()
@@ -1353,15 +1358,19 @@ namespace COTG.Game
 
 		public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
 		{
-			;
+			
 			//   SelectMe(false) ;
 			var flyout = new MenuFlyout();
-
+			var aMisc = flyout.AddSubMenu( "Misc..");
+			var aExport = flyout.AddSubMenu("Import/Export..");
+			var aSetup = AApp.AddSubMenu(flyout, "Setup..");
+			var aWar = AApp.AddSubMenu(flyout, "War..");
 			if (this.isCityOrCastle)
 			{
 				// Look - its my city!
 				if (this.isFriend)
 				{
+
 					//{
 					//	var tags = TagHelper.GetTags(this);
 					//	var tagFlyout = AApp.AddSubMenu(flyout, "Tags");
@@ -1375,6 +1384,8 @@ namespace COTG.Game
 					//	}
 					//}
 					// This one has multi select
+					var aRaid = AApp.AddSubMenu(flyout, "Raid..");
+
 					int count = 1;
 					if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
 					{
@@ -1382,28 +1393,29 @@ namespace COTG.Game
 					}
 					if (count > 1)
 					{
-						AApp.AddItem(flyout, $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-						AApp.AddItem(flyout, $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
-						AApp.AddItem(flyout, $"Return At...x{count}", this.ReturnAtBatch);
+						aRaid.AddItem( $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+						aRaid.AddItem( $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+						aRaid.AddItem( $"Return At...x{count}", this.ReturnAtBatch);
 
 					}
 					else
 					{
 
-						AApp.AddItem(flyout, "End Raids", this.ReturnSlowClick);
-						AApp.AddItem(flyout, "Home Please", this.ReturnFastClick);
-						AApp.AddItem(flyout, "Return At...", this.ReturnAt);
+						aRaid.AddItem( "End Raids", this.ReturnSlowClick);
+						aRaid.AddItem( "Home Please", this.ReturnFastClick);
+						aRaid.AddItem( "Return At...", this.ReturnAt);
 					}
 
-					AApp.AddItem(flyout, "Set Hub", (_, _) => CitySettings.SetHub(cid));
-					AApp.AddItem(flyout, "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
+					
+					aSetup.AddItem("Info", Spot.InfoClick, cid);
+					aSetup.AddItem( "Set Hub", (_, _) => CitySettings.SetHub(cid));
+					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
-					AApp.AddItem(flyout, "Info",Spot.InfoClick, cid);
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-					AApp.AddItem(flyout, "Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
+					aSetup.AddItem("Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
 
 
-					AApp.AddItem(flyout, "Troops to Sheets", CopyForSheets);
+					aExport.AddItem("Troops to Sheets", CopyForSheets);
 				}
 
 				{
@@ -1436,7 +1448,7 @@ namespace COTG.Game
 					}
 					else
 					{
-						flyout.AddItem("Add funky Attack String", async (_, _) =>
+						aExport.AddItem("Add funky Attack String", async (_, _) =>
 					   {
 						   using var work = new WorkScope("Add to attack string..");
 
@@ -1453,7 +1465,7 @@ namespace COTG.Game
 				}
 				if (cid != City.build)
 				{
-					AApp.AddItem(flyout, "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
+					aSetup.AddItem( "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
 					//if(Player.myName == "Avatar")
 					//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 				}
@@ -1462,16 +1474,16 @@ namespace COTG.Game
 
 				}
 
-				AApp.AddItem(flyout, "Attack", (_, _) => Spot.JSAttack(cid));
-				AApp.AddItem(flyout, "Near Defence", DefendMe);
+				aWar.AddItem( "Attack", (_, _) => Spot.JSAttack(cid));
+				aWar.AddItem( "Near Defence", DefendMe);
 				if (incoming.Any())
-					AApp.AddItem(flyout, "Incoming", ShowIncoming);
+					aWar.AddItem( "Incoming", ShowIncoming);
 
 
-				AApp.AddItem(flyout, "Send Defence", (_, _) => JSDefend(cid));
+				aWar.AddItem( "Send Defence", (_, _) => JSDefend(cid));
+				aWar.AddItem( "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
+				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-				AApp.AddItem(flyout, "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
-				AApp.AddItem(flyout, "Defense Sheet", ExportToDefenseSheet);
 			}
 			else if (this.isDungeon || this.isBoss)
 			{
@@ -1483,11 +1495,12 @@ namespace COTG.Game
 				AApp.AddItem(flyout, "Claim", this.DiscordClaim);
 
 			}
-			AApp.AddItem(flyout, "Notify on Decay", DecayQuery);
+			aMisc.AddItem( "Notify on Decay", DecayQuery);
 
-			AApp.AddItem(flyout, "Distance", (_, _) => ShowDistanceTo(Spot.focus));
-			AApp.AddItem(flyout, "Select", (_, _) => SelectMe(true, App.keyModifiers));
-			AApp.AddItem(flyout, "Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
+			aMisc.AddItem( "Distance", (_, _) => ShowDistanceTo(Spot.focus));
+			aMisc.AddItem( "Select", (_, _) => SelectMe(true, App.keyModifiers));
+			aMisc.AddItem("Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
+			flyout.RemoveEmpy();
 			flyout.CopyXamlRoomFrom(uie);
 
 			//   flyout.XamlRoot = uie.XamlRoot;
@@ -1533,7 +1546,7 @@ namespace COTG.Game
 				for (; ; )
 				{
 					await Task.Delay(2000);
-					if (tab.defenderGrid.ItemsSource != null && tab.defenderGrid.ItemsSource != Spot.emptySpotSource)
+					if (tab.defenderGrid.ItemsSource != null )
 						break;
 				}
 				App.DispatchOnUIThreadSneaky(() =>
@@ -1549,7 +1562,7 @@ namespace COTG.Game
 				for (; ; )
 				{
 					await Task.Delay(2000);
-					if (tab.attackerGrid.ItemsSource != null && tab.attackerGrid.ItemsSource != Spot.emptySpotSource)
+					if (tab.attackerGrid.ItemsSource != null )
 						break;
 				}
 				App.DispatchOnUIThreadSneaky(() =>
