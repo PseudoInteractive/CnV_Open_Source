@@ -1,35 +1,54 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Configuration;
 using System.Collections.Generic;
 
 using COTG.DB;
 using COTG.Game;
 using System.Threading;
 using static COTG.Debug;
-using System.Text.Json;
-using System.Text;
 using Microsoft.Azure.Cosmos;
 using System.Net;
 using Microsoft.Azure.Cosmos.Linq;
+using Microsoft.Azure.Cosmos.Table;
 using System.Linq;
 
 namespace COTG.Services
 {
+	public class ShareString : TableEntity
+	{
+		public ShareString()
+		{
+		}
 
-    public static class Cosmos
+		public ShareString(string partitionKey, string rowKey,string s, string Description) : base(partitionKey, rowKey)
+		{
+			this.s = s;
+			this.Description = Description;
+		
+		}
+
+		public string s { get; set; }
+
+		public string Description { get; set; }
+	}
+
+	public static class Cosmos
     {
         // The Azure Cosmos DB endpoint for running this sample.
         private static readonly string EndpointUri = "https://avatars.documents.azure.com:443/";
+		private static readonly string EndpointUriT = "https://avadata.table.cosmos.azure.com:443/";
 
-        // The primary key for the Azure Cosmos account.
-        private static readonly string PrimaryKey = "58VB6zTdjvySN7UmmxjalK3dltKdvArFwAOsZ7b2aqQBtPFM0AEwPlUxMnovFVpObUou3QNIEIGjYgI42pNZYQ==";
+		// The primary key for the Azure Cosmos account.
+		private static readonly string PrimaryKey = "58VB6zTdjvySN7UmmxjalK3dltKdvArFwAOsZ7b2aqQBtPFM0AEwPlUxMnovFVpObUou3QNIEIGjYgI42pNZYQ==";
+		private static readonly string PrimaryKeyT = "NCTG9rOtJjJbiPNiRSPup3hRCNea4igaaYQRKWZN3v9u4qP2bk1DNLFA5WXM6Ct05tCaaZWw8wqdeFlj4gUVpw==";
+		private static readonly string connectionStringT = @"DefaultEndpointsProtocol=https;AccountName=avadata;AccountKey=NCTG9rOtJjJbiPNiRSPup3hRCNea4igaaYQRKWZN3v9u4qP2bk1DNLFA5WXM6Ct05tCaaZWw8wqdeFlj4gUVpw==;TableEndpoint=https://avadata.table.cosmos.azure.com:443/;";
 
-        // The Cosmos client instance
-        private static CosmosClient cosmosClient;
+		// The Cosmos client instance
+		private static CosmosClient cosmosClient;
+		private static CosmosClient cosmosClientT; // tables
 
-        // The database we will create
-        private static Database database;
+		// The database we will create
+		private static Database database;
 
         // The container we will create.
         private static Container container;
@@ -45,11 +64,20 @@ namespace COTG.Services
 		private static string ordersContainerId => "seenOrders";
         private static string blobContainerId => $"c{JSClient.world}";
         private static string blobName => $"b{311 + Alliance.myId}22";
-        private static ReaderWriterLockSlim semaphore = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        const int concurrentRequestCount = 1;
+     	const int concurrentRequestCount = 1;
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
-		
+
+		static CloudStorageAccount storageAccount ;
+
+		// Create a table client for interacting with the table service
+		static CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+		const string tableName = "a";
+
+	// Create a table client for interacting with the table service 
+		static CloudTable table;
+
+		private static SemaphoreSlim throttleT = new SemaphoreSlim(concurrentRequestCount);
 
 		static async Task<Container> GetContainer( string id, string parition = "/id")
 		{
@@ -68,14 +96,110 @@ namespace COTG.Services
 			var c = await database.CreateContainerIfNotExistsAsync(props);
 			return c.Container;
 		}
+		static async ValueTask<bool> TouchT()
+		{
+
+			if (storageAccount != null)
+				return table != null;
+		
+			
+			await throttleT.WaitAsync();
+			try
+			{
+				if (table != null)
+					return true;
+
+
+				// Create a new instance of the Cosmos Client
+				//	var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct };
+				//	clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
+				//		clientOptions.Diagnostics.IsLoggingContentEnabled = false;
+				//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
+				//		clientOptions.Diagnostics.IsLoggingEnabled = false;
+				storageAccount = CloudStorageAccount.Parse(connectionStringT);
+				var _tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+				var _table = _tableClient.GetTableReference(tableName);
+				// write back 
+				if (_table != null)
+				{
+					tableClient = _tableClient;
+					table = _table;
+				}
+				return table!= null;
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+
+			//            await ScaleContainerAsync();
+			//	await AddItemsToContainerAsync();
+		}
+
+		public static async void Share(string part, string key, string s, string desc)
+		{
+			if (!await TouchT())
+				return;
+			await throttleT.WaitAsync();
+			try
+			{
+
+				var i = new ShareString(part, key, s, desc);
+				TableOperation insertOp = TableOperation.InsertOrReplace(i);
+				TableResult result = await table.ExecuteAsync(insertOp);
+				if((HttpStatusCode)result.HttpStatusCode != HttpStatusCode.OK)
+				{
+					Log(result);
+				}
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+		}
+		public static async Task<ShareString> ReadShare(string part, string key)
+		{
+			if (!await TouchT())
+				return null;
+			await throttleT.WaitAsync();
+			try
+			{
+				TableOperation retrieveOperation = TableOperation.Retrieve<ShareString>(part, key);
+				TableResult result = await table.ExecuteAsync(retrieveOperation);
+				ShareString customer = result.Result as ShareString;
+
+				return customer;
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+		}
+		public static async Task<ShareString[]> ReadShares(string part)
+		{
+			if (!await TouchT())
+				return null;
+			await throttleT.WaitAsync();
+			try
+			{
+
+				IQueryable<ShareString> linqQuery = table.CreateQuery<ShareString>().Where(x => x.PartitionKey == part);
+				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
+
+				return  linqQuery.ToArray();
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+		}
 
 		static async ValueTask<bool> Touch()
 		{
 			Assert(JSClient.world != 0);
 			if (cosmosClient != null)
 				return database != null;
-			if (!Discord.isValid)
-				return false;
+		
 			while(Alliance.diplomacyFetched==false)
 			{
 				await Task.Delay(300);

@@ -239,7 +239,7 @@ function replaceAt(_this:string,index: number, char: any) {
             selectbuttlandoff+='<option value="'+lol+'">Ava 2s Vanq Finisher</option>';
                 layoutlol.push("[ShareString.1.3]:########################-------#-;-,J--#####BBBBB---#-------.###-BGBGB---#----::---##ZBBBBB-,-#-.------,##-BGBGB#######,-.---##-BBBB##BBBBB##-----##;---##BBGBGBB##-..-##----#BGBGBGBGB#-.SS##:--.#BGBBBBBGB#--S,#######BGBGTGBGB#######---:#BGBGBGBGB#,-:-##-;-:#BGBGBGBGB#----##----##BBGBGBB##,--,##-,-;-##BBBBB##-----##-----:#######::-:--##--PP-----#-,-:--:--##.---.-X--#---------###------,,#----:-,,#####.-,--,-#-.-----##############v##########");
                 remarklol.push("Vanqs");
-				notelol.push("Use this layout after your buildings are complete.  At this stage you build your TS, trade and storage");
+				notelol.push("Use this layout once your main buildings are complete.  At this stage you increase TS, carts and storage");
                 troopcounlol.push([0,0,0,0,0,264000,0,0,0,0,0,0,0,0,0,0,0]);
                 reslol.push([0, 0, 0, 0, 1, 80000, 80000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 120000, 120000, 750000, 750000]);
                 lol++;

@@ -1924,7 +1924,12 @@ namespace COTG
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
 								   if (jso.TryGetProperty("c", out var _cid))
 								   {
-									   City.StBuild(_cid.GetAsInt(), true);
+									   var cid = _cid.GetAsInt();
+									   if (cid != City.build)
+									   {
+										   var city = City.GetOrAddCity(cid);
+										   city.SetBuild(true);
+									   }
 								   }
 								   break;
 							   }

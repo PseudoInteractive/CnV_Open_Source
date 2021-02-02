@@ -12739,7 +12739,7 @@ function outer() {
 				$(__s[1739])
 					.click(function () {
 						E6k.R6();
-						R2(Q72);
+						SetCity(Q72);
 	  setTimeout(function () {
 					r7F();
 				}, 500);
@@ -13017,7 +13017,7 @@ function outer() {
 				e2();
 				var G51 = JSON.parse(S51);
 				var x51 = G51[0];
-				var b51 = x51[__s[B8y * 1]];
+				var b51 = x51["f"];
 				E6k.y6();
 				var X51 = x51["s"];
 				var z51 = x51[__s[+w6y]];
@@ -15885,7 +15885,7 @@ function outer() {
 						var g2V = $(__s[+s9R])
 							.val();
 						E6k.y6();
-						R2(g2V);
+						SetCity(g2V);
 					});
 				$(__s[960])
 					.click(function () {
@@ -16036,7 +16036,7 @@ function outer() {
 					.click(function () {
 						var H8V = $(this)
 							.attr("data");
-						R2(H8V);
+						SetCity(H8V);
 					});
 				$(__s[A4y * 1])
 					.click(function () {
@@ -16273,7 +16273,7 @@ function outer() {
 						var c8V = $(this)
 							.attr('a');
 						E6k.R6();
-						R2(c8V);
+						SetCity(c8V);
 					});
 				$(document)
 					.on("click", __s[3299], function () {
@@ -16876,8 +16876,7 @@ function outer() {
 					.val(0);
 		}
 		gspotfunct.chcity = function (__cid) {
-			_cid = cid = Number(__cid);
-			R2(__cid);
+			SetCity(__cid);
 		
 		};
 		window['chcity'] = gspotfunct.chcity;
@@ -18685,21 +18684,18 @@ function outer() {
 		}(window.String.fromCharCode, parseInt);
 
 
-		function R2(d9l) {
-			// E6k.R6();
-			// var b9l = arguments.callee.caller.name;
-			//if (U9 == 0) {
-			//	U9 = 1;
+		function SetCity(d9l) {
+			let __cid = Number(d9l);
+			if(__cid === cid )
+				   return;
+				_cid = cid = __cid;
+			
 				ClearCity();
-				cid = Number(d9l);
-				_cid = cid;
 				callSyncViewMode();
 				getCity(Number(d9l));
 				X8();
 				DoPoll2(300);
 	
-	//			{ setTimeout(function () { U9 = 0; }, 100); }
-	//		}
 		}
 
 		function W3F(d9T) {
@@ -19779,11 +19775,11 @@ function outer() {
 				} if (N0v[__s[b5p * 1]]) q0v += __s[6774] + p6(N0v[E6k
 					.o55(+b5p)]["w"]) + __s[+o1R] + p6(N0v[__s[b5p >> 1090186272]]["s"]) + _s(+
 						"2954") + p6(N0v[__s[+b5p]][__s[g4p >> 727435456]]) + __s[2485] + p6(N0v[_s(b5p & E6k
-							.s6s)][__s[B8y & 2147483647]]) + __s[6402];
+							.s6s)]["f"]) + __s[6402];
 			if (N0v[__s[p5p - 0]]) q0v += _s(+
 				'4393') + p6(N0v[__s[p5p - 0]]["w"]) + __s[4188] + p6(N0v[_s(+
 					p5p)]["s"]) + __s[3645] + p6(N0v[__s[+p5p]][__s[+g4p]]) + _s(+
-						'4875') + p6(N0v[__s[+p5p]][__s[B8y * 1]]) + __s[3356] + p6(N0v[__s[+p5p]][_s(+
+						'4875') + p6(N0v[__s[+p5p]]["f"]) + __s[3356] + p6(N0v[__s[+p5p]][_s(+
 							"3653")]) + __s[2195] + p6(N0v[__s[p5p * 1]][__s[3749]]) + __s[1503] +
 				p6(N0v[__s[p5p & 2147483647]][__s["3788" | 520]]) + __s[5946] + p6(N0v[__s[+p5p]][_s(+
 					'4594')]) + __s[5800];
@@ -23412,15 +23408,15 @@ function outer() {
 				} if (o5v[__s[b5p >> 1038560256]] && G5v != 1) X5v += __s[6774] + p6(
 					o5v[__s[b5p * 1]]["w"]) + __s[+o1R] + p6(o5v[__s[b5p << 523256832]]["s"]) +
 					__s[2954] + p6(o5v[__s[+b5p]][__s[+g4p]]) + __s[2485] + p6(o5v[_s(b5p >>
-						1842699424)][__s[B8y ^ 0]]) + __s[6402];
+						1842699424)]["f"]) + __s[6402];
 			if (o5v[__s[+E04]]) X5v += __s[4036] + p6(
 				o5v[__s[+E04]]["w"]) + __s[o1R & 2147483647] + p6(o5v[__s[E04 ^ 0]][_s(Z9y >>
 					291371328)]) + __s[2954] + p6(o5v[__s[+E04]][__s[+g4p]]) + __s[2485] + p6(o5v[E6k
-						.S55(E04 - 0)][__s[+B8y]]) + __s[2537];
+						.S55(E04 - 0)]["f"]) + __s[2537];
 			if (o5v[__s[+p5p]]) X5v += _s(+
 				"4393") + p6(o5v[__s[p5p | B9s]]["w"]) + __s[4188] + p6(o5v[__s[p5p ^ 0]][E6k
 					.S55(+Z9y)]) + __s[3645] + p6(o5v[__s[+p5p]][__s[+g4p]]) + __s[4875] + p6(o5v[_s(
-						p5p ^ 0)][__s[B8y >> 111677824]]) + __s[3356] + p6(o5v[__s[+p5p]][__s[3653]]) + E6k
+						p5p ^ 0)]["f"]) + __s[3356] + p6(o5v[__s[+p5p]][__s[3653]]) + E6k
 							.o55(2195) + p6(o5v[__s[p5p << 982150496]][__s[3749]]) + __s[1503] + p6(
 								o5v[__s[p5p << 1883232992]][__s[3788]]) + __s[5946] + p6(o5v[E6k
 									.S55(+p5p)][__s[4594]]) + __s[5800];
@@ -24225,7 +24221,7 @@ function outer() {
 							//c6.time.fpsMax = 1;
 							//c6.raf.stop();
 							console.log("R2: 0");
-							R2(Q46);
+							SetCity(Q46);
 						}
 					}
 				}
@@ -25231,7 +25227,7 @@ function outer() {
 					for (var Z01 =
 						0; Z01 < E01.length; Z01++) {
 						var n01 = E01[Z01];
-						var D01 = n01[__s[+B8y]];
+						var D01 = n01["f"];
 						var
 							K01 = n01["s"];
 						var c01 = n01[__s[w6y | 1048]];
@@ -26427,7 +26423,7 @@ function outer() {
 										}
 								}
 		console.log("R2: 1");
-								R2(y9l);
+								SetCity(y9l);
 							}
 						} else {
 							var R9l = ppdt.clc[p9l]
@@ -26450,7 +26446,7 @@ function outer() {
 										}
 								}
 							console.log("R2: 3");
-							R2(y9l);
+							SetCity(y9l);
 								X8();
 							}
 						}
@@ -26481,7 +26477,7 @@ function outer() {
 											m9l = ppdt['c'][a9l][1];
 										}
 								}
-								R2(m9l);
+								SetCity(m9l);
 							}
 						} else {
 							var c9l = ppdt.clc[E9l]
@@ -26503,7 +26499,7 @@ function outer() {
 											m9l = ppdt.clc[E9l][a9l];
 										}
 								}
-								R2(m9l);
+								SetCity(m9l);
 							}
 						}
 					});
@@ -26511,7 +26507,7 @@ function outer() {
 					.change(function () {
 						var H0B = $(__s[6880])
 							.val();
-						R2(H0B);
+						SetCity(H0B);
 					});
 				$(__s[+k8y])
 					.click(function () {
@@ -29464,7 +29460,7 @@ function outer() {
 						$(__s[5836])
 							.text(f7v.t);
 					}
-					if (f7v.stype == __s[B8y << 1598845376]) {
+					if (f7v.stype == "f") {
 						o8();
 						$(__s[4764])
 							.css("display", '');
@@ -30118,7 +30114,7 @@ function outer() {
 					}
 					if ((f7v.type == 2 || f7v.type == +
 						'1' || f7v.type == 0) && f7v.stype != 'c' && f7v.stype != __s[6856] && f7v
-							.stype != "d" && f7v.stype != 'l' && f7v.stype != __s[+B8y] && f7v
+							.stype != "d" && f7v.stype != 'l' && f7v.stype != "f" && f7v
 								.stype != "h") {
 						o8();
 						var S3v = 0;
@@ -30966,7 +30962,7 @@ function outer() {
 							$(__s[2599])
 								.text(Math.floor(f7v.rp[__s[+g4p]]));
 							$(__s[6057])
-								.text(Math.floor(f7v.rp[__s[+B8y]]));
+								.text(Math.floor(f7v.rp["f"]));
 							$(__s[5961])
 								.css("display", "");
 						}
@@ -32867,7 +32863,7 @@ function outer() {
 										for (var S02 = 0; S02 < y02.length; S02++) {
 											var W02 = y02[S02];
 											var n02 = W02[
-												__s[B8y ^ 0]];
+												"f"];
 											var d02 = W02["s"];
 											var P02 = W02[_s(w6y -
 												0)];
@@ -33260,7 +33256,7 @@ function outer() {
 						for (var u52 in E02.t[1]) {
 							var s52 = u52;
 							var
-								I52 = E02.t[1][u52][__s[B8y ^ 0]];
+								I52 = E02.t[1][u52]["f"];
 							var v52 = E02.t['1' | 1][u52][__s[w6y & 2147483647]];
 							H52 = H52 + I52;
 							e52 = e52 + __s[Z5y | 512] + s52 + __s[+q4t] + v52 + __s[+q4t] + I52 + _s(+
@@ -33278,7 +33274,7 @@ function outer() {
 						for (var u52 in E02.t[2]) {
 							var
 								s52 = u52;
-							var I52 = E02.t["2" | 2][u52][__s[B8y | 5336]];
+							var I52 = E02.t["2" | 2][u52]["f"];
 							var v52 = E02.t[2][
 								u52][__s[w6y - 0]];
 							H52 = H52 + I52;
@@ -33297,7 +33293,7 @@ function outer() {
 						for (var u52 in E02.t[+
 							'3']) {
 							var s52 = u52;
-							var I52 = E02.t[3][u52][__s[+B8y]];
+							var I52 = E02.t[3][u52]["f"];
 							var v52 = E02.t[3][u52][E6k
 								.o55(w6y - 0)];
 							H52 = H52 + I52;
@@ -33316,7 +33312,7 @@ function outer() {
 						for (var u52 in E02.t['4' & E6k
 							.s6s]) {
 							var s52 = u52;
-							var I52 = E02.t[4][u52][__s[B8y - 0]];
+							var I52 = E02.t[4][u52]["f"];
 							var v52 = E02.t[4][u52][E6k
 								.o55(w6y | 3848)];
 							H52 = H52 + I52;
@@ -33335,7 +33331,7 @@ function outer() {
 						for (var u52 in E02.t[5]) {
 							var s52 =
 								u52;
-							var I52 = E02.t['5' | 4][u52][__s[+B8y]];
+							var I52 = E02.t['5' | 4][u52]["f"];
 							var v52 = E02.t[5][u52][_s(+
 								w6y)];
 							H52 = H52 + I52;
@@ -33354,7 +33350,7 @@ function outer() {
 						for (var u52 in E02.t[6]) {
 							var s52 = u52;
 							var
-								I52 = E02.t[6][u52][__s[B8y * 1]];
+								I52 = E02.t[6][u52]["f"];
 							var v52 = E02.t[6][u52][_s(w6y <<
 								1091239680)];
 							H52 = H52 + I52;
@@ -33373,7 +33369,7 @@ function outer() {
 						for (var u52 in E02.t[7]) {
 							var
 								s52 = u52;
-							var I52 = E02.t[7][u52][__s[+B8y]];
+							var I52 = E02.t[7][u52]["f"];
 							var v52 = E02.t[7][u52][
 								__s[+w6y]];
 							H52 = H52 + I52;
@@ -33392,7 +33388,7 @@ function outer() {
 						for (var u52 in E02.t[8]) {
 							var s52 =
 								u52;
-							var I52 = E02.t[8][u52][__s[B8y >> 561217888]];
+							var I52 = E02.t[8][u52]["f"];
 							var v52 = E02.t[8][u52][_s(+
 								w6y)];
 							H52 = H52 + I52;
@@ -35858,7 +35854,7 @@ function outer() {
 			var l2n = K8[__s[i9t * 1]][H2n]["d"];
 			var
 				Q2n = K8[__s[i9t >> 1158660576]][H2n]["e"];
-			var T2n = K8[__s[+i9t]][H2n][__s[+B8y]];
+			var T2n = K8[__s[+i9t]][H2n]["f"];
 			var
 				x2n = __s[4558] + w2n + __s[6883] + I2n + __s[+q9t] + l2n + __s[5663] + j2n + E6k
 					.S55(+g3y) + v2n + __s[1560] + T2n + __s[+t1y] + Q2n + __s[5208];
@@ -35867,7 +35863,18 @@ function outer() {
 			$(__s[6966])
 				.show();
 		}
-		window['misccommand'] = t7F;
+		window['misccommand'] = function(_action : string,scid : string)
+		{
+			let __cid = Number(scid);
+   //  Wrong city?
+			if(__cid != cid)
+			{
+				const wrapper = { error: "Please plress the refresh button." };
+				window['external']['notify'](JSON.stringify(wrapper));
+				return;
+			}
+			t7F(_action);
+		}
 
 		$(document)
 			.ready(function () {
@@ -44076,7 +44083,7 @@ function outer() {
 						L01 = k01["h"][u01]['c'];
 						o01 = k01["h"][u01]["d"];
 						l01 = k01["h"][u01]["e"];
-						j01 = k01["h"][u01][__s[B8y >> 1310965440]];
+						j01 = k01["h"][u01]["f"];
 						T01 = k01["h"][u01]['g'];
 						t01 = k01["h"][u01]["h"];
 						citidd = k01["h"][u01][__s[g4p >> 166291232]];
@@ -46782,7 +46789,7 @@ function outer() {
 						"1531") + p6(N5v[F5v][__s[t9m * 1]][q5v][__s[b5p - 0]]["w"]) + __s[6496] + p6(
 							N5v[F5v][__s[+t9m]][q5v][__s[+b5p]]["s"]) + __s[3949] + p6(N5v[F5v][_s(
 								t9m & 2147483647)][q5v][__s[+b5p]][__s[+g4p]]) + __s[r8y >> 1087335200] + p6(N5v[F5v][_s(
-									t9m - 0)][q5v][__s[+b5p]][__s[B8y - 0]]) + __s[6955];
+									t9m - 0)][q5v][__s[+b5p]]["f"]) + __s[6955];
 				if (N5v[F5v][__s[t9m * 1]][q5v][E6k
 					.o55(G0t << 624753312)]) c5v += K9F(N5v[F5v][__s[+t9m]][q5v][__s[G0t << 1492612768]]);
 				c5v += __s[O5p * 1] + J7v + "</div>";
@@ -47088,93 +47095,93 @@ function outer() {
 			923: _s(e64 <<
 				927513248),
 			924: "h",
-			925: __s[+B8y],
-			926: __s[+B8y],
-			927: __s[+B8y],
+			925: "f",
+			926: "f",
+			927: "f",
 			928: _s(
 				B8y << 1166025504),
-			929: __s[+B8y],
+			929: "f",
 			930: '',
 			931: "h",
 			932: "h",
 			933: "h",
 			934: "h",
-			935: __s[B8y | 400],
-			936: __s[+B8y],
+			935: "f",
+			936: "f",
 			937: _s(+
 				B8y),
-			938: __s[B8y ^ 0],
-			939: __s[B8y ^ 0],
+			938: "f",
+			939: "f",
 			940: '',
 			941: "h",
 			942: _s(
 				+e64),
 			943: '',
 			944: "",
-			945: __s[+B8y],
+			945: "f",
 			946: _s(B8y <<
 				1923491104),
-			947: __s[B8y ^ 0],
-			948: __s[+B8y],
-			949: __s[B8y << 1147537504],
+			947: "f",
+			948: "f",
+			949: "f",
 			950: _s(
 				4867),
-			951: __s[B8y ^ 0],
-			952: __s[+B8y],
-			953: __s[B8y - 0],
+			951: "f",
+			952: "f",
+			953: "f",
 			954: _s(B8y -
 				0),
-			955: __s[B8y * 1],
-			956: __s[B8y >> 463982304],
-			957: __s[B8y - 0],
-			958: __s[B8y * 1],
-			959: __s[B8y >> 212304704],
+			955: "f",
+			956: "f",
+			957: "f",
+			958: "f",
+			959: "f",
 			960: "",
-			961: __s[+B8y],
+			961: "f",
 			962: _s(B8y & E6k
 				.s6s),
-			963: __s[+B8y],
-			964: __s[B8y ^ 0],
-			965: __s[B8y ^ 0],
-			966: __s[B8y << 741884800],
-			967: __s[B8y << 1286967104],
-			968: __s[+B8y],
-			969: __s[B8y | 5184],
+			963: "f",
+			964: "f",
+			965: "f",
+			966: "f",
+			967: "f",
+			968: "f",
+			969: "f",
 			970: "",
-			971: __s[B8y * 1],
-			972: __s[B8y * 1],
-			973: __s[B8y | 5208],
-			974: __s[+B8y],
+			971: "f",
+			972: "f",
+			973: "f",
+			974: "f",
 			975: _s(B8y &
 				2147483647),
-			976: __s[B8y ^ 0],
-			977: __s[B8y ^ 0],
-			978: __s[B8y >> 1626101056],
+			976: "f",
+			977: "f",
+			978: "f",
 			979: _s(B8y >>
 				1610355872),
 			980: '',
-			981: __s[B8y - 0],
-			982: __s[B8y << 1547824064],
+			981: "f",
+			982: "f",
 			983: _s(
 				B8y * 1),
-			984: __s[+B8y],
-			985: __s[B8y - 0],
-			986: __s[+B8y],
-			987: __s[B8y | 4488],
+			984: "f",
+			985: "f",
+			986: "f",
+			987: "f",
 			988: E6k
 				.S55(B8y >> 1161773728),
-			989: __s[B8y << 542731520],
+			989: "f",
 			990: '',
-			991: __s[B8y | 1280],
-			992: __s[+B8y],
-			993: __s[B8y >> 1136192288],
-			994: __s[+B8y],
-			995: __s[+B8y],
+			991: "f",
+			992: "f",
+			993: "f",
+			994: "f",
+			995: "f",
 			996: _s(+
 				B8y),
-			997: __s[+B8y],
-			998: __s[B8y ^ 0],
-			999: __s[B8y ^ 0]
+			997: "f",
+			998: "f",
+			999: "f"
 		};
 
 		function H7V(c4D, m4D, a4D, E4D) {
@@ -47572,7 +47579,7 @@ function outer() {
 				.S55(+I6y),
 			307: "h",
 			308: "m",
-			309: __s[B8y ^ 0],
+			309: "f",
 			310: '',
 			311: E6k
 				.S55(4867),
@@ -47583,7 +47590,7 @@ function outer() {
 				.o55("4867" | 4355),
 			316: "h",
 			317: "m",
-			318: __s[B8y - 0],
+			318: "f",
 			319: "",
 			320: '',
 			321: '',
@@ -54550,7 +54557,7 @@ function outer() {
 			} else {
 		   console.log("R2: 4");
 				var i9l = ppdt['c'][0][1];
-				R2(i9l);
+				SetCity(i9l);
 			}
 		}
 
@@ -56245,7 +56252,7 @@ function outer() {
 					for (var B19 = 0; B19 < P19.length; B19++) {
 						if (P19[B19]["mg"] == 0) var D19 = "";
 						else var D19 = __s[+j2k];
-						var w69 = P19[B19][__s[B8y & 2147483647]];
+						var w69 = P19[B19]["f"];
 						var c19 = "";
 						if (w69 == +s0R) c19 = '';
 						else if (w69 >= 1) c19 = __s[5273];
@@ -57378,18 +57385,7 @@ function outer() {
 			return J62;
 		}
 
-		function w7V(S9l) {
-			//   var J9l = arguments.callee.caller.name;
-			E6k.R6();
-	//		if (U9 == 0) {
-	//			U9 = 1;
-				ClearCity();
-				getCity(Number(S9l));
-				cid = Number(S9l);
-				
-			//	c3F();
-			//}
-		}
+	
 
 		function W5V(n59, f59) {
 			E6k.R6();
@@ -58107,7 +58103,7 @@ function outer() {
 					var n71 = pollJ[__s[3383]];
 					 if (n71 >= 1){
 						console.log("R2: 7");
-							R2(cid);
+							SetCity(cid);
 					  }
 					var x71 = pollJ[E6k
 						.o55(1076)];
@@ -58480,7 +58476,7 @@ function outer() {
 				$(__s[3664])
 					.text(p6(Number(B81[__s[+g4p]])));
 				$(__s[1131])
-					.text(p6(Number(B81[__s[B8y - 0]])));
+					.text(p6(Number(B81["f"])));
 				if (P81[__s[6460]] == 1) $(__s[+Q04])
 					.prop(__s[286], ![]);
 				else $(__s[Q04 << 1994413920])
@@ -60854,7 +60850,7 @@ function outer() {
 			var M2V = $(__s[s9R * 1])
 				.data(__s[5099]);
 			M2V = M2V.selectedData.value;
-			R2(M2V);
+			SetCity(M2V);
 		}
 		var K0F = [p1R >> 559832000, +z1R, +n1R, +d1R, 323, l1R >> 1486036800, +k1R, +o1R];
 		var e9 = [3, 7, 13, 17 - 0, +D8y, S1R & 2147483647, t5R << 1955771840, +J5R, T5R * 1, 433, x5R ^ 0,
@@ -69391,7 +69387,7 @@ function outer() {
 			}
 			if (f09 != 0) {
 				r09++;
-				h09[__s[B8y << 2108940384]] = f09;
+				h09["f"] = f09;
 			}
 			if (r09 < 3) {
 				var J09 = '';
@@ -69403,7 +69399,7 @@ function outer() {
 						S09 == "s") J09 = __s[660];
 					if (S09 == __s[g4p | 16]) J09 = _s('3602' &
 						2147483647);
-					if (S09 == __s[+B8y]) J09 = __s[6268];
+					if (S09 == "f") J09 = __s[6268];
 					V09 += __s[669] + U09 + __s[1699] + J09 + __s[1167] + p6(Math.floor(h09[S09])) +
 						__s[648];
 				}
@@ -69419,7 +69415,7 @@ function outer() {
 						.S55(+Z9y)) J09 = __s[660];
 					if (S09 == __s[g4p & 2147483647]) J09 = __s[3602];
 					if (S09 ==
-						__s[+B8y]) J09 = __s[6268];
+						"f") J09 = __s[6268];
 					if (A09 == ("1" | 1) || A09 == 3) V09 += __s[6586];
 					V09 += __s[2846] + J09 + __s[1167] + p6(Math.floor(h09[S09])) + _s("6870" -
 						0);

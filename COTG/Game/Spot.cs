@@ -1331,7 +1331,7 @@ namespace COTG.Game
 				case VirtualKey.Left:
 					{
 						if (spot.canVisit)
-							spot.SetBuild(false);
+							JSClient.ChangeCity(spot.cid, false);
 						else
 							spot.SetFocus(false);
 						return true;

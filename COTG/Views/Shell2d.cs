@@ -224,7 +224,32 @@ namespace COTG.Views
 					{
 						case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
 						case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
+						case Windows.System.VirtualKey.Left:
+							if (CityView.hovered.IsValid())
+								CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
+							else
+								CityView.hovered = (0, 0);
+					
+							break;
+						case Windows.System.VirtualKey.Up:
+							if (CityView.hovered.IsValid())
+								CityView.hovered.y = (CityView.hovered.y - 1).Max(City.span0);
+							else
+								CityView.hovered = (0, 0);
+							break;
+						case Windows.System.VirtualKey.Right:
+							if (CityView.hovered.IsValid())
+								CityView.hovered.x = (CityView.hovered.x + 1).Min(City.span1);
+							else
+								CityView.hovered = (0, 0);
 
+							break;
+						case Windows.System.VirtualKey.Down:
+							if (CityView.hovered.IsValid())
+								CityView.hovered.y = (CityView.hovered.y + 1).Min(City.span1);
+							else
+								CityView.hovered = (0, 0);
+							break;
 						case Windows.System.VirtualKey.F11: if(Player.isAvatarOrTest) Raid.test^= true; break;
 						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3, CityView.hovered); break;

@@ -961,7 +961,6 @@ namespace COTG.Views
 				var newSel = e.AddedItems?.FirstOrDefault() as City;
 				if (newSel.cid != City.build)
 				{
-					newSel.SetBuild(true);
 					JSClient.ChangeCity(newSel.cid, false);
 					NavStack.Push(newSel.cid);
 
@@ -989,7 +988,7 @@ namespace COTG.Views
 
 				newSel = items[id];
 			}
-			newSel.SetBuild(true);
+			//newSel.SetBuild(true);
 			JSClient.ChangeCity(newSel.cid, false);
 			//	ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
@@ -1172,33 +1171,22 @@ namespace COTG.Views
 			// todo!
 		}
 
-		static byte viewToggle;
-		const byte viewToggleCount = 4;
-		const byte viewToggleWeb = 1;
-		private void webFocus_Click(object sender, RoutedEventArgs e)
+		private void windowLayout_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			// stage 1 is web view has focus
-			if(webviewHasFocus)
-			{
-				viewToggle = viewToggleWeb;
-			}
 
-			++viewToggle;
-			if (viewToggle >= viewToggleCount)
-				viewToggle = 0;
+			var viewToggle = windowLayout.SelectedIndex;
 
 			switch(viewToggle)
 			{
 				case 0:
-				case 1:
 					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
 					grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
 					break;
-				case 2:
+				case 1:
 					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
 					grid.ColumnDefinitions[2].Width = new GridLength(80);
 					break;
-				case 3:
+				case 2:
 					grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
 					grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
 					break;
@@ -1206,9 +1194,10 @@ namespace COTG.Views
 			}
 
 
-			var hasFocus = (viewToggle == viewToggleWeb);
-
-		//	webviewHasFocus = hasFocus;
+		}
+		private void webFocus_Click(object sender, RoutedEventArgs e)
+		{
+			var hasFocus = !webviewHasFocus;
 
 			CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
 			canvasVisible = !hasFocus;
@@ -1216,6 +1205,7 @@ namespace COTG.Views
 			SetWebViewHasFocus(hasFocus);
 
 		}
+
 
 		private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
@@ -1232,5 +1222,7 @@ namespace COTG.Views
 
 			}
 		}
+
+		
 	}
 }

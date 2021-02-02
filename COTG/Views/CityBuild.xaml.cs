@@ -38,6 +38,7 @@ namespace COTG.Views
 	{
 		public static int quickBuildId;
 		public static CityBuild instance;
+		public static bool layoutMode;
 
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
@@ -1020,6 +1021,7 @@ namespace COTG.Views
 			{
 				ShellPage.instance.buildMenu.IsOpen = false;
 				//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
+				Assert(false);
 				return;
 			}
 
@@ -1091,7 +1093,7 @@ namespace COTG.Views
 
 		private void Abandon_Click(object sender, RoutedEventArgs e)
 		{
-			JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity" });
+			JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity",City.build.ToString() });
 		}
 	}
 
