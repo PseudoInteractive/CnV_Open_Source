@@ -9,13 +9,13 @@
         <Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="NoWrap" />
-		
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>

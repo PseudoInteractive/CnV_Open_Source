@@ -11,7 +11,7 @@ namespace COTG.Game
 {
 	public class APlayfab
 	{
-		const string titleId = "1DBCE";
+		static string titleId => JSClient.world == 22 ? "2B907" : "1DBCE";
 		static PlayFabAuthenticationContext authenticationContext;
 		static LoginResult login;
 		public static string GetClientId()

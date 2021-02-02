@@ -39,6 +39,7 @@ namespace COTG.Views
 		public static int quickBuildId;
 		public static CityBuild instance;
 		public static bool layoutMode;
+		public static bool isLayout { get; set; }
 
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
@@ -423,6 +424,10 @@ namespace COTG.Views
 					JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
 					buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
 				}
+				else
+				{
+					DrawSprite(IdToXY(id), decalBuildingInvalid, 0.312f);
+				}
 			}
 		}
 		public static void Downgrade((int x, int y) building, bool dryRun)
@@ -786,14 +791,8 @@ namespace COTG.Views
 											if(bestSpot != -1)
 											{
 												Status("Will Demolish a Cottage to make room", dryRun);
-												if (dryRun)
-												{
-													DrawSprite(IdToXY(bestSpot), decalBuildingInvalid, .31f);
-												}
-												else
-												{
-													Demolish(bestSpot,dryRun);
-												}
+												
+												Demolish(bestSpot,dryRun);
 												break;
 
 											}
@@ -842,15 +841,8 @@ namespace COTG.Views
 									{
 										Status($"Destorying {b.def.Bn} to make way for {desName}",dryRun);
 									}
-									if (dryRun)
-									{
-
-										DrawSprite(hovered, decalBuildingInvalid, .31f);
-									}
-									else
-									{
-										Demolish(cc,dryRun);
-									}
+									Demolish(cc,dryRun);
+									
 									// Test!
 									//JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
 								}
@@ -980,19 +972,52 @@ namespace COTG.Views
 					}
 				case Action.abandon:
 					{
-						instance.Abandon_Click(null, null);
+						if(!dryRun)
+							instance.Abandon_Click(null, null);
 						break;
 					}
 				case Action.flipLayoutH:
 					{
-						GetBuild().FlipLayoutH();
+						if (!dryRun)
+							GetBuild().FlipLayoutH();
 						break;
 					}
 				case Action.flipLayoutV:
 					{
-						GetBuild().FlipLayoutV();
+						if (!dryRun)
+							GetBuild().FlipLayoutV();
 						break;
 					}
+				case Action.none:
+				{
+					if (b.isEmpty)
+					{
+							if (IsBuildingSpot(hovered))
+							{
+								ShellPage.contToolTip = $"Left click to build something\nRight click to select a quick build tool";
+
+							}
+							else if (IsTowerSpot(hovered))
+							{
+								ShellPage.contToolTip = $"Left click to build tower\nRight click to select a quick build tool";
+
+							}
+							else if (IsWallSpot(hovered))
+							{
+								ShellPage.contToolTip = $"Left click to build wall\nRight click to select a quick build tool";
+							}
+							else
+							{
+								ShellPage.contToolTip = $"Please don't left click here\nRight click to select a quick build tool";
+							}
+					}
+					else 
+					{
+						ShellPage.contToolTip = $"Left click modify {b.def.Bn}, Right click to select a quick build tool";
+					}
+					
+					break;
+				}
 			}
 		}
 
@@ -1011,7 +1036,8 @@ namespace COTG.Views
 
 		public static void PreviewBuildAction()
 		{
-			PerformAction(action, hovered, quickBuildId, true);
+			if(hovered.IsValid())
+				PerformAction(action, hovered, quickBuildId, true);
 
 		}
 
@@ -1091,9 +1117,22 @@ namespace COTG.Views
 
 
 
-		private void Abandon_Click(object sender, RoutedEventArgs e)
+		private async void Abandon_Click(object sender, RoutedEventArgs e)
 		{
-			JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity",City.build.ToString() });
+			var dialog = new ContentDialog()
+			{
+				Title = "Are you Sure?",
+				Content = "Abandon " + City.GetBuild().nameAndRemarks,
+				PrimaryButtonText = "Yes",
+				SecondaryButtonText = "Cancel"
+			};
+			if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
+			{
+				  await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", City.build.ToString() });
+
+				await Task.Delay(500);
+				NavStack.Back(true);
+			}
 		}
 	}
 

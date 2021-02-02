@@ -311,34 +311,7 @@ namespace COTG.Draw
 						}
 					}
 				}
-				else if (CityBuild.action == CityBuild.Action.none)
-				{
-					if (biHovered.isEmpty)
-					{
-						if (IsBuildingSpot(hovered))
-						{
-							ShellPage.contToolTip = $"Left click to build something\nRight click to select a quick build tool";
-
-						}
-						else if (IsTowerSpot(hovered))
-						{
-							ShellPage.contToolTip = $"Left click to build tower\nRight click to select a quick build tool";
-
-						}
-						else if (IsWallSpot(hovered))
-						{
-							ShellPage.contToolTip = $"Left click to build wall\nRight click to select a quick build tool";
-						}
-						else
-						{
-							ShellPage.contToolTip = $"Please don't left click here\nRight click to select a quick build tool";
-						}
-					}
-					else if (biHovered.isRes)
-					{
-						ShellPage.contToolTip = $"Left click modify {bdHovered.Bn}, Right click to select a quick build tool";
-					}
-				}
+				
 
 			}
 			PreviewBuildAction();

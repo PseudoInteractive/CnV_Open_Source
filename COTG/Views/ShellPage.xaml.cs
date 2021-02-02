@@ -956,15 +956,11 @@ namespace COTG.Views
 		}
 		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Any())
+			var sel = cityBox.SelectedItem as City;
+			if (sel != null && sel.cid != City.build)
 			{
-				var newSel = e.AddedItems?.FirstOrDefault() as City;
-				if (newSel.cid != City.build)
-				{
-					JSClient.ChangeCity(newSel.cid, false);
-					NavStack.Push(newSel.cid);
-
-				}
+				JSClient.ChangeCity(sel.cid, false);
+				NavStack.Push(sel.cid);
 			}
 		}
 
@@ -1173,28 +1169,34 @@ namespace COTG.Views
 
 		private void windowLayout_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-
-			var viewToggle = windowLayout.SelectedIndex;
-
-			switch(viewToggle)
+			if (MainPage.instance != null)
 			{
-				case 0:
-					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
-					break;
-				case 1:
-					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(80);
-					break;
-				case 2:
-					grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
-					break;
+				var viewToggle = windowLayout.SelectedIndex;
 
+				var raidInfo = true;
+				switch (viewToggle)
+				{
+					case 0:
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+						break;
+					case 1:
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(160);
+						raidInfo = false;
+						break;
+					case 2:
+						grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
+						break;
+
+				}
+
+				MainPage.ToggleInfoBoxes(raidInfo);
+				City.gridCitySource.NotifyReset();
 			}
-
-
 		}
+
 		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{
 			var hasFocus = !webviewHasFocus;

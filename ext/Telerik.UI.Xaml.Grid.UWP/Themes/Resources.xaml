@@ -387,7 +387,8 @@
     </Style>
 
     <Style TargetType="local:RadDataGrid">
-        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontSize" Value="13"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		
 		
@@ -863,13 +864,13 @@
                                 <Image Source="{ThemeResource TelerikGridReorderHandle}" Height="16" Width="16" VerticalAlignment="Center"  />
                                 <ContentControl Margin="10,0,0,0" VerticalAlignment="Center" Content="{Binding DisplayContent, Mode=OneTime}"/>
                                 <TextBlock Text="{Binding SortOrder, Mode=OneTime, Converter={StaticResource SortOrderConverter}}" 
-                                            FontFamily="{ThemeResource SymbolThemeFontFamily}" FontStretch="Condensed" FontSize="10" Margin="6,0,4,2" VerticalAlignment="Center"/>
+                                            FontFamily="{ThemeResource SymbolThemeFontFamily}" FontStretch="Condensed" FontSize="12" Margin="6,0,4,2" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                         <primitivesCommon:InlineButton Style="{StaticResource GridServiceButtonStyle}" 
                                                        x:Name="PART_CloseButton" Content="&#xe711;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                                        Width="40" Height="40" Margin="2,0,0,0" Grid.Column="1" FontWeight="SemiBold"/>
-                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontFamily="{ThemeResource SymbolThemeFontFamily}" FontSize="9" Text="&#xEB0F;"
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" FontFamily="{ThemeResource SymbolThemeFontFamily}" FontSize="10" Text="&#xEB0F;"
                                    Opacity="{TemplateBinding BottomGlyphOpacity}" Margin="11,2,0,2"
                                    Foreground="{ThemeResource TelerikGridFlyoutGroupForegroundBrush}"/>
                         <Rectangle Margin="-2" StrokeThickness="2" Stroke="{TemplateBinding Foreground}" Grid.ColumnSpan="2"

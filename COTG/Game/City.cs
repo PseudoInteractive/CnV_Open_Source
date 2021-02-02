@@ -918,6 +918,17 @@ namespace COTG.Game
 			return (max, count);
 
 		}
+		public static void SyncCityBox()
+		{
+			App.DispatchOnUIThreadLow(() =>
+			{
+				var _build = City.GetBuild();
+				if (_build != ShellPage.instance.cityBox.SelectedItem)
+				{
+					ShellPage.instance.cityBox.SelectedItem = _build;
+				}
+			});
+		}
 	}
 
     public class SenatorInfo
@@ -1022,42 +1033,44 @@ namespace COTG.Game
         public static ComboBox box => ShellPage.instance.cityListBox;
         public static void SelectedChange()
         {
- 
-            App.DispatchOnUIThreadLow( () =>
-            {
- //               Log("CityListChange");
 
-                var selectedCityList = CityList.box.SelectedItem as CityList;
-                IEnumerable<City> l;
-                if (selectedCityList == null || selectedCityList.id == -1) // "all"
-                {
-                    l = City.myCities;
-                }
-                else
-                {
-                    var cityList = selectedCityList;// CityList.Find(selectedCityList);
-                    var filtered = new List<City>();
-                    foreach (var cid in cityList.cities)
-                    {
-                        if (City.TryGet(cid, out var c))
-                        {
-                            filtered.Add(c);
-                        }
-                    }
-                    l = filtered;
-                }
-                l = l.OrderBy((a) => a._cityName).ToArray();
-                ShellPage.instance.cityBox.ItemsSource = l;
-                var reserveCartsFilter = DonationTab.reserveCarts;
-                if (DonationTab.IsVisible())
-                    DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
-                        .OrderByDescending(a=>a.cartsHome).ToArray();
-             //   if (MainPage.IsVisible())
-                    City.gridCitySource.Set(l);
-                   City.GetBuild().SelectInUI(true);
-            });
+			App.DispatchOnUIThreadLow( () =>
+			{
+				//               Log("CityListChange");
+
+				var selectedCityList = CityList.box.SelectedItem as CityList;
+				IEnumerable<City> l;
+				if (selectedCityList == null || selectedCityList.id == -1) // "all"
+				{
+					l = City.myCities;
+				}
+				else
+				{
+					var cityList = selectedCityList;// CityList.Find(selectedCityList);
+					var filtered = new List<City>();
+					foreach (var cid in cityList.cities)
+					{
+						if (City.TryGet(cid, out var c))
+						{
+							filtered.Add(c);
+						}
+					}
+					l = filtered;
+				}
+				l = l.OrderBy((a) => a._cityName).ToArray();
+				ShellPage.instance.cityBox.ItemsSource = l;
+				SyncCityBox();
+				var reserveCartsFilter = DonationTab.reserveCarts;
+				if (DonationTab.IsVisible())
+					DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
+						.OrderByDescending(a => a.cartsHome).ToArray();
+				//   if (MainPage.IsVisible())
+				City.gridCitySource.Set(l);
+				City.GetBuild().SelectInUI(true);
+			});
         }
-        
-    }
+
+		
+	}
 
 }

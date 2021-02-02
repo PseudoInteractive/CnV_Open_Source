@@ -9,27 +9,33 @@ using static COTG.Debug;
 using Microsoft.Azure.Cosmos;
 using System.Net;
 using Microsoft.Azure.Cosmos.Linq;
-using Microsoft.Azure.Cosmos.Table;
+using Azure.Data.Tables;
 using System.Linq;
+using Azure;
 
 namespace COTG.Services
 {
-	public class ShareString : TableEntity
+	public class ShareString : ITableEntity
 	{
 		public ShareString()
 		{
 		}
 
-		public ShareString(string partitionKey, string rowKey,string s, string Description) : base(partitionKey, rowKey)
+		public ShareString(string partitionKey, string rowKey,string s, string Description) 
 		{
+			this.PartitionKey = partitionKey;
+			this.RowKey = rowKey;
 			this.s = s;
 			this.Description = Description;
-		
 		}
 
 		public string s { get; set; }
 
 		public string Description { get; set; }
+		public string PartitionKey { get; set; }
+		public string  RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
 	}
 
 	public static class Cosmos
@@ -68,14 +74,14 @@ namespace COTG.Services
         private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
 
 
-		static CloudStorageAccount storageAccount ;
+		//	static CloudStorageAccount storageAccount ;
 
 		// Create a table client for interacting with the table service
-		static CloudTableClient tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
+		static TableClient tableClient;// = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
 		const string tableName = "a";
 
 	// Create a table client for interacting with the table service 
-		static CloudTable table;
+
 
 		private static SemaphoreSlim throttleT = new SemaphoreSlim(concurrentRequestCount);
 
@@ -98,34 +104,24 @@ namespace COTG.Services
 		}
 		static async ValueTask<bool> TouchT()
 		{
-
-			if (storageAccount != null)
-				return table != null;
+			// 
+			if (tableClient != null)
+				return true;
 		
 			
 			await throttleT.WaitAsync();
 			try
 			{
-				if (table != null)
+				if (tableClient != null)
 					return true;
 
-
-				// Create a new instance of the Cosmos Client
-				//	var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct };
-				//	clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
-				//		clientOptions.Diagnostics.IsLoggingContentEnabled = false;
-				//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
-				//		clientOptions.Diagnostics.IsLoggingEnabled = false;
-				storageAccount = CloudStorageAccount.Parse(connectionStringT);
-				var _tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
-				var _table = _tableClient.GetTableReference(tableName);
-				// write back 
-				if (_table != null)
-				{
-					tableClient = _tableClient;
-					table = _table;
-				}
-				return table!= null;
+				tableClient = new TableClient(connectionStringT, tableName);
+				return tableClient != null;
+			}
+			catch(Exception e)
+			{
+				Log(e);
+				return false;
 			}
 			finally
 			{
@@ -145,12 +141,12 @@ namespace COTG.Services
 			{
 
 				var i = new ShareString(part, key, s, desc);
-				TableOperation insertOp = TableOperation.InsertOrReplace(i);
-				TableResult result = await table.ExecuteAsync(insertOp);
-				if((HttpStatusCode)result.HttpStatusCode != HttpStatusCode.OK)
-				{
-					Log(result);
-				}
+				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
+				// todo
+			}
+			catch(Exception e)
+			{
+				Log(e);
 			}
 			finally
 			{
@@ -164,18 +160,22 @@ namespace COTG.Services
 			await throttleT.WaitAsync();
 			try
 			{
-				TableOperation retrieveOperation = TableOperation.Retrieve<ShareString>(part, key);
-				TableResult result = await table.ExecuteAsync(retrieveOperation);
-				ShareString customer = result.Result as ShareString;
+				ShareString r = await tableClient.GetEntityAsync<ShareString>(part,key);
+				if (r != null)
+					return r;
+			}
+			catch(Exception e)
+			{
+				Log(e);
 
-				return customer;
 			}
 			finally
 			{
 				throttleT.Release();
 			}
+			return new ShareString(part, key, "Error", "Internet failed");
 		}
-		public static async Task<ShareString[]> ReadShares(string part)
+		public static async Task<List<ShareString>> ReadShares(string part)
 		{
 			if (!await TouchT())
 				return null;
@@ -183,10 +183,16 @@ namespace COTG.Services
 			try
 			{
 
-				IQueryable<ShareString> linqQuery = table.CreateQuery<ShareString>().Where(x => x.PartitionKey == part);
+				var entities = tableClient.QueryAsync<ShareString>(x => x.PartitionKey == part);
+
 				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
 
-				return  linqQuery.ToArray();
+				var rv = new List<ShareString>();
+				await foreach( var i in entities)
+				{
+					rv.Add(i);
+				}
+				return rv;
 			}
 			finally
 			{
@@ -231,6 +237,11 @@ namespace COTG.Services
 					// write back 
 					cosmosClient = _cosmosClient;
 					return database != null;
+			}
+			catch(Exception e)
+			{
+				Log(e);
+				return false;
 			}
 			finally
 			{

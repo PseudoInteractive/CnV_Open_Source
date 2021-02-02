@@ -1170,13 +1170,10 @@ namespace COTG.Game
 				}
 
 				City.CitySwitched();
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-						if (ShellPage.instance.cityBox.SelectedItem != this)
-							ShellPage.instance.cityBox.SelectedItem = this;
-				});
+				
 			}
 			SetFocus(scrollIntoView, select);
+			City.SyncCityBox();
 			return changed;
 			//if (!noRaidScan)
 			// {

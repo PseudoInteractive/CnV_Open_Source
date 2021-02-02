@@ -138,7 +138,7 @@
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
 					<winui:ProgressRing x:Name="progress" IsActive="False" />
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-					<ComboBox x:Name="windowLayout" SelectionChanged="windowLayout_SelectionChanged" 
+					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged"  Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
 						<x:String>Default</x:String>
 						<x:String>Visual</x:String>
@@ -154,7 +154,8 @@
 			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
-			<AppBarSeparator/>
+			<AppBarToggleButton x:Name="layout" IsChecked="{x:Bind views:CityBuild.isLayout}" Icon="AllApps" Label="Layout"
+                           ToolTipService.ToolTip="Toggles between normal city building and layout mode (i.e. like LOUOpt" />
 			<AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               Click="Refresh"

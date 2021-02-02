@@ -352,7 +352,7 @@ namespace COTG.Views
 					AGame.UpdateMusic();
 					if (!webviewHasFocus && priorWebviewHasFocus)
 					{
-						Verify(ShellPage.keyboardProxy.Focus(FocusState.Programmatic));
+						ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 					}
 				});
 			}

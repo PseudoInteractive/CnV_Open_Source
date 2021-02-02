@@ -124,7 +124,7 @@
 
 					<tg:DataGridTextColumn Header= "+" 
 										   PropertyName="dungeonsToggle"
-										   CellContentStyle="{StaticResource RightAlignLink}"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
 										   Tip="Tap to expend or collapse dungeons" />
 					<tg:DataGridImageColumn PropertyName="icon"
 											Header="I"
@@ -147,54 +147,61 @@
 					<tg:DataGridNumericalColumn PropertyName="cont"
 												
 												CellContentStyle="{StaticResource CenterAlign}"
+												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
 												DefaultSortOrder="Descending"
+												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsRaid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
 												DefaultSortOrder="Descending"
+												SizeMode="Auto"
 												Tip="TS of Troops at home that can raid" />
 					<tg:DataGridNumericalColumn PropertyName="tsHome"
 												CellContentStyle="{StaticResource RightAlign}"
 												DefaultSortOrder="Descending"
 												Tip="TS of Troops at home (including non raiding troops)"
 												CellContentFormat="{}{0,7:N0}"
-												
+												SizeMode="Auto"
 												IsVisible="False" />
 					<tg:DataGridNumericalColumn PropertyName="raidReturn"
 												Tip="Click here to bring troops home asap"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,6:N0}"
+												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="raidCarry"
 												Tip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,5:N1}"
+												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="points"
 												Tip="City score"
-												
+												SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
 												 />
 					<tg:DataGridTextColumn PropertyName="remarks"
 										   CellContentStyle="{StaticResource LeftAlign}"
-										   
+										   SizeMode="Auto"
 										   IsVisible="False" />
 					<tg:DataGridTextColumn PropertyName="senny"
 										   CellContentStyle="{StaticResource LeftAlign}"
-										   
+										   SizeMode="Auto"
 										   IsVisible="False" />
 					<tg:DataGridBooleanColumn PropertyName="isCastle"
 											  IsVisible="False"
+											  SizeMode="Auto"
 											   />
 					<tg:DataGridBooleanColumn PropertyName="isOnWater"
 											  IsVisible="False"
+											  SizeMode="Auto"
 											   />
 					<tg:DataGridNumericalColumn PropertyName="carryCapacity"
 												CellContentStyle="{StaticResource RightAlign}"
@@ -218,7 +225,8 @@
 				</tg:RadDataGrid.Columns>
 
 			</tg:RadDataGrid>
-			<tk:WrapPanel Orientation="Horizontal"
+			<tk:WrapPanel x:Name="raidInfoBox"
+						  Orientation="Horizontal"
 						  Margin="4"
 						  HorizontalSpacing="4"
 						  VerticalSpacing="4"
@@ -264,7 +272,8 @@
 				</Border>
 			</tk:WrapPanel>
 
-			<tk:WrapPanel Orientation="Horizontal"
+			<tk:WrapPanel x:Name="incomeBox"
+				          Orientation="Horizontal"
 						  Margin="4"
 						  HorizontalSpacing="4"
 						  VerticalSpacing="4"
@@ -303,7 +312,8 @@
 
 			</tk:WrapPanel>
 		
-			<tk:WrapPanel Orientation="Horizontal"
+			<tk:WrapPanel x:Name="raidOptionBox"
+							Orientation="Horizontal"
 						  Grid.Row="2"
 						  VerticalAlignment="Center"
 						  TabFocusNavigation="Once">

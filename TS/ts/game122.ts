@@ -35866,10 +35866,17 @@ function outer() {
 		window['misccommand'] = function(_action : string,scid : string)
 		{
 			let __cid = Number(scid);
+			if(_action === 'abandoncity')
+			{
+			   let  dummy = $.post("/includes/abdC.php", { a: __cid });
+				
+				dummy.done(function (C92) {}
+				return;
+			}
    //  Wrong city?
 			if(__cid != cid)
 			{
-				const wrapper = { error: "Please plress the refresh button." };
+				const wrapper = { error: "Please press the refresh button." };
 				window['external']['notify'](JSON.stringify(wrapper));
 				return;
 			}
@@ -54358,9 +54365,9 @@ function outer() {
 			}
 		}
 
-		function Y0V() {
-			N6();
-			var G92 = $.post("/includes/" + __s[5481], { a: cid });
+		function abandonCity() {
+			
+			var G92 = $.post("/includes/abdC.php", { a: cid });
 			F6();
 			G92.done(function (C92) {
 				E6k.y6();
@@ -68789,7 +68796,7 @@ function outer() {
 		$(document)
 			.ready(function () {
 				$(document)
-					.on("click", __s[1223], function () { Y0V(); });
+					.on("click", __s[1223], function () { AbandonCity(); });
 				$(document)
 					.on("click", __s[5126], function () {
 						E6k.R6();

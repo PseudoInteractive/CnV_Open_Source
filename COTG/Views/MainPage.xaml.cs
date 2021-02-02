@@ -43,7 +43,7 @@ namespace COTG.Views
         static float[] raidSteps;
         public static MainPage instance;
      
-        public float troopPercent = 1;
+       
         //        public static City showingRowDetails;
 
         //{
@@ -381,7 +381,14 @@ namespace COTG.Views
             Raiding.UpdateTS(true, true);
         }
 
-        override public void VisibilityChanged(bool visible)
+		public static void ToggleInfoBoxes(bool on)
+		{
+			var vis = on ? Visibility.Visible : Visibility.Collapsed;
+			instance.raidInfoBox.Visibility = vis;
+			instance.raidOptionBox.Visibility = vis;
+			instance.incomeBox.Visibility = vis;
+		}
+		override public async void VisibilityChanged(bool visible)
         {
             //   Log("Vis change" + visible);
 
@@ -389,10 +396,12 @@ namespace COTG.Views
             {
 				if (JSClient.ppdtInitialized)
 				{
-					Raiding.UpdateTS(true, true);
-					RaidOverview.Send();
+					await Raiding.UpdateTS(true, false);
+					await RaidOverview.Send();
 					if (City.build != 0)
-						GetCity.Post(City.build);
+						await GetCity.Post(City.build);
+
+					City.gridCitySource.NotifyReset();
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;

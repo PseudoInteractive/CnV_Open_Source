@@ -85,13 +85,14 @@
                     <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
                                        
                                                 CellContentStyle="{StaticResource LeftAlign}"
+													SizeMode="Auto"
                                         />
                     <telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
-                                       
+                                       SizeMode="Auto"
                                         />
                     <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
-                                                      
+                                                      SizeMode="Auto"
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                              />
                     <telerikGrid:DataGridNumericalColumn PropertyName="wood"
@@ -112,7 +113,7 @@
                     <telerikGrid:DataGridNumericalColumn  PropertyName="cartsHome"
                                             CellContentFormat="{}{0,5:N0}"
                                             CellContentStyle="{StaticResource RightAlign}"
-                                            
+                                            SizeMode="Auto"
                                              />
                     <telerikGrid:DataGridNumericalColumn  PropertyName="carts"
                                             
