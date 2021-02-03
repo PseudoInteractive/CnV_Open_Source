@@ -16,7 +16,7 @@ const __s = [".shRinf",
 	"<div ID = \"trfoodpic\" class = \"reqtooptip\" title = \"Food\"></div><span> x ",
 	"</td> </tr> <tr> <td>Stone generated (/hour) by this city:</td> <td ID=\"stonttc\">",
 	"Survey your domain!",
-	"#optionsXbutton",
+	"#optionsXbutton", I would also like to add that you are a terrific leader.
 	"UBBit.php",
 	"#col4",
 	"ot",
@@ -55172,7 +55172,7 @@ function outer() {
 		}
 
 		function h9F() {
-			var u7l = __s[3640];
+			var u7l = "0123456789";
 			var I7l = 5;
 			var H7l = "";
 			for (var j7l = 0; j7l < I7l; j7l++) {
@@ -56825,7 +56825,7 @@ function outer() {
 		}
 
 		function O2() {
-			var a5l = __s['3640' | 3096];
+			var a5l = "0123456789";
 			var s7l = 10;
 			var E5l = '';
 			for (var k7l = '0' |

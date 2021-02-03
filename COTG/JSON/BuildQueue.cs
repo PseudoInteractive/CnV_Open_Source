@@ -38,4 +38,17 @@ namespace COTG.JSON
 
 }*/
 	}
+	public enum BuildOp : byte
+	{
+		build,
+		destroy,
+		upgrade,
+		downgrade,
+	}
+	public struct QueuedBuldOp
+	{
+		public BuildOp op;
+		public byte id; // building id
+		public short bspot;
+	}
 }
