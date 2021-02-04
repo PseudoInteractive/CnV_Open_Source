@@ -38,7 +38,7 @@ namespace COTG.Views
 	{
 		//	public static Rectangle canvasHitTest;
 
-
+		static byte testFlag;
 
 		const int bottomMargin = 0;
 		const int cotgPopupWidth = 550;
@@ -183,6 +183,7 @@ namespace COTG.Views
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			App.InputRecieved();
 			if (CityBuild.menuOpen)
 			{	
 				// todo:  Handle naviation menu items and selection
@@ -252,7 +253,22 @@ namespace COTG.Views
 							else
 								CityView.hovered = (0, 0);
 							break;
-						case Windows.System.VirtualKey.F11: if(Player.isAvatarOrTest) Raid.test^= true; break;
+						case Windows.System.VirtualKey.F11: 
+							if (Player.isAvatarOrTest)
+							{
+								Raid.test ^= true;
+								Note.Show("Test: " + Raid.test);
+							}
+							break;
+						case Windows.System.VirtualKey.F10:
+							if (Player.isAvatarOrTest)
+							{
+								testFlag ^= 1;
+								Note.Show("Test: " + testFlag);
+								JSClient.view.InvokeScriptAsync("setTestFlag", new[] {testFlag.ToString() });
+							}
+							break;
+
 						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3, CityView.hovered); break;
 						case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4, CityView.hovered); break;

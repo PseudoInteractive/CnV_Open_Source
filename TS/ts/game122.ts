@@ -7084,7 +7084,7 @@ const __s = [".shRinf",
 function _s(id) {
 	return __s[id];
 }
-let testFlag = true;
+let testFlag = false;
 var _cid = 0;
 var _viewMode = 0; // 
 
@@ -7577,7 +7577,7 @@ var gStphp; // gSt post call
 var gStQuery; // query GST, issue callback for shrines
 var gStQueryCB; // query GST, issue generic callback
 let stayAlive = false;
-let V8 =null;
+let updateBuildQueue =null;
 
 let _camera = {
 	x: 0,
@@ -11835,7 +11835,7 @@ function outer() {
 			for (let v11 in
 				T11) t11[v11] = T11[v11];
 			ppdt = t11;
-		   window['updateArtifacts']();	
+//		   window['updateArtifacts']();	
 			truncateToken();
 			var G11;
 			var L11;
@@ -14234,12 +14234,9 @@ function outer() {
 					var h1g = Number(city.bq[0].de);
 					var V1g =
 						Number(city.bq[0].brep);
-					var P1g = Number(city.bq[0].elvl);
-					var p1g = Number(city.bq[0].slvl);
+					
 					var K1g = Number(city.bq[0].pa);
-					var D1g = bam["buildings"][V1g]["bn"];
-					var
-						y1g = bam["buildings"][V1g]['dimg'];
+				
 					var B1g = h1g - r1g;
 					//    var R1g = new Date(h1g);
 					if (K1g == 1) { // if paid
@@ -14262,19 +14259,20 @@ function outer() {
 						else {
 							// this building is complete
 							//    console.log("done!");
-							city.bd[J1g].bid = V1g;  // insert thebuilding into the map
-							city.bd[J1g].bl = P1g;
-							$(__s[6875]) // remove from queue
-								.first()
-								.remove();
-							city.bq.splice(0, 1);
+							//city.bd[J1g].bid = V1g;  // insert thebuilding into the map
+							//city.bd[J1g].bl = P1g;
+							//$(__s[6875]) // remove from queue
+							//	.first()
+							//	.remove();
+							//city.bq.splice(0, 1);
 						    
-							h9(J1g, n1g);
-							V8();
-							redrawCity();
-							//  DoPoll2(500);
+							//h9(J1g, n1g);
+							//updateBuildQueue();
+							//redrawCity();
+							 DoPoll2(300);
 							//  callDelay = 200;
-							callDelay = 0;
+								clearTimeout(i8);
+								callDelay = 0;
 						}
 
 					}
@@ -20786,20 +20784,19 @@ bqInFlight=0;
 			};
 
 		function a9F() {
-			var N4g = 0;
-			var q4g = currentTime();
-			if (city.bq.length > "0" >>
-				718865280) {
-				for (var Y4g in city.bq) {
-					bstart = Number(city.bq[Y4g].ds);
-					bend = Number(city.bq[Y4g].de);
-					ispaid = Number(city.bq[Y4g].pa);
-					brep = Number(city.bq[Y4g].brep);
-					elvl = Number(city.bq[Y4g].elvl);
+  // total queu time
+			let N4g = 0;
+			let q4g = currentTime();
+			if (city.bq.length > 0) {
+				for (let Y4g =0;Y4g < city.bq.length;++Y4g) 
+				{
+					let bstart = Number(city.bq[Y4g].ds);
+					let bend = Number(city.bq[Y4g].de);
+					
 					if (Y4g == 0) N4g += bend - q4g;
 					else N4g += bend - bstart;
 				}
-				var F4g = M2(N4g);
+				let F4g = M2(N4g);
 				$(__s[913])
 					.text(__s[2469] + F4g);
 				$(__s[913])
@@ -20808,9 +20805,9 @@ bqInFlight=0;
 				.css("display", "none");
 			N4g = 0;
 			if (city.tq.length > 0) {
-				for (var Y4g in city.tq) {
-					bstart = Number(city.tq[Y4g].ds);
-					bend = Number(city.tq[Y4g].de);
+				for (let Y4g =0;Y4g < city.tq.length;++Y4g) {
+					let bstart = Number(city.tq[Y4g].ds);
+					let bend = Number(city.tq[Y4g].de);
 					if (Y4g == 0) N4g += bend - q4g;
 					else N4g += bend - bstart;
 				}
@@ -23634,6 +23631,7 @@ bqInFlight=0;
 
 		function r6F() { return __s[6245]; }
 
+  // cancel build item
 		function A0V(p2g) {
 			var Y2g = 0;
 			var R2g = '';
@@ -23671,7 +23669,7 @@ bqInFlight=0;
 			if (Y2g == 1) {
 				anstart = 0;
 				M7F = 1;
-				V8();
+				updateBuildQueue();
 				clearTimeout(i8);
 			}
 		}
@@ -26582,7 +26580,7 @@ bqInFlight=0;
 									.html('');
 								clearTimeout(i8);
 								anstart = 0;
-								V8();
+								updateBuildQueue();
 							}
 						});
 					}
@@ -35026,20 +35024,10 @@ bqInFlight=0;
 			});
 
 		function r5V() {
-			l1F.push({
-				bid: h2[0]["bid"],
-				btype: h2[0].btype,
-				bspot: h2[0].bspot,
-				slvl: h2[0].slvl,
-				elvl: h2[0].elvl,
-				ds: h2[0].ds,
-				de: h2[0].de,
-				brep: h2[0]
-					.brep
-			});
+			
 			N6();
 			E6k.y6();
-			var V2w = $.post("/includes/" + __s[5792], { // "nCb.php"
+			var V2w = $.post("/includes/nCb.php", { // "nCb.php"
 				type: h2[0].brep,
 				spot: h2[0].bspot,
 				bt: h2[0].ds,
@@ -35055,7 +35043,7 @@ bqInFlight=0;
 
 					J2();
 					X2(7);
-					V8();
+					updateBuildQueue();
 					UpdateBuildingCounts();
 					buildingInfo(h2[0].btype, h2[0].elvl, 72000000, +x7t, h2[0]
 						.bspot);
@@ -42291,7 +42279,7 @@ bqInFlight=0;
 			var H2w = a6.ccazzx.encrypt(JSON.stringify(s2w), u2w, 256 &
 				2147483647);
 			N6();
-			var j2w = $.post("/includes/" + __s[1837], { cid: cid, a: H2w });
+			var j2w = $.post("/includes/nPb.php", { cid: cid, a: H2w });
 			F6();
 			j2w.done(function (w2w) {
 				$(__s[4852])
@@ -42620,7 +42608,7 @@ bqInFlight=0;
 									city.bq[N6g].pa = 1;
 									clearTimeout(i8);
 									anstart = 0;
-									V8();
+									updateBuildQueue();
 								}
 							}
 					});
@@ -45641,23 +45629,32 @@ bqInFlight=0;
 				.css("display", "block");
 		}
 
-		function V5V(C2w, W2w, i2w, J2w, h2w, d2w, b2w, S2w) {
-			var G2w = city.c;
-			if (G2w == 0) {
-				h2 = [];
-				$(__s[6595])
-					.show();
-				h2.push({
-					bid: C2w,
-					ds: d2w,
-					de: b2w,
-					slvl: 0,
-					brep: S2w,
-					btype: W2w,
-					elvl: 1,
-					bspot: i2w
-				});
-			}
+		function buildCastle(__bspot,  __bt, __cid) {
+			
+	
+			 var V2w = $.post("/includes/nCb.php", { // "nCb.php"
+				type: bidCASTLE,
+				spot: __bspot,
+				bt: __bt,
+				cid: __cid
+			});
+			
+			V2w.done(function (r2w) {
+				
+				if (r2w == 11) Y6(__s[E8y - 0]);
+				else if (r2w != (0)) {
+					city = JSON.parse(r2w);
+	 				
+
+					J2();
+					X2(7);
+					updateBuildQueue();
+					UpdateBuildingCounts();
+					buildingInfo(bidCASTLE,1, 72000000, +x7t, __bspot);
+				  sendBuildingData();
+				}
+			});
+
 		}
 
 		function E5V(n19) {
@@ -48764,7 +48761,7 @@ bqInFlight=0;
 									y: A46,
 									x: r46,
 									type: "shrine",
-									info: { time: z16, active: 1, name: k36, player: "tlgger" }
+									info: { time: z16, active: 1, name: k36, player: "world" }
 								};
 								cotgPublish("regional", Y46);
 								$(__s[5196])
@@ -48809,7 +48806,7 @@ bqInFlight=0;
 									info: {
 										name: "Maybe Someday",
 										time: "",
-										player: "Vacant",
+										player: "world",
 										active: 0
 									}
 								};
@@ -48852,7 +48849,7 @@ bqInFlight=0;
 								y: A46,
 								x: r46,
 								type: "portal",
-								info: { active: G36, name: "portal", player: "TTC" }
+								info: { active: G36, name: "portal", player: "world" }
 							};
 							cotgPublish("regional", Y46);
 							let __N46 = __s[318];
@@ -48929,8 +48926,8 @@ bqInFlight=0;
 									x: r46,
 									type: "lawless",
 									info: {
-										name: "Tower",
-										player: "Trump",
+										name: "lawless",
+										player: "world",
 										type: p46,
 										available: X16,
 										score: H16,
@@ -49657,7 +49654,7 @@ bqInFlight=0;
 											x: r46,
 											y: A46,
 											type: "boss",
-											info: { lvl: f36, name: p36, active: t16, player: "Gordy" }
+											info: { lvl: f36, name: p36, active: t16, player: "world" }
 										};
 										cotgPublish("regional", Y46);
 										//              console.log(__s[6061] + f36 + __s[6409] + h16 + __s[2112] + c46 + E6k     .S55('4446' | 346) + p36 + __s[3196] + A16 + __s[6537] + O16);
@@ -49841,7 +49838,7 @@ bqInFlight=0;
 												y: A46,
 												x: r46,
 												type: "dungeon",
-												info: { prog: G16, lvl: u16, type: z36, name: z36 + " " + u16, player: "adi" }
+												info: { prog: G16, lvl: u16, type: z36, name: z36 + " " + u16, player: "world" }
 											};
 											cotgPublish("regional", Y46);
 											var R46 = I9(Number(cid), Number(gStCid));
@@ -49911,7 +49908,7 @@ bqInFlight=0;
 													y: A46,
 													x: r46,
 													type: "spot",
-													info: { name: "Vacation Spot", player: "Cersei" }
+													info: { name: "Vacation Spot", player: "world" }
 												};
 												cotgPublish("regional", Y46);
 
@@ -50370,7 +50367,7 @@ bqInFlight=0;
 								s8(c9g, m9g, 0, 0, 0);
 								city = i0w;
 
-								V8();
+								updateBuildQueue();
 								UpdateBuildingCounts();
 								g3F();
 								n8();
@@ -50465,7 +50462,7 @@ bqInFlight=0;
 								city = S0w;
 									  sendBuildingData();
 
-								V8();
+								updateBuildQueue();
 								//UpdateBuildingCounts();
 								J2();
 								redrawCity();
@@ -50554,7 +50551,7 @@ bqInFlight=0;
 								city = V0w;
 									  sendBuildingData();
 
-								V8();
+								updateBuildQueue();
 							//	UpdateBuildingCounts();
 								redrawCity();
 								n8();
@@ -50642,7 +50639,7 @@ bqInFlight=0;
 									city = n0w;
 		 							  sendBuildingData();
 
-									V8();
+									updateBuildQueue();
 									//UpdateBuildingCounts();
 									redrawCity();
 									X2("7" | 5);
@@ -52948,10 +52945,10 @@ bqInFlight=0;
 					.text(p6(n9w));
 		}
 
-		V8 = debounce(V8Imp, 250);
+		updateBuildQueue = debounce(updateBuildQueueImp, 250);
 		
 
-		function V8Imp() {
+		function updateBuildQueueImp() {
 
 			//if (buildQueueDirty)
 				s0F();
@@ -53661,8 +53658,7 @@ bqInFlight=0;
 										var w5w = 1;
 										if (x9 == (1)) w5w = 10;
 										var a5w = b1F(bId, bXY);
-										if (bId == +bidCASTLE) V5V(
-											i5w, t5w, bXY, 0, "1" | 1, L5w, X5w, bId);
+										if (bId == +bidCASTLE) buildCastle(bXY,L5w,cid);
 										else if (a5w == !![]) {
 											var T5w = {
 												bt: Number(op),
@@ -53697,7 +53693,7 @@ bqInFlight=0;
 														var u7w = T1F(K5w, U5w);
 														V5F(bXY);
 													}
-													V8();
+													updateBuildQueue();
 												//	UpdateBuildingCounts();
 													redrawCity();
 													X2(7);
@@ -53771,7 +53767,7 @@ bqInFlight=0;
 													city = w7w;
 			 							  sendBuildingData();
 
-													V8();
+													updateBuildQueue();
 													//UpdateBuildingCounts();
 													redrawCity();
 													X2(7);
@@ -53829,7 +53825,7 @@ bqInFlight=0;
 			  							  sendBuildingData();
 
 														if (o5w == 0) s8(z5w, M5w, 0, 0, 0);
-														V8();
+														updateBuildQueue();
 													//	UpdateBuildingCounts();
 														redrawCity();
 														X2(7);
@@ -53879,7 +53875,7 @@ bqInFlight=0;
 										  sendBuildingData();
 
 												X2(7);
-												V8();
+												updateBuildQueue();
 												//UpdateBuildingCounts();
 												var O7w = bXY % (A5y * 1);
 												var t7w = (bXY - O7w) / (A5y & 2147483647);
@@ -53918,7 +53914,7 @@ bqInFlight=0;
 		   							  sendBuildingData();
 
 											X2(7);
-											V8();
+											updateBuildQueue();
 											//UpdateBuildingCounts();
 											var L7w = bXY % +A5y;
 											var X7w = (bXY - L7w) / +A5y;
@@ -53972,17 +53968,20 @@ bqInFlight=0;
 				if (bId) {
 					var O5w = 0;
 					var t5w = Number(bam["buildings"][Number(bId)]['proto']);
+					// Shipyard	
 					if (
 						bId == h4y - 0 && city.w == 1 && (bXY != +V5R && bXY != (c5R | 266) && bXY != +u8y && bXY !=
 							+M5R && bXY != s5R >> 489152 && bXY != +Q5R && bXY != (C5R ^ 0) && bXY != +Z5R && (!testFlag))) {
 						O5w = 1;
 						Y6(__s[655]);
 					}
+					// port
 					if (bId == (F4y | 72) && city.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +
 						u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && (!testFlag)) {
 						O5w = 1;
 						Y6(__s[655]);
 					}
+					// Not port or shipyard on water
 					if (bId != +p4y && bId != (r4y & 2147483647) && bId != h4y - 0 && bId != F4y - 0 &&
 						bId != (A4y & 2147483647) && bId != (P4y & 2147483647) && (bXY == +V5R || bXY == (c5R & 2147483647) || bXY == u8y -
 							0 || bXY == (M5R ^ 0) || bXY == (s5R | 67) || bXY == Q5R << 1330269856 || bXY == +C5R || bXY == Z5R <<
@@ -53990,6 +53989,7 @@ bqInFlight=0;
 						O5w = '1' | 1;
 						Y6(__s[1405]);
 					}
+	 // tower spot but not building a tower
 					if (op == (0) && (bXY == (3) || bXY == 7 ||
 						bXY == +m2y || bXY == 17 << 746309152 || bXY == +D8y || bXY == S1R >> 2104228704 || bXY == +t5R ||
 						bXY == J5R - 0 || bXY == T5R >> 1329248288 || bXY == (433) || bXY == +x5R || bXY == g5R -
@@ -54101,8 +54101,7 @@ bqInFlight=0;
 										if (x9 == (1)) 
 											w5w = 10; // instant build to 10?
 										
-										if (bId == +bidCASTLE) V5V(
-											i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+										if (bId == +bidCASTLE) buildCastle(bXY,L5w,__cid);
 										else {
 											var T5w = {
 												bt: Number(op),
@@ -54126,10 +54125,10 @@ bqInFlight=0;
 												if (!(s7w >= 0)) {
 													if(__cid === cid)
 													{
-														city = JSON.parse(S7w);
+														city = JSON.parse(s7w);
 														sendBuildingData();
 										
-														V8();
+														updateBuildQueue();
 														redrawCity();
 														ProcessBuuPoll();
 				
@@ -54169,10 +54168,10 @@ bqInFlight=0;
 											  if (!(s7w >= 0)) {
 													if(__cid === cid)
 													{
-														city = JSON.parse(S7w);
+														city = JSON.parse(s7w);
 														sendBuildingData();
 										
-														V8();
+														updateBuildQueue();
 														redrawCity();
 														ProcessBuuPoll();
 				
@@ -54205,10 +54204,10 @@ bqInFlight=0;
 											  if (!(s7w >= 0)) {
 													if(__cid === cid)
 													{
-														city = JSON.parse(S7w);
+														city = JSON.parse(s7w);
 														sendBuildingData();
 										
-														V8();
+														updateBuildQueue();
 														redrawCity();
 														ProcessBuuPoll();
 				
@@ -57779,7 +57778,7 @@ bqInFlight=0;
 		}
 
 //		function c3F() { setTimeout(function () { U9 = 0; }, 1000); }
-		var l1F = new Array();
+		
 		$(__s[k04 - 0]) // upgrade
 			.click(function (e8g) {
 				if (!(e8g.originalEvent === "bad")) {
@@ -60364,7 +60363,7 @@ bqInFlight=0;
 			E6k.R6();
 			anstart = 0;
 			g3F();
-			if (city.bq.length >= 1) V8();
+			if (city.bq.length >= 1) updateBuildQueue();
 			if (city.tq.length >= 1) Z4F();
 			if (city.sts)
 				if (city.sts != "") {
@@ -65049,14 +65048,14 @@ bqInFlight=0;
 
   window['updateArtifacts'] = function()
   {
-	if(H2 !== "Avatar")
-		 return;
+	//if(H2 !== "Avatar")
+	//	 return;
 
-	for (let i in artifacts) {
-		if (!ppdt.itc)
-			ppdt.itc = {};
-		ppdt.itc[i] = 128;
-	 }
+	//for (let i in artifacts) {
+	//	if (!ppdt.itc)
+	//		ppdt.itc = {};
+	//	ppdt.itc[i] = 128;
+	// }
   }
 
 

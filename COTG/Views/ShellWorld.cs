@@ -803,7 +803,8 @@ namespace COTG.Views
 
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
 		{
-		//	PointerInfo(e);
+			App.InputRecieved(); // prevent idle timer;
+			//	PointerInfo(e);
 			e.KeyModifiers.UpdateKeyModifiers();
 			if (!isHitTestVisible)
 				return;

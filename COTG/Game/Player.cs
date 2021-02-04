@@ -65,7 +65,7 @@ namespace COTG.Game
                 _nameToId.Add(str, id);
             }
             // bonus!
-            var bonus = new string[] { "Empty", "tlgger2","Vacant", "abandoned", "TTC","Gordy", "adi" };
+            var bonus = new string[] { "world" };
             {
                 int counter = -1;
                 foreach (var i in bonus)

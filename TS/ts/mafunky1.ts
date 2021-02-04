@@ -361,7 +361,7 @@ function compareBq() : boolean
 			lastSentBq = b0;
 			if(b0===b1)
 				return false;
-			V8();
+			updateBuildQueue();
 			return true;
 	}
 function sendCityData(delayInMs) {
@@ -398,13 +398,16 @@ function sendCityData(delayInMs) {
 
 		if (city.hasOwnProperty('trin') && city.trin.length > 0)
 		{
-			wrapper.citydata['trin'] = city.trin;
+			wrapper.citydata.trin = city.trin;
 		}
 		if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
-			wrapper.citydata['trintr'] = city.trintr;
+			wrapper.citydata.trintr = city.trintr;
 		}
 		if (city.hasOwnProperty('triin') && city.triin.length > 0) {
-			wrapper.citydata['triin'] = city.triin;
+			wrapper.citydata.triin = city.triin;
+		}
+		if (city.hasOwnProperty('ble') && city.ble.length > 0) {
+			wrapper.citydata.ble = city.ble;
 		}
 
 		window['external']['notify'](JSON.stringify(wrapper));

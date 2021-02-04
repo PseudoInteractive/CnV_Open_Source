@@ -29,13 +29,33 @@ namespace COTG.Services
 			this.Description = Description;
 		}
 
-		public string s { get; set; }
-
-		public string Description { get; set; }
 		public string PartitionKey { get; set; }
 		public string  RowKey { get; set; }
 		public DateTimeOffset? Timestamp { get; set; }
 		public ETag ETag { get; set; }
+		public string s { get; set; }
+
+		public string Description { get; set; }
+	}
+
+	public class TableBuildQueue : ITableEntity
+	{
+		public TableBuildQueue()
+		{
+		}
+
+		public TableBuildQueue(string partitionKey, string rowKey, string s)
+		{
+			this.PartitionKey = partitionKey;
+			this.RowKey = rowKey;
+			this.s = s;
+		}
+
+		public string PartitionKey { get; set; }
+		public string RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
+		public string s { get; set; }
 	}
 
 	public static class Cosmos
@@ -201,7 +221,97 @@ namespace COTG.Services
 			{
 				throttleT.Release();
 			}
+		
 		}
+
+
+		#region BuildQ
+
+		static bool buildQueueExists;
+		static string buildQueuePartition => $"{JSClient.world}_{Player.myName}";
+		const string buildQueueKey = "buildq";
+		public static async Task<string> LoadBuildQueue()
+		{
+
+			if (!await TouchT())
+				return String.Empty;
+
+			var part = buildQueuePartition;
+			var key = buildQueueKey;
+
+			await throttleT.WaitAsync();
+			try
+			{
+				var r = await tableClient.GetEntityAsync<TableBuildQueue>(part, key);
+				if (r != null)
+				{
+					buildQueueExists = true;
+					return r.Value.s;
+				}
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+			return string.Empty;
+		}
+
+
+		public static async void SaveBuildQueue(string data)
+		{
+
+			if (!await TouchT())
+				return;
+
+			var part = buildQueuePartition;
+			var key = buildQueueKey;
+
+			await throttleT.WaitAsync();
+			try
+			{
+
+				var i = new TableBuildQueue(part, key,data);
+				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
+				buildQueueExists = true;
+			}
+			catch (Exception e)
+			{
+				Log(e);
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+		}
+		public static async void ClearBuildQueue()
+		{
+			if (!buildQueueExists)
+				return;
+			if (!await TouchT())
+				return;
+			var part = buildQueuePartition;
+			var key = buildQueueKey;
+
+			await throttleT.WaitAsync();
+			try
+			{
+				var r = await tableClient.DeleteEntityAsync(part, key);
+				buildQueueExists = false;
+			}
+			catch (Exception e)
+			{
+				Log(e);  // ignore if it does not exist
+			}
+			finally
+			{
+				throttleT.Release();
+			}
+		}
+		#endregion
 
 		static async ValueTask<bool> Touch()
 		{

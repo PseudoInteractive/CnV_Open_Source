@@ -394,24 +394,25 @@ namespace COTG
         // Randomish hash for city ids
         public static float CidToRandom(this int cid)
         {
-            var x = cid % 65536;
-            var y = cid / 65536;
-            const uint c1 = 0xcc9e2d51;
-            const uint c2 = 0x1b873593;
-            var result = (((int)(x * c1 + y * c2) >> 8)&0xffff);
-            return result * (1.0f / 0x10000);
+			return RandomFloat((uint)cid);
 
         }
 		// not very random at all, but good enough
 		public static float BSpotToRandom(this int bspot)
 		{
-			const uint c1 = 0xcc9e2d51;
-			const uint c2 = 0x1b873593;
-			
-			var result = (((int)(bspot * c1 + c2) >> 8) & 0xffff);
-			return result * (1.0f / 0x10000);
+			return RandomFloat( (uint)bspot);
 
 		}
+		public static float RandomFloat(uint offset)
+		{
+			var dRand = (double)(unchecked(offset)); 
+
+			var dotProduct = Math.Cos(dRand) *(256*RandomSeed.GelfondConst) + Math.Sin(dRand) *(256*RandomSeed.GelfondSchneiderConst);
+			var remainder = RandomSeed.Numerator % dotProduct;
+
+			return (float)(remainder - Math.Floor(remainder));
+		}
+
 		//public static float CidToRandom(this int cid,int offset)
 		//{
 		//    var x = cid % 65536;
@@ -433,9 +434,9 @@ namespace COTG
 		/// </summary>
 		public struct RandomSeed
 		{
-			private const double GelfondConst = 23.1406926327792690;            // e to the power of Pi = (-1) to the power of -i
-			private const double GelfondSchneiderConst = 2.6651441426902251;    // 2 to the power of sqrt(2)
-			private const double Numerator = 123456789;
+			public const double GelfondConst = 23.1406926327792690;            // e to the power of Pi = (-1) to the power of -i
+			public const double GelfondSchneiderConst = 2.6651441426902251;    // 2 to the power of sqrt(2)
+			public const double Numerator = 123456789;
 
 			// When casting uint to double it works fine, but when casting it to float it might cause underflow errors (loss of precision)
 			// We want to limit the maximum settable value to prevent such errors.

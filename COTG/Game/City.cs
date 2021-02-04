@@ -105,7 +105,8 @@ namespace COTG.Game
 		
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax;
-		public static bool wantBuildCommands => buildQueue.count < 8;
+		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
+		public const int safeBuildQueueLength = 15; // leave space for autobuild
 
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
@@ -333,7 +334,11 @@ namespace COTG.Game
 			Assert(pid != 0);
 
 
-            if (jse.TryGetProperty("w", out var isOnWataer))
+			if (jse.TryGetProperty("ble", out var ble))
+			{
+				Log(ble.ToString());
+			}
+			if (jse.TryGetProperty("w", out var isOnWataer))
             {
                 var i = isOnWataer.GetAsInt();
                 if (i==1)
@@ -381,20 +386,12 @@ namespace COTG.Game
 				for(int i=0;i<count;++i)
 				{
 					var js = bq[i];
-					buildQueue.Add( new BuildQueueItem()
-					{
-						//ds = js.GetAsInt64("ds"),
-						//de = js.GetAsInt64("de"),
-						//btime = js.GetAsInt64("btime"),
-						//bidHash = js.GetAsInt64("bid"),
-					//	btype = js.GetAsInt("btype"),
-						bspot =js.GetAsUShort("bspot"),
-						bid = js.GetAsUShort("brep"),
-						slvl = js.GetAsByte("slvl"),
-						elvl = js.GetAsByte("elvl"),
-						//pa = js.GetAsByte("pa")
-
-					});
+					buildQueue.Add(new BuildQueueItem(
+						js.GetAsByte("slvl"),
+						js.GetAsByte("elvl"), 
+						js.GetAsUShort("brep"), 
+						js.GetAsUShort("bspot")
+						));
 				}
 			}
 

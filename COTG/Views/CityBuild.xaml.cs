@@ -443,7 +443,7 @@ namespace COTG.Views
 			var lvl = sel.bl;
 			
 			if(lvl == 0)// special case
-				Enqueue( 0,1,sel.def.bid, id);
+				Build(id,sel.def.bid,false);
 			else
 				Enqueue(lvl,(lvl + 1),sel.def.bid,id);
 		
@@ -590,7 +590,7 @@ namespace COTG.Views
 		public static void Build(int id, int bid, bool dryRun)
 		{
 			var sel = GetBuildingPostQueue(id);
-			if (!sel.isEmpty)
+			if (bid != bidWall && !sel.isEmpty) // special case, wall upgrade from level is allowed as a synanom for build
 			{
 				Status("Spot is occupied",dryRun);
 			}
@@ -660,6 +660,7 @@ namespace COTG.Views
 					}
 					else
 					{
+
 						Enqueue(0, 1, bid, id);
 					}
 				}
@@ -718,7 +719,7 @@ namespace COTG.Views
 			const int duDt = 128;
 			const int dvDt = 128;
 			var u0 = (iconId % atlasColumns) * duDt;
-			var v0 = (int)(iconId / atlasColumns) * dvDt;
+			var v0 = ((int)(iconId / atlasColumns)%33) * dvDt;
 			var uri = SettingsPage.IsThemeWinter() ? "City/Winter/building_set5.png" :
 			"City/building_set5.png";
 			return BrushFromAtlas(uri, u0, v0, scale);

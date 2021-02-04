@@ -47,6 +47,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Data;
+using Windows.System.Threading;
 
 namespace COTG
 {
@@ -151,7 +152,7 @@ namespace COTG
 			//		break;
 
 			//}
-			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
+			InputRecieved();
 		}
 
 		static bool webViewInFront = false;
@@ -175,8 +176,8 @@ namespace COTG
 			//		break;
 
 			//}
-			
-			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
+
+			InputRecieved();
 		}
 
 		private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -194,8 +195,10 @@ namespace COTG
 			e.Handled = true;
 		}
 
-		static DispatcherTimer idleTimer;
-		static bool timerActive;
+		static ThreadPoolTimer idleTimer;
+		static int lastInputTick;
+		public static void InputRecieved() => lastInputTick = Environment.TickCount;
+
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
 
@@ -252,10 +255,7 @@ namespace COTG
 			{
 
 
-				idleTimer = new DispatcherTimer();
-				idleTimer.Interval = TimeSpan.FromSeconds(10);  // 16s idle delay, at most one event per 16 seconds?  What if too many are queued?
-				idleTimer.Tick += IdleTimer_Tick;
-				Assert(idleTimer.IsEnabled == false);
+				idleTimer = ThreadPoolTimer.CreatePeriodicTimer(IdleTimer_Tick, TimeSpan.FromSeconds(4) );
 				ProcessThrottledTasks();
 			}
 
@@ -294,6 +294,8 @@ namespace COTG
 				e.Handled = true;
 
 		}
+
+		// Uses Task Await
 		static async void ProcessThrottledTasks()
 		{
 			for (; ; )
@@ -339,38 +341,24 @@ namespace COTG
 					rv = true;
 					break;
 			}
-			App.DispatchOnUIThreadSneaky(ResetIdleTimer);
+			InputRecieved();
 			return rv;
 		}
 
-		private static void ResetIdleTimer()
-		{
-			if (timerActive)
-			{
-				idleTimer.Stop();
-				idleTimer.Start();
-			}
-		}
-		public static void NotIdle()
-		{
-			DispatchOnUIThreadSneaky(ResetIdleTimer);
-		}
+		
 		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		{
 			// reset timer if active
-			ResetIdleTimer();
+			InputRecieved(); 
 		}
 
-		private static void IdleTimer_Tick(object sender, object e)
+		private static void IdleTimer_Tick(ThreadPoolTimer _)
 		{
-			if (idleTasks.Count < 1)
+			var tick = Environment.TickCount;
+			// must be idle for at least 16 s
+			if( (tick - lastInputTick ).Abs() < 16*1000 )
 			{
-				Log("no tasks for tick?");
-			}
-			if (idleTasks.Count <= 1)
-			{
-				timerActive = false;
-				idleTimer.Stop();
+				return;
 			}
 			if (idleTasks.TryDequeue(out Action a))
 			{
@@ -382,8 +370,6 @@ namespace COTG
 				{
 					COTG.Debug.Log(_exception);
 				}
-
-
 			}
 		}
 
@@ -404,14 +390,10 @@ namespace COTG
 			}
 
 
-			{
-				idleTasks.Enqueue(a);
-				if (!timerActive)
-				{
-					timerActive = true;
-					DispatchOnUIThreadSneaky(idleTimer.Start);
-				}
-			}
+			
+			idleTasks.Enqueue(a);
+				
+			
 		}
 
 		protected override async void OnActivated(IActivatedEventArgs args)

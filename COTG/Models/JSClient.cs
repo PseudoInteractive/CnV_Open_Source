@@ -1967,6 +1967,8 @@ namespace COTG
 
 				   if (gotCreds)
 				   {
+					   CityBuildQueue.Init();
+
 					   ShellPage.SetViewModeCity();
 
 					   APlayfab.Login();
