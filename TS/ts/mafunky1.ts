@@ -311,6 +311,7 @@ function Contains(a:string,b:string) {
 
 let updateTimeout=0;
 let lastSentBq=0;
+let bqInFlight=0;
 let lastSentSts:string="";
 let  lastSentBD=0;
 	function compareSts() : boolean
@@ -351,6 +352,10 @@ function bqChecksum(bd:jsonT.Bq[] ) : number
 	}
 function compareBq() : boolean
 	{
+			if(bqInFlight > 0)
+				return false;
+			bqInFlight=0;
+
 			let b0 = bqChecksum(city.bq);
 			var b1 = lastSentBq;
 			lastSentBq = b0;

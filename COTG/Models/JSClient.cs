@@ -168,13 +168,17 @@ namespace COTG
 		{
 			return (DateTimeOffset.UtcNow + gameTOffset);
 		}
-		public static DateTimeOffset ToServerTime(DateTime time)
+		public static DateTimeOffset AsJSTime(long t)
 		{
-			return (time.ToUniversalTime() + gameTOffset);
+			return new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero) + TimeSpan.FromMilliseconds(t);
 		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="JSClient"/> class.
-		/// </summary>
+		public static DateTimeOffset ServerToLocal(DateTimeOffset t)
+		{
+			return t - gameTOffset;
+		}
+			/// <summary>
+			/// Initializes a new instance of the <see cref="JSClient"/> class.
+			/// </summary>
 		public JSClient()
 		{
 		}

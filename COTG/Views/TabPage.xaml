@@ -18,7 +18,7 @@
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
-                      TabFocusNavigation="Once"
+                      TabFocusNavigation="Cycle"
                       IsTabStop="True"
                       CloseButtonOverlayMode="Auto"
                       
@@ -32,7 +32,7 @@
                     
                              TabDragStarting="Tabs_TabDragStarting" >
             <muxc:TabView.TabStripHeader>
-                <Grid x:Name="ShellTitlebarInset"  Background="Transparent"  />
+                <Grid x:Name="ShellTitlebarInset"  Background="Transparent"   />
             </muxc:TabView.TabStripHeader>
             <muxc:TabView.TabStripFooter>
                 <Grid x:Name="CustomDragRegion"  Background="Transparent" >

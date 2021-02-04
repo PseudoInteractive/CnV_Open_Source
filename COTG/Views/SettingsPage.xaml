@@ -73,8 +73,14 @@
 									 SmallChange="1"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
-		
-				
+
+
+				<ToggleSwitch  Header="Build Queue"
+							   IsOn="{x:Bind views:SettingsPage.deferredBuild, Mode=TwoWay}"
+							   Margin="4"
+							   OnContent="Unlimited"
+							   OffContent="Normal" />
+
 				<TextBox Header="Visit" Text="{x:Bind visitToken, Mode=TwoWay}" />
 				<TextBox Header="VisitCookie" Text="{x:Bind visitCookie, Mode=TwoWay}" />
 

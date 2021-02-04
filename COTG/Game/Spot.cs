@@ -1407,7 +1407,7 @@ namespace COTG.Game
 					}
 
 					
-					aSetup.AddItem("Info", Spot.InfoClick, cid);
+					aSetup.AddItem("Setup", Spot.InfoClick, cid);
 					aSetup.AddItem( "Set Hub", (_, _) => CitySettings.SetHub(cid));
 					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 

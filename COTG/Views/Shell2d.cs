@@ -126,6 +126,8 @@ namespace COTG.Views
 			};
 			keyboardProxy = new KeyboardProxy()
 			{
+				AllowFocusOnInteraction = true,
+				TabFocusNavigation=KeyboardNavigationMode.Cycle,
 				Background = null,
 				IsTabStop = true
 			};
@@ -182,7 +184,7 @@ namespace COTG.Views
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			if (CityBuild.menuOpen)
-			{
+			{	
 				// todo:  Handle naviation menu items and selection
 				App.DispatchOnUIThreadSneaky(() =>
 				{

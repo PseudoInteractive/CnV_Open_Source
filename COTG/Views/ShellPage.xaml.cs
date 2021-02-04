@@ -204,9 +204,6 @@ namespace COTG.Views
 		public static bool canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
-
-			
-
 			grid.Children.Add(CityBuild.Initialize(buildMenu,buildMenuCanvas));
 		//	Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -738,23 +735,23 @@ namespace COTG.Views
 					var bd = bdi.def;
 					ProcessBuilding(bd);
 				}
+
 				try
 				{
-					for (var it = City.buildQueue.iterate;it.Next();)
-					{
-						var r = it.r;
-						// new building
-						if(r.slvl==0 )
-						{
-							ProcessBuilding(BuildingDef.all[r.brep]);
-						}
-						// demo
-						if (r.elvl == 0)
-						{
-							if (!BuildingDef.IsRes(r.brep))
-								ProcessBuilding(BuildingDef.all[r.brep],false);
-						}
-					}
+					City.IterateQueue((r) =>
+				   {
+					   // demo
+					   if (r.elvl == 0)
+					   {
+						   if (!BuildingDef.IsRes(r.bid))
+							   ProcessBuilding(BuildingDef.all[r.bid], false);
+					   }
+					   // new building
+					   else if (r.slvl == 0)
+					   {
+						   ProcessBuilding(BuildingDef.all[r.bid]);
+					   }
+				   });
 				}
 				catch( Exception _)
 				{

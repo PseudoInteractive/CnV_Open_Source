@@ -33,6 +33,7 @@
 							Grid.Row="3"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
+						AllowFocusOnInteraction="True"
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"

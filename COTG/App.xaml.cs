@@ -1064,8 +1064,8 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
-				ob.Focus(FocusState.Programmatic);
+				ShellPage.keyboardProxy.Focus(FocusState.Keyboard);
+				ob.Focus(FocusState.Keyboard);
 			}
 		}
 		static string lastTip;

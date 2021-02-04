@@ -101,13 +101,38 @@ namespace COTG.Game
 		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		public Building GetBuiding( int bspot) => buildings[bspot];
 		
-		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(64);// fixed size to improve threading behaviour and performance
+		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
 		
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax;
+		public static bool wantBuildCommands => buildQueue.count < 8;
 
+		public static IEnumerable<BuildQueueItem> IterateQueue()
+		{
+			foreach (var i in buildQueue)
+				yield return i;
 
-
+			if (BuildQueueHelper.TryGetQueue(out var q))
+			{
+				while (q.MoveNext())
+				{
+					yield return q.Current;
+				}
+			}
+		}
+		public static void IterateQueue(  Action<BuildQueueItem> action )
+		{
+			foreach (var i in buildQueue)
+				action(i);
+			
+			if (BuildQueueHelper.TryGetQueue(out var q))
+			{
+				while (q.MoveNext())
+				{
+					action(q.Current);
+				}
+			}
+		}
 		public static void CitySwitched()
 		{
 			buildQueue.Clear(); 
@@ -358,20 +383,19 @@ namespace COTG.Game
 					var js = bq[i];
 					buildQueue.Add( new BuildQueueItem()
 					{
-						ds = js.GetAsInt64("ds"),
-						de = js.GetAsInt64("de"),
-						btime = js.GetAsInt64("btime"),
-						bidHash = js.GetAsInt64("bid"),
-						btype = js.GetAsInt("btype"),
-						bspot = js.GetAsInt("bspot"),
-						brep = js.GetAsInt("brep"),
+						//ds = js.GetAsInt64("ds"),
+						//de = js.GetAsInt64("de"),
+						//btime = js.GetAsInt64("btime"),
+						//bidHash = js.GetAsInt64("bid"),
+					//	btype = js.GetAsInt("btype"),
+						bspot =js.GetAsUShort("bspot"),
+						bid = js.GetAsUShort("brep"),
 						slvl = js.GetAsByte("slvl"),
 						elvl = js.GetAsByte("elvl"),
-						pa = js.GetAsByte("pa")
+						//pa = js.GetAsByte("pa")
 
 					});
 				}
-
 			}
 
 			if (jse.TryGetProperty("bd", out var eBd))
@@ -926,27 +950,27 @@ namespace COTG.Game
 				++count;
 			}
 			// process queue for new and deleted buildings
-			for (var it = buildQueue.iterate; it.Next();)
+			foreach(var r in IterateQueue())
 			{
-				var r = it.r;
-				if (r.brep == 0)
+				if (r.bid == 0)
 					continue;
-				if (r.isBuild)
+				
+				if( r.isDemo )
 				{
-					var bd = BuildingDef.all[r.brep];
-					if (!(bd.isWall || bd.isTower))
-					{
-						++count;
-					}
-				}
-				else if( r.isDemo )
-				{
-					var bd = BuildingDef.all[r.brep];
+					var bd = BuildingDef.all[r.bid];
 					if (!(bd.isWall || bd.isTower || r.isRes))
 					{
 						--count;
 					}
 
+				}
+				else  if (r.slvl==0)
+				{
+					var bd = BuildingDef.all[r.bid];
+					if (!(bd.isWall || bd.isTower))
+					{
+						++count;
+					}
 				}
 
 			}

@@ -51,6 +51,7 @@ namespace COTG.Views
 		public static bool fetchFullHistory = true;
 		public static bool? autoBuildOn = null;
 		public static bool setRecruit;
+		public static bool deferredBuild;
 		public static float planet = 0.5f;
 		public static float parallax = 0.5f;
 		public static string hubCitylistName = "Hubs";

@@ -16,7 +16,7 @@ const __s = [".shRinf",
 	"<div ID = \"trfoodpic\" class = \"reqtooptip\" title = \"Food\"></div><span> x ",
 	"</td> </tr> <tr> <td>Stone generated (/hour) by this city:</td> <td ID=\"stonttc\">",
 	"Survey your domain!",
-	"#optionsXbutton", I would also like to add that you are a terrific leader.
+	"#optionsXbutton",
 	"UBBit.php",
 	"#col4",
 	"ot",
@@ -12727,8 +12727,8 @@ function outer() {
 						I72[v72]['l'] + " " + bam[__s[4977]][Number(I72[v72][__s[+w6y]])];
 					l72 = l72 + __s[3469] + I72[v72][__s[x9y | 6459]] + __s[3516] + I72[v72][
 						__s[x9y << 1626876384]] + __s[4389] + I72[v72]['c'] + _s('3430' <<
-							1043888224) + I72[v72]['c'] + __s[F6y ^ 0] + T72 + __s[+c2y] + Math.floor(Number(
-								I72[v72]['p'])) + __s['6205' | 1] + I72[v72][__s[x9y | 6696]] + __s[F6y ^ 0] +
+							1043888224) + I72[v72]['c'] + "'>" + T72 + __s[+c2y] + Math.floor(Number(
+								I72[v72]['p'])) + __s['6205' | 1] + I72[v72][__s[x9y | 6696]] + "'>" +
 						I72[v72][__s[H6y ^ 0]] + ":" + I72[v72][__s[+G6y]] + __s[c2y - 0] + I72[v72][E6k
 							.S55(+T9y)] + __s[+809] + I72[v72][__s[x9y | 256]] + __s[6144] + I72[v72][_s(
 								+x9y)] + __s[5434];
@@ -14239,7 +14239,7 @@ function outer() {
 					var K1g = Number(city.bq[0].pa);
 					var D1g = bam["buildings"][V1g]["bn"];
 					var
-						y1g = bam["buildings"][V1g][__s[+c1R]];
+						y1g = bam["buildings"][V1g]['dimg'];
 					var B1g = h1g - r1g;
 					//    var R1g = new Date(h1g);
 					if (K1g == 1) { // if paid
@@ -17566,7 +17566,7 @@ function outer() {
 			R6i = T8(R6i);
 			if (y6i == __s[i0p | 5120]) {
 				var U6i = __s[q0p * 1] + D6i + __s[375] + Y6i + E6k
-					.o55(F6y - 0) + p6i + __s[+D0p] + B6i + __s[F6y & 2147483647] + B6i + __s[m0p * 1] + R6i + _s(
+					.o55(F6y - 0) + p6i + __s[+D0p] + B6i + "'>" + B6i + __s[m0p * 1] + R6i + _s(
 						+B0p);
 				var P6i = $(__s[+c2R])
 					.innerHeight() + $(__s[c2R << 689402208])
@@ -17615,7 +17615,7 @@ function outer() {
 				}
 			} else if (y6i == _s(+
 				"3763")) {
-				var U6i = __s[+q0p] + D6i + __s[3839] + B6i + __s[+F6y] + B6i + _s("2546" ^
+				var U6i = __s[+q0p] + D6i + __s[3839] + B6i + "'>" + B6i + _s("2546" ^
 					0) + R6i + __s[B0p | 1026];
 				var P6i = $(__s[+c2R])
 					.innerHeight() + $(__s[+c2R])
@@ -17648,8 +17648,8 @@ function outer() {
 						.animate({ scrollTop: $(__s[L2R ^ 0])[0].scrollHeight }, +e2R);
 				}
 			} else if (y6i == "alliance") {
-				var U6i = __s[+q0p] + D6i + __s[1964] + Y6i + __s[+F6y] + p6i + _s(
-					D0p * 1) + B6i + __s[F6y ^ 0] + B6i + __s[+m0p] + R6i + __s[B0p | 1026];
+				var U6i = __s[+q0p] + D6i + __s[1964] + Y6i + "'>" + p6i + _s(
+					D0p * 1) + B6i + "'>" + B6i + __s[+m0p] + R6i + __s[B0p | 1026];
 				var P6i = $(_s(
 					c2R << 1398205088))
 					.innerHeight() + $(__s[c2R >> 1263240544])
@@ -17671,8 +17671,8 @@ function outer() {
 				}
 			} else if (y6i == E6k
 				.S55(5088)) {
-				var U6i = __s[q0p | 2066] + D6i + __s[2070] + Y6i + __s[F6y | 4160] + p6i +
-					__s[+D0p] + B6i + __s[+F6y] + B6i + __s[m0p * 1] + R6i + __s[B0p * 1];
+				var U6i = __s[q0p | 2066] + D6i + __s[2070] + Y6i + "'>" + p6i +
+					__s[+D0p] + B6i + "'>" + B6i + __s[m0p * 1] + R6i + __s[B0p * 1];
 				var P6i = $(_s(
 					c2R & 2147483647))
 					.innerHeight() + $(__s[+c2R])
@@ -18299,7 +18299,7 @@ function outer() {
 						var S3l = __s[u4p & 2147483647];
 						f3l = 1;
 					}
-					J3l = J3l + __s[3130] + S3l + __s[F6y | 514] + r3l + _s(+
+					J3l = J3l + __s[3130] + S3l + "'>" + r3l + _s(+
 						K5y);
 				}
 				for (var I1l in qam["techTreeSteps"][Number(h3l)]["r"]) {
@@ -18317,7 +18317,7 @@ function outer() {
 								var S3l = __s[u4p | 1289];
 								f3l = 1;
 							}
-							J3l = J3l + __s[+r4y] + S3l + __s[F6y >> 1391118720] + b3l + _s(+
+							J3l = J3l + __s[+r4y] + S3l + "'>" + b3l + _s(+
 								K5y);
 							break;
 						case __s[5872]:
@@ -18331,7 +18331,7 @@ function outer() {
 								var S3l = __s[u4p | 1285];
 								f3l = 1;
 							}
-							J3l = J3l + __s[6839] + S3l + __s[F6y * 1] + b3l + __s[+K5y];
+							J3l = J3l + __s[6839] + S3l + "'>" + b3l + __s[+K5y];
 							break;
 						case __s[+E4p]:
 							var T1l = ppdt["pr"][3];
@@ -18344,7 +18344,7 @@ function outer() {
 								var S3l = __s[+u4p];
 								f3l = 1;
 							}
-							J3l = J3l + __s[2581] + S3l + __s[F6y * 1] + b3l + __s[+K5y];
+							J3l = J3l + __s[2581] + S3l + "'>" + b3l + __s[+K5y];
 							break;
 						case __s[+F4R]:
 							var s1l = ppdt["pr"][4];
@@ -18357,7 +18357,7 @@ function outer() {
 								var S3l = __s[+u4p];
 								f3l = 1;
 							}
-							J3l = J3l + __s[6756] + S3l + __s[F6y | 576] + b3l + _s(
+							J3l = J3l + __s[6756] + S3l + "'>" + b3l + _s(
 								K5y >> 1751652640);
 							break;
 						default:
@@ -18689,7 +18689,8 @@ function outer() {
 			if(__cid === cid )
 				   return;
 				_cid = cid = __cid;
-			
+bqInFlight=0;
+
 				ClearCity();
 				callSyncViewMode();
 				getCity(Number(d9l));
@@ -19602,7 +19603,7 @@ function outer() {
 				__s["373" | 52] + u5v + __s[1090] + N0v.dhair + __s[6365] + N0v.dcloths + _s('4868' >>
 					688727200) + N0v.ddress + __s[2471] + N0v.dskin + __s[4996] + N0v.dbody + _s('6597' ^
 						0);
-			var H5v = __s[2828] + j5v + __s[6339] + N0v.tcid + __s[F6y * 1] + N0v.tcn + _s(+
+			var H5v = __s[2828] + j5v + __s[6339] + N0v.tcid + "'>" + N0v.tcn + _s(+
 				"1310") + N0v.tpn + __s[5782] + N0v.tpan + __s[5284] + p6(N0v.dsco) + _s(
 					5715) + N0v.dcits + __s[+l1y];
 			q0v += __s[1173] + H5v + __s[1897];
@@ -22699,11 +22700,11 @@ function outer() {
 								.S55(756) + Y21 + __s[1458] + q21 + __s[A0R >> 1359080320];
 						}
 						R21 = R21 + _s(
-							7043) + p21 + __s[+Z8p] + y21 + __s[5925] + a21 + _s('6277' <<
+							7043) + p21 + ";'>" + y21 + __s[5925] + a21 + _s('6277' <<
 								973813472) + v81 + __s[f2p - 0] + l81 + __s[2775] + g21 + __s[5447] + P21 + _s(
 									+
-									'1723') + p6(Math.floor(m21)) + __s[2381] + U21 + __s[F6y << 703292160] + k81 + _s(
-										5283) + U21 + __s[F6y - 0] + D21 + __s[270] + H81 + s81 + _s("893" |
+									'1723') + p6(Math.floor(m21)) + __s[2381] + U21 + "'>" + k81 + _s(
+										5283) + U21 + "'>" + D21 + __s[270] + H81 + s81 + _s("893" |
 											553);
 					} else if (K21 == (0) || K21 == (1) || K21 == 2 || K21 == 3) {
 						g21 = n21[
@@ -22739,9 +22740,9 @@ function outer() {
 						y21 = U8(5);
 						p21 = __s[g8p * 1];
 						a21 = __s[+W8p];
-						R21 = R21 + __s[5158] + p21 + __s[Z8p << 952332544] + y21 + __s[U6y ^ 0] + w81 + _s(+
-							'4342') + I81 + __s[F6y | 6658] + g21 + __s[1208] + P21 + __s[313] + p6(Math.floor(
-								m21)) + __s[3522] + U21 + __s[F6y * 1] + k81 + __s[2663] + U21 + __s[+F6y] +
+						R21 = R21 + __s[5158] + p21 + ";'>" + y21 + __s[U6y ^ 0] + w81 + _s(+
+							'4342') + I81 + "'>" + g21 + __s[1208] + P21 + __s[313] + p6(Math.floor(
+								m21)) + __s[3522] + U21 + "'>" + k81 + __s[2663] + U21 + "'>" +
 							D21 + __s[2406] + j81 + __s[1126] + alliance + __s[1329] + Y21 + _s(
 								1917);
 					} else if (K21 == 4) {
@@ -22777,9 +22778,9 @@ function outer() {
 						y21 = U8(3);
 						p21 = __s[g8p >> 2082991744];
 						a21 = __s[+W8p];
-						R21 = R21 + __s[5158] + p21 + __s[Z8p | 2350] + y21 + __s[1966] + E21 + _s(+
+						R21 = R21 + __s[5158] + p21 + ";'>" + y21 + __s[1966] + E21 + _s(+
 							'3805') + g21 + __s[1208] + P21 + __s[313] + p6(Math.floor(m21)) + __s[3522] +
-							U21 + __s[F6y << 10456320] + k81 + __s[2663] + U21 + __s[+F6y] + D21 + _s(+
+							U21 + "'>" + k81 + __s[2663] + U21 + "'>" + D21 + _s(+
 								'131') + B21 + __s[4885] + j81 + __s[2858] + alliance + __s[1329] + Y21 +
 							__s[4051];
 					} else if (K21 == 11) {
@@ -22801,9 +22802,9 @@ function outer() {
 						var U21 = Number(N21) * +R5y + Number(F21);
 						y21 = U8(6);
 						p21 = __s[474];
-						R21 = R21 + __s[5403] + p21 + __s[Z8p << 397686336] + y21 + _s("2995" |
+						R21 = R21 + __s[5403] + p21 + ";'>" + y21 + _s("2995" |
 							784) + g21 + __s[2897] + P21 + __s[313] + p6(Math.floor(m21)) + __s[3522] +
-							U21 + __s[+F6y] + D21 + __s["5155" | 1] + Y21 + __s[1917];
+							U21 + "'>" + D21 + __s["5155" | 1] + Y21 + __s[1917];
 					}
 				}
 				R21 = R21 + __s[+u3y];
@@ -22870,7 +22871,7 @@ function outer() {
 							.tc[w42];
 						var L42 = Math.floor(Number(city.th[w42]) * I42);
 						var X42 = bam["troops"][
-							w42][__s[c1R << 313811104]];
+							w42]['dimg'];
 						var o42 = bam["troops"][w42][_s("1067" <<
 							1474491200)];
 						if (t42 != (0)) Q42 = Q42 + __s['1154' | 128] + X42 + __s[1689] +
@@ -23125,7 +23126,7 @@ function outer() {
 				var J3T =
 					I2(C3T, 25);
 				i3T = __s[5026] + S3T + __s[5716] + J3T + __s[3049] + C3T + _s(Z04 -
-					0) + h3T + __s[F6y - 0] + W3T + "</div>";
+					0) + h3T + "'>" + W3T + "</div>";
 				return i3T;
 			}
 		}
@@ -23194,10 +23195,10 @@ function outer() {
 					V21 = U8(3);
 					b21 = __s[g8p - 0];
 					r21 = __s[+W8p];
-					o21 = o21 + __s["5158" | B9s] + b21 + __s[+Z8p] + V21 + __s[1966] + O21[t21][11] + _s(
+					o21 = o21 + __s["5158" | B9s] + b21 + ";'>" + V21 + __s[1966] + O21[t21][11] + _s(
 						3805) + O21[t21][1] + __s[1208] + O21[t21][2] + __s[313] + p6(Number(O21[
-							t21][3])) + __s[1836] + L21 + __s[2834] + M21 + __s[+F6y] + O21[t21][4] + E6k
-								.o55(2663) + M21 + __s[F6y & 2147483647] + O21[t21][5] + ":" + O21[t21][6] +
+							t21][3])) + __s[1836] + L21 + __s[2834] + M21 + "'>" + O21[t21][4] + E6k
+								.o55(2663) + M21 + "'>" + O21[t21][5] + ":" + O21[t21][6] +
 						__s[2406] + O21[t21][7] + __s[1867] + O21[t21][8] + _s(+
 							'3878') + X21 + __s[j5p << 1309679680] + d21 + __s[4051];
 				}
@@ -23234,7 +23235,7 @@ function outer() {
 				.S55(6365) + o5v.dcloths + __s[4868] + o5v.ddress + __s[2471] + o5v
 					.dskin + __s[4996] + o5v.dbody + __s[6597];
 			var S5v = __s["1419" | 1290] + J5v +
-				__s[6339] + o5v.tcid + __s[+F6y] + o5v.tcn + __s[1310] + o5v.tpn + _s(
+				__s[6339] + o5v.tcid + "'>" + o5v.tcn + __s[1310] + o5v.tpn + _s(
 					5782) + o5v.tpan + __s['5284' | 5248] + p6(o5v.dsco) + __s[5715] + o5v.dcits + _s(+
 						l1y);
 			X5v += __s[1173] + h5v + __s[+c2y] + S5v + __s[1897];
@@ -23524,7 +23525,7 @@ function outer() {
 				var u5Z = ppdt[__s[V9y | 6916]][1] * (1000);
 				var H5Z =
 					new Date(u5Z);
-				var j5Z = MDFormat(u5Z) + __s[q04 >> 41851040] + formatTimehrs(H5Z);
+				var j5Z = MDFormat(u5Z) + '   ' + formatTimehrs(H5Z);
 				$(__s[4089])
 					.text(__s[2482] + j5Z);
 			}
@@ -23537,7 +23538,7 @@ function outer() {
 				var u5Z = ppdt[__s[V9y >> 1684271136]][2] * ("1000" <<
 					544802432);
 				var H5Z = new Date(u5Z);
-				var j5Z = MDFormat(u5Z) + __s[q04 | 2112] + formatTimehrs(H5Z);
+				var j5Z = MDFormat(u5Z) + '   ' + formatTimehrs(H5Z);
 				$(__s[6177])
 					.text(__s[2482] + j5Z);
 			}
@@ -23550,7 +23551,7 @@ function outer() {
 				var u5Z = ppdt[__s[+V9y]][3] * 1000;
 				var H5Z = new Date(u5Z);
 				var
-					j5Z = MDFormat(u5Z) + __s[+q04] + formatTimehrs(H5Z);
+					j5Z = MDFormat(u5Z) + '   ' + formatTimehrs(H5Z);
 				$(__s['6558' | 2184])
 					.text(__s[2482] + j5Z);
 			}
@@ -23563,7 +23564,7 @@ function outer() {
 				var u5Z = ppdt[__s[V9y & 2147483647]]["4" | 4] * ("1000" >>
 					644295328);
 				var H5Z = new Date(u5Z);
-				var j5Z = MDFormat(u5Z) + __s[+q04] + formatTimehrs(H5Z);
+				var j5Z = MDFormat(u5Z) + '   ' + formatTimehrs(H5Z);
 				$(__s[2386])
 					.text(__s[2482] + j5Z);
 			}
@@ -24186,16 +24187,16 @@ function outer() {
 					if (type == 2) {
 						Q46 = Number(l46) * (R5y ^ 0) + Number(
 							v46);
-						var M46 = X46.indexOf(__s[n24 * 1], 0);
+						var M46 = X46.indexOf('|', 0);
 						var G46 = X46.indexOf(_s(n24 |
 							672), M46 + (1));
-						var V46 = X46.indexOf(__s[+n24], G46 + 1);
+						var V46 = X46.indexOf('|', G46 + 1);
 						var C46 = X46.substring(
 							M46 + 1, G46);
 						var z46 = C46;
-						var b46 = z46.indexOf(__s[+n24], 0);
+						var b46 = z46.indexOf('|', 0);
 						var h46 = z46
-							.indexOf(__s[+n24], b46 + 1);
+							.indexOf('|', b46 + 1);
 						var J46 = N5F(C46);
 						if (H2 == J46 || (testFlag) ||
 							H2 == "Adiera" || H2 == "MrLongTongue") {
@@ -28108,7 +28109,7 @@ function outer() {
 								"n"];
 							var m7l = artifacts[B7l]["d"];
 							var a7l = I2(B7l, 90);
-							D7l = D7l + __s[1244] + a7l + __s[4211] + m7l + __s[+F6y] +
+							D7l = D7l + __s[1244] + a7l + __s[4211] + m7l + "'>" +
 								c7l + __s[4403];
 						}
 					if (qam["quests"][R7l]["r"]['g']) D7l = D7l + __s[4466] + p6(qam[E6k
@@ -28154,7 +28155,7 @@ function outer() {
 							tname = bam["troops"][R2B][
 								__s[1067]];
 							tdesc = bam["troops"][R2B]["dsc"];
-							tpic = bam["troops"][R2B][__s[+c1R]];
+							tpic = bam["troops"][R2B]['dimg'];
 							thome = city.th[R2B];
 							if (thome > 0) {
 								var y2B = $(__s[o34 | 1008] + R2B)
@@ -29723,9 +29724,9 @@ function outer() {
 								if (g7v == +TPL) {
 									var P3v = f7v[_s(+
 										bspotHall)];
-									var B7v = shrinesarr[P3v][__s[c1R ^ 0]];
+									var B7v = shrinesarr[P3v]['dimg'];
 								} else if (bam["buildings"][g7v][E6k
-									.o55(c1R ^ 0)]) var B7v = bam["buildings"][g7v][__s[+c1R]];
+									.o55(c1R ^ 0)]) var B7v = bam["buildings"][g7v]['dimg'];
 								var L4v = bam["buildings"]
 								[g7v]["bn"];
 								var t4v = f7v["bd"][g7v];
@@ -30355,7 +30356,7 @@ function outer() {
 								.css("display", '');
 							$(__s[5048])
 								.html(__s[4681] + f7v[__s[+E84]][__s[4378]] + __s[3937] + f7v[_s(
-									+E84)][__s[5778]] + __s[4906] + K3v + __s[F6y & 2147483647] + f7v[E6k
+									+E84)][__s[5778]] + __s[4906] + K3v + "'>" + f7v[E6k
 										.S55(E84 ^ 0)][__s[807]] + ":" + f7v[__s[E84 | 652]][_s('4334' &
 											2147483647)] + __s[6591]);
 							$(__s[2062])
@@ -30441,8 +30442,8 @@ function outer() {
 									var t4v = f7v[__s[+G5p]][g7v];
 									if (g7v ==
 										TPL * 1 && f7v[__s[j84 << 1684529504]]) var B7v = shrinesarr[Number(f7v[_s(j84 -
-											0)])][__s[+c1R]];
-									else var B7v = bam["buildings"][g7v][__s[+c1R]];
+											0)])]['dimg'];
+									else var B7v = bam["buildings"][g7v]['dimg'];
 									if (y4v <= 6) {
 										c7v = c7v + _s(
 											k64 & 2147483647) + B7v + __s[+o64] + L4v + __s[S64 ^ 0] + t4v + _s('3665' |
@@ -30704,8 +30705,8 @@ function outer() {
 							for (var g7v in f7v[__s[i5p >> 2009316224]])
 								if (bam["buildings"][g7v]) {
 									if (g7v == (TPL & 2147483647) && f7v[__s[+j84]]) var B7v =
-										shrinesarr[Number(f7v[__s[+j84]])][__s[+c1R]];
-									else var B7v = bam["buildings"][g7v][__s[+c1R]];
+										shrinesarr[Number(f7v[__s[+j84]])]['dimg'];
+									else var B7v = bam["buildings"][g7v]['dimg'];
 									var L4v = bam["buildings"][g7v][
 										"bn"];
 									var V3v = f7v[__s[i5p - 0]][g7v];
@@ -30847,9 +30848,9 @@ function outer() {
 							$(__s[2610])
 								.text(g3v + __s[o9y & 2147483647]);
 							if (f7v[__s[+j84]])
-								if (shrinesarr[Number(f7v[__s[+j84]])][__s[+c1R]]) {
+								if (shrinesarr[Number(f7v[__s[+j84]])]['dimg']) {
 									var Z3v = shrinesarr[Number(f7v[E6k
-										.S55(j84 << 64936288)])][__s[c1R | 3392]];
+										.S55(j84 << 64936288)])]['dimg'];
 									var U3v = __s[7050] + Z3v + _s(+
 										'1788') + f7v[__s[2924]] + __s[3651] + f7v[__s[473]] + E6k
 											.S55(+e1y);
@@ -31382,7 +31383,7 @@ function outer() {
 					if (N4w > 0) {
 						R4w
 							= bam["troops"][g4w][__s[1067]];
-						F4w = bam["troops"][g4w][__s[+c1R]];
+						F4w = bam["troops"][g4w]['dimg'];
 						q4w = p6(Number(city.th[g4w])) + " " + R4w + "s";
 						if (P4w < 6) {
 							U4w = U4w +
@@ -31433,7 +31434,7 @@ function outer() {
 					0;
 				for (var g4w in city.triin) {
 					R4w = bam["troops"][g4w][__s['1067' | 1059]];
-					F4w = bam["troops"][g4w][__s[c1R & 2147483647]];
+					F4w = bam["troops"][g4w]['dimg'];
 					q4w = p6(Number(city.triin[g4w])) + " " + R4w + "s";
 					if (P4w < ('9' | 1)) {
 						U4w = U4w +
@@ -31471,7 +31472,7 @@ function outer() {
 				var l3w = city.ble["3" | 1] * 1000;
 				var C3w = new Date(
 					l3w);
-				var S3w = MDFormat(l3w) + __s[q04 & 2147483647] + formatTimehrs(C3w);
+				var S3w = MDFormat(l3w) + '   ' + formatTimehrs(C3w);
 				var b3w = moment.utc(l3w);
 				var
 					L3w = b3w.utc()
@@ -31502,8 +31503,7 @@ function outer() {
 						.removeClass();
 					$(__s[+g0t])
 						.addClass(__s[5200] + z3w);
-					bam["buildings"][+TPL][__s[c1R & 2147483647]] = shrinesarr[Number(city.ble[2])][_s(+
-						c1R)];
+					bam["buildings"][+TPL]['dimg'] = shrinesarr[Number(city.ble[2])][_s(+c1R)];
 					bam["buildings"][TPL ^ 0]["bn"] = __s[930] + c4w;
 					bam["buildings"][+TPL]["ds"] = shrinesarr[Number(city.ble[2])]["d"];
 					if (Math.floor(city
@@ -31571,7 +31571,7 @@ function outer() {
 					.addClass(__s[+w7p]);
 				$(__s[g0t | 5121])
 					.attr("disabled", !!{});
-				bam["buildings"][+TPL][__s[c1R >> 996830272]] = shrinesarr[Number(city.ble[4])][__s[c1R * 1]];
+				bam["buildings"][+TPL]['dimg'] = shrinesarr[Number(city.ble[4])]['dimg'];
 				bam["buildings"][TPL << 418261952]["bn"] = __s[930] + c4w;
 				bam["buildings"][TPL ^ 0]["ds"] = shrinesarr[Number(city.ble[4])]["d"];
 				if (city.ble[+
@@ -31910,28 +31910,28 @@ function outer() {
 								.css("display", "none");
 							$(__s[A4y ^ 0])
 								.attr("data", rcid);
-							var M66 = L66.indexOf(__s[n24 * 1], 0);
+							var M66 = L66.indexOf('|', 0);
 							var K66 = L66
-								.indexOf(__s[+n24], M66 + 1);
-							var C66 = L66.indexOf(__s[+n24], K66 + 1);
+								.indexOf('|', M66 + 1);
+							var C66 = L66.indexOf('|', K66 + 1);
 							var
-								W66 = L66.indexOf(__s[n24 | 736], C66 + (1));
+								W66 = L66.indexOf('|', C66 + (1));
 							var i66 = L66.indexOf(_s(n24 >>
 								995406784), W66 + (1));
-							var d66 = L66.indexOf(__s[n24 | 96], i66 + ("1" >>
+							var d66 = L66.indexOf('|', i66 + ("1" >>
 								1098545088));
-							var b66 = L66.indexOf(__s[n24 >> 1669916640], d66 + (1));
+							var b66 = L66.indexOf('|', d66 + (1));
 							var S66 =
-								L66.indexOf(__s[n24 & 2147483647], b66 + 1);
-							var J66 = L66.indexOf(__s[n24 >> 332472512],
+								L66.indexOf('|', b66 + 1);
+							var J66 = L66.indexOf('|',
 								S66 + (1));
-							var h66 = L66.indexOf(__s[n24 ^ 0], J66 + (1));
+							var h66 = L66.indexOf('|', J66 + (1));
 							var
-								V66 = L66.indexOf(__s[+n24], h66 + 1);
-							var P66 = L66.indexOf(__s[+n24], V66 + "1" *
+								V66 = L66.indexOf('|', h66 + 1);
+							var P66 = L66.indexOf('|', V66 + "1" *
 								1);
-							var m66 = L66.indexOf(__s[n24 ^ 0], P66 + (1));
-							var l26 = L66.indexOf(__s[+n24],
+							var m66 = L66.indexOf('|', P66 + (1));
+							var l26 = L66.indexOf('|',
 								m66 + 1);
 							var Q26 = Number(L66.substring(7, 8));
 							var G66 = Number(L66.substring(
@@ -31970,7 +31970,7 @@ function outer() {
 							if (Number(
 								X66) > (0)) {
 								var q66 = new Date(z66);
-								var e26 = MDFormat(z66) + __s[q04 - 0] +
+								var e26 = MDFormat(z66) + '   ' +
 									formatTimehrs(q66);
 								var c66 = moment.utc(z66);
 								var u26 = c66.utc()
@@ -31983,7 +31983,7 @@ function outer() {
 								var I26 = shrinesarr[Number(X66)][__s[6561]];
 								var v26 =
 									shrinesarr[Number(X66)][__s[+U0t]];
-								var A66 = shrinesarr[Number(X66)][__s[+c1R]];
+								var A66 = shrinesarr[Number(X66)]['dimg'];
 								if (
 									Number(G66) >= 1) {
 									var A66 = __s[+G0t] + Y66 + __s[4592] + G66;
@@ -33215,7 +33215,7 @@ function outer() {
 				i09 = __s[1355];
 				C09++;
 				G09 = d09[z09];
-				W09 = bam["troops"][z09][__s[c1R ^ 0]];
+				W09 = bam["troops"][z09]['dimg'];
 				X09 = bam["troops"][z09][__s[1067]];
 				if (G09 != 0)
 					if (M09 < (3)) L09 += __s[2584] + X09 + __s[3323] + i09 + __s[3583] + W09 + E6k
@@ -34887,7 +34887,7 @@ function outer() {
 				$(__s[2428])
 					.text(p6(q2T));
 				$(__s[6647])
-					.text(s8T + __s[q04 * 1] + MDFormat(N2T));
+					.text(s8T + '   ' + MDFormat(N2T));
 				$(__s[3452])
 					.text(c2T);
 			}
@@ -35554,7 +35554,7 @@ function outer() {
 				var s3T = a4T + __s[4486] + m4T + __s[+'14'];
 				var E4T = I2(F4T, +I8y);
 				q4T = __s['2082' | 2048] + F4T + __s[u7p * 1] + icountf + __s[2724] + e3T + __s[5129] +
-					E4T + __s[1943] + F4T + __s[Z04 & 2147483647] + k3T + __s[F6y << 194519776] + c4T + _s(+
+					E4T + __s[1943] + F4T + __s[Z04 & 2147483647] + k3T + "'>" + c4T + _s(+
 						N5y);
 				return q4T;
 			}
@@ -35870,7 +35870,7 @@ function outer() {
 			{
 			   let  dummy = $.post("/includes/abdC.php", { a: __cid });
 				
-				dummy.done(function (C92) {}
+				dummy.done(function (C92) {});
 				return;
 			}
    //  Wrong city?
@@ -42841,7 +42841,7 @@ function outer() {
 						var M61 = Math.floor(O61 % (R5y - 0));
 						var G61 = Math.floor((O61 - M61) / (
 							R5y ^ 0));
-						var o61 = __s[+m1m] + O61 + __s[F6y << 1669390752] + M61 + ":" +
+						var o61 = __s[+m1m] + O61 + "'>" + M61 + ":" +
 							G61 + __s[6021];
 						var H61 = I61.replace(__s[C1m >> 907269440], o61);
 						var u61 = O2();
@@ -42857,7 +42857,7 @@ function outer() {
 						var M61 = Math.floor(O61 % (R5y >> 116651424));
 						var G61 = Math
 							.floor((O61 - M61) / (R5y - 0));
-						var o61 = __s[m1m ^ 0] + O61 + __s[F6y - 0] + M61 + ":" + G61 + __s[6021];
+						var o61 = __s[m1m ^ 0] + O61 + "'>" + M61 + ":" + G61 + __s[6021];
 						var H61 = I61.replace(__s[+C1m], o61);
 						var u61 =
 							O2();
@@ -42898,7 +42898,7 @@ function outer() {
 						var w61 = qam[__s[Q1m - 0]][j61]["n"];
 						var I61 = qam[
 							__s[+Q1m]][j61]["d"];
-						var o61 = __s[+m1m] + L61 + __s[+F6y] + l61 + E6k
+						var o61 = __s[+m1m] + L61 + "'>" + l61 + E6k
 							.o55(6021);
 						var H61 = I61.replace(__s[+C1m], o61);
 						H61 = H61.replace(__s[+L1m], __s[R1m * 1] + x61 + __s[6021]);
@@ -42916,7 +42916,7 @@ function outer() {
 						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
 						var I61 = qam[__s[+Q1m]]
 						[j61]["d"];
-						var o61 = __s[m1m >> 737553216] + L61 + __s[F6y - 0] + l61 + _s(+
+						var o61 = __s[m1m >> 737553216] + L61 + "'>" + l61 + _s(+
 							'6021');
 						var H61 = I61.replace(__s[C1m - 0], __s[+R1m] + O61 + __s['6021' | 256]);
 						H61 = H61.replace(__s[L1m * 1], o61);
@@ -42958,7 +42958,7 @@ function outer() {
 						var w61 = qam[__s[Q1m << 1019147840]][j61]["n"];
 						var I61 = qam[E6k
 							.S55(+Q1m)][j61]["d"];
-						var o61 = __s[+m1m] + z61 + __s[+F6y] + x61 + _s(
+						var o61 = __s[+m1m] + z61 + "'>" + x61 + _s(
 							"6021" | 512);
 						var H61 = I61.replace(__s[+C1m], __s[R1m - 0] + l61 + __s[6021]);
 						H61 = H61.replace(__s[+L1m], o61);
@@ -42978,7 +42978,7 @@ function outer() {
 						var w61 = qam[__s[Q1m - 0]][j61]["n"];
 						var I61 = qam[__s[Q1m * 1]][
 							j61]["d"];
-						var o61 = __s[+m1m] + z61 + __s[+F6y] + L61 + __s[6021];
+						var o61 = __s[+m1m] + z61 + "'>" + L61 + __s[6021];
 						var
 							H61 = I61.replace(__s[C1m | 5], __s[+R1m] + O61 + __s[6021]);
 						H61 = H61.replace(__s[+L1m], l61);
@@ -42995,7 +42995,7 @@ function outer() {
 						var I61 = qam[__s[Q1m - 0]][j61]["d"];
 						var l61 = Q61[2];
 						var o61 = E6k
-							.o55(m1m >> 142165632) + l61 + __s[+F6y] + O61 + __s[6021];
+							.o55(m1m >> 142165632) + l61 + "'>" + O61 + __s[6021];
 						var H61 = I61
 							.replace(__s[C1m * 1], o61);
 						var u61 = O2();
@@ -44244,28 +44244,43 @@ function outer() {
 					.o55(3483);
 				var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
 				N6();
+				++bqInFlight;
 				var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: cid });
 				F6();
 				// nBUu returns 0 on success
 				Y0w.done(function (e5w) {
+					--bqInFlight;
 					E6k.y6();
 					if (e5w == 0) {
 						
 						X2(7);
 					} else if (e5w == 1) Y6(__s[6910]);
 					else if (e5w == 2) Y6(__s[4507]);
-					
 					ProcessBuuPoll()
 				});
 			}
 			Z9 = 1;
 			b3F();
 		}
-		window["upgradeBuilding"] = function(x,y,l)
-		{
-			h8 = parseInt(x);
-			S8 = parseInt(y);
-		    W1F(parseInt(l));
+
+
+	  function upgradeEx(__spot:number,__level:number, __cid:number) {
+  			lastSentBq = -1;
+			{
+		   ++bqInFlight;
+				var a0w = { bspot: __spot, endlvl: Number(__level), cid: __cid };
+				var E0w = "X24s2x449" +P8 + "Jx1e2";
+				var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
+				
+				var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: __cid });
+				
+				// nBUu returns 0 on success
+				Y0w.done(function (e5w) {
+					E6k.y6();
+					--bqInFlight;
+					ProcessBuuPoll()
+				});
+			}
 		}
 
 		function l2F() {
@@ -44603,12 +44618,16 @@ function outer() {
 			});
 		}
 
-		window['exBuildingInfo'] = function (_bid: string, bl: string, _xy:string) {
+		window['exBuildingInfo'] = function (_bid: string, _bl: string, _xy:string) {
 				let xy = Number(_xy);		
 				let bId = Number(_bid);
+				let bl = Number(_bl);
 				d2 =xy;
-				let uptime = _bid == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
-				let dtime = _bid == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
+				S8 = Math.floor(xy/A5y);
+				h8 = xy - s8*A8y;
+	
+				 let uptime = bId == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
+				let dtime =  bId == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
 				buildingInfo(bId, Number(bl), uptime, dtime, xy);
 		}
 
@@ -45680,15 +45699,15 @@ function outer() {
 			return V19;
 		}
 
-		function D1F() {
+		function D1F(__cid) {
 			var J6w = O2();
 			var S6w = [];
-			S6w.push({ bid: J6w, cid: cid });
+			S6w.push({ bid: J6w, cid: Number(__cid) });
 			var h6w = __s[6037];
 			var V6w = a6.ccazzx.encrypt(JSON.stringify(S6w),
 				h6w, 256 >> 1044113888);
 			N6();
-			var r6w = $.post("/includes/" + __s[142], { a: V6w });
+			var r6w = $.post("/includes/uPb.php", { a: V6w });
 			F6();
 			r6w.done(function (A6w) {
 				if (!(A6w == ''))
@@ -45703,6 +45722,7 @@ function outer() {
 					else if (A6w == 10) Y6(__s['2655' | 2076]);
 					else if (A6w == 11) Y6(__s[E8y >> 2019175456]);
 					else {
+						lastSentBq = -1;
 						A6w = JSON.parse(A6w);
 						city.bq = A6w;
 						X2('7' | 5);
@@ -48704,7 +48724,7 @@ function outer() {
 								var F16 = Number(B46.substring(
 									p0y * 1, +G8y));
 								var P36 = new Date(m36);
-								var M16 = MDFormat(m36) + __s[+q04] +
+								var M16 = MDFormat(m36) + '   ' +
 									formatTimehrs(P36);
 								var g36 = $.post("/includes/" + __s[3620], { a: rcid });
 								g36.done(function (a16) {
@@ -49129,30 +49149,30 @@ function outer() {
 										.css("display", "none");
 									$(__s[A4y << 572912736])
 										.attr("data", rcid);
-									var K36 = B46.indexOf(__s[n24 << 1907619136], 0);
+									var K36 = B46.indexOf('|', 0);
 									var
-										w16 = B46.indexOf(__s[n24 & 2147483647], K36 + (1));
+										w16 = B46.indexOf('|', K36 + (1));
 									var I16 = B46.indexOf(_s(n24 <<
 										340794656), w16 + 1);
-									var y36 = B46.indexOf(__s[n24 | 704], I16 + 1);
+									var y36 = B46.indexOf('|', I16 + 1);
 									var D36 = B46
-										.indexOf(__s[n24 & 2147483647], y36 + (1));
+										.indexOf('|', y36 + (1));
 									var Y36 = B46.indexOf(_s(n24 >>
 										1606483936), D36 + (1));
-									var N36 = B46.indexOf(__s[n24 & 2147483647], Y36 + +
+									var N36 = B46.indexOf('|', Y36 + +
 										'1');
-									var F36 = B46.indexOf(__s[+n24], N36 + 1);
+									var F36 = B46.indexOf('|', N36 + 1);
 									var q36 = B46.indexOf(_s(n24 <<
 										1821799360), F36 + 1);
-									var c36 = B46.indexOf(__s[+n24], q36 + (1));
+									var c36 = B46.indexOf('|', q36 + (1));
 									var
-										s16 = B46.indexOf(__s[n24 & 2147483647], c36 + 1);
+										s16 = B46.indexOf('|', c36 + 1);
 									var a36 = B46.indexOf(_s(n24 <<
 										1845468384), s16 + 1);
-									var k16 = B46.indexOf(__s[+n24], a36 + (1));
+									var k16 = B46.indexOf('|', a36 + (1));
 									var e16 = B46
-										.indexOf(__s[n24 * 1], k16 + (1));
-									var o16 = B46.indexOf(__s[+n24], e16 + +
+										.indexOf('|', k16 + (1));
+									var o16 = B46.indexOf('|', e16 + +
 										'1');
 									var p46 = Number(B46.substring(7, 8)); // is castle?
 									var E46 = Number(B46.substring(+
@@ -49399,7 +49419,7 @@ function outer() {
 									if (Number(u36) > 0) {
 										var P36 = new Date(
 											C36);
-										var M16 = MDFormat(C36) + __s[+q04] + formatTimehrs(P36);
+										var M16 = MDFormat(C36) + '   ' + formatTimehrs(P36);
 										var B16 = moment.utc(
 											C36);
 										var R16 = B16.utc()
@@ -49629,7 +49649,7 @@ function outer() {
 										var c46 = Number(B46.substring(11, 12));
 										var p36 = bam[__s[V64 - 0]][c46][_s(
 											3315)];
-										var A16 = bam[__s[+V64]][c46][__s[+c1R]];
+										var A16 = bam[__s[+V64]][c46]['dimg'];
 										var O16 = bam[__s[+V64]][c46][
 											__s[+y0R]];
 										var t16 = Number(B46.substring(7, 8));
@@ -50340,9 +50360,11 @@ function outer() {
 							1918008864) + b2() + __s[+z8R];
 						var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
 						N6();
+						++ bqInFlight
 						var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
 						F6();
 						k0w.done(function (i0w) {
+								--bqInFlight;
 							if (!(i0w >= 0)) {
 								i0w = JSON.parse(i0w);
 								s8(c9g, m9g, 0, 0, 0);
@@ -50431,9 +50453,12 @@ function outer() {
 						var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, 256 & E6k
 							.s6s);
 						N6();
+			++bqInFlight;
 						var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
 						F6();
 						k0w.done(function (S0w) {
+			--bqInFlight;
+
 							if (!(S0w >= 0)) {
 								S0w = JSON.parse(S0w);
 								s8(c9g, m9g, 0, 0, 0);
@@ -50517,10 +50542,12 @@ function outer() {
 						var e0w = a6
 							.ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
 						N6();
+	  bqInFlight++;
 						var k0w = $.post("/includes/" + "nBuu.php", { cid: cid, a: e0w });
 						F6();
 						k0w.done(function (V0w) {
-							E6k.y6();
+					--bqInFlight;
+	 E6k.y6();
 							if (!(V0w >= 0)) {
 								V0w = JSON.parse(V0w);
 								s8(c9g, m9g, 0, 0, 0);
@@ -50604,9 +50631,11 @@ function outer() {
 							var e0w = a6
 								.ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
 							N6();
+	   ++bqInFlight;
 							var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
 							F6();
 							k0w.done(function (n0w) {
+	   --bqInFlight;
 								if (!(n0w >= (0))) {
 									n0w = JSON.parse(n0w);
 									s8(c9g, m9g, 0, 0, 0);
@@ -50861,7 +50890,7 @@ function outer() {
 		function y8F(p9D) {
 			var W9D = [];
 			E6k.y6();
-			var i9D = p9D.split(__s[n24 - 0]);
+			var i9D = p9D.split('|');
 			var d9D = i9D[1].split('l');
 			var b9D = d9D[
 				0];
@@ -51290,8 +51319,8 @@ function outer() {
 							if (o1V == _s(+
 								'512'));
 							X1V = T8(X1V);
-							O1V += __s[q0p ^ 0] + L1V[b1V][__s[x9y * 1]] + __s[375] + z1V + __s[+F6y] + C1V + E6k
-								.o55(+D0p) + o1V + __s[F6y | 2560] + o1V + __s[+m0p] + X1V + __s[B0p - 0];
+							O1V += __s[q0p ^ 0] + L1V[b1V][__s[x9y * 1]] + __s[375] + z1V + "'>" + C1V + E6k
+								.o55(+D0p) + o1V + "'>" + o1V + __s[+m0p] + X1V + __s[B0p - 0];
 						}
 					} $(_s(
 						c2R & 2147483647))
@@ -51333,7 +51362,7 @@ function outer() {
 									A6m);
 							} else { var C1V = q9(M1V); var z1V = __s[+v6m]; } X1V = T8(X1V);
 							O1V += __s[+q0p] + L1V[b1V]['c'] + __s[1964] + z1V + _s(F6y |
-								6210) + C1V + __s[D0p | 2120] + o1V + __s[+F6y] + o1V + __s[+m0p] + X1V + _s(+
+								6210) + C1V + __s[D0p | 2120] + o1V + "'>" + o1V + __s[+m0p] + X1V + _s(+
 									B0p);
 						}
 					} $(__s[+s2R])
@@ -51365,8 +51394,8 @@ function outer() {
 								var
 									z1V = __s[+G6m];
 							} else { var C1V = q9(M1V); var z1V = __s[+v6m]; } X1V = T8(X1V);
-							O1V += __s[+q0p] + d1V + __s[2070] + z1V + __s[F6y | B9s] + C1V + __s[D0p * 1] +
-								o1V + __s[F6y | 4674] + o1V + __s[m0p * 1] + X1V + __s[+B0p];
+							O1V += __s[+q0p] + d1V + __s[2070] + z1V + "'>" + C1V + __s[D0p * 1] +
+								o1V + "'>" + o1V + __s[m0p * 1] + X1V + __s[+B0p];
 						}
 					} $(_s(P8y >>
 						1251467968))
@@ -51431,8 +51460,8 @@ function outer() {
 						if (e7F == (0)) {
 							X1V = T8(X1V);
 							var O1V = _s(q0p &
-								2147483647) + d1V + __s[375] + z1V + __s[+F6y] + C1V + __s[D0p >> 1119471840] + o1V +
-								__s[F6y * 1] + o1V + __s[+m0p] + X1V + __s[+B0p];
+								2147483647) + d1V + __s[375] + z1V + "'>" + C1V + __s[D0p >> 1119471840] + o1V +
+								"'>" + o1V + __s[+m0p] + X1V + __s[+B0p];
 							var W1V = $(__s[+c2R])
 								.innerHeight() + $(__s[+c2R])
 									.scrollTop();
@@ -51506,7 +51535,7 @@ function outer() {
 						}
 						X1V = T8(X1V);
 						var O1V = __s[+q0p] + d1V + _s(+
-							"5269") + o1V + __s[F6y | 2562] + o1V + __s[4222] + X1V + __s[B0p ^ 0];
+							"5269") + o1V + "'>" + o1V + __s[4222] + X1V + __s[B0p ^ 0];
 						if (R0F == +
 							"0") {
 							var W1V = $(__s[+c2R])
@@ -51617,7 +51646,7 @@ function outer() {
 						}
 						X1V = T8(X1V);
 						var O1V = __s[+q0p] + d1V + E6k
-							.o55(3839) + o1V + __s[F6y | 4162] + o1V + __s[2546] + X1V + _s(+
+							.o55(3839) + o1V + "'>" + o1V + __s[2546] + X1V + _s(+
 								B0p);
 						var W1V = $(__s[c2R ^ 0])
 							.innerHeight() + $(__s[+c2R])
@@ -51706,7 +51735,7 @@ function outer() {
 						}
 						X1V = T8(X1V);
 						var O1V = __s[+q0p] + d1V + _s(
-							1964) + z1V + __s[F6y - 0] + C1V + __s[+D0p] + o1V + __s[F6y ^ 0] + o1V + _s(+
+							1964) + z1V + "'>" + C1V + __s[+D0p] + o1V + "'>" + o1V + _s(+
 								m0p) + X1V + __s[B0p | 2];
 						var W1V = $(__s[c2R & 2147483647])
 							.innerHeight() + $(__s[c2R & 2147483647])
@@ -51790,7 +51819,7 @@ function outer() {
 						}
 						X1V = T8(X1V);
 						var O1V = __s[q0p << 967867424] + d1V +
-							__s[2070] + z1V + __s[F6y | 6658] + C1V + __s[D0p << 788124224] + o1V + _s(F6y *
+							__s[2070] + z1V + "'>" + C1V + __s[D0p << 788124224] + o1V + _s(F6y *
 								1) + o1V + __s[+m0p] + X1V + __s[B0p >> 1734952672];
 						var W1V = $(__s[+c2R])
 							.innerHeight() + $(__s[+c2R])
@@ -52316,7 +52345,7 @@ function outer() {
 					var
 						Y4B = Number(b4B.substring(11, 12));
 					var w3B = bam[__s[+V64]][Y4B]["n"];
-					var L3B = bam[__s[+V64]][Y4B][__s[c1R - 0]];
+					var L3B = bam[__s[+V64]][Y4B]['dimg'];
 					var o3B = bam[__s[V64 * 1]][Y4B][_s(+
 						y0R)];
 					var N4B = g5F(cid, k3B);
@@ -52495,7 +52524,7 @@ function outer() {
 					new Date(K8T);
 				var N8T = formatTimehrs(Y8T);
 				$(__s[4253])
-					.text(N8T + __s[+q04] + MDFormat(K8T));
+					.text(N8T + '   ' + MDFormat(K8T));
 				$(__s[4182])
 					.text(y8T);
 			} else {
@@ -52920,7 +52949,7 @@ function outer() {
 		}
 
 		V8 = debounce(V8Imp, 250);
-		let buildQueueDirty = false;
+		
 
 		function V8Imp() {
 
@@ -52996,7 +53025,7 @@ function outer() {
 										N3g + __s[2877] + Y3g + __s[6272] + c3g + __s[1071] + p3g + _s(
 											6534) + m3g + __s[3699] + a3g + __s[+Y7R] + q3g + __s[1061] +
 										s1g + __s[1036] + y3g + __s[2316] + H1g + __s[+p6R] + p3g + __s[436] +
-										y3g + __s[F6y ^ 0] + j1g + __s[2493] + F3g + __s[7055] + y3g + E6k
+										y3g + "'>" + j1g + __s[2493] + F3g + __s[7055] + y3g + E6k
 											.o55(F6y * 1) + O1g + __s[+c2y] + e1g + __s[143];
 									$("#buildTableb")
 										.append(v1g);
@@ -53014,7 +53043,7 @@ function outer() {
 										2147483647) + N3g + __s[2877] + Y3g + __s[6272] + c3g + _s("1071" ^
 											0) + p3g + __s[6534] + m3g + __s[3699] + a3g + __s[+Y7R] + q3g + _s(+
 												"1343") + s1g + __s[+Q1y] + y3g + __s[2316] + H1g + __s[+p6R] + p3g + _s(
-													3117) + y3g + __s[+F6y] + j1g + __s[+k8m] + I1g + __s[6017] + y3g + E6k
+													3117) + y3g + "'>" + j1g + __s[+k8m] + I1g + __s[6017] + y3g + E6k
 														.o55('5635' | 5633) + w1g + __s[1941] + y3g + __s[6423];
 									$("#buildTableb")
 										.append(v1g);
@@ -53117,7 +53146,7 @@ function outer() {
 				O09 = __s[1355];
 				x09++;
 				T09 = p6(v09[l09][__s[r1t ^ 0]]);
-				t09 = bam["troops"][v09[l09][__s["6626" | 6498]]][__s[+c1R]];
+				t09 = bam["troops"][v09[l09][__s["6626" | 6498]]]['dimg'];
 				I09 = bam["troops"][v09[l09][__s[6626]]][__s[1067]];
 				if (T09 != 0)
 					if (Q09 < 3) w09 += __s[2584] + I09 + __s[3323] + O09 + __s[3583] + t09 + _s(+
@@ -53253,7 +53282,7 @@ function outer() {
 								5952);
 							var Y2T = p6(Number(P2T[B2T][2])) + __s[4981];
 							R2T = R2T + __s[3795] + P2T[B2T][3] + __s[Z04 << 665055168] + P2T[B2T][
-								2] + __s[3695] + P2T[B2T][0] + __s[+F6y] + y2T + " " + p2T + " " + D2T + " " + P2T[B2T][4] + __s[Q4p - 0] +
+								2] + __s[3695] + P2T[B2T][0] + "'>" + y2T + " " + p2T + " " + D2T + " " + P2T[B2T][4] + __s[Q4p - 0] +
 								Y2T + __s[+P8p];
 						}
 					}
@@ -53353,8 +53382,7 @@ function outer() {
 			return M49 + G49 + z49 + C49 + W49;
 		}
 		//    var r2;
-		var y7V;
-		var B7V;
+	
 
 		function buildOp(bId, bXY, op) {
 			lastSentBq = -1;
@@ -53380,7 +53408,7 @@ function outer() {
 			}
 			//var P5w = Math.floor(currentTime() / (1000)) + bXY;
 			{
-				if (op == 1 && bId >= +TPL) D1F(); // upgrade temple
+				if (op == 1 && bId >= +TPL) D1F(cid); // upgrade temple
 				else if (bId) {
 					var O5w = 0;
 					var t5w = Number(bam["buildings"][Number(bId)]['proto']);
@@ -53651,10 +53679,10 @@ function outer() {
 											var Q5w = __s[+p8R] +
 												b2() + __s[+z8R];
 											var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
-											N6();
+											N6();bqInFlight++;
 											var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
 											F6();
-											x5w.done(function (s7w) {
+											x5w.done(function (s7w) {--bqInFlight;
 												if (!(s7w >= 0)) {
 													s7w = JSON.parse(s7w);
 													s8(z5w, M5w, 0, 0, 0);
@@ -53732,10 +53760,10 @@ function outer() {
 												135380192) + b2() + __s[z8R & 2147483647];
 											var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
 												Q5w, +256);
-											N6();
+											N6();++bqInFlight;
 											var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
 											F6();
-											x5w.done(function (w7w) {
+											x5w.done(function (w7w) {--bqInFlight;
 												E6k.y6();
 												if (!(w7w >= 0)) {
 													w7w = JSON.parse(w7w);
@@ -53790,10 +53818,10 @@ function outer() {
 												var Q5w = __s[p8R << 1369875872] +
 													b2() + __s[+z8R];
 												var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 | 0);
-												N6();
+												N6();++bqInFlight;
 												var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
 												F6();
-												x5w.done(function (l7w) {
+												x5w.done(function (l7w) {--bqInFlight;
 													E6k.R6();
 													if (!(l7w >= 0)) {
 														l7w = JSON.parse(l7w);
@@ -53840,10 +53868,10 @@ function outer() {
 											Q5w = __s[+p8R] + b2() + __s[z8R * 1];
 										var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
 											Q5w, 256 & 2147483647);
-										N6();
+										N6();++bqInFlight;
 										var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
 										F6();
-										x5w.done(function (x7w) {
+										x5w.done(function (x7w) {--bqInFlight;
 											E6k.y6();
 											if (!(x7w >= 0)) {
 												x7w = JSON.parse(x7w);
@@ -53880,9 +53908,10 @@ function outer() {
 									var l5w = a6.ccazzx.encrypt(
 										JSON.stringify(T5w), Q5w, +256);
 									N6();
+		 ++bqInFlight;
 									var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
 									F6();
-									x5w.done(function (o7w) {
+									x5w.done(function (o7w) {--bqInFlight;
 										if (!(o7w >= 0)) {
 											o7w = JSON.parse(o7w);
 											city = o7w;
@@ -53906,7 +53935,296 @@ function outer() {
 			}
 		}
 
-	window['buildop'] = function (bId, bXY, op) 
+  // The only accepted options are 0, 2, 3
+  	function buildEx(bId, bXY, startLevel:number,endLevel:number, __cid : number ) {
+			var V5w = 0;
+			bId = Number(bId);
+			bXY = Number(bXY);
+			if(startLevel != 0 && endLevel>startLevel)
+			{
+   				if ( bId >= +TPL)
+				{
+					D1F(__cid); // upgrade temple
+					return;
+				}
+				// Do upgrade
+			   upgradeEx(bXY,endLevel,__cid);
+			   return;
+			}
+			let op =  endLevel==0 ? 3 : (startLevel==0)? 0 : 2;
+			
+
+			//if(bId == bidWALL )
+			//{
+			//	if(op == 0)
+			//		buildWall(1);
+			//  if(op == 1)
+			//		buildWall(2);
+			//	 if(op == 2)
+			//		buildWall(3);
+			//	 if(op == 3)
+			//		buildWall(4);
+			//	 return;
+			//}
+			//var P5w = Math.floor(currentTime() / (1000)) + bXY;
+			{
+    // TODO
+				if (bId) {
+					var O5w = 0;
+					var t5w = Number(bam["buildings"][Number(bId)]['proto']);
+					if (
+						bId == h4y - 0 && city.w == 1 && (bXY != +V5R && bXY != (c5R | 266) && bXY != +u8y && bXY !=
+							+M5R && bXY != s5R >> 489152 && bXY != +Q5R && bXY != (C5R ^ 0) && bXY != +Z5R && (!testFlag))) {
+						O5w = 1;
+						Y6(__s[655]);
+					}
+					if (bId == (F4y | 72) && city.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +
+						u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && (!testFlag)) {
+						O5w = 1;
+						Y6(__s[655]);
+					}
+					if (bId != +p4y && bId != (r4y & 2147483647) && bId != h4y - 0 && bId != F4y - 0 &&
+						bId != (A4y & 2147483647) && bId != (P4y & 2147483647) && (bXY == +V5R || bXY == (c5R & 2147483647) || bXY == u8y -
+							0 || bXY == (M5R ^ 0) || bXY == (s5R | 67) || bXY == Q5R << 1330269856 || bXY == +C5R || bXY == Z5R <<
+							1362508416) && city.w == 1 && (!testFlag)) {
+						O5w = '1' | 1;
+						Y6(__s[1405]);
+					}
+					if (op == (0) && (bXY == (3) || bXY == 7 ||
+						bXY == +m2y || bXY == 17 << 746309152 || bXY == +D8y || bXY == S1R >> 2104228704 || bXY == +t5R ||
+						bXY == J5R - 0 || bXY == T5R >> 1329248288 || bXY == (433) || bXY == +x5R || bXY == g5R -
+						0 || bXY == +W5R || bXY == f5R << 1700226848 || bXY == (U5R ^ 0) || bXY == +N0R || bXY == (p1R ^ 0) ||
+						bXY == +z1R || bXY == n1R >> 799060256 || bXY == +d1R || bXY == 323 || bXY == (l1R & 2147483647) ||
+						bXY == (k1R | 165) || bXY == +o1R) && (bId == n4y - 0 || bId == (t1y ^ 0) || bId == +V1y || bId == +
+							u1y || bId == D1y - 0 || bId == (O1y ^ 0) || bId == b1y - 0 || bId == (d1y & 2147483647) || bId == +x5y))
+						V5w = 1;
+					if (op == 0 && (bXY == (p1R | 97) || bXY == z1R - 0 || bXY == (n1R | 8) ||
+						bXY == +d1R || bXY == 323 || bXY == +l1R || bXY == (k1R & 2147483647) || bXY == (o1R & E6k
+							.s6s)) && (bId == +n4y || bId == (t1y | 531) || bId == +V1y || bId == +u1y || bId == D1y - 0)) V5w =
+								1;
+					if (bId != (n4y | 0) && bId != (l4y & 2147483647) && bId != +o4y && bId != (I1R | 32) && bId != +
+						t1y && bId != +T1y && bId != g1y >> 1307237344 && bId != +f1y && bId != (V1y & 2147483647) && bId != +M1y &&
+						bId != +Q1y && bId != Z1y << 518286752 && bId != u1y - 0 && bId != +N1y && bId != +i1y && bId != +q1y &&
+						bId != D1y * 1 && bId != B1y * 1 && bId != +e1y && bId != (y1y ^ 0) && (bXY == p1R * 1 || bXY == z1R <<
+							575091360 || bXY == (n1R ^ 0) || bXY == +d1R || bXY == (323) || bXY == +l1R || bXY == k1R *
+							1 || bXY == o1R * 1 && (!testFlag))) {
+						O5w = 1;
+						Y6(__s[863]);
+					}
+					if ((bId == n4y * 1 || bId == l4y << 1300259168 || bId == o4y * 1 || bId == I1R -
+						0 || bId == (t1y & 2147483647) || bId == +T1y || bId == +g1y || bId == +f1y || bId == +V1y || bId == (M1y |
+							516) || bId == Q1y >> 2014405312 || bId == +Z1y || bId == u1y * 1 || bId == (N1y ^ 0) || bId == i1y >>
+							186129248 || bId == +q1y || bId == +D1y || bId == (B1y | 44) || bId == (e1y & 2147483647) || bId == +y1y
+					) && bXY != (3) && bXY != 7 && bXY != +m2y && bXY != (17 | 17) && bXY != (D8y | 1) && bXY != (
+						S1R | 130) && bXY != +t5R && bXY != +J5R && bXY != (T5R & 2147483647) && bXY != ('433' | 176) && bXY !=
+						x5R - 0 && bXY != +g5R && bXY != W5R << 920500128 && bXY != f5R << 752539296 && bXY != U5R - 0 && bXY != +
+						N0R && bXY != (p1R ^ 0) && bXY != +z1R && bXY != +n1R && bXY != d1R * 1 && bXY != 323 && bXY != +l1R &&
+						bXY != +k1R && bXY != o1R << 1600765280 && (!testFlag)) {
+						O5w = 1;
+						Y6(__s[4062]);
+					}
+					if (bId != n4y - 0 && bId != l4y << 1802783584 && bId != +o4y && bId != +I1R &&
+						bId != t1y << 855131232 && bId != (T1y & 2147483647) && bId != +g1y && bId != +f1y && bId != +V1y && bId !=
+						M1y >> 1827448544 && bId != +Q1y && bId != +Z1y && bId != +u1y && bId != +N1y && bId != +i1y && bId != +
+						q1y && bId != D1y >> 2074275232 && bId != B1y << 706999392 && bId != (e1y & 2147483647) && bId != (y1y ^
+							0) && bId != (O1y & 2147483647) && bId != +w1y && bId != +H1y && bId != +G1y && bId != b1y << 1965211328 &&
+						bId != X1y - 0 && bId != +I1y && bId != +z1y && bId != +d1y && bId != +k1y && bId != +S1y && bId != (J5y |
+							560) && bId != +x5y && bId != +W5y && bId != +U5y && bId != +c5y && (bXY == +p1R || bXY == z1R <<
+								456030304 || bXY == +n1R || bXY == d1R >> 1182571200 || bXY == 323 || bXY == l1R * 1 || bXY == k1R <<
+								454428768 || bXY == +o1R || bXY == 3 || bXY == 7 || bXY == +m2y ||
+								bXY == 17 >> 1868092384 || bXY == (D8y & 2147483647) || bXY == +S1R || bXY == +t5R || bXY == (J5R & E6k
+									.s6s) || bXY == +T5R || bXY == ('433' | 177) || bXY == x5R << 679735904 || bXY == +g5R || bXY == (
+										W5R & 2147483647) || bXY == f5R >> 1279393504 || bXY == +U5R || bXY == +N0R || bXY == +p1R || bXY ==
+								z1R * 1 || bXY == +n1R || bXY == (d1R | 256) || bXY == (323) || bXY == +l1R || bXY == +k1R ||
+								bXY == o1R >> 119232160 && (!testFlag))) {
+						O5w = 1;
+						Y6(__s[1664]);
+					}
+					if ((bId == O1y << 826264544 || bId == (w1y & 2147483647) || bId == H1y - 0 || bId ==
+						G1y * 1 || bId == +b1y || bId == +X1y || bId == +I1y || bId == +z1y || bId == +d1y || bId == +k1y ||
+						bId == +S1y || bId == +J5y || bId == x5y << 1520084640 || bId == +W5y || bId == (U5y | 61) || bId == (
+							c5y & 2147483647)) && bXY != 3 && bXY != 7 && bXY != +m2y && bXY != +17 && bXY != (D8y | 19) &&
+						bXY != (S1R | 2) && bXY != +t5R && bXY != (J5R ^ 0) && bXY != T5R * 1 && bXY != 433 && bXY != +x5R &&
+						bXY != +g5R && bXY != +W5R && bXY != +f5R && bXY != +U5R && bXY != N0R - 0 && bXY != p1R * 1 && bXY !=
+						z1R - 0 && bXY != +n1R && bXY != (d1R & 2147483647) && bXY != 323 && bXY != l1R <<
+						611117984 && bXY != +k1R && bXY != o1R << 449644192 && (!testFlag)) {
+						O5w = 1;
+						Y6(__s[6755]);
+					}
+					
+	   
+				if (O5w == 0) 
+				 {
+						if (bId == +r4y && (bXY == +V5R || bXY == c5R - 0 || bXY == (u8y ^ 0) || bXY == M5R >>
+							1074238720)) {
+							t5w = 492;
+							bId = +F4y;
+						}
+						if (bId == +r4y && (bXY == +s5R || bXY == Q5R - 0)) {
+							t5w = 493;
+							bId = A4y * 1;
+						}
+						if (bId == +p4y && (bXY == +V5R || bXY == +c5R || bXY == (u8y & 2147483647) || bXY == +
+							M5R)) {
+							t5w = 495;
+							bId = +h4y;
+						}
+						if (bId == p4y - 0 && (bXY == +s5R || bXY == +Q5R)) {
+							t5w = X4y * 1;
+							bId = +P4y;
+						}
+						if (V5w == 1) {
+							var y5w = y0V(bId, bXY);
+							bId = y5w.t;
+							t5w = y5w.p;
+						}
+						
+						
+	  // v5w is build time
+						if (true) {
+							let v5w = 2500;
+							var i5w = O2();
+							//var W5w = new Date();
+							
+							var L5w = currentTime();
+							var X5w = Number(L5w) +
+									Number(v5w);
+							
+							var o5w = 1;
+							// Todo:  Castle, temple and Walls
+							if (bId == +TPL) 
+								b5V(i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+							else {
+								if (op == (0)) // build
+									{
+										var w5w = 1;
+										if (x9 == (1)) 
+											w5w = 10; // instant build to 10?
+										
+										if (bId == +bidCASTLE) V5V(
+											i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+										else {
+											var T5w = {
+												bt: Number(op),
+												pa: 1,
+												elvl: 1,
+												bid: i5w,
+												brep: bId,
+												ds: L5w,
+												btype: t5w,
+												bspot: bXY,
+												slvl: 0,
+												de: X5w
+											};
+											var Q5w = __s[+p8R] +
+												b2() + __s[+z8R];
+											var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
+											N6();++bqInFlight;
+											var x5w = $.post("/includes/nBuu.php", { a: l5w, cid: __cid });
+											F6();
+											x5w.done(function (s7w) {--bqInFlight;
+												if (!(s7w >= 0)) {
+													if(__cid === cid)
+													{
+														city = JSON.parse(S7w);
+														sendBuildingData();
+										
+														V8();
+														redrawCity();
+														ProcessBuuPoll();
+				
+													}
+												}
+											});
+										}
+									}
+								if (op == (2)) { // downgrade
+									
+									if (bId == +BAL && endLevel == (0)) Y6(_s('4265' |
+										1));
+									else if (bId == +bidCASTLE && endLevel == 0) Y6(__s[6957]);
+									else {
+										
+										
+										var T5w = {
+											bt: Number(op),
+											bspot: bXY,
+											btype: t5w,
+											bid: i5w,
+											slvl: endLevel+1,
+											elvl: endLevel,
+											brep: bId,
+											ds: L5w,
+											pa: 1,
+											de: X5w
+										};
+										var
+											Q5w = __s[+p8R] + b2() + __s[z8R * 1];
+										var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w),
+											Q5w, 256 & 2147483647);
+										bqInFlight++;
+										var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
+										
+										x5w.done(function (s7w) {--bqInFlight;
+											  if (!(s7w >= 0)) {
+													if(__cid === cid)
+													{
+														city = JSON.parse(S7w);
+														sendBuildingData();
+										
+														V8();
+														redrawCity();
+														ProcessBuuPoll();
+				
+													}
+												}
+										});
+									}
+								}
+								if (op == 3) { // Demo
+									
+									var T5w = {
+										bt: Number(op),
+										btype: t5w,
+										bid: i5w,
+										bspot: bXY,
+										slvl: startLevel,
+										pa: 1,
+										de: X5w,
+										brep: bId,
+										ds: L5w,
+										elvl: 0
+									};
+									var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
+									var l5w = a6.ccazzx.encrypt(
+										JSON.stringify(T5w), Q5w, +256);
+									N6();++bqInFlight;
+									var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
+									F6();
+									x5w.done(function (s7w) {--bqInFlight;
+											  if (!(s7w >= 0)) {
+													if(__cid === cid)
+													{
+														city = JSON.parse(S7w);
+														sendBuildingData();
+										
+														V8();
+														redrawCity();
+														ProcessBuuPoll();
+				
+													}
+												}
+										
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+   window['buildop'] = function (bId, bXY, op) 
    {
      bId = Number(bId);
 		var nBid = L2( bId );
@@ -53915,8 +54233,27 @@ function outer() {
 		buildOp(bId,bXY,op);
 
    }
+   window['cancelbuilds'] = function () 
+   {
+	   for (let i in city.bq) {
+		   var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
+	  }
+		lastSentBq = -1;
+	   DoPoll2(500);
+   }
 
-		function h7V() { }
+
+   window['buildex'] = function (bId, bXY,startLevel:string,endLevel:string, __cid : string) 
+   {
+     bId = Number(bId);
+		var nBid = L2( bId );
+		if(nBid != 0 )
+			bId = nBid;
+		buildEx(bId,bXY,Number(startLevel),Number(endLevel),Number(__cid));
+   }
+
+
+	function h7V() { }
 
 		function B5V(w9l, I9l) {
 			$(__s[3276] + w9l)
@@ -55214,7 +55551,7 @@ function outer() {
 					var j7D = city.tq[a5D].ttype;
 					var t7D = bam["troops"][Number(j7D)]
 						.tn;
-					var O7D = bam["troops"][Number(j7D)][__s[+c1R]];
+					var O7D = bam["troops"][Number(j7D)]['dimg'];
 					var u7D = city.tq[a5D].tc;
 					var
 						I7D = city.tq[a5D].ds;
@@ -56021,8 +56358,8 @@ function outer() {
 					}
 					z31 = z31 + __s[5083] + M31 + _s("2189" |
 						2177) + G31 + __s[1361] + L31[X31][__s[5747]] + __s[2897] + L31[X31][_s(t1R ^
-							0)] + __s[6428] + L31[X31][__s[F4t - 0]] + __s[+F6y] + L31[X31][__s[+M8R]] + _s(
-								2663) + L31[X31][__s[+F4t]] + __s[+F6y] + L31[X31][__s[+B5m]] + __s[2552] + L31[
+							0)] + __s[6428] + L31[X31][__s[F4t - 0]] + "'>" + L31[X31][__s[+M8R]] + _s(
+								2663) + L31[X31][__s[+F4t]] + "'>" + L31[X31][__s[+B5m]] + __s[2552] + L31[
 								X31]['pn'] + __s[4348] + L31[X31][__s[6995]] + __s[2811] + L31[X31][E6k
 									.S55(+w6y)] + __s[389];
 				}
@@ -56264,10 +56601,10 @@ function outer() {
 						if (w69 == +s0R) c19 = '';
 						else if (w69 >= 1) c19 = __s[5273];
 						else c19 = z7F(P19[B19][__s[G2k >> 915248992]], P19[B19]["d"]);
-						N19 += __s[2084] + P19[B19]["mg"] + __s[F6y - 0] + D19 + _s(c2y ^
+						N19 += __s[2084] + P19[B19]["mg"] + "'>" + D19 + _s(c2y ^
 							0) + P19[B19][__s[859]] + __s[4330] + P19[B19][__s[233]] + _s(
 								c2y | 64) + p6(Number(P19[B19][__s[a4y & 2147483647]])) + __s[3057] + P19[B19][_s(
-									"6626" | 4098)] + __s[+F6y] + P19[B19][__s[+w6y]] + __s[2031] + P19[B19][_s(+
+									"6626" | 4098)] + "'>" + P19[B19][__s[+w6y]] + __s[2031] + P19[B19][_s(+
 										x9y)] + __s[5694] + c19 + __s[6193];
 					}
 					$(__s[s5R >> 357485312])
@@ -56329,10 +56666,10 @@ function outer() {
 						if (P19[B19][5] == 0) var e69 = "";
 						else var e69 = __s[5776] + P19[B19][5] + __s[6113];
 						N19 += __s[5422] + Y19 + __s[3164] + Y19 + __s[V6y >> 1141458432] + H69 + E6k
-							.o55(U6y >> 1462320992) + Y19 + __s[2371] + I69 + __s[F6y | 0] + F19 + _s(+
+							.o55(U6y >> 1462320992) + Y19 + __s[2371] + I69 + "'>" + F19 + _s(+
 								U6y) + Y19 + __s[+V6y] + u69 + __s[+U6y] + Y19 + __s[V6y ^ 0] + q19 + __s[+U6y] +
 							Y19 + __s[V6y >> 426372192] + P19[B19][8] + __s[+c2y] + P19[B19][m2y ^ 0] + _s(U6y |
-								4) + Y19 + __s['2371' | 2048] + P19[B19][+'14'] + __s[+F6y] + P19[B19][9] + _s(+
+								4) + Y19 + __s['2371' | 2048] + P19[B19][+'14'] + "'>" + P19[B19][9] + _s(+
 									U6y) + Y19 + __s[4369] + e69 + __s[5694] + c19 + __s[6193];
 					}
 					$(_s(+
@@ -56527,7 +56864,7 @@ function outer() {
 					var m72 = city.tc[N72];
 					var e42 = Math.floor(Number(city.th[N72]) * F72 / k42);
 					var a72 = bam[E6k
-						.S55(4619)][N72][__s[c1R << 562136256]];
+						.S55(4619)][N72]['dimg'];
 					var E72 = bam["troops"][N72][_s(+
 						"1067")];
 					if (m72 != (0)) c72 = c72 + __s[1154] + a72 + __s[1689] +
@@ -56883,7 +57220,7 @@ function outer() {
 					var j4D = Number(m7D);
 					var Q4D = new Date(j4D);
 					$(__s[4436] + u4D)
-						.text(MDFormat(j4D) + __s[+q04] + formatTimehrs(Q4D));
+						.text(MDFormat(j4D) + '   ' + formatTimehrs(Q4D));
 				}
 			if (E7D == 0) {
 				K4F = 1;
@@ -57458,7 +57795,7 @@ function outer() {
 						}
 					if (L2(m2g) != (0)) m2g = L2(m2g);
 					if (m2g == bidWALL - 0) buildWall(2); // upgrade
-					else if (m2g == +TPL) D1F();
+					else if (m2g == +TPL) D1F(cid);
 					else buildOp(m2g, E2g, 1);
 				}
 			});
@@ -60348,7 +60685,7 @@ function outer() {
 				var j2T =
 					formatTimehrs(H2T);
 				$(__s[4688])
-					.text(j2T + __s[+q04] + MDFormat(a6T));
+					.text(j2T + '   ' + MDFormat(a6T));
 				$(__s[3148])
 					.text(u2T);
 			}
@@ -60640,7 +60977,7 @@ function outer() {
 							q6T = q6T + __s[3360] + N6T[F6T][0] + E6k
 								.S55(6929) + N6T[F6T][3] + __s[5673] + N6T[F6T]["7" >>
 								897293664] + __s[4998] + N6T[F6T][6] + __s['4730' | 4176] + N6T[F6T]["1" >>
-								839947168] + __s[3695] + N6T[F6T][0] + __s[+F6y] + c6T + E6k
+								839947168] + __s[3695] + N6T[F6T][0] + "'>" + c6T + E6k
 									.S55(304) + m6T + " " + N6T[F6T][4] + _s(+
 										"4012") + N6T[F6T][5] + __s[+P8p];
 						}
@@ -62332,10 +62669,10 @@ function outer() {
 									1182757056)] == (1)) F92 = __s[6185];
 								else if (N92[Y92][__s[+y5k]] == 0) F92 = __s[515];
 								else if (N92[Y92][__s[y5k - 0]] == 2) F92 = __s[1194];
-								q92 += __s[6897] + F92 + __s[+w5k] + N92[Y92][__s[+F5k]] + __s[F6y ^ 0] + N92[
-									Y92][__s[+H5k]] + __s[+w5k] + N92[Y92][__s[+A5k]] + __s[+F6y] + N92[Y92][E6k
+								q92 += __s[6897] + F92 + __s[+w5k] + N92[Y92][__s[+F5k]] + "'>" + N92[
+									Y92][__s[+H5k]] + __s[+w5k] + N92[Y92][__s[+A5k]] + "'>" + N92[Y92][E6k
 										.S55(+W6m)] + __s[W1R >> 2141931648] + E92 + __s[W1R ^ 0] + c92 + __s[G5k - 0] +
-									N92[Y92][__s[+r5k]] + __s[+F6y] + N92[Y92][__s[217]] + _s(K5y &
+									N92[Y92][__s[+r5k]] + "'>" + N92[Y92][__s[217]] + _s(K5y &
 										2147483647);
 							}
 							catch (eee) {
@@ -62369,7 +62706,7 @@ function outer() {
 							else if (N92[Y92][__s[+y5k]] == (2)) F92 = __s[1194];
 							q92 += __s[6897] + F92 + __s[+w5k] + N92[Y92][__s[F5k >> 1491922752]] + _s(+
 								F6y) + N92[Y92][__s[H5k | 4165]] + __s[w5k & 2147483647] + N92[Y92][_s(A5k >>
-									1292798080)] + __s[F6y ^ 0] + N92[Y92][__s[W6m & 2147483647]] + _s(W1R >>
+									1292798080)] + "'>" + N92[Y92][__s[W6m & 2147483647]] + _s(W1R >>
 										1174957824) + E92 + __s[+W1R] + c92 + __s[+G5k] + N92[Y92][__s[+r5k]] + _s(+
 											F6y) + N92[Y92][__s[217]] + __s[+W1R] + N92[Y92][__s[G0t | 6229]] + _s(
 												K5y <<
@@ -62389,8 +62726,8 @@ function outer() {
 							else if (N92[Y92][__s[y5k >> 824334432]] == 2) F92 = __s[1194];
 							if (!N92[Y92]
 								.hasOwnProperty(__s[1644])) N92[Y92][__s[1644]] = "-";
-							q92 += __s[127] + F92 + __s[+w5k] + N92[Y92][__s[+F5k]] + __s[+F6y] + N92[Y92][
-								__s[+H5k]] + __s[+w5k] + N92[Y92][__s[A5k * 1]] + __s[+F6y] + N92[Y92][_s(
+							q92 += __s[127] + F92 + __s[+w5k] + N92[Y92][__s[+F5k]] + "'>" + N92[Y92][
+								__s[+H5k]] + __s[+w5k] + N92[Y92][__s[A5k * 1]] + "'>" + N92[Y92][_s(
 									W6m << 1061748544)] + __s[W1R - 0] + m92 + __s[+G5k] + N92[Y92][__s[r5k ^ 0]] + E6k
 										.S55(+F6y) + N92[Y92][__s[217]] + __s[+G5k] + N92[Y92][__s[r5k | 516]] + E6k
 											.S55(+F6y) + N92[Y92][__s[1644]] + __s[+K5y];
@@ -62407,12 +62744,12 @@ function outer() {
 							if (N92[Y92].hasOwnProperty(__s[2048])) {
 								N92[Y92][_s("1644" &
 									2147483647)] = "-";
-								H09 = __s[4340] + N92[Y92][__s[+A5k]] + __s[+F6y] + N92[Y92][__s[W6m ^ 0]] +
+								H09 = __s[4340] + N92[Y92][__s[+A5k]] + "'>" + N92[Y92][__s[W6m ^ 0]] +
 									__s[+M8p];
 							}
 							q92 += __s["2896" | 528] + N92[Y92][__s[X4m ^ 0]] + _s(F6y & E6k
 								.s6s) + N92[Y92][__s[H5k >> 924786976]] + __s[W1R - 0] + m92 + __s[+M8p] + H09 + E6k
-									.S55(5903) + N92[Y92][__s[+r5k]] + __s[F6y << 964295968] + N92[Y92][_s(
+									.S55(5903) + N92[Y92][__s[+r5k]] + "'>" + N92[Y92][_s(
 										217)] + __s[+K5y];
 						}
 						$(__s[6158])
@@ -62426,8 +62763,8 @@ function outer() {
 								1;
 							if (N92[Y92][__s[+R5m]] == (1)) m92 = __s[4245];
 							else m92 = __s[6536];
-							q92 += __s[2896] + N92[Y92][__s[+F5k]] + __s[+F6y] + N92[Y92][__s[H5k - 0]] +
-								__s[w5k | 528] + N92[Y92][__s[A5k >> 439652288]] + __s[+F6y] + N92[Y92][_s(W6m <<
+							q92 += __s[2896] + N92[Y92][__s[+F5k]] + "'>" + N92[Y92][__s[H5k - 0]] +
+								__s[w5k | 528] + N92[Y92][__s[A5k >> 439652288]] + "'>" + N92[Y92][_s(W6m <<
 									370503264)] + __s[5708] + m92 + __s[+G5k] + N92[Y92][__s[+r5k]] + _s(+
 										F6y) + N92[Y92][__s[217]] + __s[+K5y];
 						}
@@ -62456,9 +62793,9 @@ function outer() {
 							else if (N92[Y92][__s[y5k & 2147483647]] == 0) F92 = __s[515];
 							else if (N92[Y92][__s[+y5k]] == (2)) F92 = __s[1194];
 							q92 += __s[6897] + F92 + __s[w5k >> 1630020544] + N92[Y92][__s[+F5k]] + _s(+
-								F6y) + N92[Y92][__s[H5k * 1]] + __s[+w5k] + N92[Y92][__s[+A5k]] + __s[+F6y] +
+								F6y) + N92[Y92][__s[H5k * 1]] + __s[+w5k] + N92[Y92][__s[+A5k]] + "'>" +
 								N92[Y92][__s[+W6m]] + __s[W1R - 0] + E92 + __s[+W1R] + c92 + __s[W1R - 0] + p6(
-									N92[Y92][__s[4302]]) + __s[+G5k] + N92[Y92][__s[+r5k]] + __s[+F6y] + N92[Y92]
+									N92[Y92][__s[4302]]) + __s[+G5k] + N92[Y92][__s[+r5k]] + "'>" + N92[Y92]
 								[__s[217]] + __s[K5y & 2147483647];
 						}
 						$(__s[4379])
@@ -62980,7 +63317,7 @@ function outer() {
 									var K4U = Math.floor(J4U % +R5y);
 									var B4U = Math.floor((
 										J4U - K4U) / (R5y - 0));
-									var r4U = __s[m1m | 6290] + J4U + __s[F6y << 245552544] +
+									var r4U = __s[m1m | 6290] + J4U + "'>" +
 										K4U + ":" + B4U + __s[6021];
 									var z4U = G4U.replace(_s(C1m >>
 										1238491040), r4U);
@@ -62996,7 +63333,7 @@ function outer() {
 									var K4U = Math.floor(J4U % +R5y);
 									var B4U = Math.floor((
 										J4U - K4U) / (R5y * 1));
-									var r4U = __s[m1m ^ 0] + J4U + __s[+F6y] + K4U + ":" + B4U + __s[6021];
+									var r4U = __s[m1m ^ 0] + J4U + "'>" + K4U + ":" + B4U + __s[6021];
 									var z4U = G4U.replace(__s[+C1m], r4U);
 									z4U.replace(/<br>/g, '');
 									var C4U = W4U[2];
@@ -63097,11 +63434,11 @@ function outer() {
 									var C4U = W4U[5];
 									var N4U = W4U["6" <<
 										2095378944];
-									var P4U = __s[+V7k] + J4U + __s[F6y << 100665888] + J4U + _s('6021' <<
+									var P4U = __s[+V7k] + J4U + "'>" + J4U + _s('6021' <<
 										864184288);
-									var U4U = __s[+V7k] + S4U + __s[F6y >> 751477760] + S4U + _s(+
+									var U4U = __s[+V7k] + S4U + "'>" + S4U + _s(+
 										"6021");
-									var r4U = __s[m1m << 812903072] + N4U + __s[+F6y] + f4U + __s[6021];
+									var r4U = __s[m1m << 812903072] + N4U + "'>" + f4U + __s[6021];
 									var
 										z4U = G4U.replace(__s[+C1m], P4U);
 									z4U = z4U.replace(__s[+L1m], d4U);
@@ -63962,7 +64299,7 @@ function outer() {
 					N4T = artifacts[P4T]["d"];
 				var p4T = I2(P4T, +I8y);
 				B4T = __s[2082] + P4T + __s[u7p - 0] + icountf + __s[2724] + y4T + __s[3947] + P4T +
-					__s[Z04 | 1217] + R4T + __s[+F6y] + D4T + __s[3090] + p4T + _s("1257" |
+					__s[Z04 | 1217] + R4T + "'>" + D4T + __s[3090] + p4T + _s("1257" |
 						1120);
 				return B4T;
 			}
@@ -64111,8 +64448,8 @@ function outer() {
 							2147483647) + B5v[__s[+K7k]] + __s[371];
 					}
 				} else if (shrinesarr[Number(B5v[__s[u7k - 0]])][
-					__s[+c1R]]) {
-					var y5v = shrinesarr[Number(B5v[__s[+u7k]])][__s[c1R << 215320000]];
+					'dimg']) {
+					var y5v = shrinesarr[Number(B5v[__s[+u7k]])]['dimg'];
 					var R5v =
 						Number(B5v[__s[P5m ^ 0]]) - Number(B5v[__s[1496]]);
 					var D5v = Math.round(R5v / Number(B5v[E6k
@@ -64122,7 +64459,7 @@ function outer() {
 				}
 			} else if (shrinesarr[Number(B5v[__s[u7k ^ 0]])][_s(+
 				c1R)]) {
-				var y5v = shrinesarr[Number(B5v[__s[u7k >> 1712071936]])][__s[c1R << 1853719616]];
+				var y5v = shrinesarr[Number(B5v[__s[u7k >> 1712071936]])]['dimg'];
 				var
 					R5v = Number(B5v[__s[+P5m]]) - Number(B5v[__s[1496]]);
 				var D5v = Math.round(R5v /

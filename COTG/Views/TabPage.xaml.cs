@@ -119,7 +119,7 @@ namespace COTG.Views
         private const string DataIdentifier = "ChatTabItem";
         public TabPage()
         {
-			
+
 			this.InitializeComponent();
 			IsTabStop = true;
 			TabFocusNavigation = KeyboardNavigationMode.Once;

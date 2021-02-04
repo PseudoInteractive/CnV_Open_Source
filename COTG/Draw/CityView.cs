@@ -73,6 +73,8 @@ namespace COTG.Draw
 	
 		}
 		public static JSON.Building[] buildingsCache;
+		public static JSON.Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
+		public static bool postQueueBuildingsDirty = true;
 		public static Building GetBuilding( int id) => buildingsCache[id];
 		public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
 		static Vector2 waterC =new Vector2( 1.0f - 768.0f* cityTileGainX / 128,
@@ -317,40 +319,37 @@ namespace COTG.Draw
 			}
 			PreviewBuildAction();
 			var processed = new HashSet<int>();
-			for (var it = buildQueue.iterate; it.Next();)
+			foreach (var r in IterateQueue() )
 			{
-				ref var r = ref it.r;
 				int bspot = r.bspot;
 				if (!processed.Add(bspot))
 					continue;
 				var cc = IdToXY(bspot);
 				var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
 				var off = (bspot.BSpotToRandom() + animationT*0.325f);
-				var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+				var cScale = new Vector2(off.Wave().Lerp(0.3f,1.0f), off.WaveC().Lerp(0.3f, 1.0f));
 				if (r.elvl == 0)
 				{
 					// demo
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(cScale), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha/2, iAlpha/2, iAlpha/2, iAlpha / 4)).Scale(cScale), PlanetDepth, zHover);
 				}
 				else if (r.slvl == 0)
 				{
 					// new building
-					DrawBuilding(cc, iAlpha, r.brep, off);
+					DrawBuilding(cc, iAlpha, r.bid, off);
 					
-					var off2 = off * 1.07f;
-					var cScale2 = new Vector2(off2.Wave().Lerp(0.8f, 1.1f), off2.WaveC().Lerp(0.8f, 1.0f));
 					// now the overlay
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha/2).Scale(cScale2), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha/2, iAlpha / 2, iAlpha / 2, iAlpha/4).Scale(cScale), PlanetDepth, zHover);
 				}
 				else if (r.slvl < r.elvl)
 				{
 					// upgrade
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha , iAlpha , iAlpha , iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha / 2, iAlpha / 2, iAlpha/2 , iAlpha / 4).Scale(cScale), PlanetDepth, zHover);
 				}
 				else
 				{
 					// downgrade or other, just highlight it
-					draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+					draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha / 2, iAlpha / 2, iAlpha / 2, iAlpha / 4).Scale(cScale), PlanetDepth, zHover);
 
 				}
 			}

@@ -18112,6 +18112,7 @@ function outer() {
             if (__cid === cid)
                 return;
             _cid = cid = __cid;
+            bqInFlight = 0;
             ClearCity();
             callSyncViewMode();
             getCity(Number(d9l));
@@ -41665,9 +41666,11 @@ function outer() {
                     .o55(3483);
                 var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
                 N6();
+                ++bqInFlight;
                 var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: cid });
                 F6();
                 Y0w.done(function (e5w) {
+                    --bqInFlight;
                     E6k.y6();
                     if (e5w == 0) {
                         X2(7);
@@ -41682,11 +41685,21 @@ function outer() {
             Z9 = 1;
             b3F();
         }
-        window["upgradeBuilding"] = function (x, y, l) {
-            h8 = parseInt(x);
-            S8 = parseInt(y);
-            W1F(parseInt(l));
-        };
+        function upgradeEx(__spot, __level, __cid) {
+            lastSentBq = -1;
+            {
+                ++bqInFlight;
+                var a0w = { bspot: __spot, endlvl: Number(__level), cid: __cid };
+                var E0w = "X24s2x449" + P8 + "Jx1e2";
+                var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
+                var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: __cid });
+                Y0w.done(function (e5w) {
+                    E6k.y6();
+                    --bqInFlight;
+                    ProcessBuuPoll();
+                });
+            }
+        }
         function l2F() {
             var D9B = s9();
             E6k.y6();
@@ -41880,12 +41893,15 @@ function outer() {
                         E5F();
             });
         }
-        window['exBuildingInfo'] = function (_bid, bl, _xy) {
+        window['exBuildingInfo'] = function (_bid, _bl, _xy) {
             let xy = Number(_xy);
             let bId = Number(_bid);
+            let bl = Number(_bl);
             d2 = xy;
-            let uptime = _bid == 0 || bl == 0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
-            let dtime = _bid == 0 || bl == 0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
+            S8 = Math.floor(xy / A5y);
+            h8 = xy - s8 * A8y;
+            let uptime = bId == 0 || bl == 0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
+            let dtime = bId == 0 || bl == 0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
             buildingInfo(bId, Number(bl), uptime, dtime, xy);
         };
         buildingInfo = function (l6U, T6U, O6U, t6U, L6U) {
@@ -46962,9 +46978,11 @@ function outer() {
                             1918008864) + b2() + __s[+z8R];
                         var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
                         N6();
+                        ++bqInFlight;
                         var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
                         F6();
                         k0w.done(function (i0w) {
+                            --bqInFlight;
                             if (!(i0w >= 0)) {
                                 i0w = JSON.parse(i0w);
                                 s8(c9g, m9g, 0, 0, 0);
@@ -47047,9 +47065,11 @@ function outer() {
                         var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, 256 & E6k
                             .s6s);
                         N6();
+                        ++bqInFlight;
                         var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
                         F6();
                         k0w.done(function (S0w) {
+                            --bqInFlight;
                             if (!(S0w >= 0)) {
                                 S0w = JSON.parse(S0w);
                                 s8(c9g, m9g, 0, 0, 0);
@@ -47128,9 +47148,11 @@ function outer() {
                         var e0w = a6
                             .ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
                         N6();
+                        bqInFlight++;
                         var k0w = $.post("/includes/" + "nBuu.php", { cid: cid, a: e0w });
                         F6();
                         k0w.done(function (V0w) {
+                            --bqInFlight;
                             E6k.y6();
                             if (!(V0w >= 0)) {
                                 V0w = JSON.parse(V0w);
@@ -47215,9 +47237,11 @@ function outer() {
                             var e0w = a6
                                 .ccazzx.encrypt(JSON.stringify(s0w), H0w, +256);
                             N6();
+                            ++bqInFlight;
                             var k0w = $.post("/includes/" + "nBuu.php", { a: e0w, cid: cid });
                             F6();
                             k0w.done(function (n0w) {
+                                --bqInFlight;
                                 if (!(n0w >= (0))) {
                                     n0w = JSON.parse(n0w);
                                     s8(c9g, m9g, 0, 0, 0);
@@ -49471,7 +49495,6 @@ function outer() {
                     .text(p6(n9w));
         }
         V8 = debounce(V8Imp, 250);
-        let buildQueueDirty = false;
         function V8Imp() {
             s0F();
             var Y3g, a3g, q3g, N3g, p3g, c3g, y3g, u1g, m3g, v1g, x1g, T1g;
@@ -50207,9 +50230,11 @@ function outer() {
                                                 b2() + __s[+z8R];
                                             var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
                                             N6();
+                                            bqInFlight++;
                                             var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
                                             F6();
                                             x5w.done(function (s7w) {
+                                                --bqInFlight;
                                                 if (!(s7w >= 0)) {
                                                     s7w = JSON.parse(s7w);
                                                     s8(z5w, M5w, 0, 0, 0);
@@ -50285,9 +50310,11 @@ function outer() {
                                                 135380192) + b2() + __s[z8R & 2147483647];
                                             var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, +256);
                                             N6();
+                                            ++bqInFlight;
                                             var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
                                             F6();
                                             x5w.done(function (w7w) {
+                                                --bqInFlight;
                                                 E6k.y6();
                                                 if (!(w7w >= 0)) {
                                                     w7w = JSON.parse(w7w);
@@ -50341,9 +50368,11 @@ function outer() {
                                                     b2() + __s[+z8R];
                                                 var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 | 0);
                                                 N6();
+                                                ++bqInFlight;
                                                 var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
                                                 F6();
                                                 x5w.done(function (l7w) {
+                                                    --bqInFlight;
                                                     E6k.R6();
                                                     if (!(l7w >= 0)) {
                                                         l7w = JSON.parse(l7w);
@@ -50390,9 +50419,11 @@ function outer() {
                                         var Q5w = __s[+p8R] + b2() + __s[z8R * 1];
                                         var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 & 2147483647);
                                         N6();
+                                        ++bqInFlight;
                                         var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
                                         F6();
                                         x5w.done(function (x7w) {
+                                            --bqInFlight;
                                             E6k.y6();
                                             if (!(x7w >= 0)) {
                                                 x7w = JSON.parse(x7w);
@@ -50425,9 +50456,11 @@ function outer() {
                                     var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
                                     var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, +256);
                                     N6();
+                                    ++bqInFlight;
                                     var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: cid });
                                     F6();
                                     x5w.done(function (o7w) {
+                                        --bqInFlight;
                                         if (!(o7w >= 0)) {
                                             o7w = JSON.parse(o7w);
                                             city = o7w;
@@ -50447,12 +50480,259 @@ function outer() {
                 }
             }
         }
+        function buildEx(bId, bXY, startLevel, endLevel, __cid) {
+            var V5w = 0;
+            bId = Number(bId);
+            bXY = Number(bXY);
+            if (startLevel != 0 && endLevel > startLevel) {
+                upgradeEx(bXY, endLevel, __cid);
+                return;
+            }
+            let op = (startLevel == 0) ? 0 : endLevel == 0 ? 3 : 2;
+            {
+                if (op == 1 && bId >= +TPL)
+                    D1F();
+                else if (bId) {
+                    var O5w = 0;
+                    var t5w = Number(bam["buildings"][Number(bId)]['proto']);
+                    if (bId == h4y - 0 && city.w == 1 && (bXY != +V5R && bXY != (c5R | 266) && bXY != +u8y && bXY !=
+                        +M5R && bXY != s5R >> 489152 && bXY != +Q5R && bXY != (C5R ^ 0) && bXY != +Z5R && (!testFlag))) {
+                        O5w = 1;
+                        Y6(__s[655]);
+                    }
+                    if (bId == (F4y | 72) && city.w == 1 && (bXY != +V5R && bXY != +c5R && bXY != +u8y && bXY != +M5R && bXY != (s5R & 2147483647) && bXY != +Q5R && bXY != +C5R && bXY != Z5R * 1) && (!testFlag)) {
+                        O5w = 1;
+                        Y6(__s[655]);
+                    }
+                    if (bId != +p4y && bId != (r4y & 2147483647) && bId != h4y - 0 && bId != F4y - 0 &&
+                        bId != (A4y & 2147483647) && bId != (P4y & 2147483647) && (bXY == +V5R || bXY == (c5R & 2147483647) || bXY == u8y -
+                        0 || bXY == (M5R ^ 0) || bXY == (s5R | 67) || bXY == Q5R << 1330269856 || bXY == +C5R || bXY == Z5R <<
+                        1362508416) && city.w == 1 && (!testFlag)) {
+                        O5w = '1' | 1;
+                        Y6(__s[1405]);
+                    }
+                    if (op == (0) && (bXY == (3) || bXY == 7 ||
+                        bXY == +m2y || bXY == 17 << 746309152 || bXY == +D8y || bXY == S1R >> 2104228704 || bXY == +t5R ||
+                        bXY == J5R - 0 || bXY == T5R >> 1329248288 || bXY == (433) || bXY == +x5R || bXY == g5R -
+                        0 || bXY == +W5R || bXY == f5R << 1700226848 || bXY == (U5R ^ 0) || bXY == +N0R || bXY == (p1R ^ 0) ||
+                        bXY == +z1R || bXY == n1R >> 799060256 || bXY == +d1R || bXY == 323 || bXY == (l1R & 2147483647) ||
+                        bXY == (k1R | 165) || bXY == +o1R) && (bId == n4y - 0 || bId == (t1y ^ 0) || bId == +V1y || bId == +u1y || bId == D1y - 0 || bId == (O1y ^ 0) || bId == b1y - 0 || bId == (d1y & 2147483647) || bId == +x5y))
+                        V5w = 1;
+                    if (op == 0 && (bXY == (p1R | 97) || bXY == z1R - 0 || bXY == (n1R | 8) ||
+                        bXY == +d1R || bXY == 323 || bXY == +l1R || bXY == (k1R & 2147483647) || bXY == (o1R & E6k
+                        .s6s)) && (bId == +n4y || bId == (t1y | 531) || bId == +V1y || bId == +u1y || bId == D1y - 0))
+                        V5w =
+                            1;
+                    if (bId != (n4y | 0) && bId != (l4y & 2147483647) && bId != +o4y && bId != (I1R | 32) && bId != +t1y && bId != +T1y && bId != g1y >> 1307237344 && bId != +f1y && bId != (V1y & 2147483647) && bId != +M1y &&
+                        bId != +Q1y && bId != Z1y << 518286752 && bId != u1y - 0 && bId != +N1y && bId != +i1y && bId != +q1y &&
+                        bId != D1y * 1 && bId != B1y * 1 && bId != +e1y && bId != (y1y ^ 0) && (bXY == p1R * 1 || bXY == z1R <<
+                        575091360 || bXY == (n1R ^ 0) || bXY == +d1R || bXY == (323) || bXY == +l1R || bXY == k1R *
+                        1 || bXY == o1R * 1 && (!testFlag))) {
+                        O5w = 1;
+                        Y6(__s[863]);
+                    }
+                    if ((bId == n4y * 1 || bId == l4y << 1300259168 || bId == o4y * 1 || bId == I1R -
+                        0 || bId == (t1y & 2147483647) || bId == +T1y || bId == +g1y || bId == +f1y || bId == +V1y || bId == (M1y |
+                        516) || bId == Q1y >> 2014405312 || bId == +Z1y || bId == u1y * 1 || bId == (N1y ^ 0) || bId == i1y >>
+                        186129248 || bId == +q1y || bId == +D1y || bId == (B1y | 44) || bId == (e1y & 2147483647) || bId == +y1y) && bXY != (3) && bXY != 7 && bXY != +m2y && bXY != (17 | 17) && bXY != (D8y | 1) && bXY != (S1R | 130) && bXY != +t5R && bXY != +J5R && bXY != (T5R & 2147483647) && bXY != ('433' | 176) && bXY !=
+                        x5R - 0 && bXY != +g5R && bXY != W5R << 920500128 && bXY != f5R << 752539296 && bXY != U5R - 0 && bXY != +N0R && bXY != (p1R ^ 0) && bXY != +z1R && bXY != +n1R && bXY != d1R * 1 && bXY != 323 && bXY != +l1R &&
+                        bXY != +k1R && bXY != o1R << 1600765280 && (!testFlag)) {
+                        O5w = 1;
+                        Y6(__s[4062]);
+                    }
+                    if (bId != n4y - 0 && bId != l4y << 1802783584 && bId != +o4y && bId != +I1R &&
+                        bId != t1y << 855131232 && bId != (T1y & 2147483647) && bId != +g1y && bId != +f1y && bId != +V1y && bId !=
+                        M1y >> 1827448544 && bId != +Q1y && bId != +Z1y && bId != +u1y && bId != +N1y && bId != +i1y && bId != +q1y && bId != D1y >> 2074275232 && bId != B1y << 706999392 && bId != (e1y & 2147483647) && bId != (y1y ^
+                        0) && bId != (O1y & 2147483647) && bId != +w1y && bId != +H1y && bId != +G1y && bId != b1y << 1965211328 &&
+                        bId != X1y - 0 && bId != +I1y && bId != +z1y && bId != +d1y && bId != +k1y && bId != +S1y && bId != (J5y |
+                        560) && bId != +x5y && bId != +W5y && bId != +U5y && bId != +c5y && (bXY == +p1R || bXY == z1R <<
+                        456030304 || bXY == +n1R || bXY == d1R >> 1182571200 || bXY == 323 || bXY == l1R * 1 || bXY == k1R <<
+                        454428768 || bXY == +o1R || bXY == 3 || bXY == 7 || bXY == +m2y ||
+                        bXY == 17 >> 1868092384 || bXY == (D8y & 2147483647) || bXY == +S1R || bXY == +t5R || bXY == (J5R & E6k
+                        .s6s) || bXY == +T5R || bXY == ('433' | 177) || bXY == x5R << 679735904 || bXY == +g5R || bXY == (W5R & 2147483647) || bXY == f5R >> 1279393504 || bXY == +U5R || bXY == +N0R || bXY == +p1R || bXY ==
+                        z1R * 1 || bXY == +n1R || bXY == (d1R | 256) || bXY == (323) || bXY == +l1R || bXY == +k1R ||
+                        bXY == o1R >> 119232160 && (!testFlag))) {
+                        O5w = 1;
+                        Y6(__s[1664]);
+                    }
+                    if ((bId == O1y << 826264544 || bId == (w1y & 2147483647) || bId == H1y - 0 || bId ==
+                        G1y * 1 || bId == +b1y || bId == +X1y || bId == +I1y || bId == +z1y || bId == +d1y || bId == +k1y ||
+                        bId == +S1y || bId == +J5y || bId == x5y << 1520084640 || bId == +W5y || bId == (U5y | 61) || bId == (c5y & 2147483647)) && bXY != 3 && bXY != 7 && bXY != +m2y && bXY != +17 && bXY != (D8y | 19) &&
+                        bXY != (S1R | 2) && bXY != +t5R && bXY != (J5R ^ 0) && bXY != T5R * 1 && bXY != 433 && bXY != +x5R &&
+                        bXY != +g5R && bXY != +W5R && bXY != +f5R && bXY != +U5R && bXY != N0R - 0 && bXY != p1R * 1 && bXY !=
+                        z1R - 0 && bXY != +n1R && bXY != (d1R & 2147483647) && bXY != 323 && bXY != l1R <<
+                        611117984 && bXY != +k1R && bXY != o1R << 449644192 && (!testFlag)) {
+                        O5w = 1;
+                        Y6(__s[6755]);
+                    }
+                    if (O5w == 0) {
+                        if (bId == +r4y && (bXY == +V5R || bXY == c5R - 0 || bXY == (u8y ^ 0) || bXY == M5R >>
+                            1074238720)) {
+                            t5w = 492;
+                            bId = +F4y;
+                        }
+                        if (bId == +r4y && (bXY == +s5R || bXY == Q5R - 0)) {
+                            t5w = 493;
+                            bId = A4y * 1;
+                        }
+                        if (bId == +p4y && (bXY == +V5R || bXY == +c5R || bXY == (u8y & 2147483647) || bXY == +M5R)) {
+                            t5w = 495;
+                            bId = +h4y;
+                        }
+                        if (bId == p4y - 0 && (bXY == +s5R || bXY == +Q5R)) {
+                            t5w = X4y * 1;
+                            bId = +P4y;
+                        }
+                        if (V5w == 1) {
+                            var y5w = y0V(bId, bXY);
+                            bId = y5w.t;
+                            t5w = y5w.p;
+                        }
+                        if (true) {
+                            let v5w = 2500;
+                            var i5w = O2();
+                            var L5w = currentTime();
+                            var X5w = Number(L5w) +
+                                Number(v5w);
+                            var o5w = 1;
+                            if (bId == +TPL)
+                                b5V(i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+                            else {
+                                if (op == (0)) {
+                                    var w5w = 1;
+                                    if (x9 == (1))
+                                        w5w = 10;
+                                    if (bId == +bidCASTLE)
+                                        V5V(i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+                                    else {
+                                        var T5w = {
+                                            bt: Number(op),
+                                            pa: 1,
+                                            elvl: 1,
+                                            bid: i5w,
+                                            brep: bId,
+                                            ds: L5w,
+                                            btype: t5w,
+                                            bspot: bXY,
+                                            slvl: 0,
+                                            de: X5w
+                                        };
+                                        var Q5w = __s[+p8R] +
+                                            b2() + __s[+z8R];
+                                        var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
+                                        N6();
+                                        ++bqInFlight;
+                                        var x5w = $.post("/includes/nBuu.php", { a: l5w, cid: __cid });
+                                        F6();
+                                        x5w.done(function (s7w) {
+                                            --bqInFlight;
+                                            if (!(s7w >= 0)) {
+                                                if (__cid === cid) {
+                                                    city = JSON.parse(S7w);
+                                                    sendBuildingData();
+                                                    V8();
+                                                    redrawCity();
+                                                    ProcessBuuPoll();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                                if (op == (2)) {
+                                    if (bId == +BAL && endLevel == (0))
+                                        Y6(_s('4265' |
+                                            1));
+                                    else if (bId == +bidCASTLE && endLevel == 0)
+                                        Y6(__s[6957]);
+                                    else {
+                                        var T5w = {
+                                            bt: Number(op),
+                                            bspot: bXY,
+                                            btype: t5w,
+                                            bid: i5w,
+                                            slvl: endLevel + 1,
+                                            elvl: endLevel,
+                                            brep: bId,
+                                            ds: L5w,
+                                            pa: 1,
+                                            de: X5w
+                                        };
+                                        var Q5w = __s[+p8R] + b2() + __s[z8R * 1];
+                                        var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 & 2147483647);
+                                        bqInFlight++;
+                                        var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
+                                        x5w.done(function (s7w) {
+                                            --bqInFlight;
+                                            if (!(s7w >= 0)) {
+                                                if (__cid === cid) {
+                                                    city = JSON.parse(S7w);
+                                                    sendBuildingData();
+                                                    V8();
+                                                    redrawCity();
+                                                    ProcessBuuPoll();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                                if (op == 3) {
+                                    var T5w = {
+                                        bt: Number(op),
+                                        btype: t5w,
+                                        bid: i5w,
+                                        bspot: bXY,
+                                        slvl: startLevel,
+                                        pa: 1,
+                                        de: X5w,
+                                        brep: bId,
+                                        ds: L5w,
+                                        elvl: 0
+                                    };
+                                    var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
+                                    var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, +256);
+                                    N6();
+                                    ++bqInFlight;
+                                    var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
+                                    F6();
+                                    x5w.done(function (s7w) {
+                                        --bqInFlight;
+                                        if (!(s7w >= 0)) {
+                                            if (__cid === cid) {
+                                                city = JSON.parse(S7w);
+                                                sendBuildingData();
+                                                V8();
+                                                redrawCity();
+                                                ProcessBuuPoll();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         window['buildop'] = function (bId, bXY, op) {
             bId = Number(bId);
             var nBid = L2(bId);
             if (nBid != 0)
                 bId = nBid;
             buildOp(bId, bXY, op);
+        };
+        window['cancelbuilds'] = function () {
+            for (let i in city.bq) {
+                var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
+            }
+            lastSentBq = -1;
+            DoPoll2(500);
+        };
+        window['buildex'] = function (bId, bXY, startLevel, endLevel, __cid) {
+            bId = Number(bId);
+            var nBid = L2(bId);
+            if (nBid != 0)
+                bId = nBid;
+            buildEx(bId, bXY, Number(startLevel), Number(endLevel), Number(__cid));
         };
         function h7V() { }
         function B5V(w9l, I9l) {
@@ -51697,7 +51977,7 @@ function outer() {
             }
         }
         function h9F() {
-            var u7l = __s[3640];
+            var u7l = "0123456789";
             var I7l = 5;
             var H7l = "";
             for (var j7l = 0; j7l < I7l; j7l++) {
@@ -53347,7 +53627,7 @@ function outer() {
             }
         }
         function O2() {
-            var a5l = __s['3640' | 3096];
+            var a5l = "0123456789";
             var s7l = 10;
             var E5l = '';
             for (var k7l = '0' |
@@ -68381,6 +68661,7 @@ function Contains(a, b) {
 }
 let updateTimeout = 0;
 let lastSentBq = 0;
+let bqInFlight = 0;
 let lastSentSts = "";
 let lastSentBD = 0;
 function compareSts() {
@@ -68411,6 +68692,9 @@ function compareBD() {
     return b0 !== b1;
 }
 function compareBq() {
+    if (bqInFlight > 0)
+        return false;
+    bqInFlight = 0;
     let b0 = bqChecksum(city.bq);
     var b1 = lastSentBq;
     lastSentBq = b0;

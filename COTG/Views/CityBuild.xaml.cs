@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using static COTG.Views.CityBuild;
 using Action = COTG.Views.CityBuild.Action;
 using COTG.Services;
+using Microsoft.Toolkit.HighPerformance.Extensions;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 using static COTG.Draw.CityView;
 
@@ -39,6 +40,7 @@ namespace COTG.Views
 		public static int quickBuildId;
 		public static CityBuild instance;
 		public static bool isLayout;
+	
 		
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
@@ -422,14 +424,17 @@ namespace COTG.Views
 		}
 
 
-		internal static async void ClearQueue()
+		internal static void ClearQueue()
 		{
-			foreach(var i in buildQueue)
-			{
-				await Post.Send("/includes/cBu.php", $"id={i.bidHash}&cid={City.build}", World.CidToPlayer(City.build));
-			}
+			BuildQueueHelper.ClearQueue();
+			JSClient.view.InvokeScriptAsync("cancelbuilds", Array.Empty<string>() );
 		}
 
+		public static void Enqueue( int slvl, int elvl, int bid, int spot)
+		{
+			BuildQueueHelper.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
+		}
+		
 		private void Upgrade_Click(object sender, RoutedEventArgs e)
 		{
 
@@ -438,11 +443,10 @@ namespace COTG.Views
 			var lvl = sel.bl;
 			
 			if(lvl == 0)// special case
-				JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "0" });
+				Enqueue( 0,1,sel.def.bid, id);
 			else
-				JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (selected.x - span0).ToString(), (selected.y - span0).ToString(), (lvl + 1).ToString() });
+				Enqueue(lvl,(lvl + 1),sel.def.bid,id);
 		
-			buildQueue.Add(new JSON.BuildQueueItem() { bspot = (ushort)id, slvl = (byte)(lvl), elvl = (byte)(lvl + 1) });
 		}
 		public static void UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
 		{
@@ -468,13 +472,12 @@ namespace COTG.Views
 
 				if(isLayout)
 				{
-					GetBuild().buildings[id].bl++;
+					GetBuild().buildings[id].bl =(byte) level;
 
 				}
 				else if (!dryRun)
 				{
-					JSClient.view.InvokeScriptAsync("upgradeBuilding", new[] { (target.x - span0).ToString(), (target.y - span0).ToString(), (level).ToString() });
-					buildQueue.Add(new JSON.BuildQueueItem() { bspot = id, slvl = (byte)(lvl), elvl = (byte)(level) }); ;
+					Enqueue(lvl, level, sel.def.bid, id);
 				}
 			}			
 		}
@@ -489,18 +492,38 @@ namespace COTG.Views
 			var b = GetBuilding(spot);
 			var wasBuilding = b.isBuilding;
 			// its a struct so we can mutate it
-			foreach( var q in buildQueue)
-			{
-				if(q.bspot == spot)
-				{
-					b.bl = q.elvl;
-					b.id = BuildingDef.BidToId( q.brep);
-					if (b.bl == 0 && wasBuilding)
-						b.id = 0;
-				}
-			}
+			IterateQueue((q) =>
+		   {
+			   if (q.bspot == spot)
+			   {
+				   b.bl = q.elvl;
+				   b.id = BuildingDef.BidToId(q.bid);
+				   if (b.bl == 0 && wasBuilding)
+					   b.id = 0;
+			   }
+		   });
 			return b;
 
+		}
+
+		public static Building[] GetPostQueueBuildings()
+		{
+			if (!postQueueBuildingsDirty)
+				return postQueuebuildingsCache;
+			postQueueBuildingsDirty = false;
+			for(var i =0;i<citySpotCount;++i)
+			{
+				postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
+			}
+			IterateQueue((q) =>
+			{
+				ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
+				b.bl = q.elvl;
+				b.id = BuildingDef.BidToId(q.bid);
+			});
+
+
+			return postQueuebuildingsCache;
 		}
 
 		public static void Demolish(int id, bool dryRun)
@@ -522,8 +545,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "3" }); // op 3 is destroy
-						buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = 0 });
+						Enqueue(sel.bl, 0, sel.def.bid, id);
 					}
 				}
 				else
@@ -558,12 +580,12 @@ namespace COTG.Views
 					}
 					else
 					{
-						JSClient.view.InvokeScriptAsync("buildop", new[] { sel.def.bid.ToString(), id.ToString(), "2" }); // op 2 is downgrade
+						Enqueue(sel.bl, sel.bl - 1, sel.def.bid, id);
 					}
 				}
 			}
-			if(!dryRun)
-				buildQueue.Add(new BuildQueueItem() { bspot = id, brep = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
+			//if(!dryRun)
+			//	buildQueue.Add(new BuildQueueItem() { bspot = id, bid = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
 		}
 		public static void Build(int id, int bid, bool dryRun)
 		{
@@ -638,10 +660,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						JSClient.view.InvokeScriptAsync("buildop", new[] { bid.ToString(), id.ToString(), "0" });
-
-						// todo: btype
-						buildQueue.Add(new BuildQueueItem() { bspot = id, brep = bid, slvl = 0, elvl = 1 });
+						Enqueue(0, 1, bid, id);
 					}
 				}
 			}
@@ -946,7 +965,7 @@ namespace COTG.Views
 													if (bld.bl < bestLevel)
 													{
 														// is it not being modified?
-														if (buildQueue.Any(a => a.bspot == spot))
+														if (IterateQueue().Any(a => a.bspot == spot))
 															continue;
 
 														bestLevel = bld.bl;
@@ -977,11 +996,11 @@ namespace COTG.Views
 									}
 								}
 								{
-									if (buildQueueFull)
-									{
-										Status("Build Queue full", dryRun);
-										break;
-									}
+									//if (buildQueueFull)
+									//{
+									//	Status("Build Queue full", dryRun);
+									//	break;
+									//}
 
 									if (desBid == 0)
 										Status($"No building is wanted here, how about a cottage instead?", dryRun);
@@ -998,12 +1017,12 @@ namespace COTG.Views
 							{
 								if (desBid != 0)
 								{
-									if (buildQueueFull)
-									{
-										Status("Build Queue full",dryRun);
-										break;
-									}
-									else
+									//if (buildQueueFull)
+									//{
+									//	Status("Build Queue full",dryRun);
+									//	break;
+									//}
+									//else
 									{
 										Status($"Destorying {b.def.Bn} to make way for {desName}",dryRun);
 									}
@@ -1087,16 +1106,16 @@ namespace COTG.Views
 					}
 				case Action.build:
 					{
-						if(b.isRes && !buildQueue.Any(a => a.bspot == bspot))
+						if(b.isRes && !IterateQueue().Any(a => a.bspot == bspot))
 						{
 							Status("Spot is not empty", dryRun);
 							break;
 						}
-						if (buildQueueFull)
-						{
-							Status("Build Queue full", dryRun);
-							break;
-						}
+						//if (buildQueueFull)
+						//{
+						//	Status("Build Queue full", dryRun);
+						//	break;
+						//}
 
 						var sel = _quickBuildId;
 
@@ -1111,11 +1130,11 @@ namespace COTG.Views
 					}
 				case Action.destroy:
 					{
-						if (buildQueueFull)
-						{
-							Status("Build Queue full", dryRun);
-							break;
-						}
+						//if (buildQueueFull)
+						//{
+						//	Status("Build Queue full", dryRun);
+						//	break;
+						//}
 						Demolish(cc, dryRun);
 
 						
@@ -1268,7 +1287,7 @@ namespace COTG.Views
 					}
 				}
 				var d = b.def;
-		//		if (!b.isEmpty)
+				if (d.bid!=0)
 					JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 				{
 					selected = cc;
