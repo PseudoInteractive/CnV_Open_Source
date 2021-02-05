@@ -17,6 +17,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 using static COTG.Debug;
+using static COTG.JSON.BuildQueue;
 
 namespace COTG.JSON
 {
@@ -75,11 +76,20 @@ namespace COTG.JSON
 
 
 		// Moves from the pending queue to the active queue;
-		public void Apply(int cid)
+		public Windows.Foundation.IAsyncOperation<string> Apply(int cid)
 		{
-			JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			if(cid == City.build)
+			if (cid == City.build)
 				City.buildQueue.Add(this);
+			return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
+			
+		}
+		public void ApplyOnUIThread(int cid)
+		{
+			if (cid == City.build)
+				City.buildQueue.Add(this);
+			
+			JSClient.JSInvoke("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
+			
 		}
 	}
 	public class CityBuildQueue
@@ -87,9 +97,15 @@ namespace COTG.JSON
 		public int cid;
 		public ConcurrentQueue<BuildQueueItem> queue = new ConcurrentQueue<BuildQueueItem>();
 		public static ConcurrentDictionary<int, CityBuildQueue> all = new ConcurrentDictionary<int, CityBuildQueue>();
-		public static bool saveNeeded; // needs to be saved to disc
-		static ThreadPoolTimer saveTimer;
-		public static bool initialized => saveTimer != null;
+		public bool TryDequeue(out BuildQueueItem BuildQueueItem)
+		{
+			if(queue.TryDequeue(out BuildQueueItem))
+			{
+				BuildTab.RemoveOp(BuildQueueItem, cid);
+				return true;
+			}
+			return false;
+		}
 		public async void Process(int initialDelay=0)
 		{
 			if(initialDelay > 0 )
@@ -99,16 +115,14 @@ namespace COTG.JSON
 			for (; ; )
 			{
 				int delay;
+				int queuedCommands = 0;
 				if (cid == City.build)
 				{
 					// every two seconds commands will only be queud on changes
 					delay = 2000;
+					queuedCommands = City.buildQueue.count;
 					// process pending queue first if appropriate
-					while (City.wantBuildCommands && queue.TryDequeue(out var rv))
-					{
-						rv.Apply(cid);
-						saveNeeded = true;
-					}
+					
 				}
 				else
 				{
@@ -117,12 +131,12 @@ namespace COTG.JSON
 					// todo
 					await GetCity.Post(cid, (jse, city) =>
 					 {
-						 int count = 0;
+						
 						 if (jse.TryGetProperty("bq", out var bq))
 						 {
-							 count = bq.GetArrayLength();
+							 queuedCommands = bq.GetArrayLength();
 							 // todo: sort dependencies
-							 var js = bq[count - 1];
+							 var js = bq[queuedCommands - 1];
 							 var e = js.GetAsInt64("de");
 							 var t = JSClient.AsJSTime(e);
 							 var st = JSClient.ServerTime();
@@ -133,33 +147,50 @@ namespace COTG.JSON
 								 delay = 5000; // never wait less than 5 seconds
 							 Log(delay);
 							 // no progress :( wait two minutes
-							 if (count >= City.safeBuildQueueLength)
+							 if (queuedCommands >= City.safeBuildQueueLength)
 							 {
 								 if (delay < 2 * 60 * 1000)
 									 delay = 2 * 60 * 1000;
 							 }
 						 }
-						 for (; count < City.safeBuildQueueLength; ++count)
-						 {
-							 if (queue.TryDequeue(out var rv))
-							 {
-								 rv.Apply(cid);
-								 saveNeeded = true;
-							 }
-							 else
-							 {
-								 break;
-							 }
-
-						 }
+						
 
 					 });
 				}
+				int commandsToQueue = (City.safeBuildQueueLength - queuedCommands).Min(queue.Count);
+				if(commandsToQueue > 0)
+				{
+					var ops = new BuildQueueItem[commandsToQueue];
+					int put = 0;
+					do
+					{
+						if (!TryDequeue(out var rv))
+						{
+							break;
+						}
+						ops[put++] = rv;
+
+					} while (--commandsToQueue > 0);
+					App.DispatchOnUIThreadSneaky(async () =>
+					{
+						for (int i = 0; i < put; ++i)
+						{
+							var _i = i;
+							await ops[_i].Apply(cid);
+						}
+						SaveNeeded();
+					}
+
+					);
+					
+
+				}
+
 
 				if (!queue.Any())
 				{
 					all.TryRemove(cid, out var dummy);
-					saveNeeded = true;
+					SaveNeeded();
 					return;
 				}
 				await Task.Delay(delay); // todo estimate this
@@ -177,11 +208,137 @@ namespace COTG.JSON
 			else
 				return (all[cid]); // someone else added
 		}
+
+
+
+		public  BuildQueueItem Enqueue(BuildQueueItem op)
+		{
+			queue.Enqueue(op);
+			BuildTab.AddOp(op, cid);
+			return op;
+		}
+
+
+	}
+
+	public static class BuildQueue
+	{
+		static ThreadPoolTimer saveTimer;
+		public static byte buildActionCounter; // needs to be saved to disc
+		public static void SaveNeeded() => buildActionCounter = 3;
+
+
+		public static bool initialized => saveTimer != null;
+		public static async void Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot)
+		{
+			Assert(initialized);
+			var op = new BuildQueueItem(slvl, elvl, bid, spot);
+			if (bid == City.bidTemple)
+			{
+				Assert(cid == City.build);
+				op.ApplyOnUIThread(cid);
+				return;
+			}
+			if (bid == City.bidCastle)
+			{
+				Assert(cid == City.build);
+				var dialog = new ContentDialog()
+				{
+					Title = $"Castle {City.GetOrAddCity(cid).nameAndRemarks}?",
+					Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
+					PrimaryButtonText = "Yes",
+					SecondaryButtonText = "Cancel"
+				};
+				if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
+				{
+					Assert(cid == City.build);
+					op.ApplyOnUIThread(cid);
+				}
+				return;
+			}
+			var pending = CityBuildQueue.Get(cid);
+			pending.Enqueue(op);
+			SaveNeeded();
+			if (pending.queue.Count == 1)
+			{
+				pending.Process();
+			}
+		}
+
+	
+
+		public static bool TryGetQueue(out IEnumerator<BuildQueueItem> rv)
+		{
+			rv = null;
+			if (!CityBuildQueue.all.TryGetValue(City.build, out var q))
+				return false;
+			rv = q.queue.GetEnumerator();
+			return true;
+		}
+		public static void ClearQueue()
+		{
+			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			{
+				q.queue.Clear();
+				SaveNeeded();
+			}
+		}
+		public static void SaveIfNeeded()
+		{
+			if (!initialized)
+				return;
+			SaveTimerGo(true);
+		}
+		static internal void ShutDown(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+		{
+			if (!initialized)
+				return;
+			saveTimer.Cancel();
+			SaveTimerGo(true); // flush pending saves if any
+		}
+		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
+		{
+			SaveTimerGo(false);
+		}
+		static internal void SaveTimerGo(bool force)
+		{
+			if (buildActionCounter == 0)
+			{
+				return;
+			}
+			if (force)
+				buildActionCounter = 0;
+			else
+				--buildActionCounter;
+			if (buildActionCounter > 0)
+				return;
+			
+				try
+				{
+					if (CityBuildQueue.all.Any())
+					{
+						var str = Serialize();
+						Log($"SaveQueue: {str}");
+						Cosmos.SaveBuildQueue(str);
+					}
+					else
+					{
+						Cosmos.ClearBuildQueue();
+					}
+				}
+				catch (Exception ex)
+				{
+					Log(ex);
+					SaveNeeded(); // something went wrong, try again later
+				}
+			
+		}
+
 		static public string Serialize()
 		{
 			StringBuilder sb = new StringBuilder("{");
 			bool isFirst = true;
-			foreach (var city in all.Values)
+			foreach (var city in CityBuildQueue.all.Values)
 			{
 				if (isFirst)
 				{
@@ -192,6 +349,7 @@ namespace COTG.JSON
 					sb.Append(',');
 				}
 				sb.Append($"\"{city.cid}\":[");
+				Log($"{city.cid} {city.queue.Count}");
 				var qFirst = true;
 				foreach (var q in city.queue)
 				{
@@ -211,9 +369,9 @@ namespace COTG.JSON
 			return sb.ToString();
 
 		}
-		public static async void Init()
+		public static async void Initialize()
 		{
-			if(initialized)
+			if (initialized)
 			{
 				Assert(false);
 				return;
@@ -224,117 +382,23 @@ namespace COTG.JSON
 				// Todo:  Ensure no building occurs yet
 				// Load from JSon, too bad we can't do UTF8
 				var js = JsonDocument.Parse(data);
-				foreach(var jsCity in js.RootElement.EnumerateObject())
+				foreach (var jsCity in js.RootElement.EnumerateObject())
 				{
 					var cid = int.Parse(jsCity.Name);
-					var cq = Get(cid);
-					foreach(var d in jsCity.Value.EnumerateArray())
+					var cq = CityBuildQueue.Get(cid);
+					foreach (var d in jsCity.Value.EnumerateArray())
 					{
-						var op = new BuildQueueItem(d[2].GetByte(),d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16() );
-						cq.queue.Enqueue(op);
+						var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
+						cq.Enqueue(op);
 					}
+					Log($"{cid} {cq.queue.Count}");
 					cq.Process(AMath.random.Next(1024, 3 * 1024)); // wait 1 - 3 seconds.
 
 				}
 			}
-			// Todo: load
-			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(Dummy.instance.SaveTimer_Tick, TimeSpan.FromMinutes(1));
 
-			App.DispatchOnUIThreadSneaky(() => Window.Current.Closed += Dummy.instance.ShutDown);
-		}
+			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(120));
 
-		
-
-		class Dummy
-		{
-			internal static Dummy instance = new Dummy();
-			internal void ShutDown(object sender, Windows.UI.Core.CoreWindowEventArgs e)
-			{
-				if (!initialized)
-					return;
-				saveTimer.Cancel();
-				SaveTimer_Tick(null); // flush pending saves if any
-			}
-			internal void SaveTimer_Tick(ThreadPoolTimer timer)
-			{
-				if (saveNeeded == false)
-					return;
-				saveNeeded = false;
-				try
-				{
-					if (all.Any())
-					{
-						var str = Serialize();
-						Cosmos.SaveBuildQueue(str);
-					}
-					else
-					{
-						Cosmos.ClearBuildQueue();
-					}
-				}
-				catch (Exception ex)
-				{
-					Log(ex);
-					saveNeeded = true; // something went wrong, try again later
-				}
-			}
 		}
-	
-	}
-
-	public static class BuildQueueHelper
-	{
-		public static async void Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot)
-		{
-			Assert(CityBuildQueue.initialized);
-			var op = new BuildQueueItem(slvl, elvl, bid, spot);
-			if(bid == City.bidTemple)
-			{
-				Assert(cid == City.build);
-				op.Apply(cid);
-				return;
-			}
-			if(bid == City.bidCastle)
-			{
-				Assert(cid == City.build);
-				var dialog = new ContentDialog()
-				{
-					Title = $"Castle {City.GetOrAddCity(cid).nameAndRemarks}?",
-					Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
-					PrimaryButtonText = "Yes",
-					SecondaryButtonText = "Cancel"
-				};
-				if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
-				{
-					Assert(cid == City.build);
-					op.Apply(cid);
-				}
-				return;
-			}
-			var pending = CityBuildQueue.Get(cid);
-			CityBuildQueue.saveNeeded = true;
-			pending.queue.Enqueue(op);
-			if (pending.queue.Count == 1)
-			{
-				pending.Process();
-			}
-		}
-		public static bool TryGetQueue(out IEnumerator<BuildQueueItem> rv)
-		{
-			rv = null;
-			if (!CityBuildQueue.all.TryGetValue(City.build, out var q))
-				return false;
-			rv = q.queue.GetEnumerator();
-			return true;
-		}
-		public static void ClearQueue()
-		{
-			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
-			{
-				q.queue.Clear();
-				CityBuildQueue.saveNeeded = true;
-			}
-		}
-
 	}
 }

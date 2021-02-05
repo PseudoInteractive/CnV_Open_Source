@@ -54232,13 +54232,24 @@ bqInFlight=0;
 		buildOp(bId,bXY,op);
 
    }
+
+   function cancelBuildOp( i  : number )
+   {
+   	   var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
+	   q2g.done((a) => {
+			if( i > 0)
+				cancelBuildOp(i-1);
+
+	   });
+   }
    window['cancelbuilds'] = function () 
    {
-	   for (let i in city.bq) {
-		   var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
-	  }
-		lastSentBq = -1;
-	   DoPoll2(500);
+	   if(city.bq.length> 0)
+	   {
+		cancelBuildOp( city.bq.length - 1 );
+			lastSentBq = -1;
+		   DoPoll2(500);
+	   }
    }
 
 

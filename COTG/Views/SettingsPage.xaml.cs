@@ -249,7 +249,7 @@ namespace COTG.Views
 				Log(e);
 			}
 		}
-		public static void SaveAll(object _ = null, Windows.UI.Core.CoreWindowEventArgs __ = null)
+		public static void SaveAll(object __ = null, Windows.ApplicationModel.SuspendingEventArgs _=null)
 		{
 			try
 			{
@@ -386,8 +386,7 @@ namespace COTG.Views
 			//       UserDataService.UserDataUpdated += OnUserDataUpdated;
 			//_isLoggedIn = true;// IdentityService.IsLoggedIn();
 			LoadAll();
-			Window.Current.Closed -= SaveAll;
-			Window.Current.Closed += SaveAll;
+		//	App.instance.Suspending += SaveAll;
 
 			//           _user = await UserDataService.GetDefaultUserData();
 			//if (Microsoft.Services.Store.Engagement.StoreServicesFeedbackLauncher.IsSupported())

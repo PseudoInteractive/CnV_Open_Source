@@ -37,13 +37,13 @@ namespace COTG.Views
                 new DefenseHistoryTab(),
                 new BossTab(),
                 new AttackTab(),
+				new BuildTab(),
                 new SpotTab(),
                 new OutgoingTab(),
                 new HitTab(),
                 new NearDefenseTab(),
         };
             }
-		// workaround for webview
 		
 		
 
@@ -244,7 +244,7 @@ namespace COTG.Views
             { "Boss", Symbol.View },
             { "AttackPlanner", Symbol.Audio },
             { "world", Symbol.Microphone },
-            
+			{ "Build", Symbol.Repair },
             { "officer" ,Symbol.Admin },
         };
 

@@ -306,6 +306,9 @@
     <Compile Include="Views\CityRename.xaml.cs">
       <DependentUpon>CityRename.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BuildTab.xaml.cs">
+      <DependentUpon>BuildTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DonationTab.xaml.cs">
       <DependentUpon>DonationTab.xaml</DependentUpon>
     </Compile>
@@ -427,6 +430,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CityRename.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BuildTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

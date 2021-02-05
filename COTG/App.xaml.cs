@@ -55,7 +55,7 @@ namespace COTG
 	{
 		private Lazy<ActivationService> _activationService;
 		public static bool isForeground;
-
+		public static bool processingTasksStarted;
 		private ActivationService ActivationService
 		{
 			get { return _activationService.Value; }
@@ -103,8 +103,10 @@ namespace COTG
 
 		private void App_Suspending(object sender, SuspendingEventArgs e)
 		{
+			Trace("Suspend");
 			isForeground = false;
-
+			JSON.BuildQueue.SaveIfNeeded();
+			SettingsPage.SaveAll();
 		}
 
 
@@ -195,7 +197,6 @@ namespace COTG
 			e.Handled = true;
 		}
 
-		static ThreadPoolTimer idleTimer;
 		static int lastInputTick;
 		public static void InputRecieved() => lastInputTick = Environment.TickCount;
 
@@ -251,12 +252,12 @@ namespace COTG
 #endif
 			//if(args!=null)
 			//	SystemInformation.TrackAppUse(args);
-			if (idleTimer == null)
+			if (processingTasksStarted == false)
 			{
+				processingTasksStarted = true;
 
-
-				idleTimer = ThreadPoolTimer.CreatePeriodicTimer(IdleTimer_Tick, TimeSpan.FromSeconds(4) );
 				ProcessThrottledTasks();
+				ProcessIdleTasks();
 			}
 
 
@@ -352,25 +353,33 @@ namespace COTG
 			InputRecieved(); 
 		}
 
-		private static void IdleTimer_Tick(ThreadPoolTimer _)
+		private static async void ProcessIdleTasks()
 		{
-			var tick = Environment.TickCount;
-			// must be idle for at least 16 s
-			if( (tick - lastInputTick ).Abs() < 16*1000 )
+			for (; ; )
 			{
-				return;
-			}
-			if (idleTasks.TryDequeue(out Action a))
-			{
-				try
+				var tick = Environment.TickCount;
+				// must be idle for at least 16 s
+				if ((tick - lastInputTick).Abs() < 16 * 1000)
 				{
-					a();
+					// not idle
+					await Task.Delay(9 * 1000);
+					continue;
 				}
-				catch (Exception _exception)
+				if (idleTasks.TryDequeue(out Action a))
 				{
-					COTG.Debug.Log(_exception);
+					try
+					{
+						a();
+					}
+					catch (Exception _exception)
+					{
+						COTG.Debug.Log(_exception);
+					}
+					await Task.Delay(1000); // wait one second if idel
 				}
-			}
+				// not idle but no tasks
+				await Task.Delay(9 * 1000);
+			}	
 		}
 
 		// with a delay
@@ -497,7 +506,9 @@ namespace COTG
 
 			//   if (ShellPage.canvas != null)
 			//      ShellPage.canvas.Paused = true;
-			SettingsPage.SaveAll();
+		//	SettingsPage.SaveAll();
+			JSON.BuildQueue.SaveIfNeeded();
+
 			//            var deferral = e.GetDeferral();
 			//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
 			//           deferral.Complete();
@@ -536,6 +547,16 @@ namespace COTG
 				action();
 			else
 				d.RunAsync(CoreDispatcherPriority.Low, action);
+		}
+
+		public static void DispatchOnUIThreadIdleSneaky(IdleDispatchedHandler action)
+		{
+			var d = GlobalDispatcher();
+			// run it immediately if we can
+			if (d.HasThreadAccess)
+				action(null);
+			else
+				d.RunIdleAsync( action);
 		}
 		public static async Task DispatchOnUIThreadSneakyTask(DispatchedHandler action)
 		{

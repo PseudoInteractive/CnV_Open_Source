@@ -113,7 +113,7 @@ namespace COTG.Game
 			foreach (var i in buildQueue)
 				yield return i;
 
-			if (BuildQueueHelper.TryGetQueue(out var q))
+			if (BuildQueue.TryGetQueue(out var q))
 			{
 				while (q.MoveNext())
 				{
@@ -126,7 +126,7 @@ namespace COTG.Game
 			foreach (var i in buildQueue)
 				action(i);
 			
-			if (BuildQueueHelper.TryGetQueue(out var q))
+			if (BuildQueue.TryGetQueue(out var q))
 			{
 				while (q.MoveNext())
 				{

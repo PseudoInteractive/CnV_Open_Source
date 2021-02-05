@@ -426,13 +426,13 @@ namespace COTG.Views
 
 		internal static void ClearQueue()
 		{
-			BuildQueueHelper.ClearQueue();
+			BuildQueue.ClearQueue();
 			JSClient.view.InvokeScriptAsync("cancelbuilds", Array.Empty<string>() );
 		}
 
 		public static void Enqueue( int slvl, int elvl, int bid, int spot)
 		{
-			BuildQueueHelper.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
+			BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 		}
 		
 		private void Upgrade_Click(object sender, RoutedEventArgs e)

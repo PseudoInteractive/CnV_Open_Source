@@ -78,6 +78,13 @@ namespace COTG
 		//		return _downloadImageClient;
 		//	}
 		//}
+
+		public static void JSInvoke(string func, string[] args)
+		{
+			App.DispatchOnUIThreadSneaky(() =>
+		   JSClient.view.InvokeScriptAsync(func, args));
+		}
+
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
 		{
@@ -1967,7 +1974,7 @@ namespace COTG
 
 				   if (gotCreds)
 				   {
-					   CityBuildQueue.Init();
+					   BuildQueue.Initialize();
 
 					   ShellPage.SetViewModeCity();
 

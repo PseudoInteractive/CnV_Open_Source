@@ -308,8 +308,9 @@ namespace COTG.Views
 				{
 					var tabPage = CreateTabPage(shellFrame);
 					TabPage.mainTabs = tabPage;
-					tabPage.AddTab(MainPage.instance, true);
-
+					tabPage.AddTab(MainPage.instance, false);
+					tabPage.AddTab(BuildTab.instance, true);
+		
 					// gridTip=new TextBlock();
 					// tabPage.Tabs.TabStripFooter = gridTip;
 					//    tabPage.AddTab(IncomingTab.instance, false);
