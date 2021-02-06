@@ -8558,7 +8558,7 @@ let city = {};
 let pollJ = {};
 var P8 = 0;
 function SetViewMode(mode) {
-    _viewModeCache = _viewModeInvalid;
+    _viewModeCache = viewModeInvalid;
     _viewMode = mode;
     callSyncViewMode();
 }

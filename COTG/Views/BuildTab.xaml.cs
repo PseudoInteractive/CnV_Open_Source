@@ -28,6 +28,8 @@ using System.Numerics;
 using COTG.JSON;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
+using Windows.UI.Xaml.Media.Imaging;
+
 namespace COTG.Views
 {
 
@@ -132,14 +134,45 @@ namespace COTG.Views
 			});
 
 		}
+		public static void RebuildAll()
+		{
+			instance.cities.Clear();
+			foreach(var city in CityBuildQueue.all.Values)
+			{
+				var view = new BuildQueueView() { cid = city.cid };
+				instance.cities.Add(view);
+				foreach(var q in city.queue)
+				{
+					view.queue.Add( new BuildOpView(q));
+				}
 
+			}
+		}
+		override public async void VisibilityChanged(bool visible)
+		{
+			//   Log("Vis change" + visible);
+
+			if (visible)
+			{
+				RebuildAll();
+			}
+			else
+			{
+				cities.Clear();
+			}
+			base.VisibilityChanged(visible);
+
+		}
 
 	}
+
 
 	public class BuildQueueView
 	{
 		public int cid;
-		public string name => City.GetOrAdd(cid).nameAndRemarks;
+		public string title => City.GetOrAdd(cid).nameAndRemarks;
+		public BitmapImage icon => City.GetOrAdd(cid).icon;
+
 		public ObservableCollection<BuildOpView> queue { get; set; } = new ObservableCollection<BuildOpView>();
 	}
 	public class BuildOpView

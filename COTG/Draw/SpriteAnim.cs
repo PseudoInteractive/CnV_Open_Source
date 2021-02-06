@@ -25,12 +25,13 @@ namespace COTG
 		{
 			asset = _asset;
 			frameCount = (byte)_frameCount;
-			var frameDelta = 1.0 / _frameCount;
-			var g = (int)(frameDelta * 255);
+			double dFrameCount = _frameCount;
+			double frameDelta = 1.0 / dFrameCount;
+			var g = Math.Floor(frameDelta * 255.0);
 			var error = frameDelta - (g / 255.0);
 			Assert(error >= 0.0);
 			Assert(error <= 1.0/255.0);
-			var b = (int)(error * 256 * 255);
+			var b = (int)(error * 256.0 * 255.0);
 			Assert(b >= 0);
 			Assert(b <= 255);
 			frameDeltaB = (byte)b;

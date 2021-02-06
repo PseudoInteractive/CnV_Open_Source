@@ -1482,6 +1482,7 @@ namespace COTG
 									   }
 									   catch (Exception _ex)
 									   {
+										   Log(_ex);
 										   await Task.Delay(1000);
 										   continue;
 

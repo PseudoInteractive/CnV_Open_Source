@@ -101,7 +101,7 @@ namespace COTG
 		public static float zTopLevel => zTopLevelBase * AGame.parallaxGain;
 		public static float zCities => zCitiesBase * AGame.parallaxGain;
 		public static float zLabels => zLabelsBase * AGame.parallaxGain;
-		public static float zEffectShadow => zEffectShadowBase * AGame.parallaxGain;
+		public static float zEffectShadow => zEffectShadowBase * 0.5f;
 
 		public const float cameraZ = 1.0f;
 		public static SwapChainPanel canvas;
@@ -1906,15 +1906,17 @@ namespace COTG
 					var frac = rtype - iType;
 					iType = iType.Min(nSprite - 1);
 					if (frac < 0.25f)
-						alpha = AMath.STerm(frac * 4.0f);
+						alpha = AMath.SCurve(frac * 4.0f);
 					else if (frac > 0.75f)
-						alpha = AMath.STerm((1 - frac) * 4.0f);
+						alpha = AMath.SCurve((1 - frac) * 4.0f);
 
 				}
 				return (iType, alpha);
 			}
 		}
-
+		static int _blend;
+		static Vector2 _uv0;
+		static Vector2 _uv1;
 		private static void DrawFlag(int cid, SpriteAnim sprite)
 		{
 			var wc = cid.CidToWorld();
@@ -1931,13 +1933,26 @@ namespace COTG
 				c.Y -= dz.z*(5.0f* shapeSizeGain); // 8 pixels up regardless of scale
 				z += dz.z*viewHoverZGain;
 			}
-			float frameCount = sprite.frameCount;
-			var frameF = (((animationT + cid.CidToRandom() * 15) * 12) % frameCount);
-			var frameI = MathF.Truncate(frameF);
-			var blend = (int)((frameF - frameI) * 255.0f + 0.325f );
+			double frameCount = sprite.frameCount;
+			double frameTotal = ((animationT + cid.CidToRandom() * 15.0) * 12.0);
+			var frameWrap = frameTotal% frameCount;
+
+			var frameI = Math.Floor(frameWrap);
+			var frameMod = (frameWrap - frameI) * 255.0 + 0.325;
+			Assert(frameMod >= 0);
+			Assert(frameMod < 256.0f);
+			var blend = (int)(frameMod);
+		//	_blend = blend;
 			var c0 = new Vector2(c.X, c.Y - dv * 0.435f*0.75f);
 			Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f, c.Y - dv * 0.035f * 0.75f);
-			draw.AddQuad(Layer.effects, sprite.material, c0, c1, new Vector2(frameI / frameCount, 0.0f), new Vector2((frameI + 1) / frameCount, 1),new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB,255), (c0, c1).RectDepth(z));
+			var uv0 = new Vector2( (float)(frameI / frameCount), 0.0f);
+			var uv1 = new Vector2( (float)( (frameI + 1.0f) / frameCount), 1.0f);
+		//	_uv0 = uv0;
+		//	_uv1 = uv1;
+			draw.AddQuad(Layer.effects, sprite.material, c0, c1, 
+				uv0, 
+				uv1,
+				new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB,255), (c0, c1).RectDepth(z));
 		}
 
 		private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)

@@ -22,20 +22,18 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <tg:RadDataGrid x:Name="attackerGrid"
-						 x:FieldModifier="public"
+						x:FieldModifier="public"
                         GridLinesThickness="1"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
 						IsTabStop="True"
 						TabFocusNavigation="Once"
-							Margin="4,4,8,16"
-
+						Margin="4,4,8,16"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
                         PointerPressed="gridPointerPress"
                         GroupPanelPosition="Bottom"
-                      
                         AlternationStep="2"
                         SelectionMode="Single"
                         AllowFocusOnInteraction="True"

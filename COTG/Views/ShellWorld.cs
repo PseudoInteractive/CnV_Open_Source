@@ -627,7 +627,9 @@ namespace COTG.Views
 				{
 					Windows.UI.Input.PointerUpdateKind.LeftButtonPressed => 0,
 					Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed => 1,
+					
 					Windows.UI.Input.PointerUpdateKind.RightButtonPressed => 2,
+					_=>0
 				}))
 			{
 				//				isOverPopup = true;

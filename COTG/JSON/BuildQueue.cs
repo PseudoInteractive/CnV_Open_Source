@@ -1,9 +1,11 @@
-﻿using COTG.Game;
+﻿using COTG.Draw;
+using COTG.Game;
 using COTG.Helpers;
 using COTG.Services;
 using COTG.Views;
 
 using System;
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +58,7 @@ namespace COTG.JSON
 
 	public readonly struct BuildQueueItem
 	{
+		public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
 		public readonly byte slvl;
 		public readonly byte elvl;
 		public readonly ushort bid; // building id
@@ -81,7 +84,7 @@ namespace COTG.JSON
 			if (cid == City.build)
 				City.buildQueue.Add(this);
 			return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			
+			CityView.BuildingsOrQueueChanged();
 		}
 		public void ApplyOnUIThread(int cid)
 		{
@@ -89,7 +92,7 @@ namespace COTG.JSON
 				City.buildQueue.Add(this);
 			
 			JSClient.JSInvoke("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			
+			CityView.BuildingsOrQueueChanged();
 		}
 	}
 	public class CityBuildQueue
@@ -112,10 +115,19 @@ namespace COTG.JSON
 			{
 				await Task.Delay(initialDelay);
 			}
+			// Ordering:
+			// too few buildings - advance townhall or a demo
+			// castle:  process demo first
+			// repace a building:  Wait for demo to complete first
+			// towers must wait for walls
+			// Temple:  must demo first
+
 			for (; ; )
 			{
+				int buildingCount = 0;
 				int delay;
 				int queuedCommands = 0;
+
 				if (cid == City.build)
 				{
 					// every two seconds commands will only be queud on changes
@@ -135,22 +147,23 @@ namespace COTG.JSON
 						 if (jse.TryGetProperty("bq", out var bq))
 						 {
 							 queuedCommands = bq.GetArrayLength();
-							 // todo: sort dependencies
-							 var js = bq[queuedCommands - 1];
-							 var e = js.GetAsInt64("de");
-							 var t = JSClient.AsJSTime(e);
-							 var st = JSClient.ServerTime();
-							 Log(t);
-							 Log(st);
-							 delay = (t - st).TotalMilliseconds.RoundToInt() - 2000; // recover after 2 seconds
-							 if (delay < 5000)
-								 delay = 5000; // never wait less than 5 seconds
-							 Log(delay);
-							 // no progress :( wait two minutes
-							 if (queuedCommands >= City.safeBuildQueueLength)
+							 if (queuedCommands > 0)
 							 {
-								 if (delay < 2 * 60 * 1000)
-									 delay = 2 * 60 * 1000;
+								 // todo: sort dependencies
+								 var js = bq[queuedCommands - 1];
+
+								 var e = js.GetAsInt64("de");
+								 var t = JSClient.AsJSTime(e);
+								 var st = JSClient.ServerTime();
+								 delay = (t - st).TotalMilliseconds.RoundToInt() - 2000; // recover after 2 seconds
+								 if (delay < 5000)
+									 delay = 5000; // never wait less than 5 seconds
+								 // no progress :( wait two minutes
+								 if (queuedCommands >= City.safeBuildQueueLength)
+								 {
+									 if (delay < 2 * 60 * 1000)
+										 delay = 2 * 60 * 1000;
+								 }
 							 }
 						 }
 						
@@ -162,6 +175,8 @@ namespace COTG.JSON
 				{
 					var ops = new BuildQueueItem[commandsToQueue];
 					int put = 0;
+	//				if(BuildTab.IsVisible)
+	//					BuildTab.cvsGroups.View
 					do
 					{
 						if (!TryDequeue(out var rv))
@@ -280,6 +295,7 @@ namespace COTG.JSON
 			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
 			{
 				q.queue.Clear();
+				BuildTab.Clear(City.build);
 				SaveNeeded();
 			}
 		}

@@ -20,7 +20,8 @@
         </Grid.RowDefinitions>
         <Grid.Resources>
             <local:HyperlinkColorConverter x:Key="hyperlinkColorConverter" />
-                              
+          
+			
           
             <!-- Data template used: -->
             <!-- The data template is bound to a custom DataType called Message. -->
@@ -53,7 +54,7 @@ sent or received, and those values are bound in the DataTemplate.-->
             <Button x:Name="translateButton" Click="Button_Click" Style="{ThemeResource ButtonRevealStyle}" >
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF2B7;"/>
             </Button>
-            <TextBox x:Name="input" x:FieldModifier="public" Grid.Column="1" Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver" PointerExited="inputPointerExited" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap"  />
+            <TextBox x:Name="input" x:FieldModifier="public" Grid.Column="1" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver" PointerExited="inputPointerExited" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap"  />
         </Grid>
                 <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" MinHeight="22" IsMultiSelectCheckBoxEnabled="False" IsTabStop="True" AllowFocusOnInteraction="True" TabFocusNavigation="Cycle"
                    ItemsSource="{x:Bind items,Mode=OneWay}" >

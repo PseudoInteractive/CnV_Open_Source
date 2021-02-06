@@ -129,7 +129,9 @@ namespace COTG.JSON
                                         }
                                     //                            army.sumDef = Array.Empty<TroopTypeCount>();
                                     spot.incoming = spot.incoming.ArrayAppend(army);
-                                        defenders.Add(spot);
+										spot.QueueClassify();
+
+										defenders.Add(spot);
                                     //   defenders.Add(spot);
                                     if (fetchReports)
                                             reportsOutgoing.Add(army);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Toolkit.HighPerformance.Enumerables;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +29,12 @@ namespace COTG
 		{
 			return new Enumerator(this);
 		}
+		public Span<T> span => new Span<T>(v, 0,count);
 
+		public SpanEnumerable<T> Enumerate()
+		{
+			return new SpanEnumerable<T>(span);
+		}
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return new Enumerator(this);

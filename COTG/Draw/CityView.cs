@@ -74,7 +74,10 @@ namespace COTG.Draw
 		}
 		public static JSON.Building[] buildingsCache;
 		public static JSON.Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
+		static float[] animationOffsets = new float[citySpotCount];
 		public static bool postQueueBuildingsDirty = true;
+		public static void BuildingsOrQueueChanged() => postQueueBuildingsDirty = true;
+
 		public static Building GetBuilding( int id) => buildingsCache[id];
 		public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
 		static Vector2 waterC =new Vector2( 1.0f - 768.0f* cityTileGainX / 128,
@@ -114,36 +117,177 @@ namespace COTG.Draw
 				return;
 			int iAlpha = (int)(alpha * 255f);
 			buildingsCache = build.buildings;
-			
+			var postBuildings = CityBuild.postQueueBuildings;
 			buildCityOrigin = build.cid.CidToWorldV();
 			// draw each building tile
 			var city = City.GetBuild();
 			cityDrawAlpha = iAlpha;
-			var zBase = 0;
+			var zBase = 0f;
 			// selected
 
-			
+			// Timeline:
+			// 0..1: B0
+			// 1..2: Fade Out B0, fade in Op
+			// 2..3: Fade Out Op, fade in B1
+			// 3..4: B1
+			// 4..5: Fade out B1 fade in B0
+
 			var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * SettingsPage.fontScale; // perspective attenuation with distance
 			for (var cy = span0; cy <= span1; ++cy)
 			{
 				for (var cx = span0; cx <= span1; ++cx)
 				{
-					var bid = GetBuilding((cx, cy));
-					if (bid.id == 0)
-						continue;
-					var bd = BuildingDef.FromId(bid.id);
-					
-					var iconId = BidToAtlas(bd.bid);
-
-					var u0 = iconId.x* duDt;
-					var v0 = iconId.y* dvDt;
+					var id = XYToId((cx, cy));
+					var bid = buildingsCache[id];
+					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
-					
-					draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase) ); // shader does the z transform
-					var textColor = new Color(0xf1, 0xd1, 0x1b, iAlpha);
-					if (bid.bl!=0)
-						DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0,cs.c1) , textformatBuilding, textColor,(byte) iAlpha, Layer.tileText, scale: fontScale,zBias:0);
+					byte iAlpha0 = 0;
+					byte iAlpha1 = 0;
+					float blendw0 = 0, blendw1 = 0, blendOp = 0;
+					if (bid.id==next.id)
+					{
+						if (next.bl != bid.bl)
+						{
+							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 2f;
+							if (blendT < 1.0f)
+							{
+								var t = blendT;
+								blendOp = t.SCurve();
+							}
+							else
+							{
+								var t = blendT - 1;
 
+								blendOp = t.SCurve(1f, 0f);
+							}
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,iAlpha0,next.bl,iAlpha1);
+							if (next.bl > bid.bl)
+							{
+								// upgrade
+								draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+							}
+							else if (next.bl < bid.bl)
+							{
+								// downgrade or other, just highlight it
+								draw.AddQuad(Layer.tileCity + 2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+
+							}
+						}
+						else
+						{
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity);
+
+						}
+
+					}
+					else
+					{
+						
+						if (next.id == 0)
+						{
+							 iAlpha0 = (byte)(blendw0 * alpha * 255.0f);
+							 iAlpha1 = (byte)(blendw1 * alpha * 255.0f);
+							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 4f;
+							if (blendT < 1.0f)
+							{
+								blendw0 = 1;
+							}
+							else if (blendT < 2.0f)
+							{
+								var t = blendT - 1.0f;
+								blendw0 = t.SCurve(1f, 0f);
+								blendOp = t.SCurve();
+							}
+							else if (blendT < 3.0f)
+							{
+								var t = blendT - 2.0f;
+								blendOp = t.SCurve(1f, 0f);
+							}
+							else
+							{
+								var t = blendT - 3.0f;
+								blendw0 = t.SCurve();
+							}
+
+
+						}
+						else if (bid.id == 0)
+						{
+							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 4f;
+							if (blendT < 1.0f)
+							{
+								var t = blendT;
+								blendOp = t.SCurve();
+							}
+							else if (blendT <2.0f)
+							{
+								var t = blendT - 1.0f;
+								blendOp = t.SCurve(1f, 0f);
+								blendw1 = t.SCurve();
+							}
+							else if (blendT < 3.0f)
+							{
+								blendw1 = 1;
+							}
+							else
+							{
+								var t = blendT - 3.0f;
+								blendw1 = t.SCurve(1f, 0f);
+							}
+
+
+						}
+						else
+						{
+							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 5f;
+							if (blendT < 1.0f)
+							{
+								blendw0 = 1;
+							}
+							else if (blendT < 2.0f)
+							{
+								var t = blendT - 1.0f;
+								blendw0 = t.SCurve(1f, 0f);
+								blendOp = t.SCurve();
+							}
+							else if (blendT < 3.0f)
+							{
+								var t = blendT - 2.0f;
+								blendOp = t.SCurve(1f, 0f);
+								blendw1 = t.SCurve();
+							}
+							else if (blendT < 4.0f)
+							{
+								blendw1 = 1;
+							}
+							else
+							{
+								var t = blendT - 4.0f;
+								blendw1 = t.SCurve(1f, 0f);
+								blendw0 = t.SCurve();
+							}
+						}
+
+						 iAlpha0 = (byte)(blendw0 * alpha * 255.0f);
+						 iAlpha1 = (byte)(blendw1 * alpha * 255.0f);
+
+
+
+						if (next.bl == 0)
+						{
+							// demo
+							draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0,cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
+						}
+						else if (bid.bl == 0)
+						{
+
+							// now the overlay
+							draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti,cs.c0 , cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+						}
+						
+						DrawBuilding(iAlpha0, zBase, fontScale, cs, bid, Layer.tileCity);
+						DrawBuilding(iAlpha1, zBase, fontScale, cs, next, Layer.tileCity+1);
+					}
 				}
 			}
 			var citySpan = new Vector2(0.5f, 0.5f * yScale);
@@ -166,7 +310,7 @@ namespace COTG.Draw
 							(var bid,var bd) = build.BFromOverlay((cx, cy));
 							if (bd.isRes)
 								bid = 0;
-							var current =  GetBuilding(bspot);
+							var current =  buildingsCache[bspot];
 							var currentBid = current.isBuilding ? current.def.bid : 0;
 							if (currentBid == bid)
 								continue;
@@ -318,41 +462,67 @@ namespace COTG.Draw
 
 			}
 			PreviewBuildAction();
-			var processed = new HashSet<int>();
-			foreach (var r in IterateQueue() )
-			{
-				int bspot = r.bspot;
-				if (!processed.Add(bspot))
-					continue;
-				var cc = IdToXY(bspot);
-				var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
-				var off = (bspot.BSpotToRandom() + animationT*0.325f);
-				var cScale = new Vector2(off.Wave().Lerp(0.3f,1.0f), off.WaveC().Lerp(0.3f, 1.0f));
-				if (r.elvl == 0)
-				{
-					// demo
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha/2, iAlpha/2, iAlpha/2, iAlpha / 4)).Scale(cScale), PlanetDepth, zHover);
-				}
-				else if (r.slvl == 0)
-				{
-					// new building
-					DrawBuilding(cc, iAlpha, r.bid, off);
+			//var processed = new HashSet<int>();
+			//foreach (var r in IterateQueue() )
+			//{
+			//	int bspot = r.bspot;
+			//	if (!processed.Add(bspot))
+			//		continue;
+			//	var cc = IdToXY(bspot);
+			//	var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
+			//	var off = (bspot.BSpotToRandom() + animationT*0.325f);
+			//	var cScale = new Vector2(off.Wave().Lerp(0.3f,1.0f), off.WaveC().Lerp(0.3f, 1.0f));
+			//	if (r.elvl == 0)
+			//	{
+			//		// demo
+			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(cScale), PlanetDepth, zHover);
+			//	}
+			//	else if (r.slvl == 0)
+			//	{
+			//		// new building
+			//		DrawBuilding(cc, iAlpha, r.bid, off);
 					
-					// now the overlay
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha/2, iAlpha / 2, iAlpha / 2, iAlpha/4).Scale(cScale), PlanetDepth, zHover);
-				}
-				else if (r.slvl < r.elvl)
-				{
-					// upgrade
-					draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha / 2, iAlpha / 2, iAlpha/2 , iAlpha / 4).Scale(cScale), PlanetDepth, zHover);
-				}
-				else
-				{
-					// downgrade or other, just highlight it
-					draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha / 2, iAlpha / 2, iAlpha / 2, iAlpha / 4).Scale(cScale), PlanetDepth, zHover);
+			//		// now the overlay
+			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha/2).Scale(cScale), PlanetDepth, zHover);
+			//	}
+			//	else if (r.slvl < r.elvl)
+			//	{
+			//		// upgrade
+			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+			//	}
+			//	else
+			//	{
+			//		// downgrade or other, just highlight it
+			//		draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
 
-				}
+			//	}
+			//}
+		}
+
+		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,byte fontAlpha=0, int bl1=0, byte fontAlpha1=0)
+		{
+			if (bid.id != 0)
+			{
+				var bd = BuildingDef.FromId(bid.id);
+
+				var iconId = BidToAtlas(bd.bid);
+
+				var u0 = iconId.x * duDt;
+				var v0 = iconId.y * dvDt;
+			
+
+				draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+				if (fontAlpha == 0)
+					fontAlpha = (byte)iAlpha;
+				var textColor = new Color(0xf1, 0xd1, 0x1b, (int)fontAlpha);
+				if (bid.bl != 0)
+					DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, textColor, fontAlpha,((int)layer+16), scale: fontScale, zBias: 0);
+				if(fontAlpha1 !=0)
+					DrawTextBox(bl1.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, textColor, fontAlpha1, ((int)layer + 17), scale: fontScale, zBias: 0);
+
 			}
+
+
 		}
 
 		public static void DrawSprite( (int x, int y) cc, Material mat, float animFreq)

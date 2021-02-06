@@ -489,41 +489,43 @@ namespace COTG.Views
 
 		public static Building GetBuildingPostQueue(int spot)
 		{
-			var b = GetBuilding(spot);
-			var wasBuilding = b.isBuilding;
-			// its a struct so we can mutate it
-			IterateQueue((q) =>
-		   {
-			   if (q.bspot == spot)
-			   {
-				   b.bl = q.elvl;
-				   b.id = BuildingDef.BidToId(q.bid);
-				   if (b.bl == 0 && wasBuilding)
-					   b.id = 0;
-			   }
-		   });
-			return b;
+			return postQueueBuildings[spot];
 
 		}
 
-		public static Building[] GetPostQueueBuildings()
+		public static Building[] postQueueBuildings
 		{
-			if (!postQueueBuildingsDirty)
-				return postQueuebuildingsCache;
-			postQueueBuildingsDirty = false;
-			for(var i =0;i<citySpotCount;++i)
+			get
 			{
-				postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
+				{
+					if (!postQueueBuildingsDirty)
+						return postQueuebuildingsCache;
+					postQueueBuildingsDirty = false;
+					buildingsCache = City.GetBuild().buildings;
+					//
+					// copy current buildings
+					//
+					for (var i = 0; i < citySpotCount; ++i)
+					{
+						postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
+					}
+					//
+					// Apply queue
+					//
+					IterateQueue((q) =>
+					{
+						ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
+						b.bl = q.elvl;
+						if (q.elvl == 0)
+							b.id = 0;
+						else
+							b.id = BuildingDef.BidToId(q.bid);
+					});
+
+
+					return postQueuebuildingsCache;
+				}
 			}
-			IterateQueue((q) =>
-			{
-				ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
-				b.bl = q.elvl;
-				b.id = BuildingDef.BidToId(q.bid);
-			});
-
-
-			return postQueuebuildingsCache;
 		}
 
 		public static void Demolish(int id, bool dryRun)
@@ -873,7 +875,7 @@ namespace COTG.Views
 
 			int bspot = XYToId(cc);
 			var build = GetBuild();
-			var b = build.buildings[bspot];
+			var b = GetBuildingPostQueue(bspot);
 
 
 			switch (action)

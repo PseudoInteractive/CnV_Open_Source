@@ -276,13 +276,13 @@ namespace COTG
             return new Vector2(t0*c0.X+t*c1.X, t0 * c0.Y + t * c1.Y);
         }
 
-        public static float STerm(this float t)
+        public static float SCurve(this float t)
         {
             return t * t * (3 - 2 * t);
         }
-        public static float SLerp(this float t, float c0, float c1)
+        public static float SCurve(this float t, float c0, float c1)
         {
-            return c0 + (c1 - c0) * STerm(t);
+            return c0 + (c1 - c0) * SCurve(t);
         }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -391,16 +391,25 @@ namespace COTG
         {
             return string.IsNullOrEmpty(a);
         }
-        // Randomish hash for city ids
-        public static float CidToRandom(this int cid)
-        {
-			return RandomFloat((uint)cid);
+		// Randomish hash for city ids
+		public static float CidToRandom(this int cid)
+		{
+			var x = cid % 65536;
+			var y = cid / 65536;
+			const uint c1 = 0xcc9e2d51;
+			const uint c2 = 0x1b873593;
+			var result = (((int)(x * c1 + y * c2) >> 8) & 0xffff);
+			return result * (1.0f / 0x10000);
 
-        }
+		}
 		// not very random at all, but good enough
 		public static float BSpotToRandom(this int bspot)
 		{
-			return RandomFloat( (uint)bspot);
+			const uint c1 = 0xcc9e2d51;
+			const uint c2 = 0x1b873593;
+
+			var result = (((int)(bspot * c1 + c2) >> 4) & 0xffff);
+			return result * (1.0f / 0x10000);
 
 		}
 		public static float RandomFloat(uint offset)

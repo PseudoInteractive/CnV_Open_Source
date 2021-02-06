@@ -16,6 +16,9 @@ using COTG.Services;
 using COTG.Views;
 using COTG.JSON;
 using static COTG.Game.City;
+using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance.Enumerables;
+using COTG.Draw;
 
 namespace COTG.Game
 {
@@ -121,6 +124,67 @@ namespace COTG.Game
 				}
 			}
 		}
+		//public static Span<BuildQueueItem> Combine( Span<BuildQueueItem> q0,Span<BuildQueueItem> q)
+		//{
+		//	var rv = BuildQueueItem.pool.Rent(q0.Length + (q.Length));
+		//	var sp= rv.Memory.Span;			
+
+		//	var put = 0;
+		//	q0.CopyTo(REfrv,)
+		//	foreach (var i in q0)
+		//	{
+		//		sp[put++] = i;
+		//	}
+		//	foreach(var i in q)
+		//	{
+		//		sp[put++] = i;
+		//	}	
+		//	return sp;
+
+		//}
+		//public static Span<BuildQueueItem> GetQueue(int cid,  Span<BuildQueueItem> q0)
+		//{
+		//	var city = City.GetOrAdd(cid);
+		//	return GetQueue(cid,q0,);
+
+		//	var rv = BuildQueueItem.pool.Rent(q0.Length + (q.Length));
+		//	var s = rv.Memory;
+		//	var sp = s.Span;
+		//	var put = 0;
+		//	foreach (var i in q0)
+		//	{
+		//		sp[put++] = i;
+		//	}
+
+
+		//	foreach (var i in q)
+		//	{
+		//		sp[put++] = i;
+		//	}
+
+		//	return sp;
+
+		//}
+		public static Span<BuildQueueItem> GetExtQueue(int cid)
+		{
+
+			if (CityBuildQueue.all.TryGetValue(cid, out var q))
+			{
+				return new Span<BuildQueueItem>(q.queue.ToArray());
+			}
+			return new Span<BuildQueueItem>();
+	
+
+		}
+
+		//public static Span<BuildQueueItem> GetQueue()
+		//{
+
+		//	return GetQueue(City.build, City.buildQueue.span, GetExtQueue(build));
+	
+
+		//}
+
 		public static void IterateQueue(  Action<BuildQueueItem> action )
 		{
 			foreach (var i in buildQueue)
@@ -139,6 +203,8 @@ namespace COTG.Game
 			buildQueue.Clear(); 
 			Draw.CityView.ClearSelectedBuilding();
 			CityBuild.ClearAction();
+			CityView.BuildingsOrQueueChanged();
+
 			if (CityBuild.menuOpen)
 			{
 				App.DispatchOnUIThreadSneaky(() =>
@@ -393,6 +459,7 @@ namespace COTG.Game
 						js.GetAsUShort("bspot")
 						));
 				}
+				CityView.BuildingsOrQueueChanged();
 			}
 
 			if (jse.TryGetProperty("bd", out var eBd))
@@ -432,6 +499,10 @@ namespace COTG.Game
 					{
 						Log("error BD bad");
 					}
+
+					if (cid == City.build)
+						CityView.BuildingsOrQueueChanged();
+
 				}
 			}
 			if (jse.TryGetProperty("comm", out var comm))
@@ -925,12 +996,13 @@ namespace COTG.Game
 			friendCitiesCache = null;
 			myCitiesCache = null;
 		}
-		public static  (int max, int count)  CountBuildings()
+
+		public static (int max, int count) CountBuildings(int cid, Span<BuildQueueItem> buildQueue)
 		{
 			var max = -1;
 			var count = 0;
-			
-			foreach (var bi in GetBuild().buildings)
+
+			foreach (var bi in GetOrAddCity(cid).buildings)
 			{
 				if (bi.id == 0 || bi.bl == 0)
 					continue;
@@ -947,12 +1019,12 @@ namespace COTG.Game
 				++count;
 			}
 			// process queue for new and deleted buildings
-			foreach(var r in IterateQueue())
+			foreach (var r in buildQueue)
 			{
 				if (r.bid == 0)
 					continue;
-				
-				if( r.isDemo )
+
+				if (r.isDemo)
 				{
 					var bd = BuildingDef.all[r.bid];
 					if (!(bd.isWall || bd.isTower || r.isRes))
@@ -961,7 +1033,7 @@ namespace COTG.Game
 					}
 
 				}
-				else  if (r.slvl==0)
+				else if (r.slvl == 0)
 				{
 					var bd = BuildingDef.all[r.bid];
 					if (!(bd.isWall || bd.isTower))
@@ -974,6 +1046,80 @@ namespace COTG.Game
 			return (max, count);
 
 		}
+
+
+		public static (int max, int count) CountBuildings()
+		{
+				var max = -1;
+			var count = 0;
+			foreach (var bi in CityBuild.postQueueBuildings)
+				{
+					if (bi.id == 0 || bi.bl == 0)
+						continue;
+					var bd = bi.def;
+					if (bd.isTower || bd.isWall)
+					{
+						continue;
+					}
+					if (bd.isTownHall)
+					{
+						max = bi.bl * 10;
+						continue;
+					}
+					++count;
+				}
+			return (max, count);
+		}
+		//	Span<BuildQueueItem> queue = stackalloc  BuildQueueItem[256];
+
+		//	return CountBuildings( City.build, queue)
+		//	var max = -1;
+		//	var count = 0;
+
+		//	foreach (var bi in GetBuild().buildings)
+		//	{
+		//		if (bi.id == 0 || bi.bl == 0)
+		//			continue;
+		//		var bd = bi.def;
+		//		if (bd.isTower || bd.isWall)
+		//		{
+		//			continue;
+		//		}
+		//		if (bd.isTownHall)
+		//		{
+		//			max = bi.bl * 10;
+		//			continue;
+		//		}
+		//		++count;
+		//	}
+		//	// process queue for new and deleted buildings
+		//	foreach(var r in IterateQueue())
+		//	{
+		//		if (r.bid == 0)
+		//			continue;
+
+		//		if( r.isDemo )
+		//		{
+		//			var bd = BuildingDef.all[r.bid];
+		//			if (!(bd.isWall || bd.isTower || r.isRes))
+		//			{
+		//				--count;
+		//			}
+
+		//		}
+		//		else  if (r.slvl==0)
+		//		{
+		//			var bd = BuildingDef.all[r.bid];
+		//			if (!(bd.isWall || bd.isTower))
+		//			{
+		//				++count;
+		//			}
+		//		}
+
+		//	}
+		//	return (max, count);
+
+		//}
 		public static void SyncCityBox()
 		{
 			App.DispatchOnUIThreadLow(() =>

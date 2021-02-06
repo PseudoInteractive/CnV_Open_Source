@@ -7099,7 +7099,7 @@ let pollJ: jsonT.Poll = {};
 var P8 = 0;
 function SetViewMode(mode) {
 
-	_viewModeCache = _viewModeInvalid;
+	_viewModeCache = viewModeInvalid;
 	_viewMode = mode;
  // this needs to be black in city view, white in region view
 	callSyncViewMode();
