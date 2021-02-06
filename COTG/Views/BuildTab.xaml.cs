@@ -58,7 +58,7 @@ namespace COTG.Views
 			if (!IsVisible())
 				return;
 			
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadSneakyLow(() =>
 			{
 				BuildQueueView view = null;
 				foreach (var c in instance.cities)
@@ -84,7 +84,7 @@ namespace COTG.Views
 			{
 				if (c.cid == cid)
 				{
-					App.DispatchOnUIThreadSneaky(() =>
+					App.DispatchOnUIThreadSneakyLow(() =>
 					{
 						instance.cities.Remove(c);
 						c.queue.Clear();
@@ -100,7 +100,7 @@ namespace COTG.Views
 				return;
 			
 
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadSneakyLow(() =>
 			{
 				BuildQueueView view = null;
 				foreach (var c in instance.cities)

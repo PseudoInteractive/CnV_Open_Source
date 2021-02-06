@@ -38,6 +38,10 @@ namespace COTG
 			
 			return 3*df2 - 2*df2*dfs;
 		}
+		public static float SmoothStepOut(this float f, float v0, float v1, float pow = 1)
+		{
+			return 1 - SmoothStep(f, v0, v1, pow);
+		}
 
 		public static Vector2 ToVector(this (float x, float y) me) => new Vector2(me.x, me.y);
 		public static (float x, float y) ToTuple(this Vector2 me) => (me.X, me.Y);
@@ -196,8 +200,9 @@ namespace COTG
         public static float Min(this float f,  float max)
         {
             return (f <= max ? f : max);
-        }
-        public static float Max(this float f, float m)
+		}
+		public static float Frac(this float f) => f - MathF.Floor(f);
+		public static float Max(this float f, float m)
         {
             return (f >= m ? f : m);
         }

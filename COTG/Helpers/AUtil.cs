@@ -7,7 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI;
-
+using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance.Enumerables;
 namespace COTG
 {
     public enum RefreshState
@@ -24,7 +25,13 @@ namespace COTG
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
         public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
 
-		public static void Swap<T>(ref T a, ref T b)
+
+		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T:unmanaged
+		{
+			COTG.Debug.Assert(source.Length == target.Length);
+			Buffer.BlockCopy(source, 0, target, 0, source.Length * sizeof(T));
+		}
+public static void Swap<T>(ref T a, ref T b)
 		{
 			T temp = a;
 			a = b;

@@ -88,7 +88,7 @@ namespace COTG.Game
 
 			rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType)));
 			if(!autoRaid)
-				App.DispatchOnUIThreadSneaky( rv.NotifyReset);
+				App.DispatchOnUIThreadSneakyLow( rv.NotifyReset);
 				
 			if (autoRaid)
 			{

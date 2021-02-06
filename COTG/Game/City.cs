@@ -200,6 +200,7 @@ namespace COTG.Game
 		}
 		public static void CitySwitched()
 		{
+			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
 			buildQueue.Clear(); 
 			Draw.CityView.ClearSelectedBuilding();
 			CityBuild.ClearAction();
@@ -207,7 +208,7 @@ namespace COTG.Game
 
 			if (CityBuild.menuOpen)
 			{
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadSneakyLow(() =>
 			   ShellPage.instance.buildMenu.IsOpen = false);
 			}
 		}
@@ -711,7 +712,7 @@ namespace COTG.Game
 
         public void NotifyChange(string member = "")
         {
-            App.DispatchOnUIThreadSneaky(() =>
+            App.DispatchOnUIThreadSneakyLow(() =>
        {
            OnPropertyChanged(member);
        });
@@ -990,6 +991,7 @@ namespace COTG.Game
 			}
 		}
 		public string dungeonsToggle => MainPage.expandedCity==this ? "-" : "+";
+
 
 		internal static void CitiesChanged()
 		{

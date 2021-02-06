@@ -186,7 +186,7 @@ namespace COTG.JSON
 						ops[put++] = rv;
 
 					} while (--commandsToQueue > 0);
-					App.DispatchOnUIThreadSneaky(async () =>
+					App.DispatchOnUIThreadSneakyLow(async () =>
 					{
 						for (int i = 0; i < put; ++i)
 						{
@@ -228,7 +228,9 @@ namespace COTG.JSON
 
 		public  BuildQueueItem Enqueue(BuildQueueItem op)
 		{
+			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
 			queue.Enqueue(op);
+			CityView.BuildingsOrQueueChanged();
 			BuildTab.AddOp(op, cid);
 			return op;
 		}

@@ -7104,6 +7104,10 @@ function SetViewMode(mode) {
  // this needs to be black in city view, white in region view
 	callSyncViewMode();
 }
+window['showLayout']= function()
+{
+	$("#editspncn").click();
+}
 function setTestFlag(flag) {
 	testFlag = flag;
 }
@@ -44611,8 +44615,8 @@ bqInFlight=0;
 				let bId = Number(_bid);
 				let bl = Number(_bl);
 				d2 =xy;
-				S8 = Math.floor(xy/A5y);
-				h8 = xy - s8*A8y;
+				S8 = Math.floor(xy/21);
+				h8 = xy - S8*21;
 	
 				 let uptime = bId == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["tu"] / (Number(city.cs) / (100)));
 				let dtime =  bId == 0||bl==0 ? 0 : Math.ceil(bam["buildings"][bId]["bc"][bl]["td"] / (Number(city.cs) / (100)));
@@ -65057,6 +65061,7 @@ bqInFlight=0;
 			}
 		}
 
+ 
   window['updateArtifacts'] = function()
   {
 	//if(H2 !== "Avatar")

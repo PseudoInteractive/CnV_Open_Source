@@ -548,16 +548,25 @@ namespace COTG
 			else
 				d.RunAsync(CoreDispatcherPriority.Low, action);
 		}
-
+		public static void DispatchOnUIThreadSneakyLow(DispatchedHandler action)
+		{
+			var d = GlobalDispatcher();
+			// run it immediately if we can
+			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+				action();
+			else
+				d.RunAsync(CoreDispatcherPriority.Low, action);
+		}
 		public static void DispatchOnUIThreadIdleSneaky(IdleDispatchedHandler action)
 		{
 			var d = GlobalDispatcher();
 			// run it immediately if we can
-			if (d.HasThreadAccess)
+			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
 				action(null);
 			else
 				d.RunIdleAsync( action);
 		}
+
 		public static async Task DispatchOnUIThreadSneakyTask(DispatchedHandler action)
 		{
 			var d = GlobalDispatcher();

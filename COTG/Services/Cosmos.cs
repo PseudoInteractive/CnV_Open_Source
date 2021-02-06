@@ -249,6 +249,19 @@ namespace COTG.Services
 					return r.Value.s;
 				}
 			}
+			catch (Azure.RequestFailedException e)
+			{
+				if( e.Status == 404)
+				{
+					// not found, don't log it, this is common
+				}
+				else
+				{
+					Log(e);
+
+				}
+
+			}
 			catch (Exception e)
 			{
 				Log(e);

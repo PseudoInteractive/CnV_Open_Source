@@ -160,7 +160,7 @@ namespace COTG.Views
             //              await _logSemaphore.WaitAsync();
             // try
             ////  {
-            App.DispatchOnUIThreadSneaky(() =>
+            App.DispatchOnUIThreadSneakyLow(() =>
             {
 
                 try

@@ -308,7 +308,7 @@ namespace COTG
 				Player.activeId = pid;
 				jsVars = jsv;
 
-				App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = pn);
+				App.DispatchOnUIThreadSneakyLow(() => ShellPage.instance.friendListBox.SelectedItem = pn);
 
 			}
 			
@@ -602,7 +602,7 @@ namespace COTG
 
 		public static void SetStayAlive(bool stayAlive)
 		{
-			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
+			App.DispatchOnUIThreadSneakyLow(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
 		}
 		public static void SendChat(int channel, string message)
 		{
@@ -1196,7 +1196,7 @@ namespace COTG
 				
 					if(MainPage.IsVisible())
 					{
-						App.DispatchOnUIThreadSneaky( ()=>MainPage.instance.Refresh());
+						App.DispatchOnUIThreadSneakyLow( ()=>MainPage.instance.Refresh());
 					}
 				}
 				
@@ -1732,7 +1732,7 @@ namespace COTG
 									   if (blessed != city.isBlessed)
 									   {
 										   city.isBlessed = blessed;
-										   App.DispatchOnUIThreadSneaky(() => city.OnPropertyChanged(nameof(City.icon)));
+										   App.DispatchOnUIThreadSneakyLow(() => city.OnPropertyChanged(nameof(City.icon)));
 									   }
 									   city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 									   city.isTemple = jso.GetAsInt("plvl") != 0;

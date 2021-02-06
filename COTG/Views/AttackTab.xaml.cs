@@ -223,7 +223,7 @@ namespace COTG.Views
         }
         private static void UpdateStats()
         {
-            App.DispatchOnUIThreadSneaky(() =>
+            App.DispatchOnUIThreadSneakyLow(() =>
             {
                 instance.attackCount.Text=$"Attacks: {readable.attacks.Length}";
                 var seCount = readable.attacks.Count((a) => a.spot.primaryTroopType==ttScorpion);

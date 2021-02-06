@@ -432,6 +432,19 @@ namespace COTG.Views
 
 		public static void Enqueue( int slvl, int elvl, int bid, int spot)
 		{
+			if(slvl == 0 && elvl == 1)
+			{
+				var tlvl = postQueueBuildings[bspotTownHall].bl;
+				if(BuildingDef.all[bid].Thl > tlvl)
+				{
+					Note.Show($"Please upgrade town hall be level {BuildingDef.all[bid].Thl}");
+					return;
+
+				}	
+
+			}
+			var maxBuildings = postQueueBuildings[bspotTownHall].bl * 10;
+
 			BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 		}
 		
@@ -885,6 +898,7 @@ namespace COTG.Views
 						var layout = build.layout;
 						if (build.layout == null)
 						{
+
 							Status("Please assign a layout",dryRun);
 						}
 						else
@@ -929,12 +943,12 @@ namespace COTG.Views
 									}
 								}
 							}
-
+							var counts = CountBuildings();
 
 							// case 1:  nothing here, add building
 							if (b.id == 0)
 							{
-								var counts = CountBuildings();
+								
 								// see if we can re-use one
 								if (desBid != 0)
 								{
@@ -1090,11 +1104,19 @@ namespace COTG.Views
 
 									if (!buildingWanted)
 									{
-										Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
-										if(dryRun)
-											DrawSprite(hovered, decalBuildingInvalid, .31f);
+										if (b.isCabin && counts.count < counts.max )
+										{
+											Status($"A cabin is here, leaving it", dryRun);
+											// 
+										}
 										else
-											Demolish(cc, dryRun);
+										{
+											Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+											if (dryRun)
+												DrawSprite(hovered, decalBuildingInvalid, .31f);
+											else
+												Demolish(cc, dryRun);
+										}
 									}
 								}
 								else
@@ -1599,6 +1621,8 @@ namespace COTG.Views
 					if (bi.action == Action.layout && City.GetBuild().layout == null)
 					{
 						Note.Show("Please assign a layout");
+						JSClient.JSInvoke("showLayout", null);
+
 					}
 					else
 					{

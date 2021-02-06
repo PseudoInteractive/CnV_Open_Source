@@ -50,7 +50,7 @@
 			</SemanticZoom.ZoomedInView>
 
 			<SemanticZoom.ZoomedOutView>
-				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" GotFocus="List_GotFocus" />
+				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}" GotFocus="List_GotFocus" />
 			</SemanticZoom.ZoomedOutView>
 		</SemanticZoom>
 

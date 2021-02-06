@@ -33,7 +33,7 @@ namespace COTG.Game
         }
         public void NotifyChange(string member = "")
         {
-            App.DispatchOnUIThreadSneaky(() =>
+            App.DispatchOnUIThreadSneakyLow(() =>
             {
                 OnPropertyChanged(member);
                 Debug.Log("NotifyChange");

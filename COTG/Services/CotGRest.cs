@@ -801,7 +801,7 @@ namespace COTG.Services
                 // Log($"cid:{cid} carry: {minCarry}");
 
             }
-            App.DispatchOnUIThreadSneaky(()
+            App.DispatchOnUIThreadSneakyLow(()
                 =>
             {
                 MainPage.instance.rWood.Text = $"Wood: {(rWood*0.001).RoundToInt():N0} k/h";

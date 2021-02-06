@@ -134,7 +134,7 @@ namespace COTG.Helpers
                 return;
 
             // defer the call, we don't need it right away
-           App.DispatchOnUIThreadSneaky(() =>
+           App.DispatchOnUIThreadSneakyLow(() =>
            {
                try
                {

@@ -293,7 +293,7 @@ namespace COTG.Game
 				SettingsPage.pinned = SettingsPage.pinned.ArrayAppendIfAbsent(cid);
 			else
 				SettingsPage.pinned = SettingsPage.pinned.Where(a => a != cid).ToArray();
-			App.DispatchOnUIThreadSneaky(() => OnPropertyChanged(nameof(pinned)));
+			App.DispatchOnUIThreadSneakyLow(() => OnPropertyChanged(nameof(pinned)));
 		}  // pinned in MRU
 		public byte claim; // only if this is under attack
 		public byte shipyards { get; set; }
@@ -1654,7 +1654,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadSneakyLow(() =>
 			{
 				
 					if (scrollIntoView && MainPage.IsVisible())

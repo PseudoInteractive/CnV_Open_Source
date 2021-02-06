@@ -17,7 +17,8 @@ namespace COTG.JSON
 		public bool isRes => id != 0 && bl == 0;
 		public BuildingDef def => BuildingDef.FromId(id);
 		public string name => def.Bn;
-
+	
+		public bool isCabin => id == BuildingDef.idCabin;
 
 		internal void SetBid(int bid, int bl)
 		{

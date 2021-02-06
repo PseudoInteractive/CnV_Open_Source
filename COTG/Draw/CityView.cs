@@ -25,7 +25,17 @@ namespace COTG.Draw
 	
 	public class CityView
 	{
-	
+		static CityView()
+		{
+			for (int y = span0; y <= span1; ++y)
+				for (int x=span0;x<=span1;++x)
+				{
+					baseAnimationOffsets[City.XYToId((x,y))] =MathF.Atan2(y, x) / MathF.PI + (((float)y/span0).Squared() + ((float)x / span0).Squared()).Sqrt();
+
+				}
+			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
+
+		}
 		const int atlasTileSize = 128;
 		const int atlasColumns = 4;
 		static public (int x, int y) BidToAtlas(int bid)
@@ -74,7 +84,9 @@ namespace COTG.Draw
 		}
 		public static JSON.Building[] buildingsCache;
 		public static JSON.Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
-		static float[] animationOffsets = new float[citySpotCount];
+		public static float[] animationOffsets = new float[citySpotCount];
+		public static float[] baseAnimationOffsets = new float[citySpotCount];
+		public static float animationRate = 0.25f;
 		public static bool postQueueBuildingsDirty = true;
 		public static void BuildingsOrQueueChanged() => postQueueBuildingsDirty = true;
 
@@ -141,25 +153,40 @@ namespace COTG.Draw
 					var bid = buildingsCache[id];
 					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
-					byte iAlpha0 = 0;
-					byte iAlpha1 = 0;
+					var iAlpha0 = 0;
+					var iAlpha1 = 0;
 					float blendw0 = 0, blendw1 = 0, blendOp = 0;
+					float blendT = (animationT * 0.25f - animationOffsets[id]+0.2f).Frac();
 					if (bid.id==next.id)
 					{
 						if (next.bl != bid.bl)
 						{
-							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 2f;
-							if (blendT < 1.0f)
+							if (blendT < 0.25f)
 							{
-								var t = blendT;
+								var t = (blendT) * 4;
+								blendw0 = 1;
+								blendw1 = t.SCurve(1,0);
+
+							}
+							else if (blendT < 0.5f)
+							{
+								var t = (blendT - 0.25f)*4;
+								blendw0 = t.SCurve(1f, 0f);
 								blendOp = t.SCurve();
+							}
+							else if (blendT < 0.75f)
+							{
+								var t = (blendT - 0.5f)*4.0f;
+								blendOp = t.SCurve(1f, 0f);
+								blendw1 = t.SCurve();
 							}
 							else
 							{
-								var t = blendT - 1;
-
-								blendOp = t.SCurve(1f, 0f);
+								blendw1 = 1;
 							}
+							
+							iAlpha0 = (int)(blendw0 * alpha * 255.0f);
+							iAlpha1 = (int)(blendw1 * alpha * 255.0f);
 							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,iAlpha0,next.bl,iAlpha1);
 							if (next.bl > bid.bl)
 							{
@@ -175,6 +202,7 @@ namespace COTG.Draw
 						}
 						else
 						{
+							// not changing
 							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity);
 
 						}
@@ -185,27 +213,28 @@ namespace COTG.Draw
 						
 						if (next.id == 0)
 						{
-							 iAlpha0 = (byte)(blendw0 * alpha * 255.0f);
-							 iAlpha1 = (byte)(blendw1 * alpha * 255.0f);
-							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 4f;
-							if (blendT < 1.0f)
+							
+							if (blendT < 0.2f)
 							{
+								var t = blendT*5.0f; // demo fades in, half second
+								blendOp = t.SCurve();
 								blendw0 = 1;
 							}
-							else if (blendT < 2.0f)
+							else if (blendT < 0.6f)
 							{
-								var t = blendT - 1.0f;
-								blendw0 = t.SCurve(1f, 0f);
-								blendOp = t.SCurve();
+								var t = (blendT - 0.2f)*2.5f; // building fades in, hammer fades out 1 seconds
+								blendOp = 1;
+								blendw0 = t.SCurve(1,0);
 							}
-							else if (blendT < 3.0f)
+							else if (blendT < 0.8f) // building stays, .5 seconds
 							{
-								var t = blendT - 2.0f;
-								blendOp = t.SCurve(1f, 0f);
+								var t =(blendT - 0.6f)*5f;
+								blendOp =t.SCurve(1,0);
 							}
 							else
 							{
-								var t = blendT - 3.0f;
+								var t = (blendT - 0.8f)*5.0f;
+							
 								blendw0 = t.SCurve();
 							}
 
@@ -213,76 +242,79 @@ namespace COTG.Draw
 						}
 						else if (bid.id == 0)
 						{
-							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 4f;
-							if (blendT < 1.0f)
+							if (blendT < 0.2f)
 							{
-								var t = blendT;
+								var t = blendT*5f; // hammers fades in, half second
 								blendOp = t.SCurve();
 							}
-							else if (blendT <2.0f)
+							else if (blendT <0.6f)
 							{
-								var t = blendT - 1.0f;
-								blendOp = t.SCurve(1f, 0f);
+								var t = (blendT - .2f)*(1.0f/0.4f); // building fades in, hammer fades out 1 seconds
+								blendOp = t.SCurve(1,0);
 								blendw1 = t.SCurve();
 							}
-							else if (blendT < 3.0f)
+							else if (blendT < 0.9f) // building stays, .5 seconds
 							{
+								var t = (blendT - 0.6f)*(1.0f/0.3f);
 								blendw1 = 1;
 							}
 							else
 							{
-								var t = blendT - 3.0f;
-								blendw1 = t.SCurve(1f, 0f);
+								var t = (blendT - 0.9f) * (1.0f / 0.1f); // building fades out, 0.5s
+								blendw1 = t.SCurve(1.0f,0);
 							}
 
 
 						}
 						else
 						{
-							float blendT = ((animationT - animationOffsets[id]) * 2.0f) % 5f;
-							if (blendT < 1.0f)
+							
+							if (blendT < 0.2f)
 							{
 								blendw0 = 1;
 							}
-							else if (blendT < 2.0f)
+							else if (blendT < 0.4f)
 							{
-								var t = blendT - 1.0f;
+								var t = (blendT - 0.2f)/0.2f;
 								blendw0 = t.SCurve(1f, 0f);
 								blendOp = t.SCurve();
 							}
-							else if (blendT < 3.0f)
+							else if (blendT < 0.8f)
 							{
-								var t = blendT - 2.0f;
+								var t = (blendT - 4.0f)/0.4f;
 								blendOp = t.SCurve(1f, 0f);
 								blendw1 = t.SCurve();
 							}
-							else if (blendT < 4.0f)
+							else if (blendT < 0.9f)
 							{
 								blendw1 = 1;
 							}
 							else
 							{
-								var t = blendT - 4.0f;
+								var t = (blendT - 0.9f)/1.0f;
 								blendw1 = t.SCurve(1f, 0f);
 								blendw0 = t.SCurve();
 							}
 						}
 
-						 iAlpha0 = (byte)(blendw0 * alpha * 255.0f);
-						 iAlpha1 = (byte)(blendw1 * alpha * 255.0f);
+						 iAlpha0 = (int)(blendw0 * alpha * 255.0f);
+						 iAlpha1 = (int)(blendw1 * alpha * 255.0f);
 
 
-
-						if (next.bl == 0)
-						{
-							// demo
-							draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0,cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
-						}
-						else if (bid.bl == 0)
+						if (blendOp > 0)
 						{
 
-							// now the overlay
-							draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti,cs.c0 , cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+							if (next.bl == 0)
+							{
+								// demo
+								draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
+							}
+							else if (bid.bl == 0)
+							{
+
+								// now the overlay
+								draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+							}
 						}
 						
 						DrawBuilding(iAlpha0, zBase, fontScale, cs, bid, Layer.tileCity);
@@ -310,7 +342,7 @@ namespace COTG.Draw
 							(var bid,var bd) = build.BFromOverlay((cx, cy));
 							if (bd.isRes)
 								bid = 0;
-							var current =  buildingsCache[bspot];
+							var current =  postBuildings[bspot];
 							var currentBid = current.isBuilding ? current.def.bid : 0;
 							if (currentBid == bid)
 								continue;
@@ -318,6 +350,8 @@ namespace COTG.Draw
 							if(bid==0)
 							{
 								bid = 443 + 8 * 4; // X mark
+								if (current.isCabin)
+									continue; // leave it, it is fine
 							}
 							if (bid == 0)
 								continue;
@@ -350,117 +384,117 @@ namespace COTG.Draw
 
 			// if selected is 
 			
-			var biSelected = GetBuilding(selected);
-			var bdSelected = biSelected.def;
+			//var biSelected = postQueuebuildingsCache[XYToId(selected)];
+			//var bdSelected = biSelected.def;
 
-			if (selected.IsValid())
-			{
-				Material mat = CityBuild.action switch
-				{
-					CityBuild.Action.build => null,
-					CityBuild.Action.destroy => null,
-					CityBuild.Action.move => decalMoveBuilding,
-					_ => decalSelectBuilding
-				};
+			//if (selected.IsValid())
+			//{
+			//	Material mat = CityBuild.action switch
+			//	{
+			//		CityBuild.Action.build => null,
+			//		CityBuild.Action.destroy => null,
+			//		CityBuild.Action.move => decalMoveBuilding,
+			//		_ => decalSelectBuilding
+			//	};
 
-				if (mat != null)
-				{
-					var off = (animationT * 0.3256f);
-					var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-					var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
-					draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+			//	if (mat != null)
+			//	{
+			//		var off = (animationT * 0.3256f);
+			//		var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+			//		var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
+			//		draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
 
-				}
-			}
+			//	}
+			//}
 
 			// hovered
-			if (hovered.IsValid())
-			{
-				var biHovered = GetBuilding(hovered);
-				var bdHovered = biHovered.def;
+			//if (hovered.IsValid())
+			//{
+			//	var biHovered = postQueuebuildingsCache[XYToId(hovered)]; ;
+			//	var bdHovered = biHovered.def;
 
-				Material mat = CityBuild.action switch
-				{
-					CityBuild.Action.layout => decalBuildingValidMulti,
-					CityBuild.Action.build => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty,
-					CityBuild.Action.destroy => (bdHovered.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
-					CityBuild.Action.move => selected.IsValid() ?
-						(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
-						: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
-					// create
-					_ => (bdHovered.id == 0) ? decalSelectEmpty : decalSelectEmpty
-				};
+			//	Material mat = CityBuild.action switch
+			//	{
+			//		CityBuild.Action.layout => decalBuildingValidMulti,
+			//		CityBuild.Action.build => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty,
+			//		CityBuild.Action.destroy => (bdHovered.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
+			//		CityBuild.Action.move => selected.IsValid() ?
+			//			(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
+			//			: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
+			//		// create
+			//		_ => (bdHovered.id == 0) ? decalSelectEmpty : decalSelectEmpty
+			//	};
 
-				if (mat != null)
-				{
-					DrawSprite(hovered, mat, 0.312f);
+			//	if (mat != null)
+			//	{
+			//		DrawSprite(hovered, mat, 0.312f);
 
-				}
-				// draw the quickbuild placeholder building
-				if (CityBuild.action == CityBuild.Action.build)
-				{
-					//if (bdHovered.id == 0)
-					//{
+			//	}
+			//	// draw the quickbuild placeholder building
+			//	if (CityBuild.action == CityBuild.Action.build)
+			//	{
+			//		//if (bdHovered.id == 0)
+			//		//{
 
-					//	var sel = CityBuild.quickBuildId;
-					//	if (sel != 0)
-					//	{
-					//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
-					//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
-					//	}
-					//}
-					//else
-					//{
-					//	ShellPage.contToolTip = $"Spot is occupied";
-					//}
-				}
-				else if (CityBuild.action == CityBuild.Action.move)
-				{
+			//		//	var sel = CityBuild.quickBuildId;
+			//		//	if (sel != 0)
+			//		//	{
+			//		//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
+			//		//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
+			//		//	}
+			//		//}
+			//		//else
+			//		//{
+			//		//	ShellPage.contToolTip = $"Spot is occupied";
+			//		//}
+			//	}
+			//	else if (CityBuild.action == CityBuild.Action.move)
+			//	{
 
-					if (selected.IsValid())
-					{
-						if (Player.isAvatarOrTest ? IsTowerSpot(hovered):!IsBuildingSpot(hovered))
-						{
-							ShellPage.contToolTip = $"Please do not build buildings on walls";
-						}
-						else
-						{
-							if (bdHovered.id == 0)
-							{
-								ShellPage.contToolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
-								DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+			//		if (selected.IsValid())
+			//		{
+			//			if (Player.isAvatarOrTest ? IsTowerSpot(hovered):!IsBuildingSpot(hovered))
+			//			{
+			//				ShellPage.contToolTip = $"Please do not build buildings on walls";
+			//			}
+			//			else
+			//			{
+			//				if (bdHovered.id == 0)
+			//				{
+			//					ShellPage.contToolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
+			//					DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
 
 
-							}
-							else
-							{
-								if (bdHovered.isRes)
-									ShellPage.contToolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
-								else
-								{
-									ShellPage.contToolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
-									DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
-									// draw a move icond too
-								}
-							}
-						}
+			//				}
+			//				else
+			//				{
+			//					if (bdHovered.isRes)
+			//						ShellPage.contToolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
+			//					else
+			//					{
+			//						ShellPage.contToolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
+			//						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+			//						// draw a move icond too
+			//					}
+			//				}
+			//			}
 
-					}
-					else
-					{
-						if (biHovered.isBuilding)
-						{
-							ShellPage.contToolTip = $"Click to move {bdHovered.Bn}";
-						}
-						else
-						{
-							ShellPage.contToolTip = $"Please Select a building to move";
-						}
-					}
-				}
+			//		}
+			//		else
+			//		{
+			//			if (biHovered.isBuilding)
+			//			{
+			//				ShellPage.contToolTip = $"Click to move {bdHovered.Bn}";
+			//			}
+			//			else
+			//			{
+			//				ShellPage.contToolTip = $"Please Select a building to move";
+			//			}
+			//		}
+			//	}
 				
 
-			}
+			//}
 			PreviewBuildAction();
 			//var processed = new HashSet<int>();
 			//foreach (var r in IterateQueue() )
@@ -499,7 +533,7 @@ namespace COTG.Draw
 			//}
 		}
 
-		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,byte fontAlpha=0, int bl1=0, byte fontAlpha1=0)
+		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=0, int bl1=0, int fontAlpha1=0)
 		{
 			if (bid.id != 0)
 			{
@@ -513,12 +547,16 @@ namespace COTG.Draw
 
 				draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
 				if (fontAlpha == 0)
-					fontAlpha = (byte)iAlpha;
-				var textColor = new Color(0xf1, 0xd1, 0x1b, (int)fontAlpha);
+					fontAlpha = iAlpha;
+				
 				if (bid.bl != 0)
-					DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, textColor, fontAlpha,((int)layer+16), scale: fontScale, zBias: 0);
+					DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, 
+						new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
+						(byte)fontAlpha,((int)layer+16), scale: fontScale, zBias: 0);
 				if(fontAlpha1 !=0)
-					DrawTextBox(bl1.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, textColor, fontAlpha1, ((int)layer + 17), scale: fontScale, zBias: 0);
+					DrawTextBox(bl1.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding,
+						new Color(0xf1 * fontAlpha1 / 256, 0xd1 * fontAlpha1 / 256, 0x1b * fontAlpha1/ 256,fontAlpha),
+						(byte)fontAlpha1, ((int)layer + 17), scale: fontScale, zBias: 0);
 
 			}
 
