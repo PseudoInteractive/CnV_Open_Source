@@ -25,7 +25,7 @@
 
 		<DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="views:BuildQueueView">
 			<StackPanel Orientation="Horizontal" Margin="4">
-				<Image Source="{x:Bind icon}"  Width="64" Height="64" />
+				<Image Source="{x:Bind icon}"  Width="48" Height="48" />
 				<TextBlock Text="{x:Bind title}"/>
 			</StackPanel>
 		</DataTemplate>
@@ -41,7 +41,7 @@
 	<StackPanel>
 		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto"   >
 			<SemanticZoom.ZoomedInView>
-				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" SelectionMode="None" GotFocus="List_GotFocus"
+				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" GotFocus="List_GotFocus"
                         ItemTemplate="{StaticResource ZoomedInTemplate}">
 					<GridView.GroupStyle>
 						<GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}" />
@@ -50,7 +50,7 @@
 			</SemanticZoom.ZoomedInView>
 
 			<SemanticZoom.ZoomedOutView>
-				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}" GotFocus="List_GotFocus" />
+				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}"  ItemTemplate="{StaticResource ZoomedOutTemplate}" GotFocus="List_GotFocus" />
 			</SemanticZoom.ZoomedOutView>
 		</SemanticZoom>
 

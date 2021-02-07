@@ -153,51 +153,91 @@ namespace COTG.Draw
 					var bid = buildingsCache[id];
 					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
-					var iAlpha0 = 0;
-					var iAlpha1 = 0;
-					float blendw0 = 0, blendw1 = 0, blendOp = 0;
+					
 					float blendT = (animationT * 0.25f - animationOffsets[id]+0.2f).Frac();
 					if (bid.id==next.id)
 					{
 						if (next.bl != bid.bl)
 						{
+							float blendOp=0;
+							byte  bl;
+							float fontA;
 							if (blendT < 0.25f)
 							{
-								var t = (blendT) * 4;
-								blendw0 = 1;
-								blendw1 = t.SCurve(1,0);
-
+								var t = (blendT) * 4.0f;
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								bl = bid.bl; // fade in hammer
+								fontA = 1;// - ((blendT-0.25f)*3.75f).Squared();
+								blendOp = t.SCurve();
+							}
+							else if(blendT < 0.375f)
+							{
+								var t = (blendT - 0.25f) * 8.0f;
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								blendOp = 1;
+								// fade out number
+								bl = bid.bl;
+								fontA = t.SCurve(1, 0);
 							}
 							else if (blendT < 0.5f)
 							{
-								var t = (blendT - 0.25f)*4;
-								blendw0 = t.SCurve(1f, 0f);
-								blendOp = t.SCurve();
+								var t = (blendT - 0.375f) * 8.0f; // fade in new number
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								blendOp = 1;
+								// fade out number
+								bl = next.bl;
+								fontA = t.SCurve(0, 1);
 							}
-							else if (blendT < 0.75f)
+							else if( blendT < 0.75f) // fade out hammer
 							{
-								var t = (blendT - 0.5f)*4.0f;
-								blendOp = t.SCurve(1f, 0f);
-								blendw1 = t.SCurve();
+								var t = (blendT - 0.5f) * 4.0f; // fade in new number
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								blendOp = t.SCurve(1,0);
+								// fade out number
+								bl = next.bl;
+								fontA = 1;
+							}
+							else if( blendT < 0.875f)
+							{
+								// fade out number
+								var t = (blendT - 0.75f) * 8.0f; // fade in new number
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								// fade out number
+								bl = next.bl;
+								fontA = t.SCurve(1,0);
+
 							}
 							else
 							{
-								blendw1 = 1;
-							}
-							
-							iAlpha0 = (int)(blendw0 * alpha * 255.0f);
-							iAlpha1 = (int)(blendw1 * alpha * 255.0f);
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,iAlpha0,next.bl,iAlpha1);
-							if (next.bl > bid.bl)
-							{
-								// upgrade
-								draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
-							}
-							else if (next.bl < bid.bl)
-							{
-								// downgrade or other, just highlight it
-								draw.AddQuad(Layer.tileCity + 2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+								// fade in number
+								var t = (blendT - 0.875f) * 8.0f; // fade in new number
+																  // fade out number
+								Assert(t >= 0.0f);
+								Assert(t <= 1.0f);
+								bl = bid.bl;
+								fontA = t.SCurve(0, 1);
 
+							}
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
+							if (blendOp > 0)
+							{
+
+								if (next.bl > bid.bl)
+								{
+									// upgrade
+									draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+								}
+								else if (next.bl < bid.bl)
+								{
+									// downgrade or other, just highlight it
+									draw.AddQuad(Layer.tileCity + 2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+
+								}
 							}
 						}
 						else
@@ -210,7 +250,9 @@ namespace COTG.Draw
 					}
 					else
 					{
-						
+						float blendw0 = 0, blendw1 = 0, blendOp = 0;
+						var iAlpha0 = 0;
+						var iAlpha1 = 0;
 						if (next.id == 0)
 						{
 							
@@ -533,7 +575,7 @@ namespace COTG.Draw
 			//}
 		}
 
-		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=0, int bl1=0, int fontAlpha1=0)
+		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1)
 		{
 			if (bid.id != 0)
 			{
@@ -546,17 +588,15 @@ namespace COTG.Draw
 			
 
 				draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
-				if (fontAlpha == 0)
+				if (fontAlpha == -1)
 					fontAlpha = iAlpha;
-				
-				if (bid.bl != 0)
-					DrawTextBox(bid.bl.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, 
+				if (blOverride == -1)
+					blOverride = bid.bl;
+				if (blOverride != 0)
+					DrawTextBox(blOverride.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, 
 						new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
-						(byte)fontAlpha,((int)layer+16), scale: fontScale, zBias: 0);
-				if(fontAlpha1 !=0)
-					DrawTextBox(bl1.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding,
-						new Color(0xf1 * fontAlpha1 / 256, 0xd1 * fontAlpha1 / 256, 0x1b * fontAlpha1/ 256,fontAlpha),
-						(byte)fontAlpha1, ((int)layer + 17), scale: fontScale, zBias: 0);
+						(byte)iAlpha, ((int)layer+16), scale: fontScale, zBias: 0);
+				
 
 			}
 

@@ -8563,6 +8563,7 @@ function SetViewMode(mode) {
     callSyncViewMode();
 }
 window['showLayout'] = function () {
+    $("#CNtabs").tabs({ active: 3 });
     $("#editspncn").click();
 };
 function setTestFlag(flag) {
@@ -17573,7 +17574,7 @@ function outer() {
             clearTimeout(i8);
             clearTimeout(n5F);
             lastSentBD = 0;
-            lastSentBq = 0;
+            lastSentBq = -1;
             lastSentSts = "";
             city.bq = [];
             city.tq = [];
@@ -50459,6 +50460,7 @@ function outer() {
             }
         }
         function buildEx(bId, bXY, startLevel, endLevel, __cid) {
+            lastSentBq = -1;
             var V5w = 0;
             bId = Number(bId);
             bXY = Number(bXY);
@@ -64054,6 +64056,11 @@ function outer() {
             });
         }
         window['pollthis'] = __pollthis;
+        window['pollNow'] = function () {
+            lastSentBD = 0;
+            lastSentBq = -1;
+            DoPoll2(100);
+        };
         const idleTimeout = 60;
         function Z1F() {
             if (M4F == 0)
@@ -68639,7 +68646,7 @@ function Contains(a, b) {
     return a.indexOf(b) != -1;
 }
 let updateTimeout = 0;
-let lastSentBq = 0;
+let lastSentBq = -1;
 let bqInFlight = 0;
 let lastSentSts = "";
 let lastSentBD = 0;

@@ -101,8 +101,8 @@ namespace COTG.Game
 		
 		
 
-		public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
-		public Building GetBuiding( int bspot) => buildings[bspot];
+		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
+	//	public Building GetBuiding( int bspot) => buildings[bspot];
 		
 		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
 		
@@ -206,11 +206,11 @@ namespace COTG.Game
 			CityBuild.ClearAction();
 			CityView.BuildingsOrQueueChanged();
 
-			if (CityBuild.menuOpen)
-			{
-				App.DispatchOnUIThreadSneakyLow(() =>
-			   ShellPage.instance.buildMenu.IsOpen = false);
-			}
+			//if (CityBuild.menuOpen)
+			//{
+			//	App.DispatchOnUIThreadSneakyLow(() =>
+			//   ShellPage.instance.buildMenu.IsOpen = false);
+			//}
 		}
 
 		public City() { type = typeCity; }
@@ -1050,10 +1050,10 @@ namespace COTG.Game
 		}
 
 
-		public static (int max, int count) CountBuildings()
+		public static (int max, int count, int townHallLevel) CountBuildings()
 		{
-				var max = -1;
 			var count = 0;
+			var townHallLevel = 1;
 			foreach (var bi in CityBuild.postQueueBuildings)
 				{
 					if (bi.id == 0 || bi.bl == 0)
@@ -1065,13 +1065,37 @@ namespace COTG.Game
 					}
 					if (bd.isTownHall)
 					{
-						max = bi.bl * 10;
+						townHallLevel = bi.bl;
 						continue;
 					}
 					++count;
 				}
+			return (townHallLevel*10, count, townHallLevel);
+		}
+
+		public (int max, int count) CountBuildingWithoutQueue()
+		{
+			var max = -1;
+			var count = 0;
+			foreach (var bi in buildings)
+			{
+				if (bi.id == 0 || bi.bl == 0)
+					continue;
+				var bd = bi.def;
+				if (bd.isTower || bd.isWall)
+				{
+					continue;
+				}
+				if (bd.isTownHall)
+				{
+					max = bi.bl * 10;
+					continue;
+				}
+				++count;
+			}
 			return (max, count);
 		}
+
 		//	Span<BuildQueueItem> queue = stackalloc  BuildQueueItem[256];
 
 		//	return CountBuildings( City.build, queue)

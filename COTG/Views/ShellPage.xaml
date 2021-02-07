@@ -12,8 +12,6 @@
       xmlns:views="using:COTG.Views"
       xmlns:models="using:COTG.Models"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-	  xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
-	  xmlns:telerikPrimitivesMenu="using:Telerik.UI.Xaml.Controls.Primitives.Menu"
       x:Name="shellPage"
       Loaded="OnLoaded"
       mc:Ignorable="d"
@@ -21,25 +19,24 @@
 >
 	<Page.Resources>
 
-		<Style x:Key="TimeFlyoutStyle"
-               TargetType="FlyoutPresenter">
-			<Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-			<Setter Property="VerticalContentAlignment"
-                    Value="Stretch" />
-			<Setter Property="MaxWidth"
-                    Value="1900" />
-		</Style>
-		<DataTemplate x:DataType="x:String" x:Key="headerTemplate" >
-			<TextBlock Text="{x:Bind}" FontSize="12" Height="22" />
-		</DataTemplate>
+		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
 
-
-		<SolidColorBrush x:Key="LogBufferForeground"
-                         Color="#900238" />
+		
+		
 	</Page.Resources>
 	<!--HeaderTemplate="{StaticResource headerTemplate}"-->
 	<Grid x:Name="grid"  x:FieldModifier="public" >
+		<Grid.Resources>
+			<Style x:Key="TimeFlyoutStyle"
+               TargetType="FlyoutPresenter">
+				<Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+				<Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+				<Setter Property="MaxWidth"
+                    Value="1900" />
+			</Style>
+		</Grid.Resources>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="42" />
 			<RowDefinition />
@@ -54,38 +51,6 @@
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
 
-		<Canvas x:Name="buildMenuCanvas" x:FieldModifier="public"  Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="14" >
-			<telerikPrimitives:RadRadialMenu x:Name="buildMenu" ShowToolTip="True" x:FieldModifier="public" Width="448" Height="448" IsTabStop="False" IsOpen="False" >
-				<telerikPrimitives:RadRadialMenu.Resources>
-					<Style TargetType="telerikPrimitivesMenu:MenuToolTip">
-						<Setter Property="Transitions">
-							<Setter.Value>
-								<TransitionCollection>
-									<PopupThemeTransition/>
-								</TransitionCollection>
-							</Setter.Value>
-						</Setter>
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="telerikPrimitivesMenu:MenuToolTip">
-									<StackPanel Orientation="Horizontal" Margin="3" Background="Black" >
-										<Ellipse Width="2" Height="2" Fill="Red" Margin="1"/>
-										<Ellipse Width="3" Height="3" Fill="Red" Margin="1"/>
-										<Ellipse Width="4" Height="4" Fill="Red" Margin="1"/>
-										<TextBlock Text="{TemplateBinding Content}" Foreground="White"
-                                       VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="256" 
-                                        Margin="4,0,4,0"/>
-										<Ellipse Width="4" Height="4" Fill="Red" Margin="1"/>
-										<Ellipse Width="3" Height="3" Fill="Red" Margin="1"/>
-										<Ellipse Width="2" Height="2" Fill="Red" Margin="1"/>
-									</StackPanel>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</telerikPrimitives:RadRadialMenu.Resources>
-			</telerikPrimitives:RadRadialMenu>
-		</Canvas>
 		
 		
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
@@ -353,6 +318,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                               
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />
+		<!---
 		<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"
@@ -360,7 +326,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
 					   Title=":o" Canvas.ZIndex="35"
                                >
 			<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>
-		</winui:InfoBar>
+		</winui:InfoBar>-->
 		<tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"

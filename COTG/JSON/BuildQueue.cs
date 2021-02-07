@@ -73,9 +73,11 @@ namespace COTG.JSON
 		}
 
 		//public bool isBuild => slvl == 0;
-
+		public BuildingDef def => BuildingDef.all[bid];
 		public bool isRes => BuildingDef.IsRes(bid);
 		public bool isDemo => elvl == 0;
+
+		public bool isBuild => slvl == 0 && elvl != 0;
 
 
 		// Moves from the pending queue to the active queue;
@@ -109,6 +111,14 @@ namespace COTG.JSON
 			}
 			return false;
 		}
+		public bool TryPeek(out BuildQueueItem BuildQueueItem)
+		{
+			if (queue.TryPeek(out BuildQueueItem))
+			{
+				return true;
+			}
+			return false;
+		}
 		public async void Process(int initialDelay=0)
 		{
 			if(initialDelay > 0 )
@@ -122,19 +132,19 @@ namespace COTG.JSON
 			// towers must wait for walls
 			// Temple:  must demo first
 
+			var city = City.GetOrAdd(cid);
+			DArray<BuildQueueItem> cotgQ = default;
 			for (; ; )
 			{
 				int buildingCount = 0;
 				int delay;
-				int queuedCommands = 0;
 
 				if (cid == City.build)
 				{
 					// every two seconds commands will only be queud on changes
 					delay = 2000;
-					queuedCommands = City.buildQueue.count;
 					// process pending queue first if appropriate
-					
+					cotgQ = City.buildQueue;
 				}
 				else
 				{
@@ -146,11 +156,12 @@ namespace COTG.JSON
 						
 						 if (jse.TryGetProperty("bq", out var bq))
 						 {
-							 queuedCommands = bq.GetArrayLength();
-							 if (queuedCommands > 0)
+							 var count = bq.GetArrayLength();
+							 cotgQ = new DArray<BuildQueueItem>(count);
+							 if (count > 0)
 							 {
 								 // todo: sort dependencies
-								 var js = bq[queuedCommands - 1];
+								 var js = bq[count - 1];
 
 								 var e = js.GetAsInt64("de");
 								 var t = JSClient.AsJSTime(e);
@@ -159,10 +170,21 @@ namespace COTG.JSON
 								 if (delay < 5000)
 									 delay = 5000; // never wait less than 5 seconds
 								 // no progress :( wait two minutes
-								 if (queuedCommands >= City.safeBuildQueueLength)
+								 if (count >= City.safeBuildQueueLength)
 								 {
 									 if (delay < 2 * 60 * 1000)
 										 delay = 2 * 60 * 1000;
+								 }
+								 foreach(var cmd in bq.EnumerateArray())
+								 {
+									 cotgQ.Add(new BuildQueueItem());
+									 cotgQ.Add(new BuildQueueItem(
+										 cmd.GetAsByte("slvl"),
+										 cmd.GetAsByte("elvl"),
+										 cmd.GetAsUShort("brep"),
+										 cmd.GetAsUShort("bspot")
+										 ));
+
 								 }
 							 }
 						 }
@@ -170,7 +192,7 @@ namespace COTG.JSON
 
 					 });
 				}
-				int commandsToQueue = (City.safeBuildQueueLength - queuedCommands).Min(queue.Count);
+				int commandsToQueue = (City.safeBuildQueueLength - cotgQ.count).Min(queue.Count);
 				if(commandsToQueue > 0)
 				{
 					var ops = new BuildQueueItem[commandsToQueue];
@@ -179,6 +201,44 @@ namespace COTG.JSON
 	//					BuildTab.cvsGroups.View
 					do
 					{
+						if (TryPeek(out var i))
+						{
+							// do we have to wait on this on?
+							// - towers before wall
+							if( i.isBuild )
+							{
+								if (i.def.isTower)
+								{
+									if (city.buildings[City.bspotWall].bl == 0)
+									{
+										// wait for wall to build first
+										break;
+
+									}
+								}
+								else if(i.def.bid == City.bidCastle)
+								{
+									var bd = city.CountBuildingWithoutQueue();
+									// cannot queue if there is no room, even if there is a demo in progress
+									if (bd.count >= bd.max)
+									{
+										break;
+									}
+									
+								}
+								// is there a building in the way?
+								// wait for the demo
+								if(!city.buildings[i.bspot].isEmpty)
+								{
+									break;
+								}
+							}
+							// - castles before free space
+							// - build before demo
+
+						}
+
+
 						if (!TryDequeue(out var rv))
 						{
 							break;

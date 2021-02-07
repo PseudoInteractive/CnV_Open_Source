@@ -310,7 +310,7 @@ function Contains(a:string,b:string) {
 }
 
 let updateTimeout=0;
-let lastSentBq=0;
+let lastSentBq=-1;
 let bqInFlight=0;
 let lastSentSts:string="";
 let  lastSentBD=0;

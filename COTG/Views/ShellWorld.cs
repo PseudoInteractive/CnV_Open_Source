@@ -573,11 +573,11 @@ namespace COTG.Views
 
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
-			if (CityBuild.menuOpen)
-			{
-				App.DispatchOnUIThreadSneaky(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
-				return;
-			}
+			//if (CityBuild.menuOpen)
+			//{
+			//	App.DispatchOnUIThreadSneaky(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
+			//	return;
+			//}
 
 			if (!isHitTestVisible)
 				return;
@@ -840,8 +840,8 @@ namespace COTG.Views
 						var build = City.GetBuild();
 						if (build != null)
 						{
-							var b = build.GetBuiding(cc);
-							var d = b.def;
+						//	var b = build.GetBuiding(cc);
+							//var d = b.def;
 							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = 0;
 							Player.viewHover = 0;

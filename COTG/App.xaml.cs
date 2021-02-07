@@ -947,8 +947,8 @@ namespace COTG
 					App.DispatchOnUIThreadSneaky(() =>
 					{
 						ShellPage.inAppNote.Closed += InAppNote_Closed;
-						ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
-						ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
+				//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
+				//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					});
 				}
 
@@ -986,32 +986,32 @@ namespace COTG
 				{
 					ChatTab.L(s);
 					var wasOpen = false;
-					if (ShellPage.instance.infoBar.IsOpen)
-					{
-						wasOpen = true;
-						ShellPage.instance.infoBar.IsOpen = false;
-					}
+					//if (ShellPage.instance.infoBar.IsOpen)
+					//{
+					//	wasOpen = true;
+					//	ShellPage.instance.infoBar.IsOpen = false;
+					//}
 					if (!useInfoBar)
 					{
 						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
 						textBlock.LinkClicked += MarkDownLinkClicked;
 						ShellPage.inAppNote.Show(textBlock, timeout);
 
-						ShellPage.instance.infoBar.IsOpen = false;
+						//ShellPage.instance.infoBar.IsOpen = false;
 					}
-					else
-					{
-						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-						ShellPage.instance.infoMD.Text = s;
-						if (wasOpen)
-						{
-							Task.Delay(500).ContinueWith((_) => ShellPage.instance.infoBar.IsOpen = true, TaskScheduler.FromCurrentSynchronizationContext());
-						}
-						else
-						{
-							ShellPage.instance.infoBar.IsOpen = true;
-						}
-					}
+					//else
+					//{
+					//	var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+					//	ShellPage.instance.infoMD.Text = s;
+					//	if (wasOpen)
+					//	{
+					//		Task.Delay(500).ContinueWith((_) => ShellPage.instance.infoBar.IsOpen = true, TaskScheduler.FromCurrentSynchronizationContext());
+					//	}
+					//	else
+					//	{
+					//		ShellPage.instance.infoBar.IsOpen = true;
+					//	}
+					//}
 				});
 
 

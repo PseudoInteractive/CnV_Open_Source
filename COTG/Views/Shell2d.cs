@@ -184,16 +184,16 @@ namespace COTG.Views
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			App.InputRecieved();
-			if (CityBuild.menuOpen)
-			{	
-				// todo:  Handle naviation menu items and selection
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-					ShellPage.instance.buildMenu.IsOpen = false;
-				});
-				return;
+			//if (CityBuild.menuOpen)
+			//{	
+			//	// todo:  Handle naviation menu items and selection
+			//	App.DispatchOnUIThreadSneaky(() =>
+			//	{
+			//		ShellPage.instance.buildMenu.IsOpen = false;
+			//	});
+			//	return;
 
-			}
+			//}
 			var key = e.Key;
 			if (IsWorldView())
 			{

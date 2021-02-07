@@ -204,7 +204,7 @@ namespace COTG.Views
 		public static bool canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			grid.Children.Add(CityBuild.Initialize(buildMenu,buildMenuCanvas));
+			CityBuild.Initialize();
 		//	Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
 			Grid.SetRowSpan(CityBuild.instance, 5);
@@ -728,7 +728,7 @@ namespace COTG.Views
 					}
 				}
 
-				foreach (var bdi in build.buildings)
+				foreach (var bdi in CityBuild.postQueueBuildings)
 				{
 					var id = bdi.id;
 					if (id == 0 || !bdi.isBuilding )
@@ -737,27 +737,6 @@ namespace COTG.Views
 					ProcessBuilding(bd);
 				}
 
-				try
-				{
-					City.IterateQueue((r) =>
-				   {
-					   // demo
-					   if (r.elvl == 0)
-					   {
-						   if (!BuildingDef.IsRes(r.bid))
-							   ProcessBuilding(BuildingDef.all[r.bid], false);
-					   }
-					   // new building
-					   else if (r.slvl == 0)
-					   {
-						   ProcessBuilding(BuildingDef.all[r.bid]);
-					   }
-				   });
-				}
-				catch( Exception _)
-				{
-					// build queue changes asynchrously, if we get a bad read, we just ignore it
-				}
 
 				{
 					var bd = new List<BuildingCount>();

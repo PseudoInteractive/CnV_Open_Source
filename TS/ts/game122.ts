@@ -7106,7 +7106,11 @@ function SetViewMode(mode) {
 }
 window['showLayout']= function()
 {
-	$("#editspncn").click();
+//`$('.cssbuttongo')[0].click();
+
+ $("#CNtabs").tabs({active:3});
+ $("#editspncn").click();
+//	$("#cityplannerTab")[0].click();
 }
 function setTestFlag(flag) {
 	testFlag = flag;
@@ -18082,7 +18086,7 @@ function outer() {
 			clearTimeout(n5F);
 
 			lastSentBD = 0;
-			lastSentBq=0;
+			lastSentBq=-1;
 			lastSentSts = "";
 			city.bq = [];
 			city.tq = [];
@@ -53937,6 +53941,7 @@ bqInFlight=0;
 
   // The only accepted options are 0, 2, 3
   	function buildEx(bId, bXY, startLevel:number,endLevel:number, __cid : number ) {
+			lastSentBq = -1;
 			var V5w = 0;
 			bId = Number(bId);
 			bXY = Number(bXY);
@@ -67774,6 +67779,14 @@ bqInFlight=0;
 
 		}
 		window['pollthis'] = __pollthis;
+
+  
+  	window['pollNow'] = function() {
+		lastSentBD=0;
+		lastSentBq=-1;
+		 DoPoll2(100);
+		};
+		 
 
 		const idleTimeout = 60;
 
