@@ -50462,8 +50462,6 @@ function outer() {
         function buildEx(bId, bXY, startLevel, endLevel, __cid) {
             lastSentBq = -1;
             var V5w = 0;
-            bId = Number(bId);
-            bXY = Number(bXY);
             if (startLevel != 0 && endLevel > startLevel) {
                 if (bId >= +TPL) {
                     D1F(__cid);
@@ -50703,7 +50701,7 @@ function outer() {
             buildOp(bId, bXY, op);
         };
         function cancelBuildOp(i) {
-            var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
+            let q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
             q2g.done((a) => {
                 if (i > 0)
                     cancelBuildOp(i - 1);
@@ -50716,12 +50714,34 @@ function outer() {
                 DoPoll2(500);
             }
         };
-        window['buildex'] = function (bId, bXY, startLevel, endLevel, __cid) {
-            bId = Number(bId);
+        function tryDemo(bId, bXY, bqOffset) {
+            while (bqOffset > 0) {
+                let qi = city.bq[--bqOffset];
+                if (qi.bspot == bXY) {
+                    let pst = $.post("/includes/cBu.php", { id: qi.bid, cid: cid });
+                    pst.done((a) => {
+                        tryDemo(bId, bXY, bqOffset);
+                    });
+                    return;
+                }
+            }
+            buildEx(bId, bXY, city.bd[bXY].bl, 0, cid);
+        }
+        window['buildex'] = function (_bId, _bXY, _startLevel, _endLevel, ___cid) {
+            let bId = Number(_bId);
+            let bXY = Number(_bXY);
+            let startLevel = Number(_startLevel);
+            let endLevel = Number(_endLevel);
+            let __cid = Number(___cid);
             var nBid = L2(bId);
             if (nBid != 0)
                 bId = nBid;
-            buildEx(bId, bXY, Number(startLevel), Number(endLevel), Number(__cid));
+            if (__cid === cid && endLevel === 0) {
+                tryDemo(bId, bXY, city.bq.length);
+            }
+            else {
+                buildEx(bId, bXY, startLevel, endLevel, Number(__cid));
+            }
         };
         function h7V() { }
         function B5V(w9l, I9l) {

@@ -263,6 +263,7 @@ namespace COTG
 
 			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 			coreTitleBar.ExtendViewIntoTitleBar = false;
+			
 			//  UpdateTitleBarLayout(coreTitleBar);
 
 			// Set XAML element as a draggable region.

@@ -56,6 +56,12 @@
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content>
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged"  Margin="4"
+                           ToolTipService.ToolTip="Select a view layout" >
+						<x:String>Default</x:String>
+						<x:String>Visual</x:String>
+						<x:String>Numbers</x:String>
+					</ComboBox>
 					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
 							  Visibility="Collapsed"
                      SelectionChanged="friendListBox_SelectionChanged"
@@ -104,12 +110,7 @@
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
 					<winui:ProgressRing x:Name="progress" IsActive="False" />
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged"  Margin="4"
-                           ToolTipService.ToolTip="Select a view layout" >
-						<x:String>Default</x:String>
-						<x:String>Visual</x:String>
-						<x:String>Numbers</x:String>
-					</ComboBox>
+					
 				</StackPanel>
 			</CommandBar.Content>
 			<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"

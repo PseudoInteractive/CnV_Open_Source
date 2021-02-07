@@ -133,10 +133,10 @@ namespace COTG.JSON
 			// Temple:  must demo first
 
 			var city = City.GetOrAdd(cid);
-			DArray<BuildQueueItem> cotgQ = default;
+		
 			for (; ; )
 			{
-				int buildingCount = 0;
+				int ququeCount = 0;
 				int delay;
 
 				if (cid == City.build)
@@ -144,7 +144,7 @@ namespace COTG.JSON
 					// every two seconds commands will only be queud on changes
 					delay = 2000;
 					// process pending queue first if appropriate
-					cotgQ = City.buildQueue;
+					ququeCount= City.buildQueue.count;
 				}
 				else
 				{
@@ -156,12 +156,11 @@ namespace COTG.JSON
 						
 						 if (jse.TryGetProperty("bq", out var bq))
 						 {
-							 var count = bq.GetArrayLength();
-							 cotgQ = new DArray<BuildQueueItem>(count);
-							 if (count > 0)
+							 ququeCount = bq.GetArrayLength();
+							 if (ququeCount > 0)
 							 {
 								 // todo: sort dependencies
-								 var js = bq[count - 1];
+								 var js = bq[ququeCount - 1];
 
 								 var e = js.GetAsInt64("de");
 								 var t = JSClient.AsJSTime(e);
@@ -170,29 +169,29 @@ namespace COTG.JSON
 								 if (delay < 5000)
 									 delay = 5000; // never wait less than 5 seconds
 								 // no progress :( wait two minutes
-								 if (count >= City.safeBuildQueueLength)
+								 if (ququeCount >= City.safeBuildQueueLength)
 								 {
 									 if (delay < 2 * 60 * 1000)
 										 delay = 2 * 60 * 1000;
 								 }
-								 foreach(var cmd in bq.EnumerateArray())
-								 {
-									 cotgQ.Add(new BuildQueueItem());
-									 cotgQ.Add(new BuildQueueItem(
-										 cmd.GetAsByte("slvl"),
-										 cmd.GetAsByte("elvl"),
-										 cmd.GetAsUShort("brep"),
-										 cmd.GetAsUShort("bspot")
-										 ));
+								 //foreach(var cmd in bq.EnumerateArray())
+								 //{
+									// cotgQ.Add(new BuildQueueItem());
+									// cotgQ.Add(new BuildQueueItem(
+									//	 cmd.GetAsByte("slvl"),
+									//	 cmd.GetAsByte("elvl"),
+									//	 cmd.GetAsUShort("brep"),
+									//	 cmd.GetAsUShort("bspot")
+									//	 ));
 
-								 }
+								 //}
 							 }
 						 }
 						
 
 					 });
 				}
-				int commandsToQueue = (City.safeBuildQueueLength - cotgQ.count).Min(queue.Count);
+				int commandsToQueue = (City.safeBuildQueueLength - ququeCount).Min(queue.Count);
 				if(commandsToQueue > 0)
 				{
 					var ops = new BuildQueueItem[commandsToQueue];
@@ -326,12 +325,10 @@ namespace COTG.JSON
 					PrimaryButtonText = "Yes",
 					SecondaryButtonText = "Cancel"
 				};
-				if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
+				if (await dialog.ShowAsync2().ConfigureAwait(true) != ContentDialogResult.Primary)
 				{
-					Assert(cid == City.build);
-					op.ApplyOnUIThread(cid);
+					return;
 				}
-				return;
 			}
 			var pending = CityBuildQueue.Get(cid);
 			pending.Enqueue(op);

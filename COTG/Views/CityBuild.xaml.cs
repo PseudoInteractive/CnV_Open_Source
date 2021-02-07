@@ -153,6 +153,7 @@ namespace COTG.Views
 		static BuildMenuItem amMove = new BuildMenuItem("Move", Action.move, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
 		static BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
 		static BuildMenuItem amLayout = new BuildMenuItem("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
+		static BuildMenuItem amNone = new BuildMenuItem("-", Action.layout, "City/decal_select_building.png", "To be determined");
 		static BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
 		static BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
@@ -174,49 +175,62 @@ namespace COTG.Views
 		public static List<BuildMenuItem> allBuildings = new();
 
 
-		static BuildMenuItem bmTownHall = CreateBuildMenuItem( bidTownHall); //  = 455;
-		static BuildMenuItem bmWall = CreateBuildMenuItem( bidWall); //  = 809;
-		static BuildMenuItem bmTemple = CreateBuildMenuItem( bidTemple); //  = 890;
-		static BuildMenuItem bmForester = CreateBuildMenuItem( bidForester); //  = 448;
-		static BuildMenuItem bmCottage = CreateBuildMenuItem( bidCottage); //  = 446;
-		static BuildMenuItem bmStorehouse = CreateBuildMenuItem( bidStorehouse); //  = 464;
-		static BuildMenuItem bmQuarry = CreateBuildMenuItem( bidQuarry); //  = 461;
-		static BuildMenuItem bmHideaway = CreateBuildMenuItem( bidHideaway); //  = 479;
-		static BuildMenuItem bmFarmhouse = CreateBuildMenuItem( bidFarmhouse); //  = 447;
-		static BuildMenuItem bmCityguardhouse = CreateBuildMenuItem( bidCityguardhouse); //  = 504;
-		static BuildMenuItem bmBarracks = CreateBuildMenuItem( bidBarracks); //  = 445;
-		static BuildMenuItem bmMine = CreateBuildMenuItem( bidMine); //  = 465;
-		static BuildMenuItem bmTrainingground = CreateBuildMenuItem( bidTrainingground); //  = 483;
-		static BuildMenuItem bmMarketplace = CreateBuildMenuItem( bidMarketplace); //  = 449;
-		static BuildMenuItem bmTownhouse = CreateBuildMenuItem( bidTownhouse); //  = 481;
-		static BuildMenuItem bmSawmill = CreateBuildMenuItem( bidSawmill); //  = 460;
-		static BuildMenuItem bmStable = CreateBuildMenuItem( bidStable); //  = 466;
-		static BuildMenuItem bmStonemason = CreateBuildMenuItem( bidStonemason); //  = 462;
-		static BuildMenuItem bmMage_tower = CreateBuildMenuItem( bidMage_tower); //  = 500;
-		static BuildMenuItem bmWindmill = CreateBuildMenuItem( bidWindmill); //  = 463;
-		static BuildMenuItem bmAcademy = CreateBuildMenuItem( bidAcademy); //  = 482;
-		static BuildMenuItem bmSmelter = CreateBuildMenuItem( bidSmelter); //  = 477;
-		static BuildMenuItem bmBlacksmith = CreateBuildMenuItem( bidBlacksmith); //  = 502;
-		static BuildMenuItem bmCastle = CreateBuildMenuItem( bidCastle); //  = 467;
+		static BuildMenuItem bmCottage = CreateBuildMenuItem(bidCottage); //  = 446;
+		static BuildMenuItem bmStorehouse = CreateBuildMenuItem(bidStorehouse); //  = 464;
+		static BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
 		static BuildMenuItem bmPort = CreateBuildMenuItem( bidPort); //  = 488;
-		static BuildMenuItem bmShipyard = CreateBuildMenuItem( bidShipyard); //  = 491;
-		static BuildMenuItem bmTriariPost = CreateBuildMenuItem( bidTriariPost); //  = 539;
-		static BuildMenuItem bmRangerPost = CreateBuildMenuItem( bidRangerPost); //  = 543;
-		static BuildMenuItem bmSentinelPost = CreateBuildMenuItem( bidSentinelPost); //  = 547;
+
+		static BuildMenuItem bmBarracks = CreateBuildMenuItem(bidBarracks); //  = 445;
+		static BuildMenuItem bmCastle = CreateBuildMenuItem(bidCastle); //  = 467;
+		static BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingground); //  = 483;
+		static BuildMenuItem bmStable = CreateBuildMenuItem(bidStable); //  = 466;
+	
+		static BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidMage_tower); //  = 500;
+		static BuildMenuItem bmAcademy = CreateBuildMenuItem(bidAcademy); //  = 482;
+		static BuildMenuItem bmBlacksmith = CreateBuildMenuItem(bidBlacksmith); //  = 502;
+		static BuildMenuItem bmShipyard = CreateBuildMenuItem(bidShipyard); //  = 491;
+
+
+		static BuildMenuItem bmForester = CreateBuildMenuItem(bidForester); //  = 448;
+		static BuildMenuItem bmQuarry = CreateBuildMenuItem(bidQuarry); //  = 461;
+		static BuildMenuItem bmMine = CreateBuildMenuItem(bidMine); //  = 465;
+		static BuildMenuItem bmFarmhouse = CreateBuildMenuItem(bidFarmhouse); //  = 447;
+
+		static BuildMenuItem bmSawmill = CreateBuildMenuItem(bidSawmill); //  = 460;
+		static BuildMenuItem bmStonemason = CreateBuildMenuItem(bidStonemason); //  = 462;
+		static BuildMenuItem bmSmelter = CreateBuildMenuItem(bidSmelter); //  = 477;
+		static BuildMenuItem bmWindmill = CreateBuildMenuItem(bidWindmill); //  = 463;
+
+
+		static BuildMenuItem bmHideaway = CreateBuildMenuItem(bidHideaway); //  = 479;
+		static BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidCityguardhouse); //  = 504;
+		static BuildMenuItem bmTownhouse = CreateBuildMenuItem(bidTownhouse); //  = 481;
+		static BuildMenuItem bmTemple = CreateBuildMenuItem(bidTemple); //  = 890;
+
+
+
+
+		//	static BuildMenuItem bmTownHall = CreateBuildMenuItem( bidTownHall); //  = 455;
+		//		static BuildMenuItem bmWall = CreateBuildMenuItem( bidWall); //  = 809;
+
+		static BuildMenuItem bmRangerPost = CreateBuildMenuItem(bidRangerPost); //  = 543;
+		static BuildMenuItem bmTriariPost = CreateBuildMenuItem(bidTriariPost); //  = 539;
 		static BuildMenuItem bmPriestessPost = CreateBuildMenuItem( bidPriestessPost); //  = 551;
 		static BuildMenuItem bmBallistaPost = CreateBuildMenuItem( bidBallistaPost); //  = 555;
-		static BuildMenuItem bmEquineBarricade = CreateBuildMenuItem( bidEquineBarricade); //  = 559;
+
+		static BuildMenuItem bmSnagBarricade = CreateBuildMenuItem(bidSnagBarricade); //  = 567;
+		static BuildMenuItem bmEquineBarricade = CreateBuildMenuItem(bidEquineBarricade); //  = 559;
 		static BuildMenuItem bmRuneBarricade = CreateBuildMenuItem( bidRuneBarricade); //  = 563;
-		static BuildMenuItem bmSnagBarricade = CreateBuildMenuItem( bidSnagBarricade); //  = 567;
 		static BuildMenuItem bmVeiledBarricade = CreateBuildMenuItem( bidVeiledBarricade); //  = 571;
 
+		static BuildMenuItem bmSentinelPost = CreateBuildMenuItem(bidSentinelPost); //  = 547;
 
 
 
 		public static void UpdateBuildMenuType(MenuType _menuType,int bspot)
 		{
-			//	if (menuType == _menuType)
-			//		return;
+			if (menuType == _menuType)
+				return;
 			var buildMenu = instance;
 			var items = new List<BuildMenuItem>();
 
@@ -244,11 +258,11 @@ namespace COTG.Views
 					items.Add(amMove);
 					items.Add(amDemo);
 					items.Add(amLayout);
-					foreach(var i in allBuildings)
+
+					foreach (var i in allBuildings)
 					{
 						items.Add(i);
 					}
-
 
 					break;
 				case MenuType.buliding:
@@ -273,13 +287,18 @@ namespace COTG.Views
 				
 					break;
 				case MenuType.empty:
+
 					items.Add(amLayout);
+					items.Add(amNone);
+					items.Add(amNone);
+					items.Add(amNone);
 
 					// restrict by level?
 					foreach (var i in allBuildings)
 					{
 						items.Add(i);
 					}
+
 					break;
 
 				case MenuType.tower:
@@ -309,26 +328,26 @@ namespace COTG.Views
 			}
 
 			
-			foreach(var bi in items)
-			{
-				if( bi.isBuilding)
-				{
-					var def = BuildingDef.all[bi.bid];
-					var enabled = true;
-					if(def.Thl > townHallLevel)
-					{
-						enabled = false;
-					}
-					else if(_menuType == MenuType.empty)
-					{
-						enabled = true; // todo
+			//foreach(var bi in items)
+			//{
+			//	if( bi.isBuilding)
+			//	{
+			//		var def = BuildingDef.all[bi.bid];
+			//		var enabled = true;
+			//		if(def.Thl > townHallLevel)
+			//		{
+			//			enabled = false;
+			//		}
+			//		else if(_menuType == MenuType.empty)
+			//		{
+			//			enabled = true; // todo
 
-					}
+			//		}
 
-				}
+			//	}
 
 				
-			}
+			//}
 			instance.gridView.ItemsSource = items;
 
 		}
@@ -486,19 +505,19 @@ namespace COTG.Views
 			BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 		}
 		
-		private void Upgrade_Click(object sender, RoutedEventArgs e)
-		{
+		//private void Upgrade_Click(object sender, RoutedEventArgs e)
+		//{
 
-			var id = XYToId(selected);
-			var sel = GetBuildingPostQueue(id);
-			var lvl = sel.bl;
+		//	var id = XYToId(selected);
+		//	var sel = GetBuildingPostQueue(id);
+		//	var lvl = sel.bl;
 			
-			if(lvl == 0)// special case
-				Build(id,sel.def.bid,false);
-			else
-				Enqueue(lvl,(lvl + 1),sel.def.bid,id);
+		//	if(lvl == 0)// special case
+		//		Build(id,sel.def.bid,false);
+		//	else
+		//		Enqueue(lvl,(lvl + 1),sel.def.bid,id);
 		
-		}
+		//}
 		public static void UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
 		{
 			//var target = hovered;
@@ -588,7 +607,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				Status($"Destory {sel.def.Bn}", dryRun);
+				Status($"Destroy {sel.def.Bn}", dryRun);
 				if (!dryRun)
 				{
 					if (isLayout)
@@ -652,6 +671,8 @@ namespace COTG.Views
 			if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
 			{
 				Enqueue(0, 1, bidWall, bspotWall);
+				await Task.Delay(200).ConfigureAwait(true);
+
 				return true;
 			}
 			else
@@ -673,6 +694,7 @@ namespace COTG.Views
 			{
 				var currentLevel = postQueueBuildings[bspotTownHall].bl;
 				Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
+				await Task.Delay(300).ConfigureAwait(true);
 				return true;
 			}
 			else if( a == ContentDialogResult.Secondary)
@@ -857,6 +879,7 @@ namespace COTG.Views
 			var temp = b0;
 			b0 = b1;
 			b1 = temp;
+			BuildingsOrQueueChanged();
 		}
 		public static async void SwapBuilding(int a, int b)
 		{
@@ -872,6 +895,7 @@ namespace COTG.Views
 				await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayer(City.build));
 				await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
 			}
+			BuildingsOrQueueChanged(); 
 		}
 
 		internal static void MoveHovered(bool isSingleAction, bool dryRun)
@@ -1110,6 +1134,8 @@ namespace COTG.Views
 												Status("Will Demolish a Cottage to make room", dryRun);
 												
 												Demolish(bestSpot,dryRun);
+												if (!dryRun)
+													await Task.Delay(200).ConfigureAwait(true);
 												//break;
 
 											}
@@ -1349,6 +1375,7 @@ namespace COTG.Views
 		internal static void ShortBuild(short bid)
 		{
 			PerformAction(CityBuild.Action.build, hovered, bid,false);
+			lastQuickBuildActionBSpot = XYToId(hovered);
 
 		}
 
@@ -1453,7 +1480,7 @@ namespace COTG.Views
 					//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 					//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
 
-					buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y)  });
+					buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement= FlyoutPlacementMode.Bottom });
 
 
 				}
@@ -1490,7 +1517,9 @@ namespace COTG.Views
 				{
 					if (singleClickAction == CityBuild.Action.pending)
 					{
+					
 						await PerformAction(CityBuild.Action.build, selected, bi.bid, false);
+						lastQuickBuildActionBSpot = XYToId(selected);
 					}
 					else
 					{
@@ -1524,6 +1553,7 @@ namespace COTG.Views
 							else
 							{
 								await PerformAction(bi.action, selected, 0, false);
+								lastQuickBuildActionBSpot = XYToId(selected);
 								singleClickAction = CityBuild.Action.none;
 								ClearSelectedBuilding();
 							}

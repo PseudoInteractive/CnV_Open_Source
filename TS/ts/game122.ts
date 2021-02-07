@@ -53940,11 +53940,10 @@ bqInFlight=0;
 		}
 
   // The only accepted options are 0, 2, 3
-  	function buildEx(bId, bXY, startLevel:number,endLevel:number, __cid : number ) {
+  	function buildEx(bId:number, bXY:number, startLevel:number,endLevel:number, __cid : number ) {
 			lastSentBq = -1;
 			var V5w = 0;
-			bId = Number(bId);
-			bXY = Number(bXY);
+			
 			if(startLevel != 0 && endLevel>startLevel)
 			{
    				if ( bId >= +TPL)
@@ -54244,7 +54243,7 @@ bqInFlight=0;
 
    function cancelBuildOp( i  : number )
    {
-   	   var q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
+   	   let q2g = $.post("/includes/cBu.php", { id: city.bq[i].bid, cid: cid });
 	   q2g.done((a) => {
 			if( i > 0)
 				cancelBuildOp(i-1);
@@ -54262,13 +54261,49 @@ bqInFlight=0;
    }
 
 
-   window['buildex'] = function (bId, bXY,startLevel:string,endLevel:string, __cid : string) 
+   function tryDemo(bId:number, bXY:number, bqOffset : number)
    {
-     bId = Number(bId);
+		// Assume cid == global cid
+		while(bqOffset > 0)
+		{
+  			let qi = city.bq[--bqOffset];
+			if(qi.bspot == bXY)
+			{
+				let pst = $.post("/includes/cBu.php", { id: qi.bid, cid: cid });
+				   pst.done((a) => {
+						tryDemo(bId,bXY,bqOffset);
+
+				   });
+
+				return;
+			
+			}
+		}
+		
+	  buildEx(bId,bXY,city.bd[bXY].bl,0,cid);
+   }
+
+   window['buildex'] = function (_bId, _bXY,_startLevel:string,_endLevel:string, ___cid : string) 
+   {
+
+     let bId = Number(_bId);
+     let bXY = Number(_bXY);
+	let startLevel = Number(_startLevel);
+    let endLevel = Number(_endLevel);
+	let __cid = Number(___cid);
 		var nBid = L2( bId );
 		if(nBid != 0 )
 			bId = nBid;
-		buildEx(bId,bXY,Number(startLevel),Number(endLevel),Number(__cid));
+		// first cancel all actions on this spot if this is the global build level
+		if( __cid === cid && endLevel ===0 )
+		{
+		   tryDemo(bId,bXY,city.bq.length);
+		}
+		else
+		{
+  
+		  buildEx(bId,bXY,startLevel,endLevel,Number(__cid));
+		}
    }
 
 
