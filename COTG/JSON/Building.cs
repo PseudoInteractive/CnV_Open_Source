@@ -12,18 +12,25 @@ namespace COTG.JSON
 		public byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
 		public byte bl; // building level
 
+		public int bid => def.bid;
 		public bool isBuilding => bl > 0;
 		public bool isEmpty => id == 0;
-		public bool isRes => id != 0 && bl == 0;
+		public bool isRes => def.isRes;
 		public BuildingDef def => BuildingDef.FromId(id);
 		public string name => def.Bn;
 	
 		public bool isCabin => id == BuildingDef.idCabin;
 
+		public void AssertValid() => COTG.Debug.Assert( isRes || bl!=0 );
+		public bool isMilitary => def.isMilitary;
+		public bool isBarracks => def.isBarracks;
+
+
 		internal void SetBid(int bid, int bl)
 		{
 			this.id = BuildingDef.BidToId(bid);
 			this.bl = (byte)bl;
+
 		}
 		//[J("bu")] public long Bu { get; set; }
 		//	[J("bd")] public long Bd { get; set; }

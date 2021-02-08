@@ -31,8 +31,8 @@ using Action = COTG.Views.CityBuild.Action;
 using COTG.Services;
 using Microsoft.Toolkit.HighPerformance.Extensions;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-using static COTG.Draw.CityView;
 
+using System.Text.RegularExpressions;
 namespace COTG.Views
 {
 	public sealed partial class CityBuild : UserControl
@@ -60,6 +60,8 @@ namespace COTG.Views
 		public static bool IsWaterSpot(int spot) => City.GetBuild().isOnWater && waterSpots.Contains((ushort)spot);
 
 		public static bool IsShoreSpot(int spot) => City.GetBuild().isOnWater && shoreSpots.Contains((ushort)spot);
+
+		public static Regex shortKeyRegEx = new Regex(@"Shortkey: (.)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
 		public enum Action
 		{
@@ -153,7 +155,7 @@ namespace COTG.Views
 		static BuildMenuItem amMove = new BuildMenuItem("Move", Action.move, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
 		static BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
 		static BuildMenuItem amLayout = new BuildMenuItem("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
-		static BuildMenuItem amNone = new BuildMenuItem("-", Action.layout, "City/decal_select_building.png", "To be determined");
+		static BuildMenuItem amNone = new BuildMenuItem();
 		static BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
 		static BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
@@ -174,23 +176,6 @@ namespace COTG.Views
 		}
 		public static List<BuildMenuItem> allBuildings = new();
 
-
-		static BuildMenuItem bmCottage = CreateBuildMenuItem(bidCottage); //  = 446;
-		static BuildMenuItem bmStorehouse = CreateBuildMenuItem(bidStorehouse); //  = 464;
-		static BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
-		static BuildMenuItem bmPort = CreateBuildMenuItem( bidPort); //  = 488;
-
-		static BuildMenuItem bmBarracks = CreateBuildMenuItem(bidBarracks); //  = 445;
-		static BuildMenuItem bmCastle = CreateBuildMenuItem(bidCastle); //  = 467;
-		static BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingground); //  = 483;
-		static BuildMenuItem bmStable = CreateBuildMenuItem(bidStable); //  = 466;
-	
-		static BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidMage_tower); //  = 500;
-		static BuildMenuItem bmAcademy = CreateBuildMenuItem(bidAcademy); //  = 482;
-		static BuildMenuItem bmBlacksmith = CreateBuildMenuItem(bidBlacksmith); //  = 502;
-		static BuildMenuItem bmShipyard = CreateBuildMenuItem(bidShipyard); //  = 491;
-
-
 		static BuildMenuItem bmForester = CreateBuildMenuItem(bidForester); //  = 448;
 		static BuildMenuItem bmQuarry = CreateBuildMenuItem(bidQuarry); //  = 461;
 		static BuildMenuItem bmMine = CreateBuildMenuItem(bidMine); //  = 465;
@@ -201,9 +186,23 @@ namespace COTG.Views
 		static BuildMenuItem bmSmelter = CreateBuildMenuItem(bidSmelter); //  = 477;
 		static BuildMenuItem bmWindmill = CreateBuildMenuItem(bidWindmill); //  = 463;
 
+		static BuildMenuItem bmBarracks = CreateBuildMenuItem(bidBarracks); //  = 445;
+		static BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingground); //  = 483;
+		static BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidMage_tower); //  = 500;
+		static BuildMenuItem bmStable = CreateBuildMenuItem(bidStable); //  = 466;
+
+		static BuildMenuItem bmAcademy = CreateBuildMenuItem(bidAcademy); //  = 482;
+		static BuildMenuItem bmBlacksmith = CreateBuildMenuItem(bidBlacksmith); //  = 502;
+		static BuildMenuItem bmShipyard = CreateBuildMenuItem(bidShipyard); //  = 491;
+		static BuildMenuItem bmCastle = CreateBuildMenuItem(bidCastle); //  = 467;
+
 
 		static BuildMenuItem bmHideaway = CreateBuildMenuItem(bidHideaway); //  = 479;
 		static BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidCityguardhouse); //  = 504;
+		static BuildMenuItem bmCottage = CreateBuildMenuItem(bidCottage); //  = 446;
+		static BuildMenuItem bmStorehouse = CreateBuildMenuItem(bidStorehouse); //  = 464;
+		static BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
+		static BuildMenuItem bmPort = CreateBuildMenuItem( bidPort); //  = 488;
 		static BuildMenuItem bmTownhouse = CreateBuildMenuItem(bidTownhouse); //  = 481;
 		static BuildMenuItem bmTemple = CreateBuildMenuItem(bidTemple); //  = 890;
 
@@ -231,9 +230,11 @@ namespace COTG.Views
 		{
 			if (menuType == _menuType)
 				return;
-			var buildMenu = instance;
-			var items = new List<BuildMenuItem>();
-
+			var groups = new List<BuildMenuItemGroup>();
+			var commands = new BuildMenuItemGroup() { title = "Command" };
+			var items = new BuildMenuItemGroup() { title = "Build" };
+			groups.Add(items);
+			groups.Add(commands);
 			//if ((menuType == MenuType.quickBuild) != (_menuType == MenuType.quickBuild))
 			//{
 			//	if (_menuType == MenuType.quickBuild)
@@ -254,71 +255,70 @@ namespace COTG.Views
 			switch (menuType)
 			{
 				case MenuType.quickBuild:
-					items.Add(amSelect);
-					items.Add(amMove);
-					items.Add(amDemo);
-					items.Add(amLayout);
+					commands.items.Add(amDemo);
+					commands.items.Add(amSelect);
+					commands.items.Add(amLayout);
+					commands.items.Add(amMove);
 
 					foreach (var i in allBuildings)
 					{
-						items.Add(i);
+						items.items.Add(i);
 					}
 
 					break;
 				case MenuType.buliding:
-					items.Add(amMove);
-					items.Add(amDemo);
-					items.Add(amLayout);
+
+					commands.items.Add(amDemo);
+					commands.items.Add(amDowngrade);
+					commands.items.Add(amLayout);
 					if(postQueueBuildings[bspot].bl == 0 )
-						items.Add(amBuild);
+						commands.items.Add(amBuild);
 					else
-						items.Add(amUpgrade);
-					items.Add(amDowngrade);
-		
+						commands.items.Add(amUpgrade);
+					commands.items.Add(amMove);
+
 					break;
 				case MenuType.townhall:
-					items.Add(amMove);
-					items.Add(amAbandon);
-					items.Add(amLayout);
-					items.Add(amUpgrade);
-					items.Add(amDowngrade);
-					items.Add(amFlipLayoutH);
-					items.Add(amFlipLayoutV);
+					commands.items.Add(amMove);
+					commands.items.Add(amAbandon);
+					commands.items.Add(amLayout);
+					commands.items.Add(amUpgrade);
+					commands.items.Add(amDowngrade);
+					commands.items.Add(amFlipLayoutH);
+					commands.items.Add(amFlipLayoutV);
 				
 					break;
 				case MenuType.empty:
 
-					items.Add(amLayout);
-					items.Add(amNone);
-					items.Add(amNone);
-					items.Add(amNone);
+					commands.items.Add(amLayout);
+					
 
 					// restrict by level?
 					foreach (var i in allBuildings)
 					{
-						items.Add(i);
+						items.items.Add(i);
 					}
 
 					break;
 
 				case MenuType.tower:
-					items.Add(bmSentinelPost);
-					items.Add(bmRangerPost);
-					items.Add(bmTriariPost);
-					items.Add(bmPriestessPost);
-					items.Add(bmBallistaPost);
-					items.Add(bmEquineBarricade);
-					items.Add(bmRuneBarricade);
-					items.Add(bmVeiledBarricade);
+					items.items.Add(bmSentinelPost);
+					items.items.Add(bmRangerPost);
+					items.items.Add(bmTriariPost);
+					items.items.Add(bmPriestessPost);
+					items.items.Add(bmBallistaPost);
+					items.items.Add(bmEquineBarricade);
+					items.items.Add(bmRuneBarricade);
+					items.items.Add(bmVeiledBarricade);
 					break;
 
 				case MenuType.shore:
-					items.Add(bmPort);
-					items.Add(bmShipyard);
+					items.items.Add(bmPort);
+					items.items.Add(bmShipyard);
 					break;
 
 				case MenuType.res:
-					items.Add(amDemo);
+					commands.items.Add(amDemo);
 				//	for (int i = 0; i < 7; ++i)
 				//		Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
 
@@ -327,7 +327,7 @@ namespace COTG.Views
 
 			}
 
-			
+
 			//foreach(var bi in items)
 			//{
 			//	if( bi.isBuilding)
@@ -346,10 +346,9 @@ namespace COTG.Views
 
 			//	}
 
-				
-			//}
-			instance.gridView.ItemsSource = items;
 
+			//}
+			instance.cvsGroups.Source = groups;
 		}
 
 		public static Flyout buildMenu;
@@ -357,9 +356,15 @@ namespace COTG.Views
 		public static CityBuild Initialize()
 		{
 			instance = new CityBuild();
-			buildMenu = new Flyout() { AllowFocusOnInteraction = true, Content = instance };
+			buildMenu = new Flyout() { LightDismissOverlayMode=LightDismissOverlayMode.Auto,ShowMode=FlyoutShowMode.Standard,AreOpenCloseAnimationsEnabled=true,
+				AllowFocusOnInteraction = true, Content = instance };
 
-//			{
+			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(FlyoutPresenter) };
+			s.Setters.Add(new Setter(MinHeightProperty, "300"));
+			s.Setters.Add(new Setter(MinWidthProperty, "300"));
+			s.Setters.Add(new Setter(MaxWidthProperty, "600"));
+			buildMenu.FlyoutPresenterStyle = s;
+			//			{
 
 			//	itemQB = new RadialMenuItem() { Header = "QuickBuild" };
 
@@ -389,7 +394,7 @@ namespace COTG.Views
 			//		{
 			//			await Task.Delay(450);
 			//			App.DispatchOnUIThreadSneaky( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
-					
+
 			//			menuOpen = false;
 			//		}
 			//		else
@@ -682,6 +687,11 @@ namespace COTG.Views
 		}
 		static async Task<bool> UpgradeTownHallDialogue(int toLevel)
 		{
+			toLevel = toLevel.Min(10);
+			var currentLevel = postQueueBuildings[bspotTownHall].bl;
+			if (currentLevel >= toLevel)
+				return true;
+
 			var dialog = new ContentDialog()
 			{
 				Title = "Upgrade TownHall?",
@@ -692,7 +702,7 @@ namespace COTG.Views
 			var a = await dialog.ShowAsync2().ConfigureAwait(true);
 			if (a == ContentDialogResult.Primary)
 			{
-				var currentLevel = postQueueBuildings[bspotTownHall].bl;
+				
 				Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
 				await Task.Delay(300).ConfigureAwait(true);
 				return true;
@@ -1007,7 +1017,7 @@ namespace COTG.Views
 			//	quickBuildId = 0;
 			//}
 		}
-
+	
 		public static async Task PerformAction(Action action, (int x, int y) cc, int _quickBuildId, bool dryRun)
 		{
 		
@@ -1029,6 +1039,7 @@ namespace COTG.Views
 						}
 						else
 						{
+
 							var desBid = build.BidFromOverlay(bspot);
 							var desName = BuildingDef.all[desBid].Bn;
 							var curBid = b.def.bid;
@@ -1071,14 +1082,22 @@ namespace COTG.Views
 							}
 							var counts = CountBuildings();
 
-							// case 1:  nothing here, add building
-							if (b.id == 0)
+							// case 1:  nothing here, or res. if res, demo first, then Add building
+							if (b.id == 0 || b.isRes)
 							{
 								
-								// see if we can re-use one
+								// Do we want a building here?
 								if (desBid != 0)
 								{
-									if (takeScore > 0)
+									if (b.isRes)
+									{
+										Status($"Destorying {b.def.Bn} to make way for {desName}", dryRun);
+										Demolish(cc, dryRun);
+										if (!dryRun)
+											await Task.Delay(200).ConfigureAwait(true);
+
+									}
+									else if (takeScore > 0)
 									{
 										Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 										if (!dryRun)
@@ -1094,7 +1113,7 @@ namespace COTG.Views
 									}
 									if (counts.townHallLevel < b.def.Thl || (counts.count >= counts.max && counts.townHallLevel < 10))
 									{
-										var level = (counts.count/ 10+1).Max(b.def.Thl);
+										var level = (counts.count/ 10+1).Max(b.def.Thl).Min(10);
 										if (dryRun)
 										{
 											Status($"Upgrade town hall to level {level}", dryRun);
@@ -1143,51 +1162,26 @@ namespace COTG.Views
 
 
 									}
+									Build(cc, desBid == 0 ? bidCottage : desBid, dryRun);
 
 								}
 								else
 								{
-									if(counts.count >= counts.max)
+									// Nothing wanted here
+									if (b.isRes)
 									{
-										Status("City is full",dryRun);
-										break;
-									}
-								}
-								{
-									//if (buildQueueFull)
-									//{
-									//	Status("Build Queue full", dryRun);
-									//	break;
-									//}
+										Status($"What a lovely {b.def.Bn}.", dryRun);
 
-									if (desBid == 0)
-										Status($"No building is wanted here, how about a cottage instead?", dryRun);
+									}
 									else
-										Status($"Build a {desName}", dryRun);
-
-									
-									
-									Build(cc, desBid == 0 ? bidCottage : desBid,dryRun);
-									
-								}
-							}
-							else if (b.isRes)
-							{
-								if (desBid != 0)
-								{
-									//if (buildQueueFull)
-									//{
-									//	Status("Build Queue full",dryRun);
-									//	break;
-									//}
-									//else
 									{
-										Status($"Destorying {b.def.Bn} to make way for {desName}",dryRun);
+										// nothing here
+										if (counts.count < counts.max ) // can we put a cabin here?
+										{
+											Status($"No building is wanted here, how about a cottage instead?", dryRun);
+											Build(cc, bidCottage, dryRun);
+										}
 									}
-									Demolish(cc,dryRun);
-									
-									// Test!
-									//JSClient.view.InvokeScriptAsync("buildop", new[] { (desBid == 0 ? bidCottage.ToString() : desBid.ToString()), bspot.ToString(), "0" });
 								}
 							}
 							else
@@ -1480,7 +1474,7 @@ namespace COTG.Views
 					//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 					//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
 
-					buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement= FlyoutPlacementMode.Bottom });
+					buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement= FlyoutPlacementMode.Top });
 
 
 				}
@@ -1584,8 +1578,33 @@ namespace COTG.Views
 			//		buildMenu.IsOpen = false;
 
 		}
+		//public static BuildPhase GetBuildPhase()
+		//{
+		//	var buildings = postQueueBuildings;
+			
+		//	foreach (var b in buildings )
+		//	{
+		//		// any mil buildings full?
+		//		if(b.isMilitary)
+		//		{
+
+		//		}
+		//	}
+		//}
+	}
+	public enum BuildPhase
+	{
+		cabins,
+		buildings,
+		teardown,
 	}
 
+	public class BuildMenuItemGroup
+	{
+		public string title { get; set; }
+		public List<BuildMenuItem> items { get; set; } = new();
+	}
+	
 	public class BuildMenuItem 
 	{
 		public int bid;
@@ -1596,7 +1615,7 @@ namespace COTG.Views
 		public string header;
 		public Windows.UI.Color textColor;
 		public CityBuild.Action action = Action.invalid;
-
+		public string accessKey { get; set; }
 		public const int width = 64;
 		public const int height = 64;
 
@@ -1615,8 +1634,13 @@ namespace COTG.Views
 				var def = BuildingDef.all[_bid];
 				header = def.Bn;
 				toolTip = def.Ds;
-				brush= BuildingBrush(bid, (float)width / 128.0f); 
+				brush= BuildingBrush(bid, (float)width / 128.0f);
 			//	Command = BuildMenuItemCommand.instance;
+				var match = shortKeyRegEx.Match(toolTip);
+				if(match.Success && match.Groups.Count == 2)
+				{
+					accessKey = match.Groups[1].Value;
+				}
 			}
 		}
 		public BuildMenuItem(string name, Action action, string icon, string toolTip)

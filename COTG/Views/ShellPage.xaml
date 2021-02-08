@@ -56,7 +56,7 @@
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content>
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged"  Margin="4"
+					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
 						<x:String>Default</x:String>
 						<x:String>Visual</x:String>

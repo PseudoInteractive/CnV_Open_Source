@@ -152,6 +152,11 @@
 						IsOn="{x:Bind views:SettingsPage.cityListWarship, Mode=TwoWay}"
 						Margin="4"
 						MinWidth="60" />
+					<ToggleSwitch Header="Stingers"
+						IsOn="{x:Bind views:SettingsPage.cityListStingers, Mode=TwoWay}"
+						
+						Margin="4"
+						MinWidth="60" />
 				</wct:WrapPanel>
 			</StackPanel>
 

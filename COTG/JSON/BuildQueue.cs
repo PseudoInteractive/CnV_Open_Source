@@ -86,7 +86,7 @@ namespace COTG.JSON
 			if (cid == City.build)
 				City.buildQueue.Add(this);
 			return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			CityView.BuildingsOrQueueChanged();
+			
 		}
 		public void ApplyOnUIThread(int cid)
 		{
@@ -227,7 +227,7 @@ namespace COTG.JSON
 								}
 								// is there a building in the way?
 								// wait for the demo
-								if(!city.buildings[i.bspot].isEmpty)
+								if((!city.buildings[i.bspot].isEmpty) && i.bspot != City.bspotWall)
 								{
 									break;
 								}
@@ -252,6 +252,7 @@ namespace COTG.JSON
 							var _i = i;
 							await ops[_i].Apply(cid);
 						}
+						CityView.BuildingsOrQueueChanged();
 						SaveNeeded();
 					}
 

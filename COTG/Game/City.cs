@@ -482,7 +482,7 @@ namespace COTG.Game
 
 							if ((put == 0) && (bid == 0))
 							{
-								buildings[put] = new Building() { id = BuildingDef.BidToId(bidWall), bl = 0 };
+								buildings[put] = new Building() { id = BuildingDef.BidToId(bidWall), bl = (byte)bl };
 							}
 							else
 							{
@@ -1222,8 +1222,9 @@ namespace COTG.Game
 		public static GroupDef gdShipper = new GroupDef("Shipper", new[]{"shipping","shipper"} );
 		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });
 		public static GroupDef gdGalley = new GroupDef("Galleys", new[] { "galley" });
+		public static GroupDef gdStinger = new GroupDef("Stingers", new[] { "stinger" });
 		public static GroupDef gdOffense = new GroupDef("Offense", new[] { "vanq", "sorc", "horse","druid", "scorp","warship" });
-		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt","r/t", "vt","v/t", "vrt","v/r/t", "ranger","triari","priest","prae","arb","ballista" });
+		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt","r/t", "vt","v/t", "vrt","v/r/t", "ranger","triari","priest","prae","arb","ballista","stinger" });
 
 //		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
 //        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };

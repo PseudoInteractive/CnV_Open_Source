@@ -23,7 +23,8 @@ namespace COTG.Game
 		Galley = 1 << Enum.ttGalley,
 		Warship = 1 << Enum.ttWarship,
 		Navy = 1 << 20,
-		Ship= 1 << 21,
+		Shipper= 1 << 21,
+		Shipping = 1 << 21,
 		Hub = 1 << 22,
 	}
 	public struct TagInfo

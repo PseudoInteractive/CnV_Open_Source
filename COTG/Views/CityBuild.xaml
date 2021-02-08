@@ -7,11 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	
 	mc:Ignorable="d">
-
-	<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto"  >
+	<UserControl.Resources>
+		<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" 
+                              ItemsPath="items"/>
+	</UserControl.Resources>
+	<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto" BorderThickness="1" MaxWidth="840" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" >
+		
+		
 		<GridView.ItemTemplate>
 			<DataTemplate x:DataType="views:BuildMenuItem">
-				<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}">
+				<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
 					<Canvas Width="64" Height="64" Background="{x:Bind brush}" />
 					<TextBlock Text="{x:Bind header}"  Style="{StaticResource CenterAlign}" FontSize="10" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
 				</StackPanel>
@@ -19,9 +25,20 @@
 		</GridView.ItemTemplate>
 		<GridView.ItemsPanel>
 			<ItemsPanelTemplate>
-				<ItemsWrapGrid MaximumRowsOrColumns="4"
+				<ItemsWrapGrid MaximumRowsOrColumns="8" AreStickyGroupHeadersEnabled="True" 
                               Orientation="Horizontal" />
 			</ItemsPanelTemplate>
 		</GridView.ItemsPanel>
+		<GridView.GroupStyle>
+			<GroupStyle HidesIfEmpty="True">
+				<GroupStyle.HeaderTemplate>
+					<DataTemplate x:DataType="views:BuildMenuItemGroup" >
+						<Grid BorderThickness="1" >
+							<TextBlock Text="{x:Bind title}" />
+						</Grid>
+					</DataTemplate>
+				</GroupStyle.HeaderTemplate>
+			</GroupStyle>
+		</GridView.GroupStyle>
 	</GridView>
 </UserControl>

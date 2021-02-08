@@ -8,8 +8,10 @@
     xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
     >
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
-	
-    <x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
+	<x:Double x:Key="FlyoutMaxWidth">1920</x:Double>
+	<x:Double x:Key="GridViewMaxWidth">1920</x:Double>
+
+	<x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">1024</x:Double>
 	<Style TargetType="Page">

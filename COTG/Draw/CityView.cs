@@ -223,7 +223,7 @@ namespace COTG.Draw
 								fontA = t.SCurve(0, 1);
 
 							}
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
+						//	DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
 							if (blendOp > 0)
 							{
 
@@ -240,7 +240,7 @@ namespace COTG.Draw
 								}
 							}
 						}
-						else
+					//	else
 						{
 							// not changing
 							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity);
@@ -338,7 +338,8 @@ namespace COTG.Draw
 								blendw0 = t.SCurve();
 							}
 						}
-
+						blendw0 = 1;
+						blendw1 = 1;
 						 iAlpha0 = (int)(blendw0 * alpha * 255.0f);
 						 iAlpha1 = (int)(blendw1 * alpha * 255.0f);
 

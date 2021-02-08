@@ -539,7 +539,7 @@ namespace COTG
 						var asm = typeof(JSClient).Assembly;
 						var js = "const cityAtlas = " +
 						  (SettingsPage.IsThemeWinter() ?
-						  		"'ms-appx-web:///web/images/city128/building_set5.png'\n" :
+						  		"'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
 							   "'/images/city128/building_set5.png'\n") +
 
 								 GetJsString("funky")

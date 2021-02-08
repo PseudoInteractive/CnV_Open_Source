@@ -248,6 +248,16 @@ namespace COTG.JSON
 				split[22] = "20000";
 				split[21] = "2000";
 			}
+			if (rem.Contains("warship"))
+			{
+				result += "\nSet recruit Warships";
+				split[25] = "900";
+			}
+			if (rem.Contains("stinger"))
+			{
+				result += "\nSet recruit Stinger";
+				split[24] = "3600";
+			}
 			return result;
         }
 

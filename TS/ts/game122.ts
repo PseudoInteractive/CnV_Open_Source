@@ -17903,6 +17903,7 @@ function outer() {
 				else if (M0Z == (6)) $(__s[a2p * 1])
 					.text(__s[6871]);
 				else if (M0Z == 0) {
+					forceFetchAlliance=true;
 					$("#withAlliance")
 						.show();
 					$("#withoutAlliance")
@@ -34301,8 +34302,8 @@ bqInFlight=0;
 				}
 				$(__s[2461])
 					.html(M1v);
-				$(__s[6085])
-					.tooltipster();
+				//$(__s[6085])
+				//	.tooltipster();
 			}
 			var G1v = "";
 			if (aldt["oi"])
@@ -56546,6 +56547,8 @@ bqInFlight=0;
 				if (P0Z == 0) {
 					$("#withAlliance")
 						.show();
+					  forceFetchAlliance=true;
+					
 					$("#withoutAlliance")
 						.css("display", "none");
 					$(__s[5173])
@@ -67824,7 +67827,7 @@ bqInFlight=0;
 		 
 
 		const idleTimeout = 60;
-
+		let forceFetchAlliance=false;
 		function Z1F() {
 			if (M4F == 0) try {
 				if ((idleMinutes <= idleTimeout || stayAlive) && w8 == 0) {
@@ -67838,10 +67841,12 @@ bqInFlight=0;
 						//  console.log("!!!!!" + E51);
 					}
 					var allyiance = 0;
-					if ($("#withAlliance").css("display") != "none" ||
-						$("#withoutAlliance").css("display") != "none" ||
+					if (forceFetchAlliance ||
 						G4F == 0 ||
-						hasSentAldt === false) allyiance = 1;
+						hasSentAldt === false){
+	  allyiance = 1;
+   forceFetchAlliance=false;
+   }
 					N6();
 					let a51 = $.post("/includes/poll2.php", { world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php
 					a51.fail(function () {

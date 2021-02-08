@@ -117,6 +117,7 @@ namespace COTG.Views
 		public static bool cityListDefense = true;
 		public static bool cityListOffense = true;
 		public static bool cityListGalleys = true;
+		public static bool cityListStingers = true;
 
 		int uiLighting
 		{
@@ -512,6 +513,8 @@ namespace COTG.Views
 
 				   if(SettingsPage.cityListGalleys)
 					   global.Add(CityList.gdGalley);
+				   if (SettingsPage.cityListStingers)
+					   global.Add(CityList.gdStinger);
 				   if (SettingsPage.cityListOffense)
 					   perContinent.Add(CityList.gdOffense);
 				   if (SettingsPage.cityListDefense)

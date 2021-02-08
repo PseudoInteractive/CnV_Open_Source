@@ -114,9 +114,9 @@ namespace COTG.JSON
 		public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
 
 		[JsonIgnore]
-		public bool isRes => Bc.Count == 1;
+		public bool isRes => IsRes(bid);
 
-		public static bool IsRes(int id) => id switch { City.bidStone =>true, City.bidIron =>true,City.bidLake=>true,City.bidForest=>true,_=>false };
+		public static bool IsRes(int bid) => bid switch { City.bidStone =>true, City.bidIron =>true,City.bidLake=>true,City.bidForest=>true,_=>false };
 
 		[JsonIgnore]
 		public bool isPost => Trcap!=null;
@@ -128,12 +128,21 @@ namespace COTG.JSON
 		public bool isWall => bid == Game.City.bidWall;
 		[JsonIgnore]
 		public bool isTownHall => bid == Game.City.bidTownHall;
+
+		[JsonIgnore]
+		public bool isCabin => bid == Game.City.bidCottage;
 		// Not persisted
 		[JsonIgnore]
 		public byte id; // packed id
 						// not persisted
 		[JsonIgnore]
 		public int bid; // building id
+
+		[JsonIgnore]
+		public bool isMilitary => Ts.Any(); // building id
+		[JsonIgnore]
+		public bool isBarracks => Tc.Any(); // building id
+
 
 		[JsonIgnore]
 		internal bool isShoreBuilding => bid == City.bidPort || bid == City.bidShipyard;
