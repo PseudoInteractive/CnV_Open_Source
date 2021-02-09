@@ -74,7 +74,7 @@ namespace COTG.Views
 					view = new BuildQueueView() { cid = cid };
 					instance.cities.Add(view);
 				}
-				view.queue.Add(new BuildOpView(item));
+				view.queue.Add(new BuildOpView(item,cid));
 			});
 	
 		}
@@ -143,7 +143,7 @@ namespace COTG.Views
 				instance.cities.Add(view);
 				foreach(var q in city.queue)
 				{
-					view.queue.Add( new BuildOpView(q));
+					view.queue.Add( new BuildOpView(q,city.cid));
 				}
 
 			}
@@ -164,6 +164,26 @@ namespace COTG.Views
 
 		}
 
+		private void ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var i = (e.ClickedItem as BuildOpView);
+			BuildQueue.CancelBuildOp(i.cid, i.item);
+
+
+		}
+
+		private void ClearQueue(object sender, RoutedEventArgs e)
+		{
+			CityBuild.ClearQueue();
+
+		}
+
+		private void CityClick(object sender, ItemClickEventArgs e)
+		{
+			var i = e.ClickedItem as ICollectionViewGroup;
+			var group = i.Group as BuildQueueView;
+			JSClient.ChangeCity(group.cid,false);
+		}
 	}
 
 
@@ -179,12 +199,14 @@ namespace COTG.Views
 	{
 		public const int size = 32;
 		public ImageBrush brush { get; set; }
+		public int cid; // owner
 		public readonly BuildQueueItem item;
 		public string building => BuildingDef.all[item.bid].Bn;
 		public string op => item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
 
-		public BuildOpView(BuildQueueItem _item)
+		public BuildOpView(BuildQueueItem _item, int _cid)
 		{
+			cid = _cid;
 			item = _item;
 			brush = CityBuild.BuildingBrush(item.bid, (float)size / 128.0f);
 		}

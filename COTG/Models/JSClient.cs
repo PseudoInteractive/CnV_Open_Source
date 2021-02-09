@@ -1004,6 +1004,11 @@ namespace COTG
 					bonusesUpdated = true;
 
 				}
+				if(jse.TryGetProperty("mvb", out var mvb))
+				{
+					Player.moveSlots = mvb.GetAsInt();
+
+				}
 				if (jse.TryGetProperty("fa", out var fa))
 				{
 					faith.evara = fa.GetAsByte("1");
@@ -1547,6 +1552,7 @@ namespace COTG
 							   {
 								   var msg = jsp.Value.GetString();
 								   Note.Show(msg);
+								 
 								   break;
 							   }
 						   case "sub":

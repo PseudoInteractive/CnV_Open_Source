@@ -37,9 +37,9 @@ sent or received, and those values are bound in the DataTemplate.-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" Tag="{Binding ElementName=message}" Tapped="TextBlock_Tapped" />
+                    <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" Tag="{Binding ElementName=message}" Tapped="TextBlock_Tapped"  />
                     <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="12" Margin="0,0,0,0"  />
-                    <tk:MarkdownTextBlock Grid.Column="2" x:Name="message" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0" RightTapped="MarkdownTextBlock_RightTapped"   Height="Auto" 
+                    <tk:MarkdownTextBlock Grid.Column="2" x:Name="message" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0"    Height="Auto" 
                                               InlineCodeForeground="Firebrick" InlineCodeBackground="Black" 
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked" />
                     </Grid>
@@ -49,14 +49,18 @@ sent or received, and those values are bound in the DataTemplate.-->
         <Grid Grid.Row="1" Width="Auto" TabFocusNavigation="Cycle"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="translateButton" Click="Button_Click" Style="{ThemeResource ButtonRevealStyle}" >
+            <Button x:Name="translateButton" Click="Button_Click" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="Click to add a translation of your outgoing text to another language" >
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF2B7;"/>
             </Button>
-            <TextBox x:Name="input" x:FieldModifier="public" Grid.Column="1" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver" PointerExited="inputPointerExited" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap"  />
+			<Button Grid.Column="1" Click="Copy_Click" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="This will copy selected messages to the clipboard, tip - select a message above and press control-A to select all" >
+				<SymbolIcon Symbol="Copy"/>
+			</Button>
+			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap"  />
         </Grid>
-                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" MinHeight="22" IsMultiSelectCheckBoxEnabled="False" IsTabStop="True" AllowFocusOnInteraction="True" TabFocusNavigation="Cycle"
+                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" MinHeight="20" SelectionMode="Extended" IsMultiSelectCheckBoxEnabled="False" IsTabStop="True" AllowFocusOnInteraction="True" TabFocusNavigation="Cycle"
                    ItemsSource="{x:Bind items,Mode=OneWay}" >
             
                      

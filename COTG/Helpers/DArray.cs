@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace COTG
 {
-	public class DArray<T> : IEnumerable<T>  where T : struct 
+	public class DArray<T> :  IDisposable, IEnumerable<T>  where T : struct 
 	{
 		public T[] v;
 		public int count;
@@ -39,6 +39,12 @@ namespace COTG
 		{
 			return new Enumerator(this);
 		}
+
+		public void Dispose()
+		{
+			
+		}
+
 		public Enumerator iterate => new Enumerator(this);
 		//
 		//  A snapshot of that array memory location and count is taken at iterator start

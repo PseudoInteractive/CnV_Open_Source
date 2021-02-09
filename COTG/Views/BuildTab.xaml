@@ -17,7 +17,7 @@
 		<CollectionViewSource x:Name="cvsGroups" Source="{x:Bind cities}" IsSourceGrouped="True" ItemsPath="queue" x:FieldModifier="public"/>
 
 		<DataTemplate x:Key="ZoomedInTemplate" x:DataType="views:BuildOpView">
-			<StackPanel Orientation="Horizontal" Margin="4">
+			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
 				<TextBlock Text="{x:Bind op}" />
 			</StackPanel>
@@ -31,7 +31,7 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-			<StackPanel Orientation="Horizontal" Margin="4">
+			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Image Source="{x:Bind ((views:BuildQueueView)Group).icon}"  Width="64" Height="64" />
 				<TextBlock Text="{x:Bind ((views:BuildQueueView)Group).title}"  />
 			</StackPanel>
@@ -39,9 +39,11 @@
 	</views:UserTab.Resources>
 
 	<StackPanel>
-		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" VerticalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Auto"   >
+		<Button Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
+		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" MaxHeight="1080"   >
 			<SemanticZoom.ZoomedInView>
 				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" GotFocus="List_GotFocus"
+						   IsItemClickEnabled="True" ItemClick="ItemClick"
                         ItemTemplate="{StaticResource ZoomedInTemplate}">
 					<GridView.GroupStyle>
 						<GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}" />
@@ -50,7 +52,8 @@
 			</SemanticZoom.ZoomedInView>
 
 			<SemanticZoom.ZoomedOutView>
-				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}"  ItemTemplate="{StaticResource ZoomedOutTemplate}" GotFocus="List_GotFocus" />
+				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" MaxHeight="1000" MinHeight="500"  ItemTemplate="{StaticResource ZoomedOutTemplate}" 
+						   IsItemClickEnabled="True" ItemClick="CityClick" GotFocus="List_GotFocus" />
 			</SemanticZoom.ZoomedOutView>
 		</SemanticZoom>
 

@@ -10693,6 +10693,7 @@ var gspotfunct = {
 var setcitybind;
 let wantFa = true;
 let wantRs = true;
+let lastSendMoveSlots;
 function truncateToken() {
     ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
 }
@@ -10719,6 +10720,11 @@ function ppdtChanged(__ppdt) {
         wrapper.ppdt['rs'] = __ppdt['rs'];
         wantUpdate = wantUpdate || wantRs;
         wantRs = false;
+    }
+    if (__ppdt.hasOwnProperty("mvb") && (__ppdt.mvb.l != lastSendMoveSlots)) {
+        wrapper.ppdt['mvb'] = __ppdt.mvb.l;
+        lastSendMoveSlots = __ppdt.mvb.l;
+        wantUpdate = true;
     }
     if (!wantUpdate)
         return;
@@ -20455,6 +20461,10 @@ function outer() {
                 .append(a6n);
             i6F(E6n, k2n);
             const wrapper = { error: e2n };
+            window['external']['notify'](JSON.stringify(wrapper));
+        }
+        function __log(message) {
+            const wrapper = { error: "cotg_wtf: " + message };
             window['external']['notify'](JSON.stringify(wrapper));
         }
         var i9 = __s['6163' | 3];
@@ -41673,6 +41683,14 @@ function outer() {
                     E6k.y6();
                     --bqInFlight;
                     ProcessBuuPoll();
+                    if (e5w == 0) {
+                    }
+                    else if (e5w == 1)
+                        Y6(__s[6910]);
+                    else if (e5w == 2)
+                        Y6(__s[4507]);
+                    else
+                        __log("Upgrade " + e5w);
                 });
             }
         }
@@ -42832,6 +42850,9 @@ function outer() {
                     UpdateBuildingCounts();
                     buildingInfo(bidCASTLE, 1, 72000000, +x7t, __bspot);
                     sendBuildingData();
+                }
+                else {
+                    __log("Build Castle Failed");
                 }
             });
         }
@@ -50614,6 +50635,9 @@ function outer() {
                                                     ProcessBuuPoll();
                                                 }
                                             }
+                                            else {
+                                                __log("build " + s7w);
+                                            }
                                         });
                                     }
                                 }
@@ -50651,6 +50675,9 @@ function outer() {
                                                     ProcessBuuPoll();
                                                 }
                                             }
+                                            else {
+                                                __log("downgrade " + s7w);
+                                            }
                                         });
                                     }
                                 }
@@ -50683,6 +50710,9 @@ function outer() {
                                                 redrawCity();
                                                 ProcessBuuPoll();
                                             }
+                                        }
+                                        else {
+                                            __log("demo " + s7w);
                                         }
                                     });
                                 }

@@ -27,13 +27,13 @@ using System.Text.Json;
 using Windows.UI;
 using COTG.Services;
 using System.Threading.Tasks;
+using System.Text;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
     public sealed class ChatEntry
     {
-
         public string player { get; set; }
         public byte crown { get; set; }
         public byte type { get; internal set; }
@@ -155,7 +155,7 @@ namespace COTG.Views
         public static void L(string s)
         {
 
-            if (debug == null)
+            if (debug == null || !debug.isActive)
                 return;
             //              await _logSemaphore.WaitAsync();
             // try
@@ -174,10 +174,6 @@ namespace COTG.Views
                 {
                     Log(e);
                 }
-
-
-
-
             });
 
             //finally
@@ -201,8 +197,6 @@ namespace COTG.Views
         {
             Note.MarkDownLinkClicked(sender, e);
         }
-
-
 
         private void HyperlinkButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -238,6 +232,7 @@ namespace COTG.Views
                 input.Text = s + text;
             }
         }
+		
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (Tag is string s)
@@ -439,9 +434,6 @@ namespace COTG.Views
             }
         }
 
-
-
-
         //private void input_PointerEntered(object sender, PointerRoutedEventArgs e)
         //{
 
@@ -511,7 +503,6 @@ namespace COTG.Views
         //{
 
         //}
-
 
         //private async void input_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         //{
@@ -609,14 +600,24 @@ namespace COTG.Views
 			input.Focus(FocusState.Programmatic);
         }
 
-		private void inputPointerExited(object sender, PointerRoutedEventArgs e)
-		{
+		
 
+		private void Copy_Click(object sender, RoutedEventArgs e)
+		{
+			var sb = new StringBuilder();
+			foreach(var _i in listView.SelectedItems)
+			{
+				var i = _i as ChatEntry;
+				sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
+
+			}
+			App.CopyTextToClipboard(sb.ToString());
+			Note.Show("Copied to clipboard");
 		}
 	}
+
 	class HyperlinkColorConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var ce = value as ChatEntry;

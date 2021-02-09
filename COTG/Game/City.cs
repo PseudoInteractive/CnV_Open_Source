@@ -546,16 +546,16 @@ namespace COTG.Game
                 }
                 reinforcementsIn = l.ToArray();
             }
-            if (jse.TryGetProperty("trin", out var trin))
-            {
-                Log(trin);
+            //if (jse.TryGetProperty("trin", out var trin))
+            //{
+            //    Log(trin);
 
-            }
-            if (jse.TryGetProperty("triin", out var triin))
-            {
-                Log(triin);
+            //}
+            //if (jse.TryGetProperty("triin", out var triin))
+            //{
+            ////    Log(triin);
 
-            }
+            //}
 
 
 			lastUpdateTick = Environment.TickCount;
@@ -1072,6 +1072,27 @@ namespace COTG.Game
 				}
 			return (townHallLevel*10, count, townHallLevel);
 		}
+
+		public Building GetBuildingPostQueue(int bspot, in DArray<BuildQueueItem> q)
+		{
+			var rv = buildings[bspot];
+			if (q != null)
+			{
+				foreach (var i in q)
+				{
+					if (i.bspot == bspot)
+					{
+						rv.bl = i.elvl;
+						if (i.elvl == 0)
+							rv.id = 0;
+						else
+							rv.id = BuildingDef.BidToId(i.bid);
+					}
+				}
+			}
+			return rv;
+		}
+
 
 		public (int max, int count) CountBuildingWithoutQueue()
 		{

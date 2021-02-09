@@ -1,4 +1,8 @@
 namespace jsonT {
+
+	
+
+
 	export interface Bq {
 		bid: number ;
 		btype: number;

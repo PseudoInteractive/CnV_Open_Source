@@ -23,7 +23,7 @@ namespace COTG.Game
 		public static string myName;
 		public static int myTitle;
         public static int viewHover; // in the view menu
-
+		public static int moveSlots;
 
         public static bool isAvatar => myName=="Avatar";
 		public static bool isTest => myName == "KittyKat";

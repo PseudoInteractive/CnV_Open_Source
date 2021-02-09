@@ -9479,10 +9479,11 @@ var gspotfunct = {
 var setcitybind;
 let wantFa = true;
 let wantRs = true;
+let lastSendMoveSlots;
 
 function truncateToken()
 {
-			 ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
+	 ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
 }
 
 function ppdtChanged(__ppdt) {
@@ -9512,6 +9513,11 @@ function ppdtChanged(__ppdt) {
 		wantUpdate = wantUpdate || wantRs;
 		wantRs = false;
 	}
+	if (__ppdt.hasOwnProperty("mvb") && (__ppdt.mvb.l!=lastSendMoveSlots) ) {
+		wrapper.ppdt['mvb'] = __ppdt.mvb.l;
+		lastSendMoveSlots= __ppdt.mvb.l;
+		wantUpdate = true;
+   }
  
 
 	if (!wantUpdate)
@@ -22958,6 +22964,12 @@ bqInFlight=0;
 			window['external']['notify'](JSON.stringify(wrapper));
 
 		}
+		function __log(message:string) {
+			const wrapper = { error: "cotg_wtf: " + message }
+			window['external']['notify'](JSON.stringify(wrapper));
+
+		}
+
 		var i9 = __s['6163' | 3];
 
 		function t7V(b3D) {
@@ -44276,6 +44288,12 @@ bqInFlight=0;
 					E6k.y6();
 					--bqInFlight;
 					ProcessBuuPoll()
+	 				if (e5w == 0) {
+						// success
+					} else if (e5w == 1) Y6(__s[6910]);
+					else if (e5w == 2) Y6(__s[4507]);
+					else __log("Upgrade " +e5w );
+
 				});
 			}
 		}
@@ -45662,6 +45680,12 @@ bqInFlight=0;
 					buildingInfo(bidCASTLE,1, 72000000, +x7t, __bspot);
 				  sendBuildingData();
 				}
+				else
+				{
+					__log("Build Castle Failed");
+				}
+
+
 			});
 
 		}
@@ -53940,6 +53964,11 @@ bqInFlight=0;
 			}
 		}
 
+  export interface buildops {
+
+		cid: [ number[] ];
+	}
+
   // The only accepted options are 0, 2, 3
   	function buildEx(bId:number, bXY:number, startLevel:number,endLevel:number, __cid : number ) {
 			lastSentBq = -1;
@@ -54100,9 +54129,9 @@ bqInFlight=0;
 									Number(v5w);
 							
 							var o5w = 1;
-							// Todo:  Castle, temple and Walls
+							
 							if (bId == +TPL) 
-								b5V(i5w, t5w, bXY, 0, 1, L5w, X5w, bId);
+								b5V(i5w, t5w, bXY, 0, 1, L5w, X5w, bId); // temple
 							else {
 								if (op == (0)) // build
 									{
@@ -54143,6 +54172,7 @@ bqInFlight=0;
 				
 													}
 												}
+												else { __log("build " + s7w); }
 											});
 										}
 									}
@@ -54186,6 +54216,10 @@ bqInFlight=0;
 				
 													}
 												}
+												else
+												{
+														__log("downgrade " + s7w); 
+												}
 										});
 									}
 								}
@@ -54221,6 +54255,9 @@ bqInFlight=0;
 														ProcessBuuPoll();
 				
 													}
+												}else
+												{
+														__log("demo " + s7w); 
 												}
 										
 									});

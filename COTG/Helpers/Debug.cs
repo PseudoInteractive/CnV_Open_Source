@@ -2,6 +2,7 @@
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
 using COTG.Helpers;
+using COTG.Views;
 
 using System;
 using System.Diagnostics;
@@ -85,7 +86,9 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}";
+			Note.Show(msg);
+			System.Diagnostics.Trace.WriteLine(msg);
 			DumpStack(new StackTrace(1, true));
 			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
@@ -99,9 +102,12 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 
-            System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}";
+
+			System.Diagnostics.Debug.WriteLine(str);
 			DumpStack(new StackTrace(1, true));
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
+			//Note.Show(str);
 
 		}
 
@@ -151,8 +157,9 @@ namespace COTG
         {
             if (v)
                 return;
-            var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
-            System.Diagnostics.Trace.WriteLine(str);
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
+			ChatTab.L(str);
+			System.Diagnostics.Trace.WriteLine(str);
 			DumpStack(new StackTrace(1, true));
 			System.Diagnostics.Trace.Assert(v);
         }
@@ -171,24 +178,10 @@ namespace COTG
 #if TRACE
 			DumpStack(new StackTrace(1, true));
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
+			ChatTab.L(str);
 			System.Diagnostics.Trace.WriteLine(str);
 			System.Diagnostics.Trace.Assert(v);
 #endif
 		}
-		public static void Fatal()
-        {
-            DumpStack(new StackTrace(1, true)); 
-            App.DispatchOnUIThread(async () =>
-           {
-               try
-               {
-                   await new MessageDialog("Something is amiss.", "Please Restart").ShowAsync();
-               }
-               finally
-               {
-       //            Application.Current.Exit();
-               }
-           });
-        }
     }
 }

@@ -12,25 +12,11 @@
    
     <ScrollViewer>
         <StackPanel>
-         
-            <Border BorderThickness="1"
-					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}">
-                <TextBlock TextWrapping="WrapWholeWords" Margin="6"
-                           FontSize="16"
-                           TextAlignment="Left"
-                        ><Run Text="Best wishes for 2021" /><LineBreak /></TextBlock>
-            </Border>
-			<Border BorderThickness="1"
-					Margin="6"
-					BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+
+
 			<TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="16"
-                           TextAlignment="Justify"
-                           ><Run Text="You can disable most of the rendering experiments in settings." />
-				<LineBreak/><Run Text="Have a great Year!" />
-				<LineBreak/><LineBreak/><Run Text="     - Avatar"/><LineBreak/>
-			</TextBlock>
+                          ><Run Text="Revised City Buildings Prototype:"/><Run Text=" "/><LineBreak/><Run/><LineBreak/><Run Text="Extended Build Queue:"/><LineBreak/><Run Text="&#x9;Build queues are virtually unlimited in length.  The first 16 build commands will be submitted as usual and further commands will be stored and submitted as space becomes available.  This allows you to (for example) lay out your cabins in a single pass without waiting.  The queued commands will continue to be processed when you switch cities, and when you go offline they will pause.  They will resume when you come back online."/><LineBreak/><Run/><LineBreak/><Run Text="Layout Mode:"/><LineBreak/><Run Text="&#x9;Credit to Greety for the idea."/><LineBreak/><Run Text="&#x9;Set a layout for your city and each click will build the appropriate building for any given spot. "/><LineBreak/><Run/><LineBreak/><Run Text="Fast Clicking:"/><LineBreak/><Run Text="&#x9;Clicking is fast.  There is no longer a need to wait as each building flickers on and off (for reasons yet unknown, and possibly never to be known.).  Typically, it takes half a minute to lay out 39 cabins and a storehouse."/><LineBreak/><Run/><LineBreak/><Run Text="Revised city building is Experimental.  Caution is advised."/><Run Text=" "/><LineBreak/><LineBreak/><Run Text="You can disable most of the rendering experiments in settings."/><Run Text=" "/><LineBreak/><LineBreak/><Run Text="Have a great Year, best wishes for 2021!"/><Run Text=" "/><LineBreak/><LineBreak/><Run Text="     - Avatar"/><LineBreak/></TextBlock>
 
 		</StackPanel>
     </ScrollViewer>

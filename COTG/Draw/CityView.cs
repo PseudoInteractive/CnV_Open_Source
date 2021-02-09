@@ -154,7 +154,7 @@ namespace COTG.Draw
 					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
 					
-					float blendT = (animationT * 0.25f - animationOffsets[id]+0.2f).Frac();
+					float blendT = (animationT * 0.25f - animationOffsets[id]).Frac();
 					if (bid.id==next.id)
 					{
 						if (next.bl != bid.bl)
@@ -171,25 +171,15 @@ namespace COTG.Draw
 								fontA = 1;// - ((blendT-0.25f)*3.75f).Squared();
 								blendOp = t.SCurve();
 							}
-							else if(blendT < 0.375f)
+							else if(blendT < 0.5f)
 							{
-								var t = (blendT - 0.25f) * 8.0f;
+								var t = (blendT - 0.25f) * 4.0f;
 								Assert(t >= 0.0f);
 								Assert(t <= 1.0f);
 								blendOp = 1;
 								// fade out number
 								bl = bid.bl;
 								fontA = t.SCurve(1, 0);
-							}
-							else if (blendT < 0.5f)
-							{
-								var t = (blendT - 0.375f) * 8.0f; // fade in new number
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
-								blendOp = 1;
-								// fade out number
-								bl = next.bl;
-								fontA = t.SCurve(0, 1);
 							}
 							else if( blendT < 0.75f) // fade out hammer
 							{
@@ -201,21 +191,10 @@ namespace COTG.Draw
 								bl = next.bl;
 								fontA = 1;
 							}
-							else if( blendT < 0.875f)
-							{
-								// fade out number
-								var t = (blendT - 0.75f) * 8.0f; // fade in new number
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
-								// fade out number
-								bl = next.bl;
-								fontA = t.SCurve(1,0);
-
-							}
 							else
 							{
 								// fade in number
-								var t = (blendT - 0.875f) * 8.0f; // fade in new number
+								var t = (blendT - 0.75f) * 4.0f; // fade in new number
 																  // fade out number
 								Assert(t >= 0.0f);
 								Assert(t <= 1.0f);
@@ -256,87 +235,47 @@ namespace COTG.Draw
 						if (next.id == 0)
 						{
 							
-							if (blendT < 0.2f)
+							if (blendT < 0.5f)
 							{
-								var t = blendT*5.0f; // demo fades in, half second
+								var t = blendT*2.0f; // demo fades in, half second
 								blendOp = t.SCurve();
 								blendw0 = 1;
 							}
-							else if (blendT < 0.6f)
+							else if (blendT < 0.75f)
 							{
-								var t = (blendT - 0.2f)*2.5f; // building fades in, hammer fades out 1 seconds
+								var t = (blendT - 0.5f)*4f; // building fades in, hammer fades out 1 seconds
 								blendOp = 1;
 								blendw0 = t.SCurve(1,0);
 							}
-							else if (blendT < 0.8f) // building stays, .5 seconds
-							{
-								var t =(blendT - 0.6f)*5f;
-								blendOp =t.SCurve(1,0);
-							}
 							else
 							{
-								var t = (blendT - 0.8f)*5.0f;
+								var t = (blendT - 0.75f)*4.0f;
 							
 								blendw0 = t.SCurve();
-							}
-
-
-						}
-						else if (bid.id == 0)
-						{
-							if (blendT < 0.2f)
-							{
-								var t = blendT*5f; // hammers fades in, half second
-								blendOp = t.SCurve();
-							}
-							else if (blendT <0.6f)
-							{
-								var t = (blendT - .2f)*(1.0f/0.4f); // building fades in, hammer fades out 1 seconds
-								blendOp = t.SCurve(1,0);
-								blendw1 = t.SCurve();
-							}
-							else if (blendT < 0.9f) // building stays, .5 seconds
-							{
-								var t = (blendT - 0.6f)*(1.0f/0.3f);
-								blendw1 = 1;
-							}
-							else
-							{
-								var t = (blendT - 0.9f) * (1.0f / 0.1f); // building fades out, 0.5s
-								blendw1 = t.SCurve(1.0f,0);
 							}
 
 
 						}
 						else
 						{
-							
-							if (blendT < 0.2f)
+							if (blendT < 0.25f)
 							{
-								blendw0 = 1;
-							}
-							else if (blendT < 0.4f)
-							{
-								var t = (blendT - 0.2f)/0.2f;
-								blendw0 = t.SCurve(1f, 0f);
+								var t = blendT*4f; // hammers fades in, half second
 								blendOp = t.SCurve();
 							}
-							else if (blendT < 0.8f)
+							else if (blendT <0.75f)
 							{
-								var t = (blendT - 4.0f)/0.4f;
-								blendOp = t.SCurve(1f, 0f);
+								var t = (blendT - .25f)*(2); // building fades in, hammer fades out 1 seconds
+								blendOp = t.SCurve(1,0);
 								blendw1 = t.SCurve();
-							}
-							else if (blendT < 0.9f)
-							{
-								blendw1 = 1;
 							}
 							else
 							{
-								var t = (blendT - 0.9f)/1.0f;
-								blendw1 = t.SCurve(1f, 0f);
-								blendw0 = t.SCurve();
+								var t = (blendT - 0.75f) * (4); // building fades out, 0.5s
+								blendw1 = t.SCurve(1.0f,0);
 							}
+
+
 						}
 						blendw0 = 1;
 						blendw1 = 1;
@@ -370,7 +309,7 @@ namespace COTG.Draw
 			var city1 = buildCityOrigin + citySpan;
 			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToC(), city1.WToC(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
 
-			if(build.layout!=null)
+			if(build.layout!=null && !CityBuild.isLayout)
 			{
 				try
 				{
