@@ -1202,6 +1202,5 @@ namespace COTG.Views
 			}
 		}
 
-		
 	}
 }

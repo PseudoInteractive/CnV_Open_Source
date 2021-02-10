@@ -44,6 +44,8 @@ namespace COTG.Views
 		public static CityBuild instance;
 		public static bool isPlanner;
 
+		static Dictionary<int, ImageBrush> brushFromAtlasCache = new();
+		static Dictionary<string, ImageBrush> brushFromImageCache = new();
 
 
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
@@ -511,7 +513,10 @@ namespace COTG.Views
 
 			//	quickBuild.ItemsSource = items;
 		}
-
+		/*
+		 * 			<AppBarToggleButton x:Name="planner" Checked="PlannerChecked" Unchecked="PlannerUnchecked"  x:FieldModifier="public" Icon="Orientation" Label="Planner"
+                           ToolTipService.ToolTip="Toggles between normal city building and planner mode (i.e. like LOUOpt.com" />
+		 */
 		public static bool _isPlanner
 		{
 			get => isPlanner;
@@ -887,8 +892,17 @@ namespace COTG.Views
 		{
 			Demolish(selected,false);
 		}
+
+		static int GetHash(string name, int x, int y, float scale)
+		{
+			return HashCode.Combine(name, x, y, scale);
+		}
+
 		public static ImageBrush BrushFromAtlas(string name, int x, int y, float scale)
 		{
+			var hash = GetHash(name, x, y, scale);
+			if (brushFromAtlasCache.TryGetValue(hash, out var rv))
+				return rv;
 
 			var bitmap = ImageHelper.FromImages(name);
 			var brush = new ImageBrush()
@@ -902,10 +916,13 @@ namespace COTG.Views
 			//	rect.Stretch = Stretch.None;
 			//			rect.Width = width;
 			//			rect.Height = height;
+			brushFromAtlasCache.Add(hash, brush);
 			return brush;
 		}
 		public static ImageBrush BrushFromImage(string name)
 		{
+			if (brushFromImageCache.TryGetValue(name, out var rv))
+				return rv;
 
 			var bitmap = ImageHelper.FromImages(name);
 			var brush = new ImageBrush()
@@ -916,6 +933,7 @@ namespace COTG.Views
 			//	rect.Stretch = Stretch.None;
 			//			rect.Width = width;
 			//			rect.Height = height;
+			brushFromImageCache.Add(name, rv);
 			return brush;
 		}
 		

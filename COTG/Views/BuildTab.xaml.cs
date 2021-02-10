@@ -199,7 +199,30 @@ namespace COTG.Views
 			if(item!=null)
 			{
 				JSClient.ChangeCity(item.cid, false);
+				return;
 			}
+			var op = e.DestinationItem.Item as BuildOpView;
+			if(op!=null)
+			{
+				JSClient.ChangeCity(op.cid, false);
+				return;
+
+			}
+	
+			item = e.SourceItem.Item as BuildQueueView;
+			if (item != null)
+			{
+				JSClient.ChangeCity(item.cid, false);
+				return;
+			}
+			op = e.SourceItem.Item as BuildOpView;
+			if (op != null)
+			{
+				JSClient.ChangeCity(op.cid, false);
+				return;
+
+			}
+
 		}
 	}
 

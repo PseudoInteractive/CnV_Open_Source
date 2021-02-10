@@ -109,7 +109,7 @@ namespace COTG.Game
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
-		public const int safeBuildQueueLength = 14; // leave space for autobuild
+		public const int safeBuildQueueLength = 12; // leave space for autobuild
 
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{

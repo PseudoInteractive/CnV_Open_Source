@@ -156,6 +156,13 @@ namespace COTG.JSON
 		
 		public static ConcurrentDictionary<int, CityBuildQueue> all = new ConcurrentDictionary<int, CityBuildQueue>();
 
+		void RemoveAt(int id)
+		{
+			BuildTab.RemoveOp(queue[id], cid);
+			queue.RemoveAt(id);
+		}
+	     private static SemaphoreSlim throttle = new SemaphoreSlim(1);
+
 		public async void Process(int initialDelay=0)
 		{
 			if (isRunning)
@@ -179,16 +186,17 @@ namespace COTG.JSON
 			{
 				int delay = 3000;
 				
-				if (queue.count > 0)
+				//if (queue.count > 0)
 				{
-					Trace($"iterate {city.nameAndRemarks} {queue.count}");
+					
 					int cotgQLength = 0;
 					DArray<BuildQueueItem> cotgQ = null;
+					await throttle.WaitAsync();
 
 					try
 					{
 
-					
+
 						if (cid == City.build)
 						{
 							// every two seconds commands will only be queud on changes
@@ -202,15 +210,22 @@ namespace COTG.JSON
 						{
 							delay = 6000;
 							// First try to get it from poll2, then if that fails, try GC 
-
-							var dd = await Post.SendForJson("/includes/poll2.php", $"cid={cid}&ai=0&ss=" + HttpUtility.UrlEncode(JSClient.secSessionId, Encoding.UTF8));  // /includes/poll2.php
-							if (dd.RootElement.TryGetProperty("city", out var jsCity))
+							for (int i = 0; i < 3; ++i)
 							{
-								GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
-							}
+							//	await Post.Send("/overview/mconv.php", $"a={cid}");
+							//	await Post.Send("/overview/bqSt.php", $"cid={cid}");
 
+								var dd = await Post.SendForJson("/includes/poll2.php", $"cid={cid}&ai=0&ss=" + HttpUtility.UrlEncode(JSClient.secSessionId, Encoding.UTF8));  // /includes/poll2.php
+								if (dd.RootElement.TryGetProperty("city", out var jsCity))
+								{
+									GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+								}
+								if (cotgQ != null)
+									break;
+							}
 							if (cotgQ == null)
 							{
+								Trace("Failed to get poll?");
 								await GetCity.Post(cid, (jsCity, city) =>
 								 {
 									 GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
@@ -226,7 +241,7 @@ namespace COTG.JSON
 							var qFirst = true;
 
 							int offset = 0;
-							int put = 0;
+							
 							while(offset<queue.count && commandsToQueue > 0 )
 							{
 								var i = queue.v[offset];
@@ -257,7 +272,7 @@ namespace COTG.JSON
 											{
 
 												// cancel this order
-												queue.RemoveAt(offset);
+												RemoveAt(offset);
 											}
 											else
 											{
@@ -291,7 +306,7 @@ namespace COTG.JSON
 											if (!demoPending)
 											{
 												// cancel this order
-												queue.RemoveAt(offset);
+												RemoveAt(offset);
 
 											}
 											else
@@ -313,7 +328,7 @@ namespace COTG.JSON
 										if (prior.bid != i.bid)
 										{
 											// invalid command, discard it
-											queue.RemoveAt(offset);
+											RemoveAt(offset);
 											continue;
 										}
 										else
@@ -329,7 +344,9 @@ namespace COTG.JSON
 										if (prior.bl > i.slvl)
 										{
 											// invalid command, discard it
-											queue.RemoveAt(offset);
+											RemoveAt(offset);
+											Trace("Invlid update");
+
 											continue;
 										}
 									}
@@ -340,7 +357,8 @@ namespace COTG.JSON
 									if (prior.bl == 0 || prior.bid != i.bid)
 									{
 										// invalid command, discard it
-										queue.RemoveAt(offset);
+										Trace("Invlid demo");
+										RemoveAt(offset);
 										continue;
 									}
 									// if there are any modifications keep it in the queue until they are done
@@ -355,11 +373,11 @@ namespace COTG.JSON
 								}
 							
 								// issue this command
-								queue.RemoveAt(offset);
+								RemoveAt(offset);
 								if (cid == City.build)
 									City.buildQueue.Add(i);
 								Serialize(ref sb, i, ref qFirst);
-								++commandsToQueue;
+								--commandsToQueue;
 
 							}
 
@@ -377,11 +395,18 @@ namespace COTG.JSON
 							}
 							else
 							{
-								Log($"Notify to do.. {queue.count}");
+								Trace($"Nothing to do.. {queue.count}");
 								// nothing queued
 								// no progress :( wait a minute
-								if (delay < 2 * 30 * 1000)
-									delay = 2 * 30 * 1000;
+								if (cid == City.build)
+								{
+
+								}
+								else
+								{
+									if (delay < 2 * 30 * 1000)
+										delay = 2 * 30 * 1000;
+								}
 							}
 
 						}
@@ -403,11 +428,13 @@ namespace COTG.JSON
 					}
 					finally
 					{
+						throttle.Release();
 						if (cotgQ != null && cotgQ != City.buildQueue)
 							cotgQ.Dispose();
 					}
 
 				}
+				Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
 				await Task.Delay(delay); // todo estimate this
 			}
 
@@ -425,6 +452,11 @@ namespace COTG.JSON
 						if (cotgQLength > 0 && (City.safeBuildQueueLength > cotgQLength))
 						{
 							delay = delay.Max(JSClient.ServerTimeOffset(bq[cotgQLength - 1].GetAsInt64("de"))); // recover after 2 seconds
+							if(delay > 32*1000)
+							{
+							//	Assert(false);
+								delay = 32000;
+							}
 							cotgQ = new DArray<BuildQueueItem>(128);
 							foreach (var cmd in bq.EnumerateArray())
 							{

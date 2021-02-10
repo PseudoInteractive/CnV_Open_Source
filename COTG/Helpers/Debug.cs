@@ -87,7 +87,7 @@ namespace COTG
         {
 
 			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}";
-			Note.Show(msg);
+			Note.Show(s);
 			System.Diagnostics.Trace.WriteLine(msg);
 			DumpStack(new StackTrace(1, true));
 			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
