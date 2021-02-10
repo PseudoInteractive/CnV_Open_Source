@@ -1,28 +1,33 @@
 ﻿using Microsoft.Toolkit.HighPerformance.Enumerables;
 
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using static COTG.Debug;
 namespace COTG
 {
 	public class DArray<T> :  IDisposable, IEnumerable<T>  where T : struct 
 	{
+		static ArrayPool<T> pool = ArrayPool<T>.Shared;
+
 		public T[] v;
 		public int count;
 	
 		public DArray(int maxSize)
 		{
-			v = new T[maxSize];
+			v = pool.Rent(maxSize);
 		}
 
 		public void Add(in T i)
 		{
 			v[count++] = i;
 		}
+		public bool CanGrow() => count < v.Length;
 		public void Clear() => count = 0;
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
@@ -39,10 +44,15 @@ namespace COTG
 		{
 			return new Enumerator(this);
 		}
+		public ref T this[int i] => ref v[i];
 
 		public void Dispose()
 		{
-			
+			if (v != null)
+			{
+				pool.Return(v);
+				v = null;
+			}
 		}
 
 		public Enumerator iterate => new Enumerator(this);
@@ -84,6 +94,21 @@ namespace COTG
 				array = null;
 			}
 		}
-	
+
+		internal void RemoveAt(int offset)
+		{
+			if (offset < 0 || offset >= count)
+			{
+				Assert(false);
+				return;
+			}
+
+			--count;
+			for (int i = offset; i < count; ++i)
+			{
+				v[i] = v[i + 1];
+			}
+
+		}
 	}
 }

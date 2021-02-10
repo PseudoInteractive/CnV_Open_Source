@@ -154,7 +154,7 @@ namespace COTG.Draw
 					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
 					
-					float blendT = (animationT * 0.25f - animationOffsets[id]).Frac();
+					float blendT = (animationT * 0.25f - animationOffsets[id] + 0.2f).Frac();
 					if (bid.id==next.id)
 					{
 						if (next.bl != bid.bl)
@@ -165,61 +165,43 @@ namespace COTG.Draw
 							if (blendT < 0.25f)
 							{
 								var t = (blendT) * 4.0f;
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
-								bl = bid.bl; // fade in hammer
-								fontA = 1;// - ((blendT-0.25f)*3.75f).Squared();
+								bl = next.bl; // fade next number
+								fontA = t.Bezier(0,1,1);
 								blendOp = t.SCurve();
 							}
 							else if(blendT < 0.5f)
 							{
 								var t = (blendT - 0.25f) * 4.0f;
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
 								blendOp = 1;
 								// fade out number
-								bl = bid.bl;
-								fontA = t.SCurve(1, 0);
+								bl = next.bl; // fade next number
+								fontA = t.Bezier(1,1,0);
+
 							}
 							else if( blendT < 0.75f) // fade out hammer
 							{
 								var t = (blendT - 0.5f) * 4.0f; // fade in new number
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
 								blendOp = t.SCurve(1,0);
-								// fade out number
-								bl = next.bl;
-								fontA = 1;
+								// fade in last number
+								bl = bid.bl;
+								fontA = t.Bezier(0,1,1);
 							}
 							else
 							{
 								// fade in number
 								var t = (blendT - 0.75f) * 4.0f; // fade in new number
-																  // fade out number
-								Assert(t >= 0.0f);
-								Assert(t <= 1.0f);
+																 // fade out number
 								bl = bid.bl;
-								fontA = t.SCurve(0, 1);
-
+								fontA = t.Bezier(1,1,0);// prior number out	
 							}
-						//	DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
 							if (blendOp > 0)
 							{
-
-								if (next.bl > bid.bl)
-								{
 									// upgrade
-									draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
-								}
-								else if (next.bl < bid.bl)
-								{
-									// downgrade or other, just highlight it
-									draw.AddQuad(Layer.tileCity + 2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
-
-								}
+								draw.AddQuad(Layer.tileCity + 2, (next.bl > bid.bl)? decalBuildingValid: decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
 							}
 						}
-					//	else
+						else
 						{
 							// not changing
 							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity);
@@ -229,78 +211,36 @@ namespace COTG.Draw
 					}
 					else
 					{
-						float blendw0 = 0, blendw1 = 0, blendOp = 0;
-						var iAlpha0 = 0;
-						var iAlpha1 = 0;
+						float  blendOp;
+						Material blendMat;
+						Building bd;
 						if (next.id == 0)
 						{
-							
-							if (blendT < 0.5f)
-							{
-								var t = blendT*2.0f; // demo fades in, half second
-								blendOp = t.SCurve();
-								blendw0 = 1;
-							}
-							else if (blendT < 0.75f)
-							{
-								var t = (blendT - 0.5f)*4f; // building fades in, hammer fades out 1 seconds
-								blendOp = 1;
-								blendw0 = t.SCurve(1,0);
-							}
-							else
-							{
-								var t = (blendT - 0.75f)*4.0f;
-							
-								blendw0 = t.SCurve();
-							}
-
-
+							blendMat = decalBuildingInvalid;
+							bd = bid;
 						}
 						else
 						{
-							if (blendT < 0.25f)
-							{
-								var t = blendT*4f; // hammers fades in, half second
-								blendOp = t.SCurve();
-							}
-							else if (blendT <0.75f)
-							{
-								var t = (blendT - .25f)*(2); // building fades in, hammer fades out 1 seconds
-								blendOp = t.SCurve(1,0);
-								blendw1 = t.SCurve();
-							}
-							else
-							{
-								var t = (blendT - 0.75f) * (4); // building fades out, 0.5s
-								blendw1 = t.SCurve(1.0f,0);
-							}
-
-
+							blendMat = decalBuildingValid;
+							bd = next;
 						}
-						blendw0 = 1;
-						blendw1 = 1;
-						 iAlpha0 = (int)(blendw0 * alpha * 255.0f);
-						 iAlpha1 = (int)(blendw1 * alpha * 255.0f);
-
+						if (blendT < 0.25f)
+						{
+							var t = blendT * 4.0f; // demo fades in, half second
+							blendOp = t.SCurve();
+						}
+						else
+						{
+							var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
+							blendOp = t.SCurve(1, 0);
+						}
 
 						if (blendOp > 0)
 						{
-
-							if (next.bl == 0)
-							{
-								// demo
-								draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
-							}
-							else if (bid.bl == 0)
-							{
-
-								// now the overlay
-								draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
-							}
+							draw.AddQuad(Layer.tileCity + 2, blendMat, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
 						}
 						
-						DrawBuilding(iAlpha0, zBase, fontScale, cs, bid, Layer.tileCity);
-						DrawBuilding(iAlpha1, zBase, fontScale, cs, next, Layer.tileCity+1);
+						DrawBuilding(iAlpha, zBase, fontScale, cs, bd , Layer.tileCity);
 					}
 				}
 			}
@@ -309,7 +249,7 @@ namespace COTG.Draw
 			var city1 = buildCityOrigin + citySpan;
 			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToC(), city1.WToC(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
 
-			if(build.layout!=null && !CityBuild.isLayout)
+			if(build.layout!=null && !CityBuild.isPlanner)
 			{
 				try
 				{

@@ -109,18 +109,22 @@ namespace COTG.Game
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
-		public const int safeBuildQueueLength = 15; // leave space for autobuild
+		public const int safeBuildQueueLength = 14; // leave space for autobuild
 
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
 			foreach (var i in buildQueue)
 				yield return i;
 
-			if (BuildQueue.TryGetQueue(out var q))
+			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
 			{
-				while (q.MoveNext())
+				var count = q.queue.count;
+				var data = q.queue.v;
+
+				for (int i = 0; i < count; ++i)
 				{
-					yield return q.Current;
+					//semi safe
+					yield return data[i];
 				}
 			}
 		}
@@ -189,12 +193,16 @@ namespace COTG.Game
 		{
 			foreach (var i in buildQueue)
 				action(i);
-			
-			if (BuildQueue.TryGetQueue(out var q))
+
+			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
 			{
-				while (q.MoveNext())
-				{
-					action(q.Current);
+				var count = q.queue.count;
+				var data = q.queue.v;
+
+				for(int i=0;i< count;++i)
+				{ 
+					//semi safe
+					action(data[i]);
 				}
 			}
 		}
@@ -401,10 +409,10 @@ namespace COTG.Game
 			Assert(pid != 0);
 
 
-			if (jse.TryGetProperty("ble", out var ble))
-			{
-				Log(ble.ToString());
-			}
+			//if (jse.TryGetProperty("ble", out var ble))
+			//{
+			//	Log(ble.ToString());
+			//}
 			if (jse.TryGetProperty("w", out var isOnWataer))
             {
                 var i = isOnWataer.GetAsInt();
@@ -465,7 +473,7 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				if (!CityBuild.isLayout)
+				if (!CityBuild.isPlanner)
 				{
 					commandSlots = 5;
 					isCastle = false;
@@ -1092,7 +1100,20 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-
+		public static void GetPostQueue(ref Building rv, int bspot,in BuildQueueItem [] q, int qSize)
+		{
+			for(int i=0;i<qSize;++i)
+			{ 
+				if (q[i].bspot == bspot)
+				{
+					rv.bl = q[i].elvl;
+					if (q[i].elvl == 0)
+						rv.id = 0;
+					else
+						rv.id = BuildingDef.BidToId(q[i].bid);
+				}
+			}
+		}
 
 		public (int max, int count) CountBuildingWithoutQueue()
 		{

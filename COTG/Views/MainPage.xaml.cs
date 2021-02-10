@@ -542,6 +542,7 @@ namespace COTG.Views
 				}
 	
 			}
+			Note.ShowTip($"Auto Raid: Completed: {max}");
 			Note.Show($"Finished Auto Raid with {max} selected");
 
 		}

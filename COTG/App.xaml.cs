@@ -654,6 +654,14 @@ namespace COTG
 		//		return rv;
 		//	}
 		//}
+
+		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow,0);
+		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross,0);
+		public static CoreCursor cursorMove = new(CoreCursorType.SizeAll,0);
+		public static CoreCursor cursorLayout = new(CoreCursorType.Pin,0);
+		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
+
+
 	}
 
 
@@ -911,6 +919,14 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+		
+		public static void Set(this CoreCursor type)
+		{
+			// is this thread safe?
+			if(ShellPage.coreInputSource!=null)
+				ShellPage.coreInputSource.PointerCursor = type;
+		}
+
 	}
 
 	public static class Note

@@ -234,6 +234,7 @@
     <Compile Include="JSON\incover.cs" />
     <Compile Include="JSON\Json.cs" />
     <Compile Include="JSON\OutOver.cs" />
+    <Compile Include="JSON\poll2.cs" />
     <Compile Include="JSON\ppdt.cs" />
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\SpotJson.cs" />
@@ -675,6 +676,7 @@
     <None Include="Content\Effects\Structures.fxh" />
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="JSON\buildingDef.json" />
+    <None Include="JSON\poll2.json" />
     <None Include="JSON\Troops.json" />
     <EmbeddedResource Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />

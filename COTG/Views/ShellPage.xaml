@@ -121,8 +121,8 @@
 			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
-			<AppBarToggleButton x:Name="layout" IsChecked="{x:Bind views:CityBuild._isLayout, Mode=TwoWay}" Icon="Orientation" Label="Layout"
-                           ToolTipService.ToolTip="Toggles between normal city building and layout mode (i.e. like LOUOpt" />
+			<AppBarToggleButton x:Name="planner" IsChecked="{x:Bind views:CityBuild._isPlanner, Mode=TwoWay}" Icon="Orientation" Label="Planner"
+                           ToolTipService.ToolTip="Toggles between normal city building and planner mode (i.e. like LOUOpt.com" />
 			<AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               Click="Refresh"

@@ -128,12 +128,15 @@ namespace COTG.Services
 
 
         }
+		static JsonSerializerOptions jsonOptions = new JsonSerializerOptions() { AllowTrailingCommas = true, NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals };
         public virtual async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
         {
             var data = await AcceptAndReturn(resp);
-            try
-            {
-                return JsonSerializer.Deserialize<T>(data);
+			var str = UTF8Encoding.UTF8.GetString(data);
+			Log(str);
+			try
+			{
+                return JsonSerializer.Deserialize<T>(data, jsonOptions);
 
             }
             catch (Exception e)

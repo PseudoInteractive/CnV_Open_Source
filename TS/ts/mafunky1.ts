@@ -27,6 +27,15 @@ var shrinec= [[]];//string,string,number,number,number,number,string, number,num
  */
 var errz_: number = 0;
 
+function buildQTouch( __cid : number )
+{
+	let ____cid = Number(__cid);
+	OverviewPost('overview/mconv.php', { a: ____cid },
+		(a)=>{
+		$.post("/includes/bqSt.php", { cid: ____cid });
+		}
+		);
+}
 function errorgo_(j_) {
 	errz_ = errz_ + 1;
 

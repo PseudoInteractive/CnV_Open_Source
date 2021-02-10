@@ -1153,11 +1153,11 @@ namespace COTG.Game
 			var changed = cid != build;
 			if (changed)
 			{
-				var _layout = CityBuild.isLayout;
+				var _layout = CityBuild.isPlanner;
 				if (_layout)
 				{
 					City.GetBuild().SaveBuildingsToLayout();
-					CityBuild.isLayout = false;
+					CityBuild.isPlanner = false;
 				}
 				City.build = cid;
 				Assert(pid == Player.activeId);
@@ -1174,7 +1174,7 @@ namespace COTG.Game
 				City.CitySwitched();
 				if(_layout)
 				{
-					GetCity.Post( cid, (_,_)=>  CityBuild._isLayout = true );
+					GetCity.Post( cid, (_,_)=>  CityBuild._isPlanner = true );
 				}
 			}
 			SetFocus(scrollIntoView, select);

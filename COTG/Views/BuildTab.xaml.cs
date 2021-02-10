@@ -47,9 +47,21 @@ namespace COTG.Views
 			instance = this;
 			this.InitializeComponent();
 		}
-		private void List_GotFocus(object sender, RoutedEventArgs e)
+		private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
 		{
+			Log("in focus");
 			zoom.StartBringIntoView();
+			var groups = cvsGroups;
+			var cur = groups.View.CurrentItem;
+			Log(cur?.ToString());
+		}
+		private void ZoomedOutGotFocus(object sender, RoutedEventArgs e)
+		{
+			Log("out focus");
+			zoom.StartBringIntoView();
+			var groups = cvsGroups;
+			var cur = groups.View.CurrentItem;
+			Log(cur?.ToString());
 		}
 		public ObservableCollection<BuildQueueView> cities { get; set; } = new ObservableCollection<BuildQueueView>(); 
 	
@@ -178,11 +190,16 @@ namespace COTG.Views
 
 		}
 
-		private void CityClick(object sender, ItemClickEventArgs e)
+
+
+
+		private void zoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
 		{
-			var i = e.ClickedItem as ICollectionViewGroup;
-			var group = i.Group as BuildQueueView;
-			JSClient.ChangeCity(group.cid,false);
+			var item = e.DestinationItem.Item as BuildQueueView;
+			if(item!=null)
+			{
+				JSClient.ChangeCity(item.cid, false);
+			}
 		}
 	}
 

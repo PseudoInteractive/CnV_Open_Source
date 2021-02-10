@@ -50,6 +50,9 @@ namespace COTG
 	public class JSClient
 	{
 
+		static public string secSessionId; // hack!
+
+
 
 		//	public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36";
 		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
@@ -179,6 +182,11 @@ namespace COTG
 		{
 			return new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero) + TimeSpan.FromMilliseconds(t);
 		}
+		public static int ServerTimeOffset(long t)
+		{
+			return (int)(t - gameTOffsetMs - (long)(DateTimeOffset.UtcNow-new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalMilliseconds);
+		}
+
 		public static DateTimeOffset ServerToLocal(DateTimeOffset t)
 		{
 			return t - gameTOffset;
@@ -1500,6 +1508,7 @@ namespace COTG
 								   var timeOffset = jso.GetAsInt64("timeoffset");
 								   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
 								   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
+								   gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
 								   var str = timeOffsetRounded >= 0 ? " +" : " ";
 								   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 								   Helpers.JSON.timeZoneString = str;
@@ -1519,7 +1528,7 @@ namespace COTG
 								   gameMSAtStart = jso.GetAsInt64("time");
 								   launchTime = DateTimeOffset.UtcNow;
 								   //    Log(jsVars.ToString());
-
+								   secSessionId = jso.GetAsString("s");
 								   //		AGame.clientTL.X = jso.GetAsFloat("left");
 								   //  AGame.clientTL.Y = jso.GetAsFloat("top");
 								   //   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
@@ -2143,6 +2152,7 @@ namespace COTG
 		}
 
 		public static TimeSpan gameTOffset;
+		public static long gameTOffsetMs;
 
 		//        public static async void TestGet()
 		//        {

@@ -40,9 +40,9 @@
 
 	<StackPanel>
 		<Button Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
-		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" MaxHeight="1080"   >
+		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" MaxHeight="1480"  IsZoomOutButtonEnabled="True" ViewChangeStarted="zoom_ViewChangeStarted" >
 			<SemanticZoom.ZoomedInView>
-				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" GotFocus="List_GotFocus"
+				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" GotFocus="ZoomedInGotFocus" 
 						   IsItemClickEnabled="True" ItemClick="ItemClick"
                         ItemTemplate="{StaticResource ZoomedInTemplate}">
 					<GridView.GroupStyle>
@@ -52,8 +52,8 @@
 			</SemanticZoom.ZoomedInView>
 
 			<SemanticZoom.ZoomedOutView>
-				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" MaxHeight="1000" MinHeight="500"  ItemTemplate="{StaticResource ZoomedOutTemplate}" 
-						   IsItemClickEnabled="True" ItemClick="CityClick" GotFocus="List_GotFocus" />
+				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" MaxHeight="1000" MinHeight="500" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}" 
+						    GotFocus="ZoomedOutGotFocus" />
 			</SemanticZoom.ZoomedOutView>
 		</SemanticZoom>
 

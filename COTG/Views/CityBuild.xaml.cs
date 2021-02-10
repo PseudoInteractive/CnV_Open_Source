@@ -33,6 +33,8 @@ using Microsoft.Toolkit.HighPerformance.Extensions;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 using System.Text.RegularExpressions;
+using Windows.UI.Core;
+
 namespace COTG.Views
 {
 	public sealed partial class CityBuild : UserControl
@@ -40,9 +42,10 @@ namespace COTG.Views
 		public static int quickBuildId;
 		public static int lastQuickBuildActionBSpot=-1;
 		public static CityBuild instance;
-		public static bool isLayout;
-	
-		
+		public static bool isPlanner;
+
+
+
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
@@ -81,24 +84,56 @@ namespace COTG.Views
 
 		};
 		public static Action action;
-		public static Action singleClickAction; // set on left click tool select
+		public static Action priorQuickAction; // set when you temporarily switch from quickbuild to select/move
+		public static bool isSingleClickAction; // set on left click tool select
+
+		public static void RevertToLastAction()
+		{
+			SetAction(priorQuickAction);
+			priorQuickAction = Action.none;
+			isSingleClickAction = false;
+			ClearSelectedBuilding();
+
+		}
+
 		public static void ClearAction()
 		{
 			SetAction(Action.none);
-			singleClickAction = Action.none;
+			isSingleClickAction = false;
+			priorQuickAction = Action.none;
 		}
 		public static void SetAction(Action _action)
 		{
+			Log($"{action}=>{_action}");
 			action = _action;
 
-			Log(action);
+			ShellPage.coreInputSource.Dispatcher.RunAsync(CoreDispatcherPriority.Low, ()=>
+		   {
+			   switch (action)
+			   {
+				   case Action.move:
+					   App.cursorMove.Set();
+					   break;
+				   case Action.destroy:
+					   App.cursorDestroy.Set();
+					   break;
+				   case Action.build:
+					   App.cursorQuickBuild.Set();
+					   break;
+				   case Action.layout:
+					   App.cursorLayout.Set();
+					   break;
+				   default:
+					   App.cursorDefault.Set();
+					   break;
+			   }
+		   });
 			//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
 		{
-			Log($"{action} => build {quickBuildId}");
 
-			action = Action.build;
+			SetAction(Action.build);
 
 			
 			lastQuickBuildActionBSpot = -1;
@@ -157,7 +192,7 @@ namespace COTG.Views
 		}
 		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
 
-		static BuildMenuItem amSelect = new BuildMenuItem("None", Action.none, "City/decal_select_building.png", "Left click opens a menu");
+		static BuildMenuItem amSelect = new BuildMenuItem("Modify", Action.none, "City/decal_select_building.png", "Left click opens a menu");
 		static BuildMenuItem amMove = new BuildMenuItem("Move", Action.move, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
 		static BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
 		static BuildMenuItem amLayout = new BuildMenuItem("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
@@ -369,6 +404,7 @@ namespace COTG.Views
 			buildMenu = new Flyout() { LightDismissOverlayMode=LightDismissOverlayMode.Auto,ShowMode=FlyoutShowMode.Standard,AreOpenCloseAnimationsEnabled=true,
 				AllowFocusOnInteraction = true, Content = instance };
 
+			buildMenu.Closed += BuildMenu_Closed;
 			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "300"));
@@ -424,6 +460,15 @@ namespace COTG.Views
 
 		}
 
+		private static void BuildMenu_Closed(object sender, object e)
+		{
+			if (!contextMenuResultSelected)
+			{
+				RevertToLastAction();  // player aborted
+
+			}
+		}
+
 		public CityBuild()
 		{
 			instance = this;
@@ -467,15 +512,15 @@ namespace COTG.Views
 			//	quickBuild.ItemsSource = items;
 		}
 
-		public static bool _isLayout
+		public static bool _isPlanner
 		{
-			get => isLayout;
+			get => isPlanner;
 			 set
 			{
-				if (isLayout == value)
+				if (isPlanner == value)
 					return;
-				isLayout = value;
-				if (isLayout)
+				isPlanner = value;
+				if (isPlanner)
 				{
 
 					var build = GetBuild();
@@ -555,7 +600,7 @@ namespace COTG.Views
 			if (lvl < level)
 			{
 
-				if(isLayout)
+				if(isPlanner)
 				{
 					GetBuild().buildings[id].bl =(byte) level;
 
@@ -595,7 +640,7 @@ namespace COTG.Views
 					{
 						postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
 					}
-					if (!CityBuild.isLayout)
+					if (!CityBuild.isPlanner)
 					{
 						//
 						// Apply queue
@@ -628,7 +673,7 @@ namespace COTG.Views
 				Status($"Destroy {sel.def.Bn}", dryRun);
 				if (!dryRun)
 				{
-					if (isLayout)
+					if (isPlanner)
 					{
 						var build = GetBuild();
 						build.buildings[id].SetBid(0, 0);
@@ -664,7 +709,7 @@ namespace COTG.Views
 				Status($"Downgrade {sel.def.Bn}", dryRun);
 				if (!dryRun)
 				{
-					if (isLayout)
+					if (isPlanner)
 					{
 						--GetBuild().buildings[id].bl;
 					}
@@ -807,7 +852,7 @@ namespace COTG.Views
 				}
 				else
 				{
-					if (isLayout)
+					if (isPlanner)
 					{
 						var build = GetBuild();
 						build.buildings[id].SetBid(bid, 10);
@@ -914,7 +959,7 @@ namespace COTG.Views
 				if (!dryRun)
 				{
 
-					if (!isLayout)
+					if (!isPlanner)
 					{
 						Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
 						--Player.moveSlots;
@@ -949,7 +994,7 @@ namespace COTG.Views
 					var temp = build.buildings[b];
 					build.buildings[b] = build.buildings[a];
 					build.buildings[a] = temp;
-					if (!isLayout)
+					if (!isPlanner)
 					{
 						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayer(City.build));
 						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayer(City.build));
@@ -997,11 +1042,6 @@ namespace COTG.Views
 						return;
 					}
 
-					if (isSingleAction && !dryRun)
-					{
-						singleClickAction = Action.none;
-						action = Action.none;
-					}
 
 					if (dryRun)
 					{
@@ -1025,11 +1065,16 @@ namespace COTG.Views
 						}
 						if(!dryRun)
 							ClearSelectedBuilding();
+						if (isSingleAction && !dryRun)
+						{
+							RevertToLastAction();
+						}
 					}
 				}
 			}
 			else
 			{
+				Assert(!isSingleAction);
 				if (b.bl <= 0)
 				{
 					Status("Please select a building", dryRun);
@@ -1040,11 +1085,6 @@ namespace COTG.Views
 					if (!dryRun)
 					{
 						selected = hovered;
-						if (isSingleAction)
-						{
-							singleClickAction = Action.pending;
-							action = Action.move;
-						}
 					}
 				}
 			}
@@ -1081,21 +1121,20 @@ namespace COTG.Views
 			//}
 		}
 	
-		public static async Task<bool> PerformAction(Action action, (int x, int y) cc, int _quickBuildId, bool dryRun)
+		public static async Task PerformAction(Action action, (int x, int y) cc, int _quickBuildId, bool dryRun)
 		{
 		
 
 			int bspot = XYToId(cc);
 			var build = GetBuild();
 			var b = GetBuildingPostQueue(bspot);
-			var result = true;
 
 			switch (action)
 			{
 				case Action.layout:
 					{
 						var layout = build.layout;
-						if(CityBuild.isLayout)
+						if(CityBuild.isPlanner)
 						{
 							Status("You are in layout mode, exit to use the layout tool", dryRun);
 						}
@@ -1188,7 +1227,7 @@ namespace COTG.Views
 										else
 										{
 											if (!await UpgradeTownHallDialogue(level))
-												return result;
+												return;
 										}
 									}
 									else if (counts.count >= counts.max)
@@ -1321,16 +1360,16 @@ namespace COTG.Views
 					{
 						if (!b.isEmpty)
 						{
-							if(dryRun)
-							{
+						//	if(dryRun)
+						//	{
 								Status($"Select {b.name}", dryRun);
-							}
-							else
-							{
+						//	}
+						//	else
+						//	{
 								// redirect to normal click
-								ShowContectMenu(cc, false);
-							}
-							result = false;
+						//		ShowContectMenu(cc, false);
+						//	}
+						//	result = false;
 							break;
 						}
 						else
@@ -1367,7 +1406,7 @@ namespace COTG.Views
 					}
 				case Action.move:
 					{
-						MoveHovered(singleClickAction == Action.pending, dryRun);
+						MoveHovered(isSingleClickAction, dryRun);
 						break;
 					}
 				case Action.downgrade:
@@ -1429,7 +1468,6 @@ namespace COTG.Views
 					break;
 				}
 			}
-			return result;
 		}
 
 		internal static void ShortBuild(short bid)
@@ -1475,16 +1513,22 @@ namespace COTG.Views
 
 			int bspot = XYToId(cc);
 
-			if (!isRight && action != Action.none && !( action == Action.build && !postQueueBuildings[bspot].isEmpty) )
+			// tempoararily switch to Select from quickbuild
+			if(!isRight && action == Action.build && !postQueueBuildings[bspot].isEmpty)
 			{
-				var complete = await PerformAction(action, cc, quickBuildId, false);
+				priorQuickAction = action;
+				action = Action.none;
+			}
+
+			if (!isRight && (action != Action.none) )
+			{
+				await PerformAction(action, cc, quickBuildId, false);
 				if(action != Action.move)
 					lastQuickBuildActionBSpot = bspot;
-				if (singleClickAction == Action.pending)
+				if (isSingleClickAction)
 				{
-					if(complete )
-						action = Action.none;
-					singleClickAction = Action.none;
+					Assert(action == Action.move);
+					RevertToLastAction(); // this is only for move
 				}
 				//Assert(singleClickAction == Action.none);
 			}
@@ -1493,9 +1537,7 @@ namespace COTG.Views
 			//	Log($"{action} => None");
 			//	action = Action.none;
 
-				singleClickAction = Action.none; // default
-												 // toggle visibility
-
+			
 				//	var i = instance;
 				//i.building.Text = d.Bn;
 				//i.description.Text = d.Ds;
@@ -1511,8 +1553,13 @@ namespace COTG.Views
 		public const int buildToolSpan = 448;
 
 
+		static bool contextMenuResultSelected = false;
 		public static void ShowContectMenu((int x, int y) cc, bool isRight)
 		{
+			isSingleClickAction = false; // default
+											   // toggle visibility
+
+			contextMenuResultSelected = false;
 			int bspot = XYToId(cc);
 			var b = postQueueBuildings[bspot];
 
@@ -1523,7 +1570,7 @@ namespace COTG.Views
 					Note.Show("There is water here. :(");
 					return;
 				}
-				singleClickAction = Action.pending;
+				isSingleClickAction = true;
 				if (CityBuild.IsWallSpot(bspot))
 				{
 					bspot = 0;
@@ -1578,27 +1625,29 @@ namespace COTG.Views
 		}
 		public async void ItemClick(object sender, ItemClickEventArgs e)
 		{
+			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
 			lastQuickBuildActionBSpot = -1; // reset
 			if (bi != null)
 			{
 				if (bi.isBuilding)
 				{
-					if (singleClickAction == CityBuild.Action.pending)
+					if (isSingleClickAction )
 					{
 					
 						await PerformAction(CityBuild.Action.build, selected, bi.bid, false);
-						lastQuickBuildActionBSpot = XYToId(selected);
+						RevertToLastAction();
+
 					}
 					else
 					{
 						SetQuickBuild(bi.bid);
+						ClearSelectedBuilding();
 					}
 					//Array.Sort(buildingMru, (a, b) => a.cacheScore.CompareTo(b.cacheScore) );
 					//if (menuType == MenuType.quickBuild)
-						ClearSelectedBuilding();
 
-					
+
 				}
 				else if (bi.isAction)
 				{
@@ -1607,11 +1656,14 @@ namespace COTG.Views
 					{
 						Note.Show("Please assign a layout");
 						JSClient.JSInvoke("showLayout", null);
+						SetAction(bi.action);
+						ClearSelectedBuilding();
+
 
 					}
 					else
 					{
-						if (singleClickAction == CityBuild.Action.pending)
+						if (isSingleClickAction)
 						{
 							if (bi.action == CityBuild.Action.move)
 							{
@@ -1623,8 +1675,9 @@ namespace COTG.Views
 							{
 								await PerformAction(bi.action, selected, 0, false);
 								lastQuickBuildActionBSpot = XYToId(selected);
-								singleClickAction = CityBuild.Action.none;
-								ClearSelectedBuilding();
+								
+								RevertToLastAction();
+
 							}
 						}
 						else
@@ -1636,6 +1689,7 @@ namespace COTG.Views
 				}
 				else
 				{
+					Assert(false);
 					ClearSelectedBuilding();
 				}
 			}
@@ -1644,13 +1698,6 @@ namespace COTG.Views
 				Assert(false);
 			}
 			buildMenu.Hide();
-
-			//		var def = context.CommandParameter as BuildingDef;
-
-
-			// perform custom logic here
-
-			//		buildMenu.IsOpen = false;
 
 		}
 		//public static BuildPhase GetBuildPhase()

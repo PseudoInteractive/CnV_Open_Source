@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 using Windows.System.Threading;
 using Windows.UI.Xaml;
@@ -87,7 +88,7 @@ namespace COTG.JSON
 		public string buildingName => def.Bn;
 		public bool isBuild => slvl == 0 && elvl != 0;
 		public static BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
-
+		public bool isUpgrade => slvl < elvl && slvl !=0;
 		public BuildOp op => 
 			isDemo ? BuildOp.demo : 
 			isBuild ? BuildOp.build : 
@@ -96,14 +97,14 @@ namespace COTG.JSON
 					BuildOp.upgrade;
 
 		// Moves from the pending queue to the active queue;
-		public Windows.Foundation.IAsyncOperation<string> Apply(int cid)
-		{
-			if (cid == City.build)
-				City.buildQueue.Add(this);
-			Assert(App.IsOnUIThread());
-			return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
+		//public Windows.Foundation.IAsyncOperation<string> Apply(int cid)
+		//{
+		//	if (cid == City.build)
+		//		City.buildQueue.Add(this);
+		//	Assert(App.IsOnUIThread());
+		//	return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
 			
-		}
+		//}
 		public void ApplyOnUIThread(int cid)
 		{
 			if (cid == City.build)
@@ -147,36 +148,24 @@ namespace COTG.JSON
 			return !(left == right);
 		}
 	}
-	public class CityBuildQueue
+	public class CityBuildQueue : IDisposable
 	{
+		public bool isRunning;
 		public int cid;
-		public ConcurrentQueue<BuildQueueItem> queue = new ConcurrentQueue<BuildQueueItem>();
+		public DArray<BuildQueueItem> queue = new(128); // extra large
 		
 		public static ConcurrentDictionary<int, CityBuildQueue> all = new ConcurrentDictionary<int, CityBuildQueue>();
 
-		public bool TryDequeue(out BuildQueueItem BuildQueueItem)
-		{
-			if(queue.TryDequeue(out BuildQueueItem))
-			{
-				BuildTab.RemoveOp(BuildQueueItem, cid);
-				return true;
-			}
-			return false;
-		}
-		public bool TryPeek(out BuildQueueItem BuildQueueItem)
-		{
-			if (queue.TryPeek(out BuildQueueItem))
-			{
-				return true;
-			}
-			return false;
-		}
 		public async void Process(int initialDelay=0)
 		{
-			if(initialDelay > 0 )
+			if (isRunning)
+				return;
+			isRunning = true;
+			if (initialDelay > 0 )
 			{
 				await Task.Delay(initialDelay);
 			}
+			Log("Queue Starting!");
 			// Ordering:
 			// too few buildings - advance townhall or a demo
 			// castle:  process demo first
@@ -188,191 +177,274 @@ namespace COTG.JSON
 		
 			for (; ; )
 			{
-	//			int ququeCount = 0;
-				DArray<BuildQueueItem> cotgQ = null;
-				int delay;
-
-				if (cid == City.build)
+				int delay = 3000;
+				
+				if (queue.count > 0)
 				{
-					// every two seconds commands will only be queud on changes
-					delay = 2000;
-					// process pending queue first if appropriate
-				//	ququeCount= City.buildQueue.count;
-					cotgQ = City.buildQueue;
-				}
-				else
-				{
-					delay = 5000;
+					Trace($"iterate {city.nameAndRemarks} {queue.count}");
+					int cotgQLength = 0;
+					DArray<BuildQueueItem> cotgQ = null;
 
-					// todo
-					await GetCity.Post(cid, (jse, city) =>
-					 {
-						
-						 if (jse.TryGetProperty("bq", out var bq))
-						 {
-							 var bqCount = bq.GetArrayLength();
-							 if (bqCount > 0)
-							 {
-								 // todo: sort dependencies
-								 var js = bq[bqCount - 1];
-
-								 var e = js.GetAsInt64("de");
-								 var t = JSClient.AsJSTime(e);
-								 var st = JSClient.ServerTime();
-								 delay = (t - st).TotalMilliseconds.RoundToInt() - 2000; // recover after 2 seconds
-								 if (delay < 5000)
-									 delay = 5000; // never wait less than 5 seconds
-								 // no progress :( wait two minutes
-								 if (bqCount >= City.safeBuildQueueLength)
-								 {
-									 if (delay < 2 * 60 * 1000)
-										 delay = 2 * 60 * 1000;
-								 }
-								 cotgQ = new DArray<BuildQueueItem>(bqCount);
-
-								 foreach(var cmd in bq.EnumerateArray())
-								 {
-								 // cotgQ.Add(new BuildQueueItem());
-								  cotgQ.Add(new BuildQueueItem(
-								 	 cmd.GetAsByte("slvl"),
-								 	 cmd.GetAsByte("elvl"),
-								 	 cmd.GetAsUShort("brep"),
-								 	 cmd.GetAsUShort("bspot")
-								 	 ));
-
-								 }
-							 }
-						 }
-						
-
-					 });
-				}
-				int commandsToQueue = (City.safeBuildQueueLength - (cotgQ!=null? cotgQ.count : 0) ).Min(queue.Count);
-				if(commandsToQueue > 0)
-				{
-					var ops = new BuildQueueItem[commandsToQueue];
-					int put = 0;
-	//				if(BuildTab.IsVisible)
-	//					BuildTab.cvsGroups.View
-					do
+					try
 					{
-						if (TryPeek(out var i))
+
+					
+						if (cid == City.build)
 						{
-							// do we have to wait on this on?
-							// - towers before wall
-							if( i.isBuild )
+							// every two seconds commands will only be queud on changes
+							delay = 4000;
+							// process pending queue first if appropriate
+							//	ququeCount= City.buildQueue.count;
+							cotgQ = City.buildQueue;
+							cotgQLength = cotgQ.count;
+						}
+						else
+						{
+							delay = 6000;
+							// First try to get it from poll2, then if that fails, try GC 
+
+							var dd = await Post.SendForJson("/includes/poll2.php", $"cid={cid}&ai=0&ss=" + HttpUtility.UrlEncode(JSClient.secSessionId, Encoding.UTF8));  // /includes/poll2.php
+							if (dd.RootElement.TryGetProperty("city", out var jsCity))
 							{
-								if (i.def.isTower)
+								GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+							}
+
+							if (cotgQ == null)
+							{
+								await GetCity.Post(cid, (jsCity, city) =>
+								 {
+									 GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+								 });
+							}
+						}
+						int commandsToQueue = (City.safeBuildQueueLength - cotgQLength).Min(queue.count);
+						if (commandsToQueue > 0)
+						{
+							StringBuilder sb = new StringBuilder();
+							
+							sb.Append($"{{\"{cid}\":[");
+							var qFirst = true;
+
+							int offset = 0;
+							int put = 0;
+							while(offset<queue.count && commandsToQueue > 0 )
+							{
+								var i = queue.v[offset];
+
+								// do we have to wait on this on?
+								// - towers before wall
+								if (i.isBuild)
 								{
-									if (city.buildings[City.bspotWall].bl == 0)
+									if (i.def.isTower)
 									{
-										// wait for wall to build first
-										break;
+										if (city.buildings[City.bspotWall].bl == 0)
+										{
+											// wait for wall to build first
+											// is there a wall queued?
+											var wallPending = (cotgQ != null && cotgQ.Any((a) => a.bid == City.bidWall && a.slvl == 0));
+											if (!wallPending)
+											{
+												for (int j = 0; j < offset; ++j)
+												{
+													if (queue.v[j].bid == City.bidWall && queue.v[j].slvl == 0)
+													{
+														wallPending = true;
+														break;
+													}
+												}
+											}
+											if (!wallPending)
+											{
+
+												// cancel this order
+												queue.RemoveAt(offset);
+											}
+											else
+											{
+												// leave it in the queue
+												++offset;
+											}
+											continue;
+										}
+									}
+									else if (i.def.bid == City.bidCastle)
+									{
+										// TODO: check res
+										var bd = city.CountBuildingWithoutQueue();
+										// cannot queue if there is no room, even if there is a demo in progress
+										if (bd.count >= bd.max)
+										{
+											Log("Waiting for space for castle");
+											// leave it in the queue
+											++offset;
+											continue;
+										}
 
 									}
-								}
-								else if(i.def.bid == City.bidCastle)
-								{
-									var bd = city.CountBuildingWithoutQueue();
-									// cannot queue if there is no room, even if there is a demo in progress
-									if (bd.count >= bd.max)
+									// is there a building in the way?
+									// wait for the demo
+									if (i.bspot != City.bspotWall)
 									{
-										break;
-									}
-									
-								}
-								// is there a building in the way?
-								// wait for the demo
-								if (i.bspot != City.bspotWall)
-								{
-									if (!city.buildings[i.bspot].isEmpty)
-									{
-										var demoPending = false;
-										// if there is a demo pending, wait.  Otherwise discard
-										if (cotgQ != null)
+										if (!city.buildings[i.bspot].isEmpty)
 										{
-											foreach (var other in cotgQ)
+											var demoPending = (cotgQ != null) && cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
+											if (!demoPending)
 											{
-												if(other.isDemo && other.bspot==i.bspot)
-												{
-													demoPending = true;
-													break;
-												}
+												// cancel this order
+												queue.RemoveAt(offset);
 
 											}
-										}
-										if (demoPending)
-										{
-											break; // wait for the demo to complete
-											// leave it in queue
-										}
-										else
-										{
-											// invalid build, maybe stale
-											TryDequeue(out  _);  // discard it and move on to next
+											else
+											{
+												// leave it in the queue
+												++offset;
+											}
 											continue;
 										}
 									}
 								}
+								else if (i.isUpgrade)
+								{
+									var prior = city.GetBuildingPostQueue(i.bspot, cotgQ);
+									// is build not yet queued?
+									if (prior.bid != i.bid)
+									{
+										City.GetPostQueue(ref prior, i.bspot, queue.v, offset); // is the build queued?
+										if (prior.bid != i.bid)
+										{
+											// invalid command, discard it
+											queue.RemoveAt(offset);
+											continue;
+										}
+										else
+										{
+											// leave it in the queue
+											++offset;
+											continue;
+										}
+									}
+									else
+									{
+										// already upgraded?
+										if (prior.bl > i.slvl)
+										{
+											// invalid command, discard it
+											queue.RemoveAt(offset);
+											continue;
+										}
+									}
+								}
+								else if (i.isDemo)
+								{
+									var prior = city.GetBuildingPostQueue(i.bspot, cotgQ);
+									if (prior.bl == 0 || prior.bid != i.bid)
+									{
+										// invalid command, discard it
+										queue.RemoveAt(offset);
+										continue;
+									}
+									// if there are any modifications keep it in the queue until they are done
+									var isBeingModified = cotgQ != null && cotgQ.Any(a => a.bspot == i.bspot);
+									if(isBeingModified)
+									{
+										// wait for later to destroy
+										++offset;
+										continue;
+									}
+
+								}
+							
+								// issue this command
+								queue.RemoveAt(offset);
+								if (cid == City.build)
+									City.buildQueue.Add(i);
+								Serialize(ref sb, i, ref qFirst);
+								++commandsToQueue;
+
 							}
-							// - castles before free space
-							// - build before demo
+
+							if (!qFirst)
+							{
+								sb.Append("]}");
+
+
+								JSClient.JSInvoke("buildex", new[] { sb.ToString() });
+
+								if (cid == City.build)
+									CityView.BuildingsOrQueueChanged();
+
+								SaveNeeded();
+							}
+							else
+							{
+								Log($"Notify to do.. {queue.count}");
+								// nothing queued
+								// no progress :( wait a minute
+								if (delay < 2 * 30 * 1000)
+									delay = 2 * 30 * 1000;
+							}
+
 						}
 
-						if (!TryDequeue(out var rv))
+						if (!queue.Any())
 						{
-							break;
+							all.TryRemove(cid, out _);
+							BuildTab.Clear(cid);
+							Log("Queue Done!");
+							SaveNeeded();
+							Dispose();
+							return;
 						}
-						// check to see if this build op is redundant
-						var prior = city.GetBuildingPostQueue(rv.bspot,cotgQ);
-						var valid = true;
-						switch (rv.op)
-						{
-							case BuildOp.build:
-								valid = prior.isEmpty || (rv.bspot ==0 && prior.bl==0); // all or emptty
- 								break;
-							case BuildOp.demo:
-								valid = prior.bid == rv.bid;
-								break;
-							case BuildOp.upgrade:
-								valid = prior.bid == rv.bid && prior.bl < rv.elvl;
-								break;
-							case BuildOp.downgrade:
-								valid = prior.bid == rv.bid && prior.bl > rv.elvl;
-								break;
-						}
-						if(valid)
-							ops[put++] = rv;
-
-					} while (--commandsToQueue > 0);
-					
-					App.DispatchOnUIThreadSneakyLow(async () =>
+						Log($"Next in {delay / 1000.0f} {City.GetOrAdd(cid).nameAndRemarks}");
+					}
+					catch (Exception _exception)
 					{
-						for (int i = 0; i < put; ++i)
-						{
-							var _i = i;
-							await ops[_i].Apply(cid);
-						}
-												
-						if(cid == City.build)
-							CityView.BuildingsOrQueueChanged();
-						
-						SaveNeeded();
+						COTG.Debug.Log(_exception);
+					}
+					finally
+					{
+						if (cotgQ != null && cotgQ != City.buildQueue)
+							cotgQ.Dispose();
 					}
 
-					);
-					
-
-				}
-
-
-				if (!queue.Any())
-				{
-					all.TryRemove(cid, out var dummy);
-					SaveNeeded();
-					return;
 				}
 				await Task.Delay(delay); // todo estimate this
+			}
+
+		}
+
+		private static void GetBQInfo(ref int delay, ref int cotgQLength, ref DArray<BuildQueueItem> cotgQ, ref JsonElement jsCity)
+		{
+			try
+			{
+				if (jsCity.TryGetProperty("bq", out var bq))
+				{
+					if (bq.ValueKind == JsonValueKind.Array)
+					{
+						cotgQLength = bq.GetArrayLength();
+						if (cotgQLength > 0 && (City.safeBuildQueueLength > cotgQLength))
+						{
+							delay = delay.Max(JSClient.ServerTimeOffset(bq[cotgQLength - 1].GetAsInt64("de"))); // recover after 2 seconds
+							cotgQ = new DArray<BuildQueueItem>(128);
+							foreach (var cmd in bq.EnumerateArray())
+							{
+								cotgQ.Add(new BuildQueueItem(
+											 cmd.GetAsByte("slvl"),
+											 cmd.GetAsByte("elvl"),
+											 cmd.GetAsUShort("brep"),
+											 cmd.GetAsUShort("bspot")
+											 ));
+
+
+							}
+						}
+					}
+				}
+
+			}
+			catch (Exception _exception)
+			{
+				COTG.Debug.Log(_exception);
 			}
 
 		}
@@ -390,17 +462,23 @@ namespace COTG.JSON
 
 
 
-		public  BuildQueueItem Enqueue(BuildQueueItem op)
+		public  void Enqueue(BuildQueueItem op)
 		{
 			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
-			queue.Enqueue(op);
+			queue.Add(op);
 			if(cid==City.build)
 				CityView.BuildingsOrQueueChanged();
 			BuildTab.AddOp(op, cid);
-			return op;
 		}
 
-
+		public void Dispose()
+		{
+			if(queue!=null)
+			{
+				queue.Dispose();
+				queue = null;
+			}
+		}
 	}
 
 	public static class BuildQueue
@@ -418,7 +496,7 @@ namespace COTG.JSON
 			if (bid == City.bidTemple)
 			{
 				Assert(cid == City.build);
-				op.ApplyOnUIThread(cid);
+				JSClient.JSInvoke("buildTemple", new[] {spot.ToString()});
 				return;
 			}
 			if (bid == City.bidCastle)
@@ -439,37 +517,30 @@ namespace COTG.JSON
 			var pending = CityBuildQueue.Get(cid);
 			pending.Enqueue(op);
 			SaveNeeded();
-			if (pending.queue.Count == 1)
-			{
-				pending.Process();
-			}
+			
+			pending.Process();
+			
 		}
 
 		public static void CancelBuildOp(int cid,in  BuildQueueItem i)
 		{
-			if (!CityBuildQueue.all.TryGetValue(cid, out var q))
+			if (!CityBuildQueue.all.TryGetValue(cid, out var cq))
 				return;
-			int counter=0;
-			var _q = q.queue;
-			q.queue = new();
-			foreach(var it in _q)
+			var q = cq.queue;
+			for(int iter=0;iter<q.count;++iter)
 			{
-				if(it!=i)
-					q.queue.Enqueue(it);
+				if (q[iter] == i)
+				{
+					q.RemoveAt(iter);
+					return;
+				}
 			}
 			BuildTab.RemoveOp(i, cid);
-
+			// if its empty it will be removed next iteration
 			CityView.BuildingsOrQueueChanged();
 		}
 
-		public static bool TryGetQueue(out IEnumerator<BuildQueueItem> rv)
-		{
-			rv = null;
-			if (!CityBuildQueue.all.TryGetValue(City.build, out var q))
-				return false;
-			rv = q.queue.GetEnumerator();
-			return true;
-		}
+		
 		public static void ClearQueue()
 		{
 			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
@@ -528,7 +599,24 @@ namespace COTG.JSON
 					Log(ex);
 					SaveNeeded(); // something went wrong, try again later
 				}
-			
+
+		}
+
+		/*
+				{"10813767":[[318,451,0,0],[318,445,0,1],[319,451,0,0],[319,445,0,1],[320,445,0,1],[321,451,0,0],[342,445,0,1],[363,454,0,0],[363,445,0,1],[359,452,0,0],[359,445,0,1],[380,452,0,0],[405,452,0,0],[405,445,0,1]],"16646480":[[165,449,0,1],[142,449,0,1],[143,449,0,1],[144,449,0,1],[123,449,0,1],[101,449,0,1],[102,449,0,1],[103,449,0,1],[79,449,0,1],[80,449,0,1],[59,449,0,1],[60,449,0,1],[38,449,0,1],[82,449,0,1]],"16515413":[[359,445,0,1],[402,445,0,1],[403,445,0,1],[404,451,0,0],[404,445,0,1],[405,445,0,1],[384,445,0,1]],"10813771":[[100,445,0,1],[92,446,9,0],[121,445,0,1],[93,446,9,0],[142,445,0,1],[36,453,0,0],[60,452,0,0],[123,452,0,0],[98,451,0,0],[106,446,9,0],[36,445,0,1],[107,446,9,0],[98,445,0,1],[108,446,9,0],[60,445,0,1],[109,446,9,0],[123,445,0,1],[37,445,0,1],[110,446,9,0],[38,445,0,1],[127,446,9,0],[58,445,0,1],[128,446,9,0],[79,445,0,1],[129,446,9,0],[99,445,0,1],[130,446,9,0],[101,445,0,1],[131,446,9,0],[81,445,0,1],[148,446,9,0],[102,445,0,1],[149,446,9,0],[144,445,0,1],[150,446,9,0],[164,445,0,1],[170,446,9,0],[163,445,0,1],[171,446,9,0],[35,445,0,1],[172,446,9,0],[56,445,0,1],[192,446,9,0],[77,445,0,1],[193,446,9,0],[119,445,0,1],[244,445,0,1],[117,547,0,1]],"10944843":[[38,445,0,1],[55,446,10,0],[35,445,0,1],[56,446,10,0],[37,445,0,1],[64,446,10,0],[56,445,0,1],[66,446,10,0],[57,483,0,1],[68,446,10,0],[58,445,0,1],[77,446,10,0],[77,445,0,1],[78,453,0,0],[69,446,10,0],[78,483,0,1],[70,446,10,0],[79,445,0,1],[71,446,10,0],[80,483,0,1],[75,446,10,0],[60,445,0,1],[81,454,0,0],[85,446,10,0],[81,445,0,1],[87,446,10,0],[98,445,0,1],[89,446,10,0],[99,445,0,1],[90,446,10,0],[100,445,0,1],[95,446,10,0],[101,445,0,1],[102,454,0,0],[96,446,10,0],[102,445,0,1],[106,446,10,0],[119,445,0,1],[107,446,10,0],[120,483,0,1],[109,446,10,0],[121,445,0,1],[110,446,10,0],[122,483,0,1],[128,446,10,0],[123,445,0,1],[142,451,0,0],[129,446,10,0],[142,445,0,1],[143,451,0,0],[130,446,10,0],[143,483,0,1],[131,446,10,0],[144,445,0,1],[163,451,0,0],[150,446,10,0],[163,445,0,1],[151,446,10,0],[164,445,0,1],[169,446,10,0],[256,449,6,0],[235,449,6,0]]}
+		*/
+
+		static public void Serialize(ref StringBuilder sb, in BuildQueueItem q, ref bool qFirst)
+		{
+			if (qFirst)
+			{
+				qFirst = false;
+			}
+			else
+			{
+				sb.Append(',');
+			}
+			sb.Append($"[{q.bspot},{q.bid},{q.slvl},{q.elvl}]");
 		}
 
 		static public string Serialize()
@@ -546,24 +634,18 @@ namespace COTG.JSON
 					sb.Append(',');
 				}
 				sb.Append($"\"{city.cid}\":[");
-				Log($"{city.cid} {city.queue.Count}");
+				Log($"{city.cid} {city.queue.count}");
 				var qFirst = true;
 				foreach (var q in city.queue)
 				{
-					if (qFirst)
-					{
-						qFirst = false;
-					}
-					else
-					{
-						sb.Append(',');
-					}
-					sb.Append($"[{q.bspot},{q.bid},{q.slvl},{q.elvl}]");
+					Serialize(ref sb, q, ref qFirst);
 				}
 				sb.Append(']');
 			}
 			sb.Append('}');
-			return sb.ToString();
+			var rv = sb.ToString();
+			Log(rv);
+			return rv;
 
 		}
 		public static async void Initialize()
@@ -588,7 +670,7 @@ namespace COTG.JSON
 						var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
 						cq.Enqueue(op);
 					}
-					Log($"{cid} {cq.queue.Count}");
+					Log($"{cid} {cq.queue.count}");
 					cq.Process(AMath.random.Next(1024, 3 * 1024)); // wait 1 - 3 seconds.
 
 				}
