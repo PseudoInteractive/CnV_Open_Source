@@ -866,7 +866,7 @@ namespace COTG.Views
 					else
 					{
 						var counts = CountBuildings();
-						if (counts.count >= counts.max && counts.townHallLevel < 10 || buildDef.Thl > counts.townHallLevel)
+						if ( (counts.count >= counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
 						{
 							if (!await UpgradeTownHallDialogue( ((counts.count)/10+1 ).Max(buildDef.Thl)))
 								return;

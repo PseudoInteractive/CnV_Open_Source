@@ -61,6 +61,7 @@ namespace COTG.Views
             if (isVisible && isActive)
             {
                 VisibilityChanged(false);  // close enough default behaviour
+				JSClient.JSInvoke("cityRefresh", null);
                 VisibilityChanged(true);  // close enough default behaviour
             }
         }

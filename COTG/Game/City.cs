@@ -69,11 +69,12 @@ namespace COTG.Game
 		public const short bidSnagBarricade = 567;
 		public const short bidVeiledBarricade = 571;
 
-
 		public const short bidStone = 451;
 		public const short bidIron = 452;
 		public const short bidLake = 453;
 		public const short bidForest = 454;
+		public const short bidResStart = 451;
+		public const short bidResEnd = 454;
 		public const int bspotWall = 0;
 		public const int bspotTownHall = span1 * citySpan + span1;
 

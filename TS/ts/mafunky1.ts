@@ -373,6 +373,12 @@ function compareBq() : boolean
 			updateBuildQueue();
 			return true;
 	}
+
+
+
+
+
+
 function sendCityData(delayInMs) {
 
 	clearTimeout(updateTimeout);

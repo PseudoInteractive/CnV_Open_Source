@@ -88,6 +88,12 @@ namespace COTG
 		   JSClient.view.InvokeScriptAsync(func, args));
 		}
 
+		public static Task JSInvokeTask(string func, string[] args)
+		{
+			// this won't await the actually js call
+			return App.DispatchOnUIThreadSneakyTask(() =>
+		   JSClient.view.InvokeScriptAsync(func, args));
+		}
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
 		{

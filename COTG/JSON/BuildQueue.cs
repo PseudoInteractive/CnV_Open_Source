@@ -185,7 +185,7 @@ namespace COTG.JSON
 			for (; ; )
 			{
 				int delay = 3000;
-				
+				var pollPaused = false;
 				//if (queue.count > 0)
 				{
 					
@@ -209,6 +209,8 @@ namespace COTG.JSON
 						else
 						{
 							delay = 6000;
+							pollPaused = true;
+							await JSClient.JSInvokeTask("pausepoll",null);
 							// First try to get it from poll2, then if that fails, try GC 
 							for (int i = 0; i < 3; ++i)
 							{
@@ -354,7 +356,7 @@ namespace COTG.JSON
 								else if (i.isDemo)
 								{
 									var prior = city.GetBuildingPostQueue(i.bspot, cotgQ);
-									if (prior.bl == 0 || prior.bid != i.bid)
+									if (prior.bid != i.bid)
 									{
 										// invalid command, discard it
 										Trace("Invlid demo");
@@ -428,6 +430,9 @@ namespace COTG.JSON
 					}
 					finally
 					{
+						if(pollPaused)
+						 JSClient.JSInvoke("resumepoll", null);
+
 						throttle.Release();
 						if (cotgQ != null && cotgQ != City.buildQueue)
 							cotgQ.Dispose();

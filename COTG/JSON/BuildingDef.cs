@@ -116,7 +116,7 @@ namespace COTG.JSON
 		[JsonIgnore]
 		public bool isRes => IsRes(bid);
 
-		public static bool IsRes(int bid) => bid switch { City.bidStone =>true, City.bidIron =>true,City.bidLake=>true,City.bidForest=>true,_=>false };
+		public static bool IsRes(int bid) => (bid >= City.bidResStart) & (bid <= City.bidResEnd);
 
 		[JsonIgnore]
 		public bool isPost => Trcap!=null;
@@ -128,6 +128,10 @@ namespace COTG.JSON
 		public bool isWall => bid == Game.City.bidWall;
 		[JsonIgnore]
 		public bool isTownHall => bid == Game.City.bidTownHall;
+
+		[JsonIgnore]
+		public bool requiresBuildingSlot => !isTower && !isWall && !isTownHall && !isRes ;
+
 
 		[JsonIgnore]
 		public bool isCabin => bid == Game.City.bidCottage;
