@@ -1552,10 +1552,21 @@ namespace COTG.Views
 			}
 			else
 			{
-			//	Log($"{action} => None");
-			//	action = Action.none;
+				//	Log($"{action} => None");
+				//	action = Action.none;
 
-			
+				if (isRight)
+				{
+					if(!tipBuildRightHidden)
+						instance.tipBuildRight.IsOpen = true;
+				}
+				else
+				{
+					if (!tipBuildLeftHidden)
+						instance.tipBuildLeft.IsOpen = true;
+
+				}
+
 				//	var i = instance;
 				//i.building.Text = d.Bn;
 				//i.description.Text = d.Ds;
@@ -1718,10 +1729,21 @@ namespace COTG.Views
 			buildMenu.Hide();
 
 		}
+		static bool tipBuildLeftHidden;
+		static bool tipBuildRightHidden;
+		private void hideTipBuildLeft(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		{
+			tipBuildLeftHidden = true;
+		}
+
+		private void hideTipBuildRight(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		{
+			tipBuildRightHidden = true;
+		}
 		//public static BuildPhase GetBuildPhase()
 		//{
 		//	var buildings = postQueueBuildings;
-			
+
 		//	foreach (var b in buildings )
 		//	{
 		//		// any mil buildings full?

@@ -331,6 +331,9 @@
     <Compile Include="Views\FirstRunDialog.xaml.cs">
       <DependentUpon>FirstRunDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Fixes.xaml.cs">
+      <DependentUpon>Fixes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HeatmapDatePicker.xaml.cs">
       <DependentUpon>HeatmapDatePicker.xaml</DependentUpon>
     </Compile>
@@ -463,6 +466,10 @@
     <Page Include="Views\FirstRunDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Fixes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HeatmapDatePicker.xaml">
       <SubType>Designer</SubType>
@@ -670,6 +677,7 @@
     <EmbeddedResource Include="JS\jquery-migrate1_4_1" />
     <EmbeddedResource Include="JS\jquery3_5_1" />
     <EmbeddedResource Include="JS\jquerymigrate" />
+    <EmbeddedResource Include="Notes\fixes.md" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />

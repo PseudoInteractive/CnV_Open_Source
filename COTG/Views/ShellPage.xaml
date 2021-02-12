@@ -243,10 +243,10 @@
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
-		<Grid Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
+		<Grid x:Name="chatGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
 			<Grid.RowDefinitions>
-				<RowDefinition Height="2*"/>
-				<RowDefinition Height="*"/>
+				<RowDefinition Height="8*"/>
+				<RowDefinition Height="4*"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
@@ -257,8 +257,8 @@
 					<winui:TeachingTip x:Name="ChatTip0"
                                 Title="Chat Window"
                                    IsLightDismissEnabled="True"
-                              
-Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up to view chat"></winui:TeachingTip>
+									Target="{x:Bind chatTabFrame}"
+									   Subtitle="Drag up to view chat"></winui:TeachingTip>
 					<winui:TeachingTip x:Name="ChatTip1"
                                    IsLightDismissEnabled="True"
                                 Title="Translate Incoming"
@@ -271,6 +271,7 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                                 Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
 				</Frame.Resources>
 			</Frame>
+			<!-- Chat Width resizer -->
 			<tk:GridSplitter
                         Background="Transparent"
                     Grid.Row="1"
@@ -287,9 +288,10 @@ Target="{x:Bind chatTabFrame}"                                Subtitle="Drag up 
                     Foreground="White"  IsHitTestVisible="False"    />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
+			<!-- Chat Height resizer -->
 			<tk:GridSplitter
                     Grid.Row="1"
-                    Background="Transparent"
+                    Background="Transparent" Tapped="chatResizeTapped"
 										 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeAll"

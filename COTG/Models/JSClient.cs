@@ -2017,19 +2017,11 @@ namespace COTG
 					   // await RaidOverview.Send();
 					   App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
 					   SetStayAlive(SettingsPage.stayAlive);
-					   //{
-					   //    //var now = DateTime.UtcNow;
-					   //    //if (now.Day <= 28 && now.Month==11)
-					   //    {
-					   App.DispatchOnUIThreadSneaky(() =>
-					 {
-						 //if (SystemInformation.Instance.IsAppUpdated)
-						 {
-							 var dialog = new WhatsNewDialog();
-							 dialog.DefaultButton = ContentDialogButton.Close;
-							 dialog.ShowAsync();
-						 }
-					 });
+						//{
+						//    //var now = DateTime.UtcNow;
+						//    //if (now.Day <= 28 && now.Month==11)
+						//    {
+						App.DispatchOnUIThreadSneaky(ShowWhatsNew);
 
 				   }
 			   }
@@ -2058,7 +2050,18 @@ namespace COTG
 		}
 		
 		
-
+		static async void ShowWhatsNew()
+		{
+			var dialog = new WhatsNewDialog();
+			dialog.DefaultButton = ContentDialogButton.Primary;
+			var result = await dialog.ShowAsync();
+			if(result == ContentDialogResult.Primary)
+			{
+				var fixes = new Fixes();
+				fixes.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
+				await fixes.ShowAsync();
+			}
+		}
 		private static async void PresenceTimer_Tick(object sender, object e)
 		{
 			var players = await Cosmos.GetPlayersInfo();

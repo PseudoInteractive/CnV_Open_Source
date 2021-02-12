@@ -37327,10 +37327,15 @@ function outer() {
             E6k.R6();
             var i2n = $(window)
                 .width() - W2n;
-            if (i2n >= 390)
+            if (i2n >= 390) {
                 $(__s[2868])
                     .removeClass(__s[+A7R])
                     .addClass(__s[2583]);
+                document.getElementById("mapchange").style.display = "block";
+            }
+            else {
+                document.getElementById("mapchange").style.display = "none";
+            }
             $(window)
                 .resize(function () {
                 E6k.R6();
@@ -37339,14 +37344,18 @@ function outer() {
                     .width();
                 var g2n = $(window)
                     .width() - K2n;
-                if (g2n >= 390)
+                if (g2n >= 390) {
                     $(__s[2868])
                         .removeClass(__s[A7R | 416])
                         .addClass(__s[2583]);
-                else
+                    document.getElementById("mapchange").style.display = "block";
+                }
+                else {
                     $(__s[2868])
                         .removeClass(__s[2583])
                         .addClass(__s[+A7R]);
+                    document.getElementById("mapchange").style.display = "none";
+                }
             });
             var d2n = $(__s[O3t & 2147483647])
                 .width();
@@ -49598,8 +49607,8 @@ function outer() {
                                     2147483647) + N3g + __s[2877] + Y3g + __s[6272] + c3g + _s("1071" ^
                                     0) + p3g + __s[6534] + m3g + __s[3699] + a3g + __s[+Y7R] + q3g + _s(+"1343") + s1g + __s[+Q1y] + y3g + __s[2316] + H1g + __s[+p6R] + p3g + _s(3117) + y3g + "'>" + j1g + __s[+k8m] + I1g + __s[6017] + y3g + E6k
                                     .o55('5635' | 5633) + w1g + __s[1941] + y3g + __s[6423];
-                                $("#buildTableb");
-                                console.log(v1g);
+                                $("#buildTableb")
+                                    .append(v1g);
                                 k0F[y3g] = 1;
                                 $("#a" + y3g)
                                     .tooltipster({

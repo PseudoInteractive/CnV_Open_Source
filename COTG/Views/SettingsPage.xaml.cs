@@ -45,7 +45,7 @@ namespace COTG.Views
 
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
-		public static float dpiScale;
+		public static float renderScale=1.0f;
 		public static Lighting lighting = Lighting.day;
 		//        private static UserData _user;
 		public static bool fetchFullHistory = true;

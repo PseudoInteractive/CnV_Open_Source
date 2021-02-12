@@ -529,8 +529,10 @@ namespace COTG
 		{
 			dipToNative = UWindows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
 			nativeToDip = 1.0 / dipToNative;
-			clientSpan.X = MathF.Round( (float)(dx* dipToNative / 4))*4.0f;
-			clientSpan.Y = MathF.Round((float)(dy* dipToNative /4))*4.0f;
+			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
+			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
+			clientSpan.X =  (float)(dx* dipToNative);
+			clientSpan.Y =  (float)(dy* dipToNative);
 			halfSpan = clientSpan * 0.5f;
 		}
 		public static int resolutionDirtyCounter;

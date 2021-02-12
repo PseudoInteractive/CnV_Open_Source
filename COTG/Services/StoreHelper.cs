@@ -92,7 +92,7 @@ namespace COTG.Services
 
 			// The package updates were already downloaded separately, so this method skips the download
 			// operatation and only installs the updates; no download progress notifications are provided.
-			StorePackageUpdateResult result = await installOperation.AsTask();
+			StorePackageUpdateResult result = await installOperation.AsTask().ConfigureAwait(true);
 
 			switch (result.OverallState)
 			{

@@ -1202,5 +1202,13 @@ namespace COTG.Views
 			}
 		}
 
+		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
+		{
+			var flyout = new MenuFlyout();
+			flyout.AddItem("Tall", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight*0.875f) );
+			flyout.AddItem("Medium", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight *(1.0f/3.0f)) );
+			flyout.AddItem("Small", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight*(1.0f/32.0f)));
+			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
+		}
 	}
 }

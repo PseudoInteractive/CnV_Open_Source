@@ -14274,8 +14274,11 @@ function outer(){
 						if (Z1g > 100) {
 							if (Z1g + 100 < callDelay)
 								callDelay = Z1g + 100;
-							if (city["itu"] && city["itu"][6] && city["itu"][6] > 0) {
-								DoPoll2(500);
+		
+							// build speedup?
+		
+							if (city["itu"] && city["itu"][6] && city["itu"][6] > 0) { // build speedup
+								DoPoll2(200);
 								// callDelay = 600;
 							}
 							UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
@@ -18796,11 +18799,11 @@ function outer(){
 									;
 								if (Z9T == 6) {
 									if (city["itu"])
-										if (city["itu"][Z9T]) city["itu"][Z9T] += U9T;
-										else city["itu"][Z9T] = U9T;
+										if (city["itu"][6]) city["itu"][6] += U9T;
+										else city["itu"][6] = U9T;
 									else {
 										city["itu"] = new Object();
-										city["itu"][Z9T] = U9T;
+										city["itu"][6] = U9T;
 									}
 									J2();
 								}
@@ -31383,7 +31386,7 @@ function outer(){
 			var x3w = 0;
 			if (city["itu"])
 				if (city["itu"][6])
-					if (city["itu"][6] > 0) x3w = city["itu"][6];
+					if (city["itu"][6] > 0) x3w = city["itu"][6]; // city itu 6 is building speedup
 			var w3w = '';
 			if (x3w > 0) {
 				w3w = "<br>Speedup time: " + Q2(x3w);
@@ -39912,9 +39915,18 @@ function outer(){
 				E6k.R6();
 				var i2n = $(window)
 					.width() - W2n;
-				if (i2n >= 390) $(__s[2868])
+				if (i2n >= 390){
+					$(__s[2868])
 					.removeClass(__s[+A7R])
 					.addClass(__s[2583]);
+							document.getElementById("mapchange").style.display = "block";
+				 }
+				else
+				{
+							document.getElementById("mapchange").style.display = "none";
+	
+				}
+
 				$(window)
 					.resize(function () {
 						E6k.R6();
@@ -39923,12 +39935,20 @@ function outer(){
 								.width();
 						var g2n = $(window)
 							.width() - K2n;
-						if (g2n >= 390) $(__s[2868])
+						if (g2n >= 390){
+								$(__s[2868])
 							.removeClass(__s[A7R | 416])
 							.addClass(__s[2583]);
-						else $(__s[2868])
+							document.getElementById("mapchange").style.display = "block";
+						
+						}
+						else
+						{
+							$(__s[2868])
 							.removeClass(__s[2583])
 							.addClass(__s[+A7R]);
+							document.getElementById("mapchange").style.display = "none";
+						}
 					});
 				var d2n = $(__s[O3t & 2147483647])
 					.width();
@@ -53122,8 +53142,8 @@ function outer(){
 													3117) + y3g + "'>" + j1g + __s[+k8m] + I1g + __s[6017] + y3g + E6k
 														.o55('5635' | 5633) + w1g + __s[1941] + y3g + __s[6423];
 									$("#buildTableb")
-							//			.append(v1g);
-										console.log( v1g);
+										.append(v1g);
+								//		console.log( v1g);
 									k0F[y3g] = 1;
 									$("#a" + y3g)
 										.tooltipster({
@@ -68226,8 +68246,7 @@ function outer(){
 								if (ppdt["itu"][10])
 									for (var C0i in ppdt["itu"][10]) {
 										var h0i = currentTime();
-										var i0i = ppdt[_s(
-											P1y >> 151392544)][10][C0i][1];
+										var i0i = ppdt["itu"][10][C0i][1];
 										if (i0i < h0i) ppdt["itu"]['10' | 10].splice(
 											C0i, 1);
 										else {
