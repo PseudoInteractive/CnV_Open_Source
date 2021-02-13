@@ -607,7 +607,7 @@ namespace COTG
 		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
-			if (SettingsPage.musicVolume > 0)
+			if (SettingsPage.musicVolume > 0 && !JSClient.isSub )
 			{
 				if (music == null)
 				{

@@ -210,18 +210,29 @@ namespace COTG.JSON
 						{
 							delay = 6000;
 							pollPaused = true;
-							await JSClient.JSInvokeTask("pausepoll",null);
 							// First try to get it from poll2, then if that fails, try GC 
 							for (int i = 0; i < 3; ++i)
 							{
-							//	await Post.Send("/overview/mconv.php", $"a={cid}");
-							//	await Post.Send("/overview/bqSt.php", $"cid={cid}");
-
-								var dd = await Post.SendForJson("/includes/poll2.php", $"cid={cid}&ai=0&ss=" + HttpUtility.UrlEncode(JSClient.secSessionId, Encoding.UTF8));  // /includes/poll2.php
-								if (dd.RootElement.TryGetProperty("city", out var jsCity))
+								//	await Post.Send("/overview/mconv.php", $"a={cid}");
+								//	await Post.Send("/overview/bqSt.php", $"cid={cid}");
+								JSClient.extCityHack = null;
+								await JSClient.JSInvokeTask("extpoll", new[] { cid.ToString() });
+								int timeout = 0;
+								while(JSClient.extCityHack==null)
 								{
-									GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+									await Task.Delay(50);
+									if (++timeout > 20)
+										break;
 								}
+
+								if (JSClient.extCityHack == null)
+									continue;
+
+								if( JSClient.extCityHack.RootElement.TryGetProperty("ext", out var ext) )
+								{ 
+									GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
+								}
+								JSClient.extCityHack = null;
 								if (cotgQ != null)
 									break;
 							}
@@ -347,7 +358,7 @@ namespace COTG.JSON
 										{
 											// invalid command, discard it
 											RemoveAt(offset);
-											Trace("Invlid update");
+											Trace("Invlid u");
 
 											continue;
 										}
@@ -530,13 +541,13 @@ namespace COTG.JSON
 		{
 			Assert(initialized);
 			var op = new BuildQueueItem(slvl, elvl, bid, spot);
-			if (bid == City.bidTemple)
+			if (bid == City.bidTemple && slvl == 0)
 			{
 				Assert(cid == City.build);
 				JSClient.JSInvoke("buildTemple", new[] {spot.ToString()});
 				return;
 			}
-			if (bid == City.bidCastle)
+			if (bid == City.bidCastle && slvl == 0)
 			{
 				Assert(cid == City.build);
 				var dialog = new ContentDialog()

@@ -938,14 +938,14 @@ namespace COTG
 		//    UpdatePPDT(ppdt.RootElement);
 		//}
 
-		public static async Task PollCity(int cid)
-		{
-			await Task.Delay(50);
-			await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
-			await Task.Delay(400); // hack:  Todo, handle this property
-			await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
-			await Task.Delay(300); // hack:  Todo, handle this property
-		}
+		//public static async Task PollCity(int cid)
+		//{
+		//	await Task.Delay(50);
+		//	await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
+		//	await Task.Delay(400); // hack:  Todo, handle this property
+		//	await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
+		//	await Task.Delay(300); // hack:  Todo, handle this property
+		//}
 		static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
 
 		static ConcurrentDictionary<int, Action<JsonElement>> gstCBs = new ConcurrentDictionary<int, Action<JsonElement>>();
@@ -992,6 +992,7 @@ namespace COTG
 			ttCombatBonus[16] = 1 + (faith.cyndros) * 0.5f / 100 + (researchRamp[research[45]]) / 100;
 			ttCombatBonus[17] = 1; // no combat research for senator
 		}
+		public static JsonDocument extCityHack;
 		public static bool ppdtInitialized;
 		static private int[] lastCln = null;
 		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
@@ -1551,7 +1552,7 @@ namespace COTG
 								   UpdatePPDT(ppdt,false);
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
-
+								   App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText);
 								   break;
 							   }
 						   case "aexp":
@@ -1780,6 +1781,11 @@ namespace COTG
 							   }
 
 
+						   case "ext":
+							   {
+								   extCityHack = jsDoc;
+								   break;
+							   }
 
 
 						   case "citydata":

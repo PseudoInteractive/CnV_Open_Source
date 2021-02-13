@@ -6,5 +6,6 @@
 
 	<!--  Ink  -->
     <SolidColorBrush x:Key="InkCanvasBackground" Color="#FFFFFF"></SolidColorBrush>
+	<SolidColorBrush x:Key="purpleBackground" Color="#D2100820"/>
     <SolidColorBrush x:Key="InkToolbarButtonBackgroundThemeBrush" Color="Transparent"></SolidColorBrush>
 </ResourceDictionary>

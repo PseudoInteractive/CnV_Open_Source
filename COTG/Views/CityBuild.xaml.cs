@@ -614,7 +614,12 @@ namespace COTG.Views
 				{
 					Enqueue(lvl, level, sel.def.bid, id);
 				}
-			}			
+			}
+			else
+			{
+				Status($"{sel.name} is already level {sel.bl} (or upgrading there)", dryRun);
+
+			}
 		}
 
 		public static void Demolish((int x, int y) building, bool dryRun)
@@ -866,7 +871,7 @@ namespace COTG.Views
 					else
 					{
 						var counts = CountBuildings();
-						if ( (counts.count >= counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
+						if ( ( counts.count == counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
 						{
 							if (!await UpgradeTownHallDialogue( ((counts.count)/10+1 ).Max(buildDef.Thl)))
 								return;
@@ -1234,7 +1239,7 @@ namespace COTG.Views
 										MoveBuilding(takeFrom, bspot,dryRun);
 										break;
 									}
-									if (counts.townHallLevel < b.def.Thl || (counts.count >= counts.max && counts.townHallLevel < 10))
+									if (counts.townHallLevel < b.def.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
 									{
 										var level = (counts.count/ 10+1).Max(b.def.Thl).Min(10);
 										if (dryRun)
@@ -1540,6 +1545,7 @@ namespace COTG.Views
 
 			if (!isRight && (action != Action.none) )
 			{
+				ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack: ElementSoundKind.Focus );
 				await PerformAction(action, cc, quickBuildId, false);
 				if(action != Action.move)
 					lastQuickBuildActionBSpot = bspot;
@@ -1557,13 +1563,19 @@ namespace COTG.Views
 
 				if (isRight)
 				{
-					if(!tipBuildRightHidden)
+					if (!tipBuildRightHidden)
+					{
 						instance.tipBuildRight.IsOpen = true;
+						tipBuildRightHidden = true;
+					}
 				}
 				else
 				{
 					if (!tipBuildLeftHidden)
+					{
 						instance.tipBuildLeft.IsOpen = true;
+						tipBuildLeftHidden = true;
+					}
 
 				}
 
@@ -1574,6 +1586,7 @@ namespace COTG.Views
 				//i.downgrade.IsEnabled = b.bl > 1;
 				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
 				{
+					ElementSoundPlayer.Play( ElementSoundKind.Show);
 					ShowContectMenu(cc,isRight);
 
 				}

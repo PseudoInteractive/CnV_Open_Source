@@ -7,18 +7,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Fixes"
-    PrimaryButtonText="Done"
+    Title="Changelog"
+    PrimaryButtonText="Done" Background="{StaticResource purpleBackground}"
+	
 >
 	<Grid>
 		<ScrollViewer 
                   Margin="12"
                   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
                   BorderThickness="2"
-                  HorizontalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+		
                   VerticalScrollBarVisibility="Visible">
-			<controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public"
-                                  Margin="6"
+			<controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
+                                  Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
                                    />
 		</ScrollViewer>
 	</Grid>

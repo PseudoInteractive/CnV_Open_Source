@@ -7089,6 +7089,7 @@ var _cid = 0;
 var _viewMode = 0; // 
 
 let disablePoll = false;
+let onResumePoll : { (): void; }[] = [];
 
 var _viewModeCache = 0;
 const viewModeCity = 0;
@@ -7127,138 +7128,20 @@ function setTestFlag(flag) {
 let xcoord=0;
 let ycoord=0;
 
-function debounce(func: () => void, wait: number, _maxWait: number = 0, _leading: boolean = false, _trailing: boolean = true) {
-	let lastArgs,
-		lastThis,
-		maxWait,
-		result,
-		timerId,
-		lastCallTime
+function debounceArgs(func : ()=>void, timeout:number){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 
-	let lastInvokeTime = 0
-	let leading = _leading
-	let maxing = false
-	let trailing = true
-
-
-
-	maxing = _maxWait !== 0
-	maxWait = maxing ? Math.max(_maxWait || 0, wait) : _maxWait
-	trailing = _trailing
-
-	function invokeFunc(time) {
-		const args = lastArgs
-		const thisArg = lastThis
-
-		lastArgs = lastThis = undefined
-		lastInvokeTime = time
-		result = func.apply(thisArg, args)
-		return result
-	}
-
-	function startTimer(pendingFunc, wait) {
-		return setTimeout(pendingFunc, wait)
-	}
-
-	function cancelTimer(id) {
-
-		clearTimeout(id)
-	}
-
-	function leadingEdge(time) {
-		// Reset any `maxWait` timer.
-		lastInvokeTime = time
-		// Start the timer for the trailing edge.
-		timerId = startTimer(timerExpired, wait)
-		// Invoke the leading edge.
-		return leading ? invokeFunc(time) : result
-	}
-
-	function remainingWait(time) {
-		const timeSinceLastCall = time - lastCallTime
-		const timeSinceLastInvoke = time - lastInvokeTime
-		const timeWaiting = wait - timeSinceLastCall
-
-		return maxing
-			? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
-			: timeWaiting
-	}
-
-	function shouldInvoke(time) {
-		const timeSinceLastCall = time - lastCallTime
-		const timeSinceLastInvoke = time - lastInvokeTime
-
-		// Either this is the first call, activity has stopped and we're at the
-		// trailing edge, the system time has gone backwards and we're treating
-		// it as the trailing edge, or we've hit the `maxWait` limit.
-		return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-			(timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait))
-	}
-
-	function timerExpired() {
-		const time = Date.now()
-		if (shouldInvoke(time)) {
-			return trailingEdge(time)
-		}
-		// Restart the timer.
-		timerId = startTimer(timerExpired, remainingWait(time))
-	}
-
-	function trailingEdge(time) {
-		timerId = undefined
-
-		// Only invoke if we have `lastArgs` which means `func` has been
-		// debounced at least once.
-		if (trailing && lastArgs) {
-			return invokeFunc(time)
-		}
-		lastArgs = lastThis = undefined
-		return result
-	}
-
-	function cancel() {
-		if (timerId !== undefined) {
-			cancelTimer(timerId)
-		}
-		lastInvokeTime = 0
-		lastArgs = lastCallTime = lastThis = timerId = undefined
-	}
-
-	function flush() {
-		return timerId === undefined ? result : trailingEdge(Date.now())
-	}
-
-	function pending() {
-		return timerId !== undefined
-	}
-
-	function debounced(...args) {
-		const time = Date.now()
-		const isInvoking = shouldInvoke(time)
-
-		lastArgs = args
-		lastThis = this
-		lastCallTime = time
-
-		if (isInvoking) {
-			if (timerId === undefined) {
-				return leadingEdge(lastCallTime)
-			}
-			if (maxing) {
-				// Handle invocations in a tight loop.
-				timerId = startTimer(timerExpired, wait)
-				return invokeFunc(lastCallTime)
-			}
-		}
-		if (timerId === undefined) {
-			timerId = startTimer(timerExpired, wait)
-		}
-		return result
-	}
-	debounced.cancel = cancel
-	debounced.flush = flush
-	debounced.pending = pending
-	return debounced
+function debounce(func : ()=>void, timeout:number){
+  let timer;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout(func, timeout);
+  };
 }
 
 let _zoom = 1;
@@ -14247,10 +14130,11 @@ function outer(){
 		function i5F() { }
 		var R0F = 0;
 
+		// the purpose of this is to update the build progress bar and to potentially issue an early doPoll call to coincide with when a building completes
 		function ProcessBuildQueue() {
 			if (city.bq)
 				if (city.bq[0]) {
-					let callDelay = 1000;
+					let callDelay = 2000;
 					var n1g = Number(city.bq[0].bid);
 					var Y1g = Number(city.bq[0].btype);
 					var J1g =
@@ -14272,12 +14156,10 @@ function outer(){
 						var Z1g = Number(h1g) - Number(f1g);
 						var g1g = Q2(Number(Z1g));
 						if (Z1g > 100) {
-							if (Z1g + 100 < callDelay)
-								callDelay = Z1g + 100;
-		
+						
 							// build speedup?
 		
-							if (city["itu"] && city["itu"][6] && city["itu"][6] > 0) { // build speedup
+							if (city.itu && city.itu[6] && city.itu[6] > 0) { // build speedup
 								DoPoll2(200);
 								// callDelay = 600;
 							}
@@ -14403,8 +14285,7 @@ function outer(){
 			return b62;
 		}
 
-		let redrawCity = debounce(RedrawCity, 500);
-		function RedrawCity() {
+		function redrawCity() {
 			var p8U = city["bd"][bspotHall ^ 0]["bl"];
 			var S0l = bam[_s(Q5y <<
 				1718611616)][+BAL]["st"][p8U];
@@ -15912,6 +15793,7 @@ function outer(){
 						var g2V = $(__s[+s9R])
 							.val();
 						E6k.y6();
+						console.log("???");
 						SetCity(g2V);
 					});
 				$(__s[960])
@@ -16902,12 +16784,9 @@ function outer(){
 				.val() < 0) $(__s[787] + m6Z)
 					.val(0);
 		}
-		gspotfunct.chcity = function (__cid) {
-			SetCity(__cid);
-		
-		};
-		window['chcity'] = gspotfunct.chcity;
-	   clearIdle();
+		gspotfunct.chcity = SetCity;
+		window['chcity'] = SetCity;
+	   
 		gspotfunct.infoPlay = function (q9V) {
 			E6k.y6();
 			Z5F(q9V);
@@ -17487,6 +17366,7 @@ function outer(){
 				}, 200);
 				else if (!(Y0g == 0)) {
 					city = JSON.parse(Y0g);
+			 console.log("get city " + cid + " " + city.cid);
 				    cid = city.cid;
 					gCPosted();
 					Y0g = "";
@@ -18028,7 +17908,7 @@ function outer(){
 				var X5U = ppdt["r"];
 				ppdt[__s[301]] = 0;
 				//console.log(P8);
-				var z5U = Number(ppdt[__s[Y9y | 727]]);
+				var z5U = Number(ppdt.lcit);
 				n9F();
 				getCity(z5U);
 				if (ppdt[__s[5060]])
@@ -18717,9 +18597,17 @@ function outer(){
 
 
 		function SetCity(d9l) {
+			console.log("set city " + d9l);
+			clearIdle();
 			let __cid = Number(d9l);
 			if(__cid === cid )
 				   return;
+			if(disablePoll)
+			{
+				onResumePoll.push(() => SetCity(__cid) );
+				return;
+			}
+
 				_cid = cid = __cid;
 				bqInFlight=0;
 				lastSentBq=-1;
@@ -18734,14 +18622,25 @@ function outer(){
 
  window['cityRefresh'] = function()
 {
+	if(disablePoll)
+	{
+		onResumePoll.push(window['cityRefresh']);
+		return;
+	}
+	if(cid==0)
+	 return;
+
 	bqInFlight=0;
 	lastSentBq=-1;
 	lastSentBD=-1;
 	ClearCity();
-				callSyncViewMode();
-				getCity(cid);
-				X8();
-				DoPoll2(300);
+				
+	getCity(cid);
+	DoPoll2(400);
+	
+ // once more for good measure
+	setTimeout(function () {DoPoll2(400);callSyncViewMode(); J2(); }, 1000);
+
 }
 
 		function W3F(d9T) {
@@ -18798,22 +18697,22 @@ function outer(){
 								if (Z9T == 5)
 									;
 								if (Z9T == 6) {
-									if (city["itu"])
-										if (city["itu"][6]) city["itu"][6] += U9T;
-										else city["itu"][6] = U9T;
+									if (city.itu)
+										if (city.itu[6]) city.itu[6] += U9T;
+										else city.itu[6] = U9T;
 									else {
-										city["itu"] = new Object();
-										city["itu"][6] = U9T;
+										city.itu = new Object();
+										city.itu[6] = U9T;
 									}
 									J2();
 								}
 								if (Z9T == 7) {
-									if (city["itu"])
-										if (city["itu"][Z9T]) city["itu"][Z9T] += U9T;
-										else city["itu"][Z9T] = U9T;
+									if (city.itu)
+										if (city.itu[7]) city.itu[7] += U9T;
+										else city.itu[7] = U9T;
 									else {
-										city["itu"] = new Object();
-										city["itu"][Z9T] = U9T;
+										city.itu = {};
+										city.itu[7] = U9T;
 									}
 									J2();
 								}
@@ -18822,25 +18721,25 @@ function outer(){
 									var D9T =
 										Number(c9T) + Number(B9T[9]);
 									for (var N9T = b9T - 1; N9T >= 0; N9T--)
-										if (city["itu"])
-											if (city["itu"][Z9T]) {
-												var p9T = city["itu"][Z9T].length;
-												city["itu"][Z9T][p9T] = new Object();
-												city["itu"][Z9T][p9T][0] = B9T[Z9T];
-												city["itu"][Z9T][p9T][1] = D9T;
+										if (city.itu)
+											if (city.itu[8]) {
+												var p9T = city.itu[8].length;
+												city.itu[8][p9T] = new Object();
+												city.itu[8][p9T][0] = B9T[8];
+												city.itu[8][p9T][1] = D9T;
 											} else {
-												city["itu"][Z9T] = new Object();
-												city["itu"][Z9T][0] = new Object();
-												city["itu"][Z9T][0][0] = B9T[Z9T];
-												city["itu"][Z9T][0][1] = D9T;
+												city.itu[8] = new Object();
+												city.itu[8][0] = new Object();
+												city.itu[8][0][0] = B9T[8];
+												city.itu[8][0][1] = D9T;
 											}
 										else {
-											city["itu"] =
+											city.itu =
 												new Object();
-											city["itu"][Z9T] = new Object();
-											city["itu"][Z9T][0] = new Object();
-											city["itu"][Z9T][0][0] = B9T[Z9T];
-											city["itu"][Z9T][0][1] = D9T;
+											city.itu[8] = new Object();
+											city.itu[8][0] = new Object();
+											city.itu[8][0][0] = B9T[8];
+											city.itu[8][0][1] = D9T;
 										}
 									J2();
 								}
@@ -23066,13 +22965,9 @@ function outer(){
 		var M9 = __s[4133];
 		var z9 = __s[S5R | 70];
 
-		let _s5V = debounce(s5V, 500);
+		//let J2 = debounce(s5V, 500);
 
-		function J2() {
-			E6k.R6();
-			_s5V();
-			//      s5V();
-		}
+		
 		var X9 = __s[4371];
 		var L9 = __s[S5R & 2147483647];
 
@@ -28309,88 +28204,88 @@ function outer(){
 						E6k.R6();
 						delete P5Z[p5Z.which];
 					});
-				$(document)
-					.keypress(function (O7Z) {
-						E6k.y6();
-						if (ppdt.opt[24] == 1) {
-							var H7Z = p3F(O7Z);
-							if (!$(_s(+
-								'1369'))
-								.is(__s[5280]) && Z9 == (0) && $("#city_map")
-									.css("display") != "none") {
-								O7Z.stopPropagation();
-								O7Z.preventDefault();
-								var l7Z = h8;
-								var Q7Z = S8;
-								var j7Z = Q7Z * (A5y << 956165248) + l7Z;
-								if (
-									B5F(j7Z)) j7Z = 0;
-								var w7Z = Number(city.bd[j7Z].bl);
-								var T7Z = Number(city.bd[j7Z].bid);
-								if (
-									H7Z == __s[3456] && T7Z != 0) E2F();
-								else if (B5Z()) e8F();
-								else if (R5Z()) p0V();
-								else if (y5Z()) p8(6, +k7y, 1);
-								else if (H7Z == "d") k8F();
-								else if (H7Z == "`") {
-									var I7Z = $("#citySpotMenu")
-										.css("display");
-									if (I7Z != __s[+X2R] && I7Z != "none") {
-										J9
-											();
-										var x7Z = $("#buildingMoveButton")
-											.attr("s");
-										var v7Z = city.bd[x7Z].bid;
-										if (L2(v7Z) != 0) v7Z = L2(v7Z);
-										if (
-											v7Z < TPL << 912961024) {
-											u7F = bam["buildings"][v7Z][__s[3216]];
-											g2 = 1;
-											v4F = x7Z;
-											var o7Z = x7Z % +A5y;
-											var X7Z = (x7Z - o7Z) / +A5y;
-										} else Y6(_s(+
-											'2601'));
-									}
-								} else {
-									var l7Z = h8;
-									var Q7Z = S8;
-									var j7Z = Q7Z * +A5y + l7Z;
-									if (B5F(j7Z))
-										j7Z = 0;
-									var w7Z = Number(city.bd[j7Z].bl);
-									var T7Z = Number(city.bd[j7Z].bid);
-									for (var t7Z in
-										city.bq) {
-										var L7Z = city.bq[t7Z].bspot;
-										if (j7Z == L7Z) {
-											w7Z = Number(city.bq[t7Z].elvl);
-											T7Z = Number(city.bq[t7Z].brep);
-										}
-									}
-									if (w7Z > 0 && w7Z < 10 && (H7Z == E6k
-										.o55(+p9R) || H7Z == __s[+F1R] || H7Z == __s[+C7R] || H7Z == __s[f14 ^ 0] ||
-										H7Z == __s[a4p | 4306] || H7Z == __s[5872] || H7Z == _s(E4p <<
-											911013472) || H7Z == __s[+F4R] || H7Z == 0 || H7Z == __s[d3R & 2147483647])) {
-										H7Z = Number(H7Z);
-										if (H7Z == 0)
-											H7Z = 10; // 0 maps to 10
-										if (H7Z > w7Z) W1F(H7Z);
-									} else {
-										var I7Z = $(__s[+D44])
-											.css("display");
-										if (I7Z != __s[X2R | 154] && I7Z != "none") {
-											var H7Z = p3F(O7Z);
-											m2F(H7Z);
-										}
-									}
-								}
-								Z9 = 1;
-								b3F();
-							}
-						}
-					});
+				//$(document)
+				//	.keypress(function (O7Z) {
+				//		E6k.y6();
+				//		if (ppdt.opt[24] == 1) {
+				//			var H7Z = p3F(O7Z);
+				//			if (!$(_s(+
+				//				'1369'))
+				//				.is(__s[5280]) && Z9 == (0) && $("#city_map")
+				//					.css("display") != "none") {
+				//				O7Z.stopPropagation();
+				//				O7Z.preventDefault();
+				//				var l7Z = h8;
+				//				var Q7Z = S8;
+				//				var j7Z = Q7Z * (A5y << 956165248) + l7Z;
+				//				if (
+				//					B5F(j7Z)) j7Z = 0;
+				//				var w7Z = Number(city.bd[j7Z].bl);
+				//				var T7Z = Number(city.bd[j7Z].bid);
+				//				if (
+				//					H7Z == __s[3456] && T7Z != 0) E2F();
+				//				else if (B5Z()) e8F();
+				//				else if (R5Z()) p0V();
+				//				else if (y5Z()) p8(6, +k7y, 1);
+				//				else if (H7Z == "d") k8F();
+				//				else if (H7Z == "`") {
+				//					var I7Z = $("#citySpotMenu")
+				//						.css("display");
+				//					if (I7Z != __s[+X2R] && I7Z != "none") {
+				//						J9
+				//							();
+				//						var x7Z = $("#buildingMoveButton")
+				//							.attr("s");
+				//						var v7Z = city.bd[x7Z].bid;
+				//						if (L2(v7Z) != 0) v7Z = L2(v7Z);
+				//						if (
+				//							v7Z < TPL << 912961024) {
+				//							u7F = bam["buildings"][v7Z][__s[3216]];
+				//							g2 = 1;
+				//							v4F = x7Z;
+				//							var o7Z = x7Z % +A5y;
+				//							var X7Z = (x7Z - o7Z) / +A5y;
+				//						} else Y6(_s(+
+				//							'2601'));
+				//					}
+				//				} else {
+				//					var l7Z = h8;
+				//					var Q7Z = S8;
+				//					var j7Z = Q7Z * +A5y + l7Z;
+				//					if (B5F(j7Z))
+				//						j7Z = 0;
+				//					var w7Z = Number(city.bd[j7Z].bl);
+				//					var T7Z = Number(city.bd[j7Z].bid);
+				//					for (var t7Z in
+				//						city.bq) {
+				//						var L7Z = city.bq[t7Z].bspot;
+				//						if (j7Z == L7Z) {
+				//							w7Z = Number(city.bq[t7Z].elvl);
+				//							T7Z = Number(city.bq[t7Z].brep);
+				//						}
+				//					}
+				//					if (w7Z > 0 && w7Z < 10 && (H7Z == E6k
+				//						.o55(+p9R) || H7Z == __s[+F1R] || H7Z == __s[+C7R] || H7Z == __s[f14 ^ 0] ||
+				//						H7Z == __s[a4p | 4306] || H7Z == __s[5872] || H7Z == _s(E4p <<
+				//							911013472) || H7Z == __s[+F4R] || H7Z == 0 || H7Z == __s[d3R & 2147483647])) {
+				//						H7Z = Number(H7Z);
+				//						if (H7Z == 0)
+				//							H7Z = 10; // 0 maps to 10
+				//						if (H7Z > w7Z) W1F(H7Z);
+				//					} else {
+				//						var I7Z = $(__s[+D44])
+				//							.css("display");
+				//						if (I7Z != __s[X2R | 154] && I7Z != "none") {
+				//							var H7Z = p3F(O7Z);
+				//							m2F(H7Z);
+				//						}
+				//					}
+				//				}
+				//				Z9 = 1;
+				//				b3F();
+				//			}
+				//		}
+				//	});
 				E6k.y6();
 				$(__s[4268])
 					.click(function () { k9(); });
@@ -31353,7 +31248,7 @@ function outer(){
 
 		__c.showreport = X3F;
 
-		function UpdateTroopQueue() {
+		function UpdateCityStuff() {
 			var p84 = "6119";
 			var Q0t = "6338";
 			var P84 = '1930';
@@ -31362,9 +31257,9 @@ function outer(){
 			var
 				I84 = "4639";
 			var I3w = 0;
-			if (city["itu"])
-				if (city["itu"][7])
-					if (city["itu"][7] > (0)) I3w = city["itu"][7];
+			if (city.itu)
+				if (city.itu[7])
+					if (city.itu[7] > (0)) I3w = city.itu[7];
 			if (I3w > 0)
 				var a4w = __s[2706] + Q2(I3w);
 			else var a4w = "";
@@ -31384,9 +31279,9 @@ function outer(){
 			$(__s[6206])
 				.text(W3w + __s[g9R << 31201760] + T3w);
 			var x3w = 0;
-			if (city["itu"])
-				if (city["itu"][6])
-					if (city["itu"][6] > 0) x3w = city["itu"][6]; // city itu 6 is building speedup
+			if (city.itu)
+				if (city.itu[6])
+					if (city.itu[6] > 0) x3w = city.itu[6]; // city itu 6 is building speedup
 			var w3w = '';
 			if (x3w > 0) {
 				w3w = "<br>Speedup time: " + Q2(x3w);
@@ -35912,6 +35807,12 @@ function outer(){
 		}
 		window['misccommand'] = function(_action : string,scid : string)
 		{
+		  if(disablePoll)
+			{
+				onResumePoll.push(()=>window['misccommand'](_action,scid) );
+				return;
+			}
+
 			let __cid = Number(scid);
 			if(_action === 'abandoncity')
 			{
@@ -42619,10 +42520,10 @@ function outer(){
 
 		function z0V(Z6g) {
 			var f6g = $("#a" + Z6g);
-			var J6g = f6g.attr(__s[T1m - 0]);
-			var r6g = f6g.attr(E6k
-				.o55(+K9y));
-			var S6g = f6g.attr(__s[4491]);
+			var J6g = Number(f6g.attr(__s[T1m - 0]));
+			var r6g = Number(f6g.attr(E6k
+				.o55(+K9y)));
+			var S6g = Number(f6g.attr(__s[4491]));
 			var U6g = Number(bam["buildings"][Number(J6g)][E6k
 				.o55(+h6R)][Number(r6g)][__s[m1p & 2147483647]]);
 			var g6g = Number(bam["buildings"][Number(J6g)][_s(
@@ -44345,6 +44246,7 @@ function outer(){
 					ProcessBuuPoll()
 	 				if (e5w == 0) {
 						// success
+						
 					} else if (e5w == 1) Y6(__s[6910]);
 					else if (e5w == 2) Y6(__s[4507]);
 					else __log("Upgrade " +e5w );
@@ -50366,10 +50268,8 @@ function outer(){
 		function ProcessBuuPoll() {
 			if (city.bq.length<=1)
 			    DoPoll2(300);
-			if (city.bq.length<=2)
-			    DoPoll2(500);
 			 else
-				DoPoll2(1600);
+				DoPoll2(500);
 		}
 
   // wall building?
@@ -54053,6 +53953,15 @@ function outer(){
    {
 		if(iter >= queue.length )
 		 {
+			   if(__cid === cid)
+				{
+					sendBuildingData();
+					updateBuildQueue();
+					redrawCity();
+					ProcessBuuPoll();
+				
+				}
+
 	//	   buildQTouch(__cid);
 			 return; // finished
 		}
@@ -54072,10 +53981,13 @@ function outer(){
 					return;
 				}
 				// Do upgrade
-			   upgradeEx(bXY,endLevel,__cid, iter,queue);
-			   return;
+				if( endLevel > startLevel+ 1)
+				{
+				   upgradeEx(bXY,endLevel,__cid, iter,queue);
+				   return;
+				}
 			}
-			let op =  endLevel==0 ? 3 : (startLevel==0)? 0 : 2;
+			let op =  endLevel==0 ? 3 : (startLevel==0)? 0 : endLevel > startLevel ? 1 : 2;
 			
 
 			//if(bId == bidWALL )
@@ -54256,12 +54168,6 @@ function outer(){
 													if(__cid === cid)
 													{
 														city = JSON.parse(s7w);
-														sendBuildingData();
-										
-														updateBuildQueue();
-														redrawCity();
-														ProcessBuuPoll();
-				
 													}
 												}
 												else { __log("build " + s7w); }
@@ -54272,7 +54178,44 @@ function outer(){
 											});
 										}
 									}
-								else if (op == (2)) { // downgrade
+									else if (op == (1)) // upgrade
+									{
+										{
+											var T5w = {
+												bt: Number(op),
+												pa: 1,
+												elvl: endLevel,
+												bid: i5w,
+												brep: bId,
+												ds: L5w,
+												btype: t5w,
+												bspot: bXY,
+												slvl: startLevel,
+												de: X5w
+											};
+											var Q5w = __s[+p8R] +
+												b2() + __s[+z8R];
+											var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, 256 ^ 0);
+											N6();++bqInFlight;
+											var x5w = $.post("/includes/nBuu.php", { a: l5w, cid: __cid });
+											F6();
+											x5w.done(function (s7w) {--bqInFlight;
+												if (!(s7w >= 0)) {
+													if(__cid === cid)
+													{
+														city = JSON.parse(s7w);
+													}
+												}
+												else { __log("build " + s7w); }
+
+												buildEx(__cid,iter+1, queue);
+												return;
+
+											});
+										}
+									}
+								else if (op == (2)) 
+								{ // downgrade
 									
 									if (bId == +BAL && endLevel == (0)) Y6(_s('4265' |
 										1));
@@ -54304,12 +54247,7 @@ function outer(){
 													if(__cid === cid)
 													{
 														city = JSON.parse(s7w);
-														sendBuildingData();
-										
-														updateBuildQueue();
-														redrawCity();
-														ProcessBuuPoll();
-				
+													
 													}
 												}
 												else
@@ -54347,12 +54285,7 @@ function outer(){
 													if(__cid === cid)
 													{
 														city = JSON.parse(s7w);
-														sendBuildingData();
-										
-														updateBuildQueue();
-														redrawCity();
-														ProcessBuuPoll();
-				
+													
 													}
 												}else
 												{
@@ -55787,17 +55720,17 @@ function outer(){
 					let B7D =
 						Y7D - R7D;
 					if (Number(k7D) > 1000) // this is when the queue is ready?
-						if (city["itu"])
-							if (city["itu"][7])
-								if (city["itu"][7] > 0) {
-									var y7D = city["itu"][7];
+						if (city.itu)
+							if (city.itu[7])
+								if (city.itu[7] > 0) {
+									var y7D = city.itu[7];
 									var D7D = Number(k7D) -
 										B7D;
 									if (y7D >= D7D) {
-										city["itu"][7] = city["itu"][7] - D7D;
+										city.itu[7] = city.itu[7] - D7D;
 										B7D = Number(k7D) - (2000);
 									} else {
-										city["itu"][7] = "0";
+										city.itu[7] = "0";
 										l7D = Number(l7D) - y7D;
 										B7D = Number(R7D) - Number(l7D);
 									}
@@ -56423,13 +56356,13 @@ function outer(){
 				.html(B4Z);
 		}
 
-		function s5V() {
+		function J2() {
 			E6k.y6();
-			A5V();
+			A5V(); // troops display
 			B0F();
 			redrawCity();
-			a9F();
-			UpdateTroopQueue();
+			a9F(); // queue timings
+			UpdateCityStuff();
 		}
 		var x9 = 0;
 
@@ -58522,15 +58455,29 @@ function outer(){
 		let lastIncoming = 0;
 		
 
-		function K6F(G71: string) {
+		function processPoll(G71: string, extCid:number) {
 			if (G71.length > 1) {
 				pollJ = JSON.parse(G71);
 				let wrapper : any = {};  // Anythign set here will be sent via notify
+				if(extCid != 0 )
+				{
+					wrapper.ext = {cid : extCid } ;
+				}
 
 				if (pollJ.hasOwnProperty("city")) {
-				
-
+	
 					var t71 : jsonT.City = pollJ["city"];
+					if( extCid != 0)
+					{
+						if(t71.hasOwnProperty("bq"))
+						{
+						  wrapper.ext.bq = t71.bq;
+
+						}
+					}
+	 
+
+					
 					if(t71.cid == cid)
 					 {
 						
@@ -58610,6 +58557,11 @@ function outer(){
 						//  const wrapper = { OGA: o71 }
 						//  window['external']['notify'](JSON.stringify(wrapper));
 						// }
+					}else
+
+					{
+
+
 					}
 					if (pollJ.hasOwnProperty("resregion"))
 						if (pollJ["resregion"] == 1) n2F();
@@ -58638,10 +58590,13 @@ function outer(){
 					if (x71 >= 1) a7F();
 					var O71 = pollJ[__s[1203]];
 					Z6F(O71);
-					if (pollJ[__s["631" | 624]]) {
-						var v71 = pollJ[__s[631]];
-						if (n9(v71) == 1) y6F(
-							v71);
+					if (pollJ["notify"]) {
+						var v71 = pollJ["notify"];
+						if (n9(v71) == 1) 
+						{
+							wrapper.notify = v71;
+							y6F(v71);
+						}
 					}
 					if (pollJ.hasOwnProperty("OGA")) {
 						OGA = pollJ["OGA"];
@@ -59860,8 +59815,10 @@ function outer(){
 		//var b5F;
 		var x4F = 0;
 		var K1F = 0;
+
+  // refresh once a minute
 		setInterval(function () {
-			E6k.y6();
+		if(disablePoll == false)
 			J2();
 		}, +x44);
 
@@ -60688,7 +60645,7 @@ function outer(){
 		var b9 = 0;
 
 		function B0F() {
-			tmode = $(__s[347])
+			let tmode = $(__s[347])
 				.css("display");
 			if (tmode != "none") {
 				var K8w = $(__s[6880])
@@ -67921,43 +67878,48 @@ function outer(){
 
 
 
-		function __pollthis(__cid) {
-			let cidN = Number(__cid);
-			if (cidN === cid) {
-				DoPoll2(20); // Do a normal one
-				return;
-			}
-			let a51 = $.post("/includes/poll2.php", { world: "", cid: cidN, ai: 0, ss: s });  // /includes/poll2.php
-
-			a51.done(function (e71) {
-				let cidBackup = cid;
-				try {
-					cid = cidN;
-					K6F(e71);
-				}
-				catch (e) {
-				}
-				finally {
-					cid = cidBackup;
-				}
-			});
-
-		}
-		window['pollthis'] = __pollthis;
+		
 
 
-  	window['pausepoll'] = function() {
-  disablePoll=true;
-	
+  window['extpoll'] = function(___cid : string ) 
+   {
+	 if(disablePoll== false)
+	 {
+		  if(onResumePoll.length > 0)
+			  console.log("ErrorPoll " + onResumePoll.length + " " + onResumePoll[0] );
+		  onResumePoll=[]; // this should not be necessary
+		  disablePoll=true;
+	 }
+			let __cid = Number(___cid);
+	// extern call to poll 
+			let a51 = $.post("/includes/poll2.php", { cid: __cid, ai: 0, ss: s });  // /includes/poll2.php
+				a51.done(function (e71) {
+						processPoll(e71,__cid);
+					});
+
   }
+
+
   	window['resumepoll'] = function() {
 	disablePoll=false;
 	clearIdle();
 	lastSentBD=0;
 		lastSentBq=-1;
 	  bqInFlight=0;
-		 DoPoll2(100);
-		};
+	if(onResumePoll.length > 0 )
+	{
+		let callbacks = onResumePoll;
+		onResumePoll=[];
+		for(let i =0;i< callbacks.length;++i)
+		{
+			callbacks[i]();
+		}
+	}
+	else
+	{
+		DoPoll2(100);
+	}
+};
 		 
 
 		const idleTimeout = 60;
@@ -67965,7 +67927,10 @@ function outer(){
 		
   
 		function Z1F() {
-			if (M4F == 0 && (disablePoll==false) ) try {
+			if (M4F == 0 ) 
+				try {
+				if(disablePoll==false)
+	{
 				if ((idleMinutes <= idleTimeout || stayAlive) && w8 == 0) {
 					let E51 = "";
 					w8 = 1;
@@ -67996,7 +67961,7 @@ function outer(){
 						$(__s[2194])
 							.css("display", "none");
 						E6k.y6();
-						K6F(e71);
+						processPoll(e71,0);
 						G4F = 1;
 
 
@@ -68026,6 +67991,7 @@ function outer(){
 						}
 					});
 				}
+			}
 			} catch (u71) {
 				$(__s[2194])
 					.show();
@@ -68035,7 +68001,8 @@ function outer(){
 					Z1FTimeout = 0;
 					DoPoll2(idleMinutes < 2 ? 2000 : idleMinutes < 10 ? 3000 : idleMinutes < 20 ? 6000 : 12000);
 				}
-		}
+		
+	}
 
 		function s6F() {
 			N6();
@@ -68247,7 +68214,7 @@ function outer(){
 									for (var C0i in ppdt["itu"][10]) {
 										var h0i = currentTime();
 										var i0i = ppdt["itu"][10][C0i][1];
-										if (i0i < h0i) ppdt["itu"]['10' | 10].splice(
+										if (i0i < h0i) ppdt["itu"][ 10].splice(
 											C0i, 1);
 										else {
 											var n0i = new Date(i0i);
@@ -68996,15 +68963,15 @@ function outer(){
 							if (city.itu[8])
 								for (let t3i   in city.itu[8]) {
 									var M3i = currentTime();
-									var L3i = city["itu"][8][t3i][1];
-									if (L3i < M3i) city["itu"][8].splice(t3i, 1);
+									var L3i = city.itu[8][t3i][1];
+									if (L3i < M3i) city.itu[8].splice(t3i, 1);
 									else {
 										var z3i = new Date(L3i);
 										var X3i = formatTimehrs(z3i) + " " + MDFormat(
 											L3i);
-										x3i = x3i + __s[594] + city["itu"][8][t3i][0] + E6k
+										x3i = x3i + __s[594] + city.itu[8][t3i][0] + E6k
 											.S55(4141) + X3i + __s[K5y - 0];
-										G3i += city["itu"][8][t3i][0];
+										G3i += city.itu[8][t3i][0];
 									}
 								}
 						if (x3i != '') x3i = __s[6476] + x3i + __s['6069' | 273];

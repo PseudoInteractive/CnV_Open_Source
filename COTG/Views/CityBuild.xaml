@@ -48,6 +48,7 @@
 						   Title="Left Click Action"
 						   CloseButtonClick="hideTipBuildLeft"
 						   Target="{x:Bind gridView}"
+						   Background="{x:Null}"
 						   Subtitle="Appy a single action to whatever is under the mouse">
 			<TextBlock  TextWrapping="Wrap">
                 This allows you to do one off actions.<LineBreak/> 
@@ -59,8 +60,9 @@
 						   Title="Right Click Action"
 						   CloseButtonClick="hideTipBuildRight"
 						   Target="{x:Bind gridView}"
+						   Background="{x:Null}"
 						   Subtitle="Select a tool and use it to apply multiple actions, one after another">
-			<TextBlock  TextWrapping="Wrap">
+			<TextBlock  TextWrapping="Wrap"  >
                 This includes quick build and multi destory.<LineBreak/> 
 				If you would like to do a one off action on a specific building or spot, use left click<LineBreak />
 			</TextBlock>

@@ -1113,11 +1113,18 @@ namespace COTG.Game
 		{
 			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
 		}
-		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove=true)
+		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
 		{
-			SetFocus(cid, scrollIntoView, select, bringIntoWorldView,lazyMove);
+			SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
 		}
-		public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true,bool lazyMove = true)
+
+		public static void UpdateFocusText()
+		{
+			ShellPage.instance.focus.Content = Spot.GetOrAdd(focus).nameAndRemarks;
+			ShellPage.instance.coords.Text = focus.CidToString();
+		}
+
+	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true,bool lazyMove = true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
@@ -1126,16 +1133,7 @@ namespace COTG.Game
 			if (changed)
 			{
 				focus = cid;
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-					ShellPage.instance.focus.Content = spot.nameAndRemarks;
-					ShellPage.instance.coords.Text = cid.CidToString();
-					if (scrollintoView)
-						spot.SelectInUI(true);
-
-				}
-
-				);
+				App.DispatchOnUIThreadSneakyLow(UpdateFocusText);
 			}
 			if (bringIntoWorldView)
 				cid.BringCidIntoWorldView(lazyMove);

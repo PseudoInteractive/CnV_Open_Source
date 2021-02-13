@@ -296,7 +296,7 @@ namespace COTG.Game
                 if(NearDefenseTab.IsVisible())
                 {
 
-                    await JSClient.PollCity(cid);
+                //    await JSClient.PollCity(cid);
                     await RaidOverview.Send(); 
                 }
             }
