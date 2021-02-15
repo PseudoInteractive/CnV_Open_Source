@@ -34,11 +34,13 @@ using Microsoft.Toolkit.HighPerformance.Extensions;
 
 using System.Text.RegularExpressions;
 using Windows.UI.Core;
+using static COTG.Game.City;
 
 namespace COTG.Views
 {
 	public sealed partial class CityBuild : UserControl
 	{
+		public static bool testFlag;
 		public static int quickBuildId;
 		public static int lastQuickBuildActionBSpot=-1;
 		public static CityBuild instance;
@@ -81,6 +83,7 @@ namespace COTG.Views
 			abandon,
 			flipLayoutV,
 			flipLayoutH,
+			togglePlanner,
 			invalid,
 			count = invalid,
 
@@ -159,6 +162,7 @@ namespace COTG.Views
 			quickBuild,
 			buliding,
 			townhall,
+			townhallPlanner,
 			empty,
 			res,
 			tower,
@@ -204,6 +208,7 @@ namespace COTG.Views
 		static BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
 		static BuildMenuItem amAbandon = new BuildMenuItem("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
 		static BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/decal_select_building.png", "Flip Layout Horizontally");
+		static BuildMenuItem amTogglePlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/decal_select_building.png", "Toggle to or from planner mode");
 		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/decal_select_building.png", "Flip Layout Vertically");
 
 
@@ -237,20 +242,16 @@ namespace COTG.Views
 		static BuildMenuItem bmCastle = CreateBuildMenuItem(bidCastle); //  = 467;
 
 
-		static BuildMenuItem bmHideaway = CreateBuildMenuItem(bidHideaway); //  = 479;
-		static BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidCityguardhouse); //  = 504;
 		static BuildMenuItem bmCottage = CreateBuildMenuItem(bidCottage); //  = 446;
 		static BuildMenuItem bmStorehouse = CreateBuildMenuItem(bidStorehouse); //  = 464;
-		static BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
-		static BuildMenuItem bmPort = CreateBuildMenuItem( bidPort); //  = 488;
+		static BuildMenuItem bmHideaway = CreateBuildMenuItem(bidHideaway); //  = 479;
+		static BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidCityguardhouse); //  = 504;
 		static BuildMenuItem bmTownhouse = CreateBuildMenuItem(bidTownhouse); //  = 481;
 		static BuildMenuItem bmTemple = CreateBuildMenuItem(bidTemple); //  = 890;
+		static BuildMenuItem bmPort = CreateBuildMenuItem(bidPort); //  = 488;
+		static BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
 
 
-
-
-		//	static BuildMenuItem bmTownHall = CreateBuildMenuItem( bidTownHall); //  = 455;
-		//		static BuildMenuItem bmWall = CreateBuildMenuItem( bidWall); //  = 809;
 
 		static BuildMenuItem bmRangerPost = CreateBuildMenuItem(bidRangerPost); //  = 543;
 		static BuildMenuItem bmTriariPost = CreateBuildMenuItem(bidTriariPost); //  = 539;
@@ -264,6 +265,8 @@ namespace COTG.Views
 
 		static BuildMenuItem bmSentinelPost = CreateBuildMenuItem(bidSentinelPost); //  = 547;
 
+		static BuildMenuItem bmTownHall = CreateBuildMenuItem( bidTownHall); //  = 455;
+		static BuildMenuItem bmWall = CreateBuildMenuItem( bidWall); //  = 809;
 
 
 		public static void UpdateBuildMenuType(MenuType _menuType,int bspot)
@@ -302,6 +305,11 @@ namespace COTG.Views
 
 					foreach (var i in allBuildings)
 					{
+						if (!App.IsKeyPressedShift())
+						{
+							if (i.bid == bidTownHall || i.bid== bidWall )
+								continue;
+						}
 						items.items.Add(i);
 					}
 
@@ -321,12 +329,18 @@ namespace COTG.Views
 				case MenuType.townhall:
 					commands.items.Add(amMove);
 					commands.items.Add(amAbandon);
-					commands.items.Add(amLayout);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
+//					commands.items.Add(amTogglePlanner);
+				
+					break;
+				case MenuType.townhallPlanner:
+					commands.items.Add(amAbandon);
+					commands.items.Add(amUpgrade);
+	//				commands.items.Add(amTogglePlanner);
 					commands.items.Add(amFlipLayoutH);
 					commands.items.Add(amFlipLayoutV);
-				
+
 					break;
 				case MenuType.empty:
 
@@ -341,6 +355,11 @@ namespace COTG.Views
 						{
 							continue;
 
+						}
+						if(!App.IsKeyPressedShift())
+						{
+							if (def.isTownHall || def.isWall)
+								continue;
 						}
 						items.items.Add(i);
 					}
@@ -607,7 +626,8 @@ namespace COTG.Views
 
 				if(isPlanner)
 				{
-					GetBuild().buildings[id].bl =(byte) level;
+					buildingsCache[id].bl =(byte) level;
+					PlannerTab.BuildingsChanged();
 
 				}
 				else if (!dryRun)
@@ -642,7 +662,10 @@ namespace COTG.Views
 					if (!postQueueBuildingsDirty)
 						return postQueuebuildingsCache;
 					postQueueBuildingsDirty = false;
-					buildingsCache = City.GetBuild().buildings;
+					if (!CityBuild.isPlanner)
+					{
+						buildingsCache = City.GetBuild().buildings;
+					}
 					//
 					// copy current buildings
 					//
@@ -685,8 +708,8 @@ namespace COTG.Views
 				{
 					if (isPlanner)
 					{
-						var build = GetBuild();
-						build.buildings[id].SetBid(0, 0);
+						buildingsCache[id].SetBid(0, 0);
+						PlannerTab.BuildingsChanged();
 					}
 					else
 					{
@@ -721,7 +744,8 @@ namespace COTG.Views
 				{
 					if (isPlanner)
 					{
-						--GetBuild().buildings[id].bl;
+						--buildingsCache[id].bl;
+						PlannerTab.BuildingsChanged();
 					}
 					else
 					{
@@ -793,12 +817,12 @@ namespace COTG.Views
 			else
 			{
 				var buildDef = BuildingDef.all[bid];
-				if( IsWallSpot(id))
+				if( IsWallSpot(id) && !testFlag)
 				{
 					Status("Walls go here", dryRun);
 					return;
 				}
-				if( IsWaterSpot(id))
+				if( IsWaterSpot(id) && !testFlag)
 				{
 					Status("There is water here :(", dryRun);
 					return;
@@ -865,8 +889,8 @@ namespace COTG.Views
 					if (isPlanner)
 					{
 						var build = GetBuild();
-						build.buildings[id].SetBid(bid, 10);
-				
+						buildingsCache[id].SetBid(bid, 10);
+						PlannerTab.BuildingsChanged();
 					}
 					else
 					{
@@ -963,7 +987,7 @@ namespace COTG.Views
 
 		public static void MoveBuilding(int a, int b, bool dryRun)
 		{
-			// Todo:  Cannot be moved if	queued
+			// Todo:  Cannot be moved if queued
 			// Todo: Error checking
 			var build = City.GetBuild();
 			if(HasBuildOps(a))
@@ -977,7 +1001,8 @@ namespace COTG.Views
 			}
 			else
 			{
-				Status($"Move {build.buildings[a].name} to {IdToXY(b).bspotToString()} ", dryRun);
+				var bds = isPlanner ? buildingsCache: build.buildings;
+				Status($"Move {bds[a].name} to {IdToXY(b).bspotToString()} ", dryRun);
 
 				if (!dryRun)
 				{
@@ -987,8 +1012,8 @@ namespace COTG.Views
 						Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
 						--Player.moveSlots;
 					}
-					ref var b1 = ref build.buildings[a];
-					ref var b0 = ref build.buildings[b];
+					ref var b1 = ref bds[a];
+					ref var b0 = ref bds[b];
 					// I hope that these operations are what I expect with references
 					var temp = b0;
 					b0 = b1;
@@ -1007,16 +1032,16 @@ namespace COTG.Views
 			}
 			if (Player.moveSlots >= 3)
 			{
-				// Todo: Error checking
 				var build = City.GetBuild();
+				var bds = isPlanner ? buildingsCache : build.buildings;
 				// I hope that these operations are what I expect with references
-				Status($"Swap {build.buildings[b].name} and {build.buildings[a].name} ", dryRun);
+				Status($"Swap {bds[b].name} and {bds[a].name} ", dryRun);
 				if (!dryRun)
 				{
 
-					var temp = build.buildings[b];
-					build.buildings[b] = build.buildings[a];
-					build.buildings[a] = temp;
+					var temp = bds[b];
+					bds[b] = bds[a];
+					bds[a] = temp;
 					if (!isPlanner)
 					{
 						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayer(City.build));
@@ -1033,11 +1058,12 @@ namespace COTG.Views
 			}
 		}
 
-		internal static void MoveHovered(bool isSingleAction, bool dryRun)
+		internal static void MoveHovered(bool _isSingleAction, bool dryRun)
 		{
 			int bspot = XYToId(hovered);
 			var build = GetBuild();
-			var b = build.buildings[bspot];
+
+			var b = isPlanner ? buildingsCache[bspot] : build.buildings[bspot];
 			Status($"Move slots left: {Player.moveSlots}", dryRun);
 
 			if (CanvasHelpers.IsValid(selected) )
@@ -1052,7 +1078,7 @@ namespace COTG.Views
 
 
 					// Is this a valid transition
-					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) ? 0 : 2;
+					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) && !testFlag ? 0 : 2;
 					if(bs1 ==0  && !Player.isAvatarOrTest )
 					{
 						Status("Please don't put buildings on walls.", dryRun);
@@ -1062,6 +1088,11 @@ namespace COTG.Views
 					if (bs0 != bs1)
 					{
 						Status("Cannot move between building and wall spots", dryRun);
+						return;
+					}
+					if(HasBuildOps(bspot) || HasBuildOps(source) )
+					{
+						Status($"Cannot move a building that is being rennovated", dryRun);
 						return;
 					}
 
@@ -1088,7 +1119,7 @@ namespace COTG.Views
 						}
 						if(!dryRun)
 							ClearSelectedBuilding();
-						if (isSingleAction && !dryRun)
+						if (_isSingleAction && !dryRun)
 						{
 							RevertToLastAction();
 						}
@@ -1097,7 +1128,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				Assert(!isSingleAction);
+			
 				if (b.bl <= 0)
 				{
 					Status("Please select a building", dryRun);
@@ -1108,6 +1139,9 @@ namespace COTG.Views
 					if (!dryRun)
 					{
 						selected = hovered;
+						priorQuickAction = action;
+						SetAction(Action.move);
+						isSingleClickAction = true;
 					}
 				}
 			}
@@ -1451,7 +1485,22 @@ namespace COTG.Views
 				case Action.flipLayoutH:
 					{
 						if (!dryRun)
-							GetBuild().FlipLayoutH();
+						{
+							var city = GetBuild();
+							city.FlipLayoutH();
+							
+
+						}
+
+						break;
+					}
+				case Action.togglePlanner:
+					{
+						if (!dryRun)
+						{
+							_isPlanner = !_isPlanner;
+						}
+
 						break;
 					}
 				case Action.flipLayoutV:
@@ -1599,7 +1648,7 @@ namespace COTG.Views
 
 			if (!isRight)
 			{
-				if (IsWaterSpot(bspot))
+				if (IsWaterSpot(bspot) && !testFlag)
 				{
 					Note.Show("There is water here. :(");
 					return;
@@ -1624,7 +1673,7 @@ namespace COTG.Views
 				bspot == 0 ? MenuType.buliding :
 				b.id == 0 ? MenuType.empty :
 				b.bl == 0 ? MenuType.res :
-				d.bid == bidTownHall ? MenuType.townhall :
+				d.bid == bidTownHall ? _isPlanner ? MenuType.townhallPlanner: MenuType.townhall :
 				MenuType.buliding;
 			UpdateBuildMenuType(type, bspot);
 

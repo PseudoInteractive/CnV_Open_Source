@@ -37,6 +37,7 @@ namespace COTG.Views
                 new DefenseHistoryTab(),
                 new BossTab(),
                 new AttackTab(),
+				new PlannerTab(),
 				new BuildTab(),
                 new SpotTab(),
                 new OutgoingTab(),
@@ -250,7 +251,8 @@ namespace COTG.Views
             { "AttackPlanner", Symbol.Audio },
             { "world", Symbol.Microphone },
 			{ "Build", Symbol.Repair },
-            { "officer" ,Symbol.Admin },
+			{ "Planner", Symbol.Map },
+			{ "officer" ,Symbol.Admin },
         };
 
         static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {

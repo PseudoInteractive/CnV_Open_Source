@@ -7,8 +7,15 @@ using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 
 namespace COTG.JSON
 {
-	public partial class Troops
+	public partial class TroopInfo
 	{
+		public static TroopInfo[] all;
+		static TroopInfo()
+		{
+			all = Json.FromResources<TroopInfo[]>("Troops");
+
+		}
+
 		[J("tn")] public string Tn { get; set; }
 		[J("dsc")] public string Dsc { get; set; }
 		[J("dimg")] public string Dimg { get; set; }

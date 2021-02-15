@@ -84,8 +84,6 @@ namespace COTG.Draw
 			return (c - dc, c + dc);
 	
 		}
-		public static JSON.Building[] buildingsCache;
-		public static JSON.Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 		public static float[] animationOffsets = new float[citySpotCount];
 		public static float[] baseAnimationOffsets = new float[citySpotCount];
 		public static float animationRate = 0.25f;
@@ -130,7 +128,6 @@ namespace COTG.Draw
 			if (build == null)
 				return;
 			int iAlpha = (int)(alpha * 255f);
-			buildingsCache = build.buildings;
 			var postBuildings = CityBuild.postQueueBuildings;
 			buildCityOrigin = build.cid.CidToWorldV();
 			// draw each building tile
@@ -158,7 +155,7 @@ namespace COTG.Draw
 					{
 						if (bid.bl == 0)
 							continue;
-						bidOverride = 819;
+						bidOverride = 799;
 					}
 
 					var next = postBuildings[id];
@@ -204,7 +201,7 @@ namespace COTG.Draw
 								bl = bid.bl;
 								fontA = t.Bezier(1,1,0);// prior number out	
 							}
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl);
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl, bidOverride);
 							if (blendOp > 0)
 							{
 									// upgrade
@@ -214,7 +211,7 @@ namespace COTG.Draw
 						else
 						{
 							// not changing
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity);
+							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,-1,-1, bidOverride);
 
 						}
 
@@ -250,7 +247,7 @@ namespace COTG.Draw
 							draw.AddQuad(Layer.tileCity + 2, blendMat, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha)).Scale(blendOp), PlanetDepth, zHover);
 						}
 						
-						DrawBuilding(iAlpha, zBase, fontScale, cs, bd , Layer.tileCity);
+						DrawBuilding(iAlpha, zBase, fontScale, cs, bd , Layer.tileCity,-1,-1, bidOverride);
 					}
 				}
 			}

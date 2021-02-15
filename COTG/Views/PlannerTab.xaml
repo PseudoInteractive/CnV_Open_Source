@@ -1,0 +1,65 @@
+﻿<views:UserTab 
+	x:Class="COTG.Views.PlannerTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:game="using:COTG.Game"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:cotg="using:COTG"
+               xmlns:winui="using:Windows.UI.Xaml.Controls"
+               xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+               xmlns:views="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+	Tag="Planner"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+		<StackPanel Orientation="Vertical">
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsInf" Header="Recruit Speed Inf"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtVanq" Header="Vanq" HorizontalTextAlignment="Right" Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtRanger" Header="Ranger" Style="{StaticResource RightAlignBox}" HorizontalContentAlignment="Right" />
+					<TextBox x:Name="rtTriari" Header="Triari"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsMagic" Header="Recruit Speed Magic"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtSorc" Header="Sorc"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtDruid" Header="Druid"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsBlessed" Header="Recruit Speed Blessed"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtPriestess" Header="Priestess"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtPrae" Header="Praetor"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsCav" Header="Recruit Speed Cav"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtScout" Header="Scout"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtArb" Header="Arbalist"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtHorse" Header="Horse"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsArt" Header="Recruit Speed Artilliery"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtRam" Header="Ram"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtBal" Header="Ballista"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+		</StackPanel>
+
+	</Grid>
+	
+</views:UserTab>

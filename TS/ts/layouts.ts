@@ -230,7 +230,7 @@ function replaceAt(_this:string,index: number, char: any) {
                 selectbuttlandoff+='<option value="'+lol+'">Ava 2s Vanq Starter</option>';
                 layoutlol.push("[ShareString.1.3]:########################-------#----J--#####--------#-------.###---------#---------##---------#-.------,##------#######,-.---##-----##BGBGB##-----##----##GBGBGBG##-..-##----#BGBGBGBGB#-.--##:--.#BGBGBGBGB#--S,#######BGBGTGBGB#######---:#BGBGBGBGB#,-:-##-;-:#-GBGBGBG-#----##----##-BGBGB-##,--,##-,---##-----##-----##------#######::-:--##--P------#-,-:--:--##.-----X--#---------###------,,#----:-,,#####.-,--,-#-.-----########################");
                 remarklol.push("Vanqs");
-				notelol.push("Use this for the intial layout.  You will reach a 2s Vanq before removing cabins");
+				notelol.push("Use this for the intial layout.");
                 troopcounlol.push([0,0,0,0,0,264000,0,0,0,0,0,0,0,0,0,0,0]);
                 reslol.push([0, 0, 0, 0, 1, 130000, 210000, 575000, 575000, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 150000, 220000, 750000, 750000]);
                 lol++;

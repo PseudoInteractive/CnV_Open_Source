@@ -39,7 +39,7 @@ namespace COTG.Views
 	{
 		//	public static Rectangle canvasHitTest;
 
-		static byte testFlag;
+
 
 		const int bottomMargin = 0;
 		const int cotgPopupWidth = 550;
@@ -292,9 +292,9 @@ namespace COTG.Views
 						case Windows.System.VirtualKey.F10:
 							if (Player.isAvatarOrTest)
 							{
-								testFlag ^= 1;
+								CityBuild.testFlag ^= true;
 								Note.Show("Test: " + testFlag);
-								JSClient.view.InvokeScriptAsync("setTestFlag", new[] {testFlag.ToString() });
+								JSClient.view.InvokeScriptAsync("setTestFlag", new[] { (testFlag ? "1" : "0") });
 							}
 							break;
 						case Windows.System.VirtualKey.Number1: UpgradeOrTower(1);break;

@@ -99,12 +99,14 @@ namespace COTG.Game
 		public static Building[] Emptybuildings = new Building[citySpotCount];
 
 		public Building[] buildings = Emptybuildings;
-		
-		
+
+		public static Building[] buildingsCache;
+		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
+
 
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
-	//	public Building GetBuiding( int bspot) => buildings[bspot];
-		
+		//	public Building GetBuiding( int bspot) => buildings[bspot];
+
 		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
 		public static bool buildQInSync;
 
@@ -435,6 +437,7 @@ namespace COTG.Game
 				var s = sts.GetString();
 				if (!s.IsNullOrEmpty())
 				{
+					// TODO:  What if we are in planner mode?
 
 					layout = new byte[citySpotCount];
 
@@ -477,7 +480,7 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				if (!CityBuild.isPlanner)
+				
 				{
 					commandSlots = 5;
 					isCastle = false;
@@ -614,7 +617,7 @@ namespace COTG.Game
 		{
 			layout = new byte[citySpotCount];
 			int put = 0;
-			foreach (var b in buildings)
+			foreach (var b in buildingsCache)
 			{
 				 var bid =  b.def.bid;
 				if (bid != 0)
@@ -626,21 +629,22 @@ namespace COTG.Game
 
 		public void LayoutToBuildings()
 		{
+			buildingsCache = new Building[citySpotCount];
 			for (int s = 1; s < citySpotCount; ++s)
 			{
 				var bid = BidFromOverlay(s);
 				if (bid != 0)
 				{
-					buildings[s].id = BuildingDef.BidToId(bid);
-					if (buildings[s].isRes)
-						buildings[s].bl = 0;
+					buildingsCache[s].id = BuildingDef.BidToId(bid);
+					if (buildingsCache[s].isRes)
+						buildingsCache[s].bl = 0;
 					else
-						buildings[s].bl = 10;
+						buildingsCache[s].bl = 10;
 				}
 				else
 				{
-					buildings[s].bl = 0;
-					buildings[s].id = 0;
+					buildingsCache[s].bl = 0;
+					buildingsCache[s].id = 0;
 				}
 			}
 		}
@@ -648,6 +652,7 @@ namespace COTG.Game
 		{
 			if (layout == null)
 				return;
+			Assert(CityBuild.isPlanner);
 			for(int y=0;y< citySpan;++y)
 				for(int x=0;x< citySpan/2;++x)
 				{
@@ -658,7 +663,7 @@ namespace COTG.Game
 					}
 					var x1 = citySpan - x - 1;
 
-					AUtil.Swap(ref layout[x + y * citySpan], ref layout[x1 + y * citySpan]);
+					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x1 + y * citySpan]);
 				}
 
 			SaveLayout();
@@ -668,6 +673,7 @@ namespace COTG.Game
 		{
 			if (layout == null)
 				return;
+			Assert(CityBuild.isPlanner);
 			for (int x = 0; x < citySpan; ++x)
 				for (int y = 0; y < citySpan / 2; ++y)
 				{
@@ -678,7 +684,7 @@ namespace COTG.Game
 					}
 					var y1 = citySpan - y - 1;
 
-					AUtil.Swap(ref layout[x + y * citySpan], ref layout[x + y1 * citySpan]);
+					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x + y1 * citySpan]);
 				}
 
 			SaveLayout();
@@ -1085,6 +1091,8 @@ namespace COTG.Game
 			return (townHallLevel*10, count, townHallLevel);
 		}
 
+
+		// this is the actual building, ignores planner buildings
 		public Building GetBuildingPostQueue(int bspot, in DArray<BuildQueueItem> q)
 		{
 			var rv = buildings[bspot];

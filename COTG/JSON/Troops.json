@@ -1,5 +1,5 @@
-﻿{
-	"0": {
+﻿[
+	{ // "0":
 		"tn": "Guard",
 		"dsc": "Guards represent the law in your city. These dedicated soldiers are the first line of defence.",
 		"dimg": "/images/icon/troops/guard.png",
@@ -24,7 +24,7 @@
 		"admg": 0,
 		"tt": 0
 	},
-	"1": {
+	{ // "1":
 		"tn": "Ballista",
 		"dsc": "An intimidating defensive weapon, the Ballista’s massive bolts can rip through any armament.",
 		"dimg": "/images/icon/troops/ballista.png",
@@ -49,7 +49,7 @@
 		"tt": 5,
 		"gc": 0
 	},
-	"2": {
+	{ // "2":
 		"tn": "Ranger",
 		"dsc": "Rangers are capable of slaughtering infantry units before they reach your front lines. They are valuable when defending key locations.",
 		"dimg": "/images/icon/troops/ranger.png",
@@ -74,7 +74,7 @@
 		"dc": 10,
 		"gc": 0
 	},
-	"3": {
+	{ // "3":
 		"tn": "Triari",
 		"dsc": "The fearsome Triari are disciplined soldiers, trained to unhorse mounted riders with their polearms. They are highly effective against cavalry.",
 		"dimg": "/images/icon/troops/spearman.png",
@@ -99,7 +99,7 @@
 		"admg": 0,
 		"ic": 140
 	},
-	"4": {
+	{ // "4":
 		"tn": "Priestess",
 		"dsc": "Priestesses are powerful warriors. Their heavy armour and strong shields protect them from all manner of foes, and even reflect Mystical attacks.",
 		"dimg": "/images/icon/troops/crusader.png",
@@ -124,7 +124,7 @@
 		"ic": 90,
 		"admg": 0
 	},
-	"5": {
+	{ // "5":
 		"tn": "Vanquisher",
 		"dsc": "These formidable warriors fight for glory and honour. The charge of an enraged Vanquisher has been known to send entire platoons into disarray.",
 		"dimg": "/images/icon/troops/zerk.png",
@@ -149,7 +149,7 @@
 		"ic": 150,
 		"admg": 0
 	},
-	"6": {
+	{ // "6":
 		"tn": "Sorcerer",
 		"dsc": "Sorcerers are arcanists of incredible skill. Their deadly spellcraft is a danger to any unit, but they are also vulnerable to counterattack.",
 		"dimg": "/images/icon/troops/mage.png",
@@ -174,7 +174,7 @@
 		"dc": 10,
 		"tt": 3
 	},
-	"7": {
+	{ // "7":
 		"tn": "Scout",
 		"dsc": "These resourceful units vital to any commander. Scouts move behind enemy lines to provide intelligence, and are more effective in larger numbers.",
 		"dimg": "/images/icon/troops/scout.png",
@@ -199,7 +199,7 @@
 		"ic": 40,
 		"da": 10
 	},
-	"8": {
+	{ // "8":
 		"tn": "Arbalist",
 		"dsc": "Arbalists are a terrifying foe. The deadly bolts of these ranged fighters are devastating to enemy cavalry.",
 		"dimg": "/images/icon/troops/crossbow.png",
@@ -224,7 +224,7 @@
 		"da": 40,
 		"gc": 200
 	},
-	"9": {
+	{ // "9":
 		"tn": "Praetor",
 		"dsc": "The Praetor is a mounted unit dedicated to a sacred war against magic. Their unshakeable faith protects their fellow soldiers against Mystical strikes",
 		"dimg": "/images/icon/troops/paladin.png",
@@ -249,7 +249,7 @@
 		"ut": 0,
 		"ic": 200
 	},
-	"10": {
+	{ // "10":
 		"tn": "Horseman",
 		"dsc": "Horsemen are heavily armoured cavalry units well suited for raiding enemy strongholds. Their powerful war horses are able to carry away large amounts of plunder if their rider is victorious.",
 		"dimg": "/images/icon/troops/knight.png",
@@ -274,7 +274,7 @@
 		"dm": 20,
 		"dc": 30
 	},
-	"11": {
+	{ // "11":
 		"tn": "Druid",
 		"dsc": "More costly to recruit than the Sorcerer, these mounted spell casters make up for their extra cost with improved firepower, and can alter the flow of any battle.",
 		"dimg": "/images/icon/troops/warlock.png",
@@ -299,7 +299,7 @@
 		"ps": 1300,
 		"admg": 0
 	},
-	"12": {
+	{ // "12":
 		"tn": "Battering Ram",
 		"dsc": "Battering Rams can reduce a city gate to splinters in short order. Their incredible power is hampered only by their low speed.",
 		"dimg": "/images/icon/troops/ram.png",
@@ -324,7 +324,7 @@
 		"dmg": 50,
 		"da": 50
 	},
-	"13": {
+	{ // "13":
 		"tn": "Scorpion",
 		"dsc": "These intimidating long ranged siege weapons are perfect for attacking enemy cities.",
 		"dimg": "/images/icon/troops/catapult.png",
@@ -349,7 +349,7 @@
 		"ut": 0,
 		"ps": 4000
 	},
-	"14": {
+	{ // "14":
 		"tn": "Galley",
 		"dsc": "As a naval ship designed for transporting troops, the Galley does not carry the same level of artillery as other ships. However it is still effective during coastal assaults or sieges.",
 		"dimg": "/images/icon/troops/frigate.png",
@@ -374,7 +374,7 @@
 		"gc": 2000,
 		"ic": 5000
 	},
-	"15": {
+	{ // "15":
 		"tn": "Stinger",
 		"dsc": "This small but manoeuvrable vessel packs a surprising amount of firepower. It is most often used to guard larger vessels.",
 		"dimg": "/images/icon/troops/sloop.png",
@@ -399,7 +399,7 @@
 		"gc": 2000,
 		"sc": 0
 	},
-	"16": {
+	{ // "16":
 		"tn": "Warship",
 		"dsc": "The intimidating and majestic Warship is the most impressive vessel in any navy, Especially effective against buildings and enemy defences, this ship will strike fear into the hearts of enemy sailors.",
 		"dimg": "/images/icon/troops/manowar.png",
@@ -424,7 +424,7 @@
 		"ts": 400,
 		"sc": 0
 	},
-	"17": {
+	{ // "17":
 		"tn": "Senator",
 		"dsc": "Senators are necessary to allow you to smoothly take over a city and claim it as your own. They also have an important role in founding new cities.",
 		"dimg": "/images/icon/troops/noble.png",
@@ -449,7 +449,7 @@
 		"ut": 0,
 		"admg": 0
 	},
-	"18": {
+	{ // "18":
 		"n": "Drakon",
 		"dn": "Drakon",
 		"dimg": "/images/icon/monster/drakonp.png",
@@ -461,7 +461,7 @@
 		"da": 10,
 		"dm": 16
 	},
-	"19": {
+	{ // "19":
 		"n": "Tauros",
 		"dn": "Tauros",
 		"dimg": "/images/icon/monster/taurusp.png",
@@ -473,7 +473,7 @@
 		"dc": 30,
 		"c": 10
 	},
-	"20": {
+	{ // "20":
 		"n": "Pegasus20",
 		"dn": "Pegasus20",
 		"dimg": "/images/icon/monster/pegasusp.png",
@@ -485,7 +485,7 @@
 		"da": 100,
 		"di": 200
 	},
-	"21": {
+	{ // "21":
 		"n": "Phoenix",
 		"dn": "Phoenix",
 		"dimg": "/images/icon/monster/phoenixp.png",
@@ -497,7 +497,7 @@
 		"da": 80,
 		"di": 80
 	},
-	"22": {
+	{ // "22":
 		"n": "Pegasus",
 		"dn": "Pegasus",
 		"dimg": "/images/icon/monster/pegasusp.png",
@@ -509,7 +509,7 @@
 		"da": 200,
 		"dc": 200
 	},
-	"23": {
+	{ // "23":
 		"n": "Chimaera",
 		"dn": "Chimaera",
 		"dimg": "/images/icon/monster/chimerap.png",
@@ -521,7 +521,7 @@
 		"dm": 22,
 		"di": 12
 	},
-	"24": {
+	{ // "24":
 		"n": "Gryphon",
 		"dn": "Gryphon",
 		"dimg": "/images/icon/monster/gryphusp.png",
@@ -533,7 +533,7 @@
 		"di": 16,
 		"dm": 33
 	},
-	"25": {
+	{ // "25":
 		"n": "Harpy",
 		"dn": "Harpy",
 		"dimg": "/images/icon/monster/harpyp.png",
@@ -545,7 +545,7 @@
 		"c": 60,
 		"da": 75
 	},
-	"26": {
+	{ // "26":
 		"n": "Basilisk",
 		"dn": "Basilisk",
 		"dimg": "/images/icon/monster/basiliskp.png",
@@ -557,7 +557,7 @@
 		"da": 150,
 		"dm": 150
 	},
-	"27": {
+	{ // "27":
 		"n": "Manticore",
 		"dn": "Manticore",
 		"dimg": "/images/icon/monster/manticorep.png",
@@ -569,7 +569,7 @@
 		"dm": 16,
 		"da": 16
 	},
-	"28": {
+	{ // "28":
 		"n": "Unicorn",
 		"dn": "Unicorn",
 		"dimg": "/images/icon/monster/monokerap.png",
@@ -581,7 +581,7 @@
 		"di": 28,
 		"dc": 14
 	},
-	"29": {
+	{ // "29":
 		"n": "Amphis",
 		"dn": "Amphis",
 		"dimg": "/images/icon/monster/amphisbenap.png",
@@ -593,7 +593,7 @@
 		"da": 40,
 		"c": 20
 	},
-	"30": {
+	{ // "30":
 		"n": "Centaur",
 		"dn": "Centaur",
 		"dimg": "/images/icon/monster/centaurp.png",
@@ -605,7 +605,7 @@
 		"di": 160,
 		"da": 160
 	},
-	"31": {
+	{ // "31":
 		"n": "Siren",
 		"dn": "Siren",
 		"dimg": "/images/icon/monster/sirenp.png",
@@ -617,7 +617,7 @@
 		"da": 30,
 		"c": 75
 	},
-	"32": {
+	{ // "32":
 		"n": "Cetus",
 		"dn": "Cetus",
 		"dimg": "/images/icon/monster/cetusp.png",
@@ -629,7 +629,7 @@
 		"c": 250,
 		"dc": 200
 	},
-	"33": {
+	{ // "33":
 		"n": "Charybdis",
 		"dn": "Charybdis",
 		"dimg": "/images/icon/monster/charybdisp.png",
@@ -641,7 +641,7 @@
 		"dc": 500,
 		"c": 650
 	},
-	"34": {
+	{ // "34":
 		"n": "Scylla",
 		"dn": "Scylla",
 		"dimg": "/images/icon/monster/scyllap.png",
@@ -653,4 +653,4 @@
 		"dm": 1000,
 		"da": 500
 	}
-}
+]

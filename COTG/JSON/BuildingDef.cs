@@ -13,7 +13,7 @@ namespace COTG.JSON
 	using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 	
 
-	public partial class BuildingDef
+	public sealed class BuildingDef
 	{
 		public static byte idCabin;
 		public static byte BidToId(int bid)
@@ -162,7 +162,7 @@ namespace COTG.JSON
 			[J("tooltip")] public string Tooltip { get; set; }
 			[J("rt")] public int Rt { get; set; }
 			[J("tc")] public Dictionary<string, int> Tc { get; set; }
-			[J("ts")] public Dictionary<string, int> Ts { get; set; }
+			[J("ts")] public int[] Ts { get; set; }
 			[J("mt")] public int Mt { get; set; }
 			[J("sc")] public Dictionary<string, int> Sc { get; set; }
 			[J("bc")] public Dictionary<string, Bc> Bc { get; set; }

@@ -233,7 +233,7 @@
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\SpotJson.cs" />
     <Compile Include="JSON\TileSet.cs" />
-    <Compile Include="JSON\Troops.cs" />
+    <Compile Include="JSON\TroopInfo.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
@@ -348,6 +348,9 @@
     </Compile>
     <Compile Include="Views\OutgoingTab.xaml.cs">
       <DependentUpon>OutgoingTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlannerTab.xaml.cs">
+      <DependentUpon>PlannerTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerGroup.xaml.cs">
       <DependentUpon>PlayerGroup.xaml</DependentUpon>
@@ -490,6 +493,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OutgoingTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlannerTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -679,7 +686,7 @@
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="JSON\buildingDef.json" />
     <None Include="JSON\poll2.json" />
-    <None Include="JSON\Troops.json" />
+    <EmbeddedResource Include="JSON\Troops.json" />
     <EmbeddedResource Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />
     <EmbeddedResource Include="JS\jquery" />

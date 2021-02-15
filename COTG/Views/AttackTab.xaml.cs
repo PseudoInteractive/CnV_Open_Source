@@ -53,6 +53,7 @@ namespace COTG.Views
 			instance.arrival.Content = SettingsPage.attackPlayerTime.FormatDefault();
 		}
 
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
