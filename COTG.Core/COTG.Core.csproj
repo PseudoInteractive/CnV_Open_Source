@@ -89,8 +89,8 @@
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.4.0" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview4" />
+    <PackageReference Include="Microsoft.Toolkit" Version="6.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="6.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
     <PackageReference Include="PlayFabAllSDK" Version="1.89.210208" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />

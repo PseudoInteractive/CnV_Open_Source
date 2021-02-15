@@ -33,6 +33,7 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace COTG.Views
 {
 
+	
 	public sealed partial class BuildTab : UserTab, INotifyPropertyChanged
 	{
 
@@ -47,22 +48,22 @@ namespace COTG.Views
 			instance = this;
 			this.InitializeComponent();
 		}
-		private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
-		{
-			Log("in focus");
-			zoom.StartBringIntoView();
-			var groups = cvsGroups;
-			var cur = groups.View.CurrentItem;
-			Log(cur?.ToString());
-		}
-		private void ZoomedOutGotFocus(object sender, RoutedEventArgs e)
-		{
-			Log("out focus");
-			zoom.StartBringIntoView();
-			var groups = cvsGroups;
-			var cur = groups.View.CurrentItem;
-			Log(cur?.ToString());
-		}
+		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
+		//{
+		//	Log("in focus");
+		//	zoom.StartBringIntoView();
+		//	var groups = cvsGroups;
+		//	var cur = groups.View.CurrentItem;
+		//	Log(cur?.ToString());
+		//}
+		//private void ZoomedOutGotFocus(object sender, RoutedEventArgs e)
+		//{
+		//	Log("out focus");
+		//	zoom.StartBringIntoView();
+		//	var groups = cvsGroups;
+		//	var cur = groups.View.CurrentItem;
+		//	Log(cur?.ToString());
+		//}
 		public ObservableCollection<BuildQueueView> cities { get; set; } = new ObservableCollection<BuildQueueView>(); 
 	
 		public static void AddOp(BuildQueueItem item, int cid)
@@ -106,6 +107,8 @@ namespace COTG.Views
 			}
 
 		}
+		
+
 		public static void RemoveOp( BuildQueueItem item, int cid)
 		{
 			if (!IsVisible())
@@ -224,9 +227,73 @@ namespace COTG.Views
 			}
 
 		}
+
+		private void ClearSelected(object sender, RoutedEventArgs e)
+		{
+			var sel = zoom.SelectedNodes;
+			var removedCitites = new List<BuildQueueView>();
+			var removedOps = new List<BuildOpView>();
+
+			/// collect all cities
+			foreach (var i in sel)
+			{
+				if (i.Content is BuildQueueView city)
+				{
+					removedCitites.Add(city);
+				}
+			}
+
+			// collect op not part of removed cities
+			foreach (var i in sel)
+			{
+  			 if ( i.Content is BuildOpView op )
+				{
+					if(!removedCitites.Any( city => city.cid == op.cid))
+					{
+						removedOps.Add(op);
+					}
+				}
+			}
+
+			Note.Show($"Removed {removedOps.Count} build ops and {removedCitites.Count} city queues");
+			// now remove
+			foreach (var city in removedCitites)
+			{
+				BuildQueue.ClearQueue(city.cid);
+			}
+			foreach (var op in removedOps)
+			{
+				BuildQueue.CancelBuildOp(op.cid, op.item); ;
+			}
+		}
+
+		private void zoom_ItemInvoked(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		{
+			var ob = args.InvokedItem;
+			if (ob is BuildQueueView q)
+			{
+				JSClient.ChangeCity(q.cid,false);
+			}
+			else if (ob is BuildOpView op)
+			{
+
+			}
+		}
 	}
 
+	public class BuildItemTemplateSelector : DataTemplateSelector
+	{
+		public DataTemplate cityTemplate { get; set; }
+		public DataTemplate opTemplate { get; set; }
 
+		protected override DataTemplate SelectTemplateCore(object item)
+		{
+			if (item is BuildQueueView city)
+				return cityTemplate;
+			else
+				return opTemplate;
+		}
+	}
 	public class BuildQueueView
 	{
 		public int cid;

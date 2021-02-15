@@ -61,9 +61,11 @@ namespace COTG.Views
             if (isVisible && isActive)
             {
                 VisibilityChanged(false);  // close enough default behaviour
-				if(JSClient.ppdtInitialized )
+				if (JSClient.ppdtInitialized)
+				{
+					Game.City.CitiesChanged();
 					JSClient.JSInvoke("cityRefresh", null);
-
+				}
                 VisibilityChanged(true);  // close enough default behaviour
             }
         }

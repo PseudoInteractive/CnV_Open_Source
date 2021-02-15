@@ -19,12 +19,19 @@ namespace COTG.Helpers
         public static HashSet<string> seen = new HashSet<string>();
         public static Microsoft.UI.Xaml.Controls.TeachingTip queued; // tip is queued to be executed on idle
 
-        public static bool Show(this Microsoft.UI.Xaml.Controls.TeachingTip tip,int delay=1000)
+        public static bool Show(this Microsoft.UI.Xaml.Controls.TeachingTip tip,int delay=0)
         {
+			if (seen.Contains(tip.Name))
+				return false;
+			if (delay == 0)
+			{
+				seen.Add(tip.Name);
+				App.DispatchOnUIThreadSneaky(() => tip.IsOpen = true);
+				return true;
+			}
+
             if (queued!=null)
                 return true;
-            if (seen.Contains(tip.Name))
-                return false;
 
             queued =tip;
             App.QueueIdleTask(ShowTip, delay);

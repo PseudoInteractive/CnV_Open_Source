@@ -1216,7 +1216,8 @@ namespace COTG
 				
 					if(MainPage.IsVisible())
 					{
-						App.DispatchOnUIThreadSneakyLow( ()=>MainPage.instance.Refresh());
+						//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
+						App.DispatchOnUIThreadSneakyLow(MainPage.instance.Refresh);
 					}
 				}
 				
@@ -1526,6 +1527,7 @@ namespace COTG
 								   ppss = jso.GetAsInt("ppss");
 								   Player.myName = jso.GetString("player");
 								   Player.activeId =Player.myId = jso.GetAsInt("pid"); ;
+								   Player.myIds.Add(Player.myId);
 								   var cid = jso.GetAsInt("cid");
 								   City.build = City.focus = cid;
 								   NavStack.Push(cid);
@@ -1667,6 +1669,32 @@ namespace COTG
 
 						   //        break;
 						   //    }
+						   case "notify":
+							   {
+								   foreach(var note in jsp.Value.EnumerateArray())
+								   {
+									   var str = note.GetString();
+									   Log(str);
+									   var ss = str.Split(',', StringSplitOptions.RemoveEmptyEntries);
+									   if(int.TryParse(ss[0], out var id))
+									   {
+										   if( id == 99)
+										   {
+											   // online notify
+											   var friend = ss[1];
+											   var online = ss[2] == "1";
+											   var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", DateTimeOffset.UtcNow, ChatEntry.typeAnnounce);
+											   App.DispatchOnUIThreadLow(() =>
+											  {
+												  ChatTab.alliance.Post(msg);
+												  ChatTab.world.Post(msg);
+											  }); // post on both
+										   }
+									   }
+
+								   }
+								   break;
+							   }
 						   case "incoming":
 							   {
 								   var jso = jsp.Value;

@@ -46,7 +46,7 @@
 		<winui:TeachingTip x:Name="tipBuildLeft"
 						   x:FieldModifier="public"
 						   Title="Left Click Action"
-						   CloseButtonClick="hideTipBuildLeft"
+						  
 						   Target="{x:Bind gridView}"
 						   Background="{x:Null}"
 						   Subtitle="Appy a single action to whatever is under the mouse">
@@ -58,7 +58,7 @@
 		<winui:TeachingTip x:Name="tipBuildRight"
 						   x:FieldModifier="public"
 						   Title="Right Click Action"
-						   CloseButtonClick="hideTipBuildRight"
+						  
 						   Target="{x:Bind gridView}"
 						   Background="{x:Null}"
 						   Subtitle="Select a tool and use it to apply multiple actions, one after another">

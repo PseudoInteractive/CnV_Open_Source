@@ -107,12 +107,12 @@ namespace COTG.Game
 							var good = await Raiding.SendRaids(i, false);
 							if (good)
 								break;
-							if(++counter > 16)
+							if(++counter > 8)
 							{
-								Note.Show($"Giving up on {city.nameAndRemarks}");
+								Note.Show($"Giving up on {city.nameAndRemarks}, please try again in a few min");
 								break;
 							}
-							await Task.Delay(2000);	
+							await Task.Delay(500);	
 						}
 						success = true;
 						break;

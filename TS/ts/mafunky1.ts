@@ -880,6 +880,10 @@ function postppdt()
 		document.getElementById("mainMapDiv").addEventListener("mousedown",canvasMouseDown,options);
 		 // this needs to be white in region mode 
 	
+		if (ppdt) {
+			if (ppdt.opt[25]) $("#incomingRes")
+					.show();
+		}
 
 		let creds = {
 			token: SetupHeaders(),

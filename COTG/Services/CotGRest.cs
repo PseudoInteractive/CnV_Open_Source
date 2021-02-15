@@ -412,10 +412,18 @@ namespace COTG.Services
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
 			{
-				
-				var okay=	await GetCity.Post(_cid, null);
-				if (!okay)
-					return false;
+				for (int counter=0; ;++counter )
+				{
+					var okay = await GetCity.Post(_cid, null);
+					if (okay)
+						break;
+					if(counter >= 8)
+					{
+						Note.Show($"Internet failed for {Spot.GetOrAdd(_cid).nameAndRemarks}, please run auto raids again in a few minutes");
+						return false;
+					}
+					await Task.Delay(500);				
+				}
 
 			}            //   await Task.Delay(2000);
 						 //   COTG.Views.MainPage.CityListUpdateAll();

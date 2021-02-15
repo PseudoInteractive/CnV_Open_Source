@@ -12920,7 +12920,7 @@ function outer(){
 			E6k.R6();
 			F6();
 			Q51.done(function (S51) {
-				var M51 = __s[D8y | 0] + l51 + __s[m8y ^ 0] + v51 + ")";
+				var M51 = __s[D8y | 0] + l51 + "," + v51 + ")";
 				W0F(M51);
 				e2();
 				var G51 = JSON.parse(S51);
@@ -37643,7 +37643,7 @@ function outer(){
 								e1n = H1n.offset()
 									.top,
 								g3n = d3n.$elProxy.attr(__s[6746]) !== undefined ? d3n.$elProxy.attr(__s[6746])
-									.split(__s[+m8y]) : undefined;
+									.split(",") : undefined;
 							if (w1n == __s[5006]) {
 								var Y3n = parseInt(
 									g3n[0]),
@@ -42740,11 +42740,11 @@ function outer(){
 				K1m = "922";
 			var a1m = "3137";
 			var Z1m = "6603";
-			for (var i61 = 0; i61 < W61.length; i61++) {
-				var A61 =
-					W61[i61];
-				if (W61 != 0 || W61 != '') {
-					var Q61 = A61.split(__s[m8y >> 1715024416]);
+			for (let i61 = 0; i61 < W61.length; i61++) {
+				let A61 =W61[i61];
+				if (W61 != 0 || W61 != '') 
+				{
+					var Q61 = A61.split(",");
 					var
 						j61 = Q61[0];
 					var O61 = Q61[1];
@@ -42755,27 +42755,27 @@ function outer(){
 					var T61 = formatTimenostyle(r61);
 					if (
 						j61 == 1) {
-						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var X61 = E3F(O61);
 						var I61 =
-							qam[__s[+Q1m]][j61]["d"];
+							qam["events"][j61]["d"];
 						var H61 = I61.replace(__s[+C1m], X61);
 						var u61 = O2();
 						Y7F();
 						X2(11);
-						var v61 = __s[Z1m >> 204129888] + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + _s(
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + _s(
 							a1m & 2147483647) + u61 + __s[N1m >> 1361352448] + T61 + __s[+c64] + H61 + __s[E1m - 0] +
 							u61 + __s[i1m & 2147483647];
 					}
 					if (j61 == 90) {
-						var w61 = qam[__s[Q1m - 0]][j61][_s(
+						var w61 = qam["events"][j61][_s(
 							3315)];
 						var X61 = O61;
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(E6k
 							.S55(C1m & 2147483647), X61);
 						var u61 = O2();
-						var v61 = __s[Z1m - 0] + u61 + __s[+K1m] + t61 + E6k
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + E6k
 							.S55(u1m >> 2106557408) + w61 + __s[+a1m] + u61 + __s[N1m & 2147483647] + T61 + __s[+c64] +
 							H61 + __s[E1m - 0] + u61 + __s[i1m >> 1458167104];
 					}
@@ -42786,10 +42786,10 @@ function outer(){
 						var V61 = new Date(
 							X61);
 						var h61 = formatTimenostyle(V61);
-						var I61 = qam[__s[Q1m >> 76775008]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(__s[+C1m], h61);
 						var u61 = O2();
-						var v61 = __s[Z1m - 0] +
+						var v61 = "<div ID = \"notifyPopUp" +
 							u61 + __s[+K1m] + t61 + __s[u1m >> 1983280192] + w61 + __s[a1m >> 1010272448] + u61 + E6k
 								.S55(1960) + T61 + __s[+c64] + H61 + __s[+E1m] + u61 + _s(i1m & E6k
 									.s6s);
@@ -42800,8 +42800,8 @@ function outer(){
 					}
 					if (j61 == +r8y || j61 == +
 						b8y) {
-						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
-						var I61 = qam[__s[+Q1m]][j61][
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][j61][
 							"d"];
 						var M61 = Math.floor(O61 % (R5y - 0));
 						var G61 = Math.floor((O61 - M61) / (
@@ -42811,14 +42811,14 @@ function outer(){
 						var H61 = I61.replace(__s[C1m >> 907269440], o61);
 						var u61 = O2();
 						var v61 =
-							__s[+Z1m] + u61 + __s[K1m - 0] + t61 + __s[+u1m] + w61 + __s[a1m & 2147483647] + u61 + E6k
+							"<div ID = \"notifyPopUp" + u61 + __s[K1m - 0] + t61 + __s[+u1m] + w61 + __s[a1m & 2147483647] + u61 + E6k
 								.S55(N1m ^ 0) + T61 + __s[c64 >> 2071516992] + H61 + __s[E1m << 1458926176] + u61 + _s(+
 									i1m);
 					}
 					if (j61 == 9) {
-						var w61 = qam[__s[+Q1m]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var I61 = qam[
-							__s[+Q1m]][j61]["d"];
+							"events"][j61]["d"];
 						var M61 = Math.floor(O61 % (R5y >> 116651424));
 						var G61 = Math
 							.floor((O61 - M61) / (R5y - 0));
@@ -42826,7 +42826,7 @@ function outer(){
 						var H61 = I61.replace(__s[+C1m], o61);
 						var u61 =
 							O2();
-						var v61 = __s[+Z1m] + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + __s[a1m ^ 0] + u61 +
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + __s[a1m ^ 0] + u61 +
 							__s[+N1m] + T61 + __s[c64 & 2147483647] + H61 + __s[E1m >> 1394379904] + u61 + _s(i1m *
 								1);
 						setTimeout(function () { X8(); }, +B1m);
@@ -42834,24 +42834,24 @@ function outer(){
 					if (j61 == (z8y ^ 0) || j61 == +x0R) {
 						var w61 = qam[_s(+
 							Q1m)][j61]["n"];
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var
 							H61 = I61.replace(__s[C1m << 439136896], __s[+R1m] + O61 + __s[6021]);
 						var u61 =
 							O2();
-						var v61 = __s[Z1m >> 494053376] + u61 + __s[+K1m] + t61 + __s[u1m & 2147483647] + w61 + E6k
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + __s[u1m & 2147483647] + w61 + E6k
 							.o55(a1m - 0) + u61 + __s[+N1m] + T61 + __s[+c64] + H61 + __s[+E1m] + u61 + _s(i1m <<
 								609899680);
 					}
 					if (j61 == I8y - 0) {
-						var w61 = qam[__s[+Q1m]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var
 							X61 = bam[__s[157]][O61];
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 =
 							I61.replace(__s[+C1m], X61);
 						var u61 = O2();
-						var v61 = __s[Z1m ^ 0] + u61 + __s[K1m * 1] +
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m * 1] +
 							t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + __s[1960] + T61 + __s[+c64] + H61 + E6k
 								.S55(+E1m) + u61 + __s[i1m | 1089];
 					}
@@ -42860,9 +42860,9 @@ function outer(){
 						var x61 = Q61[+
 							"3"];
 						var L61 = Q61[4];
-						var w61 = qam[__s[Q1m - 0]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var I61 = qam[
-							__s[+Q1m]][j61]["d"];
+							"events"][j61]["d"];
 						var o61 = __s[+m1m] + L61 + "'>" + l61 + E6k
 							.o55(6021);
 						var H61 = I61.replace(__s[+C1m], o61);
@@ -42878,8 +42878,8 @@ function outer(){
 						var x61 = Q61[3];
 						var L61 = Q61['4' >>
 							1395046016];
-						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
-						var I61 = qam[__s[+Q1m]]
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"]
 						[j61]["d"];
 						var o61 = __s[m1m >> 737553216] + L61 + "'>" + l61 + _s(+
 							'6021');
@@ -42888,7 +42888,7 @@ function outer(){
 						H61 = H61.replace(__s[y1m & 2147483647], __s[R1m * 1] + x61 + __s[6021]);
 						var u61 = O2();
 						var
-							v61 = __s[+Z1m] + u61 + __s[K1m - 0] + t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + E6k
+							v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m - 0] + t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + E6k
 								.S55(1960) + T61 + __s[5659] + H61 + __s[934] + u61 + _s(i1m |
 									J5s);
 					}
@@ -42898,9 +42898,9 @@ function outer(){
 						var L61 = Q61["4" <<
 							1856467072];
 						var z61 = Q61[5];
-						var w61 = qam[__s[Q1m | 443]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var
-							I61 = qam[__s[+Q1m]][j61]["d"];
+							I61 = qam["events"][j61]["d"];
 						var o61 = __s[m1m & 2147483647] + z61 + _s(F6y ^
 							0) + l61 + __s[6021];
 						var H61 = I61.replace(__s[C1m * 1], __s[R1m << 343978368] + O61 +
@@ -42910,7 +42910,7 @@ function outer(){
 						H61 = H61.replace(__s[5137], L61);
 						var u61 = O2();
 						X2(12);
-						var v61 = __s[+Z1m] + u61 + __s[K1m * 1] + t61 + __s[+u1m] + w61 + _s(a1m >>
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m * 1] + t61 + __s[+u1m] + w61 + _s(a1m >>
 							1473343776) + u61 + __s[N1m & 2147483647] + T61 + __s[5659] + H61 + __s[934] + u61 +
 							__s[+i1m];
 					}
@@ -42920,7 +42920,7 @@ function outer(){
 						var L61 = Q61[4];
 						var
 							z61 = Q61[5];
-						var w61 = qam[__s[Q1m << 1019147840]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var I61 = qam[E6k
 							.S55(+Q1m)][j61]["d"];
 						var o61 = __s[+m1m] + z61 + "'>" + x61 + _s(
@@ -42930,7 +42930,7 @@ function outer(){
 						H61 = H61.replace(__s[+y1m], __s[R1m >> 1313907104] + L61 + __s[6021]);
 						var u61 = O2();
 						var
-							v61 = __s[+Z1m] + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + __s[a1m >> 2040804992] +
+							v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + __s[a1m >> 2040804992] +
 								u61 + __s[N1m - 0] + T61 + __s[+c64] + H61 + __s[E1m << 23987168] + u61 + _s(+
 									i1m);
 					}
@@ -42940,8 +42940,8 @@ function outer(){
 						var L61 = Q61[4];
 						var z61 =
 							Q61[5];
-						var w61 = qam[__s[Q1m - 0]][j61]["n"];
-						var I61 = qam[__s[Q1m * 1]][
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][
 							j61]["d"];
 						var o61 = __s[+m1m] + z61 + "'>" + L61 + __s[6021];
 						var
@@ -42951,13 +42951,13 @@ function outer(){
 						H61 = H61.replace(__s[5137], o61);
 						var u61 = O2();
 						X2(+m2y);
-						var v61 = __s[Z1m ^ 0] + u61 + __s[K1m ^ 0] + t61 + __s[u1m | 4] + w61 + _s(
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m ^ 0] + t61 + __s[u1m | 4] + w61 + _s(
 							a1m * 1) + u61 + __s[N1m >> 476925760] + T61 + __s[c64 | 5840] + H61 + __s[+E1m] + u61 +
 							__s[i1m * 1];
 					}
 					if (j61 == 59) {
-						var w61 = qam[__s[+Q1m]][j61]["n"];
-						var I61 = qam[__s[Q1m - 0]][j61]["d"];
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][j61]["d"];
 						var l61 = Q61[2];
 						var o61 = E6k
 							.o55(m1m >> 142165632) + l61 + "'>" + O61 + __s[6021];
@@ -42965,49 +42965,49 @@ function outer(){
 							.replace(__s[C1m * 1], o61);
 						var u61 = O2();
 						X2(m2y | 8);
-						var v61 = __s[+Z1m] + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + _s(a1m *
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[+K1m] + t61 + __s[+u1m] + w61 + _s(a1m *
 							1) + u61 + __s[N1m * 1] + T61 + __s[+c64] + H61 + __s[E1m * 1] + u61 + __s[+i1m];
 					}
 					if (
 						j61 == (a0R ^ 0)) {
 						var l61 = Q61[2];
-						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
-						var I61 = qam[__s[Q1m * 1]][j61]["d"];
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(_s(+
 							C1m), O61);
 						H61 = H61.replace(__s[L1m >> 2022719456], l61);
 						var u61 = O2();
 						X2(m2y & 2147483647);
-						var v61 = __s[+Z1m] + u61 + __s[K1m * 1] + t61 + __s[u1m >> 822817600] +
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m * 1] + t61 + __s[u1m >> 822817600] +
 							w61 + __s[+a1m] + u61 + __s[+N1m] + T61 + __s[+c64] + H61 + __s[+E1m] + u61 + _s(+
 								i1m);
 					}
 					if (j61 == +K0R) {
-						var w61 = qam[__s[Q1m | 6022]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var I61 = qam[
-							__s[Q1m - 0]][j61]["d"];
+							"events"][j61]["d"];
 						var H61 = I61.replace(__s[+C1m], O61);
 						var u61 = O2();
 						var
-							v61 = __s[Z1m - 0] + u61 + __s[K1m ^ 0] + t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + E6k
+							v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m ^ 0] + t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + E6k
 								.S55(N1m - 0) + T61 + __s[c64 - 0] + H61 + __s[+E1m] + u61 + __s[+i1m];
 					}
 					if (j61 == (N0R |
 						26)) {
-						var w61 = qam[__s[+Q1m]][j61]["n"];
-						var I61 = qam[__s[Q1m * 1]][j61][E6k
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][j61][E6k
 							.o55(T9y ^ 0)];
 						var H61 = I61.replace(__s[C1m * 1], O61);
 						var u61 = O2();
 						X2('15' >> 1194432320);
-						var v61 = __s[+Z1m] + u61 + __s[K1m | 282] + t61 + __s[+u1m] + w61 +
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m | 282] + t61 + __s[+u1m] + w61 +
 							__s[+a1m] + u61 + __s[+N1m] + T61 + __s[c64 & 2147483647] + H61 + __s[+E1m] + u61 + E6k
 								.S55(i1m * 1);
 					}
 					if (j61 == +X8y) {
-						var w61 = qam[__s[+Q1m]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var
-							I61 = qam[__s[Q1m | 1977]][j61]["d"];
+							I61 = qam["events"][j61]["d"];
 						var u61 = O2();
 						var v61 = _s(Z1m <<
 							856103936) + u61 + __s[+K1m] + t61 + __s[u1m >> 1779686848] + w61 + __s[+a1m] + u61 + E6k
@@ -43015,13 +43015,13 @@ function outer(){
 									i1m);
 					}
 					if (j61 == J0R << 1540061376) {
-						var w61 = qam[__s[Q1m - 0]][j61]["n"];
+						var w61 = qam["events"][j61]["n"];
 						var
-							I61 = qam[__s[+Q1m]][j61]["d"];
+							I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(__s[C1m >> 19232096],
 							O61);
 						var u61 = O2();
-						var v61 = __s[+Z1m] + u61 + __s[K1m | 520] + t61 + __s[+u1m] + w61 + E6k
+						var v61 = "<div ID = \"notifyPopUp" + u61 + __s[K1m | 520] + t61 + __s[+u1m] + w61 + E6k
 							.o55(a1m * 1) + u61 + __s[+N1m] + T61 + __s[c64 >> 813984] + H61 + __s[E1m & 2147483647] +
 							u61 + __s[i1m & 2147483647];
 					}
@@ -43029,13 +43029,13 @@ function outer(){
 						var l61 = Q61[2];
 						var x61 = Q61[3];
 						var w61 =
-							qam[__s[Q1m & 2147483647]][j61]["n"];
-						var I61 = qam[__s[Q1m | 268]][j61][E6k
+							qam["events"][j61]["n"];
+						var I61 = qam["events"][j61][E6k
 							.o55(+T9y)];
 						var H61 = I61.replace(__s[L1m & 2147483647], O61);
 						H61 = H61.replace(__s[+C1m], l61);
 						var u61 = O2();
-						var v61 = __s[Z1m >> 2027472576] + u61 + E6k
+						var v61 = "<div ID = \"notifyPopUp" + u61 + E6k
 							.S55(K1m << 1251867456) + t61 + __s[u1m - 0] + w61 + __s[+a1m] + u61 + __s[N1m * 1] + T61 +
 							__s[c64 ^ 0] + H61 + __s[E1m | 688] + u61 + __s[i1m ^ 0];
 						X8();
@@ -43045,12 +43045,12 @@ function outer(){
 						var x61 = Q61[3];
 						var w61 = qam[E6k
 							.S55(Q1m & 2147483647)][j61]["n"];
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var
 							H61 = I61.replace(__s[C1m << 1766191008], x61);
 						H61 = H61.replace(__s[+L1m], l61);
 						var u61 = O2();
-						var v61 = __s[Z1m | 194] + u61 + _s(+
+						var v61 = "<div ID = \"notifyPopUp" + u61 + _s(+
 							K1m) + t61 + __s[+u1m] + w61 + __s[+a1m] + u61 + __s[N1m & 2147483647] + T61 + _s(c64 ^
 								0) + H61 + __s[E1m >> 700132960] + u61 + __s[i1m * 1];
 						X8();
@@ -43058,15 +43058,15 @@ function outer(){
 					if (j61 == +m2y) {
 						var l61 = Q61[2];
 						var x61 = Q61[3];
-						var w61 = qam[__s[+Q1m]][j61][
+						var w61 = qam["events"][j61][
 							"n"];
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(_s(+
 							C1m), O61);
 						H61 = H61.replace(__s[L1m ^ 0], l61);
 						H61 = H61.replace(__s[y1m | 129], x61);
 						var u61 = O2();
-						var v61 = __s[+Z1m] + u61 + _s(+
+						var v61 = "<div ID = \"notifyPopUp" + u61 + _s(+
 							K1m) + t61 + __s[+u1m] + w61 + __s[a1m & 2147483647] + u61 + __s[N1m ^ 0] + T61 + _s(+
 								c64) + H61 + __s[+E1m] + u61 + __s[i1m & 2147483647];
 					}
@@ -43074,14 +43074,14 @@ function outer(){
 						var l61 =
 							Q61[2];
 						var x61 = Q61[3];
-						var w61 = qam[__s[Q1m & 2147483647]][j61]["n"];
-						var I61 = qam[__s[+Q1m]][j61]["d"];
+						var w61 = qam["events"][j61]["n"];
+						var I61 = qam["events"][j61]["d"];
 						var H61 = I61.replace(_s(
 							y1m >> 1356203488), O61);
 						H61 = H61.replace(__s[L1m * 1], l61);
 						H61 = H61.replace(__s[C1m << 2007247776], x61);
 						var u61 = O2();
-						var v61 = __s[Z1m * 1] + u61 + E6k
+						var v61 = "<div ID = \"notifyPopUp" + u61 + E6k
 							.o55(K1m * 1) + t61 + __s[+u1m] + w61 + __s[a1m >> 895284480] + u61 + __s[+N1m] + T61 + E6k
 								.S55(c64 << 273107392) + H61 + __s[E1m << 518974048] + u61 + __s[+i1m];
 					}
@@ -46826,9 +46826,9 @@ function outer(){
 		}
 
 		function P3F() {
-			E6k.y6();
-			for (var W5g = 0; W5g <= +t9R; W5g++) $(__s[+B1R] + W5g)
-				.css(__s[6241], "none");
+			//E6k.y6();
+			//for (var W5g = 0; W5g <= +t9R; W5g++) $(__s[+B1R] + W5g)
+			//	.css(__s[6241], "none");
 		}
 		$("#cvs")
 			.dblclick(function () {
@@ -56957,7 +56957,7 @@ function outer(){
 
 		function Z2(i7w) {
 			E6k.R6();
-			if (b4F.indexOf(__s[m8y | 1168] + i7w + __s[m8y * 1]) < 0 &&
+			if (b4F.indexOf("," + i7w + ",") < 0 &&
 				K0F.indexOf(Number(i7w)) < 0 && e9.indexOf(Number(i7w)) < (0)) return !0;
 			else return !!"";
 		}
@@ -56985,7 +56985,7 @@ function outer(){
 					var E72 = bam["troops"][N72][_s(+
 						"1067")];
 					if (m72 != (0)) c72 = c72 + __s[1154] + a72 + __s[1689] +
-						E72 + __s["4933" | 4353] + N72 + __s[m8y ^ 0] + m72 + __s[2334] + N72 + __s[4148] +
+						E72 + __s["4933" | 4353] + N72 + "," + m72 + __s[2334] + N72 + __s[4148] +
 						e42 + __s[6139] + m72 + __s[4403];
 				} $(__s[510])
 					.html(c72);
@@ -58476,9 +58476,9 @@ function outer(){
 						}
 					}
 	 
-
+					let isBuildCity = t71.cid == cid;
 					
-					if(t71.cid == cid)
+					if(isBuildCity)
 					 {
 						
 					    d3F(t71);
@@ -58588,7 +58588,7 @@ function outer(){
 					var x71 = pollJ[E6k
 						.o55(1076)];
 					if (x71 >= 1) a7F();
-					var O71 = pollJ[__s[1203]];
+					var O71 = pollJ[__s[1203]]; // mail
 					Z6F(O71);
 					if (pollJ["notify"]) {
 						var v71 = pollJ["notify"];
@@ -58598,14 +58598,16 @@ function outer(){
 							y6F(v71);
 						}
 					}
-					if (pollJ.hasOwnProperty("OGA")) {
+				 if(isBuildCity)
+				{
+					if (pollJ.hasOwnProperty("OGA")) { // City commands
 						OGA = pollJ["OGA"];
 						//            console.log(OGA);
 						//  if OGA is empty it will sometimes fire repeatedly
 						m6F(OGA);
 
 					}
-					if (pollJ.hasOwnProperty("OGT")) {
+					if (pollJ.hasOwnProperty("OGT")) {// trades
 						var L71 = pollJ["OGT"];
 						N6F(L71);
 						//if(L71.length > 0)
@@ -58623,6 +58625,7 @@ function outer(){
 						//  window['external']['notify'](JSON.stringify(wrapper));
 						// }
 					}
+				}
 					var z71 = pollJ["rep"];
 					U6F(z71);
 					if (pollJ.hasOwnProperty("alliance")) {
@@ -59469,7 +59472,7 @@ function outer(){
 						if (city.cg[S2V] == C2V) {
 							d2V = __s[286];
 							if (G2V == '') G2V = G2V + i2V;
-							else G2V = G2V + __s[+m8y] + i2V;
+							else G2V = G2V + "," + i2V;
 						} W2V = W2V + __s[3124] + i2V + "</td><td><input id=\"citylistaddCD\" value=\""
 							+ C2V + __s[3066] + d2V + __s[5260];
 				}
@@ -59482,12 +59485,12 @@ function outer(){
 		}
 
 		function U3F() {
-			for (var G5g = 0; G5g <= +t9R; G5g++) {
-				var C5g = D5F(Number(G5g));
-				if (C5g == _s(L9y *
-					1) || C5g == __s[+g4p] || C5g == __s[+G2k]) $(__s[B1R << 322099584] + G5g)
-						.css(__s[6241], __s[4925]);
-			}
+			//for (var G5g = 0; G5g <= +t9R; G5g++) {
+			//	var C5g = D5F(Number(G5g));
+			//	if (C5g == _s(L9y *
+			//		1) || C5g == __s[+g4p] || C5g == __s[+G2k]) $(__s[B1R << 322099584] + G5g)
+			//			.css(__s[6241], __s[4925]);
+			//}
 		}
 
 		function H0V(k0i) { // buy one item
@@ -60321,7 +60324,7 @@ function outer(){
 			S8 = o2g;
 			n2 = $("#quickBuildMenu")
 				.css("display");
-			var Z2g = __s[+m8y] + O2g + __s[m8y | 1452];
+			var Z2g = "," + O2g + ",";
 			var g2g = O2g;
 			var P2g = city
 				.bd[0]["bl"];
@@ -63403,7 +63406,7 @@ function outer(){
 							var Y4U = Z4U[R4U];
 							if (Z4U != 0 || Z4U != _s(+
 								'4867')) {
-								var W4U = Y4U.split(__s[+m8y]);
+								var W4U = Y4U.split(",");
 								var M4U = W4U[0];
 								var J4U = W4U[1];
 								var q4U =
@@ -63414,9 +63417,9 @@ function outer(){
 								var y4U =
 									formatTime(D4U);
 								if (M4U == 1) {
-									var i4U = qam[__s[Q1m ^ 0]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var A4U = E3F(J4U);
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var d4U = W4U[+
 										"2"];
 									var z4U = G4U.replace(__s[+C1m], A4U);
@@ -63425,10 +63428,10 @@ function outer(){
 										631154944);
 								}
 								if (M4U == 90) {
-									var i4U = qam[__s[Q1m | 260]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var
 										A4U = J4U;
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var C4U = W4U[2];
 									var
 										z4U = G4U.replace(__s[C1m - 0], A4U);
@@ -63437,7 +63440,7 @@ function outer(){
 								}
 								if (M4U ==
 									85) {
-									var i4U = qam[__s[+Q1m]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var A4U = Number(J4U) * (
 										1000);
 									var p4U = new Date(A4U);
@@ -63452,7 +63455,7 @@ function outer(){
 								}
 								if (M4U == +r8y ||
 									M4U == b8y - 0) {
-									var i4U = qam[__s[Q1m ^ 0]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[_s(
 										+Q1m)][M4U]["d"];
 									var K4U = Math.floor(J4U % +R5y);
@@ -63468,7 +63471,7 @@ function outer(){
 								}
 								if (M4U == +
 									"9") {
-									var i4U = qam[__s[Q1m | 4773]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[_s(Q1m *
 										1)][M4U]["d"];
 									var K4U = Math.floor(J4U % +R5y);
@@ -63482,9 +63485,9 @@ function outer(){
 										.s6s);
 								}
 								if (M4U == +z8y || M4U == x0R * 1) {
-									var i4U = qam[__s[+Q1m]][M4U][_s(+
+									var i4U = qam["events"][M4U][_s(+
 										'3315')];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(_s(
 										C1m ^ 0), J4U);
 									z4U.replace(/<br>/g, "");
@@ -63493,10 +63496,10 @@ function outer(){
 								}
 								if (M4U == +
 									I8y) {
-									var i4U = qam[__s[+Q1m]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var A4U = bam[__s[157]][
 										J4U];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(_s(C1m >>
 										1881183808), A4U);
 									z4U.replace(/<br>/g, '');
@@ -63509,7 +63512,7 @@ function outer(){
 									var S4U = W4U[3];
 									var i4U = qam[_s(Q1m |
 										1415)][M4U]["n"];
-									var G4U = qam[__s[Q1m | 693]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(__s[+C1m], d4U);
 									z4U = z4U.replace(__s[L1m ^ 0], S4U);
 									z4U.replace(/<br>/g, "");
@@ -63522,7 +63525,7 @@ function outer(){
 									var S4U = W4U[3];
 									var i4U = qam[_s(Q1m |
 										4664)][M4U]["n"];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(__s[C1m >> 1113116384], J4U);
 									z4U = z4U.replace(__s[+L1m], d4U);
 									z4U = z4U.replace(__s[+y1m], S4U);
@@ -63536,8 +63539,8 @@ function outer(){
 									var S4U = W4U[3];
 									var f4U = W4U["4" | 4];
 									var i4U =
-										qam[__s[Q1m * 1]][M4U]["n"];
-									var G4U = qam[__s[+Q1m]][M4U][_s(+
+										qam["events"][M4U]["n"];
+									var G4U = qam["events"][M4U][_s(+
 										T9y)];
 									var z4U = G4U.replace(__s[C1m * 1], J4U);
 									z4U = z4U.replace(__s[+L1m], d4U);
@@ -63551,9 +63554,9 @@ function outer(){
 									+y9y) {
 									var d4U = W4U[2];
 									var S4U = W4U[3];
-									var i4U = qam[__s[+Q1m]][M4U][_s(+
+									var i4U = qam["events"][M4U][_s(+
 										"3315")];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(_s(
 										C1m >> 561063488), J4U);
 									z4U = z4U.replace(__s[L1m >> 836175616], d4U);
@@ -63569,7 +63572,7 @@ function outer(){
 									var f4U = W4U[4];
 									var m4U = W4U[5];
 									var
-										i4U = qam[__s[Q1m - 0]][M4U]["n"];
+										i4U = qam["events"][M4U]["n"];
 									var G4U = qam[_s(Q1m & E6k
 										.s6s)][M4U]["d"];
 									var C4U = W4U[5];
@@ -63590,8 +63593,8 @@ function outer(){
 								}
 								if (M4U == '59' -
 									0) {
-									var i4U = qam[__s[Q1m * 1]][M4U]["n"];
-									var G4U = qam[__s[+Q1m]][M4U][
+									var i4U = qam["events"][M4U]["n"];
+									var G4U = qam["events"][M4U][
 										"d"];
 									var z4U = G4U.replace(__s[C1m & 2147483647], J4U);
 									z4U.replace(/<br>/g, '');
@@ -63601,9 +63604,9 @@ function outer(){
 								if (
 									M4U == (a0R & 2147483647)) {
 									var d4U = W4U[2];
-									var i4U = qam[__s[Q1m ^ 0]][M4U][_s(+
+									var i4U = qam["events"][M4U][_s(+
 										"3315")];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var C4U = W4U["3" >>
 										1674703360];
 									var z4U = G4U.replace(__s[+C1m], J4U);
@@ -63613,7 +63616,7 @@ function outer(){
 								}
 								if (M4U == K0R *
 									1) {
-									var i4U = qam[__s[Q1m << 719477760]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[_s(+
 										Q1m)][M4U]["d"];
 									var z4U = G4U.replace(__s[+C1m], J4U);
@@ -63625,9 +63628,9 @@ function outer(){
 								}
 								if (M4U ==
 									N0R * 1) {
-									var i4U = qam[__s[Q1m >> 1639539616]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[
-										__s[+Q1m]][M4U]["d"];
+										"events"][M4U]["d"];
 									var z4U = G4U.replace(__s[+C1m], J4U);
 									z4U.replace(/<br>/g, "");
 									var C4U = W4U[2];
@@ -63635,18 +63638,18 @@ function outer(){
 								}
 								if (
 									M4U == X8y - 0) {
-									var i4U = qam[__s[Q1m | 4780]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var z4U = qam[
-										__s[Q1m >> 57208800]][M4U]["d"];
+										"events"][M4U]["d"];
 									var C4U = W4U[2];
 									z4U.replace(/<br>/g, '');
 									b4U = b4U + __s[f7k - 0] + C4U + __s[+U7k] + z4U + __s[+K5y];
 								}
 								if (M4U == (J0R &
 									2147483647)) {
-									var i4U = qam[__s[+Q1m]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[
-										__s[Q1m ^ 0]][M4U]["d"];
+										"events"][M4U]["d"];
 									var z4U = G4U.replace(_s(C1m <<
 										849275296), J4U);
 									var C4U = W4U[2];
@@ -63657,9 +63660,9 @@ function outer(){
 									0)) {
 									var d4U = W4U['2' | 2];
 									var S4U = W4U[3];
-									var i4U = qam[__s[Q1m - 0]][M4U][E6k
+									var i4U = qam["events"][M4U][E6k
 										.o55(3315)];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U
 										.replace(__s[L1m | 3200], J4U);
 									z4U = z4U.replace(__s[+C1m], d4U);
@@ -63671,9 +63674,9 @@ function outer(){
 									443128896) {
 									var d4U = W4U[2];
 									var S4U = W4U[3];
-									var i4U = qam[__s[+Q1m]][M4U][E6k
+									var i4U = qam["events"][M4U][E6k
 										.o55(3315)];
-									var G4U = qam[__s[Q1m - 0]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(
 										__s[C1m ^ 0], S4U);
 									z4U = z4U.replace(__s[L1m - 0], d4U);
@@ -63687,7 +63690,7 @@ function outer(){
 									var S4U = W4U[3];
 									var f4U = W4U[
 										5];
-									var i4U = qam[__s[+Q1m]][M4U]["n"];
+									var i4U = qam["events"][M4U]["n"];
 									var G4U = qam[_s(
 										Q1m * 1)][M4U]["d"];
 									var P4U = __s[V7k | 261] + J4U + _s(
@@ -63707,9 +63710,9 @@ function outer(){
 									0) {
 									var d4U = W4U[2];
 									var S4U = W4U[3];
-									var i4U = qam[__s[Q1m ^ 0]][M4U][_s(
+									var i4U = qam["events"][M4U][_s(
 										3315)];
-									var G4U = qam[__s[+Q1m]][M4U]["d"];
+									var G4U = qam["events"][M4U]["d"];
 									var z4U = G4U.replace(E6k
 										.S55(y1m * 1), J4U);
 									z4U = z4U.replace(__s[L1m | 3204], d4U);
@@ -64086,7 +64089,7 @@ function outer(){
 				.length; o4w++) {
 				var i4w = city.bd[o4w].bl;
 				var G4w = city.bd[o4w].bid;
-				if (i4w >= 1 && G4w != (BAL) && b4F.indexOf(__s[m8y ^ 0] + o4w + __s[m8y ^ 0]) < 0 && K0F.indexOf(Number(o4w)) < +
+				if (i4w >= 1 && G4w != (BAL) && b4F.indexOf("," + o4w + ",") < 0 && K0F.indexOf(Number(o4w)) < +
 					'0' && e9.indexOf(Number(o4w)) < 0 && G4w <= +TPL) X4w = X4w + 1;
 			}
 			E6k.y6();

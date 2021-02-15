@@ -1304,7 +1304,7 @@ namespace COTG.Views
 									else
 									{
 										// nothing here
-										if (counts.count < counts.max ) // can we put a cabin here?
+								//		if (counts.count < counts.max ) // can we put a cabin here?
 										{
 											Status($"No building is wanted here, how about a cottage instead?", dryRun);
 											Build(cc, bidCottage, dryRun);
@@ -1563,20 +1563,12 @@ namespace COTG.Views
 
 				if (isRight)
 				{
-					if (!tipBuildRightHidden)
-					{
-						instance.tipBuildRight.IsOpen = true;
-						tipBuildRightHidden = true;
-					}
+					Tips.Show(instance.tipBuildRight);
 				}
 				else
 				{
-					if (!tipBuildLeftHidden)
-					{
-						instance.tipBuildLeft.IsOpen = true;
-						tipBuildLeftHidden = true;
-					}
-
+					Tips.Show(instance.tipBuildLeft);
+		
 				}
 
 				//	var i = instance;
@@ -1742,16 +1734,9 @@ namespace COTG.Views
 			buildMenu.Hide();
 
 		}
-		static bool tipBuildLeftHidden;
-		static bool tipBuildRightHidden;
-		private void hideTipBuildLeft(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		private void StackPanel_AccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
 		{
-			tipBuildLeftHidden = true;
-		}
 
-		private void hideTipBuildRight(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-		{
-			tipBuildRightHidden = true;
 		}
 		//public static BuildPhase GetBuildPhase()
 		//{

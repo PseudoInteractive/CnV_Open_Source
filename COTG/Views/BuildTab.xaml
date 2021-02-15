@@ -6,7 +6,7 @@
                xmlns:game="using:COTG.Game"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:cotg="using:COTG"
-               xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+               xmlns:winui="using:Windows.UI.Xaml.Controls"
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:views="using:COTG.Views"
 			   xmlns:wuxdata="using:Windows.UI.Xaml.Data"
@@ -14,48 +14,43 @@
 			  IsTabStop="True"
                mc:Ignorable="d">
 	<views:UserTab.Resources>
-		<CollectionViewSource x:Name="cvsGroups" Source="{x:Bind cities}" IsSourceGrouped="True" ItemsPath="queue" x:FieldModifier="public"/>
-
+	
 		<DataTemplate x:Key="ZoomedInTemplate" x:DataType="views:BuildOpView">
+			<winui:TreeViewItem>
 			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
 				<TextBlock Text="{x:Bind op}" />
 			</StackPanel>
+			</winui:TreeViewItem>
 		</DataTemplate>
 
 		<DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="views:BuildQueueView">
-			<StackPanel Orientation="Horizontal" Margin="4">
-				<Image Source="{x:Bind icon}"  Width="48" Height="48" />
-				<TextBlock Text="{x:Bind title}"/>
-			</StackPanel>
+			<winui:TreeViewItem ItemsSource="{x:Bind queue}" IsExpanded="True">
+				<StackPanel Orientation="Horizontal" Margin="4">
+					<Image Source="{x:Bind icon}"  Width="48" Height="48" />
+					<TextBlock Text="{x:Bind title}"/>
+				</StackPanel>
+			</winui:TreeViewItem>
 		</DataTemplate>
 
-		<DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
-				<Image Source="{x:Bind ((views:BuildQueueView)Group).icon}"  Width="64" Height="64" />
-				<TextBlock Text="{x:Bind ((views:BuildQueueView)Group).title}"  />
-			</StackPanel>
-		</DataTemplate>
+		<views:BuildItemTemplateSelector x:Key="BuildItemTemplateSelector"
+        cityTemplate="{StaticResource ZoomedInGroupHeaderTemplate}"
+        opTemplate="{StaticResource ZoomedInTemplate}" />
+
 	</views:UserTab.Resources>
 
-	<StackPanel>
-		<Button Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
-		<SemanticZoom x:Name="zoom" HorizontalContentAlignment="Stretch"  MinHeight="500" MaxHeight="1480"  IsZoomOutButtonEnabled="True" ViewChangeStarted="zoom_ViewChangeStarted" >
-			<SemanticZoom.ZoomedInView>
-				<GridView ItemsSource="{x:Bind cvsGroups.View}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" GotFocus="ZoomedInGotFocus" 
-						   IsItemClickEnabled="True" ItemClick="ItemClick"
-                        ItemTemplate="{StaticResource ZoomedInTemplate}">
-					<GridView.GroupStyle>
-						<GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}" />
-					</GridView.GroupStyle>
-				</GridView>
-			</SemanticZoom.ZoomedInView>
 
-			<SemanticZoom.ZoomedOutView>
-				<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" MaxHeight="1000" MinHeight="500" SelectionMode="None" ItemTemplate="{StaticResource ZoomedOutTemplate}" 
-						    GotFocus="ZoomedOutGotFocus" />
-			</SemanticZoom.ZoomedOutView>
-		</SemanticZoom>
+
+	<StackPanel Height="auto">
+		<StackPanel Orientation="Horizontal" BorderThickness="2" >
+			<Button Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
+			<Button Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
+		</StackPanel>
+		<winui:TreeView x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True"
+ TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
+						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" VerticalAlignment="Top" 
+						VerticalContentAlignment="Stretch"  >
+		</winui:TreeView>
 
 	</StackPanel>
 </views:UserTab>

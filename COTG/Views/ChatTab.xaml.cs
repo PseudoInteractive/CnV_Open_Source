@@ -42,7 +42,8 @@ namespace COTG.Views
         public const byte typeWhisperTo = 3;
         public const byte typeAlliance = 4;
         public const byte typeOfficer = 5;
-        public sbyte allignment;
+		public const byte typeAnnounce =6;
+		public sbyte allignment;
         public HorizontalAlignment MsgAlignment => (AMath.random.Next(3)-1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
         public DateTimeOffset time;
         public string arrivedString => time.ToString("HH':'mm':'ss");
@@ -618,20 +619,24 @@ namespace COTG.Views
 
 	class HyperlinkColorConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+		static SolidColorBrush[] brushes;
+		static HyperlinkColorConverter()
+		{
+
+			brushes = new SolidColorBrush[ChatEntry.typeAnnounce + 1];
+			brushes[1] = brushes[0] = new SolidColorBrush() { Color = Colors.Orange };
+			brushes[2] = new SolidColorBrush() { Color = Colors.Magenta };
+			brushes[3] = new SolidColorBrush() { Color = Colors.MediumVioletRed };
+			brushes[4] = new SolidColorBrush() { Color = Colors.ForestGreen };
+			brushes[5] = new SolidColorBrush() { Color = Colors.Cyan };
+			brushes[ChatEntry.typeAnnounce] = new SolidColorBrush() { Color = Colors.Red };
+
+		}
+		public object Convert(object value, Type targetType, object parameter, string language)
         {
             var ce = value as ChatEntry;
-            //   Debug.Log(value.GetType());
-            //    Log(value.ToString());
-            return ce.type switch
-            {
-                2 => new SolidColorBrush() { Color = Colors.Magenta },
-                3 => new SolidColorBrush() { Color = Colors.MediumVioletRed },
-                4 => new SolidColorBrush() { Color = Colors.ForestGreen },
-                5 => new SolidColorBrush() { Color = Colors.Cyan },
-                _ => new SolidColorBrush() { Color =Colors.Orange },
-            };
-        }
+			return brushes[ce.type];
+			        }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {

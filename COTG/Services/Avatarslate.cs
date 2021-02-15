@@ -53,17 +53,31 @@ namespace COTG.Services
             var id = src.IndexOf('{');
             if (id > 2)
                 txt = txt.Substring(0, id-1);
-            var xl = await service.TranslateAsync(txt,lang);
-            var result = $"{src} {{ {item.Text}: {xl} }}";
-            if (markdown != null)
-            {
-                markdown.Text = result;
-            }
-            else
-            {
-                textblock.Text = result;
+            
+			var xl = await service.TranslateWithResponseAsync(txt,lang);
+			Log($"Detected: {xl.DetectedLanguage.Language} score {xl.DetectedLanguage.Score}");
+			string xresult = null;
+			foreach (var i in xl.Translations)
+			{
+				Log($"{i.Text} => {i.To}");
+				xresult = i.Text;
+			}
+			if (xresult != null)
+			{
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					var result = $"{src} {{ {item.Text}: {xresult} }}";
+					if (markdown != null)
+					{
+						markdown.Text = result;
+					}
+					else
+					{
+						textblock.Text = result;
 
-            }
+					}
+				});
+			}
         }
         public static async Task<string[]> GetLanguagesAsync()
         {

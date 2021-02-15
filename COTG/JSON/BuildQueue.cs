@@ -18,7 +18,7 @@ using System.Web;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
+using Microsoft.Toolkit.Extensions;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
 
@@ -208,6 +208,7 @@ namespace COTG.JSON
 						}
 						else
 						{
+							var gotBQ = false;
 							delay = 6000;
 							pollPaused = true;
 							// First try to get it from poll2, then if that fails, try GC 
@@ -227,16 +228,16 @@ namespace COTG.JSON
 
 								if (JSClient.extCityHack == null)
 									continue;
-
+								
 								if( JSClient.extCityHack.RootElement.TryGetProperty("ext", out var ext) )
-								{ 
-									GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
+								{
+									gotBQ = GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
 								}
 								JSClient.extCityHack = null;
-								if (cotgQ != null)
+								if (gotBQ)
 									break;
 							}
-							if (cotgQ == null)
+							if (!gotBQ)
 							{
 								Trace("Failed to get poll?");
 								await GetCity.Post(cid, (jsCity, city) =>
@@ -456,21 +457,36 @@ namespace COTG.JSON
 
 		}
 
-		private static void GetBQInfo(ref int delay, ref int cotgQLength, ref DArray<BuildQueueItem> cotgQ, ref JsonElement jsCity)
+		private static bool GetBQInfo(ref int delay, ref int cotgQLength, ref DArray<BuildQueueItem> cotgQ, ref JsonElement jsCity)
 		{
+			var result = false;
 			try
 			{
 				if (jsCity.TryGetProperty("bq", out var bq))
 				{
 					if (bq.ValueKind == JsonValueKind.Array)
 					{
+						result = true;
 						cotgQLength = bq.GetArrayLength();
+
+						{
+							var delays = new float[cotgQLength];
+							var put = 0;
+							foreach (var cmd in bq.EnumerateArray())
+							{
+								delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
+							}
+							ShellPage.debugTip = delays.ToArrayString();
+						}
+
+
 						if (cotgQLength > 0 && (City.safeBuildQueueLength > cotgQLength))
 						{
 							delay = delay.Max(JSClient.ServerTimeOffset(bq[cotgQLength - 1].GetAsInt64("de"))); // recover after 2 seconds
 							if(delay > 32*1000)
 							{
 							//	Assert(false);
+	
 								delay = 32000;
 							}
 							cotgQ = new DArray<BuildQueueItem>(128);
@@ -494,6 +510,7 @@ namespace COTG.JSON
 			{
 				COTG.Debug.Log(_exception);
 			}
+			return result;
 
 		}
 
@@ -589,12 +606,14 @@ namespace COTG.JSON
 		}
 
 		
-		public static void ClearQueue()
+		public static void ClearQueue(int cid = -1)
 		{
-			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			if (cid == -1)
+				cid = City.build;
+			if (CityBuildQueue.all.TryGetValue(cid, out var q))
 			{
 				q.queue.Clear();
-				BuildTab.Clear(City.build);
+				BuildTab.Clear(cid);
 				SaveNeeded();
 				CityView.BuildingsOrQueueChanged();
 			}

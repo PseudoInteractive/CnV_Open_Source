@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 
 using static COTG.Views.SettingsPage;
 namespace COTG.JSON
@@ -261,9 +262,21 @@ namespace COTG.JSON
 			return result;
         }
 
-        public static void SetTargetHub(int cid, int targetHub)
+        public static async void SetTargetHub(int cid, int targetHub)
         {
-            UpdateMinisterOptions(cid,async (split) =>
+			var dialog = new ContentDialog()
+			{
+				Title = $"Set Trade Settings",
+				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}?", 
+				PrimaryButtonText = "Yes",
+				SecondaryButtonText = "Cancel"
+			};
+			if (await dialog.ShowAsync2() != ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			UpdateMinisterOptions(cid,async (split) =>
             {
                 split[37] = sendWood? targetHub.ToString() : "0"; // hub to use for this res
                 split[38] = sendStone?targetHub.ToString() : "0"; // hub to use for this res
