@@ -41,16 +41,20 @@
 
 
 
-	<StackPanel Height="auto">
+	<Grid >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" BorderThickness="2" >
-			<Button Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
-			<Button Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
+			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
+			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
-		<winui:TreeView x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True"
+		<winui:TreeView Grid.Row="1" x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" 
  TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" VerticalAlignment="Top" 
-						VerticalContentAlignment="Stretch"  >
+						>
 		</winui:TreeView>
 
-	</StackPanel>
+	</Grid>
 </views:UserTab>

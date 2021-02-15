@@ -64,8 +64,10 @@ namespace COTG.Views
 		//	var cur = groups.View.CurrentItem;
 		//	Log(cur?.ToString());
 		//}
-		public ObservableCollection<BuildQueueView> cities { get; set; } = new ObservableCollection<BuildQueueView>(); 
-	
+		public ObservableCollection<BuildQueueView> cities { get; set; } = new ObservableCollection<BuildQueueView>();
+
+		
+
 		public static void AddOp(BuildQueueItem item, int cid)
 		{
 			if (!IsVisible())
@@ -179,13 +181,13 @@ namespace COTG.Views
 
 		}
 
-		private void ItemClick(object sender, ItemClickEventArgs e)
-		{
-			var i = (e.ClickedItem as BuildOpView);
-			BuildQueue.CancelBuildOp(i.cid, i.item);
+		//private void ItemClick(object sender, ItemClickEventArgs e)
+		//{
+		//	var i = (e.ClickedItem as BuildOpView);
+		//	BuildQueue.CancelBuildOp(i.cid, i.item);
 
 
-		}
+		//}
 
 		private void ClearQueue(object sender, RoutedEventArgs e)
 		{

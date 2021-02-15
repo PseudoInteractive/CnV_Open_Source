@@ -30,7 +30,8 @@ using Windows.UI.Xaml.Media;
 using Windows.Graphics.Display;
 using COTG.Draw;
 using Windows.UI.Xaml.Input;
-
+using static COTG.Views.CityBuild;
+using static COTG.Game.City;
 namespace COTG.Views
 {
 
@@ -181,6 +182,34 @@ namespace COTG.Views
 			//			CityBuild.ClearAction();
 		}
 
+		static void UpgradeOrTower(int number)
+		{
+			var xy = CityView.hovered;
+			var spot = City.XYToId(xy);
+			if (CityBuild.IsTowerSpot(spot) && CityBuild.postQueueBuildings[spot].bl == 0)
+			{
+				var bid = number switch
+				{
+					1 => City.bidSentinelPost,
+					2 => bidRangerPost,
+					3 => bidTriariPost,
+					4 => bidPriestessPost,
+					5 => bidBallistaPost,
+					6 => bidSnagBarricade,
+					7 => bidEquineBarricade,
+					8 => bidRuneBarricade,
+					_ => bidVeiledBarricade
+				};
+				 
+				ShortBuild(bid);
+			}
+			else
+			{
+				CityBuild.UpgradeToLevel(number, CityView.hovered);
+
+			}
+		}
+
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			App.InputRecieved();
@@ -268,18 +297,18 @@ namespace COTG.Views
 								JSClient.view.InvokeScriptAsync("setTestFlag", new[] {testFlag.ToString() });
 							}
 							break;
-
-						case Windows.System.VirtualKey.Number2: CityBuild.UpgradeToLevel(2, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number3: CityBuild.UpgradeToLevel(3, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number4: CityBuild.UpgradeToLevel(4, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number5: CityBuild.UpgradeToLevel(5, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number6: CityBuild.UpgradeToLevel(6, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number7: CityBuild.UpgradeToLevel(7, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number8: CityBuild.UpgradeToLevel(8, CityView.hovered); break;
-						case Windows.System.VirtualKey.Number9: CityBuild.UpgradeToLevel(9, CityView.hovered); break;
+						case Windows.System.VirtualKey.Number1: UpgradeOrTower(1);break;
+						case Windows.System.VirtualKey.Number2: UpgradeOrTower(2); break;
+						case Windows.System.VirtualKey.Number3: UpgradeOrTower(3); break;
+						case Windows.System.VirtualKey.Number4: UpgradeOrTower(4); break;
+						case Windows.System.VirtualKey.Number5: UpgradeOrTower(5); break;
+						case Windows.System.VirtualKey.Number6: UpgradeOrTower(6); break;
+						case Windows.System.VirtualKey.Number7: UpgradeOrTower(7); break;
+						case Windows.System.VirtualKey.Number8: UpgradeOrTower(8); break;
+						case Windows.System.VirtualKey.Number9: UpgradeOrTower(9); break;
 						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
 						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered,false); break;
-						case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
+			//			case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered,false); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
 						case (VirtualKey)192: CityBuild.MoveHovered(true,false); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;

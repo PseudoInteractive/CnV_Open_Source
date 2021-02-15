@@ -82,10 +82,19 @@
                       Width="200"
 							  IsEditable="True"
 					TextSubmitted="CitySubmitted"
-                      DisplayMemberPath="nameAndRemarks"
+                 
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
-                      Margin="4" />
+                      Margin="4" >
+						<ComboBox.ItemTemplate>
+							<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
+								<StackPanel Orientation="Horizontal" Height="32" >
+									<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
+									<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
+								</StackPanel>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
 						<Button.Resources>

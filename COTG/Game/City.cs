@@ -106,9 +106,10 @@ namespace COTG.Game
 	//	public Building GetBuiding( int bspot) => buildings[bspot];
 		
 		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
-		
-		public const int buildQMax = 16; // this should depend on ministers
-		public static bool buildQueueFull => buildQueue.count >= buildQMax;
+		public static bool buildQInSync;
+
+		//public const int buildQMax = 16; // this should depend on ministers
+		//public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 12; // leave space for autobuild
 
@@ -210,7 +211,8 @@ namespace COTG.Game
 		public static void CitySwitched()
 		{
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
-			buildQueue.Clear(); 
+			buildQueue.Clear();
+			buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 			CityBuild.ClearAction();
 			CityView.BuildingsOrQueueChanged();
@@ -469,6 +471,7 @@ namespace COTG.Game
 						js.GetAsUShort("bspot")
 						));
 				}
+				buildQInSync = true;
 				CityView.BuildingsOrQueueChanged();
 			}
 
@@ -799,7 +802,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(cid)}={cid},{nameof(tsTotal)}={tsTotal.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
+			return nameAndRemarks;// $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(cid)}={cid},{nameof(tsTotal)}={tsTotal.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
         }
         public async static void UpdateSenatorInfo()
         {

@@ -383,8 +383,8 @@ namespace COTG.Views
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
 			Gesture.ProcessPointerExited(e.CurrentPoint);
-			PointerInfo(e);
-			Log("pointer Exit " + isOverPopup);
+		//	PointerInfo(e);
+	//		Log("pointer Exit " + isOverPopup);
 			isOverPopup = false;
 			//if (ShellPage.IsCityView())
 			//{
@@ -738,7 +738,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
-			PointerInfo(e);
+			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;

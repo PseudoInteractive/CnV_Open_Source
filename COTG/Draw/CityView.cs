@@ -20,6 +20,8 @@ using Microsoft.Xna.Framework;
 using COTG.Views;
 using static COTG.Debug;
 using static COTG.Views.CityBuild;
+
+
 namespace COTG.Draw
 {
 	
@@ -151,10 +153,18 @@ namespace COTG.Draw
 				{
 					var id = XYToId((cx, cy));
 					var bid = buildingsCache[id];
+					var bidOverride = -1;
+					if (id == 0)
+					{
+						if (bid.bl == 0)
+							continue;
+						bidOverride = 819;
+					}
+
 					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
 					
-					float blendT = (animationT * 0.25f - animationOffsets[id] + 0.2f).Frac();
+					float blendT = (animationT * 0.375f - animationOffsets[id] + 0.2f).Frac();
 					if (bid.id==next.id)
 					{
 						if (next.bl != bid.bl)
@@ -227,17 +237,17 @@ namespace COTG.Draw
 						if (blendT < 0.25f)
 						{
 							var t = blendT * 4.0f; // demo fades in, half second
-							blendOp = t.SCurve();
+							blendOp = t.Bezier(0,1,1);
 						}
 						else
 						{
 							var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
-							blendOp = t.SCurve(1, 0);
+							blendOp = t.Bezier(1,1, 0);
 						}
 
 						if (blendOp > 0)
 						{
-							draw.AddQuad(Layer.tileCity + 2, blendMat, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(blendOp), PlanetDepth, zHover);
+							draw.AddQuad(Layer.tileCity + 2, blendMat, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha)).Scale(blendOp), PlanetDepth, zHover);
 						}
 						
 						DrawBuilding(iAlpha, zBase, fontScale, cs, bd , Layer.tileCity);
@@ -455,13 +465,13 @@ namespace COTG.Draw
 			//}
 		}
 
-		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1)
+		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, int bidOverride = -1)
 		{
 			if (bid.id != 0)
 			{
 				var bd = BuildingDef.FromId(bid.id);
 
-				var iconId = BidToAtlas(bd.bid);
+				var iconId = BidToAtlas(bidOverride==-1? BuildingDef.FromId(bid.id).bid : bidOverride);
 
 				var u0 = iconId.x * duDt;
 				var v0 = iconId.y * dvDt;
