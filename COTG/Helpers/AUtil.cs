@@ -47,7 +47,41 @@ public static void Swap<T>(ref T a, ref T b)
 			}
 			return false;
 		}
-		
+
+		public static string FormatDurationFromSeconds(double f)
+		{
+			if(Math.Abs(f) < 60)
+			{
+				return $"{f:0.00}s";
+			}
+			else
+			{
+				var prefix =string.Empty;
+				var s = f.RoundToInt();
+				if (s < 0)
+				{
+					s = -s;
+					prefix = "-";
+				}
+				if (s < 60 * 60)
+				{
+					var min = (s / 60);
+					var sec = s - min * 60;
+					return $"{prefix}{min}m {sec}s";
+				}
+				else
+				{
+					var hour = (s / (60*60) );
+					s -= hour * 60 * 60;
+					var min = (s) / 60;
+					s -= min * 60;
+					var sec = s;
+					return $"{prefix}{hour}h {min}m {sec}s";
+				}
+			}
+
+		}
+
 		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
 		public static string FormatTimeDefault(this DateTimeOffset m) => m.ToString(defaultTimeFormat);
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseTimeFormat);

@@ -635,9 +635,6 @@
     <Content Include="Content\Art\Icons\castle1w.png" />
     <Content Include="Content\Art\Icons\castle2.png" />
     <Content Include="Content\Art\Icons\castle2w.png" />
-    <Content Include="Content\Art\Icons\castlell0.png" />
-    <Content Include="Content\Art\Icons\castlell1.png" />
-    <Content Include="Content\Art\Icons\castlell2.png" />
     <Content Include="Content\Art\Icons\city0.png" />
     <Content Include="Content\Art\Icons\city0w.png" />
     <Content Include="Content\Art\Icons\city1.png" />

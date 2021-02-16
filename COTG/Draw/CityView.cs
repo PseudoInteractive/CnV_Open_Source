@@ -265,7 +265,7 @@ namespace COTG.Draw
 						for (var cx = span0; cx <= span1; ++cx)
 						{
 							var bspot = City.XYToId((cx, cy));
-							if (!CityBuild.IsBuildingSpot(bspot) || (cx==0&&cy==0) )
+							if (!CityBuild.IsBuildingSpot(bspot) || (cx==0&&cy==0) || bspot==0 )
 								continue; // wall
 
 							(var bid,var bd) = build.BFromOverlay((cx, cy));

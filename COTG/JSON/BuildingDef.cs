@@ -161,17 +161,17 @@ namespace COTG.JSON
 			[J("simg")] public string Simg { get; set; }
 			[J("tooltip")] public string Tooltip { get; set; }
 			[J("rt")] public int Rt { get; set; }
-			[J("tc")] public Dictionary<string, int> Tc { get; set; }
+			[J("tc")] public int[] Tc { get; set; }
 			[J("ts")] public int[] Ts { get; set; }
 			[J("mt")] public int Mt { get; set; }
 			[J("sc")] public Dictionary<string, int> Sc { get; set; }
 			[J("bc")] public Dictionary<string, Bc> Bc { get; set; }
 			[J("thl")] public int Thl { get; set; }
-			[J("cs")] public Dictionary<string, int> Cs { get; set; }
+			[J("cs")] public int[] Cs { get; set; }
 			[J("eff")] public Dictionary<string, int> Eff { get; set; }
 			[J("r")] public Dictionary<string, int> R { get; set; }
-			[J("trn")] public Dictionary<string, int> Trn { get; set; }
-			[J("st")] public Dictionary<string, int> St { get; set; }
+			[J("trn")] public int[] Trn { get; set; }
+			[J("st")] public int[] St { get; set; }
 			[J("stt")] public int Stt { get; set; }
 			[J("efft")] public int Efft { get; set; }
 			[J("tt")] public int Tt { get; set; }

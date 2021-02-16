@@ -86,9 +86,7 @@
     <Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
-        <Setter Property="HorizontalAlignment"
-                        Value="Right" />
-		<Setter Property="HorizontalContentAlignment"
+       <Setter Property="HorizontalContentAlignment"
                         Value="Right" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>

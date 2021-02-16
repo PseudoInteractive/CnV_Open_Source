@@ -1139,9 +1139,12 @@ namespace COTG.Views
 					if (!dryRun)
 					{
 						selected = hovered;
-						priorQuickAction = action;
-						SetAction(Action.move);
-						isSingleClickAction = true;
+						if (_isSingleAction)
+						{
+							priorQuickAction = action;
+							SetAction(Action.move);
+							isSingleClickAction = true;
+						}
 					}
 				}
 			}

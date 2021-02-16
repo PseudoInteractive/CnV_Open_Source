@@ -19,16 +19,24 @@
 			<Border Padding="1" Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-					<TextBox x:Name="rsInf" Header="Recruit Speed Inf"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="rtVanq" Header="Vanq" HorizontalTextAlignment="Right" Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="rtRanger" Header="Ranger" Style="{StaticResource RightAlignBox}" HorizontalContentAlignment="Right" />
+					<Button Content="ShareString..." ToolTipService.ToolTip="Open the sharestring dialog where you can chose or set your intitial layout" Style="{StaticResource ButtonRevealStyle}" Click="ShareStringClick" />
+					<Button Content="Flip Horizontal" ToolTipService.ToolTip="Flip buildings horzontally, usually used to position the off center buildings where there are fewer resources" Style="{StaticResource ButtonRevealStyle}" Click="FlipHClick" />
+					<Button Content="Flip Vertical" ToolTipService.ToolTip="Flip buildings vertically, usually used to position the off center buildings where there are fewer resources" Style="{StaticResource ButtonRevealStyle}" Click="FlipVClick" />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="rsInf" Header="Recruit Inf"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtVanq" Header="Vanq" Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtRanger" Header="Ranger" Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtTriari" Header="Triari"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
 			<Border Padding="1" Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-					<TextBox x:Name="rsMagic" Header="Recruit Speed Magic"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rsMagic" Header="Recruit Magic"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtSorc" Header="Sorc"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtDruid" Header="Druid"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
@@ -36,15 +44,16 @@
 			<Border Padding="1" Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-					<TextBox x:Name="rsBlessed" Header="Recruit Speed Blessed"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rsBlessed" Header="Recruit Blessed"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtPriestess" Header="Priestess"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtPrae" Header="Praetor"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtSen" Header="Senator"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
 			<Border Padding="1" Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-					<TextBox x:Name="rsCav" Header="Recruit Speed Cav"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rsCav" Header="Recruit Cav"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtScout" Header="Scout"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtArb" Header="Arbalist"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtHorse" Header="Horse"  Style="{StaticResource RightAlignBox}"  />
@@ -53,9 +62,40 @@
 			<Border Padding="1" Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-					<TextBox x:Name="rsArt" Header="Recruit Speed Artilliery"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rsArt" Header="Recruit Arti"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtRam" Header="Ram"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtBal" Header="Ballista"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtCat" Header="Catapult"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"   Margin="4">
+					<TextBox x:Name="rsNavy" Header="Recruit Navy"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtStinger" Header="Stinger"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtGalley" Header="Galley"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtWarship" Header="Warship"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="carts" Header="Carts"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="ships" Header="Ships"  Style="{StaticResource RightAlignBox}"  />
+				</tk:WrapPanel>
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+					<TextBox x:Name="maxTS" Header="Troop Space"  Style="{StaticResource RightAlignBox}"  />
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<TextBox x:Name="cs" Header="Construction Speed"  Style="{StaticResource RightAlignBox}"  />
+			</Border>
+			<Border Padding="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+					<TextBox x:Name="stWood" Header="Wood Storage"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="stStone" Header="Stone Storage"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="stIron" Header="Iron Storage"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="stFood" Header="Food Storage"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
 		</StackPanel>
