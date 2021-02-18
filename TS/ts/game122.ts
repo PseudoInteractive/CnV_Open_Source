@@ -17366,7 +17366,7 @@ function outer(){
 				}, 200);
 				else if (!(Y0g == 0)) {
 					city = JSON.parse(Y0g);
-			 console.log("get city " + cid + " " + city.cid);
+			// console.log("get city " + cid + " " + city.cid);
 				    cid = city.cid;
 					gCPosted();
 					Y0g = "";
@@ -18597,7 +18597,7 @@ function outer(){
 
 
 		function SetCity(d9l) {
-			console.log("set city " + d9l);
+		//	console.log("set city " + d9l);
 			clearIdle();
 			let __cid = Number(d9l);
 			if(__cid === cid )
@@ -46065,7 +46065,7 @@ function outer(){
 						X76.push(Number(t76) - ('24' | 24));
 					}
 				} if (X76.length > 0) {
-					console.log((new Date()).getTime() + " rmp:" + X76);
+			//		console.log((new Date()).getTime() + " rmp:" + X76);
 					B1F(X76);
 				}
 		}

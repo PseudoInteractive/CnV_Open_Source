@@ -1,0 +1,65 @@
+﻿<ContentDialog
+    x:Class="COTG.Views.ShareString"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:winui="using:Windows.UI.Xaml.Controls"
+	xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+	 xmlns:views="using:COTG.Views"
+    Title="City Planner String"
+    PrimaryButtonText="Done"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+	<ContentDialog.Resources>
+
+
+		<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem">
+			<winui:TreeViewItem ItemsSource="{x:Bind children}" >
+				<StackPanel Orientation="Horizontal" Margin="4">
+				
+					<TextBlock Text="{x:Bind title}"/>
+				</StackPanel>
+			</winui:TreeViewItem>
+		</DataTemplate>
+		
+
+	</ContentDialog.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False"  />
+		<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
+			<tk:WrapPanel  Orientation="Horizontal">
+				<TextBox x:Name="remarks" Header="Remarks" TextWrapping="Wrap" AcceptsReturn="False" />
+				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" />
+			</tk:WrapPanel>
+		</Border>
+		<Border Grid.Row="2" Style="{StaticResource BorderReveal}">
+			<tk:WrapPanel  Orientation="Horizontal">
+				<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
+				<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
+				<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
+				<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
+				<ToggleSwitch x:Name="onComplete" Header="Planner" OffContent="Return to build" OnContent="Go to planner" ToolTipService.ToolTip="This allows you to go to the planner on completion to edit the layout"  />
+
+			</tk:WrapPanel>
+		</Border>
+		<Border Grid.Row="3" Style="{StaticResource BorderReveal}">
+			<winui:TreeView x:Name="zoom" SelectionMode="Single" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" 
+							BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+						TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplate="{StaticResource ShareItemTemplate}"
+						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
+						>
+			</winui:TreeView>
+		</Border>
+	</Grid>
+</ContentDialog>

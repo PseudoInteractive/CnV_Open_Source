@@ -1858,7 +1858,7 @@ namespace COTG
 					if (_debugTip != null)
 					{
 						var alpha =  255;
-						Vector2 c = new Vector2(clientSpan.X, 16).SToC();
+						Vector2 c = new Vector2(clientSpan.X-16, 16).SToC();
 						DrawTextBox(_debugTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 

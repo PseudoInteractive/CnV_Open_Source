@@ -107,7 +107,7 @@ namespace COTG.Views
 							ships += bdef.Trn[bd.bl];
 							break;
 						case bidCottage:
-							cs += bdef.Tc[bd.bl];
+							cs += bdef.Cs[bd.bl];
 							break;
 						case bidBarracks:
 							ts += bdef.Tc[bd.bl];
@@ -246,9 +246,20 @@ namespace COTG.Views
 			App.DispatchOnUIThreadLow(UpdateStats);
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
-		{
 
+		private void ShareStringClick(object sender, RoutedEventArgs e)
+		{
+			ShareString.Show();
+
+		}
+
+		private void FlipHClick(object sender, RoutedEventArgs e)
+		{
+			GetBuild().FlipLayoutH();
+		}
+		private void FlipVClick(object sender, RoutedEventArgs e)
+		{
+			GetBuild().FlipLayoutV();
 		}
 	}
 }

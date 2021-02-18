@@ -84,6 +84,7 @@ namespace COTG.Views
 			flipLayoutV,
 			flipLayoutH,
 			togglePlanner,
+			showShareString,
 			invalid,
 			count = invalid,
 
@@ -207,9 +208,10 @@ namespace COTG.Views
 		static BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
 		static BuildMenuItem amAbandon = new BuildMenuItem("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
-		static BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/decal_select_building.png", "Flip Layout Horizontally");
-		static BuildMenuItem amTogglePlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/decal_select_building.png", "Toggle to or from planner mode");
-		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/decal_select_building.png", "Flip Layout Vertically");
+		static BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
+		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
+		static BuildMenuItem amTogglePlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Toggle to or from planner mode");
+		static BuildMenuItem amSelectShareString = new BuildMenuItem("ShareString", Action.showShareString, "City/build_details_gloss_overlay.png", "Show sharestring selection mode");
 
 
 
@@ -302,6 +304,8 @@ namespace COTG.Views
 					commands.items.Add(amSelect);
 					commands.items.Add(amLayout);
 					commands.items.Add(amMove);
+					commands.items.Add(amTogglePlanner);
+					commands.items.Add(amSelectShareString);
 
 					foreach (var i in allBuildings)
 					{
@@ -324,6 +328,8 @@ namespace COTG.Views
 					else
 						commands.items.Add(amUpgrade);
 					commands.items.Add(amMove);
+					commands.items.Add(amTogglePlanner);
+
 
 					break;
 				case MenuType.townhall:
@@ -331,13 +337,15 @@ namespace COTG.Views
 					commands.items.Add(amAbandon);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
-//					commands.items.Add(amTogglePlanner);
+					commands.items.Add(amSelectShareString);
+					commands.items.Add(amTogglePlanner);
 				
 					break;
 				case MenuType.townhallPlanner:
 					commands.items.Add(amAbandon);
 					commands.items.Add(amUpgrade);
-	//				commands.items.Add(amTogglePlanner);
+					commands.items.Add(amTogglePlanner);
+					commands.items.Add(amSelectShareString);
 					commands.items.Add(amFlipLayoutH);
 					commands.items.Add(amFlipLayoutV);
 
@@ -345,7 +353,9 @@ namespace COTG.Views
 				case MenuType.empty:
 
 					commands.items.Add(amLayout);
-					
+					commands.items.Add(amTogglePlanner);
+					commands.items.Add(amSelectShareString);
+
 
 					// restrict by level?
 					foreach (var i in allBuildings)
@@ -385,8 +395,10 @@ namespace COTG.Views
 
 				case MenuType.res:
 					commands.items.Add(amDemo);
-				//	for (int i = 0; i < 7; ++i)
-				//		Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
+					commands.items.Add(amTogglePlanner);
+
+					//	for (int i = 0; i < 7; ++i)
+					//		Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
 
 
 					break;
@@ -548,7 +560,7 @@ namespace COTG.Views
 				{
 
 					var build = GetBuild();
-					if (build.layout != null)
+					if (build.isLayoutValid)
 					{
 						build.LayoutToBuildings();
 						
@@ -557,7 +569,9 @@ namespace COTG.Views
 				}
 				else
 				{
-					City.GetBuild().SaveBuildingsToLayout();
+					var b = City.GetBuild();
+					b.BuildingsToLayout();
+					b.SaveLayout();
 					GetCity.Post(City.build);
 
 				}
@@ -962,7 +976,7 @@ namespace COTG.Views
 			//	rect.Stretch = Stretch.None;
 			//			rect.Width = width;
 			//			rect.Height = height;
-			brushFromImageCache.Add(name, rv);
+			brushFromImageCache.Add(name, brush);
 			return brush;
 		}
 		
@@ -1035,7 +1049,7 @@ namespace COTG.Views
 				var build = City.GetBuild();
 				var bds = isPlanner ? buildingsCache : build.buildings;
 				// I hope that these operations are what I expect with references
-				Status($"Swap {bds[b].name} and {bds[a].name} ", dryRun);
+				Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 				if (!dryRun)
 				{
 
@@ -1198,7 +1212,7 @@ namespace COTG.Views
 						{
 							Status("You are in layout mode, exit to use the layout tool", dryRun);
 						}
-						else if (build.layout == null)
+						else if ( !build.isLayoutValid)
 						{
 
 							Status("Please assign a layout",dryRun);
@@ -1290,7 +1304,7 @@ namespace COTG.Views
 												return;
 										}
 									}
-									else if (counts.count >= counts.max)
+									else if (counts.count >= 100 )
 									{
 										{
 											// Is there a cabin to remove?
@@ -1365,7 +1379,7 @@ namespace COTG.Views
 										{
 											case 4:
 												{
-													Status($"Swaping {b.def.Bn} and {desName} as they are mixed up", dryRun);
+													Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
 													{
 														SwapBuilding(bspot, putTo,dryRun);
 													}
@@ -1391,7 +1405,7 @@ namespace COTG.Views
 
 									if (!buildingWanted)
 									{
-										if (b.isCabin && counts.count < counts.max )
+										if (b.isCabin && counts.count < 100 )
 										{
 											Status($"A cabin is here, leaving it", dryRun);
 											// 
@@ -1497,11 +1511,17 @@ namespace COTG.Views
 
 						break;
 					}
+				case Action.showShareString:
+					{
+						ShareString.Show();
+						break;
+					}
 				case Action.togglePlanner:
 					{
 						if (!dryRun)
 						{
-							_isPlanner = !_isPlanner;
+							TogglePlanner();
+
 						}
 
 						break;
@@ -1542,6 +1562,19 @@ namespace COTG.Views
 					
 					break;
 				}
+			}
+		}
+
+		private static void TogglePlanner()
+		{
+			if (PlannerTab.instance.isVisible)
+			{
+				PlannerTab.instance.Close();
+			}
+			else
+			{
+				PlannerTab.instance.Show();
+
 			}
 		}
 
@@ -1738,12 +1771,14 @@ namespace COTG.Views
 				else if (bi.isAction)
 				{
 		//			var items = ShellPage.instance.buildMenu.Items;
-					if (bi.action == Action.layout && City.GetBuild().layout == null)
+					if (bi.action == Action.layout && City.GetBuild().layout.IsNullOrEmpty() )
 					{
 						Note.Show("Please assign a layout");
-						JSClient.JSInvoke("showLayout", null);
+						//		JSClient.JSInvoke("showLayout", null);
+						await ShareString.Show();
 						SetAction(bi.action);
 						ClearSelectedBuilding();
+						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show());
 
 
 					}
@@ -1765,6 +1800,10 @@ namespace COTG.Views
 								RevertToLastAction();
 
 							}
+						}
+						else if(bi.action == Action.togglePlanner)
+						{
+							TogglePlanner();
 						}
 						else
 						{

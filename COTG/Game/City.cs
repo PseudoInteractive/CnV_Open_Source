@@ -113,7 +113,7 @@ namespace COTG.Game
 		//public const int buildQMax = 16; // this should depend on ministers
 		//public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
-		public const int safeBuildQueueLength = 12; // leave space for autobuild
+		public const int safeBuildQueueLength = 14; // leave space for autobuild
 
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
@@ -435,29 +435,8 @@ namespace COTG.Game
 			if (jse.TryGetProperty("sts", out var sts))
 			{
 				var s = sts.GetString();
-				if (!s.IsNullOrEmpty())
-				{
-					// TODO:  What if we are in planner mode?
-
-					layout = new byte[citySpotCount];
-
-					const int offset = 18;
-					const int count = citySpan * citySpan;
-					// translate sharestring to building ids
-					// anything that is not a building gets 0
-					for (int i = 0; i < count; ++i)
-					{
-						if(!BuildingDef.sharestringToBuldings.TryGetValue( (byte)s[i + offset], out var b))
-						{
-							b = 0;
-						}
-						layout[i] = b;
-					}
-				}
-				else
-				{
-					layout = null;
-				}
+				if(!CityBuild.isPlanner)
+					SetLayoutFromShareString(s);
 
 			}
 			if (cid == City.build && jse.TryGetProperty("bq", out var bq))
@@ -584,38 +563,114 @@ namespace COTG.Game
             //            COTG.Views.MainPage.CityListUpdateAll();
         }
 
-        
+		public  void SetLayoutFromShareString(string s)
+		{
+			if (s != null && s.Length >= citySpotCount)
+			{
+				// TODO:  What if we are in planner mode?
 
-        internal static City GetBuild()
+				layout = new byte[citySpotCount];
+
+				const int offset = 18;
+				const int count = citySpotCount;
+				// translate sharestring to building ids
+				// anything that is not a building gets 0
+				for (int i = 0; i < count; ++i)
+				{
+					if (!BuildingDef.sharestringToBuldings.TryGetValue((byte)s[i + offset], out var b))
+					{
+						b = 0;
+					}
+					layout[i] = b;
+
+				}
+				
+			}
+			else
+			{
+				layout = null;
+			}
+			if (CityBuild.isPlanner)
+				LayoutToBuildings();
+		}
+
+
+		internal static City GetBuild()
         {
             if (build!=0 && Spot.TryGet(build, out var city))
                 return city;
             return null;
         }
 
+		public string LayoutToShareString()
+		{
+
+			if (!isLayoutValid)
+				return string.Empty;
+
+			var sb = new StringBuilder("[ShareString.1.3]");
+			sb.Append(isOnWater ? ';' : ':');
+			foreach (var c in layout)
+			{
+				if (!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o))
+				{
+					o = (byte)'-';
+				}
+				sb.Append((char)o);
+			}
+			sb.Append("[/ShareString]");
+			return sb.ToString();
+		}
+		public static string LayoutToShareString(byte[] _layout, bool _isOnWater)
+		{
+			if (_layout == null)
+				return string.Empty;
+
+			var sb = new StringBuilder("[ShareString.1.3]");
+			sb.Append(_isOnWater ? ';' : ':');
+			foreach (var c in _layout)
+			{
+				if (!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o))
+				{
+					o = (byte)'-';
+				}
+				sb.Append((char)o);
+			}
+			sb.Append("[/ShareString]");
+			return sb.ToString();
+		}
+
 		public async Task SaveLayout()
 		{
-			if (layout == null)
+			var share = LayoutToShareString(layout, isOnWater);
+			if (share.IsNullOrEmpty())
+			{
+				Note.Show("No layout to save");
 				return;
-			
-				var sb = new StringBuilder("[ShareString.1.3]");
-				sb.Append(isOnWater? ';' : ':');
-				foreach(var c in layout)
-				{
-					if(!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o) )
-					{
-						o = (byte)'-';
-					}
-					sb.Append((char)o);
-				}
-				sb.Append("[/ShareString]");
-				var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(sb.ToString(), Encoding.UTF8);
+			}
+			Note.Show("Saved layout");
+			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(LayoutToShareString(), Encoding.UTF8);
 				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayer(cid));
 			Assert(rv == true);
 		}
-		public async void SaveBuildingsToLayout()
+
+		public void BuildingsToLayout()
 		{
-			layout = new byte[citySpotCount];
+			var anyValid = false;
+			foreach (var b in buildingsCache)
+			{
+				if(b.id!=0)
+				{
+					anyValid = true;
+					break;
+				}
+			}
+			if(!anyValid)
+			{
+				layout = null;
+				return;
+			}
+				layout = new byte[citySpotCount];
 			int put = 0;
 			foreach (var b in buildingsCache)
 			{
@@ -624,34 +679,61 @@ namespace COTG.Game
 					bid -= BuildingDef.sharestringOffset;
 				layout[put++] = (byte)bid;
 			}
-			await SaveLayout();
+//			await SaveLayout();
+		}
+		public string BuildingsToShareString()
+		{
+			// hide member
+			var layout = new byte[citySpotCount];
+			int put = 0;
+			foreach (var b in buildings)
+			{
+				var bid = b.def.bid;
+				if (bid != 0)
+					bid -= BuildingDef.sharestringOffset;
+				layout[put++] = (byte)bid;
+			}
+			return LayoutToShareString(layout, isOnWater);
+
 		}
 
 		public void LayoutToBuildings()
 		{
 			buildingsCache = new Building[citySpotCount];
-			for (int s = 1; s < citySpotCount; ++s)
+			if (!isLayoutValid)
 			{
-				var bid = BidFromOverlay(s);
-				if (bid != 0)
+				for (int s = 0; s < citySpotCount; ++s)
 				{
-					buildingsCache[s].id = BuildingDef.BidToId(bid);
-					if (buildingsCache[s].isRes)
-						buildingsCache[s].bl = 0;
-					else
-						buildingsCache[s].bl = 10;
-				}
-				else
-				{
-					buildingsCache[s].bl = 0;
-					buildingsCache[s].id = 0;
+					buildingsCache[s].id = BuildingDef.BidToId(bidTemple);
+					buildingsCache[s].bl = 10;
 				}
 			}
+			else
+			{
+				for (int s = 1; s < citySpotCount; ++s)
+				{
+					var bid = BidFromOverlay(s);
+					if (bid != 0)
+					{
+						buildingsCache[s].id = BuildingDef.BidToId(bid);
+						if (buildingsCache[s].isRes)
+							buildingsCache[s].bl = 0;
+						else
+							buildingsCache[s].bl = 10;
+					}
+					else
+					{
+						buildingsCache[s].bl = 0;
+						buildingsCache[s].id = 0;
+					}
+				}
+			}
+			PlannerTab.BuildingsChanged();
 		}
 		public void FlipLayoutH()
 		{
-			if (layout == null)
-				return;
+		//	if (layout == null)
+		//		return;
 			Assert(CityBuild.isPlanner);
 			for(int y=0;y< citySpan;++y)
 				for(int x=0;x< citySpan/2;++x)
@@ -665,14 +747,14 @@ namespace COTG.Game
 
 					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x1 + y * citySpan]);
 				}
-
-			SaveLayout();
+			PlannerTab.BuildingsChanged();
+			// SaveLayout();
 		}
 
 		public void FlipLayoutV()
 		{
-			if (layout == null)
-				return;
+			//if (layout == null)
+			//	return;
 			Assert(CityBuild.isPlanner);
 			for (int x = 0; x < citySpan; ++x)
 				for (int y = 0; y < citySpan / 2; ++y)
@@ -686,8 +768,8 @@ namespace COTG.Game
 
 					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x + y1 * citySpan]);
 				}
-
-			SaveLayout();
+			PlannerTab.BuildingsChanged();
+			///SaveLayout();
 		}
 
 		public static void CheckTipRaiding()
@@ -971,9 +1053,9 @@ namespace COTG.Game
 
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
+		internal bool isLayoutValid => layout != null;
 
-       
-        public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
+		public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
         {
             hours = 0;
             onDifferentContinent = cont != target.CidToContinent();

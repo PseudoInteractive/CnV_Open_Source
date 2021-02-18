@@ -71,8 +71,8 @@ namespace COTG.Views
 		public static void AddOp(BuildQueueItem item, int cid)
 		{
 			if (!IsVisible())
-				return;
-			
+				return;			
+
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{
 				BuildQueueView view = null;
@@ -86,13 +86,13 @@ namespace COTG.Views
 				}
 				if (view == null)
 				{
-					view = new BuildQueueView() { cid = cid };
+					view = new BuildQueueView(cid);
 					instance.cities.Add(view);
-				}
+				}	
 				view.queue.Add(new BuildOpView(item,cid));
 			});
-	
 		}
+
 		public static void Clear(int cid)
 		{
 			foreach (var c in instance.cities)
@@ -156,7 +156,7 @@ namespace COTG.Views
 			instance.cities.Clear();
 			foreach(var city in CityBuildQueue.all.Values)
 			{
-				var view = new BuildQueueView() { cid = city.cid };
+				var view = new BuildQueueView(city.cid);
 				instance.cities.Add(view);
 				foreach(var q in city.queue)
 				{
@@ -198,37 +198,37 @@ namespace COTG.Views
 
 
 
-		private void zoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
-		{
-			var item = e.DestinationItem.Item as BuildQueueView;
-			if(item!=null)
-			{
-				JSClient.ChangeCity(item.cid, false);
-				return;
-			}
-			var op = e.DestinationItem.Item as BuildOpView;
-			if(op!=null)
-			{
-				JSClient.ChangeCity(op.cid, false);
-				return;
+		//private void zoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
+		//{
+		//	var item = e.DestinationItem.Item as BuildQueueView;
+		//	if(item!=null)
+		//	{
+		//		JSClient.ChangeCity(item.cid, false);
+		//		return;
+		//	}
+		//	var op = e.DestinationItem.Item as BuildOpView;
+		//	if(op!=null)
+		//	{
+		//		JSClient.ChangeCity(op.cid, false);
+		//		return;
 
-			}
+		//	}
 	
-			item = e.SourceItem.Item as BuildQueueView;
-			if (item != null)
-			{
-				JSClient.ChangeCity(item.cid, false);
-				return;
-			}
-			op = e.SourceItem.Item as BuildOpView;
-			if (op != null)
-			{
-				JSClient.ChangeCity(op.cid, false);
-				return;
+		//	item = e.SourceItem.Item as BuildQueueView;
+		//	if (item != null)
+		//	{
+		//		JSClient.ChangeCity(item.cid, false);
+		//		return;
+		//	}
+		//	op = e.SourceItem.Item as BuildOpView;
+		//	if (op != null)
+		//	{
+		//		JSClient.ChangeCity(op.cid, false);
+		//		return;
 
-			}
+		//	}
 
-		}
+		//}
 
 		private void ClearSelected(object sender, RoutedEventArgs e)
 		{
@@ -299,9 +299,15 @@ namespace COTG.Views
 	public class BuildQueueView
 	{
 		public int cid;
-		public string title => City.GetOrAdd(cid).nameAndRemarks;
-		public BitmapImage icon => City.GetOrAdd(cid).icon;
+		public string title { get; set; }
+		public BitmapImage icon { get; set; } 
 
+		public BuildQueueView(int _cid)
+		{
+			cid = _cid;
+			icon = City.GetOrAdd(_cid).icon;
+			title = City.GetOrAdd(_cid).nameAndRemarks;
+		}
 		public ObservableCollection<BuildOpView> queue { get; set; } = new ObservableCollection<BuildOpView>();
 	}
 	public class BuildOpView

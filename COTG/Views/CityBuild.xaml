@@ -67,5 +67,10 @@
 				If you would like to do a one off action on a specific building or spot, use left click<LineBreak />
 			</TextBlock>
 		</winui:TeachingTip>
+		<winui:TeachingTip
+                                x:Name="PlannerTeachingTip"
+                                Title="City Planer"
+                                Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT">
+		</winui:TeachingTip>
 	</Grid>
 </UserControl>

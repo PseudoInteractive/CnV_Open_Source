@@ -115,6 +115,12 @@ namespace COTG.Views
 			}
 
 		}
+		public void Close()
+		{
+			if (!isActive)
+				return;
+			TabPage.Close(this);
+		}
 	}
     public sealed partial class TabPage : Page
     {
@@ -152,6 +158,23 @@ namespace COTG.Views
             }
             return rv;
         }
+		public static bool Close(UserTab tab)
+		{
+			bool rv = false;
+			foreach (var tabPage in tabPages)
+			{
+				foreach (TabViewItem ti in tabPage.Tabs.TabItems)
+				{
+					if (ti.Content == tab)
+					{
+						tabPage.RemoveTab(ti);
+						return true;
+
+					}
+				}
+			}
+			return rv;
+		}
 		public static (TabPage page, bool found) Get(UserTab tab)
 		{
 			bool rv = false;

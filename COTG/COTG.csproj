@@ -364,6 +364,10 @@
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ShareString.xaml.cs">
+      <DependentUpon>ShareString.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShareStringData.cs" />
     <Compile Include="Views\ShareTargetPage.xaml.cs">
       <DependentUpon>ShareTargetPage.xaml</DependentUpon>
     </Compile>
@@ -516,6 +520,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ShareString.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ShareTargetPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -568,6 +576,7 @@
     <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Content\Art\City\building_set5.png" />
+    <Content Include="Content\Art\City\build_details_gloss_overlay.png" />
     <Content Include="Content\Art\City\decal_building_invalid.png" />
     <Content Include="Content\Art\City\decal_building_valid.png" />
     <Content Include="Content\Art\City\decal_building_valid_multi.png" />

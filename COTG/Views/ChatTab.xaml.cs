@@ -122,7 +122,8 @@ namespace COTG.Views
                     items.RemoveAt(0);
             }
             items.Add(entry);
-            if (this != debug && entry.text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase))
+			var text = entry.text;
+			if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@", StringComparison.Ordinal)))
             {
                 Note.Show(entry.text);
 

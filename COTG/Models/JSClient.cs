@@ -1554,7 +1554,7 @@ namespace COTG
 								   UpdatePPDT(ppdt,false);
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
-								   App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText);
+								   Task.Delay(200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
 								   break;
 							   }
 						   case "aexp":

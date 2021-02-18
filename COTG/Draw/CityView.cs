@@ -256,7 +256,7 @@ namespace COTG.Draw
 			var city1 = buildCityOrigin + citySpan;
 			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToC(), city1.WToC(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
 
-			if(build.layout!=null && !CityBuild.isPlanner)
+			if(build.isLayoutValid && !CityBuild.isPlanner)
 			{
 				try
 				{
@@ -308,6 +308,10 @@ namespace COTG.Draw
 					Log(exception);
 				}
 
+			}
+			if(isPlanner && !build.isLayoutValid)
+			{
+				ShellPage.debugTip = "Please set a layout.";
 			}
 
 

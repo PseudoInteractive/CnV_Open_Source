@@ -25,6 +25,7 @@
   <ItemGroup>
     <TypeScriptCompile Remove="ts\gfunky3.user.ts" />
     <TypeScriptCompile Remove="ts\incoming-filter.user.ts" />
+    <TypeScriptCompile Remove="ts\layoutPrint.ts" />
     <TypeScriptCompile Remove="ts\mail-city-coords.user.ts" />
   </ItemGroup>
 

@@ -50,7 +50,7 @@
 			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
-		<winui:TreeView Grid.Row="1" x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" 
+		<winui:TreeView Grid.Row="1" x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
  TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" VerticalAlignment="Top" 
 						>

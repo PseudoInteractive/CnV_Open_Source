@@ -1154,7 +1154,9 @@ namespace COTG.Game
 				var _layout = CityBuild.isPlanner;
 				if (_layout)
 				{
-					City.GetBuild().SaveBuildingsToLayout();
+					var b = City.GetBuild();
+					b.BuildingsToLayout();
+					b.SaveLayout();
 					CityBuild.isPlanner = false;
 				}
 				City.build = cid;
