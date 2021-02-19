@@ -66,6 +66,7 @@ namespace COTG.JSON
 	}
 	public readonly struct BuildQueueItem : IEquatable<BuildQueueItem>
 	{
+	
 	//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
 		public readonly byte slvl;
 		public readonly byte elvl;
@@ -429,8 +430,8 @@ namespace COTG.JSON
 									}
 									else
 									{
-										if (delay < 2 * 30 * 1000)
-											delay = 2 * 30 * 1000;
+										if (delay < 2 * 60 * 1000)
+											delay = 2 * 60 * 1000;
 									}
 								}
 
@@ -467,7 +468,8 @@ namespace COTG.JSON
 					}
 
 				}
-				if(delay > 60*1000 )
+//				if(delay > 60*1000 )
+				if(city.cid!= City.build)
 					Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
 				await Task.Delay(delay); // todo estimate this
 			}
@@ -497,28 +499,30 @@ namespace COTG.JSON
 						//	ShellPage.debugTip = delays.ToArrayString();
 						//	Log(delays.ToArrayString());
 						//}
-
-
-						if (cotgQLength > 0 && (City.safeBuildQueueLength > cotgQLength))
+						if (cotgQLength > 0)
 						{
 							delay = delay.Max(JSClient.ServerTimeOffset(bq[cotgQLength - 1].GetAsInt64("de"))); // recover after 2 seconds
-							if(delay > 5*32*1000) /// never more than 5 minutes please
+							if (delay > 5 * 32 * 1000) /// never more than 5 minutes please
 							{
-							//	Assert(false);
-	
-								delay = 5*32*1000;
+								//	Assert(false);
+
+								delay = 5 * 32 * 1000;
 							}
-							cotgQ = new DArray<BuildQueueItem>(128);
-							foreach (var cmd in bq.EnumerateArray())
+
+							if ( (City.safeBuildQueueLength > cotgQLength))
 							{
-								cotgQ.Add(new BuildQueueItem(
-											 cmd.GetAsByte("slvl"),
-											 cmd.GetAsByte("elvl"),
-											 cmd.GetAsUShort("brep"),
-											 cmd.GetAsUShort("bspot")
-											 ));
+								cotgQ = new DArray<BuildQueueItem>(128);
+								foreach (var cmd in bq.EnumerateArray())
+								{
+									cotgQ.Add(new BuildQueueItem(
+												 cmd.GetAsByte("slvl"),
+												 cmd.GetAsByte("elvl"),
+												 cmd.GetAsUShort("brep"),
+												 cmd.GetAsUShort("bspot")
+												 ));
 
 
+								}
 							}
 						}
 					}

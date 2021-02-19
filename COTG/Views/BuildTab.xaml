@@ -15,27 +15,16 @@
                mc:Ignorable="d">
 	<views:UserTab.Resources>
 	
-		<DataTemplate x:Key="ZoomedInTemplate" x:DataType="views:BuildOpView">
-			<winui:TreeViewItem>
+		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
+			<winui:TreeViewItem ItemsSource="{x:Bind queue}">
 			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
-				<TextBlock Text="{x:Bind op}" />
+				<TextBlock Text="{x:Bind text}" />
 			</StackPanel>
 			</winui:TreeViewItem>
 		</DataTemplate>
 
-		<DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="views:BuildQueueView">
-			<winui:TreeViewItem ItemsSource="{x:Bind queue}" IsExpanded="True">
-				<StackPanel Orientation="Horizontal" Margin="4">
-					<Image Source="{x:Bind icon}"  Width="48" Height="48" />
-					<TextBlock Text="{x:Bind title}"/>
-				</StackPanel>
-			</winui:TreeViewItem>
-		</DataTemplate>
 
-		<views:BuildItemTemplateSelector x:Key="BuildItemTemplateSelector"
-        cityTemplate="{StaticResource ZoomedInGroupHeaderTemplate}"
-        opTemplate="{StaticResource ZoomedInTemplate}" />
 
 	</views:UserTab.Resources>
 
@@ -51,7 +40,7 @@
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
 		<winui:TreeView Grid.Row="1" x:Name="zoom" SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
- TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
+ TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplate="{StaticResource BuildTabTemplate}"
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" VerticalAlignment="Top" 
 						>
 		</winui:TreeView>

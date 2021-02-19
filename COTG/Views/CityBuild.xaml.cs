@@ -48,6 +48,7 @@ namespace COTG.Views
 
 		static Dictionary<int, ImageBrush> brushFromAtlasCache = new();
 		static Dictionary<string, ImageBrush> brushFromImageCache = new();
+		static Dictionary<BitmapImage, ImageBrush> brushFromImageCache2 = new();
 
 
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
@@ -300,10 +301,12 @@ namespace COTG.Views
 			switch (menuType)
 			{
 				case MenuType.quickBuild:
-					commands.items.Add(amDemo);
 					commands.items.Add(amSelect);
+					commands.items.Add(amDemo);
 					commands.items.Add(amLayout);
 					commands.items.Add(amMove);
+					commands.items.Add(amUpgrade);
+					commands.items.Add(amDowngrade);
 					commands.items.Add(amTogglePlanner);
 					commands.items.Add(amSelectShareString);
 
@@ -562,7 +565,7 @@ namespace COTG.Views
 					var build = GetBuild();
 					if (build.isLayoutValid)
 					{
-						build.LayoutToBuildings();
+						build.ShareStringToBuildingsCache();
 						
 					}
 					BuildingsOrQueueChanged();
@@ -570,7 +573,7 @@ namespace COTG.Views
 				else
 				{
 					var b = City.GetBuild();
-					b.BuildingsToLayout();
+					b.BuildingsCacheToShareString();
 					b.SaveLayout();
 					GetCity.Post(City.build);
 
@@ -979,7 +982,23 @@ namespace COTG.Views
 			brushFromImageCache.Add(name, brush);
 			return brush;
 		}
-		
+		public static ImageBrush BrushFromImage(BitmapImage bitmap)
+		{
+			if (brushFromImageCache2.TryGetValue(bitmap, out var rv))
+				return rv;
+
+			var brush = new ImageBrush()
+			{
+				ImageSource = bitmap,
+				Stretch = Stretch.Fill,
+			};
+			//	rect.Stretch = Stretch.None;
+			//			rect.Width = width;
+			//			rect.Height = height;
+			brushFromImageCache2.Add(bitmap, brush);
+			return brush;
+		}
+
 		public static ImageBrush BuildingBrush(int id, float scale)
 		{
 			var iconId = id - 443;
@@ -1207,7 +1226,7 @@ namespace COTG.Views
 			{
 				case Action.layout:
 					{
-						var layout = build.layout;
+					
 						if(CityBuild.isPlanner)
 						{
 							Status("You are in layout mode, exit to use the layout tool", dryRun);
@@ -1513,14 +1532,16 @@ namespace COTG.Views
 					}
 				case Action.showShareString:
 					{
-						ShareString.Show();
+						if(isSingleClickAction)
+							App.DispatchOnUIThreadSneaky( ()=> ShareString.Show() );
 						break;
 					}
 				case Action.togglePlanner:
 					{
 						if (!dryRun)
 						{
-							TogglePlanner();
+
+							App.DispatchOnUIThreadSneaky(()=>TogglePlanner() );
 
 						}
 
@@ -1565,7 +1586,7 @@ namespace COTG.Views
 			}
 		}
 
-		private static void TogglePlanner()
+		private static async Task TogglePlanner()
 		{
 			if (PlannerTab.instance.isVisible)
 			{
@@ -1573,6 +1594,11 @@ namespace COTG.Views
 			}
 			else
 			{
+				if (!isPlanner)
+				{
+					if (!GetBuild().isLayoutValid)
+						await ShareString.Show();
+				}
 				PlannerTab.instance.Show();
 
 			}
@@ -1771,7 +1797,7 @@ namespace COTG.Views
 				else if (bi.isAction)
 				{
 		//			var items = ShellPage.instance.buildMenu.Items;
-					if (bi.action == Action.layout && City.GetBuild().layout.IsNullOrEmpty() )
+					if (bi.action == Action.layout && !City.GetBuild().isLayoutValid )
 					{
 						Note.Show("Please assign a layout");
 						//		JSClient.JSInvoke("showLayout", null);
@@ -1804,6 +1830,10 @@ namespace COTG.Views
 						else if(bi.action == Action.togglePlanner)
 						{
 							TogglePlanner();
+						}
+						else if (bi.action == Action.showShareString)
+						{
+							await ShareString.Show(); 
 						}
 						else
 						{

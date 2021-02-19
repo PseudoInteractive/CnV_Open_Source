@@ -998,7 +998,7 @@ namespace COTG
 		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
 		{
 			// Todo:  should we update out local PPDT to the server?
-			var thisPid = jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : 0;
+			var thisPid = jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.activeId;
 			int clChanged = 0;
 			// City lists
 			try
@@ -1172,6 +1172,7 @@ namespace COTG
 
 
 					var city = City.GetOrAddCity(cid);
+					city.type = City.typeCity;
 					if (thisPid != 0)
 						city.pid = thisPid;
 					var name = jsCity.GetProperty("2").GetString();
@@ -1683,7 +1684,7 @@ namespace COTG
 											   // online notify
 											   var friend = ss[1];
 											   var online = ss[2] == "1";
-											   var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", DateTimeOffset.UtcNow, ChatEntry.typeAnnounce);
+											   var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", ServerTime(), ChatEntry.typeAnnounce);
 											   App.DispatchOnUIThreadLow(() =>
 											  {
 												  ChatTab.alliance.Post(msg);

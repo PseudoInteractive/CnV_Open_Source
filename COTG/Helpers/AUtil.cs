@@ -19,7 +19,8 @@ namespace COTG
     }
     public static class AUtil
     {
-        public const string defaultTimeFormat = "HH':'mm':'ss";
+        public const string emptyJson= "{}";
+		public const string defaultTimeFormat = "HH':'mm':'ss";
 		public const string preciseTimeFormat = "HH':'mm':'ss.fff";
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
         public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";

@@ -614,7 +614,7 @@ namespace COTG.Game
 
 
 						// set is water var
-						str = $"[ShareString.1.3]{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
+						str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
 
 				//	Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
@@ -1151,11 +1151,12 @@ namespace COTG.Game
 			var changed = cid != build;
 			if (changed)
 			{
-				var _layout = CityBuild.isPlanner;
-				if (_layout)
+				var wasPlanner = CityBuild.isPlanner;
+			
+				if (wasPlanner)
 				{
 					var b = City.GetBuild();
-					b.BuildingsToLayout();
+					b.BuildingsCacheToShareString();
 					b.SaveLayout();
 					CityBuild.isPlanner = false;
 				}
@@ -1172,7 +1173,7 @@ namespace COTG.Game
 				}
 
 				City.CitySwitched();
-				if(_layout)
+				if(wasPlanner)
 				{
 					GetCity.Post( cid, (_,_)=>  CityBuild._isPlanner = true );
 				}

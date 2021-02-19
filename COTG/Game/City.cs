@@ -30,35 +30,38 @@ namespace COTG.Game
 	//	// bd:  time to demo?
 	//}
 
-    public sealed class City : Spot 
-    {
-		
+	public sealed class City : Spot
+	{
+
 		public const short bidTownHall = 455;
 		public const short bidWall = 809;
 		public const short bidTemple = 890;
-		 public const short bidForester= 448;
-		 public const short bidCottage= 446;
-		 public const short bidStorehouse= 464;
-		 public const short bidQuarry= 461;
-		 public const short bidHideaway= 479;
-		 public const short bidFarmhouse= 447;
-		 public const short bidCityguardhouse= 504;
-		 public const short bidBarracks= 445;
-		 public const short bidMine= 465;
-		 public const short bidTrainingground= 483;
-		 public const short bidMarketplace= 449;
-		 public const short bidTownhouse= 481;
-		 public const short bidSawmill= 460;
-		 public const short bidStable= 466;
-		 public const short bidStonemason= 462;
-		 public const short bidMage_tower= 500;
-		 public const short bidWindmill= 463;
-		 public const short bidAcademy= 482;
-		 public const short bidSmelter= 477;
-		 public const short bidBlacksmith= 502;
-		 public const short bidCastle= 467;
-		 public const short bidPort= 488;
-		 public const short bidShipyard= 491;
+		public const short bidForester = 448;
+		public const short bidCottage = 446;
+		public const short bidStorehouse = 464;
+		public const short bidQuarry = 461;
+		public const short bidHideaway = 479;
+		public const short bidFarmhouse = 447;
+		public const short bidCityguardhouse = 504;
+		public const short bidBarracks = 445;
+		public const short bidMine = 465;
+		public const short bidTrainingground = 483;
+		public const short bidMarketplace = 449;
+		public const short bidTownhouse = 481;
+		public const short bidSawmill = 460;
+		public const short bidStable = 466;
+		public const short bidStonemason = 462;
+		public const short bidMage_tower = 500;
+		public const short bidWindmill = 463;
+
+		
+
+		public const short bidAcademy = 482;
+		public const short bidSmelter = 477;
+		public const short bidBlacksmith = 502;
+		public const short bidCastle = 467;
+		public const short bidPort = 488;
+		public const short bidShipyard = 491;
 		public const short bidTriariPost = 539;
 		public const short bidRangerPost = 543;
 		public const short bidSentinelPost = 547;
@@ -79,11 +82,11 @@ namespace COTG.Game
 		public const int bspotTownHall = span1 * citySpan + span1;
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
-		
+
 		public static (int x, int y) IdToXY(int id)
 		{
 			var y = id / citySpan;
-			return (id - y * citySpan+ span0, y+ span0);
+			return (id - y * citySpan + span0, y + span0);
 		}
 
 		public const int span1 = (citySpan - 1) / 2; // inclusive
@@ -94,7 +97,7 @@ namespace COTG.Game
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		public const int citySpan = 21;
-		public const int citySpotCount = citySpan* citySpan;
+		public const int citySpotCount = citySpan * citySpan;
 		public const int cityScratchSpot = citySpotCount - 1;
 		public static Building[] Emptybuildings = new Building[citySpotCount];
 
@@ -114,7 +117,10 @@ namespace COTG.Game
 		//public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 14; // leave space for autobuild
-
+		internal void CopyBuidingCacheToShareString()
+		{
+			shareString = BuildingsToShareString(buildingsCache, isOnWater);
+		}
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
 			foreach (var i in buildQueue)
@@ -181,7 +187,7 @@ namespace COTG.Game
 				return new Span<BuildQueueItem>(q.queue.ToArray());
 			}
 			return new Span<BuildQueueItem>();
-	
+
 
 		}
 
@@ -189,11 +195,11 @@ namespace COTG.Game
 		//{
 
 		//	return GetQueue(City.build, City.buildQueue.span, GetExtQueue(build));
-	
+
 
 		//}
 
-		public static void IterateQueue(  Action<BuildQueueItem> action )
+		public static void IterateQueue(Action<BuildQueueItem> action)
 		{
 			foreach (var i in buildQueue)
 				action(i);
@@ -203,8 +209,8 @@ namespace COTG.Game
 				var count = q.queue.count;
 				var data = q.queue.v;
 
-				for(int i=0;i< count;++i)
-				{ 
+				for (int i = 0; i < count; ++i)
+				{
 					//semi safe
 					action(data[i]);
 				}
@@ -229,143 +235,158 @@ namespace COTG.Game
 		public City() { type = typeCity; }
 
 		public long lastUpdateTick;
-			
-        public Raid[] raids = Array.Empty<Raid>();
+
+		public Raid[] raids = Array.Empty<Raid>();
 
 
-        public static City GetOrAddCity(int cid)
-        {
-            Assert(cid > 65536);
+		public static City GetOrAddCity(int cid)
+		{
+			Assert(cid > 65536);
 			return Spot.GetOrAdd(cid);
-        }
-		
-		public bool AreRaidsRepeating()
-        {
-            foreach (var r in raids)
-            {
-                if (r.isRepeating)
-                    return true;
-            }
-            return false;
-        }
+		}
 
-	
+		public bool AreRaidsRepeating()
+		{
+			foreach (var r in raids)
+			{
+				if (r.isRepeating)
+					return true;
+			}
+			return false;
+		}
+
+
 
 		public DateTimeOffset GetRaidReturnTime()
-        {
-            var rv = AUtil.dateTimeZero;
-            foreach(var r in raids)
-            {
-                if(r.isReturning)
-                {
-                    if (rv < r.time)
-                        rv = r.time;
-                }
-                else
-                {
-                    
-                    var travel = r.GetOneWayTripTimeMinutes(this);
-                    var _t = r.time + TimeSpan.FromMinutes(travel);
-                        if (_t > rv)
-                            rv = _t;
-                    
-                }
-            }
-            return rv;
-        }
-   
+		{
+			var rv = AUtil.dateTimeZero;
+			foreach (var r in raids)
+			{
+				if (r.isReturning)
+				{
+					if (rv < r.time)
+						rv = r.time;
+				}
+				else
+				{
+
+					var travel = r.GetOneWayTripTimeMinutes(this);
+					var _t = r.time + TimeSpan.FromMinutes(travel);
+					if (_t > rv)
+						rv = _t;
+
+				}
+			}
+			return rv;
+		}
+
 		public static bool CanVisit(int cid)
 		{
 			return Spot.TryGet(cid, out var s) ? s.isFriend : false;
 		}
 		public byte commandSlots { get; set; }
 
-        public byte activeCommands { get; set; }
+		public byte activeCommands { get; set; }
 
-        public int freeCommandSlots => commandSlots - activeCommands;
+		public int freeCommandSlots => commandSlots - activeCommands;
 
-        public int carryCapacity
-        {
-            get {
-                // Todo: water
-                var _carryCapacity = 0;
-                foreach(var tc in troopsHome)
-                {
-                  _carryCapacity += tc.count * ttCarry[tc.type];
-                }
-                return _carryCapacity;
-            }
-        }
-        public float homeTroopsAttack
-        {
-            get
-            {
-                // Todo: water
-                var atk = 0.0f;
-                foreach (var tc in troopsHome)
-                {
-                    // todo: research?
-                    atk += tc.count * ttAttack[tc.type] *ttCombatBonus[tc.type];
-                }
-                return atk;
-            }
-        }
-        public float CarryCapacity(bool forWater)
-        {
-                // Todo: water
-                var _carryCapacity = 0.0f;
-                foreach (var tc in troopsHome)
-                {
-                if (!IsRaider(tc.type) || !Raid.includeRaiders[tc.type])
-                    continue;
-                    if(IsWaterRaider(tc.type) == forWater)
-                    {
-                        _carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
-                    }
+		public int carryCapacity
+		{
+			get {
+				// Todo: water
+				var _carryCapacity = 0;
+				foreach (var tc in troopsHome)
+				{
+					_carryCapacity += tc.count * ttCarry[tc.type];
+				}
+				return _carryCapacity;
+			}
+		}
+		public float homeTroopsAttack
+		{
+			get
+			{
+				// Todo: water
+				var atk = 0.0f;
+				foreach (var tc in troopsHome)
+				{
+					// todo: research?
+					atk += tc.count * ttAttack[tc.type] * ttCombatBonus[tc.type];
+				}
+				return atk;
+			}
+		}
+		public float CarryCapacity(bool forWater)
+		{
+			// Todo: water
+			var _carryCapacity = 0.0f;
+			foreach (var tc in troopsHome)
+			{
+				if (!IsRaider(tc.type) || !Raid.includeRaiders[tc.type])
+					continue;
+				if (IsWaterRaider(tc.type) == forWater)
+				{
+					_carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
+				}
 
 
-                }
-                return _carryCapacity;
-        }
+			}
+			return _carryCapacity;
+		}
 
-        public float raidReturn
-        {
-            get
-            {
-                if (raids.IsNullOrEmpty())
-                    return 999; // no raids
-                var dt = (float)(raids[0].time- JSClient.ServerTime()).TotalMinutes; // should we check more than one
-                if (raids[0].isReturning)
-                    return dt;
-                else
-                    return (-1.0f).Min(dt- raids[0].GetOneWayTripTimeMinutes(this) );
-            }
-        }
+		public float raidReturn
+		{
+			get
+			{
+				if (raids.IsNullOrEmpty())
+					return 999; // no raids
+				var dt = (float)(raids[0].time - JSClient.ServerTime()).TotalMinutes; // should we check more than one
+				if (raids[0].isReturning)
+					return dt;
+				else
+					return (-1.0f).Min(dt - raids[0].GetOneWayTripTimeMinutes(this));
+			}
+		}
 
-        public void SelectInWorldView( bool lazyMove)
-        {
-                if (!isBuild)
-                {
-                    JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
-    
-                }
-                if(!ShellPage.IsWorldView())
-                    JSClient.ChangeView(false);// toggle between city/region view
+		public void SelectInWorldView(bool lazyMove)
+		{
+			if (!isBuild)
+			{
+				JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
 
-                NavStack.Push(cid);
+			}
+			if (!ShellPage.IsWorldView())
+				JSClient.ChangeView(false);// toggle between city/region view
 
-        }
+			NavStack.Push(cid);
+
+		}
 
 		// Abusing invalid jsE by returning it when we want to return null
 		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
 		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
-		public byte[] layout; // for building
 		
-		public int BidFromOverlay( int id) => layout[id]!=0? layout[id] + BuildingDef.sharestringOffset : 0;
-		
+		public string shareString; // for building
+
+		public int BidFromOverlay(int id) {
+			if (shareString.IsNullOrEmpty())
+				return 0;
+			var t = shareString[id + shareStringStartOffset];
+			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c!=0)
+			{
+				
+				return (int)c + BuildingDef.sharestringOffset;
+			}
+			else
+			{
+				return 0;
+			}
+			
+		}
+
 		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
-	
-		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c) 
+
+		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
 		{
 			var bid = BidFromOverlay(c);
 			return (bid, BuildingDef.all[bid]);
@@ -380,10 +401,10 @@ namespace COTG.Game
 		{
 			get
 			{
-				if(myCitiesCache == null)
+				if (myCitiesCache == null)
 				{
 					// Todo: should this be Any of my cities?  Determine case by case
-			
+
 					myCitiesCache = Spot.allSpots.Values.Where(s => s.pid == Player.activeId).ToArray();
 				}
 				return myCitiesCache;
@@ -396,17 +417,17 @@ namespace COTG.Game
 				if (friendCitiesCache == null)
 				{
 					// Todo: should this be Any of my cities?  Determine case by case
-					friendCitiesCache = Spot.allSpots.Values.Where(s => Player.myIds.Contains(s.pid) ).ToArray();
+					friendCitiesCache = Spot.allSpots.Values.Where(s => Player.myIds.Contains(s.pid)).ToArray();
 				}
 				return friendCitiesCache;
 			}
 		}
 
 		public void LoadCityData(JsonElement jse)
-        {
-            Debug.Assert(cid == jse.GetInt("cid"));
-            if (jse.TryGetProperty("citn", out var citn))
-                _cityName = citn.GetString();
+		{
+			Debug.Assert(cid == jse.GetInt("cid"));
+			if (jse.TryGetProperty("citn", out var citn))
+				_cityName = citn.GetString();
 
 			type = typeCity;
 			// In rare cases, this changes
@@ -419,37 +440,43 @@ namespace COTG.Game
 			//	Log(ble.ToString());
 			//}
 			if (jse.TryGetProperty("w", out var isOnWataer))
-            {
-                var i = isOnWataer.GetAsInt();
-                if (i==1)
-                    isOnWater=true;
-                else if(i==0)
-                    isOnWater=false;
-            }
+			{
+				var i = isOnWataer.GetAsInt();
+				if (i == 1)
+					isOnWater = true;
+				else if (i == 0)
+					isOnWater = false;
+			}
 			if (jse.TryGetProperty("cn", out var cn))
 			{
 				remarks = cn[0].GetAsString();
 				notes = cn[1].GetAsString();
-				
+
 			}
 			if (jse.TryGetProperty("sts", out var sts))
 			{
 				var s = sts.GetString();
-				if(!CityBuild.isPlanner)
-					SetLayoutFromShareString(s);
+				Log(s);
+				s = s.Replace("&#34;", "\"");
+				Log(s);
+				if (!CityBuild.isPlanner)
+				{
+
+					SetShareString(s);
+				}
 
 			}
 			if (cid == City.build && jse.TryGetProperty("bq", out var bq))
 			{
 				int count = bq.GetArrayLength();
 				buildQueue.Clear();
-				for(int i=0;i<count;++i)
+				for (int i = 0; i < count; ++i)
 				{
 					var js = bq[i];
 					buildQueue.Add(new BuildQueueItem(
 						js.GetAsByte("slvl"),
-						js.GetAsByte("elvl"), 
-						js.GetAsUShort("brep"), 
+						js.GetAsByte("elvl"),
+						js.GetAsUShort("brep"),
 						js.GetAsUShort("bspot")
 						));
 				}
@@ -459,7 +486,7 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("bd", out var eBd))
 			{
-				
+
 				{
 					commandSlots = 5;
 					isCastle = false;
@@ -505,8 +532,8 @@ namespace COTG.Game
 				activeCommands = comm.GetByte();
 			}
 
-          //  troopsHome = TroopTypeCount.empty;
-          //  troopsTotal = TroopTypeCount.empty;
+			//  troopsHome = TroopTypeCount.empty;
+			//  troopsTotal = TroopTypeCount.empty;
 
 
 
@@ -516,121 +543,90 @@ namespace COTG.Game
 				_tsTotal = troopsTotal.TS();
 			}
 
-            if (jse.TryGetProperty("th", out var th))
-            {
-                troopsHome = th.GetTroopTypeCount().ToArray(); ;
-	
+			if (jse.TryGetProperty("th", out var th))
+			{
+				troopsHome = th.GetTroopTypeCount().ToArray(); ;
+
 				_tsHome = troopsHome.TS();
 
 			}
 			if (jse.TryGetProperty("trintr", out var trintr))
-            {
-                var l = new List<Reinforcement>();
-                foreach (var rein in trintr.EnumerateArray())
-                {
-                    if (rein.ValueKind==JsonValueKind.Object)
-                    {
-                        var re = new Reinforcement();
-                        re.targetCid=cid;
-                        re.sourceCid =rein.GetAsInt("c");
-                        re.order = rein.GetAsInt64("o");
-                        re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
-                        l.Add(re);
-                    }
-                }
-                reinforcementsIn = l.ToArray();
-            }
-            //if (jse.TryGetProperty("trin", out var trin))
-            //{
-            //    Log(trin);
+			{
+				var l = new List<Reinforcement>();
+				foreach (var rein in trintr.EnumerateArray())
+				{
+					if (rein.ValueKind == JsonValueKind.Object)
+					{
+						var re = new Reinforcement();
+						re.targetCid = cid;
+						re.sourceCid = rein.GetAsInt("c");
+						re.order = rein.GetAsInt64("o");
+						re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
+						l.Add(re);
+					}
+				}
+				reinforcementsIn = l.ToArray();
+			}
+			//if (jse.TryGetProperty("trin", out var trin))
+			//{
+			//    Log(trin);
 
-            //}
-            //if (jse.TryGetProperty("triin", out var triin))
-            //{
-            ////    Log(triin);
+			//}
+			//if (jse.TryGetProperty("triin", out var triin))
+			//{
+			////    Log(triin);
 
-            //}
+			//}
 
 
 			lastUpdateTick = Environment.TickCount;
-          
-            //            if(COTG.Views.MainPage.cache.cities.Count!=0)
-            // one off change
-            NotifyChange();
-            
 
-            //   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
-            //            COTG.Views.MainPage.CityListUpdateAll();
-        }
+			//            if(COTG.Views.MainPage.cache.cities.Count!=0)
+			// one off change
+			NotifyChange();
 
-		public  void SetLayoutFromShareString(string s)
+
+			//   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);
+			//            COTG.Views.MainPage.CityListUpdateAll();
+		}
+
+		public void SetShareString(string s)
 		{
 			if (s != null && s.Length >= citySpotCount)
 			{
 				// TODO:  What if we are in planner mode?
-
-				layout = new byte[citySpotCount];
-
-				const int offset = 18;
-				const int count = citySpotCount;
-				// translate sharestring to building ids
-				// anything that is not a building gets 0
-				for (int i = 0; i < count; ++i)
-				{
-					if (!BuildingDef.sharestringToBuldings.TryGetValue((byte)s[i + offset], out var b))
-					{
-						b = 0;
-					}
-					layout[i] = b;
-
-				}
-				
+				shareString = s;
 			}
 			else
 			{
-				layout = null;
+				shareString = null;
 			}
 			if (CityBuild.isPlanner)
-				LayoutToBuildings();
+				ShareStringToBuildingsCache();
 		}
 
 
 		internal static City GetBuild()
-        {
-            if (build!=0 && Spot.TryGet(build, out var city))
-                return city;
-            return null;
-        }
-
-		public string LayoutToShareString()
 		{
-
-			if (!isLayoutValid)
-				return string.Empty;
-
-			var sb = new StringBuilder("[ShareString.1.3]");
-			sb.Append(isOnWater ? ';' : ':');
-			foreach (var c in layout)
-			{
-				if (!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o))
-				{
-					o = (byte)'-';
-				}
-				sb.Append((char)o);
-			}
-			sb.Append("[/ShareString]");
-			return sb.ToString();
+			if (build != 0 && Spot.TryGet(build, out var city))
+				return city;
+			return null;
 		}
-		public static string LayoutToShareString(byte[] _layout, bool _isOnWater)
+		public const string shareStringStart= "[ShareString.1.3]";
+	
+		public static string BuildingsToShareString(Building[] _layout, bool _isOnWater)
 		{
 			if (_layout == null)
 				return string.Empty;
 
-			var sb = new StringBuilder("[ShareString.1.3]");
+			var sb = new StringBuilder(shareStringStart);
 			sb.Append(_isOnWater ? ';' : ':');
 			foreach (var c in _layout)
 			{
-				if (!BuildingDef.buildingsToSharestring.TryGetValue(c, out var o))
+				var bid = c.bid;
+				if (bid != 0)
+					bid -= BuildingDef.sharestringOffset;
+				if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out var o))
 				{
 					o = (byte)'-';
 				}
@@ -639,65 +635,36 @@ namespace COTG.Game
 			sb.Append("[/ShareString]");
 			return sb.ToString();
 		}
-
+		public const int shareStringStartOffset = 17+1;
+		public const int minShareStringLength = shareStringStartOffset +  City.citySpotCount;
+		
+		public (string ss,string json) splitShareString {
+			get {
+				if (shareString == null)
+					return (string.Empty, AUtil.emptyJson);
+				var i = shareString.IndexOf('{');
+				if (i == -1)
+					return (shareString, AUtil.emptyJson); ;
+				return (shareString.Substring(0,i),shareString.Substring(i));
+			}
+		}
 		public async Task SaveLayout()
 		{
-			var share = LayoutToShareString(layout, isOnWater);
-			if (share.IsNullOrEmpty())
-			{
-				Note.Show("No layout to save");
-				return;
-			}
 			Note.Show("Saved layout");
-			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(LayoutToShareString(), Encoding.UTF8);
+			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString??string.Empty, Encoding.UTF8);
 				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayer(cid));
 			Assert(rv == true);
 		}
 
-		public void BuildingsToLayout()
+		public void BuildingsCacheToShareString()
 		{
-			var anyValid = false;
-			foreach (var b in buildingsCache)
-			{
-				if(b.id!=0)
-				{
-					anyValid = true;
-					break;
-				}
-			}
-			if(!anyValid)
-			{
-				layout = null;
-				return;
-			}
-				layout = new byte[citySpotCount];
-			int put = 0;
-			foreach (var b in buildingsCache)
-			{
-				 var bid =  b.def.bid;
-				if (bid != 0)
-					bid -= BuildingDef.sharestringOffset;
-				layout[put++] = (byte)bid;
-			}
-//			await SaveLayout();
+			
+			shareString = BuildingsToShareString(buildingsCache, isOnWater) + splitShareString.json;
+			//			await SaveLayout();
 		}
-		public string BuildingsToShareString()
-		{
-			// hide member
-			var layout = new byte[citySpotCount];
-			int put = 0;
-			foreach (var b in buildings)
-			{
-				var bid = b.def.bid;
-				if (bid != 0)
-					bid -= BuildingDef.sharestringOffset;
-				layout[put++] = (byte)bid;
-			}
-			return LayoutToShareString(layout, isOnWater);
+	
 
-		}
-
-		public void LayoutToBuildings()
+		public void ShareStringToBuildingsCache()
 		{
 			buildingsCache = new Building[citySpotCount];
 			if (!isLayoutValid)
@@ -729,6 +696,7 @@ namespace COTG.Game
 				}
 			}
 			PlannerTab.BuildingsChanged();
+			
 		}
 		public void FlipLayoutH()
 		{
@@ -1053,7 +1021,7 @@ namespace COTG.Game
 
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
-		internal bool isLayoutValid => layout != null;
+		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
 
 		public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
         {

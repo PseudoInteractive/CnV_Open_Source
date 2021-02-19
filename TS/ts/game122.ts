@@ -23086,7 +23086,7 @@ function outer(){
 					.css("display", "none");
 				$(__s[F2p >> 2083788736])
 					.html("");
-			} else if (O21.hasOwnProperty(__s[1234])) {
+			} else if (O21.hasOwnProperty("sum")) {
 				var C21 =
 					'';
 				var W21 = '';
@@ -52693,7 +52693,7 @@ function outer(){
 					.html('');
 				$(__s[6723])
 					.text('');
-			} else if (K61.hasOwnProperty(__s[1234])) {
+			} else if (K61.hasOwnProperty("sum")) {
 				var s21 = '';
 				var
 					u21 = '';
@@ -56445,7 +56445,7 @@ function outer(){
 					.html('');
 				$(__s[5125])
 					.css("display", "none");
-			} else if (L31.hasOwnProperty(__s[1234])) {
+			} else if (L31.hasOwnProperty("sum")) {
 				var z31 =
 					__s[1629] + L31[0] + __s[3089] + L31[2] + __s[5511] + L31[1] + E6k
 						.S55(6817) + L31[3] + __s[3240];
@@ -56475,7 +56475,7 @@ function outer(){
 						2177) + G31 + __s[1361] + L31[X31][__s[5747]] + __s[2897] + L31[X31][_s(t1R ^
 							0)] + __s[6428] + L31[X31][__s[F4t - 0]] + "'>" + L31[X31][__s[+M8R]] + _s(
 								2663) + L31[X31][__s[+F4t]] + "'>" + L31[X31][__s[+B5m]] + __s[2552] + L31[
-								X31]['pn'] + __s[4348] + L31[X31][__s[6995]] + __s[2811] + L31[X31][E6k
+								X31]['pn'] + __s[4348] + L31[X31]["pa"] + __s[2811] + L31[X31][E6k
 									.S55(+w6y)] + __s[389];
 				}
 				$(__s[5125])
@@ -57198,7 +57198,7 @@ function outer(){
 				ppdt.g.t = U1w;
 				if (city.bq.length > (0))
 					for (var g1w in city.bq)
-						if (city.bq[g1w][__s[6995]] == 0) {
+						if (city.bq[g1w].pa == 0) {
 							var P1w = city.bq[g1w][__s[+T1m]];
 							var B1w =
 								city.bq[g1w][__s[1381]];

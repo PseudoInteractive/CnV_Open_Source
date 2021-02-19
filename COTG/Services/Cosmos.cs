@@ -15,18 +15,18 @@ using Azure;
 
 namespace COTG.Services
 {
-	public class ShareString : ITableEntity
+	public class ShareStringDB : ITableEntity
 	{
-		public ShareString()
+		public ShareStringDB()
 		{
 		}
 
-		public ShareString(string partitionKey, string rowKey,string s, string Description) 
+		public ShareStringDB(string partitionKey, string rowKey,string s) 
 		{
 			this.PartitionKey = partitionKey;
 			this.RowKey = rowKey;
 			this.s = s;
-			this.Description = Description;
+		
 		}
 
 		public string PartitionKey { get; set; }
@@ -35,7 +35,7 @@ namespace COTG.Services
 		public ETag ETag { get; set; }
 		public string s { get; set; }
 
-		public string Description { get; set; }
+	
 	}
 
 	public class TableBuildQueue : ITableEntity
@@ -155,7 +155,7 @@ namespace COTG.Services
 			//	await AddItemsToContainerAsync();
 		}
 
-		public static async void Share(string part, string key, string s, string desc)
+		public static async void ShareShareString(string part, string key, string s)
 		{
 			if (!await TouchT())
 				return;
@@ -163,7 +163,7 @@ namespace COTG.Services
 			try
 			{
 
-				var i = new ShareString(part, key, s, desc);
+				var i = new ShareStringDB(part, key, s);
 				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
 				// todo
 			}
@@ -176,14 +176,14 @@ namespace COTG.Services
 				throttleT.Release();
 			}
 		}
-		public static async Task<ShareString> ReadShare(string part, string key)
+		public static async Task<ShareStringDB> ReadShare(string part, string key)
 		{
 			if (!await TouchT())
 				return null;
 			await throttleT.WaitAsync();
 			try
 			{
-				ShareString r = await tableClient.GetEntityAsync<ShareString>(part,key);
+				ShareStringDB r = await tableClient.GetEntityAsync<ShareStringDB>(part,key);
 				if (r != null)
 					return r;
 			}
@@ -196,9 +196,9 @@ namespace COTG.Services
 			{
 				throttleT.Release();
 			}
-			return new ShareString(part, key, "Error", "Internet failed");
+			return new ShareStringDB(part, key, "Error");
 		}
-		public static async Task<List<ShareString>> ReadShares(string part)
+		public static async Task<List<ShareStringDB>> ReadShares(string part)
 		{
 			if (!await TouchT())
 				return null;
@@ -206,11 +206,11 @@ namespace COTG.Services
 			try
 			{
 
-				var entities = tableClient.QueryAsync<ShareString>(x => x.PartitionKey == part);
+				var entities = tableClient.QueryAsync<ShareStringDB>(x => x.PartitionKey == part);
 
 				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
 
-				var rv = new List<ShareString>();
+				var rv = new List<ShareStringDB>();
 				await foreach( var i in entities)
 				{
 					rv.Add(i);

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -20,7 +21,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace COTG.Views
@@ -71,7 +72,8 @@ namespace COTG.Views
 			return SetTag(src, tag, isOn.GetValueOrDefault());
 		}
 
-		
+		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)(\d+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
 		static string lastName = string.Empty;
 		public static async Task RenameDialog(int cid)
 		{
@@ -79,10 +81,9 @@ namespace COTG.Views
 			{
 				var city = City.GetOrAddCity(cid);
 				var nameDialog = new CityRename();
-				var isNew = city._cityName == "*New City" || city._cityName == "lawless city" || city._cityName == "*Lawless City";
+				bool isNew = IsNew(city);
 
-
-				foreach(var tag in TagHelper.tags)
+				foreach (var tag in TagHelper.tags)
 				{
 					var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
 					nameDialog.tags.Children.Add(check);
@@ -94,23 +95,52 @@ namespace COTG.Views
 				if (name.IsNullOrEmpty())
 					name = $"{city.cont:00} 1001";
 
-				var lg = name.Length;
-				var numberEnd = lg;
-				while (numberEnd > 0 && char.IsNumber(name[numberEnd - 1]))
+				var match = regexCityName.Match(name);
+				if (match.Success)
 				{
-					--numberEnd;
-				}
-				if (numberEnd < lg)
-				{
-					// increment number if there is one
-					var start = name.Substring(0, numberEnd);
-					var number = int.Parse(name.Substring(numberEnd, lg - numberEnd)) + (name == lastName ? 1 : 0);
-					for (; ; )
+					try
 					{
-						name = start + number.ToString();
-						if (!City.myCities.Any((v) => v._cityName == name && v != city))
-							break;
-						++number;
+						Assert(match.Groups.Count == 6);
+						var cont = match.Groups[2].Value;
+						var contV = int.Parse(cont);
+
+						// new cont?
+						if (contV != city.cont)
+						{
+							var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
+							if (lastCity != null)
+							{
+								name = IsNew(lastCity)? $"{city.cont:00} 1001" : lastCity._cityName;
+								match = regexCityName.Match(name);
+								cont = match.Groups[2].Value;
+								contV = int.Parse(cont);
+							}
+							else
+							{
+								name = $"{city.cont:00} 1001";
+
+							}
+
+						}
+
+						var pre = match.Groups[1].Value;
+
+						var mid = match.Groups[3].Value;
+						var num = match.Groups[4].Value;
+						var post = match.Groups[5].Value;
+						var numV = int.Parse(num);
+						cont = $"{city.cont:00}";
+						for (; ; )
+						{
+							++numV;
+							name = pre + cont + mid + numV.ToString() + post;
+							if (!City.myCities.Any((v) => v._cityName == name && v != city))
+								break;
+						}
+					}
+					catch (Exception ex)
+					{
+						Log(ex);
 					}
 				}
 				nameDialog.name.Text = city._cityName;
@@ -133,7 +163,7 @@ namespace COTG.Views
 
 						foreach (var tag in TagHelper.tags)
 						{
-							var check = nameDialog.tags.Children.First( (ch)=> (ch as ToggleButton).Content == tag.s) as ToggleButton;
+							var check = nameDialog.tags.Children.First((ch) => (ch as ToggleButton).Content == tag.s) as ToggleButton;
 							tags = SetTag(tags, tag.s, check.IsChecked);
 
 						}
@@ -153,7 +183,7 @@ namespace COTG.Views
 						JSClient.ClearCenter(cid);
 					}
 				}
-				
+
 			}
 			catch (Exception e)
 			{
@@ -162,6 +192,11 @@ namespace COTG.Views
 			}
 
 
+		}
+
+		private static bool IsNew(City city)
+		{
+			return city._cityName == "*New City" || city._cityName == "lawless city" || city._cityName == "*Lawless City";
 		}
 	}
     }

@@ -39,12 +39,13 @@
 		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False"  />
 		<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
 			<tk:WrapPanel  Orientation="Horizontal">
-				<TextBox x:Name="remarks" Header="Remarks" TextWrapping="Wrap" AcceptsReturn="False" />
+				<TextBox x:Name="notes" Header="Notes" TextWrapping="Wrap" AcceptsReturn="False" />
 				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" />
 			</tk:WrapPanel>
 		</Border>
 		<Border Grid.Row="2" Style="{StaticResource BorderReveal}">
 			<tk:WrapPanel  Orientation="Horizontal">
+				<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
 				<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
 				<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
 				<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />

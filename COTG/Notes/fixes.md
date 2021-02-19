@@ -7,4 +7,18 @@
  - *Fix* app would accidentally stop COTG's heartbeat function on ocassaion which would cause bad things to happen.
  - *Fix* friend online and offline notifications work
  - *Fix* if you had less than about 500 cities, in some cases they would load too fast and might not register properly in your citylists.
- - *Fix* chat translation works again 
+ - *Fix* chat translation works again
+ - *Fix* another crash with build tab treeview
+ - *Request* The auto naming algorithm has been improved:  
+	- Names must be in the format (prefix)(continent)(middle)(uniqueNumber)(postfix)
+	- prefix, middle and postfix cannot have numbers in them
+	- continent and unique number must be only numbers
+	- i.e.:
+		- C10 1001
+		- 11 001
+		- 11NE142
+	- Prefix and or postfix can be empty.
+ - *Request* Build tab cities start out collapsed
+ - *Request* added upgrade and downgrade to quickbuild
+ - *Fix* new cities did not show as cities on refresh
+ - *Optimize* build queues
