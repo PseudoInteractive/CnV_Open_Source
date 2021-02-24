@@ -117,10 +117,7 @@ namespace COTG.Game
 		//public static bool buildQueueFull => buildQueue.count >= buildQMax;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 14; // leave space for autobuild
-		internal void CopyBuidingCacheToShareString()
-		{
-			shareString = BuildingsToShareString(buildingsCache, isOnWater);
-		}
+		
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
 			foreach (var i in buildQueue)
@@ -596,6 +593,7 @@ namespace COTG.Game
 			{
 				// TODO:  What if we are in planner mode?
 				shareString = s;
+				
 			}
 			else
 			{
@@ -671,8 +669,8 @@ namespace COTG.Game
 			{
 				for (int s = 0; s < citySpotCount; ++s)
 				{
-					buildingsCache[s].id = BuildingDef.BidToId(bidTemple);
-					buildingsCache[s].bl = 10;
+					buildingsCache[s].id = 0;
+					buildingsCache[s].bl = 0;
 				}
 			}
 			else
@@ -742,38 +740,38 @@ namespace COTG.Game
 
 		public static void CheckTipRaiding()
         {
-            //if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3 )
-            //    return;
-            //int homeCount = 0;
-            //foreach (var city in City.allCities)
-            //{
-            //    if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
-            //    {
-            //        ++homeCount;
-            //    }
-            //}
-            //if (homeCount == 0)
-            //    return;
-            //if (MainPage.instance.TipRaiding101.Show())
-            //{
-            //    return;
-            //}
-            //if (homeCount < 2)
-            //    return;
-            //if (!TipsSeen.instance.raiding2)
-            //{
-            //    MainPage.ShowTipRaiding2();
-            //    return;
-            //}
-            //if (homeCount < 4)
-            //    return;
-            //if (!TipsSeen.instance.raiding3)
-            //{
-            //    MainPage.ShowTipRaiding3();
-            //    return;
-            //}
+			if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3)
+				return;
+			int homeCount = 0;
+			foreach (var city in City.allCities)
+			{
+				if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
+				{
+					++homeCount;
+				}
+			}
+			if (homeCount == 0)
+				return;
+			if (MainPage.instance.TipRaiding101.Show())
+			{
+				return;
+			}
+			if (homeCount < 2)
+				return;
+			if (!TipsSeen.instance.raiding2)
+			{
+				MainPage.ShowTipRaiding2();
+				return;
+			}
+			if (homeCount < 4)
+				return;
+			if (!TipsSeen.instance.raiding3)
+			{
+				MainPage.ShowTipRaiding3();
+				return;
+			}
 
-        }
+		}
 
         //  static List<City> dummies = new List<City>();
 

@@ -123,6 +123,9 @@ namespace COTG.Views
 									for (int dy = -1; dy <= 1; ++dy)
 									{
 										var cc1 = (x + dx, y + dy);
+										if (!IsValidCityCoord(cc1))
+											continue;
+
 										var bd1 = bds[XYToId(cc1)];
 										switch (bd1.bid)
 										{
@@ -214,7 +217,6 @@ namespace COTG.Views
 				instance.rtPrae.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPraetor].Ps * gain);
 				instance.rtSen.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSenator ].Ps * gain);
 			}
-
 			static int AddMilBuilding(in BuildingDef bdef,in Building bd, Building[] bds, int x, int y)
 			{
 				var rv = bdef.Ts[bd.bl];
@@ -223,9 +225,12 @@ namespace COTG.Views
 					for (int dy = -1; dy <= 1; ++dy)
 					{
 						var cc1 = (x + dx, y + dy);
+						if (!IsValidCityCoord(cc1))
+							continue;
 						var bd1 = bds[XYToId(cc1)];
 						if (bd1.bid == bidBarracks)
 						{
+							
 							rv += bd1.def.Ts[bd1.bl];
 						}
 
@@ -236,7 +241,10 @@ namespace COTG.Views
 			}
 		}
 		static bool statsDirty;
-
+		public static bool IsValidCityCoord((int x, int y) cc)
+		{
+			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
+		}
 		internal static void BuildingsChanged()
 		{
 			if (statsDirty == true || !IsVisible() )

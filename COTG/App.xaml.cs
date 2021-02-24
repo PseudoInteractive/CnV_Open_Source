@@ -16,7 +16,9 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 //using ZLogger;
 
 //using Cysharp.Text;
@@ -92,7 +94,9 @@ namespace COTG
 			LeavingBackground += App_LeavingBackground;
 			Resuming += App_Resuming;
 			Suspending += App_Suspending;
-
+			
+			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+				   typeof(Analytics), typeof(Crashes));
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.

@@ -116,7 +116,7 @@ namespace COTG.Game
                 return (0, 0,0);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
 			var  idealf = (carry / (loot * desiredCarry) );
-			int ideal = (int)(idealf+0.375f);
+			int ideal = (int)(idealf);  // carry at least the ideal amount
 		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
 			if (idealf < ideal || !SettingsPage.raidSendExact)
 				idealf = ideal;

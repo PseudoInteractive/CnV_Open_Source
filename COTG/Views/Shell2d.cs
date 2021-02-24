@@ -166,8 +166,8 @@ namespace COTG.Views
 			hasKeyboardFocus = true;
 			App.DispatchOnUIThreadLow(()=>
 			{
-				Verify(instance.commandBar.Focus(FocusState.Programmatic));// set switch away and back because webview reacts poorly otherwise
-				Verify(keyboardProxy.Focus(FocusState.Programmatic));
+				instance.shellPage.Focus(FocusState.Programmatic);// set switch away and back because webview reacts poorly otherwise
+				keyboardProxy.Focus(FocusState.Programmatic);
 			});
 		}
 		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)

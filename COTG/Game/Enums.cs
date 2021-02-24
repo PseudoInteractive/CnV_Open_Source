@@ -80,9 +80,10 @@ namespace COTG.Game
 
         public readonly static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };
         public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
-        public readonly static int[] otherLoot = { 350, 1000, 4270, 15500, 32300, 56900, 117200, 198500, 297500, 441600 };
-        public readonly static int[] mountainLoot = { 350, 960, 4100, 14900, 31000, 54500, 112500, 190500, 285500, 423500 };
-        public readonly static bool[] ttBossKiller =  { false, false, false, false,
+        public readonly static int[] otherLoot = { 360, 1050, 4500, 16000, 33000, 58500, 118400, 200450, 300000, 450400 };
+        public readonly static int[] mountainLoot = { 360, 1050, 4500, 16000, 33000, 58500, 118400, 200450, 300000, 450400 };
+		
+		public readonly static bool[] ttBossKiller =  { false, false, false, false,
                                                         false, true, true, false,
                                                         false, true,true,true,
                                                         false,false,true,false,

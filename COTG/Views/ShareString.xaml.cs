@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
-// The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace COTG.Views
 {
@@ -36,11 +35,48 @@ namespace COTG.Views
 			this.InitializeComponent();
 			
 		}
-	//	public static ShareStringItem tempItem = new ShareStringItem("temp~na") { notes = "nothing selected" };
-		static ShareStringItem current = new();
+		//	public static ShareStringItem tempItem = new ShareStringItem("temp~na") { notes = "nothing selected" };
 		//[ShareString.1.3]:
 		//[/ShareString]
-		
+		public static (string root, string mid, string title) DecomposePath(string src)
+		{
+			if(src.IsNullOrEmpty())
+				return (string.Empty, string.Empty, string.Empty);
+			
+			var vr = src.Split('~', StringSplitOptions.RemoveEmptyEntries);
+			if(vr.Length >= 3)
+			{
+				var mid = vr.Skip(1).Take(vr.Length - 2);
+				var midStr =String.Join('~', mid);
+				return (vr[0], midStr, vr[vr.Length - 1]);
+			}
+			else if(vr.Length >= 2)
+			{
+				return (vr[0], string.Empty, vr[1]);
+			}
+			else if(vr.Length >= 1)
+			{
+				return (string.Empty, String.Empty, vr[0]);
+			}
+			else
+			{
+				return (string.Empty, string.Empty, string.Empty);
+			}
+		}
+		private static string GetPath( (string root, string mid, string title) path)
+		{
+			return !path.mid.IsNullOrEmpty() ? path.root + '~' + path.mid +"~"+ path.title : path.root+ "~" +path.title;
+		}
+		public static string StripRoot( string path)
+		{
+			var strip = DecomposePath(path);
+			return StripRoot(strip).subPath;
+		}
+		public static (string root, string subPath) StripRoot( (string root, string mid, string title) path)
+		{
+			return (path.root, path.mid.IsNullOrEmpty() ? path.title : path.mid + '~' + path.title);
+		}
+
 		public static bool IsValid(string ss)
 		{
 			if (ss.IsNullOrEmpty())
@@ -70,7 +106,7 @@ namespace COTG.Views
 		//	instance.PlannerTeachingTip.Show();
 			// todo: copy text 
 			if(CityBuild.isPlanner)
-				city.CopyBuidingCacheToShareString();
+				city.BuildingsCacheToShareString();
 			SetFromSS();
 
 
@@ -81,8 +117,9 @@ namespace COTG.Views
 			if( rv == ContentDialogResult.Primary)
 			{
 				
-				city.SetShareString(GetShareStringWithJson());
-				if(instance.onComplete.IsOn != CityBuild.isPlanner)
+				city.SetShareString(instance.GetShareStringWithJson());
+				city.SaveLayout();
+				if (instance.onComplete.IsOn != CityBuild.isPlanner)
 				{
 					if (CityBuild.isPlanner)
 						PlannerTab.instance.Close();
@@ -96,11 +133,13 @@ namespace COTG.Views
 				return false;
 			}
 		}
-		static string GetShareStringWithJson()
+		string GetShareStringWithJson()
 		{
-			return GetShareString() + JsonSerializer.Serialize(current);
+			return GetShareString() + JsonSerializer.Serialize(new ShareStringMeta() { notes=notes.Text, desc=description.Text,path=  path.Text });
 
 		}
+	
+		
 		static string GetShareString()
 		{
 			return instance.shareString.Text.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
@@ -118,22 +157,22 @@ namespace COTG.Views
 		private void UseBuildingsClick(object sender, RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			current = current.Clone();
-			current.path = $"{Player.myName}~{current.title}";
 			instance.shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
 		}
 		private static void SetFromSS()
 		{
 			var city = City.GetBuild();
 			var s = city.splitShareString;
-			current = JsonSerializer.Deserialize<ShareStringItem>(s.json);
-			current.shareString = s.ss;
-			instance.shareString.Text = current.shareString ?? string.Empty;
-			instance.description.Text = current.desc??string.Empty;
-			instance.notes.Text = current.notes ?? string.Empty;
-			
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
+			var path = DecomposePath(meta.path);
+			instance.shareString.Text = s.ss ?? string.Empty;
+			instance.description.Text = meta.desc ?? string.Empty;
+			instance.notes.Text = meta.notes ?? string.Empty;
+			instance.title.Text = path.title;
+			instance.path.Text = GetPath( path);
 		}
 
+	
 		private async void FromClipboardClick(object sender, RoutedEventArgs e)
 		{
 			var text = await App.GetClipboardText();
@@ -162,10 +201,12 @@ namespace COTG.Views
 			{
 				if(i.shareString!= null)
 				{
-					current = i;
 					instance.shareString.Text= i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
 					instance.description.Text = i.desc;
+					instance.path.Text = i.path;
+					instance.title.Text = i.title;
 					instance.notes.Text = i.notes;
+					
 				}
 			}
 		}
@@ -182,7 +223,7 @@ namespace COTG.Views
 
 		private void ShareClick(object sender, RoutedEventArgs e)
 		{
-			var title = current.title;
+			var title = this.title.Text;
 			if(title.IsNullOrEmpty())
 			{
 				Note.Show("Please set title");
@@ -195,7 +236,7 @@ namespace COTG.Views
 
 			}
 			
-			Cosmos.ShareShareString(Player.myName, current.title,GetShareStringWithJson());
+			Cosmos.ShareShareString(Player.myName, title,GetShareStringWithJson());
 			Note.Show("Shared!");
 		}
 	}
@@ -218,16 +259,11 @@ namespace COTG.Views
 			title = dir.Last();
 
 		}
-		public ShareStringItem() 
-		{
-			path = $"{Player.myName}~tba";
-			title = "tba";
-		}
-		public ShareStringItem Clone()
-		{
-			return JsonSerializer.Deserialize<ShareStringItem>(ToString());
-
-		}
+		//public ShareStringItem() 
+		//{
+		//	path = $"{Player.myName}~tba";
+		//	title = "tba";
+		//}
 		public override string ToString() => JsonSerializer.Serialize(this);
 
 		public ShareStringItem(string path,string _notes,string _desc, string _share)
@@ -256,61 +292,11 @@ namespace COTG.Views
 		
 		}
 	}
-	public class ShareStringItem
+	public struct ShareStringMeta
 	{
-		public string path { get; set; } = string.Empty;
-		public static List<ShareStringItem> all = new();
-		public string shareString { get; set; }
-		[JsonIgnore]
-		public string title { get; set; } = string.Empty;
+		public string path { get; set; }
 		public string desc { get; set; }
 		public string notes { get; set; }
-		[JsonIgnore]
-		public List<ShareStringItem> children { get; set; } = new();
-		// group items
-		public ShareStringItem(string _path)
-		{
-			path = _path;
-			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			title = dir.Last();
 
-		}
-		public ShareStringItem()
-		{
-			path = $"{Player.myName}~tba";
-			title = "tba";
-		}
-		public ShareStringItem Clone()
-		{
-			return JsonSerializer.Deserialize<ShareStringItem>(ToString());
-
-		}
-		public override string ToString() => JsonSerializer.Serialize(this);
-
-		public ShareStringItem(string path, string _notes, string _desc, string _share)
-		{
-			this.path = path;
-			notes = _notes;
-			title = path;
-			desc = _desc;
-			shareString = _share;
-			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			title = dir.Last();
-			var myList = all;
-			var pathSoFar = String.Empty;
-			for (int i = 0; i < dir.Length - 1; ++i)
-			{
-				pathSoFar = pathSoFar + '~' + dir[i];
-				var parent = myList.Find((a) => a.title == dir[i]);
-				if (parent == null)
-				{
-					parent = new ShareStringItem(pathSoFar);
-					myList.Add(parent);
-				}
-				myList = parent.children;
-			}
-			myList.Add(this);
-
-		}
 	}
 }

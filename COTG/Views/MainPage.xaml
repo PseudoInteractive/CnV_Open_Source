@@ -232,17 +232,37 @@
 						  HorizontalSpacing="4"
 						  VerticalSpacing="4"
 						  Grid.Row="0">
-				<Button Content="Reset Raids"
+			<Button Content="Reset Raids"
 						Click="ResetRaids"
 						Style="{StaticResource ButtonSmall}"
-						ToolTipService.ToolTip="Resets all with raid carry less than 90% or idle troops greater than 25%" />
+						ToolTipService.ToolTip="Resets all with raid carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)"  >
+				<Button.Resources>
+					<winui:TeachingTip x:Name="TipResetRaids1"
+						   x:FieldModifier="public"
+						   Title="Reaet Raids Tip"
+						   Target="{x:Bind cityGrid}"
+						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
+					</winui:TeachingTip> 
+				</Button.Resources>
+			</Button>
+			<TextBlock  TextWrapping="Wrap">
+                The 'tsRaid' column header will sort your cities by TS at home, allowing you to see which cities have the most idle troops.<LineBreak />
+                Note: Click the column twice to sort in descending order<LineBreak />
+				</TextBlock>
+	
 				<Button x:Name="autoRaid"
 					    Content="Raid Selected"
 						Click="AutoRaid"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="For all selected castles, raids are sent to the closest appriate dungeon.  Use with care." />
-				<Border Style="{StaticResource BorderReveal}">
-					<TextBlock x:Name="count"
+			<Button Content="Seletct All"
+						Click="SeletctAll"
+						Style="{StaticResource ButtonSmall}"
+						ToolTipService.ToolTip="Selects all cities, useful for reset raids"  />
+			<Border Style="{StaticResource BorderReveal}">
+				
+
+				<TextBlock x:Name="count"
 							   Margin="4"
 							   x:FieldModifier="public"
 							   IsTextSelectionEnabled="True" />

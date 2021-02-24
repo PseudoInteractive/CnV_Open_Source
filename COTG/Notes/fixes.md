@@ -22,3 +22,5 @@
  - *Request* added upgrade and downgrade to quickbuild
  - *Fix* new cities did not show as cities on refresh
  - *Optimize* build queues
+ - *New* Planner mode is ready to use
+ - *Request* raids will now be selected such that the carry is *at least* the specified value.  Previously raids would be selected such that the carry was as close as possible to the desired carry, this would mean that it was sometimes under the desired carry.

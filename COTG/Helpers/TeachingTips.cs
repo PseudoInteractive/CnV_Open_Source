@@ -14,19 +14,25 @@ For new castles, raid carry alone doesn't reset raids that have recruited a lot 
  */
 namespace COTG.Helpers
 {
-    public static class Tips
+    public static class TipsAuto 
     {
         public static HashSet<string> seen = new HashSet<string>();
         public static Microsoft.UI.Xaml.Controls.TeachingTip queued; // tip is queued to be executed on idle
+		static string activeTip;
 
         public static bool Show(this Microsoft.UI.Xaml.Controls.TeachingTip tip,int delay=0)
         {
-			if (seen.Contains(tip.Name))
+			Assert(activeTip == null);
+			var name = tip.Name;
+			if (seen.Contains(name))
 				return false;
+			activeTip = name;
+			tip.Closed -= Tip_Closed;
+			tip.Closed += Tip_Closed;
 			if (delay == 0)
 			{
 				seen.Add(tip.Name);
-				App.DispatchOnUIThreadSneaky(() => tip.IsOpen = true);
+				tip.IsOpen = true;
 				return true;
 			}
 
@@ -38,7 +44,14 @@ namespace COTG.Helpers
             return true;
         }
 
-        private static void ShowTip()
+		private static void Tip_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)
+		{
+			Assert(activeTip != null);
+			seen.Add(activeTip);
+			activeTip = null;
+		}
+
+		private static void ShowTip()
         {
             var _queued = queued;
             queued = null;

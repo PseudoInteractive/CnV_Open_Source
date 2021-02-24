@@ -36,11 +36,13 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False"  />
+		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
 		<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
 			<tk:WrapPanel  Orientation="Horizontal">
-				<TextBox x:Name="notes" Header="Notes" TextWrapping="Wrap" AcceptsReturn="False" />
-				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" />
+				<TextBox x:Name="title" Header="Title"  />
+				<TextBox x:Name="path" Header="path"  />
+				<TextBox x:Name="notes" Header="Notes" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
+				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
 			</tk:WrapPanel>
 		</Border>
 		<Border Grid.Row="2" Style="{StaticResource BorderReveal}">
