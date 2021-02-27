@@ -107,7 +107,7 @@ namespace COTG.Views
 		public static float volume = 0.5f;
 		public static bool spatialOn = true;
 		public static bool stayAlive;
-		public static bool raidOffDungeons = true;
+		public static bool raidOffDungeons = false;
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 25;

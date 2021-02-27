@@ -17,22 +17,24 @@ namespace COTG
         updating,
         clean,
     }
-    public static class AUtil
-    {
-        public const string emptyJson= "{}";
+	public static class AUtil
+	{
+		public const string emptyJson = "{}";
 		public const string defaultTimeFormat = "HH':'mm':'ss";
 		public const string preciseTimeFormat = "HH':'mm':'ss.fff";
+		public const string preciseDateTimeFormat = "MM/dd HH':'mm':'ss.fff";
+
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
-        public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
-        public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
+		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
+		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
 
 
-		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T:unmanaged
+		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T : unmanaged
 		{
 			COTG.Debug.Assert(source.Length == target.Length);
 			Buffer.BlockCopy(source, 0, target, 0, source.Length * sizeof(T));
 		}
-public static void Swap<T>(ref T a, ref T b)
+		public static void Swap<T>(ref T a, ref T b)
 		{
 			T temp = a;
 			a = b;
@@ -51,13 +53,13 @@ public static void Swap<T>(ref T a, ref T b)
 
 		public static string FormatDurationFromSeconds(double f)
 		{
-			if(Math.Abs(f) < 60)
+			if (Math.Abs(f) < 60)
 			{
 				return $"{f:0.00}s";
 			}
 			else
 			{
-				var prefix =string.Empty;
+				var prefix = string.Empty;
 				var s = f.RoundToInt();
 				if (s < 0)
 				{
@@ -72,7 +74,7 @@ public static void Swap<T>(ref T a, ref T b)
 				}
 				else
 				{
-					var hour = (s / (60*60) );
+					var hour = (s / (60 * 60));
 					s -= hour * 60 * 60;
 					var min = (s) / 60;
 					s -= min * 60;
@@ -84,7 +86,8 @@ public static void Swap<T>(ref T a, ref T b)
 		}
 
 		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
-		public static string FormatTimeDefault(this DateTimeOffset m) => m.ToString(defaultTimeFormat);
+		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
+	
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseTimeFormat);
 		public static string FormatSkipDateIfToday(this DateTimeOffset m)
         {

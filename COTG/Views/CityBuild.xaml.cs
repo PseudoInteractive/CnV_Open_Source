@@ -1674,11 +1674,11 @@ namespace COTG.Views
 
 				if (isRight)
 				{
-					Tips.Show(instance.tipBuildRight);
+					Tips.Show(instance.tipBuildRight, nameof(instance.tipBuildRight));
 				}
 				else
 				{
-					Tips.Show(instance.tipBuildLeft);
+					Tips.Show(instance.tipBuildLeft,nameof(instance.tipBuildLeft));
 		
 				}
 
@@ -1804,7 +1804,7 @@ namespace COTG.Views
 						await ShareString.Show();
 						SetAction(bi.action);
 						ClearSelectedBuilding();
-						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show());
+						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
 
 
 					}

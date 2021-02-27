@@ -172,12 +172,12 @@ namespace COTG.Views
 		}
 		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
 		{
-			Log("Get focus");
+			//Log("Get focus");
 			hasKeyboardFocus =  true;
 		}
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
 		{
-			Log("Lost focus");
+		//	Log("Lost focus");
 			hasKeyboardFocus = false;
 			//			CityBuild.ClearAction();
 		}

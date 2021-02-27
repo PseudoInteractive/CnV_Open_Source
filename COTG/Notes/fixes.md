@@ -1,26 +1,32 @@
 ﻿### 2021/2/12
- - *Fix* Ports and Shipyards work with layouts
- - *New* Clicking on the top border of the chat tab allows you to toggle between predefined sizes
- - *Fix* Castles issue warning on upgrade
- - *Fix* fixed some cases in which the refresh button would not refresh everything in the HTML windows.  Tip:  If you find further cases of similar behaviour, try refreshing twice. ;)
- - *Change* music does not play when you are subing another player
- - *Fix* app would accidentally stop COTG's heartbeat function on ocassaion which would cause bad things to happen.
- - *Fix* friend online and offline notifications work
- - *Fix* if you had less than about 500 cities, in some cases they would load too fast and might not register properly in your citylists.
- - *Fix* chat translation works again
- - *Fix* another crash with build tab treeview
- - *Request* The auto naming algorithm has been improved:  
+ - **Fix** Ports and Shipyards work with layouts
+ - **New** Clicking on the top border of the chat tab allows you to toggle between predefined sizes
+ - **Fix** Castles issue warning on upgrade
+ - **Fix** fixed some cases in which the refresh button would not refresh everything in the HTML windows.
+ 	- Tip:  If you find further cases of similar behavior, try refreshing twice. ;)
+ - **Change** music does not play when you are subbing another player
+ - **Fix** app would accidentally stop COTG's heartbeat function on occasion which would cause bad things to happen.
+ - **Fix** friend online and offline notifications work
+ - **Fix** if you had less than about 500 cities, in some cases they would load too fast and might not register properly in your citylists.
+ - **Fix** chat translation works again
+ - **Fix** another crash with build tab treeview
+ - **Request** The auto naming algorithm has been improved:  
 	- Names must be in the format (prefix)(continent)(middle)(uniqueNumber)(postfix)
 	- prefix, middle and postfix cannot have numbers in them
 	- continent and unique number must be only numbers
-	- i.e.:
-		- C10 1001
-		- 11 001
-		- 11NE142
+	- The following are valid names, the continent is in bold and the unique number is italic and the suggested name for the next city is shown after the "=>"
+		- C**10** *1001* => C**10** *1002*
+		- **11** *001* => **11** *002*
+		- **11**NE*142* => **11**NE*143*
 	- Prefix and or postfix can be empty.
- - *Request* Build tab cities start out collapsed
- - *Request* added upgrade and downgrade to quickbuild
- - *Fix* new cities did not show as cities on refresh
- - *Optimize* build queues
- - *New* Planner mode is ready to use
- - *Request* raids will now be selected such that the carry is *at least* the specified value.  Previously raids would be selected such that the carry was as close as possible to the desired carry, this would mean that it was sometimes under the desired carry.
+ - **Request** Build tab cities start out collapsed
+ - **Request** added upgrade and downgrade to quick build
+ - **Fix** new cities did not show as cities on refresh
+ - **Optimize** build queues
+ - **New** Planner mode is ready to use.
+   - You can switch to planner mode via the city build menus
+### 2021/2/24
+ - **Request** raids will now be selected such that the carry is *at least* the specified value.   
+   - Previously raids would be selected such that the carry was as close as possible to the desired carry
+ - **Update** City lists are sorted by name and remarks.
+   - Previously they were only sorted by name.

@@ -162,7 +162,7 @@
                                                 
                                         />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
-                                                      Header="Hours"
+                                                      Header="Travel"
                                                       
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,4:N2}"

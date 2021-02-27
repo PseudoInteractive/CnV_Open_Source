@@ -76,8 +76,12 @@
 					<model:DungeonTapCommand />
 				</tg:RadDataGrid.Commands>
                 <tg:RadDataGrid.Columns>
-                   
-					<tg:DataGridTextColumn PropertyName="plan"
+							<tg:DataGridTextColumn PropertyName="dispatch"
+										   CellContentStyle="{StaticResource RightAlignLink}"
+											   SizeMode="Auto"
+										   Tip="Click here to send raids" />
+
+							<tg:DataGridTextColumn PropertyName="plan"
 										   CellContentStyle="{StaticResource RightAlignLink}"
 											   SizeMode="Auto"
 										   Tip="Click here to send raids" />
@@ -245,18 +249,15 @@
 					</winui:TeachingTip> 
 				</Button.Resources>
 			</Button>
-			<TextBlock  TextWrapping="Wrap">
-                The 'tsRaid' column header will sort your cities by TS at home, allowing you to see which cities have the most idle troops.<LineBreak />
-                Note: Click the column twice to sort in descending order<LineBreak />
-				</TextBlock>
+			
 	
 				<Button x:Name="autoRaid"
 					    Content="Raid Selected"
 						Click="AutoRaid"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="For all selected castles, raids are sent to the closest appriate dungeon.  Use with care." />
-			<Button Content="Seletct All"
-						Click="SeletctAll"
+			<Button Content="Select All"
+						Click="SelectAll"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Selects all cities, useful for reset raids"  />
 			<Border Style="{StaticResource BorderReveal}">
@@ -386,10 +387,9 @@
 						   CloseButtonClick="TipRaiding101_ActionButtonClick"
 						   CloseButtonContent="Got It"
 						   PreferredPlacement="LeftTop"
-						   Subtitle="Select a city and recommended raids will appear in the tab below">
+						   Subtitle="Select the [plus sign next to a city and it will expand to show recommended raids">
 			<TextBlock  TextWrapping="Wrap">
                 The 'tsRaid' column header will sort your cities by TS at home, allowing you to see which cities have the most idle troops.<LineBreak />
-                Note: Click the column twice to sort in descending order<LineBreak />
 			</TextBlock>
 		</winui:TeachingTip>
 

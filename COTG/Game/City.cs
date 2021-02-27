@@ -738,40 +738,7 @@ namespace COTG.Game
 			///SaveLayout();
 		}
 
-		public static void CheckTipRaiding()
-        {
-			if (TipsSeen.instance.raiding1 && TipsSeen.instance.raiding3)
-				return;
-			int homeCount = 0;
-			foreach (var city in City.allCities)
-			{
-				if (city.Value.tsRaid >= city.Value.tsTotal && city.Value.tsRaid > 4000)
-				{
-					++homeCount;
-				}
-			}
-			if (homeCount == 0)
-				return;
-			if (MainPage.instance.TipRaiding101.Show())
-			{
-				return;
-			}
-			if (homeCount < 2)
-				return;
-			if (!TipsSeen.instance.raiding2)
-			{
-				MainPage.ShowTipRaiding2();
-				return;
-			}
-			if (homeCount < 4)
-				return;
-			if (!TipsSeen.instance.raiding3)
-			{
-				MainPage.ShowTipRaiding3();
-				return;
-			}
-
-		}
+	
 
         //  static List<City> dummies = new List<City>();
 
@@ -952,9 +919,9 @@ namespace COTG.Game
 		{
 			return !(left == right);
 		}
-       
 
-        private string GetDebuggerDisplay()
+		
+		private string GetDebuggerDisplay()
         {
             return ToString();
         }
@@ -987,7 +954,7 @@ namespace COTG.Game
             foreach (var ttc in troopsHome)
             {
                 var type = ttBestDungeonType[ttc.type];
-                if (type >= (byte)DungeonType.water )
+                if (type > (byte)DungeonType.water )
                     continue;// todo: handle water
                 var ts = ttc.ts;
                 if (ts > bestTS)
@@ -1360,8 +1327,27 @@ namespace COTG.Game
         public static CityList[] all = Array.Empty<CityList>();
         public static CityList [] selections = new [] { allCities }; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
         internal const string sNewCities = "NewCities";
+		struct CityComparer : IComparer<City>
+		{
+			public int Compare(City x, City y)
+			{
+				var rv=string.Compare(x._cityName, y._cityName, true);
+				if (rv != 0)
+					return rv;
+				var xHasRemarks = (x.remarks!=null);
+				var yHasRemarks = (y.remarks!=null);
+				if (!xHasRemarks && !yHasRemarks)
+					return 0;
+				else if  (!xHasRemarks)
+						return 1;
+				else if  (!yHasRemarks)
+						return -1;
+				else 
+					return string.Compare(x.remarks, y.remarks, true); ;
+			}
+		}
 
-        public static ComboBox box => ShellPage.instance.cityListBox;
+		public static ComboBox box => ShellPage.instance.cityListBox;
         public static void SelectedChange()
         {
 
@@ -1388,7 +1374,7 @@ namespace COTG.Game
 					}
 					l = filtered;
 				}
-				l = l.OrderBy((a) => a._cityName).ToArray();
+				l = l.OrderBy((a) => a, new CityComparer()).ToArray();
 				ShellPage.instance.cityBox.ItemsSource = l;
 				SyncCityBox();
 				var reserveCartsFilter = DonationTab.reserveCarts;

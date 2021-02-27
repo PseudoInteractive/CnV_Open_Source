@@ -53,11 +53,32 @@
 				<CheckBox Content="Fetch Full Defense History"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  Margin="8" />
+				<controls:NumberBox  Header="Show Attacks Limit"
+									 Value="{x:Bind views:SettingsPage.showAttacksLimit,Mode=TwoWay}"
+									 SmallChange="1"
+									 ToolTipService.ToolTip="If there are more incoming attacks than this, only attacks for selected cities will be shown"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox  Header="Spot MRU count"
 									 Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
+				<ToggleSwitch  Header="Incoming visible"
+							   IsOn="{x:Bind views:SettingsPage.incomingAlwaysVisible, Mode=TwoWay}"
+							   Margin="4"
+							   OnContent="Always"
+							   OffContent="If Tab"
+							   ToolTipService.ToolTip="Allows you to always show incoming overlays (potentialy slower and more confusing) or to only show the overlays if an incoming tab is selected"
+							   />
+				<ToggleSwitch  Header="Outgoing visible"
+							   IsOn="{x:Bind views:SettingsPage.attacksAlwaysVisible, Mode=TwoWay}"
+							   Margin="4"
+							   OnContent="Always"
+							   OffContent="If Tab"
+							   ToolTipService.ToolTip="Allows you to always show outgoing overlays (potentialy slower and more confusing) or to only show the overlays if an ougoing tab is selected"
+							   />
+
 				<ToggleSwitch  Header="Stay Alive"
 							   IsOn="{x:Bind uiStayAlive, Mode=TwoWay}"
 							   Margin="4"

@@ -449,23 +449,62 @@ namespace COTG.Views
 
         public static bool IsVisible() => instance.isVisible;
 
+		public static void CheckTipRaiding()
+		{
+			if (Tips.seen.Contains(nameof(instance.TipRaiding101)) && Tips.seen.Contains(nameof(instance.TipRaiding301)) && Tips.seen.Contains(nameof(instance.TipResetRaids1)))
+				return;
+			int homeCount = 0;
+			foreach (var city in City.myCities)
+			{
+				if (city.tsRaid >= city.tsTotal && city.tsRaid > 4000)
+				{
+					++homeCount;
+				}
+			}
+			if (homeCount == 0)
+				return;
+			App.DispatchOnUIThreadSneakyLow(() =>
+		   {
+			   if (MainPage.instance.TipRaiding101.Show(nameof(MainPage.instance.TipRaiding101)))
+			   {
+				   return;
+			   }
+			   if (homeCount < 2)
+				   return;
+			   if (MainPage.instance.TipRaiding201.Show(nameof(MainPage.instance.TipRaiding201)))
+			   {
+				   return;
+			   }
+			   if (homeCount < 4)
+				   return;
+			   if (MainPage.instance.TipRaiding301.Show(nameof(MainPage.instance.TipRaiding301)))
+			   {
+				   return;
+			   }
+			   if (MainPage.instance.TipResetRaids1.Show(nameof(MainPage.instance.TipResetRaids1)))
+			   {
+				   return;
+			   }
+
+		   });
+		}
 
 
 
 
-        //static public void ShowTip(TeachingTip tip)
-        //{
-        //    if (seen || Tips.queued)
-        //        return;
-        //    Tips.Dispatch(tip, () => seen = true);
-        //}
-        //static public void ShowTipRaiding1()
-        //{
-        //    if (Tips.instance.raiding1 || Tips.tipQueued)
-        //        return;
-        //    instance.TipRaiding101.Show();
-        //}
-        private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		//static public void ShowTip(TeachingTip tip)
+		//{
+		//    if (seen || Tips.queued)
+		//        return;
+		//    Tips.Dispatch(tip, () => seen = true);
+		//}
+		//static public void ShowTipRaiding1()
+		//{
+		//    if (Tips.instance.raiding1 || Tips.tipQueued)
+		//        return;
+		//    instance.TipRaiding101.Show();
+		//}
+		private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
         {
             TipRaiding102.IsOpen = true;
         }
@@ -576,6 +615,12 @@ namespace COTG.Views
 			}
 		}
 
+		private void SelectAll(object sender, RoutedEventArgs e)
+		{
+			cityGrid.SelectAll();
+
+		}
+
 		//      static Dungeon lastTooltip;
 		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
@@ -595,7 +640,7 @@ namespace COTG.Views
 		//      }
 	}
 
-    public class CustomDataBindingCompleteCommand : DataGridCommand
+	public class CustomDataBindingCompleteCommand : DataGridCommand
     {
         public CustomDataBindingCompleteCommand()
         {
@@ -622,7 +667,7 @@ namespace COTG.Views
             MainPage.instance.castles.Text= $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
             MainPage.instance.water.Text= $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
         }
-
 		
+
 	}
 }

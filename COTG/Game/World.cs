@@ -386,7 +386,7 @@ namespace COTG.Game
 							var isCastle0 = d0 & typeCityFlagCastle;
 							var isCastle1 = d1 & typeCityFlagCastle;
 							// castle change or size change or handover  Dodo:  differentiate this two
-							color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xA0 : 0x60);
+							color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xA0u : 0x60u);
 						}
 						else if (alliance0 == Alliance.myId)
 						{

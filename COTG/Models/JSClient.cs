@@ -1226,7 +1226,7 @@ namespace COTG
 				//   Log(City.all.Count());
 
 			}
-			City.CheckTipRaiding();
+			MainPage.CheckTipRaiding();
 
 			// Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
