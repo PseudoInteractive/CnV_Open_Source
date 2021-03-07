@@ -326,7 +326,8 @@ namespace COTG.Views
 		}
 
 		private static string _versionDescription;
-		
+		public static bool incomingAlwaysVisible;
+		public static bool attacksAlwaysVisible;
 
 		public string VersionDescription
 		{

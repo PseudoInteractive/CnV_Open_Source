@@ -39,14 +39,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.2.1-rc">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <Folder Include="node_modules\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="node_modules\" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.2.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 

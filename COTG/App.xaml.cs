@@ -95,8 +95,8 @@ namespace COTG
 			Resuming += App_Resuming;
 			Suspending += App_Suspending;
 			
-			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-				   typeof(Analytics), typeof(Crashes));
+			//AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+			//	   typeof(Analytics), typeof(Crashes));
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
@@ -188,7 +188,7 @@ namespace COTG
 
 		private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
 		{
-			//    Trace("LeavingBackground");
+			Trace("LeavingBackground");
 			isForeground = true;
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
@@ -447,9 +447,12 @@ namespace COTG
 			}
 			await ActivationService.ActivateAsync(args);
 			OnLaunchedOrActivated(args as LaunchActivatedEventArgs);
-			//AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-			//   typeof(Analytics), typeof(Crashes));
 
+			if (!AppCenter.Configured)
+			{
+				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+				   typeof(Analytics), typeof(Crashes));
+			}
 
 
 			//var configuration = new ConfigurationBuilder()
@@ -570,6 +573,13 @@ namespace COTG
 				action(null);
 			else
 				d.RunIdleAsync( action);
+		}
+
+
+		public static void DispatchOnUIThreadIdle(IdleDispatchedHandler action)
+		{
+			var d = GlobalDispatcher();
+			d.RunIdleAsync(action);
 		}
 
 		public static async Task DispatchOnUIThreadSneakyTask(DispatchedHandler action)
@@ -1093,12 +1103,13 @@ namespace COTG
 				Log(ex);
 			}
 		}
-		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
+		public static  void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
 		{
 			if (ob != null)
 			{
-				ShellPage.keyboardProxy.Focus(FocusState.Keyboard);
-				ob.Focus(FocusState.Keyboard);
+				ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
+
+				App.DispatchOnUIThreadIdle( (_) => ob.Focus(FocusState.Programmatic) );
 			}
 		}
 		static string lastTip;

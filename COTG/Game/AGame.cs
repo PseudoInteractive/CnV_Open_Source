@@ -706,7 +706,7 @@ namespace COTG
 				SpriteAnim.flagPinned.Load();
 
 				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
-				worldBackground = LoadMaterial("Art/world");
+				worldBackground = LoadMaterial($"Art/world{(JSClient.world switch { 23 => "23" , _ => "22"})}");
 				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
 
@@ -1363,8 +1363,8 @@ namespace COTG
 
 					if (!focusOnCity)
 					{
-						var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible();
-						var outgoingVisible = OutgoingTab.IsVisible();
+						var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible() ||SettingsPage.incomingAlwaysVisible;
+						var outgoingVisible = OutgoingTab.IsVisible() ||SettingsPage.attacksAlwaysVisible;
 						{
 							if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
 							{

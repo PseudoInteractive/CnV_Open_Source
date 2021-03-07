@@ -243,7 +243,7 @@
 				<Button.Resources>
 					<winui:TeachingTip x:Name="TipResetRaids1"
 						   x:FieldModifier="public"
-						   Title="Reaet Raids Tip"
+						   Title="Reset Raids Tip"
 						   Target="{x:Bind cityGrid}"
 						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
 					</winui:TeachingTip> 
@@ -387,9 +387,9 @@
 						   CloseButtonClick="TipRaiding101_ActionButtonClick"
 						   CloseButtonContent="Got It"
 						   PreferredPlacement="LeftTop"
-						   Subtitle="Select the [plus sign next to a city and it will expand to show recommended raids">
+						   Subtitle="Select the plus sign next to a city to show show recommended raids">
 			<TextBlock  TextWrapping="Wrap">
-                The 'tsRaid' column header will sort your cities by TS at home, allowing you to see which cities have the most idle troops.<LineBreak />
+               Tap the 'tsRaid' column header to sort your cities by troops at home, this allows you to only deal with cities that have enough idle troops at home to raid.<LineBreak />
 			</TextBlock>
 		</winui:TeachingTip>
 

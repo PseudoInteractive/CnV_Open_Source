@@ -817,17 +817,29 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/Tiles/winter/watertiles_n.png
 
-#begin Art/world.dds
+#begin Art/world22.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
+/processorParam:GenerateMipmaps=True
 /processorParam:PremultiplyAlpha=False
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
-/processorParam:TextureFormat=NoChange
-/build:Art/world.dds
+/processorParam:TextureFormat=Compressed
+/build:Art/world22.png
+
+#begin Art/world23.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=True
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Compressed
+/build:Art/world23.png
 
 #begin Audio/music0.ogg
 /importer:OggImporter

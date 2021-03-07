@@ -11,7 +11,7 @@ namespace COTG.Game
 {
 	public class APlayfab
 	{
-		static string titleId => JSClient.world == 22 ? "2B907" : "1DBCE";
+		static string titleId => JSClient.world switch { 22 => "2B907", 23 => "97E7D",  _=> "1DBCE" };
 		static PlayFabAuthenticationContext authenticationContext;
 		static LoginResult login;
 		public static string GetClientId()
@@ -100,88 +100,88 @@ namespace COTG.Game
 						//return;
 					}
 				}
-				// wait until our alliance is fetched
-				while(!Alliance.diplomacyFetched)
-				{
-					await Task.Delay(2500);
-				}
+				//// wait until our alliance is fetched
+				//while(!Alliance.diplomacyFetched)
+				//{
+				//	await Task.Delay(2500);
+				//}
 			
-				{ 
-					var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-					if (group.Error != null)
-					{
-						Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
-						// group does not exist?
-						var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-						if (hr.Error != null)
-						{
-							Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
+				//{ 
+				//	var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//	if (group.Error != null)
+				//	{
+				//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
+				//		// group does not exist?
+				//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//		if (hr.Error != null)
+				//		{
+				//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
 
-						}
-						else
-						{
-							//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
-							//   hr.Result.
-						}
-
-
-					}
-					else
-					{
-						var hr = await PlayFabGroupsAPI.ListMembershipAsync(new PlayFab.GroupsModels.ListMembershipRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
-
-					}
-					// create a character for this world
-					//foreach(var ch in login.InfoResultPayload.CharacterList)
-					//{
-					//	ch.
-					//}
-
-				}
-				{
-					var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, 
-						GroupName = $"W{JSClient.world}" });
-					if (group.Error != null)
-					{
-						Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
-						// group does not exist?
-						var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-						if (hr.Error != null)
-						{
-							Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
-
-						}
-						else
-						{
-							//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
-							//   hr.Result.
-						}
+				//		}
+				//		else
+				//		{
+				//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+				//			//   hr.Result.
+				//		}
 
 
-					}
-					else
-					{
-						//var hr = await PlayFabGroupsAPI.ListGroupMembersAsync(new PlayFab.GroupsModels.ListGroupMembersRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
-						//if(hr.Error!=null)
-						//{
-						//	Log(hr.Error);
-						//}
-						//else
-						//{
-						//	foreach(var r in hr.Result.Members)
-						//	{
+				//	}
+				//	else
+				//	{
+				//		var hr = await PlayFabGroupsAPI.ListMembershipAsync(new PlayFab.GroupsModels.ListMembershipRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
 
-						//	}
-						//}
+				//	}
+				//	// create a character for this world
+				//	//foreach(var ch in login.InfoResultPayload.CharacterList)
+				//	//{
+				//	//	ch.
+				//	//}
 
-					}
-					// create a character for this world
-					//foreach(var ch in login.InfoResultPayload.CharacterList)
-					//{
-					//	ch.
-					//}
+				//}
+				//{
+				//	var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, 
+				//		GroupName = $"W{JSClient.world}" });
+				//	if (group.Error != null)
+				//	{
+				//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
+				//		// group does not exist?
+				//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//		if (hr.Error != null)
+				//		{
+				//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
 
-				}
+				//		}
+				//		else
+				//		{
+				//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+				//			//   hr.Result.
+				//		}
+
+
+				//	}
+				//	else
+				//	{
+				//		//var hr = await PlayFabGroupsAPI.ListGroupMembersAsync(new PlayFab.GroupsModels.ListGroupMembersRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
+				//		//if(hr.Error!=null)
+				//		//{
+				//		//	Log(hr.Error);
+				//		//}
+				//		//else
+				//		//{
+				//		//	foreach(var r in hr.Result.Members)
+				//		//	{
+
+				//		//	}
+				//		//}
+
+				//	}
+				//	// create a character for this world
+				//	//foreach(var ch in login.InfoResultPayload.CharacterList)
+				//	//{
+				//	//	ch.
+				//	//}
+
+				//}
 			}
 			catch (Exception _exception)
 			{

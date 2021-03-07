@@ -421,7 +421,10 @@ namespace COTG.Views
                         {
                             // add to all tabs
                             ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
-                            ChatTab.GetWhisperTab(ch.player, true).Post(ch);
+							var prior = FocusManager.GetFocusedElement();
+							Log(prior.GetType());
+
+							ChatTab.GetWhisperTab(ch.player, (prior as TextBox == null) ).Post(ch);
                             // ChatTab.whisper.Post(ch);
                             //       ChatTab.alliance.Post(ch);
                             //       ChatTab.officer.Post(ch);
