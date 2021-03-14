@@ -20,7 +20,7 @@ namespace COTG.Game
         public string name => city.nameAndRemarks;
         public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
         public int cid => city.cid;
-        public int raidReturn => city.raidReturn.RoundToInt();
+        public string raidReturn => city.raidReturn;
         public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefHome;
         public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings

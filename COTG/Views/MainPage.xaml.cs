@@ -449,44 +449,33 @@ namespace COTG.Views
 
         public static bool IsVisible() => instance.isVisible;
 
+		static string[] raidingTips =
+		{
+			nameof(instance.TipRaiding101),
+			nameof(instance.TipRaiding103),
+			nameof(instance.TipRaiding103),
+			nameof(instance.TipRaidReturn101),
+			nameof(instance.TipRaidReturn102),
+			nameof(instance.TipRaidReturn103),
+			nameof(instance.TipRaidReturn104),
+			nameof(instance.TipCarryCapacity101),
+
+
+
+		};
+
 		public static void CheckTipRaiding()
 		{
-			if (Tips.seen.Contains(nameof(instance.TipRaiding101)) && Tips.seen.Contains(nameof(instance.TipRaiding301)) && Tips.seen.Contains(nameof(instance.TipResetRaids1)))
-				return;
-			int homeCount = 0;
-			foreach (var city in City.myCities)
-			{
-				if (city.tsRaid >= city.tsTotal && city.tsRaid > 4000)
-				{
-					++homeCount;
-				}
-			}
-			if (homeCount == 0)
-				return;
-			App.DispatchOnUIThreadSneakyLow(() =>
-		   {
-			   if (MainPage.instance.TipRaiding101.Show(nameof(MainPage.instance.TipRaiding101)))
-			   {
-				   return;
-			   }
-			   if (homeCount < 2)
-				   return;
-			   if (MainPage.instance.TipRaiding201.Show(nameof(MainPage.instance.TipRaiding201)))
-			   {
-				   return;
-			   }
-			   if (homeCount < 4)
-				   return;
-			   if (MainPage.instance.TipRaiding301.Show(nameof(MainPage.instance.TipRaiding301)))
-			   {
-				   return;
-			   }
-			   if (MainPage.instance.TipResetRaids1.Show(nameof(MainPage.instance.TipResetRaids1)))
-			   {
-				   return;
-			   }
+			//foreach(var t in raidingTips)
+			//{
+			//	if(!Tips.seen.Contains(t))
+			//	{
+			//		var tt = instance.GetType().GetField(t).GetValue(instance) as TeachingTip;
+			//		App.DispatchOnUIThreadLow(()=>tt.Show(t,4000) );
+			//		return;
+			//	}
+			//}
 
-		   });
 		}
 
 
@@ -504,11 +493,7 @@ namespace COTG.Views
 		//        return;
 		//    instance.TipRaiding101.Show();
 		//}
-		private void TipRaiding101_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-        {
-            TipRaiding102.IsOpen = true;
-        }
-        //static public void ShowTipRaiding2()
+		//static public void ShowTipRaiding2()
         //{
         //    if (!Tips.instance.raiding1 || Tips.instance.raiding2 || Tips.tipQueued)
         //        return;
@@ -531,15 +516,7 @@ namespace COTG.Views
 
 		}
 
-		private void TipRaiding202_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-        {
-            TipRaiding203.IsOpen = true;
-        }
-
-        private void TipRaiding201_ActionButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-        {
-            TipRaiding201.IsOpen = true;
-        }
+		
 
         private async void ResetRaids(object sender, RoutedEventArgs e)
         {

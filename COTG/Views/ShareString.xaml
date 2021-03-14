@@ -18,11 +18,11 @@
 	<ContentDialog.Resources>
 
 
-		<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem">
+		<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem" >
 			<winui:TreeViewItem ItemsSource="{x:Bind children}" >
 				<StackPanel Orientation="Horizontal" Margin="4">
-				
-					<TextBlock Text="{x:Bind title}"/>
+
+					<TextBlock Text="{x:Bind label}"/>
 				</StackPanel>
 			</winui:TreeViewItem>
 		</DataTemplate>
@@ -34,14 +34,14 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
 		<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
 			<tk:WrapPanel  Orientation="Horizontal">
-				<TextBox x:Name="title" Header="Title"  />
+				<TextBox x:Name="title" Header="Title" TextChanged="title_TextChanged"  />
 				<TextBox x:Name="path" Header="path"  />
-				<TextBox x:Name="notes" Header="Notes" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
 				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
 			</tk:WrapPanel>
 		</Border>
@@ -57,6 +57,13 @@
 			</tk:WrapPanel>
 		</Border>
 		<Border Grid.Row="3" Style="{StaticResource BorderReveal}">
+			<tk:WrapPanel Grid.Row="3" x:Name="tagsPanel" x:FieldModifier="public">
+				<ToggleSwitch x:Name="applyTags" Header="Tags" OffContent="Leave" OnContent="Set" ToolTipService.ToolTip="If set, the city tags will be replaced with those defined in the layout"  />
+
+			</tk:WrapPanel>
+		</Border>
+
+		<Border Grid.Row="4" Style="{StaticResource BorderReveal}">
 			<winui:TreeView x:Name="zoom" SelectionMode="Single" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" 
 							BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
 						TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplate="{StaticResource ShareItemTemplate}"

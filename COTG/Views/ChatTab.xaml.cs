@@ -477,27 +477,27 @@ namespace COTG.Views
 
 
 
-        private async void MarkdownTextBlock_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            var msg = sender as MarkdownTextBlock;
+        //private async void MarkdownTextBlock_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        //{
+        //    e.Handled = true;
+        //    var msg = sender as MarkdownTextBlock;
             
-            var ll = await Avatarslate.TouchAsync();
-            var langs = await ll.GetLanguagesAsync();
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                var fly = new MenuFlyout();
-                var i = fly.Items;
-                foreach (var l in langs)
-                {
-                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
-                    item.CommandParameter = item;
-                    i.Add(item);
-                }
-                fly.CopyXamlRoomFrom(msg);
-                fly.ShowAt(msg, e.GetPosition(msg));
-            });
-        }
+        //    var ll = await Avatarslate.TouchAsync();
+        //    var langs = await ll.GetLanguagesAsync();
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        var fly = new MenuFlyout();
+        //        var i = fly.Items;
+        //        foreach (var l in langs)
+        //        {
+        //            MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+        //            item.CommandParameter = item;
+        //            i.Add(item);
+        //        }
+        //        fly.CopyXamlRoomFrom(msg);
+        //        fly.ShowAt(msg, e.GetPosition(msg));
+        //    });
+        //}
 
         //private async void input_Tapped(object sender, TappedRoutedEventArgs e)
         //{
@@ -549,49 +549,49 @@ namespace COTG.Views
         //    });
         //}
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var msg = sender as Button;
-            var ll = await Avatarslate.TouchAsync();
-            var langs = await Avatarslate.GetLanguagesAsync();
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                var fly = new MenuFlyout();
-                var i = fly.Items;
-                foreach (var l in langs)
-                {
-                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = input };
-                    item.CommandParameter = item;
-                    i.Add(item);
-                }
-                fly.CopyXamlRoomFrom(msg);
-                fly.ShowAt(msg);
-            });
-        }
+        //private async void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var msg = sender as Button;
+        //    var ll = await Avatarslate.TouchAsync();
+        //    var langs = await Avatarslate.GetLanguagesAsync();
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        var fly = new MenuFlyout();
+        //        var i = fly.Items;
+        //        foreach (var l in langs)
+        //        {
+        //            MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = input };
+        //            item.CommandParameter = item;
+        //            i.Add(item);
+        //        }
+        //        fly.CopyXamlRoomFrom(msg);
+        //        fly.ShowAt(msg);
+        //    });
+        //}
 
-        private async void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
-        {
+        //private async void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        //{
 
-            //            e.Handled = true;
-            var date = sender as TextBlock;
-            var msg = date.Tag as MarkdownTextBlock;
+        //    //            e.Handled = true;
+        //    var date = sender as TextBlock;
+        //    var msg = date.Tag as MarkdownTextBlock;
            
-            var ll = await Avatarslate.TouchAsync();
-            var langs = await ll.GetLanguagesAsync();
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                var fly = new MenuFlyout();
-                var i = fly.Items;
-                foreach (var l in langs)
-                {
-                    MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
-                    item.CommandParameter = item;
-                    i.Add(item);
-                }
-                fly.CopyXamlRoomFrom(date);
-                fly.ShowAt(date, e.GetPosition(date));
-            });
-        }
+        //    var ll = await Avatarslate.TouchAsync();
+        //    var langs = await ll.GetLanguagesAsync();
+        //    App.DispatchOnUIThreadSneaky(() =>
+        //    {
+        //        var fly = new MenuFlyout();
+        //        var i = fly.Items;
+        //        foreach (var l in langs)
+        //        {
+        //            MenuFlyoutItem item = new MenuFlyoutItem() { Text = l, Command = Avatarslate.instance, Tag = msg };
+        //            item.CommandParameter = item;
+        //            i.Add(item);
+        //        }
+        //        fly.CopyXamlRoomFrom(date);
+        //        fly.ShowAt(date, e.GetPosition(date));
+        //    });
+        //}
 
         private void input_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -602,7 +602,7 @@ namespace COTG.Views
         {
             //           Log("Tapped");
             listView.Focus(FocusState.Programmatic);
-			input.Focus(FocusState.Programmatic);
+			App.DispatchOnUIThread(()=>input.Focus(FocusState.Programmatic) );
         }
 
 		
@@ -610,10 +610,22 @@ namespace COTG.Views
 		private void Copy_Click(object sender, RoutedEventArgs e)
 		{
 			var sb = new StringBuilder();
-			foreach(var _i in listView.SelectedItems)
+			var sel = listView.SelectedItems;
+			if (sel.Any())
 			{
-				var i = _i as ChatEntry;
-				sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
+				foreach (var _i in sel)
+				{
+					var i = _i as ChatEntry;
+					sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
+				}
+			}
+			else
+			{
+				foreach (var _i in items)
+				{
+					var i = _i as ChatEntry;
+					sb.Append($"{i.arrivedString}:{i.player}:{i.text}\n");
+				}
 
 			}
 			App.CopyTextToClipboard(sb.ToString());

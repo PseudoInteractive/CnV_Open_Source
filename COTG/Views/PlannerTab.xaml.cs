@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using COTG.Draw;
+using COTG.Game;
+using COTG.JSON;
 
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 using static COTG.Debug;
 using static COTG.Game.City;
-using COTG.Game;
-using COTG.JSON;
 using static COTG.Game.Enum;
-using COTG.Draw;
 
 namespace COTG.Views
 {
@@ -254,7 +241,6 @@ namespace COTG.Views
 			App.DispatchOnUIThreadLow(UpdateStats);
 		}
 
-
 		private void ShareStringClick(object sender, RoutedEventArgs e)
 		{
 			ShareString.Show();
@@ -269,5 +255,94 @@ namespace COTG.Views
 		{
 			GetBuild().FlipLayoutV();
 		}
+
+		private void SmartRearrange(object sender, RoutedEventArgs e)
+		{
+			var build = City.GetBuild();
+
+			var bdc = City.buildingsCache;
+			var bds = build.buildings;
+
+			int sorcTowers = 0;
+			int academies = 0;
+			int resHelpers = 0;
+			{
+				for (int id = 0; id < City.citySpotCount; ++id)
+				{
+					var bid = bdc[id].bid;
+					if (bid == bidMage_tower)
+						++sorcTowers;
+					else if (bid == bidAcademy)
+						++academies;
+					else if (bid == bidSawmill || bid == bidWindmill || bid == bidStonemason || bid == bidSawmill)
+					{
+						++resHelpers;
+					}
+
+				}
+			}
+
+			for (int x = span0; x <= span1; ++x)
+			{
+				for (int y = span0; y <= span1; ++y)
+				{
+					var bdId = XYToId((x, y));
+					var bd = bdc[bdId];
+					// correct building is here, leave it
+					if (bds[bdId].id == bd.id)
+						continue;
+
+					var bdBid = bd.bid;
+					if (bdBid == bidCastle || (bdBid == bidMage_tower && sorcTowers == 1) || (bdBid == bidAcademy && academies == 1) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && resHelpers == 0))
+					{
+						bool foundOne = false;
+						// is there a building that we can re-use?
+						for (int id = 0; id < City.citySpotCount; ++id)
+						{
+							var b = bds[id];
+							if (b.bid == bdBid && b.id != bdc[id].id)
+							{
+								foundOne = true;
+								if (id != bdId)
+								{
+									Note.Show($"Found existing {bd.def.Bn}, moving");
+									AUtil.Swap(ref bdc[bdId], ref bdc[id]);
+								}
+							}
+						}
+
+						if (!foundOne && bds[bdId].isRes)
+						{
+							// move to a non res spot
+							for (int r = 1; ; ++r)
+							{
+								for (int x0 = span0.Max(x - r); x0 <= span1.Min(x + r); ++x0)
+								{
+									for (int y0 = span0.Max(y - r); y0 <= span1.Min(y + r); ++y0)
+									{
+										var id1 = XYToId((x0, y0));
+										if (bds[id1].isEmpty && (bdc[id1].isEmpty || bdc[id1].isRes))
+										{
+											Note.Show($"Moving {bd.def.Bn} from a res node to an empty spot");
+											AUtil.Swap(ref bdc[bdId], ref bdc[id1]);
+											foundOne = true;
+											break;
+										}
+										if (foundOne)
+											break;
+									}
+									if (foundOne)
+										break;
+								}
+								if (foundOne)
+									break;
+							}
+						}
+					}
+				}
+			}
+			CityView.BuildingsOrQueueChanged();
+		}
+
 	}
 }

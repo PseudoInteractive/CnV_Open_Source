@@ -407,19 +407,26 @@ namespace COTG.Services
 			
 			if (!await Touch())
 				return rv;
-
-			using (FeedIterator<PlayerPresenceDB> feedIterator = presenceContainer.GetItemLinqQueryable<PlayerPresenceDB>().ToFeedIterator() ) 
-			
+			await throttle.WaitAsync();
+			try
 			{
-				while (feedIterator.HasMoreResults)
+				using (FeedIterator<PlayerPresenceDB> feedIterator = presenceContainer.GetItemLinqQueryable<PlayerPresenceDB>().ToFeedIterator())
+
 				{
-					foreach (var item in await feedIterator.ReadNextAsync())
+					while (feedIterator.HasMoreResults)
 					{
-						rv.Add(item);
+						foreach (var item in await feedIterator.ReadNextAsync())
+						{
+							rv.Add(item);
+						}
 					}
 				}
+				return rv;
 			}
-			return rv;
+			finally
+			{
+				throttle.Release();
+			}
 		}
 
 	

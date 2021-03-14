@@ -59,7 +59,7 @@ namespace COTG.Game
             // lower is better
             var rv = dist;
             if (bestDungeonType != type)
-                rv += 6; // penalty of 4 spaces for wrong type
+                rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
             return rv;
         }
 		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)

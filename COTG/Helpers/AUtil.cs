@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
 namespace COTG
 {

@@ -17815,6 +17815,9 @@ function outer(){
 		}
 		
 
+  
+
+
 		window['setPlayerGlobals'] = function(token:string, cookie:string, _cid:string)
 		{
 			let savedPpdt = ppdt;
@@ -18627,6 +18630,10 @@ function outer(){
 		onResumePoll.push(window['cityRefresh']);
 		return;
 	}
+	{
+		let wrapper = { ppdt: ppdt };
+		 window['external']['notify'](JSON.stringify(wrapper));
+   }
 	if(cid==0)
 	 return;
 
@@ -22895,11 +22902,18 @@ function outer(){
 			window['external']['notify'](JSON.stringify(wrapper));
 
 		}
+
 		function __log(message:string) {
 			const wrapper = { error: "cotg_wtf: " + message }
 			window['external']['notify'](JSON.stringify(wrapper));
 
 		}
+		function LogBuildQueueFull() {
+			const wrapper = { error: "Build queue full" }
+			window['external']['notify'](JSON.stringify(wrapper));
+
+		}
+
 
 		var i9 = __s['6163' | 3];
 
@@ -44249,6 +44263,7 @@ function outer(){
 						
 					} else if (e5w == 1) Y6(__s[6910]);
 					else if (e5w == 2) Y6(__s[4507]);
+					else if (e5w == 4) LogBuildQueueFull();
 					else __log("Upgrade " +e5w );
 					
 					buildEx(__cid,iter+1, queue);		
@@ -54170,7 +54185,10 @@ function outer(){
 														city = JSON.parse(s7w);
 													}
 												}
-												else { __log("build " + s7w); }
+												else if (s7w == 4)
+				{
+						LogBuildQueueFull(); 
+				} else { __log("build " + s7w); }
 
 												buildEx(__cid,iter+1, queue);
 												return;
@@ -54206,7 +54224,9 @@ function outer(){
 														city = JSON.parse(s7w);
 													}
 												}
-												else { __log("build " + s7w); }
+												else if (s7w == 4) { 
+										LogBuildQueueFull(); }
+			else { __log("build " + s7w); }
 
 												buildEx(__cid,iter+1, queue);
 												return;
@@ -54250,7 +54270,11 @@ function outer(){
 													
 													}
 												}
-												else
+												else if(s7w==4)
+											  {
+												  LogBuildQueueFull();
+											  }
+											 else
 												{
 														__log("downgrade " + s7w); 
 												}
@@ -54287,8 +54311,13 @@ function outer(){
 														city = JSON.parse(s7w);
 													
 													}
-												}else
-												{
+												}
+											else if( s7w == 4)
+											  {
+												  LogBuildQueueFull();
+											  }
+											 else
+											{
 														__log("demo " + s7w); 
 												}
 										buildEx(__cid,iter+1, queue);

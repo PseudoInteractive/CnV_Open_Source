@@ -18,7 +18,7 @@ using System.Web;
 using Windows.System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Extensions;
+using Microsoft.Toolkit;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
 
@@ -106,15 +106,15 @@ namespace COTG.JSON
 		//	return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
 			
 		//}
-		public void ApplyOnUIThread(int cid)
-		{
-			if (cid == City.build)
-				City.buildQueue.Add(this);
+		//public void ApplyOnUIThread(int cid)
+		//{
+		//	if (cid == City.build)
+		//		City.buildQueue.Add(this);
 			
-			JSClient.JSInvoke("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			if (cid == City.build)
-				CityView.BuildingsOrQueueChanged();
-		}
+		//	JSClient.JSInvoke("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
+		//	if (cid == City.build)
+		//		CityView.BuildingsOrQueueChanged();
+		//}
 
 		public override bool Equals(object obj)
 		{
@@ -311,7 +311,7 @@ namespace COTG.JSON
 										else if (i.def.bid == City.bidCastle)
 										{
 											// TODO: check res
-											var bd = city.CountBuildingWithoutQueue();
+											var bd = city.CountBuildingsWithoutQueue();
 											// cannot queue if there is no room, even if there is a demo in progress
 											if (bd.count >= bd.max)
 											{
@@ -322,6 +322,7 @@ namespace COTG.JSON
 											}
 
 										}
+										
 										// is there a building in the way?
 										// wait for the demo
 										if (i.bspot != City.bspotWall)
@@ -405,6 +406,26 @@ namespace COTG.JSON
 									Serialize(ref sb, i, ref qFirst);
 									--commandsToQueue;
 
+								}
+								// Are we blocked?
+								var counts = City.CountBuildings(cid,cotgQ.span);
+								if (counts.count >= counts.max && cotgQLength <= City.safeBuildQueueLength)
+								{
+									// search for a command that will increase building limit (townhall) or reduce building count (demo)
+									var tOffset = offset;
+
+									while (tOffset < queue.count)
+									{
+										var i = queue.v[tOffset];
+										if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && !i.def.isTower))
+										{
+											RemoveAt(tOffset);
+											if (cid == City.build)
+												City.buildQueue.Add(i);
+											Serialize(ref sb, i, ref qFirst);
+											break;
+										}
+									}
 								}
 
 								if (!qFirst)
@@ -552,7 +573,24 @@ namespace COTG.JSON
 
 		public  void Enqueue(BuildQueueItem op)
 		{
-			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
+			if (cid == City.build && !SettingsPage.deferredBuild)
+			{
+				// build immediately
+				StringBuilder sb = new StringBuilder();
+
+				sb.Append($"{{\"{cid}\":[");
+				var qFirst = true;
+				Serialize(ref sb, op, ref qFirst);
+				sb.Append("]}");
+
+
+				JSClient.JSInvoke("buildex", new[] { sb.ToString() });
+				CityView.BuildingsOrQueueChanged();
+
+				return;
+			}
+
+				CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
 			queue.Add(op);
 			if(cid==City.build)
 				CityView.BuildingsOrQueueChanged();

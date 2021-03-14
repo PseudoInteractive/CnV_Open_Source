@@ -67,7 +67,8 @@ namespace COTG.Views
 					Game.City.CitiesChanged();
 					JSClient.JSInvoke("cityRefresh", null);
 				}
-                VisibilityChanged(true);  // close enough default behaviour
+
+				VisibilityChanged(true);  // close enough default behaviour
             }
         }
         public void SetPlus(bool set)

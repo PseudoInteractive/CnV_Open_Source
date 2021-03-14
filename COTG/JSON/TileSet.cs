@@ -81,9 +81,10 @@ namespace COTG.JSON
 			// remove names layer
 			instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
 			//  await canvas.RunOnGameLoopThreadAsync( async () =>
-			//if (prior != null)
-			//{
-			//	//Assert(false);
+			if (prior != null)
+			{
+	//			Assert(false);
+			}
 			//	var count = prior.Length;
 			//	for (int i = 0; i < count; ++i)
 			//	{
@@ -109,6 +110,7 @@ namespace COTG.JSON
 						tileSet.z = AGame.zLand;
 						tileSet.wantShadow = false;
 						tileSet.isBase = true;
+						
 						break;
 					case "water":
 						tileSet.z = AGame.zWaterBase;
@@ -138,26 +140,31 @@ namespace COTG.JSON
 					case "land":
 						{
 							layer.isBase = true;
+							layer.id = 1;
 							break;
 						}
 					case "water":
 						{
 							layer.isBase = true;
+							layer.id = 2;
 							break;
 						}
 					case "cities":
 						{
 							layer.wantShadow = true;
+							layer.id = 3;
 							break;
 						}
 					case "numbers":
 						{
 							layer.wantShadow = true;
+							layer.id = 4;
 							break;
 						}
 					case "labels":
 						{
 							layer.wantShadow = false;
+							layer.id = 5;
 							break;
 						}
 				}

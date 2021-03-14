@@ -18049,6 +18049,10 @@ function outer() {
                 onResumePoll.push(window['cityRefresh']);
                 return;
             }
+            {
+                let wrapper = { ppdt: ppdt };
+                window['external']['notify'](JSON.stringify(wrapper));
+            }
             if (cid == 0)
                 return;
             bqInFlight = 0;
@@ -20406,6 +20410,10 @@ function outer() {
         }
         function __log(message) {
             const wrapper = { error: "cotg_wtf: " + message };
+            window['external']['notify'](JSON.stringify(wrapper));
+        }
+        function LogBuildQueueFull() {
+            const wrapper = { error: "Build queue full" };
             window['external']['notify'](JSON.stringify(wrapper));
         }
         var i9 = __s['6163' | 3];
@@ -41547,6 +41555,8 @@ function outer() {
                         Y6(__s[6910]);
                     else if (e5w == 2)
                         Y6(__s[4507]);
+                    else if (e5w == 4)
+                        LogBuildQueueFull();
                     else
                         __log("Upgrade " + e5w);
                     buildEx(__cid, iter + 1, queue);
@@ -50508,6 +50518,9 @@ function outer() {
                                                 city = JSON.parse(s7w);
                                             }
                                         }
+                                        else if (s7w == 4) {
+                                            LogBuildQueueFull();
+                                        }
                                         else {
                                             __log("build " + s7w);
                                         }
@@ -50543,6 +50556,9 @@ function outer() {
                                             if (__cid === cid) {
                                                 city = JSON.parse(s7w);
                                             }
+                                        }
+                                        else if (s7w == 4) {
+                                            LogBuildQueueFull();
                                         }
                                         else {
                                             __log("build " + s7w);
@@ -50582,6 +50598,9 @@ function outer() {
                                                 city = JSON.parse(s7w);
                                             }
                                         }
+                                        else if (s7w == 4) {
+                                            LogBuildQueueFull();
+                                        }
                                         else {
                                             __log("downgrade " + s7w);
                                         }
@@ -50615,6 +50634,9 @@ function outer() {
                                         if (__cid === cid) {
                                             city = JSON.parse(s7w);
                                         }
+                                    }
+                                    else if (s7w == 4) {
+                                        LogBuildQueueFull();
                                     }
                                     else {
                                         __log("demo " + s7w);
@@ -68934,6 +68956,7 @@ function avactor() {
     console.log("here");
     popupSizeDirty = true;
     callSyncViewMode();
+    document.getElementById("chatDiv").style.display = "none";
     window['alliancelink'] = gspotfunct.alliancelink;
     window['infoPlay'] = gspotfunct.infoPlay;
     window['shCit'] = gspotfunct.shCit;

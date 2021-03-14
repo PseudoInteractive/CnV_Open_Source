@@ -22,27 +22,28 @@ namespace COTG.Helpers
 
         public static bool Show(this Microsoft.UI.Xaml.Controls.TeachingTip tip,string name,int delay=0)
         {
-			if (activeTip != null)
-				return false;
-			
-			if (seen.Contains(name))
-				return false;
-			activeTip = name;
-			tip.Closed -= Tip_Closed;
-			tip.Closed += Tip_Closed;
-			if (delay == 0)
-			{
-				seen.Add(name);
-				tip.IsOpen = true;
-				return true;
-			}
+			//if (activeTip != null)
+			//	return false;
 
-            if (queued!=null)
-                return true;
+			//if (seen.Contains(name))
+			//	return false;
+			//activeTip = name;
+			//tip.Closed -= Tip_Closed;
+			//tip.Closed += Tip_Closed;
+			//if (delay == 0)
+			//{
+			//	seen.Add(name);
+			//	tip.IsOpen = true;
+			//	return true;
+			//}
 
-            queued =tip;
-            App.QueueIdleTask(ShowTip, delay);
-            return true;
+			//         if (queued!=null)
+			//             return true;
+
+			//         queued =tip;
+			//         App.QueueIdleTask(ShowTip, delay);
+			//         return true;
+			return true;
         }
 
 		private static void Tip_Closed(Microsoft.UI.Xaml.Controls.TeachingTip sender, Microsoft.UI.Xaml.Controls.TeachingTipClosedEventArgs args)

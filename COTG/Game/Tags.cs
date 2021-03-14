@@ -46,7 +46,45 @@ namespace COTG.Game
 			}
 			
 		}
+		public static string SetTag(string src, string tag, bool isOn)
+		{
+			var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);
+			if (isOn)
+			{
+				if (exists)
+					return src;
+				else
+				{
+					// add it
+					if (src.Length > 0)
+						src += " ";
+					return src + tag;
+				}
+			}
+			else
+			{
+				if (exists)
+				{
+					src = src.Replace(tag + " ", "", StringComparison.OrdinalIgnoreCase);
+					src = src.Replace(" " + tag, "", StringComparison.OrdinalIgnoreCase);
+					src = src.Replace(tag, "", StringComparison.OrdinalIgnoreCase);
+					return src;
+				}
+				else
+					return src;
+			}
+		}
+		public static string SetTag(string src, string tag, bool? isOn)
+		{
+			if (isOn == null)
+				return src;
+			return SetTag(src, tag, isOn.GetValueOrDefault());
+		}
 
+		public static bool Has(this TagInfo tag, string s)
+		{
+			return s.Contains(tag.s, StringComparison.OrdinalIgnoreCase);
+		}
 		public static Tags Get(string src)
 		{
 			Tags result = default;

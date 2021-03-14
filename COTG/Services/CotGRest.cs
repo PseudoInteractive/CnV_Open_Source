@@ -1021,8 +1021,23 @@ namespace COTG.Services
 					Assert(false);
                     await Task.Delay(128);
                 }
-                var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, "maps/newmap/rmap6.json?a=0"));
-                
+                var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
+  /*
+   * GET /maps/newmap/rmap6.json?a=Sat%20Mar%2013%202021%2014:24:01%20GMT-0800%20(Pacific%20Standard%20Time) HTTP/1.1
+Host: w23.crownofthegods.com
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50
+Accept: 
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://w23.crownofthegods.com/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Cookie: _ga=GA1.2.1055797043.1609264074; _fbp=fb.1.1609264074502.2131400288; __gads=ID=bb534c2c262b5eb1-227ecd5a79c5009f:T=1609264077:RT=1609264077:S=ALNI_MbiRMZeGoatJbQVm5gpAomH5vSxRw; MicrosoftApplicationsTelemetryDeviceId=112453f2-6422-4887-88c6-12e528008f71; MicrosoftApplicationsTelemetryFirstLaunchTime=2021-02-28T01:02:30.235Z; remember_me=c50f0c70cd; _gid=GA1.2.991235873.1615674212; _gat=1; sec_session_id=4fr7soo40b1255mi6f1hjspee3
+*/
                 
                 if (buff != null)
                 {

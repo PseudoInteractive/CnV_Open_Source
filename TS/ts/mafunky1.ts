@@ -1015,6 +1015,7 @@ function avactor() {
 	popupSizeDirty=true;
 	callSyncViewMode();
 
+	document.getElementById("chatDiv").style.display = "none";
 
 	window['alliancelink'] = gspotfunct.alliancelink;
 	window['infoPlay'] = gspotfunct.infoPlay;

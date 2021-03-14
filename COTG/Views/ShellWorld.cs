@@ -690,7 +690,7 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
-			App.DispatchOnUIThreadLow(() => ShellPage.keyboardProxy.Focus(FocusState.Programmatic) );
+			TakeKeyboardFocus();
 			ClearHover();
 			//  e.Handled = false;
 			Gesture.Reset();
@@ -859,7 +859,7 @@ namespace COTG.Views
 							if (!IsCityView())
 							{
 								ref var cn = ref Continent.all[cont];
-								contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCites {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
+								contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
 
 							}
 						}

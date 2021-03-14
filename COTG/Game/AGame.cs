@@ -61,7 +61,6 @@ namespace COTG
 			}
 			var = default;
 			return false;
-
 		}
 
 		public static Material LoadLitMaterial(string name)
@@ -143,8 +142,6 @@ namespace COTG
 		public static Material worldOwners;
 
 		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
-
-
 
 		internal static void SetLighting(Lighting value)
 		{
@@ -654,6 +651,12 @@ namespace COTG
 				Microsoft.Xna.Framework.Content.ContentManager.wantSRGB += 16;
 			}
 		}
+
+		public static void LoadWorldBackground()
+		{
+			worldBackground = LoadMaterial($"Art/world{(JSClient.world switch { 23 => "23", _ => "22" })}");
+
+		}
 		protected override async void LoadContent()
 		{
 			try
@@ -706,7 +709,6 @@ namespace COTG
 				SpriteAnim.flagPinned.Load();
 
 				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
-				worldBackground = LoadMaterial($"Art/world{(JSClient.world switch { 23 => "23" , _ => "22"})}");
 				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
 
@@ -1156,22 +1158,20 @@ namespace COTG
 					//	ds.Antialiasing = CanvasAntialiasing.Aliased;
 					if (worldBackground != null && wantImage)
 					{
-
 						if (wantImage)
 						{
+							const byte brightness = 128;
+							const byte oBrightness = 255;
+							const byte alpha = 255;
 							const float texelGain = 1.0f / srcImageSpan;
 							draw.AddQuad(COTG.Draw.Layer.background, worldBackground,
 								destP0, destP1, srcP0 * texelGain, srcP1 * texelGain,
-								 255.AlphaToWhite(), ConstantDepth, 0);
+								 new Color(brightness, brightness, brightness, alpha), ConstantDepth, 0); ;
 
 							if (worldObjects != null)
 								draw.AddQuad(COTG.Draw.Layer.background + 1, worldObjects,
-									destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, 255.AlphaToWhite(), ConstantDepth, zCities);
-
-
+									destP0, destP1, srcP0 * texelGain, srcP1 * texelGain, new Color(oBrightness, oBrightness, oBrightness, alpha), ConstantDepth, zCities);
 						}
-
-
 					}
 
 					//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
@@ -1663,7 +1663,7 @@ namespace COTG
 							{
 								var wc = city.cid.CidToWorld();
 								// Todo: clip thi
-								if (city.senatorInfo.Length != 0 && !defenderVisible)
+								if (city.senatorInfo.Length != 0 && !(IncomingTab.IsVisible() || NearDefenseTab.IsVisible()))
 								{
 									var c = wc.WToC();
 									var idle = 0;

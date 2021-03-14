@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 using static COTG.Views.CityBuild;
 using Action = COTG.Views.CityBuild.Action;
 using COTG.Services;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 using System.Text.RegularExpressions;
@@ -211,8 +211,9 @@ namespace COTG.Views
 		static BuildMenuItem amAbandon = new BuildMenuItem("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
 		static BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
 		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
-		static BuildMenuItem amTogglePlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Toggle to or from planner mode");
-		static BuildMenuItem amSelectShareString = new BuildMenuItem("ShareString", Action.showShareString, "City/build_details_gloss_overlay.png", "Show sharestring selection mode");
+		static BuildMenuItem amSetPlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
+		static BuildMenuItem amSetBuild = new BuildMenuItem("Build", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set build mode");
+		static BuildMenuItem amSelectShareString = new BuildMenuItem("ShareString", Action.showShareString, "City/build_details_gloss_overlay.png", "Sharestring selection and exporting");
 
 
 
@@ -307,7 +308,7 @@ namespace COTG.Views
 					commands.items.Add(amMove);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
-					commands.items.Add(amTogglePlanner);
+					commands.items.Add(isPlanner ? amSetBuild: amSetPlanner);
 					commands.items.Add(amSelectShareString);
 
 					foreach (var i in allBuildings)
@@ -331,7 +332,7 @@ namespace COTG.Views
 					else
 						commands.items.Add(amUpgrade);
 					commands.items.Add(amMove);
-					commands.items.Add(amTogglePlanner);
+					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 
 					break;
@@ -341,13 +342,13 @@ namespace COTG.Views
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
 					commands.items.Add(amSelectShareString);
-					commands.items.Add(amTogglePlanner);
-				
+					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
+
 					break;
 				case MenuType.townhallPlanner:
 					commands.items.Add(amAbandon);
 					commands.items.Add(amUpgrade);
-					commands.items.Add(amTogglePlanner);
+					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 					commands.items.Add(amSelectShareString);
 					commands.items.Add(amFlipLayoutH);
 					commands.items.Add(amFlipLayoutV);
@@ -356,7 +357,7 @@ namespace COTG.Views
 				case MenuType.empty:
 
 					commands.items.Add(amLayout);
-					commands.items.Add(amTogglePlanner);
+					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 					commands.items.Add(amSelectShareString);
 
 
@@ -398,7 +399,7 @@ namespace COTG.Views
 
 				case MenuType.res:
 					commands.items.Add(amDemo);
-					commands.items.Add(amTogglePlanner);
+					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 					//	for (int i = 0; i < 7; ++i)
 					//		Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
@@ -558,6 +559,7 @@ namespace COTG.Views
 			{
 				if (isPlanner == value)
 					return;
+				menuType = MenuType.invalid; //clear this
 				isPlanner = value;
 				if (isPlanner)
 				{
@@ -720,6 +722,12 @@ namespace COTG.Views
 			}
 			else
 			{
+				if (buildQueueFull)
+				{
+					Status("Build Queue full", dryRun);
+					return;
+				}
+
 				Status($"Destroy {sel.def.Bn}", dryRun);
 				if (!dryRun)
 				{
@@ -1112,7 +1120,7 @@ namespace COTG.Views
 
 					// Is this a valid transition
 					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) && !testFlag ? 0 : 2;
-					if(bs1 ==0  && !Player.isAvatarOrTest )
+					if(bs1 ==0  && !CityBuild.testFlag)
 					{
 						Status("Please don't put buildings on walls.", dryRun);
 						return;
@@ -1241,6 +1249,10 @@ namespace COTG.Views
 
 							var desBid = build.BidFromOverlay(bspot);
 							var desName = BuildingDef.all[desBid].Bn;
+							if(BuildingDef.IsRes(desBid))
+							{
+								desBid = 0; // if it is a resource, ignore it
+							}
 							var curBid = b.def.bid;
 							var takeFrom = -1;
 							var takeScore = 0;
@@ -1296,7 +1308,10 @@ namespace COTG.Views
 								{
 									if (b.isRes)
 									{
+
 										Status($"Destorying {b.def.Bn} to make way for {desName}", dryRun);
+										
+
 										Demolish(cc, dryRun);
 										if (!dryRun)
 											await Task.Delay(400).ConfigureAwait(true);
@@ -1542,7 +1557,6 @@ namespace COTG.Views
 						{
 
 							App.DispatchOnUIThreadSneaky(()=>TogglePlanner() );
-
 						}
 
 						break;
@@ -1690,7 +1704,7 @@ namespace COTG.Views
 				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
 				{
 					ElementSoundPlayer.Play( ElementSoundKind.Show);
-					ShowContectMenu(cc,isRight);
+					ShowContextMenu(cc,isRight);
 
 				}
 			}
@@ -1699,7 +1713,7 @@ namespace COTG.Views
 
 
 		static bool contextMenuResultSelected = false;
-		public static void ShowContectMenu((int x, int y) cc, bool isRight)
+		public static void ShowContextMenu((int x, int y) cc, bool isRight)
 		{
 			isSingleClickAction = false; // default
 											   // toggle visibility
@@ -1830,6 +1844,8 @@ namespace COTG.Views
 						else if(bi.action == Action.togglePlanner)
 						{
 							TogglePlanner();
+							
+
 						}
 						else if (bi.action == Action.showShareString)
 						{

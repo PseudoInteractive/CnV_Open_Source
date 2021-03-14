@@ -36,6 +36,9 @@ namespace COTG
 		}
 		public Span<T> span => new Span<T>(v, 0,count);
 
+
+		public static explicit operator Span<T>( DArray<T> me) => new Span<T>(me.v, 0, me.count);
+
 		public SpanEnumerable<T> Enumerate()
 		{
 			return new SpanEnumerable<T>(span);

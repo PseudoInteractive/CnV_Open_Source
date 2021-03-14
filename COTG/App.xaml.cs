@@ -630,13 +630,20 @@ namespace COTG
 		{
 			App.DispatchOnUIThreadSneaky(() =>
 		 {
-			 DataPackage dataPackage = new DataPackage();
-			 // copy
-			 dataPackage.RequestedOperation = DataPackageOperation.Copy;
-			 dataPackage.SetText(s);
-			 // if(appLink!=null)
-			 //     dataPackage.SetApplicationLink(new Uri() )
-			 Clipboard.SetContent(dataPackage);
+			 try
+			 {
+				 DataPackage dataPackage = new DataPackage();
+				 // copy
+				 dataPackage.RequestedOperation = DataPackageOperation.Copy;
+				 dataPackage.SetText(s);
+				 // if(appLink!=null)
+				 //     dataPackage.SetApplicationLink(new Uri() )
+				 Clipboard.SetContent(dataPackage);
+			 }
+			 catch(Exception ex)
+			 {
+				 Log(ex);
+			 }
 		 });
 		}
 
@@ -1107,9 +1114,18 @@ namespace COTG
 		{
 			if (ob != null)
 			{
+				ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
+
+				App.DispatchOnUIThreadLow( () => ob.Focus(FocusState.Programmatic) );
+			}
+		}
+		public static void Focus(this Control  ob)
+		{
+			if (ob != null)
+			{
 				ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 
-				App.DispatchOnUIThreadIdle( (_) => ob.Focus(FocusState.Programmatic) );
+				App.DispatchOnUIThreadIdle((_) => ob.Focus(FocusState.Programmatic));
 			}
 		}
 		static string lastTip;

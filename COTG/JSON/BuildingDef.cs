@@ -69,12 +69,12 @@ namespace COTG.JSON
 			var ix = new byte[] {
 				 (byte)'-',(byte)(0),
 				 (byte)',',(byte)0,//(452 - sharestringOffset),
-				 (byte)'.',0,//(byte)(454 - sharestringOffset),
+				 (byte)'.',(byte)0,//(454 - sharestringOffset),
 				 (byte)'1',(byte)(447 - sharestringOffset),
 				 (byte)'2',(byte)(448 - sharestringOffset),
 				 (byte)'3',(byte)(461 - sharestringOffset),
 				 (byte)'4',(byte)(465 - sharestringOffset),
-				  (byte)':',(byte)0,// (451 - sharestringOffset), // stone
+				 (byte)':',(byte)0,//(451 - sharestringOffset), // stone
 				 (byte)';',(byte)0,//(453 - sharestringOffset),
 				 (byte)'A',(byte)(462 - sharestringOffset),
 				 (byte)'B',(byte)(445 - sharestringOffset),

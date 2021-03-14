@@ -20,21 +20,23 @@ namespace COTG.JSON
 		public static int FindBestHub(int cid)
 		{
 			var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
-			
 			int reqHub = 0;
 			var bestDist = 4096f;
-			foreach (var hub in cl.cities)
+			if (cl != null)
 			{
-				if (cid == hub)
-					continue;
-
-				var d = hub.DistanceToCid(cid);
-				if (d < bestDist)
+				foreach (var hub in cl.cities)
 				{
-					bestDist = d;
-					reqHub = hub;
-				}
+					if (cid == hub)
+						continue;
 
+					var d = hub.DistanceToCid(cid);
+					if (d < bestDist)
+					{
+						bestDist = d;
+						reqHub = hub;
+					}
+
+				}
 			}
 			return reqHub;
 		}

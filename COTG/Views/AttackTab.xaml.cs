@@ -25,7 +25,7 @@ using static COTG.Game.Enum;
 using static COTG.Debug;
 using System.Text.RegularExpressions;
 using System.Numerics;
-using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit;
 using System.Diagnostics.Contracts;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

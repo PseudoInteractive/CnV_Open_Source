@@ -35,7 +35,7 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Input;
 using Windows.Graphics.Display;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using System.Numerics;
 using Telerik.UI.Xaml.Controls.Primitives;
 
@@ -641,13 +641,14 @@ namespace COTG.Views
 			if (App.IsKeyPressedShift())
 			{
 				RefreshWorldData();
+			
 			}
 			else
 			{
 				Note.Show("Refresh UI");
 			}
 			// fall through from shift-refresh.  Shift refresh does both
-
+			City.UpdateSenatorInfo();
 			foreach (var tab in UserTab.userTabs)
 			{
 				tab.Refresh();

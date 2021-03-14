@@ -1,26 +1,19 @@
 ﻿using COTG.Game;
-using COTG.Helpers;
 using COTG.Services;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
+using static COTG.Game.City;
 using static COTG.Debug;
 
 namespace COTG.Views
@@ -63,7 +56,8 @@ namespace COTG.Views
 				return (string.Empty, string.Empty, string.Empty);
 			}
 		}
-		private static string GetPath( (string root, string mid, string title) path)
+		
+		public static string CombinePath( (string root, string mid, string title) path)
 		{
 			return !path.mid.IsNullOrEmpty() ? path.root + '~' + path.mid +"~"+ path.title : path.root+ "~" +path.title;
 		}
@@ -87,7 +81,19 @@ namespace COTG.Views
 				return false;
 			return true;
 		}
-		static public async Task<bool> Show()
+
+		static public string GetTags(string initial)
+		{
+			foreach (var tag in TagHelper.tags)
+			{
+				var check = instance.tagsPanel.Children.First((ch) => ((ch is ToggleButton t) && (t.Content as string == tag.s))) as ToggleButton;
+				initial = TagHelper.SetTag(initial, tag.s, check.IsChecked);
+
+			}
+			return initial;
+		}
+
+	static public async Task<bool> Show()
 		{
 			if (instance == null)
 			{
@@ -95,12 +101,18 @@ namespace COTG.Views
 				{
 					new ShareString();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Log(ex);
 				}
 				AddLayouts();
+				var shares = await Cosmos.ReadShares(Player.myName);
+				foreach(var s in shares)
+				{
+					new ShareStringItem(s.s);
+				}
 			}
+
 			instance.onComplete.IsOn = CityBuild.isPlanner;
 			var city = City.GetBuild();
 		//	instance.PlannerTeachingTip.Show();
@@ -117,6 +129,14 @@ namespace COTG.Views
 			if( rv == ContentDialogResult.Primary)
 			{
 				
+				if ( instance.applyTags.IsOn)
+				{
+					city.remarks = GetTags(city.remarks);
+					//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
+					await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={city.cid}", World.CidToPlayer(city.cid));
+				}
+
+
 				city.SetShareString(instance.GetShareStringWithJson());
 				city.SaveLayout();
 				if (instance.onComplete.IsOn != CityBuild.isPlanner)
@@ -135,7 +155,7 @@ namespace COTG.Views
 		}
 		string GetShareStringWithJson()
 		{
-			return GetShareString() + JsonSerializer.Serialize(new ShareStringMeta() { notes=notes.Text, desc=description.Text,path=  path.Text });
+			return GetShareString() + JsonSerializer.Serialize(new ShareStringMeta() { notes=GetTags(string.Empty), desc=description.Text,path=  path.Text });
 
 		}
 	
@@ -159,20 +179,47 @@ namespace COTG.Views
 			var s = City.GetBuild();
 			instance.shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
 		}
-		private static void SetFromSS()
+		public static void SetTags(string tags)
 		{
-			var city = City.GetBuild();
-			var s = city.splitShareString;
+			foreach (var tag in TagHelper.tags)
+			{
+				var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
+				if (check == null)
+				{
+					check = new ToggleButton() { Content = tag.s };
+					instance.tagsPanel.Children.Add(check);
+				}
+				check.IsChecked = tag.Has(tags);
+			}
+
+		}
+		public static void SetFromSS(string shareString)
+		{
+			var s = SplitShareString(shareString);
 			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
 			var path = DecomposePath(meta.path);
 			instance.shareString.Text = s.ss ?? string.Empty;
+			var tags = meta.notes ?? string.Empty;
+
 			instance.description.Text = meta.desc ?? string.Empty;
-			instance.notes.Text = meta.notes ?? string.Empty;
 			instance.title.Text = path.title;
-			instance.path.Text = GetPath( path);
+			instance.path.Text = CombinePath( path);
+
+			SetTags(tags);
+
+		}
+		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString);
+		public static (string ss, string json) SplitShareString(string shareString)
+		{
+				if (shareString == null)
+					return (string.Empty, AUtil.emptyJson);
+				var i = shareString.IndexOf('{');
+				if (i == -1)
+					return (shareString, AUtil.emptyJson); ;
+				return (shareString.Substring(0, i), shareString.Substring(i));
+			
 		}
 
-	
 		private async void FromClipboardClick(object sender, RoutedEventArgs e)
 		{
 			var text = await App.GetClipboardText();
@@ -204,9 +251,9 @@ namespace COTG.Views
 					instance.shareString.Text= i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
 					instance.description.Text = i.desc;
 					instance.path.Text = i.path;
-					instance.title.Text = i.title;
-					instance.notes.Text = i.notes;
+					instance.title.Text = i.label;
 					
+					SetTags(i.tags);
 				}
 			}
 		}
@@ -235,10 +282,34 @@ namespace COTG.Views
 				return;
 
 			}
-			
+			var p = DecomposePath(path.Text);
+			p.root = Player.myName;
+			path.Text = CombinePath(p); // set my name as root
 			Cosmos.ShareShareString(Player.myName, title,GetShareStringWithJson());
 			Note.Show("Shared!");
 		}
+
+		private void title_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			var ss = DecomposePath(instance.path.Text);
+			ss.title = title.Text;
+			ss.root = Player.myName;
+
+			instance.path.Text = CombinePath(ss);
+
+		}
+		
+	}
+	
+
+
+
+	public struct ShareStringMeta
+	{
+		public string path { get; set; }
+		public string desc { get; set; }
+		public string notes { get; set; }
+
 	}
 	public class ShareStringItem
 	{
@@ -246,18 +317,32 @@ namespace COTG.Views
 		public static List<ShareStringItem> all = new();
 		public string shareString { get; set; }
 		[JsonIgnore]
-		public string title { get; set; } = string.Empty;
+		public string label
+		{
+			get
+			{
+
+				var d = ShareString.DecomposePath(path);
+				return d.title;
+
+			}
+			set
+			{
+				var d = ShareString.DecomposePath(path);
+				d.root = Player.myName;
+				d.title = value;
+				path = ShareString.CombinePath(d);
+
+			}
+		}
 		public string desc { get; set; }
-		public string notes { get; set; }
+		public string tags { get; set; }
 		[JsonIgnore]
 		public List<ShareStringItem> children { get; set; } = new();
 		// group items
-		public ShareStringItem(string _path)
+		public ShareStringItem(string _path, bool _isPath)
 		{
 			path = _path;
-			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			title = dir.Last();
-
 		}
 		//public ShareStringItem() 
 		//{
@@ -266,37 +351,41 @@ namespace COTG.Views
 		//}
 		public override string ToString() => JsonSerializer.Serialize(this);
 
-		public ShareStringItem(string path,string _notes,string _desc, string _share)
+		public ShareStringItem(string shareString)
+		{
+			var s = ShareString.SplitShareString(shareString);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
+		//	var path = ShareString.DecomposePath(meta.path);
+			Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty);
+		}
+
+		public ShareStringItem(string path, string _tags, string _desc, string _share)
+		{
+			Ctor(path, _tags, _desc, _share);
+		}
+
+		public void Ctor(string path, string _tags, string _desc, string _share)
 		{
 			this.path = path;
-			notes = _notes;
-			title = path;
+			tags = _tags;
 			desc = _desc;
 			shareString = _share;
 			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			title = dir.Last();
 			var myList = all;
 			var pathSoFar = String.Empty;
-			for(int i=0;i<dir.Length-1;++i)
+			for (int i = 0; i < dir.Length - 1; ++i)
 			{
-				pathSoFar = pathSoFar +'~' + dir[i];
-				var parent = myList.Find((a) => a.title == dir[i]);
+				pathSoFar = pathSoFar + '~' + dir[i];
+				var parent = myList.Find((a) => a.label == dir[i]);
 				if (parent == null)
 				{
-					parent = new ShareStringItem(pathSoFar);
+					parent = new ShareStringItem(pathSoFar, true);
 					myList.Add(parent);
 				}
 				myList = parent.children;
 			}
 			myList.Add(this);
-		
-		}
-	}
-	public struct ShareStringMeta
-	{
-		public string path { get; set; }
-		public string desc { get; set; }
-		public string notes { get; set; }
 
+		}
 	}
 }

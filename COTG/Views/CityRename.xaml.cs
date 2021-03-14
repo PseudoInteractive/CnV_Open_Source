@@ -37,40 +37,7 @@ namespace COTG.Views
             {
             }
 
-		public static string SetTag(string src, string tag, bool isOn)
-		{
-			var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);
-			if (isOn)
-			{
-				if (exists)
-					return src;
-				else
-				{
-					// add it
-					if (src.Length > 0)
-						src += " ";
-					return src + tag;
-				}
-			}
-			else
-			{
-				if (exists)
-				{
-					src = src.Replace(tag + " ", "", StringComparison.OrdinalIgnoreCase);
-					src = src.Replace(" " + tag, "", StringComparison.OrdinalIgnoreCase);
-					src = src.Replace(tag, "", StringComparison.OrdinalIgnoreCase);
-					return src;
-				}
-				else
-					return src;
-			}
-		}
-		public static string SetTag(string src, string tag, bool? isOn)
-		{
-			if (isOn == null)
-				return src;
-			return SetTag(src, tag, isOn.GetValueOrDefault());
-		}
+		
 
 		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)(\d+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
@@ -87,7 +54,6 @@ namespace COTG.Views
 				{
 					var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
 					nameDialog.tags.Children.Add(check);
-
 				}
 
 
@@ -132,10 +98,11 @@ namespace COTG.Views
 						cont = $"{city.cont:00}";
 						for (; ; )
 						{
-							++numV;
+							
 							name = pre + cont + mid + numV.ToString() + post;
 							if (!City.myCities.Any((v) => v._cityName == name && v != city))
 								break;
+							++numV;
 						}
 					}
 					catch (Exception ex)
@@ -164,14 +131,14 @@ namespace COTG.Views
 						foreach (var tag in TagHelper.tags)
 						{
 							var check = nameDialog.tags.Children.First((ch) => (ch as ToggleButton).Content == tag.s) as ToggleButton;
-							tags = SetTag(tags, tag.s, check.IsChecked);
+							tags = TagHelper.SetTag(tags, tag.s, check.IsChecked);
 
 						}
 
 
 						city.remarks = tags;
 						//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayer(City.build));
+						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayer(cid));
 					}
 					Note.Show($"Set name to {lastName}");
 					if (SettingsPage.setHub)

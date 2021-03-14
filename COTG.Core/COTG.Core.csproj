@@ -81,24 +81,19 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.9.0" />
-    <PackageReference Include="Azure.Data.Tables" Version="3.0.0-beta.5" />
-    <PackageReference Include="Azure.Storage.Common" Version="12.8.0-beta.1" />
+    <PackageReference Include="Azure.Core" Version="1.10.0" />
+    <PackageReference Include="Azure.Data.Tables" Version="12.0.0-beta.6" />
+    <PackageReference Include="Azure.Storage.Common" Version="12.7.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.17.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.17.0" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0-preview.1.21102.12" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.4.0" />
-    <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview5" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.4.1" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.89.210208" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.1.21102.12" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0-preview.1.21102.12" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.1.21102.12" />
-    <PackageReference Include="System.Threading.Channels" Version="6.0.0-preview.1.21102.12" />
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cyotek.Drawing.BitmapFont">

@@ -68,14 +68,14 @@
 							   IsOn="{x:Bind views:SettingsPage.incomingAlwaysVisible, Mode=TwoWay}"
 							   Margin="4"
 							   OnContent="Always"
-							   OffContent="If Tab"
+							   OffContent="If Tab Open"
 							   ToolTipService.ToolTip="Allows you to always show incoming overlays (potentialy slower and more confusing) or to only show the overlays if an incoming tab is selected"
 							   />
 				<ToggleSwitch  Header="Outgoing visible"
 							   IsOn="{x:Bind views:SettingsPage.attacksAlwaysVisible, Mode=TwoWay}"
 							   Margin="4"
 							   OnContent="Always"
-							   OffContent="If Tab"
+							   OffContent="If Tab Open"
 							   ToolTipService.ToolTip="Allows you to always show outgoing overlays (potentialy slower and more confusing) or to only show the overlays if an ougoing tab is selected"
 							   />
 
@@ -84,7 +84,11 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
-
+				<controls:NumberBox Header="Penalty for wrong Dungeon Type"
+									 Value="{x:Bind views:SettingsPage.penaltyForWrongDungeonType,Mode=TwoWay}"
+									 SmallChange="0.5"
+									 LargeChange="2"
+									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind views:SettingsPage.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1"

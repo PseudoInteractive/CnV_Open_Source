@@ -1024,6 +1024,27 @@ namespace COTG
 					Player.moveSlots = mvb.GetAsInt();
 
 				}
+				if(jse.TryGetProperty("cob", out var cob))
+				{
+					var serverTime = GameTimeMs();
+
+					
+					foreach (var c in cob.EnumerateObject())
+					{
+						var t = c.Value.GetAsInt64()*1000;
+						if( t < serverTime)
+						{
+							var msg = new ContentDialog()
+							{
+								Title = "Councillors Expired",
+								Content = "Unofurtunately, this app requires councillors",
+							};
+							await msg.ShowAsync();
+							break;
+						}
+
+					}
+				}
 				if (jse.TryGetProperty("fa", out var fa))
 				{
 					faith.evara = fa.GetAsByte("1");
@@ -1279,6 +1300,9 @@ namespace COTG
 					//if (httpFilter != null)
 					//	Debug.Fatal();  // Todo
 					world = int.Parse(match.Groups[1].ToString());
+
+					// once we have the world id we can load the background
+					AGame.LoadWorldBackground();
 					try
 					{
 

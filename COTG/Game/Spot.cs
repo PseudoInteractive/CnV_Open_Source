@@ -1395,7 +1395,7 @@ namespace COTG.Game
 					if (count > 1)
 					{
 						aRaid.AddItem( $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-						aRaid.AddItem( $"Home Please x{count} selected", MainPage.ReturnFastClick, cid);
+						aRaid.AddItem( $"Return Asap x{count} selected", MainPage.ReturnFastClick, cid);
 						aRaid.AddItem( $"Return At...x{count}", this.ReturnAtBatch);
 
 					}
@@ -1403,7 +1403,7 @@ namespace COTG.Game
 					{
 
 						aRaid.AddItem( "End Raids", this.ReturnSlowClick);
-						aRaid.AddItem( "Home Please", this.ReturnFastClick);
+						aRaid.AddItem("Return Asap", this.ReturnFastClick);
 						aRaid.AddItem( "Return At...", this.ReturnAt);
 					}
 
@@ -1510,7 +1510,7 @@ namespace COTG.Game
 
 		private void SetTag(Tags id, bool on)
 		{
-			remarks = CityRename.SetTag(remarks,id.ToString(), on);
+			remarks = TagHelper.SetTag(remarks,id.ToString(), on);
 
 
 		}

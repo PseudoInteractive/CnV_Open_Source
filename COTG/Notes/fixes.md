@@ -30,3 +30,10 @@
    - Previously raids would be selected such that the carry was as close as possible to the desired carry
  - **Update** City lists are sorted by name and remarks.
    - Previously they were only sorted by name.
+### 2021/3/11
+ - **update** extended build queues are disabled by default.  To enable them, set "Build Queue" in the settings page to 'Unlimited'
+ - **fix** world map and region view in W23
+ - **fix** sharing layouts
+ - **update** Each chat tab now has a "copy to clipboard" button.  If messages are selected, it will copy then, otherwise it will copy all messages in the tab
+   - If you are submitting a bug report, please switch to the "Debug" tab, copy all messages and paste this in with the bug report, thanks!
+ - **added** Warning message if coucillors have expired (app will not work proprerly)

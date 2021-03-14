@@ -16,7 +16,7 @@ using COTG.Services;
 using COTG.Views;
 using COTG.JSON;
 using static COTG.Game.City;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
 
@@ -113,8 +113,8 @@ namespace COTG.Game
 		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
 		public static bool buildQInSync;
 
-		//public const int buildQMax = 16; // this should depend on ministers
-		//public static bool buildQueueFull => buildQueue.count >= buildQMax;
+		public const int buildQMax = 16; // this should depend on ministers
+		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.deferredBuild;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 14; // leave space for autobuild
 		
@@ -331,17 +331,17 @@ namespace COTG.Game
 			return _carryCapacity;
 		}
 
-		public float raidReturn
+		public string raidReturn
 		{
 			get
 			{
 				if (raids.IsNullOrEmpty())
-					return 999; // no raids
+					return "---"; // no raids
 				var dt = (float)(raids[0].time - JSClient.ServerTime()).TotalMinutes; // should we check more than one
 				if (raids[0].isReturning)
-					return dt;
+					return dt.ToString("0.00");
 				else
-					return (-1.0f).Min(dt - raids[0].GetOneWayTripTimeMinutes(this));
+					return $"({(1.0f).Max( raids[0].GetOneWayTripTimeMinutes(this) - dt)}";
 			}
 		}
 
@@ -380,7 +380,7 @@ namespace COTG.Game
 			}
 			
 		}
-
+	
 		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
 
 		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
@@ -455,7 +455,7 @@ namespace COTG.Game
 				var s = sts.GetString();
 				Log(s);
 				s = s.Replace("&#34;", "\"");
-				Log(s);
+			//	Log(s);
 				if (!CityBuild.isPlanner)
 				{
 
@@ -636,16 +636,7 @@ namespace COTG.Game
 		public const int shareStringStartOffset = 17+1;
 		public const int minShareStringLength = shareStringStartOffset +  City.citySpotCount;
 		
-		public (string ss,string json) splitShareString {
-			get {
-				if (shareString == null)
-					return (string.Empty, AUtil.emptyJson);
-				var i = shareString.IndexOf('{');
-				if (i == -1)
-					return (shareString, AUtil.emptyJson); ;
-				return (shareString.Substring(0,i),shareString.Substring(i));
-			}
-		}
+		public (string ss,string json) splitShareString => ShareString.SplitShareString(shareString);
 		public async Task SaveLayout()
 		{
 			Note.Show("Saved layout");
@@ -1142,7 +1133,7 @@ namespace COTG.Game
 			}
 		}
 
-		public (int max, int count) CountBuildingWithoutQueue()
+		public (int max, int count) CountBuildingsWithoutQueue()
 		{
 			var max = -1;
 			var count = 0;
@@ -1165,6 +1156,8 @@ namespace COTG.Game
 			return (max, count);
 		}
 
+
+		
 		//	Span<BuildQueueItem> queue = stackalloc  BuildQueueItem[256];
 
 		//	return CountBuildings( City.build, queue)

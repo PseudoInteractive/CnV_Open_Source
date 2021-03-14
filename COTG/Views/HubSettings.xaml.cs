@@ -32,17 +32,20 @@ namespace COTG.Views
 		public static async Task<bool> Show(int cid)
 		{
 			var bestHub = CitySettings.FindBestHub(cid);
-			var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
-			instance.bestHub.Text =hubName;
-			if ( await instance.ShowAsync2() == ContentDialogResult.Primary)
+			if (bestHub != 0)
 			{
-				
-				if (!string.Equals(instance.bestHub.Text, hubName, StringComparison.OrdinalIgnoreCase))
+				var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
+				instance.bestHub.Text = hubName;
+				if (await instance.ShowAsync2() == ContentDialogResult.Primary)
+				{
+
+					if (!string.Equals(instance.bestHub.Text, hubName, StringComparison.OrdinalIgnoreCase))
 					{
-					 // Todo
+						// Todo
 					}
-				await CitySettings.SetCitySettings(cid,bestHub);
-				return true;
+					await CitySettings.SetCitySettings(cid, bestHub);
+					return true;
+				}
 			}
 			return false;
 		}
