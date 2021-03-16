@@ -17,14 +17,35 @@ namespace COTG.JSON
 {
     public class CitySettings
     {
-		public static int FindBestHub(int cid)
+		static HashSet<int> GetHubs()
 		{
 			var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+			if (cl != null)
+				return cl.cities;
+			Note.Show("Warning:  No hub city list, querying all cities with the word 'Hub' in their remarks");
+			HashSet<int> result = new HashSet<int>();
+			foreach(var i in City.myCities)
+			{
+				if (i.remarks.Contains("hub", StringComparison.OrdinalIgnoreCase))
+				{
+					result.Add(i.cid);
+				}
+			}
+			if(result.Count==0)
+			{
+				Note.Show("Warning:  No hubs found");
+			}
+			return result;
+
+		}
+
+		public static int FindBestHub(int cid)
+		{
 			int reqHub = 0;
 			var bestDist = 4096f;
-			if (cl != null)
-			{
-				foreach (var hub in cl.cities)
+			var hubs = GetHubs();
+			
+				foreach (var hub in hubs)
 				{
 					if (cid == hub)
 						continue;
@@ -37,7 +58,8 @@ namespace COTG.JSON
 					}
 
 				}
-			}
+			
+			
 			return reqHub;
 		}
 		public static async void SetHub(int cid)

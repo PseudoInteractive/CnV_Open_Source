@@ -290,6 +290,7 @@
     <Compile Include="Services\SuspendAndResumeArgs.cs" />
     <Compile Include="Services\SuspendAndResumeService.cs" />
     <Compile Include="Services\SuspensionState.cs" />
+    <Compile Include="Services\Tables.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ToastNotificationsService.cs" />
     <Compile Include="Services\ToastNotificationsService.Samples.cs" />

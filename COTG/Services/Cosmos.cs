@@ -64,6 +64,8 @@ namespace COTG.Services
         private static readonly string EndpointUri = "https://avatars.documents.azure.com:443/";
 		private static readonly string EndpointUriT = "https://avadata.table.cosmos.azure.com:443/";
 
+		private const string avatabConnect = "DefaultEndpointsProtocol=https;AccountName=avatab;AccountKey=zLeBJT4uQpdbEFgcQHvlGNVX8xJctrL/qvByyZd+ujPLEf55awn9mGMVCW7UIHSJCnQ3xe3gbch88+eTjAqZng==;EndpointSuffix=core.windows.net";
+
 		// The primary key for the Azure Cosmos account.
 		private static readonly string PrimaryKey = "58VB6zTdjvySN7UmmxjalK3dltKdvArFwAOsZ7b2aqQBtPFM0AEwPlUxMnovFVpObUou3QNIEIGjYgI42pNZYQ==";
 		private static readonly string PrimaryKeyT = "NCTG9rOtJjJbiPNiRSPup3hRCNea4igaaYQRKWZN3v9u4qP2bk1DNLFA5WXM6Ct05tCaaZWw8wqdeFlj4gUVpw==";

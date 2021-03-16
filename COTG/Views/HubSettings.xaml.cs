@@ -47,6 +47,10 @@ namespace COTG.Views
 					return true;
 				}
 			}
+			else
+			{
+				Note.Show("No hub found");
+			}
 			return false;
 		}
 	
