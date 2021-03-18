@@ -37,3 +37,5 @@
  - **update** Each chat tab now has a "copy to clipboard" button.  If messages are selected, it will copy then, otherwise it will copy all messages in the tab
    - If you are submitting a bug report, please switch to the "Debug" tab, copy all messages and paste this in with the bug report, thanks!
  - **added** Warning message if coucillors have expired (app will not work proprerly)
+### 2021/3/17
+ - **fix** hang

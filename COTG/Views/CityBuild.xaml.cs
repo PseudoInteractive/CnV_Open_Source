@@ -631,6 +631,12 @@ namespace COTG.Views
 			}
 			var id = XYToId(target);
 			var sel = GetBuildingPostQueue(id);
+			if (sel.isRes)
+			{
+				Note.Show("Cannot upgrade Res");
+				return;
+			}
+
 			var lvl = sel.bl;
 			if (level == 1)
 				level = lvl + 1;

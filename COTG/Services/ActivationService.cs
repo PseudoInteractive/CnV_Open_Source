@@ -8,6 +8,11 @@ using COTG.Core.Helpers;
 using COTG.Core.Services;
 using COTG.Services;
 using COTG.Views;
+
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+
 using Windows.ApplicationModel.Activation;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -122,17 +127,29 @@ namespace COTG.Services
             // TODO WTS: This is a sample to demonstrate how to add a UserActivity. Please adapt and move this method call to where you consider convenient in your app.
             // TODO restore       await UserActivityService.AddSampleUserActivity();
             await ThemeSelectorService.SetRequestedThemeAsync();
+			if (!AppCenter.Configured)
+			{
+				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+				   typeof(Analytics), typeof(Crashes));
+				await Crashes.SetEnabledAsync(true);
+				await Analytics.SetEnabledAsync(true);
+				bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+				if (didAppCrash)
+				{
+					ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+				}
+			}
 
-            // TODO WTS: Configure and enable Azure Notification Hub integration.
-            //  1. Go to the HubNotificationsService class, in the InitializeAsync() method, provide the Hub Name and DefaultListenSharedAccessSignature.
-            //  2. Uncomment the following line (an exception will be thrown if it is executed and the above information is not provided).
-            // await Singleton<HubNotificationsService>.Instance.InitializeAsync().ConfigureAwait(false);
-          ///  Singleton<LiveTileService>.Instance.SampleUpdate();
-            // TODO restore     await FirstRunDisplayService.ShowIfAppropriateAsync();
-            // TODO restore        await WhatsNewDisplayService.ShowIfAppropriateAsync();
-        }
+			// TODO WTS: Configure and enable Azure Notification Hub integration.
+			//  1. Go to the HubNotificationsService class, in the InitializeAsync() method, provide the Hub Name and DefaultListenSharedAccessSignature.
+			//  2. Uncomment the following line (an exception will be thrown if it is executed and the above information is not provided).
+			// await Singleton<HubNotificationsService>.Instance.InitializeAsync().ConfigureAwait(false);
+			///  Singleton<LiveTileService>.Instance.SampleUpdate();
+			// TODO restore     await FirstRunDisplayService.ShowIfAppropriateAsync();
+			// TODO restore        await WhatsNewDisplayService.ShowIfAppropriateAsync();
+		}
 
-        private IEnumerable<ActivationHandler> GetActivationHandlers()
+		private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
             // TODO restore        yield return Singleton<LiveTileService>.Instance;
             // TODO restore     yield return Singleton<HubNotificationsService>.Instance;

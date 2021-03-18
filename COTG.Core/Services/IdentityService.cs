@@ -12,8 +12,8 @@ namespace COTG.Core.Services
 {
     public class IdentityService
     {
-                public event EventHandler LoggedIn;
-                public event EventHandler LoggedOut;
+           //     public event EventHandler LoggedIn;
+           //     public event EventHandler LoggedOut;
         //        // For more information about using Identity, see
         //        // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/services/identity.md
         //        //

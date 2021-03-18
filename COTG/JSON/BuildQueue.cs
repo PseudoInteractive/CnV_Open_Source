@@ -425,6 +425,7 @@ namespace COTG.JSON
 											Serialize(ref sb, i, ref qFirst);
 											break;
 										}
+										++tOffset;
 									}
 								}
 

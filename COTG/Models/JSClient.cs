@@ -41,6 +41,8 @@ using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 
 namespace COTG
 {
@@ -2081,7 +2083,8 @@ namespace COTG
 						//    //if (now.Day <= 28 && now.Month==11)
 						//    {
 						App.DispatchOnUIThreadSneaky(ShowWhatsNew);
-
+					   AppCenter.SetUserId(Player.myName);
+					   
 				   }
 			   }
 			   //}

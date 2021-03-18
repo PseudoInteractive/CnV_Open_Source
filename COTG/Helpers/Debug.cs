@@ -4,6 +4,8 @@
 using COTG.Helpers;
 using COTG.Views;
 
+using Microsoft.AppCenter.Crashes;
+
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -131,11 +133,13 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
         {
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {e.Message} {e.StackTrace}");
+			Crashes.TrackError(e);
+#if TRACE
+			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {e.Message} {e.StackTrace}");
 			DumpStack(new StackTrace(e, true));
+#endif
 			Note.Show(e.Message);
-
-        }
+		}
         [Conditional("TRACE")]
         public  static void Exception(string s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",

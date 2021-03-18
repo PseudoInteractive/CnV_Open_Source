@@ -175,8 +175,8 @@ namespace COTG.Views
 		{
 			ValidateFocus();
 
-			if (hasKeyboardFocus)
-				return;
+		//	if (hasKeyboardFocus)
+		//		return;
 			Trace($"Take focus {hasKeyboardFocus}");
 			// Set this early, it gets set again once the asyn executes
 			hasKeyboardFocus = true;

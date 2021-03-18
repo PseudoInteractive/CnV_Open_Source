@@ -44195,63 +44195,17 @@ function outer(){
 		//	} else return !"";
 		//}
 
-		function W1F(k5w) {
-  			lastSentBq = -1;
-
-			var N0w = h8;
-			var c0w = S8;
-			var R0w = c0w * +A5y + N0w;
-			if (B5F(R0w)) R0w = 0;
-			var y0w =
-				Number(city.bd[R0w].bl);
-			var F0w = Number(city.bd[R0w].bid);
-			var p0w = Number(k5w);
-			for (var D0w in city.bq) {
-				var
-					m0w = city.bq[D0w].bspot;
-				if (R0w == m0w) {
-					y0w = Number(city.bq[D0w].elvl);
-					F0w = Number(city.bq[D0w].brep);
-				}
-			}
-			if (y0w == p0w) Y6(__s[6910]);
-			else if (y0w == (0)) Y6(__s[4507]);
-			else if (ppdt[__s[V9y | 4148]][1] * 1000 < currentTime()) Y6(__s[5593]);
-			else {
-				var a0w = { bspot: R0w, endlvl: p0w, cid: cid };
-				var E0w = __s[1833] + b2() + E6k
-					.o55(3483);
-				var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
-				N6();
-				++bqInFlight;
-				var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: cid });
-				F6();
-				// nBUu returns 0 on success
-				Y0w.done(function (e5w) {
-					--bqInFlight;
-					E6k.y6();
-					if (e5w == 0) {
-						
-						X2(7);
-					} else if (e5w == 1) Y6(__s[6910]);
-					else if (e5w == 2) Y6(__s[4507]);
-					ProcessBuuPoll()
-				});
-			}
-			Z9 = 1;
-			b3F();
-		}
-
-
 	  function upgradeEx(__spot:number,__level:number, __cid:number, iter: number, queue : [number[]]) {
   			lastSentBq = -1;
 			{
 		   ++bqInFlight;
-				var a0w = { bspot: __spot, endlvl: Number(__level), cid: __cid };
-				var E0w = "X24s2x449" +P8 + "Jx1e2";
-				var q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
+			  let bId = city.bd[__spot].bid;
+			  let proto= Number(bam["buildings"][Number(bId)]['proto'])
+			  let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid,btype:proto, brep:city.bd[__spot].bid};
+			  let E0w = "X24s2x449" +P8 + "Jx1e2";
+			  let q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
 				
-				var Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: __cid });
+			  let Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: __cid });
 				
 				// nBUu returns 0 on success
 				Y0w.done(function (e5w) {
@@ -45658,9 +45612,12 @@ function outer(){
 				{
 					__log("Build Castle Failed");
 				}
+				if(queue!=null)
+	{
 
 				buildEx(__cid,iter+1, queue);
-				return;
+		}
+			return;
 
 			});
 
@@ -50100,11 +50057,6 @@ function outer(){
 			return I9(d6i, b6i);
 		}
 
-		function p0V() {
-			if ($(__s[d2y | 180])
-				.css("display") == "none" && Z9 == (0))
-				if (ppdt.opt[24] == 1) W1F(10);
-		}
 
 		function z0F(N8l, F8l) {
 			var q8l = 0;
@@ -53429,7 +53381,7 @@ function outer(){
 			}
 			//var P5w = Math.floor(currentTime() / (1000)) + bXY;
 			{
-				if (op == 1 && bId >= +TPL) upgradeTemple(cid); // upgrade temple
+				if (op == 1 && bId >= +TPL) upgradeTemple(cid,0,null); // upgrade temple
 				else if (bId) {
 					var O5w = 0;
 					var t5w = Number(bam["buildings"][Number(bId)]['proto']);
@@ -53670,7 +53622,7 @@ function outer(){
 								var b5w = 6;
 								o5w = 0;
 							}
-							if (bId == +TPL) buildTemple( bXY);
+							if (bId == +TPL) buildTemple( bXY,0,null);
 							else if (g5w >= b5w) Y6(__s[z4m & 2147483647]);
 							else if (g5w <= b5w - (1)) {
 								if (op == (0)) // build
@@ -53682,7 +53634,7 @@ function outer(){
 										var w5w = 1;
 										if (x9 == (1)) w5w = 10;
 										var a5w = b1F(bId, bXY);
-										if (bId == +bidCASTLE) buildCastle(bXY,L5w,cid);
+										if (bId == +bidCASTLE) buildCastle(bXY,L5w,cid,0,null);
 										else if (a5w == !![]) {
 											var T5w = {
 												bt: Number(op),
@@ -54160,7 +54112,7 @@ function outer(){
 										
 										if (bId == +bidCASTLE) buildCastle(bXY,L5w,__cid, iter,queue);
 										else {
-											var T5w = {
+											let T5w = {
 												bt: Number(op),
 												pa: 1,
 												elvl: 1,
@@ -54199,7 +54151,7 @@ function outer(){
 									else if (op == (1)) // upgrade
 									{
 										{
-											var T5w = {
+											let T5w = {
 												bt: Number(op),
 												pa: 1,
 												elvl: endLevel,
@@ -54243,7 +54195,7 @@ function outer(){
 									else {
 										
 										
-										var T5w = {
+										let T5w = {
 											bt: Number(op),
 											bspot: bXY,
 											btype: t5w,
@@ -54286,7 +54238,7 @@ function outer(){
 								}
 								else  { // Demo  (op == 3)
 									
-									var T5w = {
+									let T5w = {
 										bt: Number(op),
 										btype: t5w,
 										bid: i5w,

@@ -199,6 +199,7 @@ namespace COTG
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine( e.Exception.StackTrace);
 			e.Handled = true;
+			Crashes.TrackError(e.Exception);
 		}
 
 		static int lastInputTick;
@@ -448,11 +449,6 @@ namespace COTG
 			await ActivationService.ActivateAsync(args);
 			OnLaunchedOrActivated(args as LaunchActivatedEventArgs);
 
-			if (!AppCenter.Configured)
-			{
-				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-				   typeof(Analytics), typeof(Crashes));
-			}
 
 
 			//var configuration = new ConfigurationBuilder()
