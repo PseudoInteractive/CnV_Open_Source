@@ -44195,11 +44195,10 @@ function outer(){
 		//	} else return !"";
 		//}
 
-	  function upgradeEx(__spot:number,__level:number, __cid:number, iter: number, queue : [number[]]) {
+	  function upgradeEx(__spot:number,__level:number,bId:number, __cid:number, iter: number, queue : [number[]]) {
   			lastSentBq = -1;
 			{
 		   ++bqInFlight;
-			  let bId = city.bd[__spot].bid;
 			  let proto= Number(bam["buildings"][Number(bId)]['proto'])
 			  let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid,btype:proto, brep:city.bd[__spot].bid};
 			  let E0w = "X24s2x449" +P8 + "Jx1e2";
@@ -53950,7 +53949,7 @@ function outer(){
 				// Do upgrade
 				if( endLevel > startLevel+ 1)
 				{
-				   upgradeEx(bXY,endLevel,__cid, iter,queue);
+					upgradeEx(bXY, endLevel,bId,__cid, iter,queue);
 				   return;
 				}
 			}
