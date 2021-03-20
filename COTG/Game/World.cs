@@ -498,7 +498,6 @@ namespace COTG.Game
 				raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
 			}
-			if (SettingsPage.showDungeonsInRegionView)
 			{
 				foreach (var id in caverns_)
 				{
@@ -515,77 +514,80 @@ namespace COTG.Game
 
 					//  LogJS(b);
 					var index = (int)(x + y * worldDim);
-					pixels.SetColor(index, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
-					float t = (level - 1) / 9.0f;
-					switch (level)
+					if (SettingsPage.showDungeonsInRegionView)
 					{
-						case 1:
-						case 2:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 3 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-							}
-							break;
-						case 3:
-						case 4:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 3 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (3 << 6);
-							}
-							break;
-						case 5:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (3 << 6);
-							}
-							break;
-						case 6:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-							}
-							break;
-						case 7:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 1 | (3 << 2) | (3 << 4) | (2 << 6); // color index 0
-								pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (3 << 6);
-							}
-							break;
-						case 8:
-							{
-								pixels[index * 8 + 4] = 3 | (1 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 1 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 3 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (2 << 6);
-							}
-							break;
-						case 9:
-							{
-								pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
-								pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-							}
-							break;
+						pixels.SetColor(index, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
+						float t = (level - 1) / 9.0f;
+						switch (level)
+						{
+							case 1:
+							case 2:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 3 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+								}
+								break;
+							case 3:
+							case 4:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 3 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (3 << 6);
+								}
+								break;
+							case 5:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (3 << 6);
+								}
+								break;
+							case 6:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+								}
+								break;
+							case 7:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 1 | (3 << 2) | (3 << 4) | (2 << 6); // color index 0
+									pixels[index * 8 + 6] = 3 | (1 << 2) | (3 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (3 << 6);
+								}
+								break;
+							case 8:
+								{
+									pixels[index * 8 + 4] = 3 | (1 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 1 | (3 << 2) | (2 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 3 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (3 << 2) | (3 << 4) | (2 << 6);
+								}
+								break;
+							case 9:
+								{
+									pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 3 | (1 << 2) | (3 << 4) | (2 << 6); // color index 0
+									pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+								}
+								break;
 
-						default:
-							{
-								pixels[index * 8 + 4] = 1 | (1 << 2) | (3 << 4) | (3 << 6);
-								pixels[index * 8 + 5] = 3 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
-								pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (2 << 6); // color index 0
-								pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
-							}
-							break;
+							default:
+								{
+									pixels[index * 8 + 4] = 1 | (1 << 2) | (3 << 4) | (3 << 6);
+									pixels[index * 8 + 5] = 3 | (2 << 2) | (1 << 4) | (3 << 6); // color index 0
+									pixels[index * 8 + 6] = 1 | (3 << 2) | (1 << 4) | (2 << 6); // color index 0
+									pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+								}
+								break;
+						}
 					}
 					raw[index] = (uint)(level | typeDungeon);
 

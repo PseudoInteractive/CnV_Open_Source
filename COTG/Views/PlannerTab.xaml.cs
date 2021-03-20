@@ -321,6 +321,10 @@ namespace COTG.Views
 									for (int y0 = span0.Max(y - r); y0 <= span1.Min(y + r); ++y0)
 									{
 										var id1 = XYToId((x0, y0));
+										if(!CityBuild.IsBuildingSpot(id1))
+										{
+											continue;
+										}
 										if (bds[id1].isEmpty && (bdc[id1].isEmpty || bdc[id1].isRes))
 										{
 											Note.Show($"Moving {bd.def.Bn} from a res node to an empty spot");

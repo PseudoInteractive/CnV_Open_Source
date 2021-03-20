@@ -492,58 +492,61 @@ namespace COTG.Services
         public override void ProcessJson(JsonDocument json)
         {
             var changed = new HashSet<City>();
-            foreach (var item in json.RootElement.EnumerateArray())
-            {
-                var cid = item.GetAsInt("id");
-                if (!City.TryGet(cid, out var v))
-                    continue;
-                List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
-                List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
-                var hasAny = false;
-                foreach (var tt in item.EnumerateObject())
-                {
-                    var type = tt.Name;
-                    // Some are lower case
-                    if (type[0] >= 'a' && type[0] <= 'z')
-                        continue;
-                    int count = tt.Value.GetInt32();
-                    if (count == 0)
-                        continue;
+			if (json.RootElement.ValueKind == JsonValueKind.Array)
+			{
+				foreach (var item in json.RootElement.EnumerateArray())
+				{
+					var cid = item.GetAsInt("id");
+					if (!City.TryGet(cid, out var v))
+						continue;
+					List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
+					List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
+					var hasAny = false;
+					foreach (var tt in item.EnumerateObject())
+					{
+						var type = tt.Name;
+						// Some are lower case
+						if (type[0] >= 'a' && type[0] <= 'z')
+							continue;
+						int count = tt.Value.GetInt32();
+						if (count == 0)
+							continue;
 
-                    var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
-                    Assert(split.Length == 2);
-                    var tE = Game.Enum.ttNameWithCapsAndGuard.IndexOf(split[0]);
-					if (tE < 0) // Guard
-						tE = 0;
-                    var ttc = new TroopTypeCount(tE, count);
+						var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
+						Assert(split.Length == 2);
+						var tE = Game.Enum.ttNameWithCapsAndGuard.IndexOf(split[0]);
+						if (tE < 0) // Guard
+							tE = 0;
+						var ttc = new TroopTypeCount(tE, count);
 
-                    if (split[1] == "home")
-                        tsHome.Add(ttc);
-                    else
-                        tsTotal.Add(ttc);
-                    hasAny = true;
-                }
-				var tsh = v.troopsHome.TS();
-				if (hasAny)
-                {
-                    v.troopsHome = tsHome.ToArray();
-                    v.troopsTotal = tsTotal.ToArray();
-					v._tsHome = v.troopsHome.TS();
-					v._tsTotal = v.troopsTotal.TS();
+						if (split[1] == "home")
+							tsHome.Add(ttc);
+						else
+							tsTotal.Add(ttc);
+						hasAny = true;
+					}
+					var tsh = v.troopsHome.TS();
+					if (hasAny)
+					{
+						v.troopsHome = tsHome.ToArray();
+						v.troopsTotal = tsTotal.ToArray();
+						v._tsHome = v.troopsHome.TS();
+						v._tsTotal = v.troopsTotal.TS();
+					}
+					else
+					{
+						v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
+						v._tsHome = 0;
+						v._tsTotal = 0;
+					}
+					if ((tsh - v.troopsHome.TS()).Abs() > 16)
+					{
+						changed.Add(v);
+						//v.OnPropertyChanged(nameof(v.tsTotal));
+					}
+
 				}
-				else
-                {
-                    v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
-					v._tsHome = 0;
-					v._tsTotal = 0;
-				}
-                if ((tsh - v.troopsHome.TS()).Abs() > 16)
-                {
-                    changed.Add(v);
-                    //v.OnPropertyChanged(nameof(v.tsTotal));
-                }
-
-            }
+			}
             if (!changed.IsNullOrEmpty())
             {
                 changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid), nameof(Spot.tsTotal));
@@ -723,95 +726,98 @@ namespace COTG.Services
                 city.raidCarry = 0;
             }
             float rWood = 0, rStone = 0, rIron = 0, rFood = 0, rGold = 0;
-            //           string dateExtra = DateTime.Now.Year
-            var a = jsd.RootElement.GetProperty("a");
-            foreach (var cr in a.EnumerateArray())
-            {
-                int cid = cr[0].GetInt32();
-                var city = City.GetOrAddCity(cid);
-                var raids = Array.Empty<Raid>();
-                var minCarry = 255;
-                float tWood = 0, tStone = 0, tIron = 0, tFood = 0, tGold = 0;
-                foreach (var r in cr[12].EnumerateArray())
-                {
-                    var target = r[8].GetInt32();
-                    var dateTime = r[7].GetString().ParseDateTime(false);
+			if (jsd.RootElement.ValueKind == JsonValueKind.Object)
+			{
+				//           string dateExtra = DateTime.Now.Year
+				var a = jsd.RootElement.GetProperty("a");
+				foreach (var cr in a.EnumerateArray())
+				{
+					int cid = cr[0].GetInt32();
+					var city = City.GetOrAddCity(cid);
+					var raids = Array.Empty<Raid>();
+					var minCarry = 255;
+					float tWood = 0, tStone = 0, tIron = 0, tFood = 0, tGold = 0;
+					foreach (var r in cr[12].EnumerateArray())
+					{
+						var target = r[8].GetInt32();
+						var dateTime = r[7].GetString().ParseDateTime(false);
 
-                    if (raids.FindAndIncrement(target, dateTime))
-                    {
-                        rWood += tWood;
-                        rStone += tStone;
-                        rIron += tIron;
-                        rFood += tFood;
-                        rGold += tGold;
-                        continue;
-                    }
-                    string desc = r[2].GetString();
-                    //    Mountain Cavern, Level 4(91 %)
-                    var raid = new Raid();
-                    raid.repeatCount = 1;
-                    raid.target = target;
-                    raid.time = dateTime;
-                    raid.repeatCount = 1;
-                    raid.isReturning = r[3].GetInt32() != 0;
-                    raid.isRepeating = r[4].GetInt32() == 2;
-                    //    Log(raid.ToString());
-                    // raid.arrival.Year = DateTime.Now.Year;
-                    var ss0 = desc.Split(',');
-                    Assert(ss0.Length == 2);
-                    var isMountain = ss0[0].Trim()[0] == 'M';
-                    var ss = ss0[1].Split(new char[] { ' ', '(', ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
-                    Assert(ss.Length == 4);
-                    var level = int.Parse(ss[1]);
-                    var completion = int.Parse(ss[2]);
-                    var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
-                    int cc = 0;
-                  
-                    var tsMaxTS = 0;
-                    foreach (var ttr in r[5].EnumerateArray())
-                    {
-                        var tt = ttr.GetAsInt("tt");
-                        int tv = ttr.GetAsInt("tv");
-                        cc += ttCarry[tt] * tv;
-                        var ts = ttTs[tt] * tv;
-                        if(ts > tsMaxTS)
-                        {
-                            tsMaxTS = ts;
-                            raid.troopType = (byte)tt;
-                        }
-                        //   Log($"{tt}:{tv}");
-                    }
-                    if (raid.isReturning)
-                    {
-                        var resO = r[6];
-                        var rate = 60.0f * 0.5f / (raid.GetOneWayTripTimeMinutes(city)); // to res per hour
-                        tWood = resO.GetAsInt("w") * rate;
-                        tIron = resO.GetAsInt("i") * rate;
-                        tFood = resO.GetAsInt("f") * rate;
-                        tStone = resO.GetAsInt("s") * rate;
-                        tGold = resO.GetAsInt("g") * rate;
-                        rWood += tWood;
-                        rStone += tStone;
-                        rIron += tIron;
-                        rFood += tFood;
-                        rGold += tGold;
-                    }
-                    else
-                    {
-                        tWood = 0; tStone = 0; tIron = 0; tFood = 0; tGold = 0;
-                    }
-                    var carry = (cc * 100.0f / res).RoundToInt();
-                    if (carry < minCarry)
-                        minCarry = carry;
-                    // Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
+						if (raids.FindAndIncrement(target, dateTime))
+						{
+							rWood += tWood;
+							rStone += tStone;
+							rIron += tIron;
+							rFood += tFood;
+							rGold += tGold;
+							continue;
+						}
+						string desc = r[2].GetString();
+						//    Mountain Cavern, Level 4(91 %)
+						var raid = new Raid();
+						raid.repeatCount = 1;
+						raid.target = target;
+						raid.time = dateTime;
+						raid.repeatCount = 1;
+						raid.isReturning = r[3].GetInt32() != 0;
+						raid.isRepeating = r[4].GetInt32() == 2;
+						//    Log(raid.ToString());
+						// raid.arrival.Year = DateTime.Now.Year;
+						var ss0 = desc.Split(',');
+						Assert(ss0.Length == 2);
+						var isMountain = ss0[0].Trim()[0] == 'M';
+						var ss = ss0[1].Split(new char[] { ' ', '(', ',', '%' }, StringSplitOptions.RemoveEmptyEntries);
+						Assert(ss.Length == 4);
+						var level = int.Parse(ss[1]);
+						var completion = int.Parse(ss[2]);
+						var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
+						int cc = 0;
 
-                    raids = raids.ArrayAppend(raid);
-                }
-                city.raidCarry = (byte)minCarry;
-                city.raids = raids;
-                // Log($"cid:{cid} carry: {minCarry}");
+						var tsMaxTS = 0;
+						foreach (var ttr in r[5].EnumerateArray())
+						{
+							var tt = ttr.GetAsInt("tt");
+							int tv = ttr.GetAsInt("tv");
+							cc += ttCarry[tt] * tv;
+							var ts = ttTs[tt] * tv;
+							if (ts > tsMaxTS)
+							{
+								tsMaxTS = ts;
+								raid.troopType = (byte)tt;
+							}
+							//   Log($"{tt}:{tv}");
+						}
+						if (raid.isReturning)
+						{
+							var resO = r[6];
+							var rate = 60.0f * 0.5f / (raid.GetOneWayTripTimeMinutes(city)); // to res per hour
+							tWood = resO.GetAsInt("w") * rate;
+							tIron = resO.GetAsInt("i") * rate;
+							tFood = resO.GetAsInt("f") * rate;
+							tStone = resO.GetAsInt("s") * rate;
+							tGold = resO.GetAsInt("g") * rate;
+							rWood += tWood;
+							rStone += tStone;
+							rIron += tIron;
+							rFood += tFood;
+							rGold += tGold;
+						}
+						else
+						{
+							tWood = 0; tStone = 0; tIron = 0; tFood = 0; tGold = 0;
+						}
+						var carry = (cc * 100.0f / res).RoundToInt();
+						if (carry < minCarry)
+							minCarry = carry;
+						// Log($"cc:{cc}, res:{res}, carry:{cc/res} {r[7].GetString()} {r[3].GetInt32()} {r[4].GetInt32()}");
 
-            }
+						raids = raids.ArrayAppend(raid);
+					}
+					city.raidCarry = (byte)minCarry;
+					city.raids = raids;
+					// Log($"cid:{cid} carry: {minCarry}");
+
+				}
+			}
             App.DispatchOnUIThreadSneakyLow(()
                 =>
             {

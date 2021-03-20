@@ -59,9 +59,9 @@
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptOutFile>../COTG/JS/funky</TypeScriptOutFile>
     <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
-    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
   </PropertyGroup>

@@ -292,6 +292,7 @@ namespace COTG
 
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
+				
 			}
 		}
 		public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)

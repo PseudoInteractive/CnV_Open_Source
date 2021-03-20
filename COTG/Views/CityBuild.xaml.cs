@@ -565,7 +565,7 @@ namespace COTG.Views
 				{
 
 					var build = GetBuild();
-					if (build.isLayoutValid)
+//					if (build.isLayoutValid)
 					{
 						build.ShareStringToBuildingsCache();
 						
@@ -1690,17 +1690,17 @@ namespace COTG.Views
 			else
 			{
 				//	Log($"{action} => None");
-				//	action = Action.none;
+				////	action = Action.none;
 
-				if (isRight)
-				{
-					Tips.Show(instance.tipBuildRight, nameof(instance.tipBuildRight));
-				}
-				else
-				{
-					Tips.Show(instance.tipBuildLeft,nameof(instance.tipBuildLeft));
+				//if (isRight)
+				//{
+				//	Tips.Show(instance.tipBuildRight, nameof(instance.tipBuildRight));
+				//}
+				//else
+				//{
+				//	Tips.Show(instance.tipBuildLeft,nameof(instance.tipBuildLeft));
 		
-				}
+				//}
 
 				//	var i = instance;
 				//i.building.Text = d.Bn;
@@ -1824,7 +1824,7 @@ namespace COTG.Views
 						await ShareString.Show();
 						SetAction(bi.action);
 						ClearSelectedBuilding();
-						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
+//						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
 
 
 					}

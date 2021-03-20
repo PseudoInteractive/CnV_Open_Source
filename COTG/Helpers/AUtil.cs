@@ -20,13 +20,13 @@ namespace COTG
 	public static class AUtil
 	{
 		public const string emptyJson = "{}";
-		public const string defaultTimeFormat = "HH':'mm':'ss";
-		public const string preciseTimeFormat = "HH':'mm':'ss.fff";
-		public const string preciseDateTimeFormat = "MM/dd HH':'mm':'ss.fff";
+		public const string defaultTimeFormat = "H':'mm':'ss";
+		public const string preciseTimeFormat = "H':'mm':'ss.fff";
+		public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
-		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
-		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
-		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
+		public const string defaultDateFormat = "MM/dd H':'mm':'ss";
+		public const string fullDateFormat = "yyyy/MM/dd H':'mm':'ss";
+		public const string raidDateTimeFormat = "MM/dd/yyyy H':'mm':'ss";
 
 
 		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T : unmanaged

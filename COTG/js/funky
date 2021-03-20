@@ -71562,3 +71562,4 @@ function updatetroops_(data_46, notes_3) {
         var aa_5 = this.id;
     });
 }
+//# sourceMappingURL=funky.map

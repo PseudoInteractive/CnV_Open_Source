@@ -6,7 +6,6 @@
       xmlns:helpers="using:COTG.Helpers"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:views="using:COTG.Views"
@@ -17,13 +16,7 @@
       mc:Ignorable="d"
 	  IsTabStop="True"
 >
-	<Page.Resources>
 
-		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
-
-		
-		
-	</Page.Resources>
 	<!--HeaderTemplate="{StaticResource headerTemplate}"-->
 	<Grid x:Name="grid"  x:FieldModifier="public" >
 		<Grid.Resources>
@@ -38,7 +31,7 @@
 			</Style>
 		</Grid.Resources>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="42" />
+			<RowDefinition Height="Auto" />
 			<RowDefinition />
 			<RowDefinition />
 			<RowDefinition />
@@ -51,25 +44,33 @@
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
 
-		
-		
-		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
-			<CommandBar.Content>
-				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
+
+
+		<tk:TabbedCommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
+			<tk:TabbedCommandBar.MenuItems>
+				<tk:TabbedCommandBarItem Header="Misc">
+					<AppBarElementContainer>
+						<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
-						<x:String>Default</x:String>
-						<x:String>Visual</x:String>
-						<x:String>Numbers</x:String>
-					</ComboBox>
-					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
+							<x:String>Default</x:String>
+							<x:String>Visual</x:String>
+							<x:String>Numbers</x:String>
+						</ComboBox>
+					</AppBarElementContainer>
+					<AppBarElementContainer>
+						<ComboBox x:Name="friendListBox" x:FieldModifier="public"
 							  Visibility="Collapsed"
                      SelectionChanged="friendListBox_SelectionChanged"
                       Width="120"
                      
                       VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
                       Margin="4" />
-					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+					</AppBarElementContainer>
+				</tk:TabbedCommandBarItem>
+				<tk:TabbedCommandBarItem Header="Misc">
+					<AppBarElementContainer>
+
+						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
 					TextSubmitted="CityListSubmitted"
                       Width="120"
@@ -78,7 +79,10 @@
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
                       Margin="4" />
-					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
+					</AppBarElementContainer>
+					<AppBarElementContainer>
+
+						<ComboBox x:Name="cityBox" x:FieldModifier="public" 
                       Width="200"
 							  IsEditable="True"
 					TextSubmitted="CitySubmitted"
@@ -86,131 +90,137 @@
                       ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
                       Margin="4" >
-						<ComboBox.ItemTemplate>
-							<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
-								<StackPanel Orientation="Horizontal" Height="32" >
-									<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
-									<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
-								</StackPanel>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+							<ComboBox.ItemTemplate>
+								<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
+									<StackPanel Orientation="Horizontal" Height="32" >
+										<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
+										<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</AppBarElementContainer>
+
+					<AppBarButton x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
-						<Button.Resources>
-							<winui:TeachingTip x:Name="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
-                                   IsLightDismissEnabled="True" PreferredPlacement="Right" Target="{x:Bind HomeButton}"
-                                    Subtitle="Click to toggle between city and world view, and to focus on the current city" />
-						</Button.Resources>
 						<SymbolIcon Symbol="Home"/>
 
-					</Button>
-					<Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					</AppBarButton>
+				</tk:TabbedCommandBarItem>
+				<tk:TabbedCommandBarItem Header="Nav">
+					<AppBarButton Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="Switch to prior city in the current city list" >
 						<SymbolIcon Symbol="Previous"/>
-					</Button>
-					<Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					</AppBarButton>
+					<AppBarButton Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="Switch to next city in the current city list" >
 						<SymbolIcon Symbol="Next"/>
-					</Button>
-					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-					<Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
+					</AppBarButton>
+					<AppBarElementContainer>
+
+						<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+					</AppBarElementContainer>
+					<AppBarButton x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
-					<winui:ProgressRing x:Name="progress" IsActive="False" />
-					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-					
-				</StackPanel>
-			</CommandBar.Content>
-			<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+					<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />
-			<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+					<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
-			<AppBarSeparator/>
-			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
+					<AppBarSeparator/>
+				</tk:TabbedCommandBarItem>
+
+				<tk:TabbedCommandBarItem Header="Stuff">
+					<AppBarElementContainer>
+						<winui:ProgressRing x:Name="progress" IsActive="False" />
+					</AppBarElementContainer>
+					<AppBarElementContainer>
+						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
+					</AppBarElementContainer>
+					
+					<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
-
-			<AppBarButton x:Name="Fresh"
+				<AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               Click="Refresh"
                           RightTapped="RefreshX"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
-				<AppBarButton.Resources>
-					<winui:TeachingTip x:Name="RefreshTip"
+						<AppBarButton.Resources>
+							<winui:TeachingTip x:Name="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
                            x:FieldModifier="public"
                                 Target="{x:Bind Fresh}"
                                 Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
-						<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
-					</winui:TeachingTip>
-				</AppBarButton.Resources>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton  x:Name="buildingsButton"
+								<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
+							</winui:TeachingTip>
+						</AppBarButton.Resources>
+					</AppBarButton>
+					<AppBarSeparator/>
+					<AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
                            Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
-				<Button.Flyout>
-					<Flyout Closing="FlyoutClosing"
+						<Button.Flyout>
+							<Flyout Closing="FlyoutClosing"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ShowMode="Auto">
-						<GridView x:Name="buildingList"
+								<GridView x:Name="buildingList"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled">
-							<GridView.ItemTemplate>
-								<DataTemplate x:DataType="game:BuildingCount">
-									<Grid >
-										<Grid.RowDefinitions>
-											<RowDefinition Height="auto" />
-											<RowDefinition  />
-										</Grid.RowDefinitions>
-										<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
+									<GridView.ItemTemplate>
+										<DataTemplate x:DataType="game:BuildingCount">
+											<Grid >
+												<Grid.RowDefinitions>
+													<RowDefinition Height="auto" />
+													<RowDefinition  />
+												</Grid.RowDefinitions>
+												<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
                                                    Width="64" Height="64" />
-										<TextBlock Grid.Row="1"
+												<TextBlock Grid.Row="1"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
                                                        Text="{x:Bind count, Mode=OneTime}" />
-									</Grid>
-								</DataTemplate>
-							</GridView.ItemTemplate>
-							<GridView.ItemsPanel>
-								<ItemsPanelTemplate>
-									<ItemsWrapGrid MaximumRowsOrColumns="6"
+											</Grid>
+										</DataTemplate>
+									</GridView.ItemTemplate>
+									<GridView.ItemsPanel>
+										<ItemsPanelTemplate>
+											<ItemsWrapGrid MaximumRowsOrColumns="6"
                                                        Orientation="Horizontal" />
-								</ItemsPanelTemplate>
-							</GridView.ItemsPanel>
-						</GridView>
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton Label="Heatmap"
+										</ItemsPanelTemplate>
+									</GridView.ItemsPanel>
+								</GridView>
+							</Flyout>
+						</Button.Flyout>
+					</AppBarButton>
+					<AppBarSeparator/>
+					<AppBarButton Label="Heatmap"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="View city changes on the world map">
-				<AppBarButton.Icon>
-					<FontIcon Glyph="&#xF738;"/>
-				</AppBarButton.Icon>
-				<Button.Flyout>
-					<Flyout x:Name="heatMapFlyout">
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
-			<AppBarButton Label="Time"
+						<AppBarButton.Icon>
+							<FontIcon Glyph="&#xF738;"/>
+						</AppBarButton.Icon>
+						<Button.Flyout>
+							<Flyout x:Name="heatMapFlyout">
+							</Flyout>
+						</Button.Flyout>
+					</AppBarButton>
+					<AppBarButton Label="Time"
                               Icon="Shuffle"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
-				<Button.Flyout>
-					<Flyout Placement="Right"
+						<Button.Flyout>
+							<Flyout Placement="Right"
                                 FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
-						<StackPanel Width="1840">
-							<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
-							<Slider x:Name="eventTimeTravelSlider"
+								<StackPanel Width="1840">
+									<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
+									<Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
                                     AllowFocusOnInteraction="True"
@@ -222,13 +232,15 @@
                                     Maximum="1430.0"
                                         Minimum="-1430.0"
                                         Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
-		</CommandBar>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</AppBarButton>
+					<AppBarSeparator/>
+					<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
+				</tk:TabbedCommandBarItem>
+			</tk:TabbedCommandBar.MenuItems>
+		</tk:TabbedCommandBar>
 		<Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="3*"/>

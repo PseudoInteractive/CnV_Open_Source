@@ -15,12 +15,14 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using static COTG.Game.City;
 using static COTG.Debug;
+using COTG.Helpers;
 
 namespace COTG.Views
 {
 
 	public sealed partial class ShareString : ContentDialog
 	{
+		public static bool loadedLayouts;
 		static public ShareString instance;
 		public ShareString()
 		{
@@ -106,7 +108,7 @@ namespace COTG.Views
 					Log(ex);
 				}
 				AddLayouts();
-				var shares = await Cosmos.ReadShares(Player.myName);
+				var shares = await Tables.ReadShares(Player.myName);
 				foreach(var s in shares)
 				{
 					new ShareStringItem(s.s);
@@ -285,7 +287,11 @@ namespace COTG.Views
 			var p = DecomposePath(path.Text);
 			p.root = Player.myName;
 			path.Text = CombinePath(p); // set my name as root
-			Cosmos.ShareShareString(Player.myName, title,GetShareStringWithJson());
+			var json = GetShareStringWithJson();
+			Tables.ShareShareString(Player.myName, title, json);
+			
+			new ShareStringItem(json);
+
 			Note.Show("Shared!");
 		}
 
@@ -314,7 +320,7 @@ namespace COTG.Views
 	public class ShareStringItem
 	{
 		public string path { get; set; } = string.Empty;
-		public static List<ShareStringItem> all = new();
+		public static DumbCollection<ShareStringItem> all = new();
 		public string shareString { get; set; }
 		[JsonIgnore]
 		public string label
@@ -371,7 +377,7 @@ namespace COTG.Views
 			desc = _desc;
 			shareString = _share;
 			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			var myList = all;
+			List<ShareStringItem> myList = all;
 			var pathSoFar = String.Empty;
 			for (int i = 0; i < dir.Length - 1; ++i)
 			{
@@ -384,8 +390,13 @@ namespace COTG.Views
 				}
 				myList = parent.children;
 			}
-			myList.Add(this);
+			var existing = myList.Find(a => a.path == path);
+			// replace
+			if (existing != null)
+				myList.Remove(existing);
 
+			myList.Add(this);
+			all.NotifyReset();
 		}
 	}
 }

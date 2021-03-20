@@ -68,6 +68,8 @@ namespace COTG
 		public static ConcurrentBag<HttpClient> clientPool;
 		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
 		static HttpClient _downloadImageClient;
+		static bool hasCouncilors;
+		static bool councillorsChecked;
 		//public static HttpClient downloadImageClient
 		//{
 		//	get
@@ -1021,30 +1023,29 @@ namespace COTG
 					bonusesUpdated = true;
 
 				}
-				if(jse.TryGetProperty("mvb", out var mvb))
+				if (jse.TryGetProperty("mvb", out var mvb))
 				{
 					Player.moveSlots = mvb.GetAsInt();
 
 				}
-				if(jse.TryGetProperty("cob", out var cob))
+				if (!councillorsChecked)
 				{
-					var serverTime = GameTimeMs();
-
-					
-					foreach (var c in cob.EnumerateObject())
+					councillorsChecked = true;
+					if (jse.TryGetProperty("cob", out var cob))
 					{
-						var t = c.Value.GetAsInt64()*1000;
-						if( t < serverTime)
-						{
-							var msg = new ContentDialog()
-							{
-								Title = "Councillors Expired",
-								Content = "Unofurtunately, this app requires councillors",
-							};
-							await msg.ShowAsync();
-							break;
-						}
+						var serverTime = GameTimeMs();
 
+
+						foreach (var c in cob.EnumerateObject())
+						{
+							var t = c.Value.GetAsInt64() * 1000;
+							if (t < serverTime)
+							{
+								App.DispatchOnUIThreadSneaky(ShowCouncillorsMissingDialog);
+								break;
+							}
+
+						}
 					}
 				}
 				if (jse.TryGetProperty("fa", out var fa))
@@ -1254,6 +1255,19 @@ namespace COTG
 			// Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
 			// Log(ppdt.ToString());
+		}
+
+		private static async void ShowCouncillorsMissingDialog()
+		{
+				var msg = new ContentDialog()
+				{
+					IsPrimaryButtonEnabled = true,
+					Title = "Councillors Expired",
+					Content = "Unfortunately, this app requires councillors",
+					PrimaryButtonText = "Okay",
+					CloseButtonText = "Quit"
+				};
+				await msg.ShowAsync2();
 		}
 
 		private static SortedList<int, int> GetIntArray(JsonElement cln)
@@ -1825,7 +1839,7 @@ namespace COTG
 									   //     city.SetFocus(true);
 									   if (city.classification == Spot.Classification.unknown)
 									   {
-										   if (App.IsKeyPressedControl() && Discord.isValid)
+										   if (App.IsKeyPressedControl() && Player.isAvatarOrTest)
 										   {
 											   city.Classify();
 										   }
@@ -2116,12 +2130,12 @@ namespace COTG
 		{
 			var dialog = new WhatsNewDialog();
 			dialog.DefaultButton = ContentDialogButton.Primary;
-			var result = await dialog.ShowAsync();
+			var result = await dialog.ShowAsync2();
 			if(result == ContentDialogResult.Primary)
 			{
 				var fixes = new Fixes();
 				fixes.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
-				await fixes.ShowAsync();
+				await fixes.ShowAsync2();
 			}
 		}
 		private static async void PresenceTimer_Tick(object sender, object e)

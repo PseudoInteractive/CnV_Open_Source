@@ -322,7 +322,7 @@ namespace COTG.JSON
 											}
 
 										}
-										
+
 										// is there a building in the way?
 										// wait for the demo
 										if (i.bspot != City.bspotWall)
@@ -408,27 +408,29 @@ namespace COTG.JSON
 
 								}
 								// Are we blocked?
-								var counts = City.CountBuildings(cid,cotgQ.span);
-								if (counts.count >= counts.max && cotgQLength <= City.safeBuildQueueLength)
+								if (cotgQ != null)
 								{
-									// search for a command that will increase building limit (townhall) or reduce building count (demo)
-									var tOffset = offset;
-
-									while (tOffset < queue.count)
+									var counts = City.CountBuildings(cid, cotgQ.span);
+									if (counts.count >= counts.max && cotgQLength <= City.safeBuildQueueLength)
 									{
-										var i = queue.v[tOffset];
-										if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && !i.def.isTower))
+										// search for a command that will increase building limit (townhall) or reduce building count (demo)
+										var tOffset = offset;
+
+										while (tOffset < queue.count)
 										{
-											RemoveAt(tOffset);
-											if (cid == City.build)
-												City.buildQueue.Add(i);
-											Serialize(ref sb, i, ref qFirst);
-											break;
+											var i = queue.v[tOffset];
+											if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && !i.def.isTower))
+											{
+												RemoveAt(tOffset);
+												if (cid == City.build)
+													City.buildQueue.Add(i);
+												Serialize(ref sb, i, ref qFirst);
+												break;
+											}
+											++tOffset;
 										}
-										++tOffset;
 									}
 								}
-
 								if (!qFirst)
 								{
 									sb.Append("]}");

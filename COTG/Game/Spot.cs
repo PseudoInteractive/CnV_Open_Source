@@ -650,7 +650,7 @@ namespace COTG.Game
 		}
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
-			if (!Discord.isValid && !Player.isAvatarOrTest)
+			if (!Player.isAvatarOrTest)
 			{
 				classification = Classification.missing;
 				return new ClassificationExtended() { classification = classification };

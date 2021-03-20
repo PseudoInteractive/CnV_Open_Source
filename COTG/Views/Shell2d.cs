@@ -159,21 +159,9 @@ namespace COTG.Views
 
 		}
 
-		static void ValidateFocus()
-		{
-			App.DispatchOnUIThreadLow(() =>
-			{
-				var foc = keyboardProxy.FocusState;
-				Trace($"{foc} => {hasKeyboardFocus}");
-				if( (foc== FocusState.Unfocused) == hasKeyboardFocus )
-				{
-					Trace("Focus error!");
-				}
-			});
-		}
+
 		public static void TakeKeyboardFocus()
 		{
-			ValidateFocus();
 
 		//	if (hasKeyboardFocus)
 		//		return;
@@ -182,8 +170,7 @@ namespace COTG.Views
 			hasKeyboardFocus = true;
 			App.DispatchOnUIThreadLow(()=>
 			{
-				instance.commandBar.Focus(FocusState.Programmatic);// set switch away and back because webview reacts poorly otherwise
-				App.DispatchOnUIThreadLow( ()=>keyboardProxy.Focus(FocusState.Programmatic));
+				keyboardProxy.Focus(FocusState.Programmatic);
 			});
 		}
 		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
@@ -191,7 +178,6 @@ namespace COTG.Views
 			//Log("Get focus");
 			Trace($"Got focus {hasKeyboardFocus}");
 			hasKeyboardFocus =  true;
-			ValidateFocus();
 
 		}
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
@@ -199,7 +185,6 @@ namespace COTG.Views
 			Trace($"Lost focus {hasKeyboardFocus}");
 			hasKeyboardFocus = false;
 			//			CityBuild.ClearAction();
-			ValidateFocus();
 		}
 
 		static void UpgradeOrTower(int number)
