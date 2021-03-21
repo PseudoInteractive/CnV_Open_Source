@@ -898,6 +898,10 @@ namespace COTG.Views
 													var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
 													toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
 													//     Raiding.UpdateTS();
+													if(city.senatorInfo.Length != 0)
+													{
+														toolTip = toolTip + city.GetSenatorInfo();
+													}
 												}
 
 											}

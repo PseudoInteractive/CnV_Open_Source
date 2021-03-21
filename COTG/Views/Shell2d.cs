@@ -165,7 +165,7 @@ namespace COTG.Views
 
 		//	if (hasKeyboardFocus)
 		//		return;
-			Trace($"Take focus {hasKeyboardFocus}");
+		//	Trace($"Take focus {hasKeyboardFocus}");
 			// Set this early, it gets set again once the asyn executes
 			hasKeyboardFocus = true;
 			App.DispatchOnUIThreadLow(()=>
@@ -176,13 +176,13 @@ namespace COTG.Views
 		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
 		{
 			//Log("Get focus");
-			Trace($"Got focus {hasKeyboardFocus}");
+		//	Trace($"Got focus {hasKeyboardFocus}");
 			hasKeyboardFocus =  true;
 
 		}
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
 		{
-			Trace($"Lost focus {hasKeyboardFocus}");
+		//	Trace($"Lost focus {hasKeyboardFocus}");
 			hasKeyboardFocus = false;
 			//			CityBuild.ClearAction();
 		}

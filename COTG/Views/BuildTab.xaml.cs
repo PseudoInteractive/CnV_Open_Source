@@ -15,8 +15,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
@@ -274,7 +273,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void zoom_ItemInvoked(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
 		{
 			var ob = args.InvokedItem;
 			if (ob is BuildItemView q)
@@ -286,9 +285,14 @@ namespace COTG.Views
 
 			}
 		}
+
+	
+
+	
 	}
 
-	public class BuildItemTemplateSelector : DataTemplateSelector
+	public class BuildItemTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector
+
 	{
 		public DataTemplate cityTemplate { get; set; }
 		public DataTemplate opTemplate { get; set; }

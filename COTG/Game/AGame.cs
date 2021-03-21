@@ -1690,7 +1690,7 @@ namespace COTG
 										}
 									}
 									if (!IsCulledWC(wc))
-										DrawTextBox($"{recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
+										DrawTextBox($"Sen:  {recruiting}`{idle}`{active}", c, tipTextFormatCentered, Color.White, textBackgroundOpacity, Layer.tileText);
 
 								}
 								if (city.isMine)
@@ -1700,7 +1700,7 @@ namespace COTG
 										if (!city.isSelected)
 											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed);
 									}
-									if (MainPage.IsVisible())
+									if ((MainPage.IsVisible() && SettingsPage.raidsVisible!=0)||SettingsPage.raidsVisible==1 )
 									{
 										if (IsCulledWC(wc, raidCullSlopSpace))
 											continue;
@@ -1844,7 +1844,7 @@ namespace COTG
 						//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 						//	var bounds = textLayout.span;
 						Vector2 c = ShellPage.mousePositionC + new Vector2(16, 16);
-						DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 128, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 192, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 					var _contTip = ShellPage.contToolTip;
 					if (_contTip != null)

@@ -112,6 +112,7 @@ namespace COTG.Views
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 25;
 		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
+		public static int raidsVisible = -1;
 		public static bool cityListWarship=true;
 		public static bool cityListShippers = true;
 		public static bool cityListDefense = true;
@@ -243,6 +244,13 @@ namespace COTG.Views
 				SetSoundOn(soundOn);
 				ElementSoundPlayer.Volume = volume;
 				SetSpatialOn(spatialOn);
+				switch(raidsVisible)
+				{
+					case 0: instance.raidsVisibleCheckbox.IsChecked = false; break;
+					case 1: instance.raidsVisibleCheckbox.IsChecked = true; break;
+					case -1: instance.raidsVisibleCheckbox.IsChecked = null; break;
+
+				}
 
 			}
 			catch (Exception e)
@@ -360,6 +368,7 @@ namespace COTG.Views
 		{
 			InitializeComponent();
 
+
 			//         var cl = CityList.Find(hubCitylistName);
 			//if (cl != null)
 			//{
@@ -398,6 +407,7 @@ namespace COTG.Views
 			//}
 		}
 
+		
 
 		private static string GetVersionDescription()
 		{
@@ -739,5 +749,19 @@ namespace COTG.Views
 			});
 		}
 
+		private void raidsVisibleTrue(object sender, RoutedEventArgs e)
+		{
+			raidsVisible = 1;
+		}
+
+		private void raidsVisibleFalse(object sender, RoutedEventArgs e)
+		{
+			raidsVisible = 0;
+		}
+
+		private void raidsVisibleMaybe(object sender, RoutedEventArgs e)
+		{
+			raidsVisible = -1;
+		}
 	}
 }

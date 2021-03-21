@@ -78,7 +78,13 @@
 							   OffContent="If Tab Open"
 							   ToolTipService.ToolTip="Allows you to always show outgoing overlays (potentialy slower and more confusing) or to only show the overlays if an ougoing tab is selected"
 							   />
-
+				<CheckBox  Content="Raids Visible" IsThreeState="True" x:Name="raidsVisibleCheckbox"
+							   Margin="4"
+						   Checked="raidsVisibleTrue"
+						   Unchecked="raidsVisibleFalse"
+						   Indeterminate="raidsVisibleMaybe"
+							   ToolTipService.ToolTip="If checked, raids are always visible, if off, raids are never visible, if indeterminate raids are visible when the tab is open"
+							   />
 				<ToggleSwitch  Header="Stay Alive"
 							   IsOn="{x:Bind uiStayAlive, Mode=TwoWay}"
 							   Margin="4"
@@ -107,8 +113,6 @@
 							   OnContent="Unlimited"
 							   OffContent="Normal" />
 
-				<TextBox Header="Visit" Text="{x:Bind visitToken, Mode=TwoWay}" />
-				<TextBox Header="VisitCookie" Text="{x:Bind visitCookie, Mode=TwoWay}" />
 
 
 			</wct:WrapPanel>

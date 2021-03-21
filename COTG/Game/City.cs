@@ -798,6 +798,38 @@ namespace COTG.Game
 
             }
         }
+		public string GetSenatorInfo()
+		{
+			StringBuilder sb = new StringBuilder();
+			var idle = 0;
+			var settle = 0;
+			var siege = 0;
+			var recruiting = 0;
+			
+				foreach (var sen in senatorInfo)
+				{
+					if (sen.type == SenatorInfo.Type.idle)
+						idle += sen.count;
+					else if (sen.type == SenatorInfo.Type.recruit)
+						recruiting += sen.count;
+					else if (sen.type == SenatorInfo.Type.settle)
+						settle += sen.count;
+					else if (sen.type == SenatorInfo.Type.siege)
+						siege += sen.count;
+					else
+						Assert(false);
+				}
+				if (idle > 0)
+						sb.Append($"{idle} idle senators");
+					if(settle > 0)
+						sb.Append($"{settle} senators settling");
+					if (siege > 0)
+						sb.Append($"{siege} senators sieging");
+					if (recruiting > 0)
+						sb.Append($"{recruiting} senators recruiting");
+					return sb.ToString();
+			
+		}
 
         //private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         //{

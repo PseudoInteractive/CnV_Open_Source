@@ -43,7 +43,7 @@
 				</GroupStyle>
 			</GridView.GroupStyle>
 		</GridView>
-		<winui:TeachingTip x:Name="tipBuildLeft"
+		<!--<winui:TeachingTip x:Name="tipBuildLeft"
 						   x:FieldModifier="public"
 						   Title="Left Click Action"
 						  
@@ -71,6 +71,6 @@
                                 x:Name="PlannerTeachingTip"
                                 Title="City Planer"
                                 Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT">
-		</winui:TeachingTip>
+		</winui:TeachingTip>-->
 	</Grid>
 </UserControl>
