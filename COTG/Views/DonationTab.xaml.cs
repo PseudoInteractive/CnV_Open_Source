@@ -157,7 +157,7 @@ public class BlessedTapCommand : DataGridCommand
 
                         if (sender != null)
                         {
-                            var inst = DonationTab.instance;
+	                            var inst = DonationTab.instance;
                                 var wood = (sender.wood - DonationTab.reserveWood.Max(1000)).Max0();
                                 var stone = (sender.stone - DonationTab.reserveStone.Max(1000)).Max0();
                                 if (wood + stone <= 0)

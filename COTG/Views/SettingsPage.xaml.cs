@@ -244,13 +244,7 @@ namespace COTG.Views
 				SetSoundOn(soundOn);
 				ElementSoundPlayer.Volume = volume;
 				SetSpatialOn(spatialOn);
-				switch(raidsVisible)
-				{
-					case 0: instance.raidsVisibleCheckbox.IsChecked = false; break;
-					case 1: instance.raidsVisibleCheckbox.IsChecked = true; break;
-					case -1: instance.raidsVisibleCheckbox.IsChecked = null; break;
-
-				}
+				
 
 			}
 			catch (Exception e)
@@ -738,6 +732,14 @@ namespace COTG.Views
 				if (instance == null)
 					instance = new SettingsPage();
 				//shown = true;
+				switch (raidsVisible)
+				{
+					case 0: instance.raidsVisibleCheckbox.IsChecked = false; break;
+					case 1: instance.raidsVisibleCheckbox.IsChecked = true; break;
+					case -1: instance.raidsVisibleCheckbox.IsChecked = null; break;
+
+				}
+
 				var result = await instance.ShowAsync2();
 				if (!instance.visitToken.IsNullOrEmpty())
 				{

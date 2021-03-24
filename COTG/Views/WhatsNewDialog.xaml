@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Title="Whats New"
-    PrimaryButtonText="Fixes.."
-    CloseButtonText="Done"
+    PrimaryButtonText="Done"
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
    BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
     mc:Ignorable="d">
@@ -21,7 +21,10 @@
 			<TextBlock TextWrapping="WrapWholeWords" Margin="6"
                            FontSize="14" IsColorFontEnabled="False" IsTextSelectionEnabled="True"
                           ><Run Text="Revised City Buildings Prototype:"/><Run Text=" "/><LineBreak/><Run/><LineBreak/><Run FontStyle="Italic" Text="Extended Build Queue:"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run FontStyle="Italic" Text="Layout Mode:"/><LineBreak/><Run Text="&#x9;Credit to "/><Run FontStyle="Italic" Text="Greety"/><Run Text=" for the idea."/><LineBreak/><Run Text="&#x9;Set a layout for your city and each click will build the appropriate building for any given spot. "/><LineBreak/><Run/><LineBreak/><Run FontStyle="Italic" Text="Fast Clicking:"/><LineBreak/><Run Text="&#x9;Clicking is fast.  There is no longer a need to wait as each building flickers on and off (for reasons yet unknown, and possibly never to be known.).  Typically, it takes half a minute to lay out 39 cabins and a storehouse."/><LineBreak/><Run/><LineBreak/><Run Text="Revised city building is Experimental.  Caution is advised."/><LineBreak/><Run/><LineBreak/><Run FontStyle="Italic" Text="Raid Selected"/><Run Text=" is smarter and more robust. "/><LineBreak/><LineBreak/><Run FontStyle="Italic" Text="City Planner"/><LineBreak/><Run Text="&#x9;Planner mode lets you edit your layouts."/><LineBreak/><Run Text="&#x9;Similar to LOUOpt and COTGOpt."/><LineBreak/><Run Text="&#x9;To access, right click while city building and select "/><Run FontStyle="Italic" Text="Planner"/><LineBreak/><Run/><LineBreak/><Run Text="You can disable most of the rendering experiments in settings."/><Run Text=" "/><LineBreak/><LineBreak/><Run Text="Have a great Year, best wishes for 2021!"/><Run Text=" "/><LineBreak/><LineBreak/><Run Text="     - "/><Run FontStyle="Italic" Text="Avatar and tlgger"/><LineBreak/></TextBlock>
-
+               
+				<controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
+                                  Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
+                                   />
 		</StackPanel>
     </ScrollViewer>
 </ContentDialog>

@@ -3322,6 +3322,16 @@
             <param name="handler"><see cref="T:System.EventHandler"/> to be invoked</param>
             <param name="e">The <see cref="T:System.EventArgs"/> passed to <see cref="T:System.EventHandler"/></param>
         </member>
+        <member name="T:Microsoft.Xna.Framework.FileDropEventArgs">
+            <summary>
+            This class is used in the <see cref="E:Microsoft.Xna.Framework.GameWindow.FileDrop"/> event as <see cref="T:System.EventArgs"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xna.Framework.FileDropEventArgs.Files">
+            <summary>
+            The paths of dropped files
+            </summary>
+        </member>
         <member name="T:Microsoft.Xna.Framework.FrameworkDispatcher">
             <summary>
             Helper class for processing internal framework events.
@@ -4018,6 +4028,14 @@
             <summary>
             Buffered keyboard KeyUp event.
             </summary>
+        </member>
+        <member name="E:Microsoft.Xna.Framework.GameWindow.FileDrop">
+            <summary>
+            This event is raised when user drops a file into the game window
+            </summary>
+            <remarks>
+            This event is only supported on desktop platforms.
+            </remarks>
         </member>
         <member name="M:Microsoft.Xna.Framework.GameWindow.BeginScreenDeviceChange(System.Boolean)">
             <summary>
@@ -7437,7 +7455,7 @@
             <param name="characters">The characters.</param>
             <param name="lineSpacing">The line spacing (the distance from baseline to baseline) of the font.</param>
             <param name="spacing">The spacing (tracking) between characters in the font.</param>
-            <param name="kerning">The letters kernings(X - left side bearing, Y - width and Z - right side bearing).</param>
+            <param name="kerning">The letters kernings (X - left side bearing, Y - width and Z - right side bearing).</param>
             <param name="defaultCharacter">The character that will be substituted when a given character is not included in the font.</param>
         </member>
         <member name="P:Microsoft.Xna.Framework.Graphics.SpriteFont.Texture">
@@ -7450,7 +7468,7 @@
             <summary>
             Returns a copy of the dictionary containing the glyphs in this SpriteFont.
             </summary>
-            <returns>A new Dictionary containing all of the glyphs inthis SpriteFont</returns>
+            <returns>A new Dictionary containing all of the glyphs in this SpriteFont</returns>
             <remarks>Can be used to calculate character bounds when implementing custom SpriteFont rendering.</remarks>
         </member>
         <member name="P:Microsoft.Xna.Framework.Graphics.SpriteFont.Characters">
@@ -7516,12 +7534,12 @@
         </member>
         <member name="F:Microsoft.Xna.Framework.Graphics.SpriteFont.Glyph.LeftSideBearing">
             <summary>
-            The amount of space between the left side ofthe character and its first pixel in the X dimention.
+            The amount of space between the left side of the character and its first pixel in the X dimension.
             </summary>
         </member>
         <member name="F:Microsoft.Xna.Framework.Graphics.SpriteFont.Glyph.RightSideBearing">
             <summary>
-            The amount of space between the right side of the character and its last pixel in the X dimention.
+            The amount of space between the right side of the character and its last pixel in the X dimension.
             </summary>
         </member>
         <member name="F:Microsoft.Xna.Framework.Graphics.SpriteFont.Glyph.Width">

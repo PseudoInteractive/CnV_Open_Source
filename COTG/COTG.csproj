@@ -203,6 +203,7 @@
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />
+    <Compile Include="Game\ResSource.cs" />
     <Compile Include="Game\Spot.cs" />
     <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\Tags.cs" />
@@ -356,6 +357,9 @@
     <Compile Include="Views\NearDefenseTab.xaml.cs">
       <DependentUpon>NearDefenseTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NearRes.xaml.cs">
+      <DependentUpon>NearRes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OutgoingTab.xaml.cs">
       <DependentUpon>OutgoingTab.xaml</DependentUpon>
     </Compile>
@@ -503,6 +507,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\NearDefenseTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NearRes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -784,6 +792,9 @@
   <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
+    </SDKReference>
+    <SDKReference Include="Microsoft.VCLibs.Desktop, Version=14.0">
+      <Name>Visual C++ 2015-2019 UWP Desktop Runtime for native apps</Name>
     </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

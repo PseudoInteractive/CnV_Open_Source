@@ -27,13 +27,13 @@ namespace COTG.Services
 
 			// Get the updates that are available.
 			IReadOnlyList<StorePackageUpdate> updates =
-				await context.GetAppAndOptionalStorePackageUpdatesAsync();
+				await context.GetAppAndOptionalStorePackageUpdatesAsync().AsTask().ConfigureAwait(true);
 
 			if (updates.Count != 0)
 			{
 				// Download the packages.
 				
-				App.DispatchOnUIThreadSneaky( async ()=> await InstallPackageUpdatesAsync(updates) );
+				await InstallPackageUpdatesAsync(updates);
 
 			}
 		}

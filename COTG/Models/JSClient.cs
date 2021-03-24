@@ -465,6 +465,12 @@ namespace COTG
 				WebViewPage.DefaultUrl = args.Uri;
 				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
 			}
+			else if(args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
+			{
+				WebViewPage.post = args.Uri;
+				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
+			}
+//			else if (httpsHost != null && args.)
 			else
 			{
 				Launcher.LaunchUriAsync(args.Uri);
@@ -1001,7 +1007,7 @@ namespace COTG
 		static private int[] lastCln = null;
 		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
 		{
-			// Todo:  should we update out local PPDT to the server?
+			// Todo:  should we update our local PPDT to the server?
 			var thisPid = jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.activeId;
 			int clChanged = 0;
 			// City lists
@@ -2128,15 +2134,12 @@ namespace COTG
 		
 		static async void ShowWhatsNew()
 		{
+
 			var dialog = new WhatsNewDialog();
 			dialog.DefaultButton = ContentDialogButton.Primary;
+			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
+
 			var result = await dialog.ShowAsync2();
-			if(result == ContentDialogResult.Primary)
-			{
-				var fixes = new Fixes();
-				fixes.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
-				await fixes.ShowAsync2();
-			}
 		}
 		private static async void PresenceTimer_Tick(object sender, object e)
 		{

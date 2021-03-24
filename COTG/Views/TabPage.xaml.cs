@@ -43,6 +43,7 @@ namespace COTG.Views
                 new OutgoingTab(),
                 new HitTab(),
                 new NearDefenseTab(),
+				new NearRes()
         };
             }
 		
@@ -276,6 +277,7 @@ namespace COTG.Views
             { "world", Symbol.Microphone },
 			{ "Build", Symbol.Repair },
 			{ "Planner", Symbol.Map },
+			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },
         };
 

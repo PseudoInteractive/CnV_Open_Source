@@ -225,7 +225,7 @@
 				<RowDefinition Height="3*"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  />
+			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  x:FieldModifier="public" />
 			<Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
 			<tk:GridSplitter
 				IsTabStop="True"

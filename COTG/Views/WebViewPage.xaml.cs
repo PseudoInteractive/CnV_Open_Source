@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Http;
 
 using static COTG.Debug;
 
@@ -83,7 +84,9 @@ namespace COTG.Views
         }
 
         public string stringTable;
-        async private void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+		internal static Uri post;
+
+		async private void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             IsLoading = false;
             OnPropertyChanged(nameof(IsBackEnabled));
@@ -152,7 +155,6 @@ namespace COTG.Views
 
         public WebViewPage()
         {
-            Source = (DefaultUrl);
             InitializeComponent();
             IsLoading = true;
      //       Assert(instance == null);
@@ -165,9 +167,26 @@ namespace COTG.Views
 			webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
 			webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
 			webView.NewWindowRequested += WebView_NewWindowRequested;
-        }
+			if(post != null)
+			{
+				var p = post;
+				post = null;
+				using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(p.OriginalString)))
+				{
+					
 
-        private void WebView_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
+					webView.NavigateWithHttpRequestMessage(req);
+
+				}
+			}
+			else
+			{
+				Source = (DefaultUrl);
+				DefaultUrl = null;
+			}
+		}
+
+		private void WebView_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
             {
             Log("Permission");
             args.PermissionRequest.Allow();

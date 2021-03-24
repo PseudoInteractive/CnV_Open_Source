@@ -1485,6 +1485,7 @@ namespace COTG.Game
 				aWar.AddItem( "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
+				AApp.AddItem(flyout, "Near Res", ShowNearRes);
 			}
 			else if (this.isDungeon || this.isBoss)
 			{
@@ -1526,6 +1527,22 @@ namespace COTG.Game
 		{
 			NearDefenseTab.defendant = this;
 			var tab = NearDefenseTab.instance;
+			if (!tab.isActive)
+			{
+				TabPage.mainTabs.AddTab(tab, true);
+			}
+			else
+			{
+				if (!tab.isVisible)
+					TabPage.Show(tab);
+				else
+					tab.Refresh();
+			}
+		}
+		public void ShowNearRes()
+		{
+			NearRes.defendant = (City)this;
+			var tab = NearRes.instance;
 			if (!tab.isActive)
 			{
 				TabPage.mainTabs.AddTab(tab, true);

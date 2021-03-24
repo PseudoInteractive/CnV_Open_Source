@@ -68,7 +68,7 @@ namespace COTG.Game
     }
     // Proxy for a datagrid that displays 1 row per troop type
     public class SupportByTroopType
-    {
+	{
         public Supporter supporter;
         public int type;
 

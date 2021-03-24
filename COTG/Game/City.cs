@@ -1011,8 +1011,43 @@ namespace COTG.Game
 
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
+		internal CityTradeInfo tradeInfo;
+
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
 
+		public bool ComputeCartTravelTime(int target,out TimeSpan t)
+		{
+			var onDifferentContinent = cont != target.CidToContinent();
+			t = TimeSpan.Zero;
+
+			var targetC = Spot.GetOrAdd(target);
+			if (onDifferentContinent)
+			{
+				return false;
+			}
+			else
+			{
+				var dist = cid.DistanceToCid(target);
+				t = TimeSpan.FromMinutes(dist * Enum.cartTravel );
+				return true;
+
+			}
+		}
+		public bool ComputeShipTravelTime(int target,  out TimeSpan t)
+		{
+			t = TimeSpan.Zero;
+
+			var targetC = Spot.GetOrAdd(target);
+			if (!targetC.isOnWater || !isOnWater)
+				return false;
+
+			
+				var dist = cid.DistanceToCid(target);
+				t = TimeSpan.FromMinutes(dist * Enum.shipTravel + 60);
+
+				return true;
+		
+		}
 		public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
         {
             hours = 0;
