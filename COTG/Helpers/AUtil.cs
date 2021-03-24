@@ -20,8 +20,8 @@ namespace COTG
 	public static class AUtil
 	{
 		public const string emptyJson = "{}";
-		public const string defaultTimeFormat = "H':'mm':'ss";
-		public const string preciseTimeFormat = "H':'mm':'ss.fff";
+		public const string defaultTimeFormat = "hh':'mm':'ss";
+		public const string preciseTimeFormat = "hh':'mm':'ss.fff";
 		public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
 		public const string defaultDateFormat = "MM/dd H':'mm':'ss";

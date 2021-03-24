@@ -45,8 +45,11 @@ namespace COTG.Game
 			// round down (truncate as it is positive)
 			return new Resources() { wood = (int)(wood * s), stone = (int)(stone * s), iron = (int)(iron * s), food = (int)(food * s) };
 		}
+		public string Format() => "{wood:N0} wood, {stone:N0} stone, {iron:N0} iron, {food:N0} food";
+	
 
-		internal void Clear()
+
+	internal void Clear()
 		{
 			wood = stone = iron = food = 0;
 		}
@@ -60,7 +63,7 @@ namespace COTG.Game
 
 		public int shipsHome => info.shipsHome;
 		public int shipsTotal => info.shipsTotal;
-
+		public int totalRes => res.sum;
 
 		public string xy => city.xy;
 		public string SendOrLocked => city.underSiege ? "Sieged" : "Send";

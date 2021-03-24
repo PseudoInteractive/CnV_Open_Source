@@ -22,6 +22,8 @@ using System.ComponentModel;
 using COTG.Services;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Threading.Tasks;
+using System.Web;
+using System.Text;
 
 namespace COTG.Views
 {
@@ -258,11 +260,7 @@ namespace COTG.Views
 
 				supporter.NotifyChange();
 			});
-			AApp.AddItem(flyout, "None", (_, _) =>
-			{
-				supporter.send = TroopTypeCount.empty;
-				supporter.NotifyChange();
-			});
+			
 
 			flyout.ShowAt(text, e.GetPosition(text));
 		}
@@ -270,56 +268,17 @@ namespace COTG.Views
 		private async void SendClick(object sender, RoutedEventArgs e)
 		{
 			var text = sender as FrameworkElement;
-			var supporter = text.DataContext as ResSource;
-			var city = supporter.city;
-			var pid = World.CidToPlayer(senderCity.cid);
+			var s = text.DataContext as ResSource;
+			var city = s.city;
+			var pid = city.pid;
 
 			var secret = $"JJx452Tdd{pid}sRAssa";
-			var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
+			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{city.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
 
-			Post.Send("includes/sndTtr.php", $"cid={senderCity.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-			Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / (sendType == 1 ? 1000 : 10000)):N0} {(sendType == 1 ? "carts" : "ships")}");
-`
-			if (city.commandSlots != 0 && supporter.split > city.freeCommandSlots)
-			{
-				Note.Show("To few command slots");
-				return;
-			}
-			var departAt = AUtil.dateTimeZero;
-			var _arriveAt = arriveAt;
-			if (!supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
-			{
-				RaidOverview.SendMaybe();
-
-				if (city.AreRaidsRepeating())
-				{
-					await Raiding.ReturnFast(city.cid, false);
-				}
-
-				departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
-				var canArriveAt = departAt + supporter.travel;
-				if (_arriveAt > JSClient.ServerTime() && _arriveAt < canArriveAt)
-				{
-					var msg = new ContentDialog()
-					{
-						Title = "Home Too late to make arrival time",
-						Content = "Would you like to schedule as soon as they return?",
-						PrimaryButtonText = "Yes",
-						CloseButtonText = "Cancel"
-					};
-					msg.CopyXamlRoomFrom(text);
-					ElementSoundPlayer.Play(ElementSoundKind.Show);
-
-					if (await msg.ShowAsync2() != ContentDialogResult.Primary)
-					{
-						return;
-					}
-					_arriveAt = AUtil.dateTimeZero;
-				}
-			}
-
-			Post.SendRein(supporter.cid, defendant.cid, supporter.tSend, departAt, _arriveAt, supporter.travel, supporter.split, text);
-
+			Post.Send("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+			Note.Show($"Sent {s.res.Format()}");
+		
+			
 
 		}
 
@@ -332,11 +291,10 @@ namespace COTG.Views
 			Comparison<ResSource> comparer = null;
 			switch (tag)
 			{
-				case nameof(ResSource.tsTotal): comparer = (a, b) => b.tsTotal.CompareTo(a.tsTotal); break;
-				case nameof(ResSource.tsHome): comparer = (a, b) => b.tsHome.CompareTo(a.tsHome); break;
-				case nameof(ResSource.tsSend): comparer = (a, b) => b.tsSend.CompareTo(a.tsSend); break;
+				case nameof(ResSource.cartsHome): comparer = (a, b) => b.cartsHome.CompareTo(a.cartsHome); break;
+				case nameof(ResSource.shipsHome): comparer = (a, b) => b.shipsHome.CompareTo(a.shipsHome); break;
+				case nameof(ResSource.totalRes): comparer = (a, b) => b.totalRes.CompareTo(a.totalRes); break;
 				case nameof(ResSource.travel): comparer = (b, a) => b.travel.CompareTo(a.travel); break;
-				case nameof(ResSource.raidReturn): comparer = (b, a) => b.raidReturn.CompareTo(a.raidReturn); break;
 			}
 
 			if (comparer != null)
