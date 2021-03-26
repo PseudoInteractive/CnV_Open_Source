@@ -17,25 +17,57 @@
 			<RowDefinition Height="3*" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+		<StackPanel Orientation="Vertical">
+			
+		<Border Style="{StaticResource BorderReveal}">
+			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-			<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
-                          OffContent="Land" OnContent="Water"  HorizontalAlignment="Center"
+				<Image Source="{x:Bind targetIcon}"  Width="32" Tapped="TargetTapped" />
+				<TextBlock Text="{x:Bind targetName}" VerticalAlignment ="Center" />
+			</tk:WrapPanel>
+		</Border>
+
+		<Border Style="{StaticResource BorderReveal}">
+			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+
+				<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Wood"  Margin="6,0,6,0" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+				<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+				<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+				<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+			</tk:WrapPanel >
+		</Border>
+		<Border Style="{StaticResource BorderReveal}">
+
+			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+
+				<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
+                          OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" IsEnabledChanged="ToggleSwitch_IsEnabledChanged"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
 			<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
-                          NumberFormatter="{x:Bind cotg:App.formatter2Digit}"
+                          NumberFormatter="{x:Bind cotg:App.formatter2Digit}" ValueChanged="NumberBox_ValueChanged"
                           />
 			<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
-                          Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" SpinButtonPlacementMode="Inline" />
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
 			<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
-                          Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" SpinButtonPlacementMode="Inline"/>
+                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline"/>
 			<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" 
-                          Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="5000" SpinButtonPlacementMode="Inline"/>
+                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline"/>
 		</tk:WrapPanel>
+		</Border>
+		</StackPanel>
+
 		<tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:NearRes.supporters, Mode=OneWay}"
@@ -43,8 +75,8 @@
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-                     AreRowDetailsFrozen="True" 
-                     FrozenColumnCount="2"
+                   
+                        
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
                      Sorting="supportGrid_Sorting"
@@ -58,7 +90,7 @@
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:ResSource">
 							<Image Source= "{x:Bind icon}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
-              ToolTipService.ToolTip="Selects support city, right click to bring troops home from raids"                                             
+                                                       
                                    VerticalAlignment="Center" MaxWidth="32" />
 						</DataTemplate>
 					</tk:DataGridTemplateColumn.CellTemplate>
@@ -66,7 +98,7 @@
 				<tk:DataGridTemplateColumn Header="Send" CanUserSort="False" >
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:ResSource">
-							<HyperlinkButton Content="{x:Bind SendOrLocked}" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+							<HyperlinkButton Content="{x:Bind Send}" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="Sends defense, or schedules them to depart if arrival time is later than ETA"
                                              RightTapped="TsSendRightTapped"
                                              />
@@ -83,8 +115,13 @@
 						</DataTemplate>
 					</tk:DataGridTemplateColumn.CellTemplate>
 				</tk:DataGridTemplateColumn>
+				<tk:DataGridTextColumn  Header="Travel" 
+                                        Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneTime}"
+                                        IsReadOnly="True" Tag="travel"
+                                            CellStyle="{StaticResource CellCenter}"
+                                             />
 				<tk:DataGridTextColumn  Header="Carts" 
-                                        Binding="{Binding carts, Converter={StaticResource IntConverter},Mode=OneTime}"
+                                        Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneTime}"
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
@@ -93,33 +130,30 @@
                                         Binding="{Binding name, Mode=OneTime }"
                                         IsReadOnly="True"
                                             CellStyle="{StaticResource CellLeft}" />
-				<tk:DataGridTextColumn Header="Send Res" Binding="{Binding tsSend,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="tsSend"
+
+				<tk:DataGridTextColumn Header="Send Res" Binding="{Binding totalRes,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
-				<tk:DataGridTextColumn Header="Home TS" Binding="{Binding tsHome,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsHome"
-                                        />
-				<tk:DataGridTextColumn Header="Total TS"  Binding="{Binding tsTotal,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True" Tag="tsTotal"
-                                        />
+
+				<tk:DataGridTextColumn Header="Wood" Binding="{Binding wood,Converter={StaticResource IntConverter}, Mode=OneTime}"
+                                       CellStyle="{StaticResource CellRight}"   />
+				<tk:DataGridTextColumn Header="Stone" Binding="{Binding stone,Converter={StaticResource IntConverter}, Mode=TwoWay}"
+                                       CellStyle="{StaticResource CellRight}"   />
+				<tk:DataGridTextColumn Header="Iron" Binding="{Binding iron,Converter={StaticResource IntConverter}, Mode=TwoWay}"
+                                       CellStyle="{StaticResource CellRight}"   />
+
+				<tk:DataGridTextColumn Header="Food" Binding="{Binding food,Converter={StaticResource IntConverter}, Mode=TwoWay}"
+                                       CellStyle="{StaticResource CellRight}"   />
+
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneTime}"
                                        />
-				<tk:DataGridComboBoxColumn Header="Split" CanUserSort="False" Binding="{Binding split,Mode=OneTime}"
-                                       IsReadOnly="False"
-                                           ToolTipService.ToolTip=""
-                                           ItemsSource="{x:Bind local:NearRes.splitArray}"
-                                        >
-					<tk:DataGridComboBoxColumn.CellStyle>
-						<Style BasedOn="{StaticResource CellCenter}" TargetType="tk:DataGridCell">
-							<Setter Property="ToolTipService.ToolTip" Value="Send multiple batches to allow more effective use of wings"/>
-						</Style>
-					</tk:DataGridComboBoxColumn.CellStyle>
-				</tk:DataGridComboBoxColumn>
+			
 			</tk:DataGrid.Columns>
+	
 		</tk:DataGrid>
 		<tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
@@ -136,54 +170,18 @@
                      IsHitTestVisible="False"    />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
-		<tk:DataGrid x:Name="troopTypeGrid" x:FieldModifier="public"
-                        AutoGenerateColumns="False"
-                     Grid.Row="2"
-                        ItemsSource="{x:Bind local:NearRes.supportByTroopTypeEmpty, Mode=OneWay}"
-                        RowHeight="46"
-                     Margin="0,14,0,0"
-                     CanUserReorderColumns="False"
-                     CanUserSortColumns="False"
-                     GridLinesVisibility="All"
-                     
-                     AlternatingRowBackground="#FF103020"
-                     >
-			<tk:DataGrid.Columns>
-				<tk:DataGridTemplateColumn Header="Icon" >
-					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:SupportByTroopType">
-							<Image Source= "{x:Bind icon}" HorizontalAlignment="Center" Stretch= "UniformToFill"
-                                   VerticalAlignment="Center"   />
-						</DataTemplate>
-					</tk:DataGridTemplateColumn.CellTemplate>
-				</tk:DataGridTemplateColumn>
-				<tk:DataGridTextColumn Header="Type" Binding="{Binding troopType, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellLeft}" IsReadOnly="True"
-                                        />
-				<tk:DataGridTemplateColumn Header="Send" IsReadOnly="False">
-					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:SupportByTroopType">
-							<TextBlock Text= "{x:Bind send, Converter={StaticResource IntConverter} }"
-                                      ToolTipService.ToolTip="Troops to send.  Right click to select troops home or total troops (if troops will return before the send).  You can use expressions i.e. if you want to send half the troops, right click and set Troops Home, then add /2 after the number"
-                                      Style="{StaticResource RightAlign}"  
-                                        />
-						</DataTemplate>
-					</tk:DataGridTemplateColumn.CellTemplate>
-					<tk:DataGridTemplateColumn.CellEditingTemplate>
-						<DataTemplate x:DataType="game:SupportByTroopType">
-							<my:NumberBox Text= "{x:Bind send,Mode=TwoWay,Converter={StaticResource IntConverter}}" HorizontalContentAlignment="Right" AcceptsExpression="True" SmallChange="1000" LargeChange="10000" VerticalAlignment="Center" FontSize="12"
-                                        />
-						</DataTemplate>
-					</tk:DataGridTemplateColumn.CellEditingTemplate>
-				</tk:DataGridTemplateColumn>
 
-				<tk:DataGridTextColumn Header="Home" Binding="{Binding home,Converter={StaticResource IntConverter}, Mode=OneWay}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"
-                                        />
-				<tk:DataGridTextColumn Header="Total" Binding="{Binding total,Converter={StaticResource IntConverter}, Mode=OneWay}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"
-                                        />
-			</tk:DataGrid.Columns>
-		</tk:DataGrid>
+		<Border Style="{StaticResource BorderReveal}" Grid.Row="2">
+
+			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+
+				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                          Header="Wood"  Margin="6,0,6,0" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+				<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="No Wood" Click="ZeroWoodClick"  Style="{StaticResource ButtonSmall}"  />
+
+			</tk:WrapPanel>
+		</Border>
 	</Grid>
 </local:UserTab>

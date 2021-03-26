@@ -23,9 +23,18 @@ namespace COTG.Game
 		public int stone;
 		public int iron;
 		public int food;
+
+		public Resources(int wood, int stone, int iron, int food)
+		{
+			this.wood = wood;
+			this.stone = stone;
+			this.iron = iron;
+			this.food = food;
+		}
+
 		public int this[int index]
 		{
-			get => index switch { 0 => wood, 1 => stone, 2 => iron, _ => 3 };
+			get => index switch { 0 => wood, 1 => stone, 2 => iron, _ => food };
 			set
 			{
 				switch (index)
@@ -45,17 +54,35 @@ namespace COTG.Game
 			// round down (truncate as it is positive)
 			return new Resources() { wood = (int)(wood * s), stone = (int)(stone * s), iron = (int)(iron * s), food = (int)(food * s) };
 		}
-		public string Format() => "{wood:N0} wood, {stone:N0} stone, {iron:N0} iron, {food:N0} food";
+		public Resources Min(Resources b)
+		{
+			// round down (truncate as it is positive)
+			return new Resources(wood.Min(b.wood), stone.Min(b.stone), iron.Min(b.iron), food.Min(b.food));
+		}
 	
 
+		public string Format() => $"{wood:N0} wood, {stone:N0} stone, {iron:N0} iron, {food:N0} food";
+	
+		public Resources Sub(Resources from)
+		{
+			return new Resources(wood - from.wood, stone - from.stone, iron - from.iron, food - from.food);
+		}
+		public void ClampToPositive()
+		{
+			wood = wood.Max(0);
+			stone = stone.Max(0);		
+			iron= iron.Max(0);
+			food = food.Max(0);
 
-	internal void Clear()
+		}
+		internal void Clear()
 		{
 			wood = stone = iron = food = 0;
 		}
 	}
 	public class ResSource : INotifyPropertyChanged
 	{
+		public static ResSource dummy=new ResSource();
 		public City city;
 		public CityTradeInfo info;
 		public int cartsHome => info.cartsHome;
@@ -66,50 +93,53 @@ namespace COTG.Game
 		public int totalRes => res.sum;
 
 		public string xy => city.xy;
-		public string SendOrLocked => city.underSiege ? "Sieged" : "Send";
-		//        public string SendOrLocked => (city.cid&1)==0  ? "Sieged" : "Send";
+		
 		public string Send => "Send"; // make shift button column
 		public string name => city.nameAndRemarks;
 		public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
 		public int cid => city.cid;
-		public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefHome;
+	
 		public TimeSpan travel { get; set; }
 
 		public Resources res;
-		
+		public int wood
+		{
+			get => res.wood;
+			set => res.wood = value;
+		}
+		public int stone
+		{
+			get => res.stone;
+			set => res.stone= value;
+		}
+		public int iron
+		{
+			get => res.iron;
+			set => res.iron = value;
+		}
+		public int food
+		{
+			get => res.food;
+			set => res.food = value;
+		}
+
 		public void NotifyChange(string member = "")
 		{
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{
 				OnPropertyChanged(member);
-				Debug.Log("NotifyChange");
-
-				if (NearDefenseTab.instance.supportGrid.SelectedItem == this)
-					NearDefenseTab.instance.RefreshSupportByType();
-
 			});
 		}
+		public int ResMax(int type)
+		{
+					return info.res[type].Min(info.GetTransPort(NearRes.instance.viaWater)); // TODO
+		}
 
-
-		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
+	public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	}
-	// Proxy for a datagrid that displays 1 row per troop type
-	public class SupportByResType
-	{
-		public ResSource supporter;
-
-		public int type; // 
-		public string name => Resources.names[type];
-		public int res
-		{
-			get => supporter.res[type];
-			set => supporter.res[type] = value;
-		}
-
-
-		}
+	
 }

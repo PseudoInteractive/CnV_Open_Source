@@ -399,13 +399,10 @@ namespace COTG
 		// Randomish hash for city ids
 		public static float CidToRandom(this int cid)
 		{
-			var x = cid % 65536;
-			var y = cid / 65536;
 			const uint c1 = 0xcc9e2d51;
 			const uint c2 = 0x1b873593;
-			var result = (((int)(x * c1 + y * c2) >> 8) & 0xffff);
+			var result = (((int)(cid * c1 + cid/11131 * c2) >> 8) & 0xffff);
 			return result * (1.0f / 0x10000);
-
 		}
 		// not very random at all, but good enough
 		public static float BSpotToRandom(this int bspot)

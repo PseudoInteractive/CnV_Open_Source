@@ -1499,7 +1499,7 @@ namespace COTG.Game
 			}
 			aMisc.AddItem( "Notify on Decay", DecayQuery);
 
-			aMisc.AddItem( "Distance", (_, _) => ShowDistanceTo(Spot.focus));
+			aMisc.AddItem( "Distance", (_, _) => City.GetBuild().ShowDistanceTo(Spot.focus));
 			aMisc.AddItem( "Select", (_, _) => SelectMe(true, App.keyModifiers));
 			aMisc.AddItem("Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
 			flyout.RemoveEmpy();
@@ -1541,7 +1541,7 @@ namespace COTG.Game
 		}
 		public void ShowNearRes()
 		{
-			NearRes.defendant = (City)this;
+			NearRes.target = (City)this;
 			var tab = NearRes.instance;
 			if (!tab.isActive)
 			{

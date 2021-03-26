@@ -219,9 +219,7 @@ namespace COTG.Views
             {
                 troopTypeGrid.ItemsSource = supportByTroopTypeEmpty; 
             }
-
         }
-
 
         private void TTSendRightTapped(object sender, RightTappedRoutedEventArgs e)
         {

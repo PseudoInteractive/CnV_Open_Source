@@ -194,6 +194,7 @@
     </Style>
     <converter:DateTimeConverter x:Key="DateTimeConverter" />
     <converter:IntConverter x:Key="IntConverter" />
-    <converter:FloatConverter x:Key="FloatConverter" />
+	<converter:TimeConverter x:Key="TimeConverter" />
+	<converter:FloatConverter x:Key="FloatConverter" />
     <converterTK:FormatStringConverter x:Key="FormatString" />
 </ResourceDictionary>

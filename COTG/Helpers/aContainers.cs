@@ -79,7 +79,7 @@ namespace COTG.Helpers
             Set(null);
         }
 
-        public void OnPropertyChanged(T city, string propertyName) => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+        public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
         public event PropertyChangedEventHandler PropertyChanged;
 
         //       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -19,22 +19,19 @@ namespace COTG.Converters
             return default(int);
         }
     }
-	//public class TimeSpanConverter : IValueConverter
-	//{
-	//	public object Convert(object value, Type targetType, object parameter, string language)
-	//	{
+	public class TimeConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, string language)
+		{
+			return ((TimeSpan)value).Format();
+		}
 
-	//		return String.Format(parameter != null ? parameter.ToString() : defaultFormat, value);
-	//	}
+		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		{
+			return TimeSpan.Zero;
+		}
+	}
 
-	//	public object ConvertBack(object value, Type targetType, object parameter, string language)
-	//	{
-	//		TimeSpan.Parse();
-	//		if (int.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
-	//			return v;
-	//		return ;
-	//	}
-	//}
 	public class FloatConverter : IValueConverter
     {
         const string defaultFormat = "{0,3:N2}";

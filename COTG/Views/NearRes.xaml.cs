@@ -24,6 +24,8 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Threading.Tasks;
 using System.Web;
 using System.Text;
+using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.AppCenter.Analytics;
 
 namespace COTG.Views
 {
@@ -33,8 +35,7 @@ namespace COTG.Views
 		public static NearRes instance;
 		public static bool IsVisible() => instance.isVisible;
 		public bool viaWater { get; set; } = false;
-		public static City defendant;
-		public static bool includeOffense;
+		public static City target;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
 		public int filterResHome { get; set; } = 1000;
@@ -42,13 +43,34 @@ namespace COTG.Views
 		public int filterShipsHome { get; set; } = 10; // need at this this many ts at home to be considered for def
 		public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
 		public static DumbCollection<ResSource> supporters = new DumbCollection<ResSource>();
-		public static SupportByTroopType[] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
-		public static int[] splitArray = { 1, 2, 3, 4, 5 };
-		public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
 
-		public Resources des;
+		public BitmapImage targetIcon => target.icon;
+		public string targetName => target.nameAndRemarks;
 
 
+		public Resources des = new Resources() { wood = 1000000, stone = 1000000, food = 1000000, iron = 1000000 };
+
+
+		public ResSource selected = ResSource.dummy;
+		public int sendWood
+		{
+			get => selected.res[0];
+			set {
+				selected.res[0] = value;
+				supporters.OnPropertyChanged(selected);
+			}
+		}
+
+
+		public void RefreshSupportByRes()
+		{
+		//	Log("Refresh");
+			var sel = supportGrid.SelectedItem;
+			if (sel is ResSource support)
+			{
+				selected = support;
+			}
+		}
 
 		public static void GetSelected(List<int> rv)
 		{
@@ -66,15 +88,16 @@ namespace COTG.Views
 
 		public static async void UpdateTradeStuff()
 		{
+
 			var data = await Post.SendForJson("overview/tcounc.php");
 			foreach (var city in data.RootElement[0].EnumerateArray())
 			{
 				var ct = new CityTradeInfo();
 				var cid = city.GetAsInt("28");
-				var cartStr = city.GetAsString("24").Split(@" \/ ", StringSplitOptions.RemoveEmptyEntries);
+				var cartStr = city.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
 				int.TryParse(cartStr[0], out ct.cartsHome);
 				int.TryParse(cartStr[1], out ct.cartsTotal);
-				var shipStr = city.GetAsString("25").Split(@" \/ ", StringSplitOptions.RemoveEmptyEntries);
+				var shipStr = city.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
 				int.TryParse(shipStr[0], out ct.shipsHome);
 				int.TryParse(shipStr[1], out ct.shipsTotal);
 				ct.res.wood = city.GetAsInt("6");
@@ -84,6 +107,7 @@ namespace COTG.Views
 				City.GetOrAddCity(cid).tradeInfo = ct;
 
 			}
+			
 			// second pass, bind cities
 			foreach (var city in data.RootElement[0].EnumerateArray())
 			{
@@ -96,8 +120,9 @@ namespace COTG.Views
 					{
 						var toCid = int.Parse(to.Name);
 						var cTo = City.GetOrAddCity(toCid);
-						cTo.tradeInfo.resSource.Add(cid);
-						ct.resDest.Add(toCid);
+						cTo.tradeInfo.resSource.AddIfAbsent(cid);
+
+						ct.resDest.AddIfAbsent(toCid);
 
 					}
 				}
@@ -116,6 +141,7 @@ namespace COTG.Views
 			}
 
 
+//			await GetCity.Post(target.cid, (jse, c) => { });
 
 
 			//for(var fromTo=0;fromTo<2;++fromTo)
@@ -131,65 +157,99 @@ namespace COTG.Views
 
 
 		}
+
+		public async Task Refresh()
+		{
+			UpdateTradeStuff();
+
+			//supportGrid.ItemsSource = null;
+			if (target != null && target.isCityOrCastle)
+			{
+				while (target.tradeInfo == null)
+				{
+					await Task.Delay(500);
+				}
+
+				var r = des.Sub(target.tradeInfo.res);
+				r.ClampToPositive();
+
+				List<ResSource> s = new List<ResSource>();
+				//                supportGrid.ItemsSource = null;
+				foreach (var city in City.gridCitySource)
+				{
+					if (city == target)
+						continue;
+					TimeSpan dt;
+					var ti = city.tradeInfo;
+					if (viaWater)
+					{
+						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || ti.shipsHome < filterShipsHome)
+							continue;
+					}
+					else
+					{
+						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || ti.cartsHome < filterCartsHome)
+							continue;
+
+					}
+
+
+					// re-use if possible
+					var supporter = supporters.Find((a) => a.city == city);
+					if (supporter == null)
+					{
+						supporter = new ResSource() { city = city };
+					}
+					supporter.info = city.tradeInfo;
+					s.Add(supporter);
+
+
+					supporter.travel = dt;
+				}
+				s = s.OrderBy(a => a.travel).ToList();
+				foreach (var sup in s)
+				{
+					var info = sup.info;
+					var shipping = viaWater ? info.shipsHome * 10000 : info.cartsHome * 1000;
+					var send = info.res.Min(r);
+					var sum = send.sum;
+					
+					if (shipping < sum)
+					{
+						var ratio = shipping / (float)sum;
+
+						send = info.res.Scale(ratio);
+					}
+					sup.res = send;
+					r = r.Sub(send);
+					supporters.OnPropertyChanged(sup);
+					sup.OnPropertyChanged(string.Empty);
+
+				}
+				supporters.Set(s);
+				
+			//	supportGrid.ItemsSource = supporters;
+
+				RefreshSupportByRes();
+			}
+//			OnPropertyChanged(string.Empty);
+
+		}
+
 		public async override void VisibilityChanged(bool visible)
 		{
 			if (visible)
 			{
-				if (defendant == null)
-					defendant = Spot.GetFocus();
+				if (target == null)
+					target = Spot.GetFocus();
 
-				if (defendant != null && defendant.isCityOrCastle)
-				{
-					while (defendant.tradeInfo == null)
-					{
-						await Task.Delay(500);
-					}
-
-					List<ResSource> s = new List<ResSource>();
-					//                supportGrid.ItemsSource = null;
-					foreach (var city in City.gridCitySource)
-					{
-						Assert(city is City);
-						TimeSpan dt;
-						var ti = city.tradeInfo;
-						if (viaWater)
-						{
-							if (!city.ComputeShipTravelTime(defendant.cid, out dt) || dt.TotalHours > filterTime || ti.shipsHome < filterShipsHome)
-								continue;
-						}
-						else
-						{
-							if (!city.ComputeCartTravelTime(defendant.cid, out dt) || dt.TotalHours > filterTime || ti.cartsHome < filterCartsHome)
-								continue;
-
-						}
-
-
-						// re-use if possible
-						var supporter = supporters.Find((a) => a.city == city);
-						if (supporter == null)
-						{
-							supporter = new ResSource() { city = city };
-						}
-						supporter.info = city.tradeInfo;
-						s.Add(supporter);
-
-						supporter.res.wood = 0;
-						supporter.res.stone = 0;
-
-						supporter.travel = dt;
-					}
-					supporters.Set(s.OrderBy(a => a.travel));
-				}
-
-
+				Refresh();
+				Analytics.TrackEvent("NearRes");
 			}
 			else
 			{
 				supporters.Clear();
-				troopTypeGrid.ItemsSource = supportByTroopTypeEmpty;
-				//              supportGrid.ItemsSource = null;
-
+				selected = ResSource.dummy;
 			}
 		}
 
@@ -227,6 +287,7 @@ namespace COTG.Views
 
 		private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
+			RefreshSupportByRes();
 		}
 
 		private void TsSendRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -238,6 +299,7 @@ namespace COTG.Views
 			AApp.AddItem(flyout, "Zero", (_, _) =>
 			{
 				supporter.res.Clear();
+				RefreshSupportByRes();
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout, "Max", (_, _) =>
@@ -258,6 +320,8 @@ namespace COTG.Views
 
 				}
 
+				RefreshSupportByRes();
+
 				supporter.NotifyChange();
 			});
 			
@@ -273,13 +337,13 @@ namespace COTG.Views
 			var pid = city.pid;
 
 			var secret = $"JJx452Tdd{pid}sRAssa";
-			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{city.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
+			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
 
-			Post.Send("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+			var res = await Post.SendForResponse("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+
 			Note.Show($"Sent {s.res.Format()}");
-		
-			
 
+			Refresh();
 		}
 
 
@@ -330,31 +394,47 @@ namespace COTG.Views
 			}
 		}
 
-		private async void SendAtTapped(object sender, PointerRoutedEventArgs e)
+	
+
+
+		
+
+		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
-			e.Handled = true;
-			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
-			if (okay)
-			{
-				arriveAt = dateTime;
-				OnPropertyChanged(nameof(arriveAt));
-			}
+			Refresh();
 
 		}
 
-
-		private void PropChanged(object sender, RoutedEventArgs e)
+		private void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			Refresh();
+		}
+
+	
+
+		
+
+		private void MaxWoodClick(object sender, RoutedEventArgs e)
+		{
+			selected.res[0] = selected.ResMax(0);
+		}
+		private void ZeroWoodClick(object sender, RoutedEventArgs e)
+		{
+			selected.res[0] = 0;
+		}
+
+		private void TargetTapped(object sender, TappedRoutedEventArgs e)
+		{
+			Spot.ProcessCoordClick(target.cid, false, App.keyModifiers, false);
+
 		}
 	}
 
 	public class CityTradeInfo
 	{
 		public static CityTradeInfo invalid = new CityTradeInfo();
-		public List<int> resSource;
-		public List<int> resDest;
+		public List<int> resSource = new List<int>();
+		public List<int> resDest = new List<int>();
 
 		public int cartsHome;
 		public int cartsTotal;
@@ -362,7 +442,10 @@ namespace COTG.Views
 		public int shipsHome;
 		public int shipsTotal;
 
+		public int GetTransPort( bool viaWater ) => viaWater ? shipsHome*10000 : cartsHome*1000;
+		
 		public Resources res;
+		public int resTotal => res.sum;
 
 	}
 

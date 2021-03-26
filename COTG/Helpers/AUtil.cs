@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
+using System.Globalization;
+
 namespace COTG
 {
     public enum RefreshState
@@ -87,7 +89,7 @@ namespace COTG
 
 		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
 		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
-	
+		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}D " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseTimeFormat);
 		public static string FormatSkipDateIfToday(this DateTimeOffset m)
         {

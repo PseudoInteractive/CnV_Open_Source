@@ -199,6 +199,7 @@ namespace COTG
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkOrange;
 		static readonly Color senatorColor = Color.OrangeRed;
+		static readonly Color tradeColor = Color.DarkGreen;
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
 		static readonly Color raidColor = Color.Yellow;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
@@ -209,6 +210,7 @@ namespace COTG
 		static readonly Color pinnedColor = Color.Teal;
 		static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 		public static Material[] troopImages = new Material[Game.Enum.ttCount];
+		public static Material wheelImage;
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
 		public static bool initialized => canvas != null;
@@ -721,6 +723,7 @@ namespace COTG
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
 				whiteMaterial = new Material(null, noTextureEffect);
+				wheelImage = LoadMaterial("Art/icons/wheel");
 				for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
 				{
 
@@ -918,6 +921,9 @@ namespace COTG
 		public static BitmapFont.BitmapFont bfont;
 		public static float parallaxGain;
 		const float lineTileGain = 1.0f / 32.0f;
+
+		const float actionAnimationGain = 64.0f;
+		const float drawActionLength = 32;
 		const float lineAnimationGain = 2.0f;
 		public static Span2i cullWC; // culling bounds in world space
 		protected override bool BeginDraw()
@@ -1656,9 +1662,33 @@ namespace COTG
 									}
 								}
 							}
+
+							if (NearRes.IsVisible())
+							{
+								foreach (var city in City.friendCities)
+								{
+									var wc = city.cid.CidToWorld();
+									if (IsCulledWC(wc))
+										continue;
+
+									var ti = city.tradeInfo;
+									if (ti == null)
+										continue;
+									foreach(var toCid in ti.resSource)
+									{
+										var c1 = toCid.CidToWorld();
+										var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+										var r = t.Ramp();
+
+										DrawAction(wc.WToC(), c1.WToC(), tradeColor);
+
+
+									}
+
+								}
+							}
+
 							const int raidCullSlopSpace = 4;
-
-
 							foreach (var city in City.friendCities)
 							{
 								var wc = city.cid.CidToWorld();
@@ -2096,7 +2126,21 @@ namespace COTG
 
 
 		}
+		private void DrawAction( Vector2 c0, Vector2 c1, Color color)
+		{
+			if (IsCulled(c0, c1))
+				return;
 
+			var dl = (c0 - c1);
+			var dllg = dl.Length();
+			var inverseL = 1.0f / dllg;
+			var t0 = (animationT * actionAnimationGain * inverseL) % 1.0f;
+
+			var cm = t0.Lerp(c0, c1);
+
+			DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
+
+		}
 		private static void DrawSquare(int layer, Vector2 c0, Color color, float zBias)
 		{
 			draw.AddQuad(layer, quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1, 1), color, PlanetDepth, zBias);

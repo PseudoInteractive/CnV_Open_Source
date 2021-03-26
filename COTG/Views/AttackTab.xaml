@@ -88,8 +88,7 @@
         </tk:WrapPanel>
         <tk:WrapPanel Grid.Row="1">
 
-            <Border 
-                    Style="{StaticResource BorderReveal}">
+            <Border Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="attackCount"
                            Margin="4"
                            x:FieldModifier="public"

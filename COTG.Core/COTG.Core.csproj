@@ -82,7 +82,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.10.0" />
+    <PackageReference Include="Azure.Core" Version="1.11.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.0.0-beta.6" />
     <PackageReference Include="Azure.Storage.Common" Version="12.8.0-beta.2" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.17.0" />
@@ -91,7 +91,7 @@
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PlayFabAllSDK" Version="1.90.210315" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>

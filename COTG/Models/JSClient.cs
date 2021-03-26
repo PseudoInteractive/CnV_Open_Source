@@ -1932,17 +1932,20 @@ namespace COTG
 								   {
 									   await Task.Delay(500);
 								   }
-								   App.DispatchOnUIThreadSneaky(() =>
+								   if (Player.isAvatarOrTest)
 								   {
+									   App.DispatchOnUIThreadSneaky(() =>
+									   {
 									   // create a timer for precense updates
 									   presenceTimer = new DispatcherTimer();
-									   presenceTimer.Interval = TimeSpan.FromSeconds(16);
-									   presenceTimer.Tick += PresenceTimer_Tick; ;
-									   presenceTimer.Start();
+										   presenceTimer.Interval = TimeSpan.FromSeconds(16);
+										   presenceTimer.Tick += PresenceTimer_Tick; ;
+										   presenceTimer.Start();
 									   // Seed it off
 
 								   });
-								   PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
+									   PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
+								   }
 								   break;
 							   }
 						   // city lists

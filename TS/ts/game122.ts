@@ -17097,14 +17097,17 @@ function outer(){
 
 		function d9F(l41) {
 			var Q41 = l41[1];
-			E6k.y6();
 			var T41 = l41[2];
 			var x41 = l41[3];
 			var O41 = l41[4];
+			if(A8=== Q41 && q8 === T41 && D8 === x41 && z8===O41 )
+				return false;
+
 			A8 = Q41;
 			q8 = T41;
 			D8 = x41;
 			z8 = O41;
+			return true;
 		}
 		$(document)
 			.ready(function () {
@@ -58654,8 +58657,15 @@ function outer(){
 					}
 					if (pollJ["iNt"]) {
 						var d71 = pollJ["iNt"];
+		
 						//   console.log(JSON.stringify(d71));
-						d9F(d71);
+						if( d9F(d71) )
+						{
+							if (!wrapper.citydata) {
+								wrapper.citydata = {};
+							}
+							wrapper.citydata.incRes = [ d71[1],d71[2],d71[3],d71[4] ];
+						}
 					}
 					var b71 = pollJ[__s[6935]];
 					T5V(b71);

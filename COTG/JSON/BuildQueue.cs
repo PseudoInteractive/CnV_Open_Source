@@ -593,7 +593,7 @@ namespace COTG.JSON
 				return;
 			}
 
-				CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
+			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
 			queue.Add(op);
 			if(cid==City.build)
 				CityView.BuildingsOrQueueChanged();
