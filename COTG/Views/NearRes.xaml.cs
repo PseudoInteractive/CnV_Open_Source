@@ -35,7 +35,7 @@ namespace COTG.Views
 		public static NearRes instance;
 		public static bool IsVisible() => instance.isVisible;
 		public bool viaWater { get; set; } = false;
-		public static City target;
+		public City target;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
 		public int filterResHome { get; set; } = 1000;
@@ -49,17 +49,13 @@ namespace COTG.Views
 
 
 		public Resources des = new Resources() { wood = 1000000, stone = 1000000, food = 1000000, iron = 1000000 };
-
+		public Resources willHave => target.tradeInfo.res.Add(target.tradeInfo.inc);
+		
 
 		public ResSource selected = ResSource.dummy;
-		public int sendWood
-		{
-			get => selected.res[0];
-			set {
-				selected.res[0] = value;
-				supporters.OnPropertyChanged(selected);
-			}
-		}
+
+		public Resources send;
+
 
 
 		public void RefreshSupportByRes()
@@ -69,6 +65,11 @@ namespace COTG.Views
 			if (sel is ResSource support)
 			{
 				selected = support;
+				selectedCommands.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				selectedCommands.Visibility = Visibility.Collapsed;
 			}
 		}
 
@@ -90,21 +91,35 @@ namespace COTG.Views
 		{
 
 			var data = await Post.SendForJson("overview/tcounc.php");
-			foreach (var city in data.RootElement[0].EnumerateArray())
+			foreach (var js in data.RootElement[0].EnumerateArray())
 			{
-				var ct = new CityTradeInfo();
-				var cid = city.GetAsInt("28");
-				var cartStr = city.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
+				
+				var cid = js.GetAsInt("28");
+				var city = City.GetOrAddCity(cid);
+				CityTradeInfo ct;
+				if (city.tradeInfo != CityTradeInfo.invalid)
+				{
+					ct = city.tradeInfo;
+					ct.resDest.Clear();
+					ct.resSource.Clear();
+				}
+				else
+				{
+					ct = new CityTradeInfo();
+					city.tradeInfo = ct;
+				}
+
+				var cartStr = js.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
 				int.TryParse(cartStr[0], out ct.cartsHome);
 				int.TryParse(cartStr[1], out ct.cartsTotal);
-				var shipStr = city.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
+				var shipStr = js.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
 				int.TryParse(shipStr[0], out ct.shipsHome);
 				int.TryParse(shipStr[1], out ct.shipsTotal);
-				ct.res.wood = city.GetAsInt("6");
-				ct.res.stone = city.GetAsInt("7");
-				ct.res.iron = city.GetAsInt("8");
-				ct.res.food = city.GetAsInt("9");
-				City.GetOrAddCity(cid).tradeInfo = ct;
+				ct.res.wood = js.GetAsInt("6");
+				ct.res.stone = js.GetAsInt("7");
+				ct.res.iron = js.GetAsInt("8");
+				ct.res.food = js.GetAsInt("9");
+				
 
 			}
 			
@@ -140,7 +155,6 @@ namespace COTG.Views
 
 			}
 
-
 //			await GetCity.Post(target.cid, (jse, c) => { });
 
 
@@ -165,12 +179,12 @@ namespace COTG.Views
 			//supportGrid.ItemsSource = null;
 			if (target != null && target.isCityOrCastle)
 			{
-				while (target.tradeInfo == null)
+				while (target.tradeInfo == CityTradeInfo.invalid)
 				{
 					await Task.Delay(500);
 				}
 
-				var r = des.Sub(target.tradeInfo.res);
+				var r = des.Sub(target.tradeInfo.res.Add(target.tradeInfo.inc));
 				r.ClampToPositive();
 
 				List<ResSource> s = new List<ResSource>();
@@ -199,6 +213,11 @@ namespace COTG.Views
 					if (supporter == null)
 					{
 						supporter = new ResSource() { city = city };
+					}
+					if(city.tradeInfo==null)
+					{
+						Assert(false);
+						continue;
 					}
 					supporter.info = city.tradeInfo;
 					s.Add(supporter);
@@ -410,18 +429,80 @@ namespace COTG.Views
 			Refresh();
 		}
 
-	
 
-		
+
+		private void MaxResClick(int id)
+		{
+			selected.res[id] = selected.ResMax(id);
+			var viaWater = NearRes.instance.viaWater;
+			var info = selected.info;
+			var transport = info.GetTransport(viaWater);
+			if (viaWater)
+				transport -= (selected.res[id] + 9999) / 10000 * 10000;
+			else
+				transport -= (selected.res[id] + 999) / 1000 * 1000;
+			var sumOther = 0;
+			for(int i=0;i<4;++i)
+			{
+				if (i == id)
+					continue;
+				sumOther += selected.res[i];
+			}
+			if( sumOther > transport )
+			{
+				var scale = transport / (double)sumOther;
+				for (int i = 0; i < 4; ++i)
+				{
+					if (i == id)
+						continue;
+					selected.res[i] = (int)( selected.res[i] * scale);
+				}
+
+			}
+			selected.NotifyChange();
+		}
+
 
 		private void MaxWoodClick(object sender, RoutedEventArgs e)
 		{
-			selected.res[0] = selected.ResMax(0);
+			MaxResClick(0);
 		}
 		private void ZeroWoodClick(object sender, RoutedEventArgs e)
 		{
 			selected.res[0] = 0;
+			selected.NotifyChange();
 		}
+		private void MaxStoneClick(object sender, RoutedEventArgs e)
+		{
+			MaxResClick(1);
+		}
+		private void ZeroStoneClick(object sender, RoutedEventArgs e)
+		{
+			selected.res[1] = 0;
+			selected.NotifyChange();
+		}
+
+		private void MaxIronClick(object sender, RoutedEventArgs e)
+		{
+			MaxResClick(2);
+		}
+		private void ZeroIronClick(object sender, RoutedEventArgs e)
+		{
+			selected.res[2] = 0;
+			selected.NotifyChange();
+		}
+
+		private void MaxFoodClick(object sender, RoutedEventArgs e)
+		{
+			MaxResClick(3);
+		}
+		private void ZeroFoodClick(object sender, RoutedEventArgs e)
+		{
+			selected.res[3] = 0;
+			selected.NotifyChange();
+		}
+
+
 
 		private void TargetTapped(object sender, TappedRoutedEventArgs e)
 		{
@@ -442,9 +523,10 @@ namespace COTG.Views
 		public int shipsHome;
 		public int shipsTotal;
 
-		public int GetTransPort( bool viaWater ) => viaWater ? shipsHome*10000 : cartsHome*1000;
+		public int GetTransport( bool viaWater ) => viaWater ? shipsHome*10000 : cartsHome*1000;
 		
 		public Resources res;
+		public Resources inc;
 		public int resTotal => res.sum;
 
 	}

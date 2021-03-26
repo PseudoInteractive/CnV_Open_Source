@@ -210,7 +210,6 @@ namespace COTG
 		static readonly Color pinnedColor = Color.Teal;
 		static readonly Color black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 		public static Material[] troopImages = new Material[Game.Enum.ttCount];
-		public static Material wheelImage;
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
 		public static bool initialized => canvas != null;
@@ -723,7 +722,6 @@ namespace COTG
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
 				whiteMaterial = new Material(null, noTextureEffect);
-				wheelImage = LoadMaterial("Art/icons/wheel");
 				for (int i = 0; i < COTG.Game.Enum.ttCount; ++i)
 				{
 

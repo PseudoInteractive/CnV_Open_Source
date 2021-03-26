@@ -1541,8 +1541,8 @@ namespace COTG.Game
 		}
 		public void ShowNearRes()
 		{
-			NearRes.target = (City)this;
 			var tab = NearRes.instance;
+			tab.target = (City)this;
 			if (!tab.isActive)
 			{
 				TabPage.mainTabs.AddTab(tab, true);

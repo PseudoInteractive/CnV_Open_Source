@@ -463,6 +463,20 @@ namespace COTG.Game
 				}
 
 			}
+			if( tradeInfo!=CityTradeInfo.invalid)
+			{
+				if(jse.TryGetProperty("incRes", out var ir))
+				{
+					tradeInfo.inc[0] = ir[0].GetAsInt();
+					tradeInfo.inc[1] = ir[1].GetAsInt();
+					tradeInfo.inc[2] = ir[2].GetAsInt();
+					tradeInfo.inc[3] = ir[3].GetAsInt();
+					if (NearRes.IsVisible())
+					{
+						App.DispatchOnUIThreadSneaky( ()=> NearRes.instance.Refresh() );
+					}
+				}
+			}
 			if (cid == City.build && jse.TryGetProperty("bq", out var bq))
 			{
 				int count = bq.GetArrayLength();
@@ -1011,7 +1025,7 @@ namespace COTG.Game
 
         public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
         public static City[] emptyCitySource = Array.Empty<City>();
-		internal CityTradeInfo tradeInfo;
+		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
 
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
 

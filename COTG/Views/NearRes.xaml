@@ -15,57 +15,84 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="3*" />
-			<RowDefinition Height="*" />
+			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Vertical">
-			
-		<Border Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<Image Source="{x:Bind targetIcon}"  Width="32" Tapped="TargetTapped" />
-				<TextBlock Text="{x:Bind targetName}" VerticalAlignment ="Center" />
-			</tk:WrapPanel>
-		</Border>
+			<Border Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-		<Border Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+					<Image Source="{x:Bind targetIcon}"  Width="32" Tapped="TargetTapped" />
+					<TextBlock Text="{x:Bind targetName}" VerticalAlignment ="Center" />
+				</tk:WrapPanel>
+			</Border>
 
-				<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+			<Border Style="{StaticResource BorderReveal}">
+				<StackPanel Orientation="Vertical">
+					<TextBlock Text="Desired" />
+					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+
+						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
+                          Header="Wood"  Margin="6,0,6,0" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Wood"  Margin="6,0,6,0" SmallChange="1000" SpinButtonPlacementMode="Inline" />
-				<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
+                          Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
-				<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
-				<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
-			</tk:WrapPanel >
-		</Border>
-		<Border Style="{StaticResource BorderReveal}">
+                          Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+					</tk:WrapPanel >
+				</StackPanel>
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+				<StackPanel Orientation="Vertical">
+					<TextBlock Text="Incoming.." />
+					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+						<TextBlock Text="{x:Bind target.tradeInfo.inc.wood, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind target.tradeInfo.inc.stone, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind target.tradeInfo.inc.iron, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind target.tradeInfo.inc.food, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+					</tk:WrapPanel >
+				</StackPanel>
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+				<StackPanel Orientation="Vertical">
+					<TextBlock Text="Will Have.."/>
+					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+						<TextBlock Text="{x:Bind willHave.wood, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind willHave.stone, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind willHave.iron, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+						<TextBlock Text="{x:Bind willHave.food, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
+					</tk:WrapPanel >
+				</StackPanel>
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
 
-			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
+					<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" IsEnabledChanged="ToggleSwitch_IsEnabledChanged"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
-			<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
                           NumberFormatter="{x:Bind cotg:App.formatter2Digit}" ValueChanged="NumberBox_ValueChanged"
                           />
-			<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
-			<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                            NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline"/>
-			<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                            NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline"/>
-		</tk:WrapPanel>
-		</Border>
+				</tk:WrapPanel>
+			</Border>
 		</StackPanel>
 
 		<tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
@@ -99,7 +126,6 @@
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:ResSource">
 							<HyperlinkButton Content="{x:Bind Send}" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
-                                                           ToolTipService.ToolTip="Sends defense, or schedules them to depart if arrival time is later than ETA"
                                              RightTapped="TsSendRightTapped"
                                              />
 						</DataTemplate>
@@ -148,38 +174,39 @@
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
                                        IsReadOnly="False"
-                                       ToolTipService.ToolTip="Time at which troops would arrive if sent now without wings"
+                                       ToolTipService.ToolTip="Time at which res will arrive"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneTime}"
                                        />
-			
-			</tk:DataGrid.Columns>
-	
-		</tk:DataGrid>
-		<tk:GridSplitter Grid.Row="2"
-                         ResizeDirection="Rows"
-						 						 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
-				GripperCursor="SizeNorthSouth"
-                                                 Height="11"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Top"
-                           Background="Transparent"
-                    >
-			<tk:GridSplitter.Element>
-				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                     IsHitTestVisible="False"    />
-			</tk:GridSplitter.Element>
-		</tk:GridSplitter>
 
-		<Border Style="{StaticResource BorderReveal}" Grid.Row="2">
+			</tk:DataGrid.Columns>
+
+		</tk:DataGrid>
+
+		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
+
+			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+		
+			</tk:WrapPanel>
+		</Border>
+
+		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
 
 			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Wood"  Margin="6,0,6,0" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+
 				<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="No Wood" Click="ZeroWoodClick"  Style="{StaticResource ButtonSmall}"  />
+
+				<Button Content="Max Stone" Click="MaxStoneClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="No Stone" Click="ZeroStoneClick"  Style="{StaticResource ButtonSmall}"  />
+
+				<Button Content="Max Iron" Click="MaxIronClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="No Iron" Click="ZeroIronClick"  Style="{StaticResource ButtonSmall}"  />
+
+
+				<Button Content="Max Food" Click="MaxFoodClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="No Food" Click="ZeroFoodClick"  Style="{StaticResource ButtonSmall}"  />
+
 
 			</tk:WrapPanel>
 		</Border>

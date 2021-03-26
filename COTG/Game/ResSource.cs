@@ -67,6 +67,9 @@ namespace COTG.Game
 		{
 			return new Resources(wood - from.wood, stone - from.stone, iron - from.iron, food - from.food);
 		}
+
+		public Resources Add(Resources from) => new Resources(wood + from.wood, stone + from.stone, iron + from.iron, food + from.food);
+		
 		public void ClampToPositive()
 		{
 			wood = wood.Max(0);
@@ -125,14 +128,16 @@ namespace COTG.Game
 
 		public void NotifyChange(string member = "")
 		{
+			
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{
+				NearRes.supporters.OnPropertyChanged(this);
 				OnPropertyChanged(member);
 			});
 		}
 		public int ResMax(int type)
 		{
-					return info.res[type].Min(info.GetTransPort(NearRes.instance.viaWater)); // TODO
+			return info.res[type].Min(info.GetTransport(NearRes.instance.viaWater)); // TODO
 		}
 
 	public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
