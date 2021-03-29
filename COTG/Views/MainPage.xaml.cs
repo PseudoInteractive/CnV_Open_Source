@@ -356,7 +356,7 @@ namespace COTG.Views
             {
                 if (IsRaider(i))
                 {
-                    var but = new ToggleMenuFlyoutItem() { IsChecked = Raid.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
+                    var but = new ToggleMenuFlyoutItem() { IsChecked = SettingsPage.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
                     flyout.Items.Add(but);
                 }
             }
@@ -365,7 +365,7 @@ namespace COTG.Views
             flyout.ShowAt(button);
         }
 
-        private void Flyout_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+		private void Flyout_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
         {
             var menu = (sender as MenuFlyout);
             int counter = 0;
@@ -374,7 +374,7 @@ namespace COTG.Views
                 if (IsRaider(i))
                 {
                     var but = menu.Items[counter] as ToggleMenuFlyoutItem;
-                    Raid.includeRaiders[i] = but.IsChecked;
+					SettingsPage.includeRaiders[i] = but.IsChecked;
                     ++counter;
                 }
             }

@@ -37,10 +37,13 @@ namespace COTG.Views
 	{
 
 		public static BuildTab instance;
-		public static bool IsVisible() => instance.isVisible;
 
 		public event PropertyChangedEventHandler PropertyChanged;
+		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+		public static bool IsVisible() => instance.isVisible;
+
+		
 		public BuildTab()
 		{
 			Assert(instance == null);
@@ -273,7 +276,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void zoom_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
 		{
 			var ob = args.InvokedItem;
 			if (ob is BuildItemView q)

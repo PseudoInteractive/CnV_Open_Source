@@ -9377,7 +9377,7 @@ function truncateToken()
 {
 	 ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
 }
-
+let __lastWMO = "";
 function ppdtChanged(__ppdt) {
 	
 	truncateToken();
@@ -9405,11 +9405,22 @@ function ppdtChanged(__ppdt) {
 		wantUpdate = wantUpdate || wantRs;
 		wantRs = false;
 	}
-	if (__ppdt.hasOwnProperty("mvb") && (__ppdt.mvb.l!=lastSendMoveSlots) ) {
-		wrapper.ppdt['mvb'] = __ppdt.mvb.l;
-		lastSendMoveSlots= __ppdt.mvb.l;
+	if (__ppdt.hasOwnProperty("mvb") && (Math.floor(__ppdt.mvb.l)!=lastSendMoveSlots) ) {
+
+		wrapper.ppdt['mvb'] = __ppdt.mvb;
+		lastSendMoveSlots = Math.floor(__ppdt.mvb.l);
 		wantUpdate = true;
    }
+	//if(__ppdt.hasOwnProperty("wmo") )
+ //{
+ //   var _wmo = JSON.stringify(__ppdt["wmo"]);
+	//if(_wmo != __lastWMO)
+	//{
+	//	__lastWMO = _wmo;
+	//	wrapper.ppdt['wmo'] = __ppdt['wmo'];
+	//	wantUpdate = true;
+	//}
+ //}
  
 
 	if (!wantUpdate)
@@ -18645,6 +18656,7 @@ function outer(){
 	lastSentBq=-1;
 	lastSentBD=-1;
 	ClearCity();
+	lastSendMoveSlots=0;
 				
 	getCity(cid);
 	DoPoll2(400);
@@ -22542,6 +22554,7 @@ function outer(){
 			//          X5F = 0;
 			//          d7F();
 			//        }
+			sendPPDT();
 		}
 
 		function s9F(Y9Z) {
@@ -43577,7 +43590,7 @@ function outer(){
 				F5p);
 			var i72 = a6.ccazzx.encrypt(JSON.stringify(V72), r72, 256 ^ 0);
 			N6();
-			var b72 = $.post("/includes/" + __s[1735], { a: i72, cid: cid });
+			var b72 = $.post("/includes/sndRad.php", { a: i72, cid: cid });
 			F6();
 			b72.done(function (n72) {
 				if (n72 == +u7y) Y6(__s[+N8y]);
@@ -44317,7 +44330,7 @@ function outer(){
 						'3927');
 					var q9B = a6.ccazzx.encrypt(JSON.stringify(Y9B), c9B, 256 << 953103872);
 					N6();
-					var N9B = $.post("/includes/" + __s[4539], { cid: cid, a: q9B });
+					var N9B = $.post("/includes/sndRaid.php", { cid: cid, a: q9B });
 					F6();
 					N9B.done(function (u0Z) {
 						if (u0Z == +u7y) Y6(__s[N8y | 1680]);
@@ -48233,9 +48246,9 @@ function outer(){
 				$(__s[1509])
 					.show();
 				$(__s[b2p << 51177376])
-					.show();
+					.css("display", "none");
 				$("#citnamq")
-					.show();
+					.css("display", "none");
 				$(__s[+D44])
 					.css("display", "none");
 				$(__s[+T24])
@@ -48251,11 +48264,13 @@ function outer(){
 				// h0g.style.display = "block";
 				h0g.style.display = "none";
 
+				x8();
+
 				S0g.style.display = "none";
 				//     w2();
 				//  d7F();
-				// $(__s[2267])
-				//    .show();
+				$(__s[2267])
+				    .show();
 				
 				$(__s[g04 << 1148008608])
 					.show();
@@ -59678,7 +59693,7 @@ function outer(){
 			if ($(__s[+R6p])
 				.prop(__s[286])) ppdt.wmo[8] = 1;
 			else ppdt.wmo[8] = 0;
-			if ($("worldswitch10")
+			if ($("#worldswitch10")
 				.prop(__s[286])) ppdt.wmo[9] = 1;
 			else ppdt.wmo[9] = 0;
 			if ($(__s[+k6p])
@@ -59693,7 +59708,7 @@ function outer(){
 			if ($(__s[197])
 				.prop(__s[286])) ppdt.wmo[m2y << 1932556704] = 1;
 			else ppdt.wmo[+m2y] = 0;
-			if ($("worldswitch15")
+			if ($("#worldswitch15")
 				.prop(__s[286])) ppdt.wmo[+'14'] = 1;
 			else ppdt.wmo[+'14'] = 0;
 			if ($(__s[+w6p])
@@ -59767,7 +59782,14 @@ function outer(){
 				2704), { a: JSON.stringify(ppdt.wmo) });
 			Q8 = 0;
 			R8();
+			
 		}
+		function sendPPDT()
+  {
+			let wrapper = { ppdt: ppdt };
+			window['external']['notify'](JSON.stringify(wrapper));
+
+  }
 
 		function o8() {
 			$(__s[3181])
@@ -61534,7 +61556,7 @@ function outer(){
 							var T7T = '';
 							if (t7T == 1) T7T = __s[286];
 							Q7T = Q7T + __s[3135] + v7T + __s[+i3R] + T7T + __s[6089] + v7T + _s("2831" -
-								0) + x7T + "Total Build Time: " + v7T + __s[2656] + O7T + __s[4512];
+								0) + x7T + __s[2369] + v7T + __s[2656] + O7T + __s[4512];
 						}
 						Q7T = Q7T + E6k
 							.S55(5279);

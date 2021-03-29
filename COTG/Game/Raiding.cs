@@ -11,6 +11,7 @@ using static COTG.Debug;
 using static COTG.Game.Enum;
 using COTG.Services;
 using COTG.Views;
+using System.Text.Encodings.Web;
 
 namespace COTG.Game
 {
@@ -30,12 +31,7 @@ namespace COTG.Game
         //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
         //  16 "warship",17 "senator"
 
-        public static bool[] includeRaiders = new[] {
-                false, false,true,true,
-                true,true,true,false,
-                true,true,true,true,
-                false,false,true,true,
-                true,false};
+        
 
         public override bool Equals(object obj)
         {
@@ -107,7 +103,7 @@ namespace COTG.Game
             return false;
         }
         public static float desiredCarry = 1.125f;
-        public static bool raidOnce;
+        
         public static (int reps,float averageCarry, float fractionalReps) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
@@ -137,10 +133,11 @@ namespace COTG.Game
             public string tr { get; set; }
             public int type { get; set; }
             public int co { get; set; }
-            public string rt { get; set; }
+            public int rt { get; set; }
             public int snd { get; set; }
             public int rut { get; set; }
             public string ts { get; set; }
+			public int iv { get; set;  }
         }
         public static async Task<bool> SendRaids(Dungeon d, bool clearDungeonList)
         {
@@ -150,30 +147,34 @@ namespace COTG.Game
             var r = ComputeIdealReps(d,city);
             if (r.reps <= 0 || r.averageCarry < 0.5f)
                 return true;
-            var tr = new List<sndRaidtr>();
-            foreach (var ttc in city.troopsHome)
-            {
-                if (!IsRaider(ttc.type) || !Raid.includeRaiders[ttc.type])
-                    continue;
-				if (IsWaterRaider(ttc.type) == d.isWater)
-				{
-					var count = (int)(ttc.count * troopFraction / r.fractionalReps);
-					tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv =count.ToString() });
-					ttc.count -= r.reps*count;
-				}
+			var intervals = SettingsPage.raidIntervals;
 
-            }
-            var trs = JsonSerializer.Serialize(tr);
-            var args = new sndRaidArgs() { rcid = d.cid, type = raidOnce?1:2, co = r.reps, rt = "1", snd = 1, rut = 0, ts = "", tr = trs };
-            var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-            Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry*100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
-            var shiftPressed = App.IsKeyPressedShift();
-            var controlPressed = App.IsKeyPressedControl();
-			if (!await snd.Post())
-				return false;
- //           await Task.Delay(500);
-//            UpdateTS(true);
-       
+			var wantDelays = false;// intervals != 0 && clearDungeonList;
+			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
+			{
+				var tr = new List<sndRaidtr>();
+				foreach (var ttc in city.troopsHome)
+				{
+					if (!IsRaider(ttc.type) || !SettingsPage.includeRaiders[ttc.type])
+						continue;
+					if (IsWaterRaider(ttc.type) == d.isWater)
+					{
+						var count = (int)(ttc.count * troopFraction / r.fractionalReps);
+						tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = count.ToString() });
+						ttc.count -= r.reps * count;
+					}
+
+				}
+				var trs = JsonSerializer.Serialize(tr);
+				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.raidRepeat ? 2 : 1, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
+				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
+				Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry * 100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
+				if (!await snd.Post())
+					return false;
+				//           await Task.Delay(500);
+				//            UpdateTS(true);
+
+			}
 
              city.NotifyChange(nameof(city.tsRaid));
 			if (clearDungeonList)

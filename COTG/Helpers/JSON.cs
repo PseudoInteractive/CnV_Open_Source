@@ -163,7 +163,31 @@ namespace COTG.Helpers
             return e.GetInt32();
 
         }
-		
+		public static unsafe Microsoft.Xna.Framework.Color GetColor(this JsonElement js, string prop)
+		{
+			if (!js.TryGetProperty(prop, out var e))
+			{
+				Log("Missing " + prop);
+				return new Microsoft.Xna.Framework.Color();
+			}
+
+			var s = e.GetString();
+			int get = 0;
+			if (s[get] == '#')
+				++get;
+			byte * rgba = stackalloc byte[4];
+			rgba[3] = 255;
+			for(int i=0;i<4;++i)
+			{
+				if (get >= s.Length)
+					break;
+				var str = s[get + 0].ToString() + s[get + 1].ToString();
+				get += 2;
+				rgba[i] = (byte)int.Parse(str, NumberStyles.HexNumber);
+			}
+			return new Microsoft.Xna.Framework.Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+		}
+
 		public static string GetString(this JsonElement js, string prop)
         {
             if (!js.TryGetProperty(prop, out var e))

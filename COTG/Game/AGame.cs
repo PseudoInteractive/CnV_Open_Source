@@ -430,23 +430,27 @@ namespace COTG
 				{
 					// canvas.Paused = true;
 					var pixels = World.bitmapPixels;
-					var ownerPixels = World.worldOwnerPixels;
+				
 					World.bitmapPixels = null;
-					World.worldOwnerPixels = null;
 					if (worldObjects != null)
 					{
 						var w = worldObjects;
 						worldObjects = null;
 						w.texture.Dispose();
 					}
+					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+				}
+				if(World.worldOwnerPixels!=null)
+				{
+					var ownerPixels = World.worldOwnerPixels;
+					World.worldOwnerPixels = null;
 					if (worldOwners != null)
 					{
 						var w = worldOwners;
 						worldOwners = null;
 						w.texture.Dispose();
 					}
-					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
-					//worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1a);
+					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
 					//canvas.Paused = falwirse;
 					//if (worldObjectsDark != null)
 					//    worldObjectsDark.Dispose();
@@ -1351,6 +1355,15 @@ namespace COTG
 							destP0, destP1,
 							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 0), ConstantDepth, zTerrain);
 					}
+					if (worldOwners != null && !focusOnCity)
+					{
+						var tOffset = new Vector2(0.0f, 0.0f);
+						var t2d = worldOwners.texture2d;
+						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
+						draw.AddQuad(Layer.tileCity - 1, worldChanges,
+							destP0, destP1,
+							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 0), ConstantDepth, zTerrain);
+					}
 					if (wantCity)
 					{
 						// this could use refactoring
@@ -1843,7 +1856,7 @@ namespace COTG
 							}
 						}
 					}
-					if (!ShellPage.IsCityView())
+					if (!ShellPage.IsCityView() && Player.isTest)
 					{
 						var avatars = PlayerPresence.all;
 						foreach (var a in avatars)

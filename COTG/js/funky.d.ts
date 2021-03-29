@@ -252,6 +252,7 @@ declare let wantFa: boolean;
 declare let wantRs: boolean;
 declare let lastSendMoveSlots: any;
 declare function truncateToken(): void;
+declare let __lastWMO: string;
 declare function ppdtChanged(__ppdt: any): void;
 declare function reportAway(): void;
 declare function gaFrep(E7c: any): void;

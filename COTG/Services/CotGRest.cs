@@ -370,7 +370,7 @@ namespace COTG.Services
     {
         public string json;
         public int cid;
-        public sndRaid(string _json, int _cid) : base("includes/sndRaid.php", World.CidToPlayer(_cid))
+        public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayer(_cid))
         {
 			
 			Log($"sndRaid:{_json}");
@@ -380,8 +380,9 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
-            var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+            var encoded = Aes.Encode(json, $"Sx23WW9921{World.CidToPlayer(cid)}Daa2dT123ol");
+			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
+			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
         }
 

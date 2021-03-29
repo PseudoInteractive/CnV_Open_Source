@@ -49,7 +49,7 @@ namespace COTG.Game
 		}
 		public int sum => wood + stone + iron + food;
 
-		public Resources Scale(float s)
+		public Resources Scale(double s)
 		{
 			// round down (truncate as it is positive)
 			return new Resources() { wood = (int)(wood * s), stone = (int)(stone * s), iron = (int)(iron * s), food = (int)(food * s) };

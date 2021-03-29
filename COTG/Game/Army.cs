@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using COTG.Views;
 
 namespace COTG.Game
 {
@@ -378,7 +379,7 @@ namespace COTG.Game
             var rv = 0;
             foreach (var ttc in l)
             {
-                if( IsRaider(ttc.type) && Raid.includeRaiders[ttc.type])
+                if( IsRaider(ttc.type) && SettingsPage.includeRaiders[ttc.type])
                     rv += ttc.ts;
             }
             return rv;

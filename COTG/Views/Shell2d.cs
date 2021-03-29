@@ -255,7 +255,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				App.DispatchOnUIThreadSneaky(() =>
+				//	App.DispatchOnUIThreadSneaky(() =>
 				{
 					switch (key)
 					{
@@ -266,7 +266,7 @@ namespace COTG.Views
 								CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
 							else
 								CityView.hovered = (0, 0);
-					
+
 							break;
 						case Windows.System.VirtualKey.Up:
 							if (CityView.hovered.IsValid())
@@ -287,22 +287,9 @@ namespace COTG.Views
 							else
 								CityView.hovered = (0, 0);
 							break;
-						case Windows.System.VirtualKey.F11: 
-							if (Player.isAvatarOrTest)
-							{
-								Raid.test ^= true;
-								Note.Show("Test: " + Raid.test);
-							}
+						
 							break;
-						case Windows.System.VirtualKey.F10:
-							if (Player.isAvatarOrTest)
-							{
-								CityBuild.testFlag ^= true;
-								Note.Show("Test: " + testFlag);
-								JSClient.view.InvokeScriptAsync("setTestFlag", new[] { (testFlag ? "1" : "0") });
-							}
-							break;
-						case Windows.System.VirtualKey.Number1: UpgradeOrTower(1);break;
+						case Windows.System.VirtualKey.Number1: UpgradeOrTower(1); break;
 						case Windows.System.VirtualKey.Number2: UpgradeOrTower(2); break;
 						case Windows.System.VirtualKey.Number3: UpgradeOrTower(3); break;
 						case Windows.System.VirtualKey.Number4: UpgradeOrTower(4); break;
@@ -312,11 +299,11 @@ namespace COTG.Views
 						case Windows.System.VirtualKey.Number8: UpgradeOrTower(8); break;
 						case Windows.System.VirtualKey.Number9: UpgradeOrTower(9); break;
 						case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
-						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered,false); break;
-			//			case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
-						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered,false); break;
+						case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered, false); break;
+						//			case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
+						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered, false); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
-						case (VirtualKey)192: CityBuild.MoveHovered(true,false); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+						case (VirtualKey)192: CityBuild.MoveHovered(true, false); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 
 						// short keys
 						case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
@@ -346,8 +333,30 @@ namespace COTG.Views
 						default:
 							break;
 					}
-				});
+				}
 			}
+			switch (key)
+			{
+				case Windows.System.VirtualKey.F11:
+					if (Player.isAvatarOrTest)
+					{
+						Raid.test ^= true;
+						Note.Show("Test: " + Raid.test);
+					}
+					break;
+				case Windows.System.VirtualKey.F10:
+					if (Player.isAvatarOrTest)
+					{
+						CityBuild.testFlag ^= true;
+						Note.Show("Test: " + testFlag);
+						JSClient.view.InvokeScriptAsync("setTestFlag", new[] { (testFlag ? "1" : "0") });
+					}
+					break;
+			}
+			
+						//	});
+					
+
 		}
 
 		public enum ViewMode

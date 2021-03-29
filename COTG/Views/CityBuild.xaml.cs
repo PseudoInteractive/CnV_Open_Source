@@ -108,6 +108,7 @@ namespace COTG.Views
 			SetAction(Action.none);
 			isSingleClickAction = false;
 			priorQuickAction = Action.none;
+			ClearSelectedBuilding();
 		}
 		public static void SetAction(Action _action)
 		{

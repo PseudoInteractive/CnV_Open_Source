@@ -347,6 +347,7 @@ namespace COTG
 					
 					Name = "cotgView",
 					//Opacity = 0.5,
+					
 				};
 
 			//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
@@ -364,7 +365,7 @@ namespace COTG
 				view.NewWindowRequested += View_NewWindowRequested;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
-
+				
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -1029,9 +1030,95 @@ namespace COTG
 					bonusesUpdated = true;
 
 				}
+				if(jse.TryGetProperty("wmo", out var wo))
+				{
+					var i = WorldView.instance;
+					i.ownCities.isOn = wo.GetAsInt("0")==1;
+					i.ownCities.color = wo.GetColor("16");
+
+					i.ownAlliance.isOn = wo.GetAsInt("1") == 1;
+					i.ownAlliance.color = wo.GetColor("17");
+
+					i.alliedAlliance.isOn = wo.GetAsInt("2") == 1;
+					i.alliedAlliance.color = wo.GetColor("18");
+
+					i.napAlliance.isOn = wo.GetAsInt("3") == 1;
+					i.napAlliance.color = wo.GetColor("19");
+
+					i.enemyAlliance.isOn = wo.GetAsInt("4") == 1;
+					i.enemyAlliance.color = wo.GetColor("20");
+
+					i.otherPlayers.isOn = wo.GetAsInt("15") == 1;
+					i.otherPlayers.color = wo.GetColor("28");
+
+					i.lawless.isOn = wo.GetAsInt("5") == 1;
+					i.lawless.color = wo.GetColor("21");
+
+					i.friends.isOn = wo.GetAsInt("6") == 1;
+					i.friends.color = wo.GetColor("22");
+
+					i.citiesWithoutCastles = wo.GetAsInt("7") == 1;
+					i.citiesWithoutWater = wo.GetAsInt("8") == 1;
+					i.citiesWithoutTemples = wo.GetAsInt("9") == 1;
+					
+					i.caverns.isOn = wo.GetAsInt("10") == 1;
+					i.caverns.color = wo.GetColor("23");
+
+					i.bosses.isOn = wo.GetAsInt("11") == 1;
+					i.bosses.color = wo.GetColor("24");
+
+					i.shrines.isOn = wo.GetAsInt("12") == 1;
+					i.shrines.color = wo.GetColor("25");
+
+					i.inactivePortals.isOn = wo.GetAsInt("13") == 1;
+					i.inactivePortals.color = wo.GetColor("26");
+
+					i.activePortals.isOn = wo.GetAsInt("14") == 1;
+					i.activePortals.color = wo.GetColor("27");
+				
+					i.cavernMinLevel = wo.GetAsInt("29");
+					i.cavernMaxLevel = wo.GetAsInt("30");
+
+					i.bossMinLevel = wo.GetAsInt("31");
+					i.bossMaxLevel = wo.GetAsInt("32");
+
+
+					i.playerSettings.Clear();
+					if(wo.TryGetProperty("p",out var p))
+					{
+						foreach(var pset in p.EnumerateObject())
+						{
+							var ps = new WorldView.PlayerSetting();
+							ps.pid = int.Parse(pset.Name);
+							ps.color = pset.Value.GetColor("c");
+							ps.isOn = pset.Value.GetAsInt("d") == 1;
+
+							i.playerSettings.Add(ps.pid, ps);
+						}
+					}
+					i.allianceSettings.Clear();
+					if (wo.TryGetProperty("a", out var a))
+					{
+						
+						foreach (var pset in a.EnumerateObject())
+						{
+							var ps = new WorldView.AllianceSetting();
+							ps.pid = int.Parse(pset.Name);
+							ps.color = pset.Value.GetColor("c");
+							ps.isOn = pset.Value.GetAsInt("d") == 1;
+
+							i.allianceSettings.Add(ps.pid, ps);
+						}
+					}
+
+					if (World.completed)
+						GetWorldInfo.Send();
+				}
+
 				if (jse.TryGetProperty("mvb", out var mvb))
 				{
-					Player.moveSlots = mvb.GetAsInt();
+					Log("MVB: " + mvb.ToString());
+					Player.moveSlots = mvb.ValueKind == JsonValueKind.Number ? mvb.GetAsInt() : mvb.GetAsInt("l");
 
 				}
 				if (!councillorsChecked)
@@ -1601,7 +1688,7 @@ namespace COTG
 								   UpdatePPDT(ppdt,false);
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
-								   Task.Delay(200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
+								   Task.Delay(2200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
 								   break;
 							   }
 						   case "aexp":
@@ -2178,7 +2265,8 @@ namespace COTG
 					priorCid = PlayerPresence.all[priorIndex].cid;
 				}
 				
-				Player.myIds.Add(pid);
+			//	Player.myIds.Add(pid);
+			// TODO:  restore this functionality when it works again
 				if (pid != Player.myId)
 				{
 					if (p.cid != priorCid)

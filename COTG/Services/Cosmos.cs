@@ -83,6 +83,7 @@ namespace COTG.Services
         private static Container ordersContainer;
 		private static Container presenceContainer;
 		//		private static Container sessionContainer;
+		static CosmosClientOptions clientOptions = new() { ConnectionMode = ConnectionMode.Direct ,LimitToEndpoint=true,EnableContentResponseOnWrite=false };
 
 		static string worldPostfix => JSClient.world == 21 ? "": ('_' + JSClient.world.ToString());
 
@@ -132,8 +133,8 @@ namespace COTG.Services
 			// 
 			if (tableClient != null)
 				return true;
-		
-			
+
+
 			await throttleT.WaitAsync();
 			try
 			{
@@ -143,7 +144,7 @@ namespace COTG.Services
 				tableClient = new TableClient(connectionStringT, tableName);
 				return tableClient != null;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Log(e);
 				return false;
@@ -157,74 +158,8 @@ namespace COTG.Services
 			//	await AddItemsToContainerAsync();
 		}
 
-		public static async void ShareShareString(string part, string key, string s)
-		{
-			if (!await TouchT())
-				return;
-			await throttleT.WaitAsync();
-			try
-			{
 
-				var i = new ShareStringDB(part, key, s);
-				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
-				// todo
-			}
-			catch(Exception e)
-			{
-				Log(e);
-			}
-			finally
-			{
-				throttleT.Release();
-			}
-		}
-		public static async Task<ShareStringDB> ReadShare(string part, string key)
-		{
-			if (!await TouchT())
-				return null;
-			await throttleT.WaitAsync();
-			try
-			{
-				ShareStringDB r = await tableClient.GetEntityAsync<ShareStringDB>(part,key);
-				if (r != null)
-					return r;
-			}
-			catch(Exception e)
-			{
-				Log(e);
 
-			}
-			finally
-			{
-				throttleT.Release();
-			}
-			return new ShareStringDB(part, key, "Error");
-		}
-		public static async Task<List<ShareStringDB>> ReadShares(string part)
-		{
-			if (!await TouchT())
-				return null;
-			await throttleT.WaitAsync();
-			try
-			{
-
-				var entities = tableClient.QueryAsync<ShareStringDB>(x => x.PartitionKey == part);
-
-				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
-
-				var rv = new List<ShareStringDB>();
-				await foreach( var i in entities)
-				{
-					rv.Add(i);
-				}
-				return rv;
-			}
-			finally
-			{
-				throttleT.Release();
-			}
-		
-		}
 
 
 		#region BuildQ
@@ -347,18 +282,17 @@ namespace COTG.Services
 
 
 				// Create a new instance of the Cosmos Client
-				//	var clientOptions = new CosmosClientOptions() { ConsistencyLevel = ConsistencyLevel.Eventual, ConnectionMode = ConnectionMode.Direct };
 				//	clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
 				//		clientOptions.Diagnostics.IsLoggingContentEnabled = false;
 				//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
 				//		clientOptions.Diagnostics.IsLoggingEnabled = false;
 
-					var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
+					var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey,clientOptions);
 					database = _cosmosClient.GetDatabase(databaseId);
 					if (database != null)
 					{
-						container = await GetContainer(containerId);
-						ordersContainer = await GetContainer(ordersContainerId);
+					//	container = await GetContainer(containerId);
+					//	ordersContainer = await GetContainer(ordersContainerId);
 	//					sessionContainer = await GetContainer(sessionContainerId);
 						presenceContainer = await GetContainer(presenceContainerId, "/p");
 					}
@@ -396,6 +330,10 @@ namespace COTG.Services
 				await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(false), itemRequesDefault);
 			
 			}
+			catch(Exception ex)
+			{
+				Log(ex);
+			}
 			finally
 			{
 				throttle.Release();
@@ -423,6 +361,11 @@ namespace COTG.Services
 						}
 					}
 				}
+				return rv;
+			}
+			catch(Exception ex)
+			{
+				Log(ex);
 				return rv;
 			}
 			finally

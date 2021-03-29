@@ -319,7 +319,7 @@ namespace COTG.Game
 			var _carryCapacity = 0.0f;
 			foreach (var tc in troopsHome)
 			{
-				if (!IsRaider(tc.type) || !Raid.includeRaiders[tc.type])
+				if (!IsRaider(tc.type) || !SettingsPage.includeRaiders[tc.type])
 					continue;
 				if (IsWaterRaider(tc.type) == forWater)
 				{
@@ -834,13 +834,13 @@ namespace COTG.Game
 						Assert(false);
 				}
 				if (idle > 0)
-						sb.Append($"{idle} idle senators");
+						sb.Append($"\n{idle} idle senators");
 					if(settle > 0)
-						sb.Append($"{settle} senators settling");
+						sb.Append($"\n{settle} senators settling");
 					if (siege > 0)
-						sb.Append($"{siege} senators sieging");
+						sb.Append($"\n{siege} senators sieging");
 					if (recruiting > 0)
-						sb.Append($"{recruiting} senators recruiting");
+						sb.Append($"\n{recruiting} senators recruiting");
 					return sb.ToString();
 			
 		}
@@ -971,7 +971,7 @@ namespace COTG.Game
             foreach (var ttc in troopsHome)
             {
                 var type = ttc.type;
-                if (!IsRaider(type) || !Raid.includeRaiders[type])
+                if (!IsRaider(type) || !SettingsPage.includeRaiders[type])
                     continue;
                 var ts = ttc.ts;
                 if (ts > bestTS)

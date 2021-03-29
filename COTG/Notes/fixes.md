@@ -39,3 +39,16 @@
  - **added** Warning message if coucillors have expired (app will not work proprerly)
 ### 2021/3/17
  - **new** Added "Smart Rearrange" to planner: 'Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes'
+### 2021/3/26
+ - **new** Added "Near Res": For sending resources from near cities
+### 2021/3/26
+ - **fix** Near Res mis-calculated everything
+ - **fix** Custom colors work in world view.  "Click" on the "World" tab to set them up
+   - Known issue:  The color picker controls overlap the native view, so they cannot be readily clicked
+   - The workaround is to press on the web button (left of the refresh button up top) which makes web controls clickable
+ - **New** the "Share" button in city layout with publish city layouts for everyone to see and use.  (For people not on the client, you can copy the layout to the clipboard)
+### 2021/3/26
+ - **new** Support for the _delay between raids_ functionality
+  - for some reason COTG does not natively support a delay of 10s, if this is desired I could add it, but it may not work with auto raid
+ - **new** Accelerator keys F2, F3 and F4 toggle between view layouts
+  

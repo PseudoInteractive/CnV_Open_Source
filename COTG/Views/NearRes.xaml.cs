@@ -87,7 +87,7 @@ namespace COTG.Views
 			}
 		}
 
-		public static async void UpdateTradeStuff()
+		public static async Task UpdateTradeStuff()
 		{
 
 			var data = await Post.SendForJson("overview/tcounc.php");
@@ -174,7 +174,7 @@ namespace COTG.Views
 
 		public async Task Refresh()
 		{
-			UpdateTradeStuff();
+			await UpdateTradeStuff();
 
 			//supportGrid.ItemsSource = null;
 			if (target != null && target.isCityOrCastle)
@@ -186,7 +186,6 @@ namespace COTG.Views
 
 				var r = des.Sub(target.tradeInfo.res.Add(target.tradeInfo.inc));
 				r.ClampToPositive();
-
 				List<ResSource> s = new List<ResSource>();
 				//                supportGrid.ItemsSource = null;
 				foreach (var city in City.gridCitySource)
@@ -235,9 +234,9 @@ namespace COTG.Views
 					
 					if (shipping < sum)
 					{
-						var ratio = shipping / (float)sum;
+						var ratio = shipping / (double)sum;
 
-						send = info.res.Scale(ratio);
+						send = send.Scale(ratio);
 					}
 					sup.res = send;
 					r = r.Sub(send);
@@ -251,7 +250,8 @@ namespace COTG.Views
 
 				RefreshSupportByRes();
 			}
-//			OnPropertyChanged(string.Empty);
+			OnPropertyChanged(nameof(targetIcon));
+			OnPropertyChanged(nameof(targetName));
 
 		}
 
@@ -263,7 +263,7 @@ namespace COTG.Views
 					target = Spot.GetFocus();
 
 				Refresh();
-				Analytics.TrackEvent("NearRes");
+				
 			}
 			else
 			{
@@ -358,11 +358,18 @@ namespace COTG.Views
 			var secret = $"JJx452Tdd{pid}sRAssa";
 			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
 
-			var res = await Post.SendForResponse("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-
-			Note.Show($"Sent {s.res.Format()}");
-
+			var res = await Post.SendForText("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+			if (int.TryParse(res.Trim(), out var i) && i == 10)
+			{
+				Note.Show($"Sent {s.res.Format()}");
+			}
+			else
+			{
+				Note.Show($"Something changed, please refresh and try again");
+			}
 			Refresh();
+			Analytics.TrackEvent("NearResSend");
+
 		}
 
 
@@ -413,20 +420,19 @@ namespace COTG.Views
 			}
 		}
 
-	
-
-
-		
-
 		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			Refresh();
+			supporters.Clear();
 
+			Refresh();
+			supporters.NotifyReset();
 		}
 
 		private void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			supporters.Clear();
 			Refresh();
+			supporters.NotifyReset();
 		}
 
 

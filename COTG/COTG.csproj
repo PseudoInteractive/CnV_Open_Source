@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFX_CORE;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -208,6 +208,7 @@
     <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\Tags.cs" />
     <Compile Include="Game\World.cs" />
+    <Compile Include="Game\WorldView.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
@@ -793,6 +794,9 @@
   <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>
+    </SDKReference>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015-2019 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
     <SDKReference Include="Microsoft.VCLibs.Desktop, Version=14.0">
       <Name>Visual C++ 2015-2019 UWP Desktop Runtime for native apps</Name>

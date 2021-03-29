@@ -68,6 +68,12 @@ namespace COTG.Game
 			pixels[index * 8 + offset] = (byte)(color16);
 			pixels[index * 8 + offset + 1] = (byte)(color16 >> 8);
 		}
+		public static void SetColor(this byte[] pixels,byte[] ownerPixels, int index, uint r, uint g, uint b)
+		{
+			SetColor(pixels, index, RGB16(r, g, b), 2);
+			SetColor(ownerPixels, index, RGB16(r, g, b), 2);
+		}
+
 		static public uint FaithColor16(int type)
 		{
 			if (type == 7)// ibria is orange not white
@@ -413,9 +419,22 @@ namespace COTG.Game
 			changePixels = pixels;
 			rawPrior = prior;
 		}
-		public static bool initialized;
+		enum State
+		{
+			none,
+			started,
+			partWay,
+			completed,
+		}
+		static State state = State.none;
+		public static bool initialized => state >= State.partWay;
+		public static bool completed => state >= State.completed;
 		public static async void Decode(JsonDocument jsd)
 		{
+			Assert(state == State.none || state == State.completed);
+			state = State.started;
+			var view = WorldView.instance;
+
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
 			var ownerPixels = new byte[worldDim * worldDim * 8];
 			for (int i = 0; i < worldDim * worldDim; i++)
@@ -488,15 +507,19 @@ namespace COTG.Game
 				};
 				//  LogJS(b);
 				bosses.Add(b);
+
 				var index = (x + y * worldDim);
-				pixels.SetColor(index, 0xF0, 0xF0, 0x40);
-				pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
-				pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
-				pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-				pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-				//     Trace($"Boss: {b}");
 				raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
+				if (view.bosses.isOn && b.level >= view.bossMinLevel && b.level <= view.bossMaxLevel)
+				{
+					pixels.SetColor(index, view.bosses.color.R, view.bosses.color.G, view.bosses.color.B);
+					pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+					pixels[index * 8 + 5] = 3 | (2 << 2) | (3 << 4) | (2 << 6); // color index 0
+					pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+					pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+					//     Trace($"Boss: {b}");
+				}
 			}
 			{
 				foreach (var id in caverns_)
@@ -514,7 +537,7 @@ namespace COTG.Game
 
 					//  LogJS(b);
 					var index = (int)(x + y * worldDim);
-					if (SettingsPage.showDungeonsInRegionView)
+					if (view.caverns.isOn  && level >= view.cavernMinLevel && level <= view.cavernMaxLevel)
 					{
 						pixels.SetColor(index, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
 						float t = (level - 1) / 9.0f;
@@ -611,26 +634,28 @@ namespace COTG.Game
 				//  LogJS(b);
 				shrines.Add(b);
 				var index = (int)(b.x + b.y * worldDim);
-				if (b.type == 255)
+				if (view.shrines.isOn)
 				{
-					pixels.SetColor(index, 0xC0, 0xD0, 0xC0);
-					ownerPixels.SetColor(index, 0xC0, 0xB0, 0xC0);
-				}
-				else
-				{
-					pixels.SetColor(index, WorldHelper.FaithColor16(b.type), 2);
-					ownerPixels.SetColor(index, WorldHelper.FaithColor16(b.type), 2);
+					
+					if (b.type == 255)
+					{
+						pixels.SetColor( index, view.shrines.color.R,view.shrines.color.G,view.shrines.color.B);
+					}
+					else
+					{
+						pixels.SetColor(index, WorldHelper.FaithColor16(b.type), 2);
 
-				}
-				ownerPixels[index * 8 + 4] = 0 | (0 << 2) | (1 << 4) | (1 << 6);
-				ownerPixels[index * 8 + 5] = 0 | (3 << 2) | (1 << 4) | (1 << 6); // color index 0
-				ownerPixels[index * 8 + 6] = 0 | (2 << 2) | (3 << 4) | (0 << 6); // color index 0
-				ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+					}
+					//ownerPixels[index * 8 + 4] = 0 | (0 << 2) | (1 << 4) | (1 << 6);
+					//ownerPixels[index * 8 + 5] = 0 | (3 << 2) | (1 << 4) | (1 << 6); // color index 0
+					//ownerPixels[index * 8 + 6] = 0 | (2 << 2) | (3 << 4) | (0 << 6); // color index 0
+					//ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
 
-				pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
-				pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
-				pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
-				pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+					pixels[index * 8 + 4] = 1 | (3 << 2) | (1 << 4) | (3 << 6);
+					pixels[index * 8 + 5] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
+					pixels[index * 8 + 6] = 1 | (2 << 2) | (1 << 4) | (2 << 6); // color index 0
+					pixels[index * 8 + 7] = 3 | (2 << 2) | (3 << 4) | (2 << 6);
+				}
 				raw[index] = b.type | typeShrine;
 			}
 
@@ -650,27 +675,35 @@ namespace COTG.Game
 					active = (_t.SubStrAsInt(0, 1) == 2)
 				};
 				portals.Add(b);
+
 				var index = (int)(b.x + b.y * worldDim);
+				bool isOn;
 				if (b.active)
 				{
-					pixels.SetColor(index, 0xA, 0xFA, 0xA1);
-					ownerPixels.SetColor(index, 0xaA, 0xFA, 0xFF);
+					isOn = view.activePortals.isOn;
+					pixels.SetColor(index, view.activePortals.color.R,view.activePortals.color.G,view.activePortals.color.B);
+	//				ownerPixels.SetColor(index, 0xaA, 0xFA, 0xFF);
 					pixels[index * 8 + 0] = 31;
 				}
 				else
 				{
-					pixels.SetColor(index, 0xBA, 0xBA, 0xA0);
-					ownerPixels.SetColor(index, 0xBA, 0xBA, 0xA0);
+					isOn = view.inactivePortals.isOn;
+					pixels.SetColor(index, view.inactivePortals.color.R, view.inactivePortals.color.G, view.inactivePortals.color.B);
+	//				ownerPixels.SetColor(index, 0xBA, 0xBA, 0xA0);
 				}
-				pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
-				pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-				pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-				pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+				if (isOn)
+				{
+					pixels[index * 8 + 4] = 3 | (3 << 2) | (1 << 4) | (3 << 6);
+					pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+					pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+					pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
 
-				ownerPixels[index * 8 + 4] = 0 | (1 << 2) | (1 << 4) | (1 << 6);
-				ownerPixels[index * 8 + 5] = 0 | (1 << 2) | (2 << 4) | (1 << 6); // color index 0
-				ownerPixels[index * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (1 << 6); // color index 0
-				ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+					//ownerPixels[index * 8 + 4] = 0 | (1 << 2) | (1 << 4) | (1 << 6);
+					//ownerPixels[index * 8 + 5] = 0 | (1 << 2) | (2 << 4) | (1 << 6); // color index 0
+					//ownerPixels[index * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (1 << 6); // color index 0
+					//ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+				}
+
 				raw[index] = (b.active ? 1u : 0) | typePortal;
 			}
 
@@ -744,14 +777,13 @@ namespace COTG.Game
 
 				}
 			}
-			initialized = true;
+			state = State.partWay;
 
 			int counter = 0;
 			// Wait for alliance diplomacy for colors
 			while (!Alliance.diplomacyFetched && counter++ < 16)
 			{
 				await Task.Delay(1000);
-
 			}
 
 			for (int isLL = 0; isLL < 2; ++isLL)
@@ -818,84 +850,123 @@ namespace COTG.Game
 
 					if (isTemple)
 						pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
+					var isVisible = true;
+					
+					if (!isTemple && !view.citiesWithoutTemples)
+						isVisible = false;
+					if( isCastle==0 && !view.citiesWithoutCastles)
+						isVisible = false;
+					if (isWater==0 && !view.citiesWithoutWater)
+						isVisible = false;
+
+
 
 					if (pid == 0)
 					{
 						// lawless
-						pixels.SetColor(index, 0xA0, 0x00, 0xB0);
-						ownerPixels.SetColor(index, 0xb0, 0x90, 0xC0);
+						pixels.SetColor(ownerPixels,index, view.lawless.color.R,view.lawless.color.G, view.lawless.color.B);
+						if (!view.lawless.isOn)
+							isVisible = false;
 					}
 					else if (pid == Player.myId)
 					{
-						pixels.SetColor(index, 0x60, 0xd0, 0x40);
-						ownerPixels.SetColor(index, 0x30, 0xb0, 0xb0);
+						pixels.SetColor(ownerPixels,index, view.ownCities.color.R,view.ownCities.color.G, view.ownCities.color.B);
+						if (!view.ownCities.isOn)
+							isVisible = false;
 
 					}
-					else if (alliance == Alliance.my.id)
+					else if (alliance != 0 && alliance == Alliance.my.id)
 					{
-						pixels.SetColor(index, 0x30, 0xa0, 0x30);
-						ownerPixels.SetColor(index, 0xa0, 0xd0, 0xa0);
+						if (!view.ownAlliance.isOn)
+							isVisible = false;
+
+						pixels.SetColor(ownerPixels,index, view.ownAlliance.color.R,view.ownAlliance.color.G, view.ownAlliance.color.B);
 					}
 					else
 					{
 						switch (Alliance.GetDiplomacy((int)alliance))
 						{
 							default:
-								pixels.SetColor(index, 0x80, 0x80, 0x80);
-								ownerPixels.SetColor(index, 0xb0, 0xb0, 0xb0);
+								if (!view.otherPlayers.isOn)
+									isVisible = false;
+								pixels.SetColor(ownerPixels,index, view.otherPlayers.color.R, view.otherPlayers.color.G, view.otherPlayers.color.B);
 								break;
 							case Diplomacy.allied:
-								pixels.SetColor(index, 0x20, 0xA0, 0x00);
-								ownerPixels.SetColor(index, 0x90, 0xc0, 0x90);
+								if (!view.alliedAlliance.isOn)
+									isVisible = false;
+								pixels.SetColor(ownerPixels,index, view.alliedAlliance.color.R,view.alliedAlliance.color.G, view.alliedAlliance.color.B);
 								break;
 							case Diplomacy.nap:
-								pixels.SetColor(index, 0x40, 0x80, 0x40);
-								ownerPixels.SetColor(index, 0xa0, 0xc0, 0xa0);
+								if (!view.napAlliance.isOn)
+									isVisible = false;
+
+								pixels.SetColor(ownerPixels,index, view.napAlliance.color.R, view.napAlliance.color.G, view.napAlliance.color.B);
 								break;
 							case Diplomacy.enemy:
-								pixels.SetColor(index, 0xB0, 0x30, 0x20);
-								ownerPixels.SetColor(index, 0xc0, 0x60, 0x60);
+								if (!view.enemyAlliance.isOn)
+									isVisible = false;
+
+								pixels.SetColor(ownerPixels,index, view.enemyAlliance.color.R,view.enemyAlliance.color.G,view.enemyAlliance.color.B);
 								break;
 
 
 						}
 					}
+					if( view.playerSettings.TryGetValue((int)pid, out var playerSettings) && playerSettings.isOn)
+					{
+						pixels.SetColor(ownerPixels, index, playerSettings.color.R, playerSettings.color.G, playerSettings.color.B);
+
+					}
+
+					if (view.allianceSettings.TryGetValue((int)alliance, out var allianceSettings) && allianceSettings.isOn)
+					{
+						pixels.SetColor(ownerPixels,index, allianceSettings.color.R, allianceSettings.color.G, allianceSettings.color.B);
+					}
+
+
 					ownerPixels[index * 8 + 4] = 0 | (0 << 2) | (1 << 4) | (1 << 6);
 					ownerPixels[index * 8 + 5] = 0 | (3 << 2) | (1 << 4) | (1 << 6); // color index 0
 					ownerPixels[index * 8 + 6] = 0 | (3 << 2) | (3 << 4) | (0 << 6); // color index 0
 					ownerPixels[index * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
 
-					if (type == 3 || type == 4) // 3,4 is on/off water
+					if (isVisible)
 					{
-						pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-						pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
-						pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-						pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-					}
-					else if (type == 7 || type == 8) // 7 is on water
-					{
-						pixels[index * 8 + 4] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
-						pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-						pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-						pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
-					}
-					else if (type == 1 || type == 2) // 1 is lawless I 
-					{
-						// City
-						pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-						pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
-						pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-						pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
-					}
-					else // if (type == 5 || type == 6)
-					{
-						// City
-						pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
-						pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
-						pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
-						pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
-					}
 
+						if (type == 3 || type == 4) // 3,4 is on/off water
+						{
+							pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+							pixels[index * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
+							pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+							pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+						}
+						else if (type == 7 || type == 8) // 7 is on water
+						{
+							pixels[index * 8 + 4] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6));
+							pixels[index * 8 + 5] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+							pixels[index * 8 + 6] = 1 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+							pixels[index * 8 + 7] = 3 | (2 << 2) | (2 << 4) | (2 << 6);
+						}
+						else if (type == 1 || type == 2) // 1 is lawless I 
+						{
+							// City
+							pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+							pixels[index * 8 + 5] = 3 | (3 << 2) | (3 << 4) | (3 << 6); // color index 0
+							pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+							pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+						}
+						else // if (type == 5 || type == 6)
+						{
+							// City
+							pixels[index * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
+							pixels[index * 8 + 5] = 3 | (1 << 2) | (1 << 4) | (3 << 6); // color index 0
+							pixels[index * 8 + 6] = 3 | (1 << 2) | (1 << 4) | (2 << 6); // color index 0
+							pixels[index * 8 + 7] = 3 | (3 << 2) | (2 << 4) | (2 << 6);
+						}
+					}
+					else
+					{
+						int q = 0;
+					}
 
 
 				}
@@ -945,6 +1016,7 @@ namespace COTG.Game
 			SpotTab.LoadFromPriorSession(SettingsPage.pinned);
 			Task.Run(() => WorldStorage.SaveWorldData(raw));
 			current = rv;
+			state = State.completed;
 		}
 		public static async void LoadContinentHistory()
 		{

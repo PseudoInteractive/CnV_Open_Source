@@ -22,8 +22,8 @@
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-					<Image Source="{x:Bind targetIcon}"  Width="32" Tapped="TargetTapped" />
-					<TextBlock Text="{x:Bind targetName}" VerticalAlignment ="Center" />
+					<Image Source="{x:Bind targetIcon, Mode=OneWay}"  Width="32" Tapped="TargetTapped" />
+					<TextBlock Text="{x:Bind targetName, Mode=OneWay}" VerticalAlignment ="Center" />
 				</tk:WrapPanel>
 			</Border>
 
@@ -33,21 +33,25 @@
 					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
 						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+							ValidationMode="InvalidInputOverwritten"
+                          ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          ValidationMode="InvalidInputOverwritten"
+						  ValueChanged="NumberBox_ValueChanged"
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+							ValidationMode="InvalidInputOverwritten"
+									  ValueChanged="NumberBox_ValueChanged"
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 					</tk:WrapPanel >
 				</StackPanel>
 			</Border>
-			<Border Style="{StaticResource BorderReveal}">
+			<!--<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Text="Incoming.." />
 					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
@@ -70,26 +74,29 @@
 						<TextBlock Text="{x:Bind willHave.food, Converter={StaticResource IntConverter}, Mode=OneWay}"  />
 					</tk:WrapPanel >
 				</StackPanel>
-			</Border>
+			</Border>-->
 			<Border Style="{StaticResource BorderReveal}">
 
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
 					<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" IsEnabledChanged="ToggleSwitch_IsEnabledChanged"
-                      ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
+                    />
 					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
-                          NumberFormatter="{x:Bind cotg:App.formatter2Digit}" ValueChanged="NumberBox_ValueChanged"
+							ValueChanged="NumberBox_ValueChanged"
                           />
 					<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+				    ValidationMode="InvalidInputOverwritten"
+								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
 					<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                ValidationMode="InvalidInputOverwritten"
+								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline"/>
 					<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                           NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}" ValueChanged="NumberBox_ValueChanged"
+                        ValidationMode="InvalidInputOverwritten"
+								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline"/>
 				</tk:WrapPanel>
 			</Border>
@@ -182,12 +189,7 @@
 
 		</tk:DataGrid>
 
-		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
-
-			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-		
-			</tk:WrapPanel>
-		</Border>
+	
 
 		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
 

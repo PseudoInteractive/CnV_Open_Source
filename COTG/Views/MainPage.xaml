@@ -356,7 +356,26 @@
 									  Click="IncludeButtonClick"
 									  Style="{ThemeResource DropDownButtonRevealStyle}"
 									  HorizontalContentAlignment="Center" />
-				<winui:NumberBox  x:Name="raidFraction"
+			<ComboBox x:Name="intervals"
+						  Header="Intervals"
+						  FontSize="{StaticResource MediumFontSize}"
+						  IsTextScaleFactorEnabled="False"
+							SelectedIndex="{x:Bind view:SettingsPage.raidIntervals,Mode=TwoWay}"
+						  Margin="6,2,6,2" >
+				<ComboBoxItem>No delay</ComboBoxItem>
+				<ComboBoxItem>5 Seconds</ComboBoxItem>
+				<ComboBoxItem>15 Seconds</ComboBoxItem>
+				<ComboBoxItem>1 Minute</ComboBoxItem>
+				<ComboBoxItem>15 Minutes</ComboBoxItem>
+				<ComboBoxItem>30 Minutes</ComboBoxItem>
+				<ComboBoxItem>45 Minutes</ComboBoxItem>
+				<ComboBoxItem>1 Hour</ComboBoxItem>
+			</ComboBox>
+			<ToggleSwitch Header="Repeat" Width="90"
+								   IsOn="{x:Bind view:SettingsPage.raidRepeat, Mode=TwoWay}"
+						  OnContent="Yes"
+						  OffContent="Once" />
+			<winui:NumberBox  x:Name="raidFraction"
 								  Header="Use fraction"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}"
@@ -364,13 +383,13 @@
 								  ValueChanged="RaidFraction_ValueChanged"
 								  SmallChange=".0625"
 								  Style="{StaticResource NumberBoxSmall}" />
-				<ToggleSwitch     Header="Off dungeons"
+				<ToggleSwitch     Header="Off dungeons" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.raidOffDungeons,Mode=TwoWay}"
 								  OnContent="Include"
 								  OffContent="Exclude"
 								  Margin="6,2,6,2" />
-				<ToggleSwitch     Header="# to Send"
+				<ToggleSwitch     Header="# to Send" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.raidSendExact,Mode=TwoWay}"
 								  OnContent="Enough"

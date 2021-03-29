@@ -896,11 +896,20 @@ namespace COTG.Views
 												if (spot is City city)
 												{
 													var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-													toolTip = $"{player.name}\n{city.cityName}\npts:{city.points}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome}\nTSt:{city.tsTotal}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
+													toolTip = $"{player.name}\n{city.cityName}\npts:{city.points:D0}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome:D0}\nTSt:{city.tsTotal:D0}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
 													//     Raiding.UpdateTS();
 													if(city.senatorInfo.Length != 0)
 													{
 														toolTip = toolTip + city.GetSenatorInfo();
+													}
+													if(city.reinforcementsIn.Length > 0)
+													{
+														
+														foreach(var i in city.reinforcementsIn)
+														{
+															toolTip = i.troops.Format($"{toolTip}\nFrom {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n');
+														}
+
 													}
 												}
 

@@ -348,5 +348,10 @@ namespace COTG.Views
 			CityView.BuildingsOrQueueChanged();
 		}
 
+		private void Done(object sender, RoutedEventArgs e)
+		{
+			CityBuild._isPlanner = false;
+			PlannerTab.instance.Close();
+		}
 	}
 }
