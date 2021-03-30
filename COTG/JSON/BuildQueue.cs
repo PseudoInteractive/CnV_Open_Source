@@ -296,7 +296,8 @@ namespace COTG.JSON
 												}
 												if (!wallPending)
 												{
-
+													Trace($"Invalid tower (missing wall)");
+												
 													// cancel this order
 													RemoveAt(offset);
 												}
@@ -332,6 +333,8 @@ namespace COTG.JSON
 												var demoPending = (cotgQ != null) && cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
 												if (!demoPending)
 												{
+													Trace($"Invalid build: {city.buildings[i.bspot].bid},{city.buildings[i.bspot].bl} => {i.bid}");
+
 													// cancel this order
 													RemoveAt(offset);
 
@@ -354,6 +357,7 @@ namespace COTG.JSON
 											City.GetPostQueue(ref prior, i.bspot, queue.v, offset); // is the build queued?
 											if (prior.bid != i.bid)
 											{
+												Trace($"Invalid ugrade {prior.bid} => {i.bid}");
 												// invalid command, discard it
 												RemoveAt(offset);
 												continue;
@@ -372,7 +376,7 @@ namespace COTG.JSON
 											{
 												// invalid command, discard it
 												RemoveAt(offset);
-												Trace("Invlid u");
+												Trace($"Invalid ugrade {prior.bid} => {i.bid}");
 
 												continue;
 											}
@@ -384,7 +388,7 @@ namespace COTG.JSON
 										if (prior.bid != i.bid)
 										{
 											// invalid command, discard it
-											Trace("Invlid demo");
+											Trace("Invalid demo  {prior.bid} => {i.bid}");
 											RemoveAt(offset);
 											continue;
 										}
@@ -403,6 +407,11 @@ namespace COTG.JSON
 									RemoveAt(offset);
 									if (cid == City.build)
 										City.buildQueue.Add(i);
+									if(cotgQ == null)
+										cotgQ = new DArray<BuildQueueItem>(128);
+									cotgQ.Add(i);
+									++cotgQLength;
+
 									Serialize(ref sb, i, ref qFirst);
 									--commandsToQueue;
 

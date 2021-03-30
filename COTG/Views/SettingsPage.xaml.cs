@@ -7,8 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using COTG.Core.Helpers;
-using COTG.Core.Services;
+
 using COTG.Game;
 using COTG.Helpers;
 using COTG.JSON;
@@ -63,7 +62,7 @@ namespace COTG.Views
 		public static int maxStone = 250000;
 		public static int maxIron = 300000;
 		public static int maxFood = 300000;
-		public static int cottageLevel = 8;
+		public static int cottageLevel = 7;
 		public static bool sendWood = true;
 		public static bool sendStone = true;
 		public static bool sendIron = true;
@@ -119,6 +118,7 @@ namespace COTG.Views
 		public static bool spatialOn = true;
 		public static bool stayAlive;
 		public static bool raidOffDungeons = false;
+		public static bool tintCities= true;
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 25;

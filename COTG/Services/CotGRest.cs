@@ -317,7 +317,9 @@ namespace COTG.Services
         }
         public static void Send()
         {
-            (new GetWorldInfo()).Post();
+			Assert(World.state == World.State.none || World.state == World.State.completed); ;
+			World.state = World.State.started;
+			(new GetWorldInfo()).Post();
         }
 
         //async public void Post2()

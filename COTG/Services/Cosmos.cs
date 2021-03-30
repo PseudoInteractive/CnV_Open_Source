@@ -79,11 +79,11 @@ namespace COTG.Services
 		private static Database database;
 
         // The container we will create.
-        private static Container container;
-        private static Container ordersContainer;
+ //       private static Container container;
+     //   private static Container ordersContainer;
 		private static Container presenceContainer;
 		//		private static Container sessionContainer;
-		static CosmosClientOptions clientOptions = new() { ConnectionMode = ConnectionMode.Direct ,LimitToEndpoint=true,EnableContentResponseOnWrite=false };
+	//	static CosmosClientOptions clientOptions = new() { ConnectionMode = ConnectionMode.Direct ,LimitToEndpoint=true,EnableContentResponseOnWrite=false };
 
 		static string worldPostfix => JSClient.world == 21 ? "": ('_' + JSClient.world.ToString());
 
@@ -287,7 +287,7 @@ namespace COTG.Services
 				//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
 				//		clientOptions.Diagnostics.IsLoggingEnabled = false;
 
-					var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey,clientOptions);
+					var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
 					database = _cosmosClient.GetDatabase(databaseId);
 					if (database != null)
 					{
@@ -384,175 +384,175 @@ namespace COTG.Services
 		static ItemRequestOptions itemRequesDefault = new ItemRequestOptions() { EnableContentResponseOnWrite = false };
 
 		/// 
-		public static async Task<bool> TryAddOrder(long orderId)
-        {
-	//		Assert(used.Add(orderId) == true);
-            if (!await Touch() )
-                return false;
-            var order = new Order() { id = orderId.ToString() };
-			await throttle.WaitAsync();
-			try
-			{
-				//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
-				var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
+	//	public static async Task<bool> TryAddOrder(long orderId)
+ //       {
+	////		Assert(used.Add(orderId) == true);
+ //           if (!await Touch() )
+ //               return false;
+ //           var order = new Order() { id = orderId.ToString() };
+	//		await throttle.WaitAsync();
+	//		try
+	//		{
+	//			//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
+	//			var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
 			
-            }
-			catch (CosmosException ex)
-			{
-				if (ex.StatusCode == HttpStatusCode.Conflict)
-					return false;
-				Log(ex);
+ //           }
+	//		catch (CosmosException ex)
+	//		{
+	//			if (ex.StatusCode == HttpStatusCode.Conflict)
+	//				return false;
+	//			Log(ex);
 
-			}
-			catch (Exception ex)
-            {
+	//		}
+	//		catch (Exception ex)
+ //           {
               
-				Log(ex);
-				return false;
-            }
+	//			Log(ex);
+	//			return false;
+ //           }
 			
-			finally
-			{
-				throttle.Release();
-			}
-            return true;
-        }
+	//		finally
+	//		{
+	//			throttle.Release();
+	//		}
+ //           return true;
+ //       }
 
         public static int battleRecordsUpserted;
 //        static ItemRequestOptions itemRequestOptions = new ItemRequestOptions() { ConsistencyLevel=ConsistencyLevel.Eventual, EnableContentResponseOnWrite =false}
-        public static async Task AddBattleRecord(Army army)
-        {
-			if (!await Touch())
-				return;
+   //     public static async Task AddBattleRecord(Army army)
+   //     {
+			//if (!await Touch())
+			//	return;
 
 
-            await throttle.WaitAsync();
+   //         await throttle.WaitAsync();
 
-            try
-            {
-                //   semaphore.EnterWriteLock();
-                COTG.DB.SpotDB s0, s1;
-                // Create a family object for the Andersen family
-                var sourceId = COTG.DB.SpotDB.CoordsToString(army.sourceCid.CidToWorld());
-                var targetId = COTG.DB.SpotDB.CoordsToString(army.targetCid.CidToWorld());
-                var targetMine = Alliance.IsMine(army.targetAlliance);
-                var sourceMine = Alliance.IsMine(army.sourceAlliance);
-                if (!sourceMine && army.isAttack)
-                {
-                    try
-                    {
-                        // Read the item to see if it exists.  
-                        ItemResponse<COTG.DB.SpotDB> source = await container.ReadItemAsync<COTG.DB.SpotDB>(sourceId, new PartitionKey(sourceId), itemRequesDefault);
-                        s0 = source.Resource;
-                    }
-                    catch (CosmosException ex)
-                    {
-                        if (ex.StatusCode != HttpStatusCode.NotFound)
-                            return;
-                        s0 = new COTG.DB.SpotDB() { id = sourceId, own = army.sPid }; // todo:  set owner
-                                                                                    // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
-                                                                                    //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
+   //         try
+   //         {
+   //             //   semaphore.EnterWriteLock();
+   //             COTG.DB.SpotDB s0, s1;
+   //             // Create a family object for the Andersen family
+   //             var sourceId = COTG.DB.SpotDB.CoordsToString(army.sourceCid.CidToWorld());
+   //             var targetId = COTG.DB.SpotDB.CoordsToString(army.targetCid.CidToWorld());
+   //             var targetMine = Alliance.IsMine(army.targetAlliance);
+   //             var sourceMine = Alliance.IsMine(army.sourceAlliance);
+   //             if (!sourceMine && army.isAttack)
+   //             {
+   //                 try
+   //                 {
+   //                     // Read the item to see if it exists.  
+   //                     ItemResponse<COTG.DB.SpotDB> source = await container.ReadItemAsync<COTG.DB.SpotDB>(sourceId, new PartitionKey(sourceId), itemRequesDefault);
+   //                     s0 = source.Resource;
+   //                 }
+   //                 catch (CosmosException ex)
+   //                 {
+   //                     if (ex.StatusCode != HttpStatusCode.NotFound)
+   //                         return;
+   //                     s0 = new COTG.DB.SpotDB() { id = sourceId, own = army.sPid }; // todo:  set owner
+   //                                                                                 // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
+   //                                                                                 //         ItemResponse<COTG.DB.Spot> source = await container.CreateItemAsync<COTG.DB.Spot>(s0, new PartitionKey(sourceId));
 
-                    }
-                    var recb = new RecordBattle() { rep = army.reportId, typ = army.type, trp = army.troops };
-                    recb.SetTime(army.time);
-                    if (s0.AddRecord(recb))
-                    {
-                        try
-                        {
-                            await container.UpsertItemAsync<COTG.DB.SpotDB>(s0, new PartitionKey(sourceId), itemRequesDefault);
+   //                 }
+   //                 var recb = new RecordBattle() { rep = army.reportId, typ = army.type, trp = army.troops };
+   //                 recb.SetTime(army.time);
+   //                 if (s0.AddRecord(recb))
+   //                 {
+   //                     try
+   //                     {
+   //                         await container.UpsertItemAsync<COTG.DB.SpotDB>(s0, new PartitionKey(sourceId), itemRequesDefault);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Log(ex);
-                        }
+   //                     }
+   //                     catch (Exception ex)
+   //                     {
+   //                         Log(ex);
+   //                     }
 
-                        ++battleRecordsUpserted;
-                    }
-                }
-                if (!targetMine && army.isAttack && army.sumDef.TS() > 0) // defense report
-                {
-                    try
-                    {
-                        // Read the item to see if it exists.  
-                        ItemResponse<COTG.DB.SpotDB> source = await container.ReadItemAsync<COTG.DB.SpotDB>(targetId, new PartitionKey(targetId), itemRequesDefault);
-                        s1 = source.Resource;
-                    }
-                    catch (CosmosException ex)
-                    {
+   //                     ++battleRecordsUpserted;
+   //                 }
+   //             }
+   //             if (!targetMine && army.isAttack && army.sumDef.TS() > 0) // defense report
+   //             {
+   //                 try
+   //                 {
+   //                     // Read the item to see if it exists.  
+   //                     ItemResponse<COTG.DB.SpotDB> source = await container.ReadItemAsync<COTG.DB.SpotDB>(targetId, new PartitionKey(targetId), itemRequesDefault);
+   //                     s1 = source.Resource;
+   //                 }
+   //                 catch (CosmosException ex)
+   //                 {
 
-                        if (ex.StatusCode != HttpStatusCode.NotFound)
-                            return;
-                        //      if(ex.Status == (int)HttpStatusCode.NotFound)
-                        s1 = new COTG.DB.SpotDB() { id = targetId, own = army.tPid }; // todo:  set owner
+   //                     if (ex.StatusCode != HttpStatusCode.NotFound)
+   //                         return;
+   //                     //      if(ex.Status == (int)HttpStatusCode.NotFound)
+   //                     s1 = new COTG.DB.SpotDB() { id = targetId, own = army.tPid }; // todo:  set owner
 
-                    }
-                    var recb = new RecordBattle() { rep = army.reportId, typ = Game.Enum.reportDefenseStationed, trp = army.sumDef };
-                    recb.SetTime(army.time);
-                    if (s1.AddRecord(recb))
-                    {
-                        try
-                        {
-                            await container.UpsertItemAsync<COTG.DB.SpotDB>(s1, new PartitionKey(targetId), itemRequesDefault);
+   //                 }
+   //                 var recb = new RecordBattle() { rep = army.reportId, typ = Game.Enum.reportDefenseStationed, trp = army.sumDef };
+   //                 recb.SetTime(army.time);
+   //                 if (s1.AddRecord(recb))
+   //                 {
+   //                     try
+   //                     {
+   //                         await container.UpsertItemAsync<COTG.DB.SpotDB>(s1, new PartitionKey(targetId), itemRequesDefault);
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Log(ex);
+   //                     }
+   //                     catch (Exception ex)
+   //                     {
+   //                         Log(ex);
 
-                        }
+   //                     }
 
-                        ++battleRecordsUpserted;
+   //                     ++battleRecordsUpserted;
 
-                    }
-                }
-                //	recb = new RecordBattle[]
-                //	{
-                //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
-                //	},
+   //                 }
+   //             }
+   //             //	recb = new RecordBattle[]
+   //             //	{
+   //             //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
+   //             //	},
 
-                //var id1 = Spot.CoordsToString((221, 220));
-                //// Create a family object for the Wakefield family
-                //Spot wakefieldFamily = new Spot
-                //{
-                //	id = id1,
-                //	typ = Spot.typeCity,
-                //	recb = new RecordBattle[]
-                //	{
-                //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
-                //	},
-                //};
-            }
-            catch (Exception e)
-            {
-                Log(e);
-            }
-            finally
-            {
-                throttle.Release();
+   //             //var id1 = Spot.CoordsToString((221, 220));
+   //             //// Create a family object for the Wakefield family
+   //             //Spot wakefieldFamily = new Spot
+   //             //{
+   //             //	id = id1,
+   //             //	typ = Spot.typeCity,
+   //             //	recb = new RecordBattle[]
+   //             //	{
+   //             //		new RecordBattle() { t = DateTime.UtcNow.Ticks/10000, typ = 1, rep = "1", trp = new TroopTypeCount[] { new TroopTypeCount() { t= 2, c = 4 } } },
+   //             //	},
+   //             //};
+   //         }
+   //         catch (Exception e)
+   //         {
+   //             Log(e);
+   //         }
+   //         finally
+   //         {
+   //             throttle.Release();
 
 
-            }
-            //finally
-            //{
-            //   semaphore.ExitWriteLock();
-            //}
-            //try
-            //{
-            //	// Read the item to see if it exists
-            //	ItemResponse<Spot> wakefieldFamilyResponse = await container.ReadItemAsync<Spot>(wakefieldFamily.id, new PartitionKey(wakefieldFamily.id));
-            //	Console.WriteLine("Item in database with id: {0} already exists\n", wakefieldFamilyResponse.Value.id);
-            //}
-            //catch (CosmosException ex) when (ex.Status == (int)HttpStatusCode.NotFound)
-            //{
-            //	// Create an item in the container representing the Wakefield family. Note we provide the value of the partition key for this item, which is "Wakefield"
-            //	ItemResponse<Spot> wakefieldFamilyResponse = await container.CreateItemAsync<Spot>(wakefieldFamily, new PartitionKey(id1));
+   //         }
+   //         //finally
+   //         //{
+   //         //   semaphore.ExitWriteLock();
+   //         //}
+   //         //try
+   //         //{
+   //         //	// Read the item to see if it exists
+   //         //	ItemResponse<Spot> wakefieldFamilyResponse = await container.ReadItemAsync<Spot>(wakefieldFamily.id, new PartitionKey(wakefieldFamily.id));
+   //         //	Console.WriteLine("Item in database with id: {0} already exists\n", wakefieldFamilyResponse.Value.id);
+   //         //}
+   //         //catch (CosmosException ex) when (ex.Status == (int)HttpStatusCode.NotFound)
+   //         //{
+   //         //	// Create an item in the container representing the Wakefield family. Note we provide the value of the partition key for this item, which is "Wakefield"
+   //         //	ItemResponse<Spot> wakefieldFamilyResponse = await container.CreateItemAsync<Spot>(wakefieldFamily, new PartitionKey(id1));
 
-            //	// Note that after creating the item, we can access the body of the item with the Value property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
-            //	Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", wakefieldFamilyResponse.Value.id, 0);
-            //}
-        }
+   //         //	// Note that after creating the item, we can access the body of the item with the Value property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
+   //         //	Console.WriteLine("Created item in database with id: {0} Operation consumed {1} RUs.\n", wakefieldFamilyResponse.Value.id, 0);
+   //         //}
+   //     }
         //// </AddItemsToContainerAsync>
 
         //// <QueryItemsAsync>

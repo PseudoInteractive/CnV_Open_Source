@@ -1355,14 +1355,14 @@ namespace COTG
 							destP0, destP1,
 							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 0), ConstantDepth, zTerrain);
 					}
-					if (worldOwners != null && !focusOnCity)
+					if (worldOwners != null && !focusOnCity  )
 					{
 						var tOffset = new Vector2(0.0f, 0.0f);
 						var t2d = worldOwners.texture2d;
 						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
-						draw.AddQuad(Layer.tileCity - 1, worldChanges,
+						draw.AddQuad(Layer.tiles - 1, worldOwners,
 							destP0, destP1,
-							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 0), ConstantDepth, zTerrain);
+							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 128), ConstantDepth, zTerrain);
 					}
 					if (wantCity)
 					{

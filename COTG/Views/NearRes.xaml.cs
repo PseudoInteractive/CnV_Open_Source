@@ -37,7 +37,7 @@ namespace COTG.Views
 		public bool viaWater { get; set; } = false;
 		public City target;
 		public float filterTime = 6;
-		public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
+		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
 		public int filterResHome { get; set; } = 1000;
 		public int filterCartsHome { get; set; } = 100; // need at this this many ts at home to be considered for def
 		public int filterShipsHome { get; set; } = 10; // need at this this many ts at home to be considered for def
@@ -172,7 +172,7 @@ namespace COTG.Views
 
 		}
 
-		public async Task Refresh()
+		public async  Task DoRefresh()
 		{
 			await UpdateTradeStuff();
 
@@ -262,7 +262,7 @@ namespace COTG.Views
 				if (target == null)
 					target = Spot.GetFocus();
 
-				Refresh();
+				DoRefresh();
 				
 			}
 			else
@@ -367,7 +367,7 @@ namespace COTG.Views
 			{
 				Note.Show($"Something changed, please refresh and try again");
 			}
-			Refresh();
+			DoRefresh();
 			Analytics.TrackEvent("NearResSend");
 
 		}
@@ -424,14 +424,14 @@ namespace COTG.Views
 		{
 			supporters.Clear();
 
-			Refresh();
+			DoRefresh();
 			supporters.NotifyReset();
 		}
 
 		private void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			supporters.Clear();
-			Refresh();
+			DoRefresh();
 			supporters.NotifyReset();
 		}
 

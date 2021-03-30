@@ -842,7 +842,7 @@ namespace COTG.Views
 		public static async void Build(int id, int bid, bool dryRun)
 		{
 			var sel = GetBuildingPostQueue(id);
-			if (bid != bidWall && !sel.isEmpty) // special case, wall upgrade from level is allowed as a synonym for build
+			if (bid != bidWall && !sel.isEmpty && !SettingsPage.deferredBuild) // special case, wall upgrade from level is allowed as a synonym for build
 			{
 				Status("Spot is occupied",dryRun);
 			}
@@ -1409,13 +1409,13 @@ namespace COTG.Views
 								// building is here
 								// a building
 								// Try to move it to some place where one is needed
-								var buildingWanted = false;
+								
 								if (desBid != curBid)
 								{
 									if (putScore > 0)
 									{
 										var name = b.def.Bn;
-										buildingWanted = true;
+										
 										switch (putScore)
 										{
 											case 4:
@@ -1443,8 +1443,7 @@ namespace COTG.Views
 
 
 									}
-
-									if (!buildingWanted)
+									else
 									{
 										if (b.isCabin && counts.count < 100 )
 										{
@@ -1457,7 +1456,12 @@ namespace COTG.Views
 											if (dryRun)
 												DrawSprite(hovered, decalBuildingInvalid, .31f);
 											else
+											{
 												Demolish(cc, dryRun);
+												// build the correct building
+												if(desBid!=0)
+													Build(cc, desBid, dryRun);
+											}
 										}
 									}
 								}

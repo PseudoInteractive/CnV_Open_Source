@@ -6,11 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI;
-using Microsoft.Toolkit.HighPerformance;
-using Microsoft.Toolkit.HighPerformance.Enumerables;
 using System.Globalization;
-
+using Color = Microsoft.Xna.Framework.Color;
 namespace COTG
 {
     public enum RefreshState
@@ -102,31 +99,36 @@ namespace COTG
         public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat);
 
         public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
-        public static Color WithAlpha(this Color c, byte alpha)
-        {
-			DateTime.Now.ToString("HH:mm:");
-            return Color.FromArgb(alpha, c.R, c.G, c.B);
-        }
-
-        public static void Nop<T0>(T0 t) { }
+      
+		public static Color HalfSaturation(this Color c)
+		{
+			return new Color((byte)(128 +c.R/2), (byte)(128 + c.G / 2), (byte)(128 + c.B / 2), c.A);
+		}
+		public static Color ThreeQuarterSaturation(this Color c)
+		{
+			return new Color((byte)(64 + c.R*3/4 ), (byte)(64 + c.G*3/4 ), (byte)(64 + c.B*3/4), c.A);
+		}
+		public static void Nop<T0>(T0 t) { }
         public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);
         // Lists
         public static Color Lerp(this float t, Color c0, Color c1)
         {
-            return Color.FromArgb(
-                (byte)t.Lerp((float)c0.A, (float)c1.A).RoundToInt(),
+            return new Color(
+               
                 (byte)t.Lerp((float)c0.R, (float)c1.R).RoundToInt(),
                 (byte)t.Lerp((float)c0.G, (float)c1.G).RoundToInt(),
-                (byte)t.Lerp((float)c0.B, (float)c1.B).RoundToInt());
+                (byte)t.Lerp((float)c0.B, (float)c1.B).RoundToInt(),
+				 (byte)t.Lerp((float)c0.A, (float)c1.A).RoundToInt() );
         }
         public static Color LerpGamma(this float t, Color c0, Color c1)
         {
            
-            return Color.FromArgb(
-                (byte)t.LerpSqrt((float)c0.A, (float)c1.A).RoundToInt(),
+            return new Color(
+               
                 (byte)t.LerpSqrt((float)c0.R, (float)c1.R).RoundToInt(),
                 (byte)t.LerpSqrt((float)c0.G, (float)c1.G).RoundToInt(),
-                (byte)t.LerpSqrt((float)c0.B, (float)c1.B).RoundToInt());
+                (byte)t.LerpSqrt((float)c0.B, (float)c1.B).RoundToInt(),
+				 (byte)t.LerpSqrt((float)c0.A, (float)c1.A).RoundToInt() );
         }
         public static bool IsZero(this DateTimeOffset c) => c == dateTimeZero;
         public static bool AddIfAbsent<T>(this List<T> l, T a) where T: IEquatable<T>
@@ -209,6 +211,16 @@ namespace COTG
             }
 
         }
+
+		//public static int IndexOf<T>(this T[] me, T val) where T : IEqualityComparable<T>
+		//{
+		//	int lg = me.Length;
+		//	for (int i = 0; i < lg; ++i)
+		//		if (Equals(me[i], val))
+		//			return i;
+		//	return -1;
+		//}
+
         public static T[] ArrayRemove<T>(this T[] l, int index)
         {
             if (l == null || l.Length <= 0)

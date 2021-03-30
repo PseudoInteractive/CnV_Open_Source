@@ -158,6 +158,11 @@
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
+				<tk:DataGridTextColumn  Header="Ships" 
+                                        Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneTime}"
+                                        IsReadOnly="True" Tag="ships"
+                                            CellStyle="{StaticResource CellCenter}"
+                                             />
 
 				<tk:DataGridTextColumn  Header="City Name"
                                         Binding="{Binding name, Mode=OneTime }"

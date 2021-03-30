@@ -14,30 +14,40 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
     public sealed partial class HeatmapDatePicker : UserControl
     {
-        public static HeatmapDatePicker instance;
+		public static string [] items;
+        public static HeatmapDatePicker Touch()
+		{
+			if (instance == null)
+				instance = new HeatmapDatePicker();
+			return instance;
+		}
+		public static HeatmapDatePicker instance;
+
         public HeatmapDatePicker()
         {
-            instance = this;
             this.InitializeComponent();
         }
 
         private void Now_Click(object sender, RoutedEventArgs e)
         {
-            date.SelectedDates.Clear();
+            snapshots.SelectedItems.Clear();
 			AGame.ClearHeatmap();
         }
 
-        private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
-        {
-            if(args.AddedDates.Any())
+		private void snapshots_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var lv = sender as ListView;
+			var sel = lv.SelectedItems.Select((a) => Array.IndexOf(items,(string)a)).OrderBy(a=>a).ToArray();
+
+
+			if (sel.Length > 0)
             {
-                Services.WorldStorage.SetHeatmapStartDate(args.AddedDates.First().Date); // Is Timezone Right?
+                Services.WorldStorage.SetHeatmapDates(sel); // Is Timezone Right?
             }
             else
             {
@@ -45,14 +55,7 @@ namespace COTG.Views
             }
         }
 
-        
-        public static void SetFirstRecordedHeatmapDate(DateTimeOffset off)
-        {
-            App.DispatchOnUIThreadLow(() =>
-            {
-                instance.date.MinDate = (off);
-                instance.date.MaxDate = (JSClient.ServerTime() + TimeSpan.FromDays(1));
-            });
-        }
-    }
+		
+		
+	}
 }

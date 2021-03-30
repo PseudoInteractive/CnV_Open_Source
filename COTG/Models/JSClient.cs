@@ -1032,82 +1032,81 @@ namespace COTG
 				}
 				if(jse.TryGetProperty("wmo", out var wo))
 				{
-					var i = WorldView.instance;
-					i.ownCities.isOn = wo.GetAsInt("0")==1;
-					i.ownCities.color = wo.GetColor("16");
+					WorldViewSettings.ownCities.isOn = wo.GetAsInt("0")==1;
+					WorldViewSettings.ownCities.color = wo.GetColor("16");
 
-					i.ownAlliance.isOn = wo.GetAsInt("1") == 1;
-					i.ownAlliance.color = wo.GetColor("17");
+					WorldViewSettings.ownAlliance.isOn = wo.GetAsInt("1") == 1;
+					WorldViewSettings.ownAlliance.color = wo.GetColor("17");
 
-					i.alliedAlliance.isOn = wo.GetAsInt("2") == 1;
-					i.alliedAlliance.color = wo.GetColor("18");
+					WorldViewSettings.alliedAlliance.isOn = wo.GetAsInt("2") == 1;
+					WorldViewSettings.alliedAlliance.color = wo.GetColor("18");
 
-					i.napAlliance.isOn = wo.GetAsInt("3") == 1;
-					i.napAlliance.color = wo.GetColor("19");
+					WorldViewSettings.napAlliance.isOn = wo.GetAsInt("3") == 1;
+					WorldViewSettings.napAlliance.color = wo.GetColor("19");
 
-					i.enemyAlliance.isOn = wo.GetAsInt("4") == 1;
-					i.enemyAlliance.color = wo.GetColor("20");
+					WorldViewSettings.enemyAlliance.isOn = wo.GetAsInt("4") == 1;
+					WorldViewSettings.enemyAlliance.color = wo.GetColor("20");
 
-					i.otherPlayers.isOn = wo.GetAsInt("15") == 1;
-					i.otherPlayers.color = wo.GetColor("28");
+					WorldViewSettings.otherPlayers.isOn = wo.GetAsInt("15") == 1;
+					WorldViewSettings.otherPlayers.color = wo.GetColor("28");
 
-					i.lawless.isOn = wo.GetAsInt("5") == 1;
-					i.lawless.color = wo.GetColor("21");
+					WorldViewSettings.lawless.isOn = wo.GetAsInt("5") == 1;
+					WorldViewSettings.lawless.color = wo.GetColor("21");
 
-					i.friends.isOn = wo.GetAsInt("6") == 1;
-					i.friends.color = wo.GetColor("22");
+					WorldViewSettings.friends.isOn = wo.GetAsInt("6") == 1;
+					WorldViewSettings.friends.color = wo.GetColor("22");
 
-					i.citiesWithoutCastles = wo.GetAsInt("7") == 1;
-					i.citiesWithoutWater = wo.GetAsInt("8") == 1;
-					i.citiesWithoutTemples = wo.GetAsInt("9") == 1;
+					WorldViewSettings.citiesWithoutCastles = wo.GetAsInt("7") == 1;
+					WorldViewSettings.citiesWithoutWater = wo.GetAsInt("8") == 1;
+					WorldViewSettings.citiesWithoutTemples = wo.GetAsInt("9") == 1;
 					
-					i.caverns.isOn = wo.GetAsInt("10") == 1;
-					i.caverns.color = wo.GetColor("23");
+					WorldViewSettings.caverns.isOn = wo.GetAsInt("10") == 1;
+					WorldViewSettings.caverns.color = wo.GetColor("23");
 
-					i.bosses.isOn = wo.GetAsInt("11") == 1;
-					i.bosses.color = wo.GetColor("24");
+					WorldViewSettings.bosses.isOn = wo.GetAsInt("11") == 1;
+					WorldViewSettings.bosses.color = wo.GetColor("24");
 
-					i.shrines.isOn = wo.GetAsInt("12") == 1;
-					i.shrines.color = wo.GetColor("25");
+					WorldViewSettings.shrines.isOn = wo.GetAsInt("12") == 1;
+					WorldViewSettings.shrines.color = wo.GetColor("25");
 
-					i.inactivePortals.isOn = wo.GetAsInt("13") == 1;
-					i.inactivePortals.color = wo.GetColor("26");
+					WorldViewSettings.inactivePortals.isOn = wo.GetAsInt("13") == 1;
+					WorldViewSettings.inactivePortals.color = wo.GetColor("26");
 
-					i.activePortals.isOn = wo.GetAsInt("14") == 1;
-					i.activePortals.color = wo.GetColor("27");
+					WorldViewSettings.activePortals.isOn = wo.GetAsInt("14") == 1;
+					WorldViewSettings.activePortals.color = wo.GetColor("27");
 				
-					i.cavernMinLevel = wo.GetAsInt("29");
-					i.cavernMaxLevel = wo.GetAsInt("30");
+					WorldViewSettings.cavernMinLevel = wo.GetAsInt("29");
+					WorldViewSettings.cavernMaxLevel = wo.GetAsInt("30");
 
-					i.bossMinLevel = wo.GetAsInt("31");
-					i.bossMaxLevel = wo.GetAsInt("32");
+					WorldViewSettings.bossMinLevel = wo.GetAsInt("31");
+					WorldViewSettings.bossMaxLevel = wo.GetAsInt("32");
 
 
-					i.playerSettings.Clear();
+					WorldViewSettings.playerSettings.Clear();
 					if(wo.TryGetProperty("p",out var p))
 					{
 						foreach(var pset in p.EnumerateObject())
 						{
-							var ps = new WorldView.PlayerSetting();
+							var ps = new WorldViewSettings.PlayerSetting();
 							ps.pid = int.Parse(pset.Name);
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
-							i.playerSettings.Add(ps.pid, ps);
+							WorldViewSettings.playerSettings.Add(ps.pid, ps);
 						}
 					}
-					i.allianceSettings.Clear();
+					WorldViewSettings.allianceSettings.Clear();
 					if (wo.TryGetProperty("a", out var a))
 					{
 						
 						foreach (var pset in a.EnumerateObject())
 						{
-							var ps = new WorldView.AllianceSetting();
+							var ps = new WorldViewSettings.AllianceSetting();
 							ps.pid = int.Parse(pset.Name);
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
-							i.allianceSettings.Add(ps.pid, ps);
+							WorldViewSettings.allianceSettings.Add(ps.pid, ps);
 						}
 					}
 
