@@ -162,7 +162,7 @@ namespace COTG.Services
 							snapshots[counter] = $"{entry.LastWriteTime.ToUniversalTime().ToString("G")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
 							++counter;
 						}
-						HeatmapDatePicker.SetItems(snapshots);
+						App.DispatchOnUIThread( ()=> HeatmapDatePicker.SetItems(snapshots) );
 					}
 					
 				}
@@ -207,7 +207,7 @@ namespace COTG.Services
                 using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
                 {
                     int entries = historyBuffer.Length;
-                    while(--entries> items[0] )
+                    while(--entries >= items[0] )
                     {
                         var dName = ArchiveName(entries);
                         var prior = zip.GetEntry(dName);

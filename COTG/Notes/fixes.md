@@ -51,4 +51,8 @@
  - **new** Support for the _delay between raids_ functionality
   - for some reason COTG does not natively support a delay of 10s, if this is desired I could add it, but it may not work with auto raid
  - **new** Accelerator keys F2, F3 and F4 toggle between view layouts
- - 
+### 2021/3/30
+ - ** new ** Cities in region view are tinted by default based on your wold color settings
+  - This can be changed in the settings page via "Tint"
+ - ** update ** The heatmap allows you to view changes in a more fine grained manner
+

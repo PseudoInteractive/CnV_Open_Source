@@ -1408,7 +1408,7 @@ namespace COTG
 						//var tOffset = new Vector2(0.0f, 0.0f);
 						//var t2d = worldChanges.texture2d;
 						//var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
-						draw.AddMesh(tesselatedWorld, Layer.tiles - 1, worldChanges);
+						draw.AddMesh(tesselatedWorld, Layer.tileShadow - 1, worldChanges);
 					}
 					if (worldOwners != null && !focusOnCity  )
 					{

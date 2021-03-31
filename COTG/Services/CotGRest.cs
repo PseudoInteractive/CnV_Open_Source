@@ -374,11 +374,9 @@ namespace COTG.Services
         public int cid;
         public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayer(_cid))
         {
-			
 			Log($"sndRaid:{_json}");
             cid = _cid;
             json = _json;
-
         }
         public override string GetPostContent()
         {

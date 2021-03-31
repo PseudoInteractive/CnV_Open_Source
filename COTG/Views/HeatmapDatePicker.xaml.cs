@@ -36,6 +36,7 @@ namespace COTG.Views
 		}
         public HeatmapDatePicker()
         {
+			instance = this;
             this.InitializeComponent();
         }
 
@@ -61,7 +62,9 @@ namespace COTG.Views
             }
         }
 
-		
-		
+		private void snapshots_PointerEntered(object sender, PointerRoutedEventArgs e)
+		{
+			snapshots.Focus(FocusState.Programmatic);
+		}
 	}
 }

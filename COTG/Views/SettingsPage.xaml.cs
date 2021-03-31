@@ -49,7 +49,7 @@ namespace COTG.Views
 		//        private static UserData _user;
 		public static bool fetchFullHistory = true;
 		public static bool? autoBuildOn = null;
-		public static bool setRecruit;
+		public static bool setRecruit = true;
 		public static bool deferredBuild;
 		public static float planet = 0.5f;
 		public static float parallax = 0.5f;
@@ -68,8 +68,8 @@ namespace COTG.Views
 		public static bool sendIron = true;
 		public static bool sendFood = true;
 		public static bool showDungeonsInRegionView = false;
-		public static bool applyTags;
-		public static bool setHub;
+		public static bool applyTags=true;
+		public static bool setHub = true;
 		public static bool useSuggested = true;
 		public static bool wantRaidRepeat=true;
 		public static bool clearRes;

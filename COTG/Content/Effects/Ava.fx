@@ -9,4 +9,3 @@
 #include "NoTexture.fxh"
 #include "WorldSpace.fxh"
 #include "AnimatedSprite.fxh"
-

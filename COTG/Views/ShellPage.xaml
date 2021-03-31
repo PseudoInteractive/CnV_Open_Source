@@ -188,7 +188,7 @@
 					<FontIcon Glyph="&#xF738;"/>
 				</AppBarButton.Icon>
 				<Button.Flyout>
-					<Flyout x:Name="heatMapFlyout">
+					<Flyout x:Name="heatMapFlyout" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" ShowMode="Standard"  Opened="heatMapFlyout_Opened">
 					</Flyout>
 				</Button.Flyout>
 			</AppBarButton>

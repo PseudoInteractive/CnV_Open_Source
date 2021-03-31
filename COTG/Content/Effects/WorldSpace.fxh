@@ -25,8 +25,8 @@ VertexShaderOutputWorld VSWorld(VertexShaderInputPositionTexture input)
 half4 PSWorld(VertexShaderOutputWorld input) : SV_Target0
 {
 	float4 result;
-	result.rgb= SAMPLE_TEXTURE(Texture, input.uv).rgb*0.5;
-	result.a = (result.r + result.g + result.b)*0.5;
+	result.rgb= SAMPLE_TEXTURE(Texture, input.uv).rgb*0.75;
+	result.a = (result.r + result.g + result.b)*0.375;
 	
 	return result;
 }

@@ -388,11 +388,11 @@ namespace COTG.Game
 					var i = y * worldDim + x;
 					var d0 = prior[i];
 					var d1 = raw[i];
-					if (d0 == 0)
-					{
-						// no change
-					}
-					else
+					//if (d0 == 0)
+					//{
+					//	// no change
+					//}
+					//else
 					{
 						var dtype0 = d0 & typeMask;
 						var dtype1 = d1 & typeMask;
@@ -410,8 +410,8 @@ namespace COTG.Game
 							{
 								var isCastle0 = d0 & typeCityFlagCastle;
 								var isCastle1 = d1 & typeCityFlagCastle;
-								// castle change or size change or handover  Dodo:  differentiate this two
-								color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xA0u : 0x60u);
+								// castle change or size change or handover  Todo:  differentiate this two
+								color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xC0u : 0x90u);
 							}
 							else if (alliance0 == Alliance.myId)
 							{
@@ -428,10 +428,10 @@ namespace COTG.Game
 
 						pixels.SetColor(i, color, 0);
 						// change:  Todo, analysis
-						pixels[i * 8 + 4] = 1 | (3 << 2) | (2 << 4) | (1 << 6);
-						pixels[i * 8 + 5] = 2 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
-						pixels[i * 8 + 6] = 3 | (0 << 2) | (0 << 4) | (2 << 6); // color index 0
-						pixels[i * 8 + 7] = 1 | (2 << 2) | (3 << 4) | (1 << 6);
+						pixels[i * 8 + 4] = 1 | (2 << 2) | (2 << 4) | (1 << 6);
+						pixels[i * 8 + 5] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
+						pixels[i * 8 + 6] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
+						pixels[i * 8 + 7] = 1 | (2 << 2) | (2 << 4) | (1 << 6);
 					}
 				}
 			}

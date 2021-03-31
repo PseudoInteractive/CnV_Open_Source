@@ -1246,5 +1246,10 @@ namespace COTG.Views
 			flyout.AddItem("Small", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight*(1.0f/32.0f)));
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
+
+		private void heatMapFlyout_Opened(object sender, object e)
+		{
+			HeatmapDatePicker.instance.snapshots.Focus(FocusState.Programmatic);
+		}
 	}
 }
